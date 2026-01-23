@@ -34,6 +34,7 @@ import type { Table as TanstackTable, SortingState } from '@tanstack/react-table
 import { getContratosColumns } from './columns';
 import { ContratoForm } from './contrato-form';
 import { SegmentosFilter } from './segmentos-filter';
+import { ContratoDeleteDialog } from './contrato-delete-dialog';
 import { GerarPecaDialog } from '@/features/pecas-juridicas';
 import type {
   Contrato,
@@ -125,6 +126,7 @@ export function ContratosTableWrapper({
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [gerarPecaOpen, setGerarPecaOpen] = React.useState(false);
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [contratoSelecionado, setContratoSelecionado] = React.useState<Contrato | null>(null);
 
   // Debounce da busca (500ms)
@@ -300,6 +302,11 @@ export function ContratosTableWrapper({
     setGerarPecaOpen(true);
   }, []);
 
+  const handleDelete = React.useCallback((contrato: Contrato) => {
+    setContratoSelecionado(contrato);
+    setDeleteOpen(true);
+  }, []);
+
   const handleEditSuccess = React.useCallback(() => {
     refetch();
     setEditOpen(false);
@@ -315,8 +322,8 @@ export function ContratosTableWrapper({
 
   // ---------- Columns (Memoized) ----------
   const columns = React.useMemo(
-    () => getContratosColumns(clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleGerarPeca),
-    [clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleGerarPeca]
+    () => getContratosColumns(clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleGerarPeca, handleDelete),
+    [clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleGerarPeca, handleDelete]
   );
 
   // ---------- Ocultar coluna ID por padrão ----------
@@ -509,6 +516,22 @@ export function ContratosTableWrapper({
           }}
           onSuccess={() => {
             // Atualizar a view sheet se estiver aberta
+            router.refresh();
+          }}
+        />
+      )}
+
+      {/* Dialog de exclusão */}
+      {contratoSelecionado && deleteOpen && (
+        <ContratoDeleteDialog
+          contratoId={contratoSelecionado.id}
+          open={deleteOpen}
+          onOpenChange={(open) => {
+            setDeleteOpen(open);
+            if (!open) setContratoSelecionado(null);
+          }}
+          onSuccess={() => {
+            refetch();
             router.refresh();
           }}
         />

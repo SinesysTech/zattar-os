@@ -11,7 +11,7 @@ export type {
   ClienteDetalhado,
   ResponsavelDetalhado,
   SegmentoDetalhado,
-} from './contratos-actions';
+} from "./contratos-actions";
 export {
   actionCriarContrato,
   actionAtualizarContrato,
@@ -21,13 +21,18 @@ export {
   actionContarContratosPorStatus,
   actionContarContratosComEstatisticas,
   actionResolverNomesEntidadesContrato,
-} from './contratos-actions';
+  actionExcluirContrato,
+} from "./contratos-actions";
 
 // Segmentos Actions
-export type { Segmento, CreateSegmentoInput, UpdateSegmentoInput } from './segmentos-actions';
+export type {
+  Segmento,
+  CreateSegmentoInput,
+  UpdateSegmentoInput,
+} from "./segmentos-actions";
 export {
   actionListarSegmentos,
   actionCriarSegmento,
   actionAtualizarSegmento,
   actionDeletarSegmento,
-} from './segmentos-actions';
+} from "./segmentos-actions";

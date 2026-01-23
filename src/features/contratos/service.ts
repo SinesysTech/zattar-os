@@ -10,7 +10,7 @@
  * - NUNCA acessar banco diretamente (usar repositório)
  */
 
-import { Result, err, PaginatedResponse } from '@/types';
+import { Result, err, PaginatedResponse } from "@/types";
 import {
   type Contrato,
   type CreateContratoInput,
@@ -19,7 +19,7 @@ import {
   type StatusContrato,
   createContratoSchema,
   updateContratoSchema,
-} from './domain';
+} from "./domain";
 import {
   findContratoById,
   findAllContratos,
@@ -31,7 +31,8 @@ import {
   countContratos,
   countContratosAteData,
   countContratosEntreDatas,
-} from './repository';
+  deleteContrato,
+} from "./repository";
 import {
   contratoNotFoundError,
   clienteNotFoundError,
@@ -39,7 +40,7 @@ import {
   contratoValidationError,
   contratoIdInvalidError,
   contratoNoFieldsToUpdateError,
-} from './errors';
+} from "./errors";
 
 // =============================================================================
 // SERVIÇOS - CONTRATO
@@ -76,7 +77,7 @@ import {
  * ```
  */
 export async function criarContrato(
-  input: CreateContratoInput
+  input: CreateContratoInput,
 ): Promise<Result<Contrato>> {
   // 1. Validar input com Zod
   const validation = createContratoSchema.safeParse(input);
@@ -85,9 +86,9 @@ export async function criarContrato(
     const firstError = validation.error.errors[0];
     return err(
       contratoValidationError(firstError.message, {
-        field: firstError.path.join('.'),
+        field: firstError.path.join("."),
         errors: validation.error.errors,
-      })
+      }),
     );
   }
 
@@ -104,16 +105,18 @@ export async function criarContrato(
 
   // 3. Validar entidades referenciadas nas partes (modelo relacional)
   for (const parte of dadosValidados.partes ?? []) {
-    if (parte.tipoEntidade === 'cliente') {
+    if (parte.tipoEntidade === "cliente") {
       const existsResult = await clienteExists(parte.entidadeId);
       if (!existsResult.success) return err(existsResult.error);
-      if (!existsResult.data) return err(clienteNotFoundError(parte.entidadeId));
+      if (!existsResult.data)
+        return err(clienteNotFoundError(parte.entidadeId));
     }
 
-    if (parte.tipoEntidade === 'parte_contraria') {
+    if (parte.tipoEntidade === "parte_contraria") {
       const existsResult = await parteContrariaExists(parte.entidadeId);
       if (!existsResult.success) return err(existsResult.error);
-      if (!existsResult.data) return err(parteContrariaNotFoundError(parte.entidadeId));
+      if (!existsResult.data)
+        return err(parteContrariaNotFoundError(parte.entidadeId));
     }
   }
 
@@ -146,7 +149,7 @@ export async function criarContrato(
  * ```
  */
 export async function buscarContrato(
-  id: number
+  id: number,
 ): Promise<Result<Contrato | null>> {
   if (!id || id <= 0) {
     return err(contratoIdInvalidError(id));
@@ -184,7 +187,7 @@ export async function buscarContrato(
  * ```
  */
 export async function listarContratos(
-  params: ListarContratosParams = {}
+  params: ListarContratosParams = {},
 ): Promise<Result<PaginatedResponse<Contrato>>> {
   // Sanitizar parâmetros de paginação
   const sanitizedParams: ListarContratosParams = {
@@ -226,7 +229,7 @@ export async function listarContratos(
  */
 export async function atualizarContrato(
   id: number,
-  input: UpdateContratoInput
+  input: UpdateContratoInput,
 ): Promise<Result<Contrato>> {
   // 1. Validar ID
   if (!id || id <= 0) {
@@ -240,9 +243,9 @@ export async function atualizarContrato(
     const firstError = validation.error.errors[0];
     return err(
       contratoValidationError(firstError.message, {
-        field: firstError.path.join('.'),
+        field: firstError.path.join("."),
         errors: validation.error.errors,
-      })
+      }),
     );
   }
 
@@ -280,16 +283,18 @@ export async function atualizarContrato(
   // 6. Validar entidades referenciadas nas partes (se enviadas)
   if (dadosValidados.partes !== undefined) {
     for (const parte of dadosValidados.partes ?? []) {
-      if (parte.tipoEntidade === 'cliente') {
+      if (parte.tipoEntidade === "cliente") {
         const existsResult = await clienteExists(parte.entidadeId);
         if (!existsResult.success) return err(existsResult.error);
-        if (!existsResult.data) return err(clienteNotFoundError(parte.entidadeId));
+        if (!existsResult.data)
+          return err(clienteNotFoundError(parte.entidadeId));
       }
 
-      if (parte.tipoEntidade === 'parte_contraria') {
+      if (parte.tipoEntidade === "parte_contraria") {
         const existsResult = await parteContrariaExists(parte.entidadeId);
         if (!existsResult.success) return err(existsResult.error);
-        if (!existsResult.data) return err(parteContrariaNotFoundError(parte.entidadeId));
+        if (!existsResult.data)
+          return err(parteContrariaNotFoundError(parte.entidadeId));
       }
     }
   }
@@ -315,7 +320,7 @@ export async function atualizarContrato(
  * ```
  */
 export async function listarContratosPorClienteId(
-  clienteId: number
+  clienteId: number,
 ): Promise<Contrato[]> {
   const result = await listarContratos({ clienteId, limite: 100 });
   if (result.success && result.data) {
@@ -349,10 +354,31 @@ export async function contarContratos(): Promise<Result<number>> {
   return countContratos();
 }
 
-export async function contarContratosAteData(dataLimite: Date): Promise<Result<number>> {
+export async function contarContratosAteData(
+  dataLimite: Date,
+): Promise<Result<number>> {
   return countContratosAteData(dataLimite);
 }
 
-export async function contarContratosEntreDatas(dataInicio: Date, dataFim: Date): Promise<Result<number>> {
+export async function contarContratosEntreDatas(
+  dataInicio: Date,
+  dataFim: Date,
+): Promise<Result<number>> {
   return countContratosEntreDatas(dataInicio, dataFim);
+}
+
+/**
+ * Remove um contrato (Hard Delete via Repository)
+ */
+export async function excluirContrato(id: number): Promise<Result<void>> {
+  if (!id || id <= 0) {
+    return err(contratoIdInvalidError(id));
+  }
+
+  // Garantir que existe antes de excluir (opcional, mas boa prática para retorno correto)
+  const existingResult = await findContratoById(id);
+  if (!existingResult.success) return existingResult;
+  if (!existingResult.data) return err(contratoNotFoundError(id));
+
+  return deleteContrato(id);
 }

@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 /**
  * CONTRATOS FEATURE - Server Actions
@@ -10,8 +10,8 @@
  * - Revalidação de cache via revalidatePath
  */
 
-import { revalidatePath } from 'next/cache';
-import { atualizarDocumentoNoIndice } from '@/lib/ai/indexing';
+import { revalidatePath } from "next/cache";
+import { atualizarDocumentoNoIndice } from "@/lib/ai/indexing";
 import {
   type Contrato,
   type CreateContratoInput,
@@ -28,7 +28,7 @@ import {
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
   PAPEL_CONTRATUAL_LABELS,
-} from '../domain';
+} from "../domain";
 import {
   criarContrato,
   atualizarContrato,
@@ -38,10 +38,11 @@ import {
   contarContratos,
   contarContratosAteData,
   contarContratosEntreDatas,
-} from '../service';
+  excluirContrato,
+} from "../service";
 
-import { createDbClient } from '@/lib/supabase';
-import { createServiceClient } from '@/lib/supabase/service-client';
+import { createDbClient } from "@/lib/supabase";
+import { createServiceClient } from "@/lib/supabase/service-client";
 
 // =============================================================================
 // TIPOS DE RETORNO DAS ACTIONS
@@ -49,7 +50,12 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
-  | { success: false; error: string; errors?: Record<string, string[]>; message: string };
+  | {
+      success: false;
+      error: string;
+      errors?: Record<string, string[]>;
+      message: string;
+    };
 
 type LookupNome = { id: number; nome: string };
 
@@ -63,56 +69,82 @@ export async function actionResolverNomesEntidadesContrato(input: {
   clienteIds?: number[];
   partesContrariasIds?: number[];
   usuariosIds?: number[];
-}): Promise<ActionResult<{ clientes: LookupNome[]; partesContrarias: LookupNome[]; usuarios: LookupNome[] }>> {
+}): Promise<
+  ActionResult<{
+    clientes: LookupNome[];
+    partesContrarias: LookupNome[];
+    usuarios: LookupNome[];
+  }>
+> {
   try {
     const db = createDbClient();
 
-    const clienteIds = Array.isArray(input.clienteIds) ? input.clienteIds.filter((n) => Number.isFinite(n) && n > 0) : [];
+    const clienteIds = Array.isArray(input.clienteIds)
+      ? input.clienteIds.filter((n) => Number.isFinite(n) && n > 0)
+      : [];
     const partesContrariasIds = Array.isArray(input.partesContrariasIds)
       ? input.partesContrariasIds.filter((n) => Number.isFinite(n) && n > 0)
       : [];
-    const usuariosIds = Array.isArray(input.usuariosIds) ? input.usuariosIds.filter((n) => Number.isFinite(n) && n > 0) : [];
+    const usuariosIds = Array.isArray(input.usuariosIds)
+      ? input.usuariosIds.filter((n) => Number.isFinite(n) && n > 0)
+      : [];
 
     const uniq = (arr: number[]) => Array.from(new Set(arr));
 
     const [clientesRes, partesRes, usuariosRes] = await Promise.all([
       uniq(clienteIds).length
-        ? db.from('clientes').select('id,nome').in('id', uniq(clienteIds))
+        ? db.from("clientes").select("id,nome").in("id", uniq(clienteIds))
         : Promise.resolve({ data: [] as unknown[], error: null as unknown }),
       uniq(partesContrariasIds).length
-        ? db.from('partes_contrarias').select('id,nome').in('id', uniq(partesContrariasIds))
+        ? db
+            .from("partes_contrarias")
+            .select("id,nome")
+            .in("id", uniq(partesContrariasIds))
         : Promise.resolve({ data: [] as unknown[], error: null as unknown }),
       // Usuários: hoje a UI já traz 1000 ativos. Mantemos lookup opcional (se a tabela existir).
       uniq(usuariosIds).length
-        ? db.from('usuarios').select('id,nome_completo,nome_exibicao').in('id', uniq(usuariosIds))
+        ? db
+            .from("usuarios")
+            .select("id,nome_completo,nome_exibicao")
+            .in("id", uniq(usuariosIds))
         : Promise.resolve({ data: [] as unknown[], error: null as unknown }),
     ]);
 
     // Falha em qualquer lookup não deve quebrar a página inteira: devolvemos vazio e logamos no retorno.
     // (os fallbacks visuais continuam funcionando)
     const clientes = Array.isArray(clientesRes.data)
-      ? (clientesRes.data as Array<Record<string, unknown>>).map((r) => ({ id: Number(r.id), nome: String(r.nome) }))
+      ? (clientesRes.data as Array<Record<string, unknown>>).map((r) => ({
+          id: Number(r.id),
+          nome: String(r.nome),
+        }))
       : [];
     const partesContrarias = Array.isArray(partesRes.data)
-      ? (partesRes.data as Array<Record<string, unknown>>).map((r) => ({ id: Number(r.id), nome: String(r.nome) }))
+      ? (partesRes.data as Array<Record<string, unknown>>).map((r) => ({
+          id: Number(r.id),
+          nome: String(r.nome),
+        }))
       : [];
     const usuarios = Array.isArray(usuariosRes.data)
       ? (usuariosRes.data as Array<Record<string, unknown>>).map((r) => ({
           id: Number(r.id),
-          nome: String((r.nome_exibicao as string | null) || (r.nome_completo as string | null) || `Usuário #${r.id}`),
+          nome: String(
+            (r.nome_exibicao as string | null) ||
+              (r.nome_completo as string | null) ||
+              `Usuário #${r.id}`,
+          ),
         }))
       : [];
 
     return {
       success: true,
       data: { clientes, partesContrarias, usuarios },
-      message: 'Nomes resolvidos com sucesso',
+      message: "Nomes resolvidos com sucesso",
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro ao resolver nomes',
-      message: 'Falha ao resolver nomes',
+      error: error instanceof Error ? error.message : "Erro ao resolver nomes",
+      message: "Falha ao resolver nomes",
     };
   }
 }
@@ -124,12 +156,12 @@ export async function actionResolverNomesEntidadesContrato(input: {
 /**
  * Converte erros do Zod para formato de errors por campo
  */
-function formatZodErrors(
-  zodError: { errors: Array<{ path: (string | number)[]; message: string }> }
-): Record<string, string[]> {
+function formatZodErrors(zodError: {
+  errors: Array<{ path: (string | number)[]; message: string }>;
+}): Record<string, string[]> {
   const errors: Record<string, string[]> = {};
   for (const err of zodError.errors) {
-    const key = err.path.join('.');
+    const key = err.path.join(".");
     if (!errors[key]) {
       errors[key] = [];
     }
@@ -144,11 +176,11 @@ function extractPartes(formData: FormData): Array<{
   papelContratual: PapelContratual;
   ordem?: number;
 }> {
-  const raw = formData.get('partes');
-  if (!raw || typeof raw !== 'string') return [];
+  const raw = formData.get("partes");
+  if (!raw || typeof raw !== "string") return [];
 
   const isRecord = (value: unknown): value is Record<string, unknown> =>
-    typeof value === 'object' && value !== null;
+    typeof value === "object" && value !== null;
 
   try {
     const parsed = JSON.parse(raw);
@@ -162,11 +194,13 @@ function extractPartes(formData: FormData): Array<{
         papelContratual: String(p.papelContratual) as PapelContratual,
         ordem: p.ordem !== undefined ? Number(p.ordem) : undefined,
       }))
-      .filter((p) =>
-        (p.tipoEntidade === 'cliente' || p.tipoEntidade === 'parte_contraria') &&
-        Number.isFinite(p.entidadeId) &&
-        p.entidadeId > 0 &&
-        (p.papelContratual === 'autora' || p.papelContratual === 're')
+      .filter(
+        (p) =>
+          (p.tipoEntidade === "cliente" ||
+            p.tipoEntidade === "parte_contraria") &&
+          Number.isFinite(p.entidadeId) &&
+          p.entidadeId > 0 &&
+          (p.papelContratual === "autora" || p.papelContratual === "re"),
       );
   } catch {
     return [];
@@ -176,28 +210,33 @@ function extractPartes(formData: FormData): Array<{
 /**
  * Converte FormData para objeto de criação de Contrato
  */
-function formDataToCreateContratoInput(formData: FormData): Record<string, unknown> {
+function formDataToCreateContratoInput(
+  formData: FormData,
+): Record<string, unknown> {
   const data: Record<string, unknown> = {};
 
   // Campos obrigatórios (enums)
-  const tipoContrato = formData.get('tipoContrato') as TipoContrato | null;
+  const tipoContrato = formData.get("tipoContrato") as TipoContrato | null;
   if (tipoContrato) data.tipoContrato = tipoContrato;
 
-  const tipoCobranca = formData.get('tipoCobranca') as TipoCobranca | null;
+  const tipoCobranca = formData.get("tipoCobranca") as TipoCobranca | null;
   if (tipoCobranca) data.tipoCobranca = tipoCobranca;
 
-  const papelClienteNoContrato = formData.get('papelClienteNoContrato') as PapelContratual | null;
-  if (papelClienteNoContrato) data.papelClienteNoContrato = papelClienteNoContrato;
+  const papelClienteNoContrato = formData.get(
+    "papelClienteNoContrato",
+  ) as PapelContratual | null;
+  if (papelClienteNoContrato)
+    data.papelClienteNoContrato = papelClienteNoContrato;
 
   // Cliente ID (obrigatório)
-  const clienteIdStr = formData.get('clienteId')?.toString();
+  const clienteIdStr = formData.get("clienteId")?.toString();
   if (clienteIdStr) {
     const clienteId = parseInt(clienteIdStr, 10);
     if (!isNaN(clienteId)) data.clienteId = clienteId;
   }
 
   // Segmento ID (opcional)
-  const segmentoIdStr = formData.get('segmentoId')?.toString();
+  const segmentoIdStr = formData.get("segmentoId")?.toString();
   if (segmentoIdStr) {
     const segmentoId = parseInt(segmentoIdStr, 10);
     if (!isNaN(segmentoId)) data.segmentoId = segmentoId;
@@ -207,23 +246,23 @@ function formDataToCreateContratoInput(formData: FormData): Record<string, unkno
   data.partes = extractPartes(formData);
 
   // Status (opcional)
-  const status = formData.get('status') as StatusContrato | null;
+  const status = formData.get("status") as StatusContrato | null;
   if (status) data.status = status;
 
-  const cadastradoEm = formData.get('cadastradoEm')?.toString();
+  const cadastradoEm = formData.get("cadastradoEm")?.toString();
   if (cadastradoEm) data.cadastradoEm = cadastradoEm;
 
   // Responsável ID (opcional)
-  const responsavelIdStr = formData.get('responsavelId')?.toString();
+  const responsavelIdStr = formData.get("responsavelId")?.toString();
   if (responsavelIdStr) {
     const responsavelId = parseInt(responsavelIdStr, 10);
     if (!isNaN(responsavelId)) data.responsavelId = responsavelId;
   }
 
   // Observações (opcional)
-  const observacoes = formData.get('observacoes')?.toString().trim();
+  const observacoes = formData.get("observacoes")?.toString().trim();
   if (observacoes) data.observacoes = observacoes;
-  else if (formData.has('observacoes')) data.observacoes = null;
+  else if (formData.has("observacoes")) data.observacoes = null;
 
   return data;
 }
@@ -231,16 +270,18 @@ function formDataToCreateContratoInput(formData: FormData): Record<string, unkno
 /**
  * Converte FormData para objeto de atualização de Contrato
  */
-function formDataToUpdateContratoInput(formData: FormData): Record<string, unknown> {
+function formDataToUpdateContratoInput(
+  formData: FormData,
+): Record<string, unknown> {
   const data: Record<string, unknown> = {};
 
   // Apenas incluir campos presentes no FormData
   const fields = [
-    'tipoContrato',
-    'tipoCobranca',
-    'papelClienteNoContrato',
-    'status',
-    'observacoes',
+    "tipoContrato",
+    "tipoCobranca",
+    "papelClienteNoContrato",
+    "status",
+    "observacoes",
   ];
 
   for (const field of fields) {
@@ -254,14 +295,14 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
     }
   }
 
-  if (formData.has('cadastradoEm')) {
-    const value = formData.get('cadastradoEm')?.toString();
+  if (formData.has("cadastradoEm")) {
+    const value = formData.get("cadastradoEm")?.toString();
     if (value) data.cadastradoEm = value.trim();
   }
 
   // Segmento ID
-  if (formData.has('segmentoId')) {
-    const value = formData.get('segmentoId')?.toString();
+  if (formData.has("segmentoId")) {
+    const value = formData.get("segmentoId")?.toString();
     if (value) {
       const num = parseInt(value, 10);
       if (!isNaN(num)) data.segmentoId = num;
@@ -271,7 +312,7 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
   }
 
   // IDs numéricos
-  const numericFields = ['clienteId', 'responsavelId'];
+  const numericFields = ["clienteId", "responsavelId"];
   for (const field of numericFields) {
     if (formData.has(field)) {
       const value = formData.get(field)?.toString();
@@ -284,7 +325,7 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
     }
   }
 
-  if (formData.has('partes')) {
+  if (formData.has("partes")) {
     data.partes = extractPartes(formData);
   }
 
@@ -303,13 +344,17 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
  * "contrato ajuizamento cliente X", "contratos pró-êxito pendentes"
  */
 function getContratoIndexText(contrato: Contrato): string {
-  const statusLabel = STATUS_CONTRATO_LABELS[contrato.status] || contrato.status;
-  const tipoLabel = TIPO_CONTRATO_LABELS[contrato.tipoContrato] || contrato.tipoContrato;
+  const statusLabel =
+    STATUS_CONTRATO_LABELS[contrato.status] || contrato.status;
+  const tipoLabel =
+    TIPO_CONTRATO_LABELS[contrato.tipoContrato] || contrato.tipoContrato;
   const papelLabel =
-    PAPEL_CONTRATUAL_LABELS[contrato.papelClienteNoContrato] || contrato.papelClienteNoContrato;
-  const cobrancaLabel = TIPO_COBRANCA_LABELS[contrato.tipoCobranca] || contrato.tipoCobranca;
+    PAPEL_CONTRATUAL_LABELS[contrato.papelClienteNoContrato] ||
+    contrato.papelClienteNoContrato;
+  const cobrancaLabel =
+    TIPO_COBRANCA_LABELS[contrato.tipoCobranca] || contrato.tipoCobranca;
 
-  return `Contrato #${contrato.id}: ${tipoLabel} - Cliente ID ${contrato.clienteId} - Status: ${statusLabel} - Papel do Cliente: ${papelLabel} - Cobrança: ${cobrancaLabel} - Cadastrado em: ${contrato.cadastradoEm} - Observações: ${contrato.observacoes || 'N/A'}`;
+  return `Contrato #${contrato.id}: ${tipoLabel} - Cliente ID ${contrato.clienteId} - Status: ${statusLabel} - Papel do Cliente: ${papelLabel} - Cobrança: ${cobrancaLabel} - Cadastrado em: ${contrato.cadastradoEm} - Observações: ${contrato.observacoes || "N/A"}`;
 }
 
 /**
@@ -320,18 +365,18 @@ function getContratoIndexText(contrato: Contrato): string {
  * Categoria 'contrato' é adicionada aos metadados para identificação.
  */
 function enfileirarIndexacaoContrato(contrato: Contrato): void {
-  if (process.env.ENABLE_AI_INDEXING === 'false') return;
+  if (process.env.ENABLE_AI_INDEXING === "false") return;
 
   queueMicrotask(async () => {
     try {
       const supabase = createServiceClient();
-      await supabase.from('documentos_pendentes_indexacao').insert({
-        tipo: 'contrato',
+      await supabase.from("documentos_pendentes_indexacao").insert({
+        tipo: "contrato",
         entity_id: contrato.id,
         texto: getContratoIndexText(contrato),
         metadata: {
-          tipo: 'outro',
-          categoria: 'contrato',
+          tipo: "outro",
+          categoria: "contrato",
           id: contrato.id,
           cliente_id: contrato.clienteId,
         },
@@ -352,9 +397,9 @@ function atualizarIndexacaoContratoAsync(contrato: Contrato): void {
       await atualizarDocumentoNoIndice({
         texto: getContratoIndexText(contrato),
         metadata: {
-          tipo: 'outro',
+          tipo: "outro",
           id: contrato.id,
-          categoria: 'contrato',
+          categoria: "contrato",
           clienteId: contrato.clienteId,
           tipoContrato: contrato.tipoContrato,
           tipoCobranca: contrato.tipoCobranca,
@@ -363,9 +408,14 @@ function atualizarIndexacaoContratoAsync(contrato: Contrato): void {
           updatedAt: contrato.updatedAt,
         },
       });
-      console.log(`[Contratos] Indexação do contrato ${contrato.id} atualizada`);
+      console.log(
+        `[Contratos] Indexação do contrato ${contrato.id} atualizada`,
+      );
     } catch (error) {
-      console.error(`[Contratos] Erro ao atualizar indexação do contrato ${contrato.id}:`, error);
+      console.error(
+        `[Contratos] Erro ao atualizar indexação do contrato ${contrato.id}:`,
+        error,
+      );
     }
   });
 }
@@ -388,7 +438,7 @@ function atualizarIndexacaoContratoAsync(contrato: Contrato): void {
  */
 export async function actionCriarContrato(
   prevState: ActionResult | null,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResult> {
   try {
     // 1. Converter FormData para objeto
@@ -400,9 +450,9 @@ export async function actionCriarContrato(
     if (!validation.success) {
       return {
         success: false,
-        error: 'Erro de validação',
+        error: "Erro de validação",
         errors: formatZodErrors(validation.error),
-        message: validation.error.errors[0]?.message || 'Dados inválidos',
+        message: validation.error.errors[0]?.message || "Dados inválidos",
       };
     }
 
@@ -418,8 +468,8 @@ export async function actionCriarContrato(
     }
 
     // 4. Revalidar cache
-    revalidatePath('/contratos');
-    revalidatePath('/financeiro');
+    revalidatePath("/contratos");
+    revalidatePath("/financeiro");
 
     // 5. Enfileirar indexação semântica (async, não bloqueia resposta)
     enfileirarIndexacaoContrato(result.data);
@@ -427,14 +477,15 @@ export async function actionCriarContrato(
     return {
       success: true,
       data: result.data,
-      message: 'Contrato criado com sucesso',
+      message: "Contrato criado com sucesso",
     };
   } catch (error) {
-    console.error('Erro ao criar contrato:', error);
+    console.error("Erro ao criar contrato:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro interno do servidor',
-      message: 'Erro ao criar contrato. Tente novamente.',
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao criar contrato. Tente novamente.",
     };
   }
 }
@@ -456,15 +507,15 @@ export async function actionCriarContrato(
 export async function actionAtualizarContrato(
   id: number,
   prevState: ActionResult | null,
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResult> {
   try {
     // 1. Validar ID
     if (!id || id <= 0) {
       return {
         success: false,
-        error: 'ID inválido',
-        message: 'ID do contrato é obrigatório',
+        error: "ID inválido",
+        message: "ID do contrato é obrigatório",
       };
     }
 
@@ -477,14 +528,17 @@ export async function actionAtualizarContrato(
     if (!validation.success) {
       return {
         success: false,
-        error: 'Erro de validação',
+        error: "Erro de validação",
         errors: formatZodErrors(validation.error),
-        message: validation.error.errors[0]?.message || 'Dados inválidos',
+        message: validation.error.errors[0]?.message || "Dados inválidos",
       };
     }
 
     // 4. Chamar serviço do core
-    const result = await atualizarContrato(id, validation.data as UpdateContratoInput);
+    const result = await atualizarContrato(
+      id,
+      validation.data as UpdateContratoInput,
+    );
 
     if (!result.success) {
       return {
@@ -495,9 +549,9 @@ export async function actionAtualizarContrato(
     }
 
     // 5. Revalidar cache
-    revalidatePath('/contratos');
+    revalidatePath("/contratos");
     revalidatePath(`/contratos/${id}`);
-    revalidatePath('/financeiro');
+    revalidatePath("/financeiro");
 
     // 6. Atualizar indexação semântica (async, não bloqueia resposta)
     atualizarIndexacaoContratoAsync(result.data);
@@ -505,14 +559,57 @@ export async function actionAtualizarContrato(
     return {
       success: true,
       data: result.data,
-      message: 'Contrato atualizado com sucesso',
+      message: "Contrato atualizado com sucesso",
     };
   } catch (error) {
-    console.error('Erro ao atualizar contrato:', error);
+    console.error("Erro ao atualizar contrato:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro interno do servidor',
-      message: 'Erro ao atualizar contrato. Tente novamente.',
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao atualizar contrato. Tente novamente.",
+    };
+  }
+}
+
+/**
+ * Action para excluir um contrato permanentemente
+ */
+export async function actionExcluirContrato(id: number): Promise<ActionResult> {
+  try {
+    if (!id || id <= 0) {
+      return {
+        success: false,
+        error: "ID inválido",
+        message: "ID do contrato é obrigatório",
+      };
+    }
+
+    const result = await excluirContrato(id);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    revalidatePath("/contratos");
+    revalidatePath("/financeiro");
+
+    return {
+      success: true,
+      data: null,
+      message: "Contrato excluído com sucesso",
+    };
+  } catch (error) {
+    console.error("Erro ao excluir contrato:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao excluir contrato. Tente novamente.",
     };
   }
 }
@@ -529,7 +626,7 @@ export async function actionAtualizarContrato(
  * ```
  */
 export async function actionListarContratos(
-  params?: ListarContratosParams
+  params?: ListarContratosParams,
 ): Promise<ActionResult> {
   try {
     const result = await listarContratos(params);
@@ -545,14 +642,15 @@ export async function actionListarContratos(
     return {
       success: true,
       data: result.data,
-      message: 'Contratos carregados com sucesso',
+      message: "Contratos carregados com sucesso",
     };
   } catch (error) {
-    console.error('Erro ao listar contratos:', error);
+    console.error("Erro ao listar contratos:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro interno do servidor',
-      message: 'Erro ao carregar contratos. Tente novamente.',
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar contratos. Tente novamente.",
     };
   }
 }
@@ -576,8 +674,8 @@ export async function actionBuscarContrato(id: number): Promise<ActionResult> {
     if (!id || id <= 0) {
       return {
         success: false,
-        error: 'ID inválido',
-        message: 'ID do contrato é obrigatório',
+        error: "ID inválido",
+        message: "ID do contrato é obrigatório",
       };
     }
 
@@ -594,22 +692,23 @@ export async function actionBuscarContrato(id: number): Promise<ActionResult> {
     if (!result.data) {
       return {
         success: false,
-        error: 'Contrato não encontrado',
-        message: 'Contrato não encontrado',
+        error: "Contrato não encontrado",
+        message: "Contrato não encontrado",
       };
     }
 
     return {
       success: true,
       data: result.data,
-      message: 'Contrato carregado com sucesso',
+      message: "Contrato carregado com sucesso",
     };
   } catch (error) {
-    console.error('Erro ao buscar contrato:', error);
+    console.error("Erro ao buscar contrato:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro interno do servidor',
-      message: 'Erro ao carregar contrato. Tente novamente.',
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar contrato. Tente novamente.",
     };
   }
 }
@@ -628,10 +727,13 @@ export async function actionBuscarContrato(id: number): Promise<ActionResult> {
  * ```
  */
 type DashboardDateFilterInput =
-  | { mode: 'all' }
-  | { mode: 'range'; from: string; to: string };
+  | { mode: "all" }
+  | { mode: "range"; from: string; to: string };
 
-function normalizeRangeFromInput(input: { from: string; to: string }): { from: Date; to: Date } | null {
+function normalizeRangeFromInput(input: {
+  from: string;
+  to: string;
+}): { from: Date; to: Date } | null {
   const from = new Date(input.from);
   const to = new Date(input.to);
   if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) return null;
@@ -641,19 +743,39 @@ function normalizeRangeFromInput(input: { from: string; to: string }): { from: D
   return { from, to };
 }
 
-export async function actionContarContratosPorStatus(dateFilter?: DashboardDateFilterInput): Promise<ActionResult<Record<StatusContrato, number>>> {
+export async function actionContarContratosPorStatus(
+  dateFilter?: DashboardDateFilterInput,
+): Promise<ActionResult<Record<StatusContrato, number>>> {
   try {
-    if (dateFilter?.mode === 'range') {
-      const range = normalizeRangeFromInput({ from: dateFilter.from, to: dateFilter.to });
+    if (dateFilter?.mode === "range") {
+      const range = normalizeRangeFromInput({
+        from: dateFilter.from,
+        to: dateFilter.to,
+      });
       if (!range) {
-        return { success: false, error: 'Período inválido', message: 'Período inválido' };
+        return {
+          success: false,
+          error: "Período inválido",
+          message: "Período inválido",
+        };
       }
 
-      const result = await contarContratosPorStatus({ dataInicio: range.from, dataFim: range.to });
+      const result = await contarContratosPorStatus({
+        dataInicio: range.from,
+        dataFim: range.to,
+      });
       if (!result.success) {
-        return { success: false, error: result.error.message, message: result.error.message };
+        return {
+          success: false,
+          error: result.error.message,
+          message: result.error.message,
+        };
       }
-      return { success: true, data: result.data, message: 'Contagem de contratos carregada com sucesso' };
+      return {
+        success: true,
+        data: result.data,
+        message: "Contagem de contratos carregada com sucesso",
+      };
     }
 
     const result = await contarContratosPorStatus();
@@ -669,14 +791,15 @@ export async function actionContarContratosPorStatus(dateFilter?: DashboardDateF
     return {
       success: true,
       data: result.data,
-      message: 'Contagem de contratos carregada com sucesso',
+      message: "Contagem de contratos carregada com sucesso",
     };
   } catch (error) {
-    console.error('Erro ao contar contratos por status:', error);
+    console.error("Erro ao contar contratos por status:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro interno do servidor',
-      message: 'Erro ao carregar contagem de contratos. Tente novamente.',
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar contagem de contratos. Tente novamente.",
     };
   }
 }
@@ -686,24 +809,45 @@ export async function actionContarContratosPorStatus(dateFilter?: DashboardDateF
  * - mode=all: compara total atual com total até o fim do mês anterior (comportamento legacy)
  * - mode=range: compara total do range com período anterior de mesma duração
  */
-export async function actionContarContratosComEstatisticas(dateFilter?: DashboardDateFilterInput): Promise<
-  | { success: true; data: { total: number; variacaoPercentual: number | null; comparacaoLabel: string } }
+export async function actionContarContratosComEstatisticas(
+  dateFilter?: DashboardDateFilterInput,
+): Promise<
+  | {
+      success: true;
+      data: {
+        total: number;
+        variacaoPercentual: number | null;
+        comparacaoLabel: string;
+      };
+    }
   | { success: false; error: string }
 > {
   try {
     // Para "Tudo", não faz sentido comparar com período anterior.
-    if (dateFilter?.mode === 'all') {
+    if (dateFilter?.mode === "all") {
       const resultAtual = await contarContratos();
-      if (!resultAtual.success) return { success: false, error: resultAtual.error.message };
-      return { success: true, data: { total: resultAtual.data, variacaoPercentual: null, comparacaoLabel: '' } };
+      if (!resultAtual.success)
+        return { success: false, error: resultAtual.error.message };
+      return {
+        success: true,
+        data: {
+          total: resultAtual.data,
+          variacaoPercentual: null,
+          comparacaoLabel: "",
+        },
+      };
     }
 
-    if (dateFilter?.mode === 'range') {
-      const range = normalizeRangeFromInput({ from: dateFilter.from, to: dateFilter.to });
-      if (!range) return { success: false, error: 'Período inválido' };
+    if (dateFilter?.mode === "range") {
+      const range = normalizeRangeFromInput({
+        from: dateFilter.from,
+        to: dateFilter.to,
+      });
+      if (!range) return { success: false, error: "Período inválido" };
 
       const atualResult = await contarContratosEntreDatas(range.from, range.to);
-      if (!atualResult.success) return { success: false, error: atualResult.error.message };
+      if (!atualResult.success)
+        return { success: false, error: atualResult.error.message };
 
       const durationMs = range.to.getTime() - range.from.getTime();
       const prevTo = new Date(range.from.getTime() - 1);
@@ -713,51 +857,79 @@ export async function actionContarContratosComEstatisticas(dateFilter?: Dashboar
       if (!prevResult.success) {
         return {
           success: true,
-          data: { total: atualResult.data, variacaoPercentual: null, comparacaoLabel: 'em relação ao período anterior' },
+          data: {
+            total: atualResult.data,
+            variacaoPercentual: null,
+            comparacaoLabel: "em relação ao período anterior",
+          },
         };
       }
 
       const totalAtual = atualResult.data;
       const totalPrev = prevResult.data;
       let variacaoPercentual: number | null = null;
-      if (totalPrev > 0) variacaoPercentual = ((totalAtual - totalPrev) / totalPrev) * 100;
+      if (totalPrev > 0)
+        variacaoPercentual = ((totalAtual - totalPrev) / totalPrev) * 100;
       else if (totalAtual > 0) variacaoPercentual = 100;
 
       return {
         success: true,
-        data: { total: totalAtual, variacaoPercentual, comparacaoLabel: 'em relação ao período anterior' },
+        data: {
+          total: totalAtual,
+          variacaoPercentual,
+          comparacaoLabel: "em relação ao período anterior",
+        },
       };
     }
 
     const resultAtual = await contarContratos();
-    if (!resultAtual.success) return { success: false, error: resultAtual.error.message };
+    if (!resultAtual.success)
+      return { success: false, error: resultAtual.error.message };
 
     const agora = new Date();
-    const primeiroDiaMesAtual = new Date(agora.getFullYear(), agora.getMonth(), 1);
+    const primeiroDiaMesAtual = new Date(
+      agora.getFullYear(),
+      agora.getMonth(),
+      1,
+    );
     const ultimoDiaMesAnterior = new Date(primeiroDiaMesAtual);
     ultimoDiaMesAnterior.setDate(0);
     ultimoDiaMesAnterior.setHours(23, 59, 59, 999);
 
-    const resultMesAnterior = await contarContratosAteData(ultimoDiaMesAnterior);
+    const resultMesAnterior =
+      await contarContratosAteData(ultimoDiaMesAnterior);
     if (!resultMesAnterior.success) {
       return {
         success: true,
-        data: { total: resultAtual.data, variacaoPercentual: null, comparacaoLabel: 'em relação ao mês anterior' },
+        data: {
+          total: resultAtual.data,
+          variacaoPercentual: null,
+          comparacaoLabel: "em relação ao mês anterior",
+        },
       };
     }
 
     const totalAtual = resultAtual.data;
     const totalMesAnterior = resultMesAnterior.data;
     let variacaoPercentual: number | null = null;
-    if (totalMesAnterior > 0) variacaoPercentual = ((totalAtual - totalMesAnterior) / totalMesAnterior) * 100;
+    if (totalMesAnterior > 0)
+      variacaoPercentual =
+        ((totalAtual - totalMesAnterior) / totalMesAnterior) * 100;
     else if (totalAtual > 0) variacaoPercentual = 100;
 
     return {
       success: true,
-      data: { total: totalAtual, variacaoPercentual, comparacaoLabel: 'em relação ao mês anterior' },
+      data: {
+        total: totalAtual,
+        variacaoPercentual,
+        comparacaoLabel: "em relação ao mês anterior",
+      },
     };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : String(error) };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
   }
 }
 
@@ -768,7 +940,7 @@ export async function actionContarContratosComEstatisticas(dateFilter?: Dashboar
 export interface ClienteDetalhado {
   id: number;
   nome: string;
-  tipoPessoa: 'pf' | 'pj';
+  tipoPessoa: "pf" | "pj";
   cpfCnpj: string | null;
   emails: string[] | null;
   dddCelular: string | null;
@@ -818,13 +990,15 @@ export interface ContratoCompleto {
  * - Informações do segmento
  * - Estatísticas (contadores)
  */
-export async function actionBuscarContratoCompleto(id: number): Promise<ActionResult<ContratoCompleto>> {
+export async function actionBuscarContratoCompleto(
+  id: number,
+): Promise<ActionResult<ContratoCompleto>> {
   try {
     if (!id || id <= 0) {
       return {
         success: false,
-        error: 'ID inválido',
-        message: 'ID do contrato é obrigatório',
+        error: "ID inválido",
+        message: "ID do contrato é obrigatório",
       };
     }
 
@@ -843,46 +1017,59 @@ export async function actionBuscarContratoCompleto(id: number): Promise<ActionRe
     if (!contratoResult.data) {
       return {
         success: false,
-        error: 'Contrato não encontrado',
-        message: 'Contrato não encontrado',
+        error: "Contrato não encontrado",
+        message: "Contrato não encontrado",
       };
     }
 
     const contrato = contratoResult.data;
 
     // Fetch paralelo de dados relacionados
-    const [clienteRes, responsavelRes, segmentoRes, documentosCountRes, lancamentosCountRes] = await Promise.all([
+    const [
+      clienteRes,
+      responsavelRes,
+      segmentoRes,
+      documentosCountRes,
+      lancamentosCountRes,
+    ] = await Promise.all([
       // Cliente
-      db.from('clientes')
-        .select('id, nome, tipo_pessoa, cpf, cnpj, emails, ddd_celular, numero_celular, endereco_id')
-        .eq('id', contrato.clienteId)
+      db
+        .from("clientes")
+        .select(
+          "id, nome, tipo_pessoa, cpf, cnpj, emails, ddd_celular, numero_celular, endereco_id",
+        )
+        .eq("id", contrato.clienteId)
         .single(),
 
       // Responsável (se existir)
       contrato.responsavelId
-        ? db.from('usuarios')
-            .select('id, nome_completo, nome_exibicao')
-            .eq('id', contrato.responsavelId)
+        ? db
+            .from("usuarios")
+            .select("id, nome_completo, nome_exibicao")
+            .eq("id", contrato.responsavelId)
             .single()
         : Promise.resolve({ data: null, error: null }),
 
       // Segmento (se existir)
       contrato.segmentoId
-        ? db.from('segmentos')
-            .select('id, nome, tipo')
-            .eq('id', contrato.segmentoId)
+        ? db
+            .from("segmentos")
+            .select("id, nome, tipo")
+            .eq("id", contrato.segmentoId)
             .single()
         : Promise.resolve({ data: null, error: null }),
 
       // Contagem de documentos
-      db.from('contrato_documentos')
-        .select('id', { count: 'exact', head: true })
-        .eq('contrato_id', id),
+      db
+        .from("contrato_documentos")
+        .select("id", { count: "exact", head: true })
+        .eq("contrato_id", id),
 
       // Contagem de lançamentos financeiros
-      db.from('lancamentos_financeiros')
-        .select('id', { count: 'exact', head: true })
-        .eq('contrato_id', id),
+      db
+        .from("lancamentos_financeiros")
+        .select("id", { count: "exact", head: true })
+        .eq("contrato_id", id),
     ]);
 
     // Processar cliente
@@ -891,11 +1078,12 @@ export async function actionBuscarContratoCompleto(id: number): Promise<ActionRe
       const c = clienteRes.data as Record<string, unknown>;
 
       // Buscar endereço se existir
-      let endereco: ClienteDetalhado['endereco'] = null;
+      let endereco: ClienteDetalhado["endereco"] = null;
       if (c.endereco_id) {
-        const { data: enderecoData } = await db.from('enderecos')
-          .select('logradouro, numero, bairro, municipio, estado_sigla')
-          .eq('id', c.endereco_id)
+        const { data: enderecoData } = await db
+          .from("enderecos")
+          .select("logradouro, numero, bairro, municipio, estado_sigla")
+          .eq("id", c.endereco_id)
           .single();
 
         if (enderecoData) {
@@ -913,7 +1101,7 @@ export async function actionBuscarContratoCompleto(id: number): Promise<ActionRe
       cliente = {
         id: c.id as number,
         nome: c.nome as string,
-        tipoPessoa: c.tipo_pessoa as 'pf' | 'pj',
+        tipoPessoa: c.tipo_pessoa as "pf" | "pj",
         cpfCnpj: (c.cpf as string | null) || (c.cnpj as string | null),
         emails: c.emails as string[] | null,
         dddCelular: c.ddd_celular as string | null,
@@ -928,7 +1116,10 @@ export async function actionBuscarContratoCompleto(id: number): Promise<ActionRe
       const r = responsavelRes.data as Record<string, unknown>;
       responsavel = {
         id: r.id as number,
-        nome: (r.nome_exibicao as string | null) || (r.nome_completo as string) || `Usuário #${r.id}`,
+        nome:
+          (r.nome_exibicao as string | null) ||
+          (r.nome_completo as string) ||
+          `Usuário #${r.id}`,
       };
     }
 
@@ -960,14 +1151,15 @@ export async function actionBuscarContratoCompleto(id: number): Promise<ActionRe
         segmento,
         stats,
       },
-      message: 'Contrato carregado com sucesso',
+      message: "Contrato carregado com sucesso",
     };
   } catch (error) {
-    console.error('Erro ao buscar contrato completo:', error);
+    console.error("Erro ao buscar contrato completo:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro interno do servidor',
-      message: 'Erro ao carregar contrato. Tente novamente.',
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar contrato. Tente novamente.",
     };
   }
 }

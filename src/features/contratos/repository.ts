@@ -9,8 +9,8 @@
  * - NUNCA fazer validação de negócio aqui (apenas persistência)
  */
 
-import { createDbClient } from '@/lib/supabase';
-import { Result, ok, err, appError, PaginatedResponse } from '@/types';
+import { createDbClient } from "@/lib/supabase";
+import { Result, ok, err, appError, PaginatedResponse } from "@/types";
 import type {
   Contrato,
   ContratoParte,
@@ -24,23 +24,25 @@ import type {
   StatusContrato,
   PapelContratual,
   TipoEntidadeContrato,
-} from './domain';
+} from "./domain";
 
 // =============================================================================
 // CONSTANTES
 // =============================================================================
 
-const TABLE_CONTRATOS = 'contratos';
-const TABLE_CLIENTES = 'clientes';
-const TABLE_PARTES_CONTRARIAS = 'partes_contrarias';
-const TABLE_CONTRATO_PARTES = 'contrato_partes';
-const TABLE_CONTRATO_STATUS_HISTORICO = 'contrato_status_historico';
+const TABLE_CONTRATOS = "contratos";
+const TABLE_CLIENTES = "clientes";
+const TABLE_PARTES_CONTRARIAS = "partes_contrarias";
+const TABLE_CONTRATO_PARTES = "contrato_partes";
+const TABLE_CONTRATO_STATUS_HISTORICO = "contrato_status_historico";
 
 // =============================================================================
 // CONVERSORES
 // =============================================================================
 
-function converterParaContratoParte(data: Record<string, unknown>): ContratoParte {
+function converterParaContratoParte(
+  data: Record<string, unknown>,
+): ContratoParte {
   return {
     id: data.id as number,
     contratoId: data.contrato_id as number,
@@ -57,34 +59,40 @@ function converterParaContratoParte(data: Record<string, unknown>): ContratoPart
 /**
  * Verifica se uma parte contrária existe
  */
-export async function parteContrariaExists(parteContrariaId: number): Promise<Result<boolean>> {
+export async function parteContrariaExists(
+  parteContrariaId: number,
+): Promise<Result<boolean>> {
   try {
     const db = createDbClient();
 
     const { data, error } = await db
       .from(TABLE_PARTES_CONTRARIAS)
-      .select('id')
-      .eq('id', parteContrariaId)
+      .select("id")
+      .eq("id", parteContrariaId)
       .maybeSingle();
 
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
     }
 
     return ok(!!data);
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao verificar parte contrária',
+        "DATABASE_ERROR",
+        "Erro ao verificar parte contrária",
         undefined,
-        error instanceof Error ? error : undefined
-      )
+        error instanceof Error ? error : undefined,
+      ),
     );
   }
 }
 
-function converterParaContratoStatusHistorico(data: Record<string, unknown>): ContratoStatusHistorico {
+function converterParaContratoStatusHistorico(
+  data: Record<string, unknown>,
+): ContratoStatusHistorico {
   return {
     id: data.id as number,
     contratoId: data.contrato_id as number,
@@ -98,7 +106,9 @@ function converterParaContratoStatusHistorico(data: Record<string, unknown>): Co
   };
 }
 
-function converterParaContratoProcessoVinculo(data: Record<string, unknown>): ContratoProcessoVinculo {
+function converterParaContratoProcessoVinculo(
+  data: Record<string, unknown>,
+): ContratoProcessoVinculo {
   const processoRaw = (data.acervo as Record<string, unknown> | null) ?? null;
 
   return {
@@ -109,7 +119,8 @@ function converterParaContratoProcessoVinculo(data: Record<string, unknown>): Co
     processo: processoRaw
       ? {
           id: processoRaw.id as number,
-          numeroProcesso: (processoRaw.numero_processo as string | null) ?? null,
+          numeroProcesso:
+            (processoRaw.numero_processo as string | null) ?? null,
           trt: (processoRaw.trt as string | null) ?? null,
           grau: (processoRaw.grau as string | null) ?? null,
           dataAutuacao: (processoRaw.data_autuacao as string | null) ?? null,
@@ -120,7 +131,8 @@ function converterParaContratoProcessoVinculo(data: Record<string, unknown>): Co
 
 function converterParaContrato(data: Record<string, unknown>): Contrato {
   const partesRaw = (data.contrato_partes as unknown[] | null) ?? [];
-  const statusHistoricoRaw = (data.contrato_status_historico as unknown[] | null) ?? [];
+  const statusHistoricoRaw =
+    (data.contrato_status_historico as unknown[] | null) ?? [];
   const processosRaw = (data.contrato_processos as unknown[] | null) ?? [];
 
   return {
@@ -135,14 +147,19 @@ function converterParaContrato(data: Record<string, unknown>): Contrato {
     responsavelId: (data.responsavel_id as number | null) ?? null,
     createdBy: (data.created_by as number | null) ?? null,
     observacoes: (data.observacoes as string | null) ?? null,
-    dadosAnteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,
+    dadosAnteriores:
+      (data.dados_anteriores as Record<string, unknown> | null) ?? null,
     createdAt: data.created_at as string,
     updatedAt: data.updated_at as string,
-    partes: partesRaw.map((p) => converterParaContratoParte(p as Record<string, unknown>)),
-    statusHistorico: statusHistoricoRaw.map((h) =>
-      converterParaContratoStatusHistorico(h as Record<string, unknown>)
+    partes: partesRaw.map((p) =>
+      converterParaContratoParte(p as Record<string, unknown>),
     ),
-    processos: processosRaw.map((p) => converterParaContratoProcessoVinculo(p as Record<string, unknown>)),
+    statusHistorico: statusHistoricoRaw.map((h) =>
+      converterParaContratoStatusHistorico(h as Record<string, unknown>),
+    ),
+    processos: processosRaw.map((p) =>
+      converterParaContratoProcessoVinculo(p as Record<string, unknown>),
+    ),
   };
 }
 
@@ -160,12 +177,22 @@ function buildContratoPartesRows(params: {
   contratoId: number;
   clienteId: number;
   papelClienteNoContrato: PapelContratual;
-  partes: Array<{ tipoEntidade: TipoEntidadeContrato; entidadeId: number; papelContratual: PapelContratual; ordem?: number }>;
+  partes: Array<{
+    tipoEntidade: TipoEntidadeContrato;
+    entidadeId: number;
+    papelContratual: PapelContratual;
+    ordem?: number;
+  }>;
 }): Array<Record<string, unknown>> {
   const rows: Array<Record<string, unknown>> = [];
   const seen = new Set<string>();
 
-  const pushUnique = (row: { tipo_entidade: string; entidade_id: number; papel_contratual: PapelContratual; ordem: number }) => {
+  const pushUnique = (row: {
+    tipo_entidade: string;
+    entidade_id: number;
+    papel_contratual: PapelContratual;
+    ordem: number;
+  }) => {
     const key = `${row.tipo_entidade}:${row.entidade_id}:${row.papel_contratual}`;
     if (seen.has(key)) return;
     seen.add(key);
@@ -180,7 +207,7 @@ function buildContratoPartesRows(params: {
 
   // Cliente principal sempre presente
   pushUnique({
-    tipo_entidade: 'cliente',
+    tipo_entidade: "cliente",
     entidade_id: params.clienteId,
     papel_contratual: params.papelClienteNoContrato,
     ordem: 0,
@@ -205,35 +232,47 @@ function buildContratoPartesRows(params: {
 /**
  * Busca um contrato pelo ID
  */
-export async function findContratoById(id: number): Promise<Result<Contrato | null>> {
+export async function findContratoById(
+  id: number,
+): Promise<Result<Contrato | null>> {
   try {
     const db = createDbClient();
 
     const { data, error } = await db
       .from(TABLE_CONTRATOS)
-      .select('*, contrato_partes(*), contrato_status_historico(*), contrato_processos(*, acervo(id, numero_processo, trt, grau, data_autuacao))')
-      .eq('id', id)
-      .order('ordem', { foreignTable: 'contrato_partes', ascending: true })
-      .order('changed_at', { foreignTable: 'contrato_status_historico', ascending: false })
-      .order('created_at', { foreignTable: 'contrato_processos', ascending: false })
+      .select(
+        "*, contrato_partes(*), contrato_status_historico(*), contrato_processos(*, acervo(id, numero_processo, trt, grau, data_autuacao))",
+      )
+      .eq("id", id)
+      .order("ordem", { foreignTable: "contrato_partes", ascending: true })
+      .order("changed_at", {
+        foreignTable: "contrato_status_historico",
+        ascending: false,
+      })
+      .order("created_at", {
+        foreignTable: "contrato_processos",
+        ascending: false,
+      })
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') {
+      if (error.code === "PGRST116") {
         return ok(null);
       }
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
     }
 
     return ok(converterParaContrato(data as Record<string, unknown>));
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao buscar contrato',
+        "DATABASE_ERROR",
+        "Erro ao buscar contrato",
         undefined,
-        error instanceof Error ? error : undefined
-      )
+        error instanceof Error ? error : undefined,
+      ),
     );
   }
 }
@@ -242,7 +281,7 @@ export async function findContratoById(id: number): Promise<Result<Contrato | nu
  * Lista contratos com filtros e paginação
  */
 export async function findAllContratos(
-  params: ListarContratosParams = {}
+  params: ListarContratosParams = {},
 ): Promise<Result<PaginatedResponse<Contrato>>> {
   try {
     const db = createDbClient();
@@ -253,61 +292,64 @@ export async function findAllContratos(
 
     let query = db
       .from(TABLE_CONTRATOS)
-      .select('*, contrato_partes(*), contrato_status_historico(*), contrato_processos(*, acervo(id, numero_processo, trt, grau, data_autuacao))', { count: 'exact' });
+      .select(
+        "*, contrato_partes(*), contrato_status_historico(*), contrato_processos(*, acervo(id, numero_processo, trt, grau, data_autuacao))",
+        { count: "exact" },
+      );
 
     // Aplicar filtros
     if (params.busca) {
       const busca = params.busca.trim();
-      query = query.ilike('observacoes', `%${busca}%`);
+      query = query.ilike("observacoes", `%${busca}%`);
     }
 
     // Filtro por período (created_at)
     if (params.dataInicio) {
       const d = new Date(params.dataInicio);
       if (!Number.isNaN(d.getTime())) {
-        query = query.gte('created_at', d.toISOString());
+        query = query.gte("created_at", d.toISOString());
       }
     }
     if (params.dataFim) {
       const d = new Date(params.dataFim);
       if (!Number.isNaN(d.getTime())) {
-        query = query.lte('created_at', d.toISOString());
+        query = query.lte("created_at", d.toISOString());
       }
     }
 
     if (params.segmentoId) {
-      query = query.eq('segmento_id', params.segmentoId);
+      query = query.eq("segmento_id", params.segmentoId);
     }
 
     if (params.tipoContrato) {
-      query = query.eq('tipo_contrato', params.tipoContrato);
+      query = query.eq("tipo_contrato", params.tipoContrato);
     }
 
     if (params.tipoCobranca) {
-      query = query.eq('tipo_cobranca', params.tipoCobranca);
+      query = query.eq("tipo_cobranca", params.tipoCobranca);
     }
 
     if (params.status) {
-      query = query.eq('status', params.status);
+      query = query.eq("status", params.status);
     }
 
     if (params.clienteId) {
-      query = query.eq('cliente_id', params.clienteId);
+      query = query.eq("cliente_id", params.clienteId);
     }
 
     if (params.responsavelId) {
-      query = query.eq('responsavel_id', params.responsavelId);
+      query = query.eq("responsavel_id", params.responsavelId);
     }
 
     // Ordenação
-    const ordenarPor = params.ordenarPor ?? 'created_at';
-    const ordem = params.ordem ?? 'desc';
-    if (ordenarPor === 'cadastrado_em') {
-      query = query.order('cadastrado_em', { ascending: ordem === 'asc' });
-    } else if (ordenarPor === 'segmento_id') {
-      query = query.order('segmento_id', { ascending: ordem === 'asc' });
+    const ordenarPor = params.ordenarPor ?? "created_at";
+    const ordem = params.ordem ?? "desc";
+    if (ordenarPor === "cadastrado_em") {
+      query = query.order("cadastrado_em", { ascending: ordem === "asc" });
+    } else if (ordenarPor === "segmento_id") {
+      query = query.order("segmento_id", { ascending: ordem === "asc" });
     } else {
-      query = query.order(ordenarPor, { ascending: ordem === 'asc' });
+      query = query.order(ordenarPor, { ascending: ordem === "asc" });
     }
 
     // Paginação
@@ -316,11 +358,13 @@ export async function findAllContratos(
     const { data, error, count } = await query;
 
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
     }
 
     const contratos = (data || []).map((item) =>
-      converterParaContrato(item as Record<string, unknown>)
+      converterParaContrato(item as Record<string, unknown>),
     );
     const total = count ?? 0;
     const totalPages = Math.ceil(total / limite);
@@ -338,11 +382,11 @@ export async function findAllContratos(
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao listar contratos',
+        "DATABASE_ERROR",
+        "Erro ao listar contratos",
         undefined,
-        error instanceof Error ? error : undefined
-      )
+        error instanceof Error ? error : undefined,
+      ),
     );
   }
 }
@@ -350,29 +394,33 @@ export async function findAllContratos(
 /**
  * Verifica se um cliente existe
  */
-export async function clienteExists(clienteId: number): Promise<Result<boolean>> {
+export async function clienteExists(
+  clienteId: number,
+): Promise<Result<boolean>> {
   try {
     const db = createDbClient();
 
     const { data, error } = await db
       .from(TABLE_CLIENTES)
-      .select('id')
-      .eq('id', clienteId)
+      .select("id")
+      .eq("id", clienteId)
       .maybeSingle();
 
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
     }
 
     return ok(!!data);
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao verificar cliente',
+        "DATABASE_ERROR",
+        "Erro ao verificar cliente",
         undefined,
-        error instanceof Error ? error : undefined
-      )
+        error instanceof Error ? error : undefined,
+      ),
     );
   }
 }
@@ -387,19 +435,21 @@ export async function countContratosPorStatus(params?: {
   try {
     const db = createDbClient();
 
-    let query = db.from(TABLE_CONTRATOS).select('status');
+    let query = db.from(TABLE_CONTRATOS).select("status");
 
     if (params?.dataInicio) {
-      query = query.gte('created_at', params.dataInicio.toISOString());
+      query = query.gte("created_at", params.dataInicio.toISOString());
     }
     if (params?.dataFim) {
-      query = query.lte('created_at', params.dataFim.toISOString());
+      query = query.lte("created_at", params.dataFim.toISOString());
     }
 
     const { data, error } = await query;
 
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
     }
 
     // Inicializar contadores para todos os status possíveis
@@ -422,11 +472,11 @@ export async function countContratosPorStatus(params?: {
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao contar contratos por status',
+        "DATABASE_ERROR",
+        "Erro ao contar contratos por status",
         undefined,
-        error instanceof Error ? error : undefined
-      )
+        error instanceof Error ? error : undefined,
+      ),
     );
   }
 }
@@ -439,21 +489,23 @@ export async function countContratos(): Promise<Result<number>> {
     const db = createDbClient();
     const { count, error } = await db
       .from(TABLE_CONTRATOS)
-      .select('*', { count: 'exact', head: true });
+      .select("*", { count: "exact", head: true });
 
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
     }
 
     return ok(count ?? 0);
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao contar contratos',
+        "DATABASE_ERROR",
+        "Erro ao contar contratos",
         undefined,
-        error instanceof Error ? error : undefined
-      )
+        error instanceof Error ? error : undefined,
+      ),
     );
   }
 }
@@ -461,27 +513,31 @@ export async function countContratos(): Promise<Result<number>> {
 /**
  * Conta contratos criados até uma data específica
  */
-export async function countContratosAteData(dataLimite: Date): Promise<Result<number>> {
+export async function countContratosAteData(
+  dataLimite: Date,
+): Promise<Result<number>> {
   try {
     const db = createDbClient();
     const { count, error } = await db
       .from(TABLE_CONTRATOS)
-      .select('*', { count: 'exact', head: true })
-      .lte('created_at', dataLimite.toISOString());
+      .select("*", { count: "exact", head: true })
+      .lte("created_at", dataLimite.toISOString());
 
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
     }
 
     return ok(count ?? 0);
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao contar contratos até data',
+        "DATABASE_ERROR",
+        "Erro ao contar contratos até data",
         undefined,
-        error instanceof Error ? error : undefined
-      )
+        error instanceof Error ? error : undefined,
+      ),
     );
   }
 }
@@ -489,28 +545,33 @@ export async function countContratosAteData(dataLimite: Date): Promise<Result<nu
 /**
  * Conta contratos criados entre duas datas (inclusive)
  */
-export async function countContratosEntreDatas(dataInicio: Date, dataFim: Date): Promise<Result<number>> {
+export async function countContratosEntreDatas(
+  dataInicio: Date,
+  dataFim: Date,
+): Promise<Result<number>> {
   try {
     const db = createDbClient();
     const { count, error } = await db
       .from(TABLE_CONTRATOS)
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', dataInicio.toISOString())
-      .lte('created_at', dataFim.toISOString());
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", dataInicio.toISOString())
+      .lte("created_at", dataFim.toISOString());
 
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
     }
 
     return ok(count ?? 0);
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao contar contratos entre datas',
+        "DATABASE_ERROR",
+        "Erro ao contar contratos entre datas",
         undefined,
-        error instanceof Error ? error : undefined
-      )
+        error instanceof Error ? error : undefined,
+      ),
     );
   }
 }
@@ -522,11 +583,14 @@ export async function countContratosEntreDatas(dataInicio: Date, dataFim: Date):
 /**
  * Cria um novo contrato no banco
  */
-export async function saveContrato(input: CreateContratoInput): Promise<Result<Contrato>> {
+export async function saveContrato(
+  input: CreateContratoInput,
+): Promise<Result<Contrato>> {
   try {
     const db = createDbClient();
 
-    const cadastradoEm = parseDateTime(input.cadastradoEm) ?? new Date().toISOString();
+    const cadastradoEm =
+      parseDateTime(input.cadastradoEm) ?? new Date().toISOString();
 
     // Preparar dados para inserção (snake_case)
     const dadosInsercao: Record<string, unknown> = {
@@ -534,7 +598,7 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
       tipo_cobranca: input.tipoCobranca,
       cliente_id: input.clienteId,
       papel_cliente_no_contrato: input.papelClienteNoContrato,
-      status: input.status ?? 'em_contratacao',
+      status: input.status ?? "em_contratacao",
       cadastrado_em: cadastradoEm,
       responsavel_id: input.responsavelId ?? null,
       created_by: input.createdBy ?? null,
@@ -552,7 +616,11 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
       .single();
 
     if (error) {
-      return err(appError('DATABASE_ERROR', `Erro ao criar contrato: ${error.message}`, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", `Erro ao criar contrato: ${error.message}`, {
+          code: error.code,
+        }),
+      );
     }
 
     const contratoId = (inserted as Record<string, unknown>).id as number;
@@ -564,36 +632,54 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
       partes: input.partes ?? [],
     });
 
-    const { error: partesError } = await db.from(TABLE_CONTRATO_PARTES).insert(partesRows);
+    const { error: partesError } = await db
+      .from(TABLE_CONTRATO_PARTES)
+      .insert(partesRows);
     if (partesError) {
-      return err(appError('DATABASE_ERROR', `Erro ao inserir contrato_partes: ${partesError.message}`, { code: partesError.code }));
+      return err(
+        appError(
+          "DATABASE_ERROR",
+          `Erro ao inserir contrato_partes: ${partesError.message}`,
+          { code: partesError.code },
+        ),
+      );
     }
 
-    const { error: historicoError } = await db.from(TABLE_CONTRATO_STATUS_HISTORICO).insert({
-      contrato_id: contratoId,
-      from_status: null,
-      to_status: (dadosInsercao.status as StatusContrato) ?? 'em_contratacao',
-      changed_at: cadastradoEm,
-      changed_by: input.createdBy ?? null,
-    });
+    const { error: historicoError } = await db
+      .from(TABLE_CONTRATO_STATUS_HISTORICO)
+      .insert({
+        contrato_id: contratoId,
+        from_status: null,
+        to_status: (dadosInsercao.status as StatusContrato) ?? "em_contratacao",
+        changed_at: cadastradoEm,
+        changed_by: input.createdBy ?? null,
+      });
     if (historicoError) {
-      return err(appError('DATABASE_ERROR', `Erro ao inserir contrato_status_historico: ${historicoError.message}`, { code: historicoError.code }));
+      return err(
+        appError(
+          "DATABASE_ERROR",
+          `Erro ao inserir contrato_status_historico: ${historicoError.message}`,
+          { code: historicoError.code },
+        ),
+      );
     }
 
     const contratoResult = await findContratoById(contratoId);
     if (!contratoResult.success) return contratoResult;
     if (!contratoResult.data) {
-      return err(appError('DATABASE_ERROR', 'Contrato recém-criado não foi encontrado'));
+      return err(
+        appError("DATABASE_ERROR", "Contrato recém-criado não foi encontrado"),
+      );
     }
     return ok(contratoResult.data);
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao criar contrato',
+        "DATABASE_ERROR",
+        "Erro ao criar contrato",
         undefined,
-        error instanceof Error ? error : undefined
-      )
+        error instanceof Error ? error : undefined,
+      ),
     );
   }
 }
@@ -604,7 +690,7 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
 export async function updateContrato(
   id: number,
   input: UpdateContratoInput,
-  contratoExistente: Contrato
+  contratoExistente: Contrato,
 ): Promise<Result<Contrato>> {
   try {
     const db = createDbClient();
@@ -658,30 +744,43 @@ export async function updateContrato(
     const { data: updated, error } = await db
       .from(TABLE_CONTRATOS)
       .update(dadosAtualizacao)
-      .eq('id', id)
+      .eq("id", id)
       .select()
       .single();
 
     if (error) {
-      return err(appError('DATABASE_ERROR', `Erro ao atualizar contrato: ${error.message}`, { code: error.code }));
+      return err(
+        appError(
+          "DATABASE_ERROR",
+          `Erro ao atualizar contrato: ${error.message}`,
+          { code: error.code },
+        ),
+      );
     }
 
-    if (input.status !== undefined && input.status !== contratoExistente.status) {
-      const { error: historicoError } = await db.from(TABLE_CONTRATO_STATUS_HISTORICO).insert({
-        contrato_id: id,
-        from_status: contratoExistente.status,
-        to_status: input.status,
-        changed_at: new Date().toISOString(),
-        changed_by: (updated as Record<string, unknown>).created_by as number | null,
-      });
+    if (
+      input.status !== undefined &&
+      input.status !== contratoExistente.status
+    ) {
+      const { error: historicoError } = await db
+        .from(TABLE_CONTRATO_STATUS_HISTORICO)
+        .insert({
+          contrato_id: id,
+          from_status: contratoExistente.status,
+          to_status: input.status,
+          changed_at: new Date().toISOString(),
+          changed_by: (updated as Record<string, unknown>).created_by as
+            | number
+            | null,
+        });
 
       if (historicoError) {
         return err(
           appError(
-            'DATABASE_ERROR',
+            "DATABASE_ERROR",
             `Erro ao inserir contrato_status_historico: ${historicoError.message}`,
-            { code: historicoError.code }
-          )
+            { code: historicoError.code },
+          ),
         );
       }
     }
@@ -690,19 +789,26 @@ export async function updateContrato(
       const { error: deleteError } = await db
         .from(TABLE_CONTRATO_PARTES)
         .delete()
-        .eq('contrato_id', id);
+        .eq("contrato_id", id);
       if (deleteError) {
         return err(
-          appError('DATABASE_ERROR', `Erro ao atualizar contrato_partes: ${deleteError.message}`, {
-            code: deleteError.code,
-          })
+          appError(
+            "DATABASE_ERROR",
+            `Erro ao atualizar contrato_partes: ${deleteError.message}`,
+            {
+              code: deleteError.code,
+            },
+          ),
         );
       }
 
-      const clienteId = (dadosAtualizacao.cliente_id as number | undefined) ?? contratoExistente.clienteId;
+      const clienteId =
+        (dadosAtualizacao.cliente_id as number | undefined) ??
+        contratoExistente.clienteId;
       const papelClienteNoContrato =
-        (dadosAtualizacao.papel_cliente_no_contrato as PapelContratual | undefined) ??
-        contratoExistente.papelClienteNoContrato;
+        (dadosAtualizacao.papel_cliente_no_contrato as
+          | PapelContratual
+          | undefined) ?? contratoExistente.papelClienteNoContrato;
 
       const partesRows = buildContratoPartesRows({
         contratoId: id,
@@ -711,12 +817,18 @@ export async function updateContrato(
         partes: input.partes,
       });
 
-      const { error: insertError } = await db.from(TABLE_CONTRATO_PARTES).insert(partesRows);
+      const { error: insertError } = await db
+        .from(TABLE_CONTRATO_PARTES)
+        .insert(partesRows);
       if (insertError) {
         return err(
-          appError('DATABASE_ERROR', `Erro ao atualizar contrato_partes: ${insertError.message}`, {
-            code: insertError.code,
-          })
+          appError(
+            "DATABASE_ERROR",
+            `Erro ao atualizar contrato_partes: ${insertError.message}`,
+            {
+              code: insertError.code,
+            },
+          ),
         );
       }
     }
@@ -724,18 +836,73 @@ export async function updateContrato(
     const contratoResult = await findContratoById(id);
     if (!contratoResult.success) return contratoResult;
     if (!contratoResult.data) {
-      return err(appError('DATABASE_ERROR', 'Contrato atualizado não foi encontrado'));
+      return err(
+        appError("DATABASE_ERROR", "Contrato atualizado não foi encontrado"),
+      );
     }
 
     return ok(contratoResult.data);
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao atualizar contrato',
+        "DATABASE_ERROR",
+        "Erro ao atualizar contrato",
         undefined,
-        error instanceof Error ? error : undefined
-      )
+        error instanceof Error ? error : undefined,
+      ),
+    );
+  }
+}
+
+/**
+ * Remove permanentemente um contrato
+ */
+export async function deleteContrato(id: number): Promise<Result<void>> {
+  try {
+    const db = createDbClient();
+
+    // 1. Remover dependências manuais (se não houver cascade)
+    // Tabela de junção many-to-many ou one-to-many fortes
+    await db.from(TABLE_CONTRATO_PARTES).delete().eq("contrato_id", id);
+    await db
+      .from(TABLE_CONTRATO_STATUS_HISTORICO)
+      .delete()
+      .eq("contrato_id", id);
+
+    // Contrato Processos
+    await db.from("contrato_processos").delete().eq("contrato_id", id);
+
+    // Contrato Tags
+    await db.from("contrato_tags").delete().eq("contrato_id", id);
+
+    // Documentos do Contrato
+    await db.from("contrato_documentos").delete().eq("contrato_id", id);
+
+    // Lançamentos Financeiros (cuidado: isso apaga financeiro)
+    await db.from("lancamentos_financeiros").delete().eq("contrato_id", id);
+
+    // 2. Remover contrato
+    const { error } = await db.from(TABLE_CONTRATOS).delete().eq("id", id);
+
+    if (error) {
+      return err(
+        appError(
+          "DATABASE_ERROR",
+          `Erro ao excluir contrato: ${error.message}`,
+          { code: error.code },
+        ),
+      );
+    }
+
+    return ok(undefined);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao excluir contrato",
+        undefined,
+        error instanceof Error ? error : undefined,
+      ),
     );
   }
 }

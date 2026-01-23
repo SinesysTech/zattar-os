@@ -19,7 +19,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Eye, Pencil, FileText } from 'lucide-react';
+import { Eye, Pencil, FileText, Trash2 } from 'lucide-react';
 import type { Contrato } from '../domain';
 import type { ClienteInfo } from '../types';
 import {
@@ -39,7 +39,8 @@ export function getContratosColumns(
   usuariosMap: Map<number, ClienteInfo>,
   segmentosMap: Map<number, { nome: string }>,
   onEdit: (contrato: Contrato) => void,
-  onGerarPeca: (contrato: Contrato) => void
+  onGerarPeca: (contrato: Contrato) => void,
+  onDelete: (contrato: Contrato) => void
 ): ColumnDef<Contrato>[] {
   const getParteNome = (parte: { tipoEntidade: string; entidadeId: number; nomeSnapshot?: string | null }) => {
     if (parte.nomeSnapshot) return parte.nomeSnapshot;
@@ -334,6 +335,21 @@ export function getContratosColumns(
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Visualizar</TooltipContent>
+            </Tooltip>
+            {/* Botão de Excluir */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                  onClick={() => onDelete(contrato)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span className="sr-only">Excluir</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Excluir</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>

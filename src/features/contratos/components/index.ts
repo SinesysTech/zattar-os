@@ -5,8 +5,9 @@
  * Padrão DataShell implementado - usa clientes como referência.
  */
 
-export { getContratosColumns } from './columns';
-export { ContratosTableWrapper } from './contratos-table-wrapper';
-export { ContratoForm } from './contrato-form';
-export { SegmentosDialog } from './segmentos-dialog';
-export { SegmentosFilter } from './segmentos-filter';
+export { getContratosColumns } from "./columns";
+export { ContratosTableWrapper } from "./contratos-table-wrapper";
+export { ContratoForm } from "./contrato-form";
+export { SegmentosDialog } from "./segmentos-dialog";
+export { SegmentosFilter } from "./segmentos-filter";
+export { ContratoDeleteDialog } from "./contrato-delete-dialog";
