@@ -17,6 +17,7 @@ const runtime = new CopilotRuntime();
 const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
   runtime,
   serviceAdapter,
+  endpoint: "/api/copilotkit",
 });
 
 export const POST = async (req: NextRequest) => {
@@ -26,7 +27,7 @@ export const POST = async (req: NextRequest) => {
     console.error("CopilotKit error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 };
