@@ -346,7 +346,7 @@ export async function processoExists(processoId: number): Promise<Result<boolean
     try {
         const db = createDbClient();
         const { data, error } = await db
-            .from('processos')
+            .from('acervo')
             .select('id')
             .eq('id', processoId)
             .single();

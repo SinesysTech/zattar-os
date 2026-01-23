@@ -7,7 +7,7 @@ import {
 import { NextRequest, NextResponse } from "next/server";
 
 const serviceAdapter = new GoogleGenerativeAIAdapter({
-  model: "gemini-3-pro-preview",
+  model: "gemini-1.5-pro",
   apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
 });
 
@@ -17,7 +17,6 @@ const runtime = new CopilotRuntime();
 const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
   runtime,
   serviceAdapter,
-  endpoint: "/api/copilotkit",
 });
 
 export const POST = async (req: NextRequest) => {
