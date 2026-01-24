@@ -3,7 +3,6 @@
 import { memo } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { Signatario } from '../types';
 
@@ -29,7 +28,12 @@ function getInitials(name: string): string {
 
 /**
  * SignerCard - Individual signer card in the sidebar
- * Shows signer info with avatar, name, email and actions on hover
+ *
+ * States:
+ * - ACTIVE: bg-primary with white text (selected signer)
+ * - INACTIVE: bg-background with hover state
+ *
+ * Uses design system tokens: bg-primary, text-primary-foreground, bg-accent
  */
 const SignerCard = memo(function SignerCard({
   signer,
@@ -42,10 +46,10 @@ const SignerCard = memo(function SignerCard({
   return (
     <div
       className={cn(
-        'group relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200',
+        'group relative flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-200',
         isActive
-          ? 'bg-primary/5 border border-primary/20'
-          : 'bg-muted/50 border border-transparent hover:bg-muted/80 hover:scale-[1.02]'
+          ? 'bg-primary text-primary-foreground'
+          : 'bg-background hover:bg-accent'
       )}
       onClick={onSelect}
       onKeyDown={(e) => {
@@ -59,67 +63,71 @@ const SignerCard = memo(function SignerCard({
       aria-label={`Selecionar signatário ${signer.nome}`}
       aria-pressed={isActive}
     >
-      {/* Active indicator bar */}
-      {isActive && (
-        <div
-          className="absolute left-0 top-2 bottom-2 w-1 rounded-full"
-          style={{ backgroundColor: signer.cor }}
-        />
-      )}
-
       {/* Avatar with initials */}
       <div
-        className="flex items-center justify-center size-10 rounded-full shrink-0"
+        className={cn(
+          'flex items-center justify-center size-10 rounded-full shrink-0 font-semibold text-sm',
+          isActive
+            ? 'bg-primary-foreground/20 text-primary-foreground'
+            : 'text-primary-foreground'
+        )}
         style={{
-          backgroundColor: `${signer.cor}20`,
-          color: signer.cor,
+          backgroundColor: isActive ? undefined : signer.cor,
         }}
       >
-        <span className="text-sm font-bold">{getInitials(signer.nome)}</span>
+        {getInitials(signer.nome)}
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-bold truncate">{signer.nome}</p>
-          {isCurrentUser && (
-            <Badge variant="secondary" className="bg-primary/10 text-primary text-xs px-1.5 py-0">
-              Você
-            </Badge>
-          )}
+          <p className={cn(
+            'text-sm font-medium truncate',
+            isActive ? 'text-primary-foreground' : 'text-foreground'
+          )}>
+            {signer.nome}
+            {isCurrentUser && ' (Você)'}
+          </p>
         </div>
-        <p className="text-xs text-muted-foreground truncate">{signer.email}</p>
+        <p className={cn(
+          'text-xs truncate',
+          isActive ? 'text-primary-foreground/80' : 'text-muted-foreground'
+        )}>
+          {signer.email}
+        </p>
       </div>
 
-      {/* Actions - visible on hover */}
-      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-7"
-          onClick={(e) => {
-            e.stopPropagation();
-            onEdit();
-          }}
-          aria-label={`Editar signatário ${signer.nome}`}
-        >
-          <Pencil className="size-3.5" />
-        </Button>
-        {!isCurrentUser && (
+      {/* Actions - visible on hover (only when not active for better contrast) */}
+      {!isActive && (
+        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <Button
             variant="ghost"
             size="icon"
-            className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+            className="size-7"
             onClick={(e) => {
               e.stopPropagation();
-              onDelete();
+              onEdit();
             }}
-            aria-label={`Remover signatário ${signer.nome}`}
+            aria-label={`Editar signatário ${signer.nome}`}
           >
-            <Trash2 className="size-3.5" />
+            <Pencil className="size-3.5" />
           </Button>
-        )}
-      </div>
+          {!isCurrentUser && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
+              aria-label={`Remover signatário ${signer.nome}`}
+            >
+              <Trash2 className="size-3.5" />
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 });

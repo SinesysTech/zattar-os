@@ -73,10 +73,10 @@ const FIELD_CONFIGS: Record<
  * Hook for managing drag & drop from the field palette to the canvas
  */
 export function usePaletteDrag({
-  canvasRef,
+  canvasRef: _canvasRef,
   zoom,
   templateId,
-  currentPage,
+  currentPage: _currentPage,
   fieldsLength,
   setFields,
   setSelectedField,
@@ -113,7 +113,7 @@ export function usePaletteDrag({
     (event: React.DragEvent<HTMLDivElement>, activeSigner: Signatario | null) => {
       event.preventDefault();
 
-      const fieldType = event.dataTransfer.getData('fieldType') as SignatureFieldType;
+      const fieldType = event.dataTransfer.getData('field-type') as SignatureFieldType;
       if (!fieldType || !FIELD_CONFIGS[fieldType]) {
         setDraggedFieldType(null);
         return;
@@ -126,15 +126,22 @@ export function usePaletteDrag({
         return;
       }
 
-      if (!canvasRef.current) {
+      // Find the page element where the drop occurred
+      const target = event.target as HTMLElement;
+      const pageElement = target.closest('[data-page]') as HTMLElement | null;
+
+      if (!pageElement) {
         setDraggedFieldType(null);
         return;
       }
 
-      // Calculate drop position
-      const rect = canvasRef.current.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / zoom;
-      const y = (event.clientY - rect.top) / zoom;
+      // Get the actual page number from the element
+      const dropPage = parseInt(pageElement.dataset.page || '1', 10);
+
+      // Calculate drop position relative to the PAGE element, not the container
+      const pageRect = pageElement.getBoundingClientRect();
+      const x = (event.clientX - pageRect.left) / zoom;
+      const y = (event.clientY - pageRect.top) / zoom;
 
       const config = FIELD_CONFIGS[fieldType];
 
@@ -150,7 +157,7 @@ export function usePaletteDrag({
           y: Math.round(y),
           width: config.width,
           height: config.height,
-          pagina: currentPage,
+          pagina: dropPage,
         },
         estilo: {
           fonte: 'Open Sans',
@@ -182,7 +189,7 @@ export function usePaletteDrag({
         );
       }, 1000);
     },
-    [canvasRef, zoom, templateId, currentPage, fieldsLength, setFields, setSelectedField, markDirty]
+    [zoom, templateId, fieldsLength, setFields, setSelectedField, markDirty]
   );
 
   return {

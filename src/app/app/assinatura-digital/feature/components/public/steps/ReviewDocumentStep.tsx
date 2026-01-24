@@ -58,85 +58,77 @@ export function ReviewDocumentStep({
       previousLabel="Voltar"
     >
       <div className="space-y-4">
-        {/* PDF Viewer Container */}
-        <div className="relative w-full flex flex-col bg-muted dark:bg-muted rounded-xl border border-border overflow-hidden shadow-sm h-[65vh] sm:h-[70vh]">
-          {/* Toolbar */}
-          <div className="flex items-center justify-between px-4 py-3 bg-card dark:bg-card border-b border-border z-10">
-            {/* Document Title */}
-            <div className="flex items-center gap-2">
+        {/* PDF Viewer - Clean floating style */}
+        <div className="relative w-full h-[65vh] sm:h-[70vh]">
+          {/* Floating Toolbar */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 bg-background/95 backdrop-blur-sm border border-border rounded-full shadow-lg px-2 py-1.5 mt-3">
+            {/* Document icon */}
+            <span
+              className="material-symbols-outlined text-red-500 text-[20px] ml-1"
+              aria-hidden="true"
+            >
+              description
+            </span>
+
+            {/* Zoom Controls */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleZoomOut}
+              disabled={zoom <= 50}
+              className="h-7 w-7 p-0 rounded-full"
+              aria-label="Diminuir zoom"
+            >
               <span
-                className="material-symbols-outlined text-red-500 text-[24px]"
+                className="material-symbols-outlined text-[18px]"
                 aria-hidden="true"
               >
-                description
+                remove
               </span>
+            </Button>
+            <span className="text-xs font-medium w-10 text-center text-muted-foreground">
+              {zoom}%
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleZoomIn}
+              disabled={zoom >= 200}
+              className="h-7 w-7 p-0 rounded-full"
+              aria-label="Aumentar zoom"
+            >
               <span
-                className="text-sm font-semibold truncate max-w-37.5 sm:max-w-xs text-foreground"
-                title={documentTitle || "Documento.pdf"}
+                className="material-symbols-outlined text-[18px]"
+                aria-hidden="true"
               >
-                {documentTitle || "Documento.pdf"}
+                add
               </span>
-            </div>
+            </Button>
 
-            {/* Zoom Controls and Download */}
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleZoomOut}
-                disabled={zoom <= 50}
-                className="h-8 w-8 p-0"
-                aria-label="Diminuir zoom"
-              >
+            {/* Separator */}
+            <div className="h-4 w-px bg-border mx-0.5" />
+
+            {/* Download Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="h-7 w-7 p-0 rounded-full mr-1"
+              aria-label="Baixar documento"
+            >
+              <a href={pdfUrl} download={documentTitle || "documento.pdf"} title="Baixar documento">
                 <span
-                  className="material-symbols-outlined text-[20px]"
+                  className="material-symbols-outlined text-[18px]"
                   aria-hidden="true"
                 >
-                  remove
+                  download
                 </span>
-              </Button>
-              <span className="text-xs font-medium w-12 text-center bg-muted dark:bg-muted py-1 rounded text-muted-foreground">
-                {zoom}%
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleZoomIn}
-                disabled={zoom >= 200}
-                className="h-8 w-8 p-0"
-                aria-label="Aumentar zoom"
-              >
-                <span
-                  className="material-symbols-outlined text-[20px]"
-                  aria-hidden="true"
-                >
-                  add
-                </span>
-              </Button>
-              {/* Separator */}
-              <div className="h-5 w-px bg-border mx-1" />
-              {/* Download Button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                asChild
-                className="h-8 w-8 p-0"
-                aria-label="Baixar documento"
-              >
-                <a href={pdfUrl} download={documentTitle || "documento.pdf"} title="Baixar documento">
-                  <span
-                    className="material-symbols-outlined text-[20px]"
-                    aria-hidden="true"
-                  >
-                    download
-                  </span>
-                </a>
-              </Button>
-            </div>
+              </a>
+            </Button>
           </div>
 
-          {/* PDF Scrollable Area */}
-          <div className="grow overflow-y-auto pdf-scrollbar p-4 sm:p-8 flex flex-col items-center gap-6 relative">
+          {/* PDF Scrollable Area - Clean background */}
+          <div className="h-full overflow-y-auto pdf-scrollbar bg-muted/30 rounded-lg p-4 pt-16 sm:p-8 sm:pt-16 flex flex-col items-center gap-6">
             <PdfPreviewDynamic
               pdfUrl={pdfUrl}
               zoom={zoom / 100}
@@ -144,13 +136,13 @@ export function ReviewDocumentStep({
               showPageIndicator={false}
               onLoadSuccess={handleLoadSuccess}
               onPageChange={handlePageChange}
-              className="w-full max-w-150"
+              className="w-full max-w-150 [&_.react-pdf__Page]:shadow-xl [&_.react-pdf__Page]:rounded-sm [&_.react-pdf__Page]:bg-white"
             />
           </div>
 
-          {/* Page Indicator */}
+          {/* Page Indicator - Bottom floating pill */}
           {numPages && (
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-foreground/80 backdrop-blur-sm text-background px-3 py-1.5 rounded-full text-xs font-medium shadow-lg pointer-events-none z-20">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-foreground/80 backdrop-blur-sm text-background px-3 py-1.5 rounded-full text-xs font-medium shadow-lg pointer-events-none z-20">
               Página {currentPage} de {numPages}
             </div>
           )}

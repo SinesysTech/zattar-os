@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { toast } from 'sonner';
 import type { EditorField } from '../types';
 
@@ -29,7 +29,7 @@ export function useFieldSelection({
   setFields,
   selectedField,
   setSelectedField,
-  currentPage,
+  currentPage: _currentPage,
   markDirty,
   canvasSize,
   setFieldsWithHeightWarning,
@@ -56,13 +56,17 @@ export function useFieldSelection({
     [setFields, setSelectedField]
   );
 
-  // Clear selection when page changes if selected field is on different page
+  // Note: In continuous scroll mode (all pages visible), we don't need to
+  // clear selection based on page changes. This logic is disabled.
+  // If you need single-page mode behavior, uncomment the useEffect below.
+  /*
   useEffect(() => {
     if (selectedField && selectedField.posicao.pagina !== currentPage) {
       setFields((prev) => prev.map((field) => ({ ...field, isSelected: false })));
       setSelectedField(null);
     }
   }, [currentPage, selectedField, setFields, setSelectedField]);
+  */
 
   // Delete a field
   const deleteField = useCallback(

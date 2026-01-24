@@ -33,24 +33,17 @@ interface UseSignersReturn {
  */
 export function useSigners({
   initialSigners,
-  currentUserEmail = '',
-  currentUserName = 'Você',
+  currentUserEmail: _currentUserEmail = '',
+  currentUserName: _currentUserName = 'Você',
 }: UseSignersProps = {}): UseSignersReturn {
-  // Initialize with default signer (current user) if no initial signers
+  // Initialize with provided signers or empty list
+  // Note: We no longer auto-create a default signer for the current user
+  // because the logged-in user is typically NOT a signatory
   const [signers, setSigners] = useState<Signatario[]>(() => {
     if (initialSigners && initialSigners.length > 0) {
       return initialSigners;
     }
-    // Create default signer for current user
-    return [
-      {
-        id: `signer-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-        nome: currentUserName,
-        email: currentUserEmail,
-        cor: SIGNER_COLORS[0],
-        ordem: 0,
-      },
-    ];
+    return [];
   });
 
   // Track active (selected) signer for field assignment
@@ -58,7 +51,7 @@ export function useSigners({
     if (initialSigners && initialSigners.length > 0) {
       return initialSigners[0];
     }
-    return signers[0] || null;
+    return null;
   });
 
   // Track if we've already synced from initial signers (to avoid re-syncing on every render)
@@ -196,12 +189,6 @@ export function useSigners({
    */
   const deleteSigner = useCallback(
     (id: string): boolean => {
-      // Cannot delete the last signer
-      if (signers.length <= 1) {
-        toast.error('É necessário ter pelo menos um signatário');
-        return false;
-      }
-
       const signerToDelete = signers.find((s) => s.id === id);
       if (!signerToDelete) {
         toast.error('Signatário não encontrado');

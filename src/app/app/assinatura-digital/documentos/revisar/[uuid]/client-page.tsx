@@ -71,14 +71,13 @@ interface DocumentoCompleto {
   }>;
 }
 
-// Cores para assinantes (mesmas do editor)
+// Cores para assinantes usando tokens do design system (chart-*)
 const SIGNER_COLORS = [
-  { bg: "bg-blue-500/20", border: "border-blue-500", text: "text-blue-700" },
-  { bg: "bg-green-500/20", border: "border-green-500", text: "text-green-700" },
-  { bg: "bg-purple-500/20", border: "border-purple-500", text: "text-purple-700" },
-  { bg: "bg-orange-500/20", border: "border-orange-500", text: "text-orange-700" },
-  { bg: "bg-pink-500/20", border: "border-pink-500", text: "text-pink-700" },
-  { bg: "bg-teal-500/20", border: "border-teal-500", text: "text-teal-700" },
+  { bg: "bg-chart-1/20", border: "border-chart-1", text: "text-chart-1", solid: "bg-chart-1" },
+  { bg: "bg-chart-2/20", border: "border-chart-2", text: "text-chart-2", solid: "bg-chart-2" },
+  { bg: "bg-chart-3/20", border: "border-chart-3", text: "text-chart-3", solid: "bg-chart-3" },
+  { bg: "bg-chart-4/20", border: "border-chart-4", text: "text-chart-4", solid: "bg-chart-4" },
+  { bg: "bg-chart-5/20", border: "border-chart-5", text: "text-chart-5", solid: "bg-chart-5" },
 ];
 
 function getSignerColor(index: number) {
@@ -312,7 +311,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary">{assinantesPendentes} pendentes</Badge>
                   {assinantesConcluidos > 0 && (
-                    <Badge variant="default" className="bg-green-600">
+                    <Badge variant="default" className="bg-chart-4">
                       {assinantesConcluidos} concluídos
                     </Badge>
                   )}
@@ -348,15 +347,15 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
                     key={assinante.id}
                     className={cn(
                       "flex items-center justify-between p-3 rounded-lg border",
-                      isConcluido ? "bg-green-50 border-green-200" : color.bg,
-                      isConcluido ? "border-green-300" : color.border
+                      isConcluido ? "bg-chart-4/10 border-chart-4/30" : color.bg,
+                      !isConcluido && color.border
                     )}
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <div
                         className={cn(
-                          "w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-medium shrink-0",
-                          isConcluido ? "bg-green-500" : color.border.replace("border-", "bg-")
+                          "w-10 h-10 rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium shrink-0",
+                          isConcluido ? "bg-chart-4" : color.solid
                         )}
                       >
                         {isConcluido ? (
@@ -448,8 +447,8 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
                       >
                         <div
                           className={cn(
-                            "absolute -top-6 left-0 px-2 py-0.5 rounded text-xs font-medium text-white flex items-center gap-1",
-                            color.border.replace("border-", "bg-")
+                            "absolute -top-6 left-0 px-2 py-0.5 rounded text-xs font-medium text-primary-foreground flex items-center gap-1",
+                            color.solid
                           )}
                         >
                           {anchor.tipo === "assinatura" ? (
