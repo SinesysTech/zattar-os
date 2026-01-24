@@ -86,30 +86,30 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
   }
 
   return (
-    <div className="h-full w-full flex overflow-hidden bg-muted/30">
+    <div className="h-screen w-full flex overflow-hidden bg-slate-50/50 dark:bg-zinc-950">
       {/* PDF Canvas Area */}
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Document Title - Sticky */}
-        <div className="flex items-center gap-3 px-6 py-3 bg-background border-b shrink-0">
+        <div className="flex items-center gap-3 px-6 py-2 bg-background border-b shrink-0 h-14">
           <FileText className="h-4 w-4 text-muted-foreground" />
-          <div>
-            <h1 className="text-sm font-medium text-foreground">
+          <div className="flex items-baseline gap-2 overflow-hidden">
+            <h1 className="text-sm font-medium text-foreground truncate max-w-[300px]" title={documento.titulo || 'Documento sem título'}>
               {documento.titulo || 'Documento sem título'}
             </h1>
-            <p className="text-xs text-muted-foreground">
-              Editado {formatRelativeTime(documento.updated_at)}
+            <p className="text-xs text-muted-foreground shrink-0">
+              • Editado {formatRelativeTime(documento.updated_at)}
             </p>
           </div>
           {isSaving && (
-            <span className="ml-auto text-xs text-muted-foreground animate-pulse">
+            <span className="ml-auto text-xs animate-pulse font-bold text-primary">
               Salvando...
             </span>
           )}
         </div>
 
         {/* PDF Canvas - Scrollable */}
-        <div className="flex-1 overflow-auto p-6">
-          <div className="flex justify-center">
+        <div className="flex-1 overflow-auto p-8 relative scroll-smooth">
+          <div className="flex justify-center min-h-full">
             <EditorCanvas
               canvasRef={canvasRef}
               canvasSize={PDF_CANVAS_SIZE}

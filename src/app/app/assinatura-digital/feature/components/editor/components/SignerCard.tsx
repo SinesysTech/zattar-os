@@ -46,10 +46,10 @@ const SignerCard = memo(function SignerCard({
   return (
     <div
       className={cn(
-        'group relative flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-200',
+        'group relative flex items-center gap-3 p-3.5 rounded-xl cursor-pointer transition-all duration-200 border',
         isActive
-          ? 'bg-primary text-primary-foreground'
-          : 'bg-background hover:bg-accent'
+          ? 'bg-primary text-primary-foreground border-primary shadow-md ring-1 ring-primary ring-offset-1'
+          : 'bg-background hover:bg-muted/50 border-input hover:border-muted-foreground/30 shadow-sm'
       )}
       onClick={onSelect}
       onKeyDown={(e) => {
