@@ -7,13 +7,16 @@
 const fs = require('fs');
 const path = require('path');
 
+// Raiz do projeto (subir dois níveis: scripts/setup -> scripts -> raiz)
+const projectRoot = path.join(__dirname, '..', '..');
+
 // Possíveis localizações do pdfjs-dist worker (dependência direta ou via react-pdf)
 const possiblePaths = [
-  path.join(__dirname, '..', 'node_modules', 'pdfjs-dist', 'build', 'pdf.worker.min.mjs'),
-  path.join(__dirname, '..', 'node_modules', 'react-pdf', 'node_modules', 'pdfjs-dist', 'build', 'pdf.worker.min.mjs'),
+  path.join(projectRoot, 'node_modules', 'pdfjs-dist', 'build', 'pdf.worker.min.mjs'),
+  path.join(projectRoot, 'node_modules', 'react-pdf', 'node_modules', 'pdfjs-dist', 'build', 'pdf.worker.min.mjs'),
 ];
 
-const targetDir = path.join(__dirname, '..', 'public', 'pdfjs');
+const targetDir = path.join(projectRoot, 'public', 'pdfjs');
 const targetFile = path.join(targetDir, 'pdf.worker.min.mjs');
 
 try {
