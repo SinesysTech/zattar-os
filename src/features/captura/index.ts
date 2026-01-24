@@ -97,7 +97,6 @@ export type {
 // Components (re-export principais)
 export { CapturaList } from "./components/captura-list";
 export { CapturaDialog } from "./components/captura-dialog";
-export { CapturaTabsContent } from "./components/captura-tabs-content";
 export {
   CapturaResult,
   type CapturaResultData,
@@ -120,10 +119,18 @@ export {
 
 // Utils
 export { ordenarCredenciaisPorTRT } from "./utils/ordenar-credenciais";
-export { formatarErroCaptura, formatarErroTecnico, isAuthTimeoutError, isNetworkError } from "./utils/error-formatter";
+export {
+  formatarErroCaptura,
+  formatarErroTecnico,
+  isAuthTimeoutError,
+  isNetworkError,
+} from "./utils/error-formatter";
 
 // Components (additional exports)
-export { CapturaFormBase, validarCamposCaptura } from "./components/captura-form-base";
+export {
+  CapturaFormBase,
+  validarCamposCaptura,
+} from "./components/captura-form-base";
 export { TipoCapturaSelect } from "./components/tipo-captura-select";
 
 // Comunica CNJ & heavy server-only code

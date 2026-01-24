@@ -1,22 +1,11 @@
-import { Suspense } from 'react';
-import { PageShell } from '@/components/shared/page-shell';
-import { CapturaTabsContent } from '@/features/captura';
-
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+import { redirect } from 'next/navigation';
 
 /**
- * Página de Captura
- *
- * Página principal com tabs para navegação no módulo de captura:
- * Histórico | Agendamentos | Credenciais | Tribunais
+ * Página de Captura - Redireciona para Histórico (seção padrão)
+ * 
+ * A navegação entre as seções (Histórico, Agendamentos, Credenciais, Tribunais)
+ * agora é feita através da sidebar, que leva diretamente para cada rota.
  */
 export default function CapturaPage() {
-  return (
-    <PageShell>
-      <Suspense fallback={<div className="flex items-center justify-center h-64">Carregando...</div>}>
-        <CapturaTabsContent />
-      </Suspense>
-    </PageShell>
-  );
+  redirect('/app/captura/historico');
 }

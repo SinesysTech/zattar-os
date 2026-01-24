@@ -472,6 +472,26 @@
   }
 }
 
+@layer utilities {
+  .scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    @apply bg-border/60 rounded-full hover:bg-border transition-colors;
+  }
+}
+
 /* --- ESTILOS DE IMPRESSÃO --- */
 @media print {
   /* Ocultar elementos de navegação e interativos */

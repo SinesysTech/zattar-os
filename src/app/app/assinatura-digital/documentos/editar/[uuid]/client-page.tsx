@@ -86,11 +86,11 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
   }
 
   return (
-    <div className="h-screen w-full flex overflow-hidden bg-slate-50/50 dark:bg-zinc-950">
+    <div className="h-full w-full flex overflow-hidden bg-slate-50/50 dark:bg-zinc-950">
       {/* PDF Canvas Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden">
+      <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Document Title - Sticky */}
-        <div className="flex items-center gap-3 px-6 py-2 bg-background border-b shrink-0 h-14">
+        <div className="flex items-center gap-3 px-6 py-2 bg-background border-b shrink-0 h-12 z-10">
           <FileText className="h-4 w-4 text-muted-foreground" />
           <div className="flex items-baseline gap-2 overflow-hidden">
             <h1 className="text-sm font-medium text-foreground truncate max-w-[300px]" title={documento.titulo || 'Documento sem título'}>
@@ -108,8 +108,8 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
         </div>
 
         {/* PDF Canvas - Scrollable */}
-        <div className="flex-1 overflow-auto p-8 relative scroll-smooth">
-          <div className="flex justify-center min-h-full">
+        <div className="flex-1 overflow-auto p-6 relative scroll-smooth scrollbar-custom mr-1">
+          <div className="flex justify-center min-h-full pb-20">
             <EditorCanvas
               canvasRef={canvasRef}
               canvasSize={PDF_CANVAS_SIZE}
