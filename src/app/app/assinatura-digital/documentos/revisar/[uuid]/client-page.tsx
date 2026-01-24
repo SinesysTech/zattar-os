@@ -40,9 +40,7 @@ import {
   PdfPreviewDynamic,
 } from "../../../feature";
 import { actionFinalizeDocumento } from "../../../feature/actions/documentos-actions";
-import {
-  SignatureWorkflowStepper,
-} from "../../../feature/components/workflow";
+
 import { useFormularioStore } from "../../../feature/store/formulario-store";
 
 // Tipos
@@ -240,8 +238,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
 
   return (
     <div className="space-y-6">
-      {/* Stepper de progresso */}
-      <SignatureWorkflowStepper />
+
 
       {/* Header */}
       <div className="flex items-center justify-between">
