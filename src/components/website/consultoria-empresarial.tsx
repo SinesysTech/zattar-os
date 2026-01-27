@@ -193,9 +193,10 @@ export default function PreventiveConsultancySection() {
                 {currentPillar.image ? (
                   <Image
                     src={currentPillar.image}
-                    alt={currentPillar.name}
+                    alt={`Imagem ilustrativa do pilar ${currentPillar.name} - ${currentPillar.description.substring(0, 100)}...`}
                     fill
                     className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center bg-linear-to-br from-primary/5 to-primary/10">
@@ -215,8 +216,8 @@ export default function PreventiveConsultancySection() {
           <p className="text-muted-foreground mx-auto mb-6 max-w-2xl">
             Vamos construir juntos um ambiente de trabalho mais seguro, justo e produtivo.
           </p>
-          <Button asChild size="lg">
-            <Link href="/contato">Agende uma Consulta Estratégica</Link>
+          <Button asChild size="lg" className="min-h-[48px] rounded-full px-8">
+            <Link href="/contato">Agende uma Consulta Estrategica</Link>
           </Button>
         </div>
       </div>

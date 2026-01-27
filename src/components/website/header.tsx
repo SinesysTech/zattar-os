@@ -148,7 +148,7 @@ const Header = () => {
           className={cn(
             "absolute inset-0 -z-10 transition-all duration-300",
             isScrolled
-              ? "bg-white/90 backdrop-blur-xl shadow-lg"
+              ? "bg-background/95 backdrop-blur-xl shadow-lg dark:bg-background/90"
               : "bg-transparent backdrop-blur-none"
           )}
         ></div>
