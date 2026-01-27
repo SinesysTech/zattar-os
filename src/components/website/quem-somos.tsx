@@ -208,9 +208,10 @@ export default function AboutSectionCompanyValues() {
                 {currentValue.image ? (
                   <Image
                     src={currentValue.image}
-                    alt={currentValue.name}
+                    alt={`Imagem ilustrativa do pilar ${currentValue.name} - ${currentValue.description.substring(0, 100)}...`}
                     fill
                     className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center bg-linear-to-br from-primary/5 to-primary/10">
@@ -228,7 +229,7 @@ export default function AboutSectionCompanyValues() {
             Seus direitos são a nossa prioridade. Se você se identifica com alguma dessas situações,
             estamos prontos para lutar por você.
           </p>
-          <Button asChild size="lg" className="text-base">
+          <Button asChild size="lg" className="text-base min-h-[48px] rounded-full px-8">
             <Link href="/contato">
               Fale com um Especialista <ArrowUpRight className="ml-2 h-5 w-5" />
             </Link>

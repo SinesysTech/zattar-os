@@ -9,7 +9,6 @@ import {
   Briefcase,
   Gift,
 } from "lucide-react";
-import Link from "next/link";
 import { Button } from "./ui/button";
 
 // --- DADOS ESTRUTURADOS ---
@@ -91,9 +90,8 @@ const FeaturesPage = () => {
         {/* Grid de features/direitos */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {direitosTrabalhistas.map((direito) => (
-            <Link key={direito.title} href="#" className="h-full">
-              {/* O Link pode levar para uma página detalhada sobre aquele direito */}
-              <div className="flex flex-col h-full gap-4 p-6 rounded-xl border border-border/50 hover:border-border transition-colors bg-background shadow-sm hover:shadow-md">
+            <div key={direito.title} className="h-full">
+              <div className="flex flex-col h-full gap-4 p-6 rounded-xl border border-border/50 hover:border-border transition-all duration-200 bg-background shadow-sm hover:shadow-md cursor-pointer">
                 <div className="flex items-start gap-4">
                   <div className="shrink-0">
                     <div className="h-12 w-12 flex items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -110,7 +108,7 @@ const FeaturesPage = () => {
                   {direito.description}
                 </p>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 
@@ -121,7 +119,7 @@ const FeaturesPage = () => {
             você acredita que sua dignidade ou seus direitos estão sendo violados, saiba que a
             Justiça do Trabalho existe para garantir o que é seu.
           </p>
-          <Button size="lg" className="mt-8 rounded-full">
+          <Button size="lg" className="mt-8 rounded-full min-h-[48px] px-8">
             Fale com um especialista
           </Button>
         </div>

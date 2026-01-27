@@ -3,24 +3,28 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { BentoGrid, BentoGridItem } from "./ui/bento-grid";
 import { FilePenLine, Gavel, Handshake, ChevronsUp, Landmark } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 // Componente gráfico para Petição Inicial
 const PeticaoInicialGraphic = () => {
+  const shouldReduceMotion = useReducedMotion();
+
   const variants = {
     initial: {
       y: 0,
       opacity: 0.8,
     },
-    animate: {
-      y: -10,
-      opacity: 1,
-      transition: {
-        duration: 2,
-        repeat: Infinity,
-        repeatType: "reverse" as const,
-      },
-    },
+    animate: shouldReduceMotion
+      ? { y: 0, opacity: 1 }
+      : {
+          y: -10,
+          opacity: 1,
+          transition: {
+            duration: 2,
+            repeat: Infinity,
+            repeatType: "reverse" as const,
+          },
+        },
   };
 
   return (
@@ -48,20 +52,24 @@ const PeticaoInicialGraphic = () => {
 
 // Componente gráfico para Audiência
 const AudienciaGraphic = () => {
+  const shouldReduceMotion = useReducedMotion();
+
   const variants = {
     initial: {
       scale: 1,
       rotate: 0,
     },
-    animate: {
-      scale: 1.05,
-      rotate: 5,
-      transition: {
-        duration: 1.5,
-        repeat: Infinity,
-        repeatType: "reverse" as const,
-      },
-    },
+    animate: shouldReduceMotion
+      ? { scale: 1, rotate: 0 }
+      : {
+          scale: 1.05,
+          rotate: 5,
+          transition: {
+            duration: 1.5,
+            repeat: Infinity,
+            repeatType: "reverse" as const,
+          },
+        },
   };
 
   return (
@@ -70,22 +78,32 @@ const AudienciaGraphic = () => {
         <div className="bg-white dark:bg-black/50 rounded-full p-6 shadow-lg">
           <Gavel className="h-12 w-12 text-amber-600 dark:text-amber-400" />
         </div>
-        <div className="absolute -top-2 -right-2 w-4 h-4 bg-amber-500 rounded-full animate-pulse" />
+        {!shouldReduceMotion && (
+          <div className="absolute -top-2 -right-2 w-4 h-4 bg-amber-500 rounded-full animate-pulse" />
+        )}
       </motion.div>
       <div className="mt-4 flex space-x-2">
         {[1, 2, 3].map((i) => (
           <motion.div
             key={i}
             className="w-2 h-2 bg-amber-400 rounded-full"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.5, 1, 0.5],
-            }}
-            transition={{
-              duration: 1,
-              repeat: Infinity,
-              delay: i * 0.2,
-            }}
+            animate={
+              shouldReduceMotion
+                ? { scale: 1, opacity: 1 }
+                : {
+                    scale: [1, 1.2, 1],
+                    opacity: [0.5, 1, 0.5],
+                  }
+            }
+            transition={
+              shouldReduceMotion
+                ? {}
+                : {
+                    duration: 1,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                  }
+            }
           />
         ))}
       </div>
@@ -95,17 +113,21 @@ const AudienciaGraphic = () => {
 
 // Componente gráfico para Conciliação
 const ConciliacaoGraphic = () => {
+  const shouldReduceMotion = useReducedMotion();
+
   const handshakeVariants = {
     initial: {
       x: 0,
     },
-    animate: {
-      x: [0, 10, -10, 0],
-      transition: {
-        duration: 3,
-        repeat: Infinity,
-      },
-    },
+    animate: shouldReduceMotion
+      ? { x: 0 }
+      : {
+          x: [0, 10, -10, 0],
+          transition: {
+            duration: 3,
+            repeat: Infinity,
+          },
+        },
   };
 
   return (
@@ -129,18 +151,22 @@ const ConciliacaoGraphic = () => {
 
 // Componente gráfico para Recurso
 const RecursoGraphic = () => {
+  const shouldReduceMotion = useReducedMotion();
+
   const arrowVariants = {
     initial: {
       y: 0,
     },
-    animate: {
-      y: -20,
-      transition: {
-        duration: 1.5,
-        repeat: Infinity,
-        repeatType: "reverse" as const,
-      },
-    },
+    animate: shouldReduceMotion
+      ? { y: 0 }
+      : {
+          y: -20,
+          transition: {
+            duration: 1.5,
+            repeat: Infinity,
+            repeatType: "reverse" as const,
+          },
+        },
   };
 
   return (
@@ -164,17 +190,21 @@ const RecursoGraphic = () => {
 
 // Componente gráfico para Tribunais Superiores
 const TribunaisSuperioresGraphic = () => {
+  const shouldReduceMotion = useReducedMotion();
+
   const buildingVariants = {
     initial: {
       scale: 1,
     },
-    animate: {
-      scale: [1, 1.02, 1],
-      transition: {
-        duration: 3,
-        repeat: Infinity,
-      },
-    },
+    animate: shouldReduceMotion
+      ? { scale: 1 }
+      : {
+          scale: [1, 1.02, 1],
+          transition: {
+            duration: 3,
+            repeat: Infinity,
+          },
+        },
   };
 
   return (
@@ -195,14 +225,22 @@ const TribunaisSuperioresGraphic = () => {
             key={i}
             className="w-2 bg-red-200 dark:bg-red-800"
             style={{ height: `${20 + i * 5}%` }}
-            animate={{
-              opacity: [0.5, 1, 0.5],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              delay: i * 0.3,
-            }}
+            animate={
+              shouldReduceMotion
+                ? { opacity: 1 }
+                : {
+                    opacity: [0.5, 1, 0.5],
+                  }
+            }
+            transition={
+              shouldReduceMotion
+                ? {}
+                : {
+                    duration: 2,
+                    repeat: Infinity,
+                    delay: i * 0.3,
+                  }
+            }
           />
         ))}
       </div>
