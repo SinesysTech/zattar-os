@@ -5,8 +5,8 @@
       "url": "https://mcp.supabase.com/mcp?project_ref=cxxdivtgeslrujpfpivs"
     },
     "CopilotKit MCP": {
-      "command": "npx",
-      "args": ["mcp-remote", "https://mcp.copilotkit.ai"]
+      "command": "cmd",
+      "args": ["/c", "npx", "mcp-remote", "https://mcp.copilotkit.ai"]
     }
   }
 }
