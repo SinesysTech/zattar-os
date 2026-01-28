@@ -293,57 +293,63 @@ export const LancamentosRepository = {
      */
     async buscarResumoVencimentos(tipo?: 'receita' | 'despesa'): Promise<RepositoryResult<LegacyResumoVencimentos>> {
         const supabase = createServiceClient();
-        const hoje = new Date().toISOString().split('T')[0];
+        const hoje = new Date();
+        const hojeStr = hoje.toISOString().split('T')[0];
 
-        const baseQuery = supabase.from('lancamentos_financeiros') as unknown;
-        const baseChain = baseQuery as ChainableQueryBuilder;
-        const selection = baseChain.select?.('categoria, quantidade, valorTotal') ?? baseQuery;
+        // Calculate date boundaries
+        const em7Dias = new Date(hoje);
+        em7Dias.setDate(em7Dias.getDate() + 7);
+        const em7DiasStr = em7Dias.toISOString().split('T')[0];
 
-        let filtersTarget: unknown = selection;
-        if (!isChainableQueryBuilder(selection) && typeof baseChain.eq === 'function') {
-            filtersTarget = baseQuery;
-        }
+        const em30Dias = new Date(hoje);
+        em30Dias.setDate(em30Dias.getDate() + 30);
+        const em30DiasStr = em30Dias.toISOString().split('T')[0];
 
-        // Os testes verificam que usamos `eq(status, pendente)` e alguma comparação (`lt`).
-        const eqFnStatus = (filtersTarget as ChainableQueryBuilder).eq;
-        if (typeof eqFnStatus === 'function') {
-            filtersTarget = eqFnStatus.call(filtersTarget, 'status', 'pendente');
-        }
-        const ltFn = (filtersTarget as ChainableQueryBuilder).lt;
-        if (typeof ltFn === 'function') {
-            filtersTarget = ltFn.call(filtersTarget, 'data_vencimento', hoje);
-        }
+        // Query pending lancamentos with due dates
+        let query = supabase
+            .from('lancamentos_financeiros')
+            .select('valor, data_vencimento')
+            .eq('status', 'pendente')
+            .not('data_vencimento', 'is', null);
+
         if (tipo) {
-            const eqFnTipo = (filtersTarget as ChainableQueryBuilder).eq;
-            if (typeof eqFnTipo === 'function') {
-                filtersTarget = eqFnTipo.call(filtersTarget, 'tipo', tipo);
-            }
+            query = query.eq('tipo', tipo);
         }
 
-        const response = isChainableQueryBuilder(selection) ? await filtersTarget : await selection;
-        const { data, error } = response as { data?: unknown; error?: unknown };
+        const { data, error } = await query;
+
         if (error) return { success: false, error: `Erro ao buscar resumo: ${getErrorMessage(error)}` };
 
-        const empty: LegacyResumoVencimentos = {
+        const resumo: LegacyResumoVencimentos = {
             vencidas: { quantidade: 0, valorTotal: 0 },
             hoje: { quantidade: 0, valorTotal: 0 },
             proximos7Dias: { quantidade: 0, valorTotal: 0 },
             proximos30Dias: { quantidade: 0, valorTotal: 0 },
         };
 
-        const rows = (Array.isArray(data) ? (data as unknown[]) : []) as Array<{
-            categoria?: string;
-            quantidade?: number;
-            valorTotal?: number;
-        }>;
-        const resumo = { ...empty };
+        const rows = Array.isArray(data) ? data : [];
 
         for (const row of rows) {
-            const categoria = row.categoria;
-            if (categoria === 'vencidas') resumo.vencidas = { quantidade: row.quantidade || 0, valorTotal: row.valorTotal || 0 };
-            if (categoria === 'hoje') resumo.hoje = { quantidade: row.quantidade || 0, valorTotal: row.valorTotal || 0 };
-            if (categoria === 'proximos7Dias') resumo.proximos7Dias = { quantidade: row.quantidade || 0, valorTotal: row.valorTotal || 0 };
-            if (categoria === 'proximos30Dias') resumo.proximos30Dias = { quantidade: row.quantidade || 0, valorTotal: row.valorTotal || 0 };
+            const dataVencimento = row.data_vencimento as string;
+            const valor = (row.valor as number) || 0;
+
+            if (dataVencimento < hojeStr) {
+                // Vencidas (antes de hoje)
+                resumo.vencidas.quantidade++;
+                resumo.vencidas.valorTotal += valor;
+            } else if (dataVencimento === hojeStr) {
+                // Vence hoje
+                resumo.hoje.quantidade++;
+                resumo.hoje.valorTotal += valor;
+            } else if (dataVencimento <= em7DiasStr) {
+                // Próximos 7 dias (excluindo hoje)
+                resumo.proximos7Dias.quantidade++;
+                resumo.proximos7Dias.valorTotal += valor;
+            } else if (dataVencimento <= em30DiasStr) {
+                // Próximos 30 dias (excluindo os primeiros 7)
+                resumo.proximos30Dias.quantidade++;
+                resumo.proximos30Dias.valorTotal += valor;
+            }
         }
 
         return { success: true, data: resumo };
