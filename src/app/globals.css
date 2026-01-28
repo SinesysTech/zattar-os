@@ -426,21 +426,21 @@
     @apply font-heading font-bold text-foreground;
   }
 
-  /* Page Headings (Semantic aliases) */
+  /* Page Headings (Semantic aliases using direct Tailwind classes) */
   .text-page-title {
-    @apply typography-h1;
+    @apply scroll-m-20 text-3xl font-bold tracking-tight md:text-4xl;
   }
 
   .text-section-title {
-    @apply typography-h2;
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
   }
 
   .text-card-title {
-    @apply typography-h3;
+    @apply scroll-m-20 text-xl font-semibold tracking-tight;
   }
 
   .text-subsection-title {
-    @apply typography-h4;
+    @apply scroll-m-20 text-lg font-semibold tracking-tight;
   }
 
   /* Body Text Variants */
