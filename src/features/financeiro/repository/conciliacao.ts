@@ -27,11 +27,15 @@ type ConciliacaoBancariaRecord = {
     id: number;
     transacao_importada_id: number;
     lancamento_financeiro_id: number | null;
-    data_conciliacao: string;
     status: ConciliacaoBancaria['status'];
-    diferenca_valor: number | null;
-    usuario_id: string;
+    tipo_conciliacao: string | null;
+    score_similaridade: number | null;
     observacoes: string | null;
+    dados_adicionais: Record<string, unknown> | null;
+    conciliado_por: number | null;
+    data_conciliacao: string | null;
+    created_at: string;
+    updated_at: string;
 };
 
 type LancamentoRecord = {
@@ -71,14 +75,18 @@ type TransacaoImportadaRecord = {
     id: number;
     conta_bancaria_id: number;
     data_transacao: string;
+    data_importacao: string | null;
     descricao: string;
     valor: number;
     tipo_transacao: TransacaoImportada['tipoTransacao'];
     documento: string | null;
-    hash_info: string;
-    banco_original: string | null;
-    categoria_original: string | null;
-    conciliacao_bancaria?: ConciliacaoBancariaRecord[] | null;
+    saldo_extrato: number | null;
+    dados_originais: Record<string, unknown> | null;
+    hash_transacao: string | null;
+    arquivo_importacao: string | null;
+    created_by: number | null;
+    created_at: string;
+    conciliacoes_bancarias?: ConciliacaoBancariaRecord[] | null;
     lancamentos_financeiros?: LancamentoRecord | null;
 };
 
@@ -120,10 +128,10 @@ export const ConciliacaoRepository = {
         const supabase = createServiceClient();
 
         let query = supabase
-            .from('transacoes_importadas')
+            .from('transacoes_bancarias_importadas')
             .select(`
                 *,
-                conciliacao_bancaria (*),
+                conciliacoes_bancarias (*),
                 lancamentos_financeiros (*)
             `, { count: 'exact' });
 
@@ -189,10 +197,10 @@ export const ConciliacaoRepository = {
     async buscarTransacaoPorId(id: number): Promise<TransacaoComConciliacao | null> {
         const supabase = createServiceClient();
         const { data, error } = await supabase
-            .from('transacoes_importadas')
+            .from('transacoes_bancarias_importadas')
             .select(`
                 *,
-                conciliacao_bancaria (*),
+                conciliacoes_bancarias (*),
                 lancamentos_financeiros (*)
             `)
             .eq('id', id)
@@ -208,7 +216,7 @@ export const ConciliacaoRepository = {
     async criarTransacao(dados: Partial<TransacaoImportada>): Promise<TransacaoImportada> {
         const supabase = createServiceClient();
         const { data, error } = await supabase
-            .from('transacoes_importadas')
+            .from('transacoes_bancarias_importadas')
             .insert({
                 conta_bancaria_id: dados.contaBancariaId,
                 data_transacao: dados.dataTransacao,
@@ -216,9 +224,8 @@ export const ConciliacaoRepository = {
                 valor: dados.valor,
                 tipo_transacao: dados.tipoTransacao,
                 documento: dados.documento,
-                hash_info: dados.hashInfo,
-                banco_original: dados.bancoOriginal,
-                categoria_original: dados.categoriaOriginal
+                hash_transacao: dados.hashInfo,
+                dados_originais: {}
             })
             .select()
             .single();
@@ -240,13 +247,12 @@ export const ConciliacaoRepository = {
             valor: t.valor,
             tipo_transacao: t.tipoTransacao,
             documento: t.documento,
-            hash_info: t.hashInfo,
-            banco_original: t.bancoOriginal,
-            categoria_original: t.categoriaOriginal
+            hash_transacao: t.hashInfo,
+            dados_originais: {}
         }));
 
         const { data, error } = await supabase
-            .from('transacoes_importadas')
+            .from('transacoes_bancarias_importadas')
             .insert(records)
             .select('id');
 
@@ -260,9 +266,9 @@ export const ConciliacaoRepository = {
     async transacaoExiste(hashInfo: string): Promise<boolean> {
         const supabase = createServiceClient();
         const { data, error } = await supabase
-            .from('transacoes_importadas')
+            .from('transacoes_bancarias_importadas')
             .select('id')
-            .eq('hash_info', hashInfo)
+            .eq('hash_transacao', hashInfo)
             .maybeSingle();
 
         if (error) throw new Error(`Erro ao verificar transação: ${error.message}`);
@@ -282,13 +288,13 @@ export const ConciliacaoRepository = {
     }): Promise<ConciliacaoBancaria> {
         const supabase = createServiceClient();
         const { data, error } = await supabase
-            .from('conciliacao_bancaria')
+            .from('conciliacoes_bancarias')
             .insert({
                 transacao_importada_id: dados.transacaoImportadaId,
                 lancamento_financeiro_id: dados.lancamentoFinanceiroId,
                 status: dados.status,
-                diferenca_valor: dados.diferencaValor || 0,
-                usuario_id: dados.usuarioId,
+                tipo_conciliacao: 'manual',
+                conciliado_por: dados.usuarioId !== 'system' ? Number(dados.usuarioId) : null,
                 observacoes: dados.observacoes,
                 data_conciliacao: new Date().toISOString()
             })
@@ -308,13 +314,11 @@ export const ConciliacaoRepository = {
     ): Promise<void> {
         const supabase = createServiceClient();
         const { error } = await supabase
-            .from('conciliacao_bancaria')
+            .from('conciliacoes_bancarias')
             .update({
                 status: dados.status,
                 lancamento_financeiro_id: dados.lancamentoFinanceiroId,
-                diferenca_valor: dados.diferencaValor,
-                observacoes: dados.observacoes,
-                updated_at: new Date().toISOString()
+                observacoes: dados.observacoes
             })
             .eq('transacao_importada_id', transacaoId);
 
@@ -327,7 +331,7 @@ export const ConciliacaoRepository = {
     async removerConciliacao(transacaoId: number): Promise<void> {
         const supabase = createServiceClient();
         const { error } = await supabase
-            .from('conciliacao_bancaria')
+            .from('conciliacoes_bancarias')
             .delete()
             .eq('transacao_importada_id', transacaoId);
 
@@ -349,10 +353,10 @@ export const ConciliacaoRepository = {
         const supabase = createServiceClient();
 
         let query = supabase
-            .from('transacoes_importadas')
+            .from('transacoes_bancarias_importadas')
             .select(`
                 id,
-                conciliacao_bancaria (status)
+                conciliacoes_bancarias (status)
             `);
 
         if (contaBancariaId) {
@@ -373,10 +377,10 @@ export const ConciliacaoRepository = {
         const transacoes = data || [];
 
         return {
-            totalPendentes: transacoes.filter(t => !t.conciliacao_bancaria?.length || t.conciliacao_bancaria[0]?.status === 'pendente').length,
-            totalConciliadas: transacoes.filter(t => t.conciliacao_bancaria?.[0]?.status === 'conciliado').length,
-            totalDivergentes: transacoes.filter(t => t.conciliacao_bancaria?.[0]?.status === 'divergente').length,
-            totalIgnoradas: transacoes.filter(t => t.conciliacao_bancaria?.[0]?.status === 'ignorado').length
+            totalPendentes: transacoes.filter(t => !t.conciliacoes_bancarias?.length || t.conciliacoes_bancarias[0]?.status === 'pendente').length,
+            totalConciliadas: transacoes.filter(t => t.conciliacoes_bancarias?.[0]?.status === 'conciliado').length,
+            totalDivergentes: transacoes.filter(t => t.conciliacoes_bancarias?.[0]?.status === 'divergente').length,
+            totalIgnoradas: transacoes.filter(t => t.conciliacoes_bancarias?.[0]?.status === 'ignorado').length
         };
     },
 
@@ -425,7 +429,7 @@ export const ConciliacaoRepository = {
 // ============================================================================
 
 function mapRecordToTransacao(record: TransacaoImportadaRecord): TransacaoComConciliacao {
-    const conciliacao = record.conciliacao_bancaria?.[0];
+    const conciliacao = record.conciliacoes_bancarias?.[0];
     const lancamento = record.lancamentos_financeiros;
 
     return {
@@ -436,9 +440,9 @@ function mapRecordToTransacao(record: TransacaoImportadaRecord): TransacaoComCon
         valor: record.valor,
         tipoTransacao: record.tipo_transacao,
         documento: record.documento,
-        hashInfo: record.hash_info,
-        bancoOriginal: record.banco_original ?? undefined,
-        categoriaOriginal: record.categoria_original ?? undefined,
+        hashInfo: record.hash_transacao ?? '',
+        bancoOriginal: undefined,
+        categoriaOriginal: undefined,
         statusConciliacao: conciliacao?.status || 'pendente',
         lancamentoVinculadoId: conciliacao?.lancamento_financeiro_id,
         lancamentoVinculado: lancamento ? mapRecordToLancamento(lancamento) : null,
@@ -455,9 +459,9 @@ function mapRecordToTransacaoSimples(record: TransacaoImportadaRecord): Transaca
         valor: record.valor,
         tipoTransacao: record.tipo_transacao,
         documento: record.documento,
-        hashInfo: record.hash_info,
-        bancoOriginal: record.banco_original ?? undefined,
-        categoriaOriginal: record.categoria_original ?? undefined
+        hashInfo: record.hash_transacao ?? '',
+        bancoOriginal: undefined,
+        categoriaOriginal: undefined
     };
 }
 
@@ -466,10 +470,10 @@ function mapRecordToConciliacao(record: ConciliacaoBancariaRecord): ConciliacaoB
         id: record.id,
         transacaoImportadaId: record.transacao_importada_id,
         lancamentoFinanceiroId: record.lancamento_financeiro_id,
-        dataConciliacao: record.data_conciliacao,
+        dataConciliacao: record.data_conciliacao ?? '',
         status: record.status,
-        diferencaValor: record.diferenca_valor ?? 0,
-        usuarioId: record.usuario_id,
+        diferencaValor: 0,
+        usuarioId: record.conciliado_por?.toString() ?? '',
         observacoes: record.observacoes
     };
 }
