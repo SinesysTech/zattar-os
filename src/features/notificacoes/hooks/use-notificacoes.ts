@@ -298,10 +298,10 @@ export function useNotificacoesRealtime(options?: {
       });
 
       if (existingChannels.length > 0) {
-        console.log(
+        /* console.log(
           "🧹 [Notificações Realtime] Limpando canais órfãos:",
           existingChannels.map((ch) => ch.topic)
-        );
+        ); */
         existingChannels.forEach((ch) => {
           try {
             supabase.removeChannel(ch);
@@ -418,12 +418,12 @@ export function useNotificacoesRealtime(options?: {
         }
 
         // Log para debug
-        console.log("🔄 [Notificações Realtime] Configurando canal:", {
+        /* console.log("🔄 [Notificações Realtime] Configurando canal:", {
           usuarioId,
           authUserId: user.id,
           channelName,
           tentativa: retryCountRef.current + 1,
-        });
+        }); */
 
         // Criar novo canal
         // Para `postgres_changes`, canal público + RLS na tabela é suficiente e mais estável
@@ -457,10 +457,10 @@ export function useNotificacoesRealtime(options?: {
                 updated_at: string;
               };
 
-              console.log(
+              /* console.log(
                 "📩 [Notificações Realtime] Nova notificação recebida:",
                 { id: newRecord.id, tipo: newRecord.tipo }
-              );
+              ); */
 
               callbackRef.current({
                 id: newRecord.id,
@@ -486,9 +486,9 @@ export function useNotificacoesRealtime(options?: {
           isConnectingRef.current = false;
 
           if (status === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
-            console.log(
+            /* console.log(
               `✅ [Notificações Realtime] Inscrito com sucesso em ${duration}ms`
-            );
+            ); */
             // Reset retry count on success
             retryCountRef.current = 0;
             setUsePolling(false);
@@ -547,9 +547,9 @@ export function useNotificacoesRealtime(options?: {
         const delay =
           Math.pow(2, retryCountRef.current) * REALTIME_CONFIG.BASE_DELAY_MS;
 
-        console.log(
+        /* console.log(
           `🔄 [Notificações Realtime] Reconectando em ${delay}ms (tentativa ${retryCountRef.current + 1}/${REALTIME_CONFIG.MAX_RETRIES})`
-        );
+        ); */
 
         // Limpar timeout anterior se existir
         if (retryTimeoutRef.current) {
@@ -594,9 +594,9 @@ export function useNotificacoesRealtime(options?: {
   useEffect(() => {
     if (!usePolling) return;
 
-    console.log(
+    /* console.log(
       `📊 [Notificações Polling] Ativado - intervalo: ${REALTIME_CONFIG.POLLING_INTERVAL_MS}ms`
-    );
+    ); */
 
     const pollNotificacoes = async () => {
       try {
@@ -610,11 +610,11 @@ export function useNotificacoesRealtime(options?: {
             !lastContadorRef.current ||
             lastContadorRef.current.total !== novoContador.total;
 
-          console.log("📊 [Notificações Polling] Verificação concluída", {
+          /* console.log("📊 [Notificações Polling] Verificação concluída", {
             total: novoContador.total,
             anterior: lastContadorRef.current?.total ?? "N/A",
             mudou: contadorMudou,
-          });
+          }); */
 
           // Atualizar ref do último contador
           lastContadorRef.current = novoContador;
@@ -650,7 +650,7 @@ export function useNotificacoesRealtime(options?: {
     );
 
     return () => {
-      console.log("📊 [Notificações Polling] Desativado");
+      // console.log("📊 [Notificações Polling] Desativado");
       clearInterval(interval);
     };
   }, [usePolling]);

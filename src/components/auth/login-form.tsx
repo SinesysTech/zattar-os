@@ -96,7 +96,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
               alt="Zattar Advogados"
               width={200}
               height={30}
-              className="object-contain"
+              className="object-contain w-[200px] h-auto"
               priority
             />
           </div>
