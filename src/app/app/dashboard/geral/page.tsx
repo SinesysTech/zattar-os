@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { DashboardTabs } from "@/app/app/dashboard/components/dashboard-tabs";
 import {
   TargetCard,
   TotalCustomersCard,
@@ -52,7 +51,6 @@ export default async function Page() {
   const lembretes = resultLembretes.success ? resultLembretes.data : [];
   return (
     <div className="space-y-4">
-      <DashboardTabs />
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <TargetCard usuarioId={currentUserId} />
         <TotalCustomersCard usuarioId={currentUserId} />

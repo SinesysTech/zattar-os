@@ -3,6 +3,7 @@
 import * as React from "react"
 import {
   Bot,
+  Briefcase,
   Calendar,
   FileText,
   FolderOpen,
@@ -14,7 +15,6 @@ import {
   Database,
   FileEdit,
   MessageSquare,
-  Wallet,
   PenTool,
   UsersRound,
   StickyNote,
@@ -38,9 +38,16 @@ import { useMinhasPermissoes } from "@/features/usuarios"
 const navPrincipal = [
   {
     title: "Dashboard",
-    url: "/app/dashboard",
+    url: "/app/dashboard/geral",
     icon: LayoutDashboard,
     isActive: true,
+    items: [
+      { title: "Geral", url: "/app/dashboard/geral" },
+      { title: "Contratos", url: "/app/dashboard/contratos" },
+      { title: "Processos", url: "/app/dashboard/processos" },
+      { title: "Expedientes", url: "/app/dashboard/expedientes" },
+      { title: "Audiências", url: "/app/dashboard/audiencias" },
+    ],
   },
   {
     title: "Partes",
@@ -83,20 +90,10 @@ const navPrincipal = [
     url: "/app/acordos-condenacoes",
     icon: Handshake,
   },
-  {
-    title: "Equipe",
-    url: "/app/usuarios",
-    icon: UsersRound,
-  },
 ]
 
 // Nav Serviços - Ferramentas e utilitários (ordem alfabética)
 const navServicos = [
-  {
-    title: "Agenda",
-    url: "/app/calendar",
-    icon: Calendar,
-  },
   {
     title: "Assistentes",
     url: "/app/assistentes",
@@ -118,11 +115,6 @@ const navServicos = [
     icon: FileEdit,
   },
   {
-    title: "Notas",
-    url: "/app/notas",
-    icon: StickyNote,
-  },
-  {
     title: "Peças Jurídicas",
     url: "/app/pecas-juridicas",
     icon: ScrollText,
@@ -141,7 +133,9 @@ const navServicos = [
     url: "/app/planner",
     icon: CalendarCheck,
     items: [
+      { title: "Agenda", url: "/app/calendar" },
       { title: "Kanban", url: "/app/kanban" },
+      { title: "Notas", url: "/app/notas" },
       { title: "Tarefas", url: "/app/tarefas" },
       { title: "To-Do", url: "/app/todo" },
     ],
@@ -151,14 +145,20 @@ const navServicos = [
 // Nav Gestão - Ferramentas administrativas (apenas super admin)
 const navGestao = [
   {
-    title: "Financeiro",
+    title: "Gestão",
     url: "/app/financeiro",
-    icon: Wallet,
-  },
-  {
-    title: "Recursos Humanos",
-    url: "/app/rh",
-    icon: Users,
+    icon: Briefcase,
+    items: [
+      { title: "Dashboard", url: "/app/financeiro" },
+      { title: "Orçamentos", url: "/app/financeiro/orcamentos" },
+      { title: "Contas a Pagar", url: "/app/financeiro/contas-pagar" },
+      { title: "Contas a Receber", url: "/app/financeiro/contas-receber" },
+      { title: "Plano de Contas", url: "/app/financeiro/plano-contas" },
+      { title: "Conciliação", url: "/app/financeiro/conciliacao-bancaria" },
+      { title: "DRE", url: "/app/financeiro/dre" },
+      { title: "Equipe", url: "/app/usuarios" },
+      { title: "Recursos Humanos", url: "/app/rh" },
+    ],
   },
   {
     title: "Captura",

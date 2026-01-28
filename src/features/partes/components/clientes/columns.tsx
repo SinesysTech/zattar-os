@@ -233,9 +233,7 @@ function formatarData(dataISO: string | null): string {
 // Define Columns
 export const getClientesColumns = (
   onEdit: (cliente: ClienteComProcessos) => void,
-  onDelete: (cliente: ClienteComProcessos) => void,
-  usuarios: { id: number; nomeExibicao: string }[] = [],
-  onSuccess?: () => void
+  onDelete: (cliente: ClienteComProcessos) => void
 ): ColumnDef<ClienteComProcessos>[] => [
 
     {

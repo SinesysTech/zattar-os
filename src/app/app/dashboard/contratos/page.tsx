@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import CustomDateRangePicker from "@/components/shared/custom-date-range-picker";
-import { DashboardTabs } from "@/app/app/dashboard/components/dashboard-tabs";
 import {
   LeadBySourceCardWrapper,
   SalesPipeline,
@@ -29,13 +28,8 @@ export default async function Page({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1">
-          <DashboardTabs />
-        </div>
-        <div className="shrink-0">
-          <CustomDateRangePicker />
-        </div>
+      <div className="flex justify-end">
+        <CustomDateRangePicker />
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <TotalCustomersCard dateFilter={dateFilter} />
