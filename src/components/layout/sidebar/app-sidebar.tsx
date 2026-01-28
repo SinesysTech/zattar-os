@@ -24,7 +24,7 @@ import {
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/sidebar/nav-main"
-import { NavProjects } from "@/components/layout/sidebar/nav-projects"
+
 import { SidebarLogo } from "@/components/layout/sidebar/sidebar-logo"
 import {
   Sidebar,
@@ -93,42 +93,42 @@ const navPrincipal = [
 // Nav Serviços - Ferramentas e utilitários (ordem alfabética)
 const navServicos = [
   {
-    name: "Agenda",
+    title: "Agenda",
     url: "/app/calendar",
     icon: Calendar,
   },
   {
-    name: "Assistentes",
+    title: "Assistentes",
     url: "/app/assistentes",
     icon: Bot,
   },
   {
-    name: "Assinatura Digital",
+    title: "Assinatura Digital",
     url: "/app/assinatura-digital",
     icon: PenTool,
   },
   {
-    name: "Chat",
+    title: "Chat",
     url: "/app/chat",
     icon: MessageSquare,
   },
   {
-    name: "Documentos",
+    title: "Documentos",
     url: "/app/documentos",
     icon: FileEdit,
   },
   {
-    name: "Notas",
+    title: "Notas",
     url: "/app/notas",
     icon: StickyNote,
   },
   {
-    name: "Peças Jurídicas",
+    title: "Peças Jurídicas",
     url: "/app/pecas-juridicas",
     icon: ScrollText,
   },
   {
-    name: "Pesquisa Jurídica",
+    title: "Pesquisa Jurídica",
     url: "/app/pesquisa-juridica",
     icon: Search,
     items: [
@@ -137,7 +137,7 @@ const navServicos = [
     ],
   },
   {
-    name: "Planner",
+    title: "Planner",
     url: "/app/planner",
     icon: CalendarCheck,
     items: [
@@ -151,17 +151,17 @@ const navServicos = [
 // Nav Gestão - Ferramentas administrativas (apenas super admin)
 const navGestao = [
   {
-    name: "Financeiro",
+    title: "Financeiro",
     url: "/app/financeiro",
     icon: Wallet,
   },
   {
-    name: "Recursos Humanos",
+    title: "Recursos Humanos",
     url: "/app/rh",
     icon: Users,
   },
   {
-    name: "Captura",
+    title: "Captura",
     url: "/app/captura",
     icon: Database,
     items: [
@@ -194,17 +194,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     })
   }, [canSeePangea])
 
+  const todosItens = React.useMemo(() => {
+    const items = [...navPrincipal, ...navServicosFiltrado]
+    if (isSuperAdmin) {
+      items.push(...navGestao)
+    }
+    return items
+  }, [navServicosFiltrado, isSuperAdmin])
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarLogo />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navPrincipal} />
-        <NavProjects projects={navServicosFiltrado} label="Serviços" showActions={false} />
-        {isSuperAdmin && (
-          <NavProjects projects={navGestao} label="Gestão" showActions={false} />
-        )}
+        <NavMain items={todosItens} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
