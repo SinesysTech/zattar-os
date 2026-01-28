@@ -14,15 +14,29 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-# Carrega .env automaticamente se existir
+# Carrega .env automaticamente se existir (método seguro para valores com caracteres especiais)
 if [[ -f "$PROJECT_ROOT/.env" ]]; then
   echo "📦 Carregando variáveis do .env..."
-  set -a
-  source "$PROJECT_ROOT/.env"
-  set +a
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    # Ignora linhas vazias e comentários
+    [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+    # Extrai nome e valor (suporta valores com = dentro)
+    if [[ "$line" =~ ^([A-Za-z_][A-Za-z0-9_]*)=(.*)$ ]]; then
+      name="${BASH_REMATCH[1]}"
+      value="${BASH_REMATCH[2]}"
+      # Remove aspas se existirem
+      value="${value#\"}"
+      value="${value%\"}"
+      value="${value#\'}"
+      value="${value%\'}"
+      export "$name=$value"
+    fi
+  done < "$PROJECT_ROOT/.env"
+  echo "✅ Variáveis carregadas com sucesso"
 fi
 
 DOCKER_IMAGE="${DOCKER_IMAGE:-sinesystec/sinesys}"
+# Nota: usuário Docker Hub = sinesystec, repositório = sinesys
 PLATFORM="${PLATFORM:-linux/amd64}"
 TAG_SHA="${TAG_SHA:-$(git rev-parse --short HEAD 2>/dev/null || echo unknown)}"
 
