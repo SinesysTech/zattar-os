@@ -26,7 +26,6 @@ import {
 
 import type { Cliente, ProcessoRelacionado } from '../../types';
 import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell } from '../shared';
-import { ClienteResponsavelCell } from './cliente-responsavel-cell';
 import {
   formatarCpf,
 
@@ -395,21 +394,6 @@ export const getClientesColumns = (
           </div>
         );
       },
-    },
-    {
-      id: 'responsavel',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" className="justify-center" />,
-      meta: { align: 'center' },
-      size: 200,
-      cell: ({ row }) => (
-        <div className="flex items-center justify-center">
-          <ClienteResponsavelCell
-            cliente={row.original}
-            usuarios={usuarios}
-            onSuccess={onSuccess}
-          />
-        </div>
-      ),
     },
     {
       id: 'actions',
