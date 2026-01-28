@@ -5,9 +5,22 @@ set -euo pipefail
 # Requisitos:
 # - Docker Desktop/Engine rodando (docker server acessível)
 # - `docker login` já realizado
-# - Variáveis obrigatórias do build do Next.js:
-#   - NEXT_PUBLIC_SUPABASE_URL
-#   - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
+# - Arquivo .env na raiz do projeto OU variáveis de ambiente configuradas
+#
+# Uso:
+#   ./scripts/docker/dockerhub-build-push.sh
+#   DOCKER_IMAGE=minha-org/minha-app ./scripts/docker/dockerhub-build-push.sh
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+# Carrega .env automaticamente se existir
+if [[ -f "$PROJECT_ROOT/.env" ]]; then
+  echo "📦 Carregando variáveis do .env..."
+  set -a
+  source "$PROJECT_ROOT/.env"
+  set +a
+fi
 
 DOCKER_IMAGE="${DOCKER_IMAGE:-sinesystec/sinesys}"
 PLATFORM="${PLATFORM:-linux/amd64}"
@@ -16,27 +29,41 @@ TAG_SHA="${TAG_SHA:-$(git rev-parse --short HEAD 2>/dev/null || echo unknown)}"
 require_env() {
   local name="$1"
   if [[ -z "${!name:-}" ]]; then
-    echo "Error: env var $name is not set" >&2
+    echo "❌ Error: env var $name is not set" >&2
     exit 1
   fi
 }
 
 # Verifica daemon
 if ! docker version >/dev/null 2>&1; then
-  echo "Error: Docker daemon não está acessível. Abra o Docker Desktop e tente novamente." >&2
-  echo "Dica: rode 'docker version' e confirme que aparece a seção 'Server'." >&2
+  echo "❌ Error: Docker daemon não está acessível. Abra o Docker Desktop e tente novamente." >&2
+  echo "💡 Dica: rode 'docker version' e confirme que aparece a seção 'Server'." >&2
   exit 1
 fi
 
+# Variáveis obrigatórias para o build
 require_env NEXT_PUBLIC_SUPABASE_URL
 require_env NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
+require_env NEXT_PUBLIC_DYTE_ORG_ID
 
 # Garante que buildx está pronto
 if ! docker buildx inspect >/dev/null 2>&1; then
+  echo "🔧 Configurando docker buildx..."
   docker buildx create --use >/dev/null
 fi
 
-echo "Building and pushing: ${DOCKER_IMAGE}:latest and ${DOCKER_IMAGE}:${TAG_SHA} (platform=${PLATFORM})"
+echo ""
+echo "🐳 Build Configuration:"
+echo "   Image: ${DOCKER_IMAGE}:latest"
+echo "   Tag:   ${DOCKER_IMAGE}:${TAG_SHA}"
+echo "   Platform: ${PLATFORM}"
+echo ""
+echo "🔑 Build Args (NEXT_PUBLIC_*):"
+echo "   SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:0:40}..."
+echo "   DYTE_ORG_ID: ${NEXT_PUBLIC_DYTE_ORG_ID}"
+echo ""
+echo "🚀 Starting build and push..."
+echo ""
 
 docker buildx build \
   --platform "${PLATFORM}" \
@@ -45,13 +72,16 @@ docker buildx build \
   -t "${DOCKER_IMAGE}:${TAG_SHA}" \
   --build-arg "NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}" \
   --build-arg "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}" \
+  --build-arg "NEXT_PUBLIC_DYTE_ORG_ID=${NEXT_PUBLIC_DYTE_ORG_ID}" \
   --build-arg "NEXT_PUBLIC_DASHBOARD_URL=${NEXT_PUBLIC_DASHBOARD_URL:-}" \
   --build-arg "NEXT_PUBLIC_MEU_PROCESSO_URL=${NEXT_PUBLIC_MEU_PROCESSO_URL:-}" \
   --build-arg "NEXT_PUBLIC_WEBSITE_URL=${NEXT_PUBLIC_WEBSITE_URL:-}" \
   --build-arg "NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-}" \
-  --build-arg "NEXT_PUBLIC_DYTE_ORG_ID=${NEXT_PUBLIC_DYTE_ORG_ID:-}" \
   --build-arg "NEXT_PUBLIC_AI_FAKE_STREAMING=${NEXT_PUBLIC_AI_FAKE_STREAMING:-}" \
   --build-arg "NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED=${NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED:-}" \
   .
 
-echo "OK: push concluído no Docker Hub."
+echo ""
+echo "✅ Push concluído com sucesso!"
+echo "   docker pull ${DOCKER_IMAGE}:latest"
+echo "   docker pull ${DOCKER_IMAGE}:${TAG_SHA}"
