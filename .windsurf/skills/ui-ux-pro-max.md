@@ -29,7 +29,7 @@ winget install Python.Python.3.12
 
 ---
 
-## How to Use This Workflow
+## How to Use This Skill
 
 When user requests UI/UX work (design, build, create, implement, review, fix, improve), follow this workflow:
 
