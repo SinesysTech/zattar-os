@@ -74,11 +74,11 @@ const formatarPercentual = (valor: number): string => {
 };
 
 const getVariacaoColor = (variacao: number): string => {
-  if (variacao <= -10) return 'text-green-600';
-  if (variacao <= 0) return 'text-green-500';
-  if (variacao <= 10) return 'text-amber-500';
-  if (variacao <= 20) return 'text-amber-600';
-  return 'text-red-600';
+  if (variacao <= -10) return 'text-success';
+  if (variacao <= 0) return 'text-success/80';
+  if (variacao <= 10) return 'text-warning/80';
+  if (variacao <= 20) return 'text-warning';
+  return 'text-destructive';
 };
 
 const getStatusBadge = (status: string): { variant: BadgeVariant; label: string } => {
@@ -174,19 +174,19 @@ function ResumoGeralCards({
         <CardContent className="pt-0 space-y-2">
           {resumo.itensAcimaMeta > 0 && (
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-red-500" />
+              <AlertTriangle className="h-4 w-4 text-destructive" />
               <span className="text-sm">{resumo.itensAcimaMeta} acima da meta</span>
             </div>
           )}
           {resumo.itensAbaixoMeta > 0 && (
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-amber-500" />
+              <AlertTriangle className="h-4 w-4 text-warning" />
               <span className="text-sm">{resumo.itensAbaixoMeta} abaixo da meta</span>
             </div>
           )}
           {resumo.itensAcimaMeta === 0 && resumo.itensAbaixoMeta === 0 && (
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
+              <CheckCircle2 className="h-4 w-4 text-success" />
               <span className="text-sm">Todos dentro da meta</span>
             </div>
           )}
@@ -281,7 +281,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
   if (alertas.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
-        <CheckCircle2 className="h-12 w-12 text-green-500 mb-4" />
+        <CheckCircle2 className="h-12 w-12 text-success mb-4" />
         <p className="text-muted-foreground">
           Nenhum alerta de desvio identificado.
         </p>
@@ -322,10 +322,10 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
           <CardContent className="flex items-start gap-4 p-4">
             <AlertTriangle
               className={`h-5 w-5 mt-0.5 ${alerta.tipo === 'critico'
-                ? 'text-red-500'
+                ? 'text-destructive'
                 : alerta.tipo === 'alerta'
-                  ? 'text-amber-500'
-                  : 'text-blue-500'
+                  ? 'text-warning'
+                  : 'text-info'
                 }`}
             />
             <div className="flex-1">
@@ -377,9 +377,9 @@ function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
   const getTendenciaIcon = (tendencia: 'alta' | 'baixa' | 'neutra') => {
     switch (tendencia) {
       case 'alta':
-        return <TrendingUp className="h-4 w-4 text-red-500" />;
+        return <TrendingUp className="h-4 w-4 text-destructive" />;
       case 'baixa':
-        return <TrendingDown className="h-4 w-4 text-green-500" />;
+        return <TrendingDown className="h-4 w-4 text-success" />;
       default:
         return null;
     }

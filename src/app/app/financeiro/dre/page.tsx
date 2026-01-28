@@ -91,15 +91,15 @@ const formatarPercentual = (valor: number): string => {
 };
 
 const getVariacaoColor = (variacao: number): string => {
-  if (variacao > 10) return 'text-green-600';
-  if (variacao > 0) return 'text-green-500';
-  if (variacao > -10) return 'text-amber-500';
-  return 'text-red-600';
+  if (variacao > 10) return 'text-success';
+  if (variacao > 0) return 'text-success/80';
+  if (variacao > -10) return 'text-warning';
+  return 'text-destructive';
 };
 
 const getLucroColor = (valor: number): string => {
-  if (valor > 0) return 'text-green-600';
-  if (valor < 0) return 'text-red-600';
+  if (valor > 0) return 'text-success';
+  if (valor < 0) return 'text-destructive';
   return 'text-muted-foreground';
 };
 
@@ -417,13 +417,13 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
             }
 
             const valorColor = linha.valor !== null
-              ? linha.valor < 0 ? 'text-red-600' : linha.valor > 0 && linha.final ? getLucroColor(linha.valor) : ''
+              ? linha.valor < 0 ? 'text-destructive' : linha.valor > 0 && linha.final ? getLucroColor(linha.valor) : ''
               : '';
 
             return (
               <tr
                 key={index}
-                className={`border-b ${linha.destaque ? 'bg-muted/30' : ''} ${linha.final ? (resumo.lucroLiquido >= 0 ? 'bg-green-50' : 'bg-red-50') : ''}`}
+                className={`border-b ${linha.destaque ? 'bg-muted/30' : ''} ${linha.final ? (resumo.lucroLiquido >= 0 ? 'bg-success/10' : 'bg-destructive/10') : ''}`}
               >
                 <td
                   className={`p-3 ${linha.bold ? 'font-semibold' : ''} ${(linha.indent || 0) === 1 ? 'pl-8' : 'pl-3'

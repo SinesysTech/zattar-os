@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   return (
     <div className="flex flex-col gap-4">
       <DataTableToolbar table={table} />
-      <div className="rounded-md border bg-white dark:bg-gray-950">
+      <div className="rounded-md border bg-card">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

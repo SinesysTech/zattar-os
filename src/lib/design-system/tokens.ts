@@ -198,6 +198,80 @@ export const SPACING_CLASSES = {
 } as const;
 
 // =============================================================================
+// ESPAÇAMENTO SEMÂNTICO (Layout Patterns)
+// =============================================================================
+
+/**
+ * Tokens de espaçamento semântico para padrões de layout comuns.
+ * Use estes tokens para garantir consistência em layouts de página, seção e cards.
+ *
+ * @ai-context Prefira SPACING_SEMANTIC sobre SPACING_CLASSES para layouts.
+ */
+export const SPACING_SEMANTIC = {
+  // Page Layout - Container principal da página
+  page: {
+    padding: 'p-4 sm:p-6 lg:p-8',
+    paddingX: 'px-4 sm:px-6 lg:px-8',
+    paddingY: 'py-4 sm:py-6 lg:py-8',
+    gap: 'gap-6 lg:gap-8',
+  },
+
+  // Section Layout - Seções dentro de uma página
+  section: {
+    padding: 'p-4 sm:p-6',
+    gap: 'gap-4 sm:gap-6',
+    marginTop: 'mt-6 sm:mt-8',
+    marginBottom: 'mb-6 sm:mb-8',
+  },
+
+  // Card Layout - Cards e containers
+  card: {
+    padding: 'p-4 sm:p-6',
+    paddingCompact: 'p-3 sm:p-4',
+    gap: 'gap-3 sm:gap-4',
+    headerGap: 'gap-1.5',
+  },
+
+  // Inline Elements - Elementos lado a lado
+  inline: {
+    gap: 'gap-2',
+    gapTight: 'gap-1',
+    gapLoose: 'gap-3',
+  },
+
+  // Stack (vertical) - Elementos empilhados
+  stack: {
+    xs: 'space-y-1',
+    sm: 'space-y-2',
+    md: 'space-y-4',
+    lg: 'space-y-6',
+    xl: 'space-y-8',
+  },
+
+  // Form Elements - Formulários
+  form: {
+    gap: 'gap-4',
+    fieldGap: 'gap-2',
+    sectionGap: 'gap-6',
+    labelGap: 'gap-1.5',
+  },
+
+  // Table Layout - Tabelas e data grids
+  table: {
+    cellPadding: 'px-3 py-2',
+    headerPadding: 'px-3 py-3',
+    gap: 'gap-4',
+  },
+
+  // Dialog/Modal Layout
+  dialog: {
+    padding: 'p-6',
+    gap: 'gap-4',
+    footerGap: 'gap-2',
+  },
+} as const;
+
+// =============================================================================
 // TIPOGRAFIA
 // =============================================================================
 
@@ -333,6 +407,7 @@ export const TOKENS = {
   colors: COLORS,
   spacing: SPACING,
   spacingClasses: SPACING_CLASSES,
+  spacingSemantic: SPACING_SEMANTIC,
   typography: TYPOGRAPHY,
   shadows: SHADOWS,
   radius: RADIUS,

@@ -14,15 +14,15 @@ interface DiskIOCardProps {
 }
 
 function getColorClass(percent: number): string {
-  if (percent < 80) return "bg-green-500";
-  if (percent < 90) return "bg-amber-500";
-  return "bg-red-500";
+  if (percent < 80) return "bg-success";
+  if (percent < 90) return "bg-warning";
+  return "bg-destructive";
 }
 
 function getTextColorClass(percent: number): string {
-  if (percent < 80) return "text-green-700";
-  if (percent < 90) return "text-amber-700";
-  return "text-red-700";
+  if (percent < 80) return "text-success";
+  if (percent < 90) return "text-warning";
+  return "text-destructive";
 }
 
 function getStatusConfig(status: DiskIOStatus, message?: string): { title: string; description: string; isLoading: boolean } {
@@ -66,8 +66,8 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
   if (!diskIO) {
     const { title, description, isLoading } = getStatusConfig(diskIOStatus, diskIOMessage);
     const bgClass = isLoading
-      ? "bg-blue-50 text-blue-800 dark:bg-blue-950 dark:text-blue-200"
-      : "bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-200";
+      ? "bg-info/10 text-info"
+      : "bg-warning/10 text-warning";
     const icon = isLoading ? "⏳" : "⚠️";
 
     return (

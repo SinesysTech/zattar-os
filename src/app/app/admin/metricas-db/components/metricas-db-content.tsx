@@ -15,9 +15,9 @@ interface MetricasDBContentProps {
 }
 
 function getColorClass(ratio: number): string {
-  if (ratio >= 99) return "text-green-700";
-  if (ratio >= 95) return "text-amber-700";
-  return "text-red-700";
+  if (ratio >= 99) return "text-success";
+  if (ratio >= 95) return "text-warning";
+  return "text-destructive";
 }
 
 function formatPercent(value: number | null | undefined): string {
@@ -219,10 +219,10 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
                       <Badge
                         className={
                           linha.bloat_percent > 50
-                            ? "bg-red-100 text-red-800"
+                            ? "bg-destructive/10 text-destructive"
                             : linha.bloat_percent > 20
-                            ? "bg-amber-100 text-amber-800"
-                            : "bg-green-100 text-green-800"
+                            ? "bg-warning/10 text-warning"
+                            : "bg-success/10 text-success"
                         }
                       >
                         {linha.bloat_percent.toFixed(2)}%

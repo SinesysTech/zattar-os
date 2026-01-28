@@ -97,7 +97,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
               placeholder="Filtrar tarefas..."
               value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
               onChange={(event) => table.getColumn("title")?.setFilterValue(event.target.value)}
-              className="h-8 w-[150px] bg-white ps-8 dark:bg-gray-950 lg:w-[250px]"
+              className="h-8 w-[150px] bg-card ps-8 lg:w-[250px]"
             />
           </div>
           {table.getColumn("status") && (
@@ -118,7 +118,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
             <Button
               variant="ghost"
               size="sm"
-              className="bg-white hover:bg-white/90 dark:bg-gray-950"
+              className="bg-card hover:bg-accent"
               onClick={() => table.resetColumnFilters()}>
               Limpar
               <X />
@@ -157,7 +157,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
                 value={form.title}
                 onChange={(e) => setForm((s) => ({ ...s, title: e.target.value }))}
                 placeholder="Ex: Revisar documento"
-                className="mt-2 bg-white dark:bg-gray-950"
+                className="mt-2 bg-card"
                 required
               />
             </div>
@@ -168,10 +168,10 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
                 value={form.status}
                 onValueChange={(value) => setForm((s) => ({ ...s, status: value as TaskStatus }))}
               >
-                <SelectTrigger className="mt-2 bg-white dark:bg-gray-950">
+                <SelectTrigger className="mt-2 bg-card">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-950">
+                <SelectContent className="bg-card">
                   {statuses.map((s) => (
                     <SelectItem key={s.value} value={s.value}>
                       {s.label}
@@ -187,10 +187,10 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
                 value={form.priority}
                 onValueChange={(value) => setForm((s) => ({ ...s, priority: value as TaskPriority }))}
               >
-                <SelectTrigger className="mt-2 bg-white dark:bg-gray-950">
+                <SelectTrigger className="mt-2 bg-card">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-950">
+                <SelectContent className="bg-card">
                   {priorities.map((p) => (
                     <SelectItem key={p.value} value={p.value}>
                       {p.label}
@@ -206,10 +206,10 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
                 value={form.label}
                 onValueChange={(value) => setForm((s) => ({ ...s, label: value as TaskLabel }))}
               >
-                <SelectTrigger className="mt-2 bg-white dark:bg-gray-950">
+                <SelectTrigger className="mt-2 bg-card">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-950">
+                <SelectContent className="bg-card">
                   <SelectItem value="bug">Bug</SelectItem>
                   <SelectItem value="feature">Funcionalidade</SelectItem>
                   <SelectItem value="documentation">Documentação</SelectItem>
