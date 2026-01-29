@@ -18,6 +18,11 @@ export function ContratoDocumentosCard({
   onGerarPeca,
 }: ContratoDocumentosCardProps) {
   const [uploadDialogOpen, setUploadDialogOpen] = React.useState(false);
+  const [refreshKey, setRefreshKey] = React.useState(0);
+
+  const handleUploadSuccess = React.useCallback(() => {
+    setRefreshKey((prev) => prev + 1);
+  }, []);
 
   return (
     <>
@@ -43,7 +48,7 @@ export function ContratoDocumentosCard({
           </CardAction>
         </CardHeader>
         <CardContent>
-          <ContratoDocumentosList contratoId={contratoId} />
+          <ContratoDocumentosList key={refreshKey} contratoId={contratoId} />
         </CardContent>
       </Card>
 
@@ -51,6 +56,7 @@ export function ContratoDocumentosCard({
         open={uploadDialogOpen}
         onOpenChange={setUploadDialogOpen}
         contratoId={contratoId}
+        onSuccess={handleUploadSuccess}
       />
     </>
   );

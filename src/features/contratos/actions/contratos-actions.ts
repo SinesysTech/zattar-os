@@ -468,8 +468,8 @@ export async function actionCriarContrato(
     }
 
     // 4. Revalidar cache
-    revalidatePath("/contratos");
-    revalidatePath("/financeiro");
+    revalidatePath("/app/contratos");
+    revalidatePath("/app/financeiro");
 
     // 5. Enfileirar indexação semântica (async, não bloqueia resposta)
     enfileirarIndexacaoContrato(result.data);
@@ -549,9 +549,9 @@ export async function actionAtualizarContrato(
     }
 
     // 5. Revalidar cache
-    revalidatePath("/contratos");
-    revalidatePath(`/contratos/${id}`);
-    revalidatePath("/financeiro");
+    revalidatePath("/app/contratos");
+    revalidatePath(`/app/contratos/${id}`);
+    revalidatePath("/app/financeiro");
 
     // 6. Atualizar indexação semântica (async, não bloqueia resposta)
     atualizarIndexacaoContratoAsync(result.data);
@@ -595,8 +595,8 @@ export async function actionExcluirContrato(id: number): Promise<ActionResult> {
       };
     }
 
-    revalidatePath("/contratos");
-    revalidatePath("/financeiro");
+    revalidatePath("/app/contratos");
+    revalidatePath("/app/financeiro");
 
     return {
       success: true,
