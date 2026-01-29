@@ -123,7 +123,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
               id="email"
               type="email"
               placeholder="seu@email.com"
-              className="h-11 pl-10"
+              className="h-11 pl-10 bg-white dark:bg-input/30"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -148,7 +148,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             <Input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              className="h-11 pl-10 pr-10"
+              className="h-11 pl-10 pr-10 bg-white dark:bg-input/30"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -196,16 +196,6 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
         </Button>
       </form>
 
-      {/* Sign up link */}
-      <p className="mt-8 text-center text-sm text-muted-foreground">
-        Não tem uma conta?{' '}
-        <Link
-          href="/app/sign-up"
-          className="font-medium text-primary transition-colors hover:text-primary/80"
-        >
-          Criar conta
-        </Link>
-      </p>
     </div>
   )
 }
