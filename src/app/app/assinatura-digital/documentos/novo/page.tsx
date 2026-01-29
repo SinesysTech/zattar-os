@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import { UploadPageLayout } from "./components/upload-page-layout";
-import { DocumentUploadDropzone } from "../../feature/components/upload/document-upload-dropzone";
+import { SignatureFlowShell } from "../components/signature-flow-shell";
+import { NovoDocumentoClient } from "./client-page";
 
 export const metadata: Metadata = {
   title: "Novo Documento | Assinatura Digital",
@@ -11,8 +11,8 @@ export const dynamic = "force-dynamic";
 
 export default function NovoDocumentoPage() {
   return (
-    <UploadPageLayout>
-      <DocumentUploadDropzone />
-    </UploadPageLayout>
+    <SignatureFlowShell>
+      <NovoDocumentoClient />
+    </SignatureFlowShell>
   );
 }

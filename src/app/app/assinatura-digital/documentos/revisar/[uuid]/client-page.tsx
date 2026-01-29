@@ -10,7 +10,6 @@
  * 4. Botão para finalizar e voltar à lista
  */
 
-import * as React from "react";
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -40,8 +39,6 @@ import {
   PdfPreviewDynamic,
 } from "../../../feature";
 import { actionFinalizeDocumento } from "../../../feature/actions/documentos-actions";
-
-import { useFormularioStore } from "../../../feature/store/formulario-store";
 
 // Tipos
 interface DocumentoCompleto {
@@ -102,7 +99,6 @@ function getSignerName(assinante: DocumentoCompleto["assinantes"][0]): string {
 
 export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
   const router = useRouter();
-  const { setEtapaAtual } = useFormularioStore();
 
   // Estado
   const [isLoading, setIsLoading] = useState(true);
@@ -113,11 +109,6 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
 
   // PDF URL presigned
   const { presignedUrl: pdfPresignedUrl } = usePresignedPdfUrl(documento?.pdf_original_url);
-
-  // Inicializar etapa do stepper como 2 (Revisar)
-  useEffect(() => {
-    setEtapaAtual(2);
-  }, [setEtapaAtual]);
 
   // Carregar documento
   useEffect(() => {
@@ -236,26 +227,16 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
   const assinantesConcluidos = documento.assinantes.filter((a) => a.status === "concluido").length;
 
   return (
-    <div className="space-y-6">
-
-
-      {/* Header */}
+    <div className="max-w-6xl mx-auto w-full space-y-6">
+      {/* Header simplificado - stepper ja fornece contexto de navegacao */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => router.push(`/app/assinatura-digital/documentos/editar/${uuid}`)}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar para Edição
-          </Button>
-          <div>
-            <h1 className="text-xl font-bold">Revisar Documento</h1>
-            <p className="text-sm text-muted-foreground">
-              Confira as configurações antes de compartilhar os links
-            </p>
-          </div>
+        <div>
+          <h1 className="text-lg font-semibold">
+            {documento.titulo || "Documento sem título"}
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Confira as configurações antes de compartilhar os links
+          </p>
         </div>
         <Badge
           variant={documento.status === "pronto" ? "default" : "secondary"}
@@ -491,8 +472,8 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         </Card>
       </div>
 
-      {/* Botões de ação */}
-      <div className="flex items-center justify-between">
+      {/* Barra de acoes */}
+      <div className="flex items-center justify-between pt-2">
         <Button
           variant="outline"
           onClick={() => router.push(`/app/assinatura-digital/documentos/editar/${uuid}`)}
@@ -509,7 +490,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
           ) : (
             <>
               <Check className="mr-2 h-4 w-4" />
-              Finalizar e Voltar à Lista
+              Finalizar e Enviar
             </>
           )}
         </Button>

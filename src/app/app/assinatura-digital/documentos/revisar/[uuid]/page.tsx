@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import { PageShell } from "@/components/shared/page-shell";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RevisarDocumentoClient } from "./client-page";
+import { SignatureFlowShell } from "../../components/signature-flow-shell";
 
 export const metadata = {
   title: "Revisar Documento | Assinatura Digital",
@@ -16,7 +16,7 @@ export default async function RevisarDocumentoPage({ params }: PageProps) {
   const { uuid } = await params;
 
   return (
-    <PageShell>
+    <SignatureFlowShell>
       <Suspense
         fallback={
           <div className="space-y-6">
@@ -33,6 +33,6 @@ export default async function RevisarDocumentoPage({ params }: PageProps) {
       >
         <RevisarDocumentoClient uuid={uuid} />
       </Suspense>
-    </PageShell>
+    </SignatureFlowShell>
   );
 }

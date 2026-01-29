@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useFormularioStore } from "../../../store/formulario-store";
 import {
   actionGetDocumento,
   actionSetDocumentoAnchors,
@@ -31,7 +30,6 @@ interface UseDocumentEditorProps {
 
 export function useDocumentEditor({ uuid }: UseDocumentEditorProps) {
   const router = useRouter();
-  const { setEtapaAtual } = useFormularioStore();
   const canvasRef = useRef<HTMLDivElement>(null);
 
   // --- STATE ---
@@ -203,10 +201,6 @@ export function useDocumentEditor({ uuid }: UseDocumentEditorProps) {
   useEffect(() => {
     loadDocument();
   }, [loadDocument]);
-
-  useEffect(() => {
-    setEtapaAtual(1);
-  }, [setEtapaAtual]);
 
   // --- HANDLERS ---
   const handleAddSigner = async (nome: string, email: string) => {

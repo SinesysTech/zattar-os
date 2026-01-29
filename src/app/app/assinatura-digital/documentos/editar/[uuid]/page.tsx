@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EditarDocumentoClient } from "./client-page";
-import { EditorPageLayout } from "./components/editor-page-layout";
+import { SignatureFlowShell } from "../../components/signature-flow-shell";
 
 export const metadata: Metadata = {
   title: "Configurar Âncoras | Assinatura Digital",
@@ -17,7 +17,7 @@ export default async function EditarDocumentoPage({ params }: PageProps) {
   const { uuid } = await params;
 
   return (
-    <EditorPageLayout>
+    <SignatureFlowShell mode="fullscreen">
       <Suspense
         fallback={
           <div className="flex h-full w-full items-center justify-center">
@@ -27,6 +27,6 @@ export default async function EditarDocumentoPage({ params }: PageProps) {
       >
         <EditarDocumentoClient uuid={uuid} />
       </Suspense>
-    </EditorPageLayout>
+    </SignatureFlowShell>
   );
 }
