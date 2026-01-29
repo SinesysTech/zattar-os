@@ -9,15 +9,16 @@ interface ContratoDocumentoUploadDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     contratoId: number;
+    onSuccess?: () => void;
 }
 
 export function ContratoDocumentoUploadDialog({
     open,
     onOpenChange,
     contratoId,
+    onSuccess,
 }: ContratoDocumentoUploadDialogProps) {
     const handleFileUploaded = async (file: File, arquivo: Arquivo) => {
-        // arquivo contains the Arquivo object returned by the upload action
         const arquivoId = arquivo?.id;
         if (!arquivoId) {
             console.error('Dados do arquivo inválidos:', arquivo);
@@ -39,12 +40,7 @@ export function ContratoDocumentoUploadDialog({
             open={open}
             onOpenChange={onOpenChange}
             onFileUploaded={handleFileUploaded}
-            onSuccess={() => {
-                // A revalidação é feita na server action, mas podemos dar um feedback extra se necessário
-                // O FileUploadDialogUnified já exibe toast de sucesso
-            }}
-            // Podemos definir uma pasta específica para contratos se desejado,
-            // mas por enquanto deixaremos cair na raiz ou pasta padrão
+            onSuccess={onSuccess}
             pastaId={null}
         />
     );
