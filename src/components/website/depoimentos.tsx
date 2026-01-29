@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Quote, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Button } from "./ui/button";
@@ -141,10 +142,12 @@ export default function Depoimentos() {
               {/* Foto e Info */}
               <div className="flex flex-col items-center lg:items-start text-center lg:text-left shrink-0">
                 <div className="relative mb-4">
-                  <img
+                  <Image
                     src={currentDepoimento.foto}
                     alt={`Foto de ${currentDepoimento.nome}`}
                     className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-primary/20"
+                    width={128}
+                    height={128}
                   />
                 </div>
                 <h3 className="font-semibold text-lg text-foreground">{currentDepoimento.nome}</h3>
