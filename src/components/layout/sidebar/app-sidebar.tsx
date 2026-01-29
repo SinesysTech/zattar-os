@@ -103,6 +103,11 @@ const navServicos = [
     title: "Assinatura Digital",
     url: "/app/assinatura-digital",
     icon: PenTool,
+    items: [
+      { title: "Documentos", url: "/app/assinatura-digital/documentos/lista" },
+      { title: "Templates", url: "/app/assinatura-digital/templates" },
+      { title: "Formulários", url: "/app/assinatura-digital/formularios" },
+    ],
   },
   {
     title: "Chat",
