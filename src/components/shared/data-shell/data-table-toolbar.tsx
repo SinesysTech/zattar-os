@@ -190,7 +190,7 @@ export function DataTableToolbar<TData>({
               }
               table?.setGlobalFilter(value);
             }}
-            className="h-10 w-full pl-9 bg-card"
+            className="h-9 w-full pl-9 bg-card"
           />
         </div>
 
@@ -209,7 +209,7 @@ export function DataTableToolbar<TData>({
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-10 w-10 bg-card"
+                    className="h-9 w-9 bg-card"
                     aria-label="Configurações de visualização"
                   >
                     <Settings2 className="h-4 w-4" aria-hidden="true" />
@@ -277,7 +277,7 @@ export function DataTableToolbar<TData>({
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-10 w-10 bg-card"
+                    className="h-9 w-9 bg-card"
                     aria-label="Exportar dados"
                   >
                     <Download className="h-4 w-4" aria-hidden="true" />
@@ -310,7 +310,7 @@ export function DataTableToolbar<TData>({
               <Button
                 onClick={actionButton.onClick}
                 size="icon"
-                className="h-10 w-10"
+                className="h-9 w-9"
                 aria-label={actionButton.label}
               >
                 <Plus className="h-4 w-4" />
