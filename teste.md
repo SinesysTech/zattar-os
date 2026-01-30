@@ -1,1 +1,0 @@
-Eu quero que você analise o git. Eu quero remover qualquer referência ao repositório remoto do GitLab e que o histórico do Git de sincronização que esteja no GitLab também esteja no GitHub, se tiver qualquer divergência
