@@ -187,7 +187,7 @@ export function Combobox({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto min-w-[var(--radix-popover-trigger-width)] p-0" align="start" sideOffset={4}>
+      <PopoverContent className="w-auto min-w-(--radix-popover-trigger-width) p-0" align="start" sideOffset={4}>
         <div className="flex flex-col">
           {/* Barra de busca */}
           <div className="p-2 border-b">
