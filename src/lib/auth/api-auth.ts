@@ -22,7 +22,7 @@ export interface AuthResult {
  * Busca o ID do usuário na tabela usuarios pelo auth_user_id (UUID do Supabase Auth)
  */
 async function buscarUsuarioIdPorAuthUserId(
-  authUserId: string
+  authUserId: string,
 ): Promise<number | null> {
   try {
     const supabase = createServiceClient();
@@ -54,7 +54,7 @@ async function buscarUsuarioIdPorAuthUserId(
  * @returns Resultado da autenticação com userId (UUID) e usuarioId (ID da tabela usuarios)
  */
 export async function authenticateRequest(
-  request: NextRequest
+  request: NextRequest,
 ): Promise<AuthResult> {
   // 1. Verificar Service API Key (para jobs do sistema)
   const serviceApiKey = request.headers.get("x-service-api-key");
@@ -74,12 +74,16 @@ export async function authenticateRequest(
       // API key inválida
       console.error("[API Auth] ✗ Service API Key inválida");
       console.error(
-        "[API Auth] Service API Key inválida (valor redacted por segurança)"
+        "[API Auth] Service API Key inválida (valor redacted por segurança)",
       );
 
       // Record suspicious activity for invalid API key
       const clientIp = getClientIp(request);
-      await recordSuspiciousActivity(clientIp, "auth_failures", "Invalid service API key");
+      await recordSuspiciousActivity(
+        clientIp,
+        "auth_failures",
+        "Invalid service API key",
+      );
 
       return {
         authenticated: false,
@@ -92,7 +96,7 @@ export async function authenticateRequest(
   // Se o header x-service-api-key foi enviado mas SERVICE_API_KEY não está configurada
   if (serviceApiKey && !expectedServiceKey) {
     console.error(
-      "[API Auth] ✗ Header x-service-api-key enviado, mas SERVICE_API_KEY não está configurada no servidor"
+      "[API Auth] ✗ Header x-service-api-key enviado, mas SERVICE_API_KEY não está configurada no servidor",
     );
     return {
       authenticated: false,
@@ -120,7 +124,11 @@ export async function authenticateRequest(
 
         // Record suspicious activity for invalid bearer token
         const clientIp = getClientIp(request);
-        await recordSuspiciousActivity(clientIp, "auth_failures", "Invalid bearer token");
+        await recordSuspiciousActivity(
+          clientIp,
+          "auth_failures",
+          "Invalid bearer token",
+        );
 
         return {
           authenticated: false,
@@ -135,11 +143,11 @@ export async function authenticateRequest(
 
       if (!usuarioId) {
         console.warn(
-          `[API Auth] ⚠ Usuário autenticado (${user.id}), mas não encontrado na tabela usuarios`
+          `[API Auth] ⚠ Usuário autenticado (${user.id}), mas não encontrado na tabela usuarios`,
         );
       } else {
         console.log(
-          `[API Auth] ✓ Autenticação bem-sucedida via Bearer token - Usuário ID: ${usuarioId}`
+          `[API Auth] ✓ Autenticação bem-sucedida via Bearer token - Usuário ID: ${usuarioId}`,
         );
       }
 
@@ -181,7 +189,7 @@ export async function authenticateRequest(
             // Os cookies serão gerenciados pelo middleware
           },
         },
-      }
+      },
     );
 
     // Primeiro atualizar a sessão (atualiza cookies se necessário)
@@ -196,6 +204,12 @@ export async function authenticateRequest(
 
     if (error || !user) {
       console.log("[API Auth] ℹ Nenhuma sessão válida encontrada (cookies)");
+      console.log(
+        "[API Auth] DEBUG - Cookies recebidos:",
+        request.cookies.getAll().map((c) => c.name),
+      );
+      console.log("[API Auth] DEBUG - Erro Supabase:", error?.message);
+      console.log("[API Auth] DEBUG - User:", user);
       return {
         authenticated: false,
         error:
@@ -208,11 +222,11 @@ export async function authenticateRequest(
 
     if (!usuarioId) {
       console.warn(
-        `[API Auth] ⚠ Usuário autenticado via sessão (${user.id}), mas não encontrado na tabela usuarios`
+        `[API Auth] ⚠ Usuário autenticado via sessão (${user.id}), mas não encontrado na tabela usuarios`,
       );
     } else {
       console.log(
-        `[API Auth] ✓ Autenticação bem-sucedida via sessão - Usuário ID: ${usuarioId}`
+        `[API Auth] ✓ Autenticação bem-sucedida via sessão - Usuário ID: ${usuarioId}`,
       );
     }
 

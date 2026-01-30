@@ -405,6 +405,8 @@ export {
   ResumoCards,
   // Dashboard
   FinanceiroDashboard,
+  // Gestão Dashboards Tabs
+  GestaoDashboardsTabs,
   // Tabs
   FinanceiroTabsContent,
   // Provider

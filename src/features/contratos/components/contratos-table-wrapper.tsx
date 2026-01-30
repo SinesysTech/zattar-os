@@ -371,7 +371,7 @@ export function ContratosTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="h-10 w-45">
+                    <SelectTrigger className="w-45">
                       <SelectValue placeholder="Tipo de Contrato" />
                     </SelectTrigger>
                     <SelectContent>
@@ -391,7 +391,7 @@ export function ContratosTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="h-10 w-37.5">
+                    <SelectTrigger className="w-37.5">
                       <SelectValue placeholder="Cobrança" />
                     </SelectTrigger>
                     <SelectContent>
@@ -411,7 +411,7 @@ export function ContratosTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="h-10 w-40">
+                    <SelectTrigger className="w-40">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>

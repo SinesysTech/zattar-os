@@ -924,7 +924,7 @@ export function ProcessosTableWrapper({
                       <Button
                         variant="outline"
                         size="icon"
-                        className="h-10 w-10"
+                        className="h-9 w-9 bg-white"
                         onClick={() => setConfigAtribuicaoOpen(true)}
                       >
                         <Settings className="h-4 w-4" />
@@ -957,7 +957,7 @@ export function ProcessosTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="h-10 w-37.5">
+                    <SelectTrigger className="w-37.5">
                       <SelectValue placeholder="Origem" />
                     </SelectTrigger>
                     <SelectContent>

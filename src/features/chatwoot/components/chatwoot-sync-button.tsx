@@ -162,7 +162,7 @@ export function ChatwootSyncButton({
           <Button
             variant="outline"
             size="icon"
-            className="h-9 w-9 bg-card"
+            className="h-9 w-9 bg-white"
             onClick={handleButtonClick}
             disabled={state === 'syncing'}
             aria-label={buttonLabel}
