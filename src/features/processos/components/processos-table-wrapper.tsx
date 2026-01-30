@@ -13,7 +13,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataShell, DataPagination, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
+import { DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import {
   Select,
@@ -43,7 +43,14 @@ import {
 } from './processos-toolbar-filters';
 import { GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
-import { Eye, Lock, CheckCircle, XCircle, Link2, Settings } from 'lucide-react';
+import { Eye, Lock, CheckCircle, XCircle, Link2, Settings, Search, Columns } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { CopyButton } from '@/features/partes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
@@ -698,7 +705,6 @@ export function ProcessosTableWrapper({
   const [usersMap, setUsersMap] = React.useState(initialUsers);
   const [usuarios, setUsuarios] = React.useState<Usuario[]>([]);
   const [table, setTable] = React.useState<TanstackTable<ProcessoUnificado> | null>(null);
-  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Estado de visibilidade das colunas
   const [columnVisibility, setColumnVisibility] = React.useState<Record<string, boolean>>(INITIAL_COLUMN_VISIBILITY);
@@ -905,88 +911,104 @@ export function ProcessosTableWrapper({
 
   return (
     <>
-      <DataShell
-        header={
-          table ? (
-            <DataTableToolbar
-              table={table}
-              density={density}
-              onDensityChange={setDensity}
-              searchValue={globalFilter}
-              onSearchValueChange={(value) => {
-                setGlobalFilter(value);
+      <div className="w-full">
+        <div className="flex items-center gap-4 py-4">
+          <div className="flex gap-2 flex-1">
+            <div className="relative max-w-md">
+              <Search
+                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Input
+                placeholder="Buscar processos..."
+                value={globalFilter}
+                onChange={(e) => {
+                  setGlobalFilter(e.target.value);
+                  setPageIndex(0);
+                }}
+                className="w-full pl-9 bg-white"
+              />
+            </div>
+            <Combobox
+              options={initialTribunais.map(t => ({ label: `${t.codigo} - ${t.nome}`, value: t.codigo }))}
+              value={trtFilter}
+              onValueChange={(val) => {
+                setTrtFilter(val);
                 setPageIndex(0);
               }}
-              actionSlot={
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-9 w-9 bg-white"
-                        onClick={() => setConfigAtribuicaoOpen(true)}
-                      >
-                        <Settings className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Configurar atribuição automática</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              }
-              filtersSlot={
-                <>
-                  <Combobox
-                    options={initialTribunais.map(t => ({ label: `${t.codigo} - ${t.nome}`, value: t.codigo }))}
-                    value={trtFilter}
-                    onValueChange={(val) => {
-                      setTrtFilter(val);
-                      setPageIndex(0);
-                    }}
-                    placeholder="Tribunais"
-                    searchPlaceholder="Buscar tribunal..."
-                    emptyText="Nenhum tribunal encontrado"
-                    multiple={true}
-                    className="w-50"
-                  />
-
-                  <Select
-                    value={origemFilter}
-                    onValueChange={(val) => {
-                      setOrigemFilter(val);
-                      setPageIndex(0);
-                    }}
+              placeholder="Tribunais"
+              searchPlaceholder="Buscar tribunal..."
+              emptyText="Nenhum tribunal encontrado"
+              multiple={true}
+              className="w-50 bg-white"
+            />
+            <Select
+              value={origemFilter}
+              onValueChange={(val) => {
+                setOrigemFilter(val);
+                setPageIndex(0);
+              }}
+            >
+              <SelectTrigger className="w-37.5 bg-white">
+                <SelectValue placeholder="Origem" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as Origens</SelectItem>
+                <SelectItem value="acervo_geral">Acervo Geral</SelectItem>
+                <SelectItem value="arquivado">Arquivados</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="bg-white"
+                    onClick={() => setConfigAtribuicaoOpen(true)}
                   >
-                    <SelectTrigger className="w-37.5">
-                      <SelectValue placeholder="Origem" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todas as Origens</SelectItem>
-                      <SelectItem value="acervo_geral">Acervo Geral</SelectItem>
-                      <SelectItem value="arquivado">Arquivados</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </>
-              }
-            />
-          ) : (
-            <div className="p-6" />
-          )
-        }
-        footer={
-          totalPages > 0 ? (
-            <DataPagination
-              pageIndex={pageIndex}
-              pageSize={pageSize}
-              total={total}
-              totalPages={totalPages}
-              onPageChange={setPageIndex}
-              onPageSizeChange={setPageSize}
-              isLoading={isLoading}
-            />
-          ) : null
-        }
-      >
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Configurar atribuição automática</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            {table && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="bg-white">
+                    <Columns className="h-4 w-4" />
+                    <span className="hidden md:inline">Colunas</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {table
+                    .getAllColumns()
+                    .filter((column) => column.getCanHide())
+                    .map((column) => (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) => column.toggleVisibility(value)}
+                      >
+                        {(column.columnDef.meta as { headerLabel?: string } | undefined)?.headerLabel || column.id}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
+        </div>
+
+        {error && (
+          <div className="mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
         {showEmptyState ? (
           <ProcessosEmptyState
             onClearFilters={() => {
@@ -998,13 +1020,12 @@ export function ProcessosTableWrapper({
             hasFilters={hasFilters}
           />
         ) : (
-          <div className="relative border-t">
+          <div className="rounded-md border bg-white">
             <DataTable
               columns={colunas}
               data={processos || []}
               isLoading={isLoading}
               error={error}
-              density={density}
               columnVisibility={columnVisibility}
               onColumnVisibilityChange={setColumnVisibility}
               onTableReady={(t) => setTable(t as TanstackTable<ProcessoUnificado>)}
@@ -1021,16 +1042,43 @@ export function ProcessosTableWrapper({
             />
           </div>
         )}
-      </DataShell>
 
-      {/* Dialog de Configuração de Atribuição Automática */}
+        {totalPages > 0 && (
+          <div className="flex items-center justify-between pt-4">
+            <div className="text-muted-foreground text-sm">
+              {total} registro(s)
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">
+                Página {pageIndex + 1} de {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPageIndex(Math.max(0, pageIndex - 1))}
+                disabled={pageIndex === 0 || isLoading}
+              >
+                Anterior
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPageIndex(Math.min(totalPages - 1, pageIndex + 1))}
+                disabled={pageIndex >= totalPages - 1 || isLoading}
+              >
+                Próximo
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+
       <ConfigAtribuicaoDialog
         open={configAtribuicaoOpen}
         onOpenChange={setConfigAtribuicaoOpen}
         usuarios={usuarios}
       />
 
-      {/* Dialog de Gerenciamento de Tags */}
       <ProcessoTagsDialog
         open={tagsDialogOpen}
         onOpenChange={setTagsDialogOpen}
