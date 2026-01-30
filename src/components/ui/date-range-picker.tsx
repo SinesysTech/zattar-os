@@ -62,8 +62,8 @@ export function DateRangePicker({ value, onChange, placeholder, allowSingle = tr
           data-slot="date-range-picker-trigger"
           className={cn(
             "justify-start w-full h-9 text-sm font-normal",
-            // Altura padronizada h-10 (40px) quando dentro de DataTableToolbar
-            "[div[data-slot=data-table-toolbar]_&]:h-10",
+            // Altura padronizada h-9 (36px) quando dentro de DataTableToolbar
+            "[div[data-slot=data-table-toolbar]_&]:h-9",
             !selected?.from && "text-muted-foreground",
             className
           )}
