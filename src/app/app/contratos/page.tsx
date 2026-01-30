@@ -27,7 +27,7 @@ export default async function ContratosPage() {
     listarContratos({ pagina: 1, limite: 50 }),
     listarClientes({ limite: 1000 }),
     listarPartesContrarias({ limite: 1000 }),
-    actionListarUsuarios({ limite: 1000, ativo: true }),
+    actionListarUsuarios({ limite: 1000, ativo: true }).catch(() => ({ success: false as const, error: 'Erro ao listar usuários' })),
   ]);
 
   const contratos = contratosResult.success ? contratosResult.data.data : [];
@@ -35,15 +35,15 @@ export default async function ContratosPage() {
 
   // Preparar options para os selects (apenas id e nome)
   const clientesOptions = clientesResult.success
-    ? clientesResult.data.data.map((c) => ({ id: c.id, nome: c.nome }))
+    ? clientesResult.data.data.map((c: { id: number; nome: string }) => ({ id: c.id, nome: c.nome }))
     : [];
 
   const partesContrariasOptions = partesContrariasResult.success
-    ? partesContrariasResult.data.data.map((p) => ({ id: p.id, nome: p.nome }))
+    ? partesContrariasResult.data.data.map((p: { id: number; nome: string }) => ({ id: p.id, nome: p.nome }))
     : [];
 
-  const usuariosOptions = usuariosResult.success && usuariosResult.data
-    ? usuariosResult.data.usuarios.map((u) => ({ id: u.id, nome: u.nomeExibicao || u.nomeCompleto }))
+  const usuariosOptions = usuariosResult.success && 'data' in usuariosResult && usuariosResult.data
+    ? usuariosResult.data.usuarios.map((u: { id: number; nomeExibicao?: string; nomeCompleto: string }) => ({ id: u.id, nome: u.nomeExibicao || u.nomeCompleto }))
     : [];
 
   return (

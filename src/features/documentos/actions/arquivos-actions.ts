@@ -29,7 +29,7 @@ export async function actionUploadArquivoGenerico(formData: FormData) {
       user.id
     );
 
-    revalidatePath("/documentos");
+    revalidatePath("/app/documentos");
     return { success: true, data: arquivo };
   } catch (error) {
     console.error("Erro ao fazer upload de arquivo:", error);
@@ -80,7 +80,7 @@ export async function actionMoverArquivo(
     }
 
     const arquivo = await service.moverArquivo(arquivo_id, pasta_id, user.id);
-    revalidatePath("/documentos");
+    revalidatePath("/app/documentos");
     return { success: true, data: arquivo };
   } catch (error) {
     console.error("Erro ao mover arquivo:", error);
@@ -102,8 +102,8 @@ export async function actionDeletarArquivo(arquivo_id: number) {
     }
 
     await service.deletarArquivo(arquivo_id, user.id);
-    revalidatePath("/documentos");
-    revalidatePath("/documentos/lixeira");
+    revalidatePath("/app/documentos");
+    revalidatePath("/app/documentos/lixeira");
     return { success: true };
   } catch (error) {
     console.error("Erro ao deletar arquivo:", error);

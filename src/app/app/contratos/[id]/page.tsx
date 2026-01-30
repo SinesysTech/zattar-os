@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { actionBuscarContratoCompleto } from '@/features/contratos';
+import { fetchContratoCompleto } from '@/features/contratos/queries';
 import { LancamentosRepository } from '@/features/financeiro/repository/lancamentos';
 import { ContratoDetalhesClient } from './contrato-detalhes-client';
 
@@ -25,8 +25,8 @@ export default async function ContratoDetalhesPage({ params }: PageProps) {
     notFound();
   }
 
-  // Fetch contrato completo
-  const result = await actionBuscarContratoCompleto(contratoId);
+  // Fetch contrato completo (query function, not server action)
+  const result = await fetchContratoCompleto(contratoId);
 
   if (!result.success || !result.data) {
     notFound();

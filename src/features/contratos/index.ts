@@ -72,15 +72,22 @@ export {
 } from './service';
 
 // =============================================================================
-// ACTIONS (Server Actions)
+// QUERIES (Data fetching for Server Components)
 // =============================================================================
 export type {
-  ActionResult,
   ContratoCompleto,
   ContratoCompletoStats,
   ClienteDetalhado,
   ResponsavelDetalhado,
   SegmentoDetalhado,
+} from './queries';
+export { fetchContratoCompleto } from './queries';
+
+// =============================================================================
+// ACTIONS (Server Actions)
+// =============================================================================
+export type {
+  ActionResult,
 } from './actions';
 export {
   actionCriarContrato,

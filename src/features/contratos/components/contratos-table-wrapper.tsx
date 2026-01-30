@@ -14,7 +14,6 @@
  */
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
   DataShell,
@@ -81,8 +80,6 @@ export function ContratosTableWrapper({
   partesContrariasOptions,
   usuariosOptions = [],
 }: ContratosTableWrapperProps) {
-  const router = useRouter();
-
   // ---------- Estado dos Dados ----------
   const [contratos, setContratos] = React.useState<Contrato[]>(initialData);
   const [table, setTable] = React.useState<TanstackTable<Contrato> | null>(null);
@@ -311,14 +308,12 @@ export function ContratosTableWrapper({
     refetch();
     setEditOpen(false);
     setContratoSelecionado(null);
-    router.refresh();
-  }, [refetch, router]);
+  }, [refetch]);
 
   const handleCreateSuccess = React.useCallback(() => {
     refetch();
     setCreateOpen(false);
-    router.refresh();
-  }, [refetch, router]);
+  }, [refetch]);
 
   // ---------- Columns (Memoized) ----------
   const columns = React.useMemo(
@@ -515,8 +510,7 @@ export function ContratosTableWrapper({
             if (!open) setContratoSelecionado(null);
           }}
           onSuccess={() => {
-            // Atualizar a view sheet se estiver aberta
-            router.refresh();
+            refetch();
           }}
         />
       )}
@@ -532,7 +526,6 @@ export function ContratosTableWrapper({
           }}
           onSuccess={() => {
             refetch();
-            router.refresh();
           }}
         />
       )}
