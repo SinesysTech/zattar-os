@@ -16,8 +16,6 @@ import {
   FileEdit,
   MessageSquare,
   PenTool,
-  UsersRound,
-  StickyNote,
   CalendarCheck,
   Search,
   ScrollText,

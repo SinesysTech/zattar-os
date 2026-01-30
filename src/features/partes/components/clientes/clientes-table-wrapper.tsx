@@ -66,7 +66,7 @@ export function ClientesTableWrapper({
 
   // Pagination
   const [pageIndex, setPageIndex] = React.useState(initialPagination ? initialPagination.page - 1 : 0);
-  const [pageSize, setPageSize] = React.useState(initialPagination ? initialPagination.limit : 50);
+  const [pageSize, _setPageSize] = React.useState(initialPagination ? initialPagination.limit : 50);
   const [total, setTotal] = React.useState(initialPagination ? initialPagination.total : 0);
   const [totalPages, setTotalPages] = React.useState(initialPagination ? initialPagination.totalPages : 0);
 

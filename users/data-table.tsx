@@ -185,7 +185,7 @@ export const columns: ColumnDef<User>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
+    cell: ({ row: _row }) => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -377,7 +377,7 @@ export default function UsersDataTable({ data }: { data: User[] }) {
                       <CommandItem
                         key={role.value}
                         value={role.value}
-                        onSelect={(currentValue) => {
+                        onSelect={(_currentValue) => {
                           // setValue(currentValue === value ? "" : currentValue);
                           // setOpen(false);
                         }}>

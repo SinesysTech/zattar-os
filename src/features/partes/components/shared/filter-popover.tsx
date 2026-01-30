@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import {
   Popover,
   PopoverContent,
@@ -54,9 +54,9 @@ export function FilterPopover({
           <PlusCircle className="h-4 w-4" />
           {label}
           {isFiltered && selected && (
-            <Badge variant="secondary" className="ml-1 rounded-sm px-1.5 font-normal">
+            <AppBadge variant="secondary" className="ml-1 rounded-sm px-1.5 font-normal">
               {selected.label}
-            </Badge>
+            </AppBadge>
           )}
         </Button>
       </PopoverTrigger>
