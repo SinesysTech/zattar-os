@@ -109,7 +109,7 @@ export function ClienteResponsavelCell({
                                     {getInitials(responsavel.nomeExibicao)}
                                 </AvatarFallback>
                             </Avatar>
-                            <span className="truncate max-w-[120px] text-xs font-normal text-foreground">
+                            <span className="truncate max-w-30 text-xs font-normal text-foreground">
                                 {responsavel.nomeExibicao}
                             </span>
                         </>

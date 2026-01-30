@@ -1,32 +1,40 @@
 'use client';
 
-/**
- * ClientesTableWrapper - Componente Client que encapsula a tabela de clientes
- *
- * Recebe dados iniciais do Server Component e gerencia:
- * - Estado de busca e filtros
- * - Paginacao client-side com refresh via Server Actions
- * - Dialogs de criacao e edicao
- */
-
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+import { Columns } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataShell, DataPagination, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { Cliente } from '../../types';
 import { ClienteFormDialog } from './cliente-form';
 import { getClientesColumns, ClienteComProcessos } from './columns';
 import { actionDesativarCliente, actionListarClientes } from '../../actions';
 import { ChatwootSyncButton } from '@/features/chatwoot/components';
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import type { Table as TanstackTable } from '@tanstack/react-table';
+import { FilterPopover } from '../shared';
 
 // =============================================================================
 // TIPOS
@@ -55,11 +63,8 @@ export function ClientesTableWrapper({
 }: ClientesTableWrapperProps = {}) {
   const router = useRouter();
   const [clientes, setClientes] = React.useState<ClienteComProcessos[]>(initialData as ClienteComProcessos[]);
-  const [table, setTable] = React.useState<TanstackTable<ClienteComProcessos> | null>(null);
-  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
-
-  // Pagination State
+  // Pagination
   const [pageIndex, setPageIndex] = React.useState(initialPagination ? initialPagination.page - 1 : 0);
   const [pageSize, setPageSize] = React.useState(initialPagination ? initialPagination.limit : 50);
   const [total, setTotal] = React.useState(initialPagination ? initialPagination.total : 0);
@@ -68,24 +73,26 @@ export function ClientesTableWrapper({
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Filter & Search State (mapped to DataTable state if needed, but here we control data fetching)
+  // Search & Filters
   const [globalFilter, setGlobalFilter] = React.useState('');
   const [tipoPessoa, setTipoPessoa] = React.useState<'all' | 'pf' | 'pj'>('all');
   const [situacao, setSituacao] = React.useState<'ativo' | 'inativo' | ''>('ativo');
-  // We can map specific column filters here if we want to server-side filter them
-  // For now, let's focus on global search and simple pagination as in the original
 
+  // Table state
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+
+  // Dialog state
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [clienteParaEditar, setClienteParaEditar] = React.useState<ClienteComProcessos | null>(null);
 
   const buscaDebounced = useDebounce(globalFilter, 500);
 
-  // Funcao para recarregar dados
+  // Data fetching
   const refetch = React.useCallback(async () => {
     setIsLoading(true);
     setError(null);
-
     try {
       const result = await actionListarClientes({
         pagina: pageIndex + 1,
@@ -96,7 +103,6 @@ export function ClientesTableWrapper({
         incluir_endereco: true,
         incluir_processos: true,
       });
-
       if (result.success) {
         const data = result.data as { data: ClienteComProcessos[]; pagination: PaginationInfo };
         setClientes(data.data);
@@ -112,18 +118,13 @@ export function ClientesTableWrapper({
     }
   }, [pageIndex, pageSize, buscaDebounced, tipoPessoa, situacao]);
 
-  // Ref para controlar primeira renderizacao
   const isFirstRender = React.useRef(true);
 
-
-  // Recarregar quando parametros mudam
   React.useEffect(() => {
-    // Evitar execucao na montagem inicial se ja houver dados
     if (isFirstRender.current) {
       isFirstRender.current = false;
       if (initialPagination) return;
     }
-
     refetch();
   }, [pageIndex, pageSize, buscaDebounced, refetch, initialPagination]);
 
@@ -171,109 +172,172 @@ export function ClientesTableWrapper({
     [handleEdit, handleDelete]
   );
 
+  const table = useReactTable({
+    data: clientes,
+    columns,
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    state: { sorting, columnVisibility },
+    manualPagination: true,
+    pageCount: totalPages,
+  });
 
   return (
     <>
-      <DataShell
-        header={
-          table ? (
-            <DataTableToolbar
-              table={table}
-              density={density}
-              onDensityChange={setDensity}
-              searchValue={globalFilter}
-              onSearchValueChange={(value) => {
-                setGlobalFilter(value);
+      <div className="w-full">
+        <div className="flex items-center gap-4 py-4">
+          <div className="flex gap-2 flex-1">
+            <Input
+              placeholder="Buscar clientes..."
+              value={globalFilter}
+              onChange={(e) => {
+                setGlobalFilter(e.target.value);
                 setPageIndex(0);
               }}
-              actionButton={{
-                label: 'Novo Cliente',
-                onClick: () => setCreateOpen(true),
+              className="max-w-sm"
+            />
+            <FilterPopover
+              label="Situação"
+              options={[
+                { value: 'ativo', label: 'Ativo' },
+                { value: 'inativo', label: 'Inativo' },
+              ]}
+              value={situacao}
+              onValueChange={(val) => {
+                setSituacao(val as typeof situacao);
+                setPageIndex(0);
               }}
-              actionSlot={
-                <ChatwootSyncButton
-                  tipoEntidade="cliente"
-                  apenasAtivos={situacao === 'ativo'}
-                />
-              }
-              filtersSlot={
-                <>
-                  <Select
-                    value={situacao}
-                    onValueChange={(val) => {
-                      const next = val as 'ativo' | 'inativo' | '';
-                      setSituacao(next);
-                      setPageIndex(0);
-                    }}
-                  >
-                    <SelectTrigger className="h-10 w-37.5">
-                      <SelectValue placeholder="Situação" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="ativo">Ativo</SelectItem>
-                      <SelectItem value="inativo">Inativo</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Select
-                    value={tipoPessoa}
-                    onValueChange={(val) => {
-                      const next = val as 'all' | 'pf' | 'pj';
-                      setTipoPessoa(next);
-                      setPageIndex(0);
-                    }}
-                  >
-                    <SelectTrigger className="h-10 w-42.5">
-                      <SelectValue placeholder="Tipo de pessoa" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todas</SelectItem>
-                      <SelectItem value="pf">Pessoa Física</SelectItem>
-                      <SelectItem value="pj">Pessoa Jurídica</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </>
-              }
+              defaultValue=""
             />
-          ) : (
-            <div className="p-6" />
-          )
-        }
-        footer={
-          totalPages > 0 ? (
-            <DataPagination
-              pageIndex={pageIndex}
-              pageSize={pageSize}
-              total={total}
-              totalPages={totalPages}
-              onPageChange={setPageIndex}
-              onPageSizeChange={setPageSize}
-              isLoading={isLoading}
+            <FilterPopover
+              label="Tipo Pessoa"
+              options={[
+                { value: 'pf', label: 'Pessoa Física' },
+                { value: 'pj', label: 'Pessoa Jurídica' },
+              ]}
+              value={tipoPessoa}
+              onValueChange={(val) => {
+                setTipoPessoa(val as typeof tipoPessoa);
+                setPageIndex(0);
+              }}
             />
-          ) : null
-        }
-      >
-        <div className="relative border-t">
-          <DataTable
-            data={clientes}
-            columns={columns}
-            pagination={{
-              pageIndex,
-              pageSize,
-              total,
-              totalPages,
-              onPageChange: setPageIndex,
-              onPageSizeChange: setPageSize,
-            }}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<ClienteComProcessos>)}
-            hideTableBorder={true}
-            emptyMessage="Nenhum cliente encontrado."
-          />
+          </div>
+          <div className="flex items-center gap-2">
+            <ChatwootSyncButton
+              tipoEntidade="cliente"
+              apenasAtivos={situacao === 'ativo'}
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  <Columns className="h-4 w-4" />
+                  <span className="hidden md:inline">Colunas</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) => column.toggleVisibility(value)}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button onClick={() => setCreateOpen(true)}>Novo Cliente</Button>
+          </div>
         </div>
-      </DataShell>
+
+        {error && (
+          <div className="mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <TableRow key={`skeleton-${i}`}>
+                    {columns.map((_, j) => (
+                      <TableCell key={`skeleton-${i}-${j}`}>
+                        <Skeleton className="h-8 w-full" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    Nenhum cliente encontrado.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        {totalPages > 0 && (
+          <div className="flex items-center justify-between pt-4">
+            <div className="text-muted-foreground text-sm">
+              {total} registro(s)
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">
+                Página {pageIndex + 1} de {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPageIndex(Math.max(0, pageIndex - 1))}
+                disabled={pageIndex === 0 || isLoading}
+              >
+                Anterior
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPageIndex(Math.min(totalPages - 1, pageIndex + 1))}
+                disabled={pageIndex >= totalPages - 1 || isLoading}
+              >
+                Próximo
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
 
       <ClienteFormDialog
         open={createOpen}
@@ -281,7 +345,6 @@ export function ClientesTableWrapper({
         onSuccess={handleCreateSuccess}
         mode="create"
       />
-
       {clienteParaEditar && (
         <ClienteFormDialog
           open={editOpen}

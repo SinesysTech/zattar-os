@@ -60,12 +60,12 @@ export function EditableTextCell({
             <div
                 onClick={() => setIsOpen(true)}
                 className={cn(
-                    'group relative min-w-10 min-h-[20px] cursor-pointer hover:bg-muted/50 transition-colors rounded px-1 -mx-1',
+                    'group relative min-w-10 min-h-5 cursor-pointer hover:bg-muted/50 transition-colors rounded px-1 -mx-1',
                     triggerClassName
                 )}
             >
                 <div className={cn(
-                    'text-xs whitespace-pre-wrap wrap-break-word max-h-[80px] overflow-hidden text-ellipsis text-muted-foreground group-hover:text-foreground transition-colors leading-relaxed',
+                    'text-xs whitespace-pre-wrap wrap-break-word max-h-20 overflow-hidden text-ellipsis text-muted-foreground group-hover:text-foreground transition-colors leading-relaxed',
                     className
                 )}>
                     {value || (emptyPlaceholder ? <span className="opacity-30 italic">{emptyPlaceholder}</span> : null)}
@@ -102,7 +102,7 @@ export function EditableTextCell({
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         placeholder={placeholder}
-                        className="resize-none min-h-[150px]"
+                        className="resize-none min-h-37.5"
                         disabled={isLoading}
                         autoFocus
                     />
