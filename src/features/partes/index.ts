@@ -39,29 +39,13 @@ export {
   ProcessosRelacionadosCell,
   CopyButton,
   // Clientes
-  CLIENTES_FILTER_CONFIGS,
-  buildClientesFilterOptions,
-  buildClientesFilterGroups,
-  parseClientesFilters,
   ClientesTableWrapper,
   ClienteForm,
   // Partes Contrarias
-  PARTES_CONTRARIAS_FILTER_CONFIGS,
-  buildPartesContrariasFilterOptions,
-  buildPartesContrariasFilterGroups,
-  parsePartesContrariasFilters,
   PartesContrariasTableWrapper,
   // Terceiros
-  TERCEIROS_FILTER_CONFIGS,
-  buildTerceirosFilterOptions,
-  buildTerceirosFilterGroups,
-  parseTerceirosFilters,
   TerceirosTableWrapper,
   // Representantes
-  REPRESENTANTES_FILTER_CONFIGS,
-  buildRepresentantesFilterOptions,
-  buildRepresentantesFilterGroups,
-  parseRepresentantesFilters,
   RepresentantesTableWrapper,
 } from "./components";
 
