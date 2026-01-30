@@ -229,6 +229,7 @@ export interface ClienteBase {
   observacoes: string | null;
   dados_anteriores: Record<string, unknown> | null;
   endereco_id: number | null;
+  responsavel_id: number | null;
   ativo: boolean;
   created_by: number | null;
   created_at: string;
@@ -419,6 +420,7 @@ export const updateClienteSchema = z.object({
   autoridade: z.boolean().nullable().optional(),
   observacoes: z.string().max(5000).nullable().optional(),
   endereco_id: z.number().positive().nullable().optional(),
+  responsavel_id: z.number().positive().nullable().optional(),
   ativo: z.boolean().optional(),
 
   // Campos PF

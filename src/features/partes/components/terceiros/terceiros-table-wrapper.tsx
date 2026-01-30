@@ -8,26 +8,42 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataPagination, DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
-import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Eye, Pencil } from 'lucide-react';
-import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
+import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Eye, Pencil, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  flexRender,
+  type ColumnDef,
+  type SortingState,
+  type VisibilityState,
+} from '@tanstack/react-table';
 import type { Terceiro, ProcessoRelacionado } from '../../types';
 
 // Imports da nova estrutura de features
 import { useTerceiros } from '../../hooks';
-import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell } from '../shared';
+import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell, FilterPopover } from '../shared';
 import { TerceiroFormDialog } from './terceiro-form';
 import { ChatwootSyncButton } from '@/features/chatwoot/components';
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import {
   formatarCpf,
   formatarCnpj,
@@ -88,9 +104,9 @@ function TerceiroActions({ terceiro, onEdit }: TerceiroActionsProps) {
           <span className="sr-only">Visualizar terceiro</span>
         </Link>
       </Button>
-      <Button 
-        variant="ghost" 
-        size="icon" 
+      <Button
+        variant="ghost"
+        size="icon"
         className="h-8 w-8"
         onClick={() => onEdit(terceiro)}
       >
@@ -104,9 +120,7 @@ function TerceiroActions({ terceiro, onEdit }: TerceiroActionsProps) {
 export function TerceirosTableWrapper() {
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
-  const [limite, setLimite] = React.useState(50);
-  const [ordenarPor, setOrdenarPor] = React.useState<'nome' | 'cpf' | 'cnpj' | 'tipo_parte' | null>('nome');
-  const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc');
+  const [limite] = React.useState(50);
 
   // Filtros
   const [tipoPessoa, setTipoPessoa] = React.useState<'all' | 'pf' | 'pj'>('all');
@@ -114,9 +128,9 @@ export function TerceirosTableWrapper() {
   const [polo, setPolo] = React.useState<'all' | 'ativo' | 'passivo'>('all');
   const [situacao, setSituacao] = React.useState<'all' | 'A' | 'I'>('all');
 
-  // Estados para o novo DataTableToolbar
-  const [table, setTable] = React.useState<TanstackTable<TerceiroComProcessos> | null>(null);
-  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+  // Table state
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
 
   // Estados para diálogos
   const [createOpen, setCreateOpen] = React.useState(false);
@@ -286,15 +300,20 @@ export function TerceirosTableWrapper() {
     [handleEdit]
   );
 
-  const handleSortingChange = React.useCallback((columnId: string | null, direction: 'asc' | 'desc' | null) => {
-    if (columnId && direction) {
-      setOrdenarPor(columnId as typeof ordenarPor);
-      setOrdem(direction);
-    } else {
-      setOrdenarPor(null);
-      setOrdem('asc');
-    }
-  }, []);
+  const table = useReactTable({
+    data: terceiros,
+    columns,
+    state: {
+      sorting,
+      columnVisibility,
+    },
+    onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    manualPagination: true,
+    pageCount: paginacao?.totalPaginas ?? 0,
+  });
 
   const handleCreateSuccess = React.useCallback(() => {
     setCreateOpen(false);
@@ -307,156 +326,227 @@ export function TerceirosTableWrapper() {
     refetch();
   }, [refetch]);
 
+  const total = paginacao?.total ?? 0;
+  const totalPages = paginacao?.totalPaginas ?? 0;
+
   return (
-    <DataShell
-      header={
-        table ? (
-          <DataTableToolbar
-            table={table}
-            density={density}
-            onDensityChange={setDensity}
-            searchValue={busca}
-            onSearchValueChange={(value) => {
-              setBusca(value);
-              setPagina(0);
-            }}
-            searchPlaceholder="Buscar terceiros..."
-            actionButton={{
-              label: 'Novo Terceiro',
-              onClick: () => setCreateOpen(true),
-            }}
-            actionSlot={
-              <ChatwootSyncButton
-                tipoEntidade="terceiro"
-                apenasAtivos={situacao === 'A'}
-              />
-            }
-            filtersSlot={
-              <>
-                <Select
-                  value={tipoPessoa}
-                  onValueChange={(val) => {
-                    setTipoPessoa(val as 'all' | 'pf' | 'pj');
-                    setPagina(0);
-                  }}
-                >
-                  <SelectTrigger className="h-10 w-42.5">
-                    <SelectValue placeholder="Tipo de pessoa" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas</SelectItem>
-                    <SelectItem value="pf">Pessoa Física</SelectItem>
-                    <SelectItem value="pj">Pessoa Jurídica</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Select
-                  value={tipoParte}
-                  onValueChange={(val) => {
-                    setTipoParte(val);
-                    setPagina(0);
-                  }}
-                >
-                  <SelectTrigger className="h-10 w-42.5">
-                    <SelectValue placeholder="Tipo de parte" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos</SelectItem>
-                    <SelectItem value="perito">Perito</SelectItem>
-                    <SelectItem value="ministerio_publico">Ministério Público</SelectItem>
-                    <SelectItem value="assistente">Assistente</SelectItem>
-                    <SelectItem value="testemunha">Testemunha</SelectItem>
-                    <SelectItem value="custos_legis">Custos Legis</SelectItem>
-                    <SelectItem value="amicus_curiae">Amicus Curiae</SelectItem>
-                    <SelectItem value="outro">Outro</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Select
-                  value={polo}
-                  onValueChange={(val) => {
-                    setPolo(val as 'all' | 'ativo' | 'passivo');
-                    setPagina(0);
-                  }}
-                >
-                  <SelectTrigger className="h-10 w-42.5">
-                    <SelectValue placeholder="Polo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos</SelectItem>
-                    <SelectItem value="ativo">Polo Ativo</SelectItem>
-                    <SelectItem value="passivo">Polo Passivo</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Select
-                  value={situacao}
-                  onValueChange={(val) => {
-                    setSituacao(val as 'all' | 'A' | 'I');
-                    setPagina(0);
-                  }}
-                >
-                  <SelectTrigger className="h-10 w-32.5">
-                    <SelectValue placeholder="Situação" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas</SelectItem>
-                    <SelectItem value="A">Ativo</SelectItem>
-                    <SelectItem value="I">Inativo</SelectItem>
-                  </SelectContent>
-                </Select>
-              </>
-            }
-          />
-        ) : (
-          <div className="p-6" />
-        )
-      }
-      footer={
-        paginacao ? (
-          <DataPagination
-            pageIndex={paginacao.pagina - 1}
-            pageSize={paginacao.limite}
-            total={paginacao.total}
-            totalPages={paginacao.totalPaginas}
-            onPageChange={setPagina}
-            onPageSizeChange={setLimite}
-            isLoading={isLoading}
-          />
-        ) : null
-      }
-    >
-      <div className="relative border-t">
-        <DataTable
-          columns={columns}
-          data={terceiros}
-          pagination={
-            paginacao
-              ? {
-                  pageIndex: paginacao.pagina - 1,
-                  pageSize: paginacao.limite,
-                  total: paginacao.total,
-                  totalPages: paginacao.totalPaginas,
-                  onPageChange: setPagina,
-                  onPageSizeChange: setLimite,
-                }
-              : undefined
-          }
-          sorting={{
-            columnId: ordenarPor,
-            direction: ordem,
-            onSortingChange: handleSortingChange,
+    <div className="space-y-4">
+      {/* Toolbar */}
+      <div className="flex items-center gap-4 py-4">
+        <Input
+          placeholder="Buscar terceiros..."
+          value={busca}
+          onChange={(e) => {
+            setBusca(e.target.value);
+            setPagina(0);
           }}
-          isLoading={isLoading}
-          error={error}
-          density={density}
-          onTableReady={(t) => setTable(t as TanstackTable<TerceiroComProcessos>)}
-          emptyMessage="Nenhum terceiro encontrado"
-          hideTableBorder={true}
-          hidePagination={true}
+          className="h-10 w-62.5"
         />
+
+        <FilterPopover
+          label="Tipo Pessoa"
+          value={tipoPessoa}
+          onValueChange={(value) => {
+            setTipoPessoa(value as 'all' | 'pf' | 'pj');
+            setPagina(0);
+          }}
+          options={[
+            { value: 'pf', label: 'Pessoa Física' },
+            { value: 'pj', label: 'Pessoa Jurídica' },
+          ]}
+          defaultValue="all"
+        />
+
+        <FilterPopover
+          label="Tipo Parte"
+          value={tipoParte}
+          onValueChange={(value) => {
+            setTipoParte(value);
+            setPagina(0);
+          }}
+          options={[
+            { value: 'perito', label: 'Perito' },
+            { value: 'ministerio_publico', label: 'Ministério Público' },
+            { value: 'assistente', label: 'Assistente' },
+            { value: 'testemunha', label: 'Testemunha' },
+            { value: 'custos_legis', label: 'Custos Legis' },
+            { value: 'amicus_curiae', label: 'Amicus Curiae' },
+            { value: 'outro', label: 'Outro' },
+          ]}
+          defaultValue="all"
+        />
+
+        <FilterPopover
+          label="Polo"
+          value={polo}
+          onValueChange={(value) => {
+            setPolo(value as 'all' | 'ativo' | 'passivo');
+            setPagina(0);
+          }}
+          options={[
+            { value: 'ativo', label: 'Polo Ativo' },
+            { value: 'passivo', label: 'Polo Passivo' },
+          ]}
+          defaultValue="all"
+        />
+
+        <FilterPopover
+          label="Situação"
+          value={situacao}
+          onValueChange={(value) => {
+            setSituacao(value as 'all' | 'A' | 'I');
+            setPagina(0);
+          }}
+          options={[
+            { value: 'A', label: 'Ativo' },
+            { value: 'I', label: 'Inativo' },
+          ]}
+          defaultValue="all"
+        />
+
+        <div className="ml-auto flex items-center gap-2">
+          <ChatwootSyncButton
+            tipoEntidade="terceiro"
+            apenasAtivos={situacao === 'A'}
+          />
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-10">
+                Colunas <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button onClick={() => setCreateOpen(true)} size="sm" className="h-10">
+            Novo Terceiro
+          </Button>
+        </div>
       </div>
 
+      {/* Error */}
+      {error && (
+        <div className="mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {error}
+        </div>
+      )}
+
+      {/* Table */}
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              Array.from({ length: 10 }).map((_, index) => (
+                <TableRow key={index}>
+                  {columns.map((_, cellIndex) => (
+                    <TableCell key={cellIndex}>
+                      <Skeleton className="h-8 w-full" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  Nenhum terceiro encontrado.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex items-center justify-between pt-4">
+        <div className="text-sm text-muted-foreground">
+          {total > 0 ? (
+            <>
+              Mostrando {pagina * limite + 1} a{' '}
+              {Math.min((pagina + 1) * limite, total)} de {total} resultados
+            </>
+          ) : (
+            'Nenhum resultado encontrado'
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPagina((old) => Math.max(0, old - 1))}
+            disabled={pagina === 0 || isLoading}
+          >
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Anterior
+          </Button>
+          <div className="text-sm text-muted-foreground">
+            Página {pagina + 1} de {totalPages || 1}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPagina((old) => old + 1)}
+            disabled={pagina >= totalPages - 1 || isLoading}
+          >
+            Próximo
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Dialogs */}
       <TerceiroFormDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
@@ -476,6 +566,6 @@ export function TerceirosTableWrapper() {
           mode="edit"
         />
       )}
-    </DataShell>
+    </div>
   );
 }

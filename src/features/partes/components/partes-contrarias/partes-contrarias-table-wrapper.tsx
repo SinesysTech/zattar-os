@@ -7,25 +7,41 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useDebounce } from '@/hooks/use-debounce';
-import { DataPagination, DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
-import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type ColumnDef,
+} from '@tanstack/react-table';
+import { Columns, Eye, Pencil } from 'lucide-react';
+import { useDebounce } from '@/hooks/use-debounce';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Eye, Pencil } from 'lucide-react';
-import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import type { ParteContraria, ProcessoRelacionado } from '../../types';
 
 // Imports da nova estrutura de features
 import { usePartesContrarias } from '../../hooks';
-import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell } from '../shared';
+import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell, FilterPopover } from '../shared';
 import { ParteContrariaFormDialog } from './parte-contraria-form';
 import { ChatwootSyncButton } from '@/features/chatwoot/components';
 import {
@@ -36,6 +52,10 @@ import {
   calcularIdade,
 } from '../../utils';
 import type { PartesContrariasFilters } from '../../types';
+
+// =============================================================================
+// TIPOS
+// =============================================================================
 
 /**
  * Tipo estendido de parte contrária com processos relacionados
@@ -55,6 +75,10 @@ type ParteContrariaComProcessos = ParteContraria & {
   endereco?: ParteEndereco | null;
 };
 
+// =============================================================================
+// FUNÇÕES AUXILIARES
+// =============================================================================
+
 /**
  * Formata data para exibição (DD/MM/YYYY)
  */
@@ -72,6 +96,10 @@ function formatarData(dataISO: string | null): string {
   }
 }
 
+// =============================================================================
+// COMPONENTES INTERNOS
+// =============================================================================
+
 interface ParteContrariaActionsProps {
   parte: ParteContrariaComProcessos;
   onEdit: (parte: ParteContrariaComProcessos) => void;
@@ -86,9 +114,9 @@ function ParteContrariaActions({ parte, onEdit }: ParteContrariaActionsProps) {
           <span className="sr-only">Visualizar parte contrária</span>
         </Link>
       </Button>
-      <Button 
-        variant="ghost" 
-        size="icon" 
+      <Button
+        variant="ghost"
+        size="icon"
         className="h-8 w-8"
         onClick={() => onEdit(parte)}
       >
@@ -99,20 +127,25 @@ function ParteContrariaActions({ parte, onEdit }: ParteContrariaActionsProps) {
   );
 }
 
+// =============================================================================
+// COMPONENTE PRINCIPAL
+// =============================================================================
+
 export function PartesContrariasTableWrapper() {
+  // Search & Filters
   const [busca, setBusca] = React.useState('');
-  const [pagina, setPagina] = React.useState(0);
-  const [limite, setLimite] = React.useState(50);
-  const [ordenarPor, setOrdenarPor] = React.useState<'nome' | 'cpf' | 'cnpj' | null>('nome');
-  const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc');
   const [tipoPessoa, setTipoPessoa] = React.useState<'all' | 'pf' | 'pj'>('all');
   const [situacao, setSituacao] = React.useState<'all' | 'A' | 'I'>('all');
 
-  // Estados para o novo DataTableToolbar
-  const [table, setTable] = React.useState<TanstackTable<ParteContrariaComProcessos> | null>(null);
-  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+  // Pagination
+  const [pagina, setPagina] = React.useState(0);
+  const [limite] = React.useState(50);
 
-  // Estados para diálogos
+  // Table state
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+
+  // Dialog state
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [parteParaEditar, setParteParaEditar] = React.useState<ParteContrariaComProcessos | null>(null);
@@ -137,22 +170,24 @@ export function PartesContrariasTableWrapper() {
 
   const { partesContrarias, paginacao, isLoading, error, refetch } = usePartesContrarias(params);
 
-  // Handlers devem ser definidos antes de serem usados nas colunas
+  // Handlers
   const handleEdit = React.useCallback((parte: ParteContrariaComProcessos) => {
     setParteParaEditar(parte);
     setEditOpen(true);
   }, []);
 
-  const handleSortingChange = React.useCallback((columnId: string | null, direction: 'asc' | 'desc' | null) => {
-    if (columnId && direction) {
-      setOrdenarPor(columnId as typeof ordenarPor);
-      setOrdem(direction);
-    } else {
-      setOrdenarPor(null);
-      setOrdem('asc');
-    }
-  }, []);
+  const handleCreateSuccess = React.useCallback(() => {
+    setCreateOpen(false);
+    refetch();
+  }, [refetch]);
 
+  const handleEditSuccess = React.useCallback(() => {
+    setEditOpen(false);
+    setParteParaEditar(null);
+    refetch();
+  }, [refetch]);
+
+  // Columns definition
   const columns = React.useMemo<ColumnDef<ParteContrariaComProcessos>[]>(
     () => [
       {
@@ -282,128 +317,184 @@ export function PartesContrariasTableWrapper() {
     [handleEdit]
   );
 
-  const handleCreateSuccess = React.useCallback(() => {
-    setCreateOpen(false);
-    refetch();
-  }, [refetch]);
+  // TanStack Table
+  const table = useReactTable({
+    data: partesContrarias,
+    columns,
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    state: { sorting, columnVisibility },
+    manualPagination: true,
+    pageCount: paginacao?.totalPaginas ?? 0,
+  });
 
-  const handleEditSuccess = React.useCallback(() => {
-    setEditOpen(false);
-    setParteParaEditar(null);
-    refetch();
-  }, [refetch]);
+  const pageIndex = pagina;
+  const total = paginacao?.total ?? 0;
+  const totalPages = paginacao?.totalPaginas ?? 0;
 
   return (
-    <DataShell
-      header={
-        table ? (
-          <DataTableToolbar
-            table={table}
-            density={density}
-            onDensityChange={setDensity}
-            searchValue={busca}
-            onSearchValueChange={(value) => {
-              setBusca(value);
-              setPagina(0);
-            }}
-            searchPlaceholder="Buscar partes contrárias..."
-            actionButton={{
-              label: 'Nova Parte Contrária',
-              onClick: () => setCreateOpen(true),
-            }}
-            actionSlot={
-              <ChatwootSyncButton
-                tipoEntidade="parte_contraria"
-                apenasAtivos={situacao === 'A'}
-              />
-            }
-            filtersSlot={
-              <>
-                <Select
-                  value={tipoPessoa}
-                  onValueChange={(val) => {
-                    setTipoPessoa(val as 'all' | 'pf' | 'pj');
-                    setPagina(0);
-                  }}
-                >
-                  <SelectTrigger className="h-10 w-42.5">
-                    <SelectValue placeholder="Tipo de pessoa" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas</SelectItem>
-                    <SelectItem value="pf">Pessoa Física</SelectItem>
-                    <SelectItem value="pj">Pessoa Jurídica</SelectItem>
-                  </SelectContent>
-                </Select>
+    <>
+      <div className="w-full">
+        {/* Toolbar */}
+        <div className="flex items-center gap-4 py-4">
+          <div className="flex gap-2 flex-1">
+            <Input
+              placeholder="Buscar partes contrárias..."
+              value={busca}
+              onChange={(e) => {
+                setBusca(e.target.value);
+                setPagina(0);
+              }}
+              className="max-w-sm"
+            />
+            <FilterPopover
+              label="Tipo Pessoa"
+              options={[
+                { value: 'pf', label: 'Pessoa Física' },
+                { value: 'pj', label: 'Pessoa Jurídica' },
+              ]}
+              value={tipoPessoa}
+              onValueChange={(val) => {
+                setTipoPessoa(val as typeof tipoPessoa);
+                setPagina(0);
+              }}
+              defaultValue="all"
+            />
+            <FilterPopover
+              label="Situação"
+              options={[
+                { value: 'A', label: 'Ativo' },
+                { value: 'I', label: 'Inativo' },
+              ]}
+              value={situacao}
+              onValueChange={(val) => {
+                setSituacao(val as typeof situacao);
+                setPagina(0);
+              }}
+              defaultValue="all"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <ChatwootSyncButton
+              tipoEntidade="parte_contraria"
+              apenasAtivos={situacao === 'A'}
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  <Columns className="h-4 w-4" />
+                  <span className="hidden md:inline">Colunas</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) => column.toggleVisibility(value)}
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button onClick={() => setCreateOpen(true)}>Nova Parte Contrária</Button>
+          </div>
+        </div>
 
-                <Select
-                  value={situacao}
-                  onValueChange={(val) => {
-                    setSituacao(val as 'all' | 'A' | 'I');
-                    setPagina(0);
-                  }}
-                >
-                  <SelectTrigger className="h-10 w-32.5">
-                    <SelectValue placeholder="Situação" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas</SelectItem>
-                    <SelectItem value="A">Ativo</SelectItem>
-                    <SelectItem value="I">Inativo</SelectItem>
-                  </SelectContent>
-                </Select>
-              </>
-            }
-          />
-        ) : (
-          <div className="p-6" />
-        )
-      }
-      footer={
-        paginacao ? (
-          <DataPagination
-            pageIndex={paginacao.pagina - 1}
-            pageSize={paginacao.limite}
-            total={paginacao.total}
-            totalPages={paginacao.totalPaginas}
-            onPageChange={setPagina}
-            onPageSizeChange={setLimite}
-            isLoading={isLoading}
-          />
-        ) : null
-      }
-    >
-      <div className="relative border-t">
-        <DataTable
-          columns={columns}
-          data={partesContrarias}
-          pagination={
-            paginacao
-              ? {
-                  pageIndex: paginacao.pagina - 1,
-                  pageSize: paginacao.limite,
-                  total: paginacao.total,
-                  totalPages: paginacao.totalPaginas,
-                  onPageChange: setPagina,
-                  onPageSizeChange: setLimite,
-                }
-              : undefined
-          }
-          sorting={{
-            columnId: ordenarPor,
-            direction: ordem,
-            onSortingChange: handleSortingChange,
-          }}
-          isLoading={isLoading}
-          error={error}
-          density={density}
-          onTableReady={(t) => setTable(t as TanstackTable<ParteContrariaComProcessos>)}
-          emptyMessage="Nenhuma parte contrária encontrada"
-          hideTableBorder={true}
-          hidePagination={true}
-        />
+        {/* Error Display */}
+        {error && (
+          <div className="mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
+        {/* Table */}
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <TableRow key={`skeleton-${i}`}>
+                    {columns.map((_, j) => (
+                      <TableCell key={`skeleton-${i}-${j}`}>
+                        <Skeleton className="h-8 w-full" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    Nenhuma parte contrária encontrada.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 0 && (
+          <div className="flex items-center justify-between pt-4">
+            <div className="text-muted-foreground text-sm">
+              {total} registro(s)
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">
+                Página {pageIndex + 1} de {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPagina(Math.max(0, pageIndex - 1))}
+                disabled={pageIndex === 0 || isLoading}
+              >
+                Anterior
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPagina(Math.min(totalPages - 1, pageIndex + 1))}
+                disabled={pageIndex >= totalPages - 1 || isLoading}
+              >
+                Próximo
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
+      {/* Dialogs */}
       <ParteContrariaFormDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
@@ -423,6 +514,6 @@ export function PartesContrariasTableWrapper() {
           mode="edit"
         />
       )}
-    </DataShell>
+    </>
   );
 }
