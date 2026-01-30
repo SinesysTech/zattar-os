@@ -526,11 +526,10 @@ export function useNotificacoesRealtime(options?: {
         const duration = Date.now() - startTime;
         const errorInfo = extractRealtimeErrorInfo(error);
 
-        console.error("❌ [Notificações Realtime] Falha ao configurar:", {
-          ...errorInfo,
-          duration,
-          tentativa: retryCountRef.current + 1,
-        });
+        console.warn(
+          `⚠️ [Notificações Realtime] Falha ao configurar (tentativa ${retryCountRef.current + 1}): ${errorInfo.message}`,
+          { ...errorInfo, duration }
+        );
 
         isConnectingRef.current = false;
         scheduleRetry(isMounted);

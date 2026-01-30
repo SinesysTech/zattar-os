@@ -109,7 +109,7 @@ const Notifications = () => {
           </div>
         </DropdownMenuLabel>
 
-        <ScrollArea className="h-[350px]">
+        <ScrollArea className="h-87.5">
           {loading ? (
             <div className="flex items-center justify-center p-8">
               <div className="text-sm text-muted-foreground">Carregando...</div>
