@@ -36,16 +36,8 @@ import { useMinhasPermissoes } from "@/features/usuarios"
 const navPrincipal = [
   {
     title: "Dashboard",
-    url: "/app/dashboard/geral",
+    url: "/app/dashboard",
     icon: LayoutDashboard,
-    isActive: true,
-    items: [
-      { title: "Geral", url: "/app/dashboard/geral" },
-      { title: "Contratos", url: "/app/dashboard/contratos" },
-      { title: "Processos", url: "/app/dashboard/processos" },
-      { title: "Expedientes", url: "/app/dashboard/expedientes" },
-      { title: "Audiências", url: "/app/dashboard/audiencias" },
-    ],
   },
   {
     title: "Partes",

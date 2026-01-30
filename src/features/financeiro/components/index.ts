@@ -105,6 +105,11 @@ export { FinanceiroDashboard } from './dashboard/financeiro-dashboard';
 export { FinanceiroTabsContent } from './financeiro-tabs-content';
 
 // ============================================================================
+// Gestão Dashboards Tabs
+// ============================================================================
+export { GestaoDashboardsTabs } from './gestao-dashboards-tabs';
+
+// ============================================================================
 // Provider de UsuarioId
 // ============================================================================
 export { UsuarioIdProvider, useUsuarioId } from './usuario-id-provider';
