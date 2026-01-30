@@ -139,7 +139,7 @@
   /* Bordas Sutis */
   --border: oklch(0.88 0 0);
   --input: oklch(0.88 0 0);
-  --ring: oklch(0.45 0.25 285 / 0.3); /* Anel de foco Roxo */
+  --ring: transparent; /* Foco removido globalmente */
 
   /* SIDEBAR FIXA (Sempre Escura - "Charcoal") */
   /* Mesmo no light mode, a sidebar mantém a identidade premium escura */
@@ -207,7 +207,7 @@
 
   --border: oklch(1 0 0 / 0.15);
   --input: oklch(1 0 0 / 0.15);
-  --ring: oklch(0.55 0.25 285 / 0.5);
+  --ring: transparent;
 
   /* Sidebar Dark (Mantém consistência, ajusta apenas bordas/contraste) */
   --sidebar: oklch(0.18 0 0);
@@ -265,7 +265,7 @@
   }
 
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-none;
   }
 
   body {
@@ -292,14 +292,11 @@
     @apply transition-all duration-200 ease-in-out;
   }
 
-  /* Foco visível para acessibilidade (WCAG AA) usando tokens da marca */
-  *:focus-visible {
-    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
-  }
-
-  /* Remover foco em clique de mouse, mantendo apenas para teclado */
-  *:focus:not(:focus-visible) {
-    @apply outline-none ring-0;
+  /* Foco: remover anel/contorno globalmente */
+  *:focus,
+  *:focus-visible,
+  *:focus-within {
+    @apply outline-none ring-0 ring-offset-0;
   }
 
   /* Prevenir overflow horizontal em elementos comuns */
@@ -817,4 +814,17 @@ body[data-theme-content-layout="centered"] .content-container {
   margin-right: auto;
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+/* =============================================================================
+ * GLOBAL FOCUS RING REMOVAL
+ * =============================================================================
+ * Regra fora de qualquer @layer para garantir prioridade máxima sobre
+ * utilitários Tailwind (focus-visible:ring-*) dos componentes shadcn/ui.
+ */
+*:focus,
+*:focus-visible {
+  outline: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
 }

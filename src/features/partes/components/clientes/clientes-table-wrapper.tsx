@@ -10,7 +10,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { Columns } from 'lucide-react';
+import { Columns, Plus, Search } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Button } from '@/components/ui/button';
 import {
@@ -189,15 +189,21 @@ export function ClientesTableWrapper({
       <div className="w-full">
         <div className="flex items-center gap-4 py-4">
           <div className="flex gap-2 flex-1">
-            <Input
-              placeholder="Buscar clientes..."
-              value={globalFilter}
-              onChange={(e) => {
-                setGlobalFilter(e.target.value);
-                setPageIndex(0);
-              }}
-              className="max-w-sm"
-            />
+            <div className="relative max-w-sm">
+              <Search
+                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Input
+                placeholder="Buscar clientes..."
+                value={globalFilter}
+                onChange={(e) => {
+                  setGlobalFilter(e.target.value);
+                  setPageIndex(0);
+                }}
+                className="w-full pl-9 bg-white"
+              />
+            </div>
             <FilterPopover
               label="Situação"
               options={[
@@ -231,7 +237,7 @@ export function ClientesTableWrapper({
             />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">
+                <Button variant="outline" className="h-10 bg-white">
                   <Columns className="h-4 w-4" />
                   <span className="hidden md:inline">Colunas</span>
                 </Button>
@@ -252,7 +258,10 @@ export function ClientesTableWrapper({
                   ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button onClick={() => setCreateOpen(true)}>Novo Cliente</Button>
+            <Button onClick={() => setCreateOpen(true)} className="h-10">
+              <Plus className="h-4 w-4" />
+              Novo Cliente
+            </Button>
           </div>
         </div>
 
@@ -262,7 +271,7 @@ export function ClientesTableWrapper({
           </div>
         )}
 
-        <div className="rounded-md border">
+        <div className="rounded-md border bg-white">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

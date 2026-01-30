@@ -50,7 +50,7 @@ export function FilterPopover({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="bg-white">
           <PlusCircle className="h-4 w-4" />
           {label}
           {isFiltered && selected && (
