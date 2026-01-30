@@ -48,11 +48,11 @@ export interface DataTableToolbarProps<TData> {
  *
  * IMPORTANTE - Altura Padrão Automática:
  * - Todos os elementos (Input, Select, Button, DateRangePicker) dentro desta toolbar
- *   automaticamente recebem altura h-10 (40px) via seletor CSS contextual
+ *   automaticamente recebem altura h-9 (36px) via seletor CSS contextual
  * - Isso é feito pelo atributo data-slot="data-table-toolbar" neste componente
  * - Os componentes ui/button.tsx, ui/select.tsx e ui/date-range-picker.tsx
- *   detectam este data-slot e aplicam h-10 automaticamente
- * - NÃO é necessário adicionar h-10 manualmente nos filtersSlot
+ *   detectam este data-slot e aplicam h-9 automaticamente
+ * - NÃO é necessário adicionar h-9 manualmente nos filtersSlot
  *
  * Acessibilidade:
  * - role="toolbar" com aria-label
@@ -168,7 +168,7 @@ export function DataTableToolbar<TData>({
       {/* Linha única: SearchBox + Filtros + Visualização + Exportar */}
       <div className="flex items-center gap-2">
         {/* SearchBox */}
-        <div className="relative w-full max-w-xs">
+        <div className="relative w-full max-w-md">
           <Search
             className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
             aria-hidden="true"
