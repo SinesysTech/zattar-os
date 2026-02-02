@@ -68,6 +68,10 @@ function getUsuarioNome(u: Usuario): string {
 // COMPONENTE CARD DE AUDIÊNCIA
 // =============================================================================
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AuditLogTimeline } from '@/components/common/audit-log-timeline';
+import { useAuditLogs } from '@/features/audit/hooks/use-audit-logs';
+
 function AudienciaCard({
   audiencia,
   usuarios,
@@ -78,136 +82,150 @@ function AudienciaCard({
   onSuccess?: () => void;
 }) {
   const [isResponsavelDialogOpen, setIsResponsavelDialogOpen] = React.useState(false);
+  const { logs, isLoading: loadingLogs } = useAuditLogs('audiencias', audiencia.id);
 
   const responsavel = usuarios.find((u) => u.id === audiencia.responsavelId);
   const nomeResponsavel = responsavel ? getUsuarioNome(responsavel) : null;
 
   return (
-    <div className="border rounded-lg p-4 space-y-3 bg-card">
-      {/* Header: Número do processo + Status */}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <SemanticBadge category="tribunal" value={audiencia.trt} className="text-xs shrink-0">
-              {audiencia.trt}
-            </SemanticBadge>
-            <SemanticBadge category="grau" value={audiencia.grau} className="text-xs shrink-0">
-              {GRAU_TRIBUNAL_LABELS[audiencia.grau] || audiencia.grau}
-            </SemanticBadge>
+    <div className="border rounded-lg p-4 bg-card">
+      <Tabs defaultValue="detalhes" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-4">
+          <TabsTrigger value="detalhes">Detalhes</TabsTrigger>
+          <TabsTrigger value="historico">Histórico</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="detalhes" className="space-y-3 mt-0">
+          {/* Header: Número do processo + Status */}
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <SemanticBadge category="tribunal" value={audiencia.trt} className="text-xs shrink-0">
+                  {audiencia.trt}
+                </SemanticBadge>
+                <SemanticBadge category="grau" value={audiencia.grau} className="text-xs shrink-0">
+                  {GRAU_TRIBUNAL_LABELS[audiencia.grau] || audiencia.grau}
+                </SemanticBadge>
+              </div>
+              <div className="font-semibold text-base truncate" title={audiencia.numeroProcesso}>
+                {audiencia.numeroProcesso}
+              </div>
+            </div>
+            <AudienciaStatusBadge status={audiencia.status} />
           </div>
-          <div className="font-semibold text-base truncate" title={audiencia.numeroProcesso}>
-            {audiencia.numeroProcesso}
-          </div>
-        </div>
-        <AudienciaStatusBadge status={audiencia.status} />
-      </div>
 
-      {/* Horário e Modalidade */}
-      <div className="flex items-center gap-4 text-sm">
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <Clock className="h-4 w-4" />
-          <span className="font-medium text-foreground">
-            {formatarHora(audiencia.dataInicio)}
-            {audiencia.dataFim && ` - ${formatarHora(audiencia.dataFim)}`}
-          </span>
-        </div>
-        {audiencia.modalidade && (
-          <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
-        )}
-      </div>
-
-      {/* Tipo de Audiência */}
-      {audiencia.tipoDescricao && (
-        <div className="text-sm">
-          <span className="text-muted-foreground">Tipo: </span>
-          <span className="font-medium">{audiencia.tipoDescricao}</span>
-        </div>
-      )}
-
-      {/* Local */}
-      {(audiencia.salaAudienciaNome || audiencia.urlAudienciaVirtual) && (
-        <div className="flex items-start gap-1.5 text-sm">
-          {audiencia.modalidade === 'presencial' ? (
-            <Building2 className="h-4 w-4 text-muted-foreground mt-0.5" />
-          ) : (
-            <Video className="h-4 w-4 text-muted-foreground mt-0.5" />
-          )}
-          <div className="flex-1">
-            {audiencia.salaAudienciaNome && <div>{audiencia.salaAudienciaNome}</div>}
-            {audiencia.urlAudienciaVirtual && (
-              <a
-                href={audiencia.urlAudienciaVirtual}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline truncate block"
-              >
-                {audiencia.urlAudienciaVirtual}
-              </a>
+          {/* Horário e Modalidade */}
+          <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <Clock className="h-4 w-4" />
+              <span className="font-medium text-foreground">
+                {formatarHora(audiencia.dataInicio)}
+                {audiencia.dataFim && ` - ${formatarHora(audiencia.dataFim)}`}
+              </span>
+            </div>
+            {audiencia.modalidade && (
+              <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
             )}
           </div>
-        </div>
-      )}
 
-      {/* Partes */}
-      <div className="grid grid-cols-2 gap-3 text-sm border-t pt-3">
-        <div>
-          <div className="text-xs text-muted-foreground mb-1">Polo Ativo</div>
-          <div className="font-medium truncate" title={audiencia.poloAtivoNome || ''}>
-            {audiencia.poloAtivoNome || '-'}
-          </div>
-        </div>
-        <div>
-          <div className="text-xs text-muted-foreground mb-1">Polo Passivo</div>
-          <div className="font-medium truncate" title={audiencia.poloPassivoNome || ''}>
-            {audiencia.poloPassivoNome || '-'}
-          </div>
-        </div>
-      </div>
-
-      {/* Responsável - Edição inline */}
-      <div className="border-t pt-3">
-        <div className="text-xs text-muted-foreground mb-1.5">Responsável</div>
-        <button
-          type="button"
-          onClick={() => setIsResponsavelDialogOpen(true)}
-          className="flex items-center gap-2 text-sm w-full hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
-          title={nomeResponsavel ? `Clique para alterar responsável: ${nomeResponsavel}` : 'Clique para atribuir responsável'}
-        >
-          {responsavel ? (
-            <>
-              <Avatar className="h-7 w-7 shrink-0">
-                <AvatarFallback className="text-xs font-medium">
-                  {getInitials(nomeResponsavel)}
-                </AvatarFallback>
-              </Avatar>
-              <span className="font-medium">{nomeResponsavel}</span>
-            </>
-          ) : (
-            <>
-              <User className="h-4 w-4 text-muted-foreground" />
-              <span className="text-muted-foreground">Sem responsável - clique para atribuir</span>
-            </>
+          {/* Tipo de Audiência */}
+          {audiencia.tipoDescricao && (
+            <div className="text-sm">
+              <span className="text-muted-foreground">Tipo: </span>
+              <span className="font-medium">{audiencia.tipoDescricao}</span>
+            </div>
           )}
-        </button>
-      </div>
 
-      <AudienciasAlterarResponsavelDialog
-        open={isResponsavelDialogOpen}
-        onOpenChange={setIsResponsavelDialogOpen}
-        audiencia={audiencia}
-        usuarios={usuarios}
-        onSuccess={() => {
-          onSuccess?.();
-        }}
-      />
+          {/* Local */}
+          {(audiencia.salaAudienciaNome || audiencia.urlAudienciaVirtual) && (
+            <div className="flex items-start gap-1.5 text-sm">
+              {audiencia.modalidade === 'presencial' ? (
+                <Building2 className="h-4 w-4 text-muted-foreground mt-0.5" />
+              ) : (
+                <Video className="h-4 w-4 text-muted-foreground mt-0.5" />
+              )}
+              <div className="flex-1">
+                {audiencia.salaAudienciaNome && <div>{audiencia.salaAudienciaNome}</div>}
+                {audiencia.urlAudienciaVirtual && (
+                  <a
+                    href={audiencia.urlAudienciaVirtual}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline truncate block"
+                  >
+                    {audiencia.urlAudienciaVirtual}
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
 
-      {/* Observações */}
-      {audiencia.observacoes && (
-        <div className="text-sm bg-muted/50 p-2 rounded border-t">
-          <div className="text-xs text-muted-foreground mb-1">Observações</div>
-          <div className="whitespace-pre-wrap">{audiencia.observacoes}</div>
-        </div>
-      )}
+          {/* Partes */}
+          <div className="grid grid-cols-2 gap-3 text-sm border-t pt-3">
+            <div>
+              <div className="text-xs text-muted-foreground mb-1">Polo Ativo</div>
+              <div className="font-medium truncate" title={audiencia.poloAtivoNome || ''}>
+                {audiencia.poloAtivoNome || '-'}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground mb-1">Polo Passivo</div>
+              <div className="font-medium truncate" title={audiencia.poloPassivoNome || ''}>
+                {audiencia.poloPassivoNome || '-'}
+              </div>
+            </div>
+          </div>
+
+          {/* Responsável - Edição inline */}
+          <div className="border-t pt-3">
+            <div className="text-xs text-muted-foreground mb-1.5">Responsável</div>
+            <button
+              type="button"
+              onClick={() => setIsResponsavelDialogOpen(true)}
+              className="flex items-center gap-2 text-sm w-full hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
+              title={nomeResponsavel ? `Clique para alterar responsável: ${nomeResponsavel}` : 'Clique para atribuir responsável'}
+            >
+              {responsavel ? (
+                <>
+                  <Avatar className="h-7 w-7 shrink-0">
+                    <AvatarFallback className="text-xs font-medium">
+                      {getInitials(nomeResponsavel)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="font-medium">{nomeResponsavel}</span>
+                </>
+              ) : (
+                <>
+                  <User className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Sem responsável - clique para atribuir</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          <AudienciasAlterarResponsavelDialog
+            open={isResponsavelDialogOpen}
+            onOpenChange={setIsResponsavelDialogOpen}
+            audiencia={audiencia}
+            usuarios={usuarios}
+            onSuccess={() => {
+              onSuccess?.();
+            }}
+          />
+
+          {/* Observações */}
+          {audiencia.observacoes && (
+            <div className="text-sm bg-muted/50 p-2 rounded border-t">
+              <div className="text-xs text-muted-foreground mb-1">Observações</div>
+              <div className="whitespace-pre-wrap">{audiencia.observacoes}</div>
+            </div>
+          )}
+        </TabsContent>
+        
+        <TabsContent value="historico" className="mt-0">
+           <AuditLogTimeline logs={logs} isLoading={loadingLogs} className="h-[400px]" />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
