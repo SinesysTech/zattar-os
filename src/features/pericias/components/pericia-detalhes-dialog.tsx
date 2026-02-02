@@ -7,6 +7,9 @@ import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AuditLogTimeline } from '@/components/common/audit-log-timeline';
+import { useAuditLogs } from '@/features/audit/hooks/use-audit-logs';
 
 import type { Pericia } from '../domain';
 import { SITUACAO_PERICIA_LABELS, SituacaoPericiaCodigo } from '../domain';
@@ -38,6 +41,149 @@ function getSituacaoVariant(codigo: SituacaoPericiaCodigo) {
     R: 'secondary',
   };
   return variantMap[codigo] || 'secondary';
+}
+
+function PericiaListItem({ pericia }: { pericia: Pericia }) {
+  const { logs, isLoading: loadingLogs } = useAuditLogs('pericias', pericia.id);
+
+  return (
+    <div className="border rounded-lg p-4 bg-card">
+      <Tabs defaultValue="detalhes" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-4">
+          <TabsTrigger value="detalhes">Detalhes</TabsTrigger>
+          <TabsTrigger value="historico">Histórico</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="detalhes" className="space-y-3 mt-0">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <div className="font-semibold text-base truncate">
+                {pericia.numeroProcesso}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {pericia.trt} • {pericia.grau}
+              </div>
+            </div>
+            <AppBadge variant={getSituacaoVariant(pericia.situacaoCodigo)}>
+              {SITUACAO_PERICIA_LABELS[pericia.situacaoCodigo]}
+            </AppBadge>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div>
+              <div className="text-xs text-muted-foreground">Prazo Entrega</div>
+              <div className="font-medium">{formatarData(pericia.prazoEntrega)}</div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">Laudo Juntado</div>
+              <div className="font-medium">{pericia.laudoJuntado ? 'Sim' : 'Não'}</div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">Especialidade</div>
+              <div className="font-medium">
+                {pericia.especialidade?.descricao || '-'}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">Perito</div>
+              <div className="font-medium">{pericia.perito?.nome || '-'}</div>
+            </div>
+          </div>
+
+          {pericia.observacoes && (
+            <div className="bg-muted/30 border rounded-md p-3 text-sm">
+              <div className="font-semibold mb-1">Observações</div>
+              <div className="whitespace-pre-wrap">{pericia.observacoes}</div>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="historico" className="mt-0">
+          <AuditLogTimeline logs={logs} isLoading={loadingLogs} className="h-[300px]" />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
+  const { logs, isLoading: loadingLogs } = useAuditLogs('pericias', pericia.id);
+
+  return (
+    <div className="space-y-4">
+      <Tabs defaultValue="detalhes" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-4">
+          <TabsTrigger value="detalhes">Detalhes</TabsTrigger>
+          <TabsTrigger value="historico">Histórico</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="detalhes" className="space-y-4 mt-0">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <AppBadge variant={getSituacaoVariant(pericia.situacaoCodigo)}>
+                {SITUACAO_PERICIA_LABELS[pericia.situacaoCodigo]}
+              </AppBadge>
+              {pericia.laudoJuntado && (
+                <AppBadge variant="info">Laudo juntado</AppBadge>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <div className="text-xs text-muted-foreground">Processo</div>
+              <div className="font-medium">{pericia.numeroProcesso}</div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">TRT / Grau</div>
+              <div className="font-medium">
+                {pericia.trt} • {pericia.grau}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">Prazo Entrega</div>
+              <div className="font-medium">
+                {formatarData(pericia.prazoEntrega)}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">Data Criação</div>
+              <div className="font-medium">
+                {formatarData(pericia.dataCriacao)}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">Especialidade</div>
+              <div className="font-medium">
+                {pericia.especialidade?.descricao || '-'}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">Perito</div>
+              <div className="font-medium">{pericia.perito?.nome || '-'}</div>
+            </div>
+            <div>
+              <div className="text-xs text-muted-foreground">Responsável</div>
+              <div className="font-medium">
+                {pericia.responsavel?.nomeExibicao || 'Sem responsável'}
+              </div>
+            </div>
+          </div>
+
+          {pericia.observacoes && (
+            <div className="bg-muted/30 border rounded-md p-3 text-sm">
+              <div className="font-semibold mb-1">Observações</div>
+              <div className="whitespace-pre-wrap">{pericia.observacoes}</div>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="historico" className="mt-0">
+          <AuditLogTimeline logs={logs} isLoading={loadingLogs} className="h-[500px]" />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
 }
 
 export function PericiaDetalhesDialog({
@@ -73,116 +219,13 @@ export function PericiaDetalhesDialog({
         {exibirLista ? (
           <div className="space-y-4">
             {pericias!.map((p) => (
-              <div key={p.id} className="border rounded-lg p-4 space-y-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="font-semibold text-base truncate">
-                      {p.numeroProcesso}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {p.trt} • {p.grau}
-                    </div>
-                  </div>
-                  <AppBadge variant={getSituacaoVariant(p.situacaoCodigo)}>
-                    {SITUACAO_PERICIA_LABELS[p.situacaoCodigo]}
-                  </AppBadge>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div>
-                    <div className="text-xs text-muted-foreground">Prazo Entrega</div>
-                    <div className="font-medium">{formatarData(p.prazoEntrega)}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-muted-foreground">Laudo Juntado</div>
-                    <div className="font-medium">{p.laudoJuntado ? 'Sim' : 'Não'}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-muted-foreground">Especialidade</div>
-                    <div className="font-medium">
-                      {p.especialidade?.descricao || '-'}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-muted-foreground">Perito</div>
-                    <div className="font-medium">{p.perito?.nome || '-'}</div>
-                  </div>
-                </div>
-
-                {p.observacoes && (
-                  <div className="bg-muted/30 border rounded-md p-3 text-sm">
-                    <div className="font-semibold mb-1">Observações</div>
-                    <div className="whitespace-pre-wrap">{p.observacoes}</div>
-                  </div>
-                )}
-              </div>
+              <PericiaListItem key={p.id} pericia={p} />
             ))}
           </div>
         ) : periciaUnica ? (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <AppBadge variant={getSituacaoVariant(periciaUnica.situacaoCodigo)}>
-                  {SITUACAO_PERICIA_LABELS[periciaUnica.situacaoCodigo]}
-                </AppBadge>
-                {periciaUnica.laudoJuntado && (
-                  <AppBadge variant="info">Laudo juntado</AppBadge>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <div className="text-xs text-muted-foreground">Processo</div>
-                <div className="font-medium">{periciaUnica.numeroProcesso}</div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">TRT / Grau</div>
-                <div className="font-medium">
-                  {periciaUnica.trt} • {periciaUnica.grau}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">Prazo Entrega</div>
-                <div className="font-medium">
-                  {formatarData(periciaUnica.prazoEntrega)}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">Data Criação</div>
-                <div className="font-medium">
-                  {formatarData(periciaUnica.dataCriacao)}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">Especialidade</div>
-                <div className="font-medium">
-                  {periciaUnica.especialidade?.descricao || '-'}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">Perito</div>
-                <div className="font-medium">{periciaUnica.perito?.nome || '-'}</div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">Responsável</div>
-                <div className="font-medium">
-                  {periciaUnica.responsavel?.nomeExibicao || 'Sem responsável'}
-                </div>
-              </div>
-            </div>
-
-            {periciaUnica.observacoes && (
-              <div className="bg-muted/30 border rounded-md p-3 text-sm">
-                <div className="font-semibold mb-1">Observações</div>
-                <div className="whitespace-pre-wrap">{periciaUnica.observacoes}</div>
-              </div>
-            )}
-          </div>
+          <PericiaSingleDetails pericia={periciaUnica} />
         ) : null}
       </ScrollArea>
     </DialogFormShell>
   );
 }
-
-

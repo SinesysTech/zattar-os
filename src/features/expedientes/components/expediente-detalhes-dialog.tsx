@@ -9,6 +9,9 @@ import { Expediente } from '../domain';
 import { actionAtualizarExpediente } from '../actions';
 import { format } from 'date-fns';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AuditLogTimeline } from '@/components/common/audit-log-timeline';
+import { useAuditLogs } from '@/features/audit/hooks/use-audit-logs';
 
 interface ExpedienteDetalhesDialogProps {
   expediente: Expediente | null;
@@ -61,14 +64,11 @@ const PrazoEditor: React.FC<PrazoEditorProps> = ({ exp, onUpdated, onSuccess }) 
         throw new Error(result.message || 'Erro ao atualizar prazo');
       }
 
-      // Update local state optimistically or based on result
       const iso = dt ? dt.toISOString() : null;
       const agora = new Date();
       const fim = iso ? new Date(iso) : null;
       const prazoVencido = !exp.baixadoEm && fim ? fim.getTime() < agora.getTime() : false;
 
-      // We cast because result.data might not match exactly if fields are missing, but for UI updates typically it's enough
-      // Ideally action returns full object.
       const atualizado = {
         ...exp,
         dataPrazoLegalParte: iso,
@@ -81,7 +81,6 @@ const PrazoEditor: React.FC<PrazoEditorProps> = ({ exp, onUpdated, onSuccess }) 
       setDt(undefined);
     } catch (err) {
       console.error(err);
-      // Toast error?
     } finally {
       setSaving(false);
     }
@@ -111,6 +110,185 @@ const PrazoEditor: React.FC<PrazoEditorProps> = ({ exp, onUpdated, onSuccess }) 
     </div>
   );
 };
+
+function ExpedienteListItem({ 
+  exp, 
+  onUpdated, 
+  onSuccess 
+}: { 
+  exp: Expediente; 
+  onUpdated: (u: Expediente) => void;
+  onSuccess?: () => void;
+}) {
+  const { logs, isLoading: loadingLogs } = useAuditLogs('expedientes', exp.id);
+
+  return (
+    <div className="border rounded-lg p-4 bg-card">
+      <Tabs defaultValue="detalhes" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-4">
+          <TabsTrigger value="detalhes">Detalhes</TabsTrigger>
+          <TabsTrigger value="historico">Histórico</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="detalhes" className="space-y-3 mt-0">
+          <div className="flex items-center justify-between">
+            <div className="font-semibold text-lg flex items-center gap-2">
+              {exp.classeJudicial && <span className="text-muted-foreground text-sm uppercase">{exp.classeJudicial}</span>}
+              {exp.numeroProcesso}
+            </div>
+            <div className="flex gap-2">
+              <AppBadge {...getStatusBadgeStyle(exp.baixadoEm)}>
+                {getStatusTexto(exp.baixadoEm)}
+              </AppBadge>
+              <AppBadge variant={exp.prazoVencido ? 'destructive' : 'outline'}>
+                {exp.prazoVencido ? 'Vencido' : 'No Prazo'}
+              </AppBadge>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div>
+              <div className="text-xs text-muted-foreground">Data de Ciência</div>
+              <div className="font-medium">{formatarData(exp.dataCienciaParte)}</div>
+            </div>
+
+            <div>
+              <div className="text-xs text-muted-foreground">Prazo Legal</div>
+              <div className="font-medium">{formatarData(exp.dataPrazoLegalParte)}</div>
+            </div>
+
+            <div className="col-span-2">
+              <div className="text-xs text-muted-foreground">Órgão Julgador</div>
+              <div>{exp.descricaoOrgaoJulgador || '-'}</div>
+            </div>
+
+            <div>
+              <div className="text-xs text-muted-foreground">Parte Autora</div>
+              <div className="truncate" title={exp.nomeParteAutora || ''}>{exp.nomeParteAutora || '-'}</div>
+            </div>
+
+            <div>
+              <div className="text-xs text-muted-foreground">Parte Ré</div>
+              <div className="truncate" title={exp.nomeParteRe || ''}>{exp.nomeParteRe || '-'}</div>
+            </div>
+          </div>
+          <PrazoEditor
+            exp={exp}
+            onUpdated={onUpdated}
+            onSuccess={onSuccess}
+          />
+        </TabsContent>
+
+        <TabsContent value="historico" className="mt-0">
+          <AuditLogTimeline logs={logs} isLoading={loadingLogs} className="h-[300px]" />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+function ExpedienteSingleDetails({ 
+  expediente, 
+  onUpdated, 
+  onSuccess 
+}: { 
+  expediente: Expediente; 
+  onUpdated: (u: Expediente) => void;
+  onSuccess?: () => void;
+}) {
+  const { logs, isLoading: loadingLogs } = useAuditLogs('expedientes', expediente.id);
+
+  return (
+    <div className="space-y-4">
+      <Tabs defaultValue="detalhes" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-4">
+          <TabsTrigger value="detalhes">Detalhes</TabsTrigger>
+          <TabsTrigger value="historico">Histórico</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="detalhes" className="space-y-4 mt-0">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-xs uppercase text-muted-foreground font-bold tracking-wider mb-1">Status</div>
+              <div className="flex gap-2">
+                <AppBadge {...getStatusBadgeStyle(expediente.baixadoEm)}>
+                  {getStatusTexto(expediente.baixadoEm)}
+                </AppBadge>
+                <AppBadge variant={expediente.prazoVencido ? 'destructive' : 'outline'}>
+                  {expediente.prazoVencido ? 'Vencido' : 'No Prazo'}
+                </AppBadge>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t pt-4 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <div className="text-xs text-muted-foreground">Número do Processo</div>
+                <div className="font-medium text-lg">
+                  {expediente.numeroProcesso}
+                </div>
+                {expediente.classeJudicial && <div className="text-sm text-muted-foreground">{expediente.classeJudicial}</div>}
+              </div>
+              <div>
+                <div className="text-xs text-muted-foreground">Órgão Julgador</div>
+                <div className="font-medium">{expediente.descricaoOrgaoJulgador || '-'}</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-muted/10 p-3 rounded-md border">
+                <div className="text-xs text-muted-foreground mb-1">Data de Ciência</div>
+                <div className="font-medium">{formatarData(expediente.dataCienciaParte)}</div>
+              </div>
+              <div className="bg-muted/10 p-3 rounded-md border">
+                <div className="text-xs text-muted-foreground mb-1">Prazo Legal</div>
+                <div className="font-medium">{formatarData(expediente.dataPrazoLegalParte)}</div>
+                <PrazoEditor
+                  exp={expediente}
+                  onUpdated={onUpdated}
+                  onSuccess={onSuccess}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <div className="text-xs text-muted-foreground">Parte Autora</div>
+                <div className="font-medium">{expediente.nomeParteAutora || '-'}</div>
+              </div>
+              <div>
+                <div className="text-xs text-muted-foreground">Parte Ré</div>
+                <div className="font-medium">{expediente.nomeParteRe || '-'}</div>
+              </div>
+            </div>
+
+            {expediente.baixadoEm && (
+              <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-md border border-green-200 dark:border-green-800">
+                <div className="text-sm text-green-700 dark:text-green-400 font-semibold mb-1">Baixado em</div>
+                <div className="font-medium">{formatarData(expediente.baixadoEm)}</div>
+                {expediente.justificativaBaixa && (
+                  <div className="text-sm mt-1 text-muted-foreground">&ldquo;{expediente.justificativaBaixa}&rdquo;</div>
+                )}
+              </div>
+            )}
+
+            {expediente.observacoes && (
+              <div className="bg-muted p-3 rounded-md text-sm">
+                <div className="font-semibold mb-1">Observações</div>
+                <div className="whitespace-pre-wrap">{expediente.observacoes}</div>
+              </div>
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="historico" className="mt-0">
+          <AuditLogTimeline logs={logs} isLoading={loadingLogs} className="h-[500px]" />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
 
 export function ExpedienteDetalhesDialog({
   expediente,
@@ -151,132 +329,20 @@ export function ExpedienteDetalhesDialog({
         {exibirLista ? (
           <div className="space-y-4">
             {listaLocal.map((exp) => (
-              <div key={exp.id} className="border rounded-lg p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="font-semibold text-lg flex items-center gap-2">
-                    {exp.classeJudicial && <span className="text-muted-foreground text-sm uppercase">{exp.classeJudicial}</span>}
-                    {exp.numeroProcesso}
-                  </div>
-                  <div className="flex gap-2">
-                    <AppBadge {...getStatusBadgeStyle(exp.baixadoEm)}>
-                      {getStatusTexto(exp.baixadoEm)}
-                    </AppBadge>
-                    <AppBadge variant={exp.prazoVencido ? 'destructive' : 'outline'}>
-                      {exp.prazoVencido ? 'Vencido' : 'No Prazo'}
-                    </AppBadge>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div>
-                    <div className="text-xs text-muted-foreground">Data de Ciência</div>
-                    <div className="font-medium">{formatarData(exp.dataCienciaParte)}</div>
-                  </div>
-
-                  <div>
-                    <div className="text-xs text-muted-foreground">Prazo Legal</div>
-                    <div className="font-medium">{formatarData(exp.dataPrazoLegalParte)}</div>
-                  </div>
-
-                  <div className="col-span-2">
-                    <div className="text-xs text-muted-foreground">Órgão Julgador</div>
-                    <div>{exp.descricaoOrgaoJulgador || '-'}</div>
-                  </div>
-
-                  <div>
-                    <div className="text-xs text-muted-foreground">Parte Autora</div>
-                    <div className="truncate" title={exp.nomeParteAutora || ''}>{exp.nomeParteAutora || '-'}</div>
-                  </div>
-
-                  <div>
-                    <div className="text-xs text-muted-foreground">Parte Ré</div>
-                    <div className="truncate" title={exp.nomeParteRe || ''}>{exp.nomeParteRe || '-'}</div>
-                  </div>
-                </div>
-                <PrazoEditor
-                  exp={exp}
-                  onUpdated={(u) => setListaLocal((prev) => prev.map((p) => (p.id === u.id ? u : p)))}
-                  onSuccess={onSuccess}
-                />
-              </div>
+              <ExpedienteListItem
+                key={exp.id}
+                exp={exp}
+                onUpdated={(u) => setListaLocal((prev) => prev.map((p) => (p.id === u.id ? u : p)))}
+                onSuccess={onSuccess}
+              />
             ))}
           </div>
         ) : expedienteUnico ? (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs uppercase text-muted-foreground font-bold tracking-wider mb-1">Status</div>
-                <div className="flex gap-2">
-                  <AppBadge {...getStatusBadgeStyle(expedienteUnico.baixadoEm)}>
-                    {getStatusTexto(expedienteUnico.baixadoEm)}
-                  </AppBadge>
-                  <AppBadge variant={expedienteUnico.prazoVencido ? 'destructive' : 'outline'}>
-                    {expedienteUnico.prazoVencido ? 'Vencido' : 'No Prazo'}
-                  </AppBadge>
-                </div>
-              </div>
-            </div>
-
-            <div className="border-t pt-4 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <div className="text-xs text-muted-foreground">Número do Processo</div>
-                  <div className="font-medium text-lg">
-                    {expedienteUnico.numeroProcesso}
-                  </div>
-                  {expedienteUnico.classeJudicial && <div className="text-sm text-muted-foreground">{expedienteUnico.classeJudicial}</div>}
-                </div>
-                <div>
-                  <div className="text-xs text-muted-foreground">Órgão Julgador</div>
-                  <div className="font-medium">{expedienteUnico.descricaoOrgaoJulgador || '-'}</div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-muted/10 p-3 rounded-md border">
-                  <div className="text-xs text-muted-foreground mb-1">Data de Ciência</div>
-                  <div className="font-medium">{formatarData(expedienteUnico.dataCienciaParte)}</div>
-                </div>
-                <div className="bg-muted/10 p-3 rounded-md border">
-                  <div className="text-xs text-muted-foreground mb-1">Prazo Legal</div>
-                  <div className="font-medium">{formatarData(expedienteUnico.dataPrazoLegalParte)}</div>
-                  <PrazoEditor
-                    exp={expedienteUnico}
-                    onUpdated={(u) => setExpLocal(u)}
-                    onSuccess={onSuccess}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <div className="text-xs text-muted-foreground">Parte Autora</div>
-                  <div className="font-medium">{expedienteUnico.nomeParteAutora || '-'}</div>
-                </div>
-                <div>
-                  <div className="text-xs text-muted-foreground">Parte Ré</div>
-                  <div className="font-medium">{expedienteUnico.nomeParteRe || '-'}</div>
-                </div>
-              </div>
-
-              {expedienteUnico.baixadoEm && (
-                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-md border border-green-200 dark:border-green-800">
-                  <div className="text-sm text-green-700 dark:text-green-400 font-semibold mb-1">Baixado em</div>
-                  <div className="font-medium">{formatarData(expedienteUnico.baixadoEm)}</div>
-                  {expedienteUnico.justificativaBaixa && (
-                    <div className="text-sm mt-1 text-muted-foreground">&ldquo;{expedienteUnico.justificativaBaixa}&rdquo;</div>
-                  )}
-                </div>
-              )}
-
-              {expedienteUnico.observacoes && (
-                <div className="bg-muted p-3 rounded-md text-sm">
-                  <div className="font-semibold mb-1">Observações</div>
-                  <div className="whitespace-pre-wrap">{expedienteUnico.observacoes}</div>
-                </div>
-              )}
-            </div>
-          </div>
+          <ExpedienteSingleDetails
+            expediente={expedienteUnico}
+            onUpdated={(u) => setExpLocal(u)}
+            onSuccess={onSuccess}
+          />
         ) : null}
       </ScrollArea>
     </DialogFormShell>
