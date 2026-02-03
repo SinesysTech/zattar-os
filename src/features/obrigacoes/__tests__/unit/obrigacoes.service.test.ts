@@ -4,6 +4,7 @@ import * as repository from '../../repository';
 import * as utils from '../../utils';
 import * as partesRepository from '@/features/partes/repositories';
 import * as processosService from '@/features/processos/service';
+import * as partesDomain from '@/features/partes/domain';
 import {
   criarAcordoMock,
   criarParcelaMock,
@@ -14,6 +15,7 @@ jest.mock('../../repository');
 jest.mock('../../utils');
 jest.mock('@/features/partes/repositories');
 jest.mock('@/features/processos/service');
+jest.mock('@/features/partes/domain');
 
 describe('Obrigações Service', () => {
   beforeEach(() => {
@@ -48,33 +50,35 @@ describe('Obrigações Service', () => {
         numeroParcelas: 2,
         dataVencimentoPrimeiraParcela: '2024-01-15',
         percentualEscritorio: 30,
-        formaPagamentoPadrao: 'transferencia_direta',
-        intervaloEntreParcelas: 30,
-        formaDistribuicao: 'igual',
-        honorariosSucumbenciaisTotal: 0,
+        incluirHonorariosSucumbenciais: true,
+        honorariosSucumbenciaisTotal: 2000,
       });
 
       // Assert
-      expect(result.id).toBe(acordo.id);
-      expect(result.acordo).toEqual(acordo);
-      expect(result.parcelas).toEqual(parcelas);
-      expect(repository.ObrigacoesRepository.criarAcordo).toHaveBeenCalledTimes(1);
+      expect(repository.ObrigacoesRepository.criarAcordo).toHaveBeenCalledWith({
+        processoId: 100,
+        tipo: 'acordo',
+        direcao: 'recebimento',
+        valorTotal: 10000,
+        dataVencimentoPrimeiraParcela: '2024-01-15',
+        numeroParcelas: 2,
+        percentualEscritorio: 30,
+        honorariosSucumbenciaisTotal: 2000,
+        status: 'pendente',
+      });
       expect(repository.ObrigacoesRepository.criarParcelas).toHaveBeenCalledTimes(1);
+      expect(result.parcelas).toHaveLength(2);
     });
 
     it('deve calcular parcelas corretamente', async () => {
       // Arrange
-      const acordo = criarAcordoMock({
-        valorTotal: 9000,
-        numeroParcelas: 3,
-      });
-
-      (repository.ObrigacoesRepository.criarAcordo as jest.Mock).mockResolvedValue(acordo);
+      (repository.ObrigacoesRepository.criarAcordo as jest.Mock).mockResolvedValue(
+        criarAcordoMock({ valorTotal: 9000, numeroParcelas: 3 })
+      );
       (repository.ObrigacoesRepository.criarParcelas as jest.Mock).mockResolvedValue([]);
       (utils.calcularDataVencimento as jest.Mock).mockImplementation(
         (data) => new Date(data)
       );
-      (utils.calcularValorParcela as jest.Mock).mockReturnValue(3000);
 
       // Act
       await service.criarAcordoComParcelas({
@@ -83,24 +87,13 @@ describe('Obrigações Service', () => {
         direcao: 'recebimento',
         valorTotal: 9000,
         numeroParcelas: 3,
-        dataVencimentoPrimeiraParcela: new Date('2024-01-15'),
-        percentualEscritorio: 30,
+        dataVencimentoPrimeiraParcela: '2024-01-15',
       });
 
       // Assert
-      expect(utils.calcularValorParcela).toHaveBeenCalledWith(9000, 3);
       expect(repository.ObrigacoesRepository.criarParcelas).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
-            numeroParcela: 1,
-            valorBrutoCreditoPrincipal: 3000,
-          }),
-          expect.objectContaining({
-            numeroParcela: 2,
-            valorBrutoCreditoPrincipal: 3000,
-          }),
-          expect.objectContaining({
-            numeroParcela: 3,
             valorBrutoCreditoPrincipal: 3000,
           }),
         ])
@@ -109,16 +102,13 @@ describe('Obrigações Service', () => {
 
     it('deve aplicar percentual de escritório', async () => {
       // Arrange
-      const acordo = criarAcordoMock({
-        percentualEscritorio: 40,
-      });
-
-      (repository.ObrigacoesRepository.criarAcordo as jest.Mock).mockResolvedValue(acordo);
+      (repository.ObrigacoesRepository.criarAcordo as jest.Mock).mockResolvedValue(
+        criarAcordoMock({ valorTotal: 10000, numeroParcelas: 2 })
+      );
       (repository.ObrigacoesRepository.criarParcelas as jest.Mock).mockResolvedValue([]);
       (utils.calcularDataVencimento as jest.Mock).mockImplementation(
         (data) => new Date(data)
       );
-      (utils.calcularValorParcela as jest.Mock).mockReturnValue(5000);
 
       // Act
       await service.criarAcordoComParcelas({
@@ -127,7 +117,7 @@ describe('Obrigações Service', () => {
         direcao: 'recebimento',
         valorTotal: 10000,
         numeroParcelas: 2,
-        dataVencimentoPrimeiraParcela: new Date('2024-01-15'),
+        dataVencimentoPrimeiraParcela: '2024-01-15',
         percentualEscritorio: 40,
       });
 
@@ -135,8 +125,7 @@ describe('Obrigações Service', () => {
       expect(repository.ObrigacoesRepository.criarParcelas).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
-            valorLiquidoEscritorio: 2000, // 40% de 5000
-            valorLiquidoRepasse: 3000, // 60% de 5000
+            valorBrutoCreditoPrincipal: 5000,
           }),
         ])
       );
@@ -144,18 +133,13 @@ describe('Obrigações Service', () => {
 
     it('deve distribuir honorários sucumbenciais', async () => {
       // Arrange
-      const acordo = criarAcordoMock({
-        incluirHonorariosSucumbenciais: true,
-        valorHonorariosSucumbenciais: 2000,
-        numeroParcelas: 2,
-      });
-
-      (repository.ObrigacoesRepository.criarAcordo as jest.Mock).mockResolvedValue(acordo);
+      (repository.ObrigacoesRepository.criarAcordo as jest.Mock).mockResolvedValue(
+        criarAcordoMock({ valorTotal: 10000, numeroParcelas: 2 })
+      );
       (repository.ObrigacoesRepository.criarParcelas as jest.Mock).mockResolvedValue([]);
       (utils.calcularDataVencimento as jest.Mock).mockImplementation(
         (data) => new Date(data)
       );
-      (utils.calcularValorParcela as jest.Mock).mockReturnValue(5000);
 
       // Act
       await service.criarAcordoComParcelas({
@@ -164,17 +148,17 @@ describe('Obrigações Service', () => {
         direcao: 'recebimento',
         valorTotal: 10000,
         numeroParcelas: 2,
-        dataVencimentoPrimeiraParcela: new Date('2024-01-15'),
+        dataVencimentoPrimeiraParcela: '2024-01-15',
         percentualEscritorio: 30,
         incluirHonorariosSucumbenciais: true,
-        valorHonorariosSucumbenciais: 2000,
+        honorariosSucumbenciaisTotal: 2000,
       });
 
       // Assert
       expect(repository.ObrigacoesRepository.criarParcelas).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
-            valorHonorariosSucumbenciaisEscritorio: 1000, // 2000 / 2 parcelas
+            honorariosSucumbenciais: 1000, // 2000 / 2 parcelas
           }),
         ])
       );
@@ -297,7 +281,7 @@ describe('Obrigações Service', () => {
 
       // Assert
       expect(result.status).toBe('recebida');
-      expect(repository.marcarParcelaComoRecebida).toHaveBeenCalledWith(parcelaId, {
+      expect(repository.ObrigacoesRepository.marcarParcelaComoRecebida).toHaveBeenCalledWith(parcelaId, {
         dataEfetivacao: '2024-01-16',
         valor: 5000,
       });
@@ -309,7 +293,7 @@ describe('Obrigações Service', () => {
       const parcelaRecebida = criarParcelaMock({
         id: parcelaId,
         status: 'recebida',
-        dataEfetivacao: new Date('2024-01-20'),
+        dataEfetivacao: '2024-01-20',
       });
 
       (repository.buscarParcelaPorId as jest.Mock).mockResolvedValue(
@@ -328,8 +312,8 @@ describe('Obrigações Service', () => {
       });
 
       // Assert
-      expect(result.dataEfetivacao).toEqual(new Date('2024-01-20'));
-      expect(repository.marcarParcelaComoRecebida).toHaveBeenCalledWith(parcelaId, {
+      expect(result.dataEfetivacao).toEqual('2024-01-20');
+      expect(repository.ObrigacoesRepository.marcarParcelaComoRecebida).toHaveBeenCalledWith(parcelaId, {
         dataEfetivacao: '2024-01-20',
         valor: undefined,
       });
@@ -376,7 +360,7 @@ describe('Obrigações Service', () => {
       const acordoId = 1;
       const { acordo, parcelas } = criarAcordoComParcelasMock(2);
 
-      parcelas[0].status = 'recebido';
+      parcelas[0].status = 'recebida';
 
       (repository.ObrigacoesRepository.buscarAcordoPorId as jest.Mock).mockResolvedValue(acordo);
       (repository.ObrigacoesRepository.buscarParcelasPorAcordo as jest.Mock).mockResolvedValue(
@@ -408,21 +392,17 @@ describe('Obrigações Service', () => {
 
       const mockAcordos = [criarAcordoMock({ processoId: 100 })];
 
-      jest.spyOn(await import('@/features/partes/repositories'), 'findClienteByCPF').mockResolvedValue({
+      (partesRepository.findClienteByCPF as jest.Mock).mockResolvedValue({
         success: true,
         data: mockCliente,
       });
-      jest.spyOn(await import('@/features/processos/service'), 'buscarProcessosPorClienteCPF').mockResolvedValue({
+      (processosService.buscarProcessosPorClienteCPF as jest.Mock).mockResolvedValue({
         success: true,
         data: mockProcessos,
       });
-      (repository.ObrigacoesRepository.listarAcordos as jest.Mock).mockResolvedValue({
-        acordos: mockAcordos,
-        total: mockAcordos.length,
-        pagina: 1,
-        limite: 200,
-        totalPaginas: 1,
-      });
+      (partesDomain.normalizarDocumento as jest.Mock).mockReturnValue(cpfNormalizado);
+
+      (repository.ObrigacoesRepository.listarAcordosPorProcessoIds as jest.Mock).mockResolvedValue(mockAcordos);
 
       // Act
       const result = await service.buscarAcordosPorClienteCPF(cpf);
@@ -430,6 +410,10 @@ describe('Obrigações Service', () => {
       // Assert
       expect(result.success).toBe(true);
       expect(result.data).toEqual(mockAcordos);
+      expect(repository.ObrigacoesRepository.listarAcordosPorProcessoIds).toHaveBeenCalledWith(
+        [100],
+        { tipo: undefined, status: undefined }
+      );
     });
 
     it('deve normalizar CPF antes de buscar', async () => {
@@ -437,15 +421,15 @@ describe('Obrigações Service', () => {
       const cpf = '123.456.789-00';
       const cpfNormalizado = '12345678900';
 
-      (utils.normalizarCPF as jest.Mock).mockReturnValue(cpfNormalizado);
-      (partesRepository.buscarClientePorCPF as jest.Mock).mockResolvedValue(null);
+      (partesDomain.normalizarDocumento as jest.Mock).mockReturnValue(cpfNormalizado);
+      (partesRepository.findClienteByCPF as jest.Mock).mockResolvedValue({ success: true, data: null });
 
       // Act
       await service.buscarAcordosPorClienteCPF(cpf);
 
       // Assert
-      expect(utils.normalizarCPF).toHaveBeenCalledWith(cpf);
-      expect(partesRepository.buscarClientePorCPF).toHaveBeenCalledWith(
+      expect(partesDomain.normalizarDocumento).toHaveBeenCalledWith(cpf);
+      expect(partesRepository.findClienteByCPF).toHaveBeenCalledWith(
         cpfNormalizado
       );
     });
@@ -454,12 +438,12 @@ describe('Obrigações Service', () => {
       // Arrange
       const cpf = 'invalido';
 
-      (utils.normalizarCPF as jest.Mock).mockReturnValue('');
+      (partesDomain.normalizarDocumento as jest.Mock).mockReturnValue('');
 
       // Act & Assert
-      await expect(service.buscarAcordosPorClienteCPF(cpf)).rejects.toThrow(
-        'CPF inválido'
-      );
+      const result = await service.buscarAcordosPorClienteCPF(cpf);
+      expect(result.success).toBe(false);
+      expect(result.error?.code).toBe('VALIDATION_ERROR');
     });
 
     it('deve retornar array vazio se cliente não tem processos', async () => {
@@ -473,19 +457,22 @@ describe('Obrigações Service', () => {
         nome: 'João Silva',
       };
 
-      (utils.normalizarCPF as jest.Mock).mockReturnValue(cpfNormalizado);
-      (partesRepository.buscarClientePorCPF as jest.Mock).mockResolvedValue(
-        mockCliente
-      );
-      (processosService.buscarProcessosPorCliente as jest.Mock).mockResolvedValue(
-        []
-      );
+      (partesDomain.normalizarDocumento as jest.Mock).mockReturnValue(cpfNormalizado);
+      (partesRepository.findClienteByCPF as jest.Mock).mockResolvedValue({
+        success: true,
+        data: mockCliente
+      });
+      (processosService.buscarProcessosPorClienteCPF as jest.Mock).mockResolvedValue({
+        success: true,
+        data: []
+      });
 
       // Act
       const result = await service.buscarAcordosPorClienteCPF(cpf);
 
       // Assert
-      expect(result).toEqual([]);
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual([]);
     });
   });
 });

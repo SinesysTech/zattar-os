@@ -292,13 +292,14 @@ export async function listarAcordos(
  * Mantém o mesmo shape de `AcordoComParcelas` usado em `listarAcordos`.
  */
 export async function listarAcordosPorProcessoIds(
-  processoIds: number[]
+  processoIds: number[],
+  filtros?: { tipo?: TipoObrigacao; status?: StatusAcordo }
 ): Promise<AcordoComParcelas[]> {
   if (!processoIds || processoIds.length === 0) return [];
 
   const supabase = createServiceClient();
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("acordos_condenacoes")
     .select(
       `
@@ -310,8 +311,16 @@ export async function listarAcordosPorProcessoIds(
       )
     `
     )
-    .in("processo_id", processoIds)
-    .order("created_at", { ascending: false });
+    .in("processo_id", processoIds);
+
+  if (filtros?.tipo) {
+    query = query.eq("tipo", filtros.tipo);
+  }
+  if (filtros?.status) {
+    query = query.eq("status", filtros.status);
+  }
+
+  const { data, error } = await query.order("created_at", { ascending: false });
 
   if (error) throw error;
 
@@ -652,4 +661,5 @@ export const ObrigacoesRepository = {
   listarRepassesPendentes,
   anexarDeclaracaoPrestacaoContas,
   registrarRepasse,
+  listarAcordosPorProcessoIds,
 };

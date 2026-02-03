@@ -1,74 +1,49 @@
-import {
-  CriarAcordoComParcelasParams,
-  ListarAcordosParams,
-  AtualizarAcordoParams,
-  MarcarParcelaRecebidaParams,
-  AtualizarParcelaParams,
-  FiltrosRepasses,
-  RegistrarRepasseParams,
-  Parcela,
-  AcordoCondenacao,
-  AcordoComParcelas,
-} from "./types";
+import { AcordoComParcelas, AcordoCondenacao, AtualizarAcordoParams, AtualizarParcelaParams, CriarAcordoComParcelasParams, FiltrosRepasses, Parcela, RegistrarRepasseParams } from "./types";
 import { TipoObrigacao, StatusAcordo } from "./domain";
 import { ObrigacoesRepository } from "./repository";
-
 import { calcularDataVencimento } from "./utils";
+import { normalizarDocumento } from "@/features/partes/domain";
+import { findClienteByCPF, findClienteByCNPJ } from "@/features/partes/repositories";
+import { err, appError } from "@/types";
+import { buscarProcessosPorClienteCPF, buscarProcessosPorClienteCNPJ } from "@/features/processos/service";
+import { normalizarNumeroProcesso } from "@/features/processos/utils";
+import { actionBuscarProcessoPorNumero } from "@/features/processos/actions";
 
-// --- Services ---
+// --- Acordos Services ---
 
 export async function criarAcordoComParcelas(
-  params: CriarAcordoComParcelasParams
+  dados: CriarAcordoComParcelasParams
 ) {
-  // 1. Validation logic is mostly handled by Zod in Actions, but we can double check logic here if needed.
-  // Assuming params are valid.
-
-  // 2. Create Agreement
+  // Use repository helper to wrap in transaction logic if needed
+  // Here we just orchestrate
   const acordo = await ObrigacoesRepository.criarAcordo({
-    processoId: params.processoId,
-    tipo: params.tipo,
-    direcao: params.direcao,
-    valorTotal: params.valorTotal,
-    dataVencimentoPrimeiraParcela: params.dataVencimentoPrimeiraParcela,
-    numeroParcelas: params.numeroParcelas,
-    formaDistribuicao: params.formaDistribuicao,
-    percentualEscritorio: params.percentualEscritorio,
-    honorariosSucumbenciaisTotal: params.honorariosSucumbenciaisTotal,
-    createdBy: params.createdBy,
+    processoId: dados.processoId,
+    tipo: dados.tipo,
+    direcao: dados.direcao,
+    valorTotal: dados.valorTotal,
+    dataVencimentoPrimeiraParcela: dados.dataVencimentoPrimeiraParcela,
+    numeroParcelas: dados.numeroParcelas,
+    formaDistribuicao: dados.formaDistribuicao,
+    percentualEscritorio: dados.percentualEscritorio,
+    honorariosSucumbenciaisTotal: dados.honorariosSucumbenciaisTotal,
+    createdBy: dados.createdBy,
   });
 
-  // 3. Calculate Parcels
-  const parcelasData = calcularParcelasDoAcordo(acordo, params);
-
-  // 4. Create Parcels
+  const parcelasData = calcularParcelasDoAcordo(acordo, dados);
   const parcelas = await ObrigacoesRepository.criarParcelas(parcelasData);
 
-  // Retornar com id na raiz para facilitar navegação
-  return {
-    id: acordo.id,
-    acordo,
-    parcelas,
-  };
+  return { ...acordo, parcelas };
 }
 
-export async function listarAcordos(params: ListarAcordosParams) {
+export async function listarAcordos(params: import("./types").ListarAcordosParams) {
   return await ObrigacoesRepository.listarAcordos(params);
 }
 
-export async function buscarAcordo(id: number) {
-  const acordo = await ObrigacoesRepository.buscarAcordoPorId(id);
-  if (!acordo) throw new Error("Acordo não encontrado");
-  return acordo;
+export async function buscarAcordoPorId(id: number) {
+  return await ObrigacoesRepository.buscarAcordoPorId(id);
 }
 
-export async function atualizarAcordo(
-  id: number,
-  dados: AtualizarAcordoParams
-) {
-  // If changing critical numbers (value or parcels), might need to recalculate parcels.
-  // For now, implementing simple update.
-  // Advanced logic: if changing values, check if parcels are already paid. If not, maybe allow recalc?
-  // Current scope: simple update.
+export async function atualizarAcordo(id: number, dados: AtualizarAcordoParams) {
   return await ObrigacoesRepository.atualizarAcordo(id, dados);
 }
 
@@ -76,45 +51,35 @@ export async function deletarAcordo(id: number) {
   return await ObrigacoesRepository.deletarAcordo(id);
 }
 
+// --- Parcelas Services ---
+
+export async function buscarParcelaPorId(id: number) {
+  return await ObrigacoesRepository.buscarParcelaPorId(id);
+}
+
+export async function atualizarParcela(id: number, dados: AtualizarParcelaParams) {
+  return await ObrigacoesRepository.atualizarParcela(id, dados);
+}
+
 export async function marcarParcelaRecebida(
-  parcelaId: number,
-  dados: MarcarParcelaRecebidaParams
+  id: number,
+  dados: { dataRecebimento: string; valorRecebido?: number }
 ) {
-  const parcela = await ObrigacoesRepository.buscarParcelaPorId(parcelaId);
-  if (!parcela) throw new Error("Parcela não encontrada");
-
-  // Logic: update status and date
-  // In future: Create 'Lancamento Financeiro' here.
-
-  return await ObrigacoesRepository.marcarParcelaComoRecebida(parcelaId, {
+  return await ObrigacoesRepository.marcarParcelaComoRecebida(id, {
     dataEfetivacao: dados.dataRecebimento,
     valor: dados.valorRecebido,
   });
-}
-
-export async function atualizarParcela(
-  parcelaId: number,
-  valores: AtualizarParcelaParams
-) {
-  return await ObrigacoesRepository.atualizarParcela(parcelaId, valores);
 }
 
 export async function recalcularDistribuicao(acordoId: number) {
   const acordo = await ObrigacoesRepository.buscarAcordoPorId(acordoId);
   if (!acordo) throw new Error("Acordo não encontrado");
 
-  // Get current parcels
-  // This logic reconstructs parcels based on CURRENT agreement values
-  // Only for unpaid parcels
-
+  // Check if any parcel is paid
   const parcelas = await ObrigacoesRepository.buscarParcelasPorAcordo(acordoId);
-  const parcelasPagas = parcelas.filter((p) =>
-    ["recebida", "paga"].includes(p.status)
-  );
-
-  if (parcelasPagas.length > 0) {
+  if (parcelas.some((p) => ["recebida", "paga"].includes(p.status))) {
     throw new Error(
-      "Não é possível recalcular distribuição com parcelas pagas."
+      "Não é possível recalcular distribuição com parcelas já pagas."
     );
   }
 
@@ -251,9 +216,6 @@ export async function buscarAcordosPorClienteCPF(
   tipo?: TipoObrigacao,
   status?: StatusAcordo
 ): Promise<import("@/types").Result<AcordoComParcelas[]>> {
-  const { normalizarDocumento } = await import("@/features/partes/domain");
-  const { findClienteByCPF } = await import("@/features/partes/repositories");
-  const { err, appError } = await import("@/types");
 
   if (!cpf || !cpf.trim()) {
     return err(appError("VALIDATION_ERROR", "CPF e obrigatorio"));
@@ -276,9 +238,6 @@ export async function buscarAcordosPorClienteCPF(
     // const clienteId = clienteResult.data.id;
 
     // Busca processos do cliente
-    const { buscarProcessosPorClienteCPF } = await import(
-      "@/features/processos/service"
-    );
     const processosResult = await buscarProcessosPorClienteCPF(cpf, 100);
     if (!processosResult.success) return err(processosResult.error);
 
@@ -288,19 +247,11 @@ export async function buscarAcordosPorClienteCPF(
 
     const processoIds = processosResult.data.map((p) => p.id);
 
-    // Busca acordos para cada processo e agrega resultados
-    const allAcordos: AcordoComParcelas[] = [];
-    for (const processoId of processoIds) {
-      const result = await listarAcordos({
-        processoId,
-        tipo,
-        status,
-        limite: 200,
-      });
-      if (result.acordos) {
-        allAcordos.push(...result.acordos);
-      }
-    }
+    // Busca acordos de todos os processos em uma única consulta
+    const allAcordos = await ObrigacoesRepository.listarAcordosPorProcessoIds(
+      processoIds,
+      { tipo, status }
+    );
 
     return { success: true, data: allAcordos };
   } catch (error) {
@@ -321,9 +272,6 @@ export async function buscarAcordosPorClienteCNPJ(
   tipo?: TipoObrigacao,
   status?: StatusAcordo
 ): Promise<import("@/types").Result<AcordoComParcelas[]>> {
-  const { normalizarDocumento } = await import("@/features/partes/domain");
-  const { findClienteByCNPJ } = await import("@/features/partes/repositories");
-  const { err, appError } = await import("@/types");
 
   if (!cnpj || !cnpj.trim()) {
     return err(appError("VALIDATION_ERROR", "CNPJ e obrigatorio"));
@@ -344,9 +292,6 @@ export async function buscarAcordosPorClienteCNPJ(
     }
 
     // Busca processos do cliente
-    const { buscarProcessosPorClienteCNPJ } = await import(
-      "@/features/processos/service"
-    );
     const processosResult = await buscarProcessosPorClienteCNPJ(cnpj, 100);
     if (!processosResult.success) return err(processosResult.error);
 
@@ -356,19 +301,11 @@ export async function buscarAcordosPorClienteCNPJ(
 
     const processoIds = processosResult.data.map((p) => p.id);
 
-    // Busca acordos para cada processo e agrega resultados
-    const allAcordos: AcordoComParcelas[] = [];
-    for (const processoId of processoIds) {
-      const result = await listarAcordos({
-        processoId,
-        tipo,
-        status,
-        limite: 200,
-      });
-      if (result.acordos) {
-        allAcordos.push(...result.acordos);
-      }
-    }
+    // Busca acordos de todos os processos em uma única consulta
+    const allAcordos = await ObrigacoesRepository.listarAcordosPorProcessoIds(
+      processoIds,
+      { tipo, status }
+    );
 
     return { success: true, data: allAcordos };
   } catch (error) {
@@ -392,10 +329,6 @@ export async function buscarAcordosPorNumeroProcesso(
   numeroProcesso: string,
   tipo?: TipoObrigacao
 ): Promise<import("@/types").Result<AcordoComParcelas[]>> {
-  const { err, appError } = await import("@/types");
-  const { normalizarNumeroProcesso } = await import(
-    "@/features/processos/utils"
-  );
 
   if (!numeroProcesso || !numeroProcesso.trim()) {
     return err(
@@ -408,9 +341,6 @@ export async function buscarAcordosPorNumeroProcesso(
     const numeroNormalizado = normalizarNumeroProcesso(numeroProcesso.trim());
 
     // Busca processo por número normalizado
-    const { actionBuscarProcessoPorNumero } = await import(
-      "@/features/processos/actions"
-    );
     const processoResult = await actionBuscarProcessoPorNumero(
       numeroNormalizado
     );
