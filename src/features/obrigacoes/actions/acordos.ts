@@ -17,7 +17,7 @@ export async function actionListarAcordos(params: ListarAcordosParams) {
 
 export async function actionBuscarAcordo(id: number) {
   try {
-    const data = await service.buscarAcordo(id);
+    const data = await service.buscarAcordoPorId(id);
     return { success: true, data };
   } catch (error) {
     return { success: false, error: String(error) };
