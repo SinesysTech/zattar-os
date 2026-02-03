@@ -82,7 +82,7 @@ EXPOSE 3000
 LABEL org.opencontainers.image.title="Sinesys App"
 LABEL org.opencontainers.image.description="Sinesys Application - Minimal Production Image"
 LABEL org.opencontainers.image.vendor="Sinesys Tech"
-LABEL org.opencontainers.image.source="https://github.com/SinesysTech/zattar-advogados-app"
+LABEL org.opencontainers.image.source="https://github.com/SinesysTech/zattar-os"
 # These should be passed as build-args ideally, but we can set defaults or placeholders
 ARG VERSION=latest
 ARG REVISION=unknown

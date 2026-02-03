@@ -51,7 +51,7 @@ Write-Host "✓ Variáveis obrigatórias configuradas" -ForegroundColor Green
 Write-Host ""
 
 # Configurações
-$IMAGE_NAME = "sinesystec/sinesys"
+$IMAGE_NAME = "sinesystec/zattar-os"
 $PLATFORM = "linux/amd64"
 $TAG_LATEST = "${IMAGE_NAME}:latest"
 

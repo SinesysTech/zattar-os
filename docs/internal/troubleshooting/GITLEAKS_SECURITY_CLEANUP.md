@@ -120,7 +120,7 @@ O script de segurança no `.github/workflows/tests.yml` e `docker-build-deploy.y
 ### Docker Build
 O build agora pode passar pela verificação de segurança:
 ```bash
-docker build -t zattar-advogados:latest .
+docker build -t zattar-os:latest .
 ```
 
 ## Próximos Passos Recomendados
