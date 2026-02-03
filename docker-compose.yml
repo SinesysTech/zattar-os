@@ -1,11 +1,9 @@
 # Docker Compose para Desenvolvimento Local
-# 
+#
 # Para CapRover: Use o arquivo captain-definition
 # Para produção completa: Os serviços MCP e Browser estão em repositórios separados
 #
-# Uso: docker-compose up -d
-
-version: "3.8"
+# Uso: docker compose up -d
 
 services:
   # ==========================================================================
@@ -16,8 +14,16 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
+        # Todas as variaveis NEXT_PUBLIC_* sao inlined no bundle durante o build
         - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
         - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
+        - NEXT_PUBLIC_DASHBOARD_URL=${NEXT_PUBLIC_DASHBOARD_URL:-}
+        - NEXT_PUBLIC_MEU_PROCESSO_URL=${NEXT_PUBLIC_MEU_PROCESSO_URL:-}
+        - NEXT_PUBLIC_WEBSITE_URL=${NEXT_PUBLIC_WEBSITE_URL:-}
+        - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-}
+        - NEXT_PUBLIC_DYTE_ORG_ID=${NEXT_PUBLIC_DYTE_ORG_ID:-}
+        - NEXT_PUBLIC_AI_FAKE_STREAMING=${NEXT_PUBLIC_AI_FAKE_STREAMING:-false}
+        - NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED=${NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED:-true}
     image: sinesys_app:latest
     container_name: sinesys_app
     restart: unless-stopped
@@ -28,20 +34,66 @@ services:
       - NEXT_TELEMETRY_DISABLED=1
       - PORT=3000
       - HOSTNAME=0.0.0.0
-      
-      # Supabase
+
+      # Supabase (obrigatorio)
       - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
       - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
       - SUPABASE_SECRET_KEY=${SUPABASE_SECRET_KEY}
-      
-      # Browser Service (conexão externa - configure conforme seu ambiente)
-      # Para desenvolvimento local sem browser remoto, deixe vazio (usa Firefox local)
-      - BROWSER_WS_ENDPOINT=${BROWSER_WS_ENDPOINT:-}
-      - BROWSER_SERVICE_URL=${BROWSER_SERVICE_URL:-}
-      
+
+      # Autenticacao de sistema (obrigatorio)
+      - SERVICE_API_KEY=${SERVICE_API_KEY}
+      - CRON_SECRET=${CRON_SECRET}
+
       # Redis (opcional)
       - ENABLE_REDIS_CACHE=${ENABLE_REDIS_CACHE:-false}
       - REDIS_URL=${REDIS_URL:-}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - REDIS_CACHE_TTL=${REDIS_CACHE_TTL:-600}
+
+      # Storage - Backblaze B2 (opcional)
+      - STORAGE_PROVIDER=${STORAGE_PROVIDER:-}
+      - B2_ENDPOINT=${B2_ENDPOINT:-}
+      - B2_REGION=${B2_REGION:-}
+      - B2_BUCKET=${B2_BUCKET:-}
+      - B2_KEY_ID=${B2_KEY_ID:-}
+      - B2_APPLICATION_KEY=${B2_APPLICATION_KEY:-}
+
+      # AI / Embeddings (opcional)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_EMBEDDING_MODEL=${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
+      - AI_EMBEDDING_PROVIDER=${AI_EMBEDDING_PROVIDER:-openai}
+      - AI_GATEWAY_API_KEY=${AI_GATEWAY_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - ENABLE_AI_INDEXING=${ENABLE_AI_INDEXING:-true}
+
+      # Dyte - Video/Audio (opcional)
+      - DYTE_API_KEY=${DYTE_API_KEY:-}
+      - DYTE_ENABLE_RECORDING=${DYTE_ENABLE_RECORDING:-false}
+
+      # Chatwoot (opcional)
+      - CHATWOOT_API_URL=${CHATWOOT_API_URL:-}
+      - CHATWOOT_API_KEY=${CHATWOOT_API_KEY:-}
+      - CHATWOOT_ACCOUNT_ID=${CHATWOOT_ACCOUNT_ID:-}
+      - CHATWOOT_DEFAULT_INBOX_ID=${CHATWOOT_DEFAULT_INBOX_ID:-}
+
+      # Browser Service (opcional - conexao externa)
+      - BROWSER_WS_ENDPOINT=${BROWSER_WS_ENDPOINT:-}
+      - BROWSER_SERVICE_URL=${BROWSER_SERVICE_URL:-}
+      - BROWSER_SERVICE_TOKEN=${BROWSER_SERVICE_TOKEN:-}
+
+      # 2FAuth - OTP/2FA para PJE (opcional)
+      - TWOFAUTH_API_URL=${TWOFAUTH_API_URL:-}
+      - TWOFAUTH_API_TOKEN=${TWOFAUTH_API_TOKEN:-}
+      - TWOFAUTH_ACCOUNT_ID=${TWOFAUTH_ACCOUNT_ID:-}
+
+      # Seguranca
+      - RATE_LIMIT_FAIL_MODE=${RATE_LIMIT_FAIL_MODE:-closed}
+      - IP_BLOCKING_ENABLED=${IP_BLOCKING_ENABLED:-true}
+      - CSP_REPORT_ONLY=${CSP_REPORT_ONLY:-true}
+
+      # Debug (opcional)
+      - DEBUG_SUPABASE=${DEBUG_SUPABASE:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
     networks:
       - sinesys_network
     healthcheck:
@@ -50,6 +102,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
 networks:
   sinesys_network:
     driver: bridge

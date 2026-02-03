@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1
 # Dockerfile.dev - Development Environment
 # Optimized for hot-reload and debugging
 
@@ -11,18 +11,17 @@ ENV WATCHPACK_POLLING=true
 # Skip playwright browser download (use external service)
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
-# Install basic dev tools
-RUN apk add --no-cache git bash curl
+# Compatibilidade glibc e ferramentas de desenvolvimento
+RUN apk add --no-cache git bash curl libc6-compat
 
 COPY package.json package-lock.json* ./
 
 # Install ALL dependencies (including dev)
-RUN npm ci
+# --legacy-peer-deps necessario para resolver conflitos de peer deps do projeto
+RUN npm ci --legacy-peer-deps
 
 COPY . .
 
-# Expose ports
 EXPOSE 3000
 
-# Default command
 CMD ["npm", "run", "dev"]

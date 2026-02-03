@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1
 # Dockerfile.test - Testing Environment
 # Includes all dependencies for running tests (Jest, Playwright client)
 
@@ -10,13 +10,13 @@ ENV NODE_ENV=test
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
-# Install required system libs for some node modules
-RUN apk add --no-cache git bash
+# Compatibilidade glibc e ferramentas necessarias para testes
+RUN apk add --no-cache git bash libc6-compat
 
 COPY package.json package-lock.json* ./
 
-# Install all dependencies (ci guarantees clean install)
-RUN npm ci
+# --legacy-peer-deps necessario para resolver conflitos de peer deps do projeto
+RUN npm ci --legacy-peer-deps
 
 COPY . .
 

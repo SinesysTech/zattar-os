@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1
 # ============================================================================
 # REQUISITO: Docker BuildKit
 # ============================================================================
@@ -62,6 +62,10 @@ ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
 # Desabilitar telemetria o mais cedo possivel para reduzir overhead
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Compatibilidade glibc para modulos nativos no Alpine
+# Ref: https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+RUN apk add --no-cache libc6-compat
 
 # Copiar arquivos de dependencias
 COPY package.json package-lock.json* ./
@@ -143,8 +147,8 @@ ENV NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED=${NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED}
 
 # Build da aplicacao com cache persistente entre builds
 # --mount=type=cache persiste o diretorio .next/cache entre builds
-# uid/gid=1000 corresponde ao usuario nextjs no stage runner
-RUN --mount=type=cache,target=/app/.next/cache,uid=1000,gid=1000 \
+# uid/gid=1001 corresponde ao usuario nextjs no stage runner
+RUN --mount=type=cache,target=/app/.next/cache,uid=1001,gid=1001 \
     npm run build:ci
 
 # ============================================================================
@@ -163,14 +167,20 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
+# dumb-init: processo init leve para tratamento correto de sinais (SIGTERM, SIGINT)
+# Node.js nao foi projetado para rodar como PID 1 - o kernel trata PID 1 de forma especial
+# dumb-init atua como PID 1 e repassa sinais corretamente para o processo Node.js
+RUN apk add --no-cache dumb-init
+
 # Criar usuario nao-root para seguranca (Alpine usa addgroup/adduser)
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
 # Copiar arquivos necessarios do build com ownership correto
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# --link melhora cache de layers (reusa layers mesmo se anteriores mudaram)
+COPY --from=builder --chown=nextjs:nodejs --link /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs --link /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs --link /app/.next/static ./.next/static
 
 USER nextjs
 
@@ -200,4 +210,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
 
+ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "server.js"]

@@ -1,13 +1,8 @@
-version: "3.8"
-
 services:
   sinesys_app:
-    # Uses existing Dockerfile but targets 'deps' stage for dev environment
-    # This allows mounting source code for hot reload while ensuring dependencies are installed
     build:
       context: ../../
-      dockerfile: Dockerfile
-      target: deps
+      dockerfile: Dockerfile.dev
     image: sinesys_local:dev
     container_name: sinesys_app
     restart: unless-stopped
@@ -18,13 +13,24 @@ services:
       - NEXT_TELEMETRY_DISABLED=1
       - PORT=3000
       - HOSTNAME=0.0.0.0
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/sinesys
+
+      # Supabase
       - NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
-      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
+      - SUPABASE_SECRET_KEY=${SUPABASE_SECRET_KEY}
+
+      # Redis
+      - ENABLE_REDIS_CACHE=true
       - REDIS_URL=redis://redis:6379
-      - SMTP_HOST=mailhog
-      - SMTP_PORT=1025
+
+      # Feature Flags
+      - ENABLE_AI_INDEXING=${ENABLE_AI_INDEXING:-false}
+
+      # Debug
+      - DEBUG_SUPABASE=${DEBUG_SUPABASE:-true}
+      - LOG_LEVEL=${LOG_LEVEL:-debug}
+      - RATE_LIMIT_FAIL_MODE=open
+      - IP_BLOCKING_ENABLED=false
     volumes:
       - ../../src:/app/src
       - ../../public:/app/public
@@ -102,8 +108,8 @@ services:
       - POSTGRES_PASSWORD=postgres
       - SUPABASE_URL=http://localhost:54321
       - SUPABASE_PUBLIC_URL=http://localhost:54321
-      - SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
-      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SECRET_KEY}
       - LOG_LEVEL=debug
     networks:
       - sinesys_dev_network

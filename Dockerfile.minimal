@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1
 # Dockerfile.minimal - Production Optimized
 # Ultra-lightweight image (~200MB) using standalone output
 
@@ -9,6 +9,8 @@ FROM node:22-alpine AS deps
 WORKDIR /app
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN apk add --no-cache libc6-compat
 
 COPY package.json package-lock.json* ./
 
@@ -30,11 +32,25 @@ RUN mkdir -p .next/cache
 
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
+ARG NEXT_PUBLIC_DASHBOARD_URL
+ARG NEXT_PUBLIC_MEU_PROCESSO_URL
+ARG NEXT_PUBLIC_WEBSITE_URL
+ARG NEXT_PUBLIC_APP_URL
+ARG NEXT_PUBLIC_DYTE_ORG_ID
+ARG NEXT_PUBLIC_AI_FAKE_STREAMING
+ARG NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED
 
 ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
 ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
+ENV NEXT_PUBLIC_DASHBOARD_URL=${NEXT_PUBLIC_DASHBOARD_URL}
+ENV NEXT_PUBLIC_MEU_PROCESSO_URL=${NEXT_PUBLIC_MEU_PROCESSO_URL}
+ENV NEXT_PUBLIC_WEBSITE_URL=${NEXT_PUBLIC_WEBSITE_URL}
+ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+ENV NEXT_PUBLIC_DYTE_ORG_ID=${NEXT_PUBLIC_DYTE_ORG_ID}
+ENV NEXT_PUBLIC_AI_FAKE_STREAMING=${NEXT_PUBLIC_AI_FAKE_STREAMING}
+ENV NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED=${NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED}
 
-RUN --mount=type=cache,target=/app/.next/cache,uid=1000,gid=1000 \
+RUN --mount=type=cache,target=/app/.next/cache,uid=1001,gid=1001 \
     npm run build:ci
 
 # ============================================================================
@@ -48,12 +64,15 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
+# dumb-init para tratamento correto de sinais como PID 1
+RUN apk add --no-cache dumb-init
+
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs --link /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs --link /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs --link /app/.next/static ./.next/static
 
 USER nextjs
 
@@ -75,4 +94,5 @@ LABEL org.opencontainers.image.created="${CREATED}"
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
 
+ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "server.js"]
