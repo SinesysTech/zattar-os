@@ -1,4 +1,4 @@
-# Configuração GitLab CI/CD - Zattar Advogados App
+# Configuração GitLab CI/CD - Zattar OS
 
 Este guia explica como configurar o GitLab CI/CD para automatizar o build e deploy da aplicação.
 
@@ -20,10 +20,10 @@ Se você ainda não tem o projeto no GitLab:
 
 ```bash
 # Adicionar remote do GitLab
-git remote add gitlab https://gitlab.com/jordansmedeiros-group/zattar-advogados.git
+git remote add gitlab https://gitlab.com/jordansmedeiros-group/zattar-os.git
 
 # Ou se já existe, atualizar a URL
-git remote set-url gitlab https://gitlab.com/jordansmedeiros-group/zattar-advogados.git
+git remote set-url gitlab https://gitlab.com/jordansmedeiros-group/zattar-os.git
 
 # Push para o GitLab
 git push gitlab master
@@ -141,7 +141,7 @@ Após o pipeline completar com sucesso:
 docker login registry.gitlab.com
 
 # Pull da imagem
-docker pull registry.gitlab.com/seu-usuario/zattar-advogados-app:latest
+docker pull registry.gitlab.com/seu-usuario/zattar-os:latest
 ```
 
 ### 6.2 Executar Localmente
@@ -151,7 +151,7 @@ docker run -d \
   -p 3000:3000 \
   -e NEXT_PUBLIC_SUPABASE_URL=sua-url \
   -e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=sua-chave \
-  registry.gitlab.com/seu-usuario/zattar-advogados-app:latest
+  registry.gitlab.com/seu-usuario/zattar-os:latest
 ```
 
 ### 6.3 Deploy em Servidor
@@ -170,7 +170,7 @@ Exemplo com Docker Compose:
 version: '3.8'
 services:
   app:
-    image: registry.gitlab.com/seu-usuario/zattar-advogados-app:latest
+    image: registry.gitlab.com/seu-usuario/zattar-os:latest
     ports:
       - "3000:3000"
     environment:
@@ -279,7 +279,7 @@ Antes de configurar o deploy, você precisa:
 2. Criar a aplicação no CapRover:
    - Acesse seu painel do CapRover
    - Vá em **Apps** → **One-Click Apps/Databases**
-   - Crie uma nova aplicação (exemplo: `zattar-advogados-prod`)
+   - Crie uma nova aplicação (exemplo: `zattar-os-prod`)
 
 ### 7.2 Configurar Variáveis de Deploy no GitLab
 
@@ -291,10 +291,10 @@ Adicione as seguintes variáveis em **Settings** → **CI/CD** → **Variables**
 |----------|------|-----------|--------|-----------|---------|
 | `CAPROVER_URL` | Variable | ✓ | ✗ | URL do seu CapRover | `https://captain.seu-dominio.com` |
 | `CAPROVER_PASSWORD` | Variable | ✓ | ✓ | Senha do CapRover | `sua-senha-segura` |
-| `CAPROVER_APP_NAME` | Variable | ✓ | ✗ | Nome do app de produção | `zattar-advogados-prod` |
-| `CAPROVER_APP_URL` | Variable | ✓ | ✗ | URL do app de produção | `https://zattar-advogados.seu-dominio.com` |
-| `CAPROVER_STAGING_APP_NAME` | Variable | ✗ | ✗ | Nome do app de staging (opcional) | `zattar-advogados-staging` |
-| `CAPROVER_STAGING_APP_URL` | Variable | ✗ | ✗ | URL do app de staging (opcional) | `https://staging.zattar-advogados.seu-dominio.com` |
+| `CAPROVER_APP_NAME` | Variable | ✓ | ✗ | Nome do app de produção | `zattar-os-prod` |
+| `CAPROVER_APP_URL` | Variable | ✓ | ✗ | URL do app de produção | `https://zattar-os.seu-dominio.com` |
+| `CAPROVER_STAGING_APP_NAME` | Variable | ✗ | ✗ | Nome do app de staging (opcional) | `zattar-os-staging` |
+| `CAPROVER_STAGING_APP_URL` | Variable | ✗ | ✗ | URL do app de staging (opcional) | `https://staging.zattar-os.seu-dominio.com` |
 
 ### 7.3 Como Obter a Senha do CapRover
 
@@ -309,10 +309,10 @@ A senha do CapRover é a senha que você usa para fazer login no painel web.
 
 No painel do CapRover, configure sua aplicação:
 
-1. **Acesse a aplicação** criada (ex: `zattar-advogados-prod`)
+1. **Acesse a aplicação** criada (ex: `zattar-os-prod`)
 2. **App Configs**:
    - **Method**: Image from Docker Registry
-   - **Image Name**: `registry.gitlab.com/jordansmedeiros-group/zattar-advogados:production`
+   - **Image Name**: `registry.gitlab.com/jordansmedeiros-group/zattar-os:production`
 3. **Persistent Directories**: (se necessário)
    - Adicione volumes para dados persistentes
 4. **Environment Variables**:
@@ -324,7 +324,7 @@ No painel do CapRover, configure sua aplicação:
    ```
 5. **HTTP Settings**:
    - Habilite HTTPS
-   - Configure domínio customizado (ex: `zattar-advogados.seu-dominio.com`)
+   - Configure domínio customizado (ex: `zattar-os.seu-dominio.com`)
    - Habilite Websocket Support (se necessário)
 
 ### 7.5 Autenticar CapRover com GitLab Container Registry
@@ -352,7 +352,7 @@ O CapRover precisa ter acesso ao GitLab Container Registry para fazer pull das i
 
 O deploy é **manual** (por segurança). Após o pipeline completar:
 
-1. Acesse: https://gitlab.com/jordansmedeiros-group/zattar-advogados/-/pipelines
+1. Acesse: https://gitlab.com/jordansmedeiros-group/zattar-os/-/pipelines
 2. Clique no pipeline que completou com sucesso
 3. No stage **deploy**, você verá os jobs:
    - `deploy:caprover:production` (para produção - branch master)
@@ -397,7 +397,7 @@ Após o deploy:
 
 1. **Logs do Pipeline**: Verifique logs do job de deploy no GitLab
 2. **Logs do CapRover**: Acesse **Apps** → Sua aplicação → **App Logs**
-3. **Testar Aplicação**: Acesse a URL configurada (ex: `https://zattar-advogados.seu-dominio.com`)
+3. **Testar Aplicação**: Acesse a URL configurada (ex: `https://zattar-os.seu-dominio.com`)
 4. **Healthcheck**: Verifique `/api/health` para confirmar que está funcionando
 
 ### 7.10 Rollback (Reverter Deploy)
@@ -418,7 +418,7 @@ Se algo der errado após o deploy:
 **Opção 3 - Tag Específica:**
 ```bash
 # No CapRover, use uma tag específica da imagem
-registry.gitlab.com/jordansmedeiros-group/zattar-advogados:<commit-sha-antigo>
+registry.gitlab.com/jordansmedeiros-group/zattar-os:<commit-sha-antigo>
 ```
 
 ## Recursos Adicionais

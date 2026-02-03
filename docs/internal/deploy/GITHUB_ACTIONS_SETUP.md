@@ -22,7 +22,7 @@ Workflow automatizado para executar diagnóstico de VACUUM semanalmente via GitH
 
 1. **Acessar Secrets do GitHub**
    ```
-   https://github.com/SinesysTech/zattar-advogados-app/settings/secrets/actions
+   https://github.com/SinesysTech/zattar-os/settings/secrets/actions
    ```
 
 2. **Criar Secret: APP_URL**

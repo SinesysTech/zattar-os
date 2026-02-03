@@ -248,4 +248,4 @@ Nenhum issue critico, alto ou medio foi identificado durante a validacao.
 ---
 
 **Validado por:** Claude Code
-**Versao do Sistema:** zattar-advogados
+**Versao do Sistema:** zattar-os
