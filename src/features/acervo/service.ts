@@ -140,14 +140,24 @@ export async function atribuirResponsavel(
   try {
     // Validate process exists
     const supabase = createServiceClient();
-    for (const processoId of processoIds) {
-      const { data, error } = await supabase
-        .from('acervo')
-        .select('id')
-        .eq('id', processoId)
-        .single();
 
-      if (error || !data) {
+    // Optimization: Fetch all IDs in one query to avoid N+1
+    const { data: processosEncontrados, error: erroBusca } = await supabase
+      .from('acervo')
+      .select('id')
+      .in('id', processoIds);
+
+    if (erroBusca) {
+      return {
+        success: false,
+        error: erroBusca.message,
+      };
+    }
+
+    const idsEncontrados = new Set(processosEncontrados?.map((p) => p.id));
+
+    for (const processoId of processoIds) {
+      if (!idsEncontrados.has(processoId)) {
         return {
           success: false,
           error: `Processo ${processoId} não encontrado`,
