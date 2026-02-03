@@ -65,9 +65,9 @@ export function useDocumentUploads(documentoId: number) {
     }
   }, [documentoId, fetchUploads]);
 
-  const generatePresignedUpload = useCallback(async (filename: string, contentType: string) => {
+  const generatePresignedUpload = useCallback(async (filename: string, contentType: string, size?: number) => {
     setError(null);
-    const result = await actionGerarPresignedUrl(filename, contentType);
+    const result = await actionGerarPresignedUrl(filename, contentType, size);
     if (result.success) {
       return result.data;
     } else {

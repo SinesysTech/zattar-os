@@ -39,7 +39,8 @@ import {
   getTipoMedia,
   validateFileType,
   validateFileSize,
-} from "./services/b2-upload.service"; // Moved to feature
+} from "./services/b2-upload.service";
+import { checkQuota, incrementQuota } from "@/lib/mcp/quotas"; // Moved to feature
 import { generatePresignedUrl as generatePresignedDownloadUrl } from "@/lib/storage/backblaze-b2.service";
 
 // ============================================================================
@@ -743,10 +744,32 @@ export async function listarUploads(
 
 export async function gerarPresignedUrl(
   filename: string,
-  contentType: string
+  contentType: string,
+  usuario_id: number,
+  size?: number
 ): Promise<{ uploadUrl: string; key: string; publicUrl: string }> {
-  // TODO: Implementar validação de usuário e limites de upload antes de gerar URL
-  return generatePresignedUploadUrl({ fileName: filename, contentType });
+  // Validar tipo de arquivo
+  if (!validateFileType(contentType)) {
+    throw new Error("Tipo de arquivo não permitido.");
+  }
+
+  // Validar tamanho se fornecido
+  if (size !== undefined && !validateFileSize(size)) {
+    throw new Error("Tamanho do arquivo excede o limite (50MB).");
+  }
+
+  // Validar quota de API/Uploads
+  const quotaCheck = await checkQuota(usuario_id, "authenticated");
+  if (!quotaCheck.allowed) {
+    throw new Error(quotaCheck.reason || "Limite de uploads excedido.");
+  }
+
+  const result = await generatePresignedUploadUrl({ fileName: filename, contentType });
+
+  // Incrementar quota
+  await incrementQuota(usuario_id, "authenticated");
+
+  return result;
 }
 
 export async function gerarUrlDownload(key: string): Promise<string> {
