@@ -339,6 +339,7 @@ export function RepresentantesTableWrapper() {
     [handleEdit]
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: representantes,
     columns,
@@ -443,9 +444,9 @@ export function RepresentantesTableWrapper() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
