@@ -94,7 +94,7 @@ function AudienciaCard({
           <TabsTrigger value="detalhes">Detalhes</TabsTrigger>
           <TabsTrigger value="historico">Histórico</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="detalhes" className="space-y-3 mt-0">
           {/* Header: Número do processo + Status */}
           <div className="flex items-start justify-between gap-2">
@@ -221,9 +221,9 @@ function AudienciaCard({
             </div>
           )}
         </TabsContent>
-        
+
         <TabsContent value="historico" className="mt-0">
-           <AuditLogTimeline logs={logs} isLoading={loadingLogs} className="h-[400px]" />
+          <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-[400px]" />
         </TabsContent>
       </Tabs>
     </div>

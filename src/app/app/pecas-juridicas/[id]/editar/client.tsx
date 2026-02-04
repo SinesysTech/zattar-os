@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import { useParams } from 'next/navigation';
-import { PecaModeloEditor } from '@/features/pecas-juridicas';
+import { PecaModeloEditor } from '@/features/pecas-juridicas/components';
 
 export function EditarPecaModeloClient() {
   const params = useParams<{ id: string }>();

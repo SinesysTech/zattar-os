@@ -488,7 +488,7 @@ export function RepresentantesTableWrapper() {
                 >
                   {error ? (
                     <div className="text-destructive">
-                      Erro ao carregar representantes: {error.message}
+                      Erro ao carregar representantes: {error}
                     </div>
                   ) : (
                     'Nenhum representante encontrado.'

@@ -60,18 +60,7 @@ const TIPO_CONTA_VARIANTS: Record<TipoContaContabil, BadgeVariant> = {
   patrimonio_liquido: 'default',  // roxo/primário
 };
 
-const TIPO_CONTA_LABELS: Record<TipoContaContabil, string> = {
-  ativo: 'Ativo',
-  passivo: 'Passivo',
-  receita: 'Receita',
-  despesa: 'Despesa',
-  patrimonio_liquido: 'Patrimônio Líquido',
-};
 
-const NIVEL_LABELS: Record<NivelConta, string> = {
-  sintetica: 'Sintética',
-  analitica: 'Analítica',
-};
 
 /**
  * Define as colunas da tabela de plano de contas

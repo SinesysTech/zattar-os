@@ -99,7 +99,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
         </TabsContent>
 
         <TabsContent value="historico" className="mt-0">
-          <AuditLogTimeline logs={logs} isLoading={loadingLogs} className="h-[300px]" />
+          <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-[300px]" />
         </TabsContent>
       </Tabs>
     </div>
@@ -179,7 +179,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
         </TabsContent>
 
         <TabsContent value="historico" className="mt-0">
-          <AuditLogTimeline logs={logs} isLoading={loadingLogs} className="h-[500px]" />
+          <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-[500px]" />
         </TabsContent>
       </Tabs>
     </div>
