@@ -1,15 +1,15 @@
-# Módulo: Audiencias
+# Módulo: Processos
 
-**Status:** Partially Migrated
+**Status:** Fully Migrated
 
 ## Visão Geral
-Funcionalidades relacionadas a audiencias. Em processo de migração/desenvolvimento.
+Funcionalidades completas de processos.
 
 ## Arquitetura (Feature-Sliced Design)
 
 - [x] Domain (Entidades e Tipos)
 - [x] Service (Regras de Negócio)
 - [x] Repository (Acesso a Dados)
-- [ ] Server Actions
+- [x] Server Actions
 - [x] UI Components
 - [x] Regras de Negócio (AI Context)

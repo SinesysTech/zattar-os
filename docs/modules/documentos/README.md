@@ -1,15 +1,15 @@
-# Módulo: Audiencias
+# Módulo: Documentos
 
 **Status:** Partially Migrated
 
 ## Visão Geral
-Funcionalidades relacionadas a audiencias. Em processo de migração/desenvolvimento.
+Funcionalidades relacionadas a documentos. Em processo de migração/desenvolvimento.
 
 ## Arquitetura (Feature-Sliced Design)
 
 - [x] Domain (Entidades e Tipos)
 - [x] Service (Regras de Negócio)
-- [x] Repository (Acesso a Dados)
-- [ ] Server Actions
+- [ ] Repository (Acesso a Dados)
+- [x] Server Actions
 - [x] UI Components
 - [x] Regras de Negócio (AI Context)
