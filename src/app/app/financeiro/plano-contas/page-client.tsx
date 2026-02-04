@@ -25,6 +25,9 @@ import {
   type PlanoContasFilters,
   type TipoContaContabil,
   usePlanoContas,
+  TIPO_CONTA_LABELS,
+  NATUREZA_LABELS,
+  NIVEL_LABELS,
 } from '@/features/financeiro';
 import { actionAtualizarConta } from '@/features/financeiro/server-actions';
 import {
@@ -326,10 +329,99 @@ export default function PlanoContasPage() {
     [refetch]
   );
 
-  const handleExport = React.useCallback((format: 'csv' | 'xlsx' | 'json') => {
-    // TODO: Implementar exportação usando dados da tabela filtrada
-    toast.info(`Exportação para ${format.toUpperCase()} será implementada em breve`);
-  }, []);
+  const handleExport = React.useCallback(
+    async (format: 'csv' | 'xlsx' | 'json') => {
+      if (!table) return;
+
+      try {
+        const rows = table.getFilteredRowModel().rows;
+
+        if (rows.length === 0) {
+          toast.warning('Nenhum dado para exportar.');
+          return;
+        }
+
+        const data = rows.map((row) => {
+          const item = row.original;
+          return {
+            'Código': item.codigo,
+            'Nome': item.nome,
+            'Tipo': TIPO_CONTA_LABELS[item.tipo] || item.tipo,
+            'Nível': NIVEL_LABELS[item.nivel] || item.nivel,
+            'Natureza': NATUREZA_LABELS[item.natureza] || item.natureza,
+            'Conta Pai': item.nomePai || '',
+            'Status': item.ativo ? 'Ativo' : 'Inativo',
+          };
+        });
+
+        const filename = 'plano-contas';
+
+        if (format === 'json') {
+          const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
+            JSON.stringify(data, null, 2)
+          )}`;
+          const link = document.createElement('a');
+          link.href = jsonString;
+          link.download = `${filename}.json`;
+          link.click();
+          toast.success('Exportação concluída!');
+          return;
+        }
+
+        if (format === 'csv') {
+          const Papa = (await import('papaparse')).default;
+          const csv = Papa.unparse(data);
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `${filename}.csv`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          toast.success('Exportação concluída!');
+          return;
+        }
+
+        if (format === 'xlsx') {
+          const exceljsModule = await import('exceljs/dist/exceljs.min.js');
+          const ExcelJS = (exceljsModule as unknown as { default: typeof import('exceljs') }).default;
+
+          const workbook = new ExcelJS.Workbook();
+          const worksheet = workbook.addWorksheet('Plano de Contas');
+
+          // Configurar colunas
+          const columns = Object.keys(data[0]);
+          worksheet.columns = columns.map(col => ({ header: col, key: col, width: 20 }));
+
+          // Adicionar dados
+          worksheet.addRows(data);
+
+          // Estilizar cabeçalho
+          worksheet.getRow(1).font = { bold: true };
+
+          const buffer = await workbook.xlsx.writeBuffer();
+          const blob = new Blob([buffer], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `${filename}.xlsx`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          toast.success('Exportação concluída!');
+        }
+      } catch (error) {
+        console.error('Erro na exportação:', error);
+        toast.error('Erro ao exportar dados.');
+      }
+    },
+    [table]
+  );
 
   const colunas = React.useMemo(
     () => criarColunas(handleEdit, handleToggleStatus),
