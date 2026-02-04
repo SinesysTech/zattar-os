@@ -263,6 +263,8 @@ export interface ListTemplatesParams {
   status?: StatusTemplate;
   segmento_id?: number;
   tipo_template?: 'pdf' | 'markdown';
+  pagina?: number;
+  limite?: number;
 }
 
 export interface TemplateListResponse {
