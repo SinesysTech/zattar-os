@@ -4,6 +4,16 @@ Sistema de gestão jurídica (Sinesys 2.0) com foco em automação e IA.
 
 **Stack**: Next.js 16 (App Router), React 19, TypeScript, Supabase (PostgreSQL + RLS), Redis (opcional), Tailwind CSS 4, shadcn/ui.
 
+## Status de Desenvolvimento (2026-01-05)
+
+| Status | Features |
+|--------|----------|
+| ✅ **Totalmente Migrado** | `acervo`, `advogados`, `ai`, `assistentes`, `captura`, `cargos`, `contratos`, `enderecos`, `expedientes`, `notificacoes`, `obrigacoes`, `pangea`, `pericias`, `processos`, `rh`, `tipos-expedientes`, `usuarios` |
+| ⚠️ **Parcialmente Migrado** | `assinatura-digital`, `audiencias`, `chat`, `documentos`, `partes`, `perfil`, `portal-cliente` |
+| ❌ **Em Desenvolvimento** | `busca`, `calendar`, `financeiro`, `profiles`, `repasses`, `tasks` |
+
+Consulte [STATUS.md](./STATUS.md) e [AGENTS.md](./AGENTS.md) para detalhes completos.
+
 ## Requisitos
 
 - Node.js `>= 24.9.0`
@@ -151,18 +161,14 @@ Build e execução local:
 
 ```bash
 docker build -t sinesys:local .
-docker run -p 3000:3000 \
-  -e NEXT_PUBLIC_SUPABASE_URL=... \
-  -e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=... \
-  -e SUPABASE_SECRET_KEY=... \
-  sinesys:local
+docker run -p 3000:3000   -e NEXT_PUBLIC_SUPABASE_URL=...   -e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=...   -e SUPABASE_SECRET_KEY=...   sinesys:local
 ```
 
 Também existe `docker-compose.yml` para subir o app via env vars.
 
 ## Docs
 
-- `docs/features.md`
-- `docs/guia-inicio-rapido.md`
+- [STATUS.md](./STATUS.md)
+- [AGENTS.md](./AGENTS.md)
+- `docs/modules/` (Documentação por módulo)
 - `docs/guia-desenvolvimento.md`
-- `docs/deploy.md`
