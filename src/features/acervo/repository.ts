@@ -650,10 +650,12 @@ export async function atribuirResponsavel(
   }
 
   // Invalidate cache for affected processes
-  for (const id of processoIds) {
-    const cacheKey = `acervo:id:${id}`;
-    await setCached(cacheKey, null, 0); // Delete from cache
-  }
+  await Promise.all(
+    processoIds.map((id) => {
+      const cacheKey = `acervo:id:${id}`;
+      return setCached(cacheKey, null, 0); // Delete from cache
+    })
+  );
 }
 
 /**
