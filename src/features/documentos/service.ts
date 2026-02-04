@@ -32,6 +32,7 @@ import * as compartilhamentoRepo from "./repositories/compartilhamento-repositor
 import * as versoesRepo from "./repositories/versoes-repository";
 import * as uploadsRepo from "./repositories/uploads-repository";
 import * as arquivosRepo from "./repositories/arquivos-repository";
+import { usuarioRepository } from "../usuarios/repository";
 import * as domain from "./domain";
 import {
   uploadFileToB2,
@@ -514,7 +515,10 @@ export async function compartilharDocumento(
     throw new Error("Não é possível compartilhar um documento consigo mesmo.");
   }
 
-  // TODO: verificar se usuario_id existe no sistema
+  const usuario = await usuarioRepository.findById(usuario_id);
+  if (!usuario) {
+    throw new Error("Usuário não encontrado.");
+  }
   return compartilhamentoRepo.compartilharDocumento(parsedParams, compartilhado_por);
 }
 
