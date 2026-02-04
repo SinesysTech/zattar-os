@@ -383,19 +383,33 @@ export async function sincronizarAcordoCompleto(
             };
         }
         
-        // 4. Sincronizar cada parcela
+        // 4. Sincronizar parcelas em lotes
         const erros: string[] = [];
         let totalSucesso = 0;
         let totalErro = 0;
         
-        for (const parcela of parcelas) {
-            const resultado = await sincronizarParcelaParaFinanceiro(parcela.id, forcar);
+        const CONCURRENCY_LIMIT = 5;
+        const chunks = [];
+
+        for (let i = 0; i < parcelas.length; i += CONCURRENCY_LIMIT) {
+            chunks.push(parcelas.slice(i, i + CONCURRENCY_LIMIT));
+        }
+
+        for (const chunk of chunks) {
+            const promises = chunk.map(parcela =>
+                sincronizarParcelaParaFinanceiro(parcela.id, forcar)
+                    .then(resultado => ({ resultado, parcela }))
+            );
             
-            if (resultado.sucesso) {
-                totalSucesso++;
-            } else {
-                totalErro++;
-                erros.push(`Parcela ${parcela.numeroParcela}: ${resultado.mensagem}`);
+            const resultados = await Promise.all(promises);
+
+            for (const { resultado, parcela } of resultados) {
+                if (resultado.sucesso) {
+                    totalSucesso++;
+                } else {
+                    totalErro++;
+                    erros.push(`Parcela ${parcela.numeroParcela}: ${resultado.mensagem}`);
+                }
             }
         }
         
@@ -532,4 +546,3 @@ export async function reverterSincronizacao(parcelaId: number): Promise<{ sucess
         };
     }
 }
-
