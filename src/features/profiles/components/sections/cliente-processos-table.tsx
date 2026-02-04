@@ -209,7 +209,6 @@ export function EntidadeProcessosTable({ data, title = 'Processos Relacionados' 
         <DataTable
           data={filteredData}
           columns={columns}
-          hideTableBorder={true}
           density="standard"
           striped={true}
           emptyMessage="Nenhum processo encontrado com os filtros aplicados."

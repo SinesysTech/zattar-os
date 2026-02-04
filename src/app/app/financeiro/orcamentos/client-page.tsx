@@ -809,28 +809,25 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={orcamentos}
-            columns={colunas}
-            pagination={{
-              pageIndex,
-              pageSize,
-              total,
-              totalPages: Math.ceil(total / pageSize),
-              onPageChange: setPageIndex,
-              onPageSizeChange: setPageSize,
-            }}
-            sorting={undefined}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<OrcamentoComItens>)}
-            emptyMessage="Nenhum orçamento encontrado."
-            hideTableBorder={true}
-            hidePagination={true}
-          />
-        </div>
+        <DataTable
+          data={orcamentos}
+          columns={colunas}
+          pagination={{
+            pageIndex,
+            pageSize,
+            total,
+            totalPages: Math.ceil(total / pageSize),
+            onPageChange: setPageIndex,
+            onPageSizeChange: setPageSize,
+          }}
+          sorting={undefined}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<OrcamentoComItens>)}
+          emptyMessage="Nenhum orçamento encontrado."
+          hidePagination={true}
+        />
       </DataShell>
 
       {/* Dialog de Formulário */}

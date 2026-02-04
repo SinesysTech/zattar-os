@@ -2,10 +2,8 @@
 
 import * as React from 'react';
 import type { Table } from '@tanstack/react-table';
-import { Download, Search, Settings2 } from 'lucide-react';
+import { Columns, Download, Plus, Search, Settings2 } from 'lucide-react';
 import Papa from 'papaparse';
-
-import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -163,164 +161,159 @@ export function DataTableToolbar<TData>({
       aria-label="Controles da tabela"
       {...(tableId && { 'aria-controls': tableId })}
       data-slot="data-table-toolbar"
-      className="px-6 py-4"
+      className="py-4"
     >
-      {/* Linha única: SearchBox + Filtros + Visualização + Exportar */}
-      <div className="flex items-center gap-2">
-        {/* SearchBox */}
-        <div className="relative w-full max-w-md">
-          <Search
-            className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-            aria-hidden="true"
-          />
-          <Input
-            type="search"
-            placeholder={searchPlaceholder}
-            aria-label="Buscar na tabela"
-            value={
-              searchValue !== undefined
-                ? searchValue
-                : (table?.getState().globalFilter as string) ?? ''
-            }
-            onChange={(event) => {
-              const value = event.target.value;
-              if (onSearchValueChange) {
-                onSearchValueChange(value);
-                return;
+      <div className="flex items-center gap-4">
+        {/* Lado esquerdo: SearchBox + Filtros */}
+        <div className="flex items-center gap-2 flex-1">
+          <div className="relative max-w-md">
+            <Search
+              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              type="search"
+              placeholder={searchPlaceholder}
+              aria-label="Buscar na tabela"
+              value={
+                searchValue !== undefined
+                  ? searchValue
+                  : (table?.getState().globalFilter as string) ?? ''
               }
-              table?.setGlobalFilter(value);
-            }}
-            className="h-9 w-full pl-9 bg-white"
-          />
+              onChange={(event) => {
+                const value = event.target.value;
+                if (onSearchValueChange) {
+                  onSearchValueChange(value);
+                  return;
+                }
+                table?.setGlobalFilter(value);
+              }}
+              className="w-full pl-9 bg-white"
+            />
+          </div>
+
+          {/* Filtros (dropdowns) */}
+          {filtersSlot}
         </div>
 
-        {/* Filtros (dropdowns) */}
-        {filtersSlot}
+        {/* Lado direito: Ações */}
+        <div className="flex items-center gap-2">
+          {/* Slot para ações adicionais (ex: ChatwootSyncButton) */}
+          {actionSlot}
 
-        {/* Spacer para empurrar botões para a direita */}
-        <div className="flex-1" />
+          {/* Botão de Exportar */}
+          {(table || onExport) && (
+            <DropdownMenu>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="bg-white"
+                      aria-label="Exportar dados"
+                    >
+                      <Download className="h-4 w-4" aria-hidden="true" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Exportar dados</TooltipContent>
+              </Tooltip>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => void handleExport('csv')}>
+                  CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => void handleExport('xlsx')}>
+                  Excel
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => void handleExport('json')}>
+                  JSON
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
-        {/* Botão de Visualização/Configurações - apenas se table estiver disponível */}
-        {table && (
-          <DropdownMenu>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-9 w-9 bg-white"
-                    aria-label="Configurações de visualização"
-                  >
-                    <Settings2 className="h-4 w-4" aria-hidden="true" />
-                  </Button>
-                </DropdownMenuTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Configurações de visualização</TooltipContent>
-            </Tooltip>
+          {/* Botão de Densidade (engrenagem) - apenas se onDensityChange for fornecido */}
+          {onDensityChange && (
+            <DropdownMenu>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="bg-white"
+                      aria-label="Configurações de densidade"
+                    >
+                      <Settings2 className="h-4 w-4" aria-hidden="true" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Densidade</TooltipContent>
+              </Tooltip>
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuLabel>Densidade</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup
+                  value={density}
+                  onValueChange={(val) =>
+                    onDensityChange(val as 'compact' | 'standard' | 'relaxed')
+                  }
+                >
+                  <DropdownMenuRadioItem value="compact">
+                    Compacta
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="standard">
+                    Normal
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="relaxed">
+                    Relaxada
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
-            <DropdownMenuContent align="end" className="w-55">
-              {/* Content remains same */}
-              {onDensityChange && (
-                <>
-                  <DropdownMenuLabel>Densidade</DropdownMenuLabel>
-                  <DropdownMenuRadioGroup
-                    value={density}
-                    onValueChange={(val) =>
-                      onDensityChange(val as 'compact' | 'standard' | 'relaxed')
-                    }
-                  >
-                    <DropdownMenuRadioItem value="compact">
-                      Compacta
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="standard">
-                      Normal
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="relaxed">
-                      Relaxada
-                    </DropdownMenuRadioItem>
-                  </DropdownMenuRadioGroup>
-                  <DropdownMenuSeparator />
-                </>
-              )}
+          {/* Botão de Colunas - separado */}
+          {table && visibleColumns.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="bg-white">
+                  <Columns className="h-4 w-4" />
+                  <span className="hidden md:inline">Colunas</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {visibleColumns.map((column) => {
+                  const columnId = column.id || (column as { accessorKey?: string }).accessorKey || '';
+                  const headerLabel = (column.columnDef.meta as { headerLabel?: string } | undefined)?.headerLabel || columnId;
+                  const displayName = headerLabel
+                    .replace(/_/g, ' ')
+                    .replace(/\b\w/g, (l) => l.toUpperCase());
 
-              <DropdownMenuLabel>Colunas</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {visibleColumns.map((column) => {
-                const columnId = column.id || (column as { accessorKey?: string }).accessorKey || '';
-                const headerLabel = (column.columnDef.meta as { headerLabel?: string } | undefined)?.headerLabel || columnId;
-                const displayName = headerLabel
-                  .replace(/_/g, ' ')
-                  .replace(/\b\w/g, (l) => l.toUpperCase());
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={columnId}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    >
+                      {displayName}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={columnId}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                  >
-                    {displayName}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-
-        {/* Botão de Exportar - apenas se table estiver disponível ou onExport for fornecido */}
-        {(table || onExport) && (
-          <DropdownMenu>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-9 w-9 bg-white"
-                    aria-label="Exportar dados"
-                  >
-                    <Download className="h-4 w-4" aria-hidden="true" />
-                  </Button>
-                </DropdownMenuTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Exportar dados</TooltipContent>
-            </Tooltip>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => void handleExport('csv')}>
-                CSV
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => void handleExport('xlsx')}>
-                Excel
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => void handleExport('json')}>
-                JSON
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-
-        {/* Slot para ações adicionais (se houver) */}
-        {actionSlot}
-
-        {/* NEW Action Button - sempre por último */}
-        {actionButton && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                onClick={actionButton.onClick}
-                size="icon"
-                className="h-9 w-9"
-                aria-label={actionButton.label}
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              {actionButton.tooltip ?? actionButton.label}
-            </TooltipContent>
-          </Tooltip>
-        )}
+          {/* Botão de ação primária (ex: "Novo Cliente") */}
+          {actionButton && (
+            <Button onClick={actionButton.onClick}>
+              {actionButton.icon ?? <Plus className="h-4 w-4" />}
+              {actionButton.label}
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

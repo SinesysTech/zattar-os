@@ -615,36 +615,33 @@ export function TemplatesClient() {
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={templates}
-            columns={colunas}
-            pagination={{
-              pageIndex: pagina,
-              pageSize: limite,
-              total,
-              totalPages: Math.ceil(total / limite),
-              onPageChange: setPagina,
-              onPageSizeChange: setLimite,
-            }}
-            sorting={undefined}
-            rowSelection={{
-              state: rowSelection,
-              onRowSelectionChange: setRowSelection,
-              getRowId: (row) => row.id.toString(),
-            }}
-            isLoading={isLoading}
-            error={null}
-            emptyMessage="Nenhum template encontrado."
-            onRowClick={(row) => handleEdit(row)}
-            onTableReady={(t) => {
-              const tableInstance = t as TanstackTable<Template>;
-              setTable(tableInstance);
-            }}
-            hidePagination
-            hideTableBorder
-          />
-        </div>
+        <DataTable
+          data={templates}
+          columns={colunas}
+          pagination={{
+            pageIndex: pagina,
+            pageSize: limite,
+            total,
+            totalPages: Math.ceil(total / limite),
+            onPageChange: setPagina,
+            onPageSizeChange: setLimite,
+          }}
+          sorting={undefined}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId: (row) => row.id.toString(),
+          }}
+          isLoading={isLoading}
+          error={null}
+          emptyMessage="Nenhum template encontrado."
+          onRowClick={(row) => handleEdit(row)}
+          onTableReady={(t) => {
+            const tableInstance = t as TanstackTable<Template>;
+            setTable(tableInstance);
+          }}
+          hidePagination
+        />
       </DataShell>
 
       <TemplateCreateDialog

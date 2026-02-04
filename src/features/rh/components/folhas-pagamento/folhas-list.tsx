@@ -303,30 +303,27 @@ export function FolhasPagamentoList() {
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            columns={colunas}
-            data={folhas}
-            isLoading={isLoading}
-            error={error}
-            pagination={
-              paginacao
-                ? {
-                    pageIndex: pagina - 1,
-                    pageSize: 50,
-                    total: paginacao.total,
-                    totalPages: paginacao.totalPaginas,
-                    onPageChange: (pageIndex) => setPagina(pageIndex + 1),
-                    onPageSizeChange: () => {},
-                  }
-                : undefined
-            }
-            hideTableBorder={true}
-            hidePagination={true}
-            onTableReady={setTable}
-            density={density}
-          />
-        </div>
+        <DataTable
+          columns={colunas}
+          data={folhas}
+          isLoading={isLoading}
+          error={error}
+          pagination={
+            paginacao
+              ? {
+                  pageIndex: pagina - 1,
+                  pageSize: 50,
+                  total: paginacao.total,
+                  totalPages: paginacao.totalPaginas,
+                  onPageChange: (pageIndex) => setPagina(pageIndex + 1),
+                  onPageSizeChange: () => {},
+                }
+              : undefined
+          }
+          hidePagination={true}
+          onTableReady={setTable}
+          density={density}
+        />
       </DataShell>
 
       <GerarFolhaDialog

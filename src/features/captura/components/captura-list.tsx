@@ -865,30 +865,27 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
         ) : null
       }
     >
-      <div className="relative border-t">
-        <DataTable
-          data={capturas}
-          columns={colunas}
-          pagination={
-            paginacao
-              ? {
-                  pageIndex: paginacao.pagina - 1,
-                  pageSize: paginacao.limite,
-                  total: paginacao.total,
-                  totalPages: paginacao.totalPaginas,
-                  onPageChange: setPagina,
-                  onPageSizeChange: setLimite,
-                }
-              : undefined
-          }
-          isLoading={isLoading}
-          error={error}
-          density={density}
-          onTableReady={(t) => setTable(t as TanstackTable<CapturaLog>)}
-          hideTableBorder={true}
-          emptyMessage="Nenhuma captura encontrada no histórico."
-        />
-      </div>
+      <DataTable
+        data={capturas}
+        columns={colunas}
+        pagination={
+          paginacao
+            ? {
+                pageIndex: paginacao.pagina - 1,
+                pageSize: paginacao.limite,
+                total: paginacao.total,
+                totalPages: paginacao.totalPaginas,
+                onPageChange: setPagina,
+                onPageSizeChange: setLimite,
+              }
+            : undefined
+        }
+        isLoading={isLoading}
+        error={error}
+        density={density}
+        onTableReady={(t) => setTable(t as TanstackTable<CapturaLog>)}
+        emptyMessage="Nenhuma captura encontrada no histórico."
+      />
     </DataShell>
   );
 }

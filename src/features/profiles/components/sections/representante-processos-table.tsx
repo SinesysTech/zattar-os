@@ -185,7 +185,6 @@ export function RepresentanteProcessosTable({ data, title = 'Processos Represent
         <DataTable
           data={filteredData}
           columns={columns}
-          hideTableBorder={true}
           density="standard"
           striped={true}
           emptyMessage="Nenhum processo encontrado com os filtros aplicados."

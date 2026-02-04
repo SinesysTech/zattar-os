@@ -210,23 +210,20 @@ export function TiposExpedientesList({ initialData }: TiposExpedientesListProps)
                     />
                 }
             >
-                <div className="relative border-t">
-                    <DataTable
-                        data={data.data}
-                        columns={columns}
-                        isLoading={isLoading}
-                        pagination={undefined}
-                        hidePagination={true}
-                        hideTableBorder={true}
-                        className="border-none"
-                        options={{
-                            meta: {
-                                onEdit: handleEdit,
-                                onDelete: handleDelete
-                            }
-                        }}
-                    />
-                </div>
+                <DataTable
+                    data={data.data}
+                    columns={columns}
+                    isLoading={isLoading}
+                    pagination={undefined}
+                    hidePagination={true}
+                    className="border-none"
+                    options={{
+                        meta: {
+                            onEdit: handleEdit,
+                            onDelete: handleDelete
+                        }
+                    }}
+                />
             </DataShell>
 
             <TipoExpedienteForm

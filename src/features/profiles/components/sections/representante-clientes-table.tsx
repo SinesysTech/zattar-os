@@ -107,7 +107,6 @@ export function RepresentanteClientesTable({ data, title = 'Carteira de Clientes
         <DataTable
           data={clientes}
           columns={columns}
-          hideTableBorder={true}
           density="standard"
           striped={true}
           emptyMessage="Nenhum cliente vinculado a este representante."

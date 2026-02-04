@@ -701,32 +701,29 @@ export default function ContasReceberPage() {
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={contasReceber}
-            columns={colunas}
-            pagination={
-              paginacao
-                ? {
-                    pageIndex: paginacao.pagina - 1,
-                    pageSize: paginacao.limite,
-                    total: paginacao.total,
-                    totalPages: paginacao.totalPaginas,
-                    onPageChange: setPageIndex,
-                    onPageSizeChange: setPageSize,
-                  }
-                : undefined
-            }
-            sorting={undefined}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<ContaReceberComDetalhes>)}
-            emptyMessage="Nenhuma conta a receber encontrada."
-            hideTableBorder={true}
-            hidePagination={true}
-          />
-        </div>
+        <DataTable
+          data={contasReceber}
+          columns={colunas}
+          pagination={
+            paginacao
+              ? {
+                  pageIndex: paginacao.pagina - 1,
+                  pageSize: paginacao.limite,
+                  total: paginacao.total,
+                  totalPages: paginacao.totalPaginas,
+                  onPageChange: setPageIndex,
+                  onPageSizeChange: setPageSize,
+                }
+              : undefined
+          }
+          sorting={undefined}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<ContaReceberComDetalhes>)}
+          emptyMessage="Nenhuma conta a receber encontrada."
+          hidePagination={true}
+        />
       </DataShell>
 
       {/* Dialog de Recebimento */}

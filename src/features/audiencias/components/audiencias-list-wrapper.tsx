@@ -298,26 +298,23 @@ export function AudienciasListWrapper({
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={audienciasEnriquecidas}
-            columns={columns}
-            pagination={{
-              pageIndex,
-              pageSize,
-              total,
-              totalPages,
-              onPageChange: setPageIndex,
-              onPageSizeChange: setPageSize,
-            }}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<AudienciaComResponsavel>)}
-            hideTableBorder={true}
-            emptyMessage="Nenhuma audiência encontrada."
-          />
-        </div>
+        <DataTable
+          data={audienciasEnriquecidas}
+          columns={columns}
+          pagination={{
+            pageIndex,
+            pageSize,
+            total,
+            totalPages,
+            onPageChange: setPageIndex,
+            onPageSizeChange: setPageSize,
+          }}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<AudienciaComResponsavel>)}
+          emptyMessage="Nenhuma audiência encontrada."
+        />
       </DataShell>
 
       <NovaAudienciaDialog

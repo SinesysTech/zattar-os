@@ -444,32 +444,29 @@ export function ContratosTableWrapper({
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={contratos}
-            columns={columns}
-            pagination={{
-              pageIndex,
-              pageSize,
-              total,
-              totalPages,
-              onPageChange: setPageIndex,
-              onPageSizeChange: setPageSize,
-            }}
-            sorting={sorting}
-            onSortingChange={(next) => {
-              setSorting(next);
-              // Ao mudar ordenação, voltar para a primeira página (server-side sorting)
-              setPageIndex(0);
-            }}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<Contrato>)}
-            hideTableBorder={true}
-            emptyMessage="Nenhum contrato encontrado."
-          />
-        </div>
+        <DataTable
+          data={contratos}
+          columns={columns}
+          pagination={{
+            pageIndex,
+            pageSize,
+            total,
+            totalPages,
+            onPageChange: setPageIndex,
+            onPageSizeChange: setPageSize,
+          }}
+          sorting={sorting}
+          onSortingChange={(next) => {
+            setSorting(next);
+            // Ao mudar ordenação, voltar para a primeira página (server-side sorting)
+            setPageIndex(0);
+          }}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<Contrato>)}
+          emptyMessage="Nenhum contrato encontrado."
+        />
       </DataShell>
 
       {/* Sheet de criação */}

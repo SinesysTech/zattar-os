@@ -177,16 +177,14 @@ export default function ConciliacaoBancariaPage() {
           </div>
         )}
 
-        <div className="relative border-t">
-          <TransacoesImportadasTable
-            transacoes={transacoes}
-            onConciliar={handleConciliar}
-            onDesconciliar={handleDesconciliar}
-            onIgnorar={handleIgnorar}
-            onVerSugestoes={handleConciliar}
-            onVerDetalhes={handleVerDetalhes}
-          />
-        </div>
+        <TransacoesImportadasTable
+          transacoes={transacoes}
+          onConciliar={handleConciliar}
+          onDesconciliar={handleDesconciliar}
+          onIgnorar={handleIgnorar}
+          onVerSugestoes={handleConciliar}
+          onVerDetalhes={handleVerDetalhes}
+        />
       </DataShell>
 
       {/* Dialogs */}

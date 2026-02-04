@@ -620,25 +620,22 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={audienciasEnriquecidas}
-            columns={columns}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<AudienciaComResponsavel>)}
-            hideTableBorder={true}
-            emptyMessage="Nenhuma audiência encontrada."
-            options={{
-              meta: {
-                usuarios,
-                tiposAudiencia,
-                onSuccess: handleSucessoOperacao,
-              },
-            }}
-          />
-        </div>
+        <DataTable
+          data={audienciasEnriquecidas}
+          columns={columns}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<AudienciaComResponsavel>)}
+          emptyMessage="Nenhuma audiência encontrada."
+          options={{
+            meta: {
+              usuarios,
+              tiposAudiencia,
+              onSuccess: handleSucessoOperacao,
+            },
+          }}
+        />
       </DataShell>
 
       <NovaAudienciaDialog

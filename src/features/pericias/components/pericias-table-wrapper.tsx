@@ -677,29 +677,26 @@ export function PericiasTableWrapper({
         ) : null
       }
     >
-      <div className="relative border-t">
-        <DataTable
-          data={pericias}
-          columns={columns}
-          isLoading={isLoading}
-          error={error}
-          density={density}
-          onTableReady={(t) => setTable(t as TanstackTable<Pericia>)}
-          hideTableBorder={true}
-          emptyMessage="Nenhuma perícia encontrada."
-          rowSelection={{
-            state: rowSelection,
-            onRowSelectionChange: setRowSelection,
-            getRowId: (row) => row.id.toString(),
-          }}
-          options={{
-            meta: {
-              usuarios,
-              onSuccess: handleSucessoOperacao,
-            },
-          }}
-        />
-      </div>
+      <DataTable
+        data={pericias}
+        columns={columns}
+        isLoading={isLoading}
+        error={error}
+        density={density}
+        onTableReady={(t) => setTable(t as TanstackTable<Pericia>)}
+        emptyMessage="Nenhuma perícia encontrada."
+        rowSelection={{
+          state: rowSelection,
+          onRowSelectionChange: setRowSelection,
+          getRowId: (row) => row.id.toString(),
+        }}
+        options={{
+          meta: {
+            usuarios,
+            onSuccess: handleSucessoOperacao,
+          },
+        }}
+      />
     </DataShell>
   );
 }

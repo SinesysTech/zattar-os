@@ -320,26 +320,23 @@ export function EntidadeTableWrapper({
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={entidades}
-            columns={columns}
-            pagination={{
-              pageIndex,
-              pageSize,
-              total,
-              totalPages,
-              onPageChange: setPageIndex,
-              onPageSizeChange: setPageSize,
-            }}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<Entidade>)}
-            hideTableBorder={true}
-            emptyMessage="Nenhum item encontrado."
-          />
-        </div>
+        <DataTable
+          data={entidades}
+          columns={columns}
+          pagination={{
+            pageIndex,
+            pageSize,
+            total,
+            totalPages,
+            onPageChange: setPageIndex,
+            onPageSizeChange: setPageSize,
+          }}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<Entidade>)}
+          emptyMessage="Nenhum item encontrado."
+        />
       </DataShell>
 
       {/* Dialog de Criação */}
@@ -722,7 +719,7 @@ export function EntidadeDetailSheet({
 |------|------|-----------|
 | `data` | `TData[]` | Dados da tabela |
 | `columns` | `ColumnDef<TData>[]` | Definição de colunas |
-| `hideTableBorder` | `boolean` | Ocultar borda (use `true` no DataShell) |
+| `hideTableBorder` | `boolean` | Ocultar borda da tabela (default: false) |
 | `isLoading` | `boolean` | Estado de loading |
 | `error` | `string \| null` | Mensagem de erro |
 | `density` | `'compact' \| 'standard' \| 'relaxed'` | Densidade |
@@ -768,7 +765,7 @@ export function EntidadeDetailSheet({
 - [ ] `DataShell` com `header`, `footer`, `children`
 - [ ] `DataTableToolbar` com `table`, `density`, `searchValue`, `filtersSlot`
 - [ ] `DataPagination` no footer
-- [ ] `DataTable` com `hideTableBorder={true}`
+- [ ] `DataTable` (tabela renderiza sua própria borda)
 - [ ] `onTableReady` para capturar instância
 - [ ] `useDebounce` para busca
 - [ ] Reset `pageIndex` ao mudar filtros

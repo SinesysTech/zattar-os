@@ -19,7 +19,6 @@
  *   <DataTable
  *     data={data}
  *     columns={columns}
- *     hideTableBorder={true} // Border é gerenciado pelo DataShell
  *   />
  * </DataShell>
  * ```
@@ -707,11 +706,9 @@ export function DataTable<TData, TValue>({
     return tableInner;
   }
 
-  // Quando hideTableBorder é false, não adiciona overflow-auto para evitar rolagem duplicada
-  // A rolagem é gerenciada pelo ScrollArea do layout do dashboard
   return (
-    <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
-      <div className="w-full">{tableInner}</div>
+    <div className="rounded-md border bg-card">
+      {tableInner}
     </div>
   );
 }

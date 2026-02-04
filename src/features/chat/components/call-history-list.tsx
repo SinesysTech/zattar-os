@@ -405,25 +405,22 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={data}
-            columns={columns}
-            pagination={{
-              pageIndex,
-              pageSize,
-              total,
-              totalPages,
-              onPageChange: handlePageChange,
-              onPageSizeChange: handlePageSizeChange,
-            }}
-            isLoading={isLoading}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<ChamadaComParticipantes>)}
-            hideTableBorder={true}
-            emptyMessage="Nenhuma chamada encontrada."
-          />
-        </div>
+        <DataTable
+          data={data}
+          columns={columns}
+          pagination={{
+            pageIndex,
+            pageSize,
+            total,
+            totalPages,
+            onPageChange: handlePageChange,
+            onPageSizeChange: handlePageSizeChange,
+          }}
+          isLoading={isLoading}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<ChamadaComParticipantes>)}
+          emptyMessage="Nenhuma chamada encontrada."
+        />
       </DataShell>
 
       <CallDetailSheet

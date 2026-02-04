@@ -637,38 +637,35 @@ export function FormulariosClient() {
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={formularios}
-            columns={colunas}
-            pagination={{
-              pageIndex: pagina,
-              pageSize: limite,
-              total,
-              totalPages: Math.ceil(total / limite),
-              onPageChange: setPagina,
-              onPageSizeChange: setLimite,
-            }}
-            sorting={undefined}
-            rowSelection={{
-              state: rowSelection,
-              onRowSelectionChange: setRowSelection,
-              getRowId: (row) => row.id.toString(),
-            }}
-            isLoading={isLoading}
-            error={null}
-            emptyMessage="Nenhum formulário encontrado."
-            onRowClick={(row) => handleEditSchema(row)}
-            onTableReady={(t) => {
-              const tableInstance = t as TanstackTable<AssinaturaDigitalFormulario>;
-              // Ocultar coluna "ativo" por padrão
-              tableInstance.getColumn('ativo')?.toggleVisibility(false);
-              setTable(tableInstance);
-            }}
-            hidePagination
-            hideTableBorder
-          />
-        </div>
+        <DataTable
+          data={formularios}
+          columns={colunas}
+          pagination={{
+            pageIndex: pagina,
+            pageSize: limite,
+            total,
+            totalPages: Math.ceil(total / limite),
+            onPageChange: setPagina,
+            onPageSizeChange: setLimite,
+          }}
+          sorting={undefined}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId: (row) => row.id.toString(),
+          }}
+          isLoading={isLoading}
+          error={null}
+          emptyMessage="Nenhum formulário encontrado."
+          onRowClick={(row) => handleEditSchema(row)}
+          onTableReady={(t) => {
+            const tableInstance = t as TanstackTable<AssinaturaDigitalFormulario>;
+            // Ocultar coluna "ativo" por padrão
+            tableInstance.getColumn('ativo')?.toggleVisibility(false);
+            setTable(tableInstance);
+          }}
+          hidePagination
+        />
       </DataShell>
 
       <FormularioCreateDialog

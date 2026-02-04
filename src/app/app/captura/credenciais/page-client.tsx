@@ -267,19 +267,16 @@ export default function CredenciaisPage() {
           )
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={credenciaisFiltradas}
-            columns={colunas}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            emptyMessage="Nenhuma credencial encontrada."
-            hideTableBorder={true}
-            hidePagination={true}
-            onTableReady={(t) => setTable(t as TanstackTable<Credencial>)}
-          />
-        </div>
+        <DataTable
+          data={credenciaisFiltradas}
+          columns={colunas}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          emptyMessage="Nenhuma credencial encontrada."
+          hidePagination={true}
+          onTableReady={(t) => setTable(t as TanstackTable<Credencial>)}
+        />
       </DataShell>
 
       {/* Dialogs */}

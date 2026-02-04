@@ -695,32 +695,29 @@ export default function ContasPagarPage() {
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={contasPagar}
-            columns={colunas}
-            pagination={
-              paginacao
-                ? {
-                    pageIndex: paginacao.pagina - 1,
-                    pageSize: paginacao.limite,
-                    total: paginacao.total,
-                    totalPages: paginacao.totalPaginas,
-                    onPageChange: setPageIndex,
-                    onPageSizeChange: setPageSize,
-                  }
-                : undefined
-            }
-            sorting={undefined}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<Lancamento>)}
-            emptyMessage="Nenhuma conta a pagar encontrada."
-            hideTableBorder={true}
-            hidePagination={true}
-          />
-        </div>
+        <DataTable
+          data={contasPagar}
+          columns={colunas}
+          pagination={
+            paginacao
+              ? {
+                  pageIndex: paginacao.pagina - 1,
+                  pageSize: paginacao.limite,
+                  total: paginacao.total,
+                  totalPages: paginacao.totalPaginas,
+                  onPageChange: setPageIndex,
+                  onPageSizeChange: setPageSize,
+                }
+              : undefined
+          }
+          sorting={undefined}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<Lancamento>)}
+          emptyMessage="Nenhuma conta a pagar encontrada."
+          hidePagination={true}
+        />
       </DataShell>
 
       {/* Dialog de Pagamento */}

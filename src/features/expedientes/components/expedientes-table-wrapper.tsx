@@ -788,30 +788,27 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={expedientes}
-            columns={columns}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<Expediente>)}
-            hideTableBorder={true}
-            emptyMessage="Nenhum expediente encontrado."
-            rowSelection={{
-              state: rowSelection,
-              onRowSelectionChange: setRowSelection,
-              getRowId: (row) => row.id.toString(),
-            }}
-            options={{
-              meta: {
-                usuarios,
-                tiposExpedientes,
-                onSuccess: handleSucessoOperacao,
-              },
-            }}
-          />
-        </div>
+        <DataTable
+          data={expedientes}
+          columns={columns}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<Expediente>)}
+          emptyMessage="Nenhum expediente encontrado."
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId: (row) => row.id.toString(),
+          }}
+          options={{
+            meta: {
+              usuarios,
+              tiposExpedientes,
+              onSuccess: handleSucessoOperacao,
+            },
+          }}
+        />
       </DataShell >
 
       <ExpedienteDialog

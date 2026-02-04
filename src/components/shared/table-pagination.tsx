@@ -65,7 +65,7 @@ export function TablePagination({
       className={cn(
         'flex items-center justify-between',
         variant === 'integrated'
-          ? 'bg-card border-t border-border rounded-b-lg p-4'
+          ? 'pt-4'
           : 'px-2',
         className
       )}

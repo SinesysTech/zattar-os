@@ -1029,7 +1029,6 @@ export function ProcessosTableWrapper({
               columnVisibility={columnVisibility}
               onColumnVisibilityChange={setColumnVisibility}
               onTableReady={(t) => setTable(t as TanstackTable<ProcessoUnificado>)}
-              hideTableBorder={true}
               emptyMessage="Nenhum processo encontrado."
               pagination={{
                 pageIndex,

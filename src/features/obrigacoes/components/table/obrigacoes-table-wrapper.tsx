@@ -388,29 +388,26 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={obrigacoes}
-            columns={columns}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<AcordoComParcelas>)}
-            hideTableBorder={true}
-            emptyMessage="Nenhuma obrigação encontrada."
-            rowSelection={{
-              state: rowSelection,
-              onRowSelectionChange: setRowSelection,
-              getRowId: (row) => row.id.toString(),
-            }}
-            options={{
-              meta: {
-                onVerDetalhes: handleVerDetalhes,
-                onSucessoOperacao: handleSucessoOperacao,
-              },
-            }}
-          />
-        </div>
+        <DataTable
+          data={obrigacoes}
+          columns={columns}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<AcordoComParcelas>)}
+          emptyMessage="Nenhuma obrigação encontrada."
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId: (row) => row.id.toString(),
+          }}
+          options={{
+            meta: {
+              onVerDetalhes: handleVerDetalhes,
+              onSucessoOperacao: handleSucessoOperacao,
+            },
+          }}
+        />
       </DataShell>
 
       <ObrigacaoDetalhesDialog

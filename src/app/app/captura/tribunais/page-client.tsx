@@ -160,19 +160,16 @@ export default function TribunaisPage() {
           )
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={tribunaisFiltrados}
-            columns={colunas}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            emptyMessage="Nenhuma configuração de tribunal encontrada."
-            hideTableBorder={true}
-            hidePagination={true}
-            onTableReady={(t) => setTable(t as TanstackTable<TribunalConfig>)}
-          />
-        </div>
+        <DataTable
+          data={tribunaisFiltrados}
+          columns={colunas}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          emptyMessage="Nenhuma configuração de tribunal encontrada."
+          hidePagination={true}
+          onTableReady={(t) => setTable(t as TanstackTable<TribunalConfig>)}
+        />
       </DataShell>
 
       <TribunaisDialog

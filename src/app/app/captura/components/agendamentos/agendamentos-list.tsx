@@ -289,18 +289,15 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
         )
       }
     >
-      <div className="relative border-t">
-        <DataTable
-          data={data}
-          columns={columns}
-          isLoading={isLoading}
-          error={error}
-          emptyMessage="Nenhum agendamento encontrado."
-          hideTableBorder
-          hidePagination
-          onTableReady={(t) => setTable(t as TanstackTable<Agendamento>)}
-        />
-      </div>
+      <DataTable
+        data={data}
+        columns={columns}
+        isLoading={isLoading}
+        error={error}
+        emptyMessage="Nenhum agendamento encontrado."
+        hidePagination
+        onTableReady={(t) => setTable(t as TanstackTable<Agendamento>)}
+      />
 
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
         <AlertDialogContent>

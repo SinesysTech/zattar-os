@@ -372,7 +372,6 @@ export function ExpedientesCalendar() {
                     isLoading={isLoading}
                     error={error}
                     hidePagination={true}
-                    hideTableBorder={true}
                     rowSelection={{
                         state: rowSelection,
                         onRowSelectionChange: setRowSelection,

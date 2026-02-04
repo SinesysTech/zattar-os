@@ -27,7 +27,7 @@ export function MinhaListagem() {
       <DataTable
         data={data}
         columns={columns}
-        hideTableBorder={true} // Border é gerenciado pelo DataShell
+        // A tabela renderiza sua própria borda (rounded-md border bg-card)
       />
     </DataShell>
   );
@@ -105,7 +105,7 @@ Tabela baseada em TanStack Table.
 - `data: TData[]` - Dados da tabela
 - `columns: ColumnDef<TData, TValue>[]` - Definição das colunas
 - `rowSelection?: {...}` - Configuração de seleção de linhas
-- `hideTableBorder?: boolean` - Ocultar borda (use `true` dentro do DataShell)
+- `hideTableBorder?: boolean` - Ocultar borda da tabela (default: false)
 - `pagination?: {...}` - Configuração de paginação server-side
 
 ### DataTableToolbar
@@ -126,7 +126,7 @@ Componente de paginação integrado.
   <DataTable
     data={items}
     columns={columns}
-    hideTableBorder={true}
+
   />
 </DataShell>
 ```
@@ -146,24 +146,24 @@ Componente de paginação integrado.
   <DataTable
     data={items}
     columns={columns}
-    hideTableBorder={true}
+
   />
 </DataShell>
 ```
 
 ## 📝 Notas Importantes
 
-1. **SEMPRE use `hideTableBorder={true}` no DataTable quando dentro do DataShell**
-2. **O alinhamento padrão é `center`** - defina `meta.align` para alterar
+1. **O alinhamento padrão é `center`** - defina `meta.align` para alterar
 3. **A coluna de seleção é sempre centralizada** - não é necessário configurar
 4. **Use `scrollableContent={true}` em diálogos ou contêineres de altura fixa** - quando o layout principal não prover scroll, ative rolagem local no conteúdo
 4. **Nunca use componentes de tabela diretamente** - sempre use DataTable dentro de DataShell
 
 ## 🎨 Design System
 
-O DataShell segue o design system do Sinesys:
-- Bordas arredondadas
-- Sombras consistentes
+O DataShell segue o layout "flat" do Sinesys:
+- Toolbar flutua acima da tabela (sem card envolvendo)
+- Tabela com borda própria (`rounded-md border bg-card`)
+- Paginação flutua abaixo da tabela
 - Espaçamento padronizado
 - Responsividade automática
 

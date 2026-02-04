@@ -436,23 +436,20 @@ export function ComunicaCNJCapturadas() {
         }
         className="h-full"
       >
-        <div className="relative border-t">
-          <DataTable
-            data={paginatedComunicacoes}
-            columns={columns}
-            pagination={{
-              pageIndex,
-              pageSize,
-              total: totalItems,
-              totalPages,
-              onPageChange: setPageIndex,
-              onPageSizeChange: setPageSize,
-            }}
-            isLoading={isLoading}
-            hideTableBorder={true}
-            emptyMessage="Nenhuma comunicação encontrada com os filtros selecionados."
-          />
-        </div>
+        <DataTable
+          data={paginatedComunicacoes}
+          columns={columns}
+          pagination={{
+            pageIndex,
+            pageSize,
+            total: totalItems,
+            totalPages,
+            onPageChange: setPageIndex,
+            onPageSizeChange: setPageSize,
+          }}
+          isLoading={isLoading}
+          emptyMessage="Nenhuma comunicação encontrada com os filtros selecionados."
+        />
       </DataShell>
 
       <ComunicacaoDetalhesDialog

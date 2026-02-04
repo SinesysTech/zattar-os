@@ -52,10 +52,15 @@ export interface DataShellProps extends React.HTMLAttributes<HTMLDivElement> {
  *   <DataTable
  *     columns={columns}
  *     data={data}
- *     hideTableBorder={true} // Border é gerenciado pelo DataShell
  *   />
  * </DataShell>
  * ```
+ *
+ * LAYOUT "FLAT":
+ * -------------
+ * O DataShell é um orquestrador de layout transparente (sem borda/shadow).
+ * A tabela (DataTable) renderiza sua própria borda (rounded-md border bg-card).
+ * Toolbar e paginação flutuam acima e abaixo da tabela.
  *
  * NUNCA use DataTable diretamente sem DataShell!
  *
@@ -78,42 +83,34 @@ export function DataShell({
   ...props
 }: DataShellProps) {
   return (
-    <div data-slot="data-shell-wrapper" className="flex flex-col gap-4">
-      {/* Botão de ação primária - agora passado para o header (Toolbar) */}
-
-      {/* Shell principal */}
-      <div
-        role="region"
-        aria-label={ariaLabel}
-        data-slot="data-shell"
-        className={cn(
-          'flex w-full flex-col rounded-lg border border-border bg-card shadow-sm',
-          className
-        )}
-        {...props}
-      >
-        {header && (
-          <div data-slot="data-shell-header" className="flex-none">
-            {header}
-          </div>
-        )}
-
-        <div
-          data-slot="data-shell-content"
-          className={cn(
-            'relative min-h-0 w-full flex-1',
-            scrollableContent && 'overflow-auto'
-          )}
-        >
-          {children}
+    <div
+      role="region"
+      aria-label={ariaLabel}
+      data-slot="data-shell"
+      className={cn('w-full', className)}
+      {...props}
+    >
+      {header && (
+        <div data-slot="data-shell-header">
+          {header}
         </div>
+      )}
 
-        {footer && (
-          <div data-slot="data-shell-footer" className="flex-none">
-            {footer}
-          </div>
+      <div
+        data-slot="data-shell-content"
+        className={cn(
+          'relative min-h-0 w-full',
+          scrollableContent && 'overflow-auto'
         )}
+      >
+        {children}
       </div>
+
+      {footer && (
+        <div data-slot="data-shell-footer">
+          {footer}
+        </div>
+      )}
     </div>
   );
 }

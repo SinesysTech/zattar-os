@@ -62,7 +62,7 @@ export default function MinhaPaginaDeListagem() {
         <DataTable
           data={dados}
           columns={columns}
-          hideTableBorder={true}
+          // Tabela renderiza sua própria borda
         />
       </DataShell>
     </PageShell>

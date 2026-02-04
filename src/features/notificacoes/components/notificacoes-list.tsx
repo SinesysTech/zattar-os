@@ -386,27 +386,24 @@ export function NotificacoesList() {
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            columns={colunas}
-            data={notificacoes}
-            isLoading={isLoading}
-            error={error}
-            pagination={{
-              pageIndex: pagina - 1,
-              pageSize: limite,
-              total,
-              totalPages: totalPaginas,
-              onPageChange: handlePageChange,
-              onPageSizeChange: () => {},
-            }}
-            hideTableBorder={true}
-            hidePagination={true}
-            onTableReady={setTable}
-            density={density}
-            emptyMessage="Nenhuma notificação encontrada."
-          />
-        </div>
+        <DataTable
+          columns={colunas}
+          data={notificacoes}
+          isLoading={isLoading}
+          error={error}
+          pagination={{
+            pageIndex: pagina - 1,
+            pageSize: limite,
+            total,
+            totalPages: totalPaginas,
+            onPageChange: handlePageChange,
+            onPageSizeChange: () => {},
+          }}
+          hidePagination={true}
+          onTableReady={setTable}
+          density={density}
+          emptyMessage="Nenhuma notificação encontrada."
+        />
       </DataShell>
     </div>
   );

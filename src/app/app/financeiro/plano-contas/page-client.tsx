@@ -541,32 +541,29 @@ export default function PlanoContasPage() {
           ) : null
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={planoContas}
-            columns={colunas}
-            pagination={
-              paginacao
-                ? {
-                  pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-                  pageSize: paginacao.limite,
-                  total: paginacao.total,
-                  totalPages: paginacao.totalPaginas,
-                  onPageChange: setPageIndex,
-                  onPageSizeChange: setPageSize,
-                }
-                : undefined
-            }
-            sorting={undefined}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<PlanoContaComPai>)}
-            emptyMessage="Nenhuma conta encontrada."
-            hideTableBorder={true}
-            hidePagination={true}
-          />
-        </div>
+        <DataTable
+          data={planoContas}
+          columns={colunas}
+          pagination={
+            paginacao
+              ? {
+                pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+                pageSize: paginacao.limite,
+                total: paginacao.total,
+                totalPages: paginacao.totalPaginas,
+                onPageChange: setPageIndex,
+                onPageSizeChange: setPageSize,
+              }
+              : undefined
+          }
+          sorting={undefined}
+          isLoading={isLoading}
+          error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<PlanoContaComPai>)}
+          emptyMessage="Nenhuma conta encontrada."
+          hidePagination={true}
+        />
       </DataShell>
 
       {/* Dialog para criação */}
