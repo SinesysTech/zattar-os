@@ -464,10 +464,10 @@ export async function recapturarTimelineUnificada(acervoId: number): Promise<Rec
     throw new Error('Nenhuma instância encontrada para o processo');
   }
 
-  const resultados: RecaptureResult[] = [];
+  // Recapturar instâncias em paralelo
+  console.log(`[recapture] Iniciando captura paralela de ${instancias.length} instâncias...`);
 
-  // Recapturar cada instância sequencialmente
-  for (const inst of instancias) {
+  const promises = instancias.map(async (inst) => {
     console.log(`[recapture] Processando instância ${inst.grau} (${inst.trt})...`);
     
     try {
@@ -489,7 +489,7 @@ export async function recapturarTimelineUnificada(acervoId: number): Promise<Rec
         totalDocumentos: resultado.totalDocumentos,
       });
 
-      resultados.push({
+      return {
         instanciaId: inst.id,
         trt: inst.trt,
         grau: inst.grau,
@@ -497,18 +497,20 @@ export async function recapturarTimelineUnificada(acervoId: number): Promise<Rec
         totalItens: resultado.totalItens,
         totalDocumentos: resultado.totalDocumentos,
         totalMovimentos: resultado.totalMovimentos,
-      });
+      } as RecaptureResult;
     } catch (error) {
       console.error(`[recapture] ❌ Erro na instância ${inst.grau}:`, error);
-      resultados.push({
+      return {
         instanciaId: inst.id,
         trt: inst.trt,
         grau: inst.grau,
         status: 'erro',
         mensagem: error instanceof Error ? error.message : 'Erro desconhecido',
-      });
+      } as RecaptureResult;
     }
-  }
+  });
+
+  const resultados = await Promise.all(promises);
 
   const totalSucesso = resultados.filter(r => r.status === 'ok').length;
   const totalErro = resultados.length - totalSucesso;
