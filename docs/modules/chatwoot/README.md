@@ -1,9 +1,9 @@
-# Módulo: Audiencias
+# Módulo: Chatwoot
 
-**Status:** Partially Migrated
+**Status:** Unknown
 
 ## Visão Geral
-Funcionalidades relacionadas a audiencias. Em processo de migração/desenvolvimento.
+Funcionalidades completas de chatwoot.
 
 ## Arquitetura (Feature-Sliced Design)
 
@@ -12,4 +12,4 @@ Funcionalidades relacionadas a audiencias. Em processo de migração/desenvolvim
 - [x] Repository (Acesso a Dados)
 - [ ] Server Actions
 - [x] UI Components
-- [x] Regras de Negócio (AI Context)
+- [ ] Regras de Negócio (AI Context)
