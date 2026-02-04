@@ -8,6 +8,7 @@
  */
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -339,6 +340,7 @@ function criarColunas(
 // ============================================================================
 
 export default function ContasPagarPage() {
+  const router = useRouter();
   // Estado da tabela
   const [table, setTable] = React.useState<TanstackTable<Lancamento> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
@@ -449,10 +451,9 @@ export default function ContasPagarPage() {
     setExcluirDialogOpen(true);
   }, []);
 
-  const handleVerDetalhes = React.useCallback(() => {
-    // TODO: Implementar navegação para página de detalhes
-    toast.info('Funcionalidade de detalhes em desenvolvimento');
-  }, []);
+  const handleVerDetalhes = React.useCallback((conta: Lancamento) => {
+    router.push(`/app/financeiro/contas-pagar/${conta.id}`);
+  }, [router]);
 
   const handleConfirmCancelar = React.useCallback(async () => {
     if (!selectedConta) return;
