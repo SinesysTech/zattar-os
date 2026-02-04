@@ -16,6 +16,7 @@ export interface DashboardFinanceiroData {
   despesasMes: number;
   saldoMes: number;
   receitasPendentes: number;
+  qtdReceitasPendentes: number;
   despesasPendentes: number;
   contasVencidas: number;
   valorVencido: number;
@@ -117,6 +118,9 @@ export async function getDashboardFinanceiro(usuarioId: string): Promise<Dashboa
     .filter((l) => l.tipo === 'despesa')
     .reduce((acc, l) => acc + clampNumber(l.valor), 0);
 
+  const qtdReceitasPendentes = pendentes
+    .filter((l) => l.tipo === 'receita')
+    .length;
   const receitasPendentes = pendentes
     .filter((l) => l.tipo === 'receita')
     .reduce((acc, l) => acc + clampNumber(l.valor), 0);
@@ -190,6 +194,7 @@ export async function getDashboardFinanceiro(usuarioId: string): Promise<Dashboa
     despesasMes,
     saldoMes: receitasMes - despesasMes,
     receitasPendentes,
+    qtdReceitasPendentes,
     despesasPendentes,
     contasVencidas,
     valorVencido,

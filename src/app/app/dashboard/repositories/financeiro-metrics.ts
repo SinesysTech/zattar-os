@@ -45,7 +45,7 @@ export async function buscarDadosFinanceirosConsolidados(
         valor: dashboardData.despesasPendentes || 0,
       },
       contasReceber: {
-        quantidade: 0, // TODO: Implementar quando disponível
+        quantidade: dashboardData.qtdReceitasPendentes || 0,
         valor: dashboardData.receitasPendentes || 0,
       },
       alertas,
