@@ -178,9 +178,11 @@ RUN addgroup --system --gid 1001 nodejs && \
 
 # Copiar arquivos necessarios do build com ownership correto
 # --link melhora cache de layers (reusa layers mesmo se anteriores mudaram)
-COPY --from=builder --chown=nextjs:nodejs --link /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs --link /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs --link /app/.next/static ./.next/static
+# Usa UIDs numericos (1001:1001) porque --link cria layers independentes
+# e nao consegue resolver nomes de usuario/grupo criados em layers anteriores
+COPY --from=builder --chown=1001:1001 --link /app/public ./public
+COPY --from=builder --chown=1001:1001 --link /app/.next/standalone ./
+COPY --from=builder --chown=1001:1001 --link /app/.next/static ./.next/static
 
 USER nextjs
 
