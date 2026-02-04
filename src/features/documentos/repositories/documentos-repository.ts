@@ -133,6 +133,41 @@ export async function listarDocumentos(
     query = query.eq("criado_por", params.criado_por);
   }
 
+  // Filtro: acesso_por_usuario_id (documentos criados ou compartilhados ou em pastas comuns)
+  if (params.acesso_por_usuario_id) {
+    const usuario_id = params.acesso_por_usuario_id;
+
+    // Buscar IDs de documentos compartilhados
+    const { data: compartilhados } = await supabase
+      .from("documentos_compartilhados")
+      .select("documento_id")
+      .eq("usuario_id", usuario_id);
+
+    const sharedIds = (compartilhados || []).map(c => c.documento_id);
+
+    // Buscar IDs de pastas comuns
+    const { data: pastasComuns } = await supabase
+      .from("pastas")
+      .select("id")
+      .eq("tipo", "comum")
+      .is("deleted_at", null);
+
+    const comumFolderIds = (pastasComuns || []).map(p => p.id);
+
+    // Construir filtro OR
+    let accessFilter = `criado_por.eq.${usuario_id}`;
+
+    if (sharedIds.length > 0) {
+      accessFilter += `,id.in.(${sharedIds.join(',')})`;
+    }
+
+    if (comumFolderIds.length > 0) {
+      accessFilter += `,pasta_id.in.(${comumFolderIds.join(',')})`;
+    }
+
+    query = query.or(accessFilter);
+  }
+
   // Filtro: incluir deletados
   if (!params.incluir_deletados) {
     query = query.is("deleted_at", null);

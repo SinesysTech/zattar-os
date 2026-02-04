@@ -47,10 +47,23 @@ import { generatePresignedUrl as generatePresignedDownloadUrl } from "@/lib/stor
 // ============================================================================
 
 export async function listarDocumentos(
-  params: ListarDocumentosParams
+  params: ListarDocumentosParams,
+  usuario_id?: number
 ): Promise<{ documentos: DocumentoComUsuario[]; total: number }> {
-  // TODO: Implementar validação de acesso às pastas ou documentos compartilhados
-  // Por enquanto, apenas o criador ou documentos públicos/compartilhados
+  if (usuario_id) {
+    if (params.pasta_id) {
+      const temAcesso = await pastasRepo.verificarAcessoPasta(
+        params.pasta_id,
+        usuario_id
+      );
+      if (!temAcesso) {
+        throw new Error("Acesso negado à pasta.");
+      }
+    }
+    // Adiciona o filtro de acesso pelo usuário
+    params.acesso_por_usuario_id = usuario_id;
+  }
+
   return documentosRepo.listarDocumentos(params);
 }
 
