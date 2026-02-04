@@ -34,7 +34,7 @@ import { getContratosColumns } from './columns';
 import { ContratoForm } from './contrato-form';
 import { SegmentosFilter } from './segmentos-filter';
 import { ContratoDeleteDialog } from './contrato-delete-dialog';
-import { GerarPecaDialog } from '@/features/pecas-juridicas';
+import { GerarPecaDialog } from '@/features/pecas-juridicas/components';
 import type {
   Contrato,
   ListarContratosParams,
