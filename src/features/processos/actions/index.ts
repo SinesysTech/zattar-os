@@ -8,9 +8,12 @@
  * - Validacao com Zod schemas do domain
  * - Chamadas aos servicos do core
  * - Revalidacao de cache via revalidatePath
+ * - Verificacao de autenticacao manual (fix de seguranca)
  */
 
 import { revalidatePath } from "next/cache";
+import { authenticateRequest } from "@/lib/auth/session";
+import { createClient } from "@/lib/supabase/server";
 import {
   type CreateProcessoInput,
   type UpdateProcessoInput,
@@ -271,6 +274,15 @@ export async function actionCriarProcesso(
   formData: FormData
 ): Promise<ActionResult> {
   try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        message: "Você precisa estar autenticado para realizar esta ação",
+      };
+    }
+
     // 1. Converter FormData para objeto
     const rawData = formDataToCreateProcessoInput(formData);
 
@@ -286,8 +298,10 @@ export async function actionCriarProcesso(
       };
     }
 
+    const client = await createClient();
+
     // 3. Chamar servico do core
-    const result = await criarProcesso(validation.data as CreateProcessoInput);
+    const result = await criarProcesso(validation.data as CreateProcessoInput, client);
 
     if (!result.success) {
       return {
@@ -326,6 +340,15 @@ export async function actionAtualizarProcesso(
   formData: FormData
 ): Promise<ActionResult> {
   try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        message: "Você precisa estar autenticado para realizar esta ação",
+      };
+    }
+
     // 1. Validar ID
     if (!id || id <= 0) {
       return {
@@ -355,11 +378,14 @@ export async function actionAtualizarProcesso(
       };
     }
 
+    const client = await createClient();
+
     // 4. Chamar servico do core
     console.log('[actionAtualizarProcesso] Dados validados:', validation.data);
     const result = await atualizarProcesso(
       id,
-      validation.data as UpdateProcessoInput
+      validation.data as UpdateProcessoInput,
+      client
     );
 
     if (!result.success) {
@@ -401,7 +427,18 @@ export async function actionListarProcessos(
   params?: ListarProcessosParams
 ): Promise<ActionResult> {
   try {
-    const result = await listarProcessos(params);
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        message: "Você precisa estar autenticado para realizar esta ação",
+      };
+    }
+
+    const client = await createClient();
+
+    const result = await listarProcessos(params, client);
 
     if (!result.success) {
       return {
@@ -439,6 +476,15 @@ export async function actionListarProcessos(
  */
 export async function actionBuscarProcesso(id: number): Promise<ActionResult> {
   try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        message: "Você precisa estar autenticado para realizar esta ação",
+      };
+    }
+
     if (!id || id <= 0) {
       return {
         success: false,
@@ -447,7 +493,9 @@ export async function actionBuscarProcesso(id: number): Promise<ActionResult> {
       };
     }
 
-    const result = await buscarProcesso(id);
+    const client = await createClient();
+
+    const result = await buscarProcesso(id, client);
 
     if (!result.success) {
       return {
@@ -490,6 +538,15 @@ export async function actionBuscarTimeline(
   processoId: number
 ): Promise<ActionResult> {
   try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        message: "Você precisa estar autenticado para realizar esta ação",
+      };
+    }
+
     if (!processoId || processoId <= 0) {
       return {
         success: false,
@@ -498,7 +555,9 @@ export async function actionBuscarTimeline(
       };
     }
 
-    const result = await buscarTimeline(processoId);
+    const client = await createClient();
+
+    const result = await buscarTimeline(processoId, client);
 
     if (!result.success) {
       return {
@@ -533,6 +592,15 @@ export async function actionBuscarTimeline(
  */
 export async function actionBuscarProcessosPorCPF(cpf: string, limite?: number): Promise<ActionResult> {
   try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        message: "Você precisa estar autenticado para realizar esta ação",
+      };
+    }
+
     if (!cpf || !cpf.trim()) {
       return {
         success: false,
@@ -541,9 +609,11 @@ export async function actionBuscarProcessosPorCPF(cpf: string, limite?: number):
       };
     }
 
+    const client = await createClient();
+
     // Import service function dynamically to avoid circular deps
     const { buscarProcessosPorClienteCPF } = await import("../service");
-    const result = await buscarProcessosPorClienteCPF(cpf, limite);
+    const result = await buscarProcessosPorClienteCPF(cpf, limite, client);
 
     if (!result.success) {
       return {
@@ -574,6 +644,15 @@ export async function actionBuscarProcessosPorCPF(cpf: string, limite?: number):
  */
 export async function actionBuscarProcessosPorCNPJ(cnpj: string, limite?: number): Promise<ActionResult> {
   try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        message: "Você precisa estar autenticado para realizar esta ação",
+      };
+    }
+
     if (!cnpj || !cnpj.trim()) {
       return {
         success: false,
@@ -582,9 +661,11 @@ export async function actionBuscarProcessosPorCNPJ(cnpj: string, limite?: number
       };
     }
 
+    const client = await createClient();
+
     // Import service function dynamically to avoid circular deps
     const { buscarProcessosPorClienteCNPJ } = await import("../service");
-    const result = await buscarProcessosPorClienteCNPJ(cnpj, limite);
+    const result = await buscarProcessosPorClienteCNPJ(cnpj, limite, client);
 
     if (!result.success) {
       return {
@@ -619,6 +700,15 @@ export async function actionBuscarProcessosPorCNPJ(cnpj: string, limite?: number
  */
 export async function actionBuscarProcessoPorNumero(numeroProcesso: string): Promise<ActionResult> {
   try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        message: "Você precisa estar autenticado para realizar esta ação",
+      };
+    }
+
     if (!numeroProcesso || !numeroProcesso.trim()) {
       return {
         success: false,
@@ -630,6 +720,16 @@ export async function actionBuscarProcessoPorNumero(numeroProcesso: string): Pro
     // Normalizar número de processo (remover formatação CNJ)
     const { normalizarNumeroProcesso } = await import('../utils');
     const numeroNormalizado = normalizarNumeroProcesso(numeroProcesso.trim());
+
+    // NOTE: actionListarProcessos checks auth inside itself, so we can just call it?
+    // Wait, calling a Server Action from another Server Action works in Next.js?
+    // Yes, but it will trigger another auth check.
+    // However, we can call the service directly to avoid double overhead, or just call the action.
+    // If we call the action, we rely on its internal check.
+    // But `actionListarProcessos` requires `params`.
+    // It's cleaner to call `actionListarProcessos` directly if we want to reuse its logic (loading referenced users etc).
+    // But `actionListarProcessos` now checks `authenticateRequest` too.
+    // Since we are in the same context, `authenticateRequest` should work (cookies are available).
 
     const result = await actionListarProcessos({ numeroProcesso: numeroNormalizado, limite: 1 });
 

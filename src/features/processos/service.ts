@@ -14,6 +14,7 @@
  */
 
 import { Result, err, appError, PaginatedResponse } from "@/types";
+import { type DbClient } from "@/lib/supabase/db-client";
 import {
   type Processo,
   type ProcessoUnificado,
@@ -52,7 +53,8 @@ import { usuarioRepository } from "@/features/usuarios/repository";
  * - Verifica unicidade (constraint do banco)
  */
 export async function criarProcesso(
-  input: CreateProcessoInput
+  input: CreateProcessoInput,
+  client?: DbClient
 ): Promise<Result<Processo>> {
   // 1. Validar input com Zod
   const validation = createProcessoSchema.safeParse(input);
@@ -84,7 +86,7 @@ export async function criarProcesso(
   }
 
   // 3. Verificar se advogado existe
-  const advogadoExistsResult = await advogadoExists(dadosValidados.advogadoId);
+  const advogadoExistsResult = await advogadoExists(dadosValidados.advogadoId, client);
   if (!advogadoExistsResult.success) {
     return err(advogadoExistsResult.error);
   }
@@ -100,7 +102,8 @@ export async function criarProcesso(
   // 4. Verificar se responsavel existe (se fornecido)
   if (dadosValidados.responsavelId) {
     const usuarioExistsResult = await usuarioExists(
-      dadosValidados.responsavelId
+      dadosValidados.responsavelId,
+      client
     );
     if (!usuarioExistsResult.success) {
       return err(usuarioExistsResult.error);
@@ -116,7 +119,7 @@ export async function criarProcesso(
   }
 
   // 5. Persistir via repositorio
-  return saveProcesso(dadosValidados);
+  return saveProcesso(dadosValidados, client);
 }
 
 /**
@@ -125,13 +128,14 @@ export async function criarProcesso(
  * Retorna null se nao encontrar (nao e erro)
  */
 export async function buscarProcesso(
-  id: number
+  id: number,
+  client?: DbClient
 ): Promise<Result<Processo | null>> {
   if (!id || id <= 0) {
     return err(appError("VALIDATION_ERROR", "ID invalido"));
   }
 
-  return findProcessoById(id);
+  return findProcessoById(id, client);
 }
 
 /**
@@ -141,13 +145,14 @@ export async function buscarProcesso(
  * Retorna null se nao encontrar (nao e erro)
  */
 export async function buscarProcessoUnificado(
-  id: number
+  id: number,
+  client?: DbClient
 ): Promise<Result<ProcessoUnificado | null>> {
   if (!id || id <= 0) {
     return err(appError("VALIDATION_ERROR", "ID invalido"));
   }
 
-  return findProcessoUnificadoById(id);
+  return findProcessoUnificadoById(id, client);
 }
 
 /**
@@ -164,7 +169,8 @@ export async function buscarProcessoUnificado(
  * - Relacionamentos: advogadoId, responsavelId, clienteId
  */
 export async function listarProcessos(
-  params: ListarProcessosParams = {}
+  params: ListarProcessosParams = {},
+  client?: DbClient
 ): Promise<Result<PaginatedResponse<Processo | ProcessoUnificado>>> {
   // Sanitizar parametros de paginacao
   const sanitizedParams: ListarProcessosParams = {
@@ -173,7 +179,7 @@ export async function listarProcessos(
     limite: Math.min(100, Math.max(1, params.limite ?? 50)),
   };
 
-  const result = await findAllProcessos(sanitizedParams);
+  const result = await findAllProcessos(sanitizedParams, client);
   if (!result.success) return err(result.error);
 
   const pagina = sanitizedParams.pagina ?? 1;
@@ -208,7 +214,8 @@ export async function listarProcessos(
  */
 export async function atualizarProcesso(
   id: number,
-  input: UpdateProcessoInput
+  input: UpdateProcessoInput,
+  client?: DbClient
 ): Promise<Result<Processo>> {
   // 1. Validar ID
   if (!id || id <= 0) {
@@ -235,7 +242,7 @@ export async function atualizarProcesso(
   }
 
   // 4. Verificar se processo existe
-  const existingResult = await findProcessoById(id);
+  const existingResult = await findProcessoById(id, client);
   if (!existingResult.success) {
     return existingResult;
   }
@@ -270,7 +277,8 @@ export async function atualizarProcesso(
     dadosValidados.advogadoId !== processoExistente.advogadoId
   ) {
     const advogadoExistsResult = await advogadoExists(
-      dadosValidados.advogadoId
+      dadosValidados.advogadoId,
+      client
     );
     if (!advogadoExistsResult.success) {
       return err(advogadoExistsResult.error);
@@ -292,7 +300,8 @@ export async function atualizarProcesso(
     dadosValidados.responsavelId !== processoExistente.responsavelId
   ) {
     const usuarioExistsResult = await usuarioExists(
-      dadosValidados.responsavelId
+      dadosValidados.responsavelId,
+      client
     );
     if (!usuarioExistsResult.success) {
       return err(usuarioExistsResult.error);
@@ -308,7 +317,7 @@ export async function atualizarProcesso(
   }
 
   // 8. Atualizar via repositorio
-  return updateProcessoRepo(id, dadosValidados, processoExistente);
+  return updateProcessoRepo(id, dadosValidados, processoExistente, client);
 }
 
 /**
@@ -317,13 +326,14 @@ export async function atualizarProcesso(
  * PLACEHOLDER: Sera implementado na Fase 4 (Integracao PJE)
  */
 export async function buscarTimeline(
-  processoId: number
+  processoId: number,
+  client?: DbClient
 ): Promise<Result<Movimentacao[]>> {
   if (!processoId || processoId <= 0) {
     return err(appError("VALIDATION_ERROR", "ID invalido"));
   }
 
-  return findTimelineByProcessoId(processoId);
+  return findTimelineByProcessoId(processoId, client);
 }
 
 /**
@@ -365,10 +375,12 @@ export async function buscarUsuariosRelacionados(
 /**
  * Lista todos os tribunais ativos
  */
-export async function listarTribunais(): Promise<
+export async function listarTribunais(
+  client?: DbClient
+): Promise<
   Result<Array<{ codigo: string; nome: string }>>
 > {
-  return findAllTribunais();
+  return findAllTribunais(client);
 }
 
 // =============================================================================
@@ -380,7 +392,8 @@ export async function listarTribunais(): Promise<
  */
 export async function buscarProcessosPorClienteCPF(
   cpf: string,
-  limite: number = 50
+  limite: number = 50,
+  client?: DbClient
 ): Promise<Result<Processo[]>> {
   // Import dynamically to avoid circular dependency
   const { findClienteByCPF } = await import("@/features/partes/repositories");
@@ -411,7 +424,7 @@ export async function buscarProcessosPorClienteCPF(
       clienteId,
       limite,
       unified: false,
-    });
+    }, client);
 
     if (!processosResult.success) return err(processosResult.error);
 
@@ -431,7 +444,8 @@ export async function buscarProcessosPorClienteCPF(
  */
 export async function buscarProcessosPorClienteCNPJ(
   cnpj: string,
-  limite: number = 50
+  limite: number = 50,
+  client?: DbClient
 ): Promise<Result<Processo[]>> {
   // Import dynamically to avoid circular dependency
   const { findClienteByCNPJ } = await import("@/features/partes/repositories");
@@ -462,7 +476,7 @@ export async function buscarProcessosPorClienteCNPJ(
       clienteId,
       limite,
       unified: false,
-    });
+    }, client);
 
     if (!processosResult.success) return err(processosResult.error);
 

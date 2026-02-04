@@ -14,6 +14,7 @@
  */
 
 import { createDbClient } from "@/lib/supabase";
+import { type DbClient } from "@/lib/supabase/db-client";
 import { Result, ok, err, appError } from "@/types";
 import type {
   Processo,
@@ -178,10 +179,11 @@ interface DbProcessoUnificadoResult {
  * Busca um processo pelo ID
  */
 export async function findProcessoById(
-  id: number
+  id: number,
+  client?: DbClient
 ): Promise<Result<Processo | null>> {
   try {
-    const db = createDbClient();
+    const db = client || createDbClient();
 
     const { data, error } = await logQuery(
       "processos.findProcessoById",
@@ -222,14 +224,15 @@ export async function findProcessoById(
  * Usa a view acervo_unificado para retornar dados unificados com fonte da verdade
  */
 export async function findProcessoUnificadoById(
-  id: number
+  id: number,
+  client?: DbClient
 ): Promise<Result<ProcessoUnificado | null>> {
   try {
     const cacheKey = `${CACHE_PREFIXES.acervo}:unificado:${id}`;
     const cached = await getCached<ProcessoUnificado>(cacheKey);
     if (cached) return ok(cached);
 
-    const db = createDbClient();
+    const db = client || createDbClient();
 
     const { data, error } = await logQuery(
       "processos.findProcessoUnificadoById",
@@ -331,13 +334,14 @@ export async function findProcessoUnificadoById(
  * 5. Busca geral (mais custoso)
  */
 export async function findAllProcessos(
-  params: ListarProcessosParams = {}
+  params: ListarProcessosParams = {},
+  client?: DbClient
 ): Promise<ListResult<ProcessoUnificado>> {
   try {
     const cacheKey = generateCacheKey(CACHE_PREFIXES.acervo, params as Record<string, unknown>);
     
     const executeQuery = async (): Promise<ListResult<ProcessoUnificado>> => {
-      const db = createDbClient();
+      const db = client || createDbClient();
 
       const pagina = params.pagina ?? 1;
       const limite = params.limite ?? 50;
@@ -655,10 +659,11 @@ export async function findAllProcessos(
  * PLACEHOLDER: Implementacao futura na Fase 4 (Integracao PJE)
  */
 export async function findTimelineByProcessoId(
-  processoId: number
+  processoId: number,
+  client?: DbClient
 ): Promise<Result<Movimentacao[]>> {
   try {
-    const processoResult = await findProcessoById(processoId);
+    const processoResult = await findProcessoById(processoId, client);
     if (!processoResult.success) {
       return err(processoResult.error);
     }
@@ -668,7 +673,7 @@ export async function findTimelineByProcessoId(
       return err(appError("NOT_FOUND", `Processo com ID ${processoId} nao encontrado`));
     }
 
-    const db = createDbClient();
+    const db = client || createDbClient();
 
     const { data: acervo, error: acervoError } = (await db
       .from(TABLE_ACERVO)
@@ -769,10 +774,11 @@ export async function findTimelineByProcessoId(
  * Verifica se um advogado existe
  */
 export async function advogadoExists(
-  advogadoId: number
+  advogadoId: number,
+  client?: DbClient
 ): Promise<Result<boolean>> {
   try {
-    const db = createDbClient();
+    const db = client || createDbClient();
 
     const { data, error } = await db
       .from(TABLE_ADVOGADOS)
@@ -803,10 +809,11 @@ export async function advogadoExists(
  * Verifica se um usuario (responsavel) existe
  */
 export async function usuarioExists(
-  usuarioId: number
+  usuarioId: number,
+  client?: DbClient
 ): Promise<Result<boolean>> {
   try {
-    const db = createDbClient();
+    const db = client || createDbClient();
 
     const { data, error } = await db
       .from(TABLE_USUARIOS)
@@ -836,11 +843,13 @@ export async function usuarioExists(
 /**
  * Lista todos os tribunais ativos
  */
-export async function findAllTribunais(): Promise<
+export async function findAllTribunais(
+  client?: DbClient
+): Promise<
   Result<Array<{ codigo: string; nome: string }>>
 > {
   try {
-    const db = createDbClient();
+    const db = client || createDbClient();
 
     const baseQuery = db.from(TABLE_TRIBUNAIS) as unknown;
     const selectFn = (baseQuery as { select?: (cols: string) => unknown }).select;
@@ -911,10 +920,11 @@ export async function findAllTribunais(): Promise<
  * Cria um novo processo no banco
  */
 export async function saveProcesso(
-  input: CreateProcessoInput
+  input: CreateProcessoInput,
+  client?: DbClient
 ): Promise<Result<Processo>> {
   try {
-    const db = createDbClient();
+    const db = client || createDbClient();
 
     // Preparar dados para insercao (camelCase -> snake_case)
     const dadosInsercao: Record<string, unknown> = {
@@ -986,10 +996,11 @@ export async function saveProcesso(
 export async function updateProcesso(
   id: number,
   input: UpdateProcessoInput,
-  _processoExistente: Processo
+  _processoExistente: Processo,
+  client?: DbClient
 ): Promise<Result<Processo>> {
   try {
-    const db = createDbClient();
+    const db = client || createDbClient();
 
     // Preparar dados para atualizacao (apenas campos fornecidos)
     const dadosAtualizacao: Record<string, unknown> = {};
