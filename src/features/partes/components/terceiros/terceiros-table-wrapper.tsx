@@ -300,6 +300,7 @@ export function TerceirosTableWrapper() {
     [handleEdit]
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: terceiros,
     columns,
@@ -459,9 +460,9 @@ export function TerceirosTableWrapper() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
