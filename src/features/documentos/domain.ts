@@ -114,6 +114,7 @@ export interface ListarDocumentosParams {
   tags?: string[];
   criado_por?: number;
   incluir_deletados?: boolean;
+  acesso_por_usuario_id?: number;
   limit?: number;
   offset?: number;
 }
@@ -494,6 +495,7 @@ export interface DocumentoVersaoComUsuario extends DocumentoVersao {
     nomeCompleto: string;
     nomeExibicao: string | null;
     emailCorporativo: string | null;
+    avatarUrl?: string | null;
   };
 }
 
@@ -541,6 +543,7 @@ export interface SalaChatComInfo extends SalaChat {
     id: number;
     nomeCompleto: string;
     nomeExibicao: string | null;
+    emailCorporativo: string | null;
   };
   documento?: {
     id: number;
