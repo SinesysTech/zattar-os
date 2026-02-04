@@ -18,7 +18,7 @@ import {
   usePaletteDrag,
   useSigners,
 } from "."; // Import from index in same folder
-import type { EditorField, Signatario } from "../types";
+import { SIGNER_COLORS, type EditorField, type Signatario } from "../types";
 import type {
   AssinaturaDigitalDocumentoCompleto,
   UpsertAssinaturaDigitalDocumentoAncoraInput,
@@ -58,7 +58,7 @@ export function useDocumentEditor({ uuid }: UseDocumentEditorProps) {
         (a.dados_snapshot.nome as string) ||
         `Assinante ${index + 1}`,
       email: (a.dados_snapshot.email as string) || "",
-      cor: "#7C3AED", // TODO: Consistent color logic
+      cor: SIGNER_COLORS[index % SIGNER_COLORS.length],
       ordem: index,
     }));
   }, [documento]);
