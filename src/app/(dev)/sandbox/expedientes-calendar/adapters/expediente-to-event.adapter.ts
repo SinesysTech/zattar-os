@@ -48,7 +48,7 @@ export function usuarioToIUser(usuario: Usuario): IUser {
 	return {
 		id: usuario.id.toString(),
 		name: usuario.nomeExibicao,
-		picturePath: null, // TODO: Adicionar foto do usuário se disponível
+		picturePath: usuario.avatarUrl || null,
 	};
 }
 
