@@ -7,6 +7,8 @@ import {
   actionObterTopCategorias as _actionObterTopCategorias,
   actionSincronizarAcordo as _actionSincronizarAcordo,
   actionVerificarConsistencia as _actionVerificarConsistencia,
+  actionListarOrcamentos as _actionListarOrcamentos,
+  actionObterAnaliseOrcamentaria as _actionObterAnaliseOrcamentaria,
 } from './actions';
 
 export async function actionAtualizarConta(...args: Parameters<typeof _actionAtualizarConta>) {
@@ -31,4 +33,12 @@ export async function actionSincronizarAcordo(...args: Parameters<typeof _action
 
 export async function actionVerificarConsistencia(...args: Parameters<typeof _actionVerificarConsistencia>) {
   return _actionVerificarConsistencia(...args);
+}
+
+export async function actionListarOrcamentos(...args: Parameters<typeof _actionListarOrcamentos>) {
+  return _actionListarOrcamentos(...args);
+}
+
+export async function actionObterAnaliseOrcamentaria(...args: Parameters<typeof _actionObterAnaliseOrcamentaria>) {
+  return _actionObterAnaliseOrcamentaria(...args);
 }

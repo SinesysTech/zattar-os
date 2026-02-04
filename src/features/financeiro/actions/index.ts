@@ -89,6 +89,8 @@ export {
   actionObterProjecaoOrcamentaria,
 } from './orcamentos';
 
+export type { AnaliseOrcamentariaUI } from './orcamentos';
+
 // ============================================================================
 // Dashboard - Server Actions
 // ============================================================================
