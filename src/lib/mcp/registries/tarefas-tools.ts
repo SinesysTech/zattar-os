@@ -19,7 +19,7 @@ import { jsonResult, errorResult } from '../types';
  * ID do usuário do sistema para operações do agente de atendimento
  * Este ID deve corresponder a um usuário de serviço no banco de dados
  */
-const SYSTEM_AGENT_USER_ID = 1; // TODO: Configurar via env ou buscar dinamicamente
+const SYSTEM_AGENT_USER_ID = Number(process.env.SYSTEM_AGENT_USER_ID) || 1;
 
 /**
  * Registra ferramentas MCP do módulo Tarefas
