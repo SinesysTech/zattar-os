@@ -1,118 +1,126 @@
-
-
-# Project Specification: Sinesys
+# Project Specification: Sinesys 2.0
 
 ## 1. Project Overview
 
 ### 1.1. Introduction
-Sinesys is a legal management system developed for law firms, focusing on client management (individuals and legal entities), contract and legal process management, automated data capture from PJE-TRT (Electronic Judicial Process of Regional Labor Courts), management of case files, hearings, and pending actions, assignment of responsibilities, and audit of changes.
+
+Sinesys is a legal management system developed with an **AI-First architecture**, utilizing Next.js 16, React 19, Supabase, and **MCP (Model Context Protocol)** integration. It focuses on client management, contract and legal process handling, automated data capture (PJE-TRT), and integrates advanced AI capabilities for document drafting and semantic search.
 
 ### 1.2. Key Features
-*   Client Management (Physical and Legal Persons)
-*   Contract and Legal Process Management
-*   Automated Data Capture from PJE-TRT
-*   Management of Case Files, Hearings, and Pending Actions
-*   Assignment of Responsibilities and Audit of Changes
-*   Integration with PJE-TRT for data capture (General archives, archived processes, hearings, pending manifestations)
-*   Authentication via SSO with 2FA (OTP) for PJE
-*   API documentation with Swagger/OpenAPI
 
-## Tech Stack
+- **Client Management:** Comprehensive management for individuals and legal entities.
+- **Legal Process Management:** Handling of contracts, processes, hearings, and deadlines.
+- **Automated Data Capture:** Integration with PJE-TRT for scraping process data, hearings, and notifications.
+- **AI-First Core:** All features exposed as MCP tools for AI agents.
+- **RAG (Retrieval Augmented Generation):** Semantic search and context awareness using pgvector.
+- **AI Document Editor:** Advanced rich text editing with Plate.js and CopilotKit integration.
+- **Authentication:** Robust auth with Supabase and SSO/2FA support.
+- **Audit Trail:** Complete tracking of changes and responsibility assignments.
+
+## 2. Tech Stack
 
 ### 2.1. Frontend
-*   **Framework:** Next.js (React)
-*   **Language:** TypeScript
-*   **UI Library:** Radix UI, Tailwind CSS for styling
-*   **Rich Text Editor:** Plate.js / Tiptap
-*   **AI Integration:** AI SDK, CopilotKit
-*   **Other Libraries:** Framer Motion, Dnd Kit, Date-fns, Lodash, Zod
 
-### 2.2. Backend
-*   **Framework:** Next.js API Routes (TypeScript)
-*   **Database Interaction:** Supabase client libraries (for PostgreSQL)
-*   **Utilities:** Axios, Pino (logging), ioredis (Redis client)
+- **Framework:** Next.js 16 (App Router)
+- **Library:** React 19
+- **Language:** TypeScript
+- **UI System:** Tailwind CSS v4, shadcn/ui, Radix UI
+- **Rich Text Editor:** Plate.js (with AI plugins)
+- **AI Integration:** Vercel AI SDK, CopilotKit, LangChain
+- **State/Utils:** Framer Motion, Dnd Kit, Zod, React Hook Form
 
-### 2.3. Database
-*   **Primary Database:** PostgreSQL (managed by Supabase)
- 
+### 2.2. Backend & API
 
-### 2.4. Other Technologies
-*   **CI/CD:** Not explicitly defined in `package.json`, but `build:caprover` suggests CapRover as a potential deployment target. Vercel is also suggested by `vercel.json`.
-*   **Testing Frameworks:** Jest (Unit/Integration), Playwright (E2E)
-*   **Logging:** Pino
+- **Runtime:** Next.js Server Actions (Safe Action Wrapper)
+- **Architecture:** Feature-Sliced Design (Domain → Service → Repository → Actions)
+- **MCP Server:** Built-in Model Context Protocol server exposing actions as tools
+- **Database Client:** Supabase JS / PostgREST
+- **Validation:** Zod (used across UI, Actions, and MCP)
 
-### Ferramentas de Desenvolvimento
-- **ESLint**: Configuração Next.js (core-web-vitals + TypeScript)
-- **Swagger/OpenAPI**: Documentação de APIs REST
-- **tsx**: Execução de scripts TypeScript
+### 2.3. Persistence & AI
+
+- **Primary DB:** PostgreSQL (Supabase)
+- **Vector DB:** pgvector (for RAG/Embeddings)
+- **Cache:** Redis (optional, for frequent queries and rate limiting)
+- **Storage:** AWS S3 / Supabase Storage
+
+### 2.4. DevOps & Tooling
+
+- **Build:** Turbo / Webpack
+- **Containerization:** Docker (Multi-stage builds detailed in `Dockerfile`)
+- **Deployment:** CapRover (suggested), Vercel compatible
+- **Testing:** Jest (Unit/Integration), Playwright (E2E)
+- **Quality:** ESLint (Next.js config), Husky, Gitleaks
 
 ## 3. Architecture
 
-### 3.1. High-Level Architecture
-The project follows a Next.js full-stack architecture. The application leverages Next.js App Router for routing, with protected routes for the dashboard. API Routes handle REST endpoints, while the `backend/` directory encapsulates business logic and services, organized modularly by feature. Supabase manages database schemas and migrations.
+### 3.1. High-Level Design
 
+The project follows a **Feature-Sliced Design** where each feature module (e.g., `processos`, `financeiro`) encapsulates its own logic.
+
+```
+UI (React 19) → Server Actions (Zod Validation) → Service Layer → Repository → Database (Supabase)
+                                      ↓
+                                  MCP Server (AI Agents)
+```
+
+### 3.2. Directory Structure
+
+- `src/app`: Next.js App Router (Routes, Layouts, API endpoints)
+- `src/features`: Modular features containing:
+  - `domain.ts`: Entities and Zod schemas
+  - `service.ts`: Business logic
+  - `repository.ts`: Data access
+  - `actions/`: Server Actions exposed to UI and MCP
+  - `components/`: React components
+- `src/lib`: Shared utilities (AI, MCP, Auth, Supabase)
+- `scripts`: Automation for maintenance, testing, and AI indexing
+
+### 3.3. MCP Integration
+
+- Server Actions are dual-purpose: accessible by UI components and AI agents via MCP.
+- **Endpoints:**
+  - `GET /api/mcp`: SSE connection for agents.
+  - `POST /api/mcp`: Tool execution.
 
 ## 4. Development Guidelines
 
-### 4.1. Code Style and Linting
+### 4.1. Coding Standards
 
-#### TypeScript
-- Strict mode habilitado (`strict: true`)
-- Usar tipos explícitos para parâmetros e retornos de funções
-- Preferir `const` sobre `function` para declarações de funções
-- Prefixar handlers de eventos com `handle` (ex: `handleClick`, `handleSubmit`)
-
-#### Nomenclatura
-- **Arquivos**: kebab-case para arquivos, PascalCase para componentes React
-- **Variáveis e funções**: camelCase
-- **Tipos e interfaces**: PascalCase
-- **Constantes**: UPPER_SNAKE_CASE ou camelCase conforme contexto
-- **Banco de dados**: snake_case para tabelas e colunas (conforme padrão PostgreSQL)
-
-#### Comentários
-- Comentários em português para código de domínio jurídico
-- JSDoc para funções públicas e APIs
-- Comentários explicativos para lógica complexa
-- Incluir comentários em schemas SQL explicando propósito de tabelas e colunas
-
-#### Formatação
-- 2 espaços para indentação
-- Aspas simples para strings (quando possível)
-- Ponto e vírgula no final de statements
-- Quebras de linha após imports e antes de exports
+- **TypeScript:** Strict mode enabled. Distinct types for Input/Output.
+- **Naming:**
+  - Files: `kebab-case`
+  - Components: `PascalCase`
+  - Functions/Vars: `camelCase`
+  - DB: `snake_case`
+- **Comments:** Portuguese for business domain, JSDoc for public utilities.
 
 ### 4.2. Testing Strategy
-- Scripts de teste para APIs externas em `dev_data/scripts/`
-- Testes manuais via scripts TypeScript executáveis com `tsx`
-- Foco em testes de integração para captura de dados do PJE
-- Validação de credenciais e fluxos de autenticação
-- **Frameworks:** Jest (Unit/Integration), Playwright (E2E)
 
-### 4.3. Deployment
-The application is a Next.js project, built using `next build` (with `turbopack` or `webpack`). Deployment is supported on platforms compatible with Node.js applications. `build:caprover` script suggests CapRover as a potential target, and `vercel.json` indicates Vercel is also an option.
+- **Unit/Integration:** `npm test` (Jest)
+- **E2E:** `npm run test:e2e` (Playwright)
+- **MCP Tools:** `npm run mcp:test`
+- **Architecture Check:** `npm run check:architecture`
 
-### 4.4. Git Workflow
-- Branch principal: `main` (assumido)
-- Commits descritivos em português
-- Estrutura de commits: `tipo: descrição breve`
-- Usar OpenSpec para gerenciar mudanças significativas
+### 4.3. Workflow
+
+- **Branches:** `main` as source of truth.
+- **Commits:** Semantic commits specific to features.
+- **Specs:** Use OpenSpec for planning complex changes.
 
 ## 5. Future Considerations
 
 ### 5.1. Scalability
-*   **PJE Data Capture:** Ensure efficiency and avoid blocking other operations during PJE data capture.
-*   **Database Queries:** Utilize appropriate indexes for database queries.
-*   **Pagination:** Implement mandatory pagination for large listings.
+
+- **PJE Scraping:** Optimize queue management for scraping jobs to avoid rate limits.
+- **Database:** Monitor query performance and index usage (pgvector indexes are critical).
 
 ### 5.2. Maintainability
-*   **Code Quality:** Adhere to strict TypeScript types, clear naming conventions, and comprehensive comments (JSDoc for public APIs, explanatory comments for complex logic).
-*   **Modular Architecture:** Maintain separation of concerns (API Routes, Business Services, Persistence, UI Components) to facilitate independent development and updates.
-*   **Documentation:** Continue using Swagger/OpenAPI for API documentation.
+
+- **Strict Layering:** Enforce the Service/Repository separation to allow swapping backends if needed (though unlikely).
+- **Documentation:** Keep `RULES.md` in feature folders updated for AI context.
 
 ### 5.3. Security
-*   **Data Protection:** Safeguard personal data in compliance with LGPD (General Data Protection Law).
-*   **Confidentiality:** Maintain professional secrecy for legal information.
-*   **Auditing:** Implement auditing for all significant changes and assignments.
-*   **Authentication:** Ensure robust authentication, especially for PJE integration (SSO with 2FA/OTP).
-*   **Supabase RLS:** Respect and enforce Row Level Security policies in Supabase
 
+- **RLS:** Row Level Security is the primary data firewall.
+- **Secrets:** Verified by `npm run security:check-secrets` and `gitleaks`.
