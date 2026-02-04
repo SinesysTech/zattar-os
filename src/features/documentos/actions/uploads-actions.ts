@@ -83,14 +83,14 @@ export async function actionListarUploads(documento_id: number) {
   }
 }
 
-export async function actionGerarPresignedUrl(filename: string, contentType: string) {
+export async function actionGerarPresignedUrl(filename: string, contentType: string, size?: number) {
   try {
     const user = await authenticateRequest();
     if (!user) {
       return { success: false, error: 'Não autenticado' };
     }
-    // O service.gerarPresignedUrl não usa usuario_id atualmente, mas o action pode passar
-    const presignedUrlData = await service.gerarPresignedUrl(filename, contentType);
+    // Validação de usuário e limites implementada no service
+    const presignedUrlData = await service.gerarPresignedUrl(filename, contentType, user.id, size);
     return { success: true, data: presignedUrlData };
   } catch (error) {
     return { success: false, error: String(error) };
