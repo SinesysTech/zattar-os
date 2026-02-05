@@ -36,6 +36,7 @@ type ConciliacaoBancariaRecord = {
     data_conciliacao: string | null;
     created_at: string;
     updated_at: string;
+    lancamentos_financeiros?: LancamentoRecord | null;
 };
 
 type LancamentoRecord = {
@@ -87,7 +88,6 @@ type TransacaoImportadaRecord = {
     created_by: number | null;
     created_at: string;
     conciliacoes_bancarias?: ConciliacaoBancariaRecord[] | null;
-    lancamentos_financeiros?: LancamentoRecord | null;
 };
 
 // ============================================================================
@@ -131,8 +131,10 @@ export const ConciliacaoRepository = {
             .from('transacoes_bancarias_importadas')
             .select(`
                 *,
-                conciliacoes_bancarias (*),
-                lancamentos_financeiros (*)
+                conciliacoes_bancarias (
+                    *,
+                    lancamentos_financeiros (*)
+                )
             `, { count: 'exact' });
 
         if (params.contaBancariaId) {
@@ -200,8 +202,10 @@ export const ConciliacaoRepository = {
             .from('transacoes_bancarias_importadas')
             .select(`
                 *,
-                conciliacoes_bancarias (*),
-                lancamentos_financeiros (*)
+                conciliacoes_bancarias (
+                    *,
+                    lancamentos_financeiros (*)
+                )
             `)
             .eq('id', id)
             .single();
@@ -430,7 +434,7 @@ export const ConciliacaoRepository = {
 
 function mapRecordToTransacao(record: TransacaoImportadaRecord): TransacaoComConciliacao {
     const conciliacao = record.conciliacoes_bancarias?.[0];
-    const lancamento = record.lancamentos_financeiros;
+    const lancamento = conciliacao?.lancamentos_financeiros ?? null;
 
     return {
         id: record.id,
