@@ -7,9 +7,9 @@ export const buildConciliacaoFilterOptions = (contas?: { id: number; nome: strin
     { value: 'status_conciliado', label: 'Conciliado' },
     { value: 'status_divergente', label: 'Divergente' },
     { value: 'status_ignorado', label: 'Ignorado' },
-    { value: 'periodo_7', label: '\u00daltimos 7 dias' },
-    { value: 'periodo_30', label: '\u00daltimos 30 dias' },
-    { value: 'periodo_90', label: '\u00daltimos 90 dias' },
+    { value: 'periodo_7', label: 'Últimos 7 dias' },
+    { value: 'periodo_30', label: 'Últimos 30 dias' },
+    { value: 'periodo_90', label: 'Últimos 90 dias' },
   ];
 
   if (contas) {
@@ -36,11 +36,11 @@ export const buildConciliacaoFilterGroups = (contas?: { id: number; nome: string
       ],
     },
     {
-      label: 'Per\u00edodo',
+      label: 'Período',
       options: [
-        { value: 'periodo_7', label: '\u00daltimos 7 dias' },
-        { value: 'periodo_30', label: '\u00daltimos 30 dias' },
-        { value: 'periodo_90', label: '\u00daltimos 90 dias' },
+        { value: 'periodo_7', label: 'Últimos 7 dias' },
+        { value: 'periodo_30', label: 'Últimos 30 dias' },
+        { value: 'periodo_90', label: 'Últimos 90 dias' },
       ],
     },
     {

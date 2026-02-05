@@ -99,7 +99,7 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="conta">Conta banc\u00e1ria</Label>
+            <Label htmlFor="conta">Conta bancária</Label>
             <Select onValueChange={(val) => setContaId(Number(val))} value={contaId?.toString()}>
               <SelectTrigger id="conta">
                 <SelectValue placeholder="Selecione a conta" />

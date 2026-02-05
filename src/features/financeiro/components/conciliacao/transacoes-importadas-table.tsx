@@ -63,7 +63,7 @@ export function TransacoesImportadasTable({
     },
     {
       accessorKey: 'descricao',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Descri\u00e7\u00e3o" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Descrição" />,
       cell: ({ row }) => (
         <div className="max-w-md truncate text-sm" title={row.original.descricao}>
           {row.original.descricao}
@@ -112,7 +112,7 @@ export function TransacoesImportadasTable({
     },
     {
       id: 'lancamento',
-      header: () => <div className="text-sm font-medium">Lan\u00e7amento</div>,
+      header: () => <div className="text-sm font-medium">Lançamento</div>,
       cell: ({ row }) => {
         const lanc = row.original.lancamentoVinculado;
         return lanc ? (
@@ -120,14 +120,14 @@ export function TransacoesImportadasTable({
             {lanc.descricao}
           </div>
         ) : (
-          <span className="text-muted-foreground text-sm">N\u00e3o conciliado</span>
+          <span className="text-muted-foreground text-sm">Não conciliado</span>
         );
       },
       size: 200,
     },
     {
       id: 'actions',
-      header: () => <div className="text-sm font-medium">A\u00e7\u00f5es</div>,
+      header: () => <div className="text-sm font-medium">Ações</div>,
       cell: ({ row }) => {
         const transacao = row.original;
         const status = transacao.conciliacao?.status || 'pendente';
@@ -143,7 +143,7 @@ export function TransacoesImportadasTable({
                 <>
                   <DropdownMenuItem onClick={() => onVerSugestoes?.(transacao)}>
                     <Wand2 className="mr-2 h-4 w-4" />
-                    Ver Sugest\u00f5es
+                    Ver Sugestões
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => onConciliar(transacao)}>
                     <CheckCircle2 className="mr-2 h-4 w-4" />
@@ -178,7 +178,7 @@ export function TransacoesImportadasTable({
       data={transacoes}
       columns={colunas}
       isLoading={false}
-      emptyMessage="Nenhuma transa\u00e7\u00e3o importada"
+      emptyMessage="Nenhuma transação importada"
     />
   );
 }

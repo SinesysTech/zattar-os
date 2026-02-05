@@ -69,7 +69,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
       
       if (!res.success) throw new Error(res.error);
 
-      toast.success('Transa\u00e7\u00e3o conciliada');
+      toast.success('Transação conciliada');
       onSuccess?.();
       onOpenChange(false);
     } catch (error) {
@@ -87,7 +87,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
 
       if (!res.success) throw new Error(res.error);
 
-      toast.success('Transa\u00e7\u00e3o conciliada');
+      toast.success('Transação conciliada');
       onSuccess?.();
       onOpenChange(false);
     } catch (error) {
@@ -105,7 +105,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
 
       if (!res.success) throw new Error(res.error);
 
-      toast.success('Transa\u00e7\u00e3o marcada como ignorada');
+      toast.success('Transação marcada como ignorada');
       onSuccess?.();
       onOpenChange(false);
     } catch (error) {
@@ -146,15 +146,15 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>Concilia\u00e7\u00e3o Manual</DialogTitle>
+          <DialogTitle>Conciliação Manual</DialogTitle>
         </DialogHeader>
 
         {transacao && (
           <div className="grid gap-4 md:grid-cols-2">
             <div className="rounded-md border p-3 space-y-1">
-              <p className="text-xs uppercase text-muted-foreground">Transa\u00e7\u00e3o importada</p>
+              <p className="text-xs uppercase text-muted-foreground">Transação importada</p>
               <p className="text-sm font-medium">{transacao.descricao}</p>
-              <p className="text-lg font-semibold">{formatarValor(transacao.valor)} ({transacao.tipoTransacao === 'credito' ? 'Cr\u00e9dito' : 'D\u00e9bito'})</p>
+              <p className="text-lg font-semibold">{formatarValor(transacao.valor)} ({transacao.tipoTransacao === 'credito' ? 'Crédito' : 'Débito'})</p>
               <p className="text-sm text-muted-foreground">Data: {transacao.dataTransacao}</p>
               {transacao.documento && (
                 <p className="text-sm text-muted-foreground">Documento: {transacao.documento}</p>
@@ -163,16 +163,16 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">Sugest\u00f5es autom\u00e1ticas</p>
+                <p className="text-sm font-medium">Sugestões automáticas</p>
                 <Button variant="outline" size="sm" onClick={handleIgnorar}>
                   Marcar como ignorado
                 </Button>
               </div>
 
-              {isLoadingSugestoes && <p className="text-sm text-muted-foreground">Carregando sugest\u00f5es...</p>}
+              {isLoadingSugestoes && <p className="text-sm text-muted-foreground">Carregando sugestões...</p>}
 
               {!isLoadingSugestoes && topSugestoes.length === 0 && (
-                <p className="text-sm text-muted-foreground">Nenhuma sugest\u00e3o encontrada.</p>
+                <p className="text-sm text-muted-foreground">Nenhuma sugestão encontrada.</p>
               )}
 
               <div className="space-y-3">
@@ -218,7 +218,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
               <div className="space-y-1">
                 <p className="text-sm font-medium">Busca manual</p>
                 <Input
-                  placeholder="Buscar por descri\u00e7\u00e3o ou documento"
+                  placeholder="Buscar por descrição ou documento"
                   value={buscaManual}
                   onChange={(e) => setBuscaManual(e.target.value)}
                 />
@@ -239,7 +239,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                 {buscando && <p className="text-xs text-muted-foreground">Buscando...</p>}
               </div>
               {resultadosBusca.length === 0 && !buscando && (
-                <p className="text-sm text-muted-foreground">Nenhum lan\u00e7amento encontrado.</p>
+                <p className="text-sm text-muted-foreground">Nenhum lançamento encontrado.</p>
               )}
               <div className="space-y-2">
                 {resultadosBusca.map((lancamento) => (
