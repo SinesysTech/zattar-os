@@ -42,11 +42,25 @@ export interface SalvarPendentesResult {
 
 /**
  * Converte data ISO string para timestamptz ou null
+ *
+ * IMPORTANTE: A API do PJE retorna datas sem timezone (ex: "2025-12-04T10:00:00")
+ * que representam horário de Brasília (America/Sao_Paulo, UTC-3).
+ *
+ * Se a string não tiver timezone explícito, assumimos Brasília para evitar
+ * que o servidor (que pode estar em UTC) interprete incorretamente.
  */
 function parseDate(dateString: string | null | undefined): string | null {
   if (!dateString) return null;
   try {
-    return new Date(dateString).toISOString();
+    // Se já tem timezone (Z, +HH:MM, -HH:MM), usa direto
+    const hasTimezone = /Z|[+-]\d{2}:\d{2}$/.test(dateString);
+
+    if (hasTimezone) {
+      return new Date(dateString).toISOString();
+    }
+
+    // Sem timezone: assumir Brasília (UTC-3)
+    return new Date(dateString + '-03:00').toISOString();
   } catch {
     return null;
   }

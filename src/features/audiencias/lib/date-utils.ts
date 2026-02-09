@@ -14,15 +14,18 @@ const TIMEZONE = "America/Sao_Paulo";
 /**
  * Converte strings de data e hora locais para uma string ISO.
  *
+ * IMPORTANTE: Assume que os valores são horário de Brasília (UTC-3).
+ * A conversão para ISO UTC é feita explicitamente para evitar problemas
+ * quando o servidor está em timezone diferente.
+ *
  * @param dateStr - Data no formato 'YYYY-MM-DD'
  * @param timeStr - Hora no formato 'HH:mm'
  */
 export function localToISO(dateStr: string, timeStr: string): string {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  const [hour, minute] = timeStr.split(":").map(Number);
-
-  const date = new Date(year, month - 1, day, hour, minute, 0, 0);
-  return date.toISOString();
+  // Monta string ISO com timezone de Brasília (UTC-3)
+  // Formato: YYYY-MM-DDTHH:mm:00-03:00
+  const isoWithTz = `${dateStr}T${timeStr}:00-03:00`;
+  return new Date(isoWithTz).toISOString();
 }
 
 export function formatDateBR(
