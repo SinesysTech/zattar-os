@@ -292,6 +292,7 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
               )}
               <DataTableToolbar
                 table={table}
+                title="Obrigações"
                 density={density}
                 onDensityChange={setDensity}
                 searchValue={busca}

@@ -378,6 +378,7 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
             <>
               <DataTableToolbar
                 table={table}
+                title="Audiências"
                 density={density}
                 onDensityChange={setDensity}
                 searchValue={busca}

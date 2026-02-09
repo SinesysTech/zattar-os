@@ -13,7 +13,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, FileText, Eye, Pencil, Trash2, MoreHorizontal } from 'lucide-react';
+import { FileText, Eye, Pencil, Trash2, MoreHorizontal } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
   DataShell,
@@ -367,24 +367,17 @@ export function PecasModelosTableWrapper({
       <DataShell
         header={
           <DataTableToolbar
+            title="Modelos de Peças"
             searchValue={busca}
             onSearchValueChange={setBusca}
             searchPlaceholder="Buscar modelos..."
             density={density}
             onDensityChange={setDensity}
             table={table}
-            actionSlot={
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button size="icon" onClick={handleCreate}>
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Novo Modelo</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            }
+            actionButton={{
+              label: 'Novo Modelo',
+              onClick: handleCreate,
+            }}
             filtersSlot={
               <>
                 {/* Filtro por Tipo de Peça */}

@@ -3,39 +3,22 @@
 /**
  * Table Wrapper de Partes Contrárias
  * Lista e gerencia partes contrárias dos processos
+ * Implementação seguindo o padrão DataShell.
  */
 
 import * as React from 'react';
 import Link from 'next/link';
-import {
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-  type ColumnDef,
-} from '@tanstack/react-table';
-import { Columns, Eye, Pencil } from 'lucide-react';
+import type { Table as TanstackTable, SortingState, ColumnDef } from '@tanstack/react-table';
+import { Eye, Pencil } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
+  DataShell,
+  DataTable,
+  DataTableToolbar,
+  DataPagination,
+} from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import type { ParteContraria, ProcessoRelacionado } from '../../types';
 
@@ -139,11 +122,11 @@ export function PartesContrariasTableWrapper() {
 
   // Pagination
   const [pagina, setPagina] = React.useState(0);
-  const [limite] = React.useState(50);
+  const [limite, setLimite] = React.useState(50);
 
   // Table state
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [table, setTable] = React.useState<TanstackTable<ParteContrariaComProcessos> | null>(null);
 
   // Dialog state
   const [createOpen, setCreateOpen] = React.useState(false);
@@ -317,183 +300,104 @@ export function PartesContrariasTableWrapper() {
     [handleEdit]
   );
 
-  // TanStack Table
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const table = useReactTable({
-    data: partesContrarias,
-    columns,
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    state: { sorting, columnVisibility },
-    manualPagination: true,
-    pageCount: paginacao?.totalPaginas ?? 0,
-  });
-
-  const pageIndex = pagina;
   const total = paginacao?.total ?? 0;
   const totalPages = paginacao?.totalPaginas ?? 0;
 
   return (
     <>
-      <div className="w-full">
-        {/* Toolbar */}
-        <div className="flex items-center gap-4 py-4">
-          <div className="flex gap-2 flex-1">
-            <Input
-              placeholder="Buscar partes contrárias..."
-              value={busca}
-              onChange={(e) => {
-                setBusca(e.target.value);
+      <DataShell
+        header={
+          table ? (
+            <DataTableToolbar
+              table={table}
+              title="Partes Contrárias"
+              searchValue={busca}
+              onSearchValueChange={(value) => {
+                setBusca(value);
                 setPagina(0);
               }}
-              className="max-w-sm"
+              searchPlaceholder="Buscar..."
+              actionButton={{
+                label: 'Nova Parte Contrária',
+                onClick: () => setCreateOpen(true),
+              }}
+              actionSlot={
+                <ChatwootSyncButton
+                  tipoEntidade="parte_contraria"
+                  apenasAtivos={situacao === 'A'}
+                />
+              }
+              filtersSlot={
+                <>
+                  <FilterPopover
+                    label="Situação"
+                    options={[
+                      { value: 'A', label: 'Ativo' },
+                      { value: 'I', label: 'Inativo' },
+                    ]}
+                    value={situacao}
+                    onValueChange={(val) => {
+                      setSituacao(val as typeof situacao);
+                      setPagina(0);
+                    }}
+                    defaultValue="all"
+                  />
+                  <FilterPopover
+                    label="Tipo Pessoa"
+                    options={[
+                      { value: 'pf', label: 'Pessoa Física' },
+                      { value: 'pj', label: 'Pessoa Jurídica' },
+                    ]}
+                    value={tipoPessoa}
+                    onValueChange={(val) => {
+                      setTipoPessoa(val as typeof tipoPessoa);
+                      setPagina(0);
+                    }}
+                    defaultValue="all"
+                  />
+                </>
+              }
             />
-            <FilterPopover
-              label="Tipo Pessoa"
-              options={[
-                { value: 'pf', label: 'Pessoa Física' },
-                { value: 'pj', label: 'Pessoa Jurídica' },
-              ]}
-              value={tipoPessoa}
-              onValueChange={(val) => {
-                setTipoPessoa(val as typeof tipoPessoa);
+          ) : (
+            <div className="p-6" />
+          )
+        }
+        footer={
+          totalPages > 0 ? (
+            <DataPagination
+              pageIndex={pagina}
+              pageSize={limite}
+              total={total}
+              totalPages={totalPages}
+              onPageChange={setPagina}
+              onPageSizeChange={(size) => {
+                setLimite(size);
                 setPagina(0);
               }}
-              defaultValue="all"
+              isLoading={isLoading}
             />
-            <FilterPopover
-              label="Situação"
-              options={[
-                { value: 'A', label: 'Ativo' },
-                { value: 'I', label: 'Inativo' },
-              ]}
-              value={situacao}
-              onValueChange={(val) => {
-                setSituacao(val as typeof situacao);
-                setPagina(0);
-              }}
-              defaultValue="all"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <ChatwootSyncButton
-              tipoEntidade="parte_contraria"
-              apenasAtivos={situacao === 'A'}
-            />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  <Columns className="h-4 w-4" />
-                  <span className="hidden md:inline">Colunas</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {table
-                  .getAllColumns()
-                  .filter((column) => column.getCanHide())
-                  .map((column) => (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(value)}
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button onClick={() => setCreateOpen(true)}>Nova Parte Contrária</Button>
-          </div>
-        </div>
-
-        {/* Error Display */}
-        {error && (
-          <div className="mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            {error}
-          </div>
-        )}
-
-        {/* Table */}
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={`skeleton-${i}`}>
-                    {columns.map((_, j) => (
-                      <TableCell key={`skeleton-${i}-${j}`}>
-                        <Skeleton className="h-8 w-full" />
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
-                    Nenhuma parte contrária encontrada.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 0 && (
-          <div className="flex items-center justify-between pt-4">
-            <div className="text-muted-foreground text-sm">
-              {total} registro(s)
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">
-                Página {pageIndex + 1} de {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPagina(Math.max(0, pageIndex - 1))}
-                disabled={pageIndex === 0 || isLoading}
-              >
-                Anterior
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPagina(Math.min(totalPages - 1, pageIndex + 1))}
-                disabled={pageIndex >= totalPages - 1 || isLoading}
-              >
-                Próximo
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
+          ) : null
+        }
+      >
+        <DataTable
+          data={partesContrarias}
+          columns={columns}
+          pagination={{
+            pageIndex: pagina,
+            pageSize: limite,
+            total,
+            totalPages,
+            onPageChange: setPagina,
+            onPageSizeChange: setLimite,
+          }}
+          sorting={sorting}
+          onSortingChange={setSorting}
+          isLoading={isLoading}
+          error={error}
+          emptyMessage="Nenhuma parte contrária encontrada."
+          onTableReady={(t) => setTable(t as TanstackTable<ParteContrariaComProcessos>)}
+        />
+      </DataShell>
 
       {/* Dialogs */}
       <ParteContrariaFormDialog

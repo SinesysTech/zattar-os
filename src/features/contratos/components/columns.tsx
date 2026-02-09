@@ -19,6 +19,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Eye, Pencil, FileText, Trash2 } from 'lucide-react';
 import type { Contrato } from '../domain';
 import type { ClienteInfo } from '../types';
@@ -28,6 +29,19 @@ import {
   STATUS_CONTRATO_LABELS,
 } from '../domain';
 import { formatarData } from '../utils';
+
+// =============================================================================
+// HELPERS
+// =============================================================================
+
+function getInitials(name: string): string {
+  if (!name) return 'U';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) {
+    return parts[0].substring(0, 2).toUpperCase();
+  }
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 // =============================================================================
 // FACTORY FUNCTION DE COLUNAS
@@ -60,17 +74,15 @@ export function getContratosColumns(
         <DataTableColumnHeader column={column} title="Cadastro" />
       ),
       meta: {
-        align: 'center',
+        align: 'left',
         headerLabel: 'Cadastro',
       },
-      size: 140,
+      size: 120,
       enableSorting: true,
       cell: ({ row }) => {
         const contrato = row.original;
         return (
-          <div className="flex flex-col gap-1 items-center text-center">
-            <span className="font-medium">{formatarData(contrato.cadastradoEm)}</span>
-          </div>
+          <span className="text-sm">{formatarData(contrato.cadastradoEm)}</span>
         );
       },
     },
@@ -316,15 +328,16 @@ export function getContratosColumns(
       id: 'actions',
       header: 'Ações',
       meta: {
-        align: 'center',
+        align: 'left',
+        headerLabel: 'Ações',
       },
-      size: 120,
+      size: 140,
       enableSorting: false,
       enableHiding: false,
       cell: ({ row }) => {
         const contrato = row.original;
         return (
-          <div className="flex items-center justify-center gap-1">
+          <div className="flex items-center gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8" asChild>

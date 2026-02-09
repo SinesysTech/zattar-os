@@ -82,7 +82,7 @@ export function TablePagination({
             onValueChange={handlePageSizeChange}
             disabled={isLoading}
           >
-            <SelectTrigger className="h-8 w-17.5" suppressHydrationWarning>
+            <SelectTrigger className="h-8 w-17.5 bg-card" suppressHydrationWarning>
               <SelectValue />
             </SelectTrigger>
             <SelectContent side="top">
@@ -102,7 +102,7 @@ export function TablePagination({
             <Button
               variant="outline"
               size="sm"
-              className="h-8 w-8 p-0"
+              className="h-8 w-8 p-0 bg-card"
               onClick={() => handlePageChange(0)}
               disabled={safePageIndex === 0 || isLoading}
             >
@@ -112,7 +112,7 @@ export function TablePagination({
             <Button
               variant="outline"
               size="sm"
-              className="h-8 w-8 p-0"
+              className="h-8 w-8 p-0 bg-card"
               onClick={() => handlePageChange(safePageIndex - 1)}
               disabled={safePageIndex === 0 || isLoading}
             >
@@ -122,7 +122,7 @@ export function TablePagination({
             <Button
               variant="outline"
               size="sm"
-              className="h-8 w-8 p-0"
+              className="h-8 w-8 p-0 bg-card"
               onClick={() => handlePageChange(safePageIndex + 1)}
               disabled={safePageIndex >= safeTotalPages - 1 || isLoading}
             >
@@ -132,7 +132,7 @@ export function TablePagination({
             <Button
               variant="outline"
               size="sm"
-              className="h-8 w-8 p-0"
+              className="h-8 w-8 p-0 bg-card"
               onClick={() => handlePageChange(safeTotalPages - 1)}
               disabled={safePageIndex >= safeTotalPages - 1 || isLoading}
             >

@@ -79,3 +79,14 @@ export type {
   TipoAcessoTribunal,
   FiltroPrazoPendentes,
 } from "./trt-types";
+
+/**
+ * Interface para expor métodos do formulário de captura ao componente pai
+ * Usado com forwardRef + useImperativeHandle
+ */
+export interface CapturaFormHandle {
+  /** Executa a ação de captura */
+  submit: () => Promise<void>;
+  /** Indica se está em processo de captura */
+  isLoading: boolean;
+}

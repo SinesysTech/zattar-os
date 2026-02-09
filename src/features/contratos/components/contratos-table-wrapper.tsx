@@ -342,6 +342,7 @@ export function ContratosTableWrapper({
           table ? (
             <DataTableToolbar
               table={table}
+              title="Contratos"
               density={density}
               onDensityChange={setDensity}
               searchValue={busca}
@@ -349,7 +350,7 @@ export function ContratosTableWrapper({
                 setBusca(value);
                 setPageIndex(0);
               }}
-              searchPlaceholder="Buscar nas observações..."
+              searchPlaceholder="Buscar contratos..."
               actionButton={{
                 label: 'Novo Contrato',
                 onClick: () => setCreateOpen(true),
@@ -371,7 +372,7 @@ export function ContratosTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="w-45">
+                    <SelectTrigger className="h-9 w-45 border-dashed bg-card">
                       <SelectValue placeholder="Tipo de Contrato" />
                     </SelectTrigger>
                     <SelectContent>
@@ -391,7 +392,7 @@ export function ContratosTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="w-37.5">
+                    <SelectTrigger className="h-9 w-37.5 border-dashed bg-card">
                       <SelectValue placeholder="Cobrança" />
                     </SelectTrigger>
                     <SelectContent>
@@ -411,7 +412,7 @@ export function ContratosTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="w-40">
+                    <SelectTrigger className="h-9 w-40 border-dashed bg-card">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>

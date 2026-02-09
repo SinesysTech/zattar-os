@@ -15,6 +15,7 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
+import { TablePagination } from '@/components/shared/table-pagination';
 import {
   Select,
   SelectContent,
@@ -912,9 +913,15 @@ export function ProcessosTableWrapper({
   return (
     <>
       <div className="w-full">
-        <div className="flex items-center gap-4 py-4">
+        {/* Linha 1: Título à esquerda (sem botão de criar no Processos) */}
+        <div className="flex items-center justify-between py-4">
+          <h1 className="text-2xl font-semibold tracking-tight">Processos</h1>
+        </div>
+
+        {/* Linha 2: Filtros à esquerda, Config + Colunas à direita */}
+        <div className="flex items-center gap-4 pb-4">
           <div className="flex gap-2 flex-1">
-            <div className="relative max-w-md">
+            <div className="relative w-80">
               <Search
                 className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                 aria-hidden="true"
@@ -926,7 +933,7 @@ export function ProcessosTableWrapper({
                   setGlobalFilter(e.target.value);
                   setPageIndex(0);
                 }}
-                className="w-full pl-9 bg-white"
+                className="h-10 w-full pl-9 bg-card"
               />
             </div>
             <Combobox
@@ -940,7 +947,7 @@ export function ProcessosTableWrapper({
               searchPlaceholder="Buscar tribunal..."
               emptyText="Nenhum tribunal encontrado"
               multiple={true}
-              className="w-50 bg-white"
+              className="h-10 w-50 bg-card"
             />
             <Select
               value={origemFilter}
@@ -949,7 +956,7 @@ export function ProcessosTableWrapper({
                 setPageIndex(0);
               }}
             >
-              <SelectTrigger className="w-37.5 bg-white">
+              <SelectTrigger className="h-10 w-37.5 bg-card">
                 <SelectValue placeholder="Origem" />
               </SelectTrigger>
               <SelectContent>
@@ -966,7 +973,7 @@ export function ProcessosTableWrapper({
                   <Button
                     variant="outline"
                     size="icon"
-                    className="bg-white"
+                    className="h-10 bg-card"
                     onClick={() => setConfigAtribuicaoOpen(true)}
                   >
                     <Settings className="h-4 w-4" />
@@ -978,7 +985,7 @@ export function ProcessosTableWrapper({
             {table && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="bg-white">
+                  <Button variant="outline" className="h-10 bg-card">
                     <Columns className="h-4 w-4" />
                     <span className="hidden md:inline">Colunas</span>
                   </Button>
@@ -1020,7 +1027,7 @@ export function ProcessosTableWrapper({
             hasFilters={hasFilters}
           />
         ) : (
-          <div className="rounded-md border bg-white">
+          <div className="rounded-md border bg-card">
             <DataTable
               columns={colunas}
               data={processos || []}
@@ -1042,34 +1049,19 @@ export function ProcessosTableWrapper({
           </div>
         )}
 
-        {totalPages > 0 && (
-          <div className="flex items-center justify-between pt-4">
-            <div className="text-muted-foreground text-sm">
-              {total} registro(s)
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">
-                Página {pageIndex + 1} de {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPageIndex(Math.max(0, pageIndex - 1))}
-                disabled={pageIndex === 0 || isLoading}
-              >
-                Anterior
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPageIndex(Math.min(totalPages - 1, pageIndex + 1))}
-                disabled={pageIndex >= totalPages - 1 || isLoading}
-              >
-                Próximo
-              </Button>
-            </div>
-          </div>
-        )}
+        <TablePagination
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          total={total}
+          totalPages={totalPages}
+          onPageChange={setPageIndex}
+          onPageSizeChange={(size) => {
+            setPageSize(size);
+            setPageIndex(0);
+          }}
+          isLoading={isLoading}
+          variant="integrated"
+        />
       </div>
 
       <ConfigAtribuicaoDialog

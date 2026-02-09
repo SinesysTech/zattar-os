@@ -185,12 +185,14 @@ interface DraggableTableHeaderProps<TData> {
   header: Header<TData, unknown>;
   className?: string;
   style?: React.CSSProperties;
+  align?: 'left' | 'center' | 'right';
 }
 
 function DraggableTableHeader<TData>({
   header,
   className,
   style: extraStyle,
+  align = 'left',
 }: DraggableTableHeaderProps<TData>) {
   const [isMounted, setIsMounted] = React.useState(false);
 
@@ -222,6 +224,14 @@ function DraggableTableHeader<TData>({
   const dndAttributes = isMounted ? attributes : {};
   const dndListeners = isMounted ? listeners : {};
 
+  // Classe de alinhamento do conteúdo
+  const justifyClass =
+    align === 'center'
+      ? 'justify-center'
+      : align === 'right'
+        ? 'justify-end'
+        : 'justify-start';
+
   return (
     <TableHead
       ref={setNodeRef}
@@ -230,7 +240,7 @@ function DraggableTableHeader<TData>({
       {...dndAttributes}
       {...dndListeners}
     >
-      <div className="min-w-0 text-sm text-muted-foreground flex items-center justify-center">
+      <div className={cn('min-w-0 text-sm text-muted-foreground flex items-center', justifyClass)}>
         {header.isPlaceholder
           ? null
           : flexRender(header.column.columnDef.header, header.getContext())}
@@ -262,7 +272,7 @@ export function DataTable<TData, TValue>({
   emptyMessage = 'Nenhum resultado.',
   emptyComponent,
   hideTableBorder,
-  hideColumnBorders,
+  hideColumnBorders = true,
   tableLayout = 'fixed',
   striped = true,
   options,
@@ -543,12 +553,18 @@ export function DataTable<TData, TValue>({
                       | number
                       | undefined;
                     const maxWidth = columnSize ? `${columnSize}px` : undefined;
-                    // Headers são sempre centralizados
-                    const alignClass = 'text-center';
-                    
-                    // Coluna de seleção (checkbox) precisa de padding igual de ambos os lados
-                    // para ficar perfeitamente centralizada
-                    const isSelectionColumn = header.column.id === 'select';
+
+                    // Alinhamento do header baseado em meta.align (default: left)
+                    const headerMeta = header.column.columnDef.meta as
+                      | { align?: 'left' | 'center' | 'right' }
+                      | undefined;
+                    const headerAlign = headerMeta?.align ?? 'left';
+                    const alignClass =
+                      headerAlign === 'center'
+                        ? 'text-center'
+                        : headerAlign === 'right'
+                          ? 'text-right'
+                          : 'text-left';
 
                     const hasBorder =
                       !hideColumnBorders &&
@@ -558,13 +574,13 @@ export function DataTable<TData, TValue>({
                       <DraggableTableHeader
                         key={header.id}
                         header={header}
+                        align={headerAlign}
                         className={cn(
                           cellPadding,
                           alignClass,
-                          // Padding uniforme para todas as colunas
-                          // Primeira coluna (não seleção): padding-left com respiro
-                          !isSelectionColumn && index === 0 && 'pl-3',
-                          // Última coluna: padding-right com respiro
+                          // Primeira coluna: padding-left padrão (pl-3)
+                          index === 0 && 'pl-3',
+                          // Última coluna: padding-right padrão (pr-3)
                           index === headerGroup.headers.length - 1 && 'pr-3',
                           hasBorder && 'border-r border-border'
                         )}
@@ -623,32 +639,27 @@ export function DataTable<TData, TValue>({
                       | number
                       | undefined;
                     const maxWidth = columnSize ? `${columnSize}px` : undefined;
-                    
-                    // Alinhamento da coluna (default: 'center')
+
+                    // Alinhamento da coluna (default: 'left')
                     // Controlado via meta.align na definição da coluna
                     const meta = cell.column.columnDef.meta as
                       | { align?: 'left' | 'center' | 'right' }
                       | undefined;
-                    const align = meta?.align ?? 'center';
-                    
+                    const align = meta?.align ?? 'left';
+
                     // Classes de alinhamento de texto para a célula
                     const alignClass =
-                      align === 'left'
-                        ? 'text-left'
+                      align === 'center'
+                        ? 'text-center'
                         : align === 'right'
                           ? 'text-right'
-                          : 'text-center';
+                          : 'text-left';
 
                     const hasBorder =
                       !hideColumnBorders && index < all.length - 1;
 
                     // Para alinhamento centralizado, usamos flexbox no wrapper interno
-                    // Isso garante que o conteúdo (ex: checkbox) fique perfeitamente centralizado
                     const isCentered = align === 'center';
-                    
-                    // Coluna de seleção (checkbox) precisa de padding igual de ambos os lados
-                    // para ficar perfeitamente centralizada
-                    const isSelectionColumn = cell.column.id === 'select';
 
                     return (
                       <TableCell
@@ -656,10 +667,9 @@ export function DataTable<TData, TValue>({
                         className={cn(
                           cellPadding,
                           alignClass,
-                          // Padding uniforme para todas as colunas
-                          // Primeira coluna (não seleção): padding-left com respiro
-                          !isSelectionColumn && index === 0 && 'pl-3',
-                          // Última coluna: padding-right com respiro
+                          // Primeira coluna: padding-left padrão (pl-3)
+                          index === 0 && 'pl-3',
+                          // Última coluna: padding-right padrão (pr-3)
                           index === all.length - 1 && 'pr-3',
                           hasBorder && 'border-r border-border'
                         )}

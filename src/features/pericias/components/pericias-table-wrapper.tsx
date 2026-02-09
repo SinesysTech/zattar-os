@@ -397,6 +397,7 @@ export function PericiasTableWrapper({
           <>
             <DataTableToolbar
               table={table}
+              title="Perícias"
               density={density}
               onDensityChange={setDensity}
               searchValue={busca}

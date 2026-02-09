@@ -7,7 +7,7 @@ export const TIPOS_CAPTURA: { value: TipoCaptura; label: string }[] = [
   { value: 'acervo_geral', label: 'Acervo Geral' },
   { value: 'arquivados', label: 'Arquivados' },
   { value: 'audiencias', label: 'Audiências' },
-  { value: 'pendentes', label: 'Pendentes' },
+  { value: 'pendentes', label: 'Expedientes' },
   { value: 'partes', label: 'Partes' },
   { value: 'combinada', label: 'Combinada' },
 ];

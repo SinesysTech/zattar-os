@@ -524,6 +524,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
               )}
               <DataTableToolbar
                 table={table}
+                title="Expedientes"
                 density={density}
                 onDensityChange={setDensity}
                 searchValue={busca}

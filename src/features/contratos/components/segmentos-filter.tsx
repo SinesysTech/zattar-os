@@ -94,7 +94,7 @@ export function SegmentosFilter({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className={cn('w-[180px] justify-between bg-white', className)}
+            className={cn('h-9 w-[180px] justify-between border-dashed bg-card font-normal', className)}
           >
             <span className={cn('truncate', !selectedLabel && 'text-muted-foreground')}>
               {selectedLabel || 'Segmento'}

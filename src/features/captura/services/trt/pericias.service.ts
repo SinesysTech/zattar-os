@@ -61,7 +61,7 @@ import type { Processo } from '../../types/types';
 import { obterProcessosAcervoGeral } from '@/features/captura/pje-trt/acervo-geral/obter-processos';
 import { obterProcessosArquivados } from '@/features/captura/pje-trt/arquivados/obter-processos';
 import { buscarDadosComplementaresProcessos } from './dados-complementares.service';
-import { salvarAcervo } from '../persistence/acervo-persistence.service';
+import { salvarAcervoBatch } from '../persistence/acervo-persistence.service';
 import { salvarTimeline } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
@@ -339,7 +339,7 @@ export async function periciasCapture(
     // 6.2.1 Arquivados
     if (processosPorOrigem.arquivado.length > 0) {
       try {
-        const persistenciaArquivados = await salvarAcervo({
+        const persistenciaArquivados = await salvarAcervoBatch({
           processos: processosPorOrigem.arquivado,
           advogadoId: advogadoDb.id,
           origem: 'arquivado',
@@ -357,7 +357,7 @@ export async function periciasCapture(
     // 6.2.2 Acervo Geral
     if (processosPorOrigem.acervo_geral.length > 0) {
       try {
-        const persistenciaAcervo = await salvarAcervo({
+        const persistenciaAcervo = await salvarAcervoBatch({
           processos: processosPorOrigem.acervo_geral,
           advogadoId: advogadoDb.id,
           origem: 'acervo_geral',
@@ -431,7 +431,7 @@ export async function periciasCapture(
         });
 
         try {
-          const persistenciaMinimos = await salvarAcervo({
+          const persistenciaMinimos = await salvarAcervoBatch({
             processos: processosMinimos,
             advogadoId: advogadoDb.id,
             origem: 'acervo_geral',

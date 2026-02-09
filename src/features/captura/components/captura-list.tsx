@@ -64,7 +64,7 @@ const formatarTipoCaptura = (tipo: TipoCaptura): string => {
     acervo_geral: 'Acervo Geral',
     arquivados: 'Arquivados',
     audiencias: 'Audiências',
-    pendentes: 'Pendentes',
+    pendentes: 'Expedientes',
     partes: 'Partes',
     combinada: 'Combinada',
     timeline: 'Timeline',

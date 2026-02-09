@@ -125,6 +125,23 @@ export async function buscarParteContrariaPorCNPJ(cnpj: string): Promise<ParteCo
   return result.data;
 }
 
+/**
+ * Cria uma parte contrária sem documento (CPF/CNPJ)
+ *
+ * Usado para casos especiais como:
+ * - Órgãos julgadores em mandados de segurança (Juízo da Vara, Tribunal, etc.)
+ * - Entidades públicas sem CNPJ cadastrado no PJE
+ */
+export async function criarParteContrariaSemDocumento(
+  input: CreateParteContrariaInput
+): Promise<{ parteContraria: ParteContraria; created: boolean }> {
+  const result = await saveParteContraria(input);
+  if (!result.success) {
+    throw new Error(result.error.message);
+  }
+  return { parteContraria: result.data, created: true };
+}
+
 // Terceiros - Compatibilidade
 export async function upsertTerceiroPorCPF(
   cpf: string,

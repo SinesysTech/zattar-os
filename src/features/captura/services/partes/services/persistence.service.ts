@@ -28,6 +28,7 @@ import {
   upsertParteContrariaPorCNPJ,
   buscarParteContrariaPorCPF,
   buscarParteContrariaPorCNPJ,
+  criarParteContrariaSemDocumento,
   buscarTerceiroPorCPF,
   buscarTerceiroPorCNPJ,
   criarTerceiroSemDocumento,
@@ -107,7 +108,8 @@ export async function processarParte(
           isPessoaFisica,
           documentoNormalizado,
           documentoValido,
-          dadosComuns
+          dadosComuns,
+          processo
         );
         break;
 
@@ -233,25 +235,41 @@ async function processarCliente(
 }
 
 /**
- * Processa uma parte contrária (upsert por CPF/CNPJ)
+ * Processa uma parte contrária (upsert por CPF/CNPJ ou criação sem documento)
+ *
+ * Permite criar partes contrárias sem documento para casos especiais como:
+ * - Mandados de segurança contra órgãos julgadores (Juízo da Vara, Tribunal, etc.)
+ * - Entidades públicas sem CNPJ cadastrado no PJE
  */
 async function processarParteContraria(
   parte: PartePJE,
   isPessoaFisica: boolean,
   documentoNormalizado: string,
   documentoValido: boolean,
+  dadosComuns: DadosComuns,
+  processo: ProcessoParaCaptura
+): Promise<number | null> {
+  if (documentoValido) {
+    return await processarParteContrariaComDocumento(
+      parte,
+      isPessoaFisica,
+      documentoNormalizado,
+      dadosComuns
+    );
+  } else {
+    return await processarParteContrariaSemDocumento(parte, processo);
+  }
+}
+
+/**
+ * Processa parte contrária que possui documento válido
+ */
+async function processarParteContrariaComDocumento(
+  parte: PartePJE,
+  isPessoaFisica: boolean,
+  documentoNormalizado: string,
   dadosComuns: DadosComuns
 ): Promise<number | null> {
-  // Parte contrária sem documento válido não pode ser processada
-  if (!documentoValido) {
-    console.warn(
-      `[PARTES] Parte contrária "${parte.nome}" sem documento válido (${
-        isPessoaFisica ? "CPF" : "CNPJ"
-      }) - ignorando`
-    );
-    return null;
-  }
-
   // Buscar entidade existente por CPF/CNPJ
   const entidadeExistente = isPessoaFisica
     ? await buscarParteContrariaPorCPF(documentoNormalizado)
@@ -294,6 +312,90 @@ async function processarParteContraria(
     );
     return result.parteContraria?.id ?? null;
   }
+}
+
+/**
+ * Processa parte contrária sem documento válido
+ *
+ * Usado para casos especiais como:
+ * - Órgãos julgadores em mandados de segurança (Juízo da 3ª Vara, Tribunal, etc.)
+ * - Entidades públicas sem CNPJ cadastrado no PJE
+ */
+async function processarParteContrariaSemDocumento(
+  parte: PartePJE,
+  processo: ProcessoParaCaptura
+): Promise<number | null> {
+  console.log(
+    `[PARTES] Parte contrária "${parte.nome}" sem documento válido - usando busca por id_pessoa_pje`
+  );
+
+  // 1. Tentar encontrar entidade existente via cadastros_pje
+  const cadastroExistente = await buscarEntidadePorIdPessoaPJE({
+    id_pessoa_pje: parte.idPessoa,
+    sistema: "pje_trt",
+    tribunal: processo.trt,
+    grau:
+      processo.grau === "primeiro_grau" ? "primeiro_grau" : "segundo_grau",
+    tipo_entidade: "parte_contraria",
+  });
+
+  if (cadastroExistente && cadastroExistente.tipo_entidade === "parte_contraria") {
+    console.log(
+      `[PARTES] Parte contrária "${parte.nome}" encontrada via cadastros_pje: ID ${cadastroExistente.entidade_id}`
+    );
+    return cadastroExistente.entidade_id;
+  }
+
+  // 2. Criar nova entidade sem documento
+  const tipoPessoaInferido = inferirTipoPessoaParteContraria(parte.nome);
+
+  const params = {
+    nome: parte.nome,
+    tipo_pessoa: tipoPessoaInferido,
+    emails: parte.emails.length > 0 ? parte.emails : undefined,
+    ddd_celular: parte.telefones[0]?.ddd || undefined,
+    numero_celular: parte.telefones[0]?.numero || undefined,
+    ddd_residencial: parte.telefones[1]?.ddd || undefined,
+    numero_residencial: parte.telefones[1]?.numero || undefined,
+    ativo: true,
+    // Documento vazio - será null no banco
+    cpf: tipoPessoaInferido === "pf" ? undefined : undefined,
+    cnpj: tipoPessoaInferido === "pj" ? undefined : undefined,
+  };
+
+  const result = await withRetry(
+    () => criarParteContrariaSemDocumento(params as CriarParteContrariaPFParams | CriarParteContrariaPJParams),
+    {
+      maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+      baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+    }
+  );
+
+  if (result.parteContraria) {
+    console.log(
+      `[PARTES] Parte contrária "${parte.nome}" criada sem documento: ID ${result.parteContraria.id}`
+    );
+    return result.parteContraria.id;
+  }
+
+  throw new PersistenceError(
+    "Erro ao criar parte contrária sem documento: resultado inesperado",
+    "insert",
+    "parte_contraria",
+    { parte: parte.nome, idPessoa: parte.idPessoa }
+  );
+}
+
+/**
+ * Infere tipo de pessoa (PF ou PJ) para parte contrária baseado no nome
+ * Heurística: órgãos julgadores, ministérios, autarquias, etc são PJ
+ */
+function inferirTipoPessoaParteContraria(nome: string): "pf" | "pj" {
+  const pareceSerPJ =
+    /^(JU[ÍI]ZO|JUIZADO|VARA|TRIBUNAL|TRT|TST|STF|STJ|MINIST[ÉE]RIO|MINISTERIO|UNI[ÃA]O|UNIAO|ESTADO|MUNIC[ÍI]PIO|MUNICIPIO|INSTITUTO|INSS|IBAMA|ANVISA|RECEITA|FAZENDA|FUNDA[ÇC][ÃA]O|FUNDACAO|AUTARQUIA|EMPRESA|[ÓO]RG[ÃA]O|ORGAO|SECRETARIA|PREFEITURA|GOVERNO|C[ÂA]MARA|CAMARA|SENADO|ASSEMBL[ÉE]IA|ASSEMBLEIA)/i.test(
+      nome.trim()
+    );
+  return pareceSerPJ ? "pj" : "pf";
 }
 
 /**

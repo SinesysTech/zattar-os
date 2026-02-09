@@ -65,7 +65,7 @@ import type { Pericia } from '@/features/captura/types/pericias-types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
 import { salvarPericias, type SalvarPericiasResult } from '../persistence/pericias-persistence.service';
-import { salvarAcervo } from '../persistence/acervo-persistence.service';
+import { salvarAcervoBatch } from '../persistence/acervo-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import {
@@ -601,7 +601,7 @@ export async function capturaCombinada(
 
         if (processosPorOrigem.arquivado.length > 0) {
           try {
-            const persistenciaArquivados = await salvarAcervo({
+            const persistenciaArquivados = await salvarAcervoBatch({
               processos: processosPorOrigem.arquivado,
               advogadoId: advogadoDb.id,
               origem: 'arquivado',
@@ -618,7 +618,7 @@ export async function capturaCombinada(
 
         if (processosPorOrigem.acervo_geral.length > 0) {
           try {
-            const persistenciaAcervo = await salvarAcervo({
+            const persistenciaAcervo = await salvarAcervoBatch({
               processos: processosPorOrigem.acervo_geral,
               advogadoId: advogadoDb.id,
               origem: 'acervo_geral',
@@ -689,7 +689,7 @@ export async function capturaCombinada(
             });
 
             try {
-              const persistenciaMinimos = await salvarAcervo({
+              const persistenciaMinimos = await salvarAcervoBatch({
                 processos: processosMinimos,
                 advogadoId: advogadoDb.id,
                 origem: 'acervo_geral',

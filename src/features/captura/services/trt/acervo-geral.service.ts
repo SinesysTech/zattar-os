@@ -51,7 +51,7 @@ import {
   obterTotalizadoresAcervoGeral,
 } from '@/features/captura/pje-trt';
 import type { Processo } from '../../types/types';
-import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
+import { salvarAcervoBatch, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import { buscarDadosComplementaresProcessos } from './dados-complementares.service';
@@ -206,7 +206,7 @@ export async function acervoGeralCapture(
     let mapeamentoIds = new Map<number, number>();
 
     try {
-      persistencia = await salvarAcervo({
+      persistencia = await salvarAcervoBatch({
         processos,
         advogadoId: advogadoDb.id,
         origem: 'acervo_geral',

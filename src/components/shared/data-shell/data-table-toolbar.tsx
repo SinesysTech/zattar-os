@@ -27,6 +27,8 @@ import {
 export interface DataTableToolbarProps<TData> {
   table?: Table<TData>;
   tableId?: string;
+  /** Título da página (exibido na linha 1, acima da toolbar) */
+  title?: string;
   onExport?: (format: 'csv' | 'xlsx' | 'json') => void | Promise<void>;
   density?: 'compact' | 'standard' | 'relaxed';
   onDensityChange?: (density: 'compact' | 'standard' | 'relaxed') => void;
@@ -60,6 +62,7 @@ export interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
   table,
   tableId,
+  title,
   onExport,
   density = 'standard',
   onDensityChange,
@@ -161,12 +164,28 @@ export function DataTableToolbar<TData>({
       aria-label="Controles da tabela"
       {...(tableId && { 'aria-controls': tableId })}
       data-slot="data-table-toolbar"
-      className="py-4"
     >
-      <div className="flex items-center gap-4">
+      {/* Linha 1: Título à esquerda, Botão de ação à direita */}
+      {(title || actionButton) && (
+        <div className="flex items-center justify-between py-4">
+          {title && (
+            <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+          )}
+          {!title && <div />}
+          {actionButton && (
+            <Button className="h-9" onClick={actionButton.onClick}>
+              {actionButton.icon ?? <Plus className="h-4 w-4" />}
+              {actionButton.label}
+            </Button>
+          )}
+        </div>
+      )}
+
+      {/* Linha 2: Filtros à esquerda, Colunas + Ações à direita */}
+      <div className="flex items-center gap-4 pb-4">
         {/* Lado esquerdo: SearchBox + Filtros */}
         <div className="flex items-center gap-2 flex-1">
-          <div className="relative max-w-md">
+          <div className="relative w-80">
             <Search
               className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
@@ -188,7 +207,7 @@ export function DataTableToolbar<TData>({
                 }
                 table?.setGlobalFilter(value);
               }}
-              className="w-full pl-9 bg-white"
+              className="h-9 w-full pl-9 bg-card"
             />
           </div>
 
@@ -210,7 +229,7 @@ export function DataTableToolbar<TData>({
                     <Button
                       variant="outline"
                       size="icon"
-                      className="bg-white"
+                      className="h-9 w-9 bg-card"
                       aria-label="Exportar dados"
                     >
                       <Download className="h-4 w-4" aria-hidden="true" />
@@ -242,7 +261,7 @@ export function DataTableToolbar<TData>({
                     <Button
                       variant="outline"
                       size="icon"
-                      className="bg-white"
+                      className="h-9 w-9 bg-card"
                       aria-label="Configurações de densidade"
                     >
                       <Settings2 className="h-4 w-4" aria-hidden="true" />
@@ -274,13 +293,12 @@ export function DataTableToolbar<TData>({
             </DropdownMenu>
           )}
 
-          {/* Botão de Colunas - separado */}
+          {/* Botão de Colunas - apenas ícone */}
           {table && visibleColumns.length > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="bg-white">
+                <Button variant="outline" size="icon" className="h-9 w-9 bg-card" aria-label="Visibilidade de colunas">
                   <Columns className="h-4 w-4" />
-                  <span className="hidden md:inline">Colunas</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -304,14 +322,6 @@ export function DataTableToolbar<TData>({
                 })}
               </DropdownMenuContent>
             </DropdownMenu>
-          )}
-
-          {/* Botão de ação primária (ex: "Novo Cliente") */}
-          {actionButton && (
-            <Button onClick={actionButton.onClick}>
-              {actionButton.icon ?? <Plus className="h-4 w-4" />}
-              {actionButton.label}
-            </Button>
           )}
         </div>
       </div>

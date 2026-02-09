@@ -6,40 +6,24 @@
  *
  * NOTA: Representantes são sempre advogados (pessoas físicas) com CPF.
  * O modelo foi deduplicado - um registro por CPF, vínculos via processo_partes.
+ *
+ * Implementação seguindo o padrão DataShell.
  */
 
 import * as React from 'react';
 import Link from 'next/link';
-import {
-  useReactTable,
-  getCoreRowModel,
-  getSortedRowModel,
-  flexRender,
-  type ColumnDef,
-  type SortingState,
-  type VisibilityState,
-} from '@tanstack/react-table';
+import type { Table as TanstackTable, ColumnDef, SortingState } from '@tanstack/react-table';
 import { useDebounce } from '@/hooks/use-debounce';
+import {
+  DataShell,
+  DataTable,
+  DataTableToolbar,
+  DataPagination,
+} from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Eye, Pencil, Settings2 } from 'lucide-react';
+import { Eye, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ProcessoRelacionado } from '../../types';
 
@@ -199,35 +183,36 @@ function RepresentanteActions({
 }
 
 export function RepresentantesTableWrapper() {
-  const [busca, setBusca] = React.useState('');
-  const [pagina, setPagina] = React.useState(0);
-  const [limite] = React.useState(50);
+  const [table, setTable] = React.useState<TanstackTable<RepresentanteComProcessos> | null>(null);
 
-  // Estados para diálogos
+  // Pagination
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(50);
+
+  // Search & Filters
+  const [globalFilter, setGlobalFilter] = React.useState('');
+  const [ufOab, setUfOab] = React.useState<string>('all');
+
+  // Table state
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  // Dialog state
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [representanteParaEditar, setRepresentanteParaEditar] = React.useState<RepresentanteComProcessos | null>(null);
 
-  // Filtros
-  const [ufOab, setUfOab] = React.useState<string>('all');
-
-  // TanStack Table states
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-
-  // Debounce da busca
-  const buscaDebounced = useDebounce(busca, 500);
+  const buscaDebounced = useDebounce(globalFilter, 500);
 
   // Parâmetros para buscar representantes
   const params = React.useMemo(() => {
     return {
-      pagina: pagina + 1, // API usa 1-indexed
-      limite,
+      pagina: pageIndex + 1, // API usa 1-indexed
+      limite: pageSize,
       busca: buscaDebounced || undefined,
       uf_oab: ufOab !== 'all' ? ufOab : undefined,
       incluirProcessos: true, // Incluir processos relacionados
     };
-  }, [pagina, limite, buscaDebounced, ufOab]);
+  }, [pageIndex, pageSize, buscaDebounced, ufOab]);
 
   const { representantes, paginacao, isLoading, error, refetch } = useRepresentantes(params);
 
@@ -339,22 +324,6 @@ export function RepresentantesTableWrapper() {
     [handleEdit]
   );
 
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const table = useReactTable({
-    data: representantes,
-    columns,
-    state: {
-      sorting,
-      columnVisibility,
-    },
-    onSortingChange: setSorting,
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    manualPagination: true,
-    pageCount: paginacao?.totalPaginas ?? 0,
-  });
-
   const handleCreateSuccess = React.useCallback(() => {
     setCreateOpen(false);
     refetch();
@@ -370,166 +339,78 @@ export function RepresentantesTableWrapper() {
   const totalPages = paginacao?.totalPaginas ?? 0;
 
   return (
-    <div className="space-y-4">
-      {/* Toolbar */}
-      <div className="flex items-center gap-4 py-4">
-        <Input
-          placeholder="Buscar por nome, CPF ou OAB..."
-          value={busca}
-          onChange={(e) => {
-            setBusca(e.target.value);
-            setPagina(0);
+    <>
+      <DataShell
+        header={
+          table ? (
+            <DataTableToolbar
+              table={table}
+              title="Representantes"
+              searchValue={globalFilter}
+              onSearchValueChange={(value) => {
+                setGlobalFilter(value);
+                setPageIndex(0);
+              }}
+              searchPlaceholder="Buscar representantes..."
+              actionButton={{
+                label: 'Novo Representante',
+                onClick: () => setCreateOpen(true),
+              }}
+              filtersSlot={
+                <FilterPopover
+                  label="UF OAB"
+                  value={ufOab}
+                  onValueChange={(val) => {
+                    setUfOab(val);
+                    setPageIndex(0);
+                  }}
+                  options={UFS_BRASIL.map((uf) => ({ value: uf, label: uf }))}
+                  defaultValue="all"
+                />
+              }
+            />
+          ) : (
+            <div className="p-6" />
+          )
+        }
+        footer={
+          totalPages > 0 ? (
+            <DataPagination
+              pageIndex={pageIndex}
+              pageSize={pageSize}
+              total={total}
+              totalPages={totalPages}
+              onPageChange={setPageIndex}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPageIndex(0);
+              }}
+              isLoading={isLoading}
+            />
+          ) : null
+        }
+      >
+        <DataTable
+          data={representantes}
+          columns={columns}
+          pagination={{
+            pageIndex,
+            pageSize,
+            total,
+            totalPages,
+            onPageChange: setPageIndex,
+            onPageSizeChange: setPageSize,
           }}
-          className="max-w-sm"
+          sorting={sorting}
+          onSortingChange={setSorting}
+          isLoading={isLoading}
+          error={error}
+          emptyMessage="Nenhum representante encontrado."
+          onTableReady={(t) => setTable(t as TanstackTable<RepresentanteComProcessos>)}
         />
+      </DataShell>
 
-        <FilterPopover
-          label="UF OAB"
-          value={ufOab}
-          onValueChange={(val) => {
-            setUfOab(val);
-            setPagina(0);
-          }}
-          options={UFS_BRASIL.map((uf) => ({ value: uf, label: uf }))}
-          defaultValue="all"
-        />
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="ml-auto">
-              <Settings2 className="mr-2 h-4 w-4" />
-              Colunas
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <Button onClick={() => setCreateOpen(true)}>
-          Novo Representante
-        </Button>
-      </div>
-
-      {/* Error Display */}
-      {error && (
-        <div className="mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-          {error}
-        </div>
-      )}
-
-      {/* Table */}
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              Array.from({ length: 5 }).map((_, index) => (
-                <TableRow key={index}>
-                  {columns.map((_, colIndex) => (
-                    <TableCell key={colIndex}>
-                      <Skeleton className="h-12 w-full" />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  {error ? (
-                    <div className="text-destructive">
-                      Erro ao carregar representantes: {error}
-                    </div>
-                  ) : (
-                    'Nenhum representante encontrado.'
-                  )}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex items-center justify-between pt-4">
-        <div className="text-sm text-muted-foreground">
-          {total > 0
-            ? `Mostrando ${pagina * limite + 1} a ${Math.min((pagina + 1) * limite, total)} de ${total} resultado${total !== 1 ? 's' : ''}`
-            : 'Nenhum resultado encontrado'}
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPagina((p) => Math.max(0, p - 1))}
-            disabled={pagina === 0 || isLoading}
-          >
-            Anterior
-          </Button>
-          <div className="text-sm text-muted-foreground">
-            Página {pagina + 1} de {totalPages || 1}
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPagina((p) => p + 1)}
-            disabled={pagina >= totalPages - 1 || isLoading}
-          >
-            Próximo
-          </Button>
-        </div>
-      </div>
-
+      {/* Dialogs */}
       <RepresentanteFormDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
@@ -549,6 +430,6 @@ export function RepresentantesTableWrapper() {
           mode="edit"
         />
       )}
-    </div>
+    </>
   );
 }
