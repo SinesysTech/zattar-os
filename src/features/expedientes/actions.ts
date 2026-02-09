@@ -266,7 +266,6 @@ export async function actionAtualizarExpediente(
     }
 
     revalidatePath("/expedientes");
-    revalidatePath(`/expedientes/${id}`);
     revalidatePath("/expedientes/semana");
     revalidatePath("/expedientes/mes");
     revalidatePath("/expedientes/ano");

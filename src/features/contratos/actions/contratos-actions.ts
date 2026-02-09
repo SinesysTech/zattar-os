@@ -962,7 +962,6 @@ export interface ResponsavelDetalhado {
 export interface SegmentoDetalhado {
   id: number;
   nome: string;
-  tipo: string;
 }
 
 export interface ContratoCompletoStats {
@@ -1054,7 +1053,7 @@ export async function actionBuscarContratoCompleto(
       contrato.segmentoId
         ? db
             .from("segmentos")
-            .select("id, nome, tipo")
+            .select("id, nome")
             .eq("id", contrato.segmentoId)
             .single()
         : Promise.resolve({ data: null, error: null }),
@@ -1130,7 +1129,6 @@ export async function actionBuscarContratoCompleto(
       segmento = {
         id: s.id as number,
         nome: s.nome as string,
-        tipo: s.tipo as string,
       };
     }
 
