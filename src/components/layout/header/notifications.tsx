@@ -40,7 +40,8 @@ const Notifications = () => {
       case "audiencia":
         return `/audiencias/${id}`;
       case "expediente":
-        return `/expedientes/${id}`;
+        // Expedientes não possuem página individual - ir para lista
+        return `/expedientes/lista`;
       case "pericia":
         return `/pericias/${id}`;
       default:

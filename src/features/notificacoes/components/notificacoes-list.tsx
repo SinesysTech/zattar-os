@@ -68,7 +68,8 @@ const getEntityLink = (
     case "audiencia":
       return `/audiencias/${entidadeId}`;
     case "expediente":
-      return `/expedientes/${entidadeId}`;
+      // Expedientes não possuem página individual - ir para lista
+      return `/expedientes/lista`;
     case "pericia":
       return `/pericias/${entidadeId}`;
     default:
