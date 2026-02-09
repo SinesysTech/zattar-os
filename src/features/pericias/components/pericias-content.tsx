@@ -8,14 +8,7 @@
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { addDays, subDays } from 'date-fns';
-import {
-  Search,
-  CalendarDays,
-  CalendarRange,
-  Calendar,
-  List,
-  Plus,
-} from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -26,11 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 import {
   TemporalViewLoading,
   MonthsCarousel,
   YearsCarousel,
+  ViewModePopover,
   type ViewType,
 } from '@/components/shared';
 
@@ -64,18 +57,6 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
   '/pericias/mes': 'mes',
   '/pericias/ano': 'ano',
 };
-
-const TABS_CONFIG = [
-  { value: 'lista' as ViewType, label: 'Lista', icon: List },
-  { value: 'semana' as ViewType, label: 'Dia', icon: CalendarDays },
-  { value: 'mes' as ViewType, label: 'Mês', icon: CalendarRange },
-  { value: 'ano' as ViewType, label: 'Ano', icon: Calendar },
-];
-
-const TABS_UI = TABS_CONFIG.map((tab) => {
-  const Icon = tab.icon;
-  return { value: tab.value, label: tab.label, icon: <Icon /> };
-});
 
 interface PericiasContentProps {
   visualizacao?: ViewType;
@@ -202,6 +183,14 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
   const handleCriarSuccess = React.useCallback(() => {
     setRefreshKey((prev) => prev + 1);
   }, []);
+
+  // ViewModePopover component para passar aos wrappers e renderFiltersBar
+  const viewModePopover = (
+    <ViewModePopover
+      value={visualizacao}
+      onValueChange={handleVisualizacaoChange}
+    />
+  );
 
   const renderCarousel = () => {
     switch (visualizacao) {
@@ -362,6 +351,11 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
           </SelectContent>
         </Select>
       </div>
+
+      {/* Ações à direita */}
+      <div className="flex items-center gap-2">
+        {viewModePopover}
+      </div>
     </div>
   );
 
@@ -403,7 +397,12 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
   const renderContent = () => {
     switch (visualizacao) {
       case 'lista':
-        return <PericiasTableWrapper />;
+        return (
+          <PericiasTableWrapper
+            viewModeSlot={viewModePopover}
+            onNovaPericiaClick={() => setCriarDialogOpen(true)}
+          />
+        );
       case 'mes':
         return (
           <PericiasCalendarMonth
@@ -427,6 +426,8 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
           <PericiasTableWrapper
             fixedDate={selectedDate}
             hideDateFilters={true}
+            viewModeSlot={viewModePopover}
+            onNovaPericiaClick={() => setCriarDialogOpen(true)}
             daysCarouselProps={{
               selectedDate,
               onDateSelect: setSelectedDate,
@@ -446,19 +447,15 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
 
   return (
     <div className="flex flex-col h-full gap-4">
-      <div className="flex items-center justify-between gap-4">
-        <AnimatedIconTabs
-          tabs={TABS_UI}
-          value={visualizacao}
-          onValueChange={handleVisualizacaoChange}
-          className="flex-1"
-          listClassName="flex-wrap"
-        />
-        <Button onClick={() => setCriarDialogOpen(true)} size="sm">
-          <Plus className="h-4 w-4 mr-2" />
-          Nova Perícia
-        </Button>
-      </div>
+      {/* Header com botão Nova Perícia (apenas para visualizações mes/ano que não têm DataTableToolbar) */}
+      {(visualizacao === 'mes' || visualizacao === 'ano') && (
+        <div className="flex items-center justify-end">
+          <Button onClick={() => setCriarDialogOpen(true)} size="sm">
+            <Plus className="h-4 w-4 mr-2" />
+            Nova Perícia
+          </Button>
+        </div>
+      )}
 
       {(visualizacao === 'mes' || visualizacao === 'ano') && (
         <div className="bg-card border border-border rounded-lg p-4">

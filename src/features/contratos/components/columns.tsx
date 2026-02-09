@@ -153,7 +153,7 @@ export function getContratosColumns(
                 {TIPO_COBRANCA_LABELS[contrato.tipoCobranca]}
               </SemanticBadge>
               {segmentoNome && (
-                <AppBadge variant="outline" className="text-xs px-2 py-0">
+                <AppBadge variant="outline" className="text-xs px-2 py-0.5">
                   {segmentoNome}
                 </AppBadge>
               )}
@@ -237,10 +237,20 @@ export function getContratosColumns(
         const nome = contrato.responsavelId
           ? usuariosMap.get(contrato.responsavelId)?.nome
           : null;
+
+        if (!nome) {
+          return <span className="text-sm text-muted-foreground">-</span>;
+        }
+
         return (
-          <span className="text-sm text-muted-foreground">
-            {nome || (contrato.responsavelId ? `Usuário #${contrato.responsavelId}` : '-')}
-          </span>
+          <div className="flex items-center gap-2">
+            <Avatar className="h-6 w-6 shrink-0">
+              <AvatarFallback className="text-[10px] font-medium">
+                {getInitials(nome)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-sm truncate">{nome}</span>
+          </div>
         );
       },
     },

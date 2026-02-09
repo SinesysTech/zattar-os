@@ -64,7 +64,7 @@ export function DataTableColumnHeader<TData, TValue>({
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 text-muted-foreground data-[state=open]:bg-accent"
+            className="-ml-3 h-8 text-muted-foreground data-[state=open]:bg-accent"
             aria-haspopup="menu"
             aria-label={`Ordenar por ${title}. Atual: ${
               sortDirection === 'asc'

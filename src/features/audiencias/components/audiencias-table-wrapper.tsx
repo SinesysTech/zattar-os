@@ -70,6 +70,8 @@ interface AudienciasTableWrapperProps {
   hideDateFilters?: boolean;
   /** Props para renderizar o DaysCarousel dentro do wrapper */
   daysCarouselProps?: DaysCarouselProps;
+  /** Slot para o seletor de modo de visualização (ViewModePopover) */
+  viewModeSlot?: React.ReactNode;
 }
 
 type StatusFilterType = 'todas' | StatusAudiencia;
@@ -85,7 +87,7 @@ function getUsuarioNome(u: { id: number; nomeExibicao?: string; nomeCompleto?: s
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouselProps }: AudienciasTableWrapperProps) {
+export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouselProps, viewModeSlot }: AudienciasTableWrapperProps) {
   const router = useRouter();
 
   // ---------- Estado da Tabela (DataShell pattern) ----------
@@ -391,6 +393,7 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
                   label: 'Nova Audiência',
                   onClick: () => setIsNovoDialogOpen(true),
                 }}
+                viewModeSlot={viewModeSlot}
                 filtersSlot={
                   <>
                     {/* Status Filter */}

@@ -61,6 +61,8 @@ interface ExpedientesTableWrapperProps {
   hideDateFilters?: boolean;
   /** Props para renderizar o DaysCarousel dentro do wrapper */
   daysCarouselProps?: DaysCarouselProps;
+  /** Slot para o seletor de modo de visualização (ViewModePopover) */
+  viewModeSlot?: React.ReactNode;
 }
 
 type UsuarioOption = {
@@ -94,7 +96,7 @@ function getTipoNome(t: TipoExpedienteOption): string {
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilters, daysCarouselProps }: ExpedientesTableWrapperProps) {
+export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilters, daysCarouselProps, viewModeSlot }: ExpedientesTableWrapperProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -537,6 +539,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                   label: 'Novo Expediente',
                   onClick: () => setIsNovoDialogOpen(true),
                 }}
+                viewModeSlot={viewModeSlot}
                 filtersSlot={
                   <>
                     {/* Status Filter */}

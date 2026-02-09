@@ -52,6 +52,8 @@ interface PaginationInfo {
 interface AudienciasListWrapperProps {
   initialData?: Audiencia[];
   initialPagination?: PaginationInfo | null;
+  /** Slot para o seletor de modo de visualização (ViewModePopover) */
+  viewModeSlot?: React.ReactNode;
 }
 
 // =============================================================================
@@ -61,6 +63,7 @@ interface AudienciasListWrapperProps {
 export function AudienciasListWrapper({
   initialData = [],
   initialPagination = null,
+  viewModeSlot,
 }: AudienciasListWrapperProps) {
   // Data state
   const [audiencias, setAudiencias] = React.useState<AudienciaComResponsavel[]>(
@@ -243,6 +246,7 @@ export function AudienciasListWrapper({
                 label: 'Nova Audiência',
                 onClick: () => setCreateOpen(true),
               }}
+              viewModeSlot={viewModeSlot}
               filtersSlot={
                 <AudienciasListFilters
                   statusFiltro={statusFiltro}

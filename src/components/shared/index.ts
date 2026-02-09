@@ -112,3 +112,11 @@ export type {
   TemporalViewLoadingProps,
   TemporalViewErrorProps,
 } from './temporal-view-shell';
+
+// =============================================================================
+// SELETOR DE VISUALIZAÇÃO
+// =============================================================================
+
+export { ViewModePopover } from './view-mode-popover';
+
+export type { ViewModePopoverProps, ViewModeOption } from './view-mode-popover';

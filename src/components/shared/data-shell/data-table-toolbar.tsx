@@ -33,6 +33,8 @@ export interface DataTableToolbarProps<TData> {
   density?: 'compact' | 'standard' | 'relaxed';
   onDensityChange?: (density: 'compact' | 'standard' | 'relaxed') => void;
   actionSlot?: React.ReactNode;
+  /** Slot para o seletor de modo de visualização (ViewModePopover) - renderizado antes do botão de export */
+  viewModeSlot?: React.ReactNode;
   searchValue?: string;
   onSearchValueChange?: (value: string) => void;
   searchPlaceholder?: string;
@@ -67,6 +69,7 @@ export function DataTableToolbar<TData>({
   density = 'standard',
   onDensityChange,
   actionSlot,
+  viewModeSlot,
   searchValue,
   onSearchValueChange,
   searchPlaceholder = 'Buscar...',
@@ -219,6 +222,9 @@ export function DataTableToolbar<TData>({
         <div className="flex items-center gap-2">
           {/* Slot para ações adicionais (ex: ChatwootSyncButton) */}
           {actionSlot}
+
+          {/* Slot para seletor de visualização (ViewModePopover) */}
+          {viewModeSlot}
 
           {/* Botão de Exportar */}
           {(table || onExport) && (

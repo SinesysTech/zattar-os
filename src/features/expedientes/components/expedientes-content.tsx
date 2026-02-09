@@ -21,14 +21,7 @@ import {
   addDays,
   subDays,
 } from 'date-fns';
-import {
-  Search,
-  Settings,
-  CalendarDays,
-  CalendarRange,
-  Calendar,
-  List,
-} from 'lucide-react';
+import { Search, Settings } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,9 +35,9 @@ import {
   TemporalViewLoading,
   MonthsCarousel,
   YearsCarousel,
+  ViewModePopover,
   type ViewType,
 } from '@/components/shared';
-import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 
 import { TiposExpedientesList } from '@/features/tipos-expedientes';
 import { ExpedientesTableWrapper } from './expedientes-table-wrapper';
@@ -69,26 +62,6 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
   '/expedientes/ano': 'ano',
   '/expedientes/lista': 'lista',
 };
-
-// =============================================================================
-// TABS CONFIGURAÇÃO
-// =============================================================================
-
-const TABS_CONFIG = [
-  { value: 'semana' as ViewType, label: 'Dia', icon: CalendarDays },
-  { value: 'mes' as ViewType, label: 'Mês', icon: CalendarRange },
-  { value: 'ano' as ViewType, label: 'Ano', icon: Calendar },
-  { value: 'lista' as ViewType, label: 'Lista', icon: List },
-];
-
-const TABS_UI = TABS_CONFIG.map((tab) => {
-  const Icon = tab.icon;
-  return {
-    value: tab.value,
-    label: tab.label,
-    icon: <Icon />,
-  };
-});
 
 // =============================================================================
 // TIPOS
@@ -243,6 +216,14 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
     }
     setVisualizacao(viewValue);
   }, [pathname, router]);
+
+  // ViewModePopover component para passar aos wrappers e renderFiltersBar
+  const viewModePopover = (
+    <ViewModePopover
+      value={visualizacao}
+      onValueChange={handleVisualizacaoChange}
+    />
+  );
 
   // =============================================================================
   // CARROSSEL BASEADO NA VISUALIZAÇÃO
@@ -418,20 +399,26 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         </Select>
       </div>
 
-      {/* Configurações */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9"
-            onClick={() => setIsSettingsOpen(true)}
-          >
-            <Settings className="h-4 w-4" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Configurações</TooltipContent>
-      </Tooltip>
+      {/* Ações à direita */}
+      <div className="flex items-center gap-2">
+        {/* View Mode Popover */}
+        {viewModePopover}
+
+        {/* Configurações */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9"
+              onClick={() => setIsSettingsOpen(true)}
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Configurações</TooltipContent>
+        </Tooltip>
+      </div>
     </div>
   );
 
@@ -442,7 +429,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   const renderContent = () => {
     switch (visualizacao) {
       case 'lista':
-        return <ExpedientesTableWrapper />;
+        return <ExpedientesTableWrapper viewModeSlot={viewModePopover} />;
 
       case 'mes':
         return (
@@ -469,6 +456,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
           <ExpedientesTableWrapper
             fixedDate={selectedDate}
             hideDateFilters={true}
+            viewModeSlot={viewModePopover}
             daysCarouselProps={{
               selectedDate,
               onDateSelect: setSelectedDate,
@@ -489,15 +477,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
 
   return (
     <div className="flex flex-col h-full gap-4">
-      {/* Tabs estilo Partes (Tabs02 - selecionado roxo) */}
-      <AnimatedIconTabs
-        tabs={TABS_UI}
-        value={visualizacao}
-        onValueChange={handleVisualizacaoChange}
-        className="w-full"
-        listClassName="flex-wrap"
-      />
-
       {/* Carrossel com container branco (apenas para mês e ano) */}
       {(visualizacao === 'mes' || visualizacao === 'ano') && (
         <div className="bg-card border border-border rounded-lg p-4">

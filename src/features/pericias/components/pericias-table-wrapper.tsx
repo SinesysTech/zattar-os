@@ -63,6 +63,10 @@ interface PericiasTableWrapperProps {
   fixedDate?: Date;
   hideDateFilters?: boolean;
   daysCarouselProps?: DaysCarouselProps;
+  /** Slot para o seletor de modo de visualização (ViewModePopover) */
+  viewModeSlot?: React.ReactNode;
+  /** Callback para abrir o dialog de criar nova perícia */
+  onNovaPericiaClick?: () => void;
 }
 
 type ResponsavelFilterType = 'todos' | 'sem_responsavel' | number;
@@ -83,6 +87,8 @@ export function PericiasTableWrapper({
   fixedDate,
   hideDateFilters,
   daysCarouselProps,
+  viewModeSlot,
+  onNovaPericiaClick,
 }: PericiasTableWrapperProps) {
   const router = useRouter();
 
@@ -406,6 +412,11 @@ export function PericiasTableWrapper({
                 setPageIndex(0);
               }}
               searchPlaceholder="Buscar perícias..."
+              viewModeSlot={viewModeSlot}
+              actionButton={onNovaPericiaClick ? {
+                label: 'Nova Perícia',
+                onClick: onNovaPericiaClick,
+              } : undefined}
               filtersSlot={
                 <>
                   {/* Situação */}
