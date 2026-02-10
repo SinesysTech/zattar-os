@@ -67,7 +67,7 @@ export interface ProcessarParteResult {
 export async function processarParte(
   parte: PartePJE,
   tipoParte: TipoParteClassificacao,
-  processo: ProcessoParaCaptura
+  processo: ProcessoParaCaptura,
 ): Promise<ProcessarParteResult | null> {
   const isPessoaFisica = parte.tipoDocumento === "CPF";
   const documento = parte.numeroDocumento;
@@ -83,9 +83,12 @@ export async function processarParte(
   const dadosCompletos = { ...dadosComuns, ...camposExtras };
 
   // Validar se o documento tem comprimento correto
-  const tipoDoc = parte.tipoDocumento === "CPF" || parte.tipoDocumento === "CNPJ"
-    ? parte.tipoDocumento
-    : (isPessoaFisica ? "CPF" : "CNPJ");
+  const tipoDoc =
+    parte.tipoDocumento === "CPF" || parte.tipoDocumento === "CNPJ"
+      ? parte.tipoDocumento
+      : isPessoaFisica
+        ? "CPF"
+        : "CNPJ";
   const documentoValido = temDocumentoValido(documento, tipoDoc);
 
   try {
@@ -98,7 +101,7 @@ export async function processarParte(
           isPessoaFisica,
           documentoNormalizado,
           documentoValido,
-          dadosCompletos
+          dadosCompletos,
         );
         break;
 
@@ -109,7 +112,7 @@ export async function processarParte(
           documentoNormalizado,
           documentoValido,
           dadosComuns,
-          processo
+          processo,
         );
         break;
 
@@ -120,7 +123,7 @@ export async function processarParte(
           documentoNormalizado,
           documentoValido,
           dadosCompletos,
-          processo
+          processo,
         );
         break;
     }
@@ -139,7 +142,7 @@ export async function processarParte(
       {
         parte: parte.nome,
         error: error instanceof Error ? error.message : String(error),
-      }
+      },
     );
   }
 }
@@ -178,14 +181,14 @@ async function processarCliente(
   isPessoaFisica: boolean,
   documentoNormalizado: string,
   documentoValido: boolean,
-  dadosCompletos: DadosComuns & Record<string, unknown>
+  dadosCompletos: DadosComuns & Record<string, unknown>,
 ): Promise<number | null> {
   // Cliente sem documento válido não pode ser processado
   if (!documentoValido) {
     console.warn(
       `[PARTES] Cliente "${parte.nome}" sem documento válido (${
         isPessoaFisica ? "CPF" : "CNPJ"
-      }) - ignorando`
+      }) - ignorando`,
     );
     return null;
   }
@@ -213,7 +216,7 @@ async function processarCliente(
       {
         maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
         baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-      }
+      },
     );
     return result.cliente?.id ?? null;
   } else {
@@ -228,7 +231,7 @@ async function processarCliente(
       {
         maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
         baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-      }
+      },
     );
     return result.cliente?.id ?? null;
   }
@@ -247,14 +250,14 @@ async function processarParteContraria(
   documentoNormalizado: string,
   documentoValido: boolean,
   dadosComuns: DadosComuns,
-  processo: ProcessoParaCaptura
+  processo: ProcessoParaCaptura,
 ): Promise<number | null> {
   if (documentoValido) {
     return await processarParteContrariaComDocumento(
       parte,
       isPessoaFisica,
       documentoNormalizado,
-      dadosComuns
+      dadosComuns,
     );
   } else {
     return await processarParteContrariaSemDocumento(parte, processo);
@@ -268,7 +271,7 @@ async function processarParteContrariaComDocumento(
   parte: PartePJE,
   isPessoaFisica: boolean,
   documentoNormalizado: string,
-  dadosComuns: DadosComuns
+  dadosComuns: DadosComuns,
 ): Promise<number | null> {
   // Buscar entidade existente por CPF/CNPJ
   const entidadeExistente = isPessoaFisica
@@ -293,7 +296,7 @@ async function processarParteContrariaComDocumento(
       {
         maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
         baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-      }
+      },
     );
     return result.parteContraria?.id ?? null;
   } else {
@@ -308,7 +311,7 @@ async function processarParteContrariaComDocumento(
       {
         maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
         baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-      }
+      },
     );
     return result.parteContraria?.id ?? null;
   }
@@ -323,10 +326,10 @@ async function processarParteContrariaComDocumento(
  */
 async function processarParteContrariaSemDocumento(
   parte: PartePJE,
-  processo: ProcessoParaCaptura
+  processo: ProcessoParaCaptura,
 ): Promise<number | null> {
   console.log(
-    `[PARTES] Parte contrária "${parte.nome}" sem documento válido - usando busca por id_pessoa_pje`
+    `[PARTES] Parte contrária "${parte.nome}" sem documento válido - usando busca por id_pessoa_pje`,
   );
 
   // 1. Tentar encontrar entidade existente via cadastros_pje
@@ -334,14 +337,16 @@ async function processarParteContrariaSemDocumento(
     id_pessoa_pje: parte.idPessoa,
     sistema: "pje_trt",
     tribunal: processo.trt,
-    grau:
-      processo.grau === "primeiro_grau" ? "primeiro_grau" : "segundo_grau",
+    grau: processo.grau === "primeiro_grau" ? "primeiro_grau" : "segundo_grau",
     tipo_entidade: "parte_contraria",
   });
 
-  if (cadastroExistente && cadastroExistente.tipo_entidade === "parte_contraria") {
+  if (
+    cadastroExistente &&
+    cadastroExistente.tipo_entidade === "parte_contraria"
+  ) {
     console.log(
-      `[PARTES] Parte contrária "${parte.nome}" encontrada via cadastros_pje: ID ${cadastroExistente.entidade_id}`
+      `[PARTES] Parte contrária "${parte.nome}" encontrada via cadastros_pje: ID ${cadastroExistente.entidade_id}`,
     );
     return cadastroExistente.entidade_id;
   }
@@ -364,16 +369,21 @@ async function processarParteContrariaSemDocumento(
   };
 
   const result = await withRetry(
-    () => criarParteContrariaSemDocumento(params as CriarParteContrariaPFParams | CriarParteContrariaPJParams),
+    () =>
+      criarParteContrariaSemDocumento(
+        params as unknown as
+          | CriarParteContrariaPFParams
+          | CriarParteContrariaPJParams,
+      ),
     {
       maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
       baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-    }
+    },
   );
 
   if (result.parteContraria) {
     console.log(
-      `[PARTES] Parte contrária "${parte.nome}" criada sem documento: ID ${result.parteContraria.id}`
+      `[PARTES] Parte contrária "${parte.nome}" criada sem documento: ID ${result.parteContraria.id}`,
     );
     return result.parteContraria.id;
   }
@@ -382,7 +392,7 @@ async function processarParteContrariaSemDocumento(
     "Erro ao criar parte contrária sem documento: resultado inesperado",
     "insert",
     "parte_contraria",
-    { parte: parte.nome, idPessoa: parte.idPessoa }
+    { parte: parte.nome, idPessoa: parte.idPessoa },
   );
 }
 
@@ -393,7 +403,7 @@ async function processarParteContrariaSemDocumento(
 function inferirTipoPessoaParteContraria(nome: string): "pf" | "pj" {
   const pareceSerPJ =
     /^(JU[ÍI]ZO|JUIZADO|VARA|TRIBUNAL|TRT|TST|STF|STJ|MINIST[ÉE]RIO|MINISTERIO|UNI[ÃA]O|UNIAO|ESTADO|MUNIC[ÍI]PIO|MUNICIPIO|INSTITUTO|INSS|IBAMA|ANVISA|RECEITA|FAZENDA|FUNDA[ÇC][ÃA]O|FUNDACAO|AUTARQUIA|EMPRESA|[ÓO]RG[ÃA]O|ORGAO|SECRETARIA|PREFEITURA|GOVERNO|C[ÂA]MARA|CAMARA|SENADO|ASSEMBL[ÉE]IA|ASSEMBLEIA)/i.test(
-      nome.trim()
+      nome.trim(),
     );
   return pareceSerPJ ? "pj" : "pf";
 }
@@ -407,14 +417,14 @@ async function processarTerceiro(
   documentoNormalizado: string,
   documentoValido: boolean,
   dadosCompletos: DadosComuns & Record<string, unknown>,
-  processo: ProcessoParaCaptura
+  processo: ProcessoParaCaptura,
 ): Promise<number | null> {
   if (documentoValido) {
     return await processarTerceiroComDocumento(
       parte,
       isPessoaFisica,
       documentoNormalizado,
-      dadosCompletos
+      dadosCompletos,
     );
   } else {
     return await processarTerceiroSemDocumento(parte, processo);
@@ -428,7 +438,7 @@ async function processarTerceiroComDocumento(
   parte: PartePJE,
   isPessoaFisica: boolean,
   documentoNormalizado: string,
-  dadosCompletos: DadosComuns & Record<string, unknown>
+  dadosCompletos: DadosComuns & Record<string, unknown>,
 ): Promise<number | null> {
   // Buscar entidade existente por CPF/CNPJ
   const entidadeExistente = isPessoaFisica
@@ -461,12 +471,12 @@ async function processarTerceiroComDocumento(
         () =>
           upsertTerceiroByCPF(
             documentoNormalizado,
-            params as UpsertTerceiroPorCPFParams
+            params as UpsertTerceiroPorCPFParams,
           ),
         {
           maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
           baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-        }
+        },
       )
     : await withRetry<
         import("@/types").Result<{
@@ -477,12 +487,12 @@ async function processarTerceiroComDocumento(
         () =>
           upsertTerceiroByCNPJ(
             documentoNormalizado,
-            params as UpsertTerceiroPorCNPJParams
+            params as UpsertTerceiroPorCNPJParams,
           ),
         {
           maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
           baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-        }
+        },
       );
 
   if (result.success && result.data?.terceiro) {
@@ -498,10 +508,10 @@ async function processarTerceiroComDocumento(
  */
 async function processarTerceiroSemDocumento(
   parte: PartePJE,
-  processo: ProcessoParaCaptura
+  processo: ProcessoParaCaptura,
 ): Promise<number | null> {
   console.log(
-    `[PARTES] Terceiro "${parte.nome}" sem documento válido - usando busca por id_pessoa_pje`
+    `[PARTES] Terceiro "${parte.nome}" sem documento válido - usando busca por id_pessoa_pje`,
   );
 
   // 1. Tentar encontrar entidade existente via cadastros_pje
@@ -509,14 +519,13 @@ async function processarTerceiroSemDocumento(
     id_pessoa_pje: parte.idPessoa,
     sistema: "pje_trt",
     tribunal: processo.trt,
-    grau:
-      processo.grau === "primeiro_grau" ? "primeiro_grau" : "segundo_grau",
+    grau: processo.grau === "primeiro_grau" ? "primeiro_grau" : "segundo_grau",
     tipo_entidade: "terceiro",
   });
 
   if (cadastroExistente && cadastroExistente.tipo_entidade === "terceiro") {
     console.log(
-      `[PARTES] Terceiro "${parte.nome}" encontrado via cadastros_pje: ID ${cadastroExistente.entidade_id}`
+      `[PARTES] Terceiro "${parte.nome}" encontrado via cadastros_pje: ID ${cadastroExistente.entidade_id}`,
     );
     return cadastroExistente.entidade_id;
   }
@@ -546,12 +555,12 @@ async function processarTerceiroSemDocumento(
     {
       maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
       baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-    }
+    },
   );
 
   if (result.terceiro) {
     console.log(
-      `[PARTES] Terceiro "${parte.nome}" criado sem documento: ID ${result.terceiro.id}`
+      `[PARTES] Terceiro "${parte.nome}" criado sem documento: ID ${result.terceiro.id}`,
     );
     return result.terceiro.id;
   }
@@ -560,7 +569,7 @@ async function processarTerceiroSemDocumento(
     "Erro ao criar terceiro sem documento: resultado inesperado",
     "insert",
     "terceiro",
-    { parte: parte.nome, idPessoa: parte.idPessoa }
+    { parte: parte.nome, idPessoa: parte.idPessoa },
   );
 }
 
@@ -571,7 +580,7 @@ async function processarTerceiroSemDocumento(
 function inferirTipoPessoa(nome: string): "pf" | "pj" {
   const pareceSerPJ =
     /^(MINISTÉRIO|MINISTERIO|UNIÃO|UNIAO|ESTADO|MUNICÍPIO|MUNICIPIO|INSTITUTO|INSS|IBAMA|ANVISA|RECEITA|FAZENDA|FUNDAÇÃO|FUNDACAO|AUTARQUIA|EMPRESA|ÓRGÃO|ORGAO)/i.test(
-      nome.trim()
+      nome.trim(),
     );
   return pareceSerPJ ? "pj" : "pf";
 }
@@ -583,13 +592,13 @@ async function registrarCadastroPJE(
   entidadeId: number,
   tipoParte: TipoParteClassificacao,
   parte: PartePJE,
-  processo: ProcessoParaCaptura
+  processo: ProcessoParaCaptura,
 ): Promise<void> {
   try {
     // Validar que o tribunal está presente (campo obrigatório)
     if (!processo.trt) {
       throw new Error(
-        `Tribunal não informado para processo ${processo.id_pje}`
+        `Tribunal não informado para processo ${processo.id_pje}`,
       );
     }
 
@@ -607,7 +616,7 @@ async function registrarCadastroPJE(
     // Log erro mas não falha a captura - dados principais já salvos
     console.error(
       `Erro ao registrar em cadastros_pje para ${tipoParte} ${entidadeId}:`,
-      cadastroError
+      cadastroError,
     );
   }
 }
@@ -619,12 +628,12 @@ export async function registrarRepresentanteCadastroPJE(
   representanteId: number,
   idPessoaPje: number,
   dadosCompletos: Record<string, unknown> | undefined,
-  processo: ProcessoParaCaptura
+  processo: ProcessoParaCaptura,
 ): Promise<void> {
   try {
     if (!processo.trt) {
       throw new Error(
-        `Tribunal não informado para processo ${processo.id_pje}`
+        `Tribunal não informado para processo ${processo.id_pje}`,
       );
     }
 
@@ -642,7 +651,7 @@ export async function registrarRepresentanteCadastroPJE(
     // Log erro mas não falha a captura
     console.error(
       `Erro ao registrar representante em cadastros_pje:`,
-      cadastroError
+      cadastroError,
     );
   }
 }

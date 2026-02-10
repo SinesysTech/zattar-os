@@ -30,6 +30,7 @@ import {
   ProcessoStatusBadge,
   ProximaAudienciaPopover,
   ProcessoTagsDialog,
+  ProcessoForm,
 } from '@/features/processos/components';
 import { actionListarProcessos } from '@/features/processos/actions';
 import { type Tag, actionListarTagsDosProcessos } from '@/features/tags';
@@ -44,7 +45,7 @@ import {
 } from './processos-toolbar-filters';
 import { GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
-import { Eye, Lock, CheckCircle, XCircle, Link2, Settings, Search, Columns } from 'lucide-react';
+import { Eye, Lock, CheckCircle, XCircle, Link2, Settings, Search, Columns, Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
@@ -162,7 +163,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
   const dataProximaAudiencia = processo.dataProximaAudiencia;
 
   return (
-    <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,23.75rem)] group">
+    <div className="flex flex-col items-start justify-center gap-1.5 py-2 max-w-[min(92vw,23.75rem)] group">
       <div className="flex items-center gap-1.5 flex-wrap">
         <SemanticBadge category="tribunal" value={trt} className="w-fit text-xs">
           {trt}
@@ -299,16 +300,16 @@ function criarColunas(
     // =========================================================================
     {
       accessorKey: 'dataAutuacao',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Data Autuação" className="justify-center" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Data Autuação" />,
       cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-center text-sm">
+        <span className="text-sm text-muted-foreground whitespace-nowrap">
           {formatarData(row.original.dataAutuacao)}
-        </div>
+        </span>
       ),
       enableSorting: true,
-      size: 120,
+      size: 140,
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Data Autuação',
       },
     },
@@ -332,16 +333,16 @@ function criarColunas(
         const parteAutora = row.original.nomeParteAutoraOrigem || row.original.nomeParteAutora || '-';
         const parteRe = row.original.nomeParteReOrigem || row.original.nomeParteRe || '-';
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 py-2">
+          <div className="flex flex-col items-start justify-center gap-1.5 py-2">
             <ParteBadge
               polo="ATIVO"
-              className="block whitespace-normal wrap-break-word text-left font-normal"
+              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
             >
               {parteAutora}
             </ParteBadge>
             <ParteBadge
               polo="PASSIVO"
-              className="block whitespace-normal wrap-break-word text-left font-normal"
+              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
             >
               {parteRe}
             </ParteBadge>
@@ -361,7 +362,7 @@ function criarColunas(
       cell: ({ row }) => {
         const processoTags = tagsMap[row.original.id] || [];
         return (
-          <div className="min-h-10 flex items-center">
+          <div className="flex items-center py-2">
             <TagBadgeList
               tags={processoTags}
               maxVisible={3}
@@ -379,10 +380,10 @@ function criarColunas(
     },
     {
       id: 'responsavel',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" className="justify-center" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" />,
       cell: ({ row }) => {
         return (
-          <div className="min-h-10 flex items-center justify-center text-sm">
+          <div className="flex items-center py-2">
             <ProcessoResponsavelCell
               processo={row.original}
               usuarios={usuarios}
@@ -405,7 +406,7 @@ function criarColunas(
         // Fallback para ATIVO se status for nulo (cenário de migração de dados)
         const status = row.original.status;
         return (
-          <div className="min-h-10 flex items-center justify-start">
+          <div className="flex items-center py-2">
             <ProcessoStatusBadge status={status} className="text-xs" />
           </div>
         );
@@ -419,17 +420,17 @@ function criarColunas(
     },
     {
       id: 'acoes',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Ações" className="justify-center" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Ações" />,
       cell: ({ row }) => {
         const processo = row.original;
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center py-2">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link
                     href={`/processos/${processo.id}`}
-                    className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+                    className="inline-flex items-center justify-center h-8 w-8 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <Eye className="h-4 w-4" />
@@ -460,18 +461,16 @@ function criarColunas(
     {
       id: 'prioridade',
       accessorKey: 'prioridadeProcessual',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Prioridade" className="justify-center" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Prioridade" />,
       cell: ({ row }) => {
         const prioridade = row.original.prioridadeProcessual;
-        if (!prioridade) return <div className="min-h-10 flex items-center justify-center text-muted-foreground">-</div>;
+        if (!prioridade) return <span className="text-sm text-muted-foreground">-</span>;
 
         const variant = prioridade >= 3 ? 'destructive' : prioridade >= 2 ? 'warning' : 'secondary';
         return (
-          <div className="min-h-10 flex items-center justify-center">
-            <AppBadge variant={variant as 'destructive' | 'secondary'} className="text-xs">
-              {prioridade}
-            </AppBadge>
-          </div>
+          <AppBadge variant={variant as 'destructive' | 'secondary'} className="text-xs">
+            {prioridade}
+          </AppBadge>
         );
       },
       enableSorting: true,
@@ -486,11 +485,11 @@ function criarColunas(
     {
       id: 'qtde_autores',
       accessorKey: 'qtdeParteAutora',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Qtde Autores" className="justify-center" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Qtde Autores" />,
       cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-center text-sm">
+        <span className="text-sm text-muted-foreground">
           {row.original.qtdeParteAutora ?? '-'}
-        </div>
+        </span>
       ),
       enableSorting: true,
       size: 110,
@@ -504,11 +503,11 @@ function criarColunas(
     {
       id: 'qtde_reus',
       accessorKey: 'qtdeParteRe',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Qtde Réus" className="justify-center" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Qtde Réus" />,
       cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-center text-sm">
+        <span className="text-sm text-muted-foreground">
           {row.original.qtdeParteRe ?? '-'}
-        </div>
+        </span>
       ),
       enableSorting: true,
       size: 100,
@@ -522,20 +521,15 @@ function criarColunas(
     {
       id: 'juizo_digital',
       accessorKey: 'juizoDigital',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Juízo Digital" className="justify-center" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Juízo Digital" />,
       cell: ({ row }) => {
         const juizoDigital = row.original.juizoDigital;
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            {juizoDigital === true ? (
-              <CheckCircle className="h-4 w-4 text-emerald-600" />
-            ) : juizoDigital === false ? (
-              <XCircle className="h-4 w-4 text-muted-foreground" />
-            ) : (
-              <span className="text-muted-foreground">-</span>
-            )}
-          </div>
-        );
+        if (juizoDigital === true) {
+          return <CheckCircle className="h-4 w-4 text-emerald-600" />;
+        } else if (juizoDigital === false) {
+          return <XCircle className="h-4 w-4 text-muted-foreground" />;
+        }
+        return <span className="text-sm text-muted-foreground">-</span>;
       },
       enableSorting: true,
       size: 110,
@@ -549,11 +543,11 @@ function criarColunas(
     {
       id: 'data_arquivamento',
       accessorKey: 'dataArquivamento',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Arquivamento" className="justify-center" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Arquivamento" />,
       cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-center text-sm">
+        <span className="text-sm text-muted-foreground whitespace-nowrap">
           {formatarData(row.original.dataArquivamento || null)}
-        </div>
+        </span>
       ),
       enableSorting: true,
       size: 120,
@@ -569,18 +563,13 @@ function criarColunas(
     {
       id: 'tem_associacao',
       accessorKey: 'temAssociacao',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Associação" className="justify-center" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Associação" />,
       cell: ({ row }) => {
         const temAssociacao = row.original.temAssociacao;
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            {temAssociacao ? (
-              <Link2 className="h-4 w-4 text-blue-600" />
-            ) : (
-              <span className="text-muted-foreground">-</span>
-            )}
-          </div>
-        );
+        if (temAssociacao) {
+          return <Link2 className="h-4 w-4 text-blue-600" />;
+        }
+        return <span className="text-sm text-muted-foreground">-</span>;
       },
       enableSorting: true,
       size: 100,
@@ -594,24 +583,22 @@ function criarColunas(
     {
       id: 'origem',
       accessorKey: 'origem',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Origem" className="justify-center" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Origem" />,
       cell: ({ row }) => {
         const origem = row.original.origem;
-        if (!origem) return <div className="min-h-10 flex items-center justify-center text-muted-foreground">-</div>;
+        if (!origem) return <span className="text-sm text-muted-foreground">-</span>;
 
         const isArquivado = origem === 'arquivado';
         return (
-          <div className="min-h-10 flex items-center justify-center">
-            <AppBadge
-              variant={isArquivado ? 'secondary' : 'default'}
-              className={cn(
-                'text-xs',
-                !isArquivado && 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/25'
-              )}
-            >
-              {ORIGEM_LABELS[origem] || origem}
-            </AppBadge>
-          </div>
+          <AppBadge
+            variant={isArquivado ? 'secondary' : 'default'}
+            className={cn(
+              'text-xs',
+              !isArquivado && 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/25'
+            )}
+          >
+            {ORIGEM_LABELS[origem] || origem}
+          </AppBadge>
         );
       },
       enableSorting: true,
@@ -626,11 +613,11 @@ function criarColunas(
     {
       id: 'created_at',
       accessorKey: 'createdAt',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Criado Em" className="justify-center" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Criado Em" />,
       cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-center text-sm text-muted-foreground">
+        <span className="text-sm text-muted-foreground whitespace-nowrap">
           {formatarDataHora(row.original.createdAt || null)}
-        </div>
+        </span>
       ),
       enableSorting: true,
       size: 150,
@@ -644,11 +631,11 @@ function criarColunas(
     {
       id: 'updated_at',
       accessorKey: 'updatedAt',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Atualizado Em" className="justify-center" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Atualizado Em" />,
       cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-center text-sm text-muted-foreground">
+        <span className="text-sm text-muted-foreground whitespace-nowrap">
           {formatarDataHora(row.original.updatedAt || null)}
-        </div>
+        </span>
       ),
       enableSorting: true,
       size: 150,
@@ -731,6 +718,9 @@ export function ProcessosTableWrapper({
 
   // Estado do dialog de configuração de atribuição
   const [configAtribuicaoOpen, setConfigAtribuicaoOpen] = React.useState(false);
+
+  // Estado do dialog de criação de processo
+  const [createProcessoOpen, setCreateProcessoOpen] = React.useState(false);
 
   // Estado de tags dos processos
   const [tagsMap, setTagsMap] = React.useState<Record<number, Tag[]>>({});
@@ -913,9 +903,16 @@ export function ProcessosTableWrapper({
   return (
     <>
       <div className="w-full">
-        {/* Linha 1: Título à esquerda (sem botão de criar no Processos) */}
+        {/* Linha 1: Título à esquerda, botão de criar à direita */}
         <div className="flex items-center justify-between py-4">
           <h1 className="text-2xl font-semibold tracking-tight">Processos</h1>
+          <Button
+            className="h-9"
+            onClick={() => setCreateProcessoOpen(true)}
+          >
+            <Plus className="h-4 w-4" />
+            Novo Processo
+          </Button>
         </div>
 
         {/* Linha 2: Filtros à esquerda, Config + Colunas à direita */}
@@ -933,7 +930,7 @@ export function ProcessosTableWrapper({
                   setGlobalFilter(e.target.value);
                   setPageIndex(0);
                 }}
-                className="h-10 w-full pl-9 bg-card"
+                className="h-9 w-full pl-9 bg-card"
               />
             </div>
             <Combobox
@@ -947,7 +944,7 @@ export function ProcessosTableWrapper({
               searchPlaceholder="Buscar tribunal..."
               emptyText="Nenhum tribunal encontrado"
               multiple={true}
-              className="h-10 w-50 bg-card"
+              className="h-9 w-40 border-dashed bg-card"
             />
             <Select
               value={origemFilter}
@@ -956,11 +953,11 @@ export function ProcessosTableWrapper({
                 setPageIndex(0);
               }}
             >
-              <SelectTrigger className="h-10 w-37.5 bg-card">
+              <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
                 <SelectValue placeholder="Origem" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todas as Origens</SelectItem>
+                <SelectItem value="all">Todas</SelectItem>
                 <SelectItem value="acervo_geral">Acervo Geral</SelectItem>
                 <SelectItem value="arquivado">Arquivados</SelectItem>
               </SelectContent>
@@ -973,7 +970,7 @@ export function ProcessosTableWrapper({
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-10 bg-card"
+                    className="h-9 w-9 bg-card"
                     onClick={() => setConfigAtribuicaoOpen(true)}
                   >
                     <Settings className="h-4 w-4" />
@@ -985,9 +982,13 @@ export function ProcessosTableWrapper({
             {table && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="h-10 bg-card">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-9 w-9 bg-card"
+                    aria-label="Visibilidade de colunas"
+                  >
                     <Columns className="h-4 w-4" />
-                    <span className="hidden md:inline">Colunas</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -1027,26 +1028,24 @@ export function ProcessosTableWrapper({
             hasFilters={hasFilters}
           />
         ) : (
-          <div className="rounded-md border bg-card">
-            <DataTable
-              columns={colunas}
-              data={processos || []}
-              isLoading={isLoading}
-              error={error}
-              columnVisibility={columnVisibility}
-              onColumnVisibilityChange={setColumnVisibility}
-              onTableReady={(t) => setTable(t as TanstackTable<ProcessoUnificado>)}
-              emptyMessage="Nenhum processo encontrado."
-              pagination={{
-                pageIndex,
-                pageSize,
-                total,
-                totalPages,
-                onPageChange: setPageIndex,
-                onPageSizeChange: setPageSize,
-              }}
-            />
-          </div>
+          <DataTable
+            columns={colunas}
+            data={processos || []}
+            isLoading={isLoading}
+            error={error}
+            columnVisibility={columnVisibility}
+            onColumnVisibilityChange={setColumnVisibility}
+            onTableReady={(t) => setTable(t as TanstackTable<ProcessoUnificado>)}
+            emptyMessage="Nenhum processo encontrado."
+            pagination={{
+              pageIndex,
+              pageSize,
+              total,
+              totalPages,
+              onPageChange: setPageIndex,
+              onPageSizeChange: setPageSize,
+            }}
+          />
         )}
 
         <TablePagination
@@ -1076,6 +1075,13 @@ export function ProcessosTableWrapper({
         processo={processoParaTags}
         tagsAtuais={processoParaTags ? (tagsMap[processoParaTags.id] || []) : []}
         onSuccess={handleTagsUpdated}
+      />
+
+      <ProcessoForm
+        open={createProcessoOpen}
+        onOpenChange={setCreateProcessoOpen}
+        onSuccess={() => refetch()}
+        mode="create"
       />
     </>
   );

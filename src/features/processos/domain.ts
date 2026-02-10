@@ -344,12 +344,61 @@ export const updateProcessoSchema = z.object({
     .optional(),
 });
 
+/**
+ * Schema para criacao MANUAL de processo (sem dados PJE)
+ *
+ * Campos obrigatorios simplificados:
+ * - numeroProcesso, trt, grau, nomeParteAutora, nomeParteRe
+ *
+ * Campos opcionais:
+ * - classeJudicial, descricaoOrgaoJulgador, dataAutuacao, responsavelId
+ *
+ * Campos gerados automaticamente pela action:
+ * - idPje (timestamp), advogadoId (1), numero (derivado do CNJ)
+ * - codigoStatusProcesso (ATIVO), origem (acervo_geral)
+ */
+export const createProcessoManualSchema = z.object({
+  // Campos obrigatórios
+  numeroProcesso: z
+    .string()
+    .min(1, "Número do processo é obrigatório")
+    .regex(
+      REGEX_NUMERO_CNJ,
+      "Número do processo deve seguir o padrão CNJ (NNNNNNN-DD.AAAA.J.TT.OOOO)"
+    ),
+  trt: z.string().min(1, "TRT é obrigatório"),
+  grau: grauProcessoSchema,
+  nomeParteAutora: z.string().min(1, "Nome da parte autora é obrigatório"),
+  nomeParteRe: z.string().min(1, "Nome da parte ré é obrigatório"),
+
+  // Campos opcionais
+  classeJudicial: z.string().optional().default(""),
+  descricaoOrgaoJulgador: z.string().optional().default(""),
+  dataAutuacao: z.string().optional(),
+  responsavelId: z
+    .number()
+    .int()
+    .positive("ID do responsável deve ser positivo")
+    .nullable()
+    .optional(),
+
+  // Campos com defaults
+  origem: origemAcervoSchema.optional().default("acervo_geral"),
+  segredoJustica: z.boolean().optional().default(false),
+  juizoDigital: z.boolean().optional().default(false),
+  temAssociacao: z.boolean().optional().default(false),
+  prioridadeProcessual: z.number().int().min(0).optional().default(0),
+  qtdeParteAutora: z.number().int().positive().optional().default(1),
+  qtdeParteRe: z.number().int().positive().optional().default(1),
+});
+
 // =============================================================================
 // TIPOS INFERIDOS DOS SCHEMAS
 // =============================================================================
 
 export type CreateProcessoInput = z.infer<typeof createProcessoSchema>;
 export type UpdateProcessoInput = z.infer<typeof updateProcessoSchema>;
+export type CreateProcessoManualInput = z.infer<typeof createProcessoManualSchema>;
 
 // =============================================================================
 // PARAMETROS DE LISTAGEM (19 FILTROS)

@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { Loader2, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { actionCriarProcesso, actionAtualizarProcesso, type ActionResult } from '../actions';
+import { actionCriarProcessoManual, actionAtualizarProcesso, type ActionResult } from '../actions';
 import type { Processo, GrauProcesso, OrigemAcervo } from '../domain';
 import { GRAU_LABELS, TRIBUNAIS } from '../domain';
 
@@ -31,21 +31,17 @@ interface ProcessoFormProps {
 }
 
 const INITIAL_FORM_STATE = {
-  // Campos obrigatórios
-  idPje: 0,
-  advogadoId: 0,
+  // Campos obrigatórios para criação manual
   origem: 'acervo_geral' as OrigemAcervo,
   trt: '',
   grau: '' as GrauProcesso | '',
   numeroProcesso: '',
-  numero: 0,
   descricaoOrgaoJulgador: '',
   classeJudicial: '',
-  codigoStatusProcesso: 'ATIVO', // Default
   nomeParteAutora: '',
   nomeParteRe: '',
   dataAutuacao: new Date().toISOString().split('T')[0],
-  
+
   // Opcionais/Defaults
   segredoJustica: false,
   juizoDigital: false,
@@ -53,16 +49,17 @@ const INITIAL_FORM_STATE = {
   prioridadeProcessual: 0,
   qtdeParteAutora: 1,
   qtdeParteRe: 1,
-  
+
   // Nullables
   dataArquivamento: '',
   dataProximaAudiencia: '',
   responsavelId: '', // string for select
-  
-  // UI only (não persistido diretamente no domain do processo, mas pode ser observacoes?)
-  // O schema createProcesso não tem observacoes, mas o form antigo tinha.
-  // Vou remover se não estiver no schema ou mapear para algo se necessário.
-  // Verificando domain: não tem observacoes.
+
+  // Campos para modo edição (preenchidos a partir do processo)
+  idPje: 0,
+  advogadoId: 0,
+  numero: 0,
+  codigoStatusProcesso: 'ATIVO',
 };
 
 export function ProcessoForm({
@@ -81,17 +78,11 @@ export function ProcessoForm({
   const initialState: ActionResult | null = null;
   const boundAction = React.useCallback(
     async (prevState: ActionResult | null, formDataPayload: FormData) => {
-      // Injetar valores que podem não estar no form
-      // Em um app real, esses IDs viriam de selects ou contexto de usuário
-      if (!formDataPayload.has('idPje')) formDataPayload.set('idPje', '1'); // Mock
-      if (!formDataPayload.has('advogadoId')) formDataPayload.set('advogadoId', '1'); // Mock
-      if (!formDataPayload.has('numero')) formDataPayload.set('numero', '1'); // Mock
-      if (!formDataPayload.has('codigoStatusProcesso')) formDataPayload.set('codigoStatusProcesso', 'ATIVO');
-
       if (isEditMode && processo) {
         return actionAtualizarProcesso(processo.id, prevState, formDataPayload);
       }
-      return actionCriarProcesso(prevState, formDataPayload);
+      // Usa action de criação manual que gera campos automáticos (idPje, advogadoId, numero)
+      return actionCriarProcessoManual(prevState, formDataPayload);
     },
     [isEditMode, processo]
   );

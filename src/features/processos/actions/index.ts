@@ -22,6 +22,7 @@ import {
   type GrauProcesso,
   createProcessoSchema,
   updateProcessoSchema,
+  createProcessoManualSchema,
 } from "../domain";
 import {
   criarProcesso,
@@ -766,6 +767,165 @@ export async function actionBuscarProcessoPorNumero(numeroProcesso: string): Pro
       error:
         error instanceof Error ? error.message : "Erro interno do servidor",
       message: "Erro ao buscar processo. Tente novamente.",
+    };
+  }
+}
+
+// =============================================================================
+// CRIAÇÃO MANUAL DE PROCESSO (sem dados PJE)
+// =============================================================================
+
+/**
+ * Extrai o número sequencial do CNJ para usar como campo "numero"
+ * Formato CNJ: NNNNNNN-DD.AAAA.J.TT.OOOO
+ * Retorna os 7 primeiros dígitos como número
+ */
+function extrairNumeroSequencialCNJ(numeroProcesso: string): number {
+  const match = numeroProcesso.match(/^(\d{7})/);
+  if (match) {
+    return parseInt(match[1], 10);
+  }
+  return Date.now() % 10000000; // Fallback
+}
+
+/**
+ * Action para criar um processo MANUALMENTE (sem integração PJE)
+ *
+ * Gera automaticamente:
+ * - idPje: timestamp único
+ * - advogadoId: 1 (placeholder)
+ * - numero: derivado do número CNJ
+ * - codigoStatusProcesso: "ATIVO"
+ */
+export async function actionCriarProcessoManual(
+  prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        message: "Você precisa estar autenticado para realizar esta ação",
+      };
+    }
+
+    // 1. Extrair dados do FormData
+    const rawData: Record<string, unknown> = {};
+
+    // Campos string
+    const stringFields = [
+      "numeroProcesso",
+      "trt",
+      "grau",
+      "nomeParteAutora",
+      "nomeParteRe",
+      "classeJudicial",
+      "descricaoOrgaoJulgador",
+      "dataAutuacao",
+      "origem",
+    ];
+
+    for (const field of stringFields) {
+      const value = formData.get(field)?.toString();
+      if (value) {
+        rawData[field] = value.trim();
+      }
+    }
+
+    // Campos numéricos opcionais
+    const responsavelIdStr = formData.get("responsavelId")?.toString();
+    if (responsavelIdStr) {
+      const responsavelId = parseInt(responsavelIdStr, 10);
+      if (!isNaN(responsavelId) && responsavelId > 0) {
+        rawData.responsavelId = responsavelId;
+      }
+    }
+
+    // Campos booleanos
+    const booleanFields = ["segredoJustica", "juizoDigital", "temAssociacao"];
+    for (const field of booleanFields) {
+      const value = formData.get(field)?.toString();
+      if (value !== undefined && value !== null) {
+        rawData[field] = value === "true" || value === "1";
+      }
+    }
+
+    // 2. Validar com schema manual
+    const validation = createProcessoManualSchema.safeParse(rawData);
+
+    if (!validation.success) {
+      return {
+        success: false,
+        error: "Erro de validação",
+        errors: formatZodErrors(validation.error),
+        message: validation.error.errors[0]?.message || "Dados inválidos",
+      };
+    }
+
+    const dadosValidados = validation.data;
+
+    // 3. Gerar campos automáticos
+    const idPje = Date.now(); // Timestamp único como ID PJE simulado
+    const advogadoId = 1; // Placeholder - idealmente seria o usuário logado ou configurável
+    const numero = extrairNumeroSequencialCNJ(dadosValidados.numeroProcesso);
+    const codigoStatusProcesso = "ATIVO";
+    const dataAutuacao = dadosValidados.dataAutuacao || new Date().toISOString().split("T")[0];
+
+    // 4. Montar input completo para o serviço
+    const processoInput: CreateProcessoInput = {
+      idPje,
+      advogadoId,
+      numero,
+      codigoStatusProcesso,
+      origem: dadosValidados.origem,
+      trt: dadosValidados.trt,
+      grau: dadosValidados.grau,
+      numeroProcesso: dadosValidados.numeroProcesso,
+      nomeParteAutora: dadosValidados.nomeParteAutora,
+      nomeParteRe: dadosValidados.nomeParteRe,
+      classeJudicial: dadosValidados.classeJudicial || "Não informada",
+      descricaoOrgaoJulgador: dadosValidados.descricaoOrgaoJulgador || "Não informado",
+      dataAutuacao,
+      segredoJustica: dadosValidados.segredoJustica,
+      juizoDigital: dadosValidados.juizoDigital,
+      temAssociacao: dadosValidados.temAssociacao,
+      prioridadeProcessual: dadosValidados.prioridadeProcessual,
+      qtdeParteAutora: dadosValidados.qtdeParteAutora,
+      qtdeParteRe: dadosValidados.qtdeParteRe,
+      responsavelId: dadosValidados.responsavelId ?? null,
+    };
+
+    const client = await createClient();
+
+    // 5. Chamar serviço do core
+    const result = await criarProcesso(processoInput, client);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    // 6. Revalidar cache
+    revalidatePath("/processos");
+    revalidatePath("/acervo");
+
+    return {
+      success: true,
+      data: result.data,
+      message: "Processo criado com sucesso",
+    };
+  } catch (error) {
+    console.error("Erro ao criar processo manual:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao criar processo. Tente novamente.",
     };
   }
 }
