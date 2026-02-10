@@ -17,10 +17,6 @@
 
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import {
-  addDays,
-  subDays,
-} from 'date-fns';
 import { Search, Settings } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -36,6 +32,7 @@ import {
   MonthsCarousel,
   YearsCarousel,
   ViewModePopover,
+  useWeekNavigator,
   type ViewType,
 } from '@/components/shared';
 
@@ -85,7 +82,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   // View State - sync with URL
   const [visualizacao, setVisualizacao] = React.useState<ViewType>(viewFromUrl);
   const [currentDate, setCurrentDate] = React.useState(new Date());
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
 
   // Sync view state when URL changes
   React.useEffect(() => {
@@ -154,22 +150,9 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   };
 
   // =============================================================================
-  // NAVEGAÇÃO POR DIA (visualização 'semana')
+  // NAVEGAÇÃO POR SEMANA (visualização 'semana')
   // =============================================================================
-  const visibleDays = 21;
-
-  const [startDate, setStartDate] = React.useState(() => {
-    const offset = Math.floor(visibleDays / 2);
-    return subDays(new Date(), offset);
-  });
-
-  const handlePreviousDay = React.useCallback(() => {
-    setStartDate(prev => subDays(prev, 1));
-  }, []);
-
-  const handleNextDay = React.useCallback(() => {
-    setStartDate(prev => addDays(prev, 1));
-  }, []);
+  const weekNav = useWeekNavigator();
 
   // =============================================================================
   // NAVEGAÇÃO POR MÊS (visualização 'mes')
@@ -454,16 +437,17 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
       case 'semana':
         return (
           <ExpedientesTableWrapper
-            fixedDate={selectedDate}
+            fixedDate={weekNav.selectedDate}
             hideDateFilters={true}
             viewModeSlot={viewModePopover}
-            daysCarouselProps={{
-              selectedDate,
-              onDateSelect: setSelectedDate,
-              startDate,
-              onPrevious: handlePreviousDay,
-              onNext: handleNextDay,
-              visibleDays,
+            weekNavigatorProps={{
+              weekDays: weekNav.weekDays,
+              selectedDate: weekNav.selectedDate,
+              onDateSelect: weekNav.setSelectedDate,
+              onPreviousWeek: weekNav.goToPreviousWeek,
+              onNextWeek: weekNav.goToNextWeek,
+              onToday: weekNav.goToToday,
+              isCurrentWeek: weekNav.isCurrentWeek,
             }}
           />
         );

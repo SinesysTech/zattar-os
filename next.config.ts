@@ -37,6 +37,9 @@ const APP_MODULES = [
 const nextConfig: NextConfig = {
   // Generates a build optimized for Docker, reducing image size and improving startup time
   output: "standalone",
+  outputFileTracingExcludes: {
+    "*": ["**/*src_features_partes_actions_data*"],
+  },
   // Custom cache handler for persistent caching across builds (production only)
   // Turbopack in dev mode doesn't support custom cache handlers
   ...(process.env.NODE_ENV === "production" && {
@@ -91,7 +94,7 @@ const nextConfig: NextConfig = {
   // Exclude test files from compilation
   excludeDefaultMomentLocales: true,
   pageExtensions: ["tsx", "ts", "jsx", "js"].filter(
-    (ext) => !ext.includes("test")
+    (ext) => !ext.includes("test"),
   ),
   // ESLint disabled via NEXT_LINT_DISABLED=true in Dockerfile
   // (eslint config key removed - not supported in Next.js 16)
@@ -343,5 +346,5 @@ export default withBundleAnalyzer(
         },
       ],
     },
-  })(nextConfig)
+  })(nextConfig),
 );

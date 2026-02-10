@@ -4,8 +4,10 @@ import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { FileText, CheckCircle2, RotateCcw, Eye } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { cn } from '@/lib/utils';
 import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
 import { actionAtualizarExpediente } from '../actions';
@@ -346,21 +348,21 @@ export function ResponsavelCell({ expediente, usuarios = [], onSuccess }: { expe
       <button
         type="button"
         onClick={() => setIsDialogOpen(true)}
-        className="flex items-center justify-center gap-2 text-xs text-center w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
+        className="flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
         title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
       >
         {responsavel ? (
           <>
-            <Avatar className="h-6 w-6 shrink-0">
+            <Avatar className="h-7 w-7 shrink-0">
               <AvatarImage src={undefined} alt={responsavel.nomeExibicao} />
-              <AvatarFallback className="text-[10px] font-medium">
+              <AvatarFallback className="text-xs font-medium">
                 {getInitials(responsavel.nomeExibicao)}
               </AvatarFallback>
             </Avatar>
-            <span className="truncate">{responsavel.nomeExibicao}</span>
+            <span className="truncate max-w-[120px]">{responsavel.nomeExibicao}</span>
           </>
         ) : (
-          <span className="text-muted-foreground">-</span>
+          <span className="text-muted-foreground">Sem responsável</span>
         )}
       </button>
 
@@ -426,7 +428,7 @@ export function ExpedienteActions({
 
   return (
     <>
-      <div className="flex items-center justify-center gap-1">
+      <ButtonGroup>
         {/* Visualizar */}
         <Tooltip>
           <TooltipTrigger asChild>
@@ -478,7 +480,7 @@ export function ExpedienteActions({
             <TooltipContent>Reverter Baixa</TooltipContent>
           </Tooltip>
         )}
-      </div>
+      </ButtonGroup>
 
       <ExpedienteVisualizarDialog
         open={showVisualizar}
@@ -525,113 +527,159 @@ export const columns: ColumnDef<Expediente>[] = [
   // 1. Prazo (badge vertical: início verde em cima, fim vermelho embaixo)
   {
     accessorKey: "dataPrazoLegalParte",
-    header: "Prazo",
-    cell: ({ row }) => <PrazoCell expediente={row.original} />,
-    size: 80,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Prazo" />
+    ),
+    meta: {
+      align: 'left' as const,
+      headerLabel: 'Prazo',
+    },
+    cell: ({ row }) => (
+      <div className="flex items-center py-2">
+        <PrazoCell expediente={row.original} />
+      </div>
+    ),
+    size: 100,
+    enableSorting: true,
   },
-  // 3. Expediente (tipo + descrição)
+  // 2. Expediente (tipo + descrição)
   {
     accessorKey: "tipoDescricao",
-    header: "Expediente",
-    meta: { align: 'left' as const },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Expediente" />
+    ),
+    meta: {
+      align: 'left' as const,
+      headerLabel: 'Expediente',
+    },
     cell: ({ row, table }) => {
       const meta = table.options.meta as ExpedientesTableMeta;
-      return <TipoDescricaoCell
-        expediente={row.original}
-        onSuccess={meta?.onSuccess || (() => { })}
-        tiposExpedientes={meta?.tiposExpedientes || []}
-      />;
+      return (
+        <div className="flex items-center py-2">
+          <TipoDescricaoCell
+            expediente={row.original}
+            onSuccess={meta?.onSuccess || (() => { })}
+            tiposExpedientes={meta?.tiposExpedientes || []}
+          />
+        </div>
+      );
     },
     size: 280,
+    enableSorting: true,
   },
-  // 4. Processo (coluna composta: Tribunal+Grau, Classe+Número, Órgão Julgador, Partes)
+  // 3. Processo (coluna composta: Tribunal+Grau, Classe+Número, Órgão Julgador, Partes)
   {
     id: "processo",
     accessorKey: "numeroProcesso",
-    header: "Processo",
-    meta: { align: 'left' as const },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Processo" />
+    ),
+    meta: {
+      align: 'left' as const,
+      headerLabel: 'Processo',
+    },
     cell: ({ row }) => {
       const e = row.original;
       return (
-        <div className="flex flex-col gap-0.5 items-start leading-relaxed">
+        <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)]">
           {/* Linha 1: Badge Tribunal + Grau */}
-          <TribunalGrauBadge trt={e.trt} grau={e.grau} />
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <TribunalGrauBadge trt={e.trt} grau={e.grau} />
+          </div>
 
-          {/* Linha 2: Classe processual + Número do processo */}
-          <span className="text-xs font-bold leading-relaxed" title={`${e.classeJudicial ? e.classeJudicial + ' ' : ''}${e.numeroProcesso}`}>
-            {e.classeJudicial && <span>{e.classeJudicial} </span>}
+          {/* Linha 2: Número do processo */}
+          <span className="text-xs font-mono font-medium text-foreground" title={e.numeroProcesso}>
             {e.numeroProcesso}
           </span>
 
-          {/* Linha 3: Órgão julgador */}
-          <span className="text-xs text-muted-foreground leading-relaxed" title={e.descricaoOrgaoJulgador ?? undefined}>
-            {e.descricaoOrgaoJulgador}
-          </span>
-
-          {/* Partes com badges de polo (nome dentro do badge) */}
-          {/* FONTE DA VERDADE: Usar nomes do 1º grau para evitar inversão por recursos */}
-          <div className="flex flex-col gap-0.5">
-            {/* Polo Ativo (Autor) - nome dentro do badge */}
-            <div className="flex items-center gap-1 text-xs leading-relaxed">
-              <ParteBadge polo="ATIVO" className="text-xs px-1.5 py-0.5">
-                {e.nomeParteAutoraOrigem || e.nomeParteAutora || '-'}
-              </ParteBadge>
-              {(e.qtdeParteAutora ?? 0) > 1 && (
-                <span className="text-xs text-muted-foreground">+{(e.qtdeParteAutora ?? 0) - 1}</span>
-              )}
-            </div>
-            {/* Polo Passivo (Réu) - nome dentro do badge */}
-            <div className="flex items-center gap-1 text-xs leading-relaxed">
-              <ParteBadge polo="PASSIVO" className="text-xs px-1.5 py-0.5">
-                {e.nomeParteReOrigem || e.nomeParteRe || '-'}
-              </ParteBadge>
-              {(e.qtdeParteRe ?? 0) > 1 && (
-                <span className="text-xs text-muted-foreground">+{(e.qtdeParteRe ?? 0) - 1}</span>
-              )}
-            </div>
+          {/* Partes com badges de polo */}
+          <div className="flex flex-col gap-1">
+            <ParteBadge
+              polo="ATIVO"
+              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+            >
+              {e.nomeParteAutoraOrigem || e.nomeParteAutora || '-'}
+            </ParteBadge>
+            <ParteBadge
+              polo="PASSIVO"
+              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+            >
+              {e.nomeParteReOrigem || e.nomeParteRe || '-'}
+            </ParteBadge>
           </div>
         </div>
       );
     },
-    size: 260,
+    size: 300,
+    enableSorting: true,
   },
-  // 5. Observações
+  // 4. Observações
   {
     accessorKey: "observacoes",
-    header: "Observações",
-    cell: ({ row, table }) => {
-      const meta = table.options.meta as ExpedientesTableMeta;
-      return <ObservacoesCell expediente={row.original} onSuccess={meta?.onSuccess} />;
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Observações" />
+    ),
+    meta: {
+      align: 'left' as const,
+      headerLabel: 'Observações',
     },
-    size: 180,
-  },
-  // 6. Responsável (penúltima)
-  {
-    accessorKey: "responsavelId",
-    header: "Responsável",
-    meta: { align: 'center' as const },
-    cell: ({ row, table }) => {
-      const meta = table.options.meta as ExpedientesTableMeta;
-      return <ResponsavelCell expediente={row.original} usuarios={meta?.usuarios} onSuccess={meta?.onSuccess} />;
-    },
-    size: 150,
-    minSize: 120,
-  },
-  // 7. Ações (última, com título)
-  {
-    id: "actions",
-    header: () => <span className="text-center block">Ações</span>,
     cell: ({ row, table }) => {
       const meta = table.options.meta as ExpedientesTableMeta;
       return (
-        <ExpedienteActions
-          expediente={row.original}
-          onSuccess={meta?.onSuccess}
-          usuarios={meta?.usuarios}
-          tiposExpedientes={meta?.tiposExpedientes}
-        />
+        <div className="flex items-center py-2">
+          <ObservacoesCell expediente={row.original} onSuccess={meta?.onSuccess} />
+        </div>
       );
     },
-    size: 80,
+    size: 180,
+    enableSorting: true,
+  },
+  // 5. Responsável
+  {
+    id: "responsavel",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Responsável" />
+    ),
+    meta: {
+      align: 'left' as const,
+      headerLabel: 'Responsável',
+    },
+    cell: ({ row, table }) => {
+      const meta = table.options.meta as ExpedientesTableMeta;
+      return (
+        <div className="flex items-center py-2">
+          <ResponsavelCell expediente={row.original} usuarios={meta?.usuarios} onSuccess={meta?.onSuccess} />
+        </div>
+      );
+    },
+    size: 200,
+    enableSorting: false,
+  },
+  // 6. Ações
+  {
+    id: "actions",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Ações" />
+    ),
+    meta: {
+      align: 'left' as const,
+      headerLabel: 'Ações',
+    },
+    cell: ({ row, table }) => {
+      const meta = table.options.meta as ExpedientesTableMeta;
+      return (
+        <div className="flex items-center py-2">
+          <ExpedienteActions
+            expediente={row.original}
+            onSuccess={meta?.onSuccess}
+            usuarios={meta?.usuarios}
+            tiposExpedientes={meta?.tiposExpedientes}
+          />
+        </div>
+      );
+    },
+    size: 100,
+    enableSorting: false,
+    enableHiding: false,
   },
 ];

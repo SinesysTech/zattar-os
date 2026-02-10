@@ -18,7 +18,7 @@ import {
   DataTableToolbar,
   DataPagination,
 } from '@/components/shared/data-shell';
-import { DaysCarousel } from '@/components/shared';
+import { WeekNavigator, type WeekNavigatorProps } from '@/components/shared';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import {
@@ -49,20 +49,12 @@ import { actionListarTerceiros } from '@/features/partes/actions/terceiros-actio
 import type { EspecialidadePericiaOption, UsuarioOption, PeritoOption } from '../types';
 import { columns } from './columns';
 
-interface DaysCarouselProps {
-  selectedDate: Date;
-  onDateSelect: (date: Date) => void;
-  startDate: Date;
-  onPrevious: () => void;
-  onNext: () => void;
-  visibleDays: number;
-}
-
 interface PericiasTableWrapperProps {
   initialData?: PaginatedResponse<Pericia>;
   fixedDate?: Date;
   hideDateFilters?: boolean;
-  daysCarouselProps?: DaysCarouselProps;
+  /** Props para renderizar o WeekNavigator dentro do wrapper */
+  weekNavigatorProps?: Omit<WeekNavigatorProps, 'className' | 'variant'>;
   /** Slot para o seletor de modo de visualização (ViewModePopover) */
   viewModeSlot?: React.ReactNode;
   /** Callback para abrir o dialog de criar nova perícia */
@@ -86,7 +78,7 @@ export function PericiasTableWrapper({
   initialData,
   fixedDate,
   hideDateFilters,
-  daysCarouselProps,
+  weekNavigatorProps,
   viewModeSlot,
   onNovaPericiaClick,
 }: PericiasTableWrapperProps) {
@@ -427,7 +419,7 @@ export function PericiasTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="w-[170px] bg-card">
+                    <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
                       <SelectValue placeholder="Situação" />
                     </SelectTrigger>
                     <SelectContent>
@@ -456,7 +448,7 @@ export function PericiasTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="w-[180px] bg-card">
+                    <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
                       <SelectValue placeholder="Responsável" />
                     </SelectTrigger>
                     <SelectContent>
@@ -478,7 +470,7 @@ export function PericiasTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="w-[150px] bg-card">
+                    <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
                       <SelectValue placeholder="Laudo" />
                     </SelectTrigger>
                     <SelectContent>
@@ -496,7 +488,7 @@ export function PericiasTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="w-[120px] bg-card">
+                    <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
                       <SelectValue placeholder="Tribunal" />
                     </SelectTrigger>
                     <SelectContent>
@@ -517,7 +509,7 @@ export function PericiasTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="w-[140px] bg-card">
+                    <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
                       <SelectValue placeholder="Grau" />
                     </SelectTrigger>
                     <SelectContent>
@@ -538,7 +530,7 @@ export function PericiasTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="w-[200px] bg-card">
+                    <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
                       <SelectValue placeholder="Especialidade" />
                     </SelectTrigger>
                     <SelectContent className="max-h-[240px]">
@@ -559,7 +551,7 @@ export function PericiasTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="w-[180px] bg-card">
+                    <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
                       <SelectValue placeholder="Perito" />
                     </SelectTrigger>
                     <SelectContent className="max-h-[240px]">
@@ -590,7 +582,7 @@ export function PericiasTableWrapper({
                           }
                         }}
                       >
-                        <SelectTrigger className="w-[140px] bg-card">
+                        <SelectTrigger className="h-9 w-36 border-dashed bg-card font-normal">
                           <SelectValue placeholder="Prazo" />
                         </SelectTrigger>
                         <SelectContent>
@@ -611,7 +603,7 @@ export function PericiasTableWrapper({
                           setPageIndex(0);
                         }}
                         placeholder="Prazo entrega"
-                        className="w-[240px] bg-card"
+                        className="h-9 w-60 bg-card"
                       />
                     </>
                   )}
@@ -619,21 +611,19 @@ export function PericiasTableWrapper({
               }
             />
 
-            {/* Days Carousel (visualização de dia) */}
-            {daysCarouselProps && (
-              <>
-                <div className="border-t border-border" />
-                <div className="px-6 py-4">
-                  <DaysCarousel
-                    selectedDate={daysCarouselProps.selectedDate}
-                    onDateSelect={daysCarouselProps.onDateSelect}
-                    startDate={daysCarouselProps.startDate}
-                    onPrevious={daysCarouselProps.onPrevious}
-                    onNext={daysCarouselProps.onNext}
-                    visibleDays={daysCarouselProps.visibleDays}
-                  />
-                </div>
-              </>
+            {/* Week Navigator - apenas quando weekNavigatorProps existe */}
+            {weekNavigatorProps && (
+              <div className="px-6 pt-2 pb-4">
+                <WeekNavigator
+                  weekDays={weekNavigatorProps.weekDays}
+                  selectedDate={weekNavigatorProps.selectedDate}
+                  onDateSelect={weekNavigatorProps.onDateSelect}
+                  onPreviousWeek={weekNavigatorProps.onPreviousWeek}
+                  onNextWeek={weekNavigatorProps.onNextWeek}
+                  onToday={weekNavigatorProps.onToday}
+                  isCurrentWeek={weekNavigatorProps.isCurrentWeek}
+                />
+              </div>
             )}
 
             {/* Active Filter Chips */}
@@ -645,16 +635,19 @@ export function PericiasTableWrapper({
                     key={chip.key}
                     variant="secondary"
                     className="gap-1 pr-1 cursor-pointer hover:bg-secondary/80"
+                    onClick={() => chip.onRemove()}
                   >
                     {chip.label}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-4 w-4 p-0 hover:bg-transparent"
-                      onClick={chip.onRemove}
+                    <button
+                      type="button"
+                      className="inline-flex h-5 w-5 items-center justify-center rounded-sm hover:bg-background/40"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        chip.onRemove();
+                      }}
                     >
                       <X className="h-3 w-3" />
-                    </Button>
+                    </button>
                   </AppBadge>
                 ))}
                 {activeFilterChips.length > 1 && (

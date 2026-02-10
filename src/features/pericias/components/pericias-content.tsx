@@ -7,7 +7,6 @@
 
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { addDays, subDays } from 'date-fns';
 import { Search, Plus } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
@@ -24,6 +23,7 @@ import {
   MonthsCarousel,
   YearsCarousel,
   ViewModePopover,
+  useWeekNavigator,
   type ViewType,
 } from '@/components/shared';
 
@@ -69,7 +69,6 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
   const viewFromUrl = ROUTE_TO_VIEW[pathname] ?? initialView;
   const [visualizacao, setVisualizacao] = React.useState<ViewType>(viewFromUrl);
   const [currentDate, setCurrentDate] = React.useState(new Date());
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
 
   React.useEffect(() => {
     const newView = ROUTE_TO_VIEW[pathname];
@@ -135,14 +134,8 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
     );
   };
 
-  // Navegação por dia (visualização 'semana')
-  const visibleDays = 21;
-  const [startDate, setStartDate] = React.useState(() => {
-    const offset = Math.floor(visibleDays / 2);
-    return subDays(new Date(), offset);
-  });
-  const handlePreviousDay = React.useCallback(() => setStartDate((prev) => subDays(prev, 1)), []);
-  const handleNextDay = React.useCallback(() => setStartDate((prev) => addDays(prev, 1)), []);
+  // Navegação por semana (visualização 'semana')
+  const weekNav = useWeekNavigator();
 
   // Navegação por mês
   const visibleMonths = 12;
@@ -231,13 +224,13 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
             placeholder="Buscar..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="h-9 w-50 pl-8 bg-card"
+            className="h-9 w-48 pl-8 bg-card"
           />
         </div>
 
         {/* Tribunal */}
         <Select value={tribunalFilter || '_all'} onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v)}>
-          <SelectTrigger className="h-9 w-30 bg-card">
+          <SelectTrigger className="h-9 w-28 bg-card">
             <SelectValue placeholder="Tribunal" />
           </SelectTrigger>
           <SelectContent>
@@ -252,7 +245,7 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
 
         {/* Grau */}
         <Select value={grauFilter || '_all'} onValueChange={(v) => setGrauFilter(v === '_all' ? '' : v)}>
-          <SelectTrigger className="h-9 w-32.5 bg-card">
+          <SelectTrigger className="h-9 w-28 bg-card">
             <SelectValue placeholder="Grau" />
           </SelectTrigger>
           <SelectContent>
@@ -267,7 +260,7 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
 
         {/* Situação */}
         <Select value={situacaoFilter || '_all'} onValueChange={(v) => setSituacaoFilter(v === '_all' ? '' : v)}>
-          <SelectTrigger className="h-9 w-42.5 bg-card">
+          <SelectTrigger className="h-9 w-32 bg-card">
             <SelectValue placeholder="Situação" />
           </SelectTrigger>
           <SelectContent>
@@ -295,7 +288,7 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
             else setResponsavelFilter(parseInt(v, 10));
           }}
         >
-          <SelectTrigger className="h-9 w-42.5 bg-card">
+          <SelectTrigger className="h-9 w-40 bg-card">
             <SelectValue placeholder="Responsável" />
           </SelectTrigger>
           <SelectContent>
@@ -311,7 +304,7 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
 
         {/* Laudo */}
         <Select value={laudoFilter} onValueChange={(v: 'todos' | 'sim' | 'nao') => setLaudoFilter(v)}>
-          <SelectTrigger className="h-9 w-35 bg-card">
+          <SelectTrigger className="h-9 w-32 bg-card">
             <SelectValue placeholder="Laudo" />
           </SelectTrigger>
           <SelectContent>
@@ -323,7 +316,7 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
 
         {/* Especialidade */}
         <Select value={especialidadeFilter || '_all'} onValueChange={(v) => setEspecialidadeFilter(v === '_all' ? '' : v)}>
-          <SelectTrigger className="h-9 w-55 bg-card">
+          <SelectTrigger className="h-9 w-40 bg-card">
             <SelectValue placeholder="Especialidade" />
           </SelectTrigger>
           <SelectContent className="max-h-60">
@@ -338,7 +331,7 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
 
         {/* Perito */}
         <Select value={peritoFilter || '_all'} onValueChange={(v) => setPeritoFilter(v === '_all' ? '' : v)}>
-          <SelectTrigger className="h-9 w-50 bg-card">
+          <SelectTrigger className="h-9 w-40 bg-card">
             <SelectValue placeholder="Perito" />
           </SelectTrigger>
           <SelectContent className="max-h-60">
@@ -424,17 +417,18 @@ export function PericiasContent({ visualizacao: initialView = 'lista' }: Pericia
       case 'semana':
         return (
           <PericiasTableWrapper
-            fixedDate={selectedDate}
+            fixedDate={weekNav.selectedDate}
             hideDateFilters={true}
             viewModeSlot={viewModePopover}
             onNovaPericiaClick={() => setCriarDialogOpen(true)}
-            daysCarouselProps={{
-              selectedDate,
-              onDateSelect: setSelectedDate,
-              startDate,
-              onPrevious: handlePreviousDay,
-              onNext: handleNextDay,
-              visibleDays,
+            weekNavigatorProps={{
+              weekDays: weekNav.weekDays,
+              selectedDate: weekNav.selectedDate,
+              onDateSelect: weekNav.setSelectedDate,
+              onPreviousWeek: weekNav.goToPreviousWeek,
+              onNextWeek: weekNav.goToNextWeek,
+              onToday: weekNav.goToToday,
+              isCurrentWeek: weekNav.isCurrentWeek,
             }}
           />
         );
