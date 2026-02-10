@@ -556,6 +556,7 @@ export function getAudienciaColumnsComOrigem(): string {
     trt_origem,
     polo_ativo_origem,
     polo_passivo_origem,
-    orgao_julgador_origem
+    orgao_julgador_origem,
+    tipo_descricao
   `.trim().replace(/\s+/g, ' ');
 }

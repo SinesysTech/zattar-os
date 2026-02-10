@@ -205,12 +205,12 @@ export function getAudienciasColumns(
         align: 'left' as const,
         headerLabel: 'Data/Hora',
       },
-      size: 160,
+      size: 140,
       cell: ({ row }) => {
         const audiencia = row.original;
         return (
-          <div className="flex flex-col gap-1">
-            <span className="font-medium">
+          <div className="flex flex-col items-start gap-1.5 py-2">
+            <span className="text-sm text-muted-foreground whitespace-nowrap">
               {formatarDataHora(audiencia.dataInicio)}
             </span>
             {audiencia.status && (
@@ -232,41 +232,35 @@ export function getAudienciasColumns(
         align: 'left' as const,
         headerLabel: 'Processo',
       },
-      size: 260,
+      size: 300,
       cell: ({ row }) => {
         const a = row.original;
         return (
-          <div className="flex flex-col gap-0.5 items-start leading-relaxed">
+          <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)]">
             {/* Linha 1: Badge Tribunal + Grau */}
-            <TribunalGrauBadge trt={a.trt} grau={a.grau} />
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <TribunalGrauBadge trt={a.trt} grau={a.grau} />
+            </div>
 
             {/* Linha 2: Número do processo */}
-            <span className="text-xs font-bold leading-relaxed" title={a.numeroProcesso}>
+            <span className="text-xs font-mono font-medium text-foreground" title={a.numeroProcesso}>
               {a.numeroProcesso}
             </span>
 
-            {/* Linha 3: Tipo de audiência (se disponível) */}
-            {a.tipoDescricao && (
-              <span className="text-xs text-muted-foreground leading-relaxed" title={a.tipoDescricao}>
-                {a.tipoDescricao}
-              </span>
-            )}
-
-            {/* Partes com badges de polo (nome dentro do badge) */}
-            {/* FONTE DA VERDADE: Usar nomes do 1º grau para evitar inversão por recursos */}
-            <div className="flex flex-col gap-0.5">
-              {/* Polo Ativo (Autor) - nome dentro do badge */}
-              <div className="flex items-center gap-1 text-xs leading-relaxed">
-                <ParteBadge polo="ATIVO" className="text-xs px-1.5 py-0.5">
-                  {a.poloAtivoOrigem || a.poloAtivoNome || '-'}
-                </ParteBadge>
-              </div>
-              {/* Polo Passivo (Réu) - nome dentro do badge */}
-              <div className="flex items-center gap-1 text-xs leading-relaxed">
-                <ParteBadge polo="PASSIVO" className="text-xs px-1.5 py-0.5">
-                  {a.poloPassivoOrigem || a.poloPassivoNome || '-'}
-                </ParteBadge>
-              </div>
+            {/* Partes com badges de polo */}
+            <div className="flex flex-col gap-1">
+              <ParteBadge
+                polo="ATIVO"
+                className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+              >
+                {a.poloAtivoOrigem || a.poloAtivoNome || '-'}
+              </ParteBadge>
+              <ParteBadge
+                polo="PASSIVO"
+                className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+              >
+                {a.poloPassivoOrigem || a.poloPassivoNome || '-'}
+              </ParteBadge>
             </div>
           </div>
         );
@@ -286,9 +280,11 @@ export function getAudienciasColumns(
       cell: ({ row }) => {
         const audiencia = row.original;
         return (
-          <span className="text-sm">
-            {audiencia.tipoDescricao || 'Não informado'}
-          </span>
+          <div className="flex items-center py-2">
+            <span className="text-sm text-muted-foreground">
+              {audiencia.tipoDescricao || '-'}
+            </span>
+          </div>
         );
       },
       enableSorting: true,
@@ -299,18 +295,20 @@ export function getAudienciasColumns(
         <DataTableColumnHeader column={column} title="Modalidade" />
       ),
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Modalidade',
       },
       size: 120,
       cell: ({ row }) => {
         const audiencia = row.original;
-        return audiencia.modalidade ? (
-          <div className="flex justify-center">
-            <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
+        return (
+          <div className="flex items-center py-2">
+            {audiencia.modalidade ? (
+              <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
+            ) : (
+              <span className="text-sm text-muted-foreground">-</span>
+            )}
           </div>
-        ) : (
-          <span className="text-muted-foreground text-sm">-</span>
         );
       },
       enableSorting: true,
@@ -324,7 +322,7 @@ export function getAudienciasColumns(
         align: 'left' as const,
         headerLabel: 'Responsável',
       },
-      size: 180,
+      size: 200,
       cell: ({ row, table }) => {
         const audiencia = row.original;
         const meta = table.options.meta as { usuarios?: Usuario[]; onSuccess?: () => void } | undefined;
@@ -332,25 +330,29 @@ export function getAudienciasColumns(
         const onSuccess = meta?.onSuccess;
 
         return (
-          <ResponsavelCell
-            audiencia={audiencia}
-            usuarios={usuarios}
-            onSuccess={onSuccess}
-          />
+          <div className="flex items-center py-2">
+            <ResponsavelCell
+              audiencia={audiencia}
+              usuarios={usuarios}
+              onSuccess={onSuccess}
+            />
+          </div>
         );
       },
       enableSorting: false,
     },
     {
       id: 'actions',
-      header: 'Ações',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Ações" />
+      ),
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Ações',
       },
       size: 100,
       cell: ({ row }) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center py-2">
           <AudienciaActions
             audiencia={row.original}
             onView={onView}

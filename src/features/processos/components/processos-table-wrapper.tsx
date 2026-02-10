@@ -254,7 +254,7 @@ function ProcessoResponsavelCell({
           e.stopPropagation();
           setIsDialogOpen(true);
         }}
-        className="flex items-center justify-center gap-2 text-xs w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
+        className="flex items-center justify-start gap-2 text-xs w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
         title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
       >
         {responsavel ? (
@@ -395,7 +395,7 @@ function criarColunas(
       enableSorting: false,
       size: 200,
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Responsável',
       },
     },
@@ -446,7 +446,7 @@ function criarColunas(
       enableSorting: false,
       size: 80,
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Ações',
       },
     },
@@ -476,7 +476,7 @@ function criarColunas(
       enableSorting: true,
       size: 100,
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Prioridade',
       },
     },
@@ -494,7 +494,7 @@ function criarColunas(
       enableSorting: true,
       size: 110,
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Qtde Autores',
       },
     },
@@ -512,7 +512,7 @@ function criarColunas(
       enableSorting: true,
       size: 100,
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Qtde Réus',
       },
     },
@@ -534,7 +534,7 @@ function criarColunas(
       enableSorting: true,
       size: 110,
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Juízo Digital',
       },
     },
@@ -552,7 +552,7 @@ function criarColunas(
       enableSorting: true,
       size: 120,
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Arquivamento',
       },
     },
@@ -574,7 +574,7 @@ function criarColunas(
       enableSorting: true,
       size: 100,
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Associação',
       },
     },
@@ -604,7 +604,7 @@ function criarColunas(
       enableSorting: true,
       size: 120,
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Origem',
       },
     },
@@ -622,7 +622,7 @@ function criarColunas(
       enableSorting: true,
       size: 150,
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Criado Em',
       },
     },
@@ -640,7 +640,7 @@ function criarColunas(
       enableSorting: true,
       size: 150,
       meta: {
-        align: 'center' as const,
+        align: 'left' as const,
         headerLabel: 'Atualizado Em',
       },
     },
@@ -707,14 +707,25 @@ export function ProcessosTableWrapper({
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Estado de busca e filtros (inicializado da URL)
-  const [globalFilter, setGlobalFilter] = React.useState(searchParams.get('search') || '');
-  const [trtFilter, setTrtFilter] = React.useState<string[]>(() => {
+  // Estado de busca e filtros (inicializado vazio para evitar hydration mismatch)
+  const [globalFilter, setGlobalFilter] = React.useState('');
+  const [trtFilter, setTrtFilter] = React.useState<string[]>([]);
+  const [origemFilter, setOrigemFilter] = React.useState<string>('all');
+  const isHydratedRef = React.useRef(false);
+
+  // Sincronizar com URL após hydration para evitar mismatch
+  React.useEffect(() => {
+    const search = searchParams.get('search');
     const trt = searchParams.get('trt');
-    if (!trt || trt === 'all') return [];
-    return trt.includes(',') ? trt.split(',') : [trt];
-  });
-  const [origemFilter, setOrigemFilter] = React.useState<string>(searchParams.get('origem') || 'all');
+    const origem = searchParams.get('origem');
+
+    if (search) setGlobalFilter(search);
+    if (trt && trt !== 'all') {
+      setTrtFilter(trt.includes(',') ? trt.split(',') : [trt]);
+    }
+    if (origem) setOrigemFilter(origem);
+    isHydratedRef.current = true;
+  }, [searchParams]);
 
   // Estado do dialog de configuração de atribuição
   const [configAtribuicaoOpen, setConfigAtribuicaoOpen] = React.useState(false);
@@ -888,12 +899,14 @@ export function ProcessosTableWrapper({
   // Ref para controlar primeira renderização
   const isFirstRender = React.useRef(true);
 
-  // Recarregar quando parâmetros mudam (skip primeira render)
+  // Recarregar quando parâmetros mudam (skip primeira render e aguardar hydration)
   React.useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
+    // Só refetch após hydration estar completa
+    if (!isHydratedRef.current) return;
     refetch();
   }, [pageIndex, pageSize, buscaDebounced, trtFilter, origemFilter, refetch]);
 
@@ -953,11 +966,11 @@ export function ProcessosTableWrapper({
                 setPageIndex(0);
               }}
             >
-              <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
+              <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
                 <SelectValue placeholder="Origem" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todas</SelectItem>
+                <SelectItem value="all">Origem</SelectItem>
                 <SelectItem value="acervo_geral">Acervo Geral</SelectItem>
                 <SelectItem value="arquivado">Arquivados</SelectItem>
               </SelectContent>
