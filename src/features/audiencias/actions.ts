@@ -11,6 +11,7 @@ import {
   Audiencia,
 } from './domain';
 import { PaginatedResponse } from '@/types';
+import { createDbClient } from '@/lib/supabase';
 
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
@@ -232,7 +233,7 @@ export async function actionListarTiposAudiencia(params?: {
   limite?: number;
 }): Promise<ActionResult<Array<{ id: number; descricao: string; is_virtual: boolean }>>> {
   try {
-    const db = (await import('@/lib/supabase')).createDbClient();
+    const db = createDbClient();
     const limit = Math.min(Math.max(params?.limite ?? 200, 1), 1000);
 
     const { data, error } = await db
@@ -262,7 +263,7 @@ export async function actionListarSalasAudiencia(params?: {
   limite?: number;
 }): Promise<ActionResult<Array<{ id: number; nome: string }>>> {
   try {
-    const db = (await import('@/lib/supabase')).createDbClient();
+    const db = createDbClient();
     const limit = Math.min(Math.max(params?.limite ?? 500, 1), 2000);
 
     let query = db

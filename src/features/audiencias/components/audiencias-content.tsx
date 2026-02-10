@@ -18,12 +18,12 @@
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import {
-  addDays,
-  subDays,
   startOfMonth,
   endOfMonth,
   startOfYear,
   endOfYear,
+  startOfDay,
+  endOfDay,
 } from 'date-fns';
 import { Search, Settings } from 'lucide-react';
 
@@ -51,6 +51,8 @@ import {
   MonthsCarousel,
   YearsCarousel,
   ViewModePopover,
+  WeekNavigator,
+  useWeekNavigator,
   type ViewType,
 } from '@/components/shared';
 
@@ -131,22 +133,9 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
   const { tiposAudiencia } = useTiposAudiencias();
 
   // =============================================================================
-  // NAVEGAÇÃO POR DIA (visualização 'semana')
+  // NAVEGAÇÃO POR SEMANA (visualização 'semana')
   // =============================================================================
-  const visibleDays = 21;
-
-  const [startDate, setStartDate] = React.useState(() => {
-    const offset = Math.floor(visibleDays / 2);
-    return subDays(new Date(), offset);
-  });
-
-  const handlePreviousDay = React.useCallback(() => {
-    setStartDate(prev => subDays(prev, 1));
-  }, []);
-
-  const handleNextDay = React.useCallback(() => {
-    setStartDate(prev => addDays(prev, 1));
-  }, []);
+  const weekNav = useWeekNavigator();
 
   // =============================================================================
   // NAVEGAÇÃO POR MÊS (visualização 'mes')
@@ -462,16 +451,17 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
       case 'semana':
         return (
           <AudienciasTableWrapper
-            fixedDate={selectedDate}
+            fixedDate={weekNav.selectedDate}
             hideDateFilters={true}
             viewModeSlot={viewModePopover}
-            daysCarouselProps={{
-              selectedDate,
-              onDateSelect: setSelectedDate,
-              startDate,
-              onPrevious: handlePreviousDay,
-              onNext: handleNextDay,
-              visibleDays,
+            weekNavigatorProps={{
+              weekDays: weekNav.weekDays,
+              selectedDate: weekNav.selectedDate,
+              onDateSelect: weekNav.setSelectedDate,
+              onPreviousWeek: weekNav.goToPreviousWeek,
+              onNextWeek: weekNav.goToNextWeek,
+              onToday: weekNav.goToToday,
+              isCurrentWeek: weekNav.isCurrentWeek,
             }}
           />
         );

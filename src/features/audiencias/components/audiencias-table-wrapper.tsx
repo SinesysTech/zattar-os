@@ -19,7 +19,7 @@ import {
   DataTableToolbar,
   DataPagination,
 } from '@/components/shared/data-shell';
-import { DaysCarousel } from '@/components/shared';
+import { WeekNavigator, type WeekNavigatorProps } from '@/components/shared';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import {
@@ -56,20 +56,11 @@ import { AudienciaForm } from './audiencia-form';
 // TIPOS
 // =============================================================================
 
-interface DaysCarouselProps {
-  selectedDate: Date;
-  onDateSelect: (date: Date) => void;
-  startDate: Date;
-  onPrevious: () => void;
-  onNext: () => void;
-  visibleDays: number;
-}
-
 interface AudienciasTableWrapperProps {
   fixedDate?: Date;
   hideDateFilters?: boolean;
-  /** Props para renderizar o DaysCarousel dentro do wrapper */
-  daysCarouselProps?: DaysCarouselProps;
+  /** Props para renderizar o WeekNavigator dentro do wrapper */
+  weekNavigatorProps?: Omit<WeekNavigatorProps, 'className' | 'variant'>;
   /** Slot para o seletor de modo de visualização (ViewModePopover) */
   viewModeSlot?: React.ReactNode;
 }
@@ -87,7 +78,7 @@ function getUsuarioNome(u: { id: number; nomeExibicao?: string; nomeCompleto?: s
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouselProps, viewModeSlot }: AudienciasTableWrapperProps) {
+export function AudienciasTableWrapper({ fixedDate, hideDateFilters, weekNavigatorProps, viewModeSlot }: AudienciasTableWrapperProps) {
   const router = useRouter();
 
   // ---------- Estado da Tabela (DataShell pattern) ----------
@@ -404,11 +395,11 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
                         setPageIndex(0);
                       }}
                     >
-                      <SelectTrigger className="w-[130px] bg-card">
+                      <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="todas">Todas</SelectItem>
+                        <SelectItem value="todas">Status</SelectItem>
                         {Object.entries(STATUS_AUDIENCIA_LABELS).map(([value, label]) => (
                           <SelectItem key={value} value={value}>
                             {label}
@@ -425,11 +416,11 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
                         setPageIndex(0);
                       }}
                     >
-                      <SelectTrigger className="w-[130px] bg-card">
+                      <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
                         <SelectValue placeholder="Modalidade" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="todas">Todas</SelectItem>
+                        <SelectItem value="todas">Modalidade</SelectItem>
                         {Object.entries(MODALIDADE_AUDIENCIA_LABELS).map(([value, label]) => (
                           <SelectItem key={value} value={value}>
                             {label}
@@ -438,42 +429,44 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
                       </SelectContent>
                     </Select>
 
-                    {/* Responsável Filter */}
-                    <Select
-                      value={
-                        responsavelFilter === 'todos'
-                          ? 'todos'
-                          : responsavelFilter === 'sem_responsavel'
-                            ? 'sem_responsavel'
-                            : String(responsavelFilter)
-                      }
-                      onValueChange={(v) => {
-                        if (v === 'todos') {
-                          setResponsavelFilter('todos');
-                        } else if (v === 'sem_responsavel') {
-                          setResponsavelFilter('sem_responsavel');
-                        } else {
-                          setResponsavelFilter(parseInt(v, 10));
+                    {/* Responsável Filter - apenas na view de lista */}
+                    {!weekNavigatorProps && (
+                      <Select
+                        value={
+                          responsavelFilter === 'todos'
+                            ? 'todos'
+                            : responsavelFilter === 'sem_responsavel'
+                              ? 'sem_responsavel'
+                              : String(responsavelFilter)
                         }
-                        setPageIndex(0);
-                      }}
-                    >
-                      <SelectTrigger className="w-[160px] bg-card">
-                        <SelectValue placeholder="Responsável" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="todos">Todos</SelectItem>
-                        <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
-                        {usuarios.map((usuario) => (
-                          <SelectItem key={usuario.id} value={String(usuario.id)}>
-                            {getUsuarioNome(usuario)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                        onValueChange={(v) => {
+                          if (v === 'todos') {
+                            setResponsavelFilter('todos');
+                          } else if (v === 'sem_responsavel') {
+                            setResponsavelFilter('sem_responsavel');
+                          } else {
+                            setResponsavelFilter(parseInt(v, 10));
+                          }
+                          setPageIndex(0);
+                        }}
+                      >
+                        <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
+                          <SelectValue placeholder="Responsável" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="todos">Responsável</SelectItem>
+                          <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
+                          {usuarios.map((usuario) => (
+                            <SelectItem key={usuario.id} value={String(usuario.id)}>
+                              {getUsuarioNome(usuario)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
 
-                    {/* Date Range Picker - Hide if date is fixed */}
-                    {!hideDateFilters && !fixedDate && (
+                    {/* Date Range Picker - Hide if date is fixed or weekNavigator is present */}
+                    {!hideDateFilters && !fixedDate && !weekNavigatorProps && (
                       <DateRangePicker
                         value={dateRange}
                         onChange={(range) => {
@@ -481,51 +474,55 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
                           setPageIndex(0);
                         }}
                         placeholder="Período"
-                        className="w-[240px] bg-card"
+                        className="h-9 w-60 bg-card"
                       />
                     )}
 
-                    {/* Tribunal Filter */}
-                    <Select
-                      value={tribunalFilter || '_all'}
-                      onValueChange={(v) => {
-                        setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal);
-                        setPageIndex(0);
-                      }}
-                    >
-                      <SelectTrigger className="w-[120px] bg-card">
-                        <SelectValue placeholder="Tribunal" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="_all">Tribunal</SelectItem>
-                        {CODIGO_TRIBUNAL.map((trt) => (
-                          <SelectItem key={trt} value={trt}>
-                            {trt}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    {/* Tribunal Filter - apenas na view de lista */}
+                    {!weekNavigatorProps && (
+                      <Select
+                        value={tribunalFilter || '_all'}
+                        onValueChange={(v) => {
+                          setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal);
+                          setPageIndex(0);
+                        }}
+                      >
+                        <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
+                          <SelectValue placeholder="Tribunal" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="_all">Tribunal</SelectItem>
+                          {CODIGO_TRIBUNAL.map((trt) => (
+                            <SelectItem key={trt} value={trt}>
+                              {trt}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
 
-                    {/* Grau Filter */}
-                    <Select
-                      value={grauFilter || '_all'}
-                      onValueChange={(v) => {
-                        setGrauFilter(v === '_all' ? '' : v as GrauTribunal);
-                        setPageIndex(0);
-                      }}
-                    >
-                      <SelectTrigger className="w-[130px] bg-card">
-                        <SelectValue placeholder="Grau" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="_all">Grau</SelectItem>
-                        {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
-                          <SelectItem key={value} value={value}>
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    {/* Grau Filter - apenas na view de lista */}
+                    {!weekNavigatorProps && (
+                      <Select
+                        value={grauFilter || '_all'}
+                        onValueChange={(v) => {
+                          setGrauFilter(v === '_all' ? '' : v as GrauTribunal);
+                          setPageIndex(0);
+                        }}
+                      >
+                        <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
+                          <SelectValue placeholder="Grau" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="_all">Grau</SelectItem>
+                          {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
+                            <SelectItem key={value} value={value}>
+                              {label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
 
                     {/* Tipo Filter */}
                     <Select
@@ -535,7 +532,7 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
                         setPageIndex(0);
                       }}
                     >
-                      <SelectTrigger className="w-[160px] bg-card">
+                      <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
                         <SelectValue placeholder="Tipo" />
                       </SelectTrigger>
                       <SelectContent>
@@ -551,21 +548,19 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
                 }
               />
 
-              {/* Days Carousel - apenas quando daysCarouselProps existe */}
-              {daysCarouselProps && (
-                <>
-                  <div className="border-t border-border" />
-                  <div className="px-6 py-4">
-                    <DaysCarousel
-                      selectedDate={daysCarouselProps.selectedDate}
-                      onDateSelect={daysCarouselProps.onDateSelect}
-                      startDate={daysCarouselProps.startDate}
-                      onPrevious={daysCarouselProps.onPrevious}
-                      onNext={daysCarouselProps.onNext}
-                      visibleDays={daysCarouselProps.visibleDays}
-                    />
-                  </div>
-                </>
+              {/* Week Navigator - apenas quando weekNavigatorProps existe */}
+              {weekNavigatorProps && (
+                <div className="px-6 pt-2 pb-4">
+                  <WeekNavigator
+                    weekDays={weekNavigatorProps.weekDays}
+                    selectedDate={weekNavigatorProps.selectedDate}
+                    onDateSelect={weekNavigatorProps.onDateSelect}
+                    onPreviousWeek={weekNavigatorProps.onPreviousWeek}
+                    onNextWeek={weekNavigatorProps.onNextWeek}
+                    onToday={weekNavigatorProps.onToday}
+                    isCurrentWeek={weekNavigatorProps.isCurrentWeek}
+                  />
+                </div>
               )}
 
               {/* Active Filter Chips */}

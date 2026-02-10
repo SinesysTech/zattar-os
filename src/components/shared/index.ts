@@ -98,6 +98,18 @@ export type {
 } from './week-days-carousel';
 
 export {
+  WeekNavigator,
+  useWeekNavigator,
+} from './week-navigator';
+
+export type {
+  WeekDay,
+  WeekNavigatorProps,
+  UseWeekNavigatorOptions,
+  UseWeekNavigatorReturn,
+} from './week-navigator';
+
+export {
   TemporalViewShell,
   TemporalViewContent,
   TemporalViewHeader,
