@@ -68,7 +68,7 @@ export const PortalNavbar = ({ nomeCliente }: PortalNavbarProps) => {
           <Link href={`/portal`} className="flex items-center space-x-2">
             <div className="w-9 h-9 flex items-center justify-center">
               <Image 
-                src="/logo_pz.png" 
+                src="/logos/logo-small-light.svg" 
                 alt="Logo Meu Processo" 
                 width={36}
                 height={36}
@@ -129,7 +129,7 @@ export const PortalNavbar = ({ nomeCliente }: PortalNavbarProps) => {
           <Link href={`/portal`} className="flex items-center space-x-2">
             <div className="w-8 h-8 flex items-center justify-center">
               <Image 
-                src="/logo_pz.png" 
+                src="/logos/logo-small-light.svg" 
                 alt="Logo Meu Processo" 
                 width={32}
                 height={32}
