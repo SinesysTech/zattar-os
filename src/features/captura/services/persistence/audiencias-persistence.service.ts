@@ -28,6 +28,12 @@ export interface SalvarAudienciasParams {
   trt: CodigoTRT;
   grau: GrauTRT;
   atas?: Record<number, { documentoId: number; url: string }>;
+  /**
+   * Mapeamento pré-calculado de id_pje → id do acervo.
+   * Se fornecido, evita lookups redundantes no banco.
+   * Usado por captura-combinada que já tem esse mapeamento.
+   */
+  mapeamentoIds?: Map<number, number>;
 }
 
 /**
@@ -37,6 +43,8 @@ export interface SalvarAudienciasResult {
   inseridos: number;
   atualizados: number;
   naoAtualizados: number;
+  /** Audiências puladas porque o processo não existe no acervo */
+  pulados: number;
   erros: number;
   total: number;
   orgaosJulgadoresCriados: number;
@@ -109,13 +117,14 @@ export async function salvarAudiencias(
   params: SalvarAudienciasParams
 ): Promise<SalvarAudienciasResult> {
   const supabase = createServiceClient();
-  const { audiencias, advogadoId, trt, grau, atas } = params;
+  const { audiencias, advogadoId, trt, grau, atas, mapeamentoIds } = params;
 
   if (audiencias.length === 0) {
     return {
       inseridos: 0,
       atualizados: 0,
       naoAtualizados: 0,
+      pulados: 0,
       erros: 0,
       total: 0,
       orgaosJulgadoresCriados: 0,
@@ -229,13 +238,20 @@ export async function salvarAudiencias(
         audiencia.processo?.numero?.trim() ?? audiencia.nrProcesso?.trim() ?? "";
 
       if (idProcessoPje && numeroProcessoAudiencia) {
-        const processo = await buscarProcessoNoAcervo(
-          idProcessoPje,
-          trt,
-          grau,
-          numeroProcessoAudiencia
-        );
-        processoId = processo?.id ?? null;
+        // Primeiro, tentar usar o mapeamento pré-calculado (se disponível)
+        // Isso evita lookups redundantes quando chamado por captura-combinada
+        if (mapeamentoIds && mapeamentoIds.has(idProcessoPje)) {
+          processoId = mapeamentoIds.get(idProcessoPje) ?? null;
+        } else {
+          // Fallback: buscar no banco
+          const processo = await buscarProcessoNoAcervo(
+            idProcessoPje,
+            trt,
+            grau,
+            numeroProcessoAudiencia
+          );
+          processoId = processo?.id ?? null;
+        }
 
         // Log de debug se o processo não foi encontrado no acervo
         if (!processoId) {
@@ -306,6 +322,7 @@ export async function salvarAudiencias(
   let inseridos = 0;
   let atualizados = 0;
   let naoAtualizados = 0;
+  let pulados = 0;
   let erros = 0;
 
   const entidade: TipoEntidade = "audiencias";
@@ -368,6 +385,15 @@ export async function salvarAudiencias(
       );
 
       if (!registroExistente) {
+        // Se processo_id é null, não podemos inserir (violaria constraint NOT NULL)
+        // Pula a audiência e registra como pulado, não como erro
+        if (!processoId) {
+          // Já foi logado como warning acima, apenas incrementa contador
+          // Não conta como erro porque o processo simplesmente não existe no acervo ainda
+          pulados++;
+          continue;
+        }
+
         // Inserir
         const { error } = await supabase.from("audiencias").insert(dadosNovos);
 
@@ -459,6 +485,7 @@ export async function salvarAudiencias(
     inseridos,
     atualizados,
     naoAtualizados,
+    pulados,
     erros,
     total: audiencias.length,
     orgaosJulgadoresCriados,
