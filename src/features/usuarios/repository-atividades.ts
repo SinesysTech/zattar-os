@@ -65,7 +65,7 @@ export async function buscarProcessosAtribuidos(
   try {
     const { data, error } = await supabase
       .from('acervo')
-      .select('id, numero_processo, partes_string, status, created_at')
+      .select('id, numero_processo, nome_parte_autora, nome_parte_re, codigo_status_processo, created_at')
       .eq('responsavel_id', usuarioId)
       .order('created_at', { ascending: false })
       .limit(limite);
@@ -91,9 +91,9 @@ export async function buscarAudienciasAtribuidas(
   try {
     const { data, error } = await supabase
       .from('audiencias')
-      .select('id, tipo, data_hora, local, processo_id, created_at')
+      .select('id, tipo_audiencia_id, data_inicio, data_fim, sala_audiencia_nome, processo_id, created_at')
       .eq('responsavel_id', usuarioId)
-      .order('data_hora', { ascending: false })
+      .order('data_inicio', { ascending: false })
       .limit(limite);
 
     if (error) throw error;
@@ -117,9 +117,9 @@ export async function buscarPendentesAtribuidos(
   try {
     const { data, error } = await supabase
       .from('expedientes')
-      .select('id, titulo, descricao, prazo, status, created_at')
+      .select('id, numero, descricao_arquivos, data_prazo_legal_parte, baixado_em, created_at')
       .eq('responsavel_id', usuarioId)
-      .order('prazo', { ascending: true })
+      .order('data_prazo_legal_parte', { ascending: true })
       .limit(limite);
 
     if (error) throw error;
@@ -143,7 +143,7 @@ export async function buscarContratosAtribuidos(
   try {
     const { data, error } = await supabase
       .from('contratos')
-      .select('id, numero, cliente_id, tipo, valor, status, created_at')
+      .select('id, cliente_id, tipo_contrato, tipo_cobranca, status, created_at')
       .eq('responsavel_id', usuarioId)
       .order('created_at', { ascending: false })
       .limit(limite);
