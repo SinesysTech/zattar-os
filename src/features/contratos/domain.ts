@@ -134,6 +134,7 @@ export interface Contrato {
   responsavelId: number | null;
   createdBy: number | null;
   observacoes: string | null;
+  documentos: string | null;
   dadosAnteriores: Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;

@@ -147,6 +147,7 @@ function converterParaContrato(data: Record<string, unknown>): Contrato {
     responsavelId: (data.responsavel_id as number | null) ?? null,
     createdBy: (data.created_by as number | null) ?? null,
     observacoes: (data.observacoes as string | null) ?? null,
+    documentos: (data.documentos as string | null) ?? null,
     dadosAnteriores:
       (data.dados_anteriores as Record<string, unknown> | null) ?? null,
     createdAt: data.created_at as string,
