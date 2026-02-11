@@ -42,7 +42,7 @@ export interface ResponsavelDetalhado {
 export interface SegmentoDetalhado {
   id: number;
   nome: string;
-  tipo: string;
+  slug: string;
 }
 
 export interface ContratoCompletoStats {
@@ -127,7 +127,7 @@ export async function fetchContratoCompleto(
       contrato.segmentoId
         ? db
             .from("segmentos")
-            .select("id, nome, tipo")
+            .select("id, nome, slug")
             .eq("id", contrato.segmentoId)
             .single()
         : Promise.resolve({ data: null, error: null }),
@@ -203,7 +203,7 @@ export async function fetchContratoCompleto(
       segmento = {
         id: s.id as number,
         nome: s.nome as string,
-        tipo: s.tipo as string,
+        slug: s.slug as string,
       };
     }
 

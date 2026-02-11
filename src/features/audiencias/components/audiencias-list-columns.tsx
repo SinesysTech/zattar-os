@@ -280,8 +280,11 @@ export function getAudienciasColumns(
       cell: ({ row }) => {
         const audiencia = row.original;
         return (
-          <div className="flex items-center py-2">
-            <span className="text-sm text-muted-foreground">
+          <div className="flex items-center py-2 min-w-0">
+            <span
+              className="text-sm text-muted-foreground truncate"
+              title={audiencia.tipoDescricao || undefined}
+            >
               {audiencia.tipoDescricao || '-'}
             </span>
           </div>
