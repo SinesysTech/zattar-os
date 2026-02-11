@@ -44,8 +44,8 @@ export interface EnderecoPresencial {
 
 export interface Audiencia {
   id: number;
-  idPje: number | null;
-  advogadoId: number | null;
+  idPje: number;
+  advogadoId: number;
   processoId: number;
   orgaoJulgadorId: number | null;
   trt: CodigoTribunal;
@@ -62,13 +62,17 @@ export interface Audiencia {
   status: StatusAudiencia;
   statusDescricao: string | null;
   tipoAudienciaId: number | null;
-  tipoDescricao: string | null;
+  tipoDescricao: string | null; // Campo vindo de JOIN com tipos_audiencias
   classeJudicialId: number | null;
   designada: boolean;
   emAndamento: boolean;
   documentoAtivo: boolean;
+  segredoJustica: boolean;
+  juizoDigital: boolean;
   poloAtivoNome: string | null;
   poloPassivoNome: string | null;
+  poloAtivoRepresentaVarios: boolean;
+  poloPassivoRepresentaVarios: boolean;
   urlAudienciaVirtual: string | null;
   enderecoPresencial: EnderecoPresencial | null;
   responsavelId: number | null;
@@ -533,8 +537,12 @@ export function getAudienciaColumnsFull(): string {
     designada,
     em_andamento,
     documento_ativo,
+    segredo_justica,
+    juizo_digital,
     polo_ativo_nome,
     polo_passivo_nome,
+    polo_ativo_representa_varios,
+    polo_passivo_representa_varios,
     url_audiencia_virtual,
     endereco_presencial,
     responsavel_id,

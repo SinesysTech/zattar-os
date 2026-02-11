@@ -29,8 +29,8 @@ type ExpedienteRow = {
   grau: GrauTribunal;
   numero_processo: string;
   descricao_orgao_julgador: string | null;
-  classe_judicial: string | null;
-  numero: string | null;
+  classe_judicial: string;
+  numero: number;
   segredo_justica: boolean;
   codigo_status_processo: string | null;
   prioridade_processual: boolean;
@@ -41,7 +41,7 @@ type ExpedienteRow = {
   data_autuacao: string | null;
   juizo_digital: boolean;
   data_arquivamento: string | null;
-  id_documento: string | null;
+  id_documento: number | null;
   data_ciencia_parte: string | null;
   data_prazo_legal_parte: string | null;
   data_criacao_expediente: string | null;

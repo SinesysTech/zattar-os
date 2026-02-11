@@ -69,8 +69,8 @@ export interface Expediente {
   grau: GrauTribunal;
   numeroProcesso: string;
   descricaoOrgaoJulgador: string | null;
-  classeJudicial: string | null;
-  numero: string | null;
+  classeJudicial: string;
+  numero: number;
   segredoJustica: boolean;
   codigoStatusProcesso: string | null;
   prioridadeProcessual: boolean;
@@ -81,7 +81,7 @@ export interface Expediente {
   dataAutuacao: string | null;
   juizoDigital: boolean;
   dataArquivamento: string | null;
-  idDocumento: string | null;
+  idDocumento: number | null;
   dataCienciaParte: string | null;
   dataPrazoLegalParte: string | null;
   dataCriacaoExpediente: string | null;

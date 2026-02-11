@@ -42,9 +42,10 @@ export interface Acervo {
   numero: number;
   descricao_orgao_julgador: string;
   classe_judicial: string;
+  classe_judicial_id: number | null;
   segredo_justica: boolean;
-  status: StatusProcesso;
-  codigo_status_processo?: string;
+  status: StatusProcesso; // Campo derivado de codigo_status_processo
+  codigo_status_processo: string;
   prioridade_processual: number;
   nome_parte_autora: string;
   qtde_parte_autora: number;
@@ -56,6 +57,7 @@ export interface Acervo {
   data_proxima_audiencia: string | null;
   tem_associacao: boolean;
   responsavel_id: number | null;
+  dados_anteriores: Record<string, unknown> | null;
   timeline_jsonb?: TimelineJSONB | null;
   created_at: string;
   updated_at: string;
@@ -434,7 +436,7 @@ export function mapearStatusProcesso(codigo: string | null | undefined): StatusP
  * Converts database record to Acervo domain object
  */
 export function converterParaAcervo(data: Record<string, unknown>): Acervo {
-  const codigoStatus = data.codigo_status_processo as string | null;
+  const codigoStatus = data.codigo_status_processo as string;
   return {
     id: data.id as number,
     id_pje: data.id_pje as number,
@@ -447,9 +449,10 @@ export function converterParaAcervo(data: Record<string, unknown>): Acervo {
     numero: data.numero as number,
     descricao_orgao_julgador: data.descricao_orgao_julgador as string,
     classe_judicial: data.classe_judicial as string,
+    classe_judicial_id: (data.classe_judicial_id as number | null) ?? null,
     segredo_justica: data.segredo_justica as boolean,
     status: mapearStatusProcesso(codigoStatus),
-    codigo_status_processo: codigoStatus ?? undefined,
+    codigo_status_processo: codigoStatus,
     prioridade_processual: data.prioridade_processual as number,
     nome_parte_autora: data.nome_parte_autora as string,
     qtde_parte_autora: data.qtde_parte_autora as number,
@@ -461,6 +464,7 @@ export function converterParaAcervo(data: Record<string, unknown>): Acervo {
     data_proxima_audiencia: (data.data_proxima_audiencia as string | null) ?? null,
     tem_associacao: data.tem_associacao as boolean,
     responsavel_id: (data.responsavel_id as number | null) ?? null,
+    dados_anteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
   };
@@ -572,12 +576,14 @@ export function getAcervoColumnsBasic(): string {
     grau,
     origem,
     classe_judicial,
+    classe_judicial_id,
     descricao_orgao_julgador,
     segredo_justica,
     tem_associacao,
     juizo_digital,
     prioridade_processual,
     data_arquivamento,
+    dados_anteriores,
     created_at,
     updated_at
   `.trim().replace(/\s+/g, ' ');
@@ -599,6 +605,7 @@ export function getAcervoColumnsFull(): string {
     numero,
     descricao_orgao_julgador,
     classe_judicial,
+    classe_judicial_id,
     segredo_justica,
     codigo_status_processo,
     prioridade_processual,
@@ -612,6 +619,7 @@ export function getAcervoColumnsFull(): string {
     data_proxima_audiencia,
     tem_associacao,
     responsavel_id,
+    dados_anteriores,
     timeline_jsonb,
     created_at,
     updated_at
