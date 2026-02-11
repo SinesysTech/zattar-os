@@ -1,14 +1,14 @@
 /**
  * Registry Principal de Ferramentas MCP do Sinesys
  *
- * Orquestra o registro de ~124 ferramentas MCP organizadas em 22 módulos.
+ * Orquestra o registro de 119 ferramentas MCP organizadas em 22 módulos.
  * Cada módulo é responsável por registrar ferramentas relacionadas a uma feature específica.
  *
  * Módulos disponíveis:
  * - Processos (4 tools)
  * - Partes (6 tools)
  * - Contratos (4 tools)
- * - Financeiro (30 tools)
+ * - Financeiro (29 tools)
  * - Chat (6 tools)
  * - Documentos (6 tools)
  * - Expedientes (7 tools)
@@ -26,7 +26,7 @@
  * - Perícias (4 tools)
  * - Assinatura Digital (1 tool)
  * - Tarefas (7 tools) - Inclui agendamento de reuniões Zoom
- * - Chatwoot (12 tools) - Integração com Chatwoot Contacts
+ * - Chatwoot (16 tools) - Integração com Chatwoot Contacts e Conversations
  */
 
 import {
