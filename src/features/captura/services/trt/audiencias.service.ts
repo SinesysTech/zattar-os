@@ -274,6 +274,7 @@ export async function audienciasCapture(
     const processosFaltantes = processosIds.filter(id => !mapeamentoIds.has(id));
 
     console.log(`   ✅ ${mapeamentoIds.size}/${processosIds.length} processos encontrados no acervo`);
+    console.log(`   📋 Processos faltantes: ${processosFaltantes.length}`);
 
     // Criar processos mínimos para os faltantes (necessário para integridade referencial)
     if (processosFaltantes.length > 0) {
@@ -317,6 +318,7 @@ export async function audienciasCapture(
       });
 
       // Inserir em batch
+      console.log(`   🔄 Inserindo ${processosMinimos.length} processos mínimos...`);
       const { data: inseridos, error } = await supabase
         .from('acervo')
         .insert(processosMinimos)
@@ -324,12 +326,14 @@ export async function audienciasCapture(
 
       if (error) {
         console.error(`   ❌ Erro ao criar processos mínimos:`, error);
+        console.error(`   ❌ Detalhes do erro:`, JSON.stringify(error, null, 2));
       } else {
         for (const proc of inseridos ?? []) {
           mapeamentoIds.set(proc.id_pje, proc.id);
         }
         console.log(`   ✅ ${inseridos?.length ?? 0} processos mínimos criados no acervo`);
       }
+      console.log(`   📊 Mapeamento após inserção: ${mapeamentoIds.size} entradas`);
     }
 
     // 5.3 Persistir timelines no PostgreSQL
@@ -452,6 +456,7 @@ export async function audienciasCapture(
 
     // 5.6 Persistir audiências
     console.log('   🎤 Persistindo audiências...');
+    console.log(`   📊 Mapeamento disponível: ${mapeamentoIds.size} processos mapeados para ${audiencias.length} audiências`);
     let persistencia: SalvarAudienciasResult | undefined;
     let logsPersistencia: LogEntry[] | undefined;
 
