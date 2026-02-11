@@ -805,6 +805,7 @@ export async function capturaCombinada(
                     trt: params.config.codigo,
                     grau: params.config.grau,
                     atas: {}, // Atas seriam processadas em captura específica
+                    mapeamentoIds, // Usa mapeamento pré-calculado para evitar lookups redundantes
                 });
 
                 console.log(`   ✅ Audiências persistidas:`, {
