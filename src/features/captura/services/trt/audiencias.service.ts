@@ -248,31 +248,89 @@ export async function audienciasCapture(
       advogadoInfo.nome
     );
 
-    // 5.2 Buscar IDs dos processos no acervo (para vínculos de partes)
-    // NOTA: Os dados de audiência (ProcessoAudiencia) são parciais e não incluem todos os campos
-    // necessários para salvar no acervo. Os processos devem ser capturados via acervo geral.
-    // Aqui apenas buscamos os IDs existentes para criar os vínculos.
+    // 5.2 Buscar IDs dos processos no acervo e criar processos mínimos se necessário
+    // NOTA: Os dados de audiência (ProcessoAudiencia) são parciais, mas precisamos garantir
+    // que existam no acervo para a integridade referencial das audiências.
     console.log('   📦 Buscando processos no acervo...');
     const mapeamentoIds = new Map<number, number>();
 
     // Reutiliza lista de IDs já extraída na fase 3
     const supabase = (await import('@/lib/supabase/service-client')).createServiceClient();
 
-    for (const idPje of processosIds) {
-      const { data } = await supabase
-        .from('acervo')
-        .select('id')
-        .eq('id_pje', idPje)
-        .eq('trt', params.config.codigo)
-        .eq('grau', params.config.grau)
-        .maybeSingle();
+    // Buscar processos existentes em batch
+    const { data: processosExistentes } = await supabase
+      .from('acervo')
+      .select('id, id_pje')
+      .in('id_pje', processosIds)
+      .eq('trt', params.config.codigo)
+      .eq('grau', params.config.grau);
 
-      if (data?.id) {
-        mapeamentoIds.set(idPje, data.id);
-      }
+    // Mapear processos existentes
+    for (const proc of processosExistentes ?? []) {
+      mapeamentoIds.set(proc.id_pje, proc.id);
     }
 
+    // Identificar processos faltantes
+    const processosFaltantes = processosIds.filter(id => !mapeamentoIds.has(id));
+
     console.log(`   ✅ ${mapeamentoIds.size}/${processosIds.length} processos encontrados no acervo`);
+
+    // Criar processos mínimos para os faltantes (necessário para integridade referencial)
+    if (processosFaltantes.length > 0) {
+      console.log(`   ⚠️ Criando ${processosFaltantes.length} processos mínimos no acervo...`);
+
+      // Criar mapa de número do processo por ID
+      const numeroProcessoPorId = new Map<number, string>();
+      for (const audiencia of audiencias) {
+        const id = audiencia.idProcesso ?? audiencia.processo?.id;
+        const numero = audiencia.nrProcesso ?? audiencia.processo?.numero;
+        if (id && numero && !numeroProcessoPorId.has(id)) {
+          numeroProcessoPorId.set(id, numero);
+        }
+      }
+
+      const processosMinimos = processosFaltantes.map(idPje => {
+        const numeroProcesso = (numeroProcessoPorId.get(idPje) || '').trim();
+        const numero = parseInt(numeroProcesso.split('-')[0] ?? '', 10) || 0;
+
+        return {
+          id_pje: idPje,
+          advogado_id: advogadoDb.id,
+          origem: 'acervo_geral' as const,
+          trt: params.config.codigo,
+          grau: params.config.grau,
+          numero_processo: numeroProcesso,
+          numero,
+          descricao_orgao_julgador: '',
+          classe_judicial: 'Não informada',
+          segredo_justica: false,
+          codigo_status_processo: '',
+          prioridade_processual: 0,
+          nome_parte_autora: '',
+          qtde_parte_autora: 1,
+          nome_parte_re: '',
+          qtde_parte_re: 1,
+          data_autuacao: new Date().toISOString(),
+          juizo_digital: false,
+          tem_associacao: false,
+        };
+      });
+
+      // Inserir em batch
+      const { data: inseridos, error } = await supabase
+        .from('acervo')
+        .insert(processosMinimos)
+        .select('id, id_pje');
+
+      if (error) {
+        console.error(`   ❌ Erro ao criar processos mínimos:`, error);
+      } else {
+        for (const proc of inseridos ?? []) {
+          mapeamentoIds.set(proc.id_pje, proc.id);
+        }
+        console.log(`   ✅ ${inseridos?.length ?? 0} processos mínimos criados no acervo`);
+      }
+    }
 
     // 5.3 Persistir timelines no PostgreSQL
     console.log('   📜 Persistindo timelines no PostgreSQL...');

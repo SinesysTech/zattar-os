@@ -5961,36 +5961,27 @@ export type Database = {
       }
       tipo_audiencia: {
         Row: {
-          codigo: string
           created_at: string
           descricao: string
-          grau: Database["public"]["Enums"]["grau_tribunal"]
           id: number
-          id_pje: number
           is_virtual: boolean
-          trt: Database["public"]["Enums"]["codigo_tribunal"]
+          trts_metadata: Json
           updated_at: string
         }
         Insert: {
-          codigo: string
           created_at?: string
           descricao: string
-          grau: Database["public"]["Enums"]["grau_tribunal"]
           id?: never
-          id_pje: number
           is_virtual?: boolean
-          trt: Database["public"]["Enums"]["codigo_tribunal"]
+          trts_metadata?: Json
           updated_at?: string
         }
         Update: {
-          codigo?: string
           created_at?: string
           descricao?: string
-          grau?: Database["public"]["Enums"]["grau_tribunal"]
           id?: never
-          id_pje?: number
           is_virtual?: boolean
-          trt?: Database["public"]["Enums"]["codigo_tribunal"]
+          trts_metadata?: Json
           updated_at?: string
         }
         Relationships: []
@@ -6600,6 +6591,7 @@ export type Database = {
           status: string | null
           status_descricao: string | null
           tipo_audiencia_id: number | null
+          tipo_descricao: string | null
           trt: Database["public"]["Enums"]["codigo_tribunal"] | null
           trt_origem: Database["public"]["Enums"]["codigo_tribunal"] | null
           updated_at: string | null
