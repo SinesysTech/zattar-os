@@ -5,6 +5,22 @@ import { listarAcordosPorBuscaCpf } from "@/features/obrigacoes/service";
 import { buscarClientePorDocumento } from "@/features/partes/service";
 import { DashboardData, ContratoPortal, AudienciaPortal, PagamentoPortal } from "./types";
 
+/** Serializa erro de forma segura (Supabase errors são objetos, não Error instances) */
+function serializeError(e: unknown): string {
+  if (e instanceof Error) return e.message;
+  if (typeof e === 'object' && e !== null) {
+    if ('message' in e && typeof (e as { message: unknown }).message === 'string') {
+      return (e as { message: string }).message;
+    }
+    try {
+      return JSON.stringify(e);
+    } catch {
+      return '[Erro não serializável]';
+    }
+  }
+  return String(e);
+}
+
 export async function obterDashboardCliente(
   cpf: string
 ): Promise<DashboardData> {
@@ -32,26 +48,26 @@ export async function obterDashboardCliente(
   try {
     [contratos, audiencias, pagamentos] = await Promise.all([
       listarContratosPorClienteId(cliente.id).catch(e => {
-        const errorMsg = e instanceof Error ? e.message : String(e);
+        const errorMsg = serializeError(e);
         console.error('[Portal] Erro ao buscar contratos:', errorMsg);
         errors.contratos = errorMsg || 'Erro ao carregar contratos';
         return [];
       }),
       listarAudienciasPorBuscaCpf(cpfLimpo).catch(e => {
-        const errorMsg = e instanceof Error ? e.message : String(e);
+        const errorMsg = serializeError(e);
         console.error('[Portal] Erro ao buscar audiências:', errorMsg);
         errors.audiencias = errorMsg || 'Erro ao carregar audiências';
         return [];
       }),
       listarAcordosPorBuscaCpf(cpfLimpo).catch(e => {
-        const errorMsg = e instanceof Error ? e.message : String(e);
+        const errorMsg = serializeError(e);
         console.error('[Portal] Erro ao buscar pagamentos:', errorMsg);
         errors.pagamentos = errorMsg || 'Erro ao carregar pagamentos';
         return [];
       }),
     ]);
   } catch (e) {
-    console.error('[Portal] Erro ao buscar dados complementares:', e);
+    console.error('[Portal] Erro ao buscar dados complementares:', serializeError(e));
     contratos = [];
     audiencias = [];
     pagamentos = [];
