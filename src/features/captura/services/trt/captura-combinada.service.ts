@@ -811,6 +811,7 @@ export async function capturaCombinada(
                     inseridos: persistenciaAud.inseridos,
                     atualizados: persistenciaAud.atualizados,
                     naoAtualizados: persistenciaAud.naoAtualizados,
+                    pulados: persistenciaAud.pulados,
                     erros: persistenciaAud.erros,
                 });
                 resultado.persistenciaAudiencias = persistenciaAud;
