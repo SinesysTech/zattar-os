@@ -222,14 +222,31 @@ export async function salvarAudiencias(
       }
 
       // Buscar ID do processo no acervo
-      if (audiencia.processo?.id && audiencia.processo?.numero) {
+      // IMPORTANTE: Usar audiencia.idProcesso (campo de primeiro nível) que é mais confiável
+      // e alinhado com o fluxo de captura combinada que cria processos mínimos no acervo
+      const idProcessoPje = audiencia.idProcesso ?? audiencia.processo?.id;
+      const numeroProcessoAudiencia =
+        audiencia.processo?.numero?.trim() ?? audiencia.nrProcesso?.trim() ?? "";
+
+      if (idProcessoPje && numeroProcessoAudiencia) {
         const processo = await buscarProcessoNoAcervo(
-          audiencia.processo.id,
+          idProcessoPje,
           trt,
           grau,
-          audiencia.processo.numero
+          numeroProcessoAudiencia
         );
         processoId = processo?.id ?? null;
+
+        // Log de debug se o processo não foi encontrado no acervo
+        if (!processoId) {
+          console.warn(
+            `   ⚠️ [salvarAudiencias] Processo não encontrado no acervo: id_pje=${idProcessoPje}, numero=${numeroProcessoAudiencia}, audiencia_id=${audiencia.id}`
+          );
+        }
+      } else {
+        console.warn(
+          `   ⚠️ [salvarAudiencias] Dados do processo incompletos na audiência ${audiencia.id}: idProcessoPje=${idProcessoPje}, numeroProcesso=${numeroProcessoAudiencia}`
+        );
       }
 
       // Buscar ID da classe judicial
@@ -303,7 +320,8 @@ export async function salvarAudiencias(
     salaAudienciaId,
   } of dadosComRelacoes) {
     try {
-      const numeroProcesso = audiencia.processo?.numero?.trim() ?? "";
+      const numeroProcesso =
+        audiencia.processo?.numero?.trim() ?? audiencia.nrProcesso?.trim() ?? "";
 
       const dadosNovos = {
         id_pje: audiencia.id,

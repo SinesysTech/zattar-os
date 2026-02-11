@@ -139,5 +139,5 @@ export interface ResponsavelInfo {
 export interface SegmentoInfo {
   id: number;
   nome: string;
-  tipo: string;
+  slug: string;
 }
