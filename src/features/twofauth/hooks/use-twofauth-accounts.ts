@@ -7,52 +7,14 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from "react";
+import type {
+  TwoFAuthAccount,
+  OTPResult,
+  CreateAccountParams,
+  UpdateAccountParams,
+} from "@/lib/integrations/twofauth/types";
 
-// =============================================================================
-// TIPOS
-// =============================================================================
-
-export interface TwoFAuthAccount {
-  id: number;
-  service: string | null;
-  account: string | null;
-  icon: string | null;
-  otp_type: "totp" | "hotp";
-  digits: number;
-  algorithm: "sha1" | "sha256" | "sha512";
-  period: number | null;
-  counter: number | null;
-  group_id: number | null;
-}
-
-export interface OTPResult {
-  password: string;
-  nextPassword?: string;
-}
-
-export interface CreateAccountData {
-  service: string;
-  account?: string;
-  secret: string;
-  otp_type: "totp" | "hotp";
-  digits?: number;
-  algorithm?: "sha1" | "sha256" | "sha512";
-  period?: number;
-  counter?: number;
-  group_id?: number;
-}
-
-export interface UpdateAccountData {
-  service?: string;
-  account?: string;
-  icon?: string;
-  otp_type?: "totp" | "hotp";
-  digits?: number;
-  algorithm?: "sha1" | "sha256" | "sha512";
-  period?: number;
-  counter?: number;
-  group_id?: number;
-}
+export type { TwoFAuthAccount, OTPResult };
 
 interface UseTwoFAuthAccountsState {
   accounts: TwoFAuthAccount[];
@@ -71,8 +33,8 @@ interface UseTwoFAuthAccountsReturn extends UseTwoFAuthAccountsState {
   getAccount: (id: number) => Promise<TwoFAuthAccount | null>;
 
   // Mutations
-  createAccount: (data: CreateAccountData) => Promise<TwoFAuthAccount | null>;
-  updateAccount: (id: number, data: UpdateAccountData) => Promise<TwoFAuthAccount | null>;
+  createAccount: (data: CreateAccountParams) => Promise<TwoFAuthAccount | null>;
+  updateAccount: (id: number, data: UpdateAccountParams) => Promise<TwoFAuthAccount | null>;
   deleteAccount: (id: number) => Promise<boolean>;
 
   // OTP
@@ -151,7 +113,7 @@ export function useTwoFAuthAccounts(): UseTwoFAuthAccountsReturn {
   // ---------------------------------------------------------------------------
 
   const createAccount = useCallback(
-    async (accountData: CreateAccountData): Promise<TwoFAuthAccount | null> => {
+    async (accountData: CreateAccountParams): Promise<TwoFAuthAccount | null> => {
       try {
         const response = await fetch("/api/twofauth/accounts", {
           method: "POST",
@@ -181,7 +143,7 @@ export function useTwoFAuthAccounts(): UseTwoFAuthAccountsReturn {
   );
 
   const updateAccount = useCallback(
-    async (id: number, accountData: UpdateAccountData): Promise<TwoFAuthAccount | null> => {
+    async (id: number, accountData: UpdateAccountParams): Promise<TwoFAuthAccount | null> => {
       try {
         const response = await fetch(`/api/twofauth/accounts/${id}`, {
           method: "PUT",
@@ -271,7 +233,9 @@ export function useTwoFAuthAccounts(): UseTwoFAuthAccountsReturn {
 
       if (isMountedRef.current) {
         setCurrentOTP(otpResult);
-        setTimeRemaining(30);
+        const period = selectedAccount?.period || 30;
+        const now = Math.floor(Date.now() / 1000);
+        setTimeRemaining(period - (now % period));
       }
 
       return otpResult;
@@ -286,7 +250,7 @@ export function useTwoFAuthAccounts(): UseTwoFAuthAccountsReturn {
         setOtpLoading(false);
       }
     }
-  }, []);
+  }, [selectedAccount]);
 
   const selectAccount = useCallback(
     (account: TwoFAuthAccount | null) => {

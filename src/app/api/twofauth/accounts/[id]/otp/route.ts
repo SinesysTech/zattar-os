@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateRequest } from "@/lib/auth/api-auth";
-import { getOTPByAccountId, TwoFAuthError } from "@/lib/integrations/twofauth";
+import { getOTP, TwoFAuthError } from "@/lib/integrations/twofauth/";
 
 /**
  * @swagger
@@ -72,7 +72,7 @@ export async function GET(
     }
 
     // 3. Obter OTP da conta
-    const otpResult = await getOTPByAccountId(accountId);
+    const otpResult = await getOTP(accountId);
 
     // 4. Retornar resultado
     return NextResponse.json({

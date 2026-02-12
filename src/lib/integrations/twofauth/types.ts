@@ -30,7 +30,7 @@ export interface TwoFAuthAccount {
   service: string | null;
   account: string | null;
   icon: string | null;
-  otp_type: "totp" | "hotp";
+  otp_type: "totp" | "hotp" | "steamtotp";
   digits: number;
   algorithm: "sha1" | "sha256" | "sha512";
   period: number | null;
@@ -45,7 +45,7 @@ export interface CreateAccountParams {
   service: string;
   account?: string;
   icon?: string;
-  otp_type: "totp" | "hotp";
+  otp_type: "totp" | "hotp" | "steamtotp";
   secret: string;
   digits?: number;
   algorithm?: "sha1" | "sha256" | "sha512";
@@ -61,7 +61,7 @@ export interface UpdateAccountParams {
   service?: string;
   account?: string;
   icon?: string;
-  otp_type?: "totp" | "hotp";
+  otp_type?: "totp" | "hotp" | "steamtotp";
   secret?: string;
   digits?: number;
   algorithm?: "sha1" | "sha256" | "sha512";
@@ -87,7 +87,7 @@ export interface ReorderAccountsParams {
 export interface TwoFAuthOTPResponse {
   password: string;
   next_password?: string;
-  otp_type: "totp" | "hotp";
+  otp_type: "totp" | "hotp" | "steamtotp";
   generated_at?: number;
   period?: number;
   counter?: number;
@@ -109,7 +109,7 @@ export interface GenerateOTPParams {
   service?: string;
   account?: string;
   secret: string;
-  otp_type: "totp" | "hotp";
+  otp_type: "totp" | "hotp" | "steamtotp";
   digits?: number;
   algorithm?: "sha1" | "sha256" | "sha512";
   period?: number;

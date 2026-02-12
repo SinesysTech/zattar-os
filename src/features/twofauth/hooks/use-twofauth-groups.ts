@@ -4,25 +4,14 @@
  * Hook para gerenciar grupos 2FAuth
  */
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
+import type {
+  TwoFAuthGroup,
+  CreateGroupParams,
+  UpdateGroupParams,
+} from "@/lib/integrations/twofauth/types";
 
-// =============================================================================
-// TIPOS
-// =============================================================================
-
-export interface TwoFAuthGroup {
-  id: number;
-  name: string;
-  twofaccounts_count?: number;
-}
-
-export interface CreateGroupData {
-  name: string;
-}
-
-export interface UpdateGroupData {
-  name: string;
-}
+export type { TwoFAuthGroup };
 
 interface UseTwoFAuthGroupsState {
   groups: TwoFAuthGroup[];
@@ -32,8 +21,8 @@ interface UseTwoFAuthGroupsState {
 
 interface UseTwoFAuthGroupsReturn extends UseTwoFAuthGroupsState {
   fetchGroups: () => Promise<void>;
-  createGroup: (data: CreateGroupData) => Promise<TwoFAuthGroup | null>;
-  updateGroup: (id: number, data: UpdateGroupData) => Promise<TwoFAuthGroup | null>;
+  createGroup: (data: CreateGroupParams) => Promise<TwoFAuthGroup | null>;
+  updateGroup: (id: number, data: UpdateGroupParams) => Promise<TwoFAuthGroup | null>;
   deleteGroup: (id: number) => Promise<boolean>;
   refresh: () => Promise<void>;
 }
@@ -76,7 +65,7 @@ export function useTwoFAuthGroups(): UseTwoFAuthGroupsReturn {
   }, []);
 
   const createGroup = useCallback(
-    async (groupData: CreateGroupData): Promise<TwoFAuthGroup | null> => {
+    async (groupData: CreateGroupParams): Promise<TwoFAuthGroup | null> => {
       try {
         const response = await fetch("/api/twofauth/groups", {
           method: "POST",
@@ -105,7 +94,7 @@ export function useTwoFAuthGroups(): UseTwoFAuthGroupsReturn {
   );
 
   const updateGroup = useCallback(
-    async (id: number, groupData: UpdateGroupData): Promise<TwoFAuthGroup | null> => {
+    async (id: number, groupData: UpdateGroupParams): Promise<TwoFAuthGroup | null> => {
       try {
         const response = await fetch(`/api/twofauth/groups/${id}`, {
           method: "PUT",
@@ -157,6 +146,13 @@ export function useTwoFAuthGroups(): UseTwoFAuthGroupsReturn {
       }
       return false;
     }
+  }, []);
+
+  // Cleanup ao desmontar
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
   }, []);
 
   return {

@@ -45,28 +45,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 
+import type { TwoFAuthAccount, TwoFAuthGroup, OTPResult } from "@/lib/integrations/twofauth/types";
+
 // =============================================================================
 // TIPOS
 // =============================================================================
-
-interface TwoFAuthAccount {
-  id: number;
-  service: string | null;
-  account: string | null;
-  icon: string | null;
-  otp_type: "totp" | "hotp";
-  digits: number;
-  algorithm: string;
-  period: number | null;
-  counter: number | null;
-  group_id: number | null;
-}
-
-interface TwoFAuthGroup {
-  id: number;
-  name: string;
-  twofaccounts_count?: number;
-}
 
 interface ConnectionStatus {
   connected: boolean;
@@ -78,11 +61,6 @@ interface ConnectionStatus {
     email: string;
     is_admin: boolean;
   };
-}
-
-interface OTPResult {
-  password: string;
-  nextPassword?: string;
 }
 
 // =============================================================================
@@ -167,14 +145,17 @@ export function TwoFAuthConfigContent() {
       const data = await response.json();
       if (data.success) {
         setCurrentOTP(data.data);
-        setTimeRemaining(30);
+        const account = accounts.find((a) => a.id === accountId);
+        const period = account?.period || 30;
+        const now = Math.floor(Date.now() / 1000);
+        setTimeRemaining(period - (now % period));
       }
     } catch {
       setCurrentOTP(null);
     } finally {
       setOtpLoading(false);
     }
-  }, []);
+  }, [accounts]);
 
   // Timer para countdown do OTP
   useEffect(() => {

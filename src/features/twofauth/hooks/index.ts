@@ -2,5 +2,6 @@
  * 2FAuth Hooks
  */
 
-export { useTwoFAuthAccounts, type TwoFAuthAccount, type OTPResult } from "./use-twofauth-accounts";
-export { useTwoFAuthGroups, type TwoFAuthGroup } from "./use-twofauth-groups";
+export { useTwoFAuthAccounts } from "./use-twofauth-accounts";
+export { useTwoFAuthGroups } from "./use-twofauth-groups";
+export type { TwoFAuthAccount, OTPResult, TwoFAuthGroup } from "@/lib/integrations/twofauth/types";
