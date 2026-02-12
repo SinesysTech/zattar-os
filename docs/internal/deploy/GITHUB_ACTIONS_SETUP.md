@@ -178,7 +178,37 @@ Para adicionar notificações via email/Slack, editar workflow adicionando steps
 
 Se não quiser usar GitHub Actions, considere:
 
-### Opção 1: Vercel Cron (Recomendado)
+### Opção 1: Supabase pg_cron (Recomendado)
+
+Usar pg_cron do Supabase para executar cron jobs direto do Postgres:
+
+```sql
+-- 1. Salvar secrets no Vault
+SELECT vault.create_secret('https://zattaradvogados.com', 'app_url');
+SELECT vault.create_secret('seu_cron_secret', 'cron_secret');
+
+-- 2. Criar cron job (executa todo domingo às 3h UTC)
+SELECT cron.schedule(
+  'vacuum-maintenance',
+  '0 3 * * 0',
+  $$
+    SELECT net.http_post(
+      url := (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'app_url')
+             || '/api/cron/vacuum-maintenance',
+      headers := jsonb_build_object(
+        'Authorization', 'Bearer ' || (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'cron_secret')
+      ),
+      body := '{}'::jsonb,
+      timeout_milliseconds := 300000
+    );
+  $$
+);
+
+-- Ver jobs: SELECT * FROM cron.job;
+-- Ver execuções: SELECT * FROM cron.job_run_details ORDER BY start_time DESC;
+```
+
+### Opção 2: Vercel Cron
 
 Adicionar ao `vercel.json`:
 ```json
@@ -191,19 +221,6 @@ Adicionar ao `vercel.json`:
   ]
 }
 ```
-
-### Opção 2: cron-job.org (Universal)
-
-1. Acessar https://cron-job.org/
-2. Criar novo cron job:
-   - Title: VACUUM Maintenance
-   - URL: https://seu-dominio.com/api/cron/vacuum-maintenance
-   - Schedule: 0 3 * * 0
-   - Headers: `Authorization: Bearer $CRON_SECRET`
-
-### Opção 3: CapRover
-
-Se usando CapRover, configurar cron nativo via dashboard
 
 ---
 

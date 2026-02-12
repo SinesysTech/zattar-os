@@ -4,13 +4,22 @@
  * Esta rota executa o scheduler de agendamentos de captura.
  * Busca todos os agendamentos com proxima_execucao <= NOW() e os executa.
  *
- * Deve ser chamada periodicamente via cron job externo (ex: cron-job.org, CapRover cron, etc.)
+ * Chamada automaticamente a cada minuto via pg_cron do Supabase.
  *
  * Autenticação: Requer secret token via header Authorization
  *
- * Exemplo de chamada:
- * curl -X POST https://seu-dominio.com/api/cron/executar-agendamentos \
- *   -H "Authorization: Bearer SEU_CRON_SECRET"
+ * Configuração pg_cron (Supabase):
+ *   SELECT cron.schedule('executar-agendamentos-captura', '* * * * *', $$
+ *     SELECT net.http_post(
+ *       url := (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'app_url')
+ *              || '/api/cron/executar-agendamentos',
+ *       headers := jsonb_build_object(
+ *         'Authorization', 'Bearer ' || (SELECT decrypted_secret FROM vault.decrypted_secrets WHERE name = 'cron_secret')
+ *       ),
+ *       body := '{}'::jsonb,
+ *       timeout_milliseconds := 300000
+ *     );
+ *   $$);
  */
 
 import { NextRequest, NextResponse } from "next/server";
