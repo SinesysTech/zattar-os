@@ -367,65 +367,67 @@ export async function audienciasCapture(
           JSON.stringify(processosMinimos[0], null, 2),
         );
 
-        // Usar upsert com onConflict para lidar com duplicatas graciosamente
+        // Usar insert ao invés de upsert para evitar problemas de inferência de tipos em enums no ON CONFLICT
+        // Como já filtramos por ID, a chance de conflito é baixa (apenas race condition)
         console.log(
-          `   🔄 [5.2] Inserindo/atualizando ${processosMinimos.length} processos mínimos (upsert)...`,
+          `   🔄 [5.2] Inserindo ${processosMinimos.length} processos mínimos (insert)...`,
         );
+
+        // Tentar inserir - se falhar por duplicidade, o re-check abaixo captura os IDs
         const { data: inseridos, error } = await supabase
           .from("acervo")
-          .upsert(processosMinimos, {
-            onConflict: "id_pje,trt,grau,numero_processo",
-            ignoreDuplicates: false, // false = atualiza em caso de conflito
-          })
+          .insert(processosMinimos)
           .select("id, id_pje");
 
         if (error) {
-          console.error(`   ❌ [5.2] Erro ao criar processos mínimos:`, error);
-          console.error(
-            `   ❌ [5.2] Detalhes do erro:`,
-            JSON.stringify(error, null, 2),
+          console.warn(
+            `   ⚠️ [5.2] Erro/Alerta ao criar processos mínimos (pode ser duplicidade):`,
+            error.message,
           );
-          console.error(`   ❌ [5.2] Código do erro:`, error.code);
-          console.error(`   ❌ [5.2] Mensagem:`, error.message);
-          console.error(`   ❌ [5.2] Hint:`, error.hint);
         } else {
           console.log(
-            `   ✅ [5.2] Upsert retornou ${inseridos?.length ?? 0} registros`,
+            `   ✅ [5.2] Insert retornou ${inseridos?.length ?? 0} registros`,
           );
           for (const proc of inseridos ?? []) {
             mapeamentoIds.set(proc.id_pje, proc.id);
           }
-          console.log(
-            `   ✅ [5.2] ${inseridos?.length ?? 0} processos mínimos criados/atualizados no acervo`,
-          );
         }
-        console.log(
-          `   📊 [5.2] Mapeamento após inserção: ${mapeamentoIds.size} entradas`,
-        );
 
-        // Re-query para garantir que TODOS os processos faltantes estejam no mapa
-        // O upsert do Supabase pode não retornar IDs em todos os casos (ex: array vazio)
-        const processosSemMapa = processosFaltantes.filter(
+        // SEMPRE fazer re-check para garantir que temos todos os IDs no mapa
+        // (necessário caso o insert tenha falhado por duplicidade ou retornado vazio)
+        const idsFaltantesNoMapa = processosIds.filter(
           (id) => !mapeamentoIds.has(id),
         );
-        if (processosSemMapa.length > 0) {
+
+        if (idsFaltantesNoMapa.length > 0) {
           console.log(
-            `   🔄 [5.2] Re-verificando ${processosSemMapa.length} processos que não foram mapeados pelo upsert...`,
+            `   🔄 [5.2] Buscando IDs restantes para ${idsFaltantesNoMapa.length} processos...`,
           );
+
           const { data: recheck } = await supabase
             .from("acervo")
             .select("id, id_pje")
-            .in("id_pje", processosSemMapa)
+            .in("id_pje", idsFaltantesNoMapa)
             .eq("trt", params.config.codigo)
             .eq("grau", params.config.grau);
 
           for (const proc of recheck ?? []) {
-            if (!mapeamentoIds.has(proc.id_pje)) {
-              mapeamentoIds.set(proc.id_pje, proc.id);
-            }
+            mapeamentoIds.set(proc.id_pje, proc.id);
           }
+        }
+
+        // Verificação final
+        const aindaFaltantes = processosIds.filter(
+          (id) => !mapeamentoIds.has(id),
+        );
+        if (aindaFaltantes.length > 0) {
+          console.warn(
+            `   ⚠️ [5.2] ATENÇÃO: ${aindaFaltantes.length} processos ainda sem ID no acervo após tentativas!`,
+            aindaFaltantes,
+          );
+        } else {
           console.log(
-            `   📊 [5.2] Mapeamento após re-verificação: ${mapeamentoIds.size} entradas`,
+            `   ✅ [5.2] Todos os ${mapeamentoIds.size} processos mapeados com sucesso.`,
           );
         }
       }

@@ -1,9 +1,10 @@
 'use client';
 
-import { AlertTriangle } from 'lucide-react';
-import { useEffect } from 'react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { isServerActionVersionMismatch } from '@/lib/server-action-error-handler';
 
 export default function Error({
   error,
@@ -12,10 +13,58 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const [isReloading, setIsReloading] = useState(false);
+  const isVersionMismatch = isServerActionVersionMismatch(error);
+
   useEffect(() => {
     // No futuro, podemos logar o erro para um serviço como Sentry
     console.error(error);
-  }, [error]);
+
+    // Auto-reload após 5 segundos para erros de versão
+    if (isVersionMismatch) {
+      const timer = setTimeout(() => {
+        setIsReloading(true);
+        window.location.reload();
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, isVersionMismatch]);
+
+  if (isVersionMismatch) {
+    return (
+      <div className="flex h-screen w-full flex-col items-center justify-center bg-background">
+        <div className="flex animate-in flex-col items-center gap-4 text-center zoom-in-95 fade-in">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-500/10">
+            <RefreshCw className={`h-10 w-10 text-blue-500 ${isReloading ? 'animate-spin' : ''}`} />
+          </div>
+          <div className="space-y-2">
+            <h1 className="font-heading text-3xl font-bold tracking-tight">
+              Nova versão disponível
+            </h1>
+            <p className="max-w-md text-muted-foreground">
+              O sistema foi atualizado. A página será recarregada automaticamente em alguns segundos.
+            </p>
+          </div>
+          <Button
+            onClick={() => {
+              setIsReloading(true);
+              window.location.reload();
+            }}
+            disabled={isReloading}
+          >
+            {isReloading ? (
+              <>
+                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                Recarregando...
+              </>
+            ) : (
+              'Recarregar agora'
+            )}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center bg-background">

@@ -317,13 +317,14 @@ export default withBundleAnalyzer(
           },
         },
         {
+          // Short cache for JS to minimize Server Action version mismatches
           urlPattern: /\/_next\/static.+\.js$/,
-          handler: "CacheFirst",
+          handler: "StaleWhileRevalidate",
           options: {
             cacheName: "next-static-js",
             expiration: {
               maxEntries: 64,
-              maxAgeSeconds: 24 * 60 * 60, // 24 hours
+              maxAgeSeconds: 60 * 60, // 1 hour (reduced from 24h)
             },
           },
         },
