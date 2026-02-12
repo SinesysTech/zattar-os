@@ -19,7 +19,7 @@ export interface ViewModeOption {
 }
 
 const DEFAULT_VIEW_OPTIONS: ViewModeOption[] = [
-  { value: 'semana', label: 'Dia', icon: CalendarDays },
+  { value: 'semana', label: 'Semana', icon: CalendarDays },
   { value: 'mes', label: 'Mês', icon: CalendarRange },
   { value: 'ano', label: 'Ano', icon: Calendar },
   { value: 'lista', label: 'Lista', icon: List },

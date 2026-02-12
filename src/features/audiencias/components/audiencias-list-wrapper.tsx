@@ -23,6 +23,7 @@ import { actionListarAudiencias } from '../actions';
 import {
   type Audiencia,
   type CodigoTribunal,
+  type TipoAudiencia,
   StatusAudiencia,
   ModalidadeAudiencia,
   GrauTribunal,
@@ -57,7 +58,7 @@ interface AudienciasListWrapperProps {
   /** Dados de usuários pré-carregados (evita fetch duplicado) */
   usuariosData?: { id: number; nomeExibicao?: string; nomeCompleto?: string }[];
   /** Dados de tipos de audiência pré-carregados (evita fetch duplicado) */
-  tiposAudienciaData?: { id: number; descricao: string }[];
+  tiposAudienciaData?: TipoAudiencia[];
 }
 
 // =============================================================================
@@ -243,6 +244,7 @@ export function AudienciasListWrapper({
           table ? (
             <DataTableToolbar
               table={table}
+              title="Audiências"
               density={density}
               onDensityChange={setDensity}
               searchValue={globalFilter}

@@ -278,25 +278,32 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
   // =============================================================================
 
   const renderFiltersBar = () => (
-    <div className="flex items-center justify-between gap-4 p-4 bg-card border rounded-md">
-      <div className="flex items-center gap-2 flex-wrap">
-        {/* Busca */}
-        <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar..."
-            value={globalFilter}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            className="h-9 w-50 pl-8 bg-card"
-          />
-        </div>
+    <div className="bg-card border rounded-md">
+      {/* Linha 1: Título */}
+      <div className="flex items-center justify-between px-4 py-4">
+        <h1 className="text-2xl font-semibold tracking-tight">Audiências</h1>
+      </div>
+
+      {/* Linha 2: Filtros */}
+      <div className="flex items-center justify-between gap-4 px-4 pb-4">
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Busca */}
+          <div className="relative w-80">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar..."
+              value={globalFilter}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              className="h-9 w-full pl-9 bg-card"
+            />
+          </div>
 
         {/* Tribunal */}
         <Select
           value={tribunalFilter || '_all'}
           onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal)}
         >
-          <SelectTrigger className="h-9 w-30 bg-card">
+          <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
             <SelectValue placeholder="Tribunal" />
           </SelectTrigger>
           <SelectContent>
@@ -314,7 +321,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           value={grauFilter || '_all'}
           onValueChange={(v) => setGrauFilter(v === '_all' ? '' : (v as GrauTribunal))}
         >
-          <SelectTrigger className="h-9 w-32.5 bg-card">
+          <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
             <SelectValue placeholder="Grau" />
           </SelectTrigger>
           <SelectContent>
@@ -332,7 +339,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           value={statusFilter || '_all'}
           onValueChange={(v) => setStatusFilter(v === '_all' ? '' : (v as StatusAudiencia))}
         >
-          <SelectTrigger className="h-9 w-32.5 bg-card">
+          <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -350,7 +357,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           value={modalidadeFilter || '_all'}
           onValueChange={(v) => setModalidadeFilter(v === '_all' ? '' : (v as ModalidadeAudiencia))}
         >
-          <SelectTrigger className="h-9 w-32.5 bg-card">
+          <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
             <SelectValue placeholder="Modalidade" />
           </SelectTrigger>
           <SelectContent>
@@ -368,7 +375,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           value={tipoAudienciaFilter ? String(tipoAudienciaFilter) : '_all'}
           onValueChange={(v) => setTipoAudienciaFilter(v === '_all' ? '' : Number(v))}
         >
-          <SelectTrigger className="h-9 w-40 bg-card">
+          <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
           <SelectContent>
@@ -400,7 +407,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
             }
           }}
         >
-          <SelectTrigger className="h-9 w-40 bg-card">
+          <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
             <SelectValue placeholder="Responsável" />
           </SelectTrigger>
           <SelectContent>
@@ -415,25 +422,26 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
         </Select>
       </div>
 
-      {/* Ações à direita */}
-      <div className="flex items-center gap-2">
-        {/* View Mode Popover */}
-        {viewModePopover}
+        {/* Ações à direita */}
+        <div className="flex items-center gap-2">
+          {/* View Mode Popover */}
+          {viewModePopover}
 
-        {/* Configurações */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9"
-              onClick={() => setIsSettingsOpen(true)}
-            >
-              <Settings className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Configurações</TooltipContent>
-        </Tooltip>
+          {/* Configurações */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9"
+                onClick={() => setIsSettingsOpen(true)}
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Configurações</TooltipContent>
+          </Tooltip>
+        </div>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { CommandMenu } from "@/components/layout/header/command-menu";
 import { ActiveThemeProvider } from "@/components/layout/theme/active-theme";
+import { ServerActionVersionGuard } from "@/components/providers/server-action-version-guard";
 import { setNonceCache } from "@/hooks/use-csp-nonce";
 import { clearExpiredSecureStorage } from "@/lib/utils/clear-secure-storage";
 
@@ -32,6 +33,7 @@ export default function RootLayoutClient({
         disableTransitionOnChange
       >
         <ActiveThemeProvider>
+          <ServerActionVersionGuard />
           <CommandMenu />
           {children}
           {/* Toaster configurado com richColors para feedback visual (Sucesso=Verde, Erro=Vermelho) */}

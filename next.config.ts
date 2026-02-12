@@ -317,15 +317,17 @@ export default withBundleAnalyzer(
           },
         },
         {
-          // Short cache for JS to minimize Server Action version mismatches
+          // NetworkFirst for JS to prevent Server Action version mismatches after deploys
+          // This prevents "Failed to find Server Action" errors when users have stale JS
           urlPattern: /\/_next\/static.+\.js$/,
-          handler: "StaleWhileRevalidate",
+          handler: "NetworkFirst",
           options: {
             cacheName: "next-static-js",
             expiration: {
               maxEntries: 64,
-              maxAgeSeconds: 60 * 60, // 1 hour (reduced from 24h)
+              maxAgeSeconds: 60 * 60, // 1 hour
             },
+            networkTimeoutSeconds: 5, // Fallback to cache after 5s timeout
           },
         },
         {

@@ -74,11 +74,11 @@ export function AudienciasListFilters({
         value={statusFiltro}
         onValueChange={(value) => onStatusChange(value as StatusAudiencia | 'todas')}
       >
-        <SelectTrigger className="h-10 w-[140px]">
+        <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="todas">Todos Status</SelectItem>
+          <SelectItem value="todas">Status</SelectItem>
           {Object.values(StatusAudiencia).map((status) => (
             <SelectItem key={status} value={status}>
               {STATUS_AUDIENCIA_LABELS[status]}
@@ -92,11 +92,11 @@ export function AudienciasListFilters({
         value={modalidadeFiltro}
         onValueChange={(value) => onModalidadeChange(value as ModalidadeAudiencia | 'todas')}
       >
-        <SelectTrigger className="h-10 w-[150px]">
+        <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
           <SelectValue placeholder="Modalidade" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="todas">Todas Modalidades</SelectItem>
+          <SelectItem value="todas">Modalidade</SelectItem>
           {Object.values(ModalidadeAudiencia).map((modalidade) => (
             <SelectItem key={modalidade} value={modalidade}>
               {MODALIDADE_AUDIENCIA_LABELS[modalidade]}
@@ -110,11 +110,11 @@ export function AudienciasListFilters({
         value={trtFiltro}
         onValueChange={(value) => onTrtChange(value as CodigoTribunal | 'todas')}
       >
-        <SelectTrigger className="h-10 w-[120px]">
-          <SelectValue placeholder="TRT" />
+        <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
+          <SelectValue placeholder="Tribunal" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="todas">Todos TRTs</SelectItem>
+          <SelectItem value="todas">Tribunal</SelectItem>
           {CODIGO_TRIBUNAL.map((trt) => (
             <SelectItem key={trt} value={trt}>
               {trt}
@@ -128,11 +128,11 @@ export function AudienciasListFilters({
         value={grauFiltro}
         onValueChange={(value) => onGrauChange(value as GrauTribunal | 'todas')}
       >
-        <SelectTrigger className="h-10 w-[140px]">
+        <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
           <SelectValue placeholder="Grau" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="todas">Todos Graus</SelectItem>
+          <SelectItem value="todas">Grau</SelectItem>
           {Object.values(GrauTribunal).map((grau) => (
             <SelectItem key={grau} value={grau}>
               {GRAU_TRIBUNAL_LABELS[grau]}
@@ -150,11 +150,11 @@ export function AudienciasListFilters({
           else onResponsavelChange(Number(value));
         }}
       >
-        <SelectTrigger className="h-10 w-[160px]">
+        <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
           <SelectValue placeholder="Responsável" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="todos">Todos Responsáveis</SelectItem>
+          <SelectItem value="todos">Responsável</SelectItem>
           <SelectItem value="null">Sem Responsável</SelectItem>
           {usuarios.map((user) => (
             <SelectItem key={user.id} value={user.id.toString()}>
@@ -172,11 +172,11 @@ export function AudienciasListFilters({
           else onTipoAudienciaChange(Number(value));
         }}
       >
-        <SelectTrigger className="h-10 w-[180px]">
-          <SelectValue placeholder="Tipo de Audiência" />
+        <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
+          <SelectValue placeholder="Tipo" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="todos">Todos os Tipos</SelectItem>
+          <SelectItem value="todos">Tipo</SelectItem>
           {tiposAudiencia.map((tipo) => (
             <SelectItem key={tipo.id} value={tipo.id.toString()}>
               {tipo.descricao}

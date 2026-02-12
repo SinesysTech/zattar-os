@@ -32,7 +32,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 
-import type { CodigoTribunal } from '../domain';
+import type { CodigoTribunal, TipoAudiencia } from '../domain';
 import {
   StatusAudiencia,
   ModalidadeAudiencia,
@@ -66,7 +66,7 @@ interface AudienciasTableWrapperProps {
   /** Dados de usuários pré-carregados (evita fetch duplicado) */
   usuariosData?: { id: number; nomeExibicao?: string; nomeCompleto?: string }[];
   /** Dados de tipos de audiência pré-carregados (evita fetch duplicado) */
-  tiposAudienciaData?: { id: number; descricao: string }[];
+  tiposAudienciaData?: TipoAudiencia[];
 }
 
 type StatusFilterType = 'todas' | StatusAudiencia;
