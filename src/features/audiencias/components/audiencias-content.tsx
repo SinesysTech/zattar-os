@@ -60,7 +60,6 @@ import { useUsuarios } from '@/features/usuarios';
 
 import { AudienciasListWrapper } from './audiencias-list-wrapper';
 import { AudienciasTableWrapper } from './audiencias-table-wrapper';
-import { AudienciasCalendarMonthView } from './audiencias-calendar-month-view';
 import { AudienciasCalendarYearView } from './audiencias-calendar-year-view';
 import { AudienciasCalendarCompact } from './audiencias-calendar-compact';
 import { AudienciasDayList } from './audiencias-day-list';
@@ -499,176 +498,174 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
       case 'mes':
         return (
           <div className="flex flex-col h-full gap-4">
-            {/* Toolbar unificada */}
-            <div className="bg-card border rounded-md">
-              {/* Linha 1: Título + Ação */}
-              <div className="flex items-center justify-between px-4 py-4">
-                <h1 className="text-2xl font-semibold tracking-tight">Audiências</h1>
-                <Button onClick={() => setIsCreateDialogOpen(true)}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Nova Audiência
-                </Button>
+            {/* Toolbar - sem card, direto no background */}
+            {/* Linha 1: Título + Ação */}
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-semibold tracking-tight">Audiências</h1>
+              <Button onClick={() => setIsCreateDialogOpen(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Nova Audiência
+              </Button>
+            </div>
+
+            {/* Linha 2: Filtros */}
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2 flex-wrap">
+                {/* Busca */}
+                <div className="relative w-80">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar..."
+                    value={globalFilter}
+                    onChange={(e) => setGlobalFilter(e.target.value)}
+                    className="h-9 w-full pl-9 bg-card"
+                  />
+                </div>
+
+                {/* Tribunal */}
+                <Select
+                  value={tribunalFilter || '_all'}
+                  onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal)}
+                >
+                  <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
+                    <SelectValue placeholder="Tribunal" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Tribunal</SelectItem>
+                    {CODIGO_TRIBUNAL.map((trt) => (
+                      <SelectItem key={trt} value={trt}>
+                        {trt}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Grau */}
+                <Select
+                  value={grauFilter || '_all'}
+                  onValueChange={(v) => setGrauFilter(v === '_all' ? '' : (v as GrauTribunal))}
+                >
+                  <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
+                    <SelectValue placeholder="Grau" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Grau</SelectItem>
+                    {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Status */}
+                <Select
+                  value={statusFilter || '_all'}
+                  onValueChange={(v) => setStatusFilter(v === '_all' ? '' : (v as StatusAudiencia))}
+                >
+                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Status</SelectItem>
+                    {Object.entries(STATUS_AUDIENCIA_LABELS).map(([value, label]) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Modalidade */}
+                <Select
+                  value={modalidadeFilter || '_all'}
+                  onValueChange={(v) => setModalidadeFilter(v === '_all' ? '' : (v as ModalidadeAudiencia))}
+                >
+                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
+                    <SelectValue placeholder="Modalidade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Modalidade</SelectItem>
+                    {Object.entries(MODALIDADE_AUDIENCIA_LABELS).map(([value, label]) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Tipo de Audiência */}
+                <Select
+                  value={tipoAudienciaFilter ? String(tipoAudienciaFilter) : '_all'}
+                  onValueChange={(v) => setTipoAudienciaFilter(v === '_all' ? '' : Number(v))}
+                >
+                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
+                    <SelectValue placeholder="Tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Tipo</SelectItem>
+                    {tiposAudiencia.map((tipo) => (
+                      <SelectItem key={tipo.id} value={String(tipo.id)}>
+                        {tipo.descricao}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Responsável */}
+                <Select
+                  value={
+                    responsavelFilter === 'todos'
+                      ? 'todos'
+                      : responsavelFilter === 'sem_responsavel'
+                        ? 'sem_responsavel'
+                        : String(responsavelFilter)
+                  }
+                  onValueChange={(v) => {
+                    if (v === 'todos') {
+                      setResponsavelFilter('todos');
+                    } else if (v === 'sem_responsavel') {
+                      setResponsavelFilter('sem_responsavel');
+                    } else {
+                      setResponsavelFilter(parseInt(v, 10));
+                    }
+                  }}
+                >
+                  <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
+                    <SelectValue placeholder="Responsável" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="todos">Responsável</SelectItem>
+                    <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
+                    {usuarios.map((usuario) => (
+                      <SelectItem key={usuario.id} value={String(usuario.id)}>
+                        {usuario.nomeExibicao || usuario.nomeCompleto || `Usuário ${usuario.id}`}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
-              {/* Linha 2: Filtros */}
-              <div className="flex items-center justify-between gap-4 px-4 pb-4">
-                <div className="flex items-center gap-2 flex-wrap">
-                  {/* Busca */}
-                  <div className="relative w-80">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Buscar..."
-                      value={globalFilter}
-                      onChange={(e) => setGlobalFilter(e.target.value)}
-                      className="h-9 w-full pl-9 bg-card"
-                    />
-                  </div>
-
-                  {/* Tribunal */}
-                  <Select
-                    value={tribunalFilter || '_all'}
-                    onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal)}
-                  >
-                    <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
-                      <SelectValue placeholder="Tribunal" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="_all">Tribunal</SelectItem>
-                      {CODIGO_TRIBUNAL.map((trt) => (
-                        <SelectItem key={trt} value={trt}>
-                          {trt}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  {/* Grau */}
-                  <Select
-                    value={grauFilter || '_all'}
-                    onValueChange={(v) => setGrauFilter(v === '_all' ? '' : (v as GrauTribunal))}
-                  >
-                    <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
-                      <SelectValue placeholder="Grau" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="_all">Grau</SelectItem>
-                      {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  {/* Status */}
-                  <Select
-                    value={statusFilter || '_all'}
-                    onValueChange={(v) => setStatusFilter(v === '_all' ? '' : (v as StatusAudiencia))}
-                  >
-                    <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="_all">Status</SelectItem>
-                      {Object.entries(STATUS_AUDIENCIA_LABELS).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  {/* Modalidade */}
-                  <Select
-                    value={modalidadeFilter || '_all'}
-                    onValueChange={(v) => setModalidadeFilter(v === '_all' ? '' : (v as ModalidadeAudiencia))}
-                  >
-                    <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                      <SelectValue placeholder="Modalidade" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="_all">Modalidade</SelectItem>
-                      {Object.entries(MODALIDADE_AUDIENCIA_LABELS).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  {/* Tipo de Audiência */}
-                  <Select
-                    value={tipoAudienciaFilter ? String(tipoAudienciaFilter) : '_all'}
-                    onValueChange={(v) => setTipoAudienciaFilter(v === '_all' ? '' : Number(v))}
-                  >
-                    <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                      <SelectValue placeholder="Tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="_all">Tipo</SelectItem>
-                      {tiposAudiencia.map((tipo) => (
-                        <SelectItem key={tipo.id} value={String(tipo.id)}>
-                          {tipo.descricao}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  {/* Responsável */}
-                  <Select
-                    value={
-                      responsavelFilter === 'todos'
-                        ? 'todos'
-                        : responsavelFilter === 'sem_responsavel'
-                          ? 'sem_responsavel'
-                          : String(responsavelFilter)
-                    }
-                    onValueChange={(v) => {
-                      if (v === 'todos') {
-                        setResponsavelFilter('todos');
-                      } else if (v === 'sem_responsavel') {
-                        setResponsavelFilter('sem_responsavel');
-                      } else {
-                        setResponsavelFilter(parseInt(v, 10));
-                      }
-                    }}
-                  >
-                    <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
-                      <SelectValue placeholder="Responsável" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="todos">Responsável</SelectItem>
-                      <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
-                      {usuarios.map((usuario) => (
-                        <SelectItem key={usuario.id} value={String(usuario.id)}>
-                          {usuario.nomeExibicao || usuario.nomeCompleto || `Usuário ${usuario.id}`}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Ações à direita */}
-                <div className="flex items-center gap-2">
-                  {viewModePopover}
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-9 w-9"
-                        onClick={() => setIsSettingsOpen(true)}
-                      >
-                        <Settings className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Configurações</TooltipContent>
-                  </Tooltip>
-                </div>
+              {/* Ações à direita */}
+              <div className="flex items-center gap-2">
+                {viewModePopover}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9"
+                      onClick={() => setIsSettingsOpen(true)}
+                    >
+                      <Settings className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Configurações</TooltipContent>
+                </Tooltip>
               </div>
             </div>
 
-            {/* Master-Detail Layout */}
+            {/* Master-Detail Layout - ocupa toda a altura restante */}
             <div className="flex-1 min-h-0 bg-card border rounded-md overflow-hidden">
               {isLoading ? (
                 <TemporalViewLoading message="Carregando audiências..." />
