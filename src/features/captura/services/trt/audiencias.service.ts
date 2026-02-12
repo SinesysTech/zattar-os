@@ -32,7 +32,7 @@
  *                               ▼
  * ┌─────────────────────────────────────────────────────────────────┐
  * │  💾 FASE 5: PERSISTÊNCIA (ordem garante integridade referencial)│
- * │  ├── 📦 Processos: upsert acervo (Supabase) → retorna IDs       │
+ * │  ├── 📦 Processos: busca completa no painel PJe → salvarAcervo  │
  * │  ├── 📜 Timeline: upsert (timeline_jsonb no Supabase)           │
  * │  ├── 👥 Partes: upsert entidades + vínculos (com ID do acervo!) │
  * │  └── 🎤 Audiências: upsert (Supabase)                           │
@@ -69,9 +69,12 @@ import {
   buscarDadosComplementaresProcessos,
   extrairProcessosUnicos,
 } from "./dados-complementares.service";
+import { buscarProcessosPorIdsNoPainel } from "./buscar-processos-painel.service";
+import { salvarAcervoBatch } from "../persistence/acervo-persistence.service";
 import { salvarTimeline } from "../timeline/timeline-persistence.service";
 import { persistirPartesProcesso } from "../partes/partes-capture.service";
 import type { TimelineItemEnriquecido } from "@/types/contracts/pje-trt";
+import type { Processo } from "../../types/types";
 
 /**
  * Resultado da captura de audiências
@@ -274,19 +277,18 @@ export async function audienciasCapture(
       advogadoInfo.nome,
     );
 
-    // 5.2 Buscar IDs dos processos no acervo e criar processos mínimos se necessário
-    // NOTA: Os dados de audiência (ProcessoAudiencia) são parciais, mas precisamos garantir
-    // que existam no acervo para a integridade referencial das audiências.
-    console.log("   📦 [5.2] Buscando processos no acervo...");
+    // 5.2 Buscar processos completos no painel + persistir no acervo
+    // Segue o mesmo padrão da captura combinada: busca dados completos do PJe
+    console.log("   📦 [5.2] Buscando processos no acervo e no painel PJe...");
     const mapeamentoIds = new Map<number, number>();
+    const idAdvogado = parseInt(advogadoInfo.idAdvogado, 10);
 
     try {
-      // Reutiliza lista de IDs já extraída na fase 3
       const supabase = (
         await import("@/lib/supabase/service-client")
       ).createServiceClient();
 
-      // Buscar processos existentes em batch
+      // Buscar processos já existentes no acervo
       const { data: processosExistentes, error: errorBusca } = await supabase
         .from("acervo")
         .select("id, id_pje")
@@ -318,121 +320,158 @@ export async function audienciasCapture(
         `   📋 [5.2] Processos faltantes: ${processosFaltantes.length}`,
       );
 
-      // Criar processos mínimos para os faltantes (necessário para integridade referencial)
+      // Buscar dados completos dos processos faltantes no painel PJe
       if (processosFaltantes.length > 0) {
         console.log(
-          `   ⚠️ [5.2] Criando ${processosFaltantes.length} processos mínimos no acervo...`,
+          `   🔎 [5.2] Buscando ${processosFaltantes.length} processos completos no painel PJe...`,
         );
 
-        // Criar mapa de número do processo por ID
-        const numeroProcessoPorId = new Map<number, string>();
-        for (const audiencia of audiencias) {
-          const id = audiencia.idProcesso ?? audiencia.processo?.id;
-          const numero = audiencia.nrProcesso ?? audiencia.processo?.numero;
-          if (id && numero && !numeroProcessoPorId.has(id)) {
-            numeroProcessoPorId.set(id, numero);
-          }
-        }
-
-        const processosMinimos = processosFaltantes.map((idPje) => {
-          const numeroProcesso = (numeroProcessoPorId.get(idPje) || "").trim();
-          const numero = parseInt(numeroProcesso.split("-")[0] ?? "", 10) || 0;
-
-          return {
-            id_pje: idPje,
-            advogado_id: advogadoDb.id,
-            origem: "acervo_geral" as const,
-            trt: params.config.codigo,
-            grau: params.config.grau,
-            numero_processo: numeroProcesso,
-            numero,
-            descricao_orgao_julgador: "",
-            classe_judicial: "Não informada",
-            segredo_justica: false,
-            codigo_status_processo: "",
-            prioridade_processual: 0,
-            nome_parte_autora: "",
-            qtde_parte_autora: 1,
-            nome_parte_re: "",
-            qtde_parte_re: 1,
-            data_autuacao: new Date().toISOString(),
-            juizo_digital: false,
-            tem_associacao: false,
-          };
+        const {
+          processosPorOrigem,
+          processosFaltantes: naoEncontradosNoPainel,
+        } = await buscarProcessosPorIdsNoPainel(page, {
+          idAdvogado,
+          processosIds: processosFaltantes,
         });
 
-        // Log para debug dos dados sendo inseridos
-        console.log(
-          `   🔍 [5.2] Exemplo de processo mínimo:`,
-          JSON.stringify(processosMinimos[0], null, 2),
-        );
-
-        // Usar insert ao invés de upsert para evitar problemas de inferência de tipos em enums no ON CONFLICT
-        // Como já filtramos por ID, a chance de conflito é baixa (apenas race condition)
-        console.log(
-          `   🔄 [5.2] Inserindo ${processosMinimos.length} processos mínimos (insert)...`,
-        );
-
-        // Tentar inserir - se falhar por duplicidade, o re-check abaixo captura os IDs
-        const { data: inseridos, error } = await supabase
-          .from("acervo")
-          .insert(processosMinimos)
-          .select("id, id_pje");
-
-        if (error) {
-          console.warn(
-            `   ⚠️ [5.2] Erro/Alerta ao criar processos mínimos (pode ser duplicidade):`,
-            error.message,
-          );
-        } else {
-          console.log(
-            `   ✅ [5.2] Insert retornou ${inseridos?.length ?? 0} registros`,
-          );
-          for (const proc of inseridos ?? []) {
-            mapeamentoIds.set(proc.id_pje, proc.id);
+        // Persistir processos arquivados com dados completos
+        if (processosPorOrigem.arquivado.length > 0) {
+          try {
+            console.log(
+              `   📦 [5.2] Persistindo ${processosPorOrigem.arquivado.length} processos arquivados...`,
+            );
+            const resultArquivados = await salvarAcervoBatch({
+              processos: processosPorOrigem.arquivado,
+              advogadoId: advogadoDb.id,
+              origem: "arquivado",
+              trt: params.config.codigo,
+              grau: params.config.grau,
+            });
+            for (const [idPje, idAcervo] of resultArquivados.mapeamentoIds) {
+              mapeamentoIds.set(idPje, idAcervo);
+            }
+          } catch (e) {
+            console.error(
+              "   ❌ [5.2] Erro ao salvar processos arquivados:",
+              e,
+            );
           }
         }
 
-        // SEMPRE fazer re-check para garantir que temos todos os IDs no mapa
-        // (necessário caso o insert tenha falhado por duplicidade ou retornado vazio)
-        const idsFaltantesNoMapa = processosIds.filter(
-          (id) => !mapeamentoIds.has(id),
-        );
+        // Persistir processos do acervo geral com dados completos
+        if (processosPorOrigem.acervo_geral.length > 0) {
+          try {
+            console.log(
+              `   📦 [5.2] Persistindo ${processosPorOrigem.acervo_geral.length} processos do acervo geral...`,
+            );
+            const resultAcervo = await salvarAcervoBatch({
+              processos: processosPorOrigem.acervo_geral,
+              advogadoId: advogadoDb.id,
+              origem: "acervo_geral",
+              trt: params.config.codigo,
+              grau: params.config.grau,
+            });
+            for (const [idPje, idAcervo] of resultAcervo.mapeamentoIds) {
+              mapeamentoIds.set(idPje, idAcervo);
+            }
+          } catch (e) {
+            console.error(
+              "   ❌ [5.2] Erro ao salvar processos do acervo geral:",
+              e,
+            );
+          }
+        }
 
-        if (idsFaltantesNoMapa.length > 0) {
-          console.log(
-            `   🔄 [5.2] Buscando IDs restantes para ${idsFaltantesNoMapa.length} processos...`,
+        // Fallback: processos não encontrados em nenhum painel
+        // Pode ser processo removido do PJe, ou falha de paginação.
+        // Tenta buscar no acervo local (pode já existir de captura anterior)
+        if (naoEncontradosNoPainel.length > 0) {
+          console.warn(
+            `   ⚠️ [5.2] ${naoEncontradosNoPainel.length} processos não encontrados no painel PJe. Verificando acervo local...`,
           );
 
-          const { data: recheck } = await supabase
+          const { data: existentesLocal } = await supabase
             .from("acervo")
             .select("id, id_pje")
-            .in("id_pje", idsFaltantesNoMapa)
+            .in("id_pje", naoEncontradosNoPainel)
             .eq("trt", params.config.codigo)
             .eq("grau", params.config.grau);
 
-          for (const proc of recheck ?? []) {
+          for (const proc of existentesLocal ?? []) {
             mapeamentoIds.set(proc.id_pje, proc.id);
           }
-        }
 
-        // Verificação final
-        const aindaFaltantes = processosIds.filter(
-          (id) => !mapeamentoIds.has(id),
-        );
-        if (aindaFaltantes.length > 0) {
-          console.warn(
-            `   ⚠️ [5.2] ATENÇÃO: ${aindaFaltantes.length} processos ainda sem ID no acervo após tentativas!`,
-            aindaFaltantes,
+          // Processos que realmente não existem em lugar nenhum: criar mínimos como último recurso
+          const semNenhumRegistro = naoEncontradosNoPainel.filter(
+            (id) => !mapeamentoIds.has(id),
           );
-        } else {
-          console.log(
-            `   ✅ [5.2] Todos os ${mapeamentoIds.size} processos mapeados com sucesso.`,
-          );
+
+          if (semNenhumRegistro.length > 0) {
+            console.warn(
+              `   ⚠️ [5.2] Criando ${semNenhumRegistro.length} processos mínimos (último recurso)...`,
+            );
+
+            // Criar mapa de número do processo por ID
+            const numeroProcessoPorId = new Map<number, string>();
+            for (const audiencia of audiencias) {
+              const id = audiencia.idProcesso ?? audiencia.processo?.id;
+              const numero = audiencia.nrProcesso ?? audiencia.processo?.numero;
+              if (id && numero && !numeroProcessoPorId.has(id)) {
+                numeroProcessoPorId.set(id, numero);
+              }
+            }
+
+            const processosMinimos: Processo[] = semNenhumRegistro.map(
+              (idPje) => {
+                const numeroProcesso = (
+                  numeroProcessoPorId.get(idPje) || ""
+                ).trim();
+                const numero =
+                  parseInt(numeroProcesso.split("-")[0] ?? "", 10) || 0;
+
+                return {
+                  id: idPje,
+                  descricaoOrgaoJulgador: "",
+                  classeJudicial: "Não informada",
+                  numero,
+                  numeroProcesso,
+                  segredoDeJustica: false,
+                  codigoStatusProcesso: "",
+                  prioridadeProcessual: 0,
+                  nomeParteAutora: "",
+                  qtdeParteAutora: 1,
+                  nomeParteRe: "",
+                  qtdeParteRe: 1,
+                  dataAutuacao: new Date().toISOString(),
+                  juizoDigital: false,
+                  dataProximaAudiencia: null,
+                  temAssociacao: false,
+                };
+              },
+            );
+
+            try {
+              const resultMinimos = await salvarAcervoBatch({
+                processos: processosMinimos,
+                advogadoId: advogadoDb.id,
+                origem: "acervo_geral",
+                trt: params.config.codigo,
+                grau: params.config.grau,
+              });
+              for (const [idPje, idAcervo] of resultMinimos.mapeamentoIds) {
+                mapeamentoIds.set(idPje, idAcervo);
+              }
+            } catch (e) {
+              console.error(
+                "   ❌ [5.2] Erro ao inserir processos mínimos:",
+                e,
+              );
+            }
+          }
         }
       }
 
-      // Verificação final: garantir que mapeamento cobre todos os processos
+      // Verificação final
       const processosSemMapeamento = processosIds.filter(
         (id) => !mapeamentoIds.has(id),
       );
@@ -447,7 +486,7 @@ export async function audienciasCapture(
         );
       }
     } catch (e) {
-      console.error(`   ❌ [5.2] Exceção ao processar processos mínimos:`, e);
+      console.error(`   ❌ [5.2] Exceção ao processar processos:`, e);
       console.error(`   ❌ [5.2] Stack:`, e instanceof Error ? e.stack : "N/A");
     }
 
