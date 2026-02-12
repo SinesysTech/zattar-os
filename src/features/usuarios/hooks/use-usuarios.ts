@@ -18,6 +18,8 @@ export interface UseUsuariosParams {
   ufOab?: string;
   cargoId?: number | null;
   isSuperAdmin?: boolean;
+  /** Se false, não faz fetch (útil quando dados são passados via props) */
+  enabled?: boolean;
 }
 
 interface UseUsuariosResult {
@@ -33,8 +35,9 @@ interface UseUsuariosResult {
 export const useUsuarios = (
   params: UseUsuariosParams = {}
 ): UseUsuariosResult => {
+  const { enabled = true } = params;
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
   const isFirstRender = useRef(true);
 
@@ -53,8 +56,9 @@ export const useUsuarios = (
   );
 
   const buscarUsuarios = useCallback(async () => {
-    // Não executar durante SSR/SSG
-    if (!isClient) {
+    // Não executar durante SSR/SSG ou se desabilitado
+    if (!isClient || !enabled) {
+      setIsLoading(false);
       return;
     }
 
@@ -78,7 +82,7 @@ export const useUsuarios = (
     } finally {
       setIsLoading(false);
     }
-  }, [stableParams]);
+  }, [stableParams, enabled]);
 
   useEffect(() => {
     // Executar na primeira render

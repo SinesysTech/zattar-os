@@ -58,7 +58,7 @@ const HOURLY_LIMITS: Partial<Record<RateLimitTier, RateLimitConfig>> = {
  * Limites específicos por endpoint
  */
 const ENDPOINT_LIMITS: Record<string, Partial<RateLimitConfig>> = {
-  '/api/mcp': { maxRequests: 50 },
+  '/api/mcp': { maxRequests: 300 }, // Aumentado para suportar agente de atendimento
   '/api/plate/ai': { maxRequests: 30 },
   '/api/mcp/stream': { maxRequests: 20 },
   '/api/auth': { maxRequests: 10 },

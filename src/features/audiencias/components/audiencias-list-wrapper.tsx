@@ -54,6 +54,10 @@ interface AudienciasListWrapperProps {
   initialPagination?: PaginationInfo | null;
   /** Slot para o seletor de modo de visualização (ViewModePopover) */
   viewModeSlot?: React.ReactNode;
+  /** Dados de usuários pré-carregados (evita fetch duplicado) */
+  usuariosData?: { id: number; nomeExibicao?: string; nomeCompleto?: string }[];
+  /** Dados de tipos de audiência pré-carregados (evita fetch duplicado) */
+  tiposAudienciaData?: { id: number; descricao: string }[];
 }
 
 // =============================================================================
@@ -64,6 +68,8 @@ export function AudienciasListWrapper({
   initialData = [],
   initialPagination = null,
   viewModeSlot,
+  usuariosData,
+  tiposAudienciaData,
 }: AudienciasListWrapperProps) {
   // Data state
   const [audiencias, setAudiencias] = React.useState<AudienciaComResponsavel[]>(
@@ -106,9 +112,13 @@ export function AudienciasListWrapper({
   // Debounce search (500ms)
   const buscaDebounced = useDebounce(globalFilter, 500);
 
-  // Auxiliary data
-  const { tiposAudiencia } = useTiposAudiencias();
-  const { usuarios } = useUsuarios();
+  // Auxiliary data (usar props se disponíveis, senão buscar)
+  const { tiposAudiencia: tiposFetched } = useTiposAudiencias({ enabled: !tiposAudienciaData });
+  const { usuarios: usuariosFetched } = useUsuarios({ enabled: !usuariosData });
+
+  // Usar dados das props se disponíveis, senão usar dados buscados
+  const tiposAudiencia = tiposAudienciaData ?? tiposFetched;
+  const usuarios = usuariosData ?? usuariosFetched;
 
   // Map usuarios to audiencias for responsavel name
   const usuariosMap = React.useMemo(() => {
@@ -171,20 +181,22 @@ export function AudienciasListWrapper({
 
   // Ref to control first render
   const isFirstRender = React.useRef(true);
+  const hasInitialData = initialPagination !== null || initialData.length > 0;
 
-  // Refetch when params change
+  // Refetch when params change (NÃO incluir refetch como dependência para evitar loop)
   React.useEffect(() => {
-    // Skip first render (uses initial data)
+    // Skip first render se tem dados iniciais
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      // If we didn't receive any initial server-side data, fetch immediately.
-      if (!initialPagination && initialData.length === 0) {
+      // Se não tem dados iniciais, buscar imediatamente
+      if (!hasInitialData) {
         refetch();
       }
       return;
     }
 
     refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     pageIndex,
     pageSize,
@@ -195,9 +207,6 @@ export function AudienciasListWrapper({
     grauFiltro,
     responsavelFiltro,
     tipoAudienciaFiltro,
-    initialPagination,
-    initialData.length,
-    refetch,
   ]);
 
   // Handlers
