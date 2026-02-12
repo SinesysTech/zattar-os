@@ -10,6 +10,8 @@ export { getAudienciasColumns, ResponsavelCell, type AudienciaComResponsavel } f
 // Calendar views
 export { AudienciasCalendarMonthView } from './audiencias-calendar-month-view';
 export { AudienciasCalendarYearView } from './audiencias-calendar-year-view';
+export { AudienciasCalendarCompact } from './audiencias-calendar-compact';
+export { AudienciasDayList } from './audiencias-day-list';
 export { AudienciasMonthDayCell } from './audiencias-month-day-cell';
 
 // Cards and badges

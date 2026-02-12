@@ -4,25 +4,26 @@
  * ConfiguracoesTabsContent - Componente principal com tabs para navegação entre configurações
  *
  * Implementa navegação por tabs seguindo o padrão do projeto:
- * - Tabs: Métricas | Segurança
+ * - Tabs: Métricas | Segurança | Autenticador
  * - URL com query param: /app/configuracoes?tab=metricas
  * - Experiência de página única
  */
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Database, Shield } from 'lucide-react';
+import { Database, Shield, KeyRound } from 'lucide-react';
 
 import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 import { MetricasDBContent } from '@/app/app/admin/metricas-db/components/metricas-db-content';
 import { BlockedIpsContent } from '@/app/app/admin/security/blocked-ips/components/blocked-ips-content';
+import { TwoFAuthConfigContent } from '@/features/twofauth';
 import type { MetricasDB } from '@/features/admin';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
-type ConfiguracoesTab = 'metricas' | 'seguranca';
+type ConfiguracoesTab = 'metricas' | 'seguranca' | 'autenticador';
 
 // =============================================================================
 // CONFIGURAÇÃO DAS TABS
@@ -31,9 +32,10 @@ type ConfiguracoesTab = 'metricas' | 'seguranca';
 const TABS_UI = [
   { value: 'metricas' as const, label: 'Métricas', icon: <Database /> },
   { value: 'seguranca' as const, label: 'Segurança', icon: <Shield /> },
+  { value: 'autenticador' as const, label: 'Autenticador', icon: <KeyRound /> },
 ];
 
-const VALID_TABS = new Set<ConfiguracoesTab>(['metricas', 'seguranca']);
+const VALID_TABS = new Set<ConfiguracoesTab>(['metricas', 'seguranca', 'autenticador']);
 
 // =============================================================================
 // PROPS
@@ -81,6 +83,8 @@ export function ConfiguracoesTabsContent({
         return metricas ? <MetricasDBContent metricas={metricas} /> : null;
       case 'seguranca':
         return <BlockedIpsContent />;
+      case 'autenticador':
+        return <TwoFAuthConfigContent />;
       default:
         return metricas ? <MetricasDBContent metricas={metricas} /> : null;
     }

@@ -6,25 +6,27 @@
  * - buscar_processos_por_cpf: Busca por CPF do cliente
  * - buscar_processos_por_cnpj: Busca por CNPJ do cliente
  * - buscar_processo_por_numero: Busca por número processual (CNJ)
+ *
+ * IMPORTANTE: As ferramentas MCP chamam os SERVICES diretamente,
+ * não as Server Actions, pois a autenticação já foi validada
+ * no endpoint MCP via Service API Key.
  */
 
 import { z } from 'zod';
 import { registerMcpTool } from '../server';
-import { actionResultToMcp } from '../utils';
 import { jsonResult, errorResult } from '../types';
-import type { ActionResult } from '@/lib/safe-action';
 
 /**
  * Registra ferramentas MCP do módulo Processos
  */
 export async function registerProcessosTools(): Promise<void> {
+  // Importar services diretamente (sem autenticação - já validada no MCP endpoint)
   const {
-    actionListarProcessos,
-    actionBuscarTimeline,
-    actionBuscarProcessosPorCPF,
-    actionBuscarProcessosPorCNPJ,
-    actionBuscarProcessoPorNumero,
-  } = await import('@/features/processos/actions');
+    listarProcessos,
+    buscarTimeline,
+    buscarProcessosPorClienteCPF,
+    buscarProcessosPorClienteCNPJ,
+  } = await import('@/features/processos/service');
 
   /**
    * Lista processos do sistema com suporte a filtros (status, TRT, grau, advogado, período, busca textual)
@@ -48,8 +50,16 @@ export async function registerProcessosTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarProcessos(args);
-        return actionResultToMcp(result as ActionResult<unknown>);
+        const result = await listarProcessos(args);
+
+        if (!result.success) {
+          return errorResult(result.error.message);
+        }
+
+        return jsonResult({
+          message: `${result.data.pagination.total} processo(s) encontrado(s)`,
+          ...result.data,
+        });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar processos');
       }
@@ -72,17 +82,17 @@ export async function registerProcessosTools(): Promise<void> {
       try {
         const { cpf, limite } = args as { cpf: string; limite?: number };
 
-        const result = await actionBuscarProcessosPorCPF(cpf, limite);
+        const result = await buscarProcessosPorClienteCPF(cpf, limite);
 
         if (!result.success) {
-          return actionResultToMcp(result as ActionResult<unknown>);
+          return errorResult(result.error.message);
         }
 
-        const processos = (result.data as Array<{ id?: number }>) ?? [];
+        const processos = result.data ?? [];
         const enriquecidos = await Promise.all(
           processos.map(async (p) => {
             if (!p?.id) return { processo: p, timeline: [] };
-            const timelineResult = await actionBuscarTimeline(p.id);
+            const timelineResult = await buscarTimeline(p.id);
             const timeline = timelineResult?.success ? timelineResult.data : [];
             return { processo: p, timeline };
           })
@@ -116,17 +126,17 @@ export async function registerProcessosTools(): Promise<void> {
       try {
         const { cnpj, limite } = args as { cnpj: string; limite?: number };
 
-        const result = await actionBuscarProcessosPorCNPJ(cnpj, limite);
+        const result = await buscarProcessosPorClienteCNPJ(cnpj, limite);
 
         if (!result.success) {
-          return actionResultToMcp(result as ActionResult<unknown>);
+          return errorResult(result.error.message);
         }
 
-        const processos = (result.data as Array<{ id?: number }>) ?? [];
+        const processos = result.data ?? [];
         const enriquecidos = await Promise.all(
           processos.map(async (p) => {
             if (!p?.id) return { processo: p, timeline: [] };
-            const timelineResult = await actionBuscarTimeline(p.id);
+            const timelineResult = await buscarTimeline(p.id);
             const timeline = timelineResult?.success ? timelineResult.data : [];
             return { processo: p, timeline };
           })
@@ -159,19 +169,24 @@ export async function registerProcessosTools(): Promise<void> {
       try {
         const { numeroProcesso } = args as { numeroProcesso: string };
 
-        const result = await actionBuscarProcessoPorNumero(numeroProcesso);
+        // Normalizar número de processo (remover formatação CNJ)
+        const { normalizarNumeroProcesso } = await import('@/features/processos/utils');
+        const numeroNormalizado = normalizarNumeroProcesso(numeroProcesso.trim());
+
+        // Buscar processo via service
+        const result = await listarProcessos({ numeroProcesso: numeroNormalizado, limite: 1 });
 
         if (!result.success) {
-          return actionResultToMcp(result as ActionResult<unknown>);
+          return errorResult(result.error.message);
         }
 
-        const processo = result.data as { id?: number };
-
-        if (!processo) {
+        if (!result.data.data || result.data.data.length === 0) {
           return errorResult('Processo não encontrado');
         }
 
-        const timeline = processo?.id ? await actionBuscarTimeline(processo.id) : null;
+        const processo = result.data.data[0] as { id?: number };
+
+        const timeline = processo?.id ? await buscarTimeline(processo.id) : null;
 
         return jsonResult({
           message: 'Processo encontrado',
