@@ -1,0 +1,101 @@
+{
+  "timestamp": "2026-02-12T13-51-03-612Z",
+  "trtsComErro": [
+    "TRT11",
+    "TRT14",
+    "TRT16",
+    "TRT17",
+    "TRT20",
+    "TRT24"
+  ],
+  "graus": [
+    "primeiro_grau",
+    "segundo_grau"
+  ],
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2026-02-12",
+    "dataFim": "2027-02-12"
+  },
+  "codigoSituacao": "M",
+  "totalTRTs": 6,
+  "totalTestes": 12,
+  "sucessos": 0,
+  "falhas": 12,
+  "totalAudienciasCapturadas": 0,
+  "duracaoTotalSegundos": 0,
+  "resultados": [
+    {
+      "trt": "TRT11",
+      "grau": "primeiro_grau",
+      "sucesso": false,
+      "erro": "fetch failed"
+    },
+    {
+      "trt": "TRT14",
+      "grau": "primeiro_grau",
+      "sucesso": false,
+      "erro": "fetch failed"
+    },
+    {
+      "trt": "TRT16",
+      "grau": "primeiro_grau",
+      "sucesso": false,
+      "erro": "fetch failed"
+    },
+    {
+      "trt": "TRT17",
+      "grau": "primeiro_grau",
+      "sucesso": false,
+      "erro": "fetch failed"
+    },
+    {
+      "trt": "TRT20",
+      "grau": "primeiro_grau",
+      "sucesso": false,
+      "erro": "fetch failed"
+    },
+    {
+      "trt": "TRT24",
+      "grau": "primeiro_grau",
+      "sucesso": false,
+      "erro": "fetch failed"
+    },
+    {
+      "trt": "TRT11",
+      "grau": "segundo_grau",
+      "sucesso": false,
+      "erro": "fetch failed"
+    },
+    {
+      "trt": "TRT14",
+      "grau": "segundo_grau",
+      "sucesso": false,
+      "erro": "fetch failed"
+    },
+    {
+      "trt": "TRT16",
+      "grau": "segundo_grau",
+      "sucesso": false,
+      "erro": "fetch failed"
+    },
+    {
+      "trt": "TRT17",
+      "grau": "segundo_grau",
+      "sucesso": false,
+      "erro": "fetch failed"
+    },
+    {
+      "trt": "TRT20",
+      "grau": "segundo_grau",
+      "sucesso": false,
+      "erro": "fetch failed"
+    },
+    {
+      "trt": "TRT24",
+      "grau": "segundo_grau",
+      "sucesso": false,
+      "erro": "fetch failed"
+    }
+  ]
+}

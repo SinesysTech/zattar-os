@@ -85,7 +85,7 @@ export interface WeekNavigatorProps {
 
 export function WeekNavigator({
   weekDays,
-  selectedDate,
+  selectedDate: _selectedDate,
   onDateSelect,
   onPreviousWeek,
   onNextWeek,

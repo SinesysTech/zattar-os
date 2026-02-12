@@ -148,11 +148,9 @@ function ResponsavelCell({
 
 function ActionsCell({
   pericia,
-  usuarios,
   onSuccess,
 }: {
   pericia: Pericia;
-  usuarios: UsuarioOption[];
   onSuccess?: () => void;
 }) {
   const [showDetalhes, setShowDetalhes] = React.useState(false);
@@ -375,7 +373,6 @@ export const columns: ColumnDef<Pericia>[] = [
         <div className="flex items-center py-2">
           <ActionsCell
             pericia={row.original}
-            usuarios={meta?.usuarios || []}
             onSuccess={meta?.onSuccess}
           />
         </div>

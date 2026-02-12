@@ -22,8 +22,7 @@ import {
   endOfMonth,
   startOfYear,
   endOfYear,
-  startOfDay,
-  endOfDay,
+
 } from 'date-fns';
 import { Search, Settings } from 'lucide-react';
 
@@ -51,7 +50,7 @@ import {
   MonthsCarousel,
   YearsCarousel,
   ViewModePopover,
-  WeekNavigator,
+
   useWeekNavigator,
   type ViewType,
 } from '@/components/shared';
@@ -106,7 +105,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
   // View State - sync with URL
   const [visualizacao, setVisualizacao] = React.useState<ViewType>(viewFromUrl);
   const [currentDate, setCurrentDate] = React.useState(new Date());
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+
 
   // Sync view state when URL changes
   React.useEffect(() => {
