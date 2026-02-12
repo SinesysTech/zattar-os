@@ -227,12 +227,10 @@ export async function listarAcordos(
   if (params.dataFim)
     query = query.lte("data_vencimento_primeira_parcela", params.dataFim);
 
-  // Busca textual em número do processo e nomes de partes
-  if (params.busca) {
-    query = query.or(
-      `acervo.numero_processo.ilike.%${params.busca}%,acervo.nome_parte_autora.ilike.%${params.busca}%,acervo.nome_parte_re.ilike.%${params.busca}%`
-    );
-  }
+  // NOTA: Busca textual via `params.busca` foi removida.
+  // PostgREST não suporta .or() em colunas de foreign tables (acervo.*).
+  // Para buscar por CPF/nome, use listarAcordosPorProcessoIds() com IDs obtidos
+  // de buscarProcessosPorClienteCPF() no service layer.
 
   query = query
     .order("created_at", { ascending: false })

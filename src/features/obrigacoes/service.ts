@@ -196,12 +196,29 @@ function calcularParcelasDoAcordo(
 
 /**
  * Helper para Portal do Cliente: Lista acordos filtrados por busca (CPF) retornando array tipado.
+ *
+ * Busca processos vinculados ao cliente pelo CPF e retorna acordos desses processos.
+ * Não usa .or() em foreign tables (não suportado pelo PostgREST).
  */
 export async function listarAcordosPorBuscaCpf(
   cpf: string
 ): Promise<AcordoComParcelas[]> {
-  const result = await listarAcordos({ busca: cpf, limite: 100 });
-  return result.acordos || [];
+  const cpfNormalizado = normalizarDocumento(cpf);
+
+  if (cpfNormalizado.length !== 11) {
+    return [];
+  }
+
+  // Busca processos do cliente via CPF
+  const processosResult = await buscarProcessosPorClienteCPF(cpfNormalizado, 100);
+  if (!processosResult.success || processosResult.data.length === 0) {
+    return [];
+  }
+
+  const processoIds = processosResult.data.map((p) => p.id);
+
+  // Busca acordos dos processos
+  return ObrigacoesRepository.listarAcordosPorProcessoIds(processoIds);
 }
 
 // =============================================================================
