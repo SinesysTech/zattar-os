@@ -63,6 +63,10 @@ interface AudienciasTableWrapperProps {
   weekNavigatorProps?: Omit<WeekNavigatorProps, 'className' | 'variant'>;
   /** Slot para o seletor de modo de visualização (ViewModePopover) */
   viewModeSlot?: React.ReactNode;
+  /** Dados de usuários pré-carregados (evita fetch duplicado) */
+  usuariosData?: { id: number; nomeExibicao?: string; nomeCompleto?: string }[];
+  /** Dados de tipos de audiência pré-carregados (evita fetch duplicado) */
+  tiposAudienciaData?: { id: number; descricao: string }[];
 }
 
 type StatusFilterType = 'todas' | StatusAudiencia;
@@ -78,7 +82,14 @@ function getUsuarioNome(u: { id: number; nomeExibicao?: string; nomeCompleto?: s
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function AudienciasTableWrapper({ fixedDate, hideDateFilters, weekNavigatorProps, viewModeSlot }: AudienciasTableWrapperProps) {
+export function AudienciasTableWrapper({
+  fixedDate,
+  hideDateFilters,
+  weekNavigatorProps,
+  viewModeSlot,
+  usuariosData,
+  tiposAudienciaData,
+}: AudienciasTableWrapperProps) {
   const router = useRouter();
 
   // ---------- Estado da Tabela (DataShell pattern) ----------
@@ -116,9 +127,13 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, weekNavigat
   const [editOpen, setEditOpen] = React.useState(false);
   const [selectedAudiencia, setSelectedAudiencia] = React.useState<AudienciaComResponsavel | null>(null);
 
-  // ---------- Dados Auxiliares ----------
-  const { usuarios } = useUsuarios();
-  const { tiposAudiencia } = useTiposAudiencias();
+  // ---------- Dados Auxiliares (usar props se disponíveis, senão buscar) ----------
+  const { usuarios: usuariosFetched } = useUsuarios({ enabled: !usuariosData });
+  const { tiposAudiencia: tiposFetched } = useTiposAudiencias({ enabled: !tiposAudienciaData });
+
+  // Usar dados das props se disponíveis, senão usar dados buscados
+  const usuarios = usuariosData ?? usuariosFetched;
+  const tiposAudiencia = tiposAudienciaData ?? tiposFetched;
 
   // Debounce da busca (500ms)
   const buscaDebounced = useDebounce(busca, 500);
@@ -223,7 +238,7 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, weekNavigat
     fixedDate,
   ]);
 
-  // ---------- Skip First Render ----------
+  // ---------- Efeito para buscar dados ----------
   const isFirstRender = React.useRef(true);
 
   React.useEffect(() => {
@@ -231,7 +246,21 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, weekNavigat
       isFirstRender.current = false;
     }
     refetch();
-  }, [refetch]);
+    // NÃO incluir refetch como dependência para evitar loop de chamadas
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    pageIndex,
+    pageSize,
+    buscaDebounced,
+    statusFilter,
+    modalidadeFilter,
+    responsavelFilter,
+    dateRange,
+    tribunalFilter,
+    grauFilter,
+    tipoAudienciaFilter,
+    fixedDate,
+  ]);
 
   // ---------- Handlers ----------
   const handleSucessoOperacao = React.useCallback(() => {

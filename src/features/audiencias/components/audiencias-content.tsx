@@ -445,7 +445,13 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
   const renderContent = () => {
     switch (visualizacao) {
       case 'lista':
-        return <AudienciasListWrapper viewModeSlot={viewModePopover} />;
+        return (
+          <AudienciasListWrapper
+            viewModeSlot={viewModePopover}
+            usuariosData={usuarios}
+            tiposAudienciaData={tiposAudiencia}
+          />
+        );
 
       case 'semana':
         return (
@@ -462,6 +468,8 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
               onToday: weekNav.goToToday,
               isCurrentWeek: weekNav.isCurrentWeek,
             }}
+            usuariosData={usuarios}
+            tiposAudienciaData={tiposAudiencia}
           />
         );
 

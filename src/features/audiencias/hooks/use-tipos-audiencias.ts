@@ -13,6 +13,8 @@ const isClient = typeof window !== "undefined";
 
 interface UseTiposAudienciasParams {
   limite?: number;
+  /** Se false, não faz fetch (útil quando dados são passados via props) */
+  enabled?: boolean;
 }
 
 /**
@@ -22,13 +24,15 @@ interface UseTiposAudienciasParams {
 export function useTiposAudiencias(
   params?: UseTiposAudienciasParams
 ): UseTiposAudienciasResult & { refetch: () => void } {
+  const enabled = params?.enabled ?? true;
   const [tiposAudiencia, setTiposAudiencia] = useState<TipoAudiencia[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
 
   const refetch = useCallback(async () => {
-    // Não executar durante SSR/SSG
-    if (!isClient) {
+    // Não executar durante SSR/SSG ou se desabilitado
+    if (!isClient || !enabled) {
+      setIsLoading(false);
       return;
     }
 
@@ -52,7 +56,7 @@ export function useTiposAudiencias(
     } finally {
       setIsLoading(false);
     }
-  }, [params?.limite]);
+  }, [params?.limite, enabled]);
 
   useEffect(() => {
     refetch();
