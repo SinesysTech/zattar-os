@@ -8,7 +8,9 @@
 -- Esta view existe no full_schema_dump.sql mas não tinha uma migration dedicada.
 -- Isso pode causar erro 500 em produção se a view não existir.
 
-CREATE OR REPLACE VIEW public.expedientes_com_origem AS
+DROP VIEW IF EXISTS public.expedientes_com_origem CASCADE;
+
+CREATE VIEW public.expedientes_com_origem AS
 WITH dados_primeiro_grau AS (
   SELECT DISTINCT ON (acervo.numero_processo)
     acervo.numero_processo,
@@ -68,7 +70,7 @@ SELECT
   e.observacoes,
   e.origem,
   -- Campos de origem (fonte da verdade do 1º grau)
-  COALESCE(dpg.trt_origem, e.trt::text) AS trt_origem,
+  COALESCE(dpg.trt_origem::text, e.trt::text) AS trt_origem,
   COALESCE(dpg.nome_parte_autora_origem, e.nome_parte_autora) AS nome_parte_autora_origem,
   COALESCE(dpg.nome_parte_re_origem, e.nome_parte_re) AS nome_parte_re_origem,
   dpg.orgao_julgador_origem

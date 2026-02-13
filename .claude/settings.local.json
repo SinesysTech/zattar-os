@@ -18,7 +18,9 @@
       "mcp__supabase__get_advisors",
       "mcp__supabase__list_edge_functions",
       "mcp__context7__resolve-library-id",
-      "mcp__context7__query-docs"
+      "mcp__context7__query-docs",
+      "mcp__supabase__list_migrations",
+      "mcp__supabase__generate_typescript_types"
     ]
   },
   "enableAllProjectMcpServers": true,

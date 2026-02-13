@@ -8,7 +8,9 @@
 -- Esta view existe no full_schema_dump.sql mas não tinha uma migration dedicada.
 -- Isso pode causar erros em produção se a view não existir.
 
-CREATE OR REPLACE VIEW public.audiencias_com_origem AS
+DROP VIEW IF EXISTS public.audiencias_com_origem CASCADE;
+
+CREATE VIEW public.audiencias_com_origem AS
 WITH dados_primeiro_grau AS (
   SELECT DISTINCT ON (acervo.numero_processo)
     acervo.numero_processo,
@@ -65,7 +67,7 @@ SELECT
   a.url_ata_audiencia,
   a.presenca_hibrida,
   -- Campos de origem (fonte da verdade do 1º grau)
-  COALESCE(dpg.trt_origem, a.trt::text) AS trt_origem,
+  COALESCE(dpg.trt_origem::text, a.trt::text) AS trt_origem,
   COALESCE(dpg.nome_parte_autora_origem, a.polo_ativo_nome) AS polo_ativo_origem,
   COALESCE(dpg.nome_parte_re_origem, a.polo_passivo_nome) AS polo_passivo_origem,
   dpg.orgao_julgador_origem,

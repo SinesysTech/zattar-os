@@ -6593,7 +6593,7 @@ export type Database = {
           tipo_audiencia_id: number | null
           tipo_descricao: string | null
           trt: Database["public"]["Enums"]["codigo_tribunal"] | null
-          trt_origem: Database["public"]["Enums"]["codigo_tribunal"] | null
+          trt_origem: string | null
           updated_at: string | null
           url_ata_audiencia: string | null
           url_audiencia_virtual: string | null
@@ -6709,7 +6709,7 @@ export type Database = {
           sigla_orgao_julgador: string | null
           tipo_expediente_id: number | null
           trt: Database["public"]["Enums"]["codigo_tribunal"] | null
-          trt_origem: Database["public"]["Enums"]["codigo_tribunal"] | null
+          trt_origem: string | null
           updated_at: string | null
         }
         Relationships: [
@@ -6756,6 +6756,16 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      mv_dados_primeiro_grau: {
+        Row: {
+          nome_parte_autora_origem: string | null
+          nome_parte_re_origem: string | null
+          numero_processo: string | null
+          orgao_julgador_origem: string | null
+          trt_origem: Database["public"]["Enums"]["codigo_tribunal"] | null
+        }
+        Relationships: []
       }
       processos_cliente_por_cpf: {
         Row: {
@@ -7055,6 +7065,7 @@ export type Database = {
         Args: { use_concurrent?: boolean }
         Returns: undefined
       }
+      refresh_mv_dados_primeiro_grau: { Args: never; Returns: undefined }
       refresh_orcamento_vs_realizado: { Args: never; Returns: undefined }
       refresh_processos_cliente_por_cpf: { Args: never; Returns: undefined }
       registrar_baixa_expediente: {
