@@ -1077,7 +1077,7 @@ export async function updateProcesso(
       .update(dadosAtualizacao)
       .eq("id", id)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) {
       return err(
@@ -1087,6 +1087,15 @@ export async function updateProcesso(
           {
             code: error.code,
           }
+        )
+      );
+    }
+
+    if (!data) {
+      return err(
+        appError(
+          "NOT_FOUND",
+          `Processo com ID ${id} não encontrado na tabela acervo`
         )
       );
     }

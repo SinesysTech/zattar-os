@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
 import { TIPOS_CAPTURA, STATUS_CAPTURA } from './captura-filters';
 import { useCapturasLog } from '../hooks/use-capturas-log';
 import { useAdvogados } from '@/features/advogados';
@@ -658,8 +657,8 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
     }
   }, [table]);
 
-  // Largura padronizada para todos os dropdowns de filtro
-  const filterWidth = 'w-[200px]';
+  // Classes padronizadas para filtros (seguindo padrão DataShell)
+  const filterClasses = 'h-9 w-32 border-dashed bg-card font-normal';
 
   return (
     <DataShell
@@ -667,6 +666,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
         table ? (
           <DataTableToolbar
             table={table}
+            title="Histórico de Capturas"
             density={density}
             onDensityChange={setDensity}
             searchValue={busca}
@@ -693,7 +693,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                       setPagina(0);
                     }}
                   >
-                    <SelectTrigger className={cn('h-10', filterWidth)}>
+                    <SelectTrigger className={filterClasses}>
                       <SelectValue placeholder="Tipo" />
                     </SelectTrigger>
                     <SelectContent>
@@ -713,7 +713,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                       setPagina(0);
                     }}
                   >
-                    <SelectTrigger className={cn('h-10', filterWidth)}>
+                    <SelectTrigger className={filterClasses}>
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -733,7 +733,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                       setPagina(0);
                     }}
                   >
-                    <SelectTrigger className={cn('h-10', filterWidth)}>
+                    <SelectTrigger className={filterClasses}>
                       <SelectValue placeholder="Advogado" />
                     </SelectTrigger>
                     <SelectContent>
@@ -748,9 +748,9 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                 </>
               ) : (
                 <>
-                  <div className={cn('h-10', filterWidth, 'rounded-md border border-input bg-transparent')} />
-                  <div className={cn('h-10', filterWidth, 'rounded-md border border-input bg-transparent')} />
-                  <div className={cn('h-10', filterWidth, 'rounded-md border border-input bg-transparent')} />
+                  <div className="h-9 w-32 rounded-md border border-dashed border-input bg-card" />
+                  <div className="h-9 w-32 rounded-md border border-dashed border-input bg-card" />
+                  <div className="h-9 w-32 rounded-md border border-dashed border-input bg-card" />
                 </>
               )
             }
@@ -772,7 +772,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                     setBusca(event.target.value);
                     setPagina(0);
                   }}
-                  className="h-10 w-full pl-9"
+                  className="h-9 w-full pl-9 bg-card"
                 />
               </div>
 
@@ -785,7 +785,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                       setPagina(0);
                     }}
                   >
-                    <SelectTrigger className={cn('h-10', filterWidth)}>
+                    <SelectTrigger className={filterClasses}>
                       <SelectValue placeholder="Tipo" />
                     </SelectTrigger>
                     <SelectContent>
@@ -805,7 +805,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                       setPagina(0);
                     }}
                   >
-                    <SelectTrigger className={cn('h-10', filterWidth)}>
+                    <SelectTrigger className={filterClasses}>
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -825,7 +825,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                       setPagina(0);
                     }}
                   >
-                    <SelectTrigger className={cn('h-10', filterWidth)}>
+                    <SelectTrigger className={filterClasses}>
                       <SelectValue placeholder="Advogado" />
                     </SelectTrigger>
                     <SelectContent>
@@ -840,9 +840,9 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                 </>
               ) : (
                 <>
-                  <div className={cn('h-10', filterWidth, 'rounded-md border border-input bg-transparent')} />
-                  <div className={cn('h-10', filterWidth, 'rounded-md border border-input bg-transparent')} />
-                  <div className={cn('h-10', filterWidth, 'rounded-md border border-input bg-transparent')} />
+                  <div className="h-9 w-32 rounded-md border border-dashed border-input bg-card" />
+                  <div className="h-9 w-32 rounded-md border border-dashed border-input bg-card" />
+                  <div className="h-9 w-32 rounded-md border border-dashed border-input bg-card" />
                 </>
               )}
 
