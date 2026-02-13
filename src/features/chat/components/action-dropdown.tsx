@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PlusIcon } from "@radix-ui/react-icons";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -14,13 +14,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { NovoChatDialog } from "./novo-chat-dialog";
 import { CriarGrupoDialog } from "./criar-grupo-dialog";
-import { cn } from "@/lib/utils";
 
 interface ActionDropdownProps {
-  buttonClassName?: string;
+  variant?: "default" | "outline";
 }
 
-export function ActionDropdown({ buttonClassName }: ActionDropdownProps) {
+export function ActionDropdown({ variant = "default" }: ActionDropdownProps) {
   const [showNovoChatDialog, setShowNovoChatDialog] = useState(false);
   const [showCriarGrupoDialog, setShowCriarGrupoDialog] = useState(false);
   const router = useRouter();
@@ -29,8 +28,8 @@ export function ActionDropdown({ buttonClassName }: ActionDropdownProps) {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon" className={cn("rounded-full", buttonClassName)}>
-            <PlusIcon />
+          <Button variant={variant} size="icon" className="rounded-full">
+            <Plus className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

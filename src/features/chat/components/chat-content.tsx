@@ -43,7 +43,7 @@ export function ChatContent({ mensagens, salaAtiva }: ChatContentProps) {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden lg:px-4 bg-background">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 bg-chat-thread">
       <div className="flex flex-col items-start space-y-4 py-8 max-w-full">
         {mensagens.map((msg) => (
           <ChatBubble 

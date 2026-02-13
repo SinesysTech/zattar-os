@@ -88,6 +88,9 @@ export function useChatSubscription({
   useEffect(() => {
     if (!enabled) return;
 
+    let channel: RealtimeChannel | null = null;
+    let cancelled = false;
+
     // Helper para obter dados do usuário
     const getUsuarioData = (usuarioId: number, fallbackNome?: string, fallbackAvatar?: string): UsuarioChat => {
       const cachedUser = getUserByIdRef.current?.(usuarioId);
@@ -175,37 +178,72 @@ export function useChatSubscription({
       onNewMessageRef.current(mensagem);
     };
 
-    // Criar canal específico para a sala
-    const channel = supabase.channel(`sala_${salaId}_messages`);
-    channelRef.current = channel;
+    const setupSubscription = async () => {
+      // Verificar autenticação antes de subscrever
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-    // Subscrever a INSERT events na tabela mensagens_chat
-    channel
-      .on('broadcast', { event: 'new-message' }, handleBroadcast)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'mensagens_chat',
-          filter: `sala_id=eq.${salaId}`,
-        },
-        handleInsert
-      )
-      .subscribe((status: REALTIME_SUBSCRIBE_STATES) => {
-        if (status === 'SUBSCRIBED') {
-          console.log(`[Chat] Subscrito à sala ${salaId}`);
-          setIsConnected(true);
-        } else if (status === 'CHANNEL_ERROR') {
-          console.error(`[Chat] Erro ao subscrever à sala ${salaId}`);
-          setIsConnected(false);
-        }
-      });
+      if (cancelled) return;
+
+      if (sessionError) {
+        console.error(`[Chat] Erro ao verificar sessão:`, sessionError.message);
+        setIsConnected(false);
+        return;
+      }
+
+      if (!session) {
+        console.warn(`[Chat] Usuário não autenticado - subscription não será criada para sala ${salaId}`);
+        setIsConnected(false);
+        return;
+      }
+
+      console.log(`[Chat] Sessão válida, criando subscription para sala ${salaId}`);
+
+      // Criar canal específico para a sala
+      channel = supabase.channel(`sala_${salaId}_messages`);
+      channelRef.current = channel;
+
+      // Subscrever a INSERT events na tabela mensagens_chat
+      channel
+        .on('broadcast', { event: 'new-message' }, handleBroadcast)
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'mensagens_chat',
+            filter: `sala_id=eq.${salaId}`,
+          },
+          handleInsert
+        )
+        .subscribe((status: REALTIME_SUBSCRIBE_STATES, err?: Error) => {
+          if (cancelled) return;
+
+          if (status === 'SUBSCRIBED') {
+            console.log(`[Chat] Subscrito à sala ${salaId}`);
+            setIsConnected(true);
+          } else if (status === 'CHANNEL_ERROR') {
+            console.error(`[Chat] Erro ao subscrever à sala ${salaId}:`, err?.message || 'Erro desconhecido');
+            console.error(`[Chat] Possíveis causas: RLS bloqueando, tabela não está em supabase_realtime publication, ou Realtime não habilitado`);
+            setIsConnected(false);
+          } else if (status === 'TIMED_OUT') {
+            console.warn(`[Chat] Timeout ao subscrever à sala ${salaId}`);
+            setIsConnected(false);
+          } else if (status === 'CLOSED') {
+            console.log(`[Chat] Canal fechado para sala ${salaId}`);
+            setIsConnected(false);
+          }
+        });
+    };
+
+    setupSubscription();
 
     // Cleanup: remover canal ao desmontar
     return () => {
+      cancelled = true;
       console.log(`[Chat] Desconectando da sala ${salaId}`);
-      supabase.removeChannel(channel);
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
       channelRef.current = null;
       setIsConnected(false);
     };

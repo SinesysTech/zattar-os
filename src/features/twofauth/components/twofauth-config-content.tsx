@@ -20,16 +20,13 @@ import {
   KeyRoundIcon,
   PlusIcon,
   TrashIcon,
-  QrCodeIcon,
   CopyIcon,
   CheckIcon,
-  SettingsIcon,
   FolderIcon,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { AppBadge } from "@/components/ui/app-badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
@@ -73,7 +70,7 @@ export function TwoFAuthConfigContent() {
   const [accounts, setAccounts] = useState<TwoFAuthAccount[]>([]);
   const [groups, setGroups] = useState<TwoFAuthGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
 
   // Estado do OTP
   const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
@@ -93,8 +90,8 @@ export function TwoFAuthConfigContent() {
       if (data.success) {
         setStatus(data.data);
       }
-    } catch (err) {
-      setError("Erro ao verificar conexão");
+    } catch {
+      console.error("Erro ao verificar conexão");
     }
   }, []);
 
@@ -106,8 +103,8 @@ export function TwoFAuthConfigContent() {
       if (data.success) {
         setAccounts(data.data || []);
       }
-    } catch (err) {
-      setError("Erro ao buscar contas");
+    } catch {
+      console.error("Erro ao buscar contas");
     }
   }, []);
 
@@ -127,7 +124,6 @@ export function TwoFAuthConfigContent() {
   // Carregar dados iniciais
   const loadData = useCallback(async () => {
     setIsLoading(true);
-    setError(null);
     await Promise.all([fetchStatus(), fetchAccounts(), fetchGroups()]);
     setIsLoading(false);
   }, [fetchStatus, fetchAccounts, fetchGroups]);
@@ -207,7 +203,7 @@ export function TwoFAuthConfigContent() {
         }
       }
     } catch {
-      setError("Erro ao excluir conta");
+      console.error("Erro ao excluir conta");
     } finally {
       setAccountToDelete(null);
     }
@@ -223,11 +219,11 @@ export function TwoFAuthConfigContent() {
 
     const initials = account.service
       ? account.service
-          .split(" ")
-          .map((w) => w[0])
-          .join("")
-          .slice(0, 2)
-          .toUpperCase()
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
       : "2F";
 
     return (
@@ -290,9 +286,9 @@ export function TwoFAuthConfigContent() {
                     <div className="text-sm text-muted-foreground">
                       Usuário: {status.user.name} ({status.user.email})
                       {status.user.is_admin && (
-                        <Badge variant="secondary" className="ml-2">
+                        <AppBadge variant="secondary" className="ml-2">
                           Admin
-                        </Badge>
+                        </AppBadge>
                       )}
                     </div>
                   )}
@@ -322,7 +318,7 @@ export function TwoFAuthConfigContent() {
             <div className="flex items-center gap-2">
               <KeyRoundIcon className="h-5 w-5 text-primary" />
               <CardTitle className="text-lg">Contas 2FA</CardTitle>
-              <Badge variant="secondary">{accounts.length}</Badge>
+              <AppBadge variant="secondary">{accounts.length}</AppBadge>
             </div>
             <Button variant="outline" size="sm" disabled>
               <PlusIcon className="h-4 w-4 mr-2" />
@@ -427,19 +423,19 @@ export function TwoFAuthConfigContent() {
             <div className="flex items-center gap-2">
               <FolderIcon className="h-5 w-5 text-primary" />
               <CardTitle className="text-lg">Grupos</CardTitle>
-              <Badge variant="secondary">{groups.length}</Badge>
+              <AppBadge variant="secondary">{groups.length}</AppBadge>
             </div>
             <CardDescription>Organize suas contas em grupos</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {groups.map((group) => (
-                <Badge key={group.id} variant="outline" className="px-3 py-1">
+                <AppBadge key={group.id} variant="outline" className="px-3 py-1">
                   {group.name}
                   {group.twofaccounts_count !== undefined && (
                     <span className="ml-2 text-muted-foreground">({group.twofaccounts_count})</span>
                   )}
-                </Badge>
+                </AppBadge>
               ))}
             </div>
           </CardContent>
