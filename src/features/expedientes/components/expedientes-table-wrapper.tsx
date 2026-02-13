@@ -264,7 +264,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
         const dateStr = format(fixedDate, 'yyyy-MM-dd');
         filters.dataPrazoLegalInicio = dateStr;
         filters.dataPrazoLegalFim = dateStr;
-        filters.incluirSemPrazo = false; // Na visão de dia, geralmente queremos ver o que é do dia
+        filters.incluirSemPrazo = true; // Incluir expedientes sem prazo na visualização de semana
         delete filters.prazoVencido;
       }
 

@@ -32,7 +32,7 @@ export function AuditLogTimeline({ logs, isLoading, className }: AuditLogTimelin
               {/* Header: User and Date */}
               <div className="flex items-center gap-2 text-sm">
                 <span className="font-semibold text-foreground">
-                  {log.usuario?.nome || 'Sistema/Desconhecido'}
+                  {log.usuario?.nome_exibicao || 'Sistema/Desconhecido'}
                 </span>
                 <span className="text-muted-foreground">
                   {format(new Date(log.created_at), "d 'de' MMMM 'às' HH:mm", { locale: ptBR })}
@@ -72,9 +72,9 @@ function LogEventContent({ log }: { log: LogAlteracao }) {
   if (log.tipo_evento === 'atribuicao_responsavel') {
     return (
       <div className="text-muted-foreground">
-        Atribuiu o processo para <span className="font-medium text-foreground">{log.responsavel_novo?.nome || 'Ninguém'}</span>
+        Atribuiu o processo para <span className="font-medium text-foreground">{log.responsavel_novo?.nome_exibicao || 'Ninguém'}</span>
         {log.responsavel_anterior && (
-          <> (anteriormente: {log.responsavel_anterior.nome})</>
+          <> (anteriormente: {log.responsavel_anterior.nome_exibicao})</>
         )}
       </div>
     );
@@ -83,7 +83,7 @@ function LogEventContent({ log }: { log: LogAlteracao }) {
   if (log.tipo_evento === 'transferencia_responsavel') {
     return (
       <div className="text-muted-foreground">
-        Transferiu a responsabilidade de <span className="font-medium">{log.responsavel_anterior?.nome}</span> para <span className="font-medium text-foreground">{log.responsavel_novo?.nome}</span>
+        Transferiu a responsabilidade de <span className="font-medium">{log.responsavel_anterior?.nome_exibicao}</span> para <span className="font-medium text-foreground">{log.responsavel_novo?.nome_exibicao}</span>
       </div>
     );
   }
@@ -91,7 +91,7 @@ function LogEventContent({ log }: { log: LogAlteracao }) {
   if (log.tipo_evento === 'desatribuicao_responsavel') {
     return (
       <div className="text-muted-foreground">
-        Removeu <span className="font-medium">{log.responsavel_anterior?.nome}</span> da responsabilidade.
+        Removeu <span className="font-medium">{log.responsavel_anterior?.nome_exibicao}</span> da responsabilidade.
       </div>
     )
   }
