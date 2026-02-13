@@ -274,6 +274,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
         table ? (
           <DataTableToolbar
             table={table}
+            title="Agendamentos"
             searchPlaceholder="Buscar agendamentos..."
             actionButton={
               onNewClick

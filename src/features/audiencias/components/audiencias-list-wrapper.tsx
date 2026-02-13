@@ -15,7 +15,7 @@ import {
   DataPagination,
   DataTable,
   DataTableToolbar,
-} from '@/components/shared/data-shell';
+} from '../../../components/shared/data-shell';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 
 import {
@@ -27,14 +27,14 @@ import {
   GrauTribunal,
 } from '../domain';
 import { useTiposAudiencias } from '../hooks/use-tipos-audiencias';
-import { useUsuarios } from '@/features/usuarios';
+import { useUsuarios } from '../../usuarios';
 import { useAudiencias } from '../hooks/use-audiencias';
 
 import { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias-list-columns';
 import { AudienciasListFilters } from './audiencias-list-filters';
 import { NovaAudienciaDialog } from './nova-audiencia-dialog';
 import { AudienciaDetailSheet } from './audiencia-detail-sheet';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { DialogFormShell } from '../../../components/shared/dialog-shell';
 import { AudienciaForm } from './audiencia-form';
 
 // =============================================================================
@@ -65,7 +65,7 @@ interface AudienciasListWrapperProps {
 // =============================================================================
 
 export function AudienciasListWrapper({
-  initialData = [],
+  initialData: _initialData = [],
   initialPagination = null,
   viewModeSlot,
   usuariosData,
@@ -131,7 +131,7 @@ export function AudienciasListWrapper({
   // Map usuarios to audiencias for responsavel name
   const usuariosMap = React.useMemo(() => {
     const map = new Map<number, { nome: string }>();
-    usuarios.forEach((u) => {
+    usuarios.forEach((u: { id: number; nomeExibicao?: string | null; nomeCompleto?: string | null }) => {
       map.set(u.id, { nome: u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}` });
     });
     return map;
@@ -189,7 +189,7 @@ export function AudienciasListWrapper({
               density={density}
               onDensityChange={setDensity}
               searchValue={globalFilter}
-              onSearchValueChange={(value) => {
+              onSearchValueChange={(value: string) => {
                 setGlobalFilter(value);
                 setPageIndex(0); // Reset page on search
               }}
@@ -268,7 +268,7 @@ export function AudienciasListWrapper({
           isLoading={isLoading}
           error={error}
           density={density}
-          onTableReady={(t) => setTable(t as TanstackTable<AudienciaComResponsavel>)}
+          onTableReady={(t: TanstackTable<AudienciaComResponsavel>) => setTable(t)}
           emptyMessage="Nenhuma audiência encontrada."
         />
       </DataShell>

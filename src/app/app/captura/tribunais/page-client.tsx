@@ -114,6 +114,7 @@ export default function TribunaisPage() {
           table ? (
             <DataTableToolbar
               table={table}
+              title="Tribunais"
               density={density}
               onDensityChange={setDensity}
               searchValue={busca}
@@ -126,11 +127,11 @@ export default function TribunaisPage() {
               filtersSlot={
                 <>
                   <Select value={tribunalFilter} onValueChange={setTribunalFilter}>
-                    <SelectTrigger className="h-10 w-[140px]">
+                    <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
                       <SelectValue placeholder="Tribunal" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="all">Tribunal</SelectItem>
                       {tribunaisUnicos.map((codigo) => (
                         <SelectItem key={codigo} value={codigo}>
                           {codigo}
@@ -140,11 +141,11 @@ export default function TribunaisPage() {
                   </Select>
 
                   <Select value={tipoAcessoFilter} onValueChange={setTipoAcessoFilter}>
-                    <SelectTrigger className="h-10 w-[150px]">
-                      <SelectValue placeholder="Tipo de Acesso" />
+                    <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
+                      <SelectValue placeholder="Grau" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="all">Grau</SelectItem>
                       {tiposAcessoUnicos.map((tipo) => (
                         <SelectItem key={tipo} value={tipo}>
                           {TIPO_ACESSO_LABELS[tipo] ?? tipo}
