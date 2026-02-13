@@ -215,7 +215,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
   };
 
   return (
-    <div className="lg:px-4 pb-4">
+    <div className="px-4 pb-4 bg-chat-thread">
       {/* Typing Indicator */}
       {typingIndicatorText && !isRecording && (
         <div className="text-xs text-muted-foreground ml-4 mb-1 animate-pulse">
@@ -225,7 +225,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
 
       {/* File Preview Area */}
       {uploadedFile && (
-        <div className="mb-2 p-2 bg-gray-100 rounded-md flex items-center justify-between mx-4 lg:mx-0">
+        <div className="mb-2 p-2 bg-muted rounded-md flex items-center justify-between">
           <div className="flex items-center gap-2 overflow-hidden">
             <FileIcon className="h-5 w-5 text-blue-500 shrink-0" />
             <span className="text-sm truncate max-w-[200px]">{uploadedFile.fileName}</span>

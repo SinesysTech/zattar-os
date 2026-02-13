@@ -37,9 +37,9 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
   return (
     <div className="flex h-[calc(100vh-4rem)] w-full overflow-hidden bg-background border rounded-lg shadow-sm">
       {/* Sidebar - Hidden on mobile if chat selected */}
-      <div 
+      <div
         className={cn(
-          "h-full w-full lg:w-96 border-r shrink-0 transition-all duration-300",
+          "h-full w-full lg:w-96 shrink-0 transition-all duration-300",
           selectedChat ? "hidden lg:block" : "block"
         )}
       >

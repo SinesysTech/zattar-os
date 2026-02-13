@@ -82,9 +82,15 @@
   /* --- 6. Surface Tokens (Layering) --- */
   --color-surface-1: var(--surface-1);
   --color-surface-2: var(--surface-2);
-  --color-surface-3: var(--surface-3)
+  --color-surface-3: var(--surface-3);
 
-  /* --- 7. Tipografia & Layout --- */
+  /* --- 7. Chat Tokens --- */
+  --color-chat-thread-bg: var(--chat-thread-bg);
+  --color-chat-bubble-received: var(--chat-bubble-received);
+  --color-chat-bubble-sent: var(--chat-bubble-sent);
+  --color-chat-sidebar-active: var(--chat-sidebar-active)
+
+  /* --- 8. Tipografia & Layout --- */
   --font-sans: var(--font-inter);
   --font-heading: var(--font-montserrat); /* Títulos */
   --font-mono: var(--font-geist-mono);
@@ -174,6 +180,12 @@
   --surface-1: oklch(0.98 0.005 270);        /* Subtle background */
   --surface-2: oklch(0.96 0.01 270);         /* Cards on surface-1 */
   --surface-3: oklch(0.94 0.01 270);         /* Hover states */
+
+  /* CHAT-SPECIFIC TOKENS */
+  --chat-thread-bg: oklch(0.94 0.008 270);   /* Chat thread background - slightly darker */
+  --chat-bubble-received: oklch(1 0 0);      /* Received message - white */
+  --chat-bubble-sent: var(--primary);        /* Sent message - primary purple */
+  --chat-sidebar-active: oklch(0.92 0.01 270); /* Selected conversation - visible contrast */
 }
 
 .dark {
@@ -241,6 +253,12 @@
   --surface-1: oklch(0.2 0 0);
   --surface-2: oklch(0.24 0 0);
   --surface-3: oklch(0.28 0 0);
+
+  /* CHAT-SPECIFIC TOKENS (Dark) */
+  --chat-thread-bg: oklch(0.16 0 0);         /* Chat thread background - darker */
+  --chat-bubble-received: oklch(0.28 0 0);   /* Received message - darker card */
+  --chat-bubble-sent: var(--primary);        /* Sent message - primary purple */
+  --chat-sidebar-active: oklch(0.26 0 0);    /* Selected conversation - visible contrast */
 }
 
 /* --- ESTILOS BASE --- */
@@ -664,6 +682,20 @@
   }
   .bg-surface-3 {
     background-color: var(--surface-3);
+  }
+
+  /* Chat Utilities */
+  .bg-chat-thread {
+    background-color: var(--chat-thread-bg);
+  }
+  .bg-chat-bubble-received {
+    background-color: var(--chat-bubble-received);
+  }
+  .bg-chat-bubble-sent {
+    background-color: var(--chat-bubble-sent);
+  }
+  .bg-chat-sidebar-active {
+    background-color: var(--chat-sidebar-active);
   }
 }
 

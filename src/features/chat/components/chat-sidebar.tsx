@@ -44,7 +44,7 @@ export function ChatSidebar({ salas, salaAtiva, onSelecionarSala }: ChatSidebarP
   };
 
   return (
-    <Card className="w-full pb-0 lg:w-96 flex flex-col h-full border-r rounded-none">
+    <Card className="w-full pb-0 lg:w-96 flex flex-col h-full border-0 border-r rounded-none">
       <CardHeader>
         <CardDescription className="relative flex w-full items-center gap-2">
           <Search className="text-muted-foreground absolute start-4 size-4 pointer-events-none" />
@@ -55,7 +55,7 @@ export function ChatSidebar({ salas, salaAtiva, onSelecionarSala }: ChatSidebarP
             onChange={changeHandle}
           />
           <div className="shrink-0">
-            <ActionDropdown buttonClassName="bg-primary text-primary-foreground hover:opacity-90" />
+            <ActionDropdown variant="default" />
           </div>
         </CardDescription>
       </CardHeader>

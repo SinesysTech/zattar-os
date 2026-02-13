@@ -30,7 +30,7 @@ function TextChatBubble({ message }: { message: MensagemComUsuario }) {
       })}>
       <div className="flex items-center gap-2">
         <div
-          className={cn("bg-muted inline-flex rounded-md border p-3 wrap-break-word", {
+          className={cn("bg-chat-bubble-received inline-flex rounded-md border p-3 wrap-break-word", {
             "order-1 bg-primary text-primary-foreground": message.ownMessage
           })}
           style={{ overflowWrap: "anywhere" }}>
@@ -80,7 +80,7 @@ function FileChatBubble({ message }: { message: MensagemComUsuario }) {
       })}>
       <div className="flex items-center gap-2">
         <div
-          className={cn("bg-muted inline-flex items-start rounded-md border p-4", {
+          className={cn("bg-chat-bubble-received inline-flex items-start rounded-md border p-4", {
             "order-1 bg-primary/10": message.ownMessage
           })}>
           <FileIcon className="me-4 mt-1 size-8 opacity-50 shrink-0" strokeWidth={1.5} />
@@ -155,7 +155,7 @@ function AudioChatBubble({ message }: { message: MensagemComUsuario }) {
       })}>
       <div className="flex items-center gap-2">
         <div
-          className={cn("bg-muted inline-flex gap-4 rounded-md p-4", {
+          className={cn("bg-chat-bubble-received inline-flex gap-4 rounded-md p-4", {
             "relative order-1 flex items-center justify-center": message.ownMessage
           })}>
           <audio controls className="w-full min-w-50 max-w-full">
@@ -187,7 +187,7 @@ function ImageChatBubble({ message }: { message: MensagemComUsuario }) {
       })}>
       <div className="flex items-center gap-2">
         <div
-          className={cn("bg-muted inline-flex gap-4 rounded-md border p-2", {
+          className={cn("bg-chat-bubble-received inline-flex gap-4 rounded-md border p-2", {
             "relative order-1 flex items-center justify-center": message.ownMessage
           })}>
           <figure className="relative overflow-hidden rounded-lg">

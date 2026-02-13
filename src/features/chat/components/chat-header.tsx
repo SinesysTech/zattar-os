@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowLeft, Ellipsis, VideoIcon, PhoneMissedIcon, Monitor } from "lucide-react";
+import { ArrowLeft, Ellipsis, Video, Phone, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { generateAvatarFallback } from "@/lib/utils";
 import useChatStore from "./useChatStore";
@@ -28,7 +28,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare }: Ch
   const lastSeen = sala.usuario?.lastSeen;
 
   return (
-    <div className="flex justify-between gap-4 lg:px-4 p-2 border-b bg-white dark:bg-gray-950">
+    <div className="flex justify-between gap-4 px-4 py-2 border-b bg-card">
       <div className="flex gap-4 items-center">
         <Button
           size="sm"
@@ -65,24 +65,24 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare }: Ch
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button size="icon" variant="outline" onClick={onVideoCall}>
-                  <VideoIcon className="h-4 w-4" />
+                <Button size="icon" variant="secondary" onClick={onVideoCall}>
+                  <Video className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Video Call</TooltipContent>
+              <TooltipContent side="bottom">Chamada de Vídeo</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button size="icon" variant="outline" onClick={onAudioCall}>
-                  <PhoneMissedIcon className="h-4 w-4" />
+                <Button size="icon" variant="secondary" onClick={onAudioCall}>
+                  <Phone className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Audio Call</TooltipContent>
+              <TooltipContent side="bottom">Chamada de Áudio</TooltipContent>
             </Tooltip>
             {onScreenshare && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button size="icon" variant="outline" onClick={onScreenshare}>
+                  <Button size="icon" variant="secondary" onClick={onScreenshare}>
                     <Monitor className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>

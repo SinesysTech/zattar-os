@@ -1,6 +1,7 @@
-# Zattar Advogados — Sinesys App
+# Zattar OS - Sistema de Gestão Jurídica by Sinesys
 
-Sistema de gestão jurídica (Sinesys 2.0) com foco em automação e IA.
+Sistema de gestão jurídica
+ com foco em automação e IA.
 
 **Stack**: Next.js 16 (App Router), React 19, TypeScript, Supabase (PostgreSQL + RLS), Redis (opcional), Tailwind CSS 4, shadcn/ui.
 
