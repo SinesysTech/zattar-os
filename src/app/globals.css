@@ -16,7 +16,7 @@
  */
 @import "tailwindcss";
 
-/* @import "tw-animate-css"; */
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -88,7 +88,7 @@
   --color-chat-thread-bg: var(--chat-thread-bg);
   --color-chat-bubble-received: var(--chat-bubble-received);
   --color-chat-bubble-sent: var(--chat-bubble-sent);
-  --color-chat-sidebar-active: var(--chat-sidebar-active)
+  --color-chat-sidebar-active: var(--chat-sidebar-active);
 
   /* --- 8. Tipografia & Layout --- */
   --font-sans: var(--font-inter);

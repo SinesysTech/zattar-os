@@ -1,0 +1,18 @@
+
+> zattar-os@0.1.0 build:ci
+> npm run check:architecture && cross-env NODE_OPTIONS=--max-old-space-size=6144 DISABLE_PWA=true node node_modules/next/dist/bin/next build
+
+
+> zattar-os@0.1.0 check:architecture
+> node scripts/dev-tools/architecture/check-architecture-imports.js
+
+🔍 Verificando imports arquiteturais...
+
+✅ Nenhuma violação arquitetural encontrada
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local, .env
+- Experiments (use with caution):
+  · optimizePackageImports
+  · serverActions
+
+  Creating an optimized production build ...
