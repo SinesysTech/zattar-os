@@ -150,7 +150,13 @@ export const createExpedienteSchema = z.object({
   observacoes: z.string().optional(),
 });
 
-export const updateExpedienteSchema = createExpedienteSchema.partial();
+export const updateExpedienteSchema = createExpedienteSchema.partial().extend({
+  // Override fields that need to accept null for clearing FK relationships
+  tipoExpedienteId: z.number().nullable().optional(),
+  responsavelId: z.number().nullable().optional(),
+  processoId: z.number().nullable().optional(),
+  advogadoId: z.number().nullable().optional(),
+});
 
 export const baixaExpedienteSchema = z
   .object({
