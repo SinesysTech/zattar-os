@@ -11,14 +11,14 @@ export interface LogAlteracao {
   dados_evento: Record<string, unknown>;
   created_at: string;
   usuario?: {
-    nome: string;
-    email: string;
+    nome_exibicao: string;
+    email_corporativo: string;
   };
   responsavel_anterior?: {
-    nome: string;
+    nome_exibicao: string;
   };
   responsavel_novo?: {
-    nome: string;
+    nome_exibicao: string;
   };
 }
 
@@ -30,9 +30,9 @@ export class AuditLogService {
       .from('logs_alteracao')
       .select(`
         *,
-        usuario:usuario_que_executou_id(nome, email),
-        responsavel_anterior:responsavel_anterior_id(nome),
-        responsavel_novo:responsavel_novo_id(nome)
+        usuario:usuario_que_executou_id(nome_exibicao, email_corporativo),
+        responsavel_anterior:responsavel_anterior_id(nome_exibicao),
+        responsavel_novo:responsavel_novo_id(nome_exibicao)
       `)
       .eq('tipo_entidade', entityType)
       .eq('entidade_id', entityId)
