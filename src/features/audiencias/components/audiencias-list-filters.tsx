@@ -110,7 +110,7 @@ export function AudienciasListFilters({
         value={trtFiltro}
         onValueChange={(value) => onTrtChange(value as CodigoTribunal | 'todas')}
       >
-        <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
+        <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
           <SelectValue placeholder="Tribunal" />
         </SelectTrigger>
         <SelectContent>
@@ -128,7 +128,7 @@ export function AudienciasListFilters({
         value={grauFiltro}
         onValueChange={(value) => onGrauChange(value as GrauTribunal | 'todas')}
       >
-        <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
+        <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
           <SelectValue placeholder="Grau" />
         </SelectTrigger>
         <SelectContent>
@@ -150,7 +150,7 @@ export function AudienciasListFilters({
           else onResponsavelChange(Number(value));
         }}
       >
-        <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
+        <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
           <SelectValue placeholder="Responsável" />
         </SelectTrigger>
         <SelectContent>

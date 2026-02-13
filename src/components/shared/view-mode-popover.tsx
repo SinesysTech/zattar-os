@@ -64,7 +64,12 @@ export function ViewModePopover({
             <Button
               variant="outline"
               size="icon"
-              className={cn('h-9 w-9', className)}
+              className={cn(
+                'h-9 w-9 bg-card',
+                // Remove efeito de "selecionado" quando popover está aberto
+                'data-[state=open]:bg-card data-[state=open]:text-foreground',
+                className
+              )}
               aria-label="Alterar visualização"
             >
               <Eye className="h-4 w-4" aria-hidden="true" />

@@ -31,6 +31,15 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
 import { capturarTimeline } from '@/features/captura/server';
 import type { CodigoTRT, GrauTRT } from '@/features/captura';
+import type { PartePJE } from '@/features/captura/pje-trt/partes/types';
+import { autenticarPJE } from '@/features/captura/services/trt/trt-auth.service';
+import { getTribunalConfig } from '@/features/captura/services/trt/config';
+import { obterPartesProcesso } from '@/features/captura/pje-trt/partes';
+import {
+  persistirPartesProcesso,
+  type ProcessoParaCaptura,
+} from '@/features/captura/services/partes/partes-capture.service';
+import { getCredentialByTribunalAndGrau } from '@/features/captura/credentials/credential.service';
 
 interface RecaptureResult {
   instanciaId: number;
@@ -41,6 +50,37 @@ interface RecaptureResult {
   totalItens?: number;
   totalDocumentos?: number;
   totalMovimentos?: number;
+  partesCapturadas?: number;
+}
+
+/**
+ * Extrai nome_parte_autora e nome_parte_re das partes capturadas
+ * - nome_parte_autora: primeira parte principal do polo ATIVO
+ * - nome_parte_re: primeira parte principal do polo PASSIVO
+ */
+function extrairNomesPartesDasPartes(partes: PartePJE[]): {
+  nome_parte_autora: string;
+  qtde_parte_autora: number;
+  nome_parte_re: string;
+  qtde_parte_re: number;
+} {
+  // Separar partes por polo
+  const poloAtivo = partes.filter(p => p.polo === 'ATIVO');
+  const poloPassivo = partes.filter(p => p.polo === 'PASSIVO');
+
+  // Encontrar a parte principal de cada polo (ou a primeira se não houver principal)
+  const parteAutoraFn = (lista: PartePJE[]) =>
+    lista.find(p => p.principal) || lista[0];
+
+  const parteAutora = parteAutoraFn(poloAtivo);
+  const parteRe = parteAutoraFn(poloPassivo);
+
+  return {
+    nome_parte_autora: parteAutora?.nome?.trim() || '',
+    qtde_parte_autora: poloAtivo.length || 1,
+    nome_parte_re: parteRe?.nome?.trim() || '',
+    qtde_parte_re: poloPassivo.length || 1,
+  };
 }
 
 interface RecaptureResponse {
@@ -433,8 +473,14 @@ export async function buscarProcessosClientePorCpf(
 }
 
 /**
- * Recaptura a timeline de TODAS as instâncias do processo (1º, 2º e TST),
+ * Recaptura a timeline E partes de TODAS as instâncias do processo (1º, 2º e TST),
  * garantindo que a visão unificada fique atualizada.
+ *
+ * FLUXO:
+ * 1. Captura timeline de cada instância (em paralelo)
+ * 2. Captura partes de cada instância (em paralelo, após timeline)
+ * 3. Atualiza o registro acervo com nome_parte_autora e nome_parte_re
+ * 4. Persiste partes e cria vínculos
  */
 export async function recapturarTimelineUnificada(acervoId: number): Promise<RecaptureResponse> {
   const supabase = createServiceClient();
@@ -465,13 +511,21 @@ export async function recapturarTimelineUnificada(acervoId: number): Promise<Rec
   }
 
   // Recapturar instâncias em paralelo
-  console.log(`[recapture] Iniciando captura paralela de ${instancias.length} instâncias...`);
+  console.log(`[recapture] Iniciando captura paralela de ${instancias.length} instâncias (timeline + partes)...`);
 
   const promises = instancias.map(async (inst) => {
     console.log(`[recapture] Processando instância ${inst.grau} (${inst.trt})...`);
-    
+
+    let resultado: RecaptureResult = {
+      instanciaId: inst.id,
+      trt: inst.trt,
+      grau: inst.grau,
+      status: 'ok',
+    };
+
+    // FASE 1: Capturar Timeline
     try {
-      const resultado = await capturarTimeline({
+      const timelineResult = await capturarTimeline({
         trtCodigo: inst.trt as CodigoTRT,
         grau: inst.grau as GrauTRT,
         processoId: String(inst.id_pje),
@@ -484,30 +538,121 @@ export async function recapturarTimelineUnificada(acervoId: number): Promise<Rec
         },
       });
 
-      console.log(`[recapture] ✅ Instância ${inst.grau} capturada:`, {
-        totalItens: resultado.totalItens,
-        totalDocumentos: resultado.totalDocumentos,
+      console.log(`[recapture] ✅ Timeline ${inst.grau} capturada:`, {
+        totalItens: timelineResult.totalItens,
+        totalDocumentos: timelineResult.totalDocumentos,
       });
 
-      return {
-        instanciaId: inst.id,
-        trt: inst.trt,
-        grau: inst.grau,
-        status: 'ok',
-        totalItens: resultado.totalItens,
-        totalDocumentos: resultado.totalDocumentos,
-        totalMovimentos: resultado.totalMovimentos,
-      } as RecaptureResult;
+      resultado.totalItens = timelineResult.totalItens;
+      resultado.totalDocumentos = timelineResult.totalDocumentos;
+      resultado.totalMovimentos = timelineResult.totalMovimentos;
     } catch (error) {
-      console.error(`[recapture] ❌ Erro na instância ${inst.grau}:`, error);
-      return {
-        instanciaId: inst.id,
-        trt: inst.trt,
-        grau: inst.grau,
-        status: 'erro',
-        mensagem: error instanceof Error ? error.message : 'Erro desconhecido',
-      } as RecaptureResult;
+      console.error(`[recapture] ❌ Erro na timeline ${inst.grau}:`, error);
+      resultado.status = 'erro';
+      resultado.mensagem = error instanceof Error ? error.message : 'Erro desconhecido na timeline';
     }
+
+    // FASE 2: Capturar Partes (mesmo se timeline falhou, tenta capturar partes)
+    try {
+      console.log(`[recapture] 👥 Capturando partes da instância ${inst.grau} (${inst.trt})...`);
+
+      // Buscar credencial para este TRT/grau
+      const credencial = await getCredentialByTribunalAndGrau({
+        advogadoId: inst.advogado_id,
+        tribunal: inst.trt as CodigoTRT,
+        grau: inst.grau as GrauTRT,
+      });
+
+      if (!credencial) {
+        console.warn(`[recapture] ⚠️ Nenhuma credencial encontrada para ${inst.trt}/${inst.grau}, pulando captura de partes`);
+      } else {
+        // Buscar configuração do tribunal
+        const config = await getTribunalConfig(inst.trt as CodigoTRT, inst.grau as GrauTRT);
+
+        // Autenticar no PJE
+        const authResult = await autenticarPJE({
+          credential: credencial, // CredenciaisTRT { cpf, senha }
+          config,
+          headless: true,
+        });
+
+        try {
+          // Buscar partes do processo
+          const { partes } = await obterPartesProcesso(authResult.page, inst.id_pje);
+
+          console.log(`[recapture] ✅ ${partes.length} partes encontradas para ${inst.grau}`);
+          resultado.partesCapturadas = partes.length;
+
+          if (partes.length > 0) {
+            // Extrair nome_parte_autora e nome_parte_re
+            const nomesPartes = extrairNomesPartesDasPartes(partes);
+
+            // Atualizar o registro acervo com os nomes das partes
+            const { error: updateError } = await supabase
+              .from('acervo')
+              .update({
+                nome_parte_autora: nomesPartes.nome_parte_autora,
+                qtde_parte_autora: nomesPartes.qtde_parte_autora,
+                nome_parte_re: nomesPartes.nome_parte_re,
+                qtde_parte_re: nomesPartes.qtde_parte_re,
+              })
+              .eq('id', inst.id);
+
+            if (updateError) {
+              console.error(`[recapture] ⚠️ Erro ao atualizar acervo com partes:`, updateError);
+            } else {
+              console.log(`[recapture] ✅ Acervo atualizado:`, {
+                nome_parte_autora: nomesPartes.nome_parte_autora.substring(0, 30) + '...',
+                nome_parte_re: nomesPartes.nome_parte_re.substring(0, 30) + '...',
+              });
+            }
+
+            // Buscar advogado para identificação de clientes
+            const { data: advogado } = await supabase
+              .from('advogados')
+              .select('id, cpf, nome')
+              .eq('id', inst.advogado_id)
+              .single();
+
+            if (advogado) {
+              // Persistir partes e criar vínculos
+              const processoParaCaptura: ProcessoParaCaptura = {
+                id_pje: inst.id_pje,
+                trt: inst.trt,
+                grau: inst.grau as 'primeiro_grau' | 'segundo_grau',
+                id: inst.id,
+                numero_processo: inst.numero_processo,
+              };
+
+              await persistirPartesProcesso(
+                partes,
+                processoParaCaptura,
+                {
+                  id: advogado.id,
+                  documento: advogado.cpf,
+                  nome: advogado.nome,
+                }
+              );
+
+              console.log(`[recapture] ✅ Partes persistidas e vínculos criados`);
+            }
+          }
+        } finally {
+          // Sempre fechar o browser
+          if (authResult.browser) {
+            await authResult.browser.close();
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`[recapture] ⚠️ Erro ao capturar partes ${inst.grau}:`, error);
+      // Não marca como erro total - partes são secundárias
+      if (resultado.mensagem) {
+        resultado.mensagem += ` | Partes: ${error instanceof Error ? error.message : 'Erro desconhecido'}`;
+      }
+    }
+
+    return resultado;
   });
 
   const resultados = await Promise.all(promises);

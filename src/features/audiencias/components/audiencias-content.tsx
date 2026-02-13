@@ -317,7 +317,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           value={tribunalFilter || '_all'}
           onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal)}
         >
-          <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
+          <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
             <SelectValue placeholder="Tribunal" />
           </SelectTrigger>
           <SelectContent>
@@ -335,7 +335,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           value={grauFilter || '_all'}
           onValueChange={(v) => setGrauFilter(v === '_all' ? '' : (v as GrauTribunal))}
         >
-          <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
+          <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
             <SelectValue placeholder="Grau" />
           </SelectTrigger>
           <SelectContent>
@@ -421,7 +421,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
             }
           }}
         >
-          <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
+          <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
             <SelectValue placeholder="Responsável" />
           </SelectTrigger>
           <SelectContent>
@@ -527,7 +527,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
                   value={tribunalFilter || '_all'}
                   onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal)}
                 >
-                  <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
+                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
                     <SelectValue placeholder="Tribunal" />
                   </SelectTrigger>
                   <SelectContent>
@@ -545,7 +545,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
                   value={grauFilter || '_all'}
                   onValueChange={(v) => setGrauFilter(v === '_all' ? '' : (v as GrauTribunal))}
                 >
-                  <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
+                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
                     <SelectValue placeholder="Grau" />
                   </SelectTrigger>
                   <SelectContent>
@@ -631,7 +631,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
                     }
                   }}
                 >
-                  <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
+                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
                     <SelectValue placeholder="Responsável" />
                   </SelectTrigger>
                   <SelectContent>
