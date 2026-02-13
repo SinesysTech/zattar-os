@@ -16,3 +16,321 @@
   · serverActions
 
   Creating an optimized production build ...
+✓ Compiled successfully in 2.9min
+  Running TypeScript ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/160) ...
+  Generating static pages using 7 workers (40/160) 
+  Generating static pages using 7 workers (80/160) 
+[Metrica DB] erro ao obter metricas Error: Dynamic server usage: Route /app/configuracoes couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at d (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\[root-of-the-server]__8f758252._.js:1:129)
+    at c (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\[root-of-the-server]__6b0572a6._.js:1:108)
+    at d (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\[root-of-the-server]__6b0572a6._.js:1:554)
+    at f (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\[root-of-the-server]__6b0572a6._.js:1:7853)
+    at g (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\[root-of-the-server]__a34fc22a._.js:1:13281) {
+  description: "Route /app/configuracoes couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Redis Client Connected
+Redis Client Ready
+  Generating static pages using 7 workers (120/160) 
+[Metrica DB] erro ao obter metricas Error: Dynamic server usage: Route /app/admin/metricas-db couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at d (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\[root-of-the-server]__8c850c04._.js:1:129)
+    at c (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\[root-of-the-server]__6b0572a6._.js:1:108)
+    at d (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\[root-of-the-server]__6b0572a6._.js:1:554)
+    at f (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\[root-of-the-server]__6b0572a6._.js:1:7853)
+    at g (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\[root-of-the-server]__ae21706d._.js:1:12225) {
+  description: "Route /app/admin/metricas-db couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+[SafeAction] Erro: Error: Dynamic server usage: Route /app/calendar couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at d (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\[root-of-the-server]__8c850c04._.js:1:129)
+    at c (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\src_3d5081a9._.js:1:481)
+    at <unknown> (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\src_3d5081a9._.js:1:5908)
+    at i (E:\DevOps\zattar-advogados\.next\server\chunks\ssr\[root-of-the-server]__94a62b01._.js:1:1992) {
+  description: "Route /app/calendar couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+✓ Generating static pages using 7 workers (160/160) in 3.4s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /ajuda
+├ ƒ /ajuda/desenvolvimento
+├ ƒ /ajuda/desenvolvimento/api-referencia
+├ ƒ /ajuda/desenvolvimento/api-swagger
+├ ƒ /ajuda/desenvolvimento/arquitetura
+├ ƒ /ajuda/desenvolvimento/arquitetura-assinatura-digital
+├ ƒ /ajuda/desenvolvimento/deploy
+├ ƒ /ajuda/desenvolvimento/integracao-google-drive
+├ ƒ /ajuda/desenvolvimento/integracao-pje
+├ ƒ /ajuda/desenvolvimento/integracao-viacep
+├ ƒ /ajuda/desenvolvimento/migrations
+├ ƒ /ajuda/desenvolvimento/troubleshooting
+├ ƒ /ajuda/desenvolvimento/variaveis-ambiente
+├ ƒ /ajuda/design-system
+├ ƒ /ajuda/design-system/componentes
+├ ƒ /ajuda/design-system/responsividade
+├ ƒ /ajuda/design-system/typography
+├ ƒ /ajuda/faq
+├ ƒ /ajuda/funcionalidades
+├ ƒ /ajuda/funcionalidades/acordos
+├ ƒ /ajuda/funcionalidades/assinatura-digital
+├ ƒ /ajuda/funcionalidades/audiencias
+├ ƒ /ajuda/funcionalidades/captura
+├ ƒ /ajuda/funcionalidades/documentos
+├ ƒ /ajuda/funcionalidades/expedientes
+├ ƒ /ajuda/funcionalidades/processos
+├ ƒ /ajuda/integracao
+├ ƒ /ajuda/integracao/api
+├ ƒ /ajuda/integracao/mcp
+├ ƒ /ajuda/integracao/permissoes
+├ ƒ /ajuda/primeiros-passos
+├ ƒ /api/acervo/cliente/cpf/[cpf]
+├ ƒ /api/admin/security/blocked-ips
+├ ƒ /api/ai/command
+├ ƒ /api/ai/copilot
+├ ƒ /api/ai/reindex
+├ ƒ /api/ai/search
+├ ƒ /api/assinatura-digital/assinantes/search
+├ ƒ /api/assinatura-digital/documentos
+├ ƒ /api/assinatura-digital/documentos/[uuid]
+├ ƒ /api/assinatura-digital/documentos/[uuid]/ancoras
+├ ƒ /api/assinatura-digital/forms/save-client
+├ ƒ /api/assinatura-digital/forms/verificar-cpf
+├ ƒ /api/assinatura-digital/formularios
+├ ƒ /api/assinatura-digital/formularios/[id]
+├ ƒ /api/assinatura-digital/formularios/[id]/schema
+├ ƒ /api/assinatura-digital/public/[token]
+├ ƒ /api/assinatura-digital/public/[token]/download
+├ ƒ /api/assinatura-digital/public/[token]/finalizar
+├ ƒ /api/assinatura-digital/public/[token]/identificacao
+├ ƒ /api/assinatura-digital/segmentos
+├ ƒ /api/assinatura-digital/segmentos/[id]
+├ ƒ /api/assinatura-digital/signature/finalizar
+├ ƒ /api/assinatura-digital/signature/preview
+├ ƒ /api/assinatura-digital/signature/sessoes
+├ ƒ /api/assinatura-digital/stats
+├ ƒ /api/assinatura-digital/templates
+├ ƒ /api/assinatura-digital/templates/[id]
+├ ƒ /api/assinatura-digital/templates/[id]/preview
+├ ƒ /api/assinatura-digital/templates/[id]/preview-test
+├ ƒ /api/assinatura-digital/templates/preview-texto
+├ ƒ /api/assinatura-digital/templates/upload
+├ ƒ /api/assinatura-digital/utils/get-client-ip
+├ ƒ /api/auth/logout
+├ ƒ /api/cache/clear
+├ ƒ /api/cache/stats
+├ ƒ /api/captura/agendamentos
+├ ƒ /api/captura/agendamentos/[id]
+├ ƒ /api/captura/agendamentos/[id]/executar
+├ ƒ /api/captura/credenciais
+├ ƒ /api/captura/historico
+├ ƒ /api/captura/historico/[id]
+├ ƒ /api/captura/recovery
+├ ƒ /api/captura/recovery/[rawLogId]
+├ ƒ /api/captura/recovery/[rawLogId]/elementos
+├ ƒ /api/captura/recovery/reprocess
+├ ƒ /api/captura/tribunais
+├ ƒ /api/captura/tribunais/[id]
+├ ƒ /api/captura/trt/acervo-geral
+├ ƒ /api/captura/trt/arquivados
+├ ƒ /api/captura/trt/audiencias
+├ ƒ /api/captura/trt/combinada
+├ ƒ /api/captura/trt/partes
+├ ƒ /api/captura/trt/pendentes-manifestacao
+├ ƒ /api/captura/trt/pericias
+├ ƒ /api/captura/trt/timeline
+├ ƒ /api/clientes/[id]/documentos
+├ ƒ /api/clientes/buscar/sugestoes
+├ ƒ /api/copilotkit
+├ ƒ /api/cron/alertas-disk-io
+├ ƒ /api/cron/executar-agendamentos
+├ ƒ /api/cron/indexar-documentos
+├ ƒ /api/cron/refresh-chat-view
+├ ƒ /api/cron/vacuum-maintenance
+├ ƒ /api/cron/verificar-prazos
+├ ƒ /api/csp-report
+├ ƒ /api/debug/schema-check
+├ ƒ /api/docs/openapi.json
+├ ƒ /api/enderecos
+├ ƒ /api/enderecos/[id]
+├ ƒ /api/fornecedores
+├ ƒ /api/health
+├ ƒ /api/mcp
+├ ƒ /api/mcp/messages
+├ ƒ /api/mcp/stream
+├ ƒ /api/me
+├ ƒ /api/metrics
+├ ƒ /api/pastas
+├ ƒ /api/pastas/[id]
+├ ƒ /api/pendentes-manifestacao
+├ ƒ /api/pendentes-manifestacao/[id]/baixa
+├ ƒ /api/pendentes-manifestacao/[id]/observacoes
+├ ƒ /api/pendentes-manifestacao/[id]/prazo-legal
+├ ƒ /api/pendentes-manifestacao/[id]/responsavel
+├ ƒ /api/pendentes-manifestacao/[id]/reverter-baixa
+├ ƒ /api/pendentes-manifestacao/[id]/tipo-descricao
+├ ƒ /api/pendentes-manifestacao/cliente/cpf/[cpf]
+├ ƒ /api/perfil
+├ ƒ /api/permissoes/minhas
+├ ƒ /api/permissoes/recursos
+├ ƒ /api/pje/pendente-manifestacao/documento
+├ ƒ /api/plate/ai
+├ ƒ /api/templates
+├ ƒ /api/templates/[id]
+├ ƒ /api/templates/[id]/usar
+├ ƒ /api/tipos-expedientes
+├ ƒ /api/tipos-expedientes/[id]
+├ ƒ /api/tribunais
+├ ƒ /api/twofauth/accounts
+├ ƒ /api/twofauth/accounts/[id]
+├ ƒ /api/twofauth/accounts/[id]/otp
+├ ƒ /api/twofauth/groups
+├ ƒ /api/twofauth/groups/[id]
+├ ƒ /api/twofauth/preferences
+├ ƒ /api/twofauth/preferences/[name]
+├ ƒ /api/twofauth/qrcode/[id]
+├ ƒ /api/twofauth/status
+├ ƒ /api/webhooks/dyte/recording
+├ ƒ /app
+├ ƒ /app/acordos-condenacoes
+├ ƒ /app/acordos-condenacoes/[id]
+├ ƒ /app/acordos-condenacoes/[id]/editar
+├ ƒ /app/acordos-condenacoes/ano
+├ ƒ /app/acordos-condenacoes/lista
+├ ƒ /app/acordos-condenacoes/mes
+├ ƒ /app/acordos-condenacoes/novo
+├ ƒ /app/acordos-condenacoes/semana
+├ ƒ /app/admin/metricas-db
+├ ƒ /app/admin/metricas-db/avaliar-upgrade
+├ ƒ /app/admin/security/blocked-ips
+├ ƒ /app/ajuda/design-system/playground
+├ ƒ /app/assinatura-digital
+├ ƒ /app/assinatura-digital/assinatura
+├ ƒ /app/assinatura-digital/documentos/editar/[uuid]
+├ ƒ /app/assinatura-digital/documentos/lista
+├ ƒ /app/assinatura-digital/documentos/novo
+├ ƒ /app/assinatura-digital/documentos/revisar/[uuid]
+├ ƒ /app/assinatura-digital/formularios
+├ ƒ /app/assinatura-digital/formularios/[id]/schema
+├ ƒ /app/assinatura-digital/templates
+├ ƒ /app/assinatura-digital/templates/[id]/edit
+├ ƒ /app/assistentes
+├ ƒ /app/assistentes/[id]
+├ ƒ /app/audiencias
+├ ƒ /app/audiencias/ano
+├ ƒ /app/audiencias/lista
+├ ƒ /app/audiencias/mes
+├ ƒ /app/audiencias/semana
+├ ƒ /app/calendar
+├ ƒ /app/captura
+├ ƒ /app/captura/advogados
+├ ƒ /app/captura/agendamentos
+├ ƒ /app/captura/credenciais
+├ ƒ /app/captura/historico
+├ ƒ /app/captura/historico/[id]
+├ ƒ /app/captura/tribunais
+├ ƒ /app/chat
+├ ƒ /app/chat/historico-chamadas
+├ ƒ /app/comunica-cnj
+├ ƒ /app/configuracoes
+├ ƒ /app/confirm
+├ ƒ /app/contratos
+├ ƒ /app/contratos/[id]
+├ ƒ /app/dashboard
+├ ƒ /app/dashboard/audiencias
+├ ƒ /app/dashboard/contratos
+├ ƒ /app/dashboard/expedientes
+├ ƒ /app/dashboard/financeiro
+├ ƒ /app/dashboard/geral
+├ ƒ /app/dashboard/processos
+├ ƒ /app/documentos
+├ ƒ /app/documentos/[id]
+├ ƒ /app/documentos/lixeira
+├ ƒ /app/editor
+├ ƒ /app/error
+├ ƒ /app/expedientes
+├ ƒ /app/expedientes/ano
+├ ƒ /app/expedientes/lista
+├ ƒ /app/expedientes/mes
+├ ƒ /app/expedientes/semana
+├ ƒ /app/financeiro
+├ ƒ /app/financeiro/conciliacao-bancaria
+├ ƒ /app/financeiro/conciliacao-bancaria/[id]
+├ ƒ /app/financeiro/contas-pagar
+├ ƒ /app/financeiro/contas-pagar/[id]
+├ ƒ /app/financeiro/contas-receber
+├ ƒ /app/financeiro/contas-receber/[id]
+├ ƒ /app/financeiro/contas-receber/relatorios/inadimplencia
+├ ƒ /app/financeiro/dre
+├ ƒ /app/financeiro/orcamentos
+├ ƒ /app/financeiro/orcamentos/[id]
+├ ƒ /app/financeiro/orcamentos/[id]/analise
+├ ƒ /app/financeiro/orcamentos/comparar
+├ ƒ /app/financeiro/plano-contas
+├ ƒ /app/financeiro/relatorios/inconsistencias
+├ ƒ /app/financeiro/relatorios/repasses
+├ ƒ /app/forgot-password
+├ ƒ /app/kanban
+├ ƒ /app/login
+├ ƒ /app/notas
+├ ƒ /app/notificacoes
+├ ƒ /app/pangea
+├ ƒ /app/partes
+├ ƒ /app/partes/clientes
+├ ƒ /app/partes/clientes/[id]
+├ ƒ /app/partes/partes-contrarias
+├ ƒ /app/partes/partes-contrarias/[id]
+├ ƒ /app/partes/representantes
+├ ƒ /app/partes/representantes/[id]
+├ ƒ /app/partes/terceiros
+├ ƒ /app/partes/terceiros/[id]
+├ ƒ /app/pecas-juridicas
+├ ƒ /app/pecas-juridicas/[id]/editar
+├ ƒ /app/pecas-juridicas/novo
+├ ƒ /app/perfil
+├ ƒ /app/pericias
+├ ƒ /app/pericias/ano
+├ ƒ /app/pericias/lista
+├ ƒ /app/pericias/mes
+├ ƒ /app/pericias/semana
+├ ƒ /app/processos
+├ ƒ /app/processos/[id]
+├ ƒ /app/repasses
+├ ƒ /app/rh
+├ ƒ /app/rh/folhas-pagamento
+├ ƒ /app/rh/folhas-pagamento/[id]
+├ ƒ /app/rh/folhas-pagamento/relatorios/mensal
+├ ƒ /app/rh/salarios
+├ ƒ /app/rh/salarios/relatorios/custo-pessoal
+├ ƒ /app/rh/salarios/usuario/[usuarioId]
+├ ƒ /app/sign-up
+├ ƒ /app/sign-up-success
+├ ƒ /app/tarefas
+├ ƒ /app/tipos-expedientes
+├ ƒ /app/todo
+├ ƒ /app/update-password
+├ ƒ /app/usuarios
+├ ƒ /app/usuarios/[id]
+├ ƒ /assinatura/[token]
+├ ƒ /dev-design-system
+├ ƒ /formulario/[segmento]/[formulario]
+├ ƒ /offline
+├ ƒ /portal
+├ ƒ /portal/audiencias
+├ ƒ /portal/contratos
+├ ƒ /portal/pagamentos
+├ ƒ /portal/processos
+├ ƒ /protected
+├ ƒ /sandbox/calendar
+├ ƒ /sandbox/components
+└ ƒ /sandbox/expedientes-calendar
+
+
+ƒ Proxy (Middleware)
+
+ƒ  (Dynamic)  server-rendered on demand
+
