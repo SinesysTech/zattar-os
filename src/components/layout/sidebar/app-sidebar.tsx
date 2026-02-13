@@ -5,20 +5,20 @@ import {
   Bot,
   Briefcase,
   Calendar,
+  CalendarCheck,
+  Database,
+  FileEdit,
   FileText,
   FolderOpen,
   Handshake,
   LayoutDashboard,
-  Microscope,
-  Scale,
-  Users,
-  Database,
-  FileEdit,
   MessageSquare,
+  Microscope,
   PenTool,
-  CalendarCheck,
-  Search,
+  Scale,
   ScrollText,
+  Search,
+  Users,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/sidebar/nav-main"
@@ -82,27 +82,19 @@ const navPrincipal = [
   },
 ]
 
-// Nav Serviços - Ferramentas e utilitários (ordem alfabética)
+// Nav Serviços - Ferramentas e utilitários
 const navServicos = [
   {
-    title: "Assistentes",
-    url: "/app/assistentes",
-    icon: Bot,
-  },
-  {
-    title: "Assinatura Digital",
-    url: "/app/assinatura-digital",
-    icon: PenTool,
+    title: "Planner",
+    url: "/app/planner",
+    icon: CalendarCheck,
     items: [
-      { title: "Documentos", url: "/app/assinatura-digital/documentos/lista" },
-      { title: "Templates", url: "/app/assinatura-digital/templates" },
-      { title: "Formulários", url: "/app/assinatura-digital/formularios" },
+      { title: "Agenda", url: "/app/calendar" },
+      { title: "Kanban", url: "/app/kanban" },
+      { title: "Notas", url: "/app/notas" },
+      { title: "Tarefas", url: "/app/tarefas" },
+      { title: "To-Do", url: "/app/todo" },
     ],
-  },
-  {
-    title: "Chat",
-    url: "/app/chat",
-    icon: MessageSquare,
   },
   {
     title: "Documentos",
@@ -124,15 +116,23 @@ const navServicos = [
     ],
   },
   {
-    title: "Planner",
-    url: "/app/planner",
-    icon: CalendarCheck,
+    title: "Chat",
+    url: "/app/chat",
+    icon: MessageSquare,
+  },
+  {
+    title: "Assistentes",
+    url: "/app/assistentes",
+    icon: Bot,
+  },
+  {
+    title: "Assinatura Digital",
+    url: "/app/assinatura-digital",
+    icon: PenTool,
     items: [
-      { title: "Agenda", url: "/app/calendar" },
-      { title: "Kanban", url: "/app/kanban" },
-      { title: "Notas", url: "/app/notas" },
-      { title: "Tarefas", url: "/app/tarefas" },
-      { title: "To-Do", url: "/app/todo" },
+      { title: "Documentos", url: "/app/assinatura-digital/documentos/lista" },
+      { title: "Templates", url: "/app/assinatura-digital/templates" },
+      { title: "Formulários", url: "/app/assinatura-digital/formularios" },
     ],
   },
 ]

@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import path from "path";
-import withPWA from "@ducanh2912/next-pwa";
+import { spawnSync } from "node:child_process";
+import withSerwistInit from "@serwist/next";
 import bundleAnalyzer from "@next/bundle-analyzer";
 
 // Bundle analyzer for performance analysis (enabled via ANALYZE=true)
@@ -115,8 +116,6 @@ const nextConfig: NextConfig = {
     // NOTA: Warnings de "Invalid source map" do Turbopack são conhecidos no Next.js 16.0.10
     // Não há opção para desabilitar source maps do Turbopack. O warning não afeta funcionalidade.
     // Alternativas: atualizar Next.js ou desabilitar Turbopack com `turbo: false` (não recomendado)
-    // Otimizar imports de pacotes grandes (melhora tree-shaking)
-    webpackBuildWorker: true,
     // Aumenta limite de tamanho do body para Server Actions (upload de imagens)
     serverActions: {
       bodySizeLimit: "50mb",
@@ -263,91 +262,26 @@ const nextConfig: NextConfig = {
 };
 
 // ============================================================================
-// PWA Configuration (@ducanh2912/next-pwa)
+// PWA Configuration (@serwist/next)
 // ============================================================================
-// Generates a production-ready service worker with Workbox strategies.
-// IMPORTANT: Requires Webpack build (use 'npm run build:prod').
-// The service worker is auto-generated in public/ during build and ignored by git.
+// Service worker is defined in src/app/sw.ts with runtime caching strategies.
+// Serwist supports both Webpack and Turbopack bundlers natively.
 // See DEPLOY.md section "Progressive Web App (PWA)" for troubleshooting.
 //
 // Bundle Analyzer: Set ANALYZE=true to generate bundle analysis reports
 // Reports are saved to scripts/results/bundle-analysis/
-export default withBundleAnalyzer(
-  withPWA({
-    // Destination folder for generated service worker files
-    dest: "public",
-    // Disable PWA in development to avoid caching issues, or if explicitly disabled (e.g. for CI)
-    disable:
-      process.env.NODE_ENV === "development" ||
-      process.env.DISABLE_PWA === "true",
-    // Automatically register the service worker (no manual registration needed)
-    register: true,
-    // Fallback page when offline
-    fallbacks: {
-      document: "/offline",
-    },
-    // Workbox caching strategies
-    workboxOptions: {
-      // Activate new service worker immediately
-      skipWaiting: true,
-      clientsClaim: true,
-      // Increase max file size to cache to 5MB (default is 2MB) to avoid warnings for large chunks
-      maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
-      runtimeCaching: [
-        {
-          urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
-          handler: "CacheFirst",
-          options: {
-            cacheName: "google-fonts",
-            expiration: {
-              maxEntries: 4,
-              maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
-            },
-          },
-        },
-        {
-          urlPattern: /\.(?:png|jpg|jpeg|svg|gif)$/,
-          handler: "CacheFirst",
-          options: {
-            cacheName: "images",
-            expiration: {
-              maxEntries: 50,
-              maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-            },
-          },
-        },
-        {
-          // NetworkFirst for JS to prevent Server Action version mismatches after deploys
-          // This prevents "Failed to find Server Action" errors when users have stale JS
-          urlPattern: /\/_next\/static.+\.js$/,
-          handler: "NetworkFirst",
-          options: {
-            cacheName: "next-static-js",
-            expiration: {
-              maxEntries: 64,
-              maxAgeSeconds: 60 * 60, // 1 hour
-            },
-            networkTimeoutSeconds: 5, // Fallback to cache after 5s timeout
-          },
-        },
-        {
-          // Exclude /api/health from caching - always fetch from network
-          urlPattern: /\/api\/health$/,
-          handler: "NetworkOnly",
-        },
-        {
-          urlPattern: /\/api\/.*/,
-          handler: "NetworkFirst",
-          options: {
-            cacheName: "api-cache",
-            expiration: {
-              maxEntries: 100,
-              maxAgeSeconds: 60 * 60, // 1 hour
-            },
-            networkTimeoutSeconds: 10,
-          },
-        },
-      ],
-    },
-  })(nextConfig),
-);
+const revision =
+  spawnSync("git", ["rev-parse", "HEAD"], {
+    encoding: "utf-8",
+  }).stdout?.trim() ?? crypto.randomUUID();
+
+const withSerwist = withSerwistInit({
+  swSrc: "src/app/sw.ts",
+  swDest: "public/sw.js",
+  additionalPrecacheEntries: [{ url: "/offline", revision }],
+  disable:
+    process.env.NODE_ENV === "development" ||
+    process.env.DISABLE_PWA === "true",
+});
+
+export default withBundleAnalyzer(withSerwist(nextConfig));

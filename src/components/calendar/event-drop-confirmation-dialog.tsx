@@ -1,6 +1,7 @@
 "use client";
 
 import {format} from "date-fns";
+import {ptBR} from "date-fns/locale";
 
 import {
     AlertDialog,
@@ -46,7 +47,7 @@ export function EventDropConfirmationDialog({
     const originalStart = new Date(event.startDate);
 
     const formatDate = (date: Date) => {
-        return format(date, "MMM dd, yyyy 'at '") + formatTime(date, use24HourFormat);
+        return format(date, "dd 'de' MMM 'de' yyyy 'às' ", { locale: ptBR }) + formatTime(date, use24HourFormat);
     };
 
     const handleConfirm = () => {
@@ -63,21 +64,21 @@ export function EventDropConfirmationDialog({
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Confirm Event Move</AlertDialogTitle>
+                    <AlertDialogTitle>Confirmar Movimentação</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Are you sure you want to move
+                        Deseja mover o evento
                         <span className={cn(getColorClass(event.color), "mx-1 py-0.5 px-1 rounded-md")}>
 							{event.title}
 						</span>
-                        event from
-                        <strong className="mx-1">{formatDate(originalStart)}</strong> to
+                        de
+                        <strong className="mx-1">{formatDate(originalStart)}</strong> para
                         <strong className="mx-1">{formatDate(newStartDate)}</strong>?
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel onClick={handleCancel}>Cancelar</AlertDialogCancel>
                     <AlertDialogAction onClick={handleConfirm}>
-                        Move Event
+                        Mover Evento
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

@@ -24,7 +24,8 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { getCalendarCells } from '@/components/calendar/helpers';
-import type { Audiencia, StatusAudiencia } from '../domain';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { StatusAudiencia, type Audiencia } from '../domain';
 
 // =============================================================================
 // TIPOS
@@ -48,12 +49,21 @@ interface AudienciasCalendarCompactProps {
 // Dias da semana em português (abreviados)
 const WEEK_DAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-// Cores por status
-const STATUS_COLORS: Record<StatusAudiencia, string> = {
-  M: 'bg-blue-500', // Marcada
-  F: 'bg-green-500', // Finalizada
-  C: 'bg-red-500', // Cancelada
-};
+/**
+ * Retorna a classe CSS de background para o indicador de status.
+ * Usa o design system para determinar a variante e mapeia para classes de cor.
+ */
+function getStatusIndicatorClass(status: StatusAudiencia | string): string {
+  const variant = getSemanticBadgeVariant('audiencia_status', status);
+  const variantToClass: Record<string, string> = {
+    info: 'bg-info',        // Marcada (azul)
+    success: 'bg-success',  // Finalizada (verde)
+    destructive: 'bg-destructive', // Cancelada (vermelho)
+    warning: 'bg-warning',  // Adiada/Reagendada
+    neutral: 'bg-muted-foreground',
+  };
+  return variantToClass[variant] ?? 'bg-primary';
+}
 
 // =============================================================================
 // COMPONENTE PRINCIPAL
@@ -201,10 +211,10 @@ export function AudienciasCalendarCompact({
               dayAudiencias.forEach((a) => {
                 statusCounts[a.status] = (statusCounts[a.status] || 0) + 1;
               });
-              // Prioridade: Marcada > Cancelada > Finalizada
-              if (statusCounts['M']) indicatorColor = STATUS_COLORS['M'];
-              else if (statusCounts['C']) indicatorColor = STATUS_COLORS['C'];
-              else if (statusCounts['F']) indicatorColor = STATUS_COLORS['F'];
+              // Prioridade: Marcada > Cancelada > Finalizada (usa design system)
+              if (statusCounts['M']) indicatorColor = getStatusIndicatorClass('M');
+              else if (statusCounts['C']) indicatorColor = getStatusIndicatorClass('C');
+              else if (statusCounts['F']) indicatorColor = getStatusIndicatorClass('F');
             }
 
             return (
@@ -265,15 +275,15 @@ export function AudienciasCalendarCompact({
       {/* Legenda */}
       <div className="flex items-center gap-3 text-xs text-muted-foreground">
         <div className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-blue-500" />
+          <span className={cn('w-2 h-2 rounded-full', getStatusIndicatorClass('M'))} />
           <span>Marcada</span>
         </div>
         <div className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-green-500" />
+          <span className={cn('w-2 h-2 rounded-full', getStatusIndicatorClass('F'))} />
           <span>Realizada</span>
         </div>
         <div className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-red-500" />
+          <span className={cn('w-2 h-2 rounded-full', getStatusIndicatorClass('C'))} />
           <span>Cancelada</span>
         </div>
       </div>

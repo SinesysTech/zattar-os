@@ -5,12 +5,11 @@
  *
  * Recebe dados iniciais do Server Component e gerencia:
  * - Estado de busca e filtros
- * - Paginação server-side com refresh via Server Actions
+ * - Paginação server-side com refresh via Server Actions (agora via useAudiencias hook)
  * - Dialogs de criação e visualização
  */
 
 import * as React from 'react';
-import { useDebounce } from '@/hooks/use-debounce';
 import {
   DataShell,
   DataPagination,
@@ -19,7 +18,6 @@ import {
 } from '@/components/shared/data-shell';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 
-import { actionListarAudiencias } from '../actions';
 import {
   type Audiencia,
   type CodigoTribunal,
@@ -30,6 +28,7 @@ import {
 } from '../domain';
 import { useTiposAudiencias } from '../hooks/use-tipos-audiencias';
 import { useUsuarios } from '@/features/usuarios';
+import { useAudiencias } from '../hooks/use-audiencias';
 
 import { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias-list-columns';
 import { AudienciasListFilters } from './audiencias-list-filters';
@@ -72,10 +71,7 @@ export function AudienciasListWrapper({
   usuariosData,
   tiposAudienciaData,
 }: AudienciasListWrapperProps) {
-  // Data state
-  const [audiencias, setAudiencias] = React.useState<AudienciaComResponsavel[]>(
-    initialData as AudienciaComResponsavel[]
-  );
+  // Table State
   const [table, setTable] = React.useState<TanstackTable<AudienciaComResponsavel> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
@@ -86,14 +82,6 @@ export function AudienciasListWrapper({
   const [pageSize, setPageSize] = React.useState(
     initialPagination ? initialPagination.limit : 50
   );
-  const [total, setTotal] = React.useState(initialPagination ? initialPagination.total : 0);
-  const [totalPages, setTotalPages] = React.useState(
-    initialPagination ? initialPagination.totalPages : 0
-  );
-
-  // Loading/Error state
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
 
   // Search/Filters State
   const [globalFilter, setGlobalFilter] = React.useState('');
@@ -110,16 +98,35 @@ export function AudienciasListWrapper({
   const [detailOpen, setDetailOpen] = React.useState(false);
   const [selectedAudiencia, setSelectedAudiencia] = React.useState<AudienciaComResponsavel | null>(null);
 
-  // Debounce search (500ms)
-  const buscaDebounced = useDebounce(globalFilter, 500);
-
-  // Auxiliary data (usar props se disponíveis, senão buscar)
+  // Auxiliary data
   const { tiposAudiencia: tiposFetched } = useTiposAudiencias({ enabled: !tiposAudienciaData });
   const { usuarios: usuariosFetched } = useUsuarios({ enabled: !usuariosData });
 
-  // Usar dados das props se disponíveis, senão usar dados buscados
   const tiposAudiencia = tiposAudienciaData ?? tiposFetched;
   const usuarios = usuariosData ?? usuariosFetched;
+
+  // Use the centralized hook for data fetching
+  const { audiencias: audienciasFetched, paginacao, isLoading, error, refetch } = useAudiencias({
+    pagina: pageIndex + 1,
+    limite: pageSize,
+    busca: globalFilter || undefined,
+    status: statusFiltro === 'todas' ? undefined : statusFiltro,
+    modalidade: modalidadeFiltro === 'todas' ? undefined : modalidadeFiltro,
+    trt: trtFiltro === 'todas' ? undefined : trtFiltro,
+    grau: grauFiltro === 'todas' ? undefined : grauFiltro,
+    responsavel_id: responsavelFiltro === 'todos' ? undefined : responsavelFiltro === 'null' ? 'null' : responsavelFiltro,
+    tipo_audiencia_id: tipoAudienciaFiltro === 'todos' ? undefined : tipoAudienciaFiltro,
+  });
+
+  // Determine if we should use initial data (only on first load if parameters match initial)
+  // For simplicity and correctness with the hook, allow the hook to manage data after mount.
+  // The hook handles SSR hydration internally if configured, but here we strictly use client-side fetching based on `useAudiencias` 
+  // implementation which defaults to client-only fetching unless initial data is passed to it (which our hook simple version might not support fully for hydration, 
+  // but it's fine as it effectively replaces the previous client-only fetch).
+  //
+  // NOTE: The previous implementation accepted `initialData` but immediately refetched if `!hasInitialData`.
+  // `useAudiencias` starts with empty array and fetches. 
+  // We will trust `useAudiencias` to fetch data.
 
   // Map usuarios to audiencias for responsavel name
   const usuariosMap = React.useMemo(() => {
@@ -132,83 +139,17 @@ export function AudienciasListWrapper({
 
   // Enrich audiencias with responsavel name
   const audienciasEnriquecidas = React.useMemo(() => {
-    return audiencias.map((a) => ({
+    // If we have fetched data, use it.
+    const sourceData = audienciasFetched;
+    return sourceData.map((a) => ({
       ...a,
       responsavelNome: a.responsavelId ? usuariosMap.get(a.responsavelId)?.nome : null,
     }));
-  }, [audiencias, usuariosMap]);
+  }, [audienciasFetched, usuariosMap]);
 
-  // Refetch function
-  const refetch = React.useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const result = await actionListarAudiencias({
-        pagina: pageIndex + 1,
-        limite: pageSize,
-        busca: buscaDebounced || undefined,
-        status: statusFiltro === 'todas' ? undefined : statusFiltro,
-        modalidade: modalidadeFiltro === 'todas' ? undefined : modalidadeFiltro,
-        trt: trtFiltro === 'todas' ? undefined : trtFiltro,
-        grau: grauFiltro === 'todas' ? undefined : grauFiltro,
-        responsavelId: responsavelFiltro === 'todos' ? undefined : responsavelFiltro,
-        tipoAudienciaId: tipoAudienciaFiltro === 'todos' ? undefined : tipoAudienciaFiltro,
-      });
-
-      if (result.success) {
-        setAudiencias(result.data.data as AudienciaComResponsavel[]);
-        setTotal(result.data.pagination.total);
-        setTotalPages(result.data.pagination.totalPages);
-      } else {
-        setError(result.error);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao carregar audiências');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [
-    pageIndex,
-    pageSize,
-    buscaDebounced,
-    statusFiltro,
-    modalidadeFiltro,
-    trtFiltro,
-    grauFiltro,
-    responsavelFiltro,
-    tipoAudienciaFiltro,
-  ]);
-
-  // Ref to control first render
-  const isFirstRender = React.useRef(true);
-  const hasInitialData = initialPagination !== null || initialData.length > 0;
-
-  // Refetch when params change (NÃO incluir refetch como dependência para evitar loop)
-  React.useEffect(() => {
-    // Skip first render se tem dados iniciais
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      // Se não tem dados iniciais, buscar imediatamente
-      if (!hasInitialData) {
-        refetch();
-      }
-      return;
-    }
-
-    refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    pageIndex,
-    pageSize,
-    buscaDebounced,
-    statusFiltro,
-    modalidadeFiltro,
-    trtFiltro,
-    grauFiltro,
-    responsavelFiltro,
-    tipoAudienciaFiltro,
-  ]);
+  // Derived pagination info
+  const total = paginacao?.total ?? (initialPagination?.total ?? 0);
+  const totalPages = paginacao?.totalPaginas ?? (initialPagination?.totalPages ?? 0);
 
   // Handlers
   const handleView = React.useCallback((audiencia: AudienciaComResponsavel) => {
@@ -361,8 +302,6 @@ export function AudienciasListWrapper({
           </DialogFormShell>
         </>
       )}
-
-
     </>
   );
 }

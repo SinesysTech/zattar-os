@@ -1,6 +1,7 @@
 "use client";
 
 import { format, parseISO } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { Calendar, Clock, Text, User } from "lucide-react";
 import type { ReactNode } from "react";
 import { toast } from "sonner";
@@ -32,9 +33,9 @@ export function EventDetailsDialog({ event, children }: IProps) {
 	const deleteEvent = (eventId: number) => {
 		try {
 			removeEvent(eventId);
-			toast.success("Event deleted successfully.");
+			toast.success("Evento excluído com sucesso.");
 		} catch {
-			toast.error("Error deleting event.");
+			toast.error("Erro ao excluir evento.");
 		}
 	};
 
@@ -51,7 +52,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
 						<div className="flex items-start gap-2">
 							<User className="mt-1 size-4 shrink-0 text-muted-foreground" />
 							<div>
-								<p className="text-sm font-medium">Responsible</p>
+								<p className="text-sm font-medium">Responsável</p>
 								<p className="text-sm text-muted-foreground">
 									{event.user.name}
 								</p>
@@ -61,10 +62,10 @@ export function EventDetailsDialog({ event, children }: IProps) {
 						<div className="flex items-start gap-2">
 							<Calendar className="mt-1 size-4 shrink-0 text-muted-foreground" />
 							<div>
-								<p className="text-sm font-medium">Start Date</p>
+								<p className="text-sm font-medium">Data de Início</p>
 								<p className="text-sm text-muted-foreground">
-									{format(startDate, "EEEE dd MMMM")}
-									<span className="mx-1">at</span>
+									{format(startDate, "EEEE, dd 'de' MMMM", { locale: ptBR })}
+									<span className="mx-1">às</span>
 									{formatTime(parseISO(event.startDate), use24HourFormat)}
 								</p>
 							</div>
@@ -73,10 +74,10 @@ export function EventDetailsDialog({ event, children }: IProps) {
 						<div className="flex items-start gap-2">
 							<Clock className="mt-1 size-4 shrink-0 text-muted-foreground" />
 							<div>
-								<p className="text-sm font-medium">End Date</p>
+								<p className="text-sm font-medium">Data de Término</p>
 								<p className="text-sm text-muted-foreground">
-									{format(endDate, "EEEE dd MMMM")}
-									<span className="mx-1">at</span>
+									{format(endDate, "EEEE, dd 'de' MMMM", { locale: ptBR })}
+									<span className="mx-1">às</span>
 									{formatTime(parseISO(event.endDate), use24HourFormat)}
 								</p>
 							</div>
@@ -85,7 +86,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
 						<div className="flex items-start gap-2">
 							<Text className="mt-1 size-4 shrink-0 text-muted-foreground" />
 							<div>
-								<p className="text-sm font-medium">Description</p>
+								<p className="text-sm font-medium">Descrição</p>
 								<p className="text-sm text-muted-foreground">
 									{event.description}
 								</p>
@@ -95,7 +96,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
 				</ScrollArea>
 				<div className="flex justify-end gap-2">
 					<AddEditEventDialog event={event}>
-						<Button variant="outline">Edit</Button>
+						<Button variant="outline">Editar</Button>
 					</AddEditEventDialog>
 					<Button
 						variant="destructive"
@@ -103,7 +104,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
 							deleteEvent(event.id);
 						}}
 					>
-						Delete
+						Excluir
 					</Button>
 				</div>
 				<DialogClose />

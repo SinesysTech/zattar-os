@@ -9,9 +9,10 @@ import {
   calculateMonthEventPositions,
 } from '@/components/calendar/helpers'; // Reusing helper functions
 import type { IEvent } from '@/components/calendar/interfaces';
-import type { Audiencia } from '../domain';
+import type { Audiencia, StatusAudiencia } from '../domain';
 import { AudienciasMonthDayCell } from './audiencias-month-day-cell';
 import { AudienciasDiaDialog } from './audiencias-dia-dialog';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 
 interface ICalendarEvent {
   id: string;
@@ -30,7 +31,22 @@ interface AudienciasCalendarMonthViewProps {
   refetch: () => void;
 }
 
-const WEEK_DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]; // Changed to Portuguese
+const WEEK_DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+/**
+ * Mapeia status de audiência para cor do calendário usando design system.
+ * Traduz as variantes semânticas para as cores esperadas pelo componente de calendário.
+ */
+function getCalendarColor(status: StatusAudiencia | string): 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'orange' {
+  const variant = getSemanticBadgeVariant('audiencia_status', status);
+  const variantToColor: Record<string, 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'orange'> = {
+    info: 'blue',        // Marcada
+    success: 'green',    // Finalizada
+    destructive: 'red',  // Cancelada
+    warning: 'yellow',   // Adiada/Reagendada
+  };
+  return variantToColor[variant] ?? 'blue';
+}
 
 function audienciaToICalendarEvent(audiencia: Audiencia): ICalendarEvent {
   return {
@@ -40,12 +56,7 @@ function audienciaToICalendarEvent(audiencia: Audiencia): ICalendarEvent {
     endDate: audiencia.dataFim,
     allDay: false,
     originalAudiencia: audiencia,
-    color:
-      audiencia.status === 'M'
-        ? 'blue'
-        : audiencia.status === 'F'
-        ? 'green'
-        : 'red',
+    color: getCalendarColor(audiencia.status),
   };
 }
 
@@ -103,7 +114,7 @@ export function AudienciasCalendarMonthView({
 
   return (
     <motion.div initial="initial" animate="animate" variants={staggerContainer}>
-      <div className="border rounded-lg overflow-hidden bg-white dark:bg-card">
+      <div className="border rounded-lg overflow-hidden bg-card">
         {/* Header dias da semana */}
         <div className="grid grid-cols-7 bg-muted/50 border-b">
           {WEEK_DAYS.map((day, index) => (

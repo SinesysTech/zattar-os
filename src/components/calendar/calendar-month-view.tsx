@@ -19,7 +19,7 @@ interface IProps {
 	multiDayEvents: IEvent[];
 }
 
-const WEEK_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEK_DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 export function CalendarMonthView({ singleDayEvents, multiDayEvents }: IProps) {
 	const { selectedDate } = useCalendar();

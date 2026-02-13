@@ -83,10 +83,9 @@ temp/
 .eslintcache
 tsconfig.tsbuildinfo
 
-# PWA (será gerado no build)
-public/sw.js
-public/workbox-*.js
-public/fallback-*.js
+# Serwist (service worker gerado no build)
+public/sw*
+public/swe-worker*
 
 # Docker
 Dockerfile*
