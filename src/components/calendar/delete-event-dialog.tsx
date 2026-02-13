@@ -24,9 +24,9 @@ export default function DeleteEventDialog({ eventId }: DeleteEventDialogProps) {
 	const deleteEvent = () => {
 		try {
 			removeEvent(eventId);
-			toast.success("Event deleted successfully.");
+			toast.success("Evento excluído com sucesso.");
 		} catch {
-			toast.error("Error deleting event.");
+			toast.error("Erro ao excluir evento.");
 		}
 	};
 
@@ -39,20 +39,20 @@ export default function DeleteEventDialog({ eventId }: DeleteEventDialogProps) {
 			<AlertDialogTrigger asChild>
 				<Button variant="destructive">
 					<TrashIcon />
-					Delete
+					Excluir
 				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
-					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+					<AlertDialogTitle>Tem certeza?</AlertDialogTitle>
 					<AlertDialogDescription>
-						This action cannot be undone. This will permanently delete your
-						event and remove event data from our servers.
+						Esta ação não pode ser desfeita. Isso excluirá permanentemente o
+						evento e removerá seus dados do sistema.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
-					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<AlertDialogAction onClick={deleteEvent}>Continue</AlertDialogAction>
+					<AlertDialogCancel>Cancelar</AlertDialogCancel>
+					<AlertDialogAction onClick={deleteEvent}>Confirmar</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

@@ -64,7 +64,7 @@ export function ViewModePopover({
             <Button
               variant="outline"
               size="icon"
-              className={cn('h-9 w-9 bg-card', className)}
+              className={cn('h-9 w-9', className)}
               aria-label="Alterar visualização"
             >
               <Eye className="h-4 w-4" aria-hidden="true" />

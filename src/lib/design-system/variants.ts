@@ -290,6 +290,11 @@ export const POLO_VARIANTS: Record<string, BadgeVisualVariant> = {
  * Mapeamento de status de audiência para variantes visuais.
  */
 export const AUDIENCIA_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  // Códigos de status (M, F, C)
+  M: 'info',        // Marcada
+  F: 'success',     // Finalizada
+  C: 'destructive', // Cancelada
+  // Labels completas
   Marcada: 'info',
   MARCADA: 'info',
   Finalizada: 'success',

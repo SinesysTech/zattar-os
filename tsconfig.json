@@ -5,7 +5,8 @@
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "esnext",
+      "webworker"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -27,7 +28,8 @@
     ],
     "types": [
       "node",
-      "jest"
+      "jest",
+      "@serwist/next"
     ],
     "plugins": [
       {
@@ -86,6 +88,7 @@
     "src/testing/mocks/**",
     "src/components/__mocks__/**",
     "**/*.stories.tsx",
-    "**/storybook/**"
+    "**/storybook/**",
+    "public/sw.js"
   ]
 }

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Eye, Pencil } from 'lucide-react';
+import { Eye, Pencil, FileText, ExternalLink } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
@@ -13,13 +13,18 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { ParteBadge } from '@/components/ui/parte-badge';
 
 import type { Audiencia, GrauTribunal } from '../domain';
-import { GRAU_TRIBUNAL_LABELS } from '../domain';
+import { GRAU_TRIBUNAL_LABELS, StatusAudiencia } from '../domain';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 import { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
@@ -27,6 +32,66 @@ import { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-respons
 // =============================================================================
 // HELPER COMPONENTS
 // =============================================================================
+
+/**
+ * Botão de Ata de Audiência
+ * Aparece apenas para audiências realizadas que possuem ata disponível
+ */
+function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel }) {
+  const isRealizada = audiencia.status === StatusAudiencia.Finalizada;
+  const hasAta = audiencia.ataAudienciaId || audiencia.urlAtaAudiencia;
+
+  if (!isRealizada || !hasAta) {
+    return null;
+  }
+
+  return (
+    <Popover>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <PopoverTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:text-emerald-300 dark:hover:bg-emerald-950"
+            >
+              <FileText className="h-4 w-4" />
+              <span className="sr-only">Ver ata de audiência</span>
+            </Button>
+          </PopoverTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Ata de Audiência</TooltipContent>
+      </Tooltip>
+      <PopoverContent className="w-72 p-4" align="start">
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <FileText className="h-5 w-5 text-emerald-600" />
+            <h4 className="font-semibold text-sm">Ata de Audiência</h4>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            A ata desta audiência está disponível para visualização.
+          </p>
+          {audiencia.urlAtaAudiencia ? (
+            <Button variant="outline" size="sm" className="w-full" asChild>
+              <a
+                href={audiencia.urlAtaAudiencia}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Abrir Ata
+              </a>
+            </Button>
+          ) : (
+            <p className="text-xs text-muted-foreground italic">
+              Ata registrada (ID: {audiencia.ataAudienciaId})
+            </p>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 /**
  * Badge composto para Tribunal + Grau
@@ -205,17 +270,25 @@ export function getAudienciasColumns(
         align: 'left' as const,
         headerLabel: 'Data/Hora',
       },
-      size: 140,
+      size: 160,
       cell: ({ row }) => {
         const audiencia = row.original;
+        const hasAta = audiencia.status === StatusAudiencia.Finalizada &&
+          (audiencia.ataAudienciaId || audiencia.urlAtaAudiencia);
+
         return (
-          <div className="flex flex-col items-start gap-1.5 py-2">
-            <span className="text-sm text-muted-foreground whitespace-nowrap">
-              {formatarDataHora(audiencia.dataInicio)}
-            </span>
-            {audiencia.status && (
-              <AudienciaStatusBadge status={audiencia.status} />
-            )}
+          <div className="flex items-start gap-2 py-2">
+            {/* Botão de Ata (aparece apenas se disponível) */}
+            {hasAta && <AtaAudienciaButton audiencia={audiencia} />}
+
+            <div className="flex flex-col items-start gap-1.5">
+              <span className="text-sm text-muted-foreground whitespace-nowrap">
+                {formatarDataHora(audiencia.dataInicio)}
+              </span>
+              {audiencia.status && (
+                <AudienciaStatusBadge status={audiencia.status} />
+              )}
+            </div>
           </div>
         );
       },
