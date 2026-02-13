@@ -341,53 +341,37 @@ export function getAudienciasColumns(
       enableSorting: true,
     },
     {
-      accessorKey: 'tipoDescricao',
+      id: 'detalhes',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Tipo" />
+        <DataTableColumnHeader column={column} title="Detalhes" />
       ),
       meta: {
         align: 'left' as const,
-        headerLabel: 'Tipo',
+        headerLabel: 'Detalhes',
       },
-      size: 180,
+      size: 220,
       cell: ({ row }) => {
         const audiencia = row.original;
         return (
-          <div className="flex items-center py-2 min-w-0">
-            <span
-              className="text-sm text-muted-foreground truncate"
-              title={audiencia.tipoDescricao || undefined}
-            >
-              {audiencia.tipoDescricao || '-'}
-            </span>
-          </div>
-        );
-      },
-      enableSorting: true,
-    },
-    {
-      accessorKey: 'modalidade',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Modalidade" />
-      ),
-      meta: {
-        align: 'left' as const,
-        headerLabel: 'Modalidade',
-      },
-      size: 120,
-      cell: ({ row }) => {
-        const audiencia = row.original;
-        return (
-          <div className="flex items-center py-2">
+          <div className="flex flex-col gap-1.5 py-2">
+            {/* Modalidade primeiro */}
             {audiencia.modalidade ? (
               <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
-            ) : (
+            ) : null}
+            {/* Tipo segundo */}
+            {audiencia.tipoDescricao ? (
+              <span className="text-sm text-muted-foreground">
+                {audiencia.tipoDescricao}
+              </span>
+            ) : null}
+            {/* Fallback se ambos estiverem vazios */}
+            {!audiencia.modalidade && !audiencia.tipoDescricao && (
               <span className="text-sm text-muted-foreground">-</span>
             )}
           </div>
         );
       },
-      enableSorting: true,
+      enableSorting: false,
     },
     {
       id: 'responsavel',
