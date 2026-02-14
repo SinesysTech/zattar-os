@@ -26,6 +26,6 @@
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "supabase",
-    "CopilotKit MCP"
+    "copilotkit"
   ]
 }
