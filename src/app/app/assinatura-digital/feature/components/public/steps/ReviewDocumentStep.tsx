@@ -64,7 +64,7 @@ export function ReviewDocumentStep({
           <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 bg-background/95 backdrop-blur-sm border border-border rounded-full shadow-lg px-2 py-1.5 mt-3">
             {/* Document icon */}
             <span
-              className="material-symbols-outlined text-red-500 text-[20px] ml-1"
+              className="material-symbols-outlined text-red-500 text-xl ml-1"
               aria-hidden="true"
             >
               description
@@ -118,7 +118,7 @@ export function ReviewDocumentStep({
             >
               <a href={pdfUrl} download={documentTitle || "documento.pdf"} title="Baixar documento">
                 <span
-                  className="material-symbols-outlined text-[18px]"
+                  className="material-symbols-outlined text-lg"
                   aria-hidden="true"
                 >
                   download

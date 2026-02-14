@@ -84,8 +84,7 @@ export function SuccessStep({
           <div className="absolute inset-0 w-20 h-20 bg-green-500/20 rounded-full animate-ping opacity-75 mx-auto" />
           <div className="relative flex items-center justify-center w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full text-green-600 dark:text-green-400">
             <span
-              className="material-symbols-outlined"
-              style={{ fontSize: 48, fontWeight: 600 }}
+              className="material-symbols-outlined text-5xl font-semibold"
               aria-hidden="true"
             >
               check
@@ -116,8 +115,7 @@ export function SuccessStep({
           {/* Badge de Status */}
           <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 text-xs font-medium rounded-full">
             <span
-              className="material-symbols-outlined"
-              style={{ fontSize: 14 }}
+              className="material-symbols-outlined text-sm"
               aria-hidden="true"
             >
               verified
@@ -160,8 +158,7 @@ export function SuccessStep({
         {/* Barra de Progresso Animada */}
         <div className="h-1 bg-muted">
           <div
-            className="h-full bg-green-500 animate-[loading_1s_ease-out_forwards]"
-            style={{ width: "100%" }}
+            className="h-full bg-green-500 animate-[loading_1s_ease-out_forwards] w-full"
           />
         </div>
       </div>

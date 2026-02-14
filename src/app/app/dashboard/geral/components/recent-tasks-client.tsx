@@ -159,7 +159,7 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
               <div
                 key={task.id}
                 className={cn(
-                  "flex items-start gap-3 rounded-md border bg-white p-3 transition-colors dark:bg-gray-950",
+                  "flex items-start gap-3 rounded-md border bg-background p-3 transition-colors",
                   done && "bg-muted/50"
                 )}
               >
@@ -199,7 +199,7 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
                 value={form.title}
                 onChange={(e) => setForm((s) => ({ ...s, title: e.target.value }))}
                 placeholder="Ex: Revisar documento"
-                className="mt-2 bg-white dark:bg-gray-950"
+                className="mt-2 bg-background"
                 required
               />
             </div>
@@ -207,10 +207,10 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
             <div>
               <Label>Status</Label>
               <Select value={form.status} onValueChange={(value) => setForm((s) => ({ ...s, status: value as TaskStatus }))}>
-                <SelectTrigger className="mt-2 bg-white dark:bg-gray-950">
+                <SelectTrigger className="mt-2 bg-background">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-950">
+                <SelectContent className="bg-background">
                   <SelectItem value="backlog">Backlog</SelectItem>
                   <SelectItem value="todo">A fazer</SelectItem>
                   <SelectItem value="in progress">Em andamento</SelectItem>
@@ -223,10 +223,10 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
             <div>
               <Label>Prioridade</Label>
               <Select value={form.priority} onValueChange={(value) => setForm((s) => ({ ...s, priority: value as TaskPriority }))}>
-                <SelectTrigger className="mt-2 bg-white dark:bg-gray-950">
+                <SelectTrigger className="mt-2 bg-background">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-950">
+                <SelectContent className="bg-background">
                   <SelectItem value="low">Baixa</SelectItem>
                   <SelectItem value="medium">Média</SelectItem>
                   <SelectItem value="high">Alta</SelectItem>
@@ -237,10 +237,10 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
             <div className="md:col-span-2">
               <Label>Etiqueta</Label>
               <Select value={form.label} onValueChange={(value) => setForm((s) => ({ ...s, label: value as TaskLabel }))}>
-                <SelectTrigger className="mt-2 bg-white dark:bg-gray-950">
+                <SelectTrigger className="mt-2 bg-background">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
-                <SelectContent className="bg-white dark:bg-gray-950">
+                <SelectContent className="bg-background">
                   <SelectItem value="bug">Bug</SelectItem>
                   <SelectItem value="feature">Funcionalidade</SelectItem>
                   <SelectItem value="documentation">Documentação</SelectItem>

@@ -247,7 +247,7 @@ export default function KanbanBoard({ initialBoard }: KanbanBoardProps) {
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="bg-white dark:bg-gray-950">
+          <Button variant="outline" className="bg-background">
             <SlidersHorizontalIcon />
             <span className="hidden lg:inline">
               {getActiveFilters().length > 0 ? (
@@ -339,13 +339,13 @@ export default function KanbanBoard({ initialBoard }: KanbanBoardProps) {
                         .find((task) => task.users.some((user) => user.name === userName));
                       const src = match?.users.find((u) => u.name === userName)?.src;
                       return (
-                    <Avatar className="mr-2 h-5 w-5">
-                      <AvatarImage
-                        src={src}
-                        alt={userName}
-                      />
-                      <AvatarFallback>{userName[0]}</AvatarFallback>
-                    </Avatar>
+                        <Avatar className="mr-2 h-5 w-5">
+                          <AvatarImage
+                            src={src}
+                            alt={userName}
+                          />
+                          <AvatarFallback>{userName[0]}</AvatarFallback>
+                        </Avatar>
                       );
                     })()}
                     <span>{userName}</span>
@@ -493,7 +493,7 @@ export default function KanbanBoard({ initialBoard }: KanbanBoardProps) {
             <SearchIcon className="absolute top-2.5 left-3 size-4 opacity-50" />
             <Input
               placeholder="Buscar tarefas..."
-              className="bg-white ps-8 dark:bg-gray-950"
+              className="bg-background ps-8"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -501,14 +501,14 @@ export default function KanbanBoard({ initialBoard }: KanbanBoardProps) {
           <div className="none lg:hidden">
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" aria-label="Buscar" className="bg-white dark:bg-gray-950">
+                <Button variant="outline" aria-label="Buscar" className="bg-background">
                   <SearchIcon />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-[240px] p-0" align="end">
                 <Input
                   placeholder="Buscar tarefas..."
-                  className="bg-white dark:bg-gray-950"
+                  className="bg-background"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -556,172 +556,172 @@ export default function KanbanBoard({ initialBoard }: KanbanBoardProps) {
           </Popover>
         </div>
       </div>
-        {syncError && (
-          <div className="text-sm text-destructive" role="alert">
-            {syncError}
-          </div>
-        )}
+      {syncError && (
+        <div className="text-sm text-destructive" role="alert">
+          {syncError}
+        </div>
+      )}
 
       <Kanban.Root
-            value={filteredColumns}
-            onValueChange={handleBoardValueChange}
-            getItemValue={(item) => item.id}>
-            <Kanban.Board className="flex w-full gap-4 overflow-x-auto pb-4">
-              {columnOrder.map((columnValue) => {
-                const tasks = filteredColumns[columnValue] ?? [];
-                return (
-                <Kanban.Column
-                  key={columnValue}
-                  value={columnValue}
-                  className="w-[340px] min-w-[340px] rounded-xl border border-border bg-white p-3 dark:bg-gray-950">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold">{columnTitles[columnValue]}</span>
-                      <Badge variant="outline">{tasks.length}</Badge>
-                    </div>
-                    <div className="flex">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            aria-label="Opções da coluna"
-                            disabled={isPending}
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            className="text-destructive focus:text-destructive"
-                            onSelect={() => setColumnToDelete(columnValue)}
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Excluir coluna
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-
-                      <Kanban.ColumnHandle asChild>
-                        <Button variant="ghost" size="icon">
-                          <GripVertical className="h-4 w-4" />
-                        </Button>
-                      </Kanban.ColumnHandle>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => openNewTask(columnValue)}
-                            aria-label="Adicionar tarefa"
-                          >
-                            <PlusCircleIcon />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Adicionar tarefa</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
+        value={filteredColumns}
+        onValueChange={handleBoardValueChange}
+        getItemValue={(item) => item.id}>
+        <Kanban.Board className="flex w-full gap-4 overflow-x-auto pb-4">
+          {columnOrder.map((columnValue) => {
+            const tasks = filteredColumns[columnValue] ?? [];
+            return (
+              <Kanban.Column
+                key={columnValue}
+                value={columnValue}
+                className="w-[340px] min-w-[340px] rounded-xl border border-border bg-card p-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold">{columnTitles[columnValue]}</span>
+                    <Badge variant="outline">{tasks.length}</Badge>
                   </div>
-                  {tasks.length > 0 ? (
-                    <div className="flex flex-col gap-2 p-0.5">
-                      {tasks.map((task) => (
-                        <Kanban.Item key={task.id} value={task.id} asHandle asChild>
-                          <Card className="border-0">
-                            <CardHeader>
-                              <CardTitle className="text-base font-semibold">
-                                {task.title}
-                              </CardTitle>
-                              <CardDescription>
-                                {task.description?.trim() ? task.description : "Sem descrição."}
-                              </CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                              <div className="text-muted-foreground flex items-center justify-between text-sm">
-                                <div className="flex -space-x-2 overflow-hidden">
-                                  {task.users.map((user, index) => (
-                                    <Avatar key={index} className="border-background border-2">
-                                      <AvatarImage
-                                        src={user.src || "/placeholder.svg"}
-                                        alt={user.alt}
-                                      />
-                                      <AvatarFallback>{user.fallback}</AvatarFallback>
-                                    </Avatar>
-                                  ))}
-                                </div>
-                                <div className="flex items-center gap-2 rounded-lg border p-1">
-                                  <div className="relative size-4">
-                                    <svg
-                                      className="size-full -rotate-90"
-                                      viewBox="0 0 36 36"
-                                      xmlns="http://www.w3.org/2000/svg">
-                                      <circle
-                                        cx="18"
-                                        cy="18"
-                                        r="16"
-                                        fill="none"
-                                        className="stroke-current text-gray-200 dark:text-neutral-700"
-                                        stroke-width="2"></circle>
-                                      <circle
-                                        cx="18"
-                                        cy="18"
-                                        r="16"
-                                        fill="none"
-                                        className={cn("stroke-current", {
-                                          "text-green-600!": task.progress === 100,
-                                          "text-orange-500!":
-                                            task.progress > 50 && task.progress < 100
-                                        })}
-                                        stroke-width="2"
-                                        strokeDasharray={2 * Math.PI * 16}
-                                        strokeDashoffset={
-                                          2 * Math.PI * 16 -
-                                          (2 * Math.PI * 16 * task.progress) / 100
-                                        }
-                                        stroke-linecap="round"></circle>
-                                    </svg>
-                                  </div>
-                                  {`${task.progress}%`}
-                                </div>
-                              </div>
-                              <Separator />
-                              <div className="text-muted-foreground flex items-center justify-between text-sm">
-                                <Badge className="capitalize" variant="outline">
-                                  {task.priority}
-                                </Badge>
-                                <div className="flex items-center gap-3">
-                                  <div className="flex items-center gap-1">
-                                    <Paperclip className="h-4 w-4" />
-                                    <span>{task.attachments ?? 0}</span>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <MessageSquare className="h-4 w-4" />
-                                    <span>{task.comments ?? 0}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </Kanban.Item>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex flex-col justify-center gap-4 pt-4">
-                      <div className="text-muted-foreground text-sm">Nenhuma tarefa aqui.</div>
-                      <Button variant="outline" onClick={() => openNewTask(columnValue)}>
-                        Adicionar tarefa
+                  <div className="flex">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label="Opções da coluna"
+                          disabled={isPending}
+                        >
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          className="text-destructive focus:text-destructive"
+                          onSelect={() => setColumnToDelete(columnValue)}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Excluir coluna
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    <Kanban.ColumnHandle asChild>
+                      <Button variant="ghost" size="icon">
+                        <GripVertical className="h-4 w-4" />
                       </Button>
-                    </div>
-                  )}
-                </Kanban.Column>
-                );
-              })}
-            </Kanban.Board>
-            <Kanban.Overlay>
-              <div className="bg-primary/10 size-full rounded-md" />
-            </Kanban.Overlay>
-          </Kanban.Root>
+                    </Kanban.ColumnHandle>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openNewTask(columnValue)}
+                          aria-label="Adicionar tarefa"
+                        >
+                          <PlusCircleIcon />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Adicionar tarefa</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                </div>
+                {tasks.length > 0 ? (
+                  <div className="flex flex-col gap-2 p-0.5">
+                    {tasks.map((task) => (
+                      <Kanban.Item key={task.id} value={task.id} asHandle asChild>
+                        <Card className="border-0">
+                          <CardHeader>
+                            <CardTitle className="text-base font-semibold">
+                              {task.title}
+                            </CardTitle>
+                            <CardDescription>
+                              {task.description?.trim() ? task.description : "Sem descrição."}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            <div className="text-muted-foreground flex items-center justify-between text-sm">
+                              <div className="flex -space-x-2 overflow-hidden">
+                                {task.users.map((user, index) => (
+                                  <Avatar key={index} className="border-background border-2">
+                                    <AvatarImage
+                                      src={user.src || "/placeholder.svg"}
+                                      alt={user.alt}
+                                    />
+                                    <AvatarFallback>{user.fallback}</AvatarFallback>
+                                  </Avatar>
+                                ))}
+                              </div>
+                              <div className="flex items-center gap-2 rounded-lg border p-1">
+                                <div className="relative size-4">
+                                  <svg
+                                    className="size-full -rotate-90"
+                                    viewBox="0 0 36 36"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <circle
+                                      cx="18"
+                                      cy="18"
+                                      r="16"
+                                      fill="none"
+                                      className="stroke-current text-gray-200 dark:text-neutral-700"
+                                      stroke-width="2"></circle>
+                                    <circle
+                                      cx="18"
+                                      cy="18"
+                                      r="16"
+                                      fill="none"
+                                      className={cn("stroke-current", {
+                                        "text-green-600!": task.progress === 100,
+                                        "text-orange-500!":
+                                          task.progress > 50 && task.progress < 100
+                                      })}
+                                      stroke-width="2"
+                                      strokeDasharray={2 * Math.PI * 16}
+                                      strokeDashoffset={
+                                        2 * Math.PI * 16 -
+                                        (2 * Math.PI * 16 * task.progress) / 100
+                                      }
+                                      stroke-linecap="round"></circle>
+                                  </svg>
+                                </div>
+                                {`${task.progress}%`}
+                              </div>
+                            </div>
+                            <Separator />
+                            <div className="text-muted-foreground flex items-center justify-between text-sm">
+                              <Badge className="capitalize" variant="outline">
+                                {task.priority}
+                              </Badge>
+                              <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-1">
+                                  <Paperclip className="h-4 w-4" />
+                                  <span>{task.attachments ?? 0}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <MessageSquare className="h-4 w-4" />
+                                  <span>{task.comments ?? 0}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </Kanban.Item>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col justify-center gap-4 pt-4">
+                    <div className="text-muted-foreground text-sm">Nenhuma tarefa aqui.</div>
+                    <Button variant="outline" onClick={() => openNewTask(columnValue)}>
+                      Adicionar tarefa
+                    </Button>
+                  </div>
+                )}
+              </Kanban.Column>
+            );
+          })}
+        </Kanban.Board>
+        <Kanban.Overlay>
+          <div className="bg-primary/10 size-full rounded-md" />
+        </Kanban.Overlay>
+      </Kanban.Root>
 
       <AlertDialog open={columnToDelete != null} onOpenChange={(open) => (!open ? setColumnToDelete(null) : null)}>
         <AlertDialogContent>
@@ -775,10 +775,10 @@ export default function KanbanBoard({ initialBoard }: KanbanBoardProps) {
           <div className="grid gap-2">
             <label className="text-sm font-medium">Coluna</label>
             <Select value={newTaskColumnId} onValueChange={setNewTaskColumnId}>
-              <SelectTrigger className="bg-white dark:bg-gray-950">
+              <SelectTrigger className="bg-background">
                 <SelectValue placeholder="Selecione uma coluna" />
               </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-gray-950">
+              <SelectContent className="bg-background">
                 {columnOrder.map((id) => (
                   <SelectItem key={id} value={id}>
                     {columnTitles[id] ?? "Coluna"}
@@ -796,7 +796,7 @@ export default function KanbanBoard({ initialBoard }: KanbanBoardProps) {
                 if (v === "low" || v === "medium" || v === "high") setNewTaskPriority(v);
               }}
             >
-              <SelectTrigger className="bg-white dark:bg-gray-950">
+              <SelectTrigger className="bg-background">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-white dark:bg-gray-950">

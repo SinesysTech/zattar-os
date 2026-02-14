@@ -62,7 +62,6 @@ const _ITEM_FOLHA_COLUMNS_BASIC = `
   usuario_id,
   salario_id,
   valor_bruto,
-  valor_liquido,
   observacoes,
   created_at
 `.trim().replace(/\s+/g, ' ');
@@ -93,20 +92,20 @@ const mapearSalarioComDetalhes = (registro: Record<string, unknown>): SalarioCom
   const usuarios = registro.usuarios as Record<string, unknown> | undefined;
   const usuario: UsuarioResumo | undefined = usuarios
     ? {
-        id: usuarios.id as number,
-        nomeExibicao: usuarios.nome_exibicao as string,
-        email: (usuarios.email_corporativo as string) || (usuarios.email_pessoal as string), // Fallback
-        cargo: ((usuarios.cargos as Record<string, unknown> | undefined)?.nome as string) || undefined, // Cargo do usuário via join
-      }
+      id: usuarios.id as number,
+      nomeExibicao: usuarios.nome_exibicao as string,
+      email: (usuarios.email_corporativo as string) || (usuarios.email_pessoal as string), // Fallback
+      cargo: ((usuarios.cargos as Record<string, unknown> | undefined)?.nome as string) || undefined, // Cargo do usuário via join
+    }
     : undefined;
 
   const cargos = registro.cargos as Record<string, unknown> | undefined;
   const cargo: CargoResumo | undefined = cargos
     ? {
-        id: cargos.id as number,
-        nome: cargos.nome as string,
-        descricao: (cargos.descricao as string | null) ?? null,
-      }
+      id: cargos.id as number,
+      nome: cargos.nome as string,
+      descricao: (cargos.descricao as string | null) ?? null,
+    }
     : undefined;
 
   return {
@@ -152,11 +151,11 @@ const mapearItemFolhaComDetalhes = (registro: Record<string, unknown>): ItemFolh
   const usuarios = registro.usuarios as Record<string, unknown> | undefined;
   const usuario: UsuarioResumo | undefined = usuarios
     ? {
-        id: usuarios.id as number,
-        nomeExibicao: usuarios.nome_exibicao as string,
-        email: (usuarios.email_corporativo as string) || (usuarios.email_pessoal as string),
-        cargo: ((usuarios.cargos as Record<string, unknown> | undefined)?.nome as string) || undefined,
-      }
+      id: usuarios.id as number,
+      nomeExibicao: usuarios.nome_exibicao as string,
+      email: (usuarios.email_corporativo as string) || (usuarios.email_pessoal as string),
+      cargo: ((usuarios.cargos as Record<string, unknown> | undefined)?.nome as string) || undefined,
+    }
     : undefined;
 
   const salarios = registro.salarios as Record<string, unknown> | undefined;
@@ -167,13 +166,13 @@ const mapearItemFolhaComDetalhes = (registro: Record<string, unknown>): ItemFolh
   const lancamentosFinanceiros = registro.lancamentos_financeiros as Record<string, unknown> | undefined;
   const lancamento: LancamentoFinanceiroResumo | undefined = lancamentosFinanceiros
     ? {
-        id: lancamentosFinanceiros.id as number,
-        descricao: lancamentosFinanceiros.descricao as string,
-        valor: Number(lancamentosFinanceiros.valor),
-        status: lancamentosFinanceiros.status as string,
-        dataVencimento: (lancamentosFinanceiros.data_vencimento as string | null) ?? null,
-        dataEfetivacao: (lancamentosFinanceiros.data_efetivacao as string | null) ?? null,
-      }
+      id: lancamentosFinanceiros.id as number,
+      descricao: lancamentosFinanceiros.descricao as string,
+      valor: Number(lancamentosFinanceiros.valor),
+      status: lancamentosFinanceiros.status as string,
+      dataVencimento: (lancamentosFinanceiros.data_vencimento as string | null) ?? null,
+      dataEfetivacao: (lancamentosFinanceiros.data_efetivacao as string | null) ?? null,
+    }
     : undefined;
 
   return {
@@ -740,7 +739,6 @@ export const listarFolhasPagamento = async (params: ListarFolhasParams): Promise
         usuario_id,
         salario_id,
         valor_bruto,
-        valor_liquido,
         lancamento_financeiro_id,
         observacoes,
         created_at,
@@ -819,7 +817,6 @@ export const buscarFolhaPorId = async (id: number): Promise<FolhaPagamentoComDet
         usuario_id,
         salario_id,
         valor_bruto,
-        valor_liquido,
         lancamento_financeiro_id,
         observacoes,
         created_at,
@@ -865,7 +862,6 @@ export const buscarFolhaPorPeriodo = async (mes: number, ano: number): Promise<F
         usuario_id,
         salario_id,
         valor_bruto,
-        valor_liquido,
         lancamento_financeiro_id,
         observacoes,
         created_at,

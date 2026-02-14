@@ -185,7 +185,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
                 <span className="sr-only">Abrir menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[160px] bg-white dark:bg-gray-950">
+            <DropdownMenuContent align="end" className="w-[160px] bg-background">
               <DropdownMenuItem onClick={() => actions.onView(doc.documento_uuid)}>
                 <Eye className="mr-2 h-4 w-4" />
                 Ver detalhes
