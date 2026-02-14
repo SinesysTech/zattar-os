@@ -243,24 +243,21 @@ export async function buscarAudienciasPorNumeroProcesso(
   status?: string
 ): Promise<import('@/types').Result<import('./domain').Audiencia[]>> {
   const { err, appError } = await import('@/types');
-  const { actionBuscarProcessoPorNumero } = await import('@/features/processos/actions');
-  const { normalizarNumeroProcesso } = await import('@/features/processos/utils');
+  // Usar service diretamente (não Server Action)
+  const { buscarProcessoPorNumero } = await import('@/features/processos/service');
 
   if (!numeroProcesso || !numeroProcesso.trim()) {
     return err(appError('VALIDATION_ERROR', 'Numero do processo e obrigatorio'));
   }
 
-  // Normalizar número de processo antes de buscar
-  const numeroNormalizado = normalizarNumeroProcesso(numeroProcesso.trim());
-
-  // Busca processo pelo número normalizado
-  const processoResult = await actionBuscarProcessoPorNumero(numeroNormalizado);
+  // Busca processo pelo número (service já normaliza internamente)
+  const processoResult = await buscarProcessoPorNumero(numeroProcesso.trim());
 
   if (!processoResult.success || !processoResult.data) {
     return err(appError('NOT_FOUND', 'Processo nao encontrado'));
   }
 
-  const processoId = (processoResult.data as { id: number }).id;
+  const processoId = processoResult.data.id;
 
   // Busca audiências do processo usando função dedicada do repository
   const result = await repo.findAudienciasByProcessoId(

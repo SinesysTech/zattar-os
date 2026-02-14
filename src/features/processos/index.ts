@@ -61,6 +61,7 @@ export {
   criarProcesso,
   buscarProcesso,
   buscarProcessoUnificado,
+  buscarProcessoPorNumero,
   listarProcessos,
   atualizarProcesso,
   buscarTimeline,

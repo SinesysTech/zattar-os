@@ -25,3 +25,4 @@ export { FiltroContaContabil } from "./filtros/filtro-conta-contabil";
 export { FiltroCentroCusto } from "./filtros/filtro-centro-custo";
 export { FiltroCliente } from "./filtros/filtro-cliente";
 export { FiltroFornecedor } from "./filtros/filtro-fornecedor";
+export { MaisFiltrosPopover } from "./filtros/mais-filtros-popover";

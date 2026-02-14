@@ -4,14 +4,14 @@
  * WeekNavigator - Navegador de semana elegante e integrado
  *
  * Componente para navegação por semana completa (segunda a sexta).
- * Design horizontal compacto que se integra com a toolbar do DataShell.
+ * Design visual polido com container, hierarquia clara e feedback visual.
  *
  * Features:
  * - Mostra apenas dias úteis (seg-sex)
  * - Navega por semana inteira
  * - Botão "Hoje" para retornar à semana atual
  * - Destaque visual para dia selecionado e dia atual
- * - Layout horizontal em linha única
+ * - Container visual integrado com o sistema de design
  *
  * @example
  * ```tsx
@@ -44,9 +44,9 @@ import {
 import { ptBR } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '../../lib/utils';
+import { Button } from '../../components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../../components/ui/tooltip';
 
 // =============================================================================
 // TIPOS
@@ -121,21 +121,20 @@ export function WeekNavigator({
   }, [weekDays]);
 
   return (
-    <div className={cn('flex items-center justify-between gap-4', className)}>
+    <div className={cn('flex items-center justify-between', className)}>
       {/* Lado esquerdo: Navegação e período */}
       <div className="flex items-center gap-2">
-        {/* Botão anterior */}
+        {/* Botão anterior - container próprio */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 shrink-0"
+            <button
+              type="button"
+              className="flex items-center justify-center h-8 w-8 shrink-0 rounded-md bg-card border hover:bg-accent transition-colors"
               onClick={onPreviousWeek}
             >
               <ChevronLeft className="h-4 w-4" />
               <span className="sr-only">Semana anterior</span>
-            </Button>
+            </button>
           </TooltipTrigger>
           <TooltipContent>Semana anterior</TooltipContent>
         </Tooltip>
@@ -145,18 +144,17 @@ export function WeekNavigator({
           {periodText}
         </span>
 
-        {/* Botão próximo */}
+        {/* Botão próximo - container próprio */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 shrink-0"
+            <button
+              type="button"
+              className="flex items-center justify-center h-8 w-8 shrink-0 rounded-md bg-card border hover:bg-accent transition-colors"
               onClick={onNextWeek}
             >
               <ChevronRight className="h-4 w-4" />
               <span className="sr-only">Próxima semana</span>
-            </Button>
+            </button>
           </TooltipTrigger>
           <TooltipContent>Próxima semana</TooltipContent>
         </Tooltip>
@@ -174,9 +172,9 @@ export function WeekNavigator({
         )}
       </div>
 
-      {/* Lado direito: Dias da semana */}
+      {/* Container direito: Dias da semana */}
       <div
-        className="flex items-center gap-1"
+        className="flex items-center gap-1 rounded-md bg-card px-2 py-1.5 border"
         role="tablist"
         aria-label="Selecionar dia da semana"
       >

@@ -20,18 +20,18 @@ import {
 } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import {
-  AlertasVencimento,
   cancelarConta,
   excluirConta,
-  FiltroCentroCusto,
-  FiltroContaContabil,
   FiltroFornecedor,
+  MaisFiltrosPopover,
   type Lancamento,
   type StatusLancamento,
   PagarContaDialog,
   useContasBancarias,
   useContasPagar,
 } from '@/features/financeiro';
+import { PageShell } from '@/components/shared/page-shell';
+import { FilterPopover } from '@/features/partes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -62,13 +62,6 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 
 // ============================================================================
@@ -426,7 +419,7 @@ export default function ContasPagarPage() {
   ]);
 
   // Hook de dados
-  const { contasPagar, paginacao, resumoVencimentos, isLoading, error, refetch } = useContasPagar(params);
+  const { contasPagar, paginacao, isLoading, error, refetch } = useContasPagar(params);
 
   // Contas bancárias para os selects
   const { contasBancarias } = useContasBancarias();
@@ -483,31 +476,6 @@ export default function ContasPagarPage() {
     }
   }, [selectedConta, refetch]);
 
-  // Handlers para alertas
-  const handleFiltrarVencidas = React.useCallback(() => {
-    setStatus('pendente');
-    setVencimento('vencidas');
-    setPageIndex(0);
-  }, []);
-
-  const handleFiltrarHoje = React.useCallback(() => {
-    setStatus('pendente');
-    setVencimento('hoje');
-    setPageIndex(0);
-  }, []);
-
-  const handleFiltrar7Dias = React.useCallback(() => {
-    setStatus('pendente');
-    setVencimento('7dias');
-    setPageIndex(0);
-  }, []);
-
-  const handleFiltrar30Dias = React.useCallback(() => {
-    setStatus('pendente');
-    setVencimento('30dias');
-    setPageIndex(0);
-  }, []);
-
   // Definir colunas
   const colunas = React.useMemo(
     () =>
@@ -515,23 +483,62 @@ export default function ContasPagarPage() {
     [handlePagar, handleEditar, handleCancelar, handleExcluir, handleVerDetalhes]
   );
 
-  return (
-    <div className="space-y-3">
-      {/* Alertas de Vencimento */}
-      <AlertasVencimento
-        resumo={resumoVencimentos}
-        isLoading={isLoading}
-        onFiltrarVencidas={handleFiltrarVencidas}
-        onFiltrarHoje={handleFiltrarHoje}
-        onFiltrar7Dias={handleFiltrar7Dias}
-        onFiltrar30Dias={handleFiltrar30Dias}
-      />
+  // Opções de filtros
+  const statusOptions = React.useMemo(
+    () => [
+      { value: 'pendente', label: 'Pendente' },
+      { value: 'confirmado', label: 'Pago' },
+      { value: 'cancelado', label: 'Cancelado' },
+      { value: 'estornado', label: 'Estornado' },
+    ],
+    []
+  );
 
+  const vencimentoOptions = React.useMemo(
+    () => [
+      { value: 'vencidas', label: 'Vencidas' },
+      { value: 'hoje', label: 'Vencem hoje' },
+      { value: '7dias', label: 'Próximos 7 dias' },
+      { value: '30dias', label: 'Próximos 30 dias' },
+    ],
+    []
+  );
+
+  const categoriaOptions = React.useMemo(
+    () => CATEGORIAS.map((cat) => ({ value: cat.value, label: cat.label })),
+    []
+  );
+
+  const tipoRecorrenteOptions = React.useMemo(
+    () => [
+      { value: 'recorrente', label: 'Recorrentes' },
+      { value: 'avulsa', label: 'Avulsas' },
+    ],
+    []
+  );
+
+  const formaPagamentoOptions = React.useMemo(
+    () => [
+      { value: 'dinheiro', label: 'Dinheiro' },
+      { value: 'pix', label: 'PIX' },
+      { value: 'transferencia_bancaria', label: 'Transferência' },
+      { value: 'ted', label: 'TED' },
+      { value: 'cartao_debito', label: 'Débito' },
+      { value: 'cartao_credito', label: 'Crédito' },
+      { value: 'boleto', label: 'Boleto' },
+      { value: 'cheque', label: 'Cheque' },
+    ],
+    []
+  );
+
+  return (
+    <PageShell>
       <DataShell
         header={
           table ? (
             <DataTableToolbar
               table={table}
+              title="Contas a Pagar"
               density={density}
               onDensityChange={setDensity}
               searchValue={globalFilter}
@@ -546,125 +553,37 @@ export default function ContasPagarPage() {
               }}
               filtersSlot={
                 <>
-                  <Select
-                    value={status || 'all'}
+                  {/* Filtros primários (4) */}
+                  <FilterPopover
+                    label="Status"
+                    options={statusOptions}
+                    value={status}
                     onValueChange={(val) => {
-                      setStatus(val === 'all' ? '' : val as StatusLancamento | '');
+                      setStatus(val === 'all' ? '' : (val as StatusLancamento | ''));
                       setPageIndex(0);
                     }}
-                  >
-                    <SelectTrigger className="h-10 w-[140px]">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
-                      <SelectItem value="pendente">Pendente</SelectItem>
-                      <SelectItem value="confirmado">Pago</SelectItem>
-                      <SelectItem value="cancelado">Cancelado</SelectItem>
-                      <SelectItem value="estornado">Estornado</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Select
+                    defaultValue=""
+                  />
+                  <FilterPopover
+                    label="Vencimento"
+                    options={vencimentoOptions}
                     value={vencimento}
                     onValueChange={(val) => {
                       setVencimento(val === 'all' ? '' : val);
                       setPageIndex(0);
                     }}
-                  >
-                    <SelectTrigger className="h-10 w-[160px]">
-                      <SelectValue placeholder="Vencimento" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
-                      <SelectItem value="vencidas">Vencidas</SelectItem>
-                      <SelectItem value="hoje">Vencem hoje</SelectItem>
-                      <SelectItem value="7dias">Próximos 7 dias</SelectItem>
-                      <SelectItem value="30dias">Próximos 30 dias</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Select
+                    defaultValue=""
+                  />
+                  <FilterPopover
+                    label="Categoria"
+                    options={categoriaOptions}
                     value={categoria}
                     onValueChange={(val) => {
                       setCategoria(val === 'all' ? '' : val);
                       setPageIndex(0);
                     }}
-                  >
-                    <SelectTrigger className="h-10 w-[180px]">
-                      <SelectValue placeholder="Categoria" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todas</SelectItem>
-                      {CATEGORIAS.map((cat) => (
-                        <SelectItem key={cat.value} value={cat.value}>
-                          {cat.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Select
-                    value={tipoRecorrente}
-                    onValueChange={(val) => {
-                      setTipoRecorrente(val === 'all' ? '' : val);
-                      setPageIndex(0);
-                    }}
-                  >
-                    <SelectTrigger className="h-10 w-[140px]">
-                      <SelectValue placeholder="Tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
-                      <SelectItem value="recorrente">Recorrentes</SelectItem>
-                      <SelectItem value="avulsa">Avulsas</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Select
-                    value={formaPagamento}
-                    onValueChange={(val) => {
-                      setFormaPagamento(val === 'all' ? '' : val);
-                      setPageIndex(0);
-                    }}
-                  >
-                    <SelectTrigger className="h-10 w-[180px]">
-                      <SelectValue placeholder="Forma Pagamento" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todas as formas</SelectItem>
-                      <SelectItem value="dinheiro">Dinheiro</SelectItem>
-                      <SelectItem value="pix">PIX</SelectItem>
-                      <SelectItem value="transferencia_bancaria">Transferência</SelectItem>
-                      <SelectItem value="ted">TED</SelectItem>
-                      <SelectItem value="cartao_debito">Débito</SelectItem>
-                      <SelectItem value="cartao_credito">Crédito</SelectItem>
-                      <SelectItem value="boleto">Boleto</SelectItem>
-                      <SelectItem value="cheque">Cheque</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <FiltroContaContabil
-                    value={contaContabilId}
-                    onChange={(value) => {
-                      setContaContabilId(value);
-                      setPageIndex(0);
-                    }}
-                    tiposConta={['despesa']}
-                    placeholder="Conta Contábil"
-                    className="w-[200px]"
+                    defaultValue=""
                   />
-
-                  <FiltroCentroCusto
-                    value={centroCustoId}
-                    onChange={(value) => {
-                      setCentroCustoId(value);
-                      setPageIndex(0);
-                    }}
-                    placeholder="Centro de Custo"
-                    className="w-[180px]"
-                  />
-
                   <FiltroFornecedor
                     value={fornecedorId}
                     onChange={(value) => {
@@ -672,7 +591,34 @@ export default function ContasPagarPage() {
                       setPageIndex(0);
                     }}
                     placeholder="Fornecedor"
-                    className="w-[200px]"
+                    className="h-9 w-40 border-dashed bg-card"
+                  />
+
+                  {/* Filtros avançados (dropdown) */}
+                  <MaisFiltrosPopover
+                    tipoRecorrente={tipoRecorrente}
+                    onTipoRecorrenteChange={(val) => {
+                      setTipoRecorrente(val);
+                      setPageIndex(0);
+                    }}
+                    tipoRecorrenteOptions={tipoRecorrenteOptions}
+                    formaPagamento={formaPagamento}
+                    onFormaPagamentoChange={(val) => {
+                      setFormaPagamento(val);
+                      setPageIndex(0);
+                    }}
+                    formaPagamentoOptions={formaPagamentoOptions}
+                    contaContabilId={contaContabilId}
+                    onContaContabilIdChange={(val) => {
+                      setContaContabilId(val);
+                      setPageIndex(0);
+                    }}
+                    tiposContaContabil={['despesa']}
+                    centroCustoId={centroCustoId}
+                    onCentroCustoIdChange={(val) => {
+                      setCentroCustoId(val);
+                      setPageIndex(0);
+                    }}
                   />
                 </>
               }
@@ -783,6 +729,6 @@ export default function ContasPagarPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </PageShell>
   );
 }

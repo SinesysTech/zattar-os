@@ -5,9 +5,8 @@ import { calcularDataVencimento } from "./utils";
 import { normalizarDocumento } from "@/features/partes/domain";
 import { findClienteByCPF, findClienteByCNPJ } from "@/features/partes/repositories";
 import { err, appError } from "@/types";
-import { buscarProcessosPorClienteCPF, buscarProcessosPorClienteCNPJ } from "@/features/processos/service";
+import { buscarProcessosPorClienteCPF, buscarProcessosPorClienteCNPJ, buscarProcessoPorNumero } from "@/features/processos/service";
 import { normalizarNumeroProcesso } from "@/features/processos/utils";
-import { actionBuscarProcessoPorNumero } from "@/features/processos/actions";
 
 // --- Acordos Services ---
 
@@ -357,16 +356,14 @@ export async function buscarAcordosPorNumeroProcesso(
     // Normalizar número de processo antes de buscar
     const numeroNormalizado = normalizarNumeroProcesso(numeroProcesso.trim());
 
-    // Busca processo por número normalizado
-    const processoResult = await actionBuscarProcessoPorNumero(
-      numeroNormalizado
-    );
+    // Busca processo por número normalizado (via service, não Server Action)
+    const processoResult = await buscarProcessoPorNumero(numeroNormalizado);
 
     if (!processoResult.success || !processoResult.data) {
       return err(appError("NOT_FOUND", "Processo nao encontrado"));
     }
 
-    const processoId = (processoResult.data as { id: number }).id;
+    const processoId = processoResult.data.id;
 
     // Busca acordos do processo
     const result = await listarAcordos({

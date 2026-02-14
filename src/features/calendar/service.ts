@@ -9,7 +9,7 @@ import type { Expediente, ListarExpedientesParams } from "@/features/expedientes
 import { listarExpedientes } from "@/features/expedientes";
 
 import type { AcordoComParcelas } from "@/features/obrigacoes";
-import { actionListarObrigacoesPorPeriodo } from "@/features/obrigacoes/server-actions";
+import { listarAcordos } from "@/features/obrigacoes/service";
 
 import {
   buildUnifiedEventId,
@@ -255,17 +255,14 @@ async function fetchObrigacoes(start: Date, end: Date): Promise<UnifiedCalendarE
   const dataInicio = start.toISOString().slice(0, 10);
   const dataFim = end.toISOString().slice(0, 10);
 
-  const result = await actionListarObrigacoesPorPeriodo({
+  // Usar service diretamente (não Server Action)
+  const result = await listarAcordos({
     dataInicio,
     dataFim,
-    incluirSemData: false,
+    limite: 1000, // Limite alto para calendário
   });
 
-  if (!result.success) {
-    return [];
-  }
-
-  const acordos = (result.data ?? []) as AcordoComParcelas[];
+  const acordos = (result.acordos ?? []) as AcordoComParcelas[];
   return acordos.flatMap(acordoParcelaToEvents);
 }
 

@@ -366,6 +366,7 @@ export {
   FiltroCentroCusto,
   FiltroCliente,
   FiltroFornecedor,
+  MaisFiltrosPopover,
   // Contas a Pagar
   AlertasVencimento,
   ContaPagarFormDialog,

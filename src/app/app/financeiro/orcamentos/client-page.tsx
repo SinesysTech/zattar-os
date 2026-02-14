@@ -27,21 +27,14 @@ import {
   excluirOrcamento,
   iniciarExecucaoOrcamento,
   isPeriodoValido,
-  isStatusValido,
   OrcamentoFormDialog,
   type OrcamentoComItens,
   type PeriodoOrcamento,
-  ResumoCards,
   type StatusOrcamento,
   useOrcamentos,
 } from '@/features/financeiro';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { PageShell } from '@/components/shared/page-shell';
+import { FilterPopover } from '@/features/partes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -453,56 +446,6 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
     filters: params,
   });
 
-  // Calcular totais por status
-  const totais = React.useMemo(() => {
-    const totaisPorStatus = {
-      rascunho: 0,
-      aprovado: 0,
-      emExecucao: 0,
-      encerrado: 0,
-    };
-
-    orcamentos.forEach((orc) => {
-      switch (orc.status) {
-        case 'rascunho':
-          totaisPorStatus.rascunho++;
-          break;
-        case 'aprovado':
-          totaisPorStatus.aprovado++;
-          break;
-        case 'em_execucao':
-          totaisPorStatus.emExecucao++;
-          break;
-        case 'encerrado':
-          totaisPorStatus.encerrado++;
-          break;
-      }
-    });
-
-    return totaisPorStatus;
-  }, [orcamentos]);
-
-  // Handlers de navegação por filtro (vindos dos ResumoCards)
-  const handleFiltrarRascunho = React.useCallback(() => {
-    setStatus('rascunho');
-    setPageIndex(0);
-  }, []);
-
-  const handleFiltrarAprovado = React.useCallback(() => {
-    setStatus('aprovado');
-    setPageIndex(0);
-  }, []);
-
-  const handleFiltrarEmExecucao = React.useCallback(() => {
-    setStatus('em_execucao');
-    setPageIndex(0);
-  }, []);
-
-  const handleFiltrarEncerrado = React.useCallback(() => {
-    setStatus('encerrado');
-    setPageIndex(0);
-  }, []);
-
   // Handlers de ações
   const handleVerDetalhes = React.useCallback(
     (orcamento: OrcamentoComItens) => {
@@ -694,106 +637,95 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
 
   const anosDisponiveis = React.useMemo(() => gerarAnosDisponiveis(), []);
 
-  return (
-    <div className="space-y-4">
-      {/* Cards de Resumo - FORA do DataShell */}
-      <ResumoCards
-        totais={totais}
-        isLoading={isLoading}
-        onFiltrarRascunho={handleFiltrarRascunho}
-        onFiltrarAprovado={handleFiltrarAprovado}
-        onFiltrarEmExecucao={handleFiltrarEmExecucao}
-        onFiltrarEncerrado={handleFiltrarEncerrado}
-      />
+  // Opções de filtros
+  const statusOptions = React.useMemo(
+    () => [
+      { value: 'rascunho', label: 'Rascunho' },
+      { value: 'aprovado', label: 'Aprovado' },
+      { value: 'em_execucao', label: 'Em Execução' },
+      { value: 'encerrado', label: 'Encerrado' },
+      { value: 'cancelado', label: 'Cancelado' },
+    ],
+    []
+  );
 
+  const periodoOptions = React.useMemo(
+    () => [
+      { value: 'mensal', label: 'Mensal' },
+      { value: 'trimestral', label: 'Trimestral' },
+      { value: 'semestral', label: 'Semestral' },
+      { value: 'anual', label: 'Anual' },
+    ],
+    []
+  );
+
+  const anoOptions = React.useMemo(
+    () => anosDisponiveis.map((a) => ({ value: String(a), label: String(a) })),
+    [anosDisponiveis]
+  );
+
+  return (
+    <PageShell>
       <DataShell
         header={
-          <DataTableToolbar
-            table={table}
-            density={density}
-            onDensityChange={setDensity}
-            searchValue={globalFilter}
-            onSearchValueChange={(value) => {
-              setGlobalFilter(value);
-              setPageIndex(0);
-            }}
-            searchPlaceholder="Buscar por nome ou descrição..."
-            actionButton={{
-              label: 'Novo Orçamento',
-              onClick: handleNovo,
-            }}
-            filtersSlot={
-              <>
-                {/* Status */}
-                <Select
-                  value={status}
-                  onValueChange={(val) => {
-                    setStatus(val === '__all__' ? '' : val);
-                    setPageIndex(0);
-                  }}
-                >
-                  <SelectTrigger className="w-[160px]">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__all__">Todos</SelectItem>
-                    <SelectItem value="rascunho">Rascunho</SelectItem>
-                    <SelectItem value="aprovado">Aprovado</SelectItem>
-                    <SelectItem value="em_execucao">Em Execução</SelectItem>
-                    <SelectItem value="encerrado">Encerrado</SelectItem>
-                    <SelectItem value="cancelado">Cancelado</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                {/* Período */}
-                <Select
-                  value={periodo ?? ''}
-                  onValueChange={(val) => {
-                    if (val === '__all__') {
-                      setPeriodo(undefined);
-                    } else if (isPeriodoValido(val)) {
-                      setPeriodo(val);
-                    } else {
-                      setPeriodo(undefined);
-                    }
-                    setPageIndex(0);
-                  }}
-                >
-                  <SelectTrigger className="w-[140px]">
-                    <SelectValue placeholder="Período" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__all__">Todos</SelectItem>
-                    <SelectItem value="mensal">Mensal</SelectItem>
-                    <SelectItem value="trimestral">Trimestral</SelectItem>
-                    <SelectItem value="semestral">Semestral</SelectItem>
-                    <SelectItem value="anual">Anual</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                {/* Ano */}
-                <Select
-                  value={ano}
-                  onValueChange={(val) => {
-                    setAno(val === '__all__' ? '' : val);
-                    setPageIndex(0);
-                  }}
-                >
-                  <SelectTrigger className="w-[110px]">
-                    <SelectValue placeholder="Ano" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__all__">Todos</SelectItem>
-                    {anosDisponiveis.map((a) => (
-                      <SelectItem key={a} value={String(a)}>
-                        {a}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </>
-            }
-          />
+          table ? (
+            <DataTableToolbar
+              table={table}
+              title="Orçamentos"
+              density={density}
+              onDensityChange={setDensity}
+              searchValue={globalFilter}
+              onSearchValueChange={(value) => {
+                setGlobalFilter(value);
+                setPageIndex(0);
+              }}
+              searchPlaceholder="Buscar por nome ou descrição..."
+              actionButton={{
+                label: 'Novo Orçamento',
+                onClick: handleNovo,
+              }}
+              filtersSlot={
+                <>
+                  <FilterPopover
+                    label="Status"
+                    options={statusOptions}
+                    value={status}
+                    onValueChange={(val) => {
+                      setStatus(val === 'all' ? '' : val);
+                      setPageIndex(0);
+                    }}
+                    defaultValue=""
+                  />
+                  <FilterPopover
+                    label="Período"
+                    options={periodoOptions}
+                    value={periodo ?? ''}
+                    onValueChange={(val) => {
+                      if (val === 'all' || val === '') {
+                        setPeriodo(undefined);
+                      } else if (isPeriodoValido(val)) {
+                        setPeriodo(val);
+                      }
+                      setPageIndex(0);
+                    }}
+                    defaultValue=""
+                  />
+                  <FilterPopover
+                    label="Ano"
+                    options={anoOptions}
+                    value={ano}
+                    onValueChange={(val) => {
+                      setAno(val === 'all' ? '' : val);
+                      setPageIndex(0);
+                    }}
+                    defaultValue=""
+                  />
+                </>
+              }
+            />
+          ) : (
+            <div className="p-6" />
+          )
         }
         footer={
           total > 0 ? (
@@ -939,6 +871,6 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </PageShell>
   );
 }

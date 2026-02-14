@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission } from '@/lib/auth/require-permission';
-import { actionListarClientesSugestoes } from '@/features/partes/server-actions';
+import { listarClientes } from '@/features/partes/service';
 
 /**
  * GET /api/clientes/buscar/sugestoes
- * 
+ *
  * Retorna sugestões de clientes para autocomplete
- * 
+ *
  * Query params:
  * - limit: número máximo de sugestões (default: 20, max: 100)
  * - search: termo de busca opcional
@@ -24,20 +24,28 @@ export async function GET(request: NextRequest) {
 
     const limit = limitParam ? Math.min(Math.max(Number(limitParam), 1), 100) : 20;
 
-    const result = await actionListarClientesSugestoes({ limit, search });
+    // Chamar service diretamente (não Server Action)
+    const result = await listarClientes({ pagina: 1, limite: limit, busca: search });
 
     if (!result.success) {
       return NextResponse.json(
-        { success: false, error: result.error },
+        { success: false, error: result.error.message },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ success: true, data: { options: result.data?.options || [] } });
+    // Mapear para formato de opções
+    const options = result.data.data.map((c) => ({
+      id: c.id,
+      label: c.nome,
+      cpf: c.cpf,
+      cnpj: c.cnpj,
+    }));
+
+    return NextResponse.json({ success: true, data: { options } });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Erro ao buscar sugestões de clientes';
     console.error('Erro em GET /api/clientes/buscar/sugestoes:', error);
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }
-
