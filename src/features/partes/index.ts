@@ -38,6 +38,7 @@ export {
   // Shared
   ProcessosRelacionadosCell,
   CopyButton,
+  FilterPopover,
   // Clientes
   ClientesTableWrapper,
   ClienteForm,
@@ -48,6 +49,8 @@ export {
   // Representantes
   RepresentantesTableWrapper,
 } from "./components";
+
+export type { FilterOption } from "./components";
 
 // ============================================================================
 // Hooks

@@ -579,7 +579,7 @@ export function AudienciasTableWrapper({
 
               {/* Week Navigator - apenas quando weekNavigatorProps existe */}
               {weekNavigatorProps && (
-                <div className="px-6 pt-2 pb-4">
+                <div className="pb-3">
                   <WeekNavigator
                     weekDays={weekNavigatorProps.weekDays}
                     selectedDate={weekNavigatorProps.selectedDate}

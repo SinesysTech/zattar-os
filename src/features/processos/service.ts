@@ -203,6 +203,40 @@ export async function listarProcessos(
 }
 
 /**
+ * Busca processo por numero processual (formato CNJ ou simplificado)
+ *
+ * Usado internamente por services que precisam localizar um processo
+ * pelo numero, sem passar pela camada de Server Actions.
+ */
+export async function buscarProcessoPorNumero(
+  numeroProcesso: string,
+  client?: DbClient
+): Promise<Result<Processo | ProcessoUnificado | null>> {
+  if (!numeroProcesso || !numeroProcesso.trim()) {
+    return err(appError("VALIDATION_ERROR", "Numero do processo e obrigatorio"));
+  }
+
+  // Importar utils dinamicamente para evitar dependencia circular
+  const { normalizarNumeroProcesso } = await import("./utils");
+  const numeroNormalizado = normalizarNumeroProcesso(numeroProcesso.trim());
+
+  const result = await listarProcessos(
+    { numeroProcesso: numeroNormalizado, limite: 1 },
+    client
+  );
+
+  if (!result.success) {
+    return err(result.error);
+  }
+
+  if (!result.data.data || result.data.data.length === 0) {
+    return { success: true, data: null };
+  }
+
+  return { success: true, data: result.data.data[0] };
+}
+
+/**
  * Atualiza um processo existente
  *
  * Regras de negocio:

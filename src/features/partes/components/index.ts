@@ -6,7 +6,8 @@
  */
 
 // Shared components
-export { ProcessosRelacionadosCell, CopyButton } from "./shared";
+export { ProcessosRelacionadosCell, CopyButton, FilterPopover } from "./shared";
+export type { FilterOption } from "./shared";
 
 // Clientes components
 export {

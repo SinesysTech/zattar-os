@@ -53,14 +53,14 @@ export default function AuthLayout({
           />
           <div className="mt-5 h-px w-10 bg-primary/40" />
           <p className="mt-5 max-w-xs text-center text-base leading-relaxed text-sidebar-foreground/50">
-            Plataforma integrada de gestão jurídica trabalhista
+            Plataforma Integrada de Gestão Jurídica
           </p>
         </div>
 
         {/* Copyright */}
         <div className="absolute bottom-6 left-0 right-0 text-center">
           <p className="text-xs text-sidebar-foreground/25">
-            &copy; {new Date().getFullYear()} Zattar Advogados. Todos os direitos reservados.
+            &copy; {new Date().getFullYear()} Zattar Advogados by <a href="https://sinesys.com.br" target="_blank" rel="noreferrer" className="hover:text-sidebar-foreground/50 transition-colors">Sinesys</a>
           </p>
         </div>
       </div>

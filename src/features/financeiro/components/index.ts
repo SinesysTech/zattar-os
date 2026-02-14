@@ -25,6 +25,7 @@ export { FiltroContaContabil } from './shared/filtros/filtro-conta-contabil';
 export { FiltroCentroCusto } from './shared/filtros/filtro-centro-custo';
 export { FiltroCliente } from './shared/filtros/filtro-cliente';
 export { FiltroFornecedor } from './shared/filtros/filtro-fornecedor';
+export { MaisFiltrosPopover } from './shared/filtros/mais-filtros-popover';
 
 // ============================================================================
 // Contas a Pagar
