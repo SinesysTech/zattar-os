@@ -11,3 +11,4 @@ export { FiltroCentroCusto } from './filtro-centro-custo';
 export { FiltroCliente } from './filtro-cliente';
 export { FiltroFornecedor } from './filtro-fornecedor';
 export { MaisFiltrosPopover } from './mais-filtros-popover';
+export { MaisFiltrosReceberPopover } from './mais-filtros-receber-popover';
