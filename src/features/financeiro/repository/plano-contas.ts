@@ -332,6 +332,12 @@ export const PlanoContasRepository = {
 // ============================================================================
 
 function mapRecordToConta(record: Record<string, unknown>): PlanoContas {
+    // Deriva o tipo de conta (sintética/analítica) a partir de aceita_lancamento
+    // - aceita_lancamento = true → Analítica (aceita lançamentos diretos)
+    // - aceita_lancamento = false → Sintética (conta de grupo)
+    const aceitaLancamento = record.aceita_lancamento as boolean | null | undefined;
+    const nivelConta: NivelConta = aceitaLancamento === true ? 'analitica' : 'sintetica';
+
     return {
         id: record.id as number,
         codigo: record.codigo as string,
@@ -340,9 +346,10 @@ function mapRecordToConta(record: Record<string, unknown>): PlanoContas {
         tipo: record.tipo_conta as TipoContaContabil, // Alias para compatibilidade
         tipoConta: record.tipo_conta as TipoContaContabil,
         natureza: record.natureza as NaturezaConta,
-        nivel: record.nivel as NivelConta,
+        nivel: nivelConta,
         contaPaiId: record.conta_pai_id as number | null | undefined,
         ordemExibicao: record.ordem_exibicao as number | null | undefined,
-        ativo: record.ativo as boolean
+        ativo: record.ativo as boolean,
+        aceitaLancamento: aceitaLancamento ?? false,
     };
 }

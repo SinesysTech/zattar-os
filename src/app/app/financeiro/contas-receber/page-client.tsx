@@ -18,6 +18,7 @@ import {
   DataTableToolbar,
 } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
+import { PageShell } from '@/components/shared/page-shell';
 import {
   AlertasInadimplencia,
   cancelarContaReceber,
@@ -537,7 +538,7 @@ export default function ContasReceberPage() {
   );
 
   return (
-    <div className="space-y-3">
+    <PageShell>
       {/* Alertas de Inadimplência */}
       <AlertasInadimplencia
         resumo={resumoInadimplencia ?? null}
@@ -553,6 +554,7 @@ export default function ContasReceberPage() {
           table ? (
             <DataTableToolbar
               table={table}
+              title="Contas a Receber"
               density={density}
               onDensityChange={setDensity}
               searchValue={globalFilter}
@@ -766,6 +768,6 @@ export default function ContasReceberPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </PageShell>
   );
 }
