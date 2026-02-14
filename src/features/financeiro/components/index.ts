@@ -80,6 +80,7 @@ export {
   buildPlanoContasFilterGroups,
   parsePlanoContasFilters,
 } from './plano-contas/plano-contas-toolbar-filters';
+export { MaisFiltrosPlanoContasPopover } from './plano-contas/mais-filtros-plano-contas-popover';
 
 // ============================================================================
 // Orçamentos

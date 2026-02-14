@@ -16,8 +16,8 @@ import {
   DataTableToolbar,
 } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
+import { PageShell } from '@/components/shared/page-shell';
 import {
-  FiltroContaContabil,
   type NivelConta,
   PlanoContaCreateDialog,
   type PlanoContaComPai,
@@ -28,15 +28,10 @@ import {
   TIPO_CONTA_LABELS,
   NATUREZA_LABELS,
   NIVEL_LABELS,
+  MaisFiltrosPlanoContasPopover,
 } from '@/features/financeiro';
 import { actionAtualizarConta } from '@/features/financeiro/server-actions';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { FilterPopover } from '@/features/partes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Power } from 'lucide-react';
@@ -113,20 +108,20 @@ function criarColunas(
     {
       accessorKey: 'tipoConta',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-start">
           <DataTableColumnHeader column={column} title="Tipo" />
         </div>
       ),
       enableSorting: true,
       size: 140,
-      meta: { align: 'center' as const, headerLabel: 'Tipo' },
+      meta: { align: 'left' as const, headerLabel: 'Tipo' },
       cell: ({ row }) => {
         const tipo = row.getValue('tipoConta') as TipoContaContabil;
         const variant = TIPO_CONTA_VARIANTS[tipo];
         return (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-start">
             <Badge variant={variant}>
-              {TIPO_CONTA_LABELS[tipo]}
+              {TIPO_CONTA_LABELS[tipo] || tipo || '—'}
             </Badge>
           </div>
         );
@@ -135,19 +130,20 @@ function criarColunas(
     {
       accessorKey: 'nivel',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-start">
           <DataTableColumnHeader column={column} title="Nível" />
         </div>
       ),
       enableSorting: true,
       size: 100,
-      meta: { align: 'center' as const, headerLabel: 'Nível' },
+      meta: { align: 'left' as const, headerLabel: 'Nível' },
       cell: ({ row }) => {
-        const nivel = row.getValue('nivel') as NivelConta;
+        const nivel = row.getValue('nivel') as NivelConta | undefined;
+        const label = nivel ? NIVEL_LABELS[nivel] : '—';
         return (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-start">
             <Badge variant={nivel === 'sintetica' ? 'outline' : 'default'}>
-              {NIVEL_LABELS[nivel]}
+              {label}
             </Badge>
           </div>
         );
@@ -156,17 +152,17 @@ function criarColunas(
     {
       accessorKey: 'ativo',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-start">
           <DataTableColumnHeader column={column} title="Status" />
         </div>
       ),
       enableSorting: true,
       size: 100,
-      meta: { align: 'center' as const, headerLabel: 'Status' },
+      meta: { align: 'left' as const, headerLabel: 'Status' },
       cell: ({ row }) => {
         const ativo = row.getValue('ativo') as boolean;
         return (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-start">
             <Badge variant={ativo ? 'success' : 'outline'}>
               {ativo ? 'Ativo' : 'Inativo'}
             </Badge>
@@ -177,17 +173,17 @@ function criarColunas(
     {
       id: 'acoes',
       header: () => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-start">
           <div className="text-sm font-medium">Ações</div>
         </div>
       ),
       enableSorting: false,
       size: 80,
-      meta: { align: 'center' as const },
+      meta: { align: 'left' as const },
       cell: ({ row }) => {
         const conta = row.original;
         return (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-start">
             <PlanoContaActions
               conta={conta}
               onEdit={onEdit}
@@ -418,11 +414,12 @@ export default function PlanoContasPage() {
   );
 
   return (
-    <div className="space-y-3">
+    <PageShell>
       <DataShell
         header={
           <DataTableToolbar
             table={table}
+            title="Plano de Contas"
             density={density}
             onDensityChange={setDensity}
             searchValue={globalFilter}
@@ -438,90 +435,66 @@ export default function PlanoContasPage() {
             onExport={handleExport}
             filtersSlot={
               <>
-                {/* Tipo de Conta */}
-                <Select
+                {/* Filtros primários (3) */}
+                <FilterPopover
+                  label="Tipo de Conta"
+                  options={[
+                    { value: 'ativo', label: 'Ativo' },
+                    { value: 'passivo', label: 'Passivo' },
+                    { value: 'receita', label: 'Receita' },
+                    { value: 'despesa', label: 'Despesa' },
+                    { value: 'patrimonio_liquido', label: 'Patrimônio Líquido' },
+                  ]}
                   value={tipoConta}
                   onValueChange={(val) => {
-                    setTipoConta(val === '__all__' ? '' : val);
+                    setTipoConta(val === 'all' ? '' : val);
                     setPageIndex(0);
                   }}
-                >
-                  <SelectTrigger className="w-45">
-                    <SelectValue placeholder="Tipo de Conta" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__all__">Todos os tipos</SelectItem>
-                    <SelectItem value="ativo">Ativo</SelectItem>
-                    <SelectItem value="passivo">Passivo</SelectItem>
-                    <SelectItem value="receita">Receita</SelectItem>
-                    <SelectItem value="despesa">Despesa</SelectItem>
-                    <SelectItem value="patrimonio_liquido">Patrimônio Líquido</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                {/* Nível */}
-                <Select
+                  defaultValue=""
+                />
+                <FilterPopover
+                  label="Nível"
+                  options={[
+                    { value: 'sintetica', label: 'Sintética' },
+                    { value: 'analitica', label: 'Analítica' },
+                  ]}
                   value={nivel}
                   onValueChange={(val) => {
-                    setNivel(val === '__all__' ? '' : val);
+                    setNivel(val === 'all' ? '' : val);
                     setPageIndex(0);
                   }}
-                >
-                  <SelectTrigger className="w-35">
-                    <SelectValue placeholder="Nível" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__all__">Todos os níveis</SelectItem>
-                    <SelectItem value="sintetica">Sintética</SelectItem>
-                    <SelectItem value="analitica">Analítica</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                {/* Natureza (NOVO) */}
-                <Select
-                  value={natureza}
-                  onValueChange={(val) => {
-                    setNatureza(val === '__all__' ? '' : val);
-                    setPageIndex(0);
-                  }}
-                >
-                  <SelectTrigger className="w-35">
-                    <SelectValue placeholder="Natureza" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__all__">Todas</SelectItem>
-                    <SelectItem value="devedora">Devedora</SelectItem>
-                    <SelectItem value="credora">Credora</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                {/* Status */}
-                <Select
+                  defaultValue=""
+                />
+                <FilterPopover
+                  label="Status"
+                  options={[
+                    { value: 'true', label: 'Ativo' },
+                    { value: 'false', label: 'Inativo' },
+                  ]}
                   value={ativo}
                   onValueChange={(val) => {
-                    setAtivo(val === '__all__' ? '' : val);
+                    setAtivo(val === 'all' ? '' : val);
                     setPageIndex(0);
                   }}
-                >
-                  <SelectTrigger className="w-32.5">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__all__">Todos</SelectItem>
-                    <SelectItem value="true">Ativo</SelectItem>
-                    <SelectItem value="false">Inativo</SelectItem>
-                  </SelectContent>
-                </Select>
+                  defaultValue="true"
+                />
 
-                {/* Conta Pai (NOVO) */}
-                <FiltroContaContabil
-                  value={contaPaiId}
-                  onChange={(val) => {
+                {/* Filtros avançados (dropdown) */}
+                <MaisFiltrosPlanoContasPopover
+                  natureza={natureza}
+                  onNaturezaChange={(val) => {
+                    setNatureza(val);
+                    setPageIndex(0);
+                  }}
+                  naturezaOptions={[
+                    { value: 'devedora', label: 'Devedora' },
+                    { value: 'credora', label: 'Credora' },
+                  ]}
+                  contaPaiId={contaPaiId}
+                  onContaPaiIdChange={(val) => {
                     setContaPaiId(val);
                     setPageIndex(0);
                   }}
-                  placeholder="Conta Pai"
-                  className="w-55"
                 />
               </>
             }
@@ -582,6 +555,6 @@ export default function PlanoContasPage() {
           conta={selectedConta}
         />
       )}
-    </div>
+    </PageShell>
   );
 }

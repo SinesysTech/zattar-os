@@ -396,6 +396,7 @@ export {
   buildPlanoContasFilterOptions,
   buildPlanoContasFilterGroups,
   parsePlanoContasFilters,
+  MaisFiltrosPlanoContasPopover,
   // Orçamentos
   OrcamentoFormDialog,
   OrcamentoItemDialog,
