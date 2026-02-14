@@ -82,7 +82,7 @@ export function TablePagination({
             onValueChange={handlePageSizeChange}
             disabled={isLoading}
           >
-            <SelectTrigger className="h-8 w-17.5 bg-card" suppressHydrationWarning>
+            <SelectTrigger className="h-8 w-[72px] bg-card" suppressHydrationWarning>
               <SelectValue />
             </SelectTrigger>
             <SelectContent side="top">
