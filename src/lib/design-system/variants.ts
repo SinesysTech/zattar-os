@@ -49,7 +49,9 @@ export type BadgeCategory =
   | 'polo'
   | 'tipo_contrato'
   | 'tipo_cobranca'
-  | 'status_contrato';
+  | 'status_contrato'
+  | 'folha_status'
+  | 'salario_status';
 
 /**
  * Determina o tom (intensidade) padrão por categoria.
@@ -461,6 +463,42 @@ export const COMUNICACAO_CNJ_VARIANTS: Record<string, BadgeVisualVariant> = {
 } as const;
 
 // =============================================================================
+// MAPEAMENTO DE STATUS DE FOLHA DE PAGAMENTO (RH)
+// =============================================================================
+
+/**
+ * Mapeamento de status de folha de pagamento para variantes visuais.
+ */
+export const FOLHA_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  rascunho: 'neutral',
+  RASCUNHO: 'neutral',
+  aprovada: 'warning',
+  APROVADA: 'warning',
+  paga: 'success',
+  PAGA: 'success',
+  cancelada: 'destructive',
+  CANCELADA: 'destructive',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE SALÁRIO (RH)
+// =============================================================================
+
+/**
+ * Mapeamento de status de salário para variantes visuais.
+ */
+export const SALARIO_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  vigente: 'success',
+  VIGENTE: 'success',
+  ativo: 'success',
+  ATIVO: 'success',
+  encerrado: 'neutral',
+  ENCERRADO: 'neutral',
+  inativo: 'destructive',
+  INATIVO: 'destructive',
+} as const;
+
+// =============================================================================
 // FUNÇÃO PRINCIPAL DE MAPEAMENTO
 // =============================================================================
 
@@ -531,6 +569,14 @@ export function getSemanticBadgeVariant(
     case 'status_contrato':
       return STATUS_CONTRATO_VARIANTS[key as string] ??
              STATUS_CONTRATO_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'folha_status':
+      return FOLHA_STATUS_VARIANTS[key as string] ??
+             FOLHA_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'salario_status':
+      return SALARIO_STATUS_VARIANTS[key as string] ??
+             SALARIO_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     default:
       return 'neutral';
@@ -649,6 +695,8 @@ export const VARIANTS = {
   tipoContrato: TIPO_CONTRATO_VARIANTS,
   tipoCobranca: TIPO_COBRANCA_VARIANTS,
   statusContrato: STATUS_CONTRATO_VARIANTS,
+  folhaStatus: FOLHA_STATUS_VARIANTS,
+  salarioStatus: SALARIO_STATUS_VARIANTS,
 } as const;
 
 export const LABELS = {

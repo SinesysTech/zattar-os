@@ -121,7 +121,7 @@ export function IncomingCallDialog({
             <Button
               variant="destructive"
               size="icon"
-              className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+              className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl hover:opacity-90 transition-all duration-200"
               onClick={handleReject}
               disabled={isProcessing}
             >
@@ -134,7 +134,7 @@ export function IncomingCallDialog({
             <Button
               variant="default"
               size="icon"
-              className="h-14 w-14 rounded-full bg-green-600 hover:bg-green-700 hover:scale-105 transition-all shadow-lg hover:shadow-xl"
+              className="h-14 w-14 rounded-full bg-green-600 hover:bg-green-700 transition-all duration-200 shadow-lg hover:shadow-xl"
               onClick={handleAccept}
               disabled={isProcessing}
             >

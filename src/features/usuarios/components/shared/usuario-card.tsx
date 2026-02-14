@@ -46,7 +46,7 @@ export function UsuarioCard({ usuario, onView, onRedefinirSenha }: UsuarioCardPr
   const deveExibirOab = cargoNome === 'advogado' || cargoNome === 'diretor';
 
   return (
-    <Card className="relative flex flex-col h-full hover:shadow-md transition-shadow">
+    <Card className="cursor-pointer flex flex-col h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5">
       <CardHeader className="px-4 py-3 pb-2">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10 shrink-0">
@@ -71,7 +71,7 @@ export function UsuarioCard({ usuario, onView, onRedefinirSenha }: UsuarioCardPr
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 space-y-1.5 text-sm px-4 py-3 pt-0 pb-12">
+      <CardContent className="flex-1 space-y-1.5 text-sm px-4 py-3 pt-0">
         <div className="flex items-center gap-2">
           <span className="text-muted-foreground text-xs">CPF:</span>
           <span className="font-medium">
@@ -103,7 +103,7 @@ export function UsuarioCard({ usuario, onView, onRedefinirSenha }: UsuarioCardPr
         )}
       </CardContent>
 
-      <div className="absolute bottom-3 right-4">
+      <div className="flex items-center justify-end px-4 pb-3">
         <DropdownMenu>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -112,6 +112,7 @@ export function UsuarioCard({ usuario, onView, onRedefinirSenha }: UsuarioCardPr
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <MoreHorizontal className="h-4 w-4" />
                   <span className="sr-only">Ações do usuário</span>
@@ -120,7 +121,7 @@ export function UsuarioCard({ usuario, onView, onRedefinirSenha }: UsuarioCardPr
             </TooltipTrigger>
             <TooltipContent>Ações</TooltipContent>
           </Tooltip>
-          <DropdownMenuContent align="start">
+          <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => onView(usuario)}>
               <Eye className="h-4 w-4 mr-2" />
               Visualizar

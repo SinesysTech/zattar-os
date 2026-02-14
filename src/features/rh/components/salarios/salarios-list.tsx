@@ -12,6 +12,7 @@ import { SalarioFormDialog } from './salario-form-dialog';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import {
   MoreHorizontal,
   Pencil,
@@ -225,7 +226,7 @@ function criarColunas(
             {salario.dataFimVigencia ? (
               formatarData(salario.dataFimVigencia)
             ) : vigente ? (
-              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+              <Badge variant={getSemanticBadgeVariant('salario_status', 'VIGENTE')}>
                 Vigente
               </Badge>
             ) : (
@@ -251,16 +252,16 @@ function criarColunas(
           <div className="flex justify-center">
             {salario.ativo ? (
               vigente ? (
-                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                <Badge variant={getSemanticBadgeVariant('salario_status', 'ATIVO')}>
                   Ativo
                 </Badge>
               ) : (
-                <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
+                <Badge variant={getSemanticBadgeVariant('salario_status', 'ENCERRADO')}>
                   Encerrado
                 </Badge>
               )
             ) : (
-              <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+              <Badge variant={getSemanticBadgeVariant('salario_status', 'INATIVO')}>
                 Inativo
               </Badge>
             )}

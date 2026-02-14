@@ -235,7 +235,7 @@ export function ProcessoTagsDialog({
                         <button
                           key={color.value}
                           type="button"
-                          className="w-6 h-6 rounded-full border-2 transition-transform hover:scale-110"
+                          className="w-6 h-6 rounded-full border-2 transition-all duration-200 hover:ring-2 hover:ring-offset-1 hover:ring-primary/50"
                           style={{
                             backgroundColor: color.value,
                             borderColor: newTagCor === color.value ? 'white' : 'transparent',

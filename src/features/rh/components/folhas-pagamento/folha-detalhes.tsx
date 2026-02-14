@@ -8,6 +8,8 @@ import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
+import { DollarSign } from 'lucide-react';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { AprovarFolhaDialog } from './aprovar-folha-dialog';
 import { PagarFolhaDialog } from './pagar-folha-dialog';
 import {
@@ -181,7 +183,8 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
-                💰 Lançamentos Financeiros
+                <DollarSign className="h-5 w-5" />
+                Lançamentos Financeiros
               </CardTitle>
               <Button
                 variant="outline"
@@ -216,12 +219,12 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         <span>Salário: {formatCurrency(item.valorBruto)}</span>
                         {folha.status === 'paga' && (
-                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                          <Badge variant={getSemanticBadgeVariant('folha_status', 'PAGA')}>
                             Pago
                           </Badge>
                         )}
                         {folha.status === 'aprovada' && (
-                          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                          <Badge variant={getSemanticBadgeVariant('folha_status', 'APROVADA')}>
                             Pendente
                           </Badge>
                         )}
