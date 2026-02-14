@@ -35,7 +35,17 @@ const APP_MODULES = [
   "usuarios",
 ];
 
+// Git revision for cache busting and version tracking
+const revision =
+  spawnSync("git", ["rev-parse", "HEAD"], {
+    encoding: "utf-8",
+  }).stdout?.trim() ?? crypto.randomUUID();
+
 const nextConfig: NextConfig = {
+  // Expose build ID to client for version mismatch detection
+  env: {
+    NEXT_PUBLIC_BUILD_ID: revision,
+  },
   // Generates a build optimized for Docker, reducing image size and improving startup time
   output: "standalone",
   outputFileTracingExcludes: {
@@ -270,11 +280,6 @@ const nextConfig: NextConfig = {
 //
 // Bundle Analyzer: Set ANALYZE=true to generate bundle analysis reports
 // Reports are saved to scripts/results/bundle-analysis/
-const revision =
-  spawnSync("git", ["rev-parse", "HEAD"], {
-    encoding: "utf-8",
-  }).stdout?.trim() ?? crypto.randomUUID();
-
 const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
   swDest: "public/sw.js",

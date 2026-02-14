@@ -10,6 +10,11 @@
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
+import {
+  checkVersionMismatch,
+  isServerActionVersionError,
+  handleVersionMismatchError,
+} from "@/lib/version";
 import { REALTIME_SUBSCRIBE_STATES } from "@supabase/supabase-js";
 import type {
   Notificacao,
@@ -598,6 +603,16 @@ export function useNotificacoesRealtime(options?: {
     ); */
 
     const pollNotificacoes = async () => {
+      // Verificar se houve mudança de versão do build antes de chamar action
+      // Isso previne erros de "Failed to find Server Action" após deploys
+      if (checkVersionMismatch()) {
+        console.log(
+          "🔄 [Notificações Polling] Versão do app mudou - recarregando..."
+        );
+        await handleVersionMismatchError();
+        return;
+      }
+
       try {
         // Usar a action para buscar contador de notificações
         const result = await actionContarNotificacoesNaoLidas({});
@@ -635,6 +650,14 @@ export function useNotificacoesRealtime(options?: {
           }
         }
       } catch (error) {
+        // Verificar se é erro de Server Action não encontrada (após deploy)
+        if (isServerActionVersionError(error)) {
+          console.log(
+            "🔄 [Notificações Polling] Server Action não encontrada - recarregando..."
+          );
+          await handleVersionMismatchError();
+          return;
+        }
         console.error("❌ [Notificações Polling] Erro ao verificar:", error);
       }
     };
