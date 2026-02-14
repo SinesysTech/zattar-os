@@ -8,15 +8,10 @@ import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
+import { DataPagination } from '@/components/shared/data-shell/data-pagination';
 import { PageShell } from '@/components/shared/page-shell';
 import { useDebounce } from '@/hooks/use-debounce';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,6 +27,7 @@ import { useAdvogados, type Advogado } from '@/features/advogados';
 import { UFS_BRASIL } from '@/features/advogados/domain';
 import { criarColunasAdvogados } from '../components/advogados/advogados-columns';
 import { AdvogadosDialog } from '../components/advogados/advogados-dialog';
+import { AdvogadosFilter } from '../components/advogados/advogados-filter';
 
 export default function AdvogadosPage() {
   const router = useRouter();
@@ -40,7 +36,7 @@ export default function AdvogadosPage() {
   const [busca, setBusca] = useState('');
   const [ufFilter, setUfFilter] = useState<string>('all');
   const [pageIndex, setPageIndex] = useState(0);
-  const pageSize = 20;
+  const [pageSize, setPageSize] = useState(20);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -119,9 +115,12 @@ export default function AdvogadosPage() {
     [handleEdit, handleDelete, handleViewCredenciais]
   );
 
-  // Paginação
-  const handlePageChange = useCallback((newPageIndex: number) => {
-    setPageIndex(newPageIndex);
+  // Opções para o filtro de UF
+  const ufOptions = useMemo(() => {
+    return UFS_BRASIL.map(uf => ({
+      label: uf,
+      value: uf
+    }));
   }, []);
 
   return (
@@ -143,19 +142,12 @@ export default function AdvogadosPage() {
                 onClick: () => setAdvogadoDialog({ open: true, advogado: null }),
               }}
               filtersSlot={
-                <Select value={ufFilter} onValueChange={setUfFilter}>
-                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                    <SelectValue placeholder="UF" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">UF</SelectItem>
-                    {UFS_BRASIL.map((uf) => (
-                      <SelectItem key={uf} value={uf}>
-                        {uf}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <AdvogadosFilter
+                  title="UF"
+                  options={ufOptions}
+                  value={ufFilter}
+                  onValueChange={setUfFilter}
+                />
               }
             />
           ) : (
@@ -163,31 +155,19 @@ export default function AdvogadosPage() {
           )
         }
         footer={
-          paginacao && paginacao.totalPaginas > 1 ? (
-            <div className="flex items-center justify-between px-4 py-3">
-              <div className="text-sm text-muted-foreground">
-                Mostrando {advogados.length} de {paginacao.total} advogados
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handlePageChange(pageIndex - 1)}
-                  disabled={pageIndex === 0}
-                  className="rounded border px-3 py-1 text-sm disabled:opacity-50"
-                >
-                  Anterior
-                </button>
-                <span className="text-sm">
-                  Página {pageIndex + 1} de {paginacao.totalPaginas}
-                </span>
-                <button
-                  onClick={() => handlePageChange(pageIndex + 1)}
-                  disabled={pageIndex >= paginacao.totalPaginas - 1}
-                  className="rounded border px-3 py-1 text-sm disabled:opacity-50"
-                >
-                  Próxima
-                </button>
-              </div>
-            </div>
+          paginacao ? (
+            <DataPagination
+              pageIndex={pageIndex}
+              pageSize={pageSize}
+              total={paginacao.total}
+              totalPages={paginacao.totalPaginas}
+              onPageChange={setPageIndex}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPageIndex(0);
+              }}
+              isLoading={isLoading}
+            />
           ) : null
         }
       >
@@ -229,7 +209,10 @@ export default function AdvogadosPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmarDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={confirmarDelete}
+              className={buttonVariants({ variant: 'destructive' })}
+            >
               Excluir
             </AlertDialogAction>
           </AlertDialogFooter>

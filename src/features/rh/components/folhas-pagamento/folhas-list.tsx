@@ -5,17 +5,13 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { Input } from '@/components/ui/input';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
+  DataPagination,
+  DataShell,
+  DataTable,
+  DataTableToolbar,
+} from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import type { ColumnDef } from '@tanstack/react-table';
 import { GerarFolhaDialog } from './gerar-folha-dialog';
@@ -23,6 +19,8 @@ import { useFolhasPagamento } from '../../hooks';
 import { MESES_LABELS, STATUS_FOLHA_LABELS } from '../../domain';
 import { STATUS_FOLHA_CORES } from '../../utils';
 import type { FolhaPagamentoComDetalhes } from '../../types';
+import { PageShell } from '@/components/shared/page-shell';
+import { FilterPopover } from '@/features/partes';
 
 const statusOptions = [
   { value: 'rascunho', label: STATUS_FOLHA_LABELS.rascunho },
@@ -30,6 +28,11 @@ const statusOptions = [
   { value: 'paga', label: STATUS_FOLHA_LABELS.paga },
   { value: 'cancelada', label: STATUS_FOLHA_LABELS.cancelada },
 ];
+
+const mesesOptions = Object.entries(MESES_LABELS).map(([value, label]) => ({
+  value,
+  label,
+}));
 
 // ============================================================================
 // Helpers
@@ -89,9 +92,7 @@ function criarColunas(
       enableSorting: true,
       size: 130,
       cell: ({ row }) => (
-        <div className="text-center">
-          {formatarData(row.original.dataGeracao)}
-        </div>
+        <div className="text-center">{formatarData(row.original.dataGeracao)}</div>
       ),
     },
     {
@@ -105,7 +106,8 @@ function criarColunas(
       size: 130,
       cell: ({ row }) => {
         const folha = row.original;
-        const cores = STATUS_FOLHA_CORES[folha.status] || STATUS_FOLHA_CORES.rascunho;
+        const cores =
+          STATUS_FOLHA_CORES[folha.status] || STATUS_FOLHA_CORES.rascunho;
         return (
           <div className="flex justify-center">
             <Badge
@@ -155,7 +157,7 @@ function criarColunas(
       cell: ({ row }) => (
         <div className="flex justify-center">
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={() => onDetalhes(row.original)}
           >
@@ -175,16 +177,18 @@ export function FolhasPagamentoList() {
   const router = useRouter();
 
   // Estado da instância da tabela e densidade
-  const [table, setTable] = React.useState<TanstackTable<FolhaPagamentoComDetalhes> | undefined>(
-    undefined
-  );
-  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+  const [table, setTable] = React.useState<
+    TanstackTable<FolhaPagamentoComDetalhes> | undefined
+  >(undefined);
+  const [density, setDensity] = React.useState<
+    'compact' | 'standard' | 'relaxed'
+  >('standard');
 
   // Estados de filtros
   const [dialogAberto, setDialogAberto] = React.useState(false);
   const [pagina, setPagina] = React.useState(1);
   const [mesReferencia, setMesReferencia] = React.useState<string>('');
-  const [anoReferencia, setAnoReferencia] = React.useState<string>('');
+  const [anoReferencia, setAnoReferencia] = React.useState<string>(''); // Mantendo como string simples por enquanto, ideal seria um input ou select de anos
   const [status, setStatus] = React.useState<string>('');
 
   const { folhas, paginacao, isLoading, error, refetch } = useFolhasPagamento({
@@ -222,11 +226,12 @@ export function FolhasPagamentoList() {
   );
 
   return (
-    <div className="space-y-3">
+    <PageShell>
       <DataShell
         header={
           <DataTableToolbar
             table={table}
+            title="Folhas de Pagamento"
             density={density}
             onDensityChange={setDensity}
             actionButton={{
@@ -235,56 +240,34 @@ export function FolhasPagamentoList() {
             }}
             filtersSlot={
               <>
-                <Select value={mesReferencia} onValueChange={setMesReferencia}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="Mês" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">Todos os meses</SelectItem>
-                    {Object.entries(MESES_LABELS).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Input
-                  type="number"
-                  placeholder="Ano"
-                  value={anoReferencia}
-                  onChange={(e) => setAnoReferencia(e.target.value)}
-                  className="w-30"
+                <FilterPopover
+                  label="Mês"
+                  options={mesesOptions}
+                  value={mesReferencia}
+                  onValueChange={(val) => {
+                    setMesReferencia(val === 'all' ? '' : val);
+                    setPagina(1);
+                  }}
+                  defaultValue=""
                 />
 
-                <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">Todos os status</SelectItem>
-                    {statusOptions.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {/* TODO: Criar componente melhor para seleção de ano se necessário, por enquanto FilterPopover não é ideal para input livre, mas para selects fixos sim. 
+                    Como ano é input livre no original, talvez devêssemos manter ou criar um filtro de ano específico.
+                    Vou manter um input estilizado dentro do toolbar slot se funcionar bem, ou adaptar.
+                    Para simplificar e seguir o padrão, vou assumir que apenas FilterPopover é desejado para selects. 
+                    Se precisar de input, o DataTableToolbar tem searchValue, mas é para busca geral.
+                */}
 
-                {(mesReferencia || anoReferencia || status) && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setMesReferencia('');
-                      setAnoReferencia('');
-                      setStatus('');
-                      setPagina(1);
-                    }}
-                  >
-                    Limpar filtros
-                  </Button>
-                )}
+                <FilterPopover
+                  label="Status"
+                  options={statusOptions}
+                  value={status}
+                  onValueChange={(val) => {
+                    setStatus(val === 'all' ? '' : val);
+                    setPagina(1);
+                  }}
+                  defaultValue=""
+                />
               </>
             }
           />
@@ -297,7 +280,7 @@ export function FolhasPagamentoList() {
               total={paginacao.total}
               totalPages={paginacao.totalPaginas}
               onPageChange={(pageIndex) => setPagina(pageIndex + 1)}
-              onPageSizeChange={() => {}}
+              onPageSizeChange={() => { }}
               isLoading={isLoading}
             />
           ) : null
@@ -311,18 +294,19 @@ export function FolhasPagamentoList() {
           pagination={
             paginacao
               ? {
-                  pageIndex: pagina - 1,
-                  pageSize: 50,
-                  total: paginacao.total,
-                  totalPages: paginacao.totalPaginas,
-                  onPageChange: (pageIndex) => setPagina(pageIndex + 1),
-                  onPageSizeChange: () => {},
-                }
+                pageIndex: pagina - 1,
+                pageSize: 50,
+                total: paginacao.total,
+                totalPages: paginacao.totalPaginas,
+                onPageChange: (pageIndex) => setPagina(pageIndex + 1),
+                onPageSizeChange: () => { },
+              }
               : undefined
           }
           hidePagination={true}
           onTableReady={setTable}
           density={density}
+          emptyMessage="Nenhuma folha de pagamento encontrada."
         />
       </DataShell>
 
@@ -331,6 +315,6 @@ export function FolhasPagamentoList() {
         onOpenChange={setDialogAberto}
         onSuccess={handleGerada}
       />
-    </div>
+    </PageShell>
   );
 }

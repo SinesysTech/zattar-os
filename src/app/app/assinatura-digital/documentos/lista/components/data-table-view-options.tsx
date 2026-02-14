@@ -27,12 +27,12 @@ export function DataTableViewOptions<TData>({ table }: { table: Table<TData> }) 
         <Button
           variant="outline"
           size="sm"
-          className="ml-auto hidden h-8 bg-white dark:bg-gray-950 lg:flex">
+          className="ml-auto hidden h-8 bg-background lg:flex">
           <Settings2 />
           Visualizar
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[150px] bg-white dark:bg-gray-950">
+      <DropdownMenuContent align="end" className="w-[150px] bg-background">
         <DropdownMenuLabel>Colunas</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
