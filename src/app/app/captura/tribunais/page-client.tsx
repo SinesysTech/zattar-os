@@ -6,17 +6,17 @@ import type { Table as TanstackTable } from '@tanstack/react-table';
 import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { PageShell } from '@/components/shared/page-shell';
 import { useDebounce } from '@/hooks/use-debounce';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { useTribunais } from '@/features/captura';
 import { criarColunasTribunais } from '../components/tribunais/tribunais-columns';
 import { TribunaisDialog } from '../components/tribunais/tribunais-dialog';
+import { AdvogadosFilter } from '../components/advogados/advogados-filter';
 import type { TribunalConfigDb as TribunalConfig } from '@/features/captura';
+
+const TIPO_ACESSO_LABELS: Record<string, string> = {
+  primeiro_grau: '1º Grau',
+  segundo_grau: '2º Grau',
+  unico: 'Único',
+};
 
 export default function TribunaisPage() {
   const {
@@ -52,15 +52,15 @@ export default function TribunaisPage() {
     setTribunalDialog({ open: true, tribunal });
   }, []);
 
-  // Extrair opções únicas dos dados para filtros
-  const tribunaisUnicos = useMemo(() => {
-    const codigos = [...new Set(tribunais.map((t) => t.tribunal_codigo))];
-    return codigos.sort();
+  // Opções para filtros (extraídas dos dados)
+  const tribunalOptions = useMemo(() => {
+    const codigos = [...new Set(tribunais.map((t) => t.tribunal_codigo))].sort();
+    return codigos.map((c) => ({ label: c, value: c }));
   }, [tribunais]);
 
-  const tiposAcessoUnicos = useMemo(() => {
-    const tipos = [...new Set(tribunais.map((t) => t.tipo_acesso))];
-    return tipos.sort();
+  const tipoAcessoOptions = useMemo(() => {
+    const tipos = [...new Set(tribunais.map((t) => t.tipo_acesso))].sort();
+    return tipos.map((t) => ({ label: TIPO_ACESSO_LABELS[t] ?? t, value: t }));
   }, [tribunais]);
 
   // Filtrar tribunais
@@ -101,12 +101,6 @@ export default function TribunaisPage() {
     [handleEdit]
   );
 
-  const TIPO_ACESSO_LABELS: Record<string, string> = {
-    primeiro_grau: '1º Grau',
-    segundo_grau: '2º Grau',
-    unico: 'Único',
-  };
-
   return (
     <PageShell>
       <DataShell
@@ -126,33 +120,18 @@ export default function TribunaisPage() {
               }}
               filtersSlot={
                 <>
-                  <Select value={tribunalFilter} onValueChange={setTribunalFilter}>
-                    <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                      <SelectValue placeholder="Tribunal" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Tribunal</SelectItem>
-                      {tribunaisUnicos.map((codigo) => (
-                        <SelectItem key={codigo} value={codigo}>
-                          {codigo}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Select value={tipoAcessoFilter} onValueChange={setTipoAcessoFilter}>
-                    <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                      <SelectValue placeholder="Grau" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Grau</SelectItem>
-                      {tiposAcessoUnicos.map((tipo) => (
-                        <SelectItem key={tipo} value={tipo}>
-                          {TIPO_ACESSO_LABELS[tipo] ?? tipo}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <AdvogadosFilter
+                    title="Tribunal"
+                    options={tribunalOptions}
+                    value={tribunalFilter}
+                    onValueChange={setTribunalFilter}
+                  />
+                  <AdvogadosFilter
+                    title="Grau"
+                    options={tipoAcessoOptions}
+                    value={tipoAcessoFilter}
+                    onValueChange={setTipoAcessoFilter}
+                  />
                 </>
               }
             />

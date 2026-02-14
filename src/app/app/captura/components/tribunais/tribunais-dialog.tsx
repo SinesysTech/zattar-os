@@ -5,7 +5,6 @@ import * as React from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -13,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import type { TribunalConfigDb } from '@/features/captura';
@@ -25,8 +25,8 @@ type Props = {
 };
 
 /**
- * Dialog mínimo para editar configurações do tribunal (UI placeholder).
- * A persistência real deve ser feita via rota `/api/captura/tribunais` (PUT/POST).
+ * Dialog para editar configurações do tribunal.
+ * A persistência real é feita via rota `/api/captura/tribunais` (PUT/POST).
  */
 export function TribunaisDialog({ tribunal, open, onOpenChange, onSuccess }: Props) {
   const [urlBase, setUrlBase] = React.useState('');
@@ -34,9 +34,11 @@ export function TribunaisDialog({ tribunal, open, onOpenChange, onSuccess }: Pro
   const [isSaving, setIsSaving] = React.useState(false);
 
   React.useEffect(() => {
-    setUrlBase(tribunal?.url_base ?? '');
-    setUrlApi(tribunal?.url_api ?? '');
-  }, [tribunal]);
+    if (open) {
+      setUrlBase(tribunal?.url_base ?? '');
+      setUrlApi(tribunal?.url_api ?? '');
+    }
+  }, [open, tribunal]);
 
   const handleSave = async () => {
     if (!tribunal) return;
@@ -72,34 +74,49 @@ export function TribunaisDialog({ tribunal, open, onOpenChange, onSuccess }: Pro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="bg-white sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Editar tribunal</DialogTitle>
-          <DialogDescription>
-            {tribunal ? `${tribunal.tribunal_codigo} — ${tribunal.tribunal_nome}` : 'Selecione um tribunal'}
-          </DialogDescription>
+          <DialogTitle>
+            {tribunal ? `Editar ${tribunal.tribunal_codigo}` : 'Editar Tribunal'}
+          </DialogTitle>
         </DialogHeader>
 
         {!tribunal ? (
           <div className="text-sm text-muted-foreground">Nenhum tribunal selecionado.</div>
         ) : (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>URL base</Label>
-              <Input value={urlBase} onChange={(e) => setUrlBase(e.target.value)} />
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="url-base">URL Base</Label>
+              <Input
+                id="url-base"
+                value={urlBase}
+                onChange={(e) => setUrlBase(e.target.value)}
+                placeholder="https://pje.trt15.jus.br"
+              />
             </div>
-            <div className="space-y-2">
-              <Label>URL API</Label>
-              <Input value={urlApi} onChange={(e) => setUrlApi(e.target.value)} />
+            <div className="grid gap-2">
+              <Label htmlFor="url-api">URL API</Label>
+              <Input
+                id="url-api"
+                value={urlApi}
+                onChange={(e) => setUrlApi(e.target.value)}
+                placeholder="https://pje.trt15.jus.br/api"
+              />
             </div>
           </div>
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={isSaving}
+          >
             Cancelar
           </Button>
           <Button onClick={handleSave} disabled={isSaving || !tribunal}>
+            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Salvar
           </Button>
         </DialogFooter>
@@ -107,5 +124,3 @@ export function TribunaisDialog({ tribunal, open, onOpenChange, onSuccess }: Pro
     </Dialog>
   );
 }
-
-

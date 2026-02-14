@@ -58,7 +58,7 @@ export {
   calcularTotalAPagar,
   cancelarFolhaPagamento,
   podeCancelarFolha,
-  
+
   // Re-exported from repository via service
   listarSalarios,
   buscarSalarioPorId,
@@ -113,4 +113,3 @@ export { GerarFolhaDialog } from './components/folhas-pagamento/gerar-folha-dial
 export { AprovarFolhaDialog } from './components/folhas-pagamento/aprovar-folha-dialog';
 export { PagarFolhaDialog } from './components/folhas-pagamento/pagar-folha-dialog';
 export { HistoricoSalarios } from './components/shared/historico-salarios';
-export { RHTabsContent } from './components/rh-tabs-content';

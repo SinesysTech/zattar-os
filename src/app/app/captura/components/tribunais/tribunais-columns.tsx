@@ -6,6 +6,11 @@ import { Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 import type { TribunalConfigDb } from '@/features/captura';
@@ -26,11 +31,15 @@ export function criarColunasTribunais({ onEdit }: Params): ColumnDef<TribunalCon
       accessorKey: 'tribunal_codigo',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Código" />,
       cell: ({ row }) => <TribunalBadge codigo={row.original.tribunal_codigo} />,
+      meta: { headerLabel: 'Código' },
     },
     {
       accessorKey: 'tribunal_nome',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Tribunal" />,
-      cell: ({ row }) => <span className="text-sm">{row.original.tribunal_nome}</span>,
+      cell: ({ row }) => (
+        <span className="text-sm font-medium">{row.original.tribunal_nome}</span>
+      ),
+      meta: { headerLabel: 'Tribunal' },
     },
     {
       accessorKey: 'tipo_acesso',
@@ -40,28 +49,46 @@ export function criarColunasTribunais({ onEdit }: Params): ColumnDef<TribunalCon
           {TIPO_ACESSO_LABELS[row.original.tipo_acesso] ?? row.original.tipo_acesso}
         </Badge>
       ),
+      meta: { headerLabel: 'Acesso' },
     },
     {
       accessorKey: 'url_base',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="URL base" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="URL Base" />,
       cell: ({ row }) => (
-        <span className="text-sm truncate block max-w-[320px]" title={row.original.url_base}>
+        <span className="text-sm text-muted-foreground truncate block max-w-xs" title={row.original.url_base}>
           {row.original.url_base}
         </span>
       ),
+      meta: { headerLabel: 'URL Base' },
     },
     {
-      id: 'actions',
-      header: '',
+      id: 'acoes',
+      header: () => (
+        <div className="flex items-center justify-center">
+          <span className="text-sm font-medium text-muted-foreground">Ações</span>
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 80,
+      meta: { align: 'center' as const },
       cell: ({ row }) => (
-        <div className="flex justify-end">
-          <Button variant="ghost" size="icon" onClick={() => onEdit?.(row.original)} aria-label="Editar">
-            <Pencil className="h-4 w-4" />
-          </Button>
+        <div className="flex items-center justify-center">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => onEdit?.(row.original)}
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Editar</TooltipContent>
+          </Tooltip>
         </div>
       ),
     },
   ];
 }
-
-

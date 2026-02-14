@@ -7,13 +7,6 @@ import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data
 import { PageShell } from '@/components/shared/page-shell';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -27,7 +20,9 @@ import { actionAtualizarCredencial } from '@/features/advogados';
 import { criarColunasCredenciais } from '../components/credenciais/credenciais-columns';
 import { AdvogadoViewDialog } from '../components/credenciais/advogado-view-dialog';
 import { CredenciaisDialog } from '../components/credenciais/credenciais-dialog';
+import { AdvogadosFilter } from '../components/advogados/advogados-filter';
 import { toast } from 'sonner';
+import { GRAU_LABELS } from '@/lib/design-system';
 import type { Credencial } from '@/features/captura/types';
 
 export default function CredenciaisPage() {
@@ -146,16 +141,21 @@ export default function CredenciaisPage() {
     }
   };
 
-  // Extrair opções únicas dos dados para filtros
-  const tribunaisUnicos = useMemo(() => {
-    const tribunais = [...new Set(credenciais.map((c) => c.tribunal))];
-    return tribunais.sort();
+  // Opções para filtros (extraídas dos dados)
+  const tribunalOptions = useMemo(() => {
+    const tribunais = [...new Set(credenciais.map((c) => c.tribunal))].sort();
+    return tribunais.map((t) => ({ label: t, value: t }));
   }, [credenciais]);
 
-  const grausUnicos = useMemo(() => {
-    const graus = [...new Set(credenciais.map((c) => c.grau))];
-    return graus.sort();
+  const grauOptions = useMemo(() => {
+    const graus = [...new Set(credenciais.map((c) => c.grau))].sort();
+    return graus.map((g) => ({ label: GRAU_LABELS[g] ?? g, value: g }));
   }, [credenciais]);
+
+  const statusOptions = useMemo(() => [
+    { label: 'Ativas', value: 'ativo' },
+    { label: 'Inativas', value: 'inativo' },
+  ], []);
 
   // Filtrar credenciais
   const credenciaisFiltradas = useMemo(() => {
@@ -222,44 +222,24 @@ export default function CredenciaisPage() {
               }}
               filtersSlot={
                 <>
-                  <Select value={tribunalFilter} onValueChange={setTribunalFilter}>
-                    <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                      <SelectValue placeholder="Tribunal" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Tribunal</SelectItem>
-                      {tribunaisUnicos.map((tribunal) => (
-                        <SelectItem key={tribunal} value={tribunal}>
-                          {tribunal}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Select value={grauFilter} onValueChange={setGrauFilter}>
-                    <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                      <SelectValue placeholder="Grau" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Grau</SelectItem>
-                      {grausUnicos.map((grau) => (
-                        <SelectItem key={grau} value={grau}>
-                          {grau}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Status</SelectItem>
-                      <SelectItem value="ativo">Ativas</SelectItem>
-                      <SelectItem value="inativo">Inativas</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <AdvogadosFilter
+                    title="Tribunal"
+                    options={tribunalOptions}
+                    value={tribunalFilter}
+                    onValueChange={setTribunalFilter}
+                  />
+                  <AdvogadosFilter
+                    title="Grau"
+                    options={grauOptions}
+                    value={grauFilter}
+                    onValueChange={setGrauFilter}
+                  />
+                  <AdvogadosFilter
+                    title="Status"
+                    options={statusOptions}
+                    value={statusFilter}
+                    onValueChange={setStatusFilter}
+                  />
                 </>
               }
             />

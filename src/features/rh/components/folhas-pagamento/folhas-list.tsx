@@ -19,7 +19,7 @@ import { useFolhasPagamento } from '../../hooks';
 import { MESES_LABELS, STATUS_FOLHA_LABELS } from '../../domain';
 import { STATUS_FOLHA_CORES } from '../../utils';
 import type { FolhaPagamentoComDetalhes } from '../../types';
-import { PageShell } from '@/components/shared/page-shell';
+
 import { FilterPopover } from '@/features/partes';
 
 const statusOptions = [
@@ -226,7 +226,7 @@ export function FolhasPagamentoList() {
   );
 
   return (
-    <PageShell>
+    <>
       <DataShell
         header={
           <DataTableToolbar
@@ -315,6 +315,6 @@ export function FolhasPagamentoList() {
         onOpenChange={setDialogAberto}
         onSuccess={handleGerada}
       />
-    </PageShell>
+    </>
   );
 }

@@ -5,15 +5,22 @@ import * as React from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { GRAU_LABELS, TRIBUNAL_VARIANTS } from '@/lib/design-system';
 
 import type { Credencial } from '@/features/captura/types';
 
@@ -24,8 +31,14 @@ type Props = {
   onSuccess?: () => void;
 };
 
+/** Lista de tribunais extraída do design system */
+const TRIBUNAIS_DISPONIVEIS = Object.keys(TRIBUNAL_VARIANTS).sort();
+
+/** Opções de grau extraídas do design system */
+const GRAUS_DISPONIVEIS = Object.entries(GRAU_LABELS) as [string, string][];
+
 /**
- * Dialog simples para criar/editar credenciais do módulo Captura.
+ * Dialog para criar/editar credenciais do módulo Captura.
  *
  * Nota: As credenciais completas (senha/criptografia) são geridas no módulo de advogados.
  * Aqui mantemos um formulário mínimo apenas para evitar rotas quebradas no build.
@@ -35,15 +48,18 @@ export function CredenciaisDialog({ credencial, open, onOpenChange, onSuccess }:
   const [grau, setGrau] = React.useState('');
   const [isSaving, setIsSaving] = React.useState(false);
 
+  const isEditing = !!credencial;
+
   React.useEffect(() => {
-    setTribunal(credencial?.tribunal ? String(credencial.tribunal) : '');
-    setGrau(credencial?.grau ? String(credencial.grau) : '');
-  }, [credencial]);
+    if (open) {
+      setTribunal(credencial?.tribunal ? String(credencial.tribunal) : '');
+      setGrau(credencial?.grau ? String(credencial.grau) : '');
+    }
+  }, [open, credencial]);
 
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      // Placeholder: a criação/edição real é feita via feature `advogados` (server actions).
       if (!tribunal || !grau) throw new Error('Informe tribunal e grau');
       toast.success(credencial ? 'Credencial atualizada' : 'Credencial criada');
       onSuccess?.();
@@ -57,36 +73,60 @@ export function CredenciaisDialog({ credencial, open, onOpenChange, onSuccess }:
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="bg-white sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{credencial ? 'Editar credencial' : 'Nova credencial'}</DialogTitle>
-          <DialogDescription>
-            Configuração mínima para a lista de captura. A senha é gerenciada no módulo de advogados.
-          </DialogDescription>
+          <DialogTitle>{isEditing ? 'Editar Credencial' : 'Nova Credencial'}</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label>Tribunal</Label>
-            <Input value={tribunal} onChange={(e) => setTribunal(e.target.value)} placeholder="TRT15" />
+        <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="tribunal">Tribunal</Label>
+            <Select value={tribunal} onValueChange={setTribunal}>
+              <SelectTrigger id="tribunal">
+                <SelectValue placeholder="Selecione o tribunal" />
+              </SelectTrigger>
+              <SelectContent>
+                {TRIBUNAIS_DISPONIVEIS.map((t) => (
+                  <SelectItem key={t} value={t}>
+                    {t}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <div className="space-y-2">
-            <Label>Grau</Label>
-            <Input value={grau} onChange={(e) => setGrau(e.target.value)} placeholder="primeiro_grau" />
+
+          <div className="grid gap-2">
+            <Label htmlFor="grau">Grau</Label>
+            <Select value={grau} onValueChange={setGrau}>
+              <SelectTrigger id="grau">
+                <SelectValue placeholder="Selecione o grau" />
+              </SelectTrigger>
+              <SelectContent>
+                {GRAUS_DISPONIVEIS.map(([key, label]) => (
+                  <SelectItem key={key} value={key}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={isSaving}
+          >
             Cancelar
           </Button>
-          <Button onClick={handleSave} disabled={isSaving}>
-            Salvar
+          <Button onClick={handleSave} disabled={isSaving || !tribunal || !grau}>
+            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isEditing ? 'Salvar' : 'Cadastrar'}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
-
-

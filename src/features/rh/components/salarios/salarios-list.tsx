@@ -5,9 +5,13 @@ import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
+import {
+  DataPagination,
+  DataShell,
+  DataTable,
+  DataTableToolbar,
+} from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
 import { SalarioFormDialog } from './salario-form-dialog';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
@@ -38,14 +42,27 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useSalarios, encerrarVigenciaSalario, inativarSalario, excluirSalario } from '../../hooks';
+import {
+  useSalarios,
+  encerrarVigenciaSalario,
+  inativarSalario,
+  excluirSalario,
+} from '../../hooks';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { SalarioComDetalhes } from '../../types';
+
 
 // ============================================================================
 // Constantes e Helpers
@@ -71,7 +88,7 @@ const isVigente = (salario: SalarioComDetalhes): boolean => {
   hoje.setHours(0, 0, 0, 0);
   const inicio = new Date(salario.dataInicioVigencia);
   inicio.setHours(0, 0, 0, 0);
-  if (inicio > hoje) return false; 
+  if (inicio > hoje) return false;
   if (salario.dataFimVigencia) {
     const fim = new Date(salario.dataFimVigencia);
     fim.setHours(0, 0, 0, 0);
@@ -112,7 +129,7 @@ function SalariosActions({
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => onVerHistorico(salario)}>
           <History className="mr-2 h-4 w-4" />
-          Ver Histórico (Legacy Page)
+          Ver Histórico
         </DropdownMenuItem>
         {salario.ativo && (
           <>
@@ -127,13 +144,19 @@ function SalariosActions({
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onInativar(salario)} className="text-orange-600">
+            <DropdownMenuItem
+              onClick={() => onInativar(salario)}
+              className="text-orange-600"
+            >
               <XCircle className="mr-2 h-4 w-4" />
               Inativar
             </DropdownMenuItem>
           </>
         )}
-        <DropdownMenuItem onClick={() => onExcluir(salario)} className="text-destructive">
+        <DropdownMenuItem
+          onClick={() => onExcluir(salario)}
+          className="text-destructive"
+        >
           <Trash2 className="mr-2 h-4 w-4" />
           Excluir
         </DropdownMenuItem>
@@ -256,7 +279,9 @@ function criarColunas(
                   Ativo
                 </Badge>
               ) : (
-                <Badge variant={getSemanticBadgeVariant('salario_status', 'ENCERRADO')}>
+                <Badge
+                  variant={getSemanticBadgeVariant('salario_status', 'ENCERRADO')}
+                >
                   Encerrado
                 </Badge>
               )
@@ -297,10 +322,12 @@ export function SalariosList() {
   const router = useRouter();
 
   // Estado da instância da tabela e densidade
-  const [table, setTable] = React.useState<TanstackTable<SalarioComDetalhes> | undefined>(
-    undefined
-  );
-  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+  const [table, setTable] = React.useState<
+    TanstackTable<SalarioComDetalhes> | undefined
+  >(undefined);
+  const [density, setDensity] = React.useState<
+    'compact' | 'standard' | 'relaxed'
+  >('standard');
 
   // Estados de filtros
   const [busca, setBusca] = React.useState('');
@@ -310,10 +337,12 @@ export function SalariosList() {
 
   // Estados de dialogs
   const [formDialogOpen, setFormDialogOpen] = React.useState(false);
-  const [salarioParaEditar, setSalarioParaEditar] = React.useState<SalarioComDetalhes | null>(null);
+  const [salarioParaEditar, setSalarioParaEditar] =
+    React.useState<SalarioComDetalhes | null>(null);
   const [alertDialogOpen, setAlertDialogOpen] = React.useState(false);
   const [acao, setAcao] = React.useState<'inativar' | 'excluir' | null>(null);
-  const [salarioSelecionado, setSalarioSelecionado] = React.useState<SalarioComDetalhes | null>(null);
+  const [salarioSelecionado, setSalarioSelecionado] =
+    React.useState<SalarioComDetalhes | null>(null);
   const [encerrarDialogOpen, setEncerrarDialogOpen] = React.useState(false);
   const [dataFimVigencia, setDataFimVigencia] = React.useState('');
 
@@ -338,16 +367,22 @@ export function SalariosList() {
     setFormDialogOpen(true);
   }, []);
 
-  const handleEncerrarVigencia = React.useCallback((salario: SalarioComDetalhes) => {
-    setSalarioSelecionado(salario);
-    setDataFimVigencia(format(new Date(), 'yyyy-MM-dd'));
-    setEncerrarDialogOpen(true);
-  }, []);
+  const handleEncerrarVigencia = React.useCallback(
+    (salario: SalarioComDetalhes) => {
+      setSalarioSelecionado(salario);
+      setDataFimVigencia(format(new Date(), 'yyyy-MM-dd'));
+      setEncerrarDialogOpen(true);
+    },
+    []
+  );
 
   const handleConfirmarEncerramento = React.useCallback(async () => {
     if (!salarioSelecionado || !dataFimVigencia) return;
 
-    const result = await encerrarVigenciaSalario(salarioSelecionado.id, dataFimVigencia);
+    const result = await encerrarVigenciaSalario(
+      salarioSelecionado.id,
+      dataFimVigencia
+    );
 
     if (result.success) {
       toast.success('Vigência encerrada com sucesso');
@@ -382,7 +417,9 @@ export function SalariosList() {
     }
 
     if (result.success) {
-      toast.success(acao === 'inativar' ? 'Salário inativado' : 'Salário excluído');
+      toast.success(
+        acao === 'inativar' ? 'Salário inativado' : 'Salário excluído'
+      );
       setAlertDialogOpen(false);
       setSalarioSelecionado(null);
       setAcao(null);
@@ -392,9 +429,12 @@ export function SalariosList() {
     }
   }, [salarioSelecionado, acao, refetch]);
 
-  const handleVerHistorico = React.useCallback((salario: SalarioComDetalhes) => {
-    router.push(`/rh/salarios/usuario/${salario.usuarioId}`);
-  }, [router]);
+  const handleVerHistorico = React.useCallback(
+    (salario: SalarioComDetalhes) => {
+      router.push(`/rh/salarios/usuario/${salario.usuarioId}`);
+    },
+    [router]
+  );
 
   const handleFormSuccess = React.useCallback(() => {
     setFormDialogOpen(false);
@@ -404,22 +444,39 @@ export function SalariosList() {
 
   // Colunas
   const colunas = React.useMemo(
-    () => criarColunas(handleEditar, handleEncerrarVigencia, handleInativar, handleExcluir, handleVerHistorico),
-    [handleEditar, handleEncerrarVigencia, handleInativar, handleExcluir, handleVerHistorico]
+    () =>
+      criarColunas(
+        handleEditar,
+        handleEncerrarVigencia,
+        handleInativar,
+        handleExcluir,
+        handleVerHistorico
+      ),
+    [
+      handleEditar,
+      handleEncerrarVigencia,
+      handleInativar,
+      handleExcluir,
+      handleVerHistorico,
+    ]
   );
 
   return (
-    <div className="space-y-3">
+    <>
       {/* Cards de Resumo */}
       {totais && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="rounded-lg border bg-card p-4">
-            <p className="text-sm text-muted-foreground">Total Funcionários com Salário</p>
+            <p className="text-sm text-muted-foreground">
+              Total Funcionários com Salário
+            </p>
             <p className="text-2xl font-bold">{totais.totalFuncionarios}</p>
           </div>
           <div className="rounded-lg border bg-card p-4">
             <p className="text-sm text-muted-foreground">Custo Mensal Bruto</p>
-            <p className="text-2xl font-bold text-green-600">{formatarValor(totais.totalBrutoMensal)}</p>
+            <p className="text-2xl font-bold text-green-600">
+              {formatarValor(totais.totalBrutoMensal)}
+            </p>
           </div>
         </div>
       )}
@@ -428,6 +485,7 @@ export function SalariosList() {
         header={
           <DataTableToolbar
             table={table}
+            title="Salários"
             density={density}
             onDensityChange={setDensity}
             searchValue={busca}
@@ -461,18 +519,19 @@ export function SalariosList() {
           pagination={
             paginacao
               ? {
-                  pageIndex: pagina - 1,
-                  pageSize: 50,
-                  total: paginacao.total,
-                  totalPages: paginacao.totalPaginas,
-                  onPageChange: (pageIndex) => setPagina(pageIndex + 1),
-                  onPageSizeChange: () => { },
-                }
+                pageIndex: pagina - 1,
+                pageSize: 50,
+                total: paginacao.total,
+                totalPages: paginacao.totalPaginas,
+                onPageChange: (pageIndex) => setPagina(pageIndex + 1),
+                onPageSizeChange: () => { },
+              }
               : undefined
           }
           hidePagination={true}
           onTableReady={setTable}
           density={density}
+          emptyMessage="Nenhum salário encontrado."
         />
       </DataShell>
 
@@ -505,10 +564,16 @@ export function SalariosList() {
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEncerrarDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setEncerrarDialogOpen(false)}
+            >
               Cancelar
             </Button>
-            <Button onClick={handleConfirmarEncerramento} disabled={!dataFimVigencia}>
+            <Button
+              onClick={handleConfirmarEncerramento}
+              disabled={!dataFimVigencia}
+            >
               Confirmar
             </Button>
           </DialogFooter>
@@ -532,13 +597,17 @@ export function SalariosList() {
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmarAcao}
-              className={acao === 'excluir' ? 'bg-destructive text-destructive-foreground' : ''}
+              className={
+                acao === 'excluir'
+                  ? 'bg-destructive text-destructive-foreground'
+                  : ''
+              }
             >
               {acao === 'inativar' ? 'Inativar' : 'Excluir'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </>
   );
 }

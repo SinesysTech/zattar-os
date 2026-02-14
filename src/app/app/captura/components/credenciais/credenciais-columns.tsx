@@ -7,6 +7,11 @@ import { Eye, Pencil, Power } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import type { Credencial } from '@/features/captura/types';
@@ -30,11 +35,13 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
           </p>
         </div>
       ),
+      meta: { headerLabel: 'Advogado' },
     },
     {
       accessorKey: 'tribunal',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Tribunal" />,
       cell: ({ row }) => <TribunalBadge codigo={row.original.tribunal} />,
+      meta: { headerLabel: 'Tribunal' },
     },
     {
       accessorKey: 'grau',
@@ -44,34 +51,77 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
           {GRAU_LABELS[row.original.grau] ?? row.original.grau}
         </Badge>
       ),
+      meta: { headerLabel: 'Grau' },
     },
     {
       accessorKey: 'active',
-      header: 'Status',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
       cell: ({ row }) => (
         <Badge variant={getSemanticBadgeVariant('status', row.original.active ? 'ATIVO' : 'INATIVO')}>
           {row.original.active ? 'Ativa' : 'Inativa'}
         </Badge>
       ),
+      meta: { headerLabel: 'Status' },
     },
     {
-      id: 'actions',
-      header: '',
-      cell: ({ row }) => (
-        <div className="flex justify-end gap-1">
-          <Button variant="ghost" size="icon" onClick={() => onViewAdvogado?.(row.original)} aria-label="Ver advogado">
-            <Eye className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => onEdit?.(row.original)} aria-label="Editar credencial">
-            <Pencil className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => onToggleStatus?.(row.original)} aria-label="Ativar/desativar">
-            <Power className="h-4 w-4" />
-          </Button>
+      id: 'acoes',
+      header: () => (
+        <div className="flex items-center justify-center">
+          <span className="text-sm font-medium text-muted-foreground">Ações</span>
         </div>
       ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 120,
+      meta: { align: 'center' as const },
+      cell: ({ row }) => {
+        const credencial = row.original;
+        return (
+          <div className="flex items-center justify-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => onViewAdvogado?.(credencial)}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Ver advogado</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => onEdit?.(credencial)}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Editar</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => onToggleStatus?.(credencial)}
+                >
+                  <Power className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {credencial.active ? 'Desativar' : 'Ativar'}
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        );
+      },
     },
   ];
 }
-
-

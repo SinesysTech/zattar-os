@@ -655,62 +655,62 @@ export function getSemanticBadgeVariant(
 
     case 'audiencia_status':
       return AUDIENCIA_STATUS_VARIANTS[key as string] ??
-             AUDIENCIA_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+        AUDIENCIA_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'audiencia_modalidade':
       return AUDIENCIA_MODALIDADE_VARIANTS[key as string] ??
-             AUDIENCIA_MODALIDADE_VARIANTS[normalizedKey as string] ?? 'neutral';
+        AUDIENCIA_MODALIDADE_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'expediente_tipo':
       return getExpedienteTipoVariant(typeof key === 'number' ? key : parseInt(key as string, 10) || null);
 
     case 'captura_status':
       return CAPTURA_STATUS_VARIANTS[key as string] ??
-             CAPTURA_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+        CAPTURA_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'tipo_contrato':
       return TIPO_CONTRATO_VARIANTS[key as string] ??
-             TIPO_CONTRATO_VARIANTS[normalizedKey as string] ?? 'neutral';
+        TIPO_CONTRATO_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'tipo_cobranca':
       return TIPO_COBRANCA_VARIANTS[key as string] ??
-             TIPO_COBRANCA_VARIANTS[normalizedKey as string] ?? 'neutral';
+        TIPO_COBRANCA_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'status_contrato':
       return STATUS_CONTRATO_VARIANTS[key as string] ??
-             STATUS_CONTRATO_VARIANTS[normalizedKey as string] ?? 'neutral';
+        STATUS_CONTRATO_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'folha_status':
       return FOLHA_STATUS_VARIANTS[key as string] ??
-             FOLHA_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+        FOLHA_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'salario_status':
       return SALARIO_STATUS_VARIANTS[key as string] ??
-             SALARIO_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+        SALARIO_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'call_status':
       return CALL_STATUS_VARIANTS[key as string] ??
-             CALL_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+        CALL_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'network_quality':
       return NETWORK_QUALITY_VARIANTS[key as string] ??
-             NETWORK_QUALITY_VARIANTS[normalizedKey as string] ?? 'neutral';
+        NETWORK_QUALITY_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'online_status':
       return ONLINE_STATUS_VARIANTS[key as string] ??
-             ONLINE_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+        ONLINE_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'obrigacao_status':
       return OBRIGACAO_STATUS_VARIANTS[key as string] ??
-             OBRIGACAO_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+        OBRIGACAO_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'obrigacao_tipo':
       return OBRIGACAO_TIPO_VARIANTS[key as string] ??
-             OBRIGACAO_TIPO_VARIANTS[normalizedKey as string] ?? 'neutral';
+        OBRIGACAO_TIPO_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     case 'obrigacao_direcao':
       return OBRIGACAO_DIRECAO_VARIANTS[key as string] ??
-             OBRIGACAO_DIRECAO_VARIANTS[normalizedKey as string] ?? 'neutral';
+        OBRIGACAO_DIRECAO_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     default:
       return 'neutral';
@@ -784,8 +784,8 @@ export const PARTE_TIPO_LABELS: Record<string, string> = {
  * Labels amigáveis para graus de processo.
  */
 export const GRAU_LABELS: Record<string, string> = {
-  primeiro_grau: '1 Grau',
-  segundo_grau: '2 Grau',
+  primeiro_grau: '1º Grau',
+  segundo_grau: '2º Grau',
   tribunal_superior: 'Tribunal Superior',
 } as const;
 

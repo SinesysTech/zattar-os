@@ -1,4 +1,3 @@
-export * from './rh-tabs-content';
 export * from './salarios/salarios-list';
 export * from './salarios/salario-form-dialog';
 export * from './folhas-pagamento/folhas-list';
