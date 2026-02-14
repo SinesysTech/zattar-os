@@ -3,6 +3,13 @@
 /**
  * Componente de Cards de Resumo para Obrigações
  * Exibe métricas consolidadas do módulo de obrigações
+ *
+ * @ai-context Cores alinhadas com design system semântico:
+ * - green (success): recebimentos, positivo, efetivado
+ * - red (destructive): pagamentos, vencido, negativo
+ * - orange (warning): pendente
+ * - blue (info): vence hoje
+ * - purple (accent): vence em breve
  */
 
 import * as React from 'react';
@@ -94,14 +101,14 @@ function MetricCard({
         {trend && trendLabel && (
           <div className="flex items-center gap-1 mt-1">
             {trend === 'up' ? (
-              <TrendingUp className="h-3 w-3 text-emerald-600" />
+              <TrendingUp className="h-3 w-3 text-green-600" />
             ) : (
               <TrendingDown className="h-3 w-3 text-red-600" />
             )}
             <span
               className={cn(
                 'text-xs',
-                trend === 'up' ? 'text-emerald-600' : 'text-red-600'
+                trend === 'up' ? 'text-green-600' : 'text-red-600'
               )}
             >
               {trendLabel}
@@ -161,7 +168,7 @@ export function ResumoCards({ resumo, isLoading = false }: ResumoCardsProps) {
         value={formatarValor(pendentes.valor)}
         subtitle={`${pendentes.quantidade} obrigações`}
         icon={Clock}
-        iconClassName="text-amber-600"
+        iconClassName="text-orange-600"
       />
 
       {/* Total Vencido */}
@@ -179,7 +186,7 @@ export function ResumoCards({ resumo, isLoading = false }: ResumoCardsProps) {
         value={formatarValor(totalRecebimentos)}
         subtitle="Acordos + Contas"
         icon={ArrowDown}
-        iconClassName="text-emerald-600"
+        iconClassName="text-green-600"
       />
 
       {/* A Pagar */}
@@ -197,7 +204,7 @@ export function ResumoCards({ resumo, isLoading = false }: ResumoCardsProps) {
         value={formatarValor(efetivadas.valor)}
         subtitle={`${efetivadas.quantidade} operações`}
         icon={CheckCircle2}
-        iconClassName="text-emerald-600"
+        iconClassName="text-green-600"
       />
 
       <MetricCard
@@ -222,7 +229,7 @@ export function ResumoCards({ resumo, isLoading = false }: ResumoCardsProps) {
         value={formatarValor(saldoPrevisto)}
         subtitle={saldoPrevisto >= 0 ? 'Positivo' : 'Negativo'}
         icon={Wallet}
-        iconClassName={saldoPrevisto >= 0 ? 'text-emerald-600' : 'text-red-600'}
+        iconClassName={saldoPrevisto >= 0 ? 'text-green-600' : 'text-red-600'}
         trend={saldoPrevisto >= 0 ? 'up' : 'down'}
         trendLabel={saldoPrevisto >= 0 ? 'Superávit' : 'Déficit'}
       />

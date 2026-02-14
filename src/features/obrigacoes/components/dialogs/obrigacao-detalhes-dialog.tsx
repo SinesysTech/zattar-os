@@ -72,7 +72,7 @@ const STATUS_CONFIG: Record<StatusObrigacao, { label: string; variant: BadgeVari
 
 const SINCRONIZACAO_CONFIG: Record<StatusSincronizacao, { label: string; icon: React.ReactNode; className: string }> = {
   sincronizado: { label: 'Sincronizado', icon: <CheckCircle className="h-4 w-4" />, className: 'text-green-600' },
-  pendente: { label: 'Pendente', icon: <Clock className="h-4 w-4" />, className: 'text-amber-600' },
+  pendente: { label: 'Pendente', icon: <Clock className="h-4 w-4" />, className: 'text-orange-600' },
   inconsistente: { label: 'Inconsistente', icon: <AlertCircle className="h-4 w-4" />, className: 'text-red-600' },
   nao_aplicavel: { label: 'N/A', icon: null, className: 'text-muted-foreground' },
 };

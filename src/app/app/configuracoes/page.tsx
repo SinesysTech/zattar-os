@@ -12,14 +12,14 @@ export default async function ConfiguracoesPage() {
     }
 
     return (
-      <PageShell title="Configurações" description="Erro ao carregar">
+      <PageShell title="Configurações">
         <div className="text-red-600">{result.error || "Erro ao carregar configurações"}</div>
       </PageShell>
     );
   }
 
   return (
-    <PageShell title="Configurações" description="Métricas e segurança do sistema">
+    <PageShell title="Configurações">
       <ConfiguracoesTabsContent metricas={result.data} />
     </PageShell>
   );

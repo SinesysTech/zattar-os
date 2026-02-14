@@ -79,7 +79,7 @@ const consultancyPillars: ConsultancyPillar[] = [
     description:
       "A economia que ignora direitos trabalhistas é uma ilusão de curto prazo com um custo altíssimo. Dados da Justiça do Trabalho, que apontam para mais de R$ 39 bilhões pagos em condenações anuais, provam que o passivo trabalhista é um risco financeiro real. Nossa abordagem transforma o compliance em uma ferramenta de gestão de risco, protegendo o caixa da empresa e otimizando o retorno sobre o investimento (ROI) em boas práticas.",
     icon: AreaChart,
-    color: "text-amber-500",
+    color: "text-orange-500",
     principles: [
       "Análise de dados para projeção e redução do passivo trabalhista.",
       "Quantificação do Retorno sobre o Investimento (ROI) em compliance.",

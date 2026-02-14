@@ -525,7 +525,7 @@ function criarColunas(
       cell: ({ row }) => {
         const juizoDigital = row.original.juizoDigital;
         if (juizoDigital === true) {
-          return <CheckCircle className="h-4 w-4 text-emerald-600" />;
+          return <CheckCircle className="h-4 w-4 text-green-600" />;
         } else if (juizoDigital === false) {
           return <XCircle className="h-4 w-4 text-muted-foreground" />;
         }
@@ -594,7 +594,7 @@ function criarColunas(
             variant={isArquivado ? 'secondary' : 'default'}
             className={cn(
               'text-xs',
-              !isArquivado && 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/25'
+              !isArquivado && 'bg-green-500/15 text-green-700 dark:text-green-400 hover:bg-green-500/25'
             )}
           >
             {ORIGEM_LABELS[origem] || origem}
@@ -918,7 +918,7 @@ export function ProcessosTableWrapper({
       <div className="w-full">
         {/* Linha 1: Título à esquerda, botão de criar à direita */}
         <div className="flex items-center justify-between py-4">
-          <h1 className="text-2xl font-semibold tracking-tight">Processos</h1>
+          <h1 className="text-2xl font-bold tracking-tight font-heading">Processos</h1>
           <Button
             className="h-9"
             onClick={() => setCreateProcessoOpen(true)}

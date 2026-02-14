@@ -95,7 +95,7 @@ function ObrigacoesResumoWidget({
           <CardTitle className="text-sm font-medium text-muted-foreground">
             Pendentes
           </CardTitle>
-          <Clock className="h-4 w-4 text-amber-600" />
+          <Clock className="h-4 w-4 text-orange-600" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{formatarValor(resumo.valorTotalPendente)}</div>

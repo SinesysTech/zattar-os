@@ -127,7 +127,7 @@ function SalariosActions({
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onInativar(salario)} className="text-amber-600">
+            <DropdownMenuItem onClick={() => onInativar(salario)} className="text-orange-600">
               <XCircle className="mr-2 h-4 w-4" />
               Inativar
             </DropdownMenuItem>

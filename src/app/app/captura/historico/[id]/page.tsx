@@ -31,7 +31,6 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
   return (
     <PageShell
       title={`Detalhes da Captura #${captura.id}`}
-      description={`Visualizando detalhes da execução da captura de tipo ${captura.tipo_captura}`}
       actions={
         <Button variant="outline" size="sm" asChild>
           <Link href="/captura/historico">

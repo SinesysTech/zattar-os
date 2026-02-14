@@ -11,6 +11,29 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage, AvatarIndicator } from "@/components/ui/avatar";
 import Image from "next/image";
+import { getSemanticBadgeVariant, type BadgeVisualVariant } from '@/lib/design-system';
+
+/**
+ * Maps online status to semantic text color classes.
+ * Uses design system's online_status category for consistency.
+ */
+function getOnlineStatusColor(status: string): string {
+  const variant = getSemanticBadgeVariant('online_status', status);
+
+  const colorMap: Record<BadgeVisualVariant, string> = {
+    success: 'text-green-500',
+    warning: 'text-orange-500',
+    neutral: 'text-muted-foreground',
+    destructive: 'text-red-500',
+    info: 'text-blue-500',
+    default: 'text-muted-foreground',
+    secondary: 'text-muted-foreground',
+    outline: 'text-muted-foreground',
+    accent: 'text-purple-500',
+  };
+
+  return colorMap[variant] || 'text-muted-foreground';
+}
 
 export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
   const { showProfileSheet, toggleProfileSheet } = useChatStore();
@@ -34,7 +57,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
             <div className="text-xs">
               Último acesso:{" "}
               {user.onlineStatus === "online" ? (
-                <span className="text-green-500">Online</span>
+                <span className={getOnlineStatusColor('online')}>Online</span>
               ) : (
                 <span className="text-muted-foreground">
                   {user.lastSeen ? new Date(user.lastSeen).toLocaleString() : 'Offline'}

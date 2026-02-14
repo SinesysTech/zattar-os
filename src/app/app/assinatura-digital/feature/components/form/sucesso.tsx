@@ -216,15 +216,15 @@ export default function Sucesso() {
                   key={pdf.template_id || index}
                   type="button"
                   onClick={() => handleDownloadIndividual(pdf, index)}
-                  className="w-full flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 hover:border-gray-300 transition-colors text-left group"
+                  className="w-full flex items-center gap-3 p-3 bg-gray-600/10 border border-gray-600/20 rounded-lg hover:bg-gray-600/20 hover:border-gray-600/30 transition-colors text-left group"
                 >
-                  <FileText className="h-5 w-5 text-blue-600 shrink-0 group-hover:text-blue-700" />
+                  <FileText className="h-5 w-5 text-blue-600 shrink-0 group-hover:text-blue-600" />
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-gray-900 truncate group-hover:text-gray-950">
+                    <p className="text-sm font-medium text-gray-600 truncate group-hover:text-gray-600">
                       {getTemplateName(pdf.template_id)}
                     </p>
                   </div>
-                  <Download className="h-4 w-4 text-gray-400 shrink-0 group-hover:text-gray-600" />
+                  <Download className="h-4 w-4 text-gray-600 shrink-0 group-hover:text-gray-600" />
                 </button>
               ))}
             </div>
@@ -261,12 +261,12 @@ export default function Sucesso() {
         )}
 
         {/* Informações adicionais */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-blue-600/10 border border-blue-600/20 rounded-lg p-4">
           <div className="flex items-start gap-3">
             <FileText className="h-5 w-5 text-blue-600 mt-0.5" />
             <div className="text-sm">
-              <p className="font-medium text-blue-900 mb-1">Sobre seus documentos:</p>
-              <ul className="text-blue-700 space-y-1">
+              <p className="font-medium text-blue-600 mb-1">Sobre seus documentos:</p>
+              <ul className="text-blue-600 space-y-1">
                 <li>• Possuem validade jurídica</li>
                 <li>• Guarde-os para futura referência</li>
                 <li>• Em caso de dúvidas, entre em contato conosco</li>

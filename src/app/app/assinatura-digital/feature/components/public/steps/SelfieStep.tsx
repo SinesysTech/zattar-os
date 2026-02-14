@@ -124,7 +124,7 @@ export function SelfieStep({
           {/* Dica de Iluminação */}
           <div className="bg-white/50 dark:bg-slate-900/30 hover:bg-white dark:hover:bg-slate-800/50 border border-dashed border-slate-200 dark:border-slate-700 rounded-lg p-4 transition-colors">
             <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+              <div className="flex-shrink-0 h-10 w-10 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center">
                 <Lightbulb className="h-5 w-5" aria-hidden="true" />
               </div>
               <div className="flex-1 min-w-0">
@@ -160,8 +160,8 @@ export function SelfieStep({
 
         {/* Aviso de erro na webcam */}
         {webcamError && (
-          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 text-center">
-            <p className="text-sm text-amber-800 dark:text-amber-200">
+          <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4 text-center">
+            <p className="text-sm text-orange-800 dark:text-orange-200">
               Não foi possível acessar a câmera. Você pode continuar sem a
               verificação por foto.
             </p>

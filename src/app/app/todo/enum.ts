@@ -25,7 +25,7 @@ export const todoPriorityNamed: Record<EnumTodoPriority, string> = {
 // Dot colors para indicadores visuais (usado nos componentes)
 export const priorityDotColors: Record<EnumTodoPriority, string> = {
   [EnumTodoPriority.High]: "bg-red-500",
-  [EnumTodoPriority.Medium]: "bg-yellow-500",
+  [EnumTodoPriority.Medium]: "bg-orange-500",
   [EnumTodoPriority.Low]: "bg-gray-400",
 };
 

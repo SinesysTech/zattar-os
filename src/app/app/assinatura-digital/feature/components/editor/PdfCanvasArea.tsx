@@ -189,7 +189,7 @@ export default function PdfCanvasArea({
           hasHeightWarning && "border-red-500 animate-pulse",
           !hasHeightWarning && field.isSelected && !signer && "cursor-move border-primary/80 bg-primary/10 shadow-sm",
           !hasHeightWarning && field.isSelected && signer && "cursor-move shadow-sm",
-          !hasHeightWarning && !field.isSelected && !signer && "cursor-pointer border-border/70 bg-yellow-100/70 hover:border-muted-foreground/80 hover:shadow-sm",
+          !hasHeightWarning && !field.isSelected && !signer && "cursor-pointer border-border/70 bg-orange-100/70 hover:border-muted-foreground/80 hover:shadow-sm",
           !hasHeightWarning && !field.isSelected && signer && "cursor-pointer hover:shadow-sm",
           field.justAdded && "animate-in fade-in-0 zoom-in-95",
           field.isDragging && "opacity-50"

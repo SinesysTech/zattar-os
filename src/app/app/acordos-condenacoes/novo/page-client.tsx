@@ -31,10 +31,7 @@ export default function NovoAcordoCondenacaoClient() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Novo Acordo/Condenacao</h1>
-          <p className="text-muted-foreground">
-            Cadastre um novo acordo, condenacao ou custas processuais
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight font-heading">Novo Acordo/Condenação</h1>
         </div>
       </div>
 

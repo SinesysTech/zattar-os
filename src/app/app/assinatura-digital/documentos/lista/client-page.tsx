@@ -61,10 +61,10 @@ const STATUS_LABELS: Record<AssinaturaDigitalDocumentoStatus, string> = {
 };
 
 const STATUS_COLORS: Record<AssinaturaDigitalDocumentoStatus, string> = {
-  rascunho: "bg-gray-100 text-gray-800",
-  pronto: "bg-blue-100 text-blue-800",
-  concluido: "bg-green-100 text-green-800",
-  cancelado: "bg-red-100 text-red-800",
+  rascunho: "bg-gray-600/10 text-gray-600",
+  pronto: "bg-blue-600/10 text-blue-600",
+  concluido: "bg-green-600/10 text-green-600",
+  cancelado: "bg-red-600/10 text-red-600",
 };
 
 const STATUS_ICONS: Record<AssinaturaDigitalDocumentoStatus, React.ReactNode> =
@@ -303,7 +303,7 @@ export function ListaDocumentosClient() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Rascunhos</CardTitle>
-            <FileText className="h-4 w-4 text-gray-500" />
+            <FileText className="h-4 w-4 text-gray-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.rascunho}</div>
@@ -312,7 +312,7 @@ export function ListaDocumentosClient() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Prontos</CardTitle>
-            <Clock className="h-4 w-4 text-blue-500" />
+            <Clock className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.pronto}</div>
@@ -321,7 +321,7 @@ export function ListaDocumentosClient() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Concluídos</CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
+            <CheckCircle2 className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.concluido}</div>
@@ -330,7 +330,7 @@ export function ListaDocumentosClient() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Cancelados</CardTitle>
-            <XCircle className="h-4 w-4 text-red-500" />
+            <XCircle className="h-4 w-4 text-red-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.cancelado}</div>
@@ -417,8 +417,8 @@ export function ListaDocumentosClient() {
                             <Badge
                               className={
                                 assinante.status === "concluido"
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-yellow-100 text-yellow-800"
+                                  ? "bg-green-600/10 text-green-600"
+                                  : "bg-orange-600/10 text-orange-600"
                               }
                               variant="secondary"
                             >

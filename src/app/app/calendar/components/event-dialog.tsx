@@ -192,8 +192,8 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
     {
       value: "amber",
       label: "\u00c2mbar",
-      bgClass: "bg-amber-400 data-[state=checked]:bg-amber-400",
-      borderClass: "border-amber-400 data-[state=checked]:border-amber-400"
+      bgClass: "bg-orange-400 data-[state=checked]:bg-orange-400",
+      borderClass: "border-orange-400 data-[state=checked]:border-orange-400"
     },
     {
       value: "violet",
@@ -210,8 +210,8 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
     {
       value: "emerald",
       label: "Verde",
-      bgClass: "bg-emerald-400 data-[state=checked]:bg-emerald-400",
-      borderClass: "border-emerald-400 data-[state=checked]:border-emerald-400"
+      bgClass: "bg-green-400 data-[state=checked]:bg-green-400",
+      borderClass: "border-green-400 data-[state=checked]:border-green-400"
     },
     {
       value: "orange",

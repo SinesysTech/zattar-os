@@ -68,8 +68,8 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
 
   // Classes de cor baseadas no grau
   const grauColorClasses: Record<GrauTribunal, string> = {
-    primeiro_grau: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
-    segundo_grau: 'bg-amber-500/15 text-amber-700 dark:text-amber-400',
+    primeiro_grau: 'bg-green-500/15 text-green-700 dark:text-green-400',
+    segundo_grau: 'bg-orange-500/15 text-orange-700 dark:text-orange-400',
     tribunal_superior: 'bg-violet-500/15 text-violet-700 dark:text-violet-400',
   };
 

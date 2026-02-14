@@ -144,10 +144,7 @@ export default function LixeiraPage() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-xl font-semibold">Lixeira</h1>
-            <p className="text-sm text-muted-foreground">
-              Documentos excluídos podem ser restaurados ou deletados permanentemente
-            </p>
+            <h1 className="text-2xl font-bold tracking-tight font-heading">Lixeira</h1>
           </div>
         </div>
       </div>
@@ -181,10 +178,10 @@ export default function LixeiraPage() {
         ) : (
           <div className="space-y-4">
             {/* Aviso */}
-            <Card className="border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/20">
+            <Card className="border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950/20">
               <CardContent className="flex items-center gap-3 p-4">
-                <AlertTriangle className="h-5 w-5 text-amber-600" />
-                <p className="text-sm text-amber-800 dark:text-amber-200">
+                <AlertTriangle className="h-5 w-5 text-orange-600" />
+                <p className="text-sm text-orange-800 dark:text-orange-200">
                   Documentos na lixeira serão deletados permanentemente após 30 dias.
                 </p>
               </CardContent>

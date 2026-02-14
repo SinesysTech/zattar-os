@@ -25,7 +25,7 @@ export async function TargetCard({ usuarioId }: TargetCardProps) {
     progresso.percentual >= 75
       ? "text-green-500"
       : progresso.percentual >= 50
-        ? "text-yellow-500"
+        ? "text-orange-500"
         : "text-orange-500";
 
   return (

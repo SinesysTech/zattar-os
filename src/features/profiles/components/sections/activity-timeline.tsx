@@ -64,8 +64,8 @@ function getActivityIcon(type: string | undefined) {
     case "criacao":
       return {
         icon: UserPlus,
-        colorClass: "text-emerald-700 dark:text-emerald-400",
-        bgClass: "bg-emerald-500/15",
+        colorClass: "text-green-700 dark:text-green-400",
+        bgClass: "bg-green-500/15",
       };
     case "vinculacao_processo":
     case "vinculacao":
@@ -78,14 +78,14 @@ function getActivityIcon(type: string | undefined) {
     case "atualizacao":
       return {
         icon: RefreshCw,
-        colorClass: "text-emerald-700 dark:text-emerald-400",
-        bgClass: "bg-emerald-500/15",
+        colorClass: "text-green-700 dark:text-green-400",
+        bgClass: "bg-green-500/15",
       };
     case "audiencia":
       return {
         icon: Calendar,
-        colorClass: "text-amber-700 dark:text-amber-400",
-        bgClass: "bg-amber-500/15",
+        colorClass: "text-orange-700 dark:text-orange-400",
+        bgClass: "bg-orange-500/15",
       };
     case "documento":
       return {
@@ -258,7 +258,7 @@ export function ActivityTimeline({ data, isLoading, error }: ActivityTimelinePro
                     <TimelineSeparator />
                     <div className="flex items-center gap-2">
                       {isAtualizacao && (
-                        <CheckCircle2 className="size-3.5 text-emerald-700 dark:text-emerald-400" />
+                        <CheckCircle2 className="size-3.5 text-green-700 dark:text-green-400" />
                       )}
                       <TimelineTitle>
                         {activity.title || activity.descricao}

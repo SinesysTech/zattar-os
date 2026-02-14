@@ -113,8 +113,8 @@ GOOGLE_DRIVE_WEBHOOK_URL=https://seu-n8n.com/webhook/google-drive-storage
 GOOGLE_DRIVE_WEBHOOK_TOKEN=gdrive_webhook_xxxxxxxxxxxxxxxxxxxxxxxx`}
           </pre>
 
-          <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-md">
-            <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+          <div className="mt-4 p-3 bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800 rounded-md">
+            <p className="text-sm font-medium text-orange-800 dark:text-orange-200">
               🔒 Segurança: Nunca exponha tokens reais em documentação ou commits
             </p>
           </div>

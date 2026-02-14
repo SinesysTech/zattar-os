@@ -45,8 +45,8 @@ export default function FormularioNotFound() {
         </p>
 
         {/* Possible Causes */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-8">
-          <h2 className="text-lg font-semibold text-amber-900 mb-3 flex items-center">
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-6 mb-8">
+          <h2 className="text-lg font-semibold text-orange-900 mb-3 flex items-center">
             <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
@@ -56,7 +56,7 @@ export default function FormularioNotFound() {
             </svg>
             Possíveis causas
           </h2>
-          <ul className="space-y-2 text-sm text-amber-800">
+          <ul className="space-y-2 text-sm text-orange-800">
             <li className="flex items-start">
               <span className="mr-2">•</span>
               <span>O segmento (organização) não existe ou está inativo</span>

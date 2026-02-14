@@ -8,7 +8,7 @@ export const revalidate = 0;
 
 export default function FinanceiroPage() {
   return (
-    <PageShell title="Dashboards" description="Painéis de gestão do escritório">
+    <PageShell title="Dashboards">
       <Suspense fallback={<Skeleton className="h-10 w-full" />}>
         <GestaoDashboardsTabs />
       </Suspense>

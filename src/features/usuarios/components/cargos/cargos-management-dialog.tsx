@@ -86,8 +86,8 @@ export function CargosManagementDialog({
 
     try {
       const response = await actionCriarCargo({
-          nome: formData.nome.trim(),
-          descricao: formData.descricao.trim() || undefined,
+        nome: formData.nome.trim(),
+        descricao: formData.descricao.trim() || undefined,
       });
 
       if (!response.success) {
@@ -126,9 +126,9 @@ export function CargosManagementDialog({
 
     try {
       const response = await actionAtualizarCargo(editingId, {
-          nome: formData.nome.trim(),
-          descricao: formData.descricao.trim() || undefined,
-          ativo: formData.ativo,
+        nome: formData.nome.trim(),
+        descricao: formData.descricao.trim() || undefined,
+        ativo: formData.ativo,
       });
 
       if (!response.success) {
@@ -214,11 +214,18 @@ export function CargosManagementDialog({
               ) : (
                 <div className="space-y-1 rounded-lg border bg-white dark:bg-gray-950">
                   {cargos.map((cargo) => (
-                    <button
+                    <div
                       key={cargo.id}
-                      type="button"
+                      role="button"
+                      tabIndex={0}
                       onClick={() => handleEdit(cargo)}
-                      className="w-full text-left flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleEdit(cargo);
+                        }
+                      }}
+                      className="w-full text-left flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors cursor-pointer rounded-md"
                     >
                       <div className="flex items-center gap-2 flex-1 min-w-0">
                         <span className="font-medium">{cargo.nome}</span>
@@ -263,7 +270,7 @@ export function CargosManagementDialog({
                           <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
                       </div>
-                    </button>
+                    </div>
                   ))}
                 </div>
               )}

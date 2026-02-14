@@ -62,9 +62,19 @@ import type { ItemDocumento } from '../domain';
 type SortOption = 'name' | 'date' | 'size';
 type SortDirection = 'asc' | 'desc';
 
+/**
+ * Retorna ícone colorido baseado no tipo de item/arquivo.
+ *
+ * @ai-context Cores alinhadas com design system:
+ * - orange: pastas (folders)
+ * - blue: documentos de texto
+ * - green: imagens
+ * - purple: vídeos
+ * - red: PDFs
+ */
 function getItemIcon(item: ItemDocumento) {
     if (item.tipo === 'pasta') {
-        return <Folder className="h-5 w-5 text-yellow-600" />;
+        return <Folder className="h-5 w-5 text-orange-600" />;
     } else if (item.tipo === 'documento') {
         return <FileText className="h-5 w-5 text-blue-600" />;
     } else {
@@ -104,8 +114,8 @@ function getPreviewIcon(item: ItemDocumento) {
 
     if (item.tipo === 'pasta') {
         return (
-            <div className={`${baseClasses} h-20 w-20 bg-amber-50 dark:bg-amber-950/30`}>
-                <Folder className="h-10 w-10 text-amber-500" />
+            <div className={`${baseClasses} h-20 w-20 bg-orange-50 dark:bg-orange-950/30`}>
+                <Folder className="h-10 w-10 text-orange-500" />
             </div>
         );
     }
@@ -113,7 +123,7 @@ function getPreviewIcon(item: ItemDocumento) {
     if (item.tipo === 'documento') {
         return (
             <div className={`${baseClasses} h-20 w-20 bg-blue-50 dark:bg-blue-950/30`}>
-                <FileText className="h-10 w-10 text-blue-500" />
+                <FileText className="h-10 w-10 text-blue-600" />
             </div>
         );
     }
@@ -139,7 +149,7 @@ function getPreviewIcon(item: ItemDocumento) {
     if (mime.startsWith('video/')) {
         return (
             <div className={`${baseClasses} h-20 w-20 bg-purple-50 dark:bg-purple-950/30`}>
-                <FileVideoIcon className="h-10 w-10 text-purple-500" />
+                <FileVideoIcon className="h-10 w-10 text-purple-600" />
             </div>
         );
     }
@@ -155,8 +165,8 @@ function getPreviewIcon(item: ItemDocumento) {
     if (mime === 'application/pdf') {
         return (
             <div className={`${baseClasses} relative h-20 w-20 bg-red-50 dark:bg-red-950/30`}>
-                <FileText className="h-10 w-10 text-red-400" />
-                <span className="absolute bottom-2 text-[10px] font-bold uppercase text-red-600 dark:text-red-400">
+                <FileText className="h-10 w-10 text-red-600" />
+                <span className="absolute bottom-2 text-[10px] font-bold uppercase text-red-600 dark:text-red-600">
                     PDF
                 </span>
             </div>

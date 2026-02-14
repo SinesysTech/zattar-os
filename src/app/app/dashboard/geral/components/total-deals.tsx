@@ -47,7 +47,7 @@ export async function TotalDeals({ usuarioId }: TotalDealsProps) {
           </h4>
           <div className="text-sm text-muted-foreground">
             {(audienciasProximaSemana || 0) > 0 ? (
-              <span className="text-amber-600">
+              <span className="text-orange-600">
                 {audienciasProximaSemana} esta semana
               </span>
             ) : (

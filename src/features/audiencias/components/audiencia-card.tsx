@@ -45,7 +45,7 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
             {hasAta && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="inline-flex items-center justify-center h-5 w-5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                  <span className="inline-flex items-center justify-center h-5 w-5 rounded bg-green-500/15 text-green-600 dark:text-green-400">
                     <FileText className="h-3 w-3" />
                   </span>
                 </TooltipTrigger>

@@ -27,7 +27,7 @@ const trendIcons: Record<NonNullable<MetricCardProps['trendDirection']>, LucideI
 };
 
 const trendColors: Record<NonNullable<MetricCardProps['trendDirection']>, string> = {
-  up: 'text-emerald-600',
+  up: 'text-green-600',
   down: 'text-red-600',
   neutral: 'text-muted-foreground',
 };

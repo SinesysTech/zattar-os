@@ -51,7 +51,7 @@ const badgeVariants = cva(
       {
         tone: "soft",
         variant: "warning",
-        className: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
+        className: "bg-orange-500/15 text-orange-700 dark:text-orange-400",
       },
       {
         tone: "soft",
@@ -93,7 +93,7 @@ const badgeVariants = cva(
       {
         tone: "solid",
         variant: "warning",
-        className: "bg-amber-600 text-white dark:bg-amber-500",
+        className: "bg-orange-600 text-white dark:bg-orange-500",
       },
       {
         tone: "solid",

@@ -4,7 +4,7 @@
  * Página de DRE (Demonstração de Resultado do Exercício)
  * Visualiza receitas, despesas e resultado por período
  *
- * Segue padrões: PageShell, semantic Badge variants, theme-aware chart colors
+ * REFATORADO: Migrado para layout DataShell + DataTableToolbar (padrão Sinesys)
  */
 
 import * as React from 'react';
@@ -16,20 +16,30 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 import { PageShell } from '@/components/shared/page-shell';
+import {
+  DataShell,
+  DataTableToolbar,
+} from '@/components/shared/data-shell';
 import {
   FileDown,
   RefreshCw,
   FileSpreadsheet,
   FileText,
   Calendar,
+  TrendingUp,
+  TrendingDown,
   BarChart3,
-  PieChart as PieChartIcon,
   List,
   ArrowUpRight,
   ArrowDownRight,
   Minus,
+  DollarSign,
+  Target,
+  Activity,
+  Wallet,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -65,11 +75,6 @@ import { ClientOnly } from '@/components/shared/client-only';
 // Constantes e Helpers
 // ============================================================================
 
-/**
- * Theme-aware chart colors using CSS variables.
- * --chart-1 through --chart-5 are defined in globals.css with light/dark variants.
- * We extend to 10 colors using opacity variations for pie charts.
- */
 const CHART_COLORS = [
   'var(--chart-1)',
   'var(--chart-2)',
@@ -83,14 +88,20 @@ const CHART_COLORS = [
   'color-mix(in oklch, var(--chart-5), white 30%)',
 ];
 
-const formatarValor = (valor: number): string => {
+const formatarValor = (valor: number | null | undefined): string => {
+  if (valor === null || valor === undefined || isNaN(valor)) {
+    return 'R$ 0,00';
+  }
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   }).format(valor);
 };
 
-const formatarValorCompacto = (valor: number): string => {
+const formatarValorCompacto = (valor: number | null | undefined): string => {
+  if (valor === null || valor === undefined || isNaN(valor)) {
+    return 'R$ 0,00';
+  }
   if (Math.abs(valor) >= 1000000) {
     return `R$ ${(valor / 1000000).toFixed(1)}M`;
   }
@@ -100,118 +111,33 @@ const formatarValorCompacto = (valor: number): string => {
   return formatarValor(valor);
 };
 
-const formatarPercentual = (valor: number): string => {
+const formatarPercentual = (valor: number | null | undefined): string => {
+  if (typeof valor !== 'number' || isNaN(valor)) {
+    return '0,00%';
+  }
   return `${valor.toFixed(2)}%`;
 };
 
-const getVariacaoColor = (variacao: number): string => {
+const getVariacaoColor = (variacao: number | null | undefined): string => {
+  if (variacao === null || variacao === undefined || isNaN(variacao)) {
+    return 'text-muted-foreground';
+  }
   if (variacao > 10) return 'text-success';
   if (variacao > 0) return 'text-success/80';
   if (variacao > -10) return 'text-warning';
   return 'text-destructive';
 };
 
-const getLucroColor = (valor: number): string => {
+const getLucroColor = (valor: number | null | undefined): string => {
+  if (valor === null || valor === undefined || isNaN(valor)) {
+    return 'text-muted-foreground';
+  }
   if (valor > 0) return 'text-success';
   if (valor < 0) return 'text-destructive';
   return 'text-muted-foreground';
 };
 
-// ============================================================================
-// Componente de Seleção de Período
-// ============================================================================
-
-function PeriodoSelector({
-  dataInicio,
-  dataFim,
-  onChange,
-}: {
-  dataInicio: string;
-  dataFim: string;
-  onChange: (dataInicio: string, dataFim: string, tipo: PeriodoDRE) => void;
-}) {
-  const hoje = new Date();
-
-  const handlePeriodoRapido = (periodoTipo: 'mes_atual' | 'mes_anterior' | 'trimestre_atual' | 'ano_atual') => {
-    let novoInicio: Date;
-    let novoFim: Date;
-    let novoTipo: PeriodoDRE;
-
-    switch (periodoTipo) {
-      case 'mes_atual':
-        novoInicio = startOfMonth(hoje);
-        novoFim = endOfMonth(hoje);
-        novoTipo = 'mensal';
-        break;
-      case 'mes_anterior': {
-        const mesAnterior = subMonths(hoje, 1);
-        novoInicio = startOfMonth(mesAnterior);
-        novoFim = endOfMonth(mesAnterior);
-        novoTipo = 'mensal';
-        break;
-      }
-      case 'trimestre_atual':
-        novoInicio = startOfQuarter(hoje);
-        novoFim = endOfQuarter(hoje);
-        novoTipo = 'trimestral';
-        break;
-      case 'ano_atual':
-        novoInicio = startOfYear(hoje);
-        novoFim = endOfYear(hoje);
-        novoTipo = 'anual';
-        break;
-    }
-
-    onChange(
-      format(novoInicio, 'yyyy-MM-dd'),
-      format(novoFim, 'yyyy-MM-dd'),
-      novoTipo
-    );
-  };
-
-  return (
-    <div className="flex flex-wrap items-center gap-2">
-      <div className="flex items-center gap-1">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePeriodoRapido('mes_atual')}
-        >
-          Mês Atual
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePeriodoRapido('mes_anterior')}
-        >
-          Mês Anterior
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePeriodoRapido('trimestre_atual')}
-        >
-          Trimestre
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePeriodoRapido('ano_atual')}
-        >
-          Ano
-        </Button>
-      </div>
-
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Calendar className="h-4 w-4" />
-        <span>
-          {format(new Date(dataInicio), "dd 'de' MMMM", { locale: ptBR })} a{' '}
-          {format(new Date(dataFim), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
-        </span>
-      </div>
-    </div>
-  );
-}
+type PeriodoRapido = 'mes_atual' | 'mes_anterior' | 'trimestre_atual' | 'ano_atual';
 
 // ============================================================================
 // Componente de Variação (reutilizável)
@@ -222,12 +148,16 @@ function VariacaoIndicator({
   label,
   size = 'sm',
 }: {
-  valor: number;
+  valor: number | null | undefined;
   label: string;
   size?: 'sm' | 'xs';
 }) {
-  const iconSize = size === 'sm' ? 'h-4 w-4' : 'h-3 w-3';
-  const textSize = size === 'sm' ? 'text-sm' : 'text-xs';
+  if (valor === null || valor === undefined || isNaN(valor)) {
+    return null;
+  }
+
+  const iconSize = size === 'sm' ? 'h-3.5 w-3.5' : 'h-3 w-3';
+  const textSize = size === 'sm' ? 'text-xs' : 'text-xs';
 
   return (
     <div className={`flex items-center gap-1 ${textSize} ${getVariacaoColor(valor)}`}>
@@ -244,8 +174,47 @@ function VariacaoIndicator({
 }
 
 // ============================================================================
-// Componente de Cards de Resumo
+// Componente de Cards de Resumo (KPI)
 // ============================================================================
+
+const KPI_CONFIG = [
+  {
+    key: 'receitaLiquida' as const,
+    label: 'Receita Líquida',
+    icon: DollarSign,
+    borderColor: 'border-l-primary',
+    iconColor: 'text-primary',
+    margemKey: null as null,
+    margemLabel: null as null,
+  },
+  {
+    key: 'lucroOperacional' as const,
+    label: 'Lucro Operacional',
+    icon: Target,
+    borderColor: 'border-l-chart-4',
+    iconColor: 'text-chart-4',
+    margemKey: 'margemOperacional' as const,
+    margemLabel: 'Margem Operacional',
+  },
+  {
+    key: 'ebitda' as const,
+    label: 'EBITDA',
+    icon: Activity,
+    borderColor: 'border-l-chart-2',
+    iconColor: 'text-chart-2',
+    margemKey: 'margemEBITDA' as const,
+    margemLabel: 'Margem EBITDA',
+  },
+  {
+    key: 'lucroLiquido' as const,
+    label: 'Lucro Líquido',
+    icon: Wallet,
+    borderColor: 'border-l-success',
+    iconColor: 'text-success',
+    margemKey: 'margemLiquida' as const,
+    margemLabel: 'Margem Líquida',
+  },
+] as const;
 
 function ResumoCards({
   resumo,
@@ -260,11 +229,11 @@ function ResumoCards({
 }) {
   if (isLoading) {
     return (
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <Card key={i}>
             <CardContent className="p-4">
-              <Skeleton className="h-20" />
+              <Skeleton className="h-16" />
             </CardContent>
           </Card>
         ))}
@@ -274,104 +243,67 @@ function ResumoCards({
 
   if (!resumo) {
     return (
-      <div className="text-center py-8 text-muted-foreground">
+      <div className="text-center py-6 text-sm text-muted-foreground">
         Selecione um período para visualizar o DRE.
       </div>
     );
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-4">
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>Receita Líquida</CardDescription>
-          <CardTitle className="text-2xl font-mono">
-            {formatarValor(resumo.receitaLiquida)}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-1">
-          {variacoes && (
-            <VariacaoIndicator
-              valor={variacoes.receitaLiquida.variacaoPercentual}
-              label="vs anterior"
-            />
-          )}
-          {variacoesOrcado && (
-            <VariacaoIndicator
-              valor={variacoesOrcado.receitaLiquida.variacaoPercentual}
-              label="vs orçado"
-            />
-          )}
-        </CardContent>
-      </Card>
+    <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+      {KPI_CONFIG.map((kpi) => {
+        const valor = resumo[kpi.key];
+        const Icon = kpi.icon;
+        const isLucroLiquido = kpi.key === 'lucroLiquido';
+        const showColor = kpi.key !== 'receitaLiquida';
 
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>Lucro Operacional</CardDescription>
-          <CardTitle className={`text-2xl font-mono ${getLucroColor(resumo.lucroOperacional)}`}>
-            {formatarValor(resumo.lucroOperacional)}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-1">
-          <p className="text-xs text-muted-foreground">
-            Margem: {formatarPercentual(resumo.margemOperacional)}
-          </p>
-          {variacoesOrcado && (
-            <VariacaoIndicator
-              valor={variacoesOrcado.lucroOperacional.variacaoPercentual}
-              label="vs orçado"
-              size="xs"
-            />
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>EBITDA</CardDescription>
-          <CardTitle className={`text-2xl font-mono ${getLucroColor(resumo.ebitda)}`}>
-            {formatarValor(resumo.ebitda)}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-1">
-          <p className="text-xs text-muted-foreground">
-            Margem EBITDA: {formatarPercentual(resumo.margemEBITDA)}
-          </p>
-          {variacoesOrcado && (
-            <VariacaoIndicator
-              valor={variacoesOrcado.ebitda.variacaoPercentual}
-              label="vs orçado"
-              size="xs"
-            />
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>Lucro Líquido</CardDescription>
-          <CardTitle className={`text-2xl font-mono ${getLucroColor(resumo.lucroLiquido)}`}>
-            {formatarValor(resumo.lucroLiquido)}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-1">
-          <div className="flex items-center gap-2">
-            <Badge variant={resumo.lucroLiquido > 0 ? 'success' : resumo.lucroLiquido < 0 ? 'destructive' : 'secondary'}>
-              {resumo.lucroLiquido > 0 ? 'Lucro' : resumo.lucroLiquido < 0 ? 'Prejuízo' : 'Neutro'}
-            </Badge>
-            <span className="text-xs text-muted-foreground">
-              Margem: {formatarPercentual(resumo.margemLiquida)}
-            </span>
-          </div>
-          {variacoesOrcado && (
-            <VariacaoIndicator
-              valor={variacoesOrcado.lucroLiquido.variacaoPercentual}
-              label="vs orçado"
-              size="xs"
-            />
-          )}
-        </CardContent>
-      </Card>
+        return (
+          <Card key={kpi.key} className={`border-l-4 ${kpi.borderColor}`}>
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground">{kpi.label}</p>
+                  <p className={`text-xl font-semibold font-mono tracking-tight ${showColor ? getLucroColor(valor) : ''}`}>
+                    {formatarValor(valor)}
+                  </p>
+                </div>
+                <div className={`rounded-md bg-muted p-1.5 ${kpi.iconColor}`}>
+                  <Icon className="h-4 w-4" />
+                </div>
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                {kpi.margemKey && (
+                  <span className="text-xs text-muted-foreground">
+                    {kpi.margemLabel}: {formatarPercentual(resumo[kpi.margemKey])}
+                  </span>
+                )}
+                {isLucroLiquido && (
+                  <Badge
+                    variant={valor > 0 ? 'success' : valor < 0 ? 'destructive' : 'secondary'}
+                    className="text-[10px] px-1.5 py-0"
+                  >
+                    {valor > 0 ? 'Lucro' : valor < 0 ? 'Prejuízo' : 'Neutro'}
+                  </Badge>
+                )}
+                {variacoes && variacoes[kpi.key] && (
+                  <VariacaoIndicator
+                    valor={variacoes[kpi.key].variacaoPercentual}
+                    label="ant."
+                    size="xs"
+                  />
+                )}
+                {variacoesOrcado && variacoesOrcado[kpi.key] && (
+                  <VariacaoIndicator
+                    valor={variacoesOrcado[kpi.key].variacaoPercentual}
+                    label="orç."
+                    size="xs"
+                  />
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }
@@ -429,15 +361,15 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
       <table className="w-full">
         <thead>
           <tr className="border-b bg-muted/50">
-            <th className="text-left p-3 text-sm font-medium">Descrição</th>
-            <th className="text-right p-3 text-sm font-medium">Valor (R$)</th>
-            <th className="text-right p-3 text-sm font-medium">% Receita</th>
+            <th className="text-left p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">Descrição</th>
+            <th className="text-right p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground w-40">Valor (R$)</th>
+            <th className="text-right p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground w-28">% Receita</th>
           </tr>
         </thead>
         <tbody>
           {linhas.map((linha, index) => {
             if (linha.espacador) {
-              return <tr key={index} className="h-2" />;
+              return <tr key={index} className="h-1" />;
             }
 
             const valorColor = linha.valor !== null
@@ -447,29 +379,25 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
             return (
               <tr
                 key={index}
-                className={`border-b transition-colors hover:bg-muted/50 ${
-                  linha.destaque ? 'bg-muted/30' : ''
-                } ${
-                  linha.final
+                className={`border-b last:border-b-0 transition-colors hover:bg-muted/50 ${linha.destaque ? 'bg-muted/30 font-medium' : ''
+                  } ${linha.final
                     ? resumo.lucroLiquido >= 0
                       ? 'bg-success/10'
                       : 'bg-destructive/10'
                     : ''
-                }`}
+                  }`}
               >
                 <td
-                  className={`p-3 text-sm ${
-                    linha.bold ? 'font-semibold' : ''
-                  } ${
-                    (linha.indent || 0) === 1 ? 'pl-8' : 'pl-3'
-                  }`}
+                  className={`p-2.5 px-4 text-sm ${linha.bold ? 'font-semibold' : ''
+                    } ${(linha.indent || 0) === 1 ? 'pl-8' : ''
+                    }`}
                 >
                   {linha.descricao}
                 </td>
-                <td className={`p-3 text-right text-sm font-mono ${linha.bold ? 'font-semibold' : ''} ${valorColor}`}>
+                <td className={`p-2.5 px-4 text-right text-sm font-mono tabular-nums ${linha.bold ? 'font-semibold' : ''} ${valorColor}`}>
                   {linha.valor !== null ? formatarValor(linha.valor) : ''}
                 </td>
-                <td className={`p-3 text-right text-sm font-mono ${linha.bold ? 'font-semibold' : ''} text-muted-foreground`}>
+                <td className={`p-2.5 px-4 text-right text-sm font-mono tabular-nums ${linha.bold ? 'font-semibold' : ''} text-muted-foreground`}>
                   {linha.percentual !== null ? formatarPercentual(linha.percentual) : ''}
                 </td>
               </tr>
@@ -485,14 +413,10 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
 // Componente de Gráfico de Pizza
 // ============================================================================
 
-function CategoriaPieChart({
-  categorias,
-}: {
-  categorias: CategoriaDRE[];
-}) {
+function CategoriaPieChart({ categorias }: { categorias: CategoriaDRE[] }) {
   if (categorias.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-muted-foreground">
+      <div className="flex items-center justify-center h-64 text-muted-foreground text-sm">
         Sem dados para exibir
       </div>
     );
@@ -505,7 +429,7 @@ function CategoriaPieChart({
   }));
 
   return (
-    <div className="h-80">
+    <div className="h-72">
       <ClientOnly>
         <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
           <PieChart>
@@ -518,12 +442,14 @@ function CategoriaPieChart({
                 const name = typeof props.name === 'string' ? props.name : String(props.name ?? '');
                 const percent = typeof props.percent === 'number' ? props.percent : 0;
                 const percentual = (percent * 100).toFixed(1);
-                const nameTruncado = name.slice(0, 15) + (name.length > 15 ? '...' : '');
+                const nameTruncado = name.slice(0, 12) + (name.length > 12 ? '...' : '');
                 return `${nameTruncado} (${percentual}%)`;
               }}
-              outerRadius={100}
+              outerRadius={90}
+              innerRadius={40}
               fill="#8884d8"
               dataKey="value"
+              paddingAngle={2}
             >
               {data.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
@@ -533,7 +459,6 @@ function CategoriaPieChart({
               formatter={(value: number | undefined) => value !== undefined ? formatarValor(value) : ''}
               labelFormatter={(name) => name}
             />
-            <Legend />
           </PieChart>
         </ResponsiveContainer>
       </ClientOnly>
@@ -560,31 +485,31 @@ function CategoriaTab({
 }) {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <Skeleton className="h-80" />
+          <Skeleton className="h-72" />
         ) : categorias && categorias.length > 0 ? (
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-4 lg:grid-cols-2">
             <CategoriaPieChart categorias={categorias} />
-            <div className="space-y-2">
-              <h4 className="font-medium mb-4">Detalhamento</h4>
+            <div className="space-y-1.5">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Detalhamento</p>
               {categorias.map((cat: CategoriaDRE, i: number) => (
-                <div key={cat.categoria} className="flex items-center justify-between p-2 rounded-md border transition-colors hover:bg-muted/50">
+                <div key={cat.categoria} className="flex items-center justify-between py-1.5 px-2 rounded transition-colors hover:bg-muted/50">
                   <div className="flex items-center gap-2">
                     <div
-                      className="w-3 h-3 rounded-full"
+                      className="w-2.5 h-2.5 rounded-full shrink-0"
                       style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] } as React.CSSProperties}
                     />
                     <span className="text-sm">{cat.categoria}</span>
                   </div>
-                  <div className="text-right">
-                    <span className="font-mono text-sm">{formatarValor(cat.valor)}</span>
-                    <span className="text-xs text-muted-foreground ml-2">
-                      ({formatarPercentual(cat.percentualReceita)})
+                  <div className="text-right flex items-center gap-2">
+                    <span className="font-mono text-sm tabular-nums">{formatarValor(cat.valor)}</span>
+                    <span className="text-xs text-muted-foreground tabular-nums w-14 text-right">
+                      {formatarPercentual(cat.percentualReceita)}
                     </span>
                   </div>
                 </div>
@@ -592,7 +517,7 @@ function CategoriaTab({
             </div>
           </div>
         ) : (
-          <p className="text-center py-8 text-muted-foreground">
+          <p className="text-center py-6 text-sm text-muted-foreground">
             {emptyMessage}
           </p>
         )}
@@ -608,27 +533,28 @@ function CategoriaTab({
 function EvolucaoChart({ evolucao }: { evolucao: EvolucaoDRE[] }) {
   if (evolucao.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-muted-foreground">
+      <div className="flex items-center justify-center h-64 text-muted-foreground text-sm">
         Sem dados de evolução
       </div>
     );
   }
 
   return (
-    <div className="h-80">
+    <div className="h-72">
       <ClientOnly>
         <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={200}>
           <LineChart data={evolucao}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
             <XAxis
               dataKey="mesNome"
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 11 }}
               className="fill-muted-foreground"
             />
             <YAxis
               tickFormatter={(value) => formatarValorCompacto(value)}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 11 }}
               className="fill-muted-foreground"
+              width={70}
             />
             <Tooltip
               formatter={(value: number | undefined, name: string | undefined) => [
@@ -650,21 +576,21 @@ function EvolucaoChart({ evolucao }: { evolucao: EvolucaoDRE[] }) {
               dataKey="receitaLiquida"
               stroke="var(--chart-1)"
               strokeWidth={2}
-              dot={{ r: 4 }}
+              dot={{ r: 3 }}
             />
             <Line
               type="monotone"
               dataKey="lucroOperacional"
               stroke="var(--chart-4)"
               strokeWidth={2}
-              dot={{ r: 4 }}
+              dot={{ r: 3 }}
             />
             <Line
               type="monotone"
               dataKey="lucroLiquido"
               stroke="var(--chart-2)"
               strokeWidth={2}
-              dot={{ r: 4 }}
+              dot={{ r: 3 }}
             />
           </LineChart>
         </ResponsiveContainer>
@@ -678,17 +604,16 @@ function EvolucaoChart({ evolucao }: { evolucao: EvolucaoDRE[] }) {
 // ============================================================================
 
 export default function DREClient() {
-  // Estado de período
+  const hoje = new Date();
+
   const [periodo, setPeriodo] = React.useState(() => {
     const { dataInicio, dataFim } = gerarPeriodoAtual('mensal');
     return { dataInicio, dataFim, tipo: 'mensal' as PeriodoDRE };
   });
 
-  // Estado de opções
   const [incluirComparativo, setIncluirComparativo] = React.useState(false);
   const [incluirOrcado, setIncluirOrcado] = React.useState(false);
 
-  // Dados do DRE
   const { dre, comparativo, isLoading, error, refetch } = useDRE({
     dataInicio: periodo.dataInicio,
     dataFim: periodo.dataFim,
@@ -697,207 +622,282 @@ export default function DREClient() {
     incluirOrcado,
   });
 
-  // Dados de evolução
-  const anoAtual = new Date().getFullYear();
+  const anoAtual = hoje.getFullYear();
   const { evolucao, isLoading: loadingEvolucao } = useEvolucaoDRE({ ano: anoAtual });
-
-  // Exportação
   const { isExporting, exportarPDF, exportarCSV } = useExportarDRE();
 
-  const handlePeriodoChange = (dataInicio: string, dataFim: string, tipo: PeriodoDRE) => {
-    setPeriodo({ dataInicio, dataFim, tipo });
-  };
+  // ---- Handlers de período ----
+  const handlePeriodoRapido = React.useCallback((periodoTipo: PeriodoRapido) => {
+    let novoInicio: Date;
+    let novoFim: Date;
+    let novoTipo: PeriodoDRE;
 
-  const handleRefresh = () => {
+    switch (periodoTipo) {
+      case 'mes_atual':
+        novoInicio = startOfMonth(hoje);
+        novoFim = endOfMonth(hoje);
+        novoTipo = 'mensal';
+        break;
+      case 'mes_anterior': {
+        const mesAnterior = subMonths(hoje, 1);
+        novoInicio = startOfMonth(mesAnterior);
+        novoFim = endOfMonth(mesAnterior);
+        novoTipo = 'mensal';
+        break;
+      }
+      case 'trimestre_atual':
+        novoInicio = startOfQuarter(hoje);
+        novoFim = endOfQuarter(hoje);
+        novoTipo = 'trimestral';
+        break;
+      case 'ano_atual':
+        novoInicio = startOfYear(hoje);
+        novoFim = endOfYear(hoje);
+        novoTipo = 'anual';
+        break;
+    }
+
+    setPeriodo({
+      dataInicio: format(novoInicio, 'yyyy-MM-dd'),
+      dataFim: format(novoFim, 'yyyy-MM-dd'),
+      tipo: novoTipo,
+    });
+  }, [hoje]);
+
+  const periodoAtivo = React.useMemo((): PeriodoRapido | '' => {
+    const inicioDate = new Date(periodo.dataInicio);
+    const fimDate = new Date(periodo.dataFim);
+    const inicioMesAtual = startOfMonth(hoje);
+    const fimMesAtual = endOfMonth(hoje);
+    const inicioMesAnterior = startOfMonth(subMonths(hoje, 1));
+    const fimMesAnterior = endOfMonth(subMonths(hoje, 1));
+    const inicioTrimestre = startOfQuarter(hoje);
+    const fimTrimestre = endOfQuarter(hoje);
+    const inicioAno = startOfYear(hoje);
+    const fimAno = endOfYear(hoje);
+
+    if (format(inicioDate, 'yyyy-MM-dd') === format(inicioMesAtual, 'yyyy-MM-dd') &&
+      format(fimDate, 'yyyy-MM-dd') === format(fimMesAtual, 'yyyy-MM-dd')) return 'mes_atual';
+    if (format(inicioDate, 'yyyy-MM-dd') === format(inicioMesAnterior, 'yyyy-MM-dd') &&
+      format(fimDate, 'yyyy-MM-dd') === format(fimMesAnterior, 'yyyy-MM-dd')) return 'mes_anterior';
+    if (format(inicioDate, 'yyyy-MM-dd') === format(inicioTrimestre, 'yyyy-MM-dd') &&
+      format(fimDate, 'yyyy-MM-dd') === format(fimTrimestre, 'yyyy-MM-dd')) return 'trimestre_atual';
+    if (format(inicioDate, 'yyyy-MM-dd') === format(inicioAno, 'yyyy-MM-dd') &&
+      format(fimDate, 'yyyy-MM-dd') === format(fimAno, 'yyyy-MM-dd')) return 'ano_atual';
+    return '';
+  }, [periodo.dataInicio, periodo.dataFim, hoje]);
+
+  // ---- Handlers de ações ----
+  const handleRefresh = React.useCallback(() => {
     refetch();
     toast.success('Dados atualizados');
-  };
+  }, [refetch]);
 
-  const handleExportarPDF = async () => {
+  const handleExportarPDF = React.useCallback(async () => {
     await exportarPDF(periodo.dataInicio, periodo.dataFim, periodo.tipo);
     toast.success('DRE exportado em PDF');
-  };
+  }, [exportarPDF, periodo]);
 
-  const handleExportarCSV = async () => {
+  const handleExportarCSV = React.useCallback(async () => {
     await exportarCSV(periodo.dataInicio, periodo.dataFim, periodo.tipo);
     toast.success('DRE exportado em CSV');
-  };
+  }, [exportarCSV, periodo]);
 
-  // Erro
   if (error && !isLoading) {
     return (
-      <PageShell
-        title="DRE"
-        description="Demonstração de Resultado do Exercício"
-      >
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
-          <p className="font-semibold">Erro ao carregar DRE</p>
-          <p>{error}</p>
-        </div>
+      <PageShell>
+        <DataShell
+          header={
+            <DataTableToolbar title="Demonstração de Resultado do Exercício" />
+          }
+        >
+          <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
+            <p className="font-semibold">Erro ao carregar DRE</p>
+            <p>{error}</p>
+          </div>
+        </DataShell>
       </PageShell>
     );
   }
 
   return (
-    <PageShell
-      title="DRE"
-      description="Demonstração de Resultado do Exercício"
-      actions={
-        <>
-          <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isLoading}>
-            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-            Atualizar
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" disabled={isExporting || !dre}>
-                <FileDown className="h-4 w-4" />
-                {isExporting ? 'Exportando...' : 'Exportar'}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleExportarPDF}>
-                <FileText className="mr-2 h-4 w-4" />
-                Exportar PDF
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleExportarCSV}>
-                <FileSpreadsheet className="mr-2 h-4 w-4" />
-                Exportar CSV
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </>
-      }
-    >
-      {/* Seletor de Período e Opções */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <PeriodoSelector
-              dataInicio={periodo.dataInicio}
-              dataFim={periodo.dataFim}
-              onChange={handlePeriodoChange}
-            />
+    <PageShell>
+      <DataShell
+        header={
+          <DataTableToolbar
+            title="Demonstração de Resultado do Exercício"
+            filtersSlot={
+              <>
+                <Tabs
+                  value={periodoAtivo || 'mes_atual'}
+                  onValueChange={(value) => handlePeriodoRapido(value as PeriodoRapido)}
+                >
+                  <TabsList className="bg-card border border-input shadow-xs">
+                    <TabsTrigger value="mes_atual">Mês Atual</TabsTrigger>
+                    <TabsTrigger value="mes_anterior">Mês Anterior</TabsTrigger>
+                    <TabsTrigger value="trimestre_atual">Trimestre</TabsTrigger>
+                    <TabsTrigger value="ano_atual">Ano</TabsTrigger>
+                  </TabsList>
+                </Tabs>
 
-            <div className="flex items-center gap-6">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="comparativo"
-                  checked={incluirComparativo}
-                  onCheckedChange={setIncluirComparativo}
-                />
-                <Label htmlFor="comparativo" className="text-sm">
-                  Comparar com período anterior
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="orcado"
-                  checked={incluirOrcado}
-                  onCheckedChange={setIncluirOrcado}
-                />
-                <Label htmlFor="orcado" className="text-sm">
-                  Comparar com orçamento
-                </Label>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+                <Separator orientation="vertical" className="h-6" />
 
-      {/* Cards de Resumo */}
-      <ResumoCards
-        resumo={dre?.resumo || null}
-        variacoes={comparativo?.variacoes || null}
-        variacoesOrcado={comparativo?.variacoesOrcado || null}
-        isLoading={isLoading}
-      />
-
-      {/* Tabs de Conteúdo */}
-      <Tabs defaultValue="estrutura" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="estrutura" className="gap-2">
-            <List className="h-4 w-4" />
-            Estrutura DRE
-          </TabsTrigger>
-          <TabsTrigger value="receitas" className="gap-2">
-            <PieChartIcon className="h-4 w-4" />
-            Receitas
-          </TabsTrigger>
-          <TabsTrigger value="despesas" className="gap-2">
-            <PieChartIcon className="h-4 w-4" />
-            Despesas
-          </TabsTrigger>
-          <TabsTrigger value="evolucao" className="gap-2">
-            <BarChart3 className="h-4 w-4" />
-            Evolução
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="estrutura">
-          <Card>
-            <CardHeader>
-              <CardTitle>Estrutura do DRE</CardTitle>
-              <CardDescription>
-                {dre?.periodo.descricao || 'Selecione um período'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <div className="space-y-2">
-                  {Array.from({ length: 15 }).map((_, i) => (
-                    <Skeleton key={i} className="h-8" />
-                  ))}
+                <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                  <Calendar className="h-3.5 w-3.5" />
+                  <span>
+                    {format(new Date(periodo.dataInicio), "dd MMM", { locale: ptBR })} — {format(new Date(periodo.dataFim), "dd MMM yyyy", { locale: ptBR })}
+                  </span>
                 </div>
-              ) : dre?.resumo ? (
-                <DRETable resumo={dre.resumo} />
-              ) : (
-                <p className="text-center py-8 text-muted-foreground">
-                  Selecione um período para visualizar o DRE
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
+              </>
+            }
+            actionSlot={
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <Switch
+                      checked={incluirComparativo}
+                      onCheckedChange={setIncluirComparativo}
+                      className="scale-90"
+                    />
+                    <span className="text-xs text-muted-foreground">vs Anterior</span>
+                  </label>
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <Switch
+                      checked={incluirOrcado}
+                      onCheckedChange={setIncluirOrcado}
+                      className="scale-90"
+                    />
+                    <span className="text-xs text-muted-foreground">vs Orçado</span>
+                  </label>
+                </div>
 
-        <TabsContent value="receitas">
-          <CategoriaTab
-            title="Receitas por Categoria"
-            description="Distribuição das receitas por categoria"
-            categorias={dre?.receitasPorCategoria}
-            isLoading={isLoading}
-            emptyMessage="Sem dados de receitas"
+                <Separator orientation="vertical" className="h-6" />
+
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleRefresh} disabled={isLoading}>
+                  <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                  <span className="sr-only">Atualizar</span>
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8" disabled={isExporting || !dre}>
+                      <FileDown className="h-4 w-4" />
+                      <span className="sr-only">Exportar</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={handleExportarPDF}>
+                      <FileText className="mr-2 h-4 w-4" />
+                      Exportar PDF
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleExportarCSV}>
+                      <FileSpreadsheet className="mr-2 h-4 w-4" />
+                      Exportar CSV
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            }
           />
-        </TabsContent>
+        }
+      >
+        {/* KPI Cards */}
+        <ResumoCards
+          resumo={dre?.resumo || null}
+          variacoes={comparativo?.variacoes || null}
+          variacoesOrcado={comparativo?.variacoesOrcado || null}
+          isLoading={isLoading}
+        />
 
-        <TabsContent value="despesas">
-          <CategoriaTab
-            title="Despesas por Categoria"
-            description="Distribuição das despesas por categoria"
-            categorias={dre?.despesasPorCategoria}
-            isLoading={isLoading}
-            emptyMessage="Sem dados de despesas"
-          />
-        </TabsContent>
+        {/* Tabs */}
+        <Tabs defaultValue="estrutura" className="mt-4 space-y-3">
+          <TabsList>
+            <TabsTrigger value="estrutura" className="gap-1.5 px-3">
+              <List className="h-3.5 w-3.5" />
+              Estrutura
+            </TabsTrigger>
+            <TabsTrigger value="receitas" className="gap-1.5 px-3">
+              <TrendingUp className="h-3.5 w-3.5" />
+              Receitas
+            </TabsTrigger>
+            <TabsTrigger value="despesas" className="gap-1.5 px-3">
+              <TrendingDown className="h-3.5 w-3.5" />
+              Despesas
+            </TabsTrigger>
+            <TabsTrigger value="evolucao" className="gap-1.5 px-3">
+              <BarChart3 className="h-3.5 w-3.5" />
+              Evolução
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="evolucao">
-          <Card>
-            <CardHeader>
-              <CardTitle>Evolução Anual</CardTitle>
-              <CardDescription>
-                Evolução mensal de receita, lucro operacional e lucro líquido - {anoAtual}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {loadingEvolucao ? (
-                <Skeleton className="h-80" />
-              ) : (
-                <EvolucaoChart evolucao={evolucao} />
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+          <TabsContent value="estrutura">
+            <Card>
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-base">Estrutura do DRE</CardTitle>
+                    <CardDescription>
+                      {dre?.periodo.descricao || 'Selecione um período'}
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <div className="space-y-1.5">
+                    {Array.from({ length: 15 }).map((_, i) => (
+                      <Skeleton key={i} className="h-7" />
+                    ))}
+                  </div>
+                ) : dre?.resumo ? (
+                  <DRETable resumo={dre.resumo} />
+                ) : (
+                  <p className="text-center py-6 text-sm text-muted-foreground">
+                    Selecione um período para visualizar o DRE
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="receitas">
+            <CategoriaTab
+              title="Receitas por Categoria"
+              description="Distribuição das receitas por categoria"
+              categorias={dre?.receitasPorCategoria}
+              isLoading={isLoading}
+              emptyMessage="Sem dados de receitas"
+            />
+          </TabsContent>
+
+          <TabsContent value="despesas">
+            <CategoriaTab
+              title="Despesas por Categoria"
+              description="Distribuição das despesas por categoria"
+              categorias={dre?.despesasPorCategoria}
+              isLoading={isLoading}
+              emptyMessage="Sem dados de despesas"
+            />
+          </TabsContent>
+
+          <TabsContent value="evolucao">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">Evolução Anual</CardTitle>
+                <CardDescription>
+                  Evolução mensal — {anoAtual}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {loadingEvolucao ? (
+                  <Skeleton className="h-72" />
+                ) : (
+                  <EvolucaoChart evolucao={evolucao} />
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </DataShell>
     </PageShell>
   );
 }

@@ -91,30 +91,30 @@ export function AtividadesCards({ usuarioId }: AtividadesCardsProps) {
       <StatCard
         title="Processos"
         value={stats.processos}
-        icon={<Briefcase className="h-4 w-4 text-blue-600 dark:text-blue-400" />}
+        icon={<Briefcase className="h-4 w-4 text-sky-700 dark:text-sky-400" />}
         href={`/acervo?responsavel=${usuarioId}`}
-        color="bg-blue-100 dark:bg-blue-900/20"
+        color="bg-sky-500/15"
       />
       <StatCard
         title="Audiências"
         value={stats.audiencias}
-        icon={<Calendar className="h-4 w-4 text-purple-600 dark:text-purple-400" />}
+        icon={<Calendar className="h-4 w-4 text-violet-700 dark:text-violet-400" />}
         href={`/audiencias?responsavel=${usuarioId}`}
-        color="bg-purple-100 dark:bg-purple-900/20"
+        color="bg-violet-500/15"
       />
       <StatCard
         title="Pendentes"
         value={stats.pendentes}
-        icon={<FileText className="h-4 w-4 text-orange-600 dark:text-orange-400" />}
+        icon={<FileText className="h-4 w-4 text-orange-700 dark:text-orange-400" />}
         href={`/expedientes?responsavel=${usuarioId}`}
-        color="bg-orange-100 dark:bg-orange-900/20"
+        color="bg-orange-500/15"
       />
       <StatCard
         title="Contratos"
         value={stats.contratos}
-        icon={<FileCheck className="h-4 w-4 text-green-600 dark:text-green-400" />}
+        icon={<FileCheck className="h-4 w-4 text-green-700 dark:text-green-400" />}
         href={`/contratos?responsavel=${usuarioId}`}
-        color="bg-green-100 dark:bg-green-900/20"
+        color="bg-green-500/15"
       />
     </div>
   );

@@ -37,7 +37,7 @@ const VARIANT_TO_CIRCLE_CLASS: Record<string, string> = {
   warning: 'border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-900/50 dark:text-orange-200',
   destructive: 'border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-900/50 dark:text-red-200',
   neutral: 'border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-200',
-  accent: 'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200',
+  accent: 'border-orange-200 bg-orange-50 text-orange-800 dark:border-orange-800 dark:bg-orange-900/40 dark:text-orange-200',
   default: 'border-border bg-background text-foreground',
   secondary: 'border-transparent bg-secondary text-secondary-foreground',
   outline: 'border-border bg-background text-foreground',

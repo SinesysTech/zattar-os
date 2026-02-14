@@ -146,7 +146,7 @@ export function getCorUrgencia(diasRestantes: number): string {
   switch (nivel) {
     case 'critico': return 'text-red-600 bg-red-50';
     case 'alto': return 'text-orange-600 bg-orange-50';
-    case 'medio': return 'text-yellow-600 bg-yellow-50';
+    case 'medio': return 'text-orange-600 bg-orange-50';
     default: return 'text-green-600 bg-green-50';
   }
 }

@@ -1,24 +1,31 @@
 'use client';
 
-import * as React from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal, Pencil, Key, Trash2 } from 'lucide-react';
+import { Pencil, Key, Trash2 } from 'lucide-react';
 
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Button } from '@/components/ui/button';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import type { Advogado } from '@/features/advogados';
 
 interface ColumnOptions {
   onEdit: (advogado: Advogado) => void;
   onDelete: (advogado: Advogado) => void;
   onViewCredenciais: (advogado: Advogado) => void;
+}
+
+/**
+ * Formata CPF para exibição: 000.000.000-00
+ */
+function formatarCpf(cpf: string): string {
+  const digits = cpf.replace(/\D/g, '');
+  if (digits.length !== 11) return cpf;
+  return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
 }
 
 export function criarColunasAdvogados({
@@ -29,86 +36,108 @@ export function criarColunasAdvogados({
   return [
     {
       accessorKey: 'nome_completo',
-      header: 'Nome',
-      cell: ({ row }) => {
-        return (
-          <div className="font-medium">
-            {row.original.nome_completo}
-          </div>
-        );
-      },
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Nome" />,
+      enableSorting: true,
+      size: 280,
       meta: { align: 'left' as const },
+      cell: ({ row }) => (
+        <span className="text-sm font-medium">{row.original.nome_completo}</span>
+      ),
     },
     {
       accessorKey: 'cpf',
-      header: 'CPF',
-      cell: ({ row }) => {
-        const cpf = row.original.cpf;
-        // Formatar CPF: 000.000.000-00
-        const formatted = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-        return <span className="font-mono text-sm">{formatted}</span>;
-      },
+      header: ({ column }) => <DataTableColumnHeader column={column} title="CPF" />,
+      enableSorting: false,
+      size: 160,
       meta: { align: 'left' as const },
+      cell: ({ row }) => (
+        <span className="font-mono text-sm">{formatarCpf(row.original.cpf)}</span>
+      ),
     },
     {
       accessorKey: 'oab',
-      header: 'OAB',
-      cell: ({ row }) => {
-        return (
-          <div className="flex items-center gap-1">
-            <span className="font-mono">{row.original.oab}</span>
-            <Badge variant="outline" className="text-xs">
-              {row.original.uf_oab}
-            </Badge>
-          </div>
-        );
-      },
+      header: ({ column }) => <DataTableColumnHeader column={column} title="OAB" />,
+      enableSorting: false,
+      size: 160,
       meta: { align: 'left' as const },
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-sm">{row.original.oab}</span>
+          <Badge variant="outline" tone="soft" className="text-xs">
+            {row.original.uf_oab}
+          </Badge>
+        </div>
+      ),
     },
     {
       accessorKey: 'uf_oab',
-      header: 'UF',
-      cell: ({ row }) => {
-        return <Badge variant="secondary">{row.original.uf_oab}</Badge>;
-      },
-      meta: { align: 'left' as const },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="UF" className="justify-center" />
+      ),
+      enableSorting: true,
+      size: 80,
+      meta: { align: 'center' as const },
+      cell: ({ row }) => (
+        <Badge variant="secondary">{row.original.uf_oab}</Badge>
+      ),
     },
     {
       id: 'acoes',
-      header: 'Ações',
+      header: () => (
+        <div className="flex items-center justify-center">
+          <span className="text-sm font-medium text-muted-foreground">Ações</span>
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 120,
+      meta: { align: 'center' as const },
       cell: ({ row }) => {
         const advogado = row.original;
-
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <MoreHorizontal className="h-4 w-4" />
-                <span className="sr-only">Abrir menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit(advogado)}>
-                <Pencil className="mr-2 h-4 w-4" />
-                Editar
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onViewCredenciais(advogado)}>
-                <Key className="mr-2 h-4 w-4" />
-                Ver Credenciais
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => onDelete(advogado)}
-                className="text-destructive focus:text-destructive"
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Excluir
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center justify-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => onEdit(advogado)}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Editar</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => onViewCredenciais(advogado)}
+                >
+                  <Key className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Ver Credenciais</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-destructive hover:text-destructive"
+                  onClick={() => onDelete(advogado)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Excluir</TooltipContent>
+            </Tooltip>
+          </div>
         );
       },
-      meta: { align: 'left' as const },
     },
   ];
 }

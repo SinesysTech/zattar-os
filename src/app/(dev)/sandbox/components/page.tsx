@@ -72,7 +72,7 @@ const IconCircleExample = () => (
       <div className="flex items-center gap-3 flex-wrap">
         <IconCircle
           icon={Video}
-          className="border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200"
+          className="border-orange-200 bg-orange-50 text-orange-800 dark:border-orange-800 dark:bg-orange-900/40 dark:text-orange-200"
         />
         <IconCircle
           icon={MapPin}

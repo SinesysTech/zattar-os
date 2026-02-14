@@ -663,9 +663,10 @@ export function ClienteFormDialog({
   const renderStep3 = () => (
     <div className="grid gap-4 py-4">
       <div className="grid gap-2">
-        <Label>E-mails</Label>
+        <Label htmlFor="novo-email-cliente">E-mails</Label>
         <div className="flex gap-2">
           <Input
+            id="novo-email-cliente"
             type="email"
             value={novoEmail}
             onChange={(e) => setNovoEmail(e.target.value)}
@@ -676,6 +677,7 @@ export function ClienteFormDialog({
                 handleAddEmail();
               }
             }}
+            aria-describedby="novo-email-cliente-hint"
           />
           <Button
             type="button"
@@ -689,6 +691,9 @@ export function ClienteFormDialog({
             <Plus className="h-4 w-4" />
           </Button>
         </div>
+        <p id="novo-email-cliente-hint" className="sr-only">
+          Pressione Enter ou clique em + para adicionar múltiplos e-mails
+        </p>
         {formData.emails.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">
             {formData.emails.map((email, index) => (

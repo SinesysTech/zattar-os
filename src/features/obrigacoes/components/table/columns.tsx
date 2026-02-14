@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 
 import {
   DropdownMenu,
@@ -42,31 +43,8 @@ const formatCurrency = (value: number) => {
   }).format(value);
 };
 
-// Cores dos badges
-const getStatusColor = (status: StatusAcordo) => {
-  switch (status) {
-    case 'pendente': return 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-500/20 border-yellow-200 dark:border-yellow-800';
-    case 'pago_parcial': return 'bg-blue-500/10 text-blue-700 dark:text-blue-400 hover:bg-blue-500/20 border-blue-200 dark:border-blue-800';
-    case 'pago_total': return 'bg-green-500/10 text-green-700 dark:text-green-400 hover:bg-green-500/20 border-green-200 dark:border-green-800';
-    case 'atrasado': return 'bg-red-500/10 text-red-700 dark:text-red-400 hover:bg-red-500/20 border-red-200 dark:border-red-800';
-    default: return 'bg-gray-500/10 text-gray-700 dark:text-gray-400 border-gray-200 dark:border-gray-800';
-  }
-};
-
-const getTipoColor = (tipo: TipoObrigacao) => {
-  switch (tipo) {
-    case 'acordo': return 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800';
-    case 'condenacao': return 'bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-800';
-    case 'custas_processuais': return 'bg-gray-500/10 text-gray-700 dark:text-gray-400 border-gray-200 dark:border-gray-800';
-    default: return 'bg-gray-100 text-gray-700';
-  }
-};
-
-const getDirecaoColor = (direcao: DirecaoPagamento) => {
-  return direcao === 'recebimento'
-    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-    : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
-};
+// Removidas funções getStatusColor, getTipoColor, getDirecaoColor
+// Agora usando getSemanticBadgeVariant() do design system
 
 export const columns: ColumnDef<AcordoComParcelas>[] = [
   {
@@ -98,7 +76,7 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
     cell: ({ row }) => {
       const tipo = row.original.tipo;
       return (
-        <Badge variant="outline" className={`${getTipoColor(tipo)} whitespace-nowrap`}>
+        <Badge variant={getSemanticBadgeVariant('obrigacao_tipo', tipo)} className="whitespace-nowrap">
           {TIPO_LABELS[tipo]}
         </Badge>
       );
@@ -116,7 +94,7 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
     cell: ({ row }) => {
       const direcao = row.original.direcao;
       return (
-        <Badge variant="outline" className={`${getDirecaoColor(direcao)} whitespace-nowrap`}>
+        <Badge variant={getSemanticBadgeVariant('obrigacao_direcao', direcao)} className="whitespace-nowrap">
           {DIRECAO_LABELS[direcao]}
         </Badge>
       );
@@ -191,7 +169,7 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
     cell: ({ row }) => {
       const status = row.original.status;
       return (
-        <Badge variant="outline" className={`${getStatusColor(status)} whitespace-nowrap`}>
+        <Badge variant={getSemanticBadgeVariant('obrigacao_status', status)} className="whitespace-nowrap">
           {STATUS_LABELS[status]}
         </Badge>
       );

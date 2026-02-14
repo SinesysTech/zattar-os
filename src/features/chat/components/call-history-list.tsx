@@ -39,6 +39,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { formatarDuracao, getStatusBadgeVariant, getStatusLabel, getTipoChamadaIcon } from '../utils';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CallDetailSheet } from './call-detail-sheet';
@@ -247,7 +248,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         const status = row.original.status as StatusChamada;
 
         if (status === StatusChamada.EmAndamento) {
-          return <Badge variant="outline" className="animate-pulse text-green-600 border-green-200">Em andamento</Badge>;
+          return <Badge variant={getSemanticBadgeVariant('call_status', 'em_andamento')} className="animate-pulse">Em andamento</Badge>;
         }
 
         return duracao ? formatarDuracao(duracao) : '-';
@@ -284,7 +285,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
             }}
             className="h-8 w-8 p-0"
           >
-            <Play className="h-4 w-4 text-blue-600" />
+            <Play className="h-4 w-4 text-primary" />
             <span className="sr-only">Assistir</span>
           </Button>
         );
@@ -305,7 +306,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <FileText className="w-4 h-4 text-blue-500" />
+                    <FileText className="w-4 h-4 text-blue-600" />
                   </TooltipTrigger>
                   <TooltipContent>Transcrição disponível</TooltipContent>
                 </Tooltip>
@@ -315,7 +316,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
-                    <Sparkles className="w-4 h-4 text-purple-500" />
+                    <Sparkles className="w-4 h-4 text-purple-600" />
                   </TooltipTrigger>
                   <TooltipContent>Resumo IA gerado</TooltipContent>
                 </Tooltip>

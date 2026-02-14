@@ -1,5 +1,14 @@
 'use client';
 
+/**
+ * Color semantics:
+ * - green-* (success, início de prazo, primeiro grau)
+ * - orange-* (warnings, segundo grau)
+ * - red-* (errors, fim de prazo)
+ * - violet-* (tribunal superior)
+ * - sky-* (tribunal badges)
+ */
+
 import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { AppBadge } from '@/components/ui/app-badge';
@@ -54,9 +63,9 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
 
   // Classes de cor baseadas no grau
   const grauColorClasses: Record<GrauTribunal, string> = {
-    primeiro_grau: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
-    segundo_grau: 'bg-amber-500/15 text-amber-700 dark:text-amber-400',
-    tribunal_superior: 'bg-violet-500/15 text-violet-700 dark:text-violet-400',
+    primeiro_grau: 'bg-green-500/15 text-green-600 dark:text-green-400',
+    segundo_grau: 'bg-orange-500/15 text-orange-600 dark:text-orange-400',
+    tribunal_superior: 'bg-violet-500/15 text-violet-600 dark:text-violet-400',
   };
 
   return (
@@ -299,11 +308,11 @@ function PrazoBadge({ dataInicio, dataFim, baixado }: {
   return (
     <div className={cn("inline-flex flex-col items-center text-xs font-medium shrink-0 gap-0.5", opacityClass)}>
       {/* Data Início (verde - arredondado) */}
-      <span className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full">
+      <span className="bg-green-500/15 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full">
         {formatDate(dataInicio)}
       </span>
       {/* Data Fim (vermelho - arredondado) */}
-      <span className="bg-red-500/15 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-full">
+      <span className="bg-red-500/15 text-red-600 dark:text-red-400 px-2 py-0.5 rounded-full">
         {formatDate(dataFim)}
       </span>
     </div>

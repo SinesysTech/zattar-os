@@ -231,7 +231,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
                 <DropdownMenuItem onClick={() => handleToggleAtivo(row.original)}>
                   {row.original.ativo ? (
                     <>
-                      <Ban className="mr-2 h-4 w-4 text-amber-500" />
+                      <Ban className="mr-2 h-4 w-4 text-orange-500" />
                       <span>Desativar</span>
                     </>
                   ) : (

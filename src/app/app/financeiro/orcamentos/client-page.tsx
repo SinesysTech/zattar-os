@@ -831,7 +831,7 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
                   {selectedOrcamento.nome} - {selectedOrcamento.ano}
                 </span>
               )}
-              <span className="block mt-2 text-amber-600">
+              <span className="block mt-2 text-orange-600">
                 Após encerrado, o orçamento ficará disponível apenas para consulta.
               </span>
             </AlertDialogDescription>

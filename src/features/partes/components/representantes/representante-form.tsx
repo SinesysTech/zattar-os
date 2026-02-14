@@ -583,9 +583,10 @@ export function RepresentanteFormDialog({
   const renderStep2 = () => (
     <div className="grid gap-4 py-4">
       <div className="grid gap-2">
-        <Label>E-mails</Label>
+        <Label htmlFor="novo-email-representante">E-mails</Label>
         <div className="flex gap-2">
           <Input
+            id="novo-email-representante"
             type="email"
             value={novoEmail}
             onChange={(e) => setNovoEmail(e.target.value)}
@@ -596,6 +597,7 @@ export function RepresentanteFormDialog({
                 handleAddEmail();
               }
             }}
+            aria-describedby="novo-email-representante-hint"
           />
           <Button
             type="button"
@@ -609,6 +611,9 @@ export function RepresentanteFormDialog({
             <Plus className="h-4 w-4" />
           </Button>
         </div>
+        <p id="novo-email-representante-hint" className="sr-only">
+          Pressione Enter ou clique em + para adicionar múltiplos e-mails
+        </p>
         {formData.emails.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">
             {formData.emails.map((email, index) => (

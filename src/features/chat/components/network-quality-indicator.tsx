@@ -1,6 +1,7 @@
 import { Wifi, WifiOff, WifiHigh, WifiLow } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { getSemanticBadgeVariant, type BadgeVisualVariant } from '@/lib/design-system';
 
 interface NetworkQualityIndicatorProps {
   quality: 'excellent' | 'good' | 'poor' | 'unknown';
@@ -9,33 +10,55 @@ interface NetworkQualityIndicatorProps {
   className?: string;
 }
 
-export function NetworkQualityIndicator({ 
-  quality, 
-  score, 
-  showLabel = false, 
-  className 
+/**
+ * Maps network quality to semantic text color classes.
+ * Uses design system's network_quality category for consistency.
+ */
+function getNetworkQualityColor(quality: 'excellent' | 'good' | 'poor' | 'unknown'): string {
+  const variant = getSemanticBadgeVariant('network_quality', quality);
+
+  const colorMap: Record<BadgeVisualVariant, string> = {
+    success: 'text-green-500',
+    info: 'text-blue-500',
+    destructive: 'text-red-500',
+    neutral: 'text-gray-500',
+    warning: 'text-orange-500',
+    default: 'text-gray-500',
+    secondary: 'text-gray-500',
+    outline: 'text-gray-500',
+    accent: 'text-purple-500',
+  };
+
+  return colorMap[variant] || 'text-gray-500';
+}
+
+export function NetworkQualityIndicator({
+  quality,
+  score,
+  showLabel = false,
+  className
 }: NetworkQualityIndicatorProps) {
-  
+
   const getQualityConfig = () => {
     switch (quality) {
       case 'excellent':
         return {
           icon: Wifi,
-          color: 'text-green-500',
+          color: getNetworkQualityColor('excellent'),
           label: 'Conexão Excelente',
           description: 'Áudio e vídeo em alta qualidade'
         };
       case 'good':
         return {
           icon: WifiHigh,
-          color: 'text-yellow-500',
+          color: getNetworkQualityColor('good'),
           label: 'Conexão Boa',
           description: 'Pode haver pequenas instabilidades'
         };
       case 'poor':
         return {
           icon: WifiLow,
-          color: 'text-red-500',
+          color: getNetworkQualityColor('poor'),
           label: 'Conexão Instável',
           description: 'Recomendado desativar vídeo'
         };
@@ -43,7 +66,7 @@ export function NetworkQualityIndicator({
       default:
         return {
           icon: WifiOff,
-          color: 'text-gray-500',
+          color: getNetworkQualityColor('unknown'),
           label: 'Verificando conexão...',
           description: 'Aguardando dados da rede'
         };

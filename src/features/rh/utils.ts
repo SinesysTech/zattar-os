@@ -146,7 +146,7 @@ export const calcularSalarioVigente = (
  * Cores para badges de status da folha
  */
 export const STATUS_FOLHA_CORES: Record<StatusFolhaPagamento, { bg: string; text: string; border: string }> = {
-  rascunho: { bg: 'bg-yellow-100', text: 'text-yellow-800', border: 'border-yellow-200' },
+  rascunho: { bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-200' },
   aprovada: { bg: 'bg-blue-100', text: 'text-blue-800', border: 'border-blue-200' },
   paga: { bg: 'bg-green-100', text: 'text-green-800', border: 'border-green-200' },
   cancelada: { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-200' },

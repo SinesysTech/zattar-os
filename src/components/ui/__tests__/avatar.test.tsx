@@ -119,7 +119,7 @@ describe('Avatar - Property-Based Tests', () => {
                     if (variant === 'online' || variant === 'success') {
                         expect(className).toMatch(/bg-green-500/);
                     } else if (variant === 'away') {
-                        expect(className).toMatch(/bg-yellow-500/);
+                        expect(className).toMatch(/bg-orange-500/);
                     } else if (variant === 'offline') {
                         expect(className).toMatch(/bg-slate-400/);
                     }

@@ -90,7 +90,7 @@ export function WidgetExpedientesUrgentes({
                 isVencido
                   ? 'bg-destructive/5 border-destructive/20'
                   : isUrgente
-                    ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900'
+                    ? 'bg-orange-50 dark:bg-orange-950/20 border-orange-200 dark:border-orange-900'
                     : 'bg-card'
               }`}
             >

@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * Color semantics:
+ * - green-* (success, resolved placeholders)
+ * - orange-* (warnings, unresolved placeholders)
+ * - primary (selection states, interactive elements)
+ */
+
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { FileText, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
@@ -301,7 +308,7 @@ export function GerarPecaDialog({
                 <span>{preview.resolvidosCount} resolvidos</span>
               </div>
               {preview.naoResolvidosCount > 0 && (
-                <div className="flex items-center gap-2 text-amber-600">
+                <div className="flex items-center gap-2 text-orange-600">
                   <AlertCircle className="h-4 w-4" />
                   <span>{preview.naoResolvidosCount} não resolvidos</span>
                 </div>
@@ -310,10 +317,10 @@ export function GerarPecaDialog({
 
             {/* Alerta se houver não resolvidos */}
             {preview.naoResolvidosCount > 0 && (
-              <Alert className="border-amber-500/50 bg-amber-50 dark:bg-amber-950/30">
-                <AlertCircle className="h-4 w-4 text-amber-600" />
-                <AlertTitle className="text-amber-700 dark:text-amber-500">Atenção</AlertTitle>
-                <AlertDescription className="text-amber-600 dark:text-amber-400">
+              <Alert className="border-orange-500/50 bg-orange-50 dark:bg-orange-950/30">
+                <AlertCircle className="h-4 w-4 text-orange-600" />
+                <AlertTitle className="text-orange-600 dark:text-orange-400">Atenção</AlertTitle>
+                <AlertDescription className="text-orange-600 dark:text-orange-400">
                   Alguns placeholders não serão substituídos por falta de dados no contrato.
                   Você poderá editar o documento após a geração.
                 </AlertDescription>
@@ -327,11 +334,11 @@ export function GerarPecaDialog({
                   <div
                     key={i}
                     className={`flex items-center justify-between p-2 rounded ${
-                      p.resolved ? 'bg-green-50 dark:bg-green-950' : 'bg-amber-50 dark:bg-amber-950'
+                      p.resolved ? 'bg-green-50 dark:bg-green-950' : 'bg-orange-50 dark:bg-orange-950'
                     }`}
                   >
                     <code className="text-sm">{p.placeholder}</code>
-                    <span className={`text-sm ${p.resolved ? 'text-green-700' : 'text-amber-700'}`}>
+                    <span className={`text-sm ${p.resolved ? 'text-green-600' : 'text-orange-600'}`}>
                       {p.resolved ? p.value : '(não encontrado)'}
                     </span>
                   </div>
@@ -365,7 +372,7 @@ export function GerarPecaDialog({
                 <strong>Placeholders resolvidos:</strong> {result.placeholdersResolvidos}
               </p>
               {result.placeholdersNaoResolvidos > 0 && (
-                <p className="text-amber-600">
+                <p className="text-orange-600">
                   <strong>Não resolvidos:</strong> {result.placeholdersNaoResolvidos}
                 </p>
               )}

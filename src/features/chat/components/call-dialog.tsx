@@ -199,8 +199,8 @@ export function CallDialog({
 
         {error && (
           <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-gray-900">
-            <div className="bg-red-500/10 p-4 rounded-full">
-              <RotateCcw className="w-12 h-12 text-red-500" />
+            <div className="bg-destructive/10 p-4 rounded-full">
+              <RotateCcw className="w-12 h-12 text-destructive" />
             </div>
             <h3 className="text-xl font-semibold text-white">Erro na Chamada</h3>
             <p className="text-gray-400 max-w-sm">{error}</p>

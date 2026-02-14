@@ -39,10 +39,7 @@ export default function RelatorioCustoPessoalPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Custo Total com Pessoal</h1>
-          <p className="text-muted-foreground">
-            Acompanhe o custo de salários e folha ao longo do tempo.
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight font-heading">Custo Total com Pessoal</h1>
         </div>
         <Button variant="outline" onClick={() => refetch()}>
           Atualizar

@@ -25,10 +25,7 @@ export default async function AvaliarUpgradePage() {
   }
 
   return (
-    <PageShell
-      title="Avaliação de Upgrade de Compute"
-      description="Análise automatizada de métricas de performance e recomendação de upgrade"
-    >
+    <PageShell title="Avaliação de Upgrade de Compute">
       <Suspense fallback={<div>Carregando...</div>}>
         <AvaliarUpgradeContent />
       </Suspense>

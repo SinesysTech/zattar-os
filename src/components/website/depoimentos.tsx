@@ -159,7 +159,7 @@ export default function Depoimentos() {
                 {/* Estrelas */}
                 <div className="flex gap-1 mt-3">
                   {Array.from({ length: currentDepoimento.estrelas }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                    <Star key={i} className="h-4 w-4 fill-orange-400 text-orange-400" />
                   ))}
                 </div>
               </div>

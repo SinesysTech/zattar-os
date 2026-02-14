@@ -292,7 +292,7 @@ export function AudienciaDetailSheet({
           {isRealizada && hasAta && (
             <DetailSection icon={<FileText className="h-4 w-4" />} title="Ata de Audiência">
               <div className="flex items-center gap-3">
-                <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
+                <span className="inline-flex items-center gap-1 rounded-md bg-green-500/15 px-2 py-0.5 text-xs font-medium text-green-700 dark:text-green-400">
                   Ata Disponível
                 </span>
                 {audiencia.urlAtaAudiencia && (
@@ -388,7 +388,7 @@ export function AudienciaDetailSheet({
               )}
               <div className="flex flex-wrap gap-2 mt-2">
                 {audiencia.segredoJustica && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-400">
+                  <span className="inline-flex items-center gap-1 rounded-md bg-orange-500/15 px-2 py-0.5 text-xs font-medium text-orange-700 dark:text-orange-400">
                     <ShieldAlert className="h-3 w-3" />
                     Segredo de Justiça
                   </span>

@@ -78,13 +78,13 @@ function AlertaItem({
 }: AlertaItemProps) {
   const variantStyles = {
     destructive: 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/20',
-    warning: 'border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/20',
+    warning: 'border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-950/20',
     default: 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/20',
   };
 
   const iconStyles = {
     destructive: 'text-red-600',
-    warning: 'text-amber-600',
+    warning: 'text-orange-600',
     default: 'text-blue-600',
   };
 

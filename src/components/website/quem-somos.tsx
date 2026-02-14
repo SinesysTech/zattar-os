@@ -94,7 +94,7 @@ const pilaresDeAtuacao: PilarDeAtuacao[] = [
     description:
       "Acreditamos na construção de um futuro do trabalho mais justo. Por isso, prestamos consultoria para empresas com visão humanista que buscam construir ambientes saudáveis e respeitosos, alinhados com a legislação.",
     icon: Lightbulb,
-    color: "text-amber-500",
+    color: "text-orange-500",
     principles: [
       "Foco na construção de ambientes de trabalho positivos.",
       "Alinhamento das práticas da empresa com as leis trabalhistas.",

@@ -139,7 +139,7 @@ export function RedefinirSenhaDialog({
             )}
 
             {successMessage && (
-              <div className="rounded-md bg-emerald-500/15 p-3 text-sm text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+              <div className="rounded-md bg-green-500/15 p-3 text-sm text-green-700 dark:text-green-400 border border-green-500/20">
                 {successMessage}
               </div>
             )}

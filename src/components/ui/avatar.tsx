@@ -57,7 +57,7 @@ const avatarIndicatorVariants = cva(
     variants: {
       variant: {
         online: "bg-green-500",
-        away: "bg-yellow-500",
+        away: "bg-orange-500",
         offline: "bg-slate-400",
         success: "bg-green-500",
       },

@@ -49,10 +49,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Histórico Salarial - {usuarioNome}</h1>
-          <p className="text-muted-foreground">
-            Acompanhe todas as alterações de salário deste funcionário.
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight font-heading">Histórico Salarial - {usuarioNome}</h1>
         </div>
         <button
           className="text-sm text-primary underline"

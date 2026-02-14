@@ -37,11 +37,11 @@ export const COLORS = {
   },
   // Tons de âmbar/warning
   amber: {
-    100: 'bg-amber-100',
-    500: 'bg-amber-500',
-    700: 'text-amber-700',
-    800: 'text-amber-800',
-    900: 'bg-amber-900',
+    100: 'bg-orange-100',
+    500: 'bg-orange-500',
+    700: 'text-orange-700',
+    800: 'text-orange-800',
+    900: 'bg-orange-900',
   },
   // Tons de vermelho/destructive
   red: {
@@ -118,11 +118,11 @@ export const COLORS = {
   },
   // Tons de yellow
   yellow: {
-    100: 'bg-yellow-100',
-    500: 'bg-yellow-500',
-    700: 'text-yellow-700',
-    800: 'text-yellow-800',
-    900: 'bg-yellow-900',
+    100: 'bg-orange-100',
+    500: 'bg-orange-500',
+    700: 'text-orange-700',
+    800: 'text-orange-800',
+    900: 'bg-orange-900',
   },
 } as const;
 

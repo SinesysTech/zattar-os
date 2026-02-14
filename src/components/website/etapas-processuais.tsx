@@ -73,20 +73,20 @@ const AudienciaGraphic = () => {
   };
 
   return (
-    <motion.div className="flex flex-1 w-full h-full min-h-24 bg-linear-to-br from-amber-50 to-amber-100 dark:from-amber-950/20 dark:to-amber-900/20 flex-col justify-center items-center p-4 rounded-lg">
+    <motion.div className="flex flex-1 w-full h-full min-h-24 bg-linear-to-br from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20 flex-col justify-center items-center p-4 rounded-lg">
       <motion.div variants={variants} initial="initial" animate="animate" className="relative">
         <div className="bg-white dark:bg-black/50 rounded-full p-6 shadow-lg">
-          <Gavel className="h-12 w-12 text-amber-600 dark:text-amber-400" />
+          <Gavel className="h-12 w-12 text-orange-600 dark:text-orange-400" />
         </div>
         {!shouldReduceMotion && (
-          <div className="absolute -top-2 -right-2 w-4 h-4 bg-amber-500 rounded-full animate-pulse" />
+          <div className="absolute -top-2 -right-2 w-4 h-4 bg-orange-500 rounded-full animate-pulse" />
         )}
       </motion.div>
       <div className="mt-4 flex space-x-2">
         {[1, 2, 3].map((i) => (
           <motion.div
             key={i}
-            className="w-2 h-2 bg-amber-400 rounded-full"
+            className="w-2 h-2 bg-orange-400 rounded-full"
             animate={
               shouldReduceMotion
                 ? { scale: 1, opacity: 1 }
@@ -307,7 +307,7 @@ const items = [
     ),
     header: <AudienciaGraphic />,
     className: "md:col-span-1",
-    icon: <Gavel className="h-4 w-4 text-amber-500" />,
+    icon: <Gavel className="h-4 w-4 text-orange-500" />,
   },
   {
     title: "Conciliação",

@@ -349,7 +349,7 @@ export default function ContaReceberDetalhesPage() {
                       icon={CircleDollarSign}
                       label="Valor Pendente"
                       value={
-                        <span className="font-semibold text-amber-600">
+                        <span className="font-semibold text-orange-600">
                           {formatarValor(historico.valorPendente)}
                         </span>
                       }
@@ -515,8 +515,8 @@ export default function ContaReceberDetalhesPage() {
                           className={cn(
                             'relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
                             index === historico!.recebimentos.length - 1 && contaReceber.status === 'confirmado'
-                              ? 'bg-green-100 text-green-600'
-                              : 'bg-blue-100 text-blue-600'
+                              ? 'bg-green-100/50 text-green-600'
+                              : 'bg-blue-100/50 text-blue-600'
                           )}
                         >
                           {index === historico!.recebimentos.length - 1 && contaReceber.status === 'confirmado' ? (
@@ -690,7 +690,7 @@ export default function ContaReceberDetalhesPage() {
               <span className="block mt-2 font-medium text-foreground">
                 {contaReceber.descricao} - {formatarValor(contaReceber.valor)}
               </span>
-              <span className="block mt-2 text-amber-600">
+              <span className="block mt-2 text-orange-600">
                 A conta será marcada como cancelada mas permanecerá no histórico.
               </span>
             </AlertDialogDescription>

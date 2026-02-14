@@ -394,7 +394,7 @@ export function ShareDocumentDialog({
                                   variant="ghost"
                                   size="icon"
                                   className={`h-8 w-8 ${compartilhamento.pode_deletar
-                                    ? 'text-amber-500 hover:text-amber-600'
+                                    ? 'text-orange-500 hover:text-orange-600'
                                     : 'text-muted-foreground hover:text-foreground'
                                     }`}
                                   onClick={() =>

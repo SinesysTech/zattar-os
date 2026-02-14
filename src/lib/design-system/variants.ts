@@ -51,7 +51,13 @@ export type BadgeCategory =
   | 'tipo_cobranca'
   | 'status_contrato'
   | 'folha_status'
-  | 'salario_status';
+  | 'salario_status'
+  | 'call_status'
+  | 'network_quality'
+  | 'online_status'
+  | 'obrigacao_status'
+  | 'obrigacao_tipo'
+  | 'obrigacao_direcao';
 
 /**
  * Determina o tom (intensidade) padrão por categoria.
@@ -499,6 +505,110 @@ export const SALARIO_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
 } as const;
 
 // =============================================================================
+// MAPEAMENTO DE STATUS DE CHAMADAS (CHAT)
+// =============================================================================
+
+/**
+ * Mapeamento de status de chamadas para variantes visuais.
+ */
+export const CALL_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  iniciada: 'info',
+  INICIADA: 'info',
+  em_andamento: 'success',
+  EM_ANDAMENTO: 'success',
+  finalizada: 'neutral',
+  FINALIZADA: 'neutral',
+  cancelada: 'destructive',
+  CANCELADA: 'destructive',
+  recusada: 'destructive',
+  RECUSADA: 'destructive',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE QUALIDADE DE REDE (CHAT)
+// =============================================================================
+
+/**
+ * Mapeamento de qualidade de rede para variantes visuais.
+ */
+export const NETWORK_QUALITY_VARIANTS: Record<string, BadgeVisualVariant> = {
+  excellent: 'success',
+  EXCELLENT: 'success',
+  good: 'info',
+  GOOD: 'info',
+  poor: 'destructive',
+  POOR: 'destructive',
+  unknown: 'neutral',
+  UNKNOWN: 'neutral',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS ONLINE (CHAT)
+// =============================================================================
+
+/**
+ * Mapeamento de status de presença do usuário para variantes visuais.
+ */
+export const ONLINE_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  online: 'success',
+  ONLINE: 'success',
+  away: 'warning',
+  AWAY: 'warning',
+  offline: 'neutral',
+  OFFLINE: 'neutral',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE OBRIGAÇÃO
+// =============================================================================
+
+/**
+ * Mapeamento de status de obrigação para variantes visuais.
+ */
+export const OBRIGACAO_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  pendente: 'warning',
+  PENDENTE: 'warning',
+  pago_parcial: 'info',
+  PAGO_PARCIAL: 'info',
+  pago_total: 'success',
+  PAGO_TOTAL: 'success',
+  atrasado: 'destructive',
+  ATRASADO: 'destructive',
+  cancelado: 'neutral',
+  CANCELADO: 'neutral',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE TIPO DE OBRIGAÇÃO
+// =============================================================================
+
+/**
+ * Mapeamento de tipo de obrigação para variantes visuais.
+ */
+export const OBRIGACAO_TIPO_VARIANTS: Record<string, BadgeVisualVariant> = {
+  acordo: 'info',
+  ACORDO: 'info',
+  condenacao: 'warning',
+  CONDENACAO: 'warning',
+  custas_processuais: 'neutral',
+  CUSTAS_PROCESSUAIS: 'neutral',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE DIREÇÃO DE PAGAMENTO
+// =============================================================================
+
+/**
+ * Mapeamento de direção de pagamento para variantes visuais.
+ */
+export const OBRIGACAO_DIRECAO_VARIANTS: Record<string, BadgeVisualVariant> = {
+  recebimento: 'success',
+  RECEBIMENTO: 'success',
+  pagamento: 'destructive',
+  PAGAMENTO: 'destructive',
+} as const;
+
+// =============================================================================
 // FUNÇÃO PRINCIPAL DE MAPEAMENTO
 // =============================================================================
 
@@ -577,6 +687,30 @@ export function getSemanticBadgeVariant(
     case 'salario_status':
       return SALARIO_STATUS_VARIANTS[key as string] ??
              SALARIO_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'call_status':
+      return CALL_STATUS_VARIANTS[key as string] ??
+             CALL_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'network_quality':
+      return NETWORK_QUALITY_VARIANTS[key as string] ??
+             NETWORK_QUALITY_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'online_status':
+      return ONLINE_STATUS_VARIANTS[key as string] ??
+             ONLINE_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'obrigacao_status':
+      return OBRIGACAO_STATUS_VARIANTS[key as string] ??
+             OBRIGACAO_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'obrigacao_tipo':
+      return OBRIGACAO_TIPO_VARIANTS[key as string] ??
+             OBRIGACAO_TIPO_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'obrigacao_direcao':
+      return OBRIGACAO_DIRECAO_VARIANTS[key as string] ??
+             OBRIGACAO_DIRECAO_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     default:
       return 'neutral';
@@ -697,6 +831,12 @@ export const VARIANTS = {
   statusContrato: STATUS_CONTRATO_VARIANTS,
   folhaStatus: FOLHA_STATUS_VARIANTS,
   salarioStatus: SALARIO_STATUS_VARIANTS,
+  callStatus: CALL_STATUS_VARIANTS,
+  networkQuality: NETWORK_QUALITY_VARIANTS,
+  onlineStatus: ONLINE_STATUS_VARIANTS,
+  obrigacaoStatus: OBRIGACAO_STATUS_VARIANTS,
+  obrigacaoTipo: OBRIGACAO_TIPO_VARIANTS,
+  obrigacaoDirecao: OBRIGACAO_DIRECAO_VARIANTS,
 } as const;
 
 export const LABELS = {

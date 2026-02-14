@@ -44,7 +44,16 @@ import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-breakpoint';
 import type { ComunicacaoItem } from '../../comunica-cnj/domain';
 
-// Configuração de tipos de comunicação (cores + ícones para acessibilidade)
+/**
+ * Configuração de tipos de comunicação (cores + ícones para acessibilidade).
+ *
+ * @ai-context Cores alinhadas com design system:
+ * - red: intimação (crítico)
+ * - orange: citação/notificação (warning)
+ * - blue: lista de distribuição (info)
+ * - purple: carta precatória (formal)
+ * - cyan: aviso (info secundário)
+ */
 const TIPO_COMUNICACAO_CONFIG: Record<string, { color: string; icon: typeof AlertCircle }> = {
   Intimação: {
     color: 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-300',
@@ -55,7 +64,7 @@ const TIPO_COMUNICACAO_CONFIG: Record<string, { color: string; icon: typeof Aler
     icon: Mail
   },
   Notificação: {
-    color: 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300',
+    color: 'bg-orange-100 text-orange-800 border-orange-300 dark:bg-orange-900/30 dark:text-orange-300',
     icon: Bell
   },
   'Lista de distribuição': {

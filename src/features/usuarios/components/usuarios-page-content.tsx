@@ -83,36 +83,18 @@ export function UsuariosPageContent() {
   return (
     <PageShell
       title="Equipe"
-      description="Gerencie os membros da equipe do escritório"
       actions={
-        <>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                className="h-9 w-9"
-                onClick={() => setCargosManagementOpen(true)}
-                aria-label="Gerenciar cargos"
-              >
-                <Settings className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Gerenciar cargos</TooltipContent>
-          </Tooltip>
-          <Button
-            type="button"
-            className="h-9"
-            onClick={() => setCreateOpen(true)}
-          >
-            <Plus className="h-4 w-4" />
-            Novo Membro
-          </Button>
-        </>
+        <Button
+          type="button"
+          className="h-9"
+          onClick={() => setCreateOpen(true)}
+        >
+          <Plus className="h-4 w-4" />
+          Novo Membro
+        </Button>
       }
     >
-      {/* Toolbar: Search + Filters */}
+      {/* Toolbar: Search + Filters + Settings */}
       <div className="flex items-center gap-2">
         <div className="relative w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -133,13 +115,30 @@ export function UsuariosPageContent() {
           onValueChange={setAtivoFiltro}
           defaultValue="all"
         />
+        <div className="ml-auto">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 bg-card"
+                onClick={() => setCargosManagementOpen(true)}
+                aria-label="Gerenciar cargos"
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Gerenciar cargos</TooltipContent>
+          </Tooltip>
+        </div>
       </div>
 
       {/* Grid de Cards */}
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="h-50 rounded-lg" />
+            <Skeleton key={i} className="h-40 rounded-lg" />
           ))}
         </div>
       ) : (

@@ -295,7 +295,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
     <div className="bg-card border rounded-md">
       {/* Linha 1: Título */}
       <div className="flex items-center justify-between px-4 py-4">
-        <h1 className="text-2xl font-semibold tracking-tight">Audiências</h1>
+        <h1 className="text-2xl font-bold tracking-tight font-heading">Audiências</h1>
       </div>
 
       {/* Linha 2: Filtros */}
@@ -501,7 +501,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
             {/* Toolbar - sem card, direto no background */}
             {/* Linha 1: Título + Ação */}
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-semibold tracking-tight">Audiências</h1>
+              <h1 className="text-2xl font-bold tracking-tight font-heading">Audiências</h1>
               <Button onClick={() => setIsCreateDialogOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Nova Audiência

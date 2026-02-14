@@ -33,7 +33,7 @@ const transactions = [
     type: "Expenses",
     amount: -72.64,
     icon: <StoreIcon className="h-4 w-4" />,
-    color: "bg-emerald-500"
+    color: "bg-green-500"
   },
   {
     id: 3,
@@ -42,7 +42,7 @@ const transactions = [
     type: "Expenses",
     amount: -8.65,
     icon: <CoffeeIcon className="h-4 w-4" />,
-    color: "bg-amber-500"
+    color: "bg-orange-500"
   },
   {
     id: 4,
@@ -121,7 +121,7 @@ export default function Transactions() {
                   <Badge variant="outline">{transaction.type}</Badge>
                 </TableCell>
                 <TableCell
-                  className={`text-end ${transaction.amount > 0 ? "text-emerald-600" : "text-red-600"}`}>
+                  className={`text-end ${transaction.amount > 0 ? "text-green-600" : "text-red-600"}`}>
                   {transaction.amount > 0 ? "" : "-"}${Math.abs(transaction.amount).toFixed(2)}
                 </TableCell>
               </TableRow>

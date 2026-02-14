@@ -84,8 +84,7 @@ export default function EditarAcordoPage({ params }: EditarAcordoCondenacaoPageP
           <Link href={`/acordos-condenacoes/${acordoId}`}><ArrowLeft className="h-4 w-4" /></Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Editar Acordo/Condenação</h1>
-          <p className="text-muted-foreground">Atualize as informações</p>
+          <h1 className="text-2xl font-bold tracking-tight font-heading">Editar Acordo/Condenação</h1>
         </div>
       </div>
 

@@ -55,7 +55,7 @@ export function ContratoDetalhesHeader({
           </Button>
           <div className="space-y-1">
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-semibold tracking-tight">
+              <h1 className="text-2xl font-bold tracking-tight font-heading">
                 {tipoContratoLabel} - {clienteNome.toUpperCase()}
               </h1>
               <Badge variant={statusVariant}>{statusLabel}</Badge>

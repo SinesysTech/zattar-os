@@ -12,7 +12,7 @@ export default async function MetricasDBPage() {
     }
 
     return (
-      <PageShell title="Métricas do Banco de Dados" description="Erro ao carregar">
+      <PageShell title="Métricas do Banco de Dados">
         <div className="text-destructive">{result.error || "Erro ao carregar métricas"}</div>
       </PageShell>
     );

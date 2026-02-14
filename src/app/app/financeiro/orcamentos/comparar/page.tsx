@@ -71,16 +71,16 @@ const formatarPercentual = (valor: number): string => {
 };
 
 const getVariacaoIcon = (variacao: number) => {
-  if (variacao < -5) return <TrendingDown className="h-4 w-4 text-green-500" />;
-  if (variacao > 5) return <TrendingUp className="h-4 w-4 text-red-500" />;
+  if (variacao < -5) return <TrendingDown className="h-4 w-4 text-green-600" />;
+  if (variacao > 5) return <TrendingUp className="h-4 w-4 text-red-600" />;
   return <Minus className="h-4 w-4 text-muted-foreground" />;
 };
 
 const getVariacaoColor = (variacao: number): string => {
   if (variacao <= -10) return 'text-green-600';
-  if (variacao <= 0) return 'text-green-500';
-  if (variacao <= 10) return 'text-amber-500';
-  if (variacao <= 20) return 'text-amber-600';
+  if (variacao <= 0) return 'text-green-600';
+  if (variacao <= 10) return 'text-orange-600';
+  if (variacao <= 20) return 'text-orange-600';
   return 'text-red-600';
 };
 

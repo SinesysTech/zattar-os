@@ -5,24 +5,17 @@ import { useRouter } from 'next/navigation';
 import { DataPagination, DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { FilterPopover } from '@/features/partes';
 import { TIPOS_CAPTURA, STATUS_CAPTURA } from './captura-filters';
 import { useCapturasLog } from '../hooks/use-capturas-log';
 import { useAdvogados } from '@/features/advogados';
 import { useCredenciais } from '@/features/advogados';
 import { deletarCapturaLog } from '@/features/captura/services/api-client';
-import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
+import type { ColumnDef, RowSelectionState, Table as TanstackTable } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/features/captura/types';
 import type { CodigoTRT } from '@/features/captura';
-import { Eye, Search, Trash2 } from 'lucide-react';
+import { Eye, Trash2 } from 'lucide-react';
 import { getSemanticBadgeVariant, CAPTURA_STATUS_LABELS } from '@/lib/design-system';
 import {
   AlertDialog,
@@ -514,7 +507,7 @@ function criarColunas(
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => onDelete(captura)}
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    className={buttonVariants({ variant: 'destructive' })}
                   >
                     Deletar
                   </AlertDialogAction>
@@ -535,9 +528,6 @@ interface CapturaListProps {
 export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   const router = useRouter();
 
-  // Estado para evitar hydration mismatch com Select components
-  const [mounted, setMounted] = React.useState(false);
-
   // Estados de busca e paginação
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
@@ -548,14 +538,13 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   const [statusCaptura, setStatusCaptura] = React.useState<'all' | StatusCaptura>('all');
   const [advogadoId, setAdvogadoId] = React.useState<'all' | string>('all');
 
-  // Marcar como montado após hidratação
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
   // Estados para DataTableToolbar
   const [table, setTable] = React.useState<TanstackTable<CapturaLog> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+
+  // Row selection state for bulk actions
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const [isDeletingBulk, setIsDeletingBulk] = React.useState(false);
 
   // Buscar advogados para filtro e mapeamento
   const { advogados } = useAdvogados({ limite: 1000 });
@@ -642,6 +631,45 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
     [refetch]
   );
 
+  const handleBulkDelete = React.useCallback(async () => {
+    setIsDeletingBulk(true);
+    try {
+      const selectedIds = Object.keys(rowSelection)
+        .filter((key) => rowSelection[key])
+        .map((key) => Number(key));
+
+      await Promise.all(selectedIds.map((id) => deletarCapturaLog(id)));
+      setRowSelection({});
+      refetch();
+    } catch (error) {
+      console.error('Erro ao deletar capturas em massa:', error);
+    } finally {
+      setIsDeletingBulk(false);
+    }
+  }, [rowSelection, refetch]);
+
+  const selectedCount = Object.keys(rowSelection).filter((k) => rowSelection[k]).length;
+
+  // Options for FilterPopover components
+  const tipoOptions = React.useMemo(
+    () => TIPOS_CAPTURA.map((t) => ({ value: t.value, label: t.label })),
+    []
+  );
+
+  const statusOptions = React.useMemo(
+    () => STATUS_CAPTURA.map((s) => ({ value: s.value, label: s.label })),
+    []
+  );
+
+  const advogadoOptions = React.useMemo(
+    () =>
+      (advogados ?? []).map((a) => ({
+        value: a.id.toString(),
+        label: a.nome_completo,
+      })),
+    [advogados]
+  );
+
   const colunas = React.useMemo(
     () => criarColunas(router, handleDelete, advogadosMap, credenciaisMap),
     [router, handleDelete, advogadosMap, credenciaisMap]
@@ -656,9 +684,6 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
       }));
     }
   }, [table]);
-
-  // Classes padronizadas para filtros (seguindo padrão DataShell)
-  const filterClasses = 'h-9 w-32 border-dashed bg-card font-normal';
 
   return (
     <DataShell
@@ -683,172 +708,78 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                   }
                 : undefined
             }
+            actionSlot={
+              selectedCount > 0 ? (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-9 gap-2 bg-card text-destructive hover:text-destructive"
+                      disabled={isDeletingBulk}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      {isDeletingBulk ? 'Excluindo...' : `Excluir (${selectedCount})`}
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Confirmar exclusão em massa</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Tem certeza que deseja deletar {selectedCount}{' '}
+                        {selectedCount === 1 ? 'captura' : 'capturas'}? Esta ação não pode ser desfeita.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={handleBulkDelete}
+                        className={buttonVariants({ variant: 'destructive' })}
+                      >
+                        Deletar {selectedCount} {selectedCount === 1 ? 'captura' : 'capturas'}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              ) : undefined
+            }
             filtersSlot={
-              mounted ? (
-                <>
-                  <Select
-                    value={tipoCaptura}
-                    onValueChange={(val) => {
-                      setTipoCaptura(val as 'all' | TipoCaptura);
-                      setPagina(0);
-                    }}
-                  >
-                    <SelectTrigger className={filterClasses}>
-                      <SelectValue placeholder="Tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os tipos</SelectItem>
-                      {TIPOS_CAPTURA.map((tipo) => (
-                        <SelectItem key={tipo.value} value={tipo.value}>
-                          {tipo.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Select
-                    value={statusCaptura}
-                    onValueChange={(val) => {
-                      setStatusCaptura(val as 'all' | StatusCaptura);
-                      setPagina(0);
-                    }}
-                  >
-                    <SelectTrigger className={filterClasses}>
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os status</SelectItem>
-                      {STATUS_CAPTURA.map((status) => (
-                        <SelectItem key={status.value} value={status.value}>
-                          {status.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Select
-                    value={advogadoId}
-                    onValueChange={(val) => {
-                      setAdvogadoId(val);
-                      setPagina(0);
-                    }}
-                  >
-                    <SelectTrigger className={filterClasses}>
-                      <SelectValue placeholder="Advogado" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os advogados</SelectItem>
-                      {advogados?.map((advogado) => (
-                        <SelectItem key={advogado.id} value={advogado.id.toString()}>
-                          {advogado.nome_completo}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </>
-              ) : (
-                <>
-                  <div className="h-9 w-32 rounded-md border border-dashed border-input bg-card" />
-                  <div className="h-9 w-32 rounded-md border border-dashed border-input bg-card" />
-                  <div className="h-9 w-32 rounded-md border border-dashed border-input bg-card" />
-                </>
-              )
+              <>
+                <FilterPopover
+                  label="Tipo"
+                  placeholder="Buscar tipo..."
+                  options={tipoOptions}
+                  value={tipoCaptura}
+                  onValueChange={(val) => {
+                    setTipoCaptura(val as 'all' | TipoCaptura);
+                    setPagina(0);
+                  }}
+                />
+                <FilterPopover
+                  label="Status"
+                  placeholder="Buscar status..."
+                  options={statusOptions}
+                  value={statusCaptura}
+                  onValueChange={(val) => {
+                    setStatusCaptura(val as 'all' | StatusCaptura);
+                    setPagina(0);
+                  }}
+                />
+                <FilterPopover
+                  label="Advogado"
+                  placeholder="Buscar advogado..."
+                  options={advogadoOptions}
+                  value={advogadoId}
+                  onValueChange={(val) => {
+                    setAdvogadoId(val);
+                    setPagina(0);
+                  }}
+                />
+              </>
             }
           />
         ) : (
-          <div className="px-6 py-4">
-            <div className="flex items-center gap-2">
-              <div className="relative w-full max-w-xs">
-                <Search
-                  className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                <Input
-                  type="search"
-                  placeholder="Buscar capturas..."
-                  aria-label="Buscar na tabela"
-                  value={busca}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    setBusca(event.target.value);
-                    setPagina(0);
-                  }}
-                  className="h-9 w-full pl-9 bg-card"
-                />
-              </div>
-
-              {mounted ? (
-                <>
-                  <Select
-                    value={tipoCaptura}
-                    onValueChange={(val) => {
-                      setTipoCaptura(val as 'all' | TipoCaptura);
-                      setPagina(0);
-                    }}
-                  >
-                    <SelectTrigger className={filterClasses}>
-                      <SelectValue placeholder="Tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os tipos</SelectItem>
-                      {TIPOS_CAPTURA.map((tipo) => (
-                        <SelectItem key={tipo.value} value={tipo.value}>
-                          {tipo.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Select
-                    value={statusCaptura}
-                    onValueChange={(val) => {
-                      setStatusCaptura(val as 'all' | StatusCaptura);
-                      setPagina(0);
-                    }}
-                  >
-                    <SelectTrigger className={filterClasses}>
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os status</SelectItem>
-                      {STATUS_CAPTURA.map((status) => (
-                        <SelectItem key={status.value} value={status.value}>
-                          {status.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Select
-                    value={advogadoId}
-                    onValueChange={(val) => {
-                      setAdvogadoId(val);
-                      setPagina(0);
-                    }}
-                  >
-                    <SelectTrigger className={filterClasses}>
-                      <SelectValue placeholder="Advogado" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os advogados</SelectItem>
-                      {advogados?.map((advogado) => (
-                        <SelectItem key={advogado.id} value={advogado.id.toString()}>
-                          {advogado.nome_completo}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </>
-              ) : (
-                <>
-                  <div className="h-9 w-32 rounded-md border border-dashed border-input bg-card" />
-                  <div className="h-9 w-32 rounded-md border border-dashed border-input bg-card" />
-                  <div className="h-9 w-32 rounded-md border border-dashed border-input bg-card" />
-                </>
-              )}
-
-              <div className="flex-1" />
-            </div>
-          </div>
+          <div className="p-6" />
         )
       }
       footer={
@@ -885,6 +816,11 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
         density={density}
         onTableReady={(t) => setTable(t as TanstackTable<CapturaLog>)}
         emptyMessage="Nenhuma captura encontrada no histórico."
+        rowSelection={{
+          state: rowSelection,
+          onRowSelectionChange: setRowSelection,
+          getRowId: (row) => row.id.toString(),
+        }}
       />
     </DataShell>
   );

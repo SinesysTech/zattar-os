@@ -447,7 +447,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                       Super Admins possuem acesso total ao sistema e bypassam todas as permissões.
                     </div>
                     {usuario.id === usuarioLogado.id && (
-                      <div className="text-xs text-amber-600 dark:text-amber-500 mt-2">
+                      <div className="text-xs text-orange-600 dark:text-orange-500 mt-2">
                         Você não pode remover seu próprio status de Super Admin
                       </div>
                     )}

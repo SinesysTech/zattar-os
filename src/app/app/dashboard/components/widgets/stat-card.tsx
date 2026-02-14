@@ -19,31 +19,39 @@ interface StatCardProps {
 }
 
 /**
- * Variant styles using Tailwind semantic colors.
- * Note: These are intentional design system color mappings for dashboard widgets.
+ * Variant styles aligned with design system semantic colors.
+ *
+ * @ai-context These colors match the semantic variant mappings in @/lib/design-system/variants.ts:
+ * - success → green
+ * - warning → orange
+ * - danger/destructive → red
+ * - info → blue
+ * - default → primary
+ *
+ * Centralized here for dashboard stat cards. Colors are consistent with Badge system.
  */
 const variantStyles = {
   default: {
     icon: 'text-primary bg-primary/10',
     trend: {
-      up: 'text-emerald-600 dark:text-emerald-400',
+      up: 'text-green-600 dark:text-green-400',
       down: 'text-red-600 dark:text-red-400',
       neutral: 'text-muted-foreground',
     },
   },
   success: {
-    icon: 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30',
+    icon: 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30',
     trend: {
-      up: 'text-emerald-600 dark:text-emerald-400',
+      up: 'text-green-600 dark:text-green-400',
       down: 'text-red-600 dark:text-red-400',
       neutral: 'text-muted-foreground',
     },
   },
   warning: {
-    icon: 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30',
+    icon: 'text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30',
     trend: {
-      up: 'text-amber-600 dark:text-amber-400',
-      down: 'text-emerald-600 dark:text-emerald-400',
+      up: 'text-orange-600 dark:text-orange-400',
+      down: 'text-green-600 dark:text-green-400',
       neutral: 'text-muted-foreground',
     },
   },
@@ -51,7 +59,7 @@ const variantStyles = {
     icon: 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30',
     trend: {
       up: 'text-red-600 dark:text-red-400',
-      down: 'text-emerald-600 dark:text-emerald-400',
+      down: 'text-green-600 dark:text-green-400',
       neutral: 'text-muted-foreground',
     },
   },

@@ -129,7 +129,7 @@ export function ClientSearchInput({
       )}
 
       {searchStatus === 'notFound' && (
-        <div className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
+        <div className="flex items-center gap-2 text-sm text-orange-600 dark:text-orange-400">
           <XCircle className="w-4 h-4" />
           <span>Cliente não encontrado. Preencha os dados manualmente.</span>
         </div>
