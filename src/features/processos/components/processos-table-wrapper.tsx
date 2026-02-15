@@ -16,14 +16,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TablePagination } from '@/components/shared/table-pagination';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Combobox } from '@/components/ui/combobox';
+import { FilterPopover, FilterPopoverMulti, type FilterOption } from '@/features/partes/components/shared';
 import {
   GrauBadgesSimple,
   ProcessosEmptyState,
@@ -94,6 +87,15 @@ interface ProcessosTableWrapperProps {
   initialUsers: Record<number, { nome: string }>;
   initialTribunais: Array<{ codigo: string; nome: string }>;
 }
+
+// =============================================================================
+// OPÇÕES DE FILTRO
+// =============================================================================
+
+const ORIGEM_OPTIONS: readonly FilterOption[] = [
+  { value: 'acervo_geral', label: 'Acervo Geral' },
+  { value: 'arquivado', label: 'Arquivados' },
+];
 
 // =============================================================================
 // HELPERS
@@ -785,6 +787,11 @@ export function ProcessosTableWrapper({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const filterGroups = React.useMemo(() => buildProcessosFilterGroups(), []);
 
+  const tribunaisOptions: readonly FilterOption[] = React.useMemo(
+    () => initialTribunais.map((t) => ({ value: t.codigo, label: `${t.codigo} - ${t.nome}` })),
+    [initialTribunais]
+  );
+
   // Função para atualizar processo localmente (otimista)
   const updateProcessoLocal = React.useCallback((processoId: number, updates: Partial<ProcessoUnificado>) => {
     setProcessos((prev) =>
@@ -946,35 +953,25 @@ export function ProcessosTableWrapper({
                 className="h-9 w-full pl-9 bg-card"
               />
             </div>
-            <Combobox
-              options={initialTribunais.map(t => ({ label: `${t.codigo} - ${t.nome}`, value: t.codigo }))}
+            <FilterPopoverMulti
+              label="Tribunais"
+              placeholder="Buscar tribunal..."
+              options={tribunaisOptions}
               value={trtFilter}
               onValueChange={(val) => {
                 setTrtFilter(val);
                 setPageIndex(0);
               }}
-              placeholder="Tribunais"
-              searchPlaceholder="Buscar tribunal..."
-              emptyText="Nenhum tribunal encontrado"
-              multiple={true}
-              className="h-9 w-40 border-dashed bg-card"
             />
-            <Select
+            <FilterPopover
+              label="Origem"
+              options={ORIGEM_OPTIONS}
               value={origemFilter}
               onValueChange={(val) => {
                 setOrigemFilter(val);
                 setPageIndex(0);
               }}
-            >
-              <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
-                <SelectValue placeholder="Origem" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Origem</SelectItem>
-                <SelectItem value="acervo_geral">Acervo Geral</SelectItem>
-                <SelectItem value="arquivado">Arquivados</SelectItem>
-              </SelectContent>
-            </Select>
+            />
           </div>
           <div className="flex items-center gap-2">
             <TooltipProvider>

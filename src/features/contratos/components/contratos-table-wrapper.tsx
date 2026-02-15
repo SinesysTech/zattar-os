@@ -21,13 +21,7 @@ import {
   DataTableToolbar,
   DataPagination,
 } from '@/components/shared/data-shell';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
 import type { Table as TanstackTable, SortingState } from '@tanstack/react-table';
 
 import { getContratosColumns } from './columns';
@@ -52,10 +46,24 @@ import {
 } from '../domain';
 import {
   actionListarContratos,
-  actionListarSegmentos,
   actionResolverNomesEntidadesContrato,
-  type Segmento,
 } from '../actions';
+
+// =============================================================================
+// OPÇÕES DE FILTRO
+// =============================================================================
+
+const TIPO_CONTRATO_OPTIONS: readonly FilterOption[] = Object.entries(TIPO_CONTRATO_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+const TIPO_COBRANCA_OPTIONS: readonly FilterOption[] = Object.entries(TIPO_COBRANCA_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+const STATUS_CONTRATO_OPTIONS: readonly FilterOption[] = Object.entries(STATUS_CONTRATO_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
 
 // =============================================================================
 // TIPOS
@@ -67,6 +75,7 @@ interface ContratosTableWrapperProps {
   clientesOptions: ClienteInfo[];
   partesContrariasOptions: ClienteInfo[];
   usuariosOptions?: ClienteInfo[];
+  segmentosOptions?: Array<{ id: number; nome: string }>;
 }
 
 // =============================================================================
@@ -79,6 +88,7 @@ export function ContratosTableWrapper({
   clientesOptions,
   partesContrariasOptions,
   usuariosOptions = [],
+  segmentosOptions = [],
 }: ContratosTableWrapperProps) {
   // ---------- Estado dos Dados ----------
   const [contratos, setContratos] = React.useState<Contrato[]>(initialData);
@@ -117,7 +127,7 @@ export function ContratosTableWrapper({
   const [status, setStatus] = React.useState<string>('');
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
-  const [segmentos, setSegmentos] = React.useState<Segmento[]>([]);
+  const [segmentos, setSegmentos] = React.useState(segmentosOptions);
 
   // ---------- Estado de Dialogs/Sheets ----------
   const [createOpen, setCreateOpen] = React.useState(false);
@@ -146,27 +156,31 @@ export function ContratosTableWrapper({
     return new Map(segmentos.map((s) => [s.id, { nome: s.nome }]));
   }, [segmentos]);
 
-  React.useEffect(() => {
-    async function fetchSegmentos() {
-      try {
-        const result = await actionListarSegmentos();
-        if (result.success) {
-          setSegmentos((result.data || []).filter((s) => s.ativo));
-        }
-      } catch {
-        // noop
-      }
-    }
+  // Refs para acessar os valores atuais das options sem incluí-los como deps do useEffect
+  // (evita loop: efeito atualiza options → options mudam → efeito re-executa)
+  const clientesOptionsRef = React.useRef(clientesOptionsState);
+  clientesOptionsRef.current = clientesOptionsState;
+  const partesContrariasOptionsRef = React.useRef(partesContrariasOptionsState);
+  partesContrariasOptionsRef.current = partesContrariasOptionsState;
+  const usuariosOptionsRef = React.useRef(usuariosOptionsState);
+  usuariosOptionsRef.current = usuariosOptionsState;
 
-    fetchSegmentos();
-  }, []);
+  // Completar nomes faltantes quando contratos mudam via refetch (paginação/filtros).
+  // Pula o render inicial: as entities já foram pré-carregadas pelo Server Component.
+  // Usa comparação de referência para ser StrictMode-safe (ref preserva mesma referência).
+  const prevContratosRef = React.useRef(contratos);
 
-  // Completar nomes faltantes conforme contratos mudam (paginação/refetch)
   React.useEffect(() => {
+    // No mount e StrictMode remount, contratos === prevContratosRef.current (mesma referência)
+    if (prevContratosRef.current === contratos) return;
+    prevContratosRef.current = contratos;
+
+    let cancelled = false;
+
     const run = async () => {
-      const currentClientes = new Set(clientesOptionsState.map((c) => c.id));
-      const currentPartes = new Set(partesContrariasOptionsState.map((p) => p.id));
-      const currentUsuarios = new Set(usuariosOptionsState.map((u) => u.id));
+      const currentClientes = new Set(clientesOptionsRef.current.map((c) => c.id));
+      const currentPartes = new Set(partesContrariasOptionsRef.current.map((p) => p.id));
+      const currentUsuarios = new Set(usuariosOptionsRef.current.map((u) => u.id));
 
       const missingClienteIds = Array.from(
         new Set(contratos.map((c) => c.clienteId).filter((id) => !currentClientes.has(id)))
@@ -199,7 +213,7 @@ export function ContratosTableWrapper({
         usuariosIds: missingUsuarioIds,
       });
 
-      if (!result.success) return;
+      if (cancelled || !result.success) return;
 
       const appendUnique = (prev: ClienteInfo[], incoming: ClienteInfo[]) => {
         const map = new Map(prev.map((x) => [x.id, x]));
@@ -218,9 +232,9 @@ export function ContratosTableWrapper({
       }
     };
 
-    // best-effort, sem travar render
     void run();
-  }, [contratos, clientesOptionsState, partesContrariasOptionsState, usuariosOptionsState]);
+    return () => { cancelled = true; };
+  }, [contratos]);
 
   // ---------- Helpers ----------
   const getSortParams = React.useCallback((sortingState: SortingState): { ordenarPor?: ContratoSortBy; ordem?: Ordem } => {
@@ -277,14 +291,22 @@ export function ContratosTableWrapper({
     }
   }, [pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, sorting, getSortParams]);
 
-  // ---------- Skip First Render ----------
-  const isFirstRender = React.useRef(true);
+  // ---------- Refetch reativo a filtros ----------
+  // Usa snapshot dos valores anteriores para:
+  // 1. Pular o render inicial (dados já vieram do server)
+  // 2. Funcionar corretamente com React StrictMode (refs persistem entre mount/unmount)
+  const prevFiltersRef = React.useRef<string | null>(null);
 
   React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+    const filterKey = JSON.stringify([pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, sorting]);
+
+    if (prevFiltersRef.current === filterKey) return;
+
+    const isInitial = prevFiltersRef.current === null;
+    prevFiltersRef.current = filterKey;
+
+    if (isInitial) return; // dados já carregados pelo Server Component
+
     refetch();
   }, [pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, sorting, refetch]);
 
@@ -365,65 +387,35 @@ export function ContratosTableWrapper({
                     }}
                   />
 
-                  <Select
-                    value={tipoContrato}
+                  <FilterPopover
+                    label="Tipo Contrato"
+                    options={TIPO_CONTRATO_OPTIONS}
+                    value={tipoContrato || 'all'}
                     onValueChange={(val) => {
                       setTipoContrato(val === 'all' ? '' : val);
                       setPageIndex(0);
                     }}
-                  >
-                    <SelectTrigger className="h-9 w-45 border-dashed bg-card">
-                      <SelectValue placeholder="Tipo de Contrato" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os tipos</SelectItem>
-                      {Object.entries(TIPO_CONTRATO_LABELS).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  />
 
-                  <Select
-                    value={tipoCobranca}
+                  <FilterPopover
+                    label="Cobrança"
+                    options={TIPO_COBRANCA_OPTIONS}
+                    value={tipoCobranca || 'all'}
                     onValueChange={(val) => {
                       setTipoCobranca(val === 'all' ? '' : val);
                       setPageIndex(0);
                     }}
-                  >
-                    <SelectTrigger className="h-9 w-37.5 border-dashed bg-card">
-                      <SelectValue placeholder="Cobrança" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todas</SelectItem>
-                      {Object.entries(TIPO_COBRANCA_LABELS).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  />
 
-                  <Select
-                    value={status}
+                  <FilterPopover
+                    label="Status"
+                    options={STATUS_CONTRATO_OPTIONS}
+                    value={status || 'all'}
                     onValueChange={(val) => {
                       setStatus(val === 'all' ? '' : val);
                       setPageIndex(0);
                     }}
-                  >
-                    <SelectTrigger className="h-9 w-40 border-dashed bg-card">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
-                      {Object.entries(STATUS_CONTRATO_LABELS).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  />
                 </>
               }
             />

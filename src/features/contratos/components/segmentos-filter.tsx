@@ -3,20 +3,29 @@
 /**
  * CONTRATOS FEATURE - SegmentosFilter
  *
- * Componente de filtro de segmentos com botão para gerenciar segmentos.
- * Usa Popover para exibir lista de segmentos com botão de configuração.
+ * Componente de filtro de segmentos seguindo o padrão FilterPopover.
+ * Carrega segmentos dinamicamente e inclui botão para gerenciar segmentos.
  */
 
 import * as React from 'react';
-import { Check, ChevronsUpDown, Settings, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { PlusCircle, Settings, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { AppBadge } from '@/components/ui/app-badge';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Separator } from '@/components/ui/separator';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from '@/components/ui/command';
+import { Checkbox } from '@/components/ui/checkbox';
 import { SegmentosDialog } from './segmentos-dialog';
 import type { Segmento } from '../actions';
 import { actionListarSegmentos } from '../actions';
@@ -28,7 +37,6 @@ import { actionListarSegmentos } from '../actions';
 interface SegmentosFilterProps {
   value: string;
   onValueChange: (value: string) => void;
-  className?: string;
 }
 
 // =============================================================================
@@ -38,12 +46,23 @@ interface SegmentosFilterProps {
 export function SegmentosFilter({
   value,
   onValueChange,
-  className,
 }: SegmentosFilterProps) {
   const [open, setOpen] = React.useState(false);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [segmentos, setSegmentos] = React.useState<Segmento[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
+
+  const activeSegmentos = React.useMemo(
+    () => segmentos.filter((s) => s.ativo),
+    [segmentos]
+  );
+
+  const isFiltered = value !== '';
+
+  const selectedLabel = React.useMemo(() => {
+    if (!value) return null;
+    return activeSegmentos.find((s) => String(s.id) === value)?.nome || null;
+  }, [value, activeSegmentos]);
 
   // Carregar segmentos ao abrir o popover
   const fetchSegmentos = React.useCallback(async () => {
@@ -74,113 +93,79 @@ export function SegmentosFilter({
     }
   };
 
-  // Encontrar label do segmento selecionado
-  const selectedLabel = React.useMemo(() => {
-    if (!value) return null;
-    const found = segmentos.find((s) => String(s.id) === value);
-    return found?.nome || null;
-  }, [value, segmentos]);
-
-  const handleSelect = (segmentoId: string) => {
-    onValueChange(segmentoId === value ? '' : segmentoId);
-    setOpen(false);
-  };
-
   return (
     <>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className={cn('h-9 w-[180px] justify-between border-dashed bg-card font-normal', className)}
-          >
-            <span className={cn('truncate', !selectedLabel && 'text-muted-foreground')}>
-              {selectedLabel || 'Segmento'}
-            </span>
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <Button variant="outline" className="h-9 border-dashed bg-card">
+            <PlusCircle className="h-4 w-4" />
+            Segmento
+            {isFiltered && selectedLabel && (
+              <AppBadge variant="secondary" className="ml-1 rounded-sm px-1.5 font-normal">
+                {selectedLabel}
+              </AppBadge>
+            )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[220px] p-0" align="start">
-          <div className="flex flex-col">
-            {/* Botão de gerenciar segmentos */}
-            <div className="p-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start gap-2 h-8 text-xs"
-                onClick={() => {
-                  setOpen(false);
-                  setDialogOpen(true);
-                }}
-              >
-                <Settings className="h-3.5 w-3.5" />
-                Gerenciar Segmentos
-              </Button>
-            </div>
-
-            <Separator />
-
-            {/* Lista de segmentos */}
-            <div className="max-h-[300px] overflow-auto p-1">
+        <PopoverContent className="w-56 p-0" align="start">
+          <Command>
+            <CommandInput placeholder="Buscar segmento..." className="h-9" />
+            <CommandList>
               {isLoading ? (
-                <div className="flex items-center justify-center py-4">
+                <div className="flex items-center justify-center py-6">
                   <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                 </div>
               ) : (
                 <>
-                  {/* Opção para limpar filtro */}
-                  <div
-                    className={cn(
-                      'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground',
-                      !value && 'bg-accent'
-                    )}
-                    onClick={() => {
+                  <CommandEmpty>Nenhum segmento encontrado.</CommandEmpty>
+                  <CommandGroup>
+                    {activeSegmentos.map((segmento) => {
+                      const segId = String(segmento.id);
+                      const isSelected = value === segId;
+                      return (
+                        <CommandItem
+                          key={segmento.id}
+                          value={segmento.nome}
+                          onSelect={() => {
+                            onValueChange(isSelected ? '' : segId);
+                            setOpen(false);
+                          }}
+                        >
+                          <div className="flex items-center space-x-3 py-1">
+                            <Checkbox checked={isSelected} className="pointer-events-none" />
+                            <span className="leading-none">{segmento.nome}</span>
+                          </div>
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                </>
+              )}
+              <CommandSeparator />
+              <CommandGroup>
+                {isFiltered && (
+                  <CommandItem
+                    onSelect={() => {
                       onValueChange('');
                       setOpen(false);
                     }}
+                    className="justify-center text-center"
                   >
-                    <Check
-                      className={cn(
-                        'mr-2 h-4 w-4',
-                        !value ? 'opacity-100' : 'opacity-0'
-                      )}
-                    />
-                    <span>Todos os segmentos</span>
-                  </div>
-
-                  {/* Segmentos ativos */}
-                  {segmentos
-                    .filter((s) => s.ativo)
-                    .map((segmento) => (
-                      <div
-                        key={segmento.id}
-                        className={cn(
-                          'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground',
-                          String(segmento.id) === value && 'bg-accent'
-                        )}
-                        onClick={() => handleSelect(String(segmento.id))}
-                      >
-                        <Check
-                          className={cn(
-                            'mr-2 h-4 w-4',
-                            String(segmento.id) === value ? 'opacity-100' : 'opacity-0'
-                          )}
-                        />
-                        <span className="truncate">{segmento.nome}</span>
-                      </div>
-                    ))}
-
-                  {segmentos.filter((s) => s.ativo).length === 0 && !isLoading && (
-                    <div className="py-4 text-center text-sm text-muted-foreground">
-                      Nenhum segmento cadastrado
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
+                    Limpar filtro
+                  </CommandItem>
+                )}
+                <CommandItem
+                  onSelect={() => {
+                    setOpen(false);
+                    setDialogOpen(true);
+                  }}
+                >
+                  <Settings className="h-4 w-4" />
+                  Gerenciar Segmentos
+                </CommandItem>
+              </CommandGroup>
+            </CommandList>
+          </Command>
         </PopoverContent>
       </Popover>
 
