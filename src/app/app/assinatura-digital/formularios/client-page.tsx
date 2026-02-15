@@ -9,9 +9,8 @@ import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Copy, Trash2, Download, Pencil, Plus, Tags } from 'lucide-react';
+import { Copy, Trash2, Download, Pencil, Tags } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -379,7 +378,6 @@ export function FormulariosClient() {
   const [createOpen, setCreateOpen] = React.useState(false);
   const [duplicateOpen, setDuplicateOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
-  const [novoPopoverOpen, setNovoPopoverOpen] = React.useState(false);
   const [selectedFormulario, setSelectedFormulario] = React.useState<AssinaturaDigitalFormulario | null>(null);
   const [selectedFormularios, setSelectedFormularios] = React.useState<AssinaturaDigitalFormulario[]>([]);
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
@@ -388,6 +386,7 @@ export function FormulariosClient() {
   const [segmentoDeleteOpen, setSegmentoDeleteOpen] = React.useState(false);
   const [segmentoDuplicateOpen, setSegmentoDuplicateOpen] = React.useState(false);
   const [selectedSegmento, setSelectedSegmento] = React.useState<AssinaturaDigitalSegmento | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   const { temPermissao } = useMinhasPermissoes('assinatura_digital');
   const canCreate = temPermissao('assinatura_digital', 'criar');
@@ -496,16 +495,6 @@ export function FormulariosClient() {
     );
   }, [rowSelection, handleExportCSV, handleBulkDeleteClick, canDelete]);
 
-  const handleOpenNovoFormulario = React.useCallback(() => {
-    setNovoPopoverOpen(false);
-    setCreateOpen(true);
-  }, []);
-
-  const handleOpenSegmentos = React.useCallback(() => {
-    setNovoPopoverOpen(false);
-    setSegmentosDialogOpen(true);
-  }, []);
-
   return (
     <>
       {error && (
@@ -523,12 +512,19 @@ export function FormulariosClient() {
           table ? (
             <DataTableToolbar
               table={table}
+              title="Formulários"
+              density={density}
+              onDensityChange={setDensity}
               searchValue={busca}
               onSearchValueChange={(value) => {
                 setBusca(value);
                 setPagina(0);
               }}
               searchPlaceholder="Buscar por nome, slug ou descrição..."
+              actionButton={canCreate ? {
+                label: 'Novo Formulário',
+                onClick: () => setCreateOpen(true),
+              } : undefined}
               filtersSlot={
                 <>
                   <Select
@@ -574,49 +570,19 @@ export function FormulariosClient() {
                   </Select>
 
                   {bulkActions}
+
+                  {canCreate && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-10"
+                      onClick={() => setSegmentosDialogOpen(true)}
+                    >
+                      <Tags className="h-4 w-4 mr-2" />
+                      Segmentos
+                    </Button>
+                  )}
                 </>
-              }
-              actionSlot={
-                canCreate ? (
-                  <Popover open={novoPopoverOpen} onOpenChange={setNovoPopoverOpen}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <PopoverTrigger asChild>
-                          <Button
-                            size="icon"
-                            className="h-10 w-10"
-                            aria-label="Novo"
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        </PopoverTrigger>
-                      </TooltipTrigger>
-                      <TooltipContent>Novo</TooltipContent>
-                    </Tooltip>
-                    <PopoverContent align="end" className="w-64 p-2">
-                      <div className="flex flex-col">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          className="justify-start"
-                          onClick={handleOpenNovoFormulario}
-                        >
-                          <Plus className="mr-2 h-4 w-4" />
-                          Novo formulário
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          className="justify-start"
-                          onClick={handleOpenSegmentos}
-                        >
-                          <Tags className="mr-2 h-4 w-4" />
-                          Segmentos
-                        </Button>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                ) : null
               }
             />
           ) : (
@@ -654,6 +620,7 @@ export function FormulariosClient() {
             onRowSelectionChange: setRowSelection,
             getRowId: (row) => row.id.toString(),
           }}
+          density={density}
           isLoading={isLoading}
           error={null}
           emptyMessage="Nenhum formulário encontrado."

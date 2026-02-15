@@ -112,7 +112,7 @@ export function TerceirosTableWrapper() {
   // Filtros
   const [tipoPessoa, setTipoPessoa] = React.useState<'all' | 'pf' | 'pj'>('all');
   const [tipoParte, setTipoParte] = React.useState<string>('all');
-  const [polo, setPolo] = React.useState<'all' | 'ativo' | 'passivo'>('all');
+  const [polo, setPolo] = React.useState<'all' | 'ATIVO' | 'PASSIVO'>('all');
   const [situacao, setSituacao] = React.useState<'all' | 'A' | 'I'>('all');
 
   // Table state
@@ -360,13 +360,13 @@ export function TerceirosTableWrapper() {
                       setPagina(0);
                     }}
                     options={[
-                      { value: 'perito', label: 'Perito' },
-                      { value: 'ministerio_publico', label: 'Ministério Público' },
-                      { value: 'assistente', label: 'Assistente' },
-                      { value: 'testemunha', label: 'Testemunha' },
-                      { value: 'custos_legis', label: 'Custos Legis' },
-                      { value: 'amicus_curiae', label: 'Amicus Curiae' },
-                      { value: 'outro', label: 'Outro' },
+                      { value: 'PERITO', label: 'Perito' },
+                      { value: 'MINISTERIO_PUBLICO', label: 'Ministério Público' },
+                      { value: 'ASSISTENTE', label: 'Assistente' },
+                      { value: 'TESTEMUNHA', label: 'Testemunha' },
+                      { value: 'CUSTOS_LEGIS', label: 'Custos Legis' },
+                      { value: 'AMICUS_CURIAE', label: 'Amicus Curiae' },
+                      { value: 'OUTRO', label: 'Outro' },
                     ]}
                     defaultValue="all"
                   />
@@ -374,12 +374,12 @@ export function TerceirosTableWrapper() {
                     label="Polo"
                     value={polo}
                     onValueChange={(value) => {
-                      setPolo(value as 'all' | 'ativo' | 'passivo');
+                      setPolo(value as 'all' | 'ATIVO' | 'PASSIVO');
                       setPagina(0);
                     }}
                     options={[
-                      { value: 'ativo', label: 'Polo Ativo' },
-                      { value: 'passivo', label: 'Polo Passivo' },
+                      { value: 'ATIVO', label: 'Polo Ativo' },
+                      { value: 'PASSIVO', label: 'Polo Passivo' },
                     ]}
                     defaultValue="all"
                   />

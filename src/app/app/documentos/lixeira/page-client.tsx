@@ -34,6 +34,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { PageShell } from '@/components/shared/page-shell';
+import { FilterPopover } from '@/features/partes';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -44,13 +46,229 @@ import {
   actionDeletarPermanentemente
 } from '@/features/documentos';
 
-export default function LixeiraPage() {
+// ============================================================================
+// Constantes
+// ============================================================================
+
+const PERIODO_OPTIONS = [
+  { value: 'hoje', label: 'Hoje' },
+  { value: '7dias', label: 'Últimos 7 dias' },
+  { value: '30dias', label: 'Últimos 30 dias' },
+  { value: 'todos', label: 'Todos' },
+] as const;
+
+type PeriodoFiltro = 'hoje' | '7dias' | '30dias' | 'todos';
+
+// ============================================================================
+// Funções Auxiliares
+// ============================================================================
+
+function filtrarDocumentosPorPeriodo(
+  documentos: DocumentoComUsuario[],
+  periodo: PeriodoFiltro
+): DocumentoComUsuario[] {
+  if (periodo === 'todos') return documentos;
+  
+  const agora = new Date();
+  const limiteData = new Date();
+  
+  switch (periodo) {
+    case 'hoje':
+      limiteData.setHours(0, 0, 0, 0);
+      break;
+    case '7dias':
+      limiteData.setDate(agora.getDate() - 7);
+      break;
+    case '30dias':
+      limiteData.setDate(agora.getDate() - 30);
+      break;
+  }
+  
+  return documentos.filter((doc) => {
+    if (!doc.deleted_at) return false;
+    const deletedDate = new Date(doc.deleted_at);
+    return deletedDate >= limiteData;
+  });
+}
+
+function formatDeletedAt(date: string | null): string {
+  if (!date) return 'Data desconhecida';
+  return formatDistanceToNow(new Date(date), {
+    addSuffix: true,
+    locale: ptBR,
+  });
+}
+
+// ============================================================================
+// Componentes de UI
+// ============================================================================
+
+function LoadingState() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-24 w-full" />
+      <Skeleton className="h-24 w-full" />
+      <Skeleton className="h-24 w-full" />
+    </div>
+  );
+}
+
+function EmptyState({ onVoltar }: { onVoltar: () => void }) {
+  return (
+    <div className="flex h-[400px] items-center justify-center">
+      <div className="text-center">
+        <Trash2 className="mx-auto h-12 w-12 text-muted-foreground" />
+        <h3 className="mt-4 text-lg font-semibold">Lixeira vazia</h3>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Documentos excluídos aparecerão aqui
+        </p>
+        <Button variant="outline" className="mt-4" onClick={onVoltar}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Voltar para Documentos
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function AvisoExclusaoCard() {
+  return (
+    <Card className="border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950/20">
+      <CardContent className="flex items-center gap-3 p-4">
+        <AlertTriangle className="h-5 w-5 text-orange-600" />
+        <p className="text-sm text-orange-800 dark:text-orange-200">
+          Documentos na lixeira serão deletados permanentemente após 30 dias.
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function DocumentoCard({
+  documento,
+  actionLoading,
+  onRestaurar,
+  onExcluir,
+}: {
+  documento: DocumentoComUsuario;
+  actionLoading: number | null;
+  onRestaurar: (doc: DocumentoComUsuario) => void;
+  onExcluir: (doc: DocumentoComUsuario) => void;
+}) {
+  const isLoading = actionLoading === documento.id;
+  
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <FileText className="h-5 w-5 text-muted-foreground" />
+            <div>
+              <CardTitle className="text-base">
+                {documento.titulo || 'Documento sem título'}
+              </CardTitle>
+              <CardDescription>
+                Excluído {formatDeletedAt(documento.deleted_at)}
+              </CardDescription>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onRestaurar(documento)}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <RotateCcw className="mr-2 h-4 w-4" />
+              )}
+              Restaurar
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => onExcluir(documento)}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 className="mr-2 h-4 w-4" />
+              )}
+              Excluir
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+      {documento.descricao && (
+        <CardContent className="pt-0">
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {documento.descricao}
+          </p>
+        </CardContent>
+      )}
+    </Card>
+  );
+}
+
+function DeleteConfirmDialog({
+  open,
+  onOpenChange,
+  documento,
+  onConfirm,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  documento: DocumentoComUsuario | null;
+  onConfirm: () => void;
+}) {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Excluir permanentemente?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Esta ação não pode ser desfeita. O documento{' '}
+            <strong>&quot;{documento?.titulo || 'Sem título'}&quot;</strong>{' '}
+            será excluído permanentemente e não poderá ser recuperado.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={onConfirm}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            Excluir permanentemente
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+// ============================================================================
+// Componente Principal
+// ============================================================================
+
+export default function LixeiraClient() {
   const router = useRouter();
+  
+  // Estado
   const [documentos, setDocumentos] = React.useState<DocumentoComUsuario[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [actionLoading, setActionLoading] = React.useState<number | null>(null);
+  const [periodo, setPeriodo] = React.useState<PeriodoFiltro>('todos');
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [documentoParaDeletar, setDocumentoParaDeletar] = React.useState<DocumentoComUsuario | null>(null);
+
+  // Documentos filtrados
+  const documentosFiltrados = React.useMemo(
+    () => filtrarDocumentosPorPeriodo(documentos, periodo),
+    [documentos, periodo]
+  );
 
   // Buscar documentos na lixeira
   const fetchDocumentos = React.useCallback(async () => {
@@ -72,7 +290,7 @@ export default function LixeiraPage() {
   }, [fetchDocumentos]);
 
   // Restaurar documento
-  const handleRestaurar = async (documento: DocumentoComUsuario) => {
+  const handleRestaurar = React.useCallback(async (documento: DocumentoComUsuario) => {
     setActionLoading(documento.id);
     try {
       const result = await actionRestaurarDaLixeira(documento.id);
@@ -89,16 +307,16 @@ export default function LixeiraPage() {
     } finally {
       setActionLoading(null);
     }
-  };
+  }, []);
 
   // Abrir diálogo de confirmação para deletar permanentemente
-  const handleOpenDeleteDialog = (documento: DocumentoComUsuario) => {
+  const handleOpenDeleteDialog = React.useCallback((documento: DocumentoComUsuario) => {
     setDocumentoParaDeletar(documento);
     setDeleteDialogOpen(true);
-  };
+  }, []);
 
   // Deletar permanentemente
-  const handleDeletarPermanentemente = async () => {
+  const handleDeletarPermanentemente = React.useCallback(async () => {
     if (!documentoParaDeletar) return;
 
     setActionLoading(documentoParaDeletar.id);
@@ -120,154 +338,59 @@ export default function LixeiraPage() {
       setActionLoading(null);
       setDocumentoParaDeletar(null);
     }
-  };
-
-  // Formatar data de exclusão
-  const formatDeletedAt = (date: string | null) => {
-    if (!date) return 'Data desconhecida';
-    return formatDistanceToNow(new Date(date), {
-      addSuffix: true,
-      locale: ptBR,
-    });
-  };
+  }, [documentoParaDeletar]);
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden">
-      {/* Header */}
-      <div className="border-b p-4">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => router.push('/documentos')}
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight font-heading">Lixeira</h1>
-          </div>
+    <PageShell
+      title="Lixeira"
+      description="Documentos excluídos que serão deletados permanentemente após 30 dias"
+    >
+      {/* Toolbar com filtros */}
+      <div className="flex items-center gap-2 mb-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => router.push('/app/documentos')}
+          aria-label="Voltar para documentos"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <FilterPopover
+          label="Período"
+          options={PERIODO_OPTIONS}
+          value={periodo}
+          onValueChange={(val) => setPeriodo(val as PeriodoFiltro)}
+          defaultValue="todos"
+        />
+      </div>
+
+      {/* Conteúdo */}
+      {loading ? (
+        <LoadingState />
+      ) : documentosFiltrados.length === 0 ? (
+        <EmptyState onVoltar={() => router.push('/app/documentos')} />
+      ) : (
+        <div className="space-y-4">
+          <AvisoExclusaoCard />
+          {documentosFiltrados.map((documento) => (
+            <DocumentoCard
+              key={documento.id}
+              documento={documento}
+              actionLoading={actionLoading}
+              onRestaurar={handleRestaurar}
+              onExcluir={handleOpenDeleteDialog}
+            />
+          ))}
         </div>
-      </div>
+      )}
 
-      {/* Content */}
-      <div className="flex-1 overflow-auto p-4">
-        {loading ? (
-          <div className="space-y-4">
-            <Skeleton className="h-24 w-full" />
-            <Skeleton className="h-24 w-full" />
-            <Skeleton className="h-24 w-full" />
-          </div>
-        ) : documentos.length === 0 ? (
-          <div className="flex h-full items-center justify-center">
-            <div className="text-center">
-              <Trash2 className="mx-auto h-12 w-12 text-muted-foreground" />
-              <h3 className="mt-4 text-lg font-semibold">Lixeira vazia</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Documentos excluídos aparecerão aqui
-              </p>
-              <Button
-                variant="outline"
-                className="mt-4"
-                onClick={() => router.push('/documentos')}
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Voltar para Documentos
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {/* Aviso */}
-            <Card className="border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950/20">
-              <CardContent className="flex items-center gap-3 p-4">
-                <AlertTriangle className="h-5 w-5 text-orange-600" />
-                <p className="text-sm text-orange-800 dark:text-orange-200">
-                  Documentos na lixeira serão deletados permanentemente após 30 dias.
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Lista de documentos */}
-            {documentos.map((documento) => (
-              <Card key={documento.id}>
-                <CardHeader className="pb-2">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <FileText className="h-5 w-5 text-muted-foreground" />
-                      <div>
-                        <CardTitle className="text-base">
-                          {documento.titulo || 'Documento sem título'}
-                        </CardTitle>
-                        <CardDescription>
-                          Excluído {formatDeletedAt(documento.deleted_at)}
-                        </CardDescription>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleRestaurar(documento)}
-                        disabled={actionLoading === documento.id}
-                      >
-                        {actionLoading === documento.id ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                          <RotateCcw className="mr-2 h-4 w-4" />
-                        )}
-                        Restaurar
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleOpenDeleteDialog(documento)}
-                        disabled={actionLoading === documento.id}
-                      >
-                        {actionLoading === documento.id ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                          <Trash2 className="mr-2 h-4 w-4" />
-                        )}
-                        Excluir
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                {documento.descricao && (
-                  <CardContent className="pt-0">
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {documento.descricao}
-                    </p>
-                  </CardContent>
-                )}
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Dialog de confirmação de exclusão permanente */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Excluir permanentemente?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta ação não pode ser desfeita. O documento{' '}
-              <strong>&quot;{documentoParaDeletar?.titulo || 'Sem título'}&quot;</strong>{' '}
-              será excluído permanentemente e não poderá ser recuperado.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeletarPermanentemente}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Excluir permanentemente
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+      {/* Dialog de confirmação */}
+      <DeleteConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        documento={documentoParaDeletar}
+        onConfirm={handleDeletarPermanentemente}
+      />
+    </PageShell>
   );
 }

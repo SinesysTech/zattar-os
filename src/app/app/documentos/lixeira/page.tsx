@@ -1,9 +1,15 @@
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import LixeiraClient from './page-client';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: 'Lixeira | Documentos',
+  description: 'Documentos excluídos que serão deletados permanentemente após 30 dias',
+};
 
 function LixeiraLoading() {
   return (

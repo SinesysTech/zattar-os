@@ -44,6 +44,8 @@ const TRUSTED_DOMAINS = {
   images: ["https://images.unsplash.com"],
   // Chatwoot
   chatwoot: ["https://chatwoot-web.platform.sinesys.app"],
+  // CopilotKit
+  copilotkit: ["https://api.cloud.copilotkit.ai"],
 } as const;
 
 /**
@@ -105,10 +107,10 @@ export function buildCSPDirectives(nonce?: string): string {
     : `'self' 'unsafe-inline' ${TRUSTED_DOMAINS.fonts[0]} ${TRUSTED_DOMAINS.chatwoot[0]}`;
 
   // CSP3: separar <style> (elem) de style="..." (attr)
-  // Muitos componentes (ex: popovers/modals) usam style attributes para positioning.
-  // Permitimos apenas attributes com unsafe-inline e mantemos <style> protegido por nonce.
+  // Muitos componentes (ex: popovers/modals, recharts) usam style attributes para positioning.
+  // Permitimos unsafe-inline para attributes para compatibilidade com bibliotecas de terceiros
   const styleSrcElem = styleSrc;
-  const styleSrcAttr = nonce ? "'unsafe-inline'" : "'unsafe-inline'";
+  const styleSrcAttr = "'unsafe-inline'";
 
   const directives: Record<string, string> = {
     "default-src": "'self'",
@@ -131,7 +133,7 @@ export function buildCSPDirectives(nonce?: string): string {
       " "
     )} ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.ai.join(
       " "
-    )} ${TRUSTED_DOMAINS.dyte.join(" ")} ${TRUSTED_DOMAINS.chatwoot[0]}`,
+    )} ${TRUSTED_DOMAINS.dyte.join(" ")} ${TRUSTED_DOMAINS.chatwoot[0]} ${TRUSTED_DOMAINS.copilotkit[0]}`,
 
     "frame-src": `'self' ${TRUSTED_DOMAINS.dyte.slice(1).join(" ")} ${
       TRUSTED_DOMAINS.chatwoot[0]

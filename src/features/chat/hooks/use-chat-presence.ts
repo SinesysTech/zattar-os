@@ -53,14 +53,26 @@ export function useChatPresence({
   // Atualizar status no banco de dados
   const updateDatabaseStatus = useCallback(async (status: 'online' | 'away' | 'offline') => {
     try {
-      await supabase
+      // Buscar o auth_user_id primeiro
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user?.id) {
+        console.warn('[ChatPresence] Sem sessão ativa');
+        return;
+      }
+
+      // Atualizar usando auth_user_id ao invés de id
+      const { error } = await supabase
         .from('usuarios')
         .update({ online_status: status })
-        .eq('id', userId);
+        .eq('auth_user_id', session.user.id);
+
+      if (error) {
+        console.error('[ChatPresence] Erro ao atualizar status:', error);
+      }
     } catch (error) {
       console.error('[ChatPresence] Erro ao atualizar status:', error);
     }
-  }, [supabase, userId]);
+  }, [supabase]);
 
   // Resetar timeout de inatividade
   const resetActivityTimeout = useCallback(() => {

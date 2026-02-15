@@ -10,7 +10,7 @@ import { DataTable, DataShell, DataTableToolbar, DataPagination } from '@/compon
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Edit, MoreHorizontal, Copy, Trash2, Download, FileText, FileUp, Plus } from 'lucide-react';
+import { Edit, MoreHorizontal, Copy, Trash2, Download } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -351,12 +351,12 @@ export function TemplatesClient() {
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<TemplatesFilters>({});
   const [createOpen, setCreateOpen] = React.useState(false);
-  const [initialTipoTemplate, setInitialTipoTemplate] = React.useState<TipoTemplate>('markdown');
   const [duplicateOpen, setDuplicateOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [selectedTemplate, setSelectedTemplate] = React.useState<Template | null>(null);
   const [selectedTemplates, setSelectedTemplates] = React.useState<Template[]>([]);
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   const { temPermissao } = useMinhasPermissoes('assinatura_digital');
   const canCreate = temPermissao('assinatura_digital', 'criar');
@@ -446,15 +446,7 @@ export function TemplatesClient() {
     setRowSelection({});
   }, [refetch]);
 
-  const handleNewTemplate = React.useCallback((tipo: TipoTemplate) => {
-    if (tipo !== 'pdf' && tipo !== 'markdown') {
-      console.error('Tipo de template inválido:', tipo);
-      return;
-    }
 
-    setInitialTipoTemplate(tipo);
-    setCreateOpen(true);
-  }, []);
 
   // Handlers para filtros
   const handleAtivoFilterChange = React.useCallback((value: string) => {
@@ -504,41 +496,6 @@ export function TemplatesClient() {
     );
   }, [rowSelection, handleExportCSV, handleBulkDelete, canDelete]);
 
-  // Botão com dropdown para escolher tipo de template
-  // Renderizado dentro da toolbar usando actionSlot
-  const NewTemplateButton = React.useMemo(() => {
-    if (!canCreate) return null;
-
-    return (
-      <DropdownMenu>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <DropdownMenuTrigger asChild>
-              <Button
-                size="icon"
-                className="h-10 w-10"
-                aria-label="Novo Template"
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-          </TooltipTrigger>
-          <TooltipContent>Novo Template</TooltipContent>
-        </Tooltip>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => handleNewTemplate('pdf')}>
-            <FileUp className="mr-2 h-4 w-4" />
-            Template PDF
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleNewTemplate('markdown')}>
-            <FileText className="mr-2 h-4 w-4" />
-            Template Markdown
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  }, [canCreate, handleNewTemplate]);
-
   return (
     <>
       {error && (
@@ -556,12 +513,19 @@ export function TemplatesClient() {
           table ? (
             <DataTableToolbar
               table={table}
+              title="Templates"
+              density={density}
+              onDensityChange={setDensity}
               searchValue={busca}
               onSearchValueChange={(value) => {
                 setBusca(value);
                 setPagina(0);
               }}
               searchPlaceholder="Buscar por nome, UUID ou descrição..."
+              actionButton={canCreate ? {
+                label: 'Novo Template',
+                onClick: () => setCreateOpen(true),
+              } : undefined}
               filtersSlot={
                 <>
                   <Select
@@ -595,7 +559,6 @@ export function TemplatesClient() {
                   {bulkActions}
                 </>
               }
-              actionSlot={NewTemplateButton}
             />
           ) : (
             <div className="p-6" />
@@ -632,6 +595,7 @@ export function TemplatesClient() {
             onRowSelectionChange: setRowSelection,
             getRowId: (row) => row.id.toString(),
           }}
+          density={density}
           isLoading={isLoading}
           error={null}
           emptyMessage="Nenhum template encontrado."
@@ -648,7 +612,7 @@ export function TemplatesClient() {
         open={createOpen}
         onOpenChange={setCreateOpen}
         onSuccess={handleCreateSuccess}
-        initialTipoTemplate={initialTipoTemplate}
+        initialTipoTemplate="markdown"
       />
 
       {selectedTemplate && (
