@@ -4,7 +4,7 @@
  * ExpedientesYearWrapper - Wrapper auto-contido para a view de ano
  *
  * Segue o padrão de AudienciasYearWrapper:
- * - DataShell + DataTableToolbar + YearsCarousel
+ * - DataShell + DataTableToolbar + YearFilterPopover
  * - ExpedientesListFilters no filtersSlot
  * - Grid de 12 meses com indicadores de expedientes
  * - Fetch via useExpedientes com range anual
@@ -18,8 +18,7 @@ import {
   DataTableToolbar,
 } from '@/components/shared/data-shell';
 import {
-  YearsCarousel,
-  useYearNavigation,
+  YearFilterPopover,
   TemporalViewLoading,
   TemporalViewError,
 } from '@/components/shared';
@@ -84,7 +83,8 @@ export function ExpedientesYearWrapper({
   tiposExpedientesData,
 }: ExpedientesYearWrapperProps) {
   // ---------- Navegação de Ano ----------
-  const yearNav = useYearNavigation(new Date(), 20);
+  const [selectedYear, setSelectedYear] = React.useState(new Date().getFullYear());
+  const selectedDate = React.useMemo(() => new Date(selectedYear, 0, 1), [selectedYear]);
 
   // ---------- Estado de Filtros ----------
   const [globalFilter, setGlobalFilter] = React.useState('');
@@ -113,8 +113,8 @@ export function ExpedientesYearWrapper({
       pagina: 1,
       limite: 1000,
       busca: globalFilter || undefined,
-      dataPrazoLegalInicio: format(startOfYear(yearNav.selectedDate), 'yyyy-MM-dd'),
-      dataPrazoLegalFim: format(endOfYear(yearNav.selectedDate), 'yyyy-MM-dd'),
+      dataPrazoLegalInicio: format(startOfYear(selectedDate), 'yyyy-MM-dd'),
+      dataPrazoLegalFim: format(endOfYear(selectedDate), 'yyyy-MM-dd'),
       incluirSemPrazo: true,
     };
 
@@ -133,7 +133,7 @@ export function ExpedientesYearWrapper({
     if (origemFilter) params.origem = origemFilter;
 
     return params;
-  }, [globalFilter, yearNav.selectedDate, statusFilter, responsavelFilter, tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter]);
+  }, [globalFilter, selectedDate, statusFilter, responsavelFilter, tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter]);
 
   // ---------- Data Fetching ----------
   const { expedientes, isLoading, error, refetch } = useExpedientes(hookParams);
@@ -164,7 +164,7 @@ export function ExpedientesYearWrapper({
 
   // ---------- Helpers ----------
   const getDiasMes = React.useCallback((mes: number) => {
-    const ano = yearNav.selectedDate.getFullYear();
+    const ano = selectedYear;
     const ultimoDia = new Date(ano, mes + 1, 0).getDate();
     const primeiroDiaSemana = new Date(ano, mes, 1).getDay();
     const offset = primeiroDiaSemana === 0 ? 6 : primeiroDiaSemana - 1;
@@ -173,7 +173,7 @@ export function ExpedientesYearWrapper({
     for (let i = 0; i < offset; i++) dias.push(null);
     for (let i = 1; i <= ultimoDia; i++) dias.push(i);
     return dias;
-  }, [yearNav.selectedDate]);
+  }, [selectedYear]);
 
   const handleDiaClick = React.useCallback((mes: number, dia: number) => {
     const key = `${mes}-${dia}`;
@@ -206,23 +206,27 @@ export function ExpedientesYearWrapper({
     <>
       <DataShell
         header={
-          <>
-            <DataTableToolbar
-              title="Expedientes"
-              searchValue={globalFilter}
-              onSearchValueChange={setGlobalFilter}
-              searchPlaceholder="Buscar expedientes..."
-              actionButton={{
-                label: 'Novo Expediente',
-                onClick: () => setIsCreateDialogOpen(true),
-              }}
-              actionSlot={
-                <>
-                  {viewModeSlot}
-                  {settingsSlot}
-                </>
-              }
-              filtersSlot={
+          <DataTableToolbar
+            title="Expedientes"
+            searchValue={globalFilter}
+            onSearchValueChange={setGlobalFilter}
+            searchPlaceholder="Buscar expedientes..."
+            actionButton={{
+              label: 'Novo Expediente',
+              onClick: () => setIsCreateDialogOpen(true),
+            }}
+            actionSlot={
+              <>
+                {viewModeSlot}
+                {settingsSlot}
+              </>
+            }
+            filtersSlot={
+              <>
+                <YearFilterPopover
+                  selectedYear={selectedYear}
+                  onYearChange={setSelectedYear}
+                />
                 <ExpedientesListFilters
                   statusFilter={statusFilter}
                   onStatusChange={setStatusFilter}
@@ -240,21 +244,9 @@ export function ExpedientesYearWrapper({
                   tiposExpedientes={tiposExpedientes}
                   hidePrazoFilter
                 />
-              }
-            />
-
-            {/* YearsCarousel */}
-            <div className="pb-3">
-              <YearsCarousel
-                selectedDate={yearNav.selectedDate}
-                onDateSelect={yearNav.setSelectedDate}
-                startYear={yearNav.startYear}
-                onPrevious={yearNav.handlePrevious}
-                onNext={yearNav.handleNext}
-                visibleYears={20}
-              />
-            </div>
-          </>
+              </>
+            }
+          />
         }
       >
         {isLoading ? (
@@ -277,7 +269,7 @@ export function ExpedientesYearWrapper({
                   {getDiasMes(mesIdx).map((dia, i) => {
                     if (!dia) return <span key={i} />;
                     const hasExp = temExpediente(mesIdx, dia);
-                    const isTodayDate = dateFnsIsToday(new Date(yearNav.selectedDate.getFullYear(), mesIdx, dia));
+                    const isTodayDate = dateFnsIsToday(new Date(selectedYear, mesIdx, dia));
 
                     return (
                       <div

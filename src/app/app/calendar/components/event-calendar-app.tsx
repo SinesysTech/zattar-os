@@ -1,60 +1,420 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  addDays,
+  addMonths,
+  addWeeks,
+  endOfMonth,
+  endOfWeek,
+  format,
+  isSameMonth,
+  startOfMonth,
+  startOfWeek,
+  subMonths,
+  subWeeks
+} from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
+import {
+  Calendar,
+  CalendarCheck,
+  CalendarDays,
+  CalendarRange,
+  Check,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  Eye,
+  List,
+  LoaderCircle,
+  PlusIcon,
+  SearchIcon
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { EventCalendar, type CalendarEvent } from "./";
-import type { UnifiedCalendarEvent } from "@/features/calendar";
+import {
+  addHoursToDate,
+  AgendaDaysToShow,
+  EventCalendar,
+  EventDialog,
+  type CalendarEvent,
+  type CalendarView
+} from "./";
+import { actionListarEventosCalendar, type UnifiedCalendarEvent } from "@/features/calendar";
+import { FilterPopoverMulti, type FilterOption } from "@/features/partes/components/shared";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+
+const capitalizeFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+const SOURCE_FILTER_OPTIONS: readonly FilterOption[] = [
+  { value: "audiencias", label: "Audiências" },
+  { value: "expedientes", label: "Expedientes" },
+  { value: "obrigacoes", label: "Obrigações" }
+];
+
+const CALENDAR_VIEW_OPTIONS = [
+  { value: "month" as CalendarView, label: "Mês", icon: CalendarRange, shortcut: "M" },
+  { value: "week" as CalendarView, label: "Semana", icon: CalendarDays, shortcut: "W" },
+  { value: "day" as CalendarView, label: "Dia", icon: Calendar, shortcut: "D" },
+  { value: "agenda" as CalendarView, label: "Agenda", icon: List, shortcut: "A" }
+];
+
+function adaptUnifiedEvent(e: UnifiedCalendarEvent): CalendarEvent {
+  return {
+    id: e.id,
+    title: e.title,
+    description: e.metadata ? JSON.stringify(e.metadata) : undefined,
+    start: new Date(e.startAt),
+    end: new Date(e.endAt),
+    allDay: e.allDay,
+    color: (e.color as CalendarEvent["color"]) || "sky",
+    location: undefined
+  };
+}
 
 export default function EventCalendarApp({
   initialEvents,
-  readOnly = false,
+  readOnly = false
 }: {
   initialEvents: UnifiedCalendarEvent[];
   readOnly?: boolean;
 }) {
   const router = useRouter();
 
-  const adaptedInitial = useMemo<CalendarEvent[]>(() => {
-    return (initialEvents || []).map((e) => ({
-      id: e.id,
-      title: e.title,
-      description: e.metadata ? JSON.stringify(e.metadata) : undefined,
-      start: new Date(e.startAt),
-      end: new Date(e.endAt),
-      allDay: e.allDay,
-      color: (e.color as CalendarEvent["color"]) || "sky",
-      location: undefined,
-    }));
-  }, [initialEvents]);
+  // Separate server events from locally created events
+  const [serverEvents, setServerEvents] = useState<UnifiedCalendarEvent[]>(initialEvents);
+  const [localEvents, setLocalEvents] = useState<CalendarEvent[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [events, setEvents] = useState<CalendarEvent[]>(adaptedInitial);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [view, setView] = useState<CalendarView>("month");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sourceFilter, setSourceFilter] = useState<string[]>([]);
+
+  // State for the page-level creation dialog
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [newEvent, setNewEvent] = useState<CalendarEvent | null>(null);
+
+  // Filter server events by source, then adapt to CalendarEvent
+  const filteredServerEvents = useMemo(() => {
+    if (sourceFilter.length === 0) return serverEvents;
+    return serverEvents.filter((e) => sourceFilter.includes(e.source));
+  }, [serverEvents, sourceFilter]);
+
+  const adaptedServerEvents = useMemo<CalendarEvent[]>(
+    () => filteredServerEvents.map(adaptUnifiedEvent),
+    [filteredServerEvents]
+  );
+
+  const events = useMemo(
+    () => [...adaptedServerEvents, ...localEvents],
+    [adaptedServerEvents, localEvents]
+  );
 
   const eventUrlById = useMemo(() => {
-    return new Map<string, string>(initialEvents.map((e) => [e.id, e.url]));
-  }, [initialEvents]);
+    return new Map<string, string>(serverEvents.map((e) => [e.id, e.url]));
+  }, [serverEvents]);
+
+  // --- Dynamic fetch when month changes ---
+  const fetchRangeKey = useMemo(
+    () => format(startOfMonth(currentDate), "yyyy-MM"),
+    [currentDate]
+  );
+
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    // Derive range from the key to avoid stale closures
+    const [year, month] = fetchRangeKey.split("-").map(Number);
+    const center = new Date(year, month - 1, 1);
+    const rangeStart = subMonths(center, 1);
+    const rangeEnd = endOfMonth(addMonths(center, 1));
+
+    let cancelled = false;
+    setIsLoading(true);
+
+    actionListarEventosCalendar({
+      startAt: rangeStart.toISOString(),
+      endAt: rangeEnd.toISOString()
+    })
+      .then((result) => {
+        if (cancelled) return;
+        if (result.success) {
+          setServerEvents(result.data);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchRangeKey]);
+
+  // Filter events by search query
+  const filteredEvents = useMemo(() => {
+    if (!searchQuery.trim()) return events;
+    const query = searchQuery.toLowerCase();
+    return events.filter((e) => e.title.toLowerCase().includes(query));
+  }, [events, searchQuery]);
+
+  // Navigation handlers
+  const handlePrevious = useCallback(() => {
+    setCurrentDate((d) => {
+      if (view === "month") return subMonths(d, 1);
+      if (view === "week") return subWeeks(d, 1);
+      if (view === "day") return addDays(d, -1);
+      if (view === "agenda") return addDays(d, -AgendaDaysToShow);
+      return d;
+    });
+  }, [view]);
+
+  const handleNext = useCallback(() => {
+    setCurrentDate((d) => {
+      if (view === "month") return addMonths(d, 1);
+      if (view === "week") return addWeeks(d, 1);
+      if (view === "day") return addDays(d, 1);
+      if (view === "agenda") return addDays(d, AgendaDaysToShow);
+      return d;
+    });
+  }, [view]);
+
+  const handleToday = useCallback(() => setCurrentDate(new Date()), []);
+
+  // View title for the navigation bar
+  const viewTitle = useMemo(() => {
+    const loc = { locale: ptBR };
+    const fmt = (d: Date, pattern: string) => capitalizeFirst(format(d, pattern, loc));
+
+    if (view === "month") {
+      return fmt(currentDate, "MMMM yyyy");
+    } else if (view === "week") {
+      const start = startOfWeek(currentDate, { weekStartsOn: 0 });
+      const end = endOfWeek(currentDate, { weekStartsOn: 0 });
+      if (isSameMonth(start, end)) return fmt(start, "MMMM yyyy");
+      return `${fmt(start, "MMM")} - ${fmt(end, "MMM yyyy")}`;
+    } else if (view === "day") {
+      return fmt(currentDate, "d 'de' MMMM, yyyy");
+    } else if (view === "agenda") {
+      const start = currentDate;
+      const end = addDays(currentDate, AgendaDaysToShow - 1);
+      if (isSameMonth(start, end)) return fmt(start, "MMMM yyyy");
+      return `${fmt(start, "MMM")} - ${fmt(end, "MMM yyyy")}`;
+    }
+    return fmt(currentDate, "MMMM yyyy");
+  }, [currentDate, view]);
 
   const handleEventSelect = (event: CalendarEvent) => {
     const url = eventUrlById.get(event.id);
     if (url) router.push(url);
   };
 
+  const handleCreateClick = () => {
+    const now = new Date();
+    now.setMinutes(0, 0, 0);
+    setNewEvent({
+      id: "",
+      title: "",
+      start: now,
+      end: addHoursToDate(now, 1),
+      allDay: false
+    });
+    setIsCreateOpen(true);
+  };
+
+  const handleCreateSave = (event: CalendarEvent) => {
+    setLocalEvents((prev) => [
+      ...prev,
+      { ...event, id: Math.random().toString(36).substring(2, 11) }
+    ]);
+    setIsCreateOpen(false);
+    setNewEvent(null);
+  };
+
   return (
-    <EventCalendar
-      events={events}
-      readOnly={readOnly}
-      onEventSelect={handleEventSelect}
-      onEventAdd={readOnly ? undefined : (event) => setEvents((prev) => [...prev, event])}
-      onEventUpdate={
-        readOnly
-          ? undefined
-          : (updatedEvent) =>
-              setEvents((prev) => prev.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev)))
-      }
-      onEventDelete={
-        readOnly ? undefined : (eventId) => setEvents((prev) => prev.filter((ev) => ev.id !== eventId))
-      }
-    />
+    <div className="flex min-h-[calc(100vh-var(--header-height)-2rem)] flex-col gap-4">
+      {/* Row 1: Title + New event button */}
+      <div className="flex items-center justify-between">
+        <h1 className="font-heading text-2xl font-bold tracking-tight">Agenda</h1>
+        <Button size="sm" onClick={handleCreateClick}>
+          <PlusIcon className="opacity-60 sm:-ms-1" size={16} aria-hidden="true" />
+          <span className="max-sm:sr-only">Novo evento</span>
+        </Button>
+      </div>
+
+      {/* Row 2: Search (left) + Navigation controls + View selector (right) */}
+      <div className="flex items-center gap-2">
+        <div className="relative max-w-sm flex-1">
+          <SearchIcon
+            className="text-muted-foreground/70 pointer-events-none absolute left-3 top-1/2 -translate-y-1/2"
+            size={16}
+            aria-hidden="true"
+          />
+          <Input
+            className="h-9 bg-card pl-9"
+            placeholder="Buscar eventos..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        <FilterPopoverMulti
+          label="Tipo"
+          placeholder="Buscar tipo..."
+          options={SOURCE_FILTER_OPTIONS}
+          value={sourceFilter}
+          onValueChange={setSourceFilter}
+        />
+
+        <div className="ml-auto flex items-center gap-1">
+          {/* Navigation: [<] Title [>] */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9"
+            onClick={handlePrevious}
+            aria-label="Anterior">
+            <ChevronLeftIcon size={16} aria-hidden="true" />
+          </Button>
+          <span className="min-w-[120px] text-center text-sm font-medium sm:min-w-[160px]">
+            {isLoading ? (
+              <LoaderCircle className="mx-auto h-4 w-4 animate-spin" />
+            ) : (
+              viewTitle
+            )}
+          </span>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9"
+            onClick={handleNext}
+            aria-label="Próximo">
+            <ChevronRightIcon size={16} aria-hidden="true" />
+          </Button>
+
+          {/* Hoje */}
+          <Button variant="outline" className="h-9" onClick={handleToday}>
+            <CalendarCheck className="sm:hidden" size={16} aria-hidden="true" />
+            <span className="max-sm:sr-only">Hoje</span>
+          </Button>
+
+          {/* View mode popover */}
+          <CalendarViewPopover value={view} onValueChange={setView} />
+        </div>
+      </div>
+
+      {/* Calendar (no internal toolbar) */}
+      <EventCalendar
+        events={filteredEvents}
+        readOnly={readOnly}
+        onEventSelect={handleEventSelect}
+        onEventAdd={
+          readOnly ? undefined : (event) => setLocalEvents((prev) => [...prev, event])
+        }
+        onEventUpdate={
+          readOnly
+            ? undefined
+            : (updatedEvent) =>
+                setLocalEvents((prev) =>
+                  prev.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
+                )
+        }
+        onEventDelete={
+          readOnly
+            ? undefined
+            : (eventId) =>
+                setLocalEvents((prev) => prev.filter((ev) => ev.id !== eventId))
+        }
+        currentDate={currentDate}
+        onCurrentDateChange={setCurrentDate}
+        view={view}
+        onViewChange={setView}
+        hideToolbar
+      />
+
+      {/* Page-level creation dialog */}
+      <EventDialog
+        event={newEvent}
+        isOpen={isCreateOpen}
+        onClose={() => {
+          setIsCreateOpen(false);
+          setNewEvent(null);
+        }}
+        onSave={handleCreateSave}
+        onDelete={() => {}}
+      />
+    </div>
+  );
+}
+
+/** Calendar-specific view mode popover (matches ViewModePopover pattern but uses CalendarView types) */
+function CalendarViewPopover({
+  value,
+  onValueChange
+}: {
+  value: CalendarView;
+  onValueChange: (value: CalendarView) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const currentOption = CALENDAR_VIEW_OPTIONS.find((opt) => opt.value === value);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className={cn(
+                "h-9 w-9",
+                "data-[state=open]:bg-card data-[state=open]:text-foreground"
+              )}
+              aria-label="Alterar visualização">
+              <Eye className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </PopoverTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Visualização: {currentOption?.label || "Selecionar"}</TooltipContent>
+      </Tooltip>
+      <PopoverContent align="end" className="w-44 p-1">
+        <div className="flex flex-col gap-0.5">
+          {CALENDAR_VIEW_OPTIONS.map((option) => {
+            const Icon = option.icon;
+            const isSelected = value === option.value;
+
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => {
+                  onValueChange(option.value);
+                  setOpen(false);
+                }}
+                className={cn(
+                  "flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors",
+                  "hover:bg-accent hover:text-accent-foreground",
+                  "focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2",
+                  isSelected && "bg-accent text-accent-foreground"
+                )}>
+                <Icon className="h-4 w-4" />
+                <span className="flex-1 text-left">{option.label}</span>
+                <kbd className="text-muted-foreground text-xs">{option.shortcut}</kbd>
+                {isSelected && <Check className="text-primary h-4 w-4" />}
+              </button>
+            );
+          })}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }

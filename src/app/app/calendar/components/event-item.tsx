@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { differenceInMinutes, format, getMinutes, isPast } from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
 
 import { getBorderRadiusClasses, getEventColorClasses, type CalendarEvent } from "./";
 import { cn } from "@/lib/utils";
@@ -13,7 +14,7 @@ import { cn } from "@/lib/utils";
 // 'a' - am/pm
 // ':mm' - minutes with leading zero (only if the token 'mm' is present)
 const formatTimeWithOptionalMinutes = (date: Date) => {
-  return format(date, getMinutes(date) === 0 ? "ha" : "h:mma").toLowerCase();
+  return format(date, getMinutes(date) === 0 ? "HH'h'" : "HH:mm", { locale: ptBR });
 };
 
 interface EventWrapperProps {
@@ -131,7 +132,7 @@ export function EventItem({
   }, [displayStart, displayEnd]);
 
   const getEventTime = () => {
-    if (event.allDay) return "All day";
+    if (event.allDay) return "Dia inteiro";
 
     // For short events (less than 45 minutes), only show start time
     if (durationMinutes < 45) {
@@ -228,7 +229,7 @@ export function EventItem({
       <div className="text-sm font-medium">{event.title}</div>
       <div className="text-xs opacity-70">
         {event.allDay ? (
-          <span>All day</span>
+          <span>Dia inteiro</span>
         ) : (
           <span className="uppercase">
             {formatTimeWithOptionalMinutes(displayStart)} -{" "}

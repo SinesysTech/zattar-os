@@ -1,29 +1,34 @@
 'use client';
 
+/**
+ * ObrigacoesContent - Orquestrador da página de obrigações
+ *
+ * Thin router que delega para wrappers auto-contidos:
+ * - lista  → ObrigacoesTableWrapper
+ * - semana → ObrigacoesTableWrapper (com WeekNavigator)
+ * - mês    → ObrigacoesMonthWrapper
+ * - ano    → ObrigacoesYearWrapper
+ *
+ * Gerencia apenas:
+ * - Routing por URL (sync visualização ↔ pathname)
+ * - ViewModePopover (seletor de view compartilhado)
+ * - ResumoCards e AlertasObrigacoes no topo (específico de obrigações)
+ */
+
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { addDays, subDays } from 'date-fns';
-import {
-  CalendarDays,
-  CalendarRange,
-  Calendar,
-  List,
-} from 'lucide-react';
 
 import {
-  DaysCarousel,
-  MonthsCarousel,
-  YearsCarousel,
-  TemporalViewLoading,
+  ViewModePopover,
+  useWeekNavigator,
+  type ViewType,
 } from '@/components/shared';
-import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 
 import { ResumoCards } from './shared/resumo-cards';
 import { AlertasObrigacoes } from './shared/alertas-obrigacoes';
 import { ObrigacoesTableWrapper } from './table/obrigacoes-table-wrapper';
-import { ObrigacoesCalendarMonth } from './calendar/obrigacoes-calendar-month';
-import { ObrigacoesCalendarYear } from './calendar/obrigacoes-calendar-year';
-import { ViewType } from '../domain';
+import { ObrigacoesMonthWrapper } from './calendar/obrigacoes-month-wrapper';
+import { ObrigacoesYearWrapper } from './calendar/obrigacoes-year-wrapper';
 
 // =============================================================================
 // MAPEAMENTO URL -> VIEW
@@ -45,27 +50,7 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
 };
 
 // =============================================================================
-// TABS CONFIGURAÇÃO
-// =============================================================================
-
-const TABS_CONFIG = [
-  { value: 'semana' as ViewType, label: 'Semana', icon: CalendarDays },
-  { value: 'mes' as ViewType, label: 'Mês', icon: CalendarRange },
-  { value: 'ano' as ViewType, label: 'Ano', icon: Calendar },
-  { value: 'lista' as ViewType, label: 'Lista', icon: List },
-];
-
-const TABS_UI = TABS_CONFIG.map((tab) => {
-  const Icon = tab.icon;
-  return {
-    value: tab.value,
-    label: tab.label,
-    icon: <Icon />,
-  };
-});
-
-// =============================================================================
-// PROPS
+// TIPOS
 // =============================================================================
 
 interface ObrigacoesContentProps {
@@ -85,11 +70,6 @@ export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: Obri
 
   // View State - sync with URL
   const [visualizacao, setVisualizacao] = React.useState<ViewType>(viewFromUrl);
-  const [currentDate, setCurrentDate] = React.useState(new Date());
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
-  
-  // Loading State
-  const [isLoading, setIsLoading] = React.useState(false);
 
   // Sync view state when URL changes
   React.useEffect(() => {
@@ -99,7 +79,10 @@ export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: Obri
     }
   }, [pathname, visualizacao]);
 
-  // Handle visualization change
+  // Week Navigator (para view semana)
+  const weekNav = useWeekNavigator();
+
+  // Handle visualization change - navigate to the correct URL
   const handleVisualizacaoChange = React.useCallback((value: string) => {
     const viewValue = value as ViewType;
     const targetRoute = VIEW_ROUTES[viewValue];
@@ -110,103 +93,15 @@ export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: Obri
   }, [pathname, router]);
 
   // =============================================================================
-  // NAVEGAÇÃO POR DIA/SEMANA
-  // =============================================================================
-  const visibleDays = 21;
-
-  const [startDate, setStartDate] = React.useState(() => {
-    const offset = Math.floor(visibleDays / 2);
-    return subDays(new Date(), offset);
-  });
-
-  const handlePreviousDay = React.useCallback(() => {
-    setStartDate(prev => subDays(prev, 1));
-  }, []);
-
-  const handleNextDay = React.useCallback(() => {
-    setStartDate(prev => addDays(prev, 1));
-  }, []);
-
-  // =============================================================================
-  // NAVEGAÇÃO POR MÊS
-  // =============================================================================
-  const visibleMonths = 12;
-
-  const [startMonth, setStartMonth] = React.useState(() => {
-    const offset = Math.floor(visibleMonths / 2);
-    return new Date(new Date().getFullYear(), new Date().getMonth() - offset, 1);
-  });
-
-  const handlePreviousMonth = React.useCallback(() => {
-    setStartMonth(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
-  }, []);
-
-  const handleNextMonth = React.useCallback(() => {
-    setStartMonth(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
-  }, []);
-
-  // =============================================================================
-  // NAVEGAÇÃO POR ANO
-  // =============================================================================
-  const visibleYears = 20;
-
-  const [startYear, setStartYear] = React.useState(() => {
-    const offset = Math.floor(visibleYears / 2);
-    return new Date().getFullYear() - offset;
-  });
-
-  const handlePreviousYear = React.useCallback(() => {
-    setStartYear(prev => prev - 1);
-  }, []);
-
-  const handleNextYear = React.useCallback(() => {
-    setStartYear(prev => prev + 1);
-  }, []);
-
-  // =============================================================================
-  // CARROSSEL BASEADO NA VISUALIZAÇÃO
+  // SLOTS COMPARTILHADOS
   // =============================================================================
 
-  const renderCarousel = () => {
-    switch (visualizacao) {
-      case 'semana':
-        return (
-          <DaysCarousel
-            selectedDate={selectedDate}
-            onDateSelect={setSelectedDate}
-            startDate={startDate}
-            onPrevious={handlePreviousDay}
-            onNext={handleNextDay}
-            visibleDays={visibleDays}
-          />
-        );
-      case 'mes':
-        return (
-          <MonthsCarousel
-            selectedDate={currentDate}
-            onDateSelect={setCurrentDate}
-            startMonth={startMonth}
-            onPrevious={handlePreviousMonth}
-            onNext={handleNextMonth}
-            visibleMonths={visibleMonths}
-          />
-        );
-      case 'ano':
-        return (
-          <YearsCarousel
-            selectedDate={currentDate}
-            onDateSelect={setCurrentDate}
-            startYear={startYear}
-            onPrevious={handlePreviousYear}
-            onNext={handleNextYear}
-            visibleYears={visibleYears}
-          />
-        );
-      case 'lista':
-      default:
-        return null;
-    }
-  };
+  const viewModePopover = (
+    <ViewModePopover
+      value={visualizacao}
+      onValueChange={handleVisualizacaoChange}
+    />
+  );
 
   // =============================================================================
   // CONTEÚDO BASEADO NA VISUALIZAÇÃO
@@ -215,36 +110,46 @@ export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: Obri
   const renderContent = () => {
     switch (visualizacao) {
       case 'lista':
-        return <ObrigacoesTableWrapper />;
-
-      case 'mes':
         return (
-          <ObrigacoesCalendarMonth
-            currentDate={currentDate}
-            onLoadingChange={setIsLoading}
-          />
-        );
-
-      case 'ano':
-        return (
-          <ObrigacoesCalendarYear
-            currentDate={currentDate}
-            onLoadingChange={setIsLoading}
+          <ObrigacoesTableWrapper
+            viewModeSlot={viewModePopover}
           />
         );
 
       case 'semana':
         return (
           <ObrigacoesTableWrapper
-            fixedDate={selectedDate}
+            fixedDate={weekNav.selectedDate}
             hideDateFilters={true}
+            viewModeSlot={viewModePopover}
+            weekNavigatorProps={{
+              weekDays: weekNav.weekDays,
+              selectedDate: weekNav.selectedDate,
+              onDateSelect: weekNav.setSelectedDate,
+              onPreviousWeek: weekNav.goToPreviousWeek,
+              onNextWeek: weekNav.goToNextWeek,
+              onToday: weekNav.goToToday,
+              isCurrentWeek: weekNav.isCurrentWeek,
+            }}
+          />
+        );
+
+      case 'mes':
+        return (
+          <ObrigacoesMonthWrapper
+            viewModeSlot={viewModePopover}
+          />
+        );
+
+      case 'ano':
+        return (
+          <ObrigacoesYearWrapper
+            viewModeSlot={viewModePopover}
           />
         );
 
       default:
-        return isLoading ? (
-          <TemporalViewLoading message="Carregando obrigações..." />
-        ) : null;
+        return null;
     }
   };
 
@@ -253,22 +158,6 @@ export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: Obri
       {/* Resumo e Alertas */}
       <ResumoCards />
       <AlertasObrigacoes />
-
-      {/* Tabs estilo Partes (Tabs02 - selecionado roxo) */}
-      <AnimatedIconTabs
-        tabs={TABS_UI}
-        value={visualizacao}
-        onValueChange={handleVisualizacaoChange}
-        className="w-full"
-        listClassName="flex-wrap"
-      />
-
-      {/* Carrossel com container branco (separado das tabs) */}
-      {visualizacao !== 'lista' && (
-        <div className="bg-card border border-border rounded-lg p-4">
-          {renderCarousel()}
-        </div>
-      )}
 
       {/* Conteúdo principal */}
       <div className="flex-1 min-h-0">

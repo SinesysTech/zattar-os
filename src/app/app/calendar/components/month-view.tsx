@@ -13,6 +13,7 @@ import {
   startOfMonth,
   startOfWeek
 } from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
 
 import {
   DraggableEvent,
@@ -28,6 +29,8 @@ import {
   type CalendarEvent
 } from "./";
 import { DefaultStartHour } from "../constants";
+
+const capitalizeFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface MonthViewProps {
@@ -50,7 +53,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
   const weekdays = useMemo(() => {
     return Array.from({ length: 7 }).map((_, i) => {
       const date = addDays(startOfWeek(new Date()), i);
-      return format(date, "EEE");
+      return capitalizeFirst(format(date, "EEE", { locale: ptBR }));
     });
   }, []);
 
@@ -159,7 +162,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                                 isLastDay={isLastDay}>
                                 <div className="invisible" aria-hidden="true">
                                   {!event.allDay && (
-                                    <span>{format(new Date(event.start), "h:mm")} </span>
+                                    <span>{format(new Date(event.start), "HH:mm")} </span>
                                   )}
                                   {event.title}
                                 </div>
@@ -204,7 +207,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                               } as React.CSSProperties
                             }>
                             <div className="space-y-2">
-                              <div className="text-sm font-medium">{format(day, "EEE d")}</div>
+                              <div className="text-sm font-medium">{capitalizeFirst(format(day, "EEE d", { locale: ptBR }))}</div>
                               <div className="space-y-1">
                                 {sortEvents(allEvents).map((event) => {
                                   const eventStart = new Date(event.start);

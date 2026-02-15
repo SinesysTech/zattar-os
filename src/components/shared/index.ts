@@ -102,6 +102,8 @@ export {
   useWeekNavigator,
 } from './week-navigator';
 
+export { YearFilterPopover } from './year-filter-popover';
+
 export type {
   WeekDay,
   WeekNavigatorProps,

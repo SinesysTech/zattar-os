@@ -12,17 +12,12 @@ import {
   DataTableToolbar,
   DataPagination,
 } from '@/components/shared/data-shell';
+import { WeekNavigator, type WeekNavigatorProps } from '@/components/shared';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
 import { Button } from '@/components/ui/button';
-import { AppBadge as Badge } from '@/components/ui/app-badge';
+import { AppBadge } from '@/components/ui/app-badge';
 
 import type { PaginatedResponse } from '@/types';
 import type {
@@ -32,12 +27,12 @@ import type {
   TipoObrigacao,
   DirecaoPagamento,
   ObrigacaoComDetalhes,
-  StatusObrigacao
+  StatusObrigacao,
 } from '../../domain';
-import { 
-  TIPO_LABELS, 
-  DIRECAO_LABELS, 
-  STATUS_LABELS 
+import {
+  TIPO_LABELS,
+  DIRECAO_LABELS,
+  STATUS_LABELS,
 } from '../../domain';
 import { actionListarAcordos } from '../../actions';
 
@@ -47,6 +42,22 @@ import { ObrigacaoDetalhesDialog } from '../dialogs/obrigacao-detalhes-dialog';
 import { NovaObrigacaoDialog } from '../dialogs/nova-obrigacao-dialog';
 
 // =============================================================================
+// OPÇÕES DE FILTRO (estáticas)
+// =============================================================================
+
+const STATUS_OPTIONS: readonly FilterOption[] = Object.entries(STATUS_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+const TIPO_OPTIONS: readonly FilterOption[] = Object.entries(TIPO_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+const DIRECAO_OPTIONS: readonly FilterOption[] = Object.entries(DIRECAO_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+// =============================================================================
 // TIPOS
 // =============================================================================
 
@@ -54,6 +65,10 @@ interface ObrigacoesTableWrapperProps {
   initialData?: PaginatedResponse<AcordoComParcelas>;
   fixedDate?: Date;
   hideDateFilters?: boolean;
+  /** Props para renderizar o WeekNavigator dentro do wrapper */
+  weekNavigatorProps?: Omit<WeekNavigatorProps, 'className'>;
+  /** Slot para o seletor de modo de visualização (ViewModePopover) */
+  viewModeSlot?: React.ReactNode;
 }
 
 type PrazoFilterType = 'todos' | 'vencidos' | 'hoje' | 'amanha' | 'semana' | 'sem_prazo';
@@ -62,7 +77,13 @@ type PrazoFilterType = 'todos' | 'vencidos' | 'hoje' | 'amanha' | 'semana' | 'se
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters }: ObrigacoesTableWrapperProps) {
+export function ObrigacoesTableWrapper({
+  initialData,
+  fixedDate,
+  hideDateFilters,
+  weekNavigatorProps,
+  viewModeSlot,
+}: ObrigacoesTableWrapperProps) {
   const router = useRouter();
 
   // ---------- Estado da Tabela (DataShell pattern) ----------
@@ -105,22 +126,24 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
 
     switch (prazo) {
       case 'vencidos':
-        // Lógica de vencidos geralmente é feita via status ou data < hoje
-        return null; 
-      case 'hoje':
+        return null;
+      case 'hoje': {
         const hojeStr = format(startOfDay(hoje), 'yyyy-MM-dd');
         return { from: hojeStr, to: hojeStr };
-      case 'amanha':
+      }
+      case 'amanha': {
         const amanha = addDays(hoje, 1);
         const amanhaStr = format(startOfDay(amanha), 'yyyy-MM-dd');
         return { from: amanhaStr, to: amanhaStr };
-      case 'semana':
+      }
+      case 'semana': {
         const inicioSemana = startOfWeek(hoje, { weekStartsOn: 1 });
         const fimSemana = endOfWeek(hoje, { weekStartsOn: 1 });
         return {
           from: format(inicioSemana, 'yyyy-MM-dd'),
           to: format(fimSemana, 'yyyy-MM-dd'),
         };
+      }
       default:
         return null;
     }
@@ -144,17 +167,15 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
 
       // Handle Date Filters
       if (prazoFilter !== 'todos') {
-         if (prazoFilter === 'vencidos') {
-             // If API supports 'atrasado' status, it's already covered by statusFilter usually.
-             // If separate param needed, add it. Assuming status 'atrasado' covers it.
-             params.status = 'atrasado';
-         } else {
-            const dates = getPrazoDates(prazoFilter);
-            if (dates) {
-                params.dataInicio = dates.from;
-                params.dataFim = dates.to;
-            }
-         }
+        if (prazoFilter === 'vencidos') {
+          params.status = 'atrasado';
+        } else {
+          const dates = getPrazoDates(prazoFilter);
+          if (dates) {
+            params.dataInicio = dates.from;
+            params.dataFim = dates.to;
+          }
+        }
       }
 
       // Date Range (overrides prazoFilter dates)
@@ -215,26 +236,32 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
   }, [refetch, router]);
 
   const handleVerDetalhes = (acordo: AcordoComParcelas) => {
-      // Map AcordoComParcelas to ObrigacaoComDetalhes
-      const detalhes: ObrigacaoComDetalhes = {
-          id: acordo.id,
-          tipo: acordo.tipo,
-          descricao: `Processo ${acordo.processo?.numero_processo || 'N/A'}`,
-          valor: acordo.valorTotal,
-          dataVencimento: acordo.dataVencimentoPrimeiraParcela,
-          status: acordo.status as StatusObrigacao, // Ensure compatible types
-          statusSincronizacao: 'nao_aplicavel',
-          diasAteVencimento: null,
-          tipoEntidade: 'obrigacao',
-          acordoId: acordo.id,
-          processoId: acordo.processoId,
-          // Add other fields mapping
-      };
-      setDetalhesItem(detalhes);
-      setIsDetalhesOpen(true);
+    const detalhes: ObrigacaoComDetalhes = {
+      id: acordo.id,
+      tipo: acordo.tipo,
+      descricao: `Processo ${acordo.processo?.numero_processo || 'N/A'}`,
+      valor: acordo.valorTotal,
+      dataVencimento: acordo.dataVencimentoPrimeiraParcela,
+      status: acordo.status as StatusObrigacao,
+      statusSincronizacao: 'nao_aplicavel',
+      diasAteVencimento: null,
+      tipoEntidade: 'obrigacao',
+      acordoId: acordo.id,
+      processoId: acordo.processoId,
+    };
+    setDetalhesItem(detalhes);
+    setIsDetalhesOpen(true);
   };
 
-  // Gerar chips de filtros ativos
+  const handleClearAllFilters = React.useCallback(() => {
+    setStatusFilter('todos');
+    setTipoFilter('todos');
+    setDirecaoFilter('todos');
+    setDateRange(undefined);
+    setPageIndex(0);
+  }, []);
+
+  // ---------- Chips de filtros ativos ----------
   const activeFilterChips = React.useMemo(() => {
     const chips: { key: string; label: string; onRemove: () => void }[] = [];
 
@@ -245,21 +272,21 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
         onRemove: () => setStatusFilter('todos'),
       });
     }
-    
+
     if (tipoFilter !== 'todos') {
-        chips.push({
-            key: 'tipo',
-            label: TIPO_LABELS[tipoFilter],
-            onRemove: () => setTipoFilter('todos'),
-        });
+      chips.push({
+        key: 'tipo',
+        label: TIPO_LABELS[tipoFilter],
+        onRemove: () => setTipoFilter('todos'),
+      });
     }
 
     if (direcaoFilter !== 'todos') {
-        chips.push({
-            key: 'direcao',
-            label: DIRECAO_LABELS[direcaoFilter],
-            onRemove: () => setDirecaoFilter('todos'),
-        });
+      chips.push({
+        key: 'direcao',
+        label: DIRECAO_LABELS[direcaoFilter],
+        onRemove: () => setDirecaoFilter('todos'),
+      });
     }
 
     if (dateRange?.from || dateRange?.to) {
@@ -275,6 +302,7 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
     return chips;
   }, [statusFilter, tipoFilter, direcaoFilter, dateRange]);
 
+  // ---------- Render ----------
   return (
     <>
       <DataShell
@@ -296,79 +324,109 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
                 density={density}
                 onDensityChange={setDensity}
                 searchValue={busca}
-                onSearchValueChange={(value) => {
+                onSearchValueChange={(value: string) => {
                   setBusca(value);
                   setPageIndex(0);
                 }}
                 searchPlaceholder="Buscar obrigações..."
+                viewModeSlot={viewModeSlot}
                 actionButton={{
                   label: 'Nova Obrigação',
                   onClick: () => setIsNovoDialogOpen(true),
                 }}
                 filtersSlot={
                   <>
-                    <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v as StatusAcordo | 'todos'); setPageIndex(0); }}>
-                      <SelectTrigger className="w-[130px] bg-card">
-                        <SelectValue placeholder="Status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="todos">Status</SelectItem>
-                        {Object.entries(STATUS_LABELS).map(([k, v]) => (
-                            <SelectItem key={k} value={k}>{v}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    <Select value={tipoFilter} onValueChange={(v) => { setTipoFilter(v as TipoObrigacao | 'todos'); setPageIndex(0); }}>
-                      <SelectTrigger className="w-[130px] bg-card">
-                        <SelectValue placeholder="Tipo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="todos">Tipo</SelectItem>
-                        {Object.entries(TIPO_LABELS).map(([k, v]) => (
-                            <SelectItem key={k} value={k}>{v}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    {!hideDateFilters && (
-                        <DateRangePicker
-                            value={dateRange}
-                            onChange={(range) => {
-                                setDateRange(range);
-                                setPageIndex(0);
-                            }}
-                            placeholder="Vencimento"
-                            className="w-[240px] bg-card"
-                        />
+                    {/* Date Range Picker - Hide if date is fixed or weekNavigator is present */}
+                    {!hideDateFilters && !fixedDate && !weekNavigatorProps && (
+                      <DateRangePicker
+                        value={dateRange}
+                        onChange={(range) => {
+                          setDateRange(range);
+                          setPageIndex(0);
+                        }}
+                        placeholder="Período"
+                        className="h-9 w-auto bg-card border-dashed text-foreground"
+                      />
                     )}
+
+                    <FilterPopover
+                      label="Status"
+                      options={STATUS_OPTIONS}
+                      value={statusFilter}
+                      onValueChange={(v) => { setStatusFilter(v as StatusAcordo | 'todos'); setPageIndex(0); }}
+                      defaultValue="todos"
+                    />
+
+                    <FilterPopover
+                      label="Tipo"
+                      options={TIPO_OPTIONS}
+                      value={tipoFilter}
+                      onValueChange={(v) => { setTipoFilter(v as TipoObrigacao | 'todos'); setPageIndex(0); }}
+                      defaultValue="todos"
+                    />
+
+                    <FilterPopover
+                      label="Direção"
+                      options={DIRECAO_OPTIONS}
+                      value={direcaoFilter}
+                      onValueChange={(v) => { setDirecaoFilter(v as DirecaoPagamento | 'todos'); setPageIndex(0); }}
+                      defaultValue="todos"
+                    />
                   </>
                 }
               />
-              
-               {/* Active Filter Chips */}
-               {activeFilterChips.length > 0 && (
+
+              {/* Week Navigator */}
+              {weekNavigatorProps && (
+                <div className="pb-3">
+                  <WeekNavigator
+                    weekDays={weekNavigatorProps.weekDays}
+                    selectedDate={weekNavigatorProps.selectedDate}
+                    onDateSelect={weekNavigatorProps.onDateSelect}
+                    onPreviousWeek={weekNavigatorProps.onPreviousWeek}
+                    onNextWeek={weekNavigatorProps.onNextWeek}
+                    onToday={weekNavigatorProps.onToday}
+                    isCurrentWeek={weekNavigatorProps.isCurrentWeek}
+                  />
+                </div>
+              )}
+
+              {/* Active Filter Chips */}
+              {activeFilterChips.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2 px-6 pb-4">
                   <span className="text-sm text-muted-foreground">Filtros:</span>
                   {activeFilterChips.map((chip) => (
-                    <Badge
+                    <AppBadge
                       key={chip.key}
                       variant="secondary"
                       className="gap-1 pr-1 cursor-pointer hover:bg-secondary/80"
+                      onClick={() => chip.onRemove()}
                     >
                       {chip.label}
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-4 w-4 p-0 hover:bg-transparent"
-                        onClick={chip.onRemove}
+                      <button
+                        type="button"
+                        className="inline-flex h-5 w-5 items-center justify-center rounded-sm hover:bg-background/40"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          chip.onRemove();
+                        }}
                       >
                         <X className="h-3 w-3" />
-                      </Button>
-                    </Badge>
+                      </button>
+                    </AppBadge>
                   ))}
+                  {activeFilterChips.length > 1 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2 text-xs"
+                      onClick={handleClearAllFilters}
+                    >
+                      Limpar todos
+                    </Button>
+                  )}
                 </div>
-               )}
+              )}
             </>
           ) : undefined
         }
@@ -416,7 +474,7 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
         open={isDetalhesOpen}
         onOpenChange={setIsDetalhesOpen}
       />
-      
+
       <NovaObrigacaoDialog
         open={isNovoDialogOpen}
         onOpenChange={setIsNovoDialogOpen}

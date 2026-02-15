@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { Calendar as CalendarIcon, Trash2 } from "lucide-react";
 import { format, isBefore } from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
 
 import type { CalendarEvent, EventColor } from "./";
 import { DefaultEndHour, DefaultStartHour, EndHour, StartHour } from "../constants";
@@ -109,7 +110,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
         const value = `${formattedHour}:${formattedMinute}`;
         // Use a fixed date to avoid unnecessary date object creations
         const date = new Date(2000, 0, 1, hour, minute);
-        const label = format(date, "h:mm a");
+        const label = format(date, "HH:mm", { locale: ptBR });
         options.push({ value, label });
       }
     }
@@ -276,7 +277,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                       !startDate && "text-muted-foreground"
                     )}>
                     <span className={cn("truncate", !startDate && "text-muted-foreground")}>
-                      {startDate ? format(startDate, "PPP") : "Selecione uma data"}
+                      {startDate ? format(startDate, "PPP", { locale: ptBR }) : "Selecione uma data"}
                     </span>
                     <CalendarIcon
                       size={16}
@@ -345,7 +346,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                       !endDate && "text-muted-foreground"
                     )}>
                     <span className={cn("truncate", !endDate && "text-muted-foreground")}>
-                      {endDate ? format(endDate, "PPP") : "Selecione uma data"}
+                      {endDate ? format(endDate, "PPP", { locale: ptBR }) : "Selecione uma data"}
                     </span>
                     <CalendarIcon
                       size={16}

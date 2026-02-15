@@ -6,6 +6,7 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { FileManager } from '@/features/documentos';
+import { PageShell } from '@/components/shared';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const metadata: Metadata = {
@@ -15,13 +16,11 @@ export const metadata: Metadata = {
 
 export default function DocumentosPage() {
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex flex-1 h-full overflow-hidden">
-        <Suspense fallback={<FileManagerSkeleton />}>
-          <FileManager />
-        </Suspense>
-      </div>
-    </div>
+    <PageShell>
+      <Suspense fallback={<FileManagerSkeleton />}>
+        <FileManager />
+      </Suspense>
+    </PageShell>
   );
 }
 

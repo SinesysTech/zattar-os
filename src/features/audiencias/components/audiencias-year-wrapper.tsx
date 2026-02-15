@@ -8,7 +8,7 @@
  *
  * Gerencia:
  * - Estado de filtros (via AudienciasListFilters)
- * - Navegação de ano (via useYearNavigation + YearsCarousel)
+ * - Navegação de ano (via YearFilterPopover)
  * - Busca de dados (via useAudiencias hook)
  * - Dialog de criação
  */
@@ -21,8 +21,7 @@ import {
   DataTableToolbar,
 } from '@/components/shared/data-shell';
 import {
-  YearsCarousel,
-  useYearNavigation,
+  YearFilterPopover,
   TemporalViewLoading,
   TemporalViewError,
 } from '@/components/shared';
@@ -69,7 +68,8 @@ export function AudienciasYearWrapper({
   tiposAudienciaData,
 }: AudienciasYearWrapperProps) {
   // ---------- Navegação de Ano ----------
-  const yearNav = useYearNavigation(new Date(), 20);
+  const [selectedYear, setSelectedYear] = React.useState(new Date().getFullYear());
+  const selectedDate = React.useMemo(() => new Date(selectedYear, 0, 1), [selectedYear]);
 
   // ---------- Estado de Filtros ----------
   const [globalFilter, setGlobalFilter] = React.useState('');
@@ -101,8 +101,8 @@ export function AudienciasYearWrapper({
     grau: grauFiltro === 'todas' ? undefined : grauFiltro,
     responsavel_id: responsavelFiltro === 'todos' ? undefined : responsavelFiltro === 'null' ? 'null' : responsavelFiltro,
     tipo_audiencia_id: tipoAudienciaFiltro === 'todos' ? undefined : tipoAudienciaFiltro,
-    data_inicio_inicio: startOfYear(yearNav.selectedDate).toISOString(),
-    data_inicio_fim: endOfYear(yearNav.selectedDate).toISOString(),
+    data_inicio_inicio: startOfYear(selectedDate).toISOString(),
+    data_inicio_fim: endOfYear(selectedDate).toISOString(),
   });
 
   // ---------- Handlers ----------
@@ -116,23 +116,27 @@ export function AudienciasYearWrapper({
     <>
       <DataShell
         header={
-          <>
-            <DataTableToolbar
-              title="Audiências"
-              searchValue={globalFilter}
-              onSearchValueChange={setGlobalFilter}
-              searchPlaceholder="Buscar audiências..."
-              actionButton={{
-                label: 'Nova Audiência',
-                onClick: () => setIsCreateDialogOpen(true),
-              }}
-              actionSlot={
-                <>
-                  {viewModeSlot}
-                  {settingsSlot}
-                </>
-              }
-              filtersSlot={
+          <DataTableToolbar
+            title="Audiências"
+            searchValue={globalFilter}
+            onSearchValueChange={setGlobalFilter}
+            searchPlaceholder="Buscar audiências..."
+            actionButton={{
+              label: 'Nova Audiência',
+              onClick: () => setIsCreateDialogOpen(true),
+            }}
+            actionSlot={
+              <>
+                {viewModeSlot}
+                {settingsSlot}
+              </>
+            }
+            filtersSlot={
+              <>
+                <YearFilterPopover
+                  selectedYear={selectedYear}
+                  onYearChange={setSelectedYear}
+                />
                 <AudienciasListFilters
                   statusFiltro={statusFiltro}
                   onStatusChange={setStatusFiltro}
@@ -149,21 +153,9 @@ export function AudienciasYearWrapper({
                   usuarios={usuarios}
                   tiposAudiencia={tiposAudiencia}
                 />
-              }
-            />
-
-            {/* YearsCarousel - mesmo posicionamento do WeekNavigator na view semana */}
-            <div className="pb-3">
-              <YearsCarousel
-                selectedDate={yearNav.selectedDate}
-                onDateSelect={yearNav.setSelectedDate}
-                startYear={yearNav.startYear}
-                onPrevious={yearNav.handlePrevious}
-                onNext={yearNav.handleNext}
-                visibleYears={20}
-              />
-            </div>
-          </>
+              </>
+            }
+          />
         }
       >
         {isLoading ? (
@@ -173,8 +165,8 @@ export function AudienciasYearWrapper({
         ) : (
           <AudienciasCalendarYearView
             audiencias={audiencias}
-            currentDate={yearNav.selectedDate}
-            onDateChange={yearNav.setSelectedDate}
+            currentDate={selectedDate}
+            onDateChange={(d: Date) => setSelectedYear(d.getFullYear())}
             refetch={refetch}
           />
         )}

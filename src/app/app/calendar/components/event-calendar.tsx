@@ -12,6 +12,7 @@ import {
   subMonths,
   subWeeks
 } from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
 import { CalendarCheck, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from "lucide-react";
 import { toast } from "sonner";
 
@@ -31,6 +32,8 @@ import {
   WeekView
 } from "./";
 import { cn } from "@/lib/utils";
+
+const capitalizeFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -49,6 +52,14 @@ export interface EventCalendarProps {
   readOnly?: boolean;
   className?: string;
   initialView?: CalendarView;
+  /** Controlled current date (if omitted, uses internal state) */
+  currentDate?: Date;
+  onCurrentDateChange?: (date: Date) => void;
+  /** Controlled view mode (if omitted, uses internal state) */
+  view?: CalendarView;
+  onViewChange?: (view: CalendarView) => void;
+  /** Hide the internal toolbar (for external toolbar control) */
+  hideToolbar?: boolean;
 }
 
 export function EventCalendar({
@@ -59,10 +70,21 @@ export function EventCalendar({
   onEventSelect,
   readOnly = false,
   className,
-  initialView = "month"
+  initialView = "month",
+  currentDate: controlledDate,
+  onCurrentDateChange,
+  view: controlledView,
+  onViewChange,
+  hideToolbar = false
 }: EventCalendarProps) {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState<CalendarView>(initialView);
+  const [internalDate, setInternalDate] = useState(new Date());
+  const [internalView, setInternalView] = useState<CalendarView>(initialView);
+
+  // Controlled/uncontrolled hybrid: use controlled values when provided
+  const currentDate = controlledDate ?? internalDate;
+  const setCurrentDate = onCurrentDateChange ?? setInternalDate;
+  const view = controlledView ?? internalView;
+  const setView = onViewChange ?? setInternalView;
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
 
@@ -180,7 +202,7 @@ export function EventCalendar({
       onEventUpdate?.(event);
       // Show toast notification when an event is updated
       toast(`Evento "${event.title}" atualizado`, {
-        description: format(new Date(event.start), "d 'de' MMM, yyyy"),
+        description: format(new Date(event.start), "d 'de' MMM, yyyy", { locale: ptBR }),
         position: "bottom-left"
       });
     } else {
@@ -190,7 +212,7 @@ export function EventCalendar({
       });
       // Show toast notification when an event is added
       toast(`Evento "${event.title}" adicionado`, {
-        description: format(new Date(event.start), "d 'de' MMM, yyyy"),
+        description: format(new Date(event.start), "d 'de' MMM, yyyy", { locale: ptBR }),
         position: "bottom-left"
       });
     }
@@ -212,7 +234,7 @@ export function EventCalendar({
     // Show toast notification when an event is deleted
     if (deletedEvent) {
       toast(`Evento "${deletedEvent.title}" exclu\u00eddo`, {
-        description: format(new Date(deletedEvent.start), "d 'de' MMM, yyyy"),
+        description: format(new Date(deletedEvent.start), "d 'de' MMM, yyyy", { locale: ptBR }),
         position: "bottom-left"
       });
     }
@@ -224,52 +246,54 @@ export function EventCalendar({
 
     // Show toast notification when an event is updated via drag and drop
     toast(`Evento "${updatedEvent.title}" movido`, {
-      description: format(new Date(updatedEvent.start), "d 'de' MMM, yyyy"),
+      description: format(new Date(updatedEvent.start), "d 'de' MMM, yyyy", { locale: ptBR }),
       position: "bottom-left"
     });
   };
 
   const viewTitle = useMemo(() => {
+    const loc = { locale: ptBR };
+    const fmt = (d: Date, pattern: string) => capitalizeFirst(format(d, pattern, loc));
+
     if (view === "month") {
-      return format(currentDate, "MMMM yyyy");
+      return fmt(currentDate, "MMMM yyyy");
     } else if (view === "week") {
       const start = startOfWeek(currentDate, { weekStartsOn: 0 });
       const end = endOfWeek(currentDate, { weekStartsOn: 0 });
       if (isSameMonth(start, end)) {
-        return format(start, "MMMM yyyy");
+        return fmt(start, "MMMM yyyy");
       } else {
-        return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`;
+        return `${fmt(start, "MMM")} - ${fmt(end, "MMM yyyy")}`;
       }
     } else if (view === "day") {
       return (
         <>
           <span className="min-[480px]:hidden" aria-hidden="true">
-            {format(currentDate, "MMM d, yyyy")}
+            {fmt(currentDate, "d 'de' MMM, yyyy")}
           </span>
           <span className="max-[479px]:hidden md:hidden" aria-hidden="true">
-            {format(currentDate, "MMMM d, yyyy")}
+            {fmt(currentDate, "d 'de' MMMM, yyyy")}
           </span>
-          <span className="max-md:hidden">{format(currentDate, "EEE MMMM d, yyyy")}</span>
+          <span className="max-md:hidden">{fmt(currentDate, "EEEE, d 'de' MMMM 'de' yyyy")}</span>
         </>
       );
     } else if (view === "agenda") {
-      // Show the month range for agenda view
       const start = currentDate;
       const end = addDays(currentDate, AgendaDaysToShow - 1);
 
       if (isSameMonth(start, end)) {
-        return format(start, "MMMM yyyy");
+        return fmt(start, "MMMM yyyy");
       } else {
-        return `${format(start, "MMM")} - ${format(end, "MMM yyyy")}`;
+        return `${fmt(start, "MMM")} - ${fmt(end, "MMM yyyy")}`;
       }
     } else {
-      return format(currentDate, "MMMM yyyy");
+      return fmt(currentDate, "MMMM yyyy");
     }
   }, [currentDate, view]);
 
   return (
     <div
-      className="flex min-h-[calc(100vh-var(--header-height)-3rem)] flex-col rounded-lg border bg-white dark:bg-gray-950 has-data-[slot=month-view]:flex-1"
+      className="bg-card flex min-h-0 flex-1 flex-col rounded-lg border has-data-[slot=month-view]:flex-1"
       style={
         {
           "--event-height": `${EventHeight}px`,
@@ -278,7 +302,7 @@ export function EventCalendar({
         } as React.CSSProperties
       }>
       <CalendarDndProvider onEventUpdate={handleEventUpdate}>
-        <div className={cn("flex items-center justify-between p-2 sm:p-4", className)}>
+        {!hideToolbar && <div className={cn("flex items-center justify-between p-2 sm:p-4", className)}>
           <div className="flex items-center gap-1 sm:gap-4">
             <Button
               variant="outline"
@@ -340,7 +364,7 @@ export function EventCalendar({
               </Button>
             )}
           </div>
-        </div>
+        </div>}
 
         <div className="flex flex-1 flex-col">
           {view === "month" && (

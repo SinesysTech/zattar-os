@@ -17,6 +17,7 @@ import {
   startOfDay,
   startOfWeek
 } from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
 
 import {
   DraggableEvent,
@@ -29,6 +30,8 @@ import {
 } from "./";
 import { EndHour, StartHour } from "../constants";
 import { cn } from "@/lib/utils";
+
+const capitalizeFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 interface WeekViewProps {
   currentDate: Date;
@@ -213,9 +216,9 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
             className="data-today:text-foreground text-muted-foreground/70 py-2 text-center text-sm data-today:font-medium"
             data-today={isToday(day) || undefined}>
             <span className="sm:hidden" aria-hidden="true">
-              {format(day, "E")[0]} {format(day, "d")}
+              {capitalizeFirst(format(day, "EEEEE", { locale: ptBR }))} {format(day, "d")}
             </span>
-            <span className="max-sm:hidden">{format(day, "EEE dd")}</span>
+            <span className="max-sm:hidden">{capitalizeFirst(format(day, "EEE dd", { locale: ptBR }))}</span>
           </div>
         ))}
       </div>
@@ -286,7 +289,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
               className="border-border/70 relative min-h-(--week-cells-height) border-b last:border-b-0">
               {index > 0 && (
                 <span className="bg-background text-muted-foreground/70 absolute -top-3 left-0 flex h-6 w-16 max-w-full items-center justify-end pe-2 text-[10px] sm:pe-4 sm:text-xs">
-                  {format(hour, "h a")}
+                  {format(hour, "HH:mm")}
                 </span>
               )}
             </div>

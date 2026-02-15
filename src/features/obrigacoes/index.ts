@@ -82,6 +82,10 @@ export { AcordoForm } from './components/dialogs/acordo-form';
 export { NovaObrigacaoDialog } from './components/dialogs/nova-obrigacao-dialog';
 export { ObrigacoesContent } from './components/obrigacoes-content';
 export { ObrigacoesTableWrapper } from './components/table/obrigacoes-table-wrapper';
+export { ObrigacoesMonthWrapper } from './components/calendar/obrigacoes-month-wrapper';
+export { ObrigacoesYearWrapper } from './components/calendar/obrigacoes-year-wrapper';
+export { ObrigacoesCalendarCompact } from './components/calendar/obrigacoes-calendar-compact';
+export { ObrigacoesDayList } from './components/calendar/obrigacoes-day-list';
 export { ResumoCards } from './components/shared/resumo-cards';
 export { AlertasObrigacoes } from './components/shared/alertas-obrigacoes';
 

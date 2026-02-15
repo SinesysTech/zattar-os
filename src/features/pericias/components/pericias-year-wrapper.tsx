@@ -4,7 +4,7 @@
  * PericiasYearWrapper - Wrapper auto-contido para a view de ano
  *
  * Segue o padrão de ExpedientesYearWrapper / AudienciasYearWrapper:
- * - DataShell + DataTableToolbar + YearsCarousel
+ * - DataShell + DataTableToolbar + YearFilterPopover
  * - PericiasListFilters no filtersSlot
  * - Grid de 12 meses com indicadores de perícias
  * - Fetch via usePericias com range anual
@@ -18,8 +18,7 @@ import {
   DataTableToolbar,
 } from '@/components/shared/data-shell';
 import {
-  YearsCarousel,
-  useYearNavigation,
+  YearFilterPopover,
   TemporalViewLoading,
   TemporalViewError,
 } from '@/components/shared';
@@ -81,7 +80,8 @@ export function PericiasYearWrapper({
   peritosData,
 }: PericiasYearWrapperProps) {
   // ---------- Navegação de Ano ----------
-  const yearNav = useYearNavigation(new Date(), 20);
+  const [selectedYear, setSelectedYear] = React.useState(new Date().getFullYear());
+  const selectedDate = React.useMemo(() => new Date(selectedYear, 0, 1), [selectedYear]);
 
   // ---------- Estado de Filtros ----------
   const [globalFilter, setGlobalFilter] = React.useState('');
@@ -113,8 +113,8 @@ export function PericiasYearWrapper({
       pagina: 1,
       limite: 1000,
       busca: globalFilter || undefined,
-      prazoEntregaInicio: format(startOfYear(yearNav.selectedDate), 'yyyy-MM-dd'),
-      prazoEntregaFim: format(endOfYear(yearNav.selectedDate), 'yyyy-MM-dd'),
+      prazoEntregaInicio: format(startOfYear(selectedDate), 'yyyy-MM-dd'),
+      prazoEntregaFim: format(endOfYear(selectedDate), 'yyyy-MM-dd'),
     };
 
     if (situacaoFilter !== 'todos') {
@@ -142,7 +142,7 @@ export function PericiasYearWrapper({
 
     return params;
   }, [
-    globalFilter, yearNav.selectedDate, situacaoFilter, responsavelFilter, laudoFilter,
+    globalFilter, selectedDate, situacaoFilter, responsavelFilter, laudoFilter,
     tribunalFilter, grauFilter, especialidadeFilter, peritoFilter,
   ]);
 
@@ -165,7 +165,7 @@ export function PericiasYearWrapper({
 
   // ---------- Helpers ----------
   const getDiasMes = React.useCallback((mes: number) => {
-    const ano = yearNav.selectedDate.getFullYear();
+    const ano = selectedYear;
     const ultimoDia = new Date(ano, mes + 1, 0).getDate();
     const primeiroDiaSemana = new Date(ano, mes, 1).getDay();
     const offset = primeiroDiaSemana === 0 ? 6 : primeiroDiaSemana - 1;
@@ -174,7 +174,7 @@ export function PericiasYearWrapper({
     for (let i = 0; i < offset; i++) dias.push(null);
     for (let i = 1; i <= ultimoDia; i++) dias.push(i);
     return dias;
-  }, [yearNav.selectedDate]);
+  }, [selectedYear]);
 
   const handleDiaClick = React.useCallback((mes: number, dia: number) => {
     const key = `${mes}-${dia}`;
@@ -199,23 +199,27 @@ export function PericiasYearWrapper({
     <>
       <DataShell
         header={
-          <>
-            <DataTableToolbar
-              title="Perícias"
-              searchValue={globalFilter}
-              onSearchValueChange={setGlobalFilter}
-              searchPlaceholder="Buscar perícias..."
-              actionButton={{
-                label: 'Nova Perícia',
-                onClick: () => setIsCreateDialogOpen(true),
-              }}
-              actionSlot={
-                <>
-                  {viewModeSlot}
-                  {settingsSlot}
-                </>
-              }
-              filtersSlot={
+          <DataTableToolbar
+            title="Perícias"
+            searchValue={globalFilter}
+            onSearchValueChange={setGlobalFilter}
+            searchPlaceholder="Buscar perícias..."
+            actionButton={{
+              label: 'Nova Perícia',
+              onClick: () => setIsCreateDialogOpen(true),
+            }}
+            actionSlot={
+              <>
+                {viewModeSlot}
+                {settingsSlot}
+              </>
+            }
+            filtersSlot={
+              <>
+                <YearFilterPopover
+                  selectedYear={selectedYear}
+                  onYearChange={setSelectedYear}
+                />
                 <PericiasListFilters
                   situacaoFilter={situacaoFilter}
                   onSituacaoChange={setSituacaoFilter}
@@ -235,21 +239,9 @@ export function PericiasYearWrapper({
                   especialidades={especialidades}
                   peritos={peritos}
                 />
-              }
-            />
-
-            {/* YearsCarousel */}
-            <div className="pb-3">
-              <YearsCarousel
-                selectedDate={yearNav.selectedDate}
-                onDateSelect={yearNav.setSelectedDate}
-                startYear={yearNav.startYear}
-                onPrevious={yearNav.handlePrevious}
-                onNext={yearNav.handleNext}
-                visibleYears={20}
-              />
-            </div>
-          </>
+              </>
+            }
+          />
         }
       >
         {isLoading ? (
@@ -272,7 +264,7 @@ export function PericiasYearWrapper({
                   {getDiasMes(mesIdx).map((dia, i) => {
                     if (!dia) return <span key={i} />;
                     const hasP = temPericia(mesIdx, dia);
-                    const isTodayDate = dateFnsIsToday(new Date(yearNav.selectedDate.getFullYear(), mesIdx, dia));
+                    const isTodayDate = dateFnsIsToday(new Date(selectedYear, mesIdx, dia));
 
                     return (
                       <div

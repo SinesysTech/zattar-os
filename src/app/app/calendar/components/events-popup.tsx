@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { format, isSameDay } from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
 import { X } from "lucide-react";
 
 import { EventItem, type CalendarEvent } from "./";
@@ -93,15 +94,15 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
         left: `${adjustedPosition.left}px`
       }}>
       <div className="bg-background sticky top-0 flex items-center justify-between border-b p-3">
-        <h3 className="font-medium">{format(date, "d MMMM yyyy")}</h3>
-        <button onClick={onClose} className="hover:bg-muted rounded-full p-1" aria-label="Close">
+        <h3 className="font-medium">{format(date, "d 'de' MMMM 'de' yyyy", { locale: ptBR })}</h3>
+        <button onClick={onClose} className="hover:bg-muted rounded-full p-1" aria-label="Fechar">
           <X className="h-4 w-4" />
         </button>
       </div>
 
       <div className="space-y-2 p-3">
         {events.length === 0 ? (
-          <div className="text-muted-foreground py-2 text-sm">No events</div>
+          <div className="text-muted-foreground py-2 text-sm">Nenhum evento</div>
         ) : (
           events.map((event) => {
             const eventStart = new Date(event.start);
