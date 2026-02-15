@@ -48,6 +48,11 @@ export interface DataTableToolbarProps<TData> {
  * Toolbar para DataTable com busca, filtros, controle de densidade,
  * visibilidade de colunas e exportação.
  *
+ * PADRÃO SINESYS:
+ * - Linha 1: Título à esquerda (h1, text-2xl), Botão de ação à direita
+ * - Linha 2: SearchBox + Filtros à esquerda, Ações (export, colunas) à direita
+ * - NÃO usar descrição/subtítulo - apenas título
+ *
  * IMPORTANTE - Altura Padrão Automática:
  * - Todos os elementos (Input, Select, Button, DateRangePicker) dentro desta toolbar
  *   automaticamente recebem altura h-9 (36px) via seletor CSS contextual

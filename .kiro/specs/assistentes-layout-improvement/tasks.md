@@ -113,7 +113,7 @@ This implementation plan refactors the assistentes page to follow the PageShell/
     - Verify list reflects changes
     - Run with 100 iterations
 
-- [-] 7. Test empty state rendering
+- [x] 7. Test empty state rendering
   - [x] 7.1 Verify empty state displays correctly
     - Test empty state shows when no assistentes
     - Test Bot icon is rendered
@@ -126,7 +126,7 @@ This implementation plan refactors the assistentes page to follow the PageShell/
     - Test message text is correct
     - _Requirements: 6.1, 6.2_
 
-- [ ] 8. Checkpoint - Verify all functionality
+- [x] 8. Checkpoint - Verify all functionality
   - Test page loads without errors
   - Test search works with debounce
   - Test create/edit/delete flows work
@@ -136,15 +136,15 @@ This implementation plan refactors the assistentes page to follow the PageShell/
   - Ensure all tests pass
   - Ask user if questions arise
 
-- [ ] 9. Accessibility and visual polish
-  - [ ] 9.1 Verify accessibility compliance
+- [x] 9. Accessibility and visual polish
+  - [x] 9.1 Verify accessibility compliance
     - Test keyboard navigation works for all interactive elements
     - Verify ARIA labels are present on buttons and inputs
     - Test focus states are visible
     - Verify color contrast meets WCAG AA in light and dark modes
     - _Requirements: RT-6_
   
-  - [ ] 9.2 Test light/dark mode consistency
+  - [x] 9.2 Test light/dark mode consistency
     - Verify cards display correctly in both modes
     - Test hover states work in both modes
     - Verify text contrast is sufficient in both modes
@@ -164,7 +164,7 @@ This implementation plan refactors the assistentes page to follow the PageShell/
     - Verify menu contains exactly permitted actions
     - Run with 100 iterations
 
-- [ ] 10. Final checkpoint - Complete verification
+- [x] 10. Final checkpoint - Complete verification
   - Run all unit tests and verify they pass
   - Run all property tests and verify they pass
   - Test page in multiple browsers (Chrome, Firefox, Safari)

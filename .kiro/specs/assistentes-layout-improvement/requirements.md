@@ -4,6 +4,8 @@
 
 Refatorar a página de assistentes para seguir os padrões de design estabelecidos no Sinesys, aplicando PageShell e DataShell, melhorando a experiência visual dos cards de assistentes com design moderno e profissional.
 
+**IMPORTANTE**: Não utilizamos descrições/subtítulos nas páginas. O título e botão de ação ficam na mesma linha via DataTableToolbar.
+
 ## 2. Contexto
 
 Atualmente, a página de assistentes (`/app/assistentes`) não segue o padrão PageShell/DataShell usado em outras páginas do sistema (como clientes, processos). O layout atual é funcional mas não está alinhado com o design system do projeto.
@@ -32,23 +34,24 @@ Atualmente, a página de assistentes (`/app/assistentes`) não segue o padrão P
 
 ### US-1: Como usuário, quero ver a página de assistentes com layout consistente
 **Critérios de Aceitação:**
-- [ ] 1.1 A página usa PageShell com título "Assistentes" e descrição apropriada
+- [ ] 1.1 A página usa PageShell sem título ou descrição (título vai no DataTableToolbar)
 - [ ] 1.2 O layout segue o mesmo padrão visual de outras páginas do sistema
 - [ ] 1.3 A navegação e hierarquia visual são claras
 
 ### US-2: Como usuário, quero buscar e filtrar assistentes facilmente
 **Critérios de Aceitação:**
-- [ ] 2.1 Campo de busca está integrado ao DataTableToolbar
+- [ ] 2.1 Campo de busca está integrado ao DataTableToolbar (linha 2)
 - [ ] 2.2 Busca funciona em tempo real com debounce
 - [ ] 2.3 Placeholder do campo de busca é descritivo ("Buscar assistentes...")
 - [ ] 2.4 Ícone de busca está visível no campo
 
 ### US-3: Como usuário com permissão, quero criar novos assistentes
 **Critérios de Aceitação:**
-- [ ] 3.1 Botão "Novo Assistente" está visível no canto superior direito
+- [ ] 3.1 Botão "Novo Assistente" está na linha 1 do DataTableToolbar, alinhado à direita
 - [ ] 3.2 Botão só aparece se o usuário tem permissão de criar
 - [ ] 3.3 Ao clicar, abre o dialog de criação
 - [ ] 3.4 Após criar, a lista é atualizada automaticamente
+- [ ] 3.5 Título "Assistentes" está na linha 1, alinhado à esquerda, mesma linha do botão
 
 ### US-4: Como usuário, quero visualizar assistentes em cards modernos
 **Critérios de Aceitação:**

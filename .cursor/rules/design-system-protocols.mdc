@@ -10,12 +10,28 @@ Este documento define as regras que agentes de IA devem seguir ao gerar ou modif
 
 ## 1. Layout & Shells
 
-### Regra: SEMPRE usar PageShell para paginas
+### Regra: SEMPRE usar PageShell para paginas (SEM título ou descrição)
 
 ```tsx
-// CORRETO
+// CORRETO - PageShell vazio, título vai no DataTableToolbar
 import { PageShell } from '@/components/shared/page-shell';
+import { DataShell } from '@/components/shared/data-shell';
+import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
 
+<PageShell>
+  <DataShell
+    header={
+      <DataTableToolbar
+        title="Processos"
+        actionButton={{ label: 'Novo Processo', onClick: ... }}
+      />
+    }
+  >
+    <ProcessosTable />
+  </DataShell>
+</PageShell>
+
+// INCORRETO - NUNCA usar title ou description no PageShell
 <PageShell title="Processos" description="Gerencie seus processos">
   <ProcessosTable />
 </PageShell>
@@ -27,15 +43,38 @@ import { PageShell } from '@/components/shared/page-shell';
 </main>
 ```
 
-### Regra: Usar DataTableShell para tabelas
+### Regra: Titulo e Botao de Acao no DataTableToolbar
+
+```tsx
+// CORRETO - Título e botão na mesma linha via DataTableToolbar
+<DataTableToolbar
+  title="Assistentes"
+  searchValue={busca}
+  onSearchValueChange={setBusca}
+  searchPlaceholder="Buscar..."
+  actionButton={{
+    label: 'Novo Assistente',
+    onClick: () => setCreateOpen(true),
+  }}
+/>
+
+// Layout gerado:
+// Linha 1: [Título H1] ........................... [Botão Ação]
+// Linha 2: [SearchBox + Filtros] ................ [Export + Colunas]
+```
+
+### Regra: Usar DataShell para tabelas e listas
 
 ```tsx
 // CORRETO
-import { DataTableShell } from '@/components/shared/data-table-shell';
+import { DataShell } from '@/components/shared/data-shell';
 
-<DataTableShell toolbar={<TableToolbar ... />}>
+<DataShell
+  header={<DataTableToolbar ... />}
+  footer={<DataPagination ... />}
+>
   <DataTable ... />
-</DataTableShell>
+</DataShell>
 ```
 
 ## 2. Badges & Status - REGRA CRITICA
@@ -177,7 +216,8 @@ export const TRIBUNAL_VARIANTS: Record<string, BadgeVisualVariant> = {
 - [ ] Nenhum `bg-{color}-{shade}` em componentes de feature
 - [ ] Nenhuma funcao `getXXXColorClass()` criada
 - [ ] Todos badges usam `getSemanticBadgeVariant()`
-- [ ] PageShell usado em todas as paginas
+- [ ] PageShell usado em todas as paginas (SEM title ou description)
+- [ ] Título e botão de ação no DataTableToolbar (mesma linha)
 - [ ] Typography usado para headings
 - [ ] Espacamentos seguem grid 4px
 - [ ] Nenhum `shadow-xl` no codigo
