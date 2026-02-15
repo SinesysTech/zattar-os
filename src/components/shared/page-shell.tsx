@@ -44,7 +44,7 @@ export function PageShell({
   const hasHeader = title || description || actions || badge;
 
   return (
-    <main className={cn('flex-1 space-y-6', className)}>
+    <main className={cn('flex-1 space-y-4', className)}>
       {hasHeader && (
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-1.5">

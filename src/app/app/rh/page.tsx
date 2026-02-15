@@ -57,23 +57,21 @@ export default function RHPage() {
     <PageShell>
       <Tabs value={activeTab} onValueChange={handleTabChange} className="flex flex-col h-full">
         <TabsList>
-          <TabsTrigger value="salarios" className="gap-1.5">
-            <Users className="h-4 w-4" />
+          <TabsTrigger value="salarios">
             Salários
           </TabsTrigger>
-          <TabsTrigger value="folhas-pagamento" className="gap-1.5">
-            <FileText className="h-4 w-4" />
+          <TabsTrigger value="folhas-pagamento">
             Folhas de Pagamento
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="salarios" className="flex-1 min-h-0">
+        <TabsContent value="salarios" className="flex-1 min-h-0 mt-6">
           <React.Suspense fallback={<TabSkeleton />}>
             <SalariosList />
           </React.Suspense>
         </TabsContent>
 
-        <TabsContent value="folhas-pagamento" className="flex-1 min-h-0">
+        <TabsContent value="folhas-pagamento" className="flex-1 min-h-0 mt-6">
           <React.Suspense fallback={<TabSkeleton />}>
             <FolhasPagamentoList />
           </React.Suspense>

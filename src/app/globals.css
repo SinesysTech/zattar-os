@@ -111,7 +111,7 @@
 
   /* ZATTAR LIGHT MODE */
   /* Fundo Off-White para evitar fadiga visual */
-  --background: oklch(0.96 0.01 270);
+  --background: oklch(0.98 0.005 270);
   /* Texto Charcoal (quase preto) para alto contraste */
   --foreground: oklch(0.24 0 0);
 
@@ -130,8 +130,8 @@
   --secondary: oklch(0.93 0 0);
   --secondary-foreground: oklch(0.24 0 0);
 
-  /* Muted: Cabeçalhos de tabela e textos de apoio */
-  --muted: oklch(0.96 0.01 270);
+  /* Muted: Fundo de controle (tabs, inputs agrupados) */
+  --muted: oklch(0.92 0.005 270);
   --muted-foreground: oklch(0.55 0.02 270); /* Mid Gray */
 
   /* Accent: Hover states */
@@ -349,6 +349,33 @@
 
 /* --- ESTILOS DO SCROLL AREA (shadcn/ui) --- */
 @layer components {
+  /* =============================================================================
+   * TABS COMPONENT (shadcn/ui)
+   * =============================================================================
+   * Estilos para garantir que as tabs tenham o visual correto
+   */
+
+  /* TabsList - Container das tabs com fundo cinza */
+  [data-slot="tabs-list"] {
+    @apply bg-muted rounded-lg p-1 h-auto;
+  }
+
+  /* TabsTrigger - Cada tab individual */
+  [data-slot="tabs-trigger"] {
+    @apply rounded-md px-3 py-1.5 text-sm font-medium transition-all;
+    @apply text-muted-foreground;
+  }
+
+  /* TabsTrigger - Estado ativo (tab selecionada) */
+  [data-slot="tabs-trigger"][data-state="active"] {
+    @apply bg-background text-foreground shadow-sm;
+  }
+
+  /* TabsTrigger - Hover */
+  [data-slot="tabs-trigger"]:hover:not([data-state="active"]) {
+    @apply text-foreground/80;
+  }
+
   /* =============================================================================
    * TIPOGRAFIA (TOKENS)
    * =============================================================================
