@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
 import { authenticateRequest } from "@/lib/auth/session";
-
-import * as kanbanService from "./service";
-import KanbanBoard from "./components/kanban-board";
+import { kanbanService } from "@/features/kanban";
+import CustomBoardView from "@/features/kanban/components/custom-board-view";
 
 export const metadata: Metadata = {
   title: "Kanban",
@@ -21,5 +20,5 @@ export default async function Page() {
     return <div className="p-6">Erro ao carregar Kanban: {result.error.message}</div>;
   }
 
-  return <KanbanBoard initialBoard={result.data} />;
+  return <CustomBoardView initialBoard={result.data} />;
 }
