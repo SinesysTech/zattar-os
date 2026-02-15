@@ -16,7 +16,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FilterPopover } from '@/features/partes';
-import { cn } from '@/lib/utils';
 import { PageShell } from '@/components/shared/page-shell';
 import {
   DataShell,
@@ -603,7 +602,7 @@ function EvolucaoChart({ evolucao }: { evolucao: EvolucaoDRE[] }) {
 // ============================================================================
 
 export default function DREClient() {
-  const hoje = new Date();
+  const hoje = React.useMemo(() => new Date(), []);
 
   const [periodo, setPeriodo] = React.useState(() => {
     const { dataInicio, dataFim } = gerarPeriodoAtual('mensal');
@@ -660,7 +659,7 @@ export default function DREClient() {
       setIncluirComparativo(true);
       setIncluirOrcado(true);
     }
-  }, []);
+  }, [setIncluirComparativo, setIncluirOrcado]);
 
   // ---- Handlers de período ----
   const handlePeriodoRapido = React.useCallback((periodoTipo: PeriodoRapido) => {
@@ -698,7 +697,7 @@ export default function DREClient() {
       dataFim: format(novoFim, 'yyyy-MM-dd'),
       tipo: novoTipo,
     });
-  }, [hoje]);
+  }, [hoje, setPeriodo]);
 
   const periodoAtivo = React.useMemo((): PeriodoRapido | '' => {
     const inicioDate = new Date(periodo.dataInicio);

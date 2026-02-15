@@ -20,9 +20,6 @@ import { DataTableColumnHeader } from '@/components/shared/data-shell';
 
 import {
   AcordoComParcelas,
-  TipoObrigacao,
-  DirecaoPagamento,
-  StatusAcordo,
   TIPO_LABELS,
   DIRECAO_LABELS,
   STATUS_LABELS,

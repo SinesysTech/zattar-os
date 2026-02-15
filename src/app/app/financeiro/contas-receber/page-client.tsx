@@ -64,13 +64,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+
 import { useClientes } from '@/features/partes';
 import { useContratos } from '@/features/contratos';
 import { useRouter } from 'next/navigation';
@@ -671,13 +665,13 @@ export default function ContasReceberPage() {
           pagination={
             paginacao
               ? {
-                  pageIndex: paginacao.pagina - 1,
-                  pageSize: paginacao.limite,
-                  total: paginacao.total,
-                  totalPages: paginacao.totalPaginas,
-                  onPageChange: setPageIndex,
-                  onPageSizeChange: setPageSize,
-                }
+                pageIndex: paginacao.pagina - 1,
+                pageSize: paginacao.limite,
+                total: paginacao.total,
+                totalPages: paginacao.totalPaginas,
+                onPageChange: setPageIndex,
+                onPageSizeChange: setPageSize,
+              }
               : undefined
           }
           sorting={undefined}

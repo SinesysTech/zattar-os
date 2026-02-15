@@ -516,7 +516,7 @@ export async function recapturarTimelineUnificada(acervoId: number): Promise<Rec
   const promises = instancias.map(async (inst) => {
     console.log(`[recapture] Processando instância ${inst.grau} (${inst.trt})...`);
 
-    let resultado: RecaptureResult = {
+    const resultado: RecaptureResult = {
       instanciaId: inst.id,
       trt: inst.trt,
       grau: inst.grau,

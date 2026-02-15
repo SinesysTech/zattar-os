@@ -185,14 +185,13 @@ interface DraggableTableHeaderProps<TData> {
   header: Header<TData, unknown>;
   className?: string;
   style?: React.CSSProperties;
-  align?: 'left' | 'center' | 'right';
+
 }
 
 function DraggableTableHeader<TData>({
   header,
   className,
   style: extraStyle,
-  align = 'left',
 }: DraggableTableHeaderProps<TData>) {
   const [isMounted, setIsMounted] = React.useState(false);
 
@@ -322,7 +321,7 @@ export function DataTable<TData, TValue>({
     controlledSorting &&
     !Array.isArray(controlledSorting) &&
     typeof (controlledSorting as DataTableSortingAdapter).onSortingChange ===
-      'function';
+    'function';
 
   const sortingState: SortingState = React.useMemo(() => {
     if (isSortingAdapter) {
@@ -550,7 +549,6 @@ export function DataTable<TData, TValue>({
                       <DraggableTableHeader
                         key={header.id}
                         header={header}
-                        align="left"
                         className={cn(
                           cellPadding,
                           'text-left',
@@ -601,11 +599,11 @@ export function DataTable<TData, TValue>({
                   onKeyDown={
                     onRowClick
                       ? (e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            onRowClick(row.original);
-                          }
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onRowClick(row.original);
                         }
+                      }
                       : undefined
                   }
                   role={onRowClick ? 'button' : undefined}

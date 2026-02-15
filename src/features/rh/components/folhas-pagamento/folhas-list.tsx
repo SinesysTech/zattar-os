@@ -188,7 +188,7 @@ export function FolhasPagamentoList() {
   const [dialogAberto, setDialogAberto] = React.useState(false);
   const [pagina, setPagina] = React.useState(1);
   const [mesReferencia, setMesReferencia] = React.useState<string>('');
-  const [anoReferencia, setAnoReferencia] = React.useState<string>(''); // Mantendo como string simples por enquanto, ideal seria um input ou select de anos
+  const [anoReferencia] = React.useState<string>(''); // Mantendo como string simples por enquanto, ideal seria um input ou select de anos
   const [status, setStatus] = React.useState<string>('');
 
   const { folhas, paginacao, isLoading, error, refetch } = useFolhasPagamento({

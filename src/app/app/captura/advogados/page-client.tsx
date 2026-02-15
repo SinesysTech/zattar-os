@@ -11,7 +11,7 @@ import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data
 import { DataPagination } from '@/components/shared/data-shell/data-pagination';
 import { PageShell } from '@/components/shared/page-shell';
 import { useDebounce } from '@/hooks/use-debounce';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import {
   AlertDialog,
   AlertDialogAction,
