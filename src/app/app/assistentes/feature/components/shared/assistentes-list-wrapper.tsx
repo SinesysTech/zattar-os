@@ -64,6 +64,7 @@ export function AssistentesListWrapper({ initialData, permissions }: Assistentes
       <DataShell
         header={
           <DataTableToolbar
+            title="Assistentes"
             searchValue={busca}
             onSearchValueChange={handleSearchChange}
             searchPlaceholder="Buscar assistentes..."

@@ -35,17 +35,7 @@ export default async function AssistentesPage() {
   const initialData = result.data;
 
   return (
-    <PageShell
-      title="Assistentes"
-      actions={
-        permissions.canCreate ? (
-          <Button onClick={() => setCreateOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Novo Assistente
-          </Button>
-        ) : undefined
-      }
-    >
+    <PageShell>
       <Suspense fallback={<div>Carregando...</div>}>
         <AssistentesListWrapper
           initialData={initialData}
