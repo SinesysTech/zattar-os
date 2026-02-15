@@ -154,11 +154,6 @@ export function RegiaoFormDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={isEditing ? "Editar Região" : "Nova Região"}
-      description={
-        isEditing
-          ? "Altere as configurações da região"
-          : "Configure uma nova região de atribuição automática"
-      }
       maxWidth="2xl"
       footer={
         <Button onClick={handleSave} disabled={isSaving || !isFormValid}>

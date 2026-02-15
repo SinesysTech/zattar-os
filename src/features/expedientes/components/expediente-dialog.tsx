@@ -332,7 +332,6 @@ export function ExpedienteDialog({
         open={open}
         onOpenChange={onOpenChange}
         title="Novo Expediente Manual"
-        description="Criar expediente vinculado ao processo"
         maxWidth="2xl"
         footer={footerButtons}
         multiStep={{
@@ -535,7 +534,6 @@ export function ExpedienteDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Novo Expediente Manual"
-      description="Criar um expediente manual vinculado a um processo existente"
       maxWidth="2xl"
       footer={footerButtons}
       multiStep={{

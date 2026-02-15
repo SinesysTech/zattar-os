@@ -68,11 +68,6 @@ export default function SignerDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={mode === 'add' ? 'Adicionar Signatário' : 'Editar Signatário'}
-      description={
-        mode === 'add'
-          ? 'Adicione uma pessoa que precisa assinar este documento.'
-          : 'Atualize os dados do signatário.'
-      }
       maxWidth="sm"
       footer={
         <Button type="submit" form="signer-form" disabled={isSubmitting}>

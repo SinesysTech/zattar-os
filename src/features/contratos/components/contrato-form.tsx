@@ -228,11 +228,6 @@ export function ContratoForm({
       open={open}
       onOpenChange={onOpenChange}
       title={isEditMode ? 'Editar Contrato' : 'Novo Contrato'}
-      description={
-        isEditMode
-          ? 'Atualize as informações do contrato'
-          : 'Preencha os dados para criar um novo contrato'
-      }
       maxWidth="lg"
       footer={
         <Button

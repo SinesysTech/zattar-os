@@ -207,7 +207,6 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
         open={isSettingsOpen}
         onOpenChange={setIsSettingsOpen}
         title="Tipos de Audiências"
-        description="Gerencie os tipos de audiências utilizados no sistema."
         maxWidth="4xl"
         footer={
           <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>

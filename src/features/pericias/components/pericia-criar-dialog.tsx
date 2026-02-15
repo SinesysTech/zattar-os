@@ -119,7 +119,6 @@ export function PericiaCriarDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Nova Perícia"
-      description="Criar uma nova perícia manualmente"
       maxWidth="lg"
       footer={
         <div className="flex w-full justify-end gap-2">

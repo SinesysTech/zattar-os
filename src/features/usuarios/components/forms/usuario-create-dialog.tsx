@@ -110,7 +110,6 @@ export function UsuarioCreateDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Novo Usuário"
-      description="Preencha os dados para criar um novo usuário no sistema"
       maxWidth="2xl"
       footer={
         <>

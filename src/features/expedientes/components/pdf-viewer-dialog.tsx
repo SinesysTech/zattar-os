@@ -74,7 +74,6 @@ export function PdfViewerDialog({
                 open={open}
                 onOpenChange={onOpenChange}
                 title={documentTitle}
-                description="Visualização do documento anexado ao expediente."
                 maxWidth="4xl"
                 footer={footerButton}
             >
@@ -91,7 +90,6 @@ export function PdfViewerDialog({
             open={open}
             onOpenChange={onOpenChange}
             title={documentTitle}
-            description="Visualização do documento anexado ao expediente"
             maxWidth="4xl"
             footer={footerButton}
         >

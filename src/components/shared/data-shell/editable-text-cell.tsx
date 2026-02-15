@@ -10,7 +10,6 @@ interface EditableTextCellProps {
     value: string | null;
     onSave: (newValue: string) => Promise<void>;
     title?: string;
-    description?: string;
     placeholder?: string;
     emptyPlaceholder?: string;
     className?: string;
@@ -21,7 +20,6 @@ export function EditableTextCell({
     value,
     onSave,
     title = 'Editar Observações',
-    description = 'Adicione ou edite as observações.',
     placeholder = 'Adicione observações...',
     emptyPlaceholder,
     className,
@@ -76,7 +74,6 @@ export function EditableTextCell({
                 open={isOpen}
                 onOpenChange={setIsOpen}
                 title={title}
-                description={description}
                 maxWidth="md"
                 footer={
                     <div className="flex justify-end gap-2 w-full">

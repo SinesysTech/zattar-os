@@ -18,9 +18,6 @@ jest.mock('@/components/ui/responsive-dialog', () => ({
   ResponsiveDialogTitle: ({ children }: { children: React.ReactNode }) => (
     <h2 data-testid="dialog-title">{children}</h2>
   ),
-  ResponsiveDialogDescription: ({ children }: { children: React.ReactNode }) => (
-    <p data-testid="dialog-description">{children}</p>
-  ),
   ResponsiveDialogBody: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="dialog-body">{children}</div>
   ),
@@ -43,11 +40,6 @@ describe('DialogFormShell', () => {
     expect(screen.getByTestId('dialog-title')).toHaveTextContent('Test Dialog');
     expect(screen.getByText('Form Content')).toBeInTheDocument();
     expect(screen.getByText('Cancelar')).toBeInTheDocument();
-  });
-
-  it('renders description when provided', () => {
-    render(<DialogFormShell {...defaultProps} description="Test Description" />);
-    expect(screen.getByTestId('dialog-description')).toHaveTextContent('Test Description');
   });
 
   it('calls onOpenChange when cancel button is clicked', () => {

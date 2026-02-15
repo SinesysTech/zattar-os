@@ -86,7 +86,6 @@ export function ExpedientesReverterBaixaDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Reverter Baixa de Expediente"
-      description="Reverter a baixa deste expediente, marcando-o como pendente novamente."
       maxWidth="lg"
       footer={footerButtons}
     >

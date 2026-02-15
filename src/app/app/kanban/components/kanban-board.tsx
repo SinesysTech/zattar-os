@@ -754,7 +754,6 @@ export default function KanbanBoard({ initialBoard }: KanbanBoardProps) {
         open={isNewTaskOpen}
         onOpenChange={setIsNewTaskOpen}
         title="Nova tarefa"
-        description="Crie uma tarefa e adicione ao seu board."
         footer={
           <div className="flex w-full items-center justify-end gap-2">
             <Button variant="outline" onClick={() => setIsNewTaskOpen(false)} disabled={isPending}>

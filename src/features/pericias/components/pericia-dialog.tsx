@@ -99,7 +99,6 @@ export function PericiaDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Editar perícia"
-      description={pericia ? `Processo ${pericia.numeroProcesso}` : 'Selecione a perícia'}
       maxWidth="lg"
       footer={
         <div className="flex w-full justify-end gap-2">

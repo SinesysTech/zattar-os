@@ -312,11 +312,6 @@ export function ContaPagarFormDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={isEditMode ? 'Editar Conta a Pagar' : 'Nova Conta a Pagar'}
-      description={
-        isEditMode
-          ? 'Atualize os dados da conta a pagar.'
-          : 'Preencha os dados para criar uma nova conta a pagar.'
-      }
       maxWidth="2xl"
       footer={
         <Button

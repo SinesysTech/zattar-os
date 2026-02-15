@@ -161,7 +161,6 @@ export function ProcessoForm({
       open={open}
       onOpenChange={onOpenChange}
       title={isEditMode ? 'Editar Processo' : 'Novo Processo'}
-      description="Preencha os dados do processo judicial"
       maxWidth="2xl"
       footer={
         <Button

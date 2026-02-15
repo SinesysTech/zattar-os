@@ -6,7 +6,6 @@ import {
   ResponsiveDialogContent,
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
-  ResponsiveDialogDescription,
   ResponsiveDialogBody,
   ResponsiveDialogFooter,
 } from "@/components/ui/responsive-dialog";
@@ -27,10 +26,6 @@ interface DialogFormShellProps {
    * Título do diálogo
    */
   title: React.ReactNode;
-  /**
-   * Descrição opcional do diálogo
-   */
-  description?: string;
   /**
    * Conteúdo do formulário
    */
@@ -68,7 +63,6 @@ export function DialogFormShell({
   open,
   onOpenChange,
   title,
-  description,
   children,
   footer,
   multiStep,
@@ -101,23 +95,15 @@ export function DialogFormShell({
         showCloseButton={false} // Removemos o botão X padrão
         className={cn(
           maxWidthClass,
-          "bg-white dark:bg-gray-950", // Background branco explícito
+          "bg-white", // Background branco explícito
           "p-0 gap-0", // Removemos padding padrão para controlar layout
           className
         )}
       >
-        <ResponsiveDialogHeader className="px-6 py-4 border-b shrink-0 space-y-1.5">
+        <ResponsiveDialogHeader className="px-6 py-4 border-b shrink-0">
           <ResponsiveDialogTitle className="text-lg font-semibold leading-none tracking-tight">
             {title}
           </ResponsiveDialogTitle>
-          {description && (
-            <ResponsiveDialogDescription
-              data-testid="dialog-description"
-              className="text-sm text-muted-foreground"
-            >
-              {description}
-            </ResponsiveDialogDescription>
-          )}
 
           {/* Barra de progresso para multi-step */}
           {multiStep && (
@@ -135,12 +121,12 @@ export function DialogFormShell({
           )}
         </ResponsiveDialogHeader>
 
-        <ResponsiveDialogBody className="flex-1 min-h-0 bg-white dark:bg-gray-950">
+        <ResponsiveDialogBody className="flex-1 min-h-0 bg-white">
           {children}
         </ResponsiveDialogBody>
 
         {!hideFooter && (
-          <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0 bg-gray-50/50 dark:bg-gray-900/50">
+          <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0 bg-white">
             <div className="flex w-full items-center gap-2">
               {/* Botão Cancelar padrão à esquerda */}
               <Button

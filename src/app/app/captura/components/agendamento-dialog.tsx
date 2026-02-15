@@ -95,7 +95,6 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
       open={open}
       onOpenChange={onOpenChange}
       title={<Typography.H3 as="span">Novo agendamento</Typography.H3>}
-      description="Agende capturas automáticas e recorrentes."
       maxWidth="2xl"
       footer={
         <div className="flex w-full justify-end gap-2">

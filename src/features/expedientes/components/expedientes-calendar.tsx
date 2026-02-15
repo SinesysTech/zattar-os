@@ -397,7 +397,6 @@ export function ExpedientesCalendar() {
                 open={isSettingsOpen}
                 onOpenChange={setIsSettingsOpen}
                 title="Tipos de Expedientes"
-                description="Gerencie os tipos de expedientes utilizados no sistema."
                 maxWidth="4xl"
                 footer={
                     <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>

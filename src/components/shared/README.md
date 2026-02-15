@@ -42,7 +42,6 @@ export default function MinhaPaginaDeListagem() {
   return (
     <PageShell
       title="Lançamentos Financeiros"
-      description="Gerencie receitas e despesas"
     >
       <DataShell
         actionButton={{

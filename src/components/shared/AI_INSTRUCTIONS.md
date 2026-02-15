@@ -586,7 +586,6 @@ export function EntidadeFormDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={mode === 'create' ? 'Nova Entidade' : 'Editar Entidade'}
-      description="Preencha os dados abaixo"
       maxWidth="lg"  // sm | md | lg | xl | 2xl
       footer={
         <Button type="submit" form="entidade-form" disabled={isPending}>
@@ -659,7 +658,6 @@ export function EntidadeDetailSheet({
       open={open}
       onOpenChange={onOpenChange}
       title={entidade.nome}
-      description="Detalhes da entidade"
       side="right"  // "left" | "right"
       footer={
         <div className="flex gap-2">

@@ -944,7 +944,6 @@ export function ParteContrariaFormDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={isEditMode ? 'Editar Parte Contrária' : stepInfo.title}
-      description={stepInfo.description}
       multiStep={{
         current: isEditMode ? currentStep - 1 : currentStep,
         total: isEditMode ? TOTAL_STEPS - 1 : TOTAL_STEPS,

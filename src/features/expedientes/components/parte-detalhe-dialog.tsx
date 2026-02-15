@@ -189,7 +189,6 @@ export function ParteDetalheDialog({
           <span className="truncate">{parte?.nome || nomeExibido}</span>
         </div>
       }
-      description="Informações da parte processual"
       maxWidth="sm"
       footer={footerButton}
     >

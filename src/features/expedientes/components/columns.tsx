@@ -246,7 +246,6 @@ export function TipoDescricaoCell({
         open={isDescricaoDialogOpen}
         onOpenChange={setIsDescricaoDialogOpen}
         title="Editar Descrição"
-        description="Atualize a descrição do expediente"
         maxWidth="md"
         footer={
           <div className="flex justify-end gap-2 w-full">
@@ -410,7 +409,6 @@ export function ObservacoesCell({ expediente, onSuccess }: { expediente: Expedie
       value={expediente.observacoes}
       onSave={handleSave}
       title="Observações"
-      description={`Editar observações do processo ${expediente.numeroProcesso}`}
       placeholder="Adicione observações aqui..."
     />
   );

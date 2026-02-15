@@ -61,11 +61,6 @@ export function PericiaObservacoesDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Observações"
-      description={
-        pericia
-          ? `Perícia do processo ${pericia.numeroProcesso}`
-          : 'Selecione a perícia'
-      }
       maxWidth="md"
       footer={
         <div className="flex w-full justify-end gap-2">

@@ -157,7 +157,7 @@ import { Label } from "@/components/ui/label"
   placeholder="Buscar processos..."
   value={searchTerm}
   onChange={(e) => setSearchTerm(e.target.value)}
-  className="h-9 w-[250px]"
+  className="h-9 w-62.5"
 />
 ```
 

@@ -318,10 +318,6 @@ export function ExpedienteDetalhesDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={titulo || (exibirLista ? 'Expedientes do Dia' : 'Detalhes do Expediente')}
-      description={exibirLista
-        ? `${expedientes?.length ?? 0} expediente${(expedientes?.length ?? 0) > 1 ? 's' : ''} para este dia`
-        : 'Informações detalhadas do expediente'
-      }
       maxWidth="2xl"
       footer={footerButton}
     >
