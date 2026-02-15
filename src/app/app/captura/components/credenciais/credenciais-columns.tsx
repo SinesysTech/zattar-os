@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Eye, Pencil, Power } from 'lucide-react';
