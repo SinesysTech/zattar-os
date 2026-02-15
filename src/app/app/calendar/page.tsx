@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+
+export const dynamic = 'force-dynamic';
 import { startOfMonth, endOfMonth } from "date-fns";
 
 import EventCalendarApp from "./components/event-calendar-app";
