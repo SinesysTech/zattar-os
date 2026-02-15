@@ -28,7 +28,7 @@ export interface FilterOption {
 interface FilterPopoverProps {
   label: string;
   placeholder?: string;
-  options: FilterOption[];
+  options: readonly FilterOption[];
   value: string;
   onValueChange: (value: string) => void;
   /** Valor que representa "sem filtro". Default: 'all' */
