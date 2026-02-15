@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+
+export const dynamic = 'force-dynamic';
 import { PageShell } from "@/components/shared/page-shell";
 import { actionObterMetricasDB } from "@/features/admin";
 import { MetricasDBContent } from "./components/metricas-db-content";
