@@ -4,6 +4,8 @@ export { AudienciasContent } from './audiencias-content';
 // Table/List views
 export { AudienciasListWrapper } from './audiencias-list-wrapper';
 export { AudienciasTableWrapper } from './audiencias-table-wrapper';
+export { AudienciasMonthWrapper } from './audiencias-month-wrapper';
+export { AudienciasYearWrapper } from './audiencias-year-wrapper';
 export { AudienciasListFilters } from './audiencias-list-filters';
 export { getAudienciasColumns, ResponsavelCell, type AudienciaComResponsavel } from './audiencias-list-columns';
 

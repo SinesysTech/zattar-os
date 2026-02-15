@@ -1,28 +1,29 @@
 'use client';
 
 /**
- * AudienciasYearWrapper - Wrapper auto-contido para a view de ano
+ * AudienciasMonthWrapper - Wrapper auto-contido para a view de mês
  *
  * Segue o mesmo padrão de DataShell + DataTableToolbar
  * que AudienciasTableWrapper (semana) e AudienciasListWrapper (lista).
  *
  * Gerencia:
  * - Estado de filtros (via AudienciasListFilters)
- * - Navegação de ano (via useYearNavigation + YearsCarousel)
  * - Busca de dados (via useAudiencias hook)
+ * - Master-Detail layout (calendário compacto + lista do dia)
  * - Dialog de criação
+ *
+ * Nota: Sem MonthsCarousel — o AudienciasCalendarCompact já tem
+ * navegação de mês embutida (setas prev/next + botão "Hoje").
  */
 
 import * as React from 'react';
-import { startOfYear, endOfYear } from 'date-fns';
+import { startOfMonth, endOfMonth } from 'date-fns';
 
 import {
   DataShell,
   DataTableToolbar,
 } from '@/components/shared/data-shell';
 import {
-  YearsCarousel,
-  useYearNavigation,
   TemporalViewLoading,
   TemporalViewError,
 } from '@/components/shared';
@@ -33,7 +34,8 @@ import { useTiposAudiencias } from '../hooks/use-tipos-audiencias';
 import { useUsuarios } from '@/features/usuarios';
 
 import { AudienciasListFilters } from './audiencias-list-filters';
-import { AudienciasCalendarYearView } from './audiencias-calendar-year-view';
+import { AudienciasCalendarCompact } from './audiencias-calendar-compact';
+import { AudienciasDayList } from './audiencias-day-list';
 import { NovaAudienciaDialog } from './nova-audiencia-dialog';
 
 import type {
@@ -47,7 +49,7 @@ import type {
 // TIPOS
 // =============================================================================
 
-interface AudienciasYearWrapperProps {
+interface AudienciasMonthWrapperProps {
   /** Slot para o seletor de modo de visualização (ViewModePopover) */
   viewModeSlot?: React.ReactNode;
   /** Slot para botões de ação adicionais (ex: Settings) */
@@ -62,14 +64,15 @@ interface AudienciasYearWrapperProps {
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function AudienciasYearWrapper({
+export function AudienciasMonthWrapper({
   viewModeSlot,
   settingsSlot,
   usuariosData,
   tiposAudienciaData,
-}: AudienciasYearWrapperProps) {
-  // ---------- Navegação de Ano ----------
-  const yearNav = useYearNavigation(new Date(), 20);
+}: AudienciasMonthWrapperProps) {
+  // ---------- Estado do Calendário ----------
+  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
+  const [currentMonth, setCurrentMonth] = React.useState<Date>(new Date());
 
   // ---------- Estado de Filtros ----------
   const [globalFilter, setGlobalFilter] = React.useState('');
@@ -101,8 +104,8 @@ export function AudienciasYearWrapper({
     grau: grauFiltro === 'todas' ? undefined : grauFiltro,
     responsavel_id: responsavelFiltro === 'todos' ? undefined : responsavelFiltro === 'null' ? 'null' : responsavelFiltro,
     tipo_audiencia_id: tipoAudienciaFiltro === 'todos' ? undefined : tipoAudienciaFiltro,
-    data_inicio_inicio: startOfYear(yearNav.selectedDate).toISOString(),
-    data_inicio_fim: endOfYear(yearNav.selectedDate).toISOString(),
+    data_inicio_inicio: startOfMonth(currentMonth).toISOString(),
+    data_inicio_fim: endOfMonth(currentMonth).toISOString(),
   });
 
   // ---------- Handlers ----------
@@ -116,54 +119,40 @@ export function AudienciasYearWrapper({
     <>
       <DataShell
         header={
-          <>
-            <DataTableToolbar
-              title="Audiências"
-              searchValue={globalFilter}
-              onSearchValueChange={setGlobalFilter}
-              searchPlaceholder="Buscar audiências..."
-              actionButton={{
-                label: 'Nova Audiência',
-                onClick: () => setIsCreateDialogOpen(true),
-              }}
-              actionSlot={
-                <>
-                  {viewModeSlot}
-                  {settingsSlot}
-                </>
-              }
-              filtersSlot={
-                <AudienciasListFilters
-                  statusFiltro={statusFiltro}
-                  onStatusChange={setStatusFiltro}
-                  modalidadeFiltro={modalidadeFiltro}
-                  onModalidadeChange={setModalidadeFiltro}
-                  trtFiltro={trtFiltro}
-                  onTrtChange={setTrtFiltro}
-                  grauFiltro={grauFiltro}
-                  onGrauChange={setGrauFiltro}
-                  responsavelFiltro={responsavelFiltro}
-                  onResponsavelChange={setResponsavelFiltro}
-                  tipoAudienciaFiltro={tipoAudienciaFiltro}
-                  onTipoAudienciaChange={setTipoAudienciaFiltro}
-                  usuarios={usuarios}
-                  tiposAudiencia={tiposAudiencia}
-                />
-              }
-            />
-
-            {/* YearsCarousel - mesmo posicionamento do WeekNavigator na view semana */}
-            <div className="pb-3">
-              <YearsCarousel
-                selectedDate={yearNav.selectedDate}
-                onDateSelect={yearNav.setSelectedDate}
-                startYear={yearNav.startYear}
-                onPrevious={yearNav.handlePrevious}
-                onNext={yearNav.handleNext}
-                visibleYears={20}
+          <DataTableToolbar
+            title="Audiências"
+            searchValue={globalFilter}
+            onSearchValueChange={setGlobalFilter}
+            searchPlaceholder="Buscar audiências..."
+            actionButton={{
+              label: 'Nova Audiência',
+              onClick: () => setIsCreateDialogOpen(true),
+            }}
+            actionSlot={
+              <>
+                {viewModeSlot}
+                {settingsSlot}
+              </>
+            }
+            filtersSlot={
+              <AudienciasListFilters
+                statusFiltro={statusFiltro}
+                onStatusChange={setStatusFiltro}
+                modalidadeFiltro={modalidadeFiltro}
+                onModalidadeChange={setModalidadeFiltro}
+                trtFiltro={trtFiltro}
+                onTrtChange={setTrtFiltro}
+                grauFiltro={grauFiltro}
+                onGrauChange={setGrauFiltro}
+                responsavelFiltro={responsavelFiltro}
+                onResponsavelChange={setResponsavelFiltro}
+                tipoAudienciaFiltro={tipoAudienciaFiltro}
+                onTipoAudienciaChange={setTipoAudienciaFiltro}
+                usuarios={usuarios}
+                tiposAudiencia={tiposAudiencia}
               />
-            </div>
-          </>
+            }
+          />
         }
       >
         {isLoading ? (
@@ -171,12 +160,29 @@ export function AudienciasYearWrapper({
         ) : error ? (
           <TemporalViewError message={`Erro ao carregar audiências: ${error}`} onRetry={refetch} />
         ) : (
-          <AudienciasCalendarYearView
-            audiencias={audiencias}
-            currentDate={yearNav.selectedDate}
-            onDateChange={yearNav.setSelectedDate}
-            refetch={refetch}
-          />
+          <div className="bg-card border rounded-md overflow-hidden flex-1 min-h-0">
+            <div className="flex h-full">
+              {/* Calendário compacto — largura fixa para não ficar achatado */}
+              <div className="w-[480px] shrink-0 border-r p-6 overflow-auto">
+                <AudienciasCalendarCompact
+                  selectedDate={selectedDate}
+                  onDateSelect={setSelectedDate}
+                  audiencias={audiencias}
+                  currentMonth={currentMonth}
+                  onMonthChange={setCurrentMonth}
+                />
+              </div>
+
+              {/* Lista do dia — ocupa todo o espaço restante */}
+              <div className="flex-1 min-w-0">
+                <AudienciasDayList
+                  selectedDate={selectedDate}
+                  audiencias={audiencias}
+                  onAddAudiencia={() => setIsCreateDialogOpen(true)}
+                />
+              </div>
+            </div>
+          </div>
         )}
       </DataShell>
 

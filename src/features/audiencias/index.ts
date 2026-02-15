@@ -30,6 +30,8 @@ export {
   // Table/List views
   AudienciasListWrapper,
   AudienciasTableWrapper,
+  AudienciasMonthWrapper,
+  AudienciasYearWrapper,
   AudienciasListFilters,
   getAudienciasColumns,
   // Calendar views

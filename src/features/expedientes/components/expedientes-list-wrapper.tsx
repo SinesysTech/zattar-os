@@ -1,18 +1,18 @@
 'use client';
 
 /**
- * PericiasTableWrapper - Wrapper auto-contido para a view de semana/lista
+ * ExpedientesListWrapper - Wrapper auto-contido para a view de lista
  *
- * Segue o padrão de ExpedientesTableWrapper refatorado:
+ * Segue o padrão de AudienciasListWrapper:
  * - Gerencia próprio estado de filtros, paginação e fetch
  * - DataShell + DataTableToolbar + DataTable + DataPagination
- * - PericiasListFilters no filtersSlot
- * - WeekNavigator para visualização de semana
- * - usePericias hook para data fetching
+ * - ExpedientesListFilters no filtersSlot
+ * - ExpedientesBulkActions para seleção em lote
+ * - Dialog de criação interno
  */
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import { format, startOfDay, addDays, startOfWeek, endOfWeek } from 'date-fns';
 import { X } from 'lucide-react';
@@ -23,67 +23,71 @@ import {
   DataTableToolbar,
   DataPagination,
 } from '@/components/shared/data-shell';
-import { WeekNavigator, type WeekNavigatorProps } from '@/components/shared';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 
-import type { Pericia } from '../domain';
-import { SituacaoPericiaCodigo, SITUACAO_PERICIA_LABELS } from '../domain';
-import { GRAU_TRIBUNAL_LABELS } from '@/features/expedientes/domain';
-import type { GrauTribunal } from '../domain';
-import { usePericias } from '../hooks/use-pericias';
+import type { Expediente } from '../domain';
+import { GrauTribunal, GRAU_TRIBUNAL_LABELS, OrigemExpediente, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
+import { useExpedientes } from '../hooks/use-expedientes';
 import { useUsuarios } from '@/features/usuarios';
-import { useEspecialidadesPericias } from '../hooks/use-especialidades-pericias';
-import { usePeritos } from '../hooks/use-peritos';
-import type { UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../types';
-
+import { useTiposExpedientes } from '@/features/tipos-expedientes';
 import { columns } from './columns';
-import { PericiaCriarDialog } from './pericia-criar-dialog';
+import { ExpedienteDialog } from './expediente-dialog';
+import { ExpedientesBulkActions } from './expedientes-bulk-actions';
 import {
-  PericiasListFilters,
-  type SituacaoFilterType,
+  ExpedientesListFilters,
+  type StatusFilterType,
+  type PrazoFilterType,
   type ResponsavelFilterType,
-  type LaudoFilterType,
-} from './pericias-list-filters';
+} from './expedientes-list-filters';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
-interface PericiasTableWrapperProps {
-  fixedDate?: Date;
-  hideDateFilters?: boolean;
-  /** Props para renderizar o WeekNavigator dentro do wrapper */
-  weekNavigatorProps?: Omit<WeekNavigatorProps, 'className' | 'variant'>;
+interface UsuarioData {
+  id: number;
+  nomeExibicao?: string;
+  nome_exibicao?: string;
+  nomeCompleto?: string;
+  nome?: string;
+}
+
+interface TipoExpedienteData {
+  id: number;
+  tipoExpediente?: string;
+  tipo_expediente?: string;
+}
+
+interface ExpedientesListWrapperProps {
   /** Slot para o seletor de modo de visualização (ViewModePopover) */
   viewModeSlot?: React.ReactNode;
   /** Dados de usuários pré-carregados (evita fetch duplicado) */
-  usuariosData?: UsuarioOption[];
-  /** Dados de especialidades pré-carregados */
-  especialidadesData?: EspecialidadePericiaOption[];
-  /** Dados de peritos pré-carregados */
-  peritosData?: PeritoOption[];
+  usuariosData?: UsuarioData[];
+  /** Dados de tipos de expediente pré-carregados (evita fetch duplicado) */
+  tiposExpedientesData?: TipoExpedienteData[];
+}
+
+// Helper para obter nome do usuário
+function getUsuarioNome(u: UsuarioData): string {
+  return u.nomeExibicao || u.nome_exibicao || u.nomeCompleto || u.nome || `Usuário ${u.id}`;
 }
 
 // =============================================================================
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function PericiasTableWrapper({
-  fixedDate,
-  hideDateFilters,
-  weekNavigatorProps,
+export function ExpedientesListWrapper({
   viewModeSlot,
   usuariosData,
-  especialidadesData,
-  peritosData,
-}: PericiasTableWrapperProps) {
+  tiposExpedientesData,
+}: ExpedientesListWrapperProps) {
   const router = useRouter();
-  const isWeekMode = !!weekNavigatorProps;
+  const searchParams = useSearchParams();
 
   // ---------- Estado da Tabela ----------
-  const [table, setTable] = React.useState<TanstackTable<Pericia> | null>(null);
+  const [table, setTable] = React.useState<TanstackTable<Expediente> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
 
@@ -93,26 +97,70 @@ export function PericiasTableWrapper({
 
   // ---------- Busca e Filtros ----------
   const [globalFilter, setGlobalFilter] = React.useState('');
-  const [situacaoFilter, setSituacaoFilter] = React.useState<SituacaoFilterType>('todos');
+  const [statusFilter, setStatusFilter] = React.useState<StatusFilterType>('pendentes');
+  const [prazoFilter, setPrazoFilter] = React.useState<PrazoFilterType>('todos');
   const [responsavelFilter, setResponsavelFilter] = React.useState<ResponsavelFilterType>('todos');
-  const [laudoFilter, setLaudoFilter] = React.useState<LaudoFilterType>('todos');
   const [tribunalFilter, setTribunalFilter] = React.useState('');
   const [grauFilter, setGrauFilter] = React.useState('');
-  const [especialidadeFilter, setEspecialidadeFilter] = React.useState('');
-  const [peritoFilter, setPeritoFilter] = React.useState('');
+  const [tipoExpedienteFilter, setTipoExpedienteFilter] = React.useState('');
+  const [origemFilter, setOrigemFilter] = React.useState('');
   const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>(undefined);
 
-  // ---------- Dialog State ----------
+  // ---------- Track se já inicializou com query param ----------
+  const hasInitializedFromParams = React.useRef(false);
+
+  React.useEffect(() => {
+    if (hasInitializedFromParams.current) return;
+    hasInitializedFromParams.current = true;
+
+    const responsavelParam = searchParams.get('responsavel');
+    if (!responsavelParam) return;
+
+    if (responsavelParam === 'sem_responsavel') {
+      setResponsavelFilter('sem_responsavel');
+    } else {
+      const parsed = parseInt(responsavelParam, 10);
+      if (!Number.isNaN(parsed)) {
+        setResponsavelFilter(parsed);
+      }
+    }
+  }, [searchParams]);
+
+  // ---------- Dialogs ----------
   const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
 
   // ---------- Dados Auxiliares ----------
   const { usuarios: usuariosFetched } = useUsuarios({ enabled: !usuariosData });
-  const { especialidades: especialidadesFetched } = useEspecialidadesPericias({ enabled: !especialidadesData });
-  const { peritos: peritosFetched } = usePeritos({ enabled: !peritosData });
+  const { tiposExpedientes: tiposFetched } = useTiposExpedientes({ limite: 100 });
 
   const usuarios = usuariosData ?? usuariosFetched;
-  const especialidades = especialidadesData ?? especialidadesFetched;
-  const peritos = peritosData ?? peritosFetched;
+  const tiposExpedientes = tiposExpedientesData ?? tiposFetched;
+
+  // ---------- Calcular datas para filtro de prazo ----------
+  const getPrazoDates = React.useCallback((prazo: PrazoFilterType): { from?: string; to?: string } | null => {
+    const hoje = new Date();
+    switch (prazo) {
+      case 'vencidos':
+      case 'sem_prazo':
+        return null;
+      case 'hoje': {
+        const hojeStr = format(startOfDay(hoje), 'yyyy-MM-dd');
+        return { from: hojeStr, to: hojeStr };
+      }
+      case 'amanha': {
+        const amanhaStr = format(startOfDay(addDays(hoje, 1)), 'yyyy-MM-dd');
+        return { from: amanhaStr, to: amanhaStr };
+      }
+      case 'semana': {
+        return {
+          from: format(startOfWeek(hoje, { weekStartsOn: 1 }), 'yyyy-MM-dd'),
+          to: format(endOfWeek(hoje, { weekStartsOn: 1 }), 'yyyy-MM-dd'),
+        };
+      }
+      default:
+        return null;
+    }
+  }, []);
 
   // ---------- Montar params para o hook ----------
   const hookParams = React.useMemo(() => {
@@ -122,16 +170,26 @@ export function PericiasTableWrapper({
       busca: globalFilter || undefined,
     };
 
-    // Situação
-    if (situacaoFilter !== 'todos') {
-      params.situacaoCodigo = situacaoFilter;
-    } else {
-      // Padrão: excluir Finalizadas e Canceladas
-      params.situacoesExcluidas = [
-        SituacaoPericiaCodigo.FINALIZADA,
-        SituacaoPericiaCodigo.CANCELADA,
-      ];
+    // Status
+    if (statusFilter === 'pendentes') params.baixado = false;
+    if (statusFilter === 'baixados') params.baixado = true;
+
+    // Prazo
+    if (prazoFilter === 'vencidos') {
+      params.prazoVencido = true;
+    } else if (prazoFilter === 'sem_prazo') {
+      params.semPrazo = true;
+    } else if (prazoFilter !== 'todos') {
+      const prazoDates = getPrazoDates(prazoFilter);
+      if (prazoDates) {
+        params.dataPrazoLegalInicio = prazoDates.from;
+        params.dataPrazoLegalFim = prazoDates.to;
+      }
     }
+
+    // DateRange (sobrescreve prazoFilter se definido)
+    if (dateRange?.from) params.dataPrazoLegalInicio = format(dateRange.from, 'yyyy-MM-dd');
+    if (dateRange?.to) params.dataPrazoLegalFim = format(dateRange.to, 'yyyy-MM-dd');
 
     // Responsável
     if (responsavelFilter === 'sem_responsavel') {
@@ -140,37 +198,22 @@ export function PericiasTableWrapper({
       params.responsavelId = responsavelFilter;
     }
 
-    // Laudo
-    if (laudoFilter === 'sim') params.laudoJuntado = true;
-    if (laudoFilter === 'nao') params.laudoJuntado = false;
-
-    // Date range
-    if (dateRange?.from) params.prazoEntregaInicio = format(dateRange.from, 'yyyy-MM-dd');
-    if (dateRange?.to) params.prazoEntregaFim = format(dateRange.to, 'yyyy-MM-dd');
-
-    // Fixed date (semana mode) overrides date range
-    if (fixedDate) {
-      const dateStr = format(fixedDate, 'yyyy-MM-dd');
-      params.prazoEntregaInicio = dateStr;
-      params.prazoEntregaFim = dateStr;
-    }
-
     // Filtros avançados
     if (tribunalFilter) params.trt = tribunalFilter;
     if (grauFilter) params.grau = grauFilter;
-    if (especialidadeFilter) params.especialidadeId = parseInt(especialidadeFilter, 10);
-    if (peritoFilter) params.peritoId = parseInt(peritoFilter, 10);
+    if (tipoExpedienteFilter) params.tipoExpedienteId = parseInt(tipoExpedienteFilter, 10);
+    if (origemFilter) params.origem = origemFilter;
 
     return params;
   }, [
     pageIndex, pageSize, globalFilter,
-    situacaoFilter, responsavelFilter, laudoFilter,
-    dateRange, fixedDate,
-    tribunalFilter, grauFilter, especialidadeFilter, peritoFilter,
+    statusFilter, prazoFilter, responsavelFilter,
+    tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter,
+    dateRange, getPrazoDates,
   ]);
 
   // ---------- Data Fetching ----------
-  const { pericias, paginacao, isLoading, error, refetch } = usePericias(hookParams);
+  const { expedientes, paginacao, isLoading, error, refetch } = useExpedientes(hookParams);
 
   const total = paginacao?.total ?? 0;
   const totalPages = paginacao?.totalPaginas ?? 0;
@@ -188,15 +231,16 @@ export function PericiasTableWrapper({
     router.refresh();
   }, [refetch, router]);
 
+  // Handler para limpar todos os filtros
   const handleClearAllFilters = React.useCallback(() => {
-    setSituacaoFilter('todos');
+    setStatusFilter('pendentes');
+    setPrazoFilter('todos');
     setResponsavelFilter('todos');
-    setLaudoFilter('todos');
     setDateRange(undefined);
     setTribunalFilter('');
     setGrauFilter('');
-    setEspecialidadeFilter('');
-    setPeritoFilter('');
+    setTipoExpedienteFilter('');
+    setOrigemFilter('');
     setPageIndex(0);
   }, []);
 
@@ -204,34 +248,42 @@ export function PericiasTableWrapper({
   const activeFilterChips = React.useMemo(() => {
     const chips: { key: string; label: string; onRemove: () => void }[] = [];
 
-    if (situacaoFilter !== 'todos') {
+    if (statusFilter !== 'pendentes') {
       chips.push({
-        key: 'situacao',
-        label: SITUACAO_PERICIA_LABELS[situacaoFilter],
-        onRemove: () => setSituacaoFilter('todos'),
+        key: 'status',
+        label: statusFilter === 'todos' ? 'Todos Status' : 'Baixados',
+        onRemove: () => setStatusFilter('pendentes'),
+      });
+    }
+
+    if (prazoFilter !== 'todos') {
+      const prazoLabels: Record<PrazoFilterType, string> = {
+        todos: 'Todos',
+        vencidos: 'Vencidos',
+        hoje: 'Hoje',
+        amanha: 'Amanhã',
+        semana: 'Esta Semana',
+        sem_prazo: 'Sem Prazo',
+      };
+      chips.push({
+        key: 'prazo',
+        label: prazoLabels[prazoFilter],
+        onRemove: () => setPrazoFilter('todos'),
       });
     }
 
     if (responsavelFilter === 'sem_responsavel') {
       chips.push({
         key: 'responsavel',
-        label: 'Sem responsável',
+        label: 'Sem Responsável',
         onRemove: () => setResponsavelFilter('todos'),
       });
     } else if (typeof responsavelFilter === 'number') {
-      const usuario = usuarios.find((u) => u.id === responsavelFilter);
+      const usuario = usuarios.find((u: UsuarioData) => u.id === responsavelFilter);
       chips.push({
         key: 'responsavel',
-        label: usuario ? (usuario.nomeExibicao || usuario.nomeCompleto || `Usuário ${usuario.id}`) : `Responsável #${responsavelFilter}`,
+        label: usuario ? getUsuarioNome(usuario) : `Responsável #${responsavelFilter}`,
         onRemove: () => setResponsavelFilter('todos'),
-      });
-    }
-
-    if (laudoFilter !== 'todos') {
-      chips.push({
-        key: 'laudo',
-        label: laudoFilter === 'sim' ? 'Laudo juntado' : 'Sem laudo',
-        onRemove: () => setLaudoFilter('todos'),
       });
     }
 
@@ -261,30 +313,26 @@ export function PericiasTableWrapper({
       });
     }
 
-    if (especialidadeFilter) {
-      const esp = especialidades.find((e) => e.id === parseInt(especialidadeFilter, 10));
+    if (tipoExpedienteFilter) {
+      const tipo = tiposExpedientes.find((t: TipoExpedienteData) => t.id === parseInt(tipoExpedienteFilter, 10));
+      const tipoLabel = tipo ? (tipo.tipoExpediente || ('tipo_expediente' in tipo ? (tipo as TipoExpedienteData).tipo_expediente : undefined) || `Tipo #${tipo.id}`) : `Tipo #${tipoExpedienteFilter}`;
       chips.push({
-        key: 'especialidade',
-        label: esp ? esp.descricao : `Especialidade #${especialidadeFilter}`,
-        onRemove: () => setEspecialidadeFilter(''),
+        key: 'tipo',
+        label: tipoLabel,
+        onRemove: () => setTipoExpedienteFilter(''),
       });
     }
 
-    if (peritoFilter) {
-      const p = peritos.find((x) => x.id === parseInt(peritoFilter, 10));
+    if (origemFilter) {
       chips.push({
-        key: 'perito',
-        label: p ? p.nome : `Perito #${peritoFilter}`,
-        onRemove: () => setPeritoFilter(''),
+        key: 'origem',
+        label: ORIGEM_EXPEDIENTE_LABELS[origemFilter as OrigemExpediente] || origemFilter,
+        onRemove: () => setOrigemFilter(''),
       });
     }
 
     return chips;
-  }, [
-    situacaoFilter, responsavelFilter, laudoFilter, dateRange,
-    tribunalFilter, grauFilter, especialidadeFilter, peritoFilter,
-    usuarios, especialidades, peritos,
-  ]);
+  }, [statusFilter, prazoFilter, responsavelFilter, dateRange, tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter, usuarios, tiposExpedientes]);
 
   // ---------- Render ----------
   return (
@@ -293,9 +341,19 @@ export function PericiasTableWrapper({
         header={
           table ? (
             <>
+              {Object.keys(rowSelection).length > 0 && (
+                <ExpedientesBulkActions
+                  selectedRows={expedientes.filter((exp) => rowSelection[exp.id.toString()])}
+                  usuarios={usuarios.map((u: UsuarioData) => ({ id: u.id, nomeExibicao: getUsuarioNome(u) }))}
+                  onSuccess={() => {
+                    setRowSelection({});
+                    handleSucessoOperacao();
+                  }}
+                />
+              )}
               <DataTableToolbar
                 table={table}
-                title="Perícias"
+                title="Expedientes"
                 density={density}
                 onDensityChange={setDensity}
                 searchValue={globalFilter}
@@ -303,65 +361,52 @@ export function PericiasTableWrapper({
                   setGlobalFilter(value);
                   setPageIndex(0);
                 }}
-                searchPlaceholder="Buscar perícias..."
-                viewModeSlot={viewModeSlot}
+                searchPlaceholder="Buscar expedientes..."
                 actionButton={{
-                  label: 'Nova Perícia',
+                  label: 'Novo Expediente',
                   onClick: () => setIsCreateDialogOpen(true),
                 }}
+                viewModeSlot={viewModeSlot}
                 filtersSlot={
                   <>
-                    <PericiasListFilters
-                      situacaoFilter={situacaoFilter}
-                      onSituacaoChange={(v) => { setSituacaoFilter(v); setPageIndex(0); }}
+                    <ExpedientesListFilters
+                      statusFilter={statusFilter}
+                      onStatusChange={(v) => { setStatusFilter(v); setPageIndex(0); }}
+                      prazoFilter={prazoFilter}
+                      onPrazoChange={(v) => {
+                        setPrazoFilter(v);
+                        setDateRange(undefined);
+                        setPageIndex(0);
+                      }}
                       responsavelFilter={responsavelFilter}
                       onResponsavelChange={(v) => { setResponsavelFilter(v); setPageIndex(0); }}
-                      laudoFilter={laudoFilter}
-                      onLaudoChange={(v) => { setLaudoFilter(v); setPageIndex(0); }}
                       tribunalFilter={tribunalFilter}
                       onTribunalChange={(v) => { setTribunalFilter(v); setPageIndex(0); }}
                       grauFilter={grauFilter}
                       onGrauChange={(v) => { setGrauFilter(v); setPageIndex(0); }}
-                      especialidadeFilter={especialidadeFilter}
-                      onEspecialidadeChange={(v) => { setEspecialidadeFilter(v); setPageIndex(0); }}
-                      peritoFilter={peritoFilter}
-                      onPeritoChange={(v) => { setPeritoFilter(v); setPageIndex(0); }}
+                      tipoExpedienteFilter={tipoExpedienteFilter}
+                      onTipoExpedienteChange={(v) => { setTipoExpedienteFilter(v); setPageIndex(0); }}
+                      origemFilter={origemFilter}
+                      onOrigemChange={(v) => { setOrigemFilter(v); setPageIndex(0); }}
                       usuarios={usuarios}
-                      especialidades={especialidades}
-                      peritos={peritos}
-                      hideAdvancedFilters={isWeekMode}
+                      tiposExpedientes={tiposExpedientes}
                     />
 
-                    {/* Date filters (oculto em modo semana) */}
-                    {!hideDateFilters && !fixedDate && (
-                      <DateRangePicker
-                        value={dateRange}
-                        onChange={(range) => {
-                          setDateRange(range);
-                          setPageIndex(0);
-                        }}
-                        placeholder="Prazo entrega"
-                        className="h-9 w-60 bg-card"
-                      />
-                    )}
+                    <DateRangePicker
+                      value={dateRange}
+                      onChange={(range) => {
+                        setDateRange(range);
+                        if (range?.from || range?.to) {
+                          setPrazoFilter('todos');
+                        }
+                        setPageIndex(0);
+                      }}
+                      placeholder="Período"
+                      className="h-9 w-60 bg-card"
+                    />
                   </>
                 }
               />
-
-              {/* Week Navigator */}
-              {weekNavigatorProps && (
-                <div className="pb-3">
-                  <WeekNavigator
-                    weekDays={weekNavigatorProps.weekDays}
-                    selectedDate={weekNavigatorProps.selectedDate}
-                    onDateSelect={weekNavigatorProps.onDateSelect}
-                    onPreviousWeek={weekNavigatorProps.onPreviousWeek}
-                    onNextWeek={weekNavigatorProps.onNextWeek}
-                    onToday={weekNavigatorProps.onToday}
-                    isCurrentWeek={weekNavigatorProps.isCurrentWeek}
-                  />
-                </div>
-              )}
 
               {/* Active Filter Chips */}
               {activeFilterChips.length > 0 && (
@@ -420,13 +465,13 @@ export function PericiasTableWrapper({
         }
       >
         <DataTable
-          data={pericias}
+          data={expedientes}
           columns={columns}
           isLoading={isLoading}
           error={error}
           density={density}
-          onTableReady={(t) => setTable(t as TanstackTable<Pericia>)}
-          emptyMessage="Nenhuma perícia encontrada."
+          onTableReady={(t) => setTable(t as TanstackTable<Expediente>)}
+          emptyMessage="Nenhum expediente encontrado."
           rowSelection={{
             state: rowSelection,
             onRowSelectionChange: setRowSelection,
@@ -435,18 +480,16 @@ export function PericiasTableWrapper({
           options={{
             meta: {
               usuarios,
+              tiposExpedientes,
               onSuccess: handleSucessoOperacao,
             },
           }}
         />
       </DataShell>
 
-      <PericiaCriarDialog
+      <ExpedienteDialog
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
-        usuarios={usuarios}
-        especialidades={especialidades}
-        peritos={peritos}
         onSuccess={handleCreateSuccess}
       />
     </>
