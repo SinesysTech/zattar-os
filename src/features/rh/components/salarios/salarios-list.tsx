@@ -115,12 +115,12 @@ function criarColunas(
       cell: ({ row }) => {
         const salario = row.original;
         return (
-          <div className="min-h-10 flex flex-col justify-center">
-            <span className="text-sm font-medium">
+          <div className="flex min-h-10 flex-col justify-center">
+            <span className="text-sm font-medium leading-tight">
               {salario.usuario?.nomeExibicao || `Usuário ${salario.usuarioId}`}
             </span>
             {salario.cargo && (
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs leading-tight text-muted-foreground">
                 {salario.cargo.nome}
               </span>
             )}
@@ -137,7 +137,7 @@ function criarColunas(
       size: 150,
       meta: { align: 'right' as const },
       cell: ({ row }) => (
-        <span className="font-mono text-sm font-medium">
+        <span className="text-sm font-medium tabular-nums">
           {formatarValor(row.original.salarioBruto)}
         </span>
       ),
@@ -145,13 +145,13 @@ function criarColunas(
     {
       accessorKey: 'dataInicioVigencia',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Início" className="justify-center" />
+        <DataTableColumnHeader column={column} title="Início" />
       ),
       enableSorting: true,
       size: 120,
-      meta: { align: 'center' as const },
+      meta: { align: 'left' as const },
       cell: ({ row }) => (
-        <span className="text-sm">
+        <span className="text-sm tabular-nums">
           {formatarData(row.original.dataInicioVigencia)}
         </span>
       ),
@@ -159,33 +159,33 @@ function criarColunas(
     {
       accessorKey: 'dataFimVigencia',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Fim" className="justify-center" />
+        <DataTableColumnHeader column={column} title="Fim" />
       ),
       enableSorting: true,
       size: 120,
-      meta: { align: 'center' as const },
+      meta: { align: 'left' as const },
       cell: ({ row }) => {
         const salario = row.original;
         const vigente = isVigente(salario);
         return salario.dataFimVigencia ? (
-          <span className="text-sm">{formatarData(salario.dataFimVigencia)}</span>
+          <span className="text-sm tabular-nums">{formatarData(salario.dataFimVigencia)}</span>
         ) : vigente ? (
           <Badge variant={getSemanticBadgeVariant('salario_status', 'VIGENTE')}>
             Vigente
           </Badge>
         ) : (
-          <span className="text-muted-foreground">-</span>
+          <span className="text-sm text-muted-foreground">-</span>
         );
       },
     },
     {
       accessorKey: 'ativo',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" className="justify-center" />
+        <DataTableColumnHeader column={column} title="Status" />
       ),
       enableSorting: true,
       size: 100,
-      meta: { align: 'center' as const },
+      meta: { align: 'left' as const },
       cell: ({ row }) => {
         const salario = row.original;
         const vigente = isVigente(salario);
@@ -203,19 +203,19 @@ function criarColunas(
     {
       id: 'acoes',
       header: () => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center">
           <span className="text-sm font-medium text-muted-foreground">Ações</span>
         </div>
       ),
       enableSorting: false,
       enableHiding: false,
       size: 140,
-      meta: { align: 'center' as const },
+      meta: { align: 'left' as const },
       cell: ({ row }) => {
         const salario = row.original;
         const vigente = isVigente(salario);
         return (
-          <div className="flex items-center justify-center gap-1">
+          <div className="flex items-center gap-1">
             {salario.ativo && (
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -461,18 +461,37 @@ export function SalariosList() {
         }
         subHeader={
           totais ? (
-            <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-lg border bg-card p-4">
-                <p className="text-sm text-muted-foreground">
-                  Total Funcionários com Salário
-                </p>
-                <p className="text-2xl font-bold">{totais.totalFuncionarios}</p>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {/* Card: Total Funcionários */}
+              <div className="group relative overflow-hidden rounded-xl border bg-gradient-to-br from-card to-card/50 p-6 shadow-sm transition-all hover:shadow-md">
+                <div className="absolute right-4 top-4 opacity-10 transition-opacity group-hover:opacity-20">
+                  <svg className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <div className="relative space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Total Funcionários com Salário
+                  </p>
+                  <p className="text-3xl font-bold tracking-tight">{totais.totalFuncionarios}</p>
+                </div>
               </div>
-              <div className="rounded-lg border bg-card p-4">
-                <p className="text-sm text-muted-foreground">Custo Mensal Bruto</p>
-                <p className="text-2xl font-bold text-emerald-600">
-                  {formatarValor(totais.totalBrutoMensal)}
-                </p>
+
+              {/* Card: Custo Mensal */}
+              <div className="group relative overflow-hidden rounded-xl border bg-gradient-to-br from-emerald-50/50 to-card dark:from-emerald-950/20 dark:to-card p-6 shadow-sm transition-all hover:shadow-md">
+                <div className="absolute right-4 top-4 opacity-10 transition-opacity group-hover:opacity-20">
+                  <svg className="h-12 w-12 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div className="relative space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Custo Mensal Bruto
+                  </p>
+                  <p className="text-3xl font-bold tracking-tight text-emerald-600 dark:text-emerald-500">
+                    {formatarValor(totais.totalBrutoMensal)}
+                  </p>
+                </div>
               </div>
             </div>
           ) : null

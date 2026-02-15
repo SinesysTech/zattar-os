@@ -18,6 +18,7 @@ import {
   Scale,
   ScrollText,
   Search,
+  UserCog,
   Users,
 } from "lucide-react"
 
@@ -140,7 +141,7 @@ const navServicos = [
 // Nav Gestão - Ferramentas administrativas (apenas super admin)
 const navGestao = [
   {
-    title: "Gestão",
+    title: "Financeiro",
     url: "/app/financeiro",
     icon: Briefcase,
     items: [
@@ -151,8 +152,16 @@ const navGestao = [
       { title: "Plano de Contas", url: "/app/financeiro/plano-contas" },
       { title: "Conciliação", url: "/app/financeiro/conciliacao-bancaria" },
       { title: "DRE", url: "/app/financeiro/dre" },
+    ],
+  },
+  {
+    title: "Recursos Humanos",
+    url: "/app/rh",
+    icon: UserCog,
+    items: [
       { title: "Equipe", url: "/app/usuarios" },
-      { title: "Recursos Humanos", url: "/app/rh" },
+      { title: "Salários", url: "/app/rh/salarios" },
+      { title: "Folhas de Pagamento", url: "/app/rh/folhas-pagamento" },
     ],
   },
   {
