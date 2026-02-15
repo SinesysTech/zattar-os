@@ -1,11 +1,13 @@
 'use client';
 
 /**
- * EXPEDIENTES FEATURE - ExpedientesTableWrapper
+ * ExpedientesTableWrapper - Wrapper para a view de semana (e lista como fallback)
  *
- * Componente Client que encapsula a tabela de expedientes.
- * Implementação seguindo o padrão DataShell.
- * Referência: src/features/partes/components/clientes/clientes-table-wrapper.tsx
+ * Refatorado para seguir o padrão de AudienciasTableWrapper:
+ * - Usa useExpedientes hook (centralizado)
+ * - Usa ExpedientesListFilters (reutilizável)
+ * - Aceita dados auxiliares pré-carregados (evita fetch duplicado)
+ * - Mantém suporte a fixedDate/weekNavigator para view de semana
  */
 
 import * as React from 'react';
@@ -21,130 +23,102 @@ import {
   DataPagination,
 } from '@/components/shared/data-shell';
 import { WeekNavigator, type WeekNavigatorProps } from '@/components/shared';
-import { useDebounce } from '@/hooks/use-debounce';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
-import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
 
-import type { PaginatedResponse } from '@/types';
-import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
-import { CodigoTribunal, GrauTribunal, GRAU_TRIBUNAL_LABELS, OrigemExpediente, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
-import { actionListarExpedientes } from '../actions';
-import { actionListarUsuarios } from '@/features/usuarios';
+import type { Expediente } from '../domain';
+import { GrauTribunal, GRAU_TRIBUNAL_LABELS, OrigemExpediente, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
+import { useExpedientes } from '../hooks/use-expedientes';
+import { useUsuarios } from '@/features/usuarios';
+import { useTiposExpedientes } from '@/features/tipos-expedientes';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
 import { ExpedientesBulkActions } from './expedientes-bulk-actions';
+import {
+  ExpedientesListFilters,
+  type StatusFilterType,
+  type PrazoFilterType,
+  type ResponsavelFilterType,
+} from './expedientes-list-filters';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
+interface UsuarioData {
+  id: number;
+  nomeExibicao?: string;
+  nome_exibicao?: string;
+  nomeCompleto?: string;
+  nome?: string;
+}
+
+interface TipoExpedienteData {
+  id: number;
+  tipoExpediente?: string;
+  tipo_expediente?: string;
+}
+
 interface ExpedientesTableWrapperProps {
-  initialData?: PaginatedResponse<Expediente>;
   fixedDate?: Date;
   hideDateFilters?: boolean;
   /** Props para renderizar o WeekNavigator dentro do wrapper */
   weekNavigatorProps?: Omit<WeekNavigatorProps, 'className' | 'variant'>;
   /** Slot para o seletor de modo de visualização (ViewModePopover) */
   viewModeSlot?: React.ReactNode;
+  /** Dados de usuários pré-carregados (evita fetch duplicado) */
+  usuariosData?: UsuarioData[];
+  /** Dados de tipos de expediente pré-carregados (evita fetch duplicado) */
+  tiposExpedientesData?: TipoExpedienteData[];
 }
-
-type UsuarioOption = {
-  id: number;
-  nomeExibicao?: string;
-  nome_exibicao?: string;
-  nome?: string;
-};
-
-type TipoExpedienteOption = {
-  id: number;
-  tipoExpediente?: string;
-  tipo_expediente?: string;
-};
-
-type PrazoFilterType = 'todos' | 'vencidos' | 'hoje' | 'amanha' | 'semana' | 'sem_prazo';
-type StatusFilterType = 'todos' | 'pendentes' | 'baixados';
-type ResponsavelFilterType = 'todos' | 'sem_responsavel' | number;
 
 // Helper para obter nome do usuário
-function getUsuarioNome(u: UsuarioOption): string {
-  return u.nomeExibicao || u.nome_exibicao || u.nome || `Usuário ${u.id}`;
+function getUsuarioNome(u: UsuarioData): string {
+  return u.nomeExibicao || u.nome_exibicao || u.nomeCompleto || u.nome || `Usuário ${u.id}`;
 }
-
-// Helper para obter nome do tipo
-function getTipoNome(t: TipoExpedienteOption): string {
-  return t.tipoExpediente || t.tipo_expediente || `Tipo ${t.id}`;
-}
-
-// =============================================================================
-// OPÇÕES DE FILTRO (estáticas)
-// =============================================================================
-
-const STATUS_OPTIONS: readonly FilterOption[] = [
-  { value: 'pendentes', label: 'Pendentes' },
-  { value: 'baixados', label: 'Baixados' },
-];
-
-const PRAZO_OPTIONS: readonly FilterOption[] = [
-  { value: 'vencidos', label: 'Vencidos' },
-  { value: 'hoje', label: 'Vence Hoje' },
-  { value: 'amanha', label: 'Vence Amanhã' },
-  { value: 'semana', label: 'Esta Semana' },
-  { value: 'sem_prazo', label: 'Sem Prazo' },
-];
-
-const TRIBUNAL_OPTIONS: readonly FilterOption[] = CodigoTribunal.map(
-  (trt) => ({ value: trt, label: trt })
-);
-
-const GRAU_OPTIONS: readonly FilterOption[] = Object.entries(GRAU_TRIBUNAL_LABELS).map(
-  ([value, label]) => ({ value, label })
-);
-
-const ORIGEM_OPTIONS: readonly FilterOption[] = Object.entries(ORIGEM_EXPEDIENTE_LABELS).map(
-  ([value, label]) => ({ value, label })
-);
 
 // =============================================================================
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilters, weekNavigatorProps, viewModeSlot }: ExpedientesTableWrapperProps) {
+export function ExpedientesTableWrapper({
+  fixedDate,
+  hideDateFilters,
+  weekNavigatorProps,
+  viewModeSlot,
+  usuariosData,
+  tiposExpedientesData,
+}: ExpedientesTableWrapperProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // ---------- Estado da Tabela (DataShell pattern) ----------
+  const isWeekMode = !!weekNavigatorProps;
+
+  // ---------- Estado da Tabela ----------
   const [table, setTable] = React.useState<TanstackTable<Expediente> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
 
-  // ---------- Estado de Paginação ----------
+  // ---------- Paginação ----------
   const [pageIndex, setPageIndex] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(initialData?.pagination.limit || 10);
-  const [total, setTotal] = React.useState(initialData?.pagination.total || 0);
-  const [totalPages, setTotalPages] = React.useState(initialData?.pagination.totalPages || 0);
+  const [pageSize, setPageSize] = React.useState(50);
 
-  // ---------- Estado de Loading/Error ----------
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-
-  // ---------- Estado dos Dados ----------
-  const [expedientes, setExpedientes] = React.useState<Expediente[]>(initialData?.data || []);
-
-  // ---------- Estado de Filtros Primários ----------
-  const [busca, setBusca] = React.useState('');
+  // ---------- Busca e Filtros ----------
+  const [globalFilter, setGlobalFilter] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState<StatusFilterType>('pendentes');
   const [prazoFilter, setPrazoFilter] = React.useState<PrazoFilterType>('todos');
   const [responsavelFilter, setResponsavelFilter] = React.useState<ResponsavelFilterType>('todos');
+  const [tribunalFilter, setTribunalFilter] = React.useState('');
+  const [grauFilter, setGrauFilter] = React.useState('');
+  const [tipoExpedienteFilter, setTipoExpedienteFilter] = React.useState('');
+  const [origemFilter, setOrigemFilter] = React.useState('');
   const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>(undefined);
 
-  // ---------- Track se já inicializou com query param ----------
+  // ---------- Sync query param responsavel (apenas no mount) ----------
   const hasInitializedFromParams = React.useRef(false);
 
-  // ---------- Sincronizar responsavelFilter com query param (apenas no mount) ----------
   React.useEffect(() => {
-    // Só sincroniza na primeira vez (mount) para evitar loops
     if (hasInitializedFromParams.current) return;
     hasInitializedFromParams.current = true;
 
@@ -161,257 +135,132 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
     }
   }, [searchParams]);
 
-  // ---------- Estado de Filtros Secundários (Mais Filtros) ----------
-  const [tribunalFilter, setTribunalFilter] = React.useState<string[]>([]);
-  const [grauFilter, setGrauFilter] = React.useState<string[]>([]);
-  const [tipoExpedienteFilter, setTipoExpedienteFilter] = React.useState<number[]>([]);
-  const [origemFilter, setOrigemFilter] = React.useState<string[]>([]);
-  const [semTipoFilter, setSemTipoFilter] = React.useState(false);
-  const [segredoJusticaFilter, setSegredoJusticaFilter] = React.useState(false);
-  const [prioridadeFilter, setPrioridadeFilter] = React.useState(false);
-
-  // ---------- Estado de Dialogs ----------
-  const [isNovoDialogOpen, setIsNovoDialogOpen] = React.useState(false);
+  // ---------- Dialogs ----------
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
 
   // ---------- Dados Auxiliares ----------
-  const [usuarios, setUsuarios] = React.useState<UsuarioOption[]>([]);
-  const [tiposExpedientes, setTiposExpedientes] = React.useState<TipoExpedienteOption[]>([]);
+  const { usuarios: usuariosFetched } = useUsuarios({ enabled: !usuariosData });
+  const { tiposExpedientes: tiposFetched } = useTiposExpedientes({ limite: 100 });
 
-  // Debounce da busca (500ms)
-  const buscaDebounced = useDebounce(busca, 500);
-
-  // ---------- Carregar dados auxiliares ----------
-  React.useEffect(() => {
-    const fetchAuxData = async () => {
-      try {
-        // Fetch users via server action and tipos via API
-        const [usersRes, tiposRes] = await Promise.all([
-          actionListarUsuarios({ ativo: true, limite: 100 }),
-          fetch('/api/tipos-expedientes?limite=100').then((r) => r.json()),
-        ]);
-
-        // Handle usuarios from server action
-        if (usersRes.success && usersRes.data?.usuarios) {
-          setUsuarios(usersRes.data.usuarios as UsuarioOption[]);
-        }
-
-        // Handle tipos from API
-        const tiposPayload = tiposRes as { success?: boolean; data?: { data?: TipoExpedienteOption[] } };
-        const tiposArr = tiposPayload.data?.data;
-        if (tiposPayload.success && Array.isArray(tiposArr)) {
-          setTiposExpedientes(tiposArr);
-        }
-      } catch (err) {
-        console.error('Erro ao carregar dados auxiliares:', err);
-      }
-    };
-    fetchAuxData();
-  }, []);
-
-  // ---------- Opções dinâmicas de filtro ----------
-  const responsavelOptions: readonly FilterOption[] = React.useMemo(
-    () => [
-      { value: 'sem_responsavel', label: 'Sem Responsável' },
-      ...usuarios.map((u) => ({
-        value: String(u.id),
-        label: getUsuarioNome(u),
-      })),
-    ],
-    [usuarios]
-  );
-
-  const tipoExpedienteOptions: readonly FilterOption[] = React.useMemo(
-    () => tiposExpedientes.map((t) => ({ value: String(t.id), label: getTipoNome(t) })),
-    [tiposExpedientes]
-  );
+  const usuarios = usuariosData ?? usuariosFetched;
+  const tiposExpedientes = tiposExpedientesData ?? tiposFetched;
 
   // ---------- Calcular datas para filtro de prazo ----------
   const getPrazoDates = React.useCallback((prazo: PrazoFilterType): { from?: string; to?: string } | null => {
     const hoje = new Date();
-
     switch (prazo) {
       case 'vencidos':
-        // Prazo vencido é tratado pelo campo prazoVencido, não por datas
+      case 'sem_prazo':
         return null;
-      case 'hoje':
+      case 'hoje': {
         const hojeStr = format(startOfDay(hoje), 'yyyy-MM-dd');
         return { from: hojeStr, to: hojeStr };
-      case 'amanha':
-        const amanha = addDays(hoje, 1);
-        const amanhaStr = format(startOfDay(amanha), 'yyyy-MM-dd');
+      }
+      case 'amanha': {
+        const amanhaStr = format(startOfDay(addDays(hoje, 1)), 'yyyy-MM-dd');
         return { from: amanhaStr, to: amanhaStr };
-      case 'semana':
-        // Segunda a Domingo da semana atual
-        const inicioSemana = startOfWeek(hoje, { weekStartsOn: 1 });
-        const fimSemana = endOfWeek(hoje, { weekStartsOn: 1 });
+      }
+      case 'semana': {
         return {
-          from: format(inicioSemana, 'yyyy-MM-dd'),
-          to: format(fimSemana, 'yyyy-MM-dd'),
+          from: format(startOfWeek(hoje, { weekStartsOn: 1 }), 'yyyy-MM-dd'),
+          to: format(endOfWeek(hoje, { weekStartsOn: 1 }), 'yyyy-MM-dd'),
         };
-      case 'sem_prazo':
-        // Tratado separadamente
-        return null;
+      }
       default:
         return null;
     }
   }, []);
 
-  // ---------- Refetch Function ----------
-  const refetch = React.useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
+  // ---------- Montar params para o hook ----------
+  const hookParams = React.useMemo(() => {
+    const params: Record<string, unknown> = {
+      pagina: pageIndex + 1,
+      limite: pageSize,
+      busca: globalFilter || undefined,
+    };
 
-    try {
-      const params: ListarExpedientesParams = {
-        pagina: pageIndex + 1, // API usa 1-based
-        limite: pageSize,
-        busca: buscaDebounced || undefined,
-      };
+    // Status
+    if (statusFilter === 'pendentes') params.baixado = false;
+    if (statusFilter === 'baixados') params.baixado = true;
 
-      const filters: ExpedientesFilters = {};
-
-      // Filtro de Status (Pendentes/Baixados)
-      if (statusFilter === 'pendentes') filters.baixado = false;
-      if (statusFilter === 'baixados') filters.baixado = true;
-
-      // Filtro de Prazo
+    // Fixed Date (week view — override tudo)
+    if (fixedDate) {
+      const dateStr = format(fixedDate, 'yyyy-MM-dd');
+      params.dataPrazoLegalInicio = dateStr;
+      params.dataPrazoLegalFim = dateStr;
+      params.incluirSemPrazo = true;
+    } else {
+      // Prazo (somente quando não tem fixedDate)
       if (prazoFilter === 'vencidos') {
-        filters.prazoVencido = true;
+        params.prazoVencido = true;
       } else if (prazoFilter === 'sem_prazo') {
-        filters.semPrazo = true;
-        // Não definir datas para buscar apenas sem prazo
+        params.semPrazo = true;
       } else if (prazoFilter !== 'todos') {
         const prazoDates = getPrazoDates(prazoFilter);
         if (prazoDates) {
-          filters.dataPrazoLegalInicio = prazoDates.from;
-          filters.dataPrazoLegalFim = prazoDates.to;
+          params.dataPrazoLegalInicio = prazoDates.from;
+          params.dataPrazoLegalFim = prazoDates.to;
         }
       }
 
-      // Filtro de Responsável
-      if (responsavelFilter === 'sem_responsavel') {
-        filters.semResponsavel = true;
-      } else if (typeof responsavelFilter === 'number') {
-        filters.responsavelId = responsavelFilter;
-      }
-
-      // Date Range (sobrescreve prazoFilter se definido)
-      if (dateRange?.from) filters.dataPrazoLegalInicio = format(dateRange.from, 'yyyy-MM-dd');
-      if (dateRange?.to) filters.dataPrazoLegalFim = format(dateRange.to, 'yyyy-MM-dd');
-
-      // Fixed Date (override manual filters)
-      if (fixedDate) {
-        const dateStr = format(fixedDate, 'yyyy-MM-dd');
-        filters.dataPrazoLegalInicio = dateStr;
-        filters.dataPrazoLegalFim = dateStr;
-        filters.incluirSemPrazo = true; // Incluir expedientes sem prazo na visualização de semana
-        delete filters.prazoVencido;
-      }
-
-      // Filtros Secundários
-      if (tribunalFilter.length === 1) {
-        filters.trt = tribunalFilter[0] as typeof CodigoTribunal[number];
-      }
-      if (grauFilter.length === 1) {
-        filters.grau = grauFilter[0] as GrauTribunal;
-      }
-      if (tipoExpedienteFilter.length === 1) {
-        filters.tipoExpedienteId = tipoExpedienteFilter[0];
-      }
-      if (semTipoFilter) {
-        filters.semTipo = true;
-      }
-      if (segredoJusticaFilter) {
-        filters.segredoJustica = true;
-      }
-      if (origemFilter.length === 1) {
-        filters.origem = origemFilter[0] as OrigemExpediente;
-      }
-      if (prioridadeFilter) {
-        filters.prioridadeProcessual = true;
-      }
-
-      const mergedParams: ListarExpedientesParams = {
-        ...params,
-        ...filters,
-      };
-
-      const result = await actionListarExpedientes(mergedParams);
-
-      if (!result.success) {
-        throw new Error(result.message || 'Erro ao listar expedientes');
-      }
-
-      const responseData = result.data as PaginatedResponse<Expediente>;
-      setExpedientes(responseData.data);
-      setTotal(responseData.pagination.total);
-      setTotalPages(responseData.pagination.totalPages);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido');
-      console.error(err);
-    } finally {
-      setIsLoading(false);
+      // DateRange (sobrescreve prazoFilter se definido)
+      if (dateRange?.from) params.dataPrazoLegalInicio = format(dateRange.from, 'yyyy-MM-dd');
+      if (dateRange?.to) params.dataPrazoLegalFim = format(dateRange.to, 'yyyy-MM-dd');
     }
+
+    // Responsável
+    if (responsavelFilter === 'sem_responsavel') {
+      params.semResponsavel = true;
+    } else if (typeof responsavelFilter === 'number') {
+      params.responsavelId = responsavelFilter;
+    }
+
+    // Filtros avançados
+    if (tribunalFilter) params.trt = tribunalFilter;
+    if (grauFilter) params.grau = grauFilter;
+    if (tipoExpedienteFilter) params.tipoExpedienteId = parseInt(tipoExpedienteFilter, 10);
+    if (origemFilter) params.origem = origemFilter;
+
+    return params;
   }, [
-    pageIndex,
-    pageSize,
-    buscaDebounced,
-    statusFilter,
-    prazoFilter,
-    responsavelFilter,
-    dateRange,
-    tribunalFilter,
-    grauFilter,
-    tipoExpedienteFilter,
-    origemFilter,
-    semTipoFilter,
-    segredoJusticaFilter,
-    prioridadeFilter,
-    getPrazoDates,
-    fixedDate,
+    pageIndex, pageSize, globalFilter,
+    statusFilter, prazoFilter, responsavelFilter,
+    tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter,
+    dateRange, fixedDate, getPrazoDates,
   ]);
 
-  // ---------- Skip First Render ----------
-  const isFirstRender = React.useRef(true);
+  // ---------- Data Fetching (via hook centralizado) ----------
+  const { expedientes, paginacao, isLoading, error, refetch } = useExpedientes(hookParams);
 
-  React.useEffect(() => {
-    // Se tivermos dados iniciais, pular o primeiro fetch
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      if (initialData) return;
-    }
-    refetch();
-  }, [refetch, initialData]);
+  const total = paginacao?.total ?? 0;
+  const totalPages = paginacao?.totalPaginas ?? 0;
 
   // ---------- Handlers ----------
   const handleSucessoOperacao = React.useCallback(() => {
+    setRowSelection({});
     refetch();
     router.refresh();
   }, [refetch, router]);
 
   const handleCreateSuccess = React.useCallback(() => {
     refetch();
-    setIsNovoDialogOpen(false);
+    setIsCreateDialogOpen(false);
     router.refresh();
   }, [refetch, router]);
 
-  // Handler para limpar todos os filtros
   const handleClearAllFilters = React.useCallback(() => {
     setStatusFilter('pendentes');
     setPrazoFilter('todos');
     setResponsavelFilter('todos');
     setDateRange(undefined);
-    setTribunalFilter([]);
-    setGrauFilter([]);
-    setTipoExpedienteFilter([]);
-    setOrigemFilter([]);
-    setSemTipoFilter(false);
-    setSegredoJusticaFilter(false);
-    setPrioridadeFilter(false);
+    setTribunalFilter('');
+    setGrauFilter('');
+    setTipoExpedienteFilter('');
+    setOrigemFilter('');
     setPageIndex(0);
   }, []);
 
-  // Gerar chips de filtros ativos
+  // ---------- Chips de filtros ativos ----------
   const activeFilterChips = React.useMemo(() => {
     const chips: { key: string; label: string; onRemove: () => void }[] = [];
 
@@ -425,12 +274,8 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
 
     if (prazoFilter !== 'todos') {
       const prazoLabels: Record<PrazoFilterType, string> = {
-        todos: 'Todos',
-        vencidos: 'Vencidos',
-        hoje: 'Hoje',
-        amanha: 'Amanhã',
-        semana: 'Esta Semana',
-        sem_prazo: 'Sem Prazo',
+        todos: 'Todos', vencidos: 'Vencidos', hoje: 'Hoje',
+        amanha: 'Amanhã', semana: 'Esta Semana', sem_prazo: 'Sem Prazo',
       };
       chips.push({
         key: 'prazo',
@@ -446,7 +291,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
         onRemove: () => setResponsavelFilter('todos'),
       });
     } else if (typeof responsavelFilter === 'number') {
-      const usuario = usuarios.find((u) => u.id === responsavelFilter);
+      const usuario = usuarios.find((u: UsuarioData) => u.id === responsavelFilter);
       chips.push({
         key: 'responsavel',
         label: usuario ? getUsuarioNome(usuario) : `Responsável #${responsavelFilter}`,
@@ -464,79 +309,34 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
       });
     }
 
-    tribunalFilter.forEach((trt) => {
-      chips.push({
-        key: `tribunal-${trt}`,
-        label: trt,
-        onRemove: () => setTribunalFilter((prev) => prev.filter((t) => t !== trt)),
-      });
-    });
+    if (tribunalFilter) {
+      chips.push({ key: 'tribunal', label: tribunalFilter, onRemove: () => setTribunalFilter('') });
+    }
 
-    grauFilter.forEach((grau) => {
+    if (grauFilter) {
       chips.push({
-        key: `grau-${grau}`,
-        label: GRAU_TRIBUNAL_LABELS[grau as GrauTribunal] || grau,
-        onRemove: () => setGrauFilter((prev) => prev.filter((g) => g !== grau)),
-      });
-    });
-
-    tipoExpedienteFilter.forEach((tipoId) => {
-      const tipo = tiposExpedientes.find((t) => t.id === tipoId);
-      chips.push({
-        key: `tipo-${tipoId}`,
-        label: tipo ? getTipoNome(tipo) : `Tipo #${tipoId}`,
-        onRemove: () => setTipoExpedienteFilter((prev) => prev.filter((t) => t !== tipoId)),
-      });
-    });
-
-    origemFilter.forEach((origem) => {
-      chips.push({
-        key: `origem-${origem}`,
-        label: ORIGEM_EXPEDIENTE_LABELS[origem as OrigemExpediente] || origem,
-        onRemove: () => setOrigemFilter((prev) => prev.filter((o) => o !== origem)),
-      });
-    });
-
-    if (semTipoFilter) {
-      chips.push({
-        key: 'semTipo',
-        label: 'Sem Tipo',
-        onRemove: () => setSemTipoFilter(false),
+        key: 'grau',
+        label: GRAU_TRIBUNAL_LABELS[grauFilter as GrauTribunal] || grauFilter,
+        onRemove: () => setGrauFilter(''),
       });
     }
 
-    if (segredoJusticaFilter) {
-      chips.push({
-        key: 'segredo',
-        label: 'Segredo de Justiça',
-        onRemove: () => setSegredoJusticaFilter(false),
-      });
+    if (tipoExpedienteFilter) {
+      const tipo = tiposExpedientes.find((t: TipoExpedienteData) => t.id === parseInt(tipoExpedienteFilter, 10));
+      const tipoLabel = tipo ? (tipo.tipoExpediente || ('tipo_expediente' in tipo ? (tipo as TipoExpedienteData).tipo_expediente : undefined) || `Tipo #${tipo.id}`) : `Tipo #${tipoExpedienteFilter}`;
+      chips.push({ key: 'tipo', label: tipoLabel, onRemove: () => setTipoExpedienteFilter('') });
     }
 
-    if (prioridadeFilter) {
+    if (origemFilter) {
       chips.push({
-        key: 'prioridade',
-        label: 'Prioridade',
-        onRemove: () => setPrioridadeFilter(false),
+        key: 'origem',
+        label: ORIGEM_EXPEDIENTE_LABELS[origemFilter as OrigemExpediente] || origemFilter,
+        onRemove: () => setOrigemFilter(''),
       });
     }
 
     return chips;
-  }, [
-    statusFilter,
-    prazoFilter,
-    responsavelFilter,
-    dateRange,
-    tribunalFilter,
-    grauFilter,
-    tipoExpedienteFilter,
-    origemFilter,
-    semTipoFilter,
-    segredoJusticaFilter,
-    prioridadeFilter,
-    usuarios,
-    tiposExpedientes,
-  ]);
+  }, [statusFilter, prazoFilter, responsavelFilter, dateRange, tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter, usuarios, tiposExpedientes]);
 
   // ---------- Render ----------
   return (
@@ -548,7 +348,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
               {Object.keys(rowSelection).length > 0 && (
                 <ExpedientesBulkActions
                   selectedRows={expedientes.filter((exp) => rowSelection[exp.id.toString()])}
-                  usuarios={usuarios.map(u => ({ id: u.id, nomeExibicao: getUsuarioNome(u) }))}
+                  usuarios={usuarios.map((u: UsuarioData) => ({ id: u.id, nomeExibicao: getUsuarioNome(u) }))}
                   onSuccess={() => {
                     setRowSelection({});
                     handleSucessoOperacao();
@@ -560,70 +360,52 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                 title="Expedientes"
                 density={density}
                 onDensityChange={setDensity}
-                searchValue={busca}
-                onSearchValueChange={(value) => {
-                  setBusca(value);
+                searchValue={globalFilter}
+                onSearchValueChange={(value: string) => {
+                  setGlobalFilter(value);
                   setPageIndex(0);
                 }}
                 searchPlaceholder="Buscar expedientes..."
                 actionButton={{
                   label: 'Novo Expediente',
-                  onClick: () => setIsNovoDialogOpen(true),
+                  onClick: () => setIsCreateDialogOpen(true),
                 }}
                 viewModeSlot={viewModeSlot}
                 filtersSlot={
                   <>
-                    {/* Status Filter */}
-                    <FilterPopover
-                      label="Status"
-                      options={STATUS_OPTIONS}
-                      value={statusFilter}
-                      onValueChange={(v) => {
-                        setStatusFilter(v as StatusFilterType);
+                    <ExpedientesListFilters
+                      statusFilter={statusFilter}
+                      onStatusChange={(v) => { setStatusFilter(v); setPageIndex(0); }}
+                      prazoFilter={prazoFilter}
+                      onPrazoChange={(v) => {
+                        setPrazoFilter(v);
+                        setDateRange(undefined);
                         setPageIndex(0);
                       }}
-                      defaultValue="todos"
+                      responsavelFilter={responsavelFilter}
+                      onResponsavelChange={(v) => { setResponsavelFilter(v); setPageIndex(0); }}
+                      tribunalFilter={tribunalFilter}
+                      onTribunalChange={(v) => { setTribunalFilter(v); setPageIndex(0); }}
+                      grauFilter={grauFilter}
+                      onGrauChange={(v) => { setGrauFilter(v); setPageIndex(0); }}
+                      tipoExpedienteFilter={tipoExpedienteFilter}
+                      onTipoExpedienteChange={(v) => { setTipoExpedienteFilter(v); setPageIndex(0); }}
+                      origemFilter={origemFilter}
+                      onOrigemChange={(v) => { setOrigemFilter(v); setPageIndex(0); }}
+                      usuarios={usuarios}
+                      tiposExpedientes={tiposExpedientes}
+                      hidePrazoFilter={!!hideDateFilters || !!fixedDate || isWeekMode}
+                      hideAdvancedFilters={isWeekMode}
                     />
 
-                    {/* Prazo Filter - Hide if date is fixed or weekNavigator is present */}
-                    {!hideDateFilters && !fixedDate && !weekNavigatorProps && (
-                      <FilterPopover
-                        label="Prazo"
-                        options={PRAZO_OPTIONS}
-                        value={prazoFilter}
-                        onValueChange={(v) => {
-                          setPrazoFilter(v as PrazoFilterType);
-                          setDateRange(undefined);
-                          setPageIndex(0);
-                        }}
-                        defaultValue="todos"
-                      />
-                    )}
-
-                    {/* Responsável Filter - apenas na view de lista */}
-                    {!weekNavigatorProps && (
-                      <FilterPopover
-                        label="Responsável"
-                        options={responsavelOptions}
-                        value={typeof responsavelFilter === 'number' ? String(responsavelFilter) : responsavelFilter}
-                        onValueChange={(v) => {
-                          if (v === 'todos') setResponsavelFilter('todos');
-                          else if (v === 'sem_responsavel') setResponsavelFilter('sem_responsavel');
-                          else setResponsavelFilter(parseInt(v, 10));
-                          setPageIndex(0);
-                        }}
-                        defaultValue="todos"
-                      />
-                    )}
-
-                    {/* Date Range Picker - Hide if date is fixed or weekNavigator is present */}
-                    {!hideDateFilters && !fixedDate && !weekNavigatorProps && (
+                    {/* Date Range Picker — somente fora do modo semana */}
+                    {!hideDateFilters && !fixedDate && !isWeekMode && (
                       <DateRangePicker
                         value={dateRange}
                         onChange={(range) => {
                           setDateRange(range);
                           if (range?.from || range?.to) {
-                            setPrazoFilter('todos'); // Limpa prazo ao usar date range
+                            setPrazoFilter('todos');
                           }
                           setPageIndex(0);
                         }}
@@ -631,60 +413,11 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                         className="h-9 w-60 bg-card"
                       />
                     )}
-
-                    {/* Tribunal Filter - apenas na view de lista */}
-                    {!weekNavigatorProps && (
-                      <FilterPopover
-                        label="Tribunal"
-                        options={TRIBUNAL_OPTIONS}
-                        value={tribunalFilter[0] || 'all'}
-                        onValueChange={(v) => {
-                          setTribunalFilter(v === 'all' ? [] : [v]);
-                          setPageIndex(0);
-                        }}
-                      />
-                    )}
-
-                    {/* Grau Filter - apenas na view de lista */}
-                    {!weekNavigatorProps && (
-                      <FilterPopover
-                        label="Grau"
-                        options={GRAU_OPTIONS}
-                        value={grauFilter[0] || 'all'}
-                        onValueChange={(v) => {
-                          setGrauFilter(v === 'all' ? [] : [v]);
-                          setPageIndex(0);
-                        }}
-                      />
-                    )}
-
-                    {/* Tipo Filter */}
-                    <FilterPopover
-                      label="Tipo"
-                      options={tipoExpedienteOptions}
-                      value={tipoExpedienteFilter[0]?.toString() || 'all'}
-                      onValueChange={(v) => {
-                        setTipoExpedienteFilter(v === 'all' ? [] : [parseInt(v, 10)]);
-                        setSemTipoFilter(false);
-                        setPageIndex(0);
-                      }}
-                    />
-
-                    {/* Origem Filter */}
-                    <FilterPopover
-                      label="Origem"
-                      options={ORIGEM_OPTIONS}
-                      value={origemFilter[0] || 'all'}
-                      onValueChange={(v) => {
-                        setOrigemFilter(v === 'all' ? [] : [v]);
-                        setPageIndex(0);
-                      }}
-                    />
                   </>
                 }
               />
 
-              {/* Week Navigator - apenas quando weekNavigatorProps existe */}
+              {/* Week Navigator — somente no modo semana */}
               {weekNavigatorProps && (
                 <div className="pb-3">
                   <WeekNavigator
@@ -776,14 +509,13 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
             },
           }}
         />
-      </DataShell >
+      </DataShell>
 
       <ExpedienteDialog
-        open={isNovoDialogOpen}
-        onOpenChange={setIsNovoDialogOpen}
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
         onSuccess={handleCreateSuccess}
       />
     </>
   );
 }
-

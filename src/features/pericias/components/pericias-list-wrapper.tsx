@@ -1,20 +1,19 @@
 'use client';
 
 /**
- * PericiasTableWrapper - Wrapper auto-contido para a view de semana/lista
+ * PericiasListWrapper - Wrapper auto-contido para a view de lista
  *
- * Segue o padrão de ExpedientesTableWrapper refatorado:
+ * Segue o padrão de ExpedientesListWrapper / AudienciasListWrapper:
  * - Gerencia próprio estado de filtros, paginação e fetch
  * - DataShell + DataTableToolbar + DataTable + DataPagination
  * - PericiasListFilters no filtersSlot
- * - WeekNavigator para visualização de semana
- * - usePericias hook para data fetching
+ * - Dialog de criação interno
  */
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
-import { format, startOfDay, addDays, startOfWeek, endOfWeek } from 'date-fns';
+import { format } from 'date-fns';
 import { X } from 'lucide-react';
 
 import {
@@ -23,7 +22,6 @@ import {
   DataTableToolbar,
   DataPagination,
 } from '@/components/shared/data-shell';
-import { WeekNavigator, type WeekNavigatorProps } from '@/components/shared';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
@@ -36,8 +34,6 @@ import { usePericias } from '../hooks/use-pericias';
 import { useUsuarios } from '@/features/usuarios';
 import { useEspecialidadesPericias } from '../hooks/use-especialidades-pericias';
 import { usePeritos } from '../hooks/use-peritos';
-import type { UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../types';
-
 import { columns } from './columns';
 import { PericiaCriarDialog } from './pericia-criar-dialog';
 import {
@@ -46,16 +42,13 @@ import {
   type ResponsavelFilterType,
   type LaudoFilterType,
 } from './pericias-list-filters';
+import type { UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../types';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
-interface PericiasTableWrapperProps {
-  fixedDate?: Date;
-  hideDateFilters?: boolean;
-  /** Props para renderizar o WeekNavigator dentro do wrapper */
-  weekNavigatorProps?: Omit<WeekNavigatorProps, 'className' | 'variant'>;
+interface PericiasListWrapperProps {
   /** Slot para o seletor de modo de visualização (ViewModePopover) */
   viewModeSlot?: React.ReactNode;
   /** Dados de usuários pré-carregados (evita fetch duplicado) */
@@ -70,17 +63,13 @@ interface PericiasTableWrapperProps {
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function PericiasTableWrapper({
-  fixedDate,
-  hideDateFilters,
-  weekNavigatorProps,
+export function PericiasListWrapper({
   viewModeSlot,
   usuariosData,
   especialidadesData,
   peritosData,
-}: PericiasTableWrapperProps) {
+}: PericiasListWrapperProps) {
   const router = useRouter();
-  const isWeekMode = !!weekNavigatorProps;
 
   // ---------- Estado da Tabela ----------
   const [table, setTable] = React.useState<TanstackTable<Pericia> | null>(null);
@@ -102,7 +91,7 @@ export function PericiasTableWrapper({
   const [peritoFilter, setPeritoFilter] = React.useState('');
   const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>(undefined);
 
-  // ---------- Dialog State ----------
+  // ---------- Dialogs ----------
   const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
 
   // ---------- Dados Auxiliares ----------
@@ -144,16 +133,9 @@ export function PericiasTableWrapper({
     if (laudoFilter === 'sim') params.laudoJuntado = true;
     if (laudoFilter === 'nao') params.laudoJuntado = false;
 
-    // Date range
+    // DateRange
     if (dateRange?.from) params.prazoEntregaInicio = format(dateRange.from, 'yyyy-MM-dd');
     if (dateRange?.to) params.prazoEntregaFim = format(dateRange.to, 'yyyy-MM-dd');
-
-    // Fixed date (semana mode) overrides date range
-    if (fixedDate) {
-      const dateStr = format(fixedDate, 'yyyy-MM-dd');
-      params.prazoEntregaInicio = dateStr;
-      params.prazoEntregaFim = dateStr;
-    }
 
     // Filtros avançados
     if (tribunalFilter) params.trt = tribunalFilter;
@@ -165,8 +147,8 @@ export function PericiasTableWrapper({
   }, [
     pageIndex, pageSize, globalFilter,
     situacaoFilter, responsavelFilter, laudoFilter,
-    dateRange, fixedDate,
     tribunalFilter, grauFilter, especialidadeFilter, peritoFilter,
+    dateRange,
   ]);
 
   // ---------- Data Fetching ----------
@@ -304,11 +286,11 @@ export function PericiasTableWrapper({
                   setPageIndex(0);
                 }}
                 searchPlaceholder="Buscar perícias..."
-                viewModeSlot={viewModeSlot}
                 actionButton={{
                   label: 'Nova Perícia',
                   onClick: () => setIsCreateDialogOpen(true),
                 }}
+                viewModeSlot={viewModeSlot}
                 filtersSlot={
                   <>
                     <PericiasListFilters
@@ -329,39 +311,20 @@ export function PericiasTableWrapper({
                       usuarios={usuarios}
                       especialidades={especialidades}
                       peritos={peritos}
-                      hideAdvancedFilters={isWeekMode}
                     />
 
-                    {/* Date filters (oculto em modo semana) */}
-                    {!hideDateFilters && !fixedDate && (
-                      <DateRangePicker
-                        value={dateRange}
-                        onChange={(range) => {
-                          setDateRange(range);
-                          setPageIndex(0);
-                        }}
-                        placeholder="Prazo entrega"
-                        className="h-9 w-60 bg-card"
-                      />
-                    )}
+                    <DateRangePicker
+                      value={dateRange}
+                      onChange={(range) => {
+                        setDateRange(range);
+                        setPageIndex(0);
+                      }}
+                      placeholder="Prazo entrega"
+                      className="h-9 w-60 bg-card"
+                    />
                   </>
                 }
               />
-
-              {/* Week Navigator */}
-              {weekNavigatorProps && (
-                <div className="pb-3">
-                  <WeekNavigator
-                    weekDays={weekNavigatorProps.weekDays}
-                    selectedDate={weekNavigatorProps.selectedDate}
-                    onDateSelect={weekNavigatorProps.onDateSelect}
-                    onPreviousWeek={weekNavigatorProps.onPreviousWeek}
-                    onNextWeek={weekNavigatorProps.onNextWeek}
-                    onToday={weekNavigatorProps.onToday}
-                    isCurrentWeek={weekNavigatorProps.isCurrentWeek}
-                  />
-                </div>
-              )}
 
               {/* Active Filter Chips */}
               {activeFilterChips.length > 0 && (
