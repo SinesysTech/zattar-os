@@ -21,9 +21,9 @@ import { Search, Settings } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
 
 import { CodigoTribunal, GRAU_TRIBUNAL_LABELS, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
 import { actionListarUsuarios } from '@/features/usuarios';
@@ -59,6 +59,27 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
   '/expedientes/ano': 'ano',
   '/expedientes/lista': 'lista',
 };
+
+// =============================================================================
+// OPÇÕES DE FILTRO (estáticas)
+// =============================================================================
+
+const STATUS_OPTIONS: readonly FilterOption[] = [
+  { value: 'pendentes', label: 'Pendentes' },
+  { value: 'baixados', label: 'Baixados' },
+];
+
+const TRIBUNAL_OPTIONS: readonly FilterOption[] = CodigoTribunal.map(
+  (trt) => ({ value: trt, label: trt })
+);
+
+const GRAU_OPTIONS: readonly FilterOption[] = Object.entries(GRAU_TRIBUNAL_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+const ORIGEM_OPTIONS: readonly FilterOption[] = Object.entries(ORIGEM_EXPEDIENTE_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
 
 // =============================================================================
 // TIPOS
@@ -148,6 +169,23 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   const getTipoNome = (t: TipoExpedienteOption): string => {
     return t.tipoExpediente || t.tipo_expediente || `Tipo ${t.id}`;
   };
+
+  // ---------- Opções dinâmicas de filtro ----------
+  const responsavelOptions: readonly FilterOption[] = React.useMemo(
+    () => [
+      { value: 'sem_responsavel', label: 'Sem Responsável' },
+      ...usuarios.map((u) => ({
+        value: String(u.id),
+        label: getUsuarioNome(u),
+      })),
+    ],
+    [usuarios]
+  );
+
+  const tipoExpedienteOptions: readonly FilterOption[] = React.useMemo(
+    () => tiposExpedientes.map((t) => ({ value: String(t.id), label: getTipoNome(t) })),
+    [tiposExpedientes]
+  );
 
   // =============================================================================
   // NAVEGAÇÃO POR SEMANA (visualização 'semana')
@@ -262,124 +300,58 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         </div>
 
         {/* Tribunal */}
-        <Select
-          value={tribunalFilter || '_all'}
-          onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v)}
-        >
-          <SelectTrigger className="h-9 w-30 bg-card">
-            <SelectValue placeholder="Tribunal" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="_all">Tribunal</SelectItem>
-            {CodigoTribunal.map((trt) => (
-              <SelectItem key={trt} value={trt}>
-                {trt}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <FilterPopover
+          label="Tribunal"
+          options={TRIBUNAL_OPTIONS}
+          value={tribunalFilter || 'all'}
+          onValueChange={(v) => setTribunalFilter(v === 'all' ? '' : v)}
+        />
 
         {/* Grau */}
-        <Select
-          value={grauFilter || '_all'}
-          onValueChange={(v) => setGrauFilter(v === '_all' ? '' : v)}
-        >
-          <SelectTrigger className="h-9 w-32.5 bg-card">
-            <SelectValue placeholder="Grau" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="_all">Grau</SelectItem>
-            {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <FilterPopover
+          label="Grau"
+          options={GRAU_OPTIONS}
+          value={grauFilter || 'all'}
+          onValueChange={(v) => setGrauFilter(v === 'all' ? '' : v)}
+        />
 
         {/* Tipo de Expediente */}
-        <Select
-          value={tipoExpedienteFilter || '_all'}
-          onValueChange={(v) => setTipoExpedienteFilter(v === '_all' ? '' : v)}
-        >
-          <SelectTrigger className="h-9 w-40 bg-card">
-            <SelectValue placeholder="Tipo" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="_all">Tipo</SelectItem>
-            {tiposExpedientes.map((tipo) => (
-              <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                {getTipoNome(tipo)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <FilterPopover
+          label="Tipo"
+          options={tipoExpedienteOptions}
+          value={tipoExpedienteFilter || 'all'}
+          onValueChange={(v) => setTipoExpedienteFilter(v === 'all' ? '' : v)}
+        />
 
         {/* Origem */}
-        <Select
-          value={origemFilter || '_all'}
-          onValueChange={(v) => setOrigemFilter(v === '_all' ? '' : v)}
-        >
-          <SelectTrigger className="h-9 w-30 bg-card">
-            <SelectValue placeholder="Origem" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="_all">Origem</SelectItem>
-            {Object.entries(ORIGEM_EXPEDIENTE_LABELS).map(([value, label]) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <FilterPopover
+          label="Origem"
+          options={ORIGEM_OPTIONS}
+          value={origemFilter || 'all'}
+          onValueChange={(v) => setOrigemFilter(v === 'all' ? '' : v)}
+        />
 
         {/* Status */}
-        <Select
+        <FilterPopover
+          label="Status"
+          options={STATUS_OPTIONS}
           value={statusFilter}
           onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
-        >
-          <SelectTrigger className="h-9 w-32.5 bg-card">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="todos">Todos</SelectItem>
-            <SelectItem value="pendentes">Pendentes</SelectItem>
-            <SelectItem value="baixados">Baixados</SelectItem>
-          </SelectContent>
-        </Select>
+          defaultValue="todos"
+        />
 
         {/* Responsável */}
-        <Select
-          value={
-            responsavelFilter === 'todos'
-              ? 'todos'
-              : responsavelFilter === 'sem_responsavel'
-                ? 'sem_responsavel'
-                : String(responsavelFilter)
-          }
+        <FilterPopover
+          label="Responsável"
+          options={responsavelOptions}
+          value={typeof responsavelFilter === 'number' ? String(responsavelFilter) : responsavelFilter}
           onValueChange={(v) => {
-            if (v === 'todos') {
-              setResponsavelFilter('todos');
-            } else if (v === 'sem_responsavel') {
-              setResponsavelFilter('sem_responsavel');
-            } else {
-              setResponsavelFilter(parseInt(v, 10));
-            }
+            if (v === 'todos') setResponsavelFilter('todos');
+            else if (v === 'sem_responsavel') setResponsavelFilter('sem_responsavel');
+            else setResponsavelFilter(parseInt(v, 10));
           }}
-        >
-          <SelectTrigger className="h-9 w-40 bg-card">
-            <SelectValue placeholder="Responsável" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="todos">Responsável</SelectItem>
-            <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
-            {usuarios.map((usuario) => (
-              <SelectItem key={usuario.id} value={String(usuario.id)}>
-                {getUsuarioNome(usuario)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          defaultValue="todos"
+        />
       </div>
 
       {/* Ações à direita */}

@@ -23,15 +23,9 @@ import {
 import { WeekNavigator, type WeekNavigatorProps } from '@/components/shared';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
+import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
 
 import type { PaginatedResponse } from '@/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
@@ -82,6 +76,35 @@ function getUsuarioNome(u: UsuarioOption): string {
 function getTipoNome(t: TipoExpedienteOption): string {
   return t.tipoExpediente || t.tipo_expediente || `Tipo ${t.id}`;
 }
+
+// =============================================================================
+// OPÇÕES DE FILTRO (estáticas)
+// =============================================================================
+
+const STATUS_OPTIONS: readonly FilterOption[] = [
+  { value: 'pendentes', label: 'Pendentes' },
+  { value: 'baixados', label: 'Baixados' },
+];
+
+const PRAZO_OPTIONS: readonly FilterOption[] = [
+  { value: 'vencidos', label: 'Vencidos' },
+  { value: 'hoje', label: 'Vence Hoje' },
+  { value: 'amanha', label: 'Vence Amanhã' },
+  { value: 'semana', label: 'Esta Semana' },
+  { value: 'sem_prazo', label: 'Sem Prazo' },
+];
+
+const TRIBUNAL_OPTIONS: readonly FilterOption[] = CodigoTribunal.map(
+  (trt) => ({ value: trt, label: trt })
+);
+
+const GRAU_OPTIONS: readonly FilterOption[] = Object.entries(GRAU_TRIBUNAL_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+const ORIGEM_OPTIONS: readonly FilterOption[] = Object.entries(ORIGEM_EXPEDIENTE_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
 
 // =============================================================================
 // COMPONENTE PRINCIPAL
@@ -184,6 +207,23 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
     };
     fetchAuxData();
   }, []);
+
+  // ---------- Opções dinâmicas de filtro ----------
+  const responsavelOptions: readonly FilterOption[] = React.useMemo(
+    () => [
+      { value: 'sem_responsavel', label: 'Sem Responsável' },
+      ...usuarios.map((u) => ({
+        value: String(u.id),
+        label: getUsuarioNome(u),
+      })),
+    ],
+    [usuarios]
+  );
+
+  const tipoExpedienteOptions: readonly FilterOption[] = React.useMemo(
+    () => tiposExpedientes.map((t) => ({ value: String(t.id), label: getTipoNome(t) })),
+    [tiposExpedientes]
+  );
 
   // ---------- Calcular datas para filtro de prazo ----------
   const getPrazoDates = React.useCallback((prazo: PrazoFilterType): { from?: string; to?: string } | null => {
@@ -534,81 +574,46 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                 filtersSlot={
                   <>
                     {/* Status Filter */}
-                    <Select
+                    <FilterPopover
+                      label="Status"
+                      options={STATUS_OPTIONS}
                       value={statusFilter}
-                      onValueChange={(v: StatusFilterType) => {
-                        setStatusFilter(v);
+                      onValueChange={(v) => {
+                        setStatusFilter(v as StatusFilterType);
                         setPageIndex(0);
                       }}
-                    >
-                      <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                        <SelectValue placeholder="Status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="todos">Status</SelectItem>
-                        <SelectItem value="pendentes">Pendentes</SelectItem>
-                        <SelectItem value="baixados">Baixados</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      defaultValue="todos"
+                    />
 
                     {/* Prazo Filter - Hide if date is fixed or weekNavigator is present */}
                     {!hideDateFilters && !fixedDate && !weekNavigatorProps && (
-                      <Select
+                      <FilterPopover
+                        label="Prazo"
+                        options={PRAZO_OPTIONS}
                         value={prazoFilter}
-                        onValueChange={(v: PrazoFilterType) => {
-                          setPrazoFilter(v);
-                          setDateRange(undefined); // Limpa date range ao usar prazo
+                        onValueChange={(v) => {
+                          setPrazoFilter(v as PrazoFilterType);
+                          setDateRange(undefined);
                           setPageIndex(0);
                         }}
-                      >
-                        <SelectTrigger className="h-9 w-36 border-dashed bg-card font-normal">
-                          <SelectValue placeholder="Prazo" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="todos">Prazo</SelectItem>
-                          <SelectItem value="vencidos">Vencidos</SelectItem>
-                          <SelectItem value="hoje">Vence Hoje</SelectItem>
-                          <SelectItem value="amanha">Vence Amanhã</SelectItem>
-                          <SelectItem value="semana">Esta Semana</SelectItem>
-                          <SelectItem value="sem_prazo">Sem Prazo</SelectItem>
-                        </SelectContent>
-                      </Select>
+                        defaultValue="todos"
+                      />
                     )}
 
                     {/* Responsável Filter - apenas na view de lista */}
                     {!weekNavigatorProps && (
-                      <Select
-                        value={
-                          responsavelFilter === 'todos'
-                            ? 'todos'
-                            : responsavelFilter === 'sem_responsavel'
-                              ? 'sem_responsavel'
-                              : String(responsavelFilter)
-                        }
+                      <FilterPopover
+                        label="Responsável"
+                        options={responsavelOptions}
+                        value={typeof responsavelFilter === 'number' ? String(responsavelFilter) : responsavelFilter}
                         onValueChange={(v) => {
-                          if (v === 'todos') {
-                            setResponsavelFilter('todos');
-                          } else if (v === 'sem_responsavel') {
-                            setResponsavelFilter('sem_responsavel');
-                          } else {
-                            setResponsavelFilter(parseInt(v, 10));
-                          }
+                          if (v === 'todos') setResponsavelFilter('todos');
+                          else if (v === 'sem_responsavel') setResponsavelFilter('sem_responsavel');
+                          else setResponsavelFilter(parseInt(v, 10));
                           setPageIndex(0);
                         }}
-                      >
-                        <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
-                          <SelectValue placeholder="Responsável" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="todos">Responsável</SelectItem>
-                          <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
-                          {usuarios.map((usuario) => (
-                            <SelectItem key={usuario.id} value={String(usuario.id)}>
-                              {getUsuarioNome(usuario)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        defaultValue="todos"
+                      />
                     )}
 
                     {/* Date Range Picker - Hide if date is fixed or weekNavigator is present */}
@@ -629,92 +634,52 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
 
                     {/* Tribunal Filter - apenas na view de lista */}
                     {!weekNavigatorProps && (
-                      <Select
-                        value={tribunalFilter[0] || '_all'}
+                      <FilterPopover
+                        label="Tribunal"
+                        options={TRIBUNAL_OPTIONS}
+                        value={tribunalFilter[0] || 'all'}
                         onValueChange={(v) => {
-                          setTribunalFilter(v === '_all' ? [] : [v]);
+                          setTribunalFilter(v === 'all' ? [] : [v]);
                           setPageIndex(0);
                         }}
-                      >
-                        <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
-                          <SelectValue placeholder="Tribunal" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="_all">Tribunal</SelectItem>
-                          {CodigoTribunal.map((trt) => (
-                            <SelectItem key={trt} value={trt}>
-                              {trt}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      />
                     )}
 
                     {/* Grau Filter - apenas na view de lista */}
                     {!weekNavigatorProps && (
-                      <Select
-                        value={grauFilter[0] || '_all'}
+                      <FilterPopover
+                        label="Grau"
+                        options={GRAU_OPTIONS}
+                        value={grauFilter[0] || 'all'}
                         onValueChange={(v) => {
-                          setGrauFilter(v === '_all' ? [] : [v]);
+                          setGrauFilter(v === 'all' ? [] : [v]);
                           setPageIndex(0);
                         }}
-                      >
-                        <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
-                          <SelectValue placeholder="Grau" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="_all">Grau</SelectItem>
-                          {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
-                            <SelectItem key={value} value={value}>
-                              {label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      />
                     )}
 
                     {/* Tipo Filter */}
-                    <Select
-                      value={tipoExpedienteFilter[0]?.toString() || '_all'}
+                    <FilterPopover
+                      label="Tipo"
+                      options={tipoExpedienteOptions}
+                      value={tipoExpedienteFilter[0]?.toString() || 'all'}
                       onValueChange={(v) => {
-                        setTipoExpedienteFilter(v === '_all' ? [] : [parseInt(v, 10)]);
+                        setTipoExpedienteFilter(v === 'all' ? [] : [parseInt(v, 10)]);
                         setSemTipoFilter(false);
                         setPageIndex(0);
                       }}
-                    >
-                      <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                        <SelectValue placeholder="Tipo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="_all">Tipo</SelectItem>
-                        {tiposExpedientes.map((tipo) => (
-                          <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                            {getTipoNome(tipo)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    />
 
                     {/* Origem Filter */}
-                    <Select
-                      value={origemFilter[0] || '_all'}
+                    <FilterPopover
+                      label="Origem"
+                      options={ORIGEM_OPTIONS}
+                      value={origemFilter[0] || 'all'}
                       onValueChange={(v) => {
-                        setOrigemFilter(v === '_all' ? [] : [v]);
+                        setOrigemFilter(v === 'all' ? [] : [v]);
                         setPageIndex(0);
                       }}
-                    >
-                      <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
-                        <SelectValue placeholder="Origem" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="_all">Origem</SelectItem>
-                        {Object.entries(ORIGEM_EXPEDIENTE_LABELS).map(([value, label]) => (
-                          <SelectItem key={value} value={value}>
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    />
                   </>
                 }
               />

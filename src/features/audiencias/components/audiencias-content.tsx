@@ -28,7 +28,7 @@ import { Plus, Search, Settings } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
@@ -86,6 +86,26 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
 };
 
 // =============================================================================
+// OPÇÕES DE FILTRO (estáticas)
+// =============================================================================
+
+const STATUS_OPTIONS: readonly FilterOption[] = Object.entries(STATUS_AUDIENCIA_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+const MODALIDADE_OPTIONS: readonly FilterOption[] = Object.entries(MODALIDADE_AUDIENCIA_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+const GRAU_OPTIONS: readonly FilterOption[] = Object.entries(GRAU_TRIBUNAL_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+const TRIBUNAL_OPTIONS: readonly FilterOption[] = CODIGO_TRIBUNAL.map(
+  (trt) => ({ value: trt, label: trt })
+);
+
+// =============================================================================
 // TIPOS
 // =============================================================================
 
@@ -137,6 +157,23 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
   // Dados Auxiliares
   const { usuarios } = useUsuarios();
   const { tiposAudiencia } = useTiposAudiencias();
+
+  // Opções dinâmicas de filtro
+  const responsavelOptions: readonly FilterOption[] = React.useMemo(
+    () => [
+      { value: 'sem_responsavel', label: 'Sem Responsável' },
+      ...usuarios.map((u) => ({
+        value: String(u.id),
+        label: u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}`,
+      })),
+    ],
+    [usuarios]
+  );
+
+  const tipoAudienciaOptions: readonly FilterOption[] = React.useMemo(
+    () => tiposAudiencia.map((t) => ({ value: String(t.id), label: t.descricao })),
+    [tiposAudiencia]
+  );
 
   // =============================================================================
   // NAVEGAÇÃO POR SEMANA (visualização 'semana')
@@ -313,97 +350,49 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           </div>
 
         {/* Tribunal */}
-        <Select
-          value={tribunalFilter || '_all'}
-          onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal)}
-        >
-          <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-            <SelectValue placeholder="Tribunal" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="_all">Tribunal</SelectItem>
-            {CODIGO_TRIBUNAL.map((trt) => (
-              <SelectItem key={trt} value={trt}>
-                {trt}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <FilterPopover
+          label="Tribunal"
+          options={TRIBUNAL_OPTIONS}
+          value={tribunalFilter || 'all'}
+          onValueChange={(v) => setTribunalFilter(v === 'all' ? '' : v as CodigoTribunal)}
+        />
 
         {/* Grau */}
-        <Select
-          value={grauFilter || '_all'}
-          onValueChange={(v) => setGrauFilter(v === '_all' ? '' : (v as GrauTribunal))}
-        >
-          <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-            <SelectValue placeholder="Grau" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="_all">Grau</SelectItem>
-            {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <FilterPopover
+          label="Grau"
+          options={GRAU_OPTIONS}
+          value={grauFilter || 'all'}
+          onValueChange={(v) => setGrauFilter(v === 'all' ? '' : v as GrauTribunal)}
+        />
 
         {/* Status */}
-        <Select
-          value={statusFilter || '_all'}
-          onValueChange={(v) => setStatusFilter(v === '_all' ? '' : (v as StatusAudiencia))}
-        >
-          <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="_all">Status</SelectItem>
-            {Object.entries(STATUS_AUDIENCIA_LABELS).map(([value, label]) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <FilterPopover
+          label="Status"
+          options={STATUS_OPTIONS}
+          value={statusFilter || 'all'}
+          onValueChange={(v) => setStatusFilter(v === 'all' ? '' : v as StatusAudiencia)}
+        />
 
         {/* Modalidade */}
-        <Select
-          value={modalidadeFilter || '_all'}
-          onValueChange={(v) => setModalidadeFilter(v === '_all' ? '' : (v as ModalidadeAudiencia))}
-        >
-          <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-            <SelectValue placeholder="Modalidade" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="_all">Modalidade</SelectItem>
-            {Object.entries(MODALIDADE_AUDIENCIA_LABELS).map(([value, label]) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <FilterPopover
+          label="Modalidade"
+          options={MODALIDADE_OPTIONS}
+          value={modalidadeFilter || 'all'}
+          onValueChange={(v) => setModalidadeFilter(v === 'all' ? '' : v as ModalidadeAudiencia)}
+        />
 
         {/* Tipo de Audiência */}
-        <Select
-          value={tipoAudienciaFilter ? String(tipoAudienciaFilter) : '_all'}
-          onValueChange={(v) => setTipoAudienciaFilter(v === '_all' ? '' : Number(v))}
-        >
-          <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-            <SelectValue placeholder="Tipo" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="_all">Tipo</SelectItem>
-            {tiposAudiencia.map((tipo) => (
-              <SelectItem key={tipo.id} value={String(tipo.id)}>
-                {tipo.descricao}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <FilterPopover
+          label="Tipo"
+          options={tipoAudienciaOptions}
+          value={tipoAudienciaFilter ? String(tipoAudienciaFilter) : 'all'}
+          onValueChange={(v) => setTipoAudienciaFilter(v === 'all' ? '' : Number(v))}
+        />
 
         {/* Responsável */}
-        <Select
+        <FilterPopover
+          label="Responsável"
+          options={responsavelOptions}
           value={
             responsavelFilter === 'todos'
               ? 'todos'
@@ -420,20 +409,8 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
               setResponsavelFilter(parseInt(v, 10));
             }
           }}
-        >
-          <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-            <SelectValue placeholder="Responsável" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="todos">Responsável</SelectItem>
-            <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
-            {usuarios.map((usuario) => (
-              <SelectItem key={usuario.id} value={String(usuario.id)}>
-                {usuario.nomeExibicao || usuario.nomeCompleto || `Usuário ${usuario.id}`}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          defaultValue="todos"
+        />
       </div>
 
         {/* Ações à direita */}
@@ -523,97 +500,49 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
                 </div>
 
                 {/* Tribunal */}
-                <Select
-                  value={tribunalFilter || '_all'}
-                  onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal)}
-                >
-                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                    <SelectValue placeholder="Tribunal" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_all">Tribunal</SelectItem>
-                    {CODIGO_TRIBUNAL.map((trt) => (
-                      <SelectItem key={trt} value={trt}>
-                        {trt}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FilterPopover
+                  label="Tribunal"
+                  options={TRIBUNAL_OPTIONS}
+                  value={tribunalFilter || 'all'}
+                  onValueChange={(v) => setTribunalFilter(v === 'all' ? '' : v as CodigoTribunal)}
+                />
 
                 {/* Grau */}
-                <Select
-                  value={grauFilter || '_all'}
-                  onValueChange={(v) => setGrauFilter(v === '_all' ? '' : (v as GrauTribunal))}
-                >
-                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                    <SelectValue placeholder="Grau" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_all">Grau</SelectItem>
-                    {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FilterPopover
+                  label="Grau"
+                  options={GRAU_OPTIONS}
+                  value={grauFilter || 'all'}
+                  onValueChange={(v) => setGrauFilter(v === 'all' ? '' : v as GrauTribunal)}
+                />
 
                 {/* Status */}
-                <Select
-                  value={statusFilter || '_all'}
-                  onValueChange={(v) => setStatusFilter(v === '_all' ? '' : (v as StatusAudiencia))}
-                >
-                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_all">Status</SelectItem>
-                    {Object.entries(STATUS_AUDIENCIA_LABELS).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FilterPopover
+                  label="Status"
+                  options={STATUS_OPTIONS}
+                  value={statusFilter || 'all'}
+                  onValueChange={(v) => setStatusFilter(v === 'all' ? '' : v as StatusAudiencia)}
+                />
 
                 {/* Modalidade */}
-                <Select
-                  value={modalidadeFilter || '_all'}
-                  onValueChange={(v) => setModalidadeFilter(v === '_all' ? '' : (v as ModalidadeAudiencia))}
-                >
-                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                    <SelectValue placeholder="Modalidade" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_all">Modalidade</SelectItem>
-                    {Object.entries(MODALIDADE_AUDIENCIA_LABELS).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FilterPopover
+                  label="Modalidade"
+                  options={MODALIDADE_OPTIONS}
+                  value={modalidadeFilter || 'all'}
+                  onValueChange={(v) => setModalidadeFilter(v === 'all' ? '' : v as ModalidadeAudiencia)}
+                />
 
                 {/* Tipo de Audiência */}
-                <Select
-                  value={tipoAudienciaFilter ? String(tipoAudienciaFilter) : '_all'}
-                  onValueChange={(v) => setTipoAudienciaFilter(v === '_all' ? '' : Number(v))}
-                >
-                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                    <SelectValue placeholder="Tipo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_all">Tipo</SelectItem>
-                    {tiposAudiencia.map((tipo) => (
-                      <SelectItem key={tipo.id} value={String(tipo.id)}>
-                        {tipo.descricao}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FilterPopover
+                  label="Tipo"
+                  options={tipoAudienciaOptions}
+                  value={tipoAudienciaFilter ? String(tipoAudienciaFilter) : 'all'}
+                  onValueChange={(v) => setTipoAudienciaFilter(v === 'all' ? '' : Number(v))}
+                />
 
                 {/* Responsável */}
-                <Select
+                <FilterPopover
+                  label="Responsável"
+                  options={responsavelOptions}
                   value={
                     responsavelFilter === 'todos'
                       ? 'todos'
@@ -630,20 +559,8 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
                       setResponsavelFilter(parseInt(v, 10));
                     }
                   }}
-                >
-                  <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                    <SelectValue placeholder="Responsável" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todos">Responsável</SelectItem>
-                    <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
-                    {usuarios.map((usuario) => (
-                      <SelectItem key={usuario.id} value={String(usuario.id)}>
-                        {usuario.nomeExibicao || usuario.nomeCompleto || `Usuário ${usuario.id}`}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  defaultValue="todos"
+                />
               </div>
 
               {/* Ações à direita */}

@@ -22,13 +22,7 @@ import {
 import { WeekNavigator, type WeekNavigatorProps } from '@/components/shared';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 
@@ -72,6 +66,26 @@ interface AudienciasTableWrapperProps {
 type StatusFilterType = 'todas' | StatusAudiencia;
 type ModalidadeFilterType = 'todas' | ModalidadeAudiencia;
 type ResponsavelFilterType = 'todos' | 'sem_responsavel' | number;
+
+// =============================================================================
+// OPÇÕES DE FILTRO
+// =============================================================================
+
+const STATUS_OPTIONS: readonly FilterOption[] = Object.entries(STATUS_AUDIENCIA_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+const MODALIDADE_OPTIONS: readonly FilterOption[] = Object.entries(MODALIDADE_AUDIENCIA_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+const GRAU_OPTIONS: readonly FilterOption[] = Object.entries(GRAU_TRIBUNAL_LABELS).map(
+  ([value, label]) => ({ value, label })
+);
+
+const TRIBUNAL_OPTIONS: readonly FilterOption[] = CODIGO_TRIBUNAL.map(
+  (trt) => ({ value: trt, label: trt })
+);
 
 // Helper para obter nome do usuário
 function getUsuarioNome(u: { id: number; nomeExibicao?: string; nomeCompleto?: string }): string {
@@ -146,6 +160,20 @@ export function AudienciasTableWrapper({
     });
     return map;
   }, [usuarios]);
+
+  // Opções dinâmicas de filtro (derivadas de dados carregados)
+  const responsavelOptions: readonly FilterOption[] = React.useMemo(
+    () => [
+      { value: 'sem_responsavel', label: 'Sem Responsável' },
+      ...usuarios.map((u) => ({ value: String(u.id), label: getUsuarioNome(u) })),
+    ],
+    [usuarios]
+  );
+
+  const tipoAudienciaOptions: readonly FilterOption[] = React.useMemo(
+    () => tiposAudiencia.map((t) => ({ value: String(t.id), label: t.descricao })),
+    [tiposAudiencia]
+  );
 
   // Enrich audiencias with responsavel name
   const audienciasEnriquecidas = React.useMemo(() => {
@@ -417,50 +445,34 @@ export function AudienciasTableWrapper({
                 filtersSlot={
                   <>
                     {/* Status Filter */}
-                    <Select
+                    <FilterPopover
+                      label="Status"
+                      options={STATUS_OPTIONS}
                       value={statusFilter}
-                      onValueChange={(v: StatusFilterType) => {
-                        setStatusFilter(v);
+                      onValueChange={(val) => {
+                        setStatusFilter(val as StatusFilterType);
                         setPageIndex(0);
                       }}
-                    >
-                      <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                        <SelectValue placeholder="Status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="todas">Status</SelectItem>
-                        {Object.entries(STATUS_AUDIENCIA_LABELS).map(([value, label]) => (
-                          <SelectItem key={value} value={value}>
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      defaultValue="todas"
+                    />
 
                     {/* Modalidade Filter */}
-                    <Select
+                    <FilterPopover
+                      label="Modalidade"
+                      options={MODALIDADE_OPTIONS}
                       value={modalidadeFilter}
-                      onValueChange={(v: ModalidadeFilterType) => {
-                        setModalidadeFilter(v);
+                      onValueChange={(val) => {
+                        setModalidadeFilter(val as ModalidadeFilterType);
                         setPageIndex(0);
                       }}
-                    >
-                      <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                        <SelectValue placeholder="Modalidade" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="todas">Modalidade</SelectItem>
-                        {Object.entries(MODALIDADE_AUDIENCIA_LABELS).map(([value, label]) => (
-                          <SelectItem key={value} value={value}>
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      defaultValue="todas"
+                    />
 
                     {/* Responsável Filter - apenas na view de lista */}
                     {!weekNavigatorProps && (
-                      <Select
+                      <FilterPopover
+                        label="Responsável"
+                        options={responsavelOptions}
                         value={
                           responsavelFilter === 'todos'
                             ? 'todos'
@@ -468,30 +480,18 @@ export function AudienciasTableWrapper({
                               ? 'sem_responsavel'
                               : String(responsavelFilter)
                         }
-                        onValueChange={(v) => {
-                          if (v === 'todos') {
+                        onValueChange={(val) => {
+                          if (val === 'todos') {
                             setResponsavelFilter('todos');
-                          } else if (v === 'sem_responsavel') {
+                          } else if (val === 'sem_responsavel') {
                             setResponsavelFilter('sem_responsavel');
                           } else {
-                            setResponsavelFilter(parseInt(v, 10));
+                            setResponsavelFilter(parseInt(val, 10));
                           }
                           setPageIndex(0);
                         }}
-                      >
-                        <SelectTrigger className="h-9 w-40 border-dashed bg-card font-normal">
-                          <SelectValue placeholder="Responsável" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="todos">Responsável</SelectItem>
-                          <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
-                          {usuarios.map((usuario) => (
-                            <SelectItem key={usuario.id} value={String(usuario.id)}>
-                              {getUsuarioNome(usuario)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        defaultValue="todos"
+                      />
                     )}
 
                     {/* Date Range Picker - Hide if date is fixed or weekNavigator is present */}
@@ -509,70 +509,40 @@ export function AudienciasTableWrapper({
 
                     {/* Tribunal Filter - apenas na view de lista */}
                     {!weekNavigatorProps && (
-                      <Select
-                        value={tribunalFilter || '_all'}
-                        onValueChange={(v) => {
-                          setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal);
+                      <FilterPopover
+                        label="Tribunal"
+                        options={TRIBUNAL_OPTIONS}
+                        value={tribunalFilter || 'all'}
+                        onValueChange={(val) => {
+                          setTribunalFilter(val === 'all' ? '' : val as CodigoTribunal);
                           setPageIndex(0);
                         }}
-                      >
-                        <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
-                          <SelectValue placeholder="Tribunal" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="_all">Tribunal</SelectItem>
-                          {CODIGO_TRIBUNAL.map((trt) => (
-                            <SelectItem key={trt} value={trt}>
-                              {trt}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      />
                     )}
 
                     {/* Grau Filter - apenas na view de lista */}
                     {!weekNavigatorProps && (
-                      <Select
-                        value={grauFilter || '_all'}
-                        onValueChange={(v) => {
-                          setGrauFilter(v === '_all' ? '' : v as GrauTribunal);
+                      <FilterPopover
+                        label="Grau"
+                        options={GRAU_OPTIONS}
+                        value={grauFilter || 'all'}
+                        onValueChange={(val) => {
+                          setGrauFilter(val === 'all' ? '' : val as GrauTribunal);
                           setPageIndex(0);
                         }}
-                      >
-                        <SelectTrigger className="h-9 w-28 border-dashed bg-card font-normal">
-                          <SelectValue placeholder="Grau" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="_all">Grau</SelectItem>
-                          {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
-                            <SelectItem key={value} value={value}>
-                              {label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      />
                     )}
 
                     {/* Tipo Filter */}
-                    <Select
-                      value={tipoAudienciaFilter ? String(tipoAudienciaFilter) : '_all'}
-                      onValueChange={(v) => {
-                        setTipoAudienciaFilter(v === '_all' ? '' : parseInt(v, 10));
+                    <FilterPopover
+                      label="Tipo"
+                      options={tipoAudienciaOptions}
+                      value={tipoAudienciaFilter ? String(tipoAudienciaFilter) : 'all'}
+                      onValueChange={(val) => {
+                        setTipoAudienciaFilter(val === 'all' ? '' : parseInt(val, 10));
                         setPageIndex(0);
                       }}
-                    >
-                      <SelectTrigger className="h-9 w-32 border-dashed bg-card font-normal">
-                        <SelectValue placeholder="Tipo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="_all">Tipo</SelectItem>
-                        {tiposAudiencia.map((tipo) => (
-                          <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                            {tipo.descricao}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    />
                   </>
                 }
               />

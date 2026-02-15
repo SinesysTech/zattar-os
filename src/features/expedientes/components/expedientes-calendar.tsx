@@ -21,8 +21,8 @@ import { DataShell, DataTable } from '@/components/shared/data-shell';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Separator } from '@/components/ui/separator';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WeekDaysCarousel } from '@/components/shared';
 
@@ -42,6 +42,11 @@ type TipoExpedienteOption = { id: number; tipoExpediente?: string; tipo_expedien
 function getUsuarioNome(u: UsuarioOption): string {
   return u.nomeExibicao || u.nome_exibicao || u.nome || `Usuário ${u.id}`;
 }
+
+const STATUS_OPTIONS: readonly FilterOption[] = [
+  { value: 'pendentes', label: 'Pendentes' },
+  { value: 'baixados', label: 'Baixados' },
+];
 
 export function ExpedientesCalendar() {
     const router = useRouter();
@@ -263,19 +268,13 @@ export function ExpedientesCalendar() {
                             filterPanelDescription="Filtre expedientes por tribunal, grau, responsável, tipo e outras características"
                             extraButtons={
                             <div className="flex items-center gap-2">
-                                <Select
+                                <FilterPopover
+                                    label="Status"
+                                    options={STATUS_OPTIONS}
                                     value={statusFilter}
                                     onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
-                                >
-                                    <SelectTrigger className="h-10 w-[130px]">
-                                        <SelectValue placeholder="Status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="todos">Todos</SelectItem>
-                                        <SelectItem value="pendentes">Pendentes</SelectItem>
-                                        <SelectItem value="baixados">Baixados</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                    defaultValue="todos"
+                                />
 
                                 <Separator orientation="vertical" className="h-6 mx-1" />
 
