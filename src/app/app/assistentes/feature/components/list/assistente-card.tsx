@@ -33,13 +33,13 @@ export function AssistenteCard({
   const temDescricao = assistente.descricao && assistente.descricao.trim().length > 0;
 
   return (
-    <Card className="relative flex flex-col h-[140px] hover:shadow-md transition-shadow">
+    <Card className="relative flex flex-col h-[140px] transition-all duration-200 hover:shadow-lg hover:scale-[1.02] cursor-pointer border border-border bg-card">
       {/* Área clicável para visualização */}
       <div
-        className="flex-1 cursor-pointer overflow-hidden"
+        className="flex-1 overflow-hidden"
         onClick={() => onView(assistente)}
       >
-        <CardHeader className="px-4 pt-2 pb-2">
+        <CardHeader className="px-4 pt-3 pb-2">
           <CardTitle className="text-sm font-semibold leading-tight line-clamp-2 pr-8">
             {assistente.nome}
           </CardTitle>
@@ -56,13 +56,13 @@ export function AssistenteCard({
 
       {/* Menu dropdown - sempre visível */}
       {(canEdit || canDelete) && (
-        <div className="absolute bottom-2 right-2">
+        <div className="absolute top-2 right-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7"
+                className="h-7 w-7 hover:bg-accent"
                 onClick={(e) => e.stopPropagation()}
               >
                 <MoreHorizontal className="h-4 w-4" />

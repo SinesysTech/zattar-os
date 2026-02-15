@@ -27,6 +27,7 @@ import {
   excluirOrcamento,
   iniciarExecucaoOrcamento,
   isPeriodoValido,
+  isStatusValido,
   OrcamentoFormDialog,
   type OrcamentoComItens,
   type PeriodoOrcamento,
