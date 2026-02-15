@@ -291,10 +291,12 @@ export async function findAllContratos(
     const limite = params.limite ?? 50;
     const offset = (pagina - 1) * limite;
 
+    // Nota: contrato_status_historico NÃO é incluído na listagem pois não é usado
+    // nas colunas da tabela. Ele é carregado apenas em findContratoById (detalhe).
     let query = db
       .from(TABLE_CONTRATOS)
       .select(
-        "*, contrato_partes(*), contrato_status_historico(*), contrato_processos(*, acervo(id, numero_processo, trt, grau, data_autuacao))",
+        "*, contrato_partes(*), contrato_processos(*, acervo(id, numero_processo, trt, grau, data_autuacao))",
         { count: "exact" },
       );
 
