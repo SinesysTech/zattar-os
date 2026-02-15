@@ -15,8 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
+import { FilterPopover } from '@/features/partes';
 import { cn } from '@/lib/utils';
 import { PageShell } from '@/components/shared/page-shell';
 import {
@@ -626,6 +625,43 @@ export default function DREClient() {
   const { evolucao, isLoading: loadingEvolucao } = useEvolucaoDRE({ ano: anoAtual });
   const { isExporting, exportarPDF, exportarCSV } = useExportarDRE();
 
+  // Options para FilterPopover
+  const periodoOptions = React.useMemo(() => [
+    { value: 'mes_atual', label: 'Mês Atual' },
+    { value: 'mes_anterior', label: 'Mês Anterior' },
+    { value: 'trimestre_atual', label: 'Trimestre' },
+    { value: 'ano_atual', label: 'Ano' },
+  ], []);
+
+  const comparacaoOptions = React.useMemo(() => [
+    { value: 'anterior', label: 'vs Anterior' },
+    { value: 'orcado', label: 'vs Orçado' },
+    { value: 'ambas', label: 'Ambas' },
+  ], []);
+
+  const comparacaoAtiva = React.useMemo(() => {
+    if (incluirComparativo && incluirOrcado) return 'ambas';
+    if (incluirComparativo) return 'anterior';
+    if (incluirOrcado) return 'orcado';
+    return 'nenhuma';
+  }, [incluirComparativo, incluirOrcado]);
+
+  const handleComparacaoChange = React.useCallback((val: string) => {
+    if (val === 'nenhuma') {
+      setIncluirComparativo(false);
+      setIncluirOrcado(false);
+    } else if (val === 'anterior') {
+      setIncluirComparativo(true);
+      setIncluirOrcado(false);
+    } else if (val === 'orcado') {
+      setIncluirComparativo(false);
+      setIncluirOrcado(true);
+    } else if (val === 'ambas') {
+      setIncluirComparativo(true);
+      setIncluirOrcado(true);
+    }
+  }, []);
+
   // ---- Handlers de período ----
   const handlePeriodoRapido = React.useCallback((periodoTipo: PeriodoRapido) => {
     let novoInicio: Date;
@@ -728,19 +764,20 @@ export default function DREClient() {
             title="Demonstração de Resultado do Exercício"
             filtersSlot={
               <>
-                <Tabs
+                <FilterPopover
+                  label="Período"
+                  options={periodoOptions}
                   value={periodoAtivo || 'mes_atual'}
-                  onValueChange={(value) => handlePeriodoRapido(value as PeriodoRapido)}
-                >
-                  <TabsList className="bg-card border border-input shadow-xs">
-                    <TabsTrigger value="mes_atual">Mês Atual</TabsTrigger>
-                    <TabsTrigger value="mes_anterior">Mês Anterior</TabsTrigger>
-                    <TabsTrigger value="trimestre_atual">Trimestre</TabsTrigger>
-                    <TabsTrigger value="ano_atual">Ano</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-
-                <Separator orientation="vertical" className="h-6" />
+                  onValueChange={(val) => handlePeriodoRapido(val as PeriodoRapido)}
+                  defaultValue="mes_atual"
+                />
+                <FilterPopover
+                  label="Comparação"
+                  options={comparacaoOptions}
+                  value={comparacaoAtiva}
+                  onValueChange={handleComparacaoChange}
+                  defaultValue="nenhuma"
+                />
 
                 <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
                   <Calendar className="h-3.5 w-3.5" />
@@ -751,28 +788,7 @@ export default function DREClient() {
               </>
             }
             actionSlot={
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-4">
-                  <label className="flex items-center gap-1.5 cursor-pointer">
-                    <Switch
-                      checked={incluirComparativo}
-                      onCheckedChange={setIncluirComparativo}
-                      className="scale-90"
-                    />
-                    <span className="text-xs text-muted-foreground">vs Anterior</span>
-                  </label>
-                  <label className="flex items-center gap-1.5 cursor-pointer">
-                    <Switch
-                      checked={incluirOrcado}
-                      onCheckedChange={setIncluirOrcado}
-                      className="scale-90"
-                    />
-                    <span className="text-xs text-muted-foreground">vs Orçado</span>
-                  </label>
-                </div>
-
-                <Separator orientation="vertical" className="h-6" />
-
+              <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleRefresh} disabled={isLoading}>
                   <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
                   <span className="sr-only">Atualizar</span>

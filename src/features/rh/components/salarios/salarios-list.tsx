@@ -18,7 +18,6 @@ import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 import {
-  MoreHorizontal,
   Pencil,
   History,
   XCircle,
@@ -26,12 +25,10 @@ import {
   CalendarOff,
 } from 'lucide-react';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -98,74 +95,6 @@ const isVigente = (salario: SalarioComDetalhes): boolean => {
 };
 
 // ============================================================================
-// Componente de Ações
-// ============================================================================
-
-function SalariosActions({
-  salario,
-  onEditar,
-  onEncerrarVigencia,
-  onInativar,
-  onExcluir,
-  onVerHistorico,
-}: {
-  salario: SalarioComDetalhes;
-  onEditar: (salario: SalarioComDetalhes) => void;
-  onEncerrarVigencia: (salario: SalarioComDetalhes) => void;
-  onInativar: (salario: SalarioComDetalhes) => void;
-  onExcluir: (salario: SalarioComDetalhes) => void;
-  onVerHistorico: (salario: SalarioComDetalhes) => void;
-}) {
-  const vigente = isVigente(salario);
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <MoreHorizontal className="h-4 w-4" />
-          <span className="sr-only">Ações do salário</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => onVerHistorico(salario)}>
-          <History className="mr-2 h-4 w-4" />
-          Ver Histórico
-        </DropdownMenuItem>
-        {salario.ativo && (
-          <>
-            <DropdownMenuItem onClick={() => onEditar(salario)}>
-              <Pencil className="mr-2 h-4 w-4" />
-              Editar
-            </DropdownMenuItem>
-            {vigente && (
-              <DropdownMenuItem onClick={() => onEncerrarVigencia(salario)}>
-                <CalendarOff className="mr-2 h-4 w-4" />
-                Encerrar Vigência
-              </DropdownMenuItem>
-            )}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => onInativar(salario)}
-              className="text-orange-600"
-            >
-              <XCircle className="mr-2 h-4 w-4" />
-              Inativar
-            </DropdownMenuItem>
-          </>
-        )}
-        <DropdownMenuItem
-          onClick={() => onExcluir(salario)}
-          className="text-destructive"
-        >
-          <Trash2 className="mr-2 h-4 w-4" />
-          Excluir
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-// ============================================================================
 // Definição das Colunas
 // ============================================================================
 
@@ -179,13 +108,10 @@ function criarColunas(
   return [
     {
       accessorKey: 'usuario',
-      header: ({ column }) => (
-        <div className="flex items-center justify-start">
-          <DataTableColumnHeader column={column} title="Funcionário" />
-        </div>
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Funcionário" />,
       enableSorting: true,
-      size: 200,
+      size: 250,
+      meta: { align: 'left' as const },
       cell: ({ row }) => {
         const salario = row.original;
         return (
@@ -205,111 +131,165 @@ function criarColunas(
     {
       accessorKey: 'salarioBruto',
       header: ({ column }) => (
-        <div className="flex items-center justify-end">
-          <DataTableColumnHeader column={column} title="Salário Bruto" />
-        </div>
+        <DataTableColumnHeader column={column} title="Salário Bruto" className="justify-end" />
       ),
       enableSorting: true,
-      size: 130,
+      size: 150,
+      meta: { align: 'right' as const },
       cell: ({ row }) => (
-        <div className="text-right font-medium">
+        <span className="font-mono text-sm font-medium">
           {formatarValor(row.original.salarioBruto)}
-        </div>
+        </span>
       ),
     },
     {
       accessorKey: 'dataInicioVigencia',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Início Vigência" />
-        </div>
+        <DataTableColumnHeader column={column} title="Início" className="justify-center" />
       ),
       enableSorting: true,
-      size: 130,
+      size: 120,
+      meta: { align: 'center' as const },
       cell: ({ row }) => (
-        <div className="text-center">
+        <span className="text-sm">
           {formatarData(row.original.dataInicioVigencia)}
-        </div>
+        </span>
       ),
     },
     {
       accessorKey: 'dataFimVigencia',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Fim Vigência" />
-        </div>
+        <DataTableColumnHeader column={column} title="Fim" className="justify-center" />
       ),
       enableSorting: true,
-      size: 130,
+      size: 120,
+      meta: { align: 'center' as const },
       cell: ({ row }) => {
         const salario = row.original;
         const vigente = isVigente(salario);
-        return (
-          <div className="text-center">
-            {salario.dataFimVigencia ? (
-              formatarData(salario.dataFimVigencia)
-            ) : vigente ? (
-              <Badge variant={getSemanticBadgeVariant('salario_status', 'VIGENTE')}>
-                Vigente
-              </Badge>
-            ) : (
-              '-'
-            )}
-          </div>
+        return salario.dataFimVigencia ? (
+          <span className="text-sm">{formatarData(salario.dataFimVigencia)}</span>
+        ) : vigente ? (
+          <Badge variant={getSemanticBadgeVariant('salario_status', 'VIGENTE')}>
+            Vigente
+          </Badge>
+        ) : (
+          <span className="text-muted-foreground">-</span>
         );
       },
     },
     {
       accessorKey: 'ativo',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Status" />
-        </div>
+        <DataTableColumnHeader column={column} title="Status" className="justify-center" />
       ),
       enableSorting: true,
       size: 100,
+      meta: { align: 'center' as const },
       cell: ({ row }) => {
         const salario = row.original;
         const vigente = isVigente(salario);
-        return (
-          <div className="flex justify-center">
-            {salario.ativo ? (
-              vigente ? (
-                <Badge variant={getSemanticBadgeVariant('salario_status', 'ATIVO')}>
-                  Ativo
-                </Badge>
-              ) : (
-                <Badge
-                  variant={getSemanticBadgeVariant('salario_status', 'ENCERRADO')}
-                >
-                  Encerrado
-                </Badge>
-              )
-            ) : (
-              <Badge variant={getSemanticBadgeVariant('salario_status', 'INATIVO')}>
-                Inativo
-              </Badge>
-            )}
-          </div>
+        return salario.ativo ? (
+          vigente ? (
+            <Badge variant={getSemanticBadgeVariant('salario_status', 'ATIVO')}>Ativo</Badge>
+          ) : (
+            <Badge variant={getSemanticBadgeVariant('salario_status', 'ENCERRADO')}>Encerrado</Badge>
+          )
+        ) : (
+          <Badge variant={getSemanticBadgeVariant('salario_status', 'INATIVO')}>Inativo</Badge>
         );
       },
     },
     {
-      id: 'actions',
-      header: () => <div className="text-center">Ações</div>,
-      size: 60,
-      cell: ({ row }) => (
-        <div className="flex justify-center">
-          <SalariosActions
-            salario={row.original}
-            onEditar={onEditar}
-            onEncerrarVigencia={onEncerrarVigencia}
-            onInativar={onInativar}
-            onExcluir={onExcluir}
-            onVerHistorico={onVerHistorico}
-          />
+      id: 'acoes',
+      header: () => (
+        <div className="flex items-center justify-center">
+          <span className="text-sm font-medium text-muted-foreground">Ações</span>
         </div>
       ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 140,
+      meta: { align: 'center' as const },
+      cell: ({ row }) => {
+        const salario = row.original;
+        const vigente = isVigente(salario);
+        return (
+          <div className="flex items-center justify-center gap-1">
+            {salario.ativo && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => onEditar(salario)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Editar</TooltipContent>
+              </Tooltip>
+            )}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => onVerHistorico(salario)}
+                >
+                  <History className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Ver Histórico</TooltipContent>
+            </Tooltip>
+            {salario.ativo && vigente && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-orange-600 hover:text-orange-600"
+                    onClick={() => onEncerrarVigencia(salario)}
+                  >
+                    <CalendarOff className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Encerrar Vigência</TooltipContent>
+              </Tooltip>
+            )}
+            {salario.ativo && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-orange-600 hover:text-orange-600"
+                    onClick={() => onInativar(salario)}
+                  >
+                    <XCircle className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Inativar</TooltipContent>
+              </Tooltip>
+            )}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-destructive hover:text-destructive"
+                  onClick={() => onExcluir(salario)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Excluir</TooltipContent>
+            </Tooltip>
+          </div>
+        );
+      },
     },
   ];
 }
@@ -463,24 +443,6 @@ export function SalariosList() {
 
   return (
     <>
-      {/* Cards de Resumo */}
-      {totais && (
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-sm text-muted-foreground">
-              Total Funcionários com Salário
-            </p>
-            <p className="text-2xl font-bold">{totais.totalFuncionarios}</p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-sm text-muted-foreground">Custo Mensal Bruto</p>
-            <p className="text-2xl font-bold text-green-600">
-              {formatarValor(totais.totalBrutoMensal)}
-            </p>
-          </div>
-        </div>
-      )}
-
       <DataShell
         header={
           <DataTableToolbar
@@ -496,6 +458,24 @@ export function SalariosList() {
               onClick: handleNovo,
             }}
           />
+        }
+        subHeader={
+          totais ? (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-lg border bg-card p-4">
+                <p className="text-sm text-muted-foreground">
+                  Total Funcionários com Salário
+                </p>
+                <p className="text-2xl font-bold">{totais.totalFuncionarios}</p>
+              </div>
+              <div className="rounded-lg border bg-card p-4">
+                <p className="text-sm text-muted-foreground">Custo Mensal Bruto</p>
+                <p className="text-2xl font-bold text-emerald-600">
+                  {formatarValor(totais.totalBrutoMensal)}
+                </p>
+              </div>
+            </div>
+          ) : null
         }
         footer={
           paginacao && paginacao.totalPaginas > 0 ? (
