@@ -86,11 +86,6 @@ export function PericiaAtribuirResponsavelDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Atribuir responsável"
-      description={
-        pericia
-          ? `Perícia do processo ${pericia.numeroProcesso}`
-          : 'Selecione a perícia'
-      }
       maxWidth="md"
       footer={
         <div className="flex w-full justify-end gap-2">

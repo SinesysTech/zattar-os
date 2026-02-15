@@ -833,7 +833,6 @@ export function RepresentanteFormDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={isEditMode ? 'Editar Representante' : stepInfo.title}
-      description={stepInfo.description}
       multiStep={{
         current: currentStep,
         total: TOTAL_STEPS,

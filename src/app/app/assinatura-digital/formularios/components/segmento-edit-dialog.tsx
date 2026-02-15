@@ -138,7 +138,6 @@ export function SegmentoEditDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Editar Segmento"
-      description="Edite as informações do segmento"
       maxWidth="2xl"
       footer={
         <Button type="submit" form="segmento-edit-form" disabled={isSubmitting}>

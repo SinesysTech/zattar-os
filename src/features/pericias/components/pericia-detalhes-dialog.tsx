@@ -207,11 +207,6 @@ export function PericiaDetalhesDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={titulo || (exibirLista ? 'Perícias do Dia' : 'Detalhes da Perícia')}
-      description={
-        exibirLista
-          ? `${pericias?.length ?? 0} perícia${(pericias?.length ?? 0) > 1 ? 's' : ''} para este dia`
-          : 'Informações detalhadas da perícia'
-      }
       maxWidth="2xl"
       footer={footerButton}
     >

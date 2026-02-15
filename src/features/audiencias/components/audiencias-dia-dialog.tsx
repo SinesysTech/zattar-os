@@ -318,11 +318,6 @@ export function AudienciasDiaDialog({
           <span>Audiências - {dataFormatada}</span>
         </div>
       }
-      description={
-        totalAudiencias > 1
-          ? `${totalAudiencias} audiências agendadas para este dia`
-          : '1 audiência agendada para este dia'
-      }
       maxWidth="2xl"
       footer={footerContent}
     >

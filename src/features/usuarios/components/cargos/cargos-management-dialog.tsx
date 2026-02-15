@@ -173,7 +173,6 @@ export function CargosManagementDialog({
         open={open}
         onOpenChange={onOpenChange}
         title={<Typography.H3 as="span">Gerenciar cargos</Typography.H3>}
-        description="Crie, edite e organize cargos do sistema."
         maxWidth="3xl"
       >
         <div className="p-6 space-y-4">

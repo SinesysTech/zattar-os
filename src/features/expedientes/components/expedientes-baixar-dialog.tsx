@@ -75,7 +75,6 @@ export function ExpedientesBaixarDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Baixar Expediente"
-      description="Marque este expediente como respondido. Informe o ID do protocolo ou a justificativa da baixa."
       maxWidth="lg"
       footer={footerButtons}
     >

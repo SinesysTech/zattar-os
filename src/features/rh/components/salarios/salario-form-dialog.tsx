@@ -139,7 +139,6 @@ export function SalarioFormDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={salario ? 'Editar Salário' : 'Novo Salário'}
-      description="Preencha os dados do salário do funcionário."
       footer={
         <Button
           type="submit"

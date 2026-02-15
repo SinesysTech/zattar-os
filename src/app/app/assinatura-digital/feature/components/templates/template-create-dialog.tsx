@@ -175,7 +175,6 @@ export function TemplateCreateDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Criar Novo Template"
-      description="Configure o template para assinatura digital"
       maxWidth="2xl"
       footer={
         <Button

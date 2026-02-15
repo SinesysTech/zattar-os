@@ -30,6 +30,27 @@ interface ProcessoTagsDialogProps {
   onSuccess: (tags: Tag[]) => void;
 }
 
+const TAG_COLOR_CLASS: Record<string, string> = {
+  '#EF4444': 'bg-red-500',
+  '#F97316': 'bg-orange-500',
+  '#F59E0B': 'bg-amber-500',
+  '#EAB308': 'bg-yellow-500',
+  '#84CC16': 'bg-lime-500',
+  '#22C55E': 'bg-green-500',
+  '#10B981': 'bg-emerald-500',
+  '#14B8A6': 'bg-teal-500',
+  '#06B6D4': 'bg-cyan-500',
+  '#0EA5E9': 'bg-sky-500',
+  '#3B82F6': 'bg-blue-500',
+  '#6366F1': 'bg-indigo-500',
+  '#8B5CF6': 'bg-violet-500',
+  '#A855F7': 'bg-purple-500',
+  '#D946EF': 'bg-fuchsia-500',
+  '#EC4899': 'bg-pink-500',
+  '#F43F5E': 'bg-rose-500',
+  '#6B7280': 'bg-gray-500',
+};
+
 export function ProcessoTagsDialog({
   open,
   onOpenChange,
@@ -158,7 +179,6 @@ export function ProcessoTagsDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Gerenciar Etiquetas"
-      description={`Processo: ${processo.numeroProcesso}`}
       maxWidth="md"
       footer={footerButtons}
     >
@@ -223,8 +243,7 @@ export function ProcessoTagsDialog({
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-10 p-0"
-                      style={{ backgroundColor: newTagCor }}
+                      className={`w-10 p-0 ${TAG_COLOR_CLASS[newTagCor] || 'bg-gray-500'}`}
                     >
                       <span className="sr-only">Escolher cor</span>
                     </Button>
@@ -235,12 +254,13 @@ export function ProcessoTagsDialog({
                         <button
                           key={color.value}
                           type="button"
-                          className="w-6 h-6 rounded-full border-2 transition-all duration-200 hover:ring-2 hover:ring-offset-1 hover:ring-primary/50"
-                          style={{
-                            backgroundColor: color.value,
-                            borderColor: newTagCor === color.value ? 'white' : 'transparent',
-                            boxShadow: newTagCor === color.value ? '0 0 0 2px black' : undefined,
-                          }}
+                          className={`h-6 w-6 rounded-full border-2 transition-all duration-200 hover:ring-2 hover:ring-offset-1 hover:ring-primary/50 ${
+                            TAG_COLOR_CLASS[color.value] || 'bg-gray-500'
+                          } ${
+                            newTagCor === color.value
+                              ? 'border-white ring-2 ring-black'
+                              : 'border-transparent'
+                          }`}
                           onClick={() => setNewTagCor(color.value)}
                           title={color.label}
                         />

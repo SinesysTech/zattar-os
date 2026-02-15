@@ -346,7 +346,6 @@ export function ListaDocumentosClient() {
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         title="Detalhes do Documento"
-        description="Informações completas e assinantes do documento"
         maxWidth="3xl"
         footer={null}
       >
@@ -541,7 +540,6 @@ export function ListaDocumentosClient() {
           }
         }}
         title="Confirmar Exclusão"
-        description="Esta ação não pode ser desfeita."
         maxWidth="md"
         footer={
           <div className="flex justify-end gap-3">

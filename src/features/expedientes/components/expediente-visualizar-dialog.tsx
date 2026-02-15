@@ -120,7 +120,6 @@ export function ExpedienteVisualizarDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={`${expediente.classeJudicial ? expediente.classeJudicial + ' ' : ''}${expediente.numeroProcesso}`}
-      description="Detalhes completos do expediente"
       maxWidth="2xl"
       footer={footerButtons}
     >

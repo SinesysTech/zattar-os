@@ -136,7 +136,7 @@ export function AcordoForm({
         </Alert>
       )}
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <Label>Tipo *</Label>
           <Select value={tipo} onValueChange={(v) => setTipo(v as TipoObrigacao)} disabled={isEditMode}>
@@ -160,7 +160,7 @@ export function AcordoForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <Label>Valor Total (R$) *</Label>
           <Input type="number" step="0.01" value={valorTotal} onChange={e => setValorTotal(e.target.value)} required />
@@ -175,7 +175,7 @@ export function AcordoForm({
       </div>
 
       {!isEditMode && (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="space-y-2">
             <Label>Parcelas *</Label>
             <Input type="number" min="1" value={numeroParcelas} onChange={e => setNumeroParcelas(Number(e.target.value))} disabled={tipo === 'custas_processuais'} />
@@ -199,7 +199,7 @@ export function AcordoForm({
       )}
 
       {direcao === 'recebimento' && tipo !== 'custas_processuais' && (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="space-y-2">
             <Label>Distribuição *</Label>
             <Select value={formaDistribuicao} onValueChange={v => setFormaDistribuicao(v as FormaDistribuicao)}>

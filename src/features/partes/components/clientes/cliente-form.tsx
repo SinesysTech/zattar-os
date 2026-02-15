@@ -1049,7 +1049,6 @@ export function ClienteFormDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={isEditMode ? 'Editar Cliente' : stepInfo.title}
-      description={stepInfo.description}
       multiStep={{
         current: isEditMode ? currentStep - 1 : currentStep,
         total: isEditMode ? TOTAL_STEPS - 1 : TOTAL_STEPS,

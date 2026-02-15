@@ -29,7 +29,7 @@ export function CallSetupDialog({
   onOpenChange,
   tipo,
   onJoinCall,
-  salaNome,
+  salaNome: _salaNome,
 }: CallSetupDialogProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -109,7 +109,6 @@ export function CallSetupDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Configurar Chamada"
-      description={`Ajuste suas configurações de áudio e vídeo antes de entrar em "${salaNome}"`}
       maxWidth="2xl"
       footer={
         <Button onClick={handleJoin}>

@@ -235,7 +235,6 @@ export function UsuarioEditDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Editar Usuário"
-      description="Atualize as informações do usuário no sistema."
       maxWidth="2xl"
       footer={
         <>

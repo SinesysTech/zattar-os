@@ -4,7 +4,6 @@
 import * as React from 'react';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Combobox } from '@/components/ui/combobox';
-import { Scale } from 'lucide-react';
 import { actionListarAcervoPaginado, type GrauAcervo } from '@/features/acervo';
 import { AcordoForm } from './acordo-form';
 import { Label } from '@/components/ui/label';
@@ -90,19 +89,14 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
     <DialogFormShell
       open={open}
       onOpenChange={handleClose}
-      title={
-        <span className="flex items-center gap-2">
-          <Scale className="h-5 w-5" /> Nova Obrigação
-        </span>
-      }
-      description="Adicionar acordo, condenação ou custas ao processo"
+      title="Nova Obrigação"
       maxWidth="3xl"
       hideFooter
     >
-      <div className="p-6 space-y-6">
+      <div className="space-y-6 px-6 py-5 md:px-8 md:py-6">
         {!selectedProcessoId && (
-          <div className="space-y-4 border-b pb-4">
-            <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-5 rounded-lg border bg-muted/20 p-4 md:p-5">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label>Tribunal</Label>
                 <Select value={trt} onValueChange={setTrt}>
@@ -127,13 +121,11 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
             </div>
             <div className="space-y-2">
               <Label>Buscar Processo</Label>
-              <p className="text-xs text-muted-foreground">
-                Busque pelo número do processo, nome do cliente ou parte contrária
-              </p>
               <Input
                 placeholder="Digite para buscar..."
                 value={buscaProcesso}
                 onChange={e => setBuscaProcesso(e.target.value)}
+                className="w-full"
               />
               {isLoading && <span className="text-xs text-muted-foreground">Buscando...</span>}
               {debouncedBusca.length >= 3 && !isLoading && (
@@ -157,13 +149,15 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
         )}
 
         {selectedProcessoId ? (
-          <AcordoForm
-            processoId={selectedProcessoId}
-            onSuccess={() => { onSuccess(); handleClose(); }}
-            onCancel={handleClose}
-          />
+          <div className="rounded-lg border bg-background p-4 md:p-5">
+            <AcordoForm
+              processoId={selectedProcessoId}
+              onSuccess={() => { onSuccess(); handleClose(); }}
+              onCancel={handleClose}
+            />
+          </div>
         ) : (
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="rounded-lg border border-dashed bg-muted/10 py-10 text-center text-sm text-muted-foreground">
             Selecione um processo para continuar
           </div>
         )}
