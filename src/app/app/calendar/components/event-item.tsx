@@ -231,7 +231,7 @@ export function EventItem({
         {event.allDay ? (
           <span>Dia inteiro</span>
         ) : (
-          <span className="uppercase">
+          <span>
             {formatTimeWithOptionalMinutes(displayStart)} -{" "}
             {formatTimeWithOptionalMinutes(displayEnd)}
           </span>

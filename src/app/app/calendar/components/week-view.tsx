@@ -207,9 +207,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
   return (
     <div data-slot="week-view" className="flex h-full flex-col">
       <div className="bg-background/80 border-border/70 sticky top-0 z-30 grid grid-cols-8 border-b backdrop-blur-md">
-        <div className="text-muted-foreground/70 py-2 text-center text-sm">
-          <span className="max-[479px]:sr-only">{format(new Date(), "O")}</span>
-        </div>
+        <div className="py-2" />
         {days.map((day) => (
           <div
             key={day.toString()}
@@ -226,8 +224,8 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
       {showAllDaySection && (
         <div className="border-border/70 bg-muted/50 border-b">
           <div className="grid grid-cols-8">
-            <div className="border-border/70 relative border-r">
-              <span className="text-muted-foreground/70 absolute bottom-0 left-0 h-6 w-16 max-w-full pe-2 text-right text-[10px] sm:pe-4 sm:text-xs">
+            <div className="border-border/70 flex items-center justify-end border-r pe-2 sm:pe-4">
+              <span className="text-muted-foreground/70 text-[10px] sm:text-xs">
                 Dia inteiro
               </span>
             </div>

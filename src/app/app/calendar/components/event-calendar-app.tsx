@@ -62,11 +62,44 @@ const CALENDAR_VIEW_OPTIONS = [
   { value: "agenda" as CalendarView, label: "Agenda", icon: List, shortcut: "A" }
 ];
 
+const GRAU_LABELS: Record<string, string> = {
+  primeiro_grau: "1º Grau",
+  segundo_grau: "2º Grau",
+  tribunal_superior: "Tribunal Superior"
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  M: "Marcada",
+  F: "Realizada",
+  C: "Cancelada"
+};
+
+function formatEventDescription(
+  metadata: Record<string, unknown> | null | undefined
+): string | undefined {
+  if (!metadata || typeof metadata !== "object") return undefined;
+
+  const parts: string[] = [];
+
+  if (metadata.trt) parts.push(String(metadata.trt));
+  if (metadata.grau) {
+    const grau = String(metadata.grau);
+    parts.push(GRAU_LABELS[grau] ?? grau);
+  }
+  if (metadata.status) {
+    const status = String(metadata.status);
+    parts.push(STATUS_LABELS[status] ?? status);
+  }
+  if (metadata.prazoVencido === true) parts.push("Prazo vencido");
+
+  return parts.length > 0 ? parts.join(" · ") : undefined;
+}
+
 function adaptUnifiedEvent(e: UnifiedCalendarEvent): CalendarEvent {
   return {
     id: e.id,
     title: e.title,
-    description: e.metadata ? JSON.stringify(e.metadata) : undefined,
+    description: formatEventDescription(e.metadata),
     start: new Date(e.startAt),
     end: new Date(e.endAt),
     allDay: e.allDay,
