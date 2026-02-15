@@ -2,15 +2,14 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Search } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Assistente } from '../../domain';
 import { useAssistentes } from '../../hooks/use-assistentes';
 import { GridView } from '../list/grid-view';
 import { CreateDialog } from '../dialogs/create-dialog';
 import { EditDialog } from '../dialogs/edit-dialog';
 import { DeleteDialog } from '../dialogs/delete-dialog';
+import { DataShell } from '@/components/shared/data-shell';
+import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
 
 interface AssistentesListWrapperProps {
   initialData: Assistente[];
@@ -32,6 +31,9 @@ export function AssistentesListWrapper({ initialData, permissions }: Assistentes
     initialData,
   });
 
+  // Search state
+  const [busca, setBuscaState] = React.useState('');
+
   // Dialog states
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
@@ -52,38 +54,39 @@ export function AssistentesListWrapper({ initialData, permissions }: Assistentes
     router.push(`/assistentes/${assistente.id}`);
   };
 
+  const handleSearchChange = (value: string) => {
+    setBuscaState(value);
+    setBusca(value);
+  };
 
   return (
-    <div className="space-y-4">
-      {/* Search bar à esquerda + Botão à direita */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Buscar assistentes..."
-            className="pl-9"
-            onChange={(e) => setBusca(e.target.value)}
+    <>
+      <DataShell
+        header={
+          <DataTableToolbar
+            searchValue={busca}
+            onSearchValueChange={handleSearchChange}
+            searchPlaceholder="Buscar assistentes..."
+            actionButton={
+              permissions.canCreate
+                ? {
+                    label: 'Novo Assistente',
+                    onClick: () => setCreateOpen(true),
+                  }
+                : undefined
+            }
           />
-        </div>
-
-        {permissions.canCreate && (
-          <Button onClick={() => setCreateOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Novo
-          </Button>
-        )}
-      </div>
-
-      <GridView
-        assistentes={assistentes}
-        onView={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        canEdit={permissions.canEdit}
-        canDelete={permissions.canDelete}
-      />
-
+        }
+      >
+        <GridView
+          assistentes={assistentes}
+          onView={handleView}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          canEdit={permissions.canEdit}
+          canDelete={permissions.canDelete}
+        />
+      </DataShell>
       <CreateDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
@@ -106,6 +109,6 @@ export function AssistentesListWrapper({ initialData, permissions }: Assistentes
           />
         </>
       )}
-    </div>
+    </>
   );
 }

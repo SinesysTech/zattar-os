@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { AssistentesListWrapper, actionListarAssistentes, requireAuth } from '@/app/app/assistentes/feature';
 import { checkMultiplePermissions } from '@/lib/auth/authorization';
+import { PageShell } from '@/components/shared/page-shell';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -34,7 +35,17 @@ export default async function AssistentesPage() {
   const initialData = result.data;
 
   return (
-    <div className="flex-1 space-y-4 p-4 pt-4">
+    <PageShell
+      title="Assistentes"
+      actions={
+        permissions.canCreate ? (
+          <Button onClick={() => setCreateOpen(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Novo Assistente
+          </Button>
+        ) : undefined
+      }
+    >
       <Suspense fallback={<div>Carregando...</div>}>
         <AssistentesListWrapper
           initialData={initialData}
@@ -45,6 +56,6 @@ export default async function AssistentesPage() {
           }}
         />
       </Suspense>
-    </div>
+    </PageShell>
   );
 }

@@ -6,22 +6,22 @@ This implementation plan refactors the assistentes page to follow the PageShell/
 
 ## Tasks
 
-- [ ] 1. Update AssistentesPage to use PageShell
+- [x] 1. Update AssistentesPage to use PageShell
   - Replace custom div wrapper with PageShell component
   - Add title "Assistentes" and description "Gerencie os assistentes de IA do sistema"
   - Remove manual padding classes (PageShell handles this)
   - Verify page renders correctly with new structure
   - _Requirements: 1.1_
 
-- [ ] 2. Refactor AssistentesListWrapper to use DataShell pattern
-  - [ ] 2.1 Replace custom search bar with DataTableToolbar
+- [x] 2. Refactor AssistentesListWrapper to use DataShell pattern
+  - [x] 2.1 Replace custom search bar with DataTableToolbar
     - Import DataTableToolbar from `@/components/shared/data-shell`
     - Configure searchValue, onSearchValueChange, and searchPlaceholder props
     - Move "Novo Assistente" button to actionButton prop
     - Ensure actionButton only renders when canCreate is true
     - _Requirements: 2.1, 2.3, 3.1, 3.2_
   
-  - [ ] 2.2 Wrap GridView with DataShell
+  - [x] 2.2 Wrap GridView with DataShell
     - Import DataShell component
     - Pass DataTableToolbar as header prop
     - Move GridView into DataShell children
@@ -34,8 +34,8 @@ This implementation plan refactors the assistentes page to follow the PageShell/
     - Test search input triggers onSearchValueChange
     - _Requirements: 2.3, 3.2_
 
-- [ ] 3. Enhance AssistenteCard design
-  - [ ] 3.1 Update card styling for modern appearance
+- [x] 3. Enhance AssistenteCard design
+  - [x] 3.1 Update card styling for modern appearance
     - Add smooth transition classes (duration-200)
     - Implement hover effects (shadow-lg, scale-[1.02])
     - Ensure cursor-pointer is applied to clickable area
@@ -43,7 +43,7 @@ This implementation plan refactors the assistentes page to follow the PageShell/
     - Verify no layout shift occurs on hover
     - _Requirements: 4.1, 4.5, 4.6_
   
-  - [ ] 3.2 Verify responsive grid behavior
+  - [x] 3.2 Verify responsive grid behavior
     - Test grid displays 1 column on mobile (<768px)
     - Test grid displays 2 columns on tablet (768-1024px)
     - Test grid displays 3 columns on desktop (1024-1280px)
@@ -57,8 +57,8 @@ This implementation plan refactors the assistentes page to follow the PageShell/
     - Test hover classes are present
     - _Requirements: 4.5, 4.6_
 
-- [ ] 4. Verify action menu and permissions
-  - [ ] 4.1 Test action menu rendering
+- [x] 4. Verify action menu and permissions
+  - [x] 4.1 Test action menu rendering
     - Verify menu button appears on each card
     - Verify menu contains View option (always)
     - Verify menu contains Edit option only when canEdit is true
@@ -72,8 +72,8 @@ This implementation plan refactors the assistentes page to follow the PageShell/
     - Verify UI elements match permissions
     - Run with 100 iterations
 
-- [ ] 5. Test search functionality
-  - [ ] 5.1 Verify search debounce behavior
+- [x] 5. Test search functionality
+  - [x] 5.1 Verify search debounce behavior
     - Test rapid typing doesn't trigger immediate searches
     - Test search triggers after 500ms pause
     - Verify filtered results display correctly
@@ -86,20 +86,20 @@ This implementation plan refactors the assistentes page to follow the PageShell/
     - Verify search called only after 500ms pause
     - Run with 100 iterations
 
-- [ ] 6. Test dialog interactions and list updates
-  - [ ] 6.1 Verify create dialog flow
+- [x] 6. Test dialog interactions and list updates
+  - [x] 6.1 Verify create dialog flow
     - Test clicking "Novo Assistente" opens CreateDialog
     - Test successful creation closes dialog
     - Test list updates after creation
     - _Requirements: 3.3, 3.4_
   
-  - [ ] 6.2 Verify edit dialog flow
+  - [x] 6.2 Verify edit dialog flow
     - Test clicking Edit in menu opens EditDialog
     - Test successful edit closes dialog
     - Test list updates after edit
     - _Requirements: 3.4_
   
-  - [ ] 6.3 Verify delete dialog flow
+  - [x] 6.3 Verify delete dialog flow
     - Test clicking Delete in menu opens DeleteDialog
     - Test successful deletion closes dialog
     - Test list updates after deletion
@@ -113,8 +113,8 @@ This implementation plan refactors the assistentes page to follow the PageShell/
     - Verify list reflects changes
     - Run with 100 iterations
 
-- [ ] 7. Test empty state rendering
-  - [ ] 7.1 Verify empty state displays correctly
+- [-] 7. Test empty state rendering
+  - [x] 7.1 Verify empty state displays correctly
     - Test empty state shows when no assistentes
     - Test Bot icon is rendered
     - Test message "Nenhum assistente encontrado" displays
