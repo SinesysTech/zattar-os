@@ -15,6 +15,8 @@ export interface DataShellActionButton {
 export interface DataShellProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Content for the header slot (toolbar/filters) */
   header?: React.ReactNode;
+  /** Content for the sub-header slot (summary cards/stats between header and content) */
+  subHeader?: React.ReactNode;
   /** Content for the footer slot (pagination/summary) */
   footer?: React.ReactNode;
   /** Main content (table/list) */
@@ -73,6 +75,7 @@ export interface DataShellProps extends React.HTMLAttributes<HTMLDivElement> {
  */
 export function DataShell({
   header,
+  subHeader,
   footer,
   children,
   className,
@@ -93,6 +96,12 @@ export function DataShell({
       {header && (
         <div data-slot="data-shell-header">
           {header}
+        </div>
+      )}
+
+      {subHeader && (
+        <div data-slot="data-shell-subheader" className="mb-4">
+          {subHeader}
         </div>
       )}
 
