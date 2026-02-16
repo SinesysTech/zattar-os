@@ -2,22 +2,22 @@ import { createDbClient } from '@/lib/supabase';
 import { Result, ok, err, appError, PaginatedResponse } from '@/types';
 import { fromSnakeToCamel, fromCamelToSnake, camelToSnakeKey } from '@/lib/utils';
 import {
-    Audiencia,
-    EnderecoPresencial,
-    ListarAudienciasParams,
-    StatusAudiencia,
+  Audiencia,
+  EnderecoPresencial,
+  ListarAudienciasParams,
+  StatusAudiencia,
 } from './domain';
 import {
-    getAudienciaColumnsFull,
-    getAudienciaColumnsComOrigem,
+  getAudienciaColumnsFull,
+  getAudienciaColumnsComOrigem,
 } from './domain';
 import {
-    withCache,
-    generateCacheKey,
-    CACHE_PREFIXES,
-    getCached,
-    setCached,
-    deleteCached,
+  withCache,
+  generateCacheKey,
+  CACHE_PREFIXES,
+  getCached,
+  setCached,
+  deleteCached,
 } from '@/lib/redis/cache-utils';
 import { invalidateAudienciasCache } from '@/lib/redis/invalidation';
 import { logQuery } from '@/lib/supabase/query-logger';
@@ -25,147 +25,177 @@ import { logQuery } from '@/lib/supabase/query-logger';
 type AudienciaRow = Record<string, unknown>;
 
 function converterParaAudiencia(data: AudienciaRow): Audiencia {
-    const converted = fromSnakeToCamel(data) as unknown as Audiencia;
-    if (data.endereco_presencial && typeof data.endereco_presencial === 'object') {
-        converted.enderecoPresencial = fromSnakeToCamel(data.endereco_presencial) as EnderecoPresencial;
-    }
-    // Campos de origem (fonte da verdade - 1º grau)
-    // Esses campos vêm da view audiencias_com_origem
-    if ('trt_origem' in data) {
-        converted.trtOrigem = data.trt_origem as string;
-    }
-    if ('polo_ativo_origem' in data) {
-        converted.poloAtivoOrigem = data.polo_ativo_origem as string;
-    }
-    if ('polo_passivo_origem' in data) {
-        converted.poloPassivoOrigem = data.polo_passivo_origem as string;
-    }
-    if ('orgao_julgador_origem' in data) {
-        converted.orgaoJulgadorOrigem = data.orgao_julgador_origem as string;
-    }
-    return converted;
+  const converted = fromSnakeToCamel(data) as unknown as Audiencia;
+  if (data.endereco_presencial && typeof data.endereco_presencial === 'object') {
+    converted.enderecoPresencial = fromSnakeToCamel(data.endereco_presencial) as EnderecoPresencial;
+  }
+  // Campos de origem (fonte da verdade - 1º grau)
+  // Esses campos vêm da view audiencias_com_origem
+  if ('trt_origem' in data) {
+    converted.trtOrigem = data.trt_origem as string;
+  }
+  if ('polo_ativo_origem' in data) {
+    converted.poloAtivoOrigem = data.polo_ativo_origem as string;
+  }
+  if ('polo_passivo_origem' in data) {
+    converted.poloPassivoOrigem = data.polo_passivo_origem as string;
+  }
+  if ('orgao_julgador_origem' in data) {
+    converted.orgaoJulgadorOrigem = data.orgao_julgador_origem as string;
+  }
+  return converted;
 }
 
 export async function findAudienciaById(id: number): Promise<Result<Audiencia | null>> {
-    try {
-        const cacheKey = `${CACHE_PREFIXES.audiencias}:id:${id}`;
-        const cached = await getCached<Audiencia>(cacheKey);
-        if (cached) return ok(cached);
+  try {
+    const cacheKey = `${CACHE_PREFIXES.audiencias}:id:${id}`;
+    const cached = await getCached<Audiencia>(cacheKey);
+    if (cached) return ok(cached);
 
-        const db = createDbClient();
-        // Usar view com dados de origem (1º grau) para partes corretas
-        const { data, error } = await logQuery(
-          'audiencias.findAudienciaById',
-          async () => {
-            const result = await db
-              .from('audiencias_com_origem')
-              .select(getAudienciaColumnsComOrigem())
-              .eq('id', id)
-              .single();
-            return result;
-          }
-        );
+    const db = createDbClient();
+    // Usar view com dados de origem (1º grau) para partes corretas
+    const { data, error } = await logQuery(
+      'audiencias.findAudienciaById',
+      async () => {
+        const result = await db
+          .from('audiencias_com_origem')
+          .select(getAudienciaColumnsComOrigem())
+          .eq('id', id)
+          .single();
+        return result;
+      }
+    );
 
-        if (error) {
-            if (error.code === 'PGRST116') {
-                return ok(null);
-            }
-            console.error('Error finding audiencia by id:', error);
-            return err(appError('DATABASE_ERROR', 'Erro ao buscar audiência.', { code: error.code }));
-        }
-
-        if (data) {
-            const audiencia = converterParaAudiencia(data as unknown as AudienciaRow);
-            await setCached(cacheKey, audiencia, 600);
-            return ok(audiencia);
-        }
-
+    if (error) {
+      if (error.code === 'PGRST116') {
         return ok(null);
-    } catch (e: unknown) {
-        const message = e instanceof Error ? e.message : String(e);
-        console.error('Unexpected error finding audiencia:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao buscar audiência.', { originalError: message }));
+      }
+      console.error('Error finding audiencia by id:', error);
+      return err(appError('DATABASE_ERROR', 'Erro ao buscar audiência.', { code: error.code }));
     }
+
+    if (data) {
+      const audiencia = converterParaAudiencia(data as unknown as AudienciaRow);
+      await setCached(cacheKey, audiencia, 600);
+      return ok(audiencia);
+    }
+
+    return ok(null);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error('Unexpected error finding audiencia:', e);
+    return err(appError('DATABASE_ERROR', 'Erro inesperado ao buscar audiência.', { originalError: message }));
+  }
 }
 
 export async function findAllAudiencias(params: ListarAudienciasParams): Promise<Result<PaginatedResponse<Audiencia>>> {
-    try {
-        const cacheKey = generateCacheKey(CACHE_PREFIXES.audiencias, params);
-        
-        return await withCache(
-            cacheKey,
-            async () => {
-                const db = createDbClient();
-                // Usar view com dados de origem (1º grau) para partes corretas
-                let query = db.from('audiencias_com_origem').select(getAudienciaColumnsComOrigem(), { count: 'exact' });
+  try {
+    const cacheKey = generateCacheKey(CACHE_PREFIXES.audiencias, params);
 
-                if (params.busca) {
-                    query = query.or(
-                        `numero_processo.ilike.%${params.busca}%,` +
-                        `polo_ativo_nome.ilike.%${params.busca}%,` +
-                        `polo_passivo_nome.ilike.%${params.busca}%,` +
-                        `observacoes.ilike.%${params.busca}%`
-                    );
-                }
+    return await withCache(
+      cacheKey,
+      async () => {
+        const db = createDbClient();
+        // Usar view com dados de origem (1º grau) para partes corretas
+        let query = db.from('audiencias_com_origem').select(getAudienciaColumnsComOrigem(), { count: 'exact' });
 
-                if (params.trt) query = query.eq('trt', params.trt);
-                if (params.grau) query = query.eq('grau', params.grau);
-                if (params.status) query = query.eq('status', params.status);
-                if (params.modalidade) query = query.eq('modalidade', params.modalidade);
-                if (params.tipoAudienciaId) query = query.eq('tipo_audiencia_id', params.tipoAudienciaId);
+        if (params.busca) {
+          query = query.or(
+            `numero_processo.ilike.%${params.busca}%,` +
+            `polo_ativo_nome.ilike.%${params.busca}%,` +
+            `polo_passivo_nome.ilike.%${params.busca}%,` +
+            `observacoes.ilike.%${params.busca}%`
+          );
+        }
 
-                if (params.responsavelId === 'null' || params.semResponsavel) {
-                    query = query.is('responsavel_id', null);
-                } else if (params.responsavelId) {
-                    query = query.eq('responsavel_id', params.responsavelId);
-                }
+        if (params.trt) {
+          if (Array.isArray(params.trt)) query = query.in('trt', params.trt);
+          else query = query.eq('trt', params.trt);
+        }
+        if (params.grau) {
+          if (Array.isArray(params.grau)) query = query.in('grau', params.grau);
+          else query = query.eq('grau', params.grau);
+        }
+        if (params.status) {
+          if (Array.isArray(params.status)) query = query.in('status', params.status);
+          else query = query.eq('status', params.status);
+        }
+        if (params.modalidade) {
+          if (Array.isArray(params.modalidade)) query = query.in('modalidade', params.modalidade);
+          else query = query.eq('modalidade', params.modalidade);
+        }
+        if (params.tipoAudienciaId) {
+          if (Array.isArray(params.tipoAudienciaId)) query = query.in('tipo_audiencia_id', params.tipoAudienciaId);
+          else query = query.eq('tipo_audiencia_id', params.tipoAudienciaId);
+        }
 
-                if (params.dataInicioInicio) query = query.gte('data_inicio', params.dataInicioInicio);
-                if (params.dataInicioFim) query = query.lte('data_inicio', params.dataInicioFim);
-                if (params.dataFimInicio) query = query.gte('data_fim', params.dataFimInicio);
-                if (params.dataFimFim) query = query.lte('data_fim', params.dataFimFim);
+        if (params.responsavelId === 'null' || params.semResponsavel) {
+          query = query.is('responsavel_id', null);
+        } else if (Array.isArray(params.responsavelId)) {
+          const ids = params.responsavelId.filter(id => id !== 'null');
+          const hasNull = params.responsavelId.includes('null');
 
-                const page = params.pagina || 1;
-                const limit = params.limite || 10;
-                const offset = (page - 1) * limit;
+          if (hasNull && ids.length > 0) {
+            // Mix of specific IDs and NULL
+            // Use OR syntax: responsavel_id.in.(1,2),responsavel_id.is.null
+            query = query.or(`responsavel_id.in.(${ids.join(',')}),responsavel_id.is.null`);
+          } else if (hasNull) {
+            // Only NULL
+            query = query.is('responsavel_id', null);
+          } else if (ids.length > 0) {
+            // Only IDs
+            query = query.in('responsavel_id', ids);
+          }
+        } else if (params.responsavelId) {
+          query = query.eq('responsavel_id', params.responsavelId);
+        }
 
-                query = query.range(offset, offset + limit - 1);
+        if (params.dataInicioInicio) query = query.gte('data_inicio', params.dataInicioInicio);
+        if (params.dataInicioFim) query = query.lte('data_inicio', params.dataInicioFim);
+        if (params.dataFimInicio) query = query.gte('data_fim', params.dataFimInicio);
+        if (params.dataFimFim) query = query.lte('data_fim', params.dataFimFim);
 
-                const sortBy = params.ordenarPor || 'dataInicio';
-                const ascending = params.ordem ? params.ordem === 'asc' : true;
-                query = query.order(camelToSnakeKey(sortBy), { ascending });
+        const page = params.pagina || 1;
+        const limit = params.limite || 10;
+        const offset = (page - 1) * limit;
 
-                const { data, error, count } = await logQuery('audiencias.findAllAudiencias', async () => {
-                  const result = await query;
-                  return result;
-                });
+        query = query.range(offset, offset + limit - 1);
 
-                if (error) {
-                    console.error('Error finding all audiencias:', error);
-                    return err(appError('DATABASE_ERROR', 'Erro ao listar audiências.', { code: error.code }));
-                }
+        const sortBy = params.ordenarPor || 'dataInicio';
+        const ascending = params.ordem ? params.ordem === 'asc' : true;
+        query = query.order(camelToSnakeKey(sortBy), { ascending });
 
-                const total = count || 0;
-                const totalPages = total ? Math.ceil(total / limit) : 1;
+        const { data, error, count } = await logQuery('audiencias.findAllAudiencias', async () => {
+          const result = await query;
+          return result;
+        });
 
-                return ok({
-                    data: (data || []).map((item) => converterParaAudiencia(item as unknown as Record<string, unknown>)),
-                    pagination: {
-                        page: page,
-                        limit: limit,
-                        total: total,
-                        totalPages: totalPages,
-                        hasMore: page < totalPages,
-                    },
-                });
-            },
-            300
-        );
-    } catch (e: unknown) {
-        const message = e instanceof Error ? e.message : String(e);
-        console.error('Unexpected error finding all audiencias:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao listar audiências.', { originalError: message }));
-    }
+        if (error) {
+          console.error('Error finding all audiencias:', error);
+          return err(appError('DATABASE_ERROR', 'Erro ao listar audiências.', { code: error.code }));
+        }
+
+        const total = count || 0;
+        const totalPages = total ? Math.ceil(total / limit) : 1;
+
+        return ok({
+          data: (data || []).map((item) => converterParaAudiencia(item as unknown as Record<string, unknown>)),
+          pagination: {
+            page: page,
+            limit: limit,
+            total: total,
+            totalPages: totalPages,
+            hasMore: page < totalPages,
+          },
+        });
+      },
+      300
+    );
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error('Unexpected error finding all audiencias:', e);
+    return err(appError('DATABASE_ERROR', 'Erro inesperado ao listar audiências.', { originalError: message }));
+  }
 }
 
 /**
@@ -343,128 +373,128 @@ export async function findAudienciasByProcessoId(
 }
 
 export async function processoExists(processoId: number): Promise<Result<boolean>> {
-    try {
-        const db = createDbClient();
-        const { data, error } = await db
-            .from('acervo')
-            .select('id')
-            .eq('id', processoId)
-            .single();
-        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
-            console.error('Error checking processo existence:', error);
-            return err(appError('DATABASE_ERROR', 'Erro ao verificar processo.', { code: error.code }));
-        }
-        return ok(!!data);
-    } catch (e: unknown) {
-        const message = e instanceof Error ? e.message : String(e);
-        console.error('Unexpected error checking processo existence:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao verificar processo.', { originalError: message }));
+  try {
+    const db = createDbClient();
+    const { data, error } = await db
+      .from('acervo')
+      .select('id')
+      .eq('id', processoId)
+      .single();
+    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
+      console.error('Error checking processo existence:', error);
+      return err(appError('DATABASE_ERROR', 'Erro ao verificar processo.', { code: error.code }));
     }
+    return ok(!!data);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error('Unexpected error checking processo existence:', e);
+    return err(appError('DATABASE_ERROR', 'Erro inesperado ao verificar processo.', { originalError: message }));
+  }
 }
 
 export async function tipoAudienciaExists(tipoId: number): Promise<Result<boolean>> {
-    try {
-        const db = createDbClient();
-        const { data, error } = await db
-            .from('tipo_audiencia')
-            .select('id')
-            .eq('id', tipoId)
-            .single();
-        if (error && error.code !== 'PGRST116') {
-            console.error('Error checking tipo_audiencia existence:', error);
-            return err(appError('DATABASE_ERROR', 'Erro ao verificar tipo de audiência.', { code: error.code }));
-        }
-        return ok(!!data);
-    } catch (e: unknown) {
-        const message = e instanceof Error ? e.message : String(e);
-        console.error('Unexpected error checking tipo_audiencia existence:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao verificar tipo de audiência.', { originalError: message }));
+  try {
+    const db = createDbClient();
+    const { data, error } = await db
+      .from('tipo_audiencia')
+      .select('id')
+      .eq('id', tipoId)
+      .single();
+    if (error && error.code !== 'PGRST116') {
+      console.error('Error checking tipo_audiencia existence:', error);
+      return err(appError('DATABASE_ERROR', 'Erro ao verificar tipo de audiência.', { code: error.code }));
     }
+    return ok(!!data);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error('Unexpected error checking tipo_audiencia existence:', e);
+    return err(appError('DATABASE_ERROR', 'Erro inesperado ao verificar tipo de audiência.', { originalError: message }));
+  }
 }
 
 export async function saveAudiencia(input: Partial<Audiencia>): Promise<Result<Audiencia>> {
-    try {
-        const db = createDbClient();
-        const snakeInput = fromCamelToSnake(input) as Record<string, unknown>;
-        const { data, error } = await db
-            .from('audiencias')
-            .insert(snakeInput)
-            .select()
-            .single();
+  try {
+    const db = createDbClient();
+    const snakeInput = fromCamelToSnake(input) as Record<string, unknown>;
+    const { data, error } = await db
+      .from('audiencias')
+      .insert(snakeInput)
+      .select()
+      .single();
 
-        if (error) {
-            console.error('Error saving audiencia:', error);
-            return err(appError('DATABASE_ERROR', 'Erro ao salvar audiência.', { code: error.code }));
-        }
-        
-        const audiencia = converterParaAudiencia(data);
-        await invalidateAudienciasCache();
-        return ok(audiencia);
-    } catch (e: unknown) {
-        const message = e instanceof Error ? e.message : String(e);
-        console.error('Unexpected error saving audiencia:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao salvar audiência.', { originalError: message }));
+    if (error) {
+      console.error('Error saving audiencia:', error);
+      return err(appError('DATABASE_ERROR', 'Erro ao salvar audiência.', { code: error.code }));
     }
+
+    const audiencia = converterParaAudiencia(data);
+    await invalidateAudienciasCache();
+    return ok(audiencia);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error('Unexpected error saving audiencia:', e);
+    return err(appError('DATABASE_ERROR', 'Erro inesperado ao salvar audiência.', { originalError: message }));
+  }
 }
 
 export async function updateAudiencia(id: number, input: Partial<Audiencia>, audienciaExistente: Audiencia): Promise<Result<Audiencia>> {
-    try {
-        const db = createDbClient();
-        const snakeInput = fromCamelToSnake(input) as Record<string, unknown>;
-        // Preserve previous state for auditing
-        snakeInput.dados_anteriores = fromCamelToSnake(audienciaExistente);
+  try {
+    const db = createDbClient();
+    const snakeInput = fromCamelToSnake(input) as Record<string, unknown>;
+    // Preserve previous state for auditing
+    snakeInput.dados_anteriores = fromCamelToSnake(audienciaExistente);
 
-        const { data, error } = await db
-            .from('audiencias')
-            .update(snakeInput)
-            .eq('id', id)
-            .select()
-            .single();
+    const { data, error } = await db
+      .from('audiencias')
+      .update(snakeInput)
+      .eq('id', id)
+      .select()
+      .single();
 
-        if (error) {
-            console.error('Error updating audiencia:', error);
-            return err(appError('DATABASE_ERROR', 'Erro ao atualizar audiência.', { code: error.code }));
-        }
-        
-        const audiencia = converterParaAudiencia(data);
-        await deleteCached(`${CACHE_PREFIXES.audiencias}:id:${id}`);
-        await invalidateAudienciasCache();
-        return ok(audiencia);
-    } catch (e: unknown) {
-        const message = e instanceof Error ? e.message : String(e);
-        console.error('Unexpected error updating audiencia:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao atualizar audiência.', { originalError: message }));
+    if (error) {
+      console.error('Error updating audiencia:', error);
+      return err(appError('DATABASE_ERROR', 'Erro ao atualizar audiência.', { code: error.code }));
     }
+
+    const audiencia = converterParaAudiencia(data);
+    await deleteCached(`${CACHE_PREFIXES.audiencias}:id:${id}`);
+    await invalidateAudienciasCache();
+    return ok(audiencia);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error('Unexpected error updating audiencia:', e);
+    return err(appError('DATABASE_ERROR', 'Erro inesperado ao atualizar audiência.', { originalError: message }));
+  }
 }
 
 export async function atualizarStatus(id: number, status: StatusAudiencia, statusDescricao?: string): Promise<Result<Audiencia>> {
-    try {
-        const db = createDbClient();
-        const updateData: Partial<AudienciaRow> = { status };
-        if (statusDescricao) {
-            updateData.status_descricao = statusDescricao;
-        }
-        const { data, error } = await db
-            .from('audiencias')
-            .update(updateData)
-            .eq('id', id)
-            .select()
-            .single();
-
-        if (error) {
-            console.error('Error updating audiencia status:', error);
-            return err(appError('DATABASE_ERROR', 'Erro ao atualizar status da audiência.', { code: error.code }));
-        }
-        
-        const audiencia = converterParaAudiencia(data);
-        await deleteCached(`${CACHE_PREFIXES.audiencias}:id:${id}`);
-        await invalidateAudienciasCache();
-        return ok(audiencia);
-    } catch (e: unknown) {
-        const message = e instanceof Error ? e.message : String(e);
-        console.error('Unexpected error updating audiencia status:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao atualizar status da audiência.', { originalError: message }));
+  try {
+    const db = createDbClient();
+    const updateData: Partial<AudienciaRow> = { status };
+    if (statusDescricao) {
+      updateData.status_descricao = statusDescricao;
     }
+    const { data, error } = await db
+      .from('audiencias')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating audiencia status:', error);
+      return err(appError('DATABASE_ERROR', 'Erro ao atualizar status da audiência.', { code: error.code }));
+    }
+
+    const audiencia = converterParaAudiencia(data);
+    await deleteCached(`${CACHE_PREFIXES.audiencias}:id:${id}`);
+    await invalidateAudienciasCache();
+    return ok(audiencia);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error('Unexpected error updating audiencia status:', e);
+    return err(appError('DATABASE_ERROR', 'Erro inesperado ao atualizar status da audiência.', { originalError: message }));
+  }
 }
 
 // ============================================================================

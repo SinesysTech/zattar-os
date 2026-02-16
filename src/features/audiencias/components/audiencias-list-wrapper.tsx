@@ -85,12 +85,12 @@ export function AudienciasListWrapper({
 
   // Search/Filters State
   const [globalFilter, setGlobalFilter] = React.useState('');
-  const [statusFiltro, setStatusFiltro] = React.useState<StatusAudiencia | 'todas'>('todas');
-  const [modalidadeFiltro, setModalidadeFiltro] = React.useState<ModalidadeAudiencia | 'todas'>('todas');
-  const [trtFiltro, setTrtFiltro] = React.useState<CodigoTribunal | 'todas'>('todas');
-  const [grauFiltro, setGrauFiltro] = React.useState<GrauTribunal | 'todas'>('todas');
-  const [responsavelFiltro, setResponsavelFiltro] = React.useState<number | 'null' | 'todos'>('todos');
-  const [tipoAudienciaFiltro, setTipoAudienciaFiltro] = React.useState<number | 'todos'>('todos');
+  const [statusFiltro, setStatusFiltro] = React.useState<StatusAudiencia[]>([]);
+  const [modalidadeFiltro, setModalidadeFiltro] = React.useState<ModalidadeAudiencia[]>([]);
+  const [trtFiltro, setTrtFiltro] = React.useState<CodigoTribunal[]>([]);
+  const [grauFiltro, setGrauFiltro] = React.useState<GrauTribunal[]>([]);
+  const [responsavelFiltro, setResponsavelFiltro] = React.useState<(number | 'null')[]>([]);
+  const [tipoAudienciaFiltro, setTipoAudienciaFiltro] = React.useState<number[]>([]);
 
   // Dialogs state
   const [createOpen, setCreateOpen] = React.useState(false);
@@ -110,12 +110,12 @@ export function AudienciasListWrapper({
     pagina: pageIndex + 1,
     limite: pageSize,
     busca: globalFilter || undefined,
-    status: statusFiltro === 'todas' ? undefined : statusFiltro,
-    modalidade: modalidadeFiltro === 'todas' ? undefined : modalidadeFiltro,
-    trt: trtFiltro === 'todas' ? undefined : trtFiltro,
-    grau: grauFiltro === 'todas' ? undefined : grauFiltro,
-    responsavel_id: responsavelFiltro === 'todos' ? undefined : responsavelFiltro === 'null' ? 'null' : responsavelFiltro,
-    tipo_audiencia_id: tipoAudienciaFiltro === 'todos' ? undefined : tipoAudienciaFiltro,
+    status: statusFiltro.length > 0 ? statusFiltro : undefined,
+    modalidade: modalidadeFiltro.length > 0 ? modalidadeFiltro : undefined,
+    trt: trtFiltro.length > 0 ? trtFiltro : undefined,
+    grau: grauFiltro.length > 0 ? grauFiltro : undefined,
+    responsavel_id: responsavelFiltro.length > 0 ? responsavelFiltro : undefined,
+    tipo_audiencia_id: tipoAudienciaFiltro.length > 0 ? tipoAudienciaFiltro : undefined,
   });
 
   // Determine if we should use initial data (only on first load if parameters match initial)

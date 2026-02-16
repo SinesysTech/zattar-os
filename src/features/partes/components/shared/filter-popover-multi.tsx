@@ -86,7 +86,10 @@ export function FilterPopoverMulti({
                     }}
                   >
                     <div className="flex items-center space-x-3 py-1">
-                      <Checkbox checked={isSelected} className="pointer-events-none" />
+                      <Checkbox
+                        checked={isSelected}
+                        className="pointer-events-none data-[state=checked]:text-white [&>span]:text-white"
+                      />
                       <span className="leading-none">{option.label}</span>
                     </div>
                   </CommandItem>

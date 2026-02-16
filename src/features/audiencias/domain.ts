@@ -109,7 +109,7 @@ const baseAudienciaSchema = z.object({
 });
 
 export const createAudienciaSchema = baseAudienciaSchema.refine(
-  data => new Date(data.dataFim) > new Date(data.dataInicio), 
+  data => new Date(data.dataFim) > new Date(data.dataInicio),
   {
     message: 'A data de fim deve ser posterior à data de início.',
     path: ['dataFim'],
@@ -130,13 +130,13 @@ export type ListarAudienciasParams = {
   pagina?: number;
   limite?: number;
   busca?: string;
-  trt?: CodigoTribunal;
-  grau?: GrauTribunal;
-  responsavelId?: number | 'null';
+  trt?: CodigoTribunal | CodigoTribunal[];
+  grau?: GrauTribunal | GrauTribunal[];
+  responsavelId?: number | 'null' | (number | 'null')[];
   semResponsavel?: boolean;
-  status?: StatusAudiencia;
-  modalidade?: ModalidadeAudiencia;
-  tipoAudienciaId?: number;
+  status?: StatusAudiencia | StatusAudiencia[];
+  modalidade?: ModalidadeAudiencia | ModalidadeAudiencia[];
+  tipoAudienciaId?: number | number[];
   dataInicioInicio?: string;
   dataInicioFim?: string;
   dataFimInicio?: string;
@@ -193,12 +193,12 @@ export interface BuscarAudienciasParams {
   busca?: string;
   ordenar_por?: AudienciaSortBy;
   ordem?: 'asc' | 'desc';
-  trt?: CodigoTribunal;
-  grau?: GrauTribunal;
-  responsavel_id?: number | 'null';
-  status?: StatusAudiencia;
-  modalidade?: ModalidadeAudiencia;
-  tipo_audiencia_id?: number;
+  trt?: CodigoTribunal | CodigoTribunal[];
+  grau?: GrauTribunal | GrauTribunal[];
+  responsavel_id?: number | 'null' | (number | 'null')[];
+  status?: StatusAudiencia | StatusAudiencia[];
+  modalidade?: ModalidadeAudiencia | ModalidadeAudiencia[];
+  tipo_audiencia_id?: number | number[];
   tipo_descricao?: string;
   tipo_codigo?: string;
   data_inicio_inicio?: string;

@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
+import { FilterPopoverMulti } from '@/features/partes/components/shared/filter-popover-multi';
+import type { FilterOption } from '@/features/partes/components/shared/filter-popover';
 
 import {
   StatusAudiencia,
@@ -46,18 +47,18 @@ interface Usuario {
 }
 
 export interface AudienciasListFiltersProps {
-  statusFiltro: StatusAudiencia | 'todas';
-  onStatusChange: (value: StatusAudiencia | 'todas') => void;
-  modalidadeFiltro: ModalidadeAudiencia | 'todas';
-  onModalidadeChange: (value: ModalidadeAudiencia | 'todas') => void;
-  trtFiltro: CodigoTribunal | 'todas';
-  onTrtChange: (value: CodigoTribunal | 'todas') => void;
-  grauFiltro: GrauTribunal | 'todas';
-  onGrauChange: (value: GrauTribunal | 'todas') => void;
-  responsavelFiltro: number | 'null' | 'todos';
-  onResponsavelChange: (value: number | 'null' | 'todos') => void;
-  tipoAudienciaFiltro: number | 'todos';
-  onTipoAudienciaChange: (value: number | 'todos') => void;
+  statusFiltro: StatusAudiencia[];
+  onStatusChange: (value: StatusAudiencia[]) => void;
+  modalidadeFiltro: ModalidadeAudiencia[];
+  onModalidadeChange: (value: ModalidadeAudiencia[]) => void;
+  trtFiltro: CodigoTribunal[];
+  onTrtChange: (value: CodigoTribunal[]) => void;
+  grauFiltro: GrauTribunal[];
+  onGrauChange: (value: GrauTribunal[]) => void;
+  responsavelFiltro: (number | 'null')[];
+  onResponsavelChange: (value: (number | 'null')[]) => void;
+  tipoAudienciaFiltro: number[];
+  onTipoAudienciaChange: (value: number[]) => void;
   usuarios: Usuario[];
   tiposAudiencia: TipoAudiencia[];
 }
@@ -101,59 +102,52 @@ export function AudienciasListFilters({
 
   return (
     <>
-      <FilterPopover
+      <FilterPopoverMulti
         label="Status"
         options={STATUS_OPTIONS}
         value={statusFiltro}
-        onValueChange={(v) => onStatusChange(v as StatusAudiencia | 'todas')}
-        defaultValue="todas"
+        onValueChange={(v) => onStatusChange(v as StatusAudiencia[])}
       />
 
-      <FilterPopover
+      <FilterPopoverMulti
         label="Modalidade"
         options={MODALIDADE_OPTIONS}
         value={modalidadeFiltro}
-        onValueChange={(v) => onModalidadeChange(v as ModalidadeAudiencia | 'todas')}
-        defaultValue="todas"
+        onValueChange={(v) => onModalidadeChange(v as ModalidadeAudiencia[])}
       />
 
-      <FilterPopover
+      <FilterPopoverMulti
         label="Tribunal"
         options={TRIBUNAL_OPTIONS}
         value={trtFiltro}
-        onValueChange={(v) => onTrtChange(v as CodigoTribunal | 'todas')}
-        defaultValue="todas"
+        onValueChange={(v) => onTrtChange(v as CodigoTribunal[])}
       />
 
-      <FilterPopover
+      <FilterPopoverMulti
         label="Grau"
         options={GRAU_OPTIONS}
         value={grauFiltro}
-        onValueChange={(v) => onGrauChange(v as GrauTribunal | 'todas')}
-        defaultValue="todas"
+        onValueChange={(v) => onGrauChange(v as GrauTribunal[])}
       />
 
-      <FilterPopover
+      <FilterPopoverMulti
         label="Responsável"
         options={responsavelOptions}
-        value={responsavelFiltro.toString()}
+        value={responsavelFiltro.map(String)}
         onValueChange={(v) => {
-          if (v === 'todos') onResponsavelChange('todos');
-          else if (v === 'null') onResponsavelChange('null');
-          else onResponsavelChange(Number(v));
+          // Converter strings de volta para number ou 'null'
+          const m = v.map((val) => (val === 'null' ? 'null' : Number(val)));
+          onResponsavelChange(m);
         }}
-        defaultValue="todos"
+        placeholder="Filtrar por responsável..."
       />
 
-      <FilterPopover
+      <FilterPopoverMulti
         label="Tipo"
         options={tipoAudienciaOptions}
-        value={tipoAudienciaFiltro.toString()}
-        onValueChange={(v) => {
-          if (v === 'todos') onTipoAudienciaChange('todos');
-          else onTipoAudienciaChange(Number(v));
-        }}
-        defaultValue="todos"
+        value={tipoAudienciaFiltro.map(String)}
+        onValueChange={(v) => onTipoAudienciaChange(v.map(Number))}
+        placeholder="Filtrar por tipo..."
       />
     </>
   );
