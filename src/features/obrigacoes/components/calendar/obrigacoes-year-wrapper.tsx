@@ -13,9 +13,9 @@
  */
 
 import * as React from 'react';
-import { startOfYear, endOfYear, format, isToday as dateFnsIsToday, parseISO } from 'date-fns';
+import { startOfYear, endOfYear, format, parseISO } from 'date-fns';
 import { DataShell, DataTableToolbar } from '@/components/shared/data-shell';
-import { YearFilterPopover, TemporalViewLoading, TemporalViewError } from '@/components/shared';
+import { YearFilterPopover, TemporalViewLoading, TemporalViewError, YearCalendarGrid } from '@/components/shared';
 import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -40,13 +40,6 @@ const TIPO_OPTIONS: readonly FilterOption[] = Object.entries(TIPO_LABELS).map(
 const DIRECAO_OPTIONS: readonly FilterOption[] = Object.entries(DIRECAO_LABELS).map(
   ([value, label]) => ({ value, label })
 );
-
-const MESES = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
-];
-
-const DIAS_SEMANA = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'];
 
 export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperProps) {
   // Year navigation
@@ -114,17 +107,10 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
     return mapa;
   }, [obrigacoes, selectedYear]);
 
-  // Get days in month with proper offset for calendar grid
-  const getDiasMes = React.useCallback((mes: number) => {
-    const ano = selectedYear;
-    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
-    const primeiroDiaSemana = new Date(ano, mes, 1).getDay();
-    const offset = primeiroDiaSemana === 0 ? 6 : primeiroDiaSemana - 1;
-    const dias: (number | null)[] = [];
-    for (let i = 0; i < offset; i++) dias.push(null);
-    for (let i = 1; i <= ultimoDia; i++) dias.push(i);
-    return dias;
-  }, [selectedYear]);
+  // Check if a day has parcelas
+  const hasDayContent = React.useCallback((mes: number, dia: number) => {
+    return parcelasPorDia.has(`${mes}-${dia}`);
+  }, [parcelasPorDia]);
 
   // Handle day click to show parcelas
   const handleDiaClick = React.useCallback((mes: number, dia: number) => {
@@ -188,43 +174,12 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
         ) : error ? (
           <TemporalViewError message={`Erro ao carregar obrigações: ${error}`} onRetry={fetchData} />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
-            {MESES.map((nome, mesIdx) => (
-              <div key={nome} className="border rounded-lg p-4 bg-card shadow-sm hover:shadow-md transition-shadow">
-                <div className="font-semibold text-center mb-3 text-sm uppercase tracking-wide text-muted-foreground">
-                  {nome}
-                </div>
-                <div className="grid grid-cols-7 gap-1 text-center mb-1">
-                  {DIAS_SEMANA.map((d, i) => (
-                    <span key={`${d}-${i}`} className="text-[10px] text-muted-foreground">
-                      {d}
-                    </span>
-                  ))}
-                </div>
-                <div className="grid grid-cols-7 gap-1 text-center">
-                  {getDiasMes(mesIdx).map((dia, i) => {
-                    if (!dia) return <span key={i} />;
-                    const hasItems = parcelasPorDia.has(`${mesIdx}-${dia}`);
-                    const isTodayDate = dateFnsIsToday(new Date(selectedYear, mesIdx, dia));
-                    return (
-                      <div
-                        key={i}
-                        onClick={() => hasItems && handleDiaClick(mesIdx, dia)}
-                        className={`
-                          text-xs h-7 w-7 flex items-center justify-center rounded-full transition-all
-                          ${isTodayDate ? 'bg-primary text-primary-foreground font-bold' : ''}
-                          ${!isTodayDate && hasItems ? 'bg-primary/20 text-primary font-medium cursor-pointer hover:bg-primary/40' : ''}
-                          ${!isTodayDate && !hasItems ? 'text-muted-foreground' : ''}
-                        `}
-                      >
-                        {dia}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
+          <YearCalendarGrid
+            year={selectedYear}
+            hasDayContent={hasDayContent}
+            onDayClick={handleDiaClick}
+            className="p-6"
+          />
         )}
       </DataShell>
 
