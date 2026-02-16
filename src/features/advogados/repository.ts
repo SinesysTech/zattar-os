@@ -16,7 +16,33 @@ import type {
   AtualizarCredencialParams,
   ListarCredenciaisParams,
   OabEntry,
+  GrauCredencial,
 } from './domain';
+
+// ============================================================================
+// Conversão GrauCredencial ('1'|'2') ↔ grau_tribunal (enum do banco)
+// ============================================================================
+
+const GRAU_TO_DB: Record<string, string> = {
+  '1': 'primeiro_grau',
+  '2': 'segundo_grau',
+};
+
+const GRAU_FROM_DB: Record<string, string> = {
+  'primeiro_grau': '1',
+  'segundo_grau': '2',
+  'tribunal_superior': '2',
+};
+
+/** Converte GrauCredencial ('1'/'2') para valor do enum grau_tribunal no banco */
+function grauToDb(grau: string): string {
+  return GRAU_TO_DB[grau] ?? grau;
+}
+
+/** Converte valor do enum grau_tribunal do banco para GrauCredencial ('1'/'2') */
+function grauFromDb(grau: string): GrauCredencial {
+  return (GRAU_FROM_DB[grau] ?? '1') as GrauCredencial;
+}
 
 // ============================================================================
 // Advogados
@@ -266,7 +292,7 @@ export async function criarCredencial(params: CriarCredencialParams): Promise<Cr
     .select('id')
     .eq('advogado_id', params.advogado_id)
     .eq('tribunal', params.tribunal)
-    .eq('grau', params.grau)
+    .eq('grau', grauToDb(params.grau))
     .eq('active', true)
     .single();
 
@@ -281,7 +307,7 @@ export async function criarCredencial(params: CriarCredencialParams): Promise<Cr
     .insert({
       advogado_id: params.advogado_id,
       tribunal: params.tribunal,
-      grau: params.grau,
+      grau: grauToDb(params.grau),
       usuario: params.usuario || null, // Login PJE (null = usar CPF do advogado)
       senha: params.senha,
       active: params.active !== undefined ? params.active : true,
@@ -297,9 +323,9 @@ export async function criarCredencial(params: CriarCredencialParams): Promise<Cr
     throw new Error('Erro ao criar credencial: nenhum dado retornado');
   }
 
-  // Retornar sem senha por segurança
+  // Retornar sem senha por segurança, convertendo grau de volta
   const { senha: _senha, ...credencialSemSenha } = data;
-  return credencialSemSenha as Credencial;
+  return { ...credencialSemSenha, grau: grauFromDb(credencialSemSenha.grau) } as Credencial;
 }
 
 /**
@@ -321,7 +347,8 @@ export async function buscarCredencial(id: number): Promise<Credencial | null> {
     throw new Error(`Erro ao buscar credencial: ${error.message}`);
   }
 
-  return data as Credencial;
+  if (!data) return null;
+  return { ...data, grau: grauFromDb(data.grau) } as Credencial;
 }
 
 /**
@@ -347,7 +374,8 @@ export async function atualizarCredencial(
     }
 
     const tribunalFinal = params.tribunal ?? credencialAtual.tribunal;
-    const grauFinal = params.grau ?? credencialAtual.grau;
+    // credencialAtual.grau vem do banco (formato DB), params.grau vem da UI (formato '1'/'2')
+    const grauFinal = params.grau !== undefined ? grauToDb(params.grau) : credencialAtual.grau;
 
     // Verificar se já existe outra credencial ativa com mesma combinação
     const { data: existente } = await supabase
@@ -380,7 +408,7 @@ export async function atualizarCredencial(
     updateData.tribunal = params.tribunal;
   }
   if (params.grau !== undefined) {
-    updateData.grau = params.grau;
+    updateData.grau = grauToDb(params.grau);
   }
   if (params.usuario !== undefined) {
     updateData.usuario = params.usuario; // null = usar CPF do advogado
@@ -410,7 +438,7 @@ export async function atualizarCredencial(
     throw new Error('Erro ao atualizar credencial: nenhum dado retornado');
   }
 
-  return data as Credencial;
+  return { ...data, grau: grauFromDb(data.grau) } as Credencial;
 }
 
 /**
@@ -470,14 +498,13 @@ export async function listarCredenciais(
 
   const rows = (data || []) as unknown as CredencialRow[];
 
-  // Normalizar shape para CredencialComAdvogado
+  // Normalizar shape para CredencialComAdvogado (converter grau do banco → UI)
   return rows.map((row): CredencialComAdvogado => {
     if (!row.advogados) {
-      // Caso extremo: credencial órfã (FK quebrada) ou join não retornou.
-      // Mantemos a credencial, mas sem dados do advogado.
       const { advogados: _unused, ...credencialData } = row;
       return {
         ...credencialData,
+        grau: grauFromDb(credencialData.grau),
         advogado_nome: '-',
         advogado_cpf: '-',
         advogado_oabs: [],
@@ -487,6 +514,7 @@ export async function listarCredenciais(
     const { advogados, ...credencial } = row;
     return {
       ...credencial,
+      grau: grauFromDb(credencial.grau),
       advogado_nome: advogados.nome_completo,
       advogado_cpf: advogados.cpf,
       advogado_oabs: advogados.oabs || [],
@@ -508,18 +536,25 @@ export async function buscarCredenciaisExistentes(
 ): Promise<{ tribunal: string; grau: string; id: number; active: boolean }[]> {
   const supabase = createServiceClient();
 
+  // Converter graus da UI ('1'/'2') para valores do enum grau_tribunal do banco
+  const grausDb = graus.map(grauToDb);
+
   const { data, error } = await supabase
     .from('credenciais')
     .select('id, tribunal, grau, active')
     .eq('advogado_id', advogado_id)
     .in('tribunal', tribunais)
-    .in('grau', graus);
+    .in('grau', grausDb);
 
   if (error) {
     throw new Error(`Erro ao buscar credenciais existentes: ${error.message}`);
   }
 
-  return (data || []) as { tribunal: string; grau: string; id: number; active: boolean }[];
+  // Converter grau de volta para formato da UI
+  return (data || []).map((row) => ({
+    ...row,
+    grau: grauFromDb(row.grau),
+  })) as { tribunal: string; grau: string; id: number; active: boolean }[];
 }
 
 /**
@@ -537,16 +572,20 @@ export async function criarCredenciaisEmLoteBatch(
 ): Promise<Credencial[]> {
   const supabase = createServiceClient();
 
+  // Converter grau da UI para formato do banco antes de inserir
+  const credenciaisDb = credenciais.map((c) => ({ ...c, grau: grauToDb(c.grau) }));
+
   const { data, error } = await supabase
     .from('credenciais')
-    .insert(credenciais)
+    .insert(credenciaisDb)
     .select('id, advogado_id, tribunal, grau, usuario, active, created_at, updated_at');
 
   if (error) {
     throw new Error(`Erro ao criar credenciais em lote: ${error.message}`);
   }
 
-  return (data || []) as Credencial[];
+  // Converter grau de volta para formato da UI
+  return (data || []).map((row) => ({ ...row, grau: grauFromDb(row.grau) })) as Credencial[];
 }
 
 /**
