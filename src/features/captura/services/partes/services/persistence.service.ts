@@ -462,44 +462,43 @@ async function processarTerceiroComDocumento(
   } as CriarTerceiroPFParams | CriarTerceiroPJParams;
 
   const result = isPessoaFisica
-    ? await withRetry<
-        import("@/types").Result<{
-          terceiro: import("@/features/partes/domain").Terceiro;
-          created: boolean;
-        }>
-      >(
-        () =>
-          upsertTerceiroByCPF(
-            documentoNormalizado,
-            params as UpsertTerceiroPorCPFParams,
-          ),
-        {
-          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-        },
+    ? await upsertTerceiroByCPF(
+        documentoNormalizado,
+        params as UpsertTerceiroPorCPFParams,
       )
-    : await withRetry<
-        import("@/types").Result<{
-          terceiro: import("@/features/partes/domain").Terceiro;
-          created: boolean;
-        }>
-      >(
-        () =>
-          upsertTerceiroByCNPJ(
-            documentoNormalizado,
-            params as UpsertTerceiroPorCNPJParams,
-          ),
-        {
-          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-        },
+    : await upsertTerceiroByCNPJ(
+        documentoNormalizado,
+        params as UpsertTerceiroPorCNPJParams,
       );
 
   if (result.success && result.data?.terceiro) {
     return result.data.terceiro.id;
   }
 
-  return null;
+  // Se houve conflito (race condition no processamento paralelo),
+  // tentar buscar novamente a entidade que foi inserida por outra thread
+  if (!result.success && result.error?.code === "CONFLICT") {
+    console.warn(
+      `[PARTES] Conflito ao inserir terceiro "${parte.nome}" - tentando buscar existente`,
+    );
+    const retryLookup = isPessoaFisica
+      ? await buscarTerceiroPorCPF(documentoNormalizado)
+      : await buscarTerceiroPorCNPJ(documentoNormalizado);
+    if (retryLookup) {
+      return retryLookup.id;
+    }
+  }
+
+  // Propagar erro real em vez de retornar null silenciosamente
+  const errorMsg = !result.success
+    ? result.error?.message ?? "Erro desconhecido"
+    : "Resultado sem dados de terceiro";
+  throw new PersistenceError(
+    `Erro ao persistir terceiro com documento: ${errorMsg}`,
+    "insert",
+    "terceiro",
+    { parte: parte.nome, documento: documentoNormalizado },
+  );
 }
 
 /**
@@ -544,9 +543,10 @@ async function processarTerceiroSemDocumento(
     ddd_residencial: parte.telefones[1]?.ddd || undefined,
     numero_residencial: parte.telefones[1]?.numero || undefined,
     ativo: true,
-    // Placeholders de documento vazios para type safety
-    cpf: tipoPessoaInferido === "pf" ? "" : undefined,
-    cnpj: tipoPessoaInferido === "pj" ? "" : undefined,
+    // Sem documento - usar undefined para que o banco receba NULL
+    // (string vazia "" violaria unique constraint parcial WHERE cpf IS NOT NULL)
+    cpf: undefined,
+    cnpj: undefined,
   };
 
   const result = await withRetry(

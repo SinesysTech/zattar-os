@@ -323,7 +323,8 @@ export async function saveCliente(input: CreateClienteInput): Promise<Result<Cli
       numero_residencial: input.numero_residencial?.trim() || null,
       ddd_comercial: input.ddd_comercial?.trim() || null,
       numero_comercial: input.numero_comercial?.trim() || null,
-      tipo_documento: input.tipo_documento?.trim() || null,
+      // Sanitizar tipo_documento: banco aceita apenas 'CPF' ou 'CNPJ' (CHECK constraint)
+      tipo_documento: (() => { const td = input.tipo_documento?.trim() || null; return td === 'CPF' || td === 'CNPJ' ? td : null; })(),
       status_pje: input.status_pje?.trim() || null,
       situacao_pje: input.situacao_pje?.trim() || null,
       login_pje: input.login_pje?.trim() || null,
@@ -464,7 +465,10 @@ export async function updateCliente(
     if (input.numero_residencial !== undefined) dadosAtualizacao.numero_residencial = input.numero_residencial?.trim() || null;
     if (input.ddd_comercial !== undefined) dadosAtualizacao.ddd_comercial = input.ddd_comercial?.trim() || null;
     if (input.numero_comercial !== undefined) dadosAtualizacao.numero_comercial = input.numero_comercial?.trim() || null;
-    if (input.tipo_documento !== undefined) dadosAtualizacao.tipo_documento = input.tipo_documento?.trim() || null;
+    if (input.tipo_documento !== undefined) {
+      const tipoDoc = input.tipo_documento?.trim() || null;
+      dadosAtualizacao.tipo_documento = tipoDoc === 'CPF' || tipoDoc === 'CNPJ' ? tipoDoc : null;
+    }
     if (input.status_pje !== undefined) dadosAtualizacao.status_pje = input.status_pje?.trim() || null;
     if (input.situacao_pje !== undefined) dadosAtualizacao.situacao_pje = input.situacao_pje?.trim() || null;
     if (input.login_pje !== undefined) dadosAtualizacao.login_pje = input.login_pje?.trim() || null;

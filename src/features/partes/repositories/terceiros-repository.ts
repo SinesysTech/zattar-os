@@ -333,7 +333,9 @@ export async function saveTerceiro(input: CreateTerceiroInput): Promise<Result<T
 
     if (input.tipo_pessoa === 'pf') {
       dadosInsercao.cpf = normalizarDocumento(input.cpf);
-      dadosInsercao.tipo_documento = input.tipo_documento?.trim() || null;
+      // Sanitizar tipo_documento: banco aceita apenas 'CPF' ou 'CNPJ' (CHECK constraint)
+      const tipoDoc = input.tipo_documento?.trim() || null;
+      dadosInsercao.tipo_documento = tipoDoc === 'CPF' || tipoDoc === 'CNPJ' ? tipoDoc : null;
       dadosInsercao.rg = input.rg?.trim() || null;
       dadosInsercao.sexo = input.sexo?.trim() || null;
       dadosInsercao.nome_genitora = input.nome_genitora?.trim() || null;
@@ -441,7 +443,10 @@ export async function updateTerceiro(
     if (input.cnpj !== undefined) dadosAtualizacao.cnpj = normalizarDocumento(input.cnpj);
 
     // Campos PF
-    if (input.tipo_documento !== undefined) dadosAtualizacao.tipo_documento = input.tipo_documento?.trim() || null;
+    if (input.tipo_documento !== undefined) {
+      const tipoDoc = input.tipo_documento?.trim() || null;
+      dadosAtualizacao.tipo_documento = tipoDoc === 'CPF' || tipoDoc === 'CNPJ' ? tipoDoc : null;
+    }
     if (input.rg !== undefined) dadosAtualizacao.rg = input.rg?.trim() || null;
     if (input.sexo !== undefined) dadosAtualizacao.sexo = input.sexo?.trim() || null;
     if (input.nome_genitora !== undefined) dadosAtualizacao.nome_genitora = input.nome_genitora?.trim() || null;
