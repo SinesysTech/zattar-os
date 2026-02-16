@@ -95,7 +95,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <CopilotKit runtimeUrl="/api/copilotkit">
+    <CopilotKit runtimeUrl="/api/copilotkit" useSingleEndpoint>
       <CopilotSidebar
         defaultOpen={false}
         instructions={SYSTEM_PROMPT}

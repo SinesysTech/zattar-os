@@ -13,7 +13,7 @@ let handleRequest: ((req: NextRequest) => Promise<Response> | Response) | null =
 if (apiKey) {
   try {
     const serviceAdapter = new GoogleGenerativeAIAdapter({
-      model: "gemini-1.5-pro",
+      model: "gemini-2.5-flash",
       apiKey: apiKey,
     });
 
@@ -34,7 +34,7 @@ if (apiKey) {
 export const POST = async (req: NextRequest) => {
   if (!handleRequest) {
     return NextResponse.json(
-      { error: "Copilot is not configured (missing API key)" },
+      { error: "Copilot is not configured (missing GOOGLE_GENERATIVE_AI_API_KEY)" },
       { status: 503 }
     );
   }
