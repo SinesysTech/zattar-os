@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
 import { Button } from "@/components/ui/button";
 import * as Kanban from "@/components/ui/kanban";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -577,7 +577,7 @@ export default function KanbanBoard({ initialBoard }: KanbanBoardProps) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold">{columnTitles[columnValue]}</span>
-                    <Badge variant="outline">{tasks.length}</Badge>
+                    <AppBadge variant="outline">{tasks.length}</AppBadge>
                   </div>
                   <div className="flex">
                     <DropdownMenu>
@@ -687,9 +687,9 @@ export default function KanbanBoard({ initialBoard }: KanbanBoardProps) {
                             </div>
                             <Separator />
                             <div className="text-muted-foreground flex items-center justify-between text-sm">
-                              <Badge className="capitalize" variant="outline">
+                              <AppBadge className="capitalize" variant="outline">
                                 {task.priority}
-                              </Badge>
+                              </AppBadge>
                               <div className="flex items-center gap-3">
                                 <div className="flex items-center gap-1">
                                   <Paperclip className="h-4 w-4" />

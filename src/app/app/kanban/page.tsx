@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 
 import { authenticateRequest } from "@/lib/auth/session";
 import { PageShell } from "@/components/shared/page-shell";
-import { kanbanService } from "@/features/kanban";
-import { KanbanPageContent } from "@/features/kanban/components/kanban-page-content";
+import { kanbanService, KanbanPageContent } from "@/features/kanban";
 
 export const metadata: Metadata = {
   title: "Kanban",

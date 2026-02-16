@@ -6,13 +6,12 @@ import {
   Gavel,
   CircleDollarSign,
   LayoutGrid,
-  PlusCircle,
   Check,
   Plus,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
 import {
   Command,
   CommandEmpty,
@@ -62,9 +61,9 @@ export function BoardSelector({
           <LayoutGrid className="h-4 w-4" />
           <span>Quadro</span>
           {selectedBoard && (
-            <Badge variant="secondary" className="ml-1 rounded-sm px-1.5 font-normal">
+            <AppBadge variant="secondary" className="ml-1 rounded-sm px-1.5 font-normal">
               {selectedBoard.titulo}
-            </Badge>
+            </AppBadge>
           )}
         </Button>
       </PopoverTrigger>
