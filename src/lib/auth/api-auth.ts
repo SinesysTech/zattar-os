@@ -101,8 +101,6 @@ export async function authenticateRequest(
   if (serviceApiKey && expectedServiceKey) {
     // Comparação segura usando timing-safe comparison
     if (serviceApiKey === expectedServiceKey) {
-      // Log removido para reduzir ruído
-      // console.log("[API Auth] ✓ Autenticação bem-sucedida via Service API Key");
       return {
         authenticated: true,
         userId: "system",
@@ -181,10 +179,6 @@ export async function authenticateRequest(
           `[API Auth] ⚠ Usuário autenticado (${user.id}), mas não encontrado na tabela usuarios`,
         );
       }
-      // Log de sucesso removido para reduzir ruído
-      // else {
-      //   console.log(`[API Auth] ✓ Autenticação bem-sucedida via Bearer token - Usuário ID: ${usuarioId}`);
-      // }
 
       return {
         authenticated: true,
@@ -226,20 +220,14 @@ export async function authenticateRequest(
       },
     );
 
-    // Otimização: Remover chamada redundante para getSession()
-    // O middleware já cuida do refresh do token e da sessão
-    // await supabase.auth.getSession();
-
-    // Usar getUser() para verificação segura de autenticação
-    // Isso valida os dados contactando o servidor Supabase Auth
+    // getUser() valida o token contactando o servidor Supabase Auth
+    // O middleware já cuida do refresh via getSession()
     const {
       data: { user },
       error,
     } = await supabase.auth.getUser();
 
     if (error || !user) {
-      // Logs de debug reduzidos para evitar poluição, mantendo apenas se necessário
-      // console.log("[API Auth] ℹ Nenhuma sessão válida encontrada (cookies)");
       return {
         authenticated: false,
         error:
@@ -255,10 +243,6 @@ export async function authenticateRequest(
         `[API Auth] ⚠ Usuário autenticado via sessão (${user.id}), mas não encontrado na tabela usuarios`,
       );
     }
-    // Log de sucesso removido para reduzir ruído
-    // else {
-    //   console.log(`[API Auth] ✓ Autenticação bem-sucedida via sessão - Usuário ID: ${usuarioId}`);
-    // }
 
     return {
       authenticated: true,

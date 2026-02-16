@@ -29,7 +29,7 @@ import {
   DataPagination,
 } from "@/components/shared/data-shell";
 import { DialogFormShell } from "@/components/shared/dialog-shell/dialog-form-shell";
-import { FilterPopover, type FilterOption } from "@/features/partes/components/shared";
+import { FilterPopover, type FilterOption } from "@/features/partes";
 import { useDebounce } from "@/hooks/use-debounce";
 
 import {
