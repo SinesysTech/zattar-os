@@ -8,7 +8,6 @@ interface TarefaStore {
     selectedTarefaId: string | null;
     isTarefaSheetOpen: boolean;
     isCreateDialogOpen: boolean;
-    viewMode: "lista" | "quadro";
 
     setTarefas: (tarefas: TarefaDisplayItem[]) => void;
     upsertTarefa: (tarefa: TarefaDisplayItem) => void;
@@ -16,7 +15,6 @@ interface TarefaStore {
     setSelectedTarefaId: (id: string | null) => void;
     setTarefaSheetOpen: (isOpen: boolean) => void;
     setCreateDialogOpen: (isOpen: boolean) => void;
-    setViewMode: (mode: "lista" | "quadro") => void;
 }
 
 export const useTarefaStore = create<TarefaStore>((set) => ({
@@ -24,7 +22,6 @@ export const useTarefaStore = create<TarefaStore>((set) => ({
     selectedTarefaId: null,
     isTarefaSheetOpen: false,
     isCreateDialogOpen: false,
-    viewMode: "lista",
 
     setTarefas: (tarefas) => set(() => ({ tarefas })),
 
@@ -40,5 +37,4 @@ export const useTarefaStore = create<TarefaStore>((set) => ({
     setSelectedTarefaId: (id) => set(() => ({ selectedTarefaId: id })),
     setTarefaSheetOpen: (isOpen) => set(() => ({ isTarefaSheetOpen: isOpen })),
     setCreateDialogOpen: (isOpen) => set(() => ({ isCreateDialogOpen: isOpen })),
-    setViewMode: (viewMode) => set(() => ({ viewMode })),
 }));

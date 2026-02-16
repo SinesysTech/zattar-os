@@ -19,8 +19,7 @@ import type {
   AddCommentInput,
   DeleteCommentInput,
   AddFileInput,
-  RemoveFileInput,
-  TaskPositionsInput
+  RemoveFileInput
 } from "./domain";
 import {
   createTaskSchema,
@@ -33,8 +32,7 @@ import {
   addCommentSchema,
   deleteCommentSchema,
   addFileSchema,
-  removeFileSchema,
-  taskPositionsSchema
+  removeFileSchema
 } from "./domain";
 import * as repo from "./repository";
 import { listarTodosEventos } from "@/lib/event-aggregation/service";
@@ -146,12 +144,6 @@ export async function removerAnexo(usuarioId: number, input: unknown): Promise<R
   return repo.removeFile(usuarioId, val.data);
 }
 
-export async function reorderTasks(usuarioId: number, input: TaskPositionsInput): Promise<Result<void>> {
-  const val = validate<TaskPositionsInput>(taskPositionsSchema, input);
-  if (!val.success) return err(val.error);
-  return repo.reorderTasks(usuarioId, val.data);
-}
-
 // =============================================================================
 // AGREGAÇÃO VIRTUAL: Tarefas manuais + Eventos do sistema
 // =============================================================================
@@ -171,7 +163,6 @@ function eventoToTarefaDisplay(evento: UnifiedEventItem): TarefaDisplayItem {
     status: mapSourceStatusToTarefaStatus(evento.source, evento.statusOrigem),
     label: SOURCE_TO_LABEL[evento.source],
     priority: calcularPrioridade(evento.dataVencimento, evento.prazoVencido),
-    position: 0, // Virtual events don't have position in kanban
     description: undefined,
     dueDate: evento.dataVencimento,
     reminderDate: null,

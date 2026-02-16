@@ -26,9 +26,8 @@ import {
 } from "@/components/ui/table";
 
 import { DataShell, DataTableToolbar } from "@/components/shared/data-shell";
-import { ViewModePopover, type ViewModeOption } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { X, List, LayoutGrid } from "lucide-react";
+import { X } from "lucide-react";
 
 import { priorities, statuses, labels } from "@/app/app/tarefas/data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
@@ -41,20 +40,12 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-// Opções de visualização para tarefas
-const TASK_VIEW_OPTIONS: ViewModeOption[] = [
-  { value: 'lista' as any, label: 'Lista', icon: List },
-  { value: 'quadro' as any, label: 'Quadro', icon: LayoutGrid }
-];
-
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const {
     setTarefas,
     setSelectedTarefaId,
     setTarefaSheetOpen,
     setCreateDialogOpen,
-    viewMode,
-    setViewMode
   } = useTarefaStore();
 
   const [rowSelection, setRowSelection] = React.useState({});
@@ -112,14 +103,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
             label: "Nova tarefa",
             onClick: () => setCreateDialogOpen(true),
           }}
-          viewModeSlot={
-            <ViewModePopover
-              value={viewMode as any}
-              onValueChange={(v) => setViewMode(v as any)}
-              options={TASK_VIEW_OPTIONS}
-              className="hidden lg:flex"
-            />
-          }
           filtersSlot={
             <>
               {table.getColumn("status") && (

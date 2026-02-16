@@ -77,7 +77,6 @@ export const taskSchema = z.object({
   //
   source: z.string().optional().nullable(), // from eventSourceSchema
   sourceEntityId: z.string().optional().nullable(),
-  position: z.number().default(0),
 });
 export type Task = z.infer<typeof taskSchema>;
 
@@ -102,7 +101,6 @@ export const createTaskSchema = taskSchema.omit({ id: true, source: true, source
   comments: true,
   files: true,
   starred: true,
-  position: true, // position é opcional na criação (será calculado automaticamente)
 });
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 
@@ -178,13 +176,3 @@ export const removeFileSchema = z.object({
   fileId: z.string().min(1),
 });
 export type RemoveFileInput = z.infer<typeof removeFileSchema>;
-
-export const taskPositionsSchema = z.object({
-  positions: z.array(
-    z.object({
-      id: z.string(),
-      position: z.number(),
-    })
-  ),
-});
-export type TaskPositionsInput = z.infer<typeof taskPositionsSchema>;

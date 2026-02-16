@@ -9,48 +9,48 @@
 
 ## 2. Remover Componentes de Kanban
 - [x] 2.1 Remover arquivo `src/app/app/tarefas/components/task-board.tsx`
-- [-] 2.2 Remover arquivo `src/app/app/tarefas/components/task-card.tsx`
-- [~] 2.3 Remover imports de `@dnd-kit/*` não utilizados
+- [x] 2.2 Remover arquivo `src/app/app/tarefas/components/task-card.tsx`
+- [x] 2.3 Remover imports de `@dnd-kit/*` não utilizados
 
 ## 3. Simplificar Store
-- [~] 3.1 Remover `viewMode: "lista" | "quadro"` do `TarefaStore` interface
-- [~] 3.2 Remover `setViewMode` do `TarefaStore` interface
-- [~] 3.3 Remover implementação de `setViewMode` do store
-- [~] 3.4 Remover valor inicial `viewMode: "lista"` do estado
+- [x] 3.1 Remover `viewMode: "lista" | "quadro"` do `TarefaStore` interface
+- [x] 3.2 Remover `setViewMode` do `TarefaStore` interface
+- [x] 3.3 Remover implementação de `setViewMode` do store
+- [x] 3.4 Remover valor inicial `viewMode: "lista"` do estado
 
 ## 4. Atualizar Domain
-- [~] 4.1 Remover campo `position: z.number().default(0)` do `taskSchema`
-- [~] 4.2 Remover `position: true` do partial em `createTaskSchema`
-- [~] 4.3 Remover `taskPositionsSchema` e `TaskPositionsInput` type
-- [~] 4.4 Verificar se `TarefaDisplayItem` interface precisa de ajustes
+- [x] 4.1 Remover campo `position: z.number().default(0)` do `taskSchema`
+- [x] 4.2 Remover `position: true` do partial em `createTaskSchema`
+- [x] 4.3 Remover `taskPositionsSchema` e `TaskPositionsInput` type
+- [x] 4.4 Verificar se `TarefaDisplayItem` interface precisa de ajustes
 
 ## 5. Simplificar TarefasClient
-- [~] 5.1 Remover imports: `TaskBoard`, `DataTableToolbar`, `ViewModePopover`, `ViewModeOption`, `List`, `LayoutGrid`
-- [~] 5.2 Remover `TASK_VIEW_OPTIONS` constant
-- [~] 5.3 Remover `viewMode` e `setViewMode` do destructuring do store
-- [~] 5.4 Remover renderização condicional (if viewMode === "lista")
-- [~] 5.5 Remover toolbar separado para visualização em quadro
-- [~] 5.6 Manter apenas: `<DataTable />`, `<TaskDetailSheet />`, `<TaskDialog />`
-- [~] 5.7 Remover `space-y-4` do container (não é mais necessário)
+- [x] 5.1 Remover imports: `TaskBoard`, `DataTableToolbar`, `ViewModePopover`, `ViewModeOption`, `List`, `LayoutGrid`
+- [x] 5.2 Remover `TASK_VIEW_OPTIONS` constant
+- [x] 5.3 Remover `viewMode` e `setViewMode` do destructuring do store
+- [x] 5.4 Remover renderização condicional (if viewMode === "lista")
+- [x] 5.5 Remover toolbar separado para visualização em quadro
+- [x] 5.6 Manter apenas: `<DataTable />`, `<TaskDetailSheet />`, `<TaskDialog />`
+- [x] 5.7 Remover `space-y-4` do container (não é mais necessário)
 
 ## 6. Atualizar DataTable
-- [~] 6.1 Remover imports: `ViewModePopover`, `ViewModeOption`, `List`, `LayoutGrid`
-- [~] 6.2 Remover `TASK_VIEW_OPTIONS` constant
-- [~] 6.3 Remover `viewMode` e `setViewMode` do destructuring do store
-- [~] 6.4 Remover `viewModeSlot` do `DataTableToolbar`
-- [~] 6.5 Verificar se paginação está com `py-4` (já deve estar corrigido)
+- [x] 6.1 Remover imports: `ViewModePopover`, `ViewModeOption`, `List`, `LayoutGrid`
+- [x] 6.2 Remover `TASK_VIEW_OPTIONS` constant
+- [x] 6.3 Remover `viewMode` e `setViewMode` do destructuring do store
+- [x] 6.4 Remover `viewModeSlot` do `DataTableToolbar`
+- [x] 6.5 Verificar se paginação está com `py-4` (já deve estar corrigido)
 
 ## 7. Atualizar Service Layer
-- [~] 7.1 Remover função `reorderTasks` de `service.ts`
-- [~] 7.2 Remover import de `taskPositionsSchema` e `TaskPositionsInput`
-- [~] 7.3 Atualizar `eventoToTarefaDisplay` para remover `position: 0`
-- [~] 7.4 Verificar se há outras referências a `position` no service
+- [x] 7.1 Remover função `reorderTasks` de `service.ts`
+- [x] 7.2 Remover import de `taskPositionsSchema` e `TaskPositionsInput`
+- [x] 7.3 Atualizar `eventoToTarefaDisplay` para remover `position: 0`
+- [x] 7.4 Verificar se há outras referências a `position` no service
 
 ## 8. Atualizar Repository
-- [~] 8.1 Remover função `reorderTasks` de `repository.ts`
-- [~] 8.2 Remover função auxiliar `getMaxPosition` (se existir)
-- [~] 8.3 Atualizar `createTask` para não calcular/inserir `position`
-- [~] 8.4 Verificar se há outras referências a `position` no repository
+- [x] 8.1 Remover função `reorderTasks` de `repository.ts`
+- [x] 8.2 Remover função auxiliar `getMaxPosition` (se existir)
+- [x] 8.3 Atualizar `createTask` para não calcular/inserir `position`
+- [x] 8.4 Verificar se há outras referências a `position` no repository
 
 ## 9. Atualizar Actions
 - [~] 9.1 Remover `actionReordenarTarefas` de `actions/tarefas-actions.ts`

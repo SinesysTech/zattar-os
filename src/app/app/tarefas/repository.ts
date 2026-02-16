@@ -24,8 +24,7 @@ import type {
   AddCommentInput,
   DeleteCommentInput,
   AddFileInput,
-  RemoveFileInput,
-  TaskPositionsInput
+  RemoveFileInput
 } from "./domain";
 
 const TABLE_ITEMS = "todo_items";
@@ -454,19 +453,6 @@ export async function deleteComment(usuarioId: number, input: DeleteCommentInput
     return getTaskById(usuarioId, input.taskId) as Promise<Result<Task>>;
   } catch (error) {
     return err(appError("DATABASE_ERROR", "Erro ao remover comentário", undefined, error instanceof Error ? error : undefined));
-  }
-}
-
-export async function reorderTasks(usuarioId: number, input: TaskPositionsInput): Promise<Result<void>> {
-  try {
-    const db = createDbClient();
-    for (const p of input.positions) {
-      const { error } = await db.from(TABLE_ITEMS).update({ position: p.position }).eq("id", p.id).eq("usuario_id", usuarioId);
-      if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
-    }
-    return ok(undefined);
-  } catch (error) {
-    return err(appError("DATABASE_ERROR", "Erro ao reordenar tarefas", undefined, error instanceof Error ? error : undefined));
   }
 }
 
