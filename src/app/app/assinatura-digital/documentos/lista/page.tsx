@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageShell } from "@/components/shared/page-shell";
-import { actionListDocumentos } from "../../feature";
+import * as documentosService from "../../feature/services/documentos.service";
 import { DocumentosTableWrapper } from "./client-page";
 
 export const metadata = {
@@ -24,16 +24,14 @@ function DocumentosLoading() {
 }
 
 export default async function ListaDocumentosPage() {
-  // Fetch inicial no server
-  const resultado = await actionListDocumentos({
-    page: 1,
-    pageSize: 200,
-  });
+  let initialData: unknown[] = [];
 
-  const initialData =
-    resultado.success && resultado.data && "documentos" in resultado.data
-      ? (resultado.data as { documentos: unknown[] }).documentos
-      : [];
+  try {
+    const resultado = await documentosService.listDocumentos({ limit: 200 });
+    initialData = resultado.documentos;
+  } catch {
+    // Fallback: client vai refetch no mount
+  }
 
   return (
     <PageShell>

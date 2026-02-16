@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   Clock,
   FileText,
+  FileUp,
   XCircle,
   Loader2,
   ExternalLink,
@@ -22,19 +23,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   DataTable,
   DataShell,
   DataTableToolbar,
   DataPagination,
 } from "@/components/shared/data-shell";
 import { DialogFormShell } from "@/components/shared/dialog-shell/dialog-form-shell";
+import { FilterPopover, type FilterOption } from "@/features/partes/components/shared";
 import { useDebounce } from "@/hooks/use-debounce";
 
 import {
@@ -95,6 +90,13 @@ const STATUS_ICONS: Record<AssinaturaDigitalDocumentoStatus, React.ReactNode> = 
   cancelado: <XCircle className="h-4 w-4" />,
 };
 
+const STATUS_FILTER_OPTIONS: readonly FilterOption[] = [
+  { value: "rascunho", label: "Rascunho" },
+  { value: "pronto", label: "Pronto" },
+  { value: "concluido", label: "Concluído" },
+  { value: "cancelado", label: "Cancelado" },
+];
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
@@ -142,10 +144,6 @@ export function DocumentosTableWrapper({
       const resultado = await actionListDocumentos({
         page: 1,
         pageSize: 200,
-        status:
-          statusFilter !== "all"
-            ? (statusFilter as AssinaturaDigitalDocumentoStatus)
-            : undefined,
       });
 
       if (resultado.success && resultado.data && "documentos" in resultado.data) {
@@ -165,7 +163,7 @@ export function DocumentosTableWrapper({
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter]);
+  }, []);
 
   // Skip first render if initialData provided
   const isFirstRender = React.useRef(true);
@@ -178,17 +176,28 @@ export function DocumentosTableWrapper({
     refetch();
   }, [refetch, initialData.length]);
 
-  // -- Client-side search filter
+  // -- Client-side search + status filter
   const filteredDocumentos = React.useMemo(() => {
-    if (!buscaDebounced) return documentos;
-    const lower = buscaDebounced.toLowerCase();
-    return documentos.filter(
-      (d) =>
-        d.titulo?.toLowerCase().includes(lower) ||
-        d.documento_uuid.toLowerCase().includes(lower) ||
-        String(d.id).includes(lower)
-    );
-  }, [documentos, buscaDebounced]);
+    let result = documentos;
+
+    // Status filter
+    if (statusFilter !== "all") {
+      result = result.filter((d) => d.status === statusFilter);
+    }
+
+    // Search filter
+    if (buscaDebounced) {
+      const lower = buscaDebounced.toLowerCase();
+      result = result.filter(
+        (d) =>
+          d.titulo?.toLowerCase().includes(lower) ||
+          d.documento_uuid.toLowerCase().includes(lower) ||
+          String(d.id).includes(lower)
+      );
+    }
+
+    return result;
+  }, [documentos, statusFilter, buscaDebounced]);
 
   // -- Client-side pagination
   const totalFiltered = filteredDocumentos.length;
@@ -198,7 +207,7 @@ export function DocumentosTableWrapper({
     return filteredDocumentos.slice(start, start + pageSize);
   }, [filteredDocumentos, pageIndex, pageSize]);
 
-  // -- Stats
+  // -- Stats (always from full dataset, not filtered)
   const stats = React.useMemo(() => ({
     total: documentos.length,
     rascunho: documentos.filter((d) => d.status === "rascunho").length,
@@ -331,110 +340,106 @@ export function DocumentosTableWrapper({
     [handleEditarDocumento, handleVerDetalhes, handleConfirmarDelete, handleDownloadPdf]
   );
 
-  // -- Status filter handler
-  const handleStatusFilterChange = React.useCallback(
-    (value: string) => {
-      setStatusFilter(value);
-      setPageIndex(0);
-      // Force refetch when changing server-side status filter
-      isFirstRender.current = false;
-    },
-    []
-  );
-
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
 
   return (
     <>
+      {/* Row 1: Título + Botão "Novo Documento" */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold tracking-tight font-heading">
+          Documentos
+        </h1>
+        <Button
+          size="sm"
+          className="h-9"
+          onClick={() =>
+            router.push("/app/assinatura-digital/documentos/novo")
+          }
+        >
+          <FileUp className="h-4 w-4" />
+          Novo Documento
+        </Button>
+      </div>
+
+      {/* Row 2: Stats Cards */}
+      <div className="grid gap-4 md:grid-cols-5">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.total}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Rascunhos</CardTitle>
+            <FileText className="h-4 w-4 text-gray-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.rascunho}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Prontos</CardTitle>
+            <Clock className="h-4 w-4 text-blue-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.pronto}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Concluídos</CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-green-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.concluido}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Cancelados</CardTitle>
+            <XCircle className="h-4 w-4 text-red-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.cancelado}</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Row 3: DataShell (Toolbar + Table + Pagination) */}
       <DataShell
         header={
           table ? (
             <DataTableToolbar
               table={table}
-              title="Documentos"
               searchValue={globalFilter}
               onSearchValueChange={(value) => {
                 setGlobalFilter(value);
                 setPageIndex(0);
               }}
               searchPlaceholder="Buscar documentos..."
-              actionButton={{
-                label: "Novo Documento",
-                onClick: () =>
-                  router.push("/app/assinatura-digital/documentos/novo"),
-              }}
               filtersSlot={
-                <Select
+                <FilterPopover
+                  label="Status"
+                  options={STATUS_FILTER_OPTIONS}
                   value={statusFilter}
-                  onValueChange={handleStatusFilterChange}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos os status</SelectItem>
-                    <SelectItem value="rascunho">Rascunho</SelectItem>
-                    <SelectItem value="pronto">Pronto</SelectItem>
-                    <SelectItem value="concluido">Concluído</SelectItem>
-                    <SelectItem value="cancelado">Cancelado</SelectItem>
-                  </SelectContent>
-                </Select>
+                  onValueChange={(v) => {
+                    setStatusFilter(v);
+                    setPageIndex(0);
+                  }}
+                  defaultValue="all"
+                />
               }
             />
           ) : (
             <div className="p-6" />
           )
-        }
-        subHeader={
-          <div className="grid gap-4 md:grid-cols-5">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total</CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.total}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Rascunhos</CardTitle>
-                <FileText className="h-4 w-4 text-gray-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.rascunho}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Prontos</CardTitle>
-                <Clock className="h-4 w-4 text-blue-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.pronto}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Concluídos</CardTitle>
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.concluido}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Cancelados</CardTitle>
-                <XCircle className="h-4 w-4 text-red-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.cancelado}</div>
-              </CardContent>
-            </Card>
-          </div>
         }
         footer={
           totalPages > 0 ? (
