@@ -16,6 +16,7 @@ import {
   buscarCredenciaisExistentes,
   criarCredenciaisEmLoteBatch,
   atualizarSenhaCredenciais,
+  atualizarStatusCredenciaisEmLote as atualizarStatusCredenciaisEmLoteDb,
 } from './repository';
 
 import type {
@@ -146,6 +147,12 @@ export async function buscarCredencial(id: number) {
 
 export async function atualizarCredencial(id: number, params: AtualizarCredencialParams) {
     return atualizarCredencialDb(id, params);
+}
+
+export async function atualizarStatusCredenciaisEmLote(ids: number[], active: boolean) {
+  if (ids.length === 0) throw new Error('Nenhuma credencial selecionada');
+  if (ids.length > 500) throw new Error('Máximo de 500 credenciais por operação');
+  return atualizarStatusCredenciaisEmLoteDb(ids, active);
 }
 
 // ============================================================================

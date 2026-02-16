@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import type { Table as TanstackTable } from '@tanstack/react-table';
-import { Plus } from 'lucide-react';
+import type { Table as TanstackTable, RowSelectionState } from '@tanstack/react-table';
+import { Plus, PowerOff, Power } from 'lucide-react';
 import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { PageShell } from '@/components/shared/page-shell';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -30,6 +30,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import {
   actionAtualizarCredencial,
+  actionAtualizarStatusCredenciaisEmLote,
   useAdvogados,
   type Advogado,
 } from '@/features/advogados';
@@ -133,6 +134,14 @@ export default function CredenciaisPage() {
     advogado: null,
   });
 
+  // Row selection para bulk actions
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [bulkToggleDialog, setBulkToggleDialog] = useState<{
+    open: boolean;
+    action: 'ativar' | 'desativar';
+  }>({ open: false, action: 'desativar' });
+  const [isBulkLoading, setIsBulkLoading] = useState(false);
+
   const [toggleDialog, setToggleDialog] = useState<{
     open: boolean;
     credencial: Credencial | null;
@@ -217,6 +226,11 @@ export default function CredenciaisPage() {
     { label: 'Inativas', value: 'inativo' },
   ], []);
 
+  // Limpar seleção quando filtros mudam
+  useEffect(() => {
+    setRowSelection({});
+  }, [buscaDebounced, tribunalFilter, grauFilter, statusFilter]);
+
   // Filtrar credenciais
   const credenciaisFiltradas = useMemo(() => {
     return credenciais.filter((credencial) => {
@@ -258,6 +272,46 @@ export default function CredenciaisPage() {
     });
   }, [credenciais, buscaDebounced, tribunalFilter, grauFilter, statusFilter]);
 
+  // Bulk actions helpers (deve ficar após credenciaisFiltradas)
+  const selectedCount = Object.keys(rowSelection).filter((k) => rowSelection[k]).length;
+  const selectedCredenciais = useMemo(() => {
+    return Object.keys(rowSelection)
+      .filter((k) => rowSelection[k])
+      .map((idx) => credenciaisFiltradas[parseInt(idx)])
+      .filter(Boolean);
+  }, [rowSelection, credenciaisFiltradas]);
+
+  const handleBulkToggle = useCallback((action: 'ativar' | 'desativar') => {
+    setBulkToggleDialog({ open: true, action });
+  }, []);
+
+  const confirmarBulkToggle = async () => {
+    const ids = selectedCredenciais.map((c) => c.id);
+    if (ids.length === 0) return;
+
+    setIsBulkLoading(true);
+    try {
+      const active = bulkToggleDialog.action === 'ativar';
+      const result = await actionAtualizarStatusCredenciaisEmLote(ids, active);
+
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao atualizar credenciais');
+      }
+
+      toast.success(
+        `${ids.length} credencial(is) ${active ? 'ativada(s)' : 'desativada(s)'} com sucesso!`
+      );
+
+      setRowSelection({});
+      setBulkToggleDialog({ open: false, action: 'desativar' });
+      await buscarCredenciais();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Erro ao atualizar credenciais');
+    } finally {
+      setIsBulkLoading(false);
+    }
+  };
+
   const colunas = useMemo(
     () =>
       criarColunasCredenciais({
@@ -286,6 +340,33 @@ export default function CredenciaisPage() {
                 icon: <Plus className="h-4 w-4" />,
                 onClick: handleNovaCredencial,
               }}
+              actionSlot={
+                selectedCount > 0 ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">
+                      {selectedCount} selecionada(s)
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-9"
+                      onClick={() => handleBulkToggle('desativar')}
+                    >
+                      <PowerOff className="mr-1.5 h-4 w-4" />
+                      Desativar
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-9"
+                      onClick={() => handleBulkToggle('ativar')}
+                    >
+                      <Power className="mr-1.5 h-4 w-4" />
+                      Ativar
+                    </Button>
+                  </div>
+                ) : undefined
+              }
               filtersSlot={
                 <>
                   <AdvogadosFilter
@@ -322,6 +403,10 @@ export default function CredenciaisPage() {
           density={density}
           emptyMessage="Nenhuma credencial encontrada."
           hidePagination={true}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+          }}
           onTableReady={(t) => setTable(t as TanstackTable<Credencial>)}
         />
       </DataShell>
@@ -406,6 +491,36 @@ export default function CredenciaisPage() {
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={confirmarToggleStatus}>
               {toggleDialog.credencial?.active ? 'Desativar' : 'Ativar'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Bulk toggle status confirmation */}
+      <AlertDialog
+        open={bulkToggleDialog.open}
+        onOpenChange={(open) => setBulkToggleDialog({ ...bulkToggleDialog, open })}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {bulkToggleDialog.action === 'desativar' ? 'Desativar' : 'Ativar'}{' '}
+              {selectedCount} credencial(is)?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {bulkToggleDialog.action === 'desativar'
+                ? `${selectedCount} credencial(is) serão desativadas e não poderão ser usadas para capturas.`
+                : `${selectedCount} credencial(is) serão ativadas e poderão ser usadas para capturas.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isBulkLoading}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmarBulkToggle} disabled={isBulkLoading}>
+              {isBulkLoading
+                ? 'Processando...'
+                : bulkToggleDialog.action === 'desativar'
+                  ? 'Desativar'
+                  : 'Ativar'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

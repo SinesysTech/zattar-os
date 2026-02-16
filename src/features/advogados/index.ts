@@ -64,6 +64,7 @@ export {
   actionCriarCredencial,
   actionAtualizarCredencial,
   actionCriarCredenciaisEmLote,
+  actionAtualizarStatusCredenciaisEmLote,
 } from './actions/credenciais-actions';
 
 // Hooks

@@ -9,6 +9,7 @@ import {
   criarCredencial,
   atualizarCredencial,
   criarCredenciaisEmLote,
+  atualizarStatusCredenciaisEmLote,
 } from '../service';
 import {
   criarCredencialSchema,
@@ -133,6 +134,36 @@ export async function actionCriarCredenciaisEmLote(
     revalidatePath('/app/captura/advogados');
 
     return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
+
+/**
+ * Atualizar status (ativar/desativar) de múltiplas credenciais em lote
+ */
+export async function actionAtualizarStatusCredenciaisEmLote(
+  ids: number[],
+  active: boolean
+): Promise<ActionResponse> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, error: 'Não autenticado' };
+
+    const [recurso, operacao] = 'credenciais:editar'.split(':');
+    const hasPermission = await checkPermission(user.id, recurso, operacao);
+    if (!hasPermission) return { success: false, error: 'Sem permissão' };
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return { success: false, error: 'Nenhuma credencial selecionada' };
+    }
+
+    const atualizadas = await atualizarStatusCredenciaisEmLote(ids, active);
+
+    revalidatePath('/app/captura/credenciais');
+    revalidatePath('/app/captura/advogados');
+
+    return { success: true, data: { atualizadas } };
   } catch (error) {
     return { success: false, error: String(error) };
   }

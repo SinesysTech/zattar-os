@@ -589,6 +589,28 @@ export async function criarCredenciaisEmLoteBatch(
 }
 
 /**
+ * Atualizar status (ativar/desativar) de múltiplas credenciais em lote
+ */
+export async function atualizarStatusCredenciaisEmLote(
+  ids: number[],
+  active: boolean
+): Promise<number> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('credenciais')
+    .update({ active })
+    .in('id', ids)
+    .select('id');
+
+  if (error) {
+    throw new Error(`Erro ao atualizar status das credenciais: ${error.message}`);
+  }
+
+  return data?.length ?? 0;
+}
+
+/**
  * Atualizar senha de múltiplas credenciais
  */
 export async function atualizarSenhaCredenciais(
