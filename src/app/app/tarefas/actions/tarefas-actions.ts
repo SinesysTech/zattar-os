@@ -14,13 +14,33 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { authenticatedAction } from '@/lib/safe-action';
 import { authenticateRequest } from '@/lib/auth/session';
-import type { CreateTaskInput, ListTasksParams, UpdateTaskInput } from '../domain';
+import * as service from '../service';
+import type {
+  CreateTaskInput,
+  ListTasksParams,
+  UpdateTaskInput,
+  CreateSubTaskInput,
+  UpdateSubTaskInput,
+  DeleteSubTaskInput,
+  AddCommentInput,
+  DeleteCommentInput,
+  AddFileInput,
+  RemoveFileInput,
+  TaskPositionsInput
+} from '../domain';
 import {
   createTaskSchema,
   listTasksSchema,
   updateTaskSchema,
+  createSubTaskSchema,
+  updateSubTaskSchema,
+  deleteSubTaskSchema,
+  addCommentSchema,
+  deleteCommentSchema,
+  addFileSchema,
+  removeFileSchema,
+  taskPositionsSchema
 } from '../domain';
-import * as service from '../service';
 
 // =============================================================================
 // TIPOS
@@ -47,7 +67,6 @@ const idSchema = z.object({
  */
 export async function actionListarTarefas(params?: ListTasksParams): Promise<ActionResult> {
   try {
-    // Obter usuário autenticado
     const user = await authenticateRequest();
     if (!user) {
       return {
@@ -159,7 +178,7 @@ export const actionRemoverTarefa = authenticatedAction(
 );
 
 /**
- * Ajustes rápidos de status (opcional)
+ * Ajustes rápidos de status
  */
 export const actionMarcarComoDone = authenticatedAction(
   idSchema,
@@ -185,3 +204,102 @@ export const actionMarcarComoTodo = authenticatedAction(
   }
 );
 
+export const actionReordenarTarefas = authenticatedAction(
+  taskPositionsSchema,
+  async (data, { user }) => {
+    const result = await service.reorderTasks(user.id, data as TaskPositionsInput);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return { success: true };
+  }
+);
+
+// =============================================================================
+// ACTIONS DE SUBTAREFAS, COMENTÁRIOS E ANEXOS
+// =============================================================================
+
+export const actionCriarSubtarefa = authenticatedAction(
+  createSubTaskSchema,
+  async (data, { user }) => {
+    const result = await service.criarSubtarefa(user.id, data as CreateSubTaskInput);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return result.data;
+  }
+);
+
+export const actionAtualizarSubtarefa = authenticatedAction(
+  updateSubTaskSchema,
+  async (data, { user }) => {
+    const result = await service.atualizarSubtarefa(user.id, data as UpdateSubTaskInput);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return result.data;
+  }
+);
+
+export const actionRemoverSubtarefa = authenticatedAction(
+  deleteSubTaskSchema,
+  async (data, { user }) => {
+    const result = await service.removerSubtarefa(user.id, data as DeleteSubTaskInput);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return result.data;
+  }
+);
+
+export const actionAdicionarComentario = authenticatedAction(
+  addCommentSchema,
+  async (data, { user }) => {
+    const result = await service.adicionarComentario(user.id, data as AddCommentInput);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return result.data;
+  }
+);
+
+export const actionRemoverComentario = authenticatedAction(
+  deleteCommentSchema,
+  async (data, { user }) => {
+    const result = await service.removerComentario(user.id, data as DeleteCommentInput);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return result.data;
+  }
+);
+
+export const actionAdicionarAnexo = authenticatedAction(
+  addFileSchema,
+  async (data, { user }) => {
+    const result = await service.adicionarAnexo(user.id, data as AddFileInput);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return result.data;
+  }
+);
+
+export const actionRemoverAnexo = authenticatedAction(
+  removeFileSchema,
+  async (data, { user }) => {
+    const result = await service.removerAnexo(user.id, data as RemoveFileInput);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return result.data;
+  }
+);

@@ -22,7 +22,7 @@
  */
 
 import * as React from 'react';
-import { Calendar, CalendarDays, CalendarRange, List } from 'lucide-react';
+import { Calendar, CalendarDays, CalendarRange, List, CalendarCheck } from 'lucide-react';
 
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
@@ -31,7 +31,7 @@ import { cn } from '@/lib/utils';
 // TIPOS
 // =============================================================================
 
-export type ViewType = 'semana' | 'mes' | 'ano' | 'lista';
+export type ViewType = 'semana' | 'mes' | 'ano' | 'lista' | 'quadro';
 
 export interface ViewOption {
   value: ViewType;
@@ -61,6 +61,7 @@ const DEFAULT_ICONS: Record<ViewType, React.ReactNode> = {
   mes: <CalendarRange className="h-4 w-4" />,
   ano: <Calendar className="h-4 w-4" />,
   lista: <List className="h-4 w-4" />,
+  quadro: <CalendarCheck className="h-4 w-4" />,
 };
 
 const DEFAULT_VIEWS: ViewOption[] = [

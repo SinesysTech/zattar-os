@@ -36,43 +36,27 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
     enableHiding: false
   },
   {
-    accessorKey: "title",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Título" />,
+    accessorKey: "date",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Data" />,
     cell: ({ row }) => {
-      const label = labels.find((l) => l.value === row.original.label);
-      const isVirtual = row.original.isVirtual;
-      const url = row.original.url;
+      const date = row.original.date;
+      if (!date) return <span className="text-muted-foreground">-</span>;
 
+      const d = new Date(date);
       return (
-        <div className="flex items-center gap-2">
-          {label && (
-            <Badge variant={isVirtual ? "secondary" : "outline"} className="shrink-0">
-              {"icon" in label && label.icon ? <label.icon className="mr-1 size-3" /> : null}
-              {label.label}
-            </Badge>
-          )}
-          {url ? (
-            <a
-              href={url}
-              className="flex max-w-[500px] items-center gap-1 truncate font-medium text-foreground hover:text-primary hover:underline"
-              title="Abrir no módulo de origem"
-            >
-              <span className="truncate">{row.getValue("title")}</span>
-              <ExternalLink className="size-3 shrink-0 text-muted-foreground" />
-            </a>
-          ) : (
-            <span className="max-w-[500px] truncate font-medium">{row.getValue("title")}</span>
-          )}
-          {row.original.prazoVencido && (
-            <Badge variant="destructive" className="shrink-0 text-[10px]">
-              Vencido
-            </Badge>
-          )}
-        </div>
+        <span className="truncate font-medium">
+          {d.toLocaleDateString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </span>
       );
     },
     meta: {
-      headerLabel: "Título",
+      headerLabel: "Data",
     },
   },
   {
@@ -97,6 +81,38 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
     },
     meta: {
       headerLabel: "Tipo",
+    },
+  },
+  {
+    accessorKey: "title",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Título" />,
+    cell: ({ row }) => {
+      const url = row.original.url;
+
+      return (
+        <div className="flex items-center gap-2">
+          {url ? (
+            <a
+              href={url}
+              className="flex max-w-[500px] items-center gap-1 truncate font-medium text-foreground hover:text-primary hover:underline"
+              title="Abrir no módulo de origem"
+            >
+              <span className="truncate">{row.getValue("title")}</span>
+              <ExternalLink className="size-3 shrink-0 text-muted-foreground" />
+            </a>
+          ) : (
+            <span className="max-w-[500px] truncate font-medium">{row.getValue("title")}</span>
+          )}
+          {row.original.prazoVencido && (
+            <Badge variant="destructive" className="shrink-0 text-[10px]">
+              Vencido
+            </Badge>
+          )}
+        </div>
+      );
+    },
+    meta: {
+      headerLabel: "Título",
     },
   },
   {

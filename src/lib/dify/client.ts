@@ -19,9 +19,9 @@ export class DifyClient {
   private baseUrl: string;
   private apiKey: string;
 
-  constructor(apiKey?: string) {
+  constructor(apiKey?: string, baseUrl?: string) {
     const config = getDifyConfig();
-    this.baseUrl = config.DIFY_API_URL || DIFY_DEFAULT_URL;
+    this.baseUrl = baseUrl || config.DIFY_API_URL || DIFY_DEFAULT_URL;
     // Prioriza a key passada no construtor, senão usa a key padrão
     this.apiKey = apiKey || config.DIFY_API_KEY || ''; // Deve ser passado ou configurado globalmente
 

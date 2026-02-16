@@ -12,6 +12,7 @@ import {
   criarPericiaSchema,
   type Pericia,
   type ListarPericiasParams,
+  SituacaoPericiaCodigo,
 } from "./domain";
 import * as repository from "./repository";
 
@@ -102,6 +103,17 @@ export async function criarPericia(
   }
 
   return repository.criarPericia(validacao.data, advogadoId);
+}
+
+export async function atualizarSituacao(
+  periciaId: number,
+  situacaoCodigo: SituacaoPericiaCodigo
+): Promise<Result<boolean>> {
+  if (!periciaId || periciaId <= 0) {
+    return err(appError("VALIDATION_ERROR", "ID da perícia inválido."));
+  }
+  // TODO: Adicionar validação de transição de status se necessário
+  return repository.atualizarSituacaoPericia(periciaId, situacaoCodigo);
 }
 
 

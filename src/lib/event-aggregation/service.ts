@@ -351,9 +351,38 @@ export async function atualizarStatusEntidadeOrigem(
 
       case "pericias": {
         // Perícias: status update via situacaoCodigo
-        // done/completed → F, canceled → C
-        // Outros status ativos não são atualizados via todo (são gerenciados no módulo)
-        // TODO: implementar quando pericias tiver action de atualizar situação
+        // done/completed → F (Finalizada)
+        // canceled → C (Cancelada)
+        // Outros status → não altera (ou poderia voltar para L - Aguardando Laudo, mas depende do fluxo)
+
+        let situacao: SituacaoPericiaCodigo | undefined;
+
+        if (novoStatus === "done" || novoStatus === "completed") {
+          situacao = SituacaoPericiaCodigo.FINALIZADA;
+        } else if (novoStatus === "canceled") {
+          situacao = SituacaoPericiaCodigo.CANCELADA;
+        }
+
+        if (situacao) {
+          // Importação dinâmica para evitar ciclos se necessário, ou garantir que o import no topo está correto.
+          // Como pericias/index.ts exporta o service, idealmente usariamos o service aqui.
+          // Mas o `event-aggregation/service.ts` já importa de `@/features/pericias`.
+          // Vou assumir que falta expor `atualizarSituacao` no index.ts de pericias ou importar direto do service.
+          // Olhando os imports: `import { ... } from "@/features/pericias";`
+          // Vou precisar garantir que `atualizarSituacao` esteja exportado em `@/features/pericias` ou importar de `@/features/pericias/service`
+
+          // Por segurança e padrão, vou usar uma importação direta do service se não estiver no index, 
+          // mas o arquivo já tem imports de `@/features/pericias`. Vou checar se precisa atualizar o index.ts.
+          // O código abaixo assume que `atualizarSituacao` sera disponibilizado.
+
+          // Para evitar erro de build agora, vou chamar direto do service que acabei de criar,
+          // mas preciso adicionar o import.
+
+          const { atualizarSituacao } = await import("@/features/pericias/service");
+          const result = await atualizarSituacao(numericId, situacao);
+          if (!result.success) return err(result.error);
+        }
+
         return ok(undefined);
       }
 

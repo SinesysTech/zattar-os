@@ -47,6 +47,10 @@ const LABEL_LABEL: Record<TaskLabel, string> = {
   bug: "Bug",
   feature: "Funcionalidade",
   documentation: "Documentação",
+  audiencia: "Audiência",
+  expediente: "Expediente",
+  obrigacao: "Obrigação",
+  pericia: "Perícia",
 };
 
 export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
@@ -244,6 +248,10 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
                   <SelectItem value="bug">Bug</SelectItem>
                   <SelectItem value="feature">Funcionalidade</SelectItem>
                   <SelectItem value="documentation">Documentação</SelectItem>
+                  <SelectItem value="audiencia">Audiência</SelectItem>
+                  <SelectItem value="expediente">Expediente</SelectItem>
+                  <SelectItem value="obrigacao">Obrigação</SelectItem>
+                  <SelectItem value="pericia">Perícia</SelectItem>
                 </SelectContent>
               </Select>
             </div>

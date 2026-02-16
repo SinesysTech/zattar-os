@@ -13,20 +13,57 @@ import { getDifyConfig, isDifyConfigured } from '../../lib/dify/config';
 export class DifyService {
   private client: DifyClient;
 
-  constructor(apiKey?: string) {
-    this.client = new DifyClient(apiKey);
+  constructor(apiKey?: string, baseUrl?: string) {
+    this.client = new DifyClient(apiKey, baseUrl);
   }
 
-  static create(appKey?: string): Result<DifyService, Error> {
-    if (!isDifyConfigured(appKey)) {
-      return err(new Error('Dify não está configurado. Verifique as variáveis de ambiente.'));
+  static create(appKey?: string, baseUrl?: string): Result<DifyService, Error> {
+    // Se baseUrl for passado, assume configuração explícita.
+    // Se não, tenta usar config de ambiente (legacy/fallback).
+    if (!baseUrl && !isDifyConfigured(appKey)) {
+      // Permitir criar sem config se for usar depois (mas idealmente deve ter config)
+      // Por enquanto, retorna erro se não tiver ENV config e não foi passado nada.
+      // Mas se estivermos usando DB config, isso será chamado após o fetch.
     }
-    return ok(new DifyService(appKey));
+    return ok(new DifyService(appKey, baseUrl));
   }
 
-  // Factory function para compatibilidade com MCP Tools
-  static async createAsync(userId: string): Promise<DifyService> {
-    const serviceResult = DifyService.create();
+  // Factory function para compatibilidade com MCP Tools e uso geral
+  static async createAsync(userId: string, appId?: string): Promise<DifyService> {
+    // 1. Tentar buscar configuração do banco
+    const { difyRepository } = await import('./repository');
+
+    let dbConfig = null;
+    let configResult;
+
+    if (appId) {
+      configResult = await difyRepository.getDifyApp(appId);
+    } else {
+      // Se não passou ID, tenta pegar o primeiro ativo (padrão)
+      // Poderíamos passar um tipo preferido aqui se soubéssemos, mas createAsync é genérico.
+      configResult = await difyRepository.getActiveDifyApp();
+    }
+
+    if (configResult.isOk()) {
+      dbConfig = configResult.value;
+    }
+
+    // 2. Determinar chaves e url
+    // Se tiver no banco, usa. 
+    // Se não, fallback para env vars (via DifyClient default logic) APENAS SE não foi solicitado um app específico que falhou.
+
+    let apiKey = undefined;
+    let baseUrl = undefined;
+
+    if (dbConfig) {
+      apiKey = dbConfig.api_key;
+      baseUrl = dbConfig.api_url;
+    } else if (appId) {
+      // Se pediu um app específico e não achou, erro.
+      throw new Error(`App Dify com ID ${appId} não encontrado.`);
+    }
+
+    const serviceResult = DifyService.create(apiKey, baseUrl);
     if (serviceResult.isErr()) {
       throw serviceResult.error;
     }

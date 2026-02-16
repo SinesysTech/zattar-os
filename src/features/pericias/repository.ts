@@ -101,10 +101,10 @@ function converterParaPericia(data: PericiaRowWithJoins): Pericia {
       : null,
     processo: data.processo
       ? {
-          numeroProcesso: data.processo.numero_processo,
-          nomeParteAutora: data.processo.nome_parte_autora,
-          nomeParteRe: data.processo.nome_parte_re,
-        }
+        numeroProcesso: data.processo.numero_processo,
+        nomeParteAutora: data.processo.nome_parte_autora,
+        nomeParteRe: data.processo.nome_parte_re,
+      }
       : null,
   };
 }
@@ -432,6 +432,37 @@ export async function criarPericia(
       appError(
         "DATABASE_ERROR",
         "Erro ao criar perícia.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+export async function atualizarSituacaoPericia(
+  periciaId: number,
+  situacaoCodigo: SituacaoPericiaCodigo
+): Promise<Result<boolean>> {
+  try {
+    const db = createDbClient();
+    const { error } = await db
+      .from(TABLE_PERICIAS)
+      .update({
+        situacao_codigo: situacaoCodigo,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", periciaId);
+
+    if (error) {
+      return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    }
+
+    return ok(true);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao atualizar situação da perícia.",
         undefined,
         error instanceof Error ? error : undefined
       )

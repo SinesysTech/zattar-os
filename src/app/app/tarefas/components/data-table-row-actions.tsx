@@ -18,15 +18,64 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import { labels } from "../data/data";
-import { taskSchema } from "../domain";
+import { TarefaDisplayItem, taskSchema, TaskLabel } from "../domain";
+import { priorities, statuses, labels } from "@/app/app/tarefas/data/data";
+import { useTarefaStore } from "../store";
+import * as actions from "../actions/tarefas-actions";
+import { toast } from "sonner";
+import * as React from "react";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
-  const task = taskSchema.parse(row.original);
+  const task = row.original as TarefaDisplayItem;
+  const { setSelectedTarefaId, setTarefaSheetOpen, upsertTarefa, removeTarefa } = useTarefaStore();
+  const [isPending, startTransition] = React.useTransition();
+
+  const handleEdit = () => {
+    setSelectedTarefaId(task.id);
+    setTarefaSheetOpen(true);
+  };
+
+  const handleToggleStarred = () => {
+    startTransition(async () => {
+      const result = await actions.actionAtualizarTarefa({
+        id: task.id,
+        starred: !task.starred,
+      });
+      if (result.success) {
+        upsertTarefa({ ...task, starred: !task.starred });
+        toast.success(task.starred ? "Removido dos favoritos" : "Adicionado aos favoritos");
+      }
+    });
+  };
+
+  const handleDelete = () => {
+    if (confirm("Tem certeza que deseja excluir esta tarefa?")) {
+      startTransition(async () => {
+        const result = await actions.actionRemoverTarefa({ id: task.id });
+        if (result.success) {
+          removeTarefa(task.id);
+          toast.success("Tarefa excluída");
+        }
+      });
+    }
+  };
+
+  const handleUpdateLabel = (labelValue: string) => {
+    startTransition(async () => {
+      const result = await actions.actionAtualizarTarefa({
+        id: task.id,
+        label: labelValue as any,
+      });
+      if (result.success) {
+        upsertTarefa({ ...task, label: labelValue as any });
+        toast.success("Etiqueta atualizada");
+      }
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -37,15 +86,21 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Editar</DropdownMenuItem>
-        <DropdownMenuItem>Duplicar</DropdownMenuItem>
-        <DropdownMenuItem>Favoritar</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleEdit}>Detalhes</DropdownMenuItem>
+        {!task.source && (
+          <DropdownMenuItem onClick={handleToggleStarred}>
+            {task.starred ? "Remover favorito" : "Favoritar"}
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Etiquetas</DropdownMenuSubTrigger>
+          <DropdownMenuSubTrigger disabled={task.isVirtual}>Etiquetas</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={task.label}>
-              {labels.map((label) => (
+            <DropdownMenuRadioGroup
+              value={task.label}
+              onValueChange={handleUpdateLabel}
+            >
+              {labels.map((label: any) => (
                 <DropdownMenuRadioItem key={label.value} value={label.value}>
                   {label.label}
                 </DropdownMenuRadioItem>
@@ -54,7 +109,11 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive">
+        <DropdownMenuItem
+          variant="destructive"
+          onClick={handleDelete}
+          disabled={task.isVirtual}
+        >
           Excluir
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>

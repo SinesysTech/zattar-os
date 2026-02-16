@@ -38,7 +38,7 @@ export function DataTableViewOptions<TData>({ table }: { table: Table<TData> }) 
                 className="capitalize"
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}>
-                {column.id}
+                {(column.columnDef.meta as any)?.headerLabel ?? column.id}
               </DropdownMenuCheckboxItem>
             );
           })}

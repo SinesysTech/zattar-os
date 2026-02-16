@@ -94,7 +94,6 @@ const navServicos = [
       { title: "Kanban", url: "/app/kanban" },
       { title: "Notas", url: "/app/notas" },
       { title: "Tarefas", url: "/app/tarefas" },
-      { title: "To-Do", url: "/app/todo" },
     ],
   },
   {

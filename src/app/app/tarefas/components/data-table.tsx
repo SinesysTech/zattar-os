@@ -28,12 +28,15 @@ import {
 import { DataShell, DataTableToolbar } from "@/components/shared/data-shell";
 import { ViewModePopover } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { X, List } from "lucide-react";
+import { X, List, LayoutGrid } from "lucide-react";
 
-import { priorities, statuses, labels } from "../data/data";
+import { priorities, statuses, labels } from "@/app/app/tarefas/data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { TaskDialog } from "./task-dialog";
+import { TaskDetailSheet } from "./task-detail-sheet";
 import { DataTablePagination } from "./data-table-pagination";
+import { useTarefaStore } from "../store";
+import { TarefaDisplayItem } from "../domain";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,15 +44,25 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+  const {
+    setTarefas,
+    setSelectedTarefaId,
+    setTarefaSheetOpen,
+    setCreateDialogOpen,
+    viewMode,
+    setViewMode
+  } = useTarefaStore();
+
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
 
-  // TanStack Table's useReactTable returns functions that cannot be memoized by React Compiler.
-  // This is expected and safe - the library handles memoization internally.
-  // eslint-disable-next-line react-hooks/incompatible-library
+  // Sincronizar dados com o store
+  React.useEffect(() => {
+    setTarefas(data as TarefaDisplayItem[]);
+  }, [data, setTarefas]);
+
   const table = useReactTable({
     data,
     columns,
@@ -79,6 +92,11 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 
   const isFiltered = table.getState().columnFilters.length > 0;
 
+  const handleRowClick = (id: string) => {
+    setSelectedTarefaId(id);
+    setTarefaSheetOpen(true);
+  };
+
   return (
     <>
       <DataShell
@@ -89,16 +107,17 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
             title="Tarefas"
             actionButton={{
               label: "Nova tarefa",
-              onClick: () => setIsCreateDialogOpen(true),
+              onClick: () => setCreateDialogOpen(true),
             }}
             viewModeSlot={
               <ViewModePopover
-                value="lista"
-                onValueChange={() => { }}
+                value={viewMode as any}
+                onValueChange={(v) => setViewMode(v as any)}
                 options={[
-                  { value: 'lista', label: 'Lista', icon: List }
+                  { value: 'lista' as any, label: 'Lista', icon: List },
+                  { value: 'quadro' as any, label: 'Quadro', icon: LayoutGrid }
                 ]}
-                className="hidden lg:flex" // Keep it aligned, technically tasks uses list only for now
+                className="hidden lg:flex"
               />
             }
             filtersSlot={
@@ -160,7 +179,12 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleRowClick((row.original as TarefaDisplayItem).id)}
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -179,8 +203,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </Table>
         </div>
       </DataShell>
-
-      <TaskDialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} />
     </>
   );
 }
