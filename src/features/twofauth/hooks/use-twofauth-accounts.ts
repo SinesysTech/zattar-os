@@ -25,6 +25,7 @@ interface UseTwoFAuthAccountsState {
   otpLoading: boolean;
   otpError: string | null;
   timeRemaining: number;
+  isPermissionError: boolean;
 }
 
 interface UseTwoFAuthAccountsReturn extends UseTwoFAuthAccountsState {
@@ -59,6 +60,7 @@ export function useTwoFAuthAccounts(): UseTwoFAuthAccountsReturn {
   const [otpLoading, setOtpLoading] = useState(false);
   const [otpError, setOtpError] = useState<string | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(30);
+  const [isPermissionError, setIsPermissionError] = useState(false);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const isMountedRef = useRef(true);
@@ -68,12 +70,19 @@ export function useTwoFAuthAccounts(): UseTwoFAuthAccountsReturn {
   // ---------------------------------------------------------------------------
 
   const fetchAccounts = useCallback(async () => {
+    if (isPermissionError) return;
+
     setIsLoading(true);
     setError(null);
 
     try {
       const response = await fetch("/api/twofauth/accounts");
       const data = await response.json();
+
+      if (response.status === 401 || response.status === 403) {
+        setIsPermissionError(true);
+        throw new Error("Não autorizado. Verifique as configurações de API.");
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Erro ao buscar contas");
@@ -336,6 +345,7 @@ export function useTwoFAuthAccounts(): UseTwoFAuthAccountsReturn {
     otpLoading,
     otpError,
     timeRemaining,
+    isPermissionError,
 
     // Queries
     fetchAccounts,

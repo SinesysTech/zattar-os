@@ -55,28 +55,28 @@ export function WidgetFluxoCaixa() {
       <CardContent className="flex-1 min-h-70 overflow-x-auto">
         <div className="w-full h-64 sm:h-72 lg:h-80">
           <ClientOnly>
-            <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={280}>
-            <BarChart data={data || []} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
-              <XAxis
-                dataKey="mes"
-                tick={{ fontSize: 10 }}
-                className="text-xs sm:text-sm"
-              />
-              <YAxis
-                tickFormatter={(value) => formatarValor(value as number)}
-                tick={{ fontSize: 10 }}
-                className="text-xs sm:text-sm"
-                width={70}
-              />
-              <Tooltip
-                formatter={(value: number | undefined) => value !== undefined ? formatarValor(value) : ''}
-                contentStyle={{ fontSize: '12px' }}
-                cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
-              />
-              <Bar dataKey="receitas" fill="hsl(var(--chart-4))" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="despesas" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data || []} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
+                <XAxis
+                  dataKey="mes"
+                  tick={{ fontSize: 10 }}
+                  className="text-xs sm:text-sm"
+                />
+                <YAxis
+                  tickFormatter={(value) => formatarValor(value as number)}
+                  tick={{ fontSize: 10 }}
+                  className="text-xs sm:text-sm"
+                  width={70}
+                />
+                <Tooltip
+                  formatter={(value: number | undefined) => value !== undefined ? formatarValor(value) : ''}
+                  contentStyle={{ fontSize: '12px' }}
+                  cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
+                />
+                <Bar dataKey="receitas" fill="hsl(var(--chart-4))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="despesas" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </ClientOnly>
         </div>
       </CardContent>
