@@ -474,7 +474,6 @@ export function FormulariosClient() {
         <Button
           variant="outline"
           size="sm"
-          className="h-10"
           onClick={handleExportCSV}
         >
           <Download className="h-4 w-4 mr-2" />
@@ -484,7 +483,6 @@ export function FormulariosClient() {
           <Button
             variant="destructive"
             size="sm"
-            className="h-10"
             onClick={handleBulkDeleteClick}
           >
             <Trash2 className="h-4 w-4 mr-2" />
@@ -531,7 +529,7 @@ export function FormulariosClient() {
                     value={filtros.ativo === undefined ? 'all' : filtros.ativo ? 'true' : 'false'}
                     onValueChange={handleAtivoFilterChange}
                   >
-                    <SelectTrigger className="h-10 w-[150px]">
+                    <SelectTrigger className="w-[150px]">
                       <SelectValue placeholder="Ativo" />
                     </SelectTrigger>
                     <SelectContent>
@@ -545,7 +543,7 @@ export function FormulariosClient() {
                     value={filtros.foto_necessaria === undefined ? 'all' : filtros.foto_necessaria ? 'true' : 'false'}
                     onValueChange={handleFotoNecessariaFilterChange}
                   >
-                    <SelectTrigger className="h-10 w-[180px]">
+                    <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Foto necessária" />
                     </SelectTrigger>
                     <SelectContent>
@@ -559,7 +557,7 @@ export function FormulariosClient() {
                     value={filtros.geolocation_necessaria === undefined ? 'all' : filtros.geolocation_necessaria ? 'true' : 'false'}
                     onValueChange={handleGeolocationNecessariaFilterChange}
                   >
-                    <SelectTrigger className="h-10 w-[200px]">
+                    <SelectTrigger className="w-[200px]">
                       <SelectValue placeholder="Geolocalização necessária" />
                     </SelectTrigger>
                     <SelectContent>
@@ -575,7 +573,6 @@ export function FormulariosClient() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="h-10"
                       onClick={() => setSegmentosDialogOpen(true)}
                     >
                       <Tags className="h-4 w-4 mr-2" />
