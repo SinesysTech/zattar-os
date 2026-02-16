@@ -2,7 +2,9 @@
 
 import * as React from 'react';
 import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
+import { Plus } from 'lucide-react';
 import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { PageShell } from '@/components/shared/page-shell';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -16,16 +18,34 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { actionAtualizarCredencial } from '@/features/advogados';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import {
+  actionAtualizarCredencial,
+  useAdvogados,
+  type Advogado,
+} from '@/features/advogados';
+import { AdvogadoCombobox } from '@/features/captura';
 import { criarColunasCredenciais } from '../components/credenciais/credenciais-columns';
 import { AdvogadoViewDialog } from '../components/credenciais/advogado-view-dialog';
-import { CredenciaisDialog } from '../components/credenciais/credenciais-dialog';
+import { CredenciaisAdvogadoDialog } from '../components/advogados/credenciais-advogado-dialog';
 import { AdvogadosFilter } from '../components/advogados/advogados-filter';
 import { toast } from 'sonner';
 import { GRAU_LABELS } from '@/lib/design-system';
 import type { Credencial } from '@/features/captura/types';
 
 export default function CredenciaisPage() {
+  const searchParams = useSearchParams();
+  const advogadoIdFromUrl = searchParams.get('advogado');
+
   const [credenciais, setCredenciais] = useState<Credencial[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +59,12 @@ export default function CredenciaisPage() {
     setError(null);
 
     try {
-      const response = await fetch('/api/captura/credenciais');
+      const params = new URLSearchParams();
+      if (advogadoIdFromUrl) {
+        params.set('advogado_id', advogadoIdFromUrl);
+      }
+      const url = `/api/captura/credenciais${params.toString() ? `?${params.toString()}` : ''}`;
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Erro ao buscar credenciais');
       }
@@ -55,7 +80,7 @@ export default function CredenciaisPage() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [advogadoIdFromUrl]);
 
   useEffect(() => {
     buscarCredenciais();
@@ -83,6 +108,9 @@ export default function CredenciaisPage() {
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
 
+  // Buscar advogados para o seletor de "Nova Credencial"
+  const { advogados: advogadosList, isLoading: advogadosLoading } = useAdvogados({ limite: 100 });
+
   // Estados de dialogs
   const [advogadoDialog, setAdvogadoDialog] = useState<{
     open: boolean;
@@ -92,12 +120,17 @@ export default function CredenciaisPage() {
     credencial: null,
   });
 
-  const [credencialDialog, setCredencialDialog] = useState<{
+  // Dialog para selecionar advogado antes de criar credenciais
+  const [selecionarAdvogadoDialog, setSelecionarAdvogadoDialog] = useState(false);
+  const [selectedAdvogadoId, setSelectedAdvogadoId] = useState<number | null>(null);
+
+  // Dialog de credenciais (batch) para o advogado selecionado
+  const [credenciaisAdvogadoDialog, setCredenciaisAdvogadoDialog] = useState<{
     open: boolean;
-    credencial: Credencial | null;
+    advogado: Advogado | null;
   }>({
     open: false,
-    credencial: null,
+    advogado: null,
   });
 
   const [toggleDialog, setToggleDialog] = useState<{
@@ -114,8 +147,14 @@ export default function CredenciaisPage() {
   }, []);
 
   const handleEdit = useCallback((credencial: Credencial) => {
-    setCredencialDialog({ open: true, credencial });
-  }, []);
+    // Encontrar o advogado e abrir o dialog de credenciais dele
+    const advogado = advogadosList.find((a) => a.id === credencial.advogado_id);
+    if (advogado) {
+      setCredenciaisAdvogadoDialog({ open: true, advogado });
+    } else {
+      toast.error('Advogado não encontrado');
+    }
+  }, [advogadosList]);
 
   const handleToggleStatus = useCallback((credencial: Credencial) => {
     setToggleDialog({ open: true, credencial });
@@ -141,6 +180,27 @@ export default function CredenciaisPage() {
     }
   };
 
+  // Handler para "Nova Credencial"
+  const handleNovaCredencial = useCallback(() => {
+    setSelectedAdvogadoId(null);
+    setSelecionarAdvogadoDialog(true);
+  }, []);
+
+  // Confirmar seleção de advogado e abrir dialog de credenciais
+  const handleConfirmarAdvogado = useCallback(() => {
+    if (!selectedAdvogadoId) {
+      toast.error('Selecione um advogado');
+      return;
+    }
+    const advogado = advogadosList.find((a) => a.id === selectedAdvogadoId);
+    if (!advogado) {
+      toast.error('Advogado não encontrado');
+      return;
+    }
+    setSelecionarAdvogadoDialog(false);
+    setCredenciaisAdvogadoDialog({ open: true, advogado });
+  }, [selectedAdvogadoId, advogadosList]);
+
   // Opções para filtros (extraídas dos dados)
   const tribunalOptions = useMemo(() => {
     const tribunais = [...new Set(credenciais.map((c) => c.tribunal))].sort();
@@ -163,10 +223,15 @@ export default function CredenciaisPage() {
       // Filtro de busca
       if (buscaDebounced) {
         const buscaLower = buscaDebounced.toLowerCase();
+        const oabMatch = credencial.advogado_oabs.some(
+          (oab) =>
+            oab.numero.toLowerCase().includes(buscaLower) ||
+            oab.uf.toLowerCase().includes(buscaLower)
+        );
         const match =
           credencial.advogado_nome.toLowerCase().includes(buscaLower) ||
           credencial.advogado_cpf.includes(buscaDebounced) ||
-          credencial.advogado_oab.toLowerCase().includes(buscaLower);
+          oabMatch;
 
         if (!match) return false;
       }
@@ -210,7 +275,7 @@ export default function CredenciaisPage() {
           table ? (
             <DataTableToolbar
               table={table}
-              title="Credenciais"
+              title={advogadoIdFromUrl ? 'Credenciais (filtrado por advogado)' : 'Credenciais'}
               density={density}
               onDensityChange={setDensity}
               searchValue={busca}
@@ -218,7 +283,8 @@ export default function CredenciaisPage() {
               searchPlaceholder="Buscar credenciais..."
               actionButton={{
                 label: 'Nova Credencial',
-                onClick: () => setCredencialDialog({ open: true, credencial: null }),
+                icon: <Plus className="h-4 w-4" />,
+                onClick: handleNovaCredencial,
               }}
               filtersSlot={
                 <>
@@ -260,23 +326,67 @@ export default function CredenciaisPage() {
         />
       </DataShell>
 
-      {/* Dialogs */}
+      {/* Dialog de visualização do advogado */}
       <AdvogadoViewDialog
         credencial={advogadoDialog.credencial}
         open={advogadoDialog.open}
         onOpenChange={(open) => setAdvogadoDialog({ ...advogadoDialog, open })}
       />
 
-      <CredenciaisDialog
-        credencial={credencialDialog.credencial}
-        open={credencialDialog.open}
-        onOpenChange={(open) => setCredencialDialog({ ...credencialDialog, open })}
-        onSuccess={() => {
-          refetch();
-          setCredencialDialog({ open: false, credencial: null });
-        }}
+      {/* Dialog para selecionar advogado antes de criar credenciais */}
+      <Dialog
+        open={selecionarAdvogadoDialog}
+        onOpenChange={setSelecionarAdvogadoDialog}
+      >
+        <DialogContent className="sm:max-w-[450px]">
+          <DialogHeader>
+            <DialogTitle>Nova Credencial</DialogTitle>
+            <DialogDescription>
+              Selecione o advogado para cadastrar credenciais de acesso aos tribunais.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <div className="grid gap-2">
+              <Label>Advogado</Label>
+              <AdvogadoCombobox
+                advogados={advogadosList}
+                selectedId={selectedAdvogadoId}
+                onSelectionChange={setSelectedAdvogadoId}
+                isLoading={advogadosLoading}
+                placeholder="Selecione um advogado..."
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setSelecionarAdvogadoDialog(false)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleConfirmarAdvogado}
+              disabled={!selectedAdvogadoId}
+            >
+              Continuar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de credenciais do advogado (com cadastro em massa) */}
+      <CredenciaisAdvogadoDialog
+        open={credenciaisAdvogadoDialog.open}
+        onOpenChangeAction={(open) =>
+          setCredenciaisAdvogadoDialog({ ...credenciaisAdvogadoDialog, open })
+        }
+        advogado={credenciaisAdvogadoDialog.advogado}
+        onRefreshAction={() => refetch()}
       />
 
+      {/* Toggle status confirmation */}
       <AlertDialog
         open={toggleDialog.open}
         onOpenChange={(open) => setToggleDialog({ ...toggleDialog, open })}

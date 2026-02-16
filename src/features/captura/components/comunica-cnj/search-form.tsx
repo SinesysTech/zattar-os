@@ -31,6 +31,7 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Check, ChevronDown, Loader2, Search, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAdvogados } from '@/features/advogados';
+import { formatOabs, formatOab, getPrimaryOab } from '@/features/advogados/domain';
 import { actionListarTribunaisDisponiveis } from '../../actions/comunica-cnj-actions';
 import type { TribunalInfo } from '../../comunica-cnj/domain';
 
@@ -128,6 +129,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
   const [tribunalSearchTerm, setTribunalSearchTerm] = useState('');
   const [advogadoSearchOpen, setAdvogadoSearchOpen] = useState(false);
   const [selectedAdvogadoId, setSelectedAdvogadoId] = useState<number | null>(null);
+  const [selectedOabIndex, setSelectedOabIndex] = useState<number>(0);
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>();
   const [selectedMeio, setSelectedMeio] = useState<string>('');
 
@@ -227,6 +229,9 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
   const selectedAdvogado = advogados?.find((a) => a.id === selectedAdvogadoId);
 
   const onSubmit = async (data: SearchFormData) => {
+    // Obter a OAB selecionada do advogado
+    const selectedOab = selectedAdvogado?.oabs[selectedOabIndex];
+
     await onSearch({
       ...data,
       // Adicionar datas do range picker
@@ -235,9 +240,9 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
       // Adicionar meio (se não for vazio)
       meio: selectedMeio || undefined,
       // Adicionar OAB do advogado selecionado
-      ...(selectedAdvogado && {
-        numeroOab: selectedAdvogado.oab,
-        ufOab: selectedAdvogado.uf_oab,
+      ...(selectedOab && {
+        numeroOab: selectedOab.numero,
+        ufOab: selectedOab.uf,
       }),
     });
   };
@@ -245,6 +250,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
   const handleReset = () => {
     reset();
     setSelectedAdvogadoId(null);
+    setSelectedOabIndex(0);
     setDateRange(undefined);
     setSelectedMeio('');
   };
@@ -369,7 +375,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                   </span>
                 ) : selectedAdvogado ? (
                   <span className="truncate text-left">
-                    {selectedAdvogado.nome_completo.split(' ')[0]} - {selectedAdvogado.oab}
+                    {selectedAdvogado.nome_completo.split(' ')[0]} - {formatOab(selectedAdvogado.oabs[selectedOabIndex] || getPrimaryOab(selectedAdvogado)!)}
                   </span>
                 ) : (
                   <span className="text-muted-foreground">Selecione</span>
@@ -383,30 +389,35 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                 <CommandList>
                   <CommandEmpty>Nenhum advogado encontrado</CommandEmpty>
                   <CommandGroup>
-                    {advogados?.map((advogado) => (
-                      <CommandItem
-                        key={advogado.id}
-                        value={`${advogado.nome_completo} ${advogado.oab} ${advogado.uf_oab}`}
-                        onSelect={() => {
-                          setSelectedAdvogadoId(advogado.id);
-                          setAdvogadoSearchOpen(false);
-                        }}
-                        className="py-1.5"
-                      >
-                        <Check
-                          className={cn(
-                            'mr-1.5 h-3 w-3 shrink-0',
-                            selectedAdvogadoId === advogado.id ? 'opacity-100' : 'opacity-0'
-                          )}
-                        />
-                        <div className="flex flex-col min-w-0">
-                          <span className="font-medium text-sm truncate">{advogado.nome_completo}</span>
-                          <span className="text-xs text-muted-foreground">
-                            OAB {advogado.oab}/{advogado.uf_oab}
-                          </span>
-                        </div>
-                      </CommandItem>
-                    ))}
+                    {advogados?.map((advogado) => {
+                      // Texto de busca inclui todas as OABs
+                      const oabsSearch = advogado.oabs.map((oab) => `${oab.numero} ${oab.uf}`).join(' ');
+                      return (
+                        <CommandItem
+                          key={advogado.id}
+                          value={`${advogado.nome_completo} ${oabsSearch}`}
+                          onSelect={() => {
+                            setSelectedAdvogadoId(advogado.id);
+                            setSelectedOabIndex(0); // Reset para primeira OAB
+                            setAdvogadoSearchOpen(false);
+                          }}
+                          className="py-1.5"
+                        >
+                          <Check
+                            className={cn(
+                              'mr-1.5 h-3 w-3 shrink-0',
+                              selectedAdvogadoId === advogado.id ? 'opacity-100' : 'opacity-0'
+                            )}
+                          />
+                          <div className="flex flex-col min-w-0">
+                            <span className="font-medium text-sm truncate">{advogado.nome_completo}</span>
+                            <span className="text-xs text-muted-foreground">
+                              OAB {formatOabs(advogado.oabs)}
+                            </span>
+                          </div>
+                        </CommandItem>
+                      );
+                    })}
                   </CommandGroup>
                 </CommandList>
               </Command>
@@ -466,6 +477,30 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
           </div>
         </div>
       </div>
+
+      {/* Seletor de OAB - aparece quando advogado tem múltiplas OABs */}
+      {selectedAdvogado && selectedAdvogado.oabs.length > 1 && (
+        <div className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg">
+          <span className="text-sm text-muted-foreground">
+            Advogado com múltiplas OABs. Selecione qual usar na busca:
+          </span>
+          <Select
+            value={selectedOabIndex.toString()}
+            onValueChange={(v) => setSelectedOabIndex(parseInt(v, 10))}
+          >
+            <SelectTrigger className="h-9 text-sm w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {selectedAdvogado.oabs.map((oab, index) => (
+                <SelectItem key={index} value={index.toString()}>
+                  {oab.numero}/{oab.uf}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       {/* Erro de validação */}
       {errors.root && (

@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import type { Credencial } from '@/features/captura/types';
+import { formatOabs } from '@/features/advogados/domain';
 
 type Props = {
   credencial: Credencial | null;
@@ -34,7 +35,7 @@ export function AdvogadoViewDialog({ credencial, open, onOpenChange }: Props) {
             <div>
               <p className="text-sm font-medium">{credencial.advogado_nome}</p>
               <p className="text-xs text-muted-foreground">
-                CPF {credencial.advogado_cpf} • OAB {credencial.advogado_oab}/{credencial.advogado_uf_oab}
+                CPF {credencial.advogado_cpf} • OAB {formatOabs(credencial.advogado_oabs)}
               </p>
             </div>
 

@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { useState, useMemo, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
@@ -23,15 +22,21 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
-import { useAdvogados, type Advogado } from '@/features/advogados';
+import {
+  useAdvogados,
+  actionCriarAdvogado,
+  actionAtualizarAdvogado,
+  type Advogado,
+  type CriarAdvogadoParams,
+  type AtualizarAdvogadoParams,
+} from '@/features/advogados';
 import { UFS_BRASIL } from '@/features/advogados/domain';
 import { criarColunasAdvogados } from '../components/advogados/advogados-columns';
-import { AdvogadosDialog } from '../components/advogados/advogados-dialog';
+import { AdvogadoDialog } from '../components/advogados/advogado-dialog';
 import { AdvogadosFilter } from '../components/advogados/advogados-filter';
+import { CredenciaisAdvogadoDialog } from '../components/advogados/credenciais-advogado-dialog';
 
 export default function AdvogadosPage() {
-  const router = useRouter();
-
   // Estados de busca e filtros
   const [busca, setBusca] = useState('');
   const [ufFilter, setUfFilter] = useState<string>('all');
@@ -62,6 +67,16 @@ export default function AdvogadosPage() {
   const [advogadoDialog, setAdvogadoDialog] = useState<{
     open: boolean;
     advogado: Advogado | null;
+    mode: 'create' | 'edit';
+  }>({
+    open: false,
+    advogado: null,
+    mode: 'create',
+  });
+
+  const [credenciaisDialog, setCredenciaisDialog] = useState<{
+    open: boolean;
+    advogado: Advogado | null;
   }>({
     open: false,
     advogado: null,
@@ -77,19 +92,36 @@ export default function AdvogadosPage() {
 
   // Handlers
   const handleEdit = useCallback((advogado: Advogado) => {
-    setAdvogadoDialog({ open: true, advogado });
+    setAdvogadoDialog({ open: true, advogado, mode: 'edit' });
   }, []);
 
   const handleDelete = useCallback((advogado: Advogado) => {
     setDeleteDialog({ open: true, advogado });
   }, []);
 
-  const handleViewCredenciais = useCallback(
-    (advogado: Advogado) => {
-      // Navegar para credenciais com filtro pelo advogado
-      router.push(`/app/captura/credenciais?advogado=${advogado.id}`);
+  const handleViewCredenciais = useCallback((advogado: Advogado) => {
+    setCredenciaisDialog({ open: true, advogado });
+  }, []);
+
+  const handleSaveAdvogado = useCallback(
+    async (data: CriarAdvogadoParams | AtualizarAdvogadoParams) => {
+      if (advogadoDialog.advogado && advogadoDialog.mode === 'edit') {
+        const result = await actionAtualizarAdvogado(advogadoDialog.advogado.id, data);
+        if (!result.success) {
+          throw new Error(result.error || 'Erro ao atualizar advogado');
+        }
+        toast.success('Advogado atualizado com sucesso!');
+      } else {
+        const result = await actionCriarAdvogado(data as CriarAdvogadoParams);
+        if (!result.success) {
+          throw new Error(result.error || 'Erro ao criar advogado');
+        }
+        toast.success('Advogado cadastrado com sucesso!');
+      }
+      setAdvogadoDialog({ open: false, advogado: null, mode: 'create' });
+      refetch();
     },
-    [router]
+    [advogadoDialog.advogado, advogadoDialog.mode, refetch]
   );
 
   const confirmarDelete = async () => {
@@ -139,7 +171,7 @@ export default function AdvogadosPage() {
               actionButton={{
                 label: 'Novo Advogado',
                 icon: <Plus className="h-4 w-4" />,
-                onClick: () => setAdvogadoDialog({ open: true, advogado: null }),
+                onClick: () => setAdvogadoDialog({ open: true, advogado: null, mode: 'create' }),
               }}
               filtersSlot={
                 <AdvogadosFilter
@@ -183,17 +215,24 @@ export default function AdvogadosPage() {
         />
       </DataShell>
 
-      {/* Dialogs */}
-      <AdvogadosDialog
-        advogado={advogadoDialog.advogado}
+      {/* Dialog de criar/editar advogado (multi-OAB) */}
+      <AdvogadoDialog
         open={advogadoDialog.open}
         onOpenChange={(open) => setAdvogadoDialog({ ...advogadoDialog, open })}
-        onSuccess={() => {
-          refetch();
-          setAdvogadoDialog({ open: false, advogado: null });
-        }}
+        advogado={advogadoDialog.advogado}
+        mode={advogadoDialog.mode}
+        onSave={handleSaveAdvogado}
       />
 
+      {/* Dialog de credenciais do advogado (com cadastro em massa) */}
+      <CredenciaisAdvogadoDialog
+        open={credenciaisDialog.open}
+        onOpenChangeAction={(open) => setCredenciaisDialog({ ...credenciaisDialog, open })}
+        advogado={credenciaisDialog.advogado}
+        onRefreshAction={() => refetch()}
+      />
+
+      {/* Confirmação de exclusão */}
       <AlertDialog
         open={deleteDialog.open}
         onOpenChange={(open) => setDeleteDialog({ ...deleteDialog, open })}

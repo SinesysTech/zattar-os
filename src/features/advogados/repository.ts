@@ -15,6 +15,7 @@ import type {
   CriarCredencialParams,
   AtualizarCredencialParams,
   ListarCredenciaisParams,
+  OabEntry,
 } from './domain';
 
 // ============================================================================
@@ -27,13 +28,18 @@ import type {
 export async function criarAdvogado(params: CriarAdvogadoParams): Promise<Advogado> {
   const supabase = createServiceClient();
 
+  // Normalizar OABs
+  const normalizedOabs = params.oabs.map((oab) => ({
+    numero: oab.numero.trim(),
+    uf: oab.uf.trim().toUpperCase(),
+  }));
+
   const { data, error } = await supabase
     .from('advogados')
     .insert({
       nome_completo: params.nome_completo.trim(),
       cpf: params.cpf.replace(/\D/g, ''),
-      oab: params.oab.trim(),
-      uf_oab: params.uf_oab.trim().toUpperCase(),
+      oabs: normalizedOabs,
     })
     .select()
     .single();
@@ -41,7 +47,7 @@ export async function criarAdvogado(params: CriarAdvogadoParams): Promise<Advoga
   if (error) {
     // Verificar erro de duplicidade (unique constraint)
     if (error.code === '23505') {
-      throw new Error('Já existe um advogado cadastrado com este CPF ou OAB/UF');
+      throw new Error('Já existe um advogado cadastrado com este CPF');
     }
     throw new Error(`Erro ao criar advogado: ${error.message}`);
   }
@@ -108,12 +114,7 @@ export async function atualizarAdvogado(
   const supabase = createServiceClient();
 
   // Montar objeto de atualização apenas com campos fornecidos
-  const updateData: Partial<{
-    nome_completo: string;
-    cpf: string;
-    oab: string;
-    uf_oab: string;
-  }> = {};
+  const updateData: Record<string, unknown> = {};
 
   if (params.nome_completo !== undefined) {
     updateData.nome_completo = params.nome_completo.trim();
@@ -121,11 +122,11 @@ export async function atualizarAdvogado(
   if (params.cpf !== undefined) {
     updateData.cpf = params.cpf.replace(/\D/g, '');
   }
-  if (params.oab !== undefined) {
-    updateData.oab = params.oab.trim();
-  }
-  if (params.uf_oab !== undefined) {
-    updateData.uf_oab = params.uf_oab.trim().toUpperCase();
+  if (params.oabs !== undefined) {
+    updateData.oabs = params.oabs.map((oab) => ({
+      numero: oab.numero.trim(),
+      uf: oab.uf.trim().toUpperCase(),
+    }));
   }
 
   const { data, error } = await supabase
@@ -140,7 +141,7 @@ export async function atualizarAdvogado(
       throw new Error('Advogado não encontrado');
     }
     if (error.code === '23505') {
-      throw new Error('Já existe um advogado cadastrado com este CPF ou OAB/UF');
+      throw new Error('Já existe um advogado cadastrado com este CPF');
     }
     throw new Error(`Erro ao atualizar advogado: ${error.message}`);
   }
@@ -166,22 +167,27 @@ export async function listarAdvogados(
 
   let query = supabase.from('advogados').select('*', { count: 'exact' });
 
-  // Filtro de busca (nome, CPF, OAB)
+  // Filtro de busca (nome, CPF)
+  // Nota: busca por OAB em JSONB seria mais complexa, fazemos apenas por nome/CPF
   if (params.busca) {
     const busca = params.busca.trim();
-    query = query.or(
-      `nome_completo.ilike.%${busca}%,cpf.ilike.%${busca}%,oab.ilike.%${busca}%`
+    query = query.or(`nome_completo.ilike.%${busca}%,cpf.ilike.%${busca}%`);
+  }
+
+  // Filtro por OAB específica usando containment JSONB
+  // Busca advogados que tenham uma OAB com o número e/ou UF especificados
+  if (params.oab && params.uf_oab) {
+    query = query.contains('oabs', [
+      { numero: params.oab.trim(), uf: params.uf_oab.trim().toUpperCase() },
+    ]);
+  } else if (params.uf_oab) {
+    // Filtrar apenas por UF - busca advogados que tenham alguma OAB nessa UF
+    // Usando raw filter para JSONB
+    query = query.filter(
+      'oabs',
+      'cs',
+      JSON.stringify([{ uf: params.uf_oab.trim().toUpperCase() }])
     );
-  }
-
-  // Filtro por OAB
-  if (params.oab) {
-    query = query.eq('oab', params.oab.trim());
-  }
-
-  // Filtro por UF OAB
-  if (params.uf_oab) {
-    query = query.eq('uf_oab', params.uf_oab.trim().toUpperCase());
   }
 
   // Filtro por advogados com credenciais ativas
@@ -276,6 +282,7 @@ export async function criarCredencial(params: CriarCredencialParams): Promise<Cr
       advogado_id: params.advogado_id,
       tribunal: params.tribunal,
       grau: params.grau,
+      usuario: params.usuario || null, // Login PJE (null = usar CPF do advogado)
       senha: params.senha,
       active: params.active !== undefined ? params.active : true,
     })
@@ -303,7 +310,7 @@ export async function buscarCredencial(id: number): Promise<Credencial | null> {
 
   const { data, error } = await supabase
     .from('credenciais')
-    .select('id, advogado_id, tribunal, grau, active, created_at, updated_at')
+    .select('id, advogado_id, tribunal, grau, usuario, active, created_at, updated_at')
     .eq('id', id)
     .single();
 
@@ -364,6 +371,7 @@ export async function atualizarCredencial(
   const updateData: Partial<{
     tribunal: string;
     grau: string;
+    usuario: string | null;
     senha: string;
     active: boolean;
   }> = {};
@@ -373,6 +381,9 @@ export async function atualizarCredencial(
   }
   if (params.grau !== undefined) {
     updateData.grau = params.grau;
+  }
+  if (params.usuario !== undefined) {
+    updateData.usuario = params.usuario; // null = usar CPF do advogado
   }
   if (params.senha !== undefined) {
     updateData.senha = params.senha;
@@ -385,7 +396,7 @@ export async function atualizarCredencial(
     .from('credenciais')
     .update(updateData)
     .eq('id', id)
-    .select('id, advogado_id, tribunal, grau, active, created_at, updated_at')
+    .select('id, advogado_id, tribunal, grau, usuario, active, created_at, updated_at')
     .single();
 
   if (error) {
@@ -418,14 +429,14 @@ export async function listarCredenciais(
     advogado_id,
     tribunal,
     grau,
+    usuario,
     active,
     created_at,
     updated_at,
     advogados:advogados (
       nome_completo,
       cpf,
-      oab,
-      uf_oab
+      oabs
     )
   `);
 
@@ -447,13 +458,12 @@ export async function listarCredenciais(
     throw new Error(`Erro ao listar credenciais: ${error.message}`);
   }
 
-  type CredencialRow = Omit<CredencialComAdvogado, 'advogado_nome' | 'advogado_cpf' | 'advogado_oab' | 'advogado_uf_oab'> & {
+  type CredencialRow = Omit<CredencialComAdvogado, 'advogado_nome' | 'advogado_cpf' | 'advogado_oabs'> & {
     advogados:
       | {
           nome_completo: string;
           cpf: string;
-          oab: string;
-          uf_oab: string;
+          oabs: OabEntry[];
         }
       | null;
   };
@@ -470,8 +480,7 @@ export async function listarCredenciais(
         ...credencialData,
         advogado_nome: '-',
         advogado_cpf: '-',
-        advogado_oab: '-',
-        advogado_uf_oab: '-',
+        advogado_oabs: [],
       };
     }
 
@@ -480,8 +489,81 @@ export async function listarCredenciais(
       ...credencial,
       advogado_nome: advogados.nome_completo,
       advogado_cpf: advogados.cpf,
-      advogado_oab: advogados.oab,
-      advogado_uf_oab: advogados.uf_oab,
+      advogado_oabs: advogados.oabs || [],
     };
   });
+}
+
+// ============================================================================
+// Credenciais em Lote
+// ============================================================================
+
+/**
+ * Busca credenciais existentes para um advogado com tribunais/graus específicos
+ */
+export async function buscarCredenciaisExistentes(
+  advogado_id: number,
+  tribunais: string[],
+  graus: string[]
+): Promise<{ tribunal: string; grau: string; id: number; active: boolean }[]> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('credenciais')
+    .select('id, tribunal, grau, active')
+    .eq('advogado_id', advogado_id)
+    .in('tribunal', tribunais)
+    .in('grau', graus);
+
+  if (error) {
+    throw new Error(`Erro ao buscar credenciais existentes: ${error.message}`);
+  }
+
+  return (data || []) as { tribunal: string; grau: string; id: number; active: boolean }[];
+}
+
+/**
+ * Criar múltiplas credenciais em uma única operação (insert em lote)
+ */
+export async function criarCredenciaisEmLoteBatch(
+  credenciais: Array<{
+    advogado_id: number;
+    tribunal: string;
+    grau: string;
+    usuario?: string | null;
+    senha: string;
+    active: boolean;
+  }>
+): Promise<Credencial[]> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('credenciais')
+    .insert(credenciais)
+    .select('id, advogado_id, tribunal, grau, usuario, active, created_at, updated_at');
+
+  if (error) {
+    throw new Error(`Erro ao criar credenciais em lote: ${error.message}`);
+  }
+
+  return (data || []) as Credencial[];
+}
+
+/**
+ * Atualizar senha de múltiplas credenciais
+ */
+export async function atualizarSenhaCredenciais(
+  ids: number[],
+  senha: string
+): Promise<void> {
+  const supabase = createServiceClient();
+
+  const { error } = await supabase
+    .from('credenciais')
+    .update({ senha, active: true })
+    .in('id', ids);
+
+  if (error) {
+    throw new Error(`Erro ao atualizar credenciais: ${error.message}`);
+  }
 }
