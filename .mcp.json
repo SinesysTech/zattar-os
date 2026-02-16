@@ -4,9 +4,12 @@
       "type": "http",
       "url": "https://mcp.supabase.com/mcp?project_ref=cxxdivtgeslrujpfpivs"
     },
-    "copilotkit": {
-      "command": "cmd",
-      "args": ["/c", "npx", "-y", "mcp-remote", "https://mcp.copilotkit.ai"]
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "ctx7sk-06b2f0d5-de5a-4871-b7bb-99dbfbe72e23"
+      }
     }
   }
 }
