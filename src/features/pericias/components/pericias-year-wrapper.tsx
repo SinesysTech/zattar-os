@@ -11,7 +11,7 @@
  */
 
 import * as React from 'react';
-import { startOfYear, endOfYear, format, isToday as dateFnsIsToday } from 'date-fns';
+import { startOfYear, endOfYear, format } from 'date-fns';
 
 import {
   DataShell,
@@ -21,6 +21,7 @@ import {
   YearFilterPopover,
   TemporalViewLoading,
   TemporalViewError,
+  YearCalendarGrid,
 } from '@/components/shared';
 
 import type { Pericia } from '../domain';
@@ -39,17 +40,6 @@ import {
 } from './pericias-list-filters';
 import { PericiaCriarDialog } from './pericia-criar-dialog';
 import { PericiaDetalhesDialog } from './pericia-detalhes-dialog';
-
-// =============================================================================
-// CONSTANTES
-// =============================================================================
-
-const MESES = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
-];
-
-const DIAS_SEMANA = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'];
 
 // =============================================================================
 // TIPOS
@@ -164,17 +154,9 @@ export function PericiasYearWrapper({
   }, [pericias]);
 
   // ---------- Helpers ----------
-  const getDiasMes = React.useCallback((mes: number) => {
-    const ano = selectedYear;
-    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
-    const primeiroDiaSemana = new Date(ano, mes, 1).getDay();
-    const offset = primeiroDiaSemana === 0 ? 6 : primeiroDiaSemana - 1;
-
-    const dias: (number | null)[] = [];
-    for (let i = 0; i < offset; i++) dias.push(null);
-    for (let i = 1; i <= ultimoDia; i++) dias.push(i);
-    return dias;
-  }, [selectedYear]);
+  const hasDayContent = React.useCallback((mes: number, dia: number) => {
+    return periciasPorDia.has(`${mes}-${dia}`);
+  }, [periciasPorDia]);
 
   const handleDiaClick = React.useCallback((mes: number, dia: number) => {
     const key = `${mes}-${dia}`;
@@ -189,10 +171,6 @@ export function PericiasYearWrapper({
     refetch();
     setIsCreateDialogOpen(false);
   }, [refetch]);
-
-  const temPericia = React.useCallback((mes: number, dia: number) => {
-    return periciasPorDia.has(`${mes}-${dia}`);
-  }, [periciasPorDia]);
 
   // ---------- Render ----------
   return (
@@ -249,42 +227,12 @@ export function PericiasYearWrapper({
         ) : error ? (
           <TemporalViewError message={`Erro ao carregar perícias: ${error}`} onRetry={refetch} />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
-            {MESES.map((nome, mesIdx) => (
-              <div key={nome} className="border rounded-lg p-4 bg-card shadow-sm hover:shadow-md transition-shadow">
-                <div className="font-semibold text-center mb-3 text-sm uppercase tracking-wide text-muted-foreground">
-                  {nome}
-                </div>
-                <div className="grid grid-cols-7 gap-1 text-center mb-1">
-                  {DIAS_SEMANA.map((d, i) => (
-                    <span key={`${d}-${i}`} className="text-[10px] text-muted-foreground">{d}</span>
-                  ))}
-                </div>
-                <div className="grid grid-cols-7 gap-1 text-center">
-                  {getDiasMes(mesIdx).map((dia, i) => {
-                    if (!dia) return <span key={i} />;
-                    const hasP = temPericia(mesIdx, dia);
-                    const isTodayDate = dateFnsIsToday(new Date(selectedYear, mesIdx, dia));
-
-                    return (
-                      <div
-                        key={i}
-                        onClick={() => hasP && handleDiaClick(mesIdx, dia)}
-                        className={`
-                          text-xs h-7 w-7 flex items-center justify-center rounded-full transition-all
-                          ${isTodayDate ? 'bg-primary text-primary-foreground font-bold' : ''}
-                          ${!isTodayDate && hasP ? 'bg-primary/20 text-primary font-medium cursor-pointer hover:bg-primary/40' : ''}
-                          ${!isTodayDate && !hasP ? 'text-muted-foreground' : ''}
-                        `}
-                      >
-                        {dia}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
+          <YearCalendarGrid
+            year={selectedYear}
+            hasDayContent={hasDayContent}
+            onDayClick={handleDiaClick}
+            className="p-6"
+          />
         )}
       </DataShell>
 

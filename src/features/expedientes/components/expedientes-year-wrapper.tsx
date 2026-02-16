@@ -11,7 +11,7 @@
  */
 
 import * as React from 'react';
-import { startOfYear, endOfYear, format, isToday as dateFnsIsToday } from 'date-fns';
+import { startOfYear, endOfYear, format } from 'date-fns';
 
 import {
   DataShell,
@@ -21,6 +21,7 @@ import {
   YearFilterPopover,
   TemporalViewLoading,
   TemporalViewError,
+  YearCalendarGrid,
 } from '@/components/shared';
 
 import type { Expediente } from '../domain';
@@ -60,17 +61,6 @@ interface ExpedientesYearWrapperProps {
   /** Dados de tipos de expediente pré-carregados (evita fetch duplicado) */
   tiposExpedientesData?: TipoExpedienteData[];
 }
-
-// =============================================================================
-// CONSTANTES
-// =============================================================================
-
-const MESES = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
-];
-
-const DIAS_SEMANA = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'];
 
 // =============================================================================
 // COMPONENTE PRINCIPAL
@@ -163,18 +153,6 @@ export function ExpedientesYearWrapper({
   );
 
   // ---------- Helpers ----------
-  const getDiasMes = React.useCallback((mes: number) => {
-    const ano = selectedYear;
-    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
-    const primeiroDiaSemana = new Date(ano, mes, 1).getDay();
-    const offset = primeiroDiaSemana === 0 ? 6 : primeiroDiaSemana - 1;
-
-    const dias: (number | null)[] = [];
-    for (let i = 0; i < offset; i++) dias.push(null);
-    for (let i = 1; i <= ultimoDia; i++) dias.push(i);
-    return dias;
-  }, [selectedYear]);
-
   const handleDiaClick = React.useCallback((mes: number, dia: number) => {
     const key = `${mes}-${dia}`;
     const doDia = expedientesPorDia.get(key) || [];
@@ -254,42 +232,12 @@ export function ExpedientesYearWrapper({
         ) : error ? (
           <TemporalViewError message={`Erro ao carregar expedientes: ${error}`} onRetry={refetch} />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
-            {MESES.map((nome, mesIdx) => (
-              <div key={nome} className="border rounded-lg p-4 bg-card shadow-sm hover:shadow-md transition-shadow">
-                <div className="font-semibold text-center mb-3 text-sm uppercase tracking-wide text-muted-foreground">
-                  {nome}
-                </div>
-                <div className="grid grid-cols-7 gap-1 text-center mb-1">
-                  {DIAS_SEMANA.map((d, i) => (
-                    <span key={`${d}-${i}`} className="text-[10px] text-muted-foreground">{d}</span>
-                  ))}
-                </div>
-                <div className="grid grid-cols-7 gap-1 text-center">
-                  {getDiasMes(mesIdx).map((dia, i) => {
-                    if (!dia) return <span key={i} />;
-                    const hasExp = temExpediente(mesIdx, dia);
-                    const isTodayDate = dateFnsIsToday(new Date(selectedYear, mesIdx, dia));
-
-                    return (
-                      <div
-                        key={i}
-                        onClick={() => hasExp && handleDiaClick(mesIdx, dia)}
-                        className={`
-                          text-xs h-7 w-7 flex items-center justify-center rounded-full transition-all
-                          ${isTodayDate ? 'bg-primary text-primary-foreground font-bold' : ''}
-                          ${!isTodayDate && hasExp ? 'bg-primary/20 text-primary font-medium cursor-pointer hover:bg-primary/40' : ''}
-                          ${!isTodayDate && !hasExp ? 'text-muted-foreground' : ''}
-                        `}
-                      >
-                        {dia}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
+          <YearCalendarGrid
+            year={selectedYear}
+            hasDayContent={temExpediente}
+            onDayClick={handleDiaClick}
+            className="p-6"
+          />
         )}
       </DataShell>
 
