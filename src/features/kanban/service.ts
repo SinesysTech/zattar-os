@@ -313,7 +313,7 @@ function audienciaToKanbanCard(aud: Audiencia, position: number): UnifiedKanbanC
 function acordoParcelasToKanbanCards(acordo: AcordoComParcelas): UnifiedKanbanCard[] {
   const parcelas = acordo.parcelas ?? [];
   const numeroProcesso =
-    acordo.processo?.numero_processo ?? acordo.processo?.numeroProcesso ?? "—";
+    acordo.processo?.numero_processo ?? "—";
 
   return parcelas.map((parcela, index) => {
     // Determinar coluna baseado no status da parcela
@@ -385,7 +385,7 @@ async function fetchExpedientesParaKanban(): Promise<UnifiedKanbanCard[]> {
 
       if (!result.success || !result.data) break;
 
-      const items = result.data.items ?? result.data.data ?? [];
+      const items = result.data.data;
       for (const exp of items) {
         cards.push(expedienteToKanbanCard(exp as Expediente, cards.length));
       }
@@ -410,13 +410,13 @@ async function fetchAudienciasParaKanban(): Promise<UnifiedKanbanCard[]> {
       const result = await listarAudiencias({
         pagina,
         limite: PAGE_SIZE,
-        ordenarPor: "data_inicio",
+        ordenarPor: "dataInicio",
         ordem: "asc",
       });
 
       if (!result.success || !result.data) break;
 
-      const items = result.data.items ?? result.data.data ?? [];
+      const items = result.data.data;
       for (const aud of items) {
         cards.push(audienciaToKanbanCard(aud as Audiencia, cards.length));
       }
@@ -518,7 +518,7 @@ export async function atualizarStatusEntidade(
       case "expedientes": {
         // Dar baixa no expediente quando arrastado para "Baixados"
         if (targetColumnId === "exp-baixado") {
-          const result = await realizarBaixaExpediente(numericId, {}, userId);
+          const result = await realizarBaixaExpediente(numericId, { expedienteId: numericId }, userId);
           if (!result.success) return err(result.error);
           return ok(undefined);
         }

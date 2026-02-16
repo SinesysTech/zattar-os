@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
+
+import { authenticateRequest } from "@/lib/auth/session";
+import { PageShell } from "@/components/shared/page-shell";
+import { DataShell } from "@/components/shared/data-shell";
+import { DataTableToolbar } from "@/components/shared/data-shell/data-table-toolbar";
+
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
-import { authenticateRequest } from "@/lib/auth/session";
 import * as tarefasService from "./service";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Tarefas",
@@ -12,7 +17,6 @@ export const metadata: Metadata = {
 export default async function TaskPage() {
   const user = await authenticateRequest();
   if (!user) {
-    // Mantém a página simples; login/redirect fica a cargo do middleware/layout do app.
     return <div className="p-6">Você precisa estar autenticado.</div>;
   }
 
@@ -21,5 +25,11 @@ export default async function TaskPage() {
     return <div className="p-6">Erro ao carregar tarefas: {result.error.message}</div>;
   }
 
-  return <DataTable data={result.data} columns={columns} />;
+  return (
+    <PageShell>
+      <DataShell header={<DataTableToolbar title="Tarefas" />}>
+        <DataTable data={result.data} columns={columns} />
+      </DataShell>
+    </PageShell>
+  );
 }

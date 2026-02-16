@@ -22,7 +22,7 @@ export function SystemBoardView({ data, source, onRefresh }: SystemBoardViewProp
   const [syncError, setSyncError] = React.useState<string | null>(null);
 
   // Converter SystemBoardData para o formato que Kanban.Root espera: Record<string, CardType[]>
-  const columnOrder = data.columns.map((c) => c.id);
+  const columnOrder = data.columns.map((c: { id: string; title: string; statusKey: string }) => c.id);
 
   const [columns, setColumns] = React.useState<Record<string, CardType[]>>(() => {
     const initial: Record<string, CardType[]> = {};
@@ -104,7 +104,7 @@ export function SystemBoardView({ data, source, onRefresh }: SystemBoardViewProp
         getItemValue={(item) => item.id}
       >
         <Kanban.Board className="flex w-full gap-4 overflow-x-auto pb-4">
-          {columnOrder.map((columnValue) => {
+          {columnOrder.map((columnValue: string) => {
             const cards = columns[columnValue] ?? [];
             return (
               <Kanban.Column
