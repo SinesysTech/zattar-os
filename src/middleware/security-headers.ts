@@ -184,7 +184,6 @@ export function buildPermissionsPolicy(): string {
     magnetometer: "()",
     gyroscope: "()",
     accelerometer: "()",
-    "ambient-light-sensor": "()",
     autoplay: "(self)",
     "encrypted-media": "(self)",
     fullscreen: "(self)",

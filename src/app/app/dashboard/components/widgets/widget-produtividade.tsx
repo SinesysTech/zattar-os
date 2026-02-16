@@ -51,7 +51,8 @@ export function WidgetProdutividade({
         ? 'down'
         : 'neutral';
 
-  const maxBaixas = Math.max(...data.porDia.map((d) => d.baixas), 1);
+  const porDia = data.porDia || [];
+  const maxBaixas = Math.max(...porDia.map((d) => d.baixas), 1);
 
   return (
     <WidgetWrapper title="Produtividade" icon={BarChart3}>
@@ -99,7 +100,7 @@ export function WidgetProdutividade({
         <div className="space-y-2">
           <p className="text-xs font-medium text-muted-foreground">Últimos 7 Dias</p>
           <div className="space-y-1.5">
-            {data.porDia.map((dia) => {
+            {porDia.map((dia) => {
               const percent = (dia.baixas / maxBaixas) * 100;
               const date = new Date(dia.data);
               const dayName = date.toLocaleDateString('pt-BR', { weekday: 'short' });

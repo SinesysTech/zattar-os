@@ -297,7 +297,7 @@ export function OrigemLancamentoSection({
 
             {processo && (
               <Button variant="outline" size="sm" asChild>
-                <Link href={`/acervo/${processo.id}`}>
+                <Link href={`/app/processos/${processo.id}`}>
                   <FileText className="h-4 w-4 mr-2" />
                   Ver Processo
                   <ExternalLink className="h-3 w-3 ml-2" />

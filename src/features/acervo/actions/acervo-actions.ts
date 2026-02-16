@@ -193,7 +193,7 @@ export async function actionAtribuirResponsavel(
     }
 
     // Revalidate acervo pages
-    revalidatePath("/acervo");
+    revalidatePath("/app/processos");
     revalidatePath("/processos");
 
     return {
