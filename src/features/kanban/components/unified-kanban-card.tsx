@@ -4,7 +4,8 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Calendar, User, ExternalLink } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
+import { SemanticBadge } from "@/components/ui/semantic-badge";
 import {
   Card,
   CardContent,
@@ -17,7 +18,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { getSemanticBadgeVariant } from "@/lib/design-system";
 
 import type { UnifiedKanbanCard as UnifiedKanbanCardType } from "../domain";
 
@@ -60,14 +60,14 @@ export function UnifiedKanbanCard({ card }: UnifiedKanbanCardProps) {
       <CardHeader className="p-3 pb-1">
         <div className="flex items-center gap-1.5">
           {trt && (
-            <Badge variant={getSemanticBadgeVariant("tribunal", trt)} className="text-[10px] px-1 py-0">
+            <SemanticBadge category="tribunal" value={trt} className="text-[10px] px-1 py-0">
               {trt}
-            </Badge>
+            </SemanticBadge>
           )}
           {card.prazoVencido && (
-            <Badge variant="destructive" className="text-[10px] px-1 py-0">
+            <AppBadge variant="destructive" className="text-[10px] px-1 py-0">
               Vencido
-            </Badge>
+            </AppBadge>
           )}
         </div>
         <CardTitle className="text-sm font-medium leading-tight line-clamp-2">

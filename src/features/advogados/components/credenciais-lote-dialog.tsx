@@ -126,11 +126,13 @@ export function CredenciaisLoteDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Criar Credenciais em Lote"
-      description={`Advogado: ${advogado.nome_completo} (CPF: ${formatCpf(advogado.cpf)})`}
       maxWidth="3xl"
       hideFooter
     >
       <div className="px-6 py-4 space-y-6">
+        <p className="text-sm text-muted-foreground">
+          Advogado: {advogado.nome_completo} (CPF: {formatCpf(advogado.cpf)})
+        </p>
         {resultado ? (
           // Exibir resultado
           <ResultadoView resultado={resultado} onClose={() => onOpenChange(false)} />
