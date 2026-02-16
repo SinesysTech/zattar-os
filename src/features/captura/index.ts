@@ -132,6 +132,8 @@ export {
   validarCamposCaptura,
 } from "./components/captura-form-base";
 export { TipoCapturaSelect } from "./components/tipo-captura-select";
+export { AdvogadoCombobox } from "./components/advogado-combobox";
+export { CredenciaisCombobox } from "./components/credenciais-combobox";
 
 // Comunica CNJ & heavy server-only code
 // NOTE: `comunica-cnj/*` and internal services depend on Node APIs / Playwright.

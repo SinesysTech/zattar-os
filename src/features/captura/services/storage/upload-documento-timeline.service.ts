@@ -1,0 +1,80 @@
+/**
+ * Serviço de Upload de Documentos da Timeline para Supabase Storage
+ * 
+ * Responsável por fazer upload de PDFs capturados da timeline do PJE
+ * para o Supabase Storage com organização padronizada.
+ */
+
+import { uploadToSupabase, type SupabaseUploadResult } from '@/lib/storage/supabase-storage.service';
+import { gerarCaminhoCompletoTimeline } from '@/lib/storage/file-naming.utils';
+
+/**
+ * Parâmetros para upload de documento da timeline
+ */
+export interface UploadDocumentoTimelineParams {
+    /** Buffer do PDF */
+    pdfBuffer: Buffer;
+    /** Número do processo (ex: 0010702-80.2025.5.03.0111) */
+    numeroProcesso: string;
+    /** ID do documento no PJE */
+    documentoId: string | number;
+}
+
+/**
+ * Resultado do upload
+ */
+export interface UploadDocumentoTimelineResult {
+    /** URL pública do arquivo */
+    url: string;
+    /** Chave (path) do arquivo no bucket */
+    key: string;
+    /** Nome do bucket */
+    bucket: string;
+    /** Nome do arquivo */
+    fileName: string;
+    /** Data/hora do upload */
+    uploadedAt: Date;
+}
+
+/**
+ * Faz upload de um documento da timeline para o Supabase Storage
+ * 
+ * @param params - Parâmetros do upload
+ * @returns Resultado com URLs e metadados do arquivo
+ */
+export async function uploadDocumentoTimeline(
+    params: UploadDocumentoTimelineParams
+): Promise<UploadDocumentoTimelineResult> {
+    const { pdfBuffer, numeroProcesso, documentoId } = params;
+
+    console.log(`📤 [uploadDocumentoTimeline] Iniciando upload para Supabase Storage`, {
+        numeroProcesso,
+        documentoId,
+        tamanho: `${(pdfBuffer.length / 1024).toFixed(2)} KB`,
+    });
+
+    // Gerar caminho completo no Storage
+    // Formato: processos/{numeroProcesso}/timeline/doc_{documentoId}_{YYYYMMDD}.pdf
+    const key = gerarCaminhoCompletoTimeline(numeroProcesso, documentoId);
+    const fileName = key.split('/').pop() || `doc_${documentoId}.pdf`;
+
+    // Upload para Supabase Storage
+    const uploadResult: SupabaseUploadResult = await uploadToSupabase({
+        buffer: pdfBuffer,
+        key,
+        contentType: 'application/pdf',
+    });
+
+    console.log(`✅ [uploadDocumentoTimeline] Upload concluído`, {
+        url: uploadResult.url,
+        key: uploadResult.key,
+    });
+
+    return {
+        url: uploadResult.url,
+        key: uploadResult.key,
+        bucket: uploadResult.bucket,
+        fileName,
+        uploadedAt: uploadResult.uploadedAt,
+    };
+}

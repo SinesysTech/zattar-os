@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import type { Advogado } from '@/features/advogados/domain';
+import { formatOabs } from '@/features/advogados/domain';
 
 interface AdvogadoComboboxProps {
   advogados: Advogado[];
@@ -22,11 +23,21 @@ export function AdvogadoCombobox({
   placeholder = 'Selecione um advogado',
 }: AdvogadoComboboxProps) {
   const options: ComboboxOption[] = useMemo(() => {
-    return advogados.map((advogado) => ({
-      value: advogado.id.toString(),
-      label: `${advogado.nome_completo} - OAB ${advogado.oab}/${advogado.uf_oab}`,
-      searchText: `${advogado.nome_completo} ${advogado.oab} ${advogado.uf_oab} ${advogado.cpf}`,
-    }));
+    return advogados.map((advogado) => {
+      // Formatar todas as OABs para exibição
+      const oabsDisplay = formatOabs(advogado.oabs);
+
+      // Texto de busca inclui todas as OABs
+      const oabsSearch = advogado.oabs
+        .map((oab) => `${oab.numero} ${oab.uf}`)
+        .join(' ');
+
+      return {
+        value: advogado.id.toString(),
+        label: `${advogado.nome_completo} - OAB ${oabsDisplay}`,
+        searchText: `${advogado.nome_completo} ${oabsSearch} ${advogado.cpf}`,
+      };
+    });
   }, [advogados]);
 
   const handleValueChange = (values: string[]) => {

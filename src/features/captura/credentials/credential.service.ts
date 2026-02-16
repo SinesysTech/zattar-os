@@ -51,6 +51,7 @@ export async function getCredential(
     .select(`
       id,
       advogado_id,
+      usuario,
       senha,
       tribunal,
       grau,
@@ -85,8 +86,11 @@ export async function getCredential(
     return null;
   }
 
+  // Usar campo usuario se disponível, senão usar CPF do advogado
+  const login = (credencial as { usuario?: string | null }).usuario || advogado.cpf;
+
   return {
-    cpf: advogado.cpf,
+    cpf: login,
     senha: credencial.senha,
   };
 }
@@ -122,6 +126,7 @@ export async function getCredentialByTribunalAndGrau(
     .select(`
       id,
       advogado_id,
+      usuario,
       senha,
       tribunal,
       grau,
@@ -171,8 +176,10 @@ export async function getCredentialByTribunalAndGrau(
   }
 
   // 3. Montar credencial e salvar no cache
+  // Usar campo usuario se disponível, senão usar CPF do advogado
+  const login = (credencial as { usuario?: string | null }).usuario || advogado.cpf;
   const credential: CredenciaisTRT = {
-    cpf: advogado.cpf,
+    cpf: login,
     senha: credencial.senha,
   };
 
@@ -210,6 +217,7 @@ export async function getActiveCredentialsByTribunalAndGrau(
     .select(`
       id,
       advogado_id,
+      usuario,
       senha,
       tribunal,
       grau,
@@ -243,8 +251,10 @@ export async function getActiveCredentialsByTribunalAndGrau(
         return null;
       }
 
+      // Usar campo usuario se disponível, senão usar CPF do advogado
+      const login = (credencial as { usuario?: string | null }).usuario || advogado.cpf;
       const credential: CredenciaisTRT = {
-        cpf: advogado.cpf,
+        cpf: login,
         senha: credencial.senha,
       };
 
@@ -286,6 +296,7 @@ export async function getCredentialComplete(
     .select(`
       id,
       advogado_id,
+      usuario,
       senha,
       tribunal,
       grau,
@@ -315,13 +326,16 @@ export async function getCredentialComplete(
     return null;
   }
 
+  // Usar campo usuario se disponível, senão usar CPF do advogado
+  const login = (credencial as { usuario?: string | null }).usuario || advogado.cpf;
+
   return {
     credentialId: credencial.id,
     advogadoId: advogado.id,
     tribunal: credencial.tribunal as CodigoTRT,
     grau: credencial.grau as GrauTRT,
     credenciais: {
-      cpf: advogado.cpf,
+      cpf: login,
       senha: credencial.senha,
     },
   };

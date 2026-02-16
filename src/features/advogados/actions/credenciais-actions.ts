@@ -8,13 +8,16 @@ import {
   buscarCredencial,
   criarCredencial,
   atualizarCredencial,
+  criarCredenciaisEmLote,
 } from '../service';
 import {
   criarCredencialSchema,
   atualizarCredencialSchema,
+  criarCredenciaisEmLoteSchema,
   type ListarCredenciaisParams,
   type CriarCredencialParams,
   type AtualizarCredencialParams,
+  type CriarCredenciaisEmLoteParams,
 } from '../domain';
 import type { ActionResponse } from './advogados-actions'; // Reuse type
 
@@ -69,7 +72,8 @@ export async function actionCriarCredencial(params: CriarCredencialParams): Prom
     }
 
     const result = await criarCredencial(params);
-    revalidatePath(`/advogados/${params.advogado_id}`);
+    revalidatePath('/app/captura/credenciais');
+    revalidatePath('/app/captura/advogados');
     return { success: true, data: result };
   } catch (error) {
      return { success: false, error: String(error) };
@@ -95,12 +99,38 @@ export async function actionAtualizarCredencial(
 
     const result = await atualizarCredencial(id, params);
     
-    // We don't know the advogado_id easily without fetching, so revalidate path might be tricky for list. 
-    // Usually revalidatePath('/advogados/[id]') works if we know it.
-    // For now revalidate global list or assume page handles it.
-    // Or fetch the credencial to know the advogado_id.
-    const cred = await buscarCredencial(id);
-    if (cred) revalidatePath(`/advogados/${cred.advogado_id}`);
+    revalidatePath('/app/captura/credenciais');
+    revalidatePath('/app/captura/advogados');
+
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
+
+/**
+ * Criar credenciais em lote para múltiplos tribunais e graus
+ */
+export async function actionCriarCredenciaisEmLote(
+  params: CriarCredenciaisEmLoteParams
+): Promise<ActionResponse> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, error: 'Não autenticado' };
+
+    const [recurso, operacao] = 'credenciais:editar'.split(':');
+    const hasPermission = await checkPermission(user.id, recurso, operacao);
+    if (!hasPermission) return { success: false, error: 'Sem permissão' };
+
+    const validation = criarCredenciaisEmLoteSchema.safeParse(params);
+    if (!validation.success) {
+      return { success: false, error: validation.error.errors[0].message };
+    }
+
+    const result = await criarCredenciaisEmLote(validation.data);
+
+    revalidatePath('/app/captura/credenciais');
+    revalidatePath('/app/captura/advogados');
 
     return { success: true, data: result };
   } catch (error) {

@@ -13,6 +13,9 @@ import {
   criarCredencial as criarCredencialDb,
   buscarCredencial as buscarCredencialDb,
   atualizarCredencial as atualizarCredencialDb,
+  buscarCredenciaisExistentes,
+  criarCredenciaisEmLoteBatch,
+  atualizarSenhaCredenciais,
 } from './repository';
 
 import type {
@@ -22,6 +25,10 @@ import type {
   ListarCredenciaisParams,
   CriarCredencialParams,
   AtualizarCredencialParams,
+  CriarCredenciaisEmLoteParams,
+  ResumoCriacaoEmLote,
+  ResultadoCredencialLote,
+  GrauCredencial,
 } from './domain';
 
 // ============================================================================
@@ -51,27 +58,65 @@ export async function criarAdvogado(params: CriarAdvogadoParams) {
   const cpfClean = params.cpf.replace(/\D/g, '');
   if (cpfClean.length !== 11) throw new Error('CPF inválido');
   if (params.nome_completo.length < 3) throw new Error('Nome curto demais');
-  if (params.uf_oab.length !== 2) throw new Error('UF OAB inválido');
-  
+
+  // Validar OABs
+  if (!params.oabs || params.oabs.length === 0) {
+    throw new Error('Pelo menos uma OAB é obrigatória');
+  }
+
+  for (const oab of params.oabs) {
+    if (!oab.numero || oab.numero.trim().length === 0) {
+      throw new Error('Número OAB obrigatório');
+    }
+    if (!oab.uf || oab.uf.length !== 2) {
+      throw new Error('UF OAB inválido');
+    }
+  }
+
   return criarAdvogadoDb({
     ...params,
     cpf: cpfClean,
     nome_completo: params.nome_completo.trim(),
-    oab: params.oab.trim(),
-    uf_oab: params.uf_oab.toUpperCase(),
+    oabs: params.oabs.map((oab) => ({
+      numero: oab.numero.trim(),
+      uf: oab.uf.toUpperCase(),
+    })),
   });
 }
 
 export async function atualizarAdvogado(id: number, params: AtualizarAdvogadoParams) {
   if (!id) throw new Error('ID obrigatório');
-  
-  if (params.cpf) {
-      const cpfClean = params.cpf.replace(/\D/g, '');
-      if (cpfClean.length !== 11) throw new Error('CPF inválido');
-      params.cpf = cpfClean;
+
+  const updateParams = { ...params };
+
+  if (updateParams.cpf) {
+    const cpfClean = updateParams.cpf.replace(/\D/g, '');
+    if (cpfClean.length !== 11) throw new Error('CPF inválido');
+    updateParams.cpf = cpfClean;
   }
-  
-  return atualizarAdvogadoDb(id, params);
+
+  // Validar OABs se fornecidas
+  if (updateParams.oabs !== undefined) {
+    if (updateParams.oabs.length === 0) {
+      throw new Error('Pelo menos uma OAB é obrigatória');
+    }
+
+    for (const oab of updateParams.oabs) {
+      if (!oab.numero || oab.numero.trim().length === 0) {
+        throw new Error('Número OAB obrigatório');
+      }
+      if (!oab.uf || oab.uf.length !== 2) {
+        throw new Error('UF OAB inválido');
+      }
+    }
+
+    updateParams.oabs = updateParams.oabs.map((oab) => ({
+      numero: oab.numero.trim(),
+      uf: oab.uf.toUpperCase(),
+    }));
+  }
+
+  return atualizarAdvogadoDb(id, updateParams);
 }
 
 // ============================================================================
@@ -101,4 +146,143 @@ export async function buscarCredencial(id: number) {
 
 export async function atualizarCredencial(id: number, params: AtualizarCredencialParams) {
     return atualizarCredencialDb(id, params);
+}
+
+// ============================================================================
+// Credenciais em Lote
+// ============================================================================
+
+/**
+ * Cria credenciais em lote para múltiplos tribunais e graus.
+ * Retorna um resumo detalhado de cada credencial criada/atualizada/pulada.
+ */
+export async function criarCredenciaisEmLote(
+  params: CriarCredenciaisEmLoteParams
+): Promise<ResumoCriacaoEmLote> {
+  const { advogado_id, tribunais, graus, senha, modo_duplicata = 'pular' } = params;
+
+  // Validar advogado existe
+  const advogado = await buscarAdvogadoDb(advogado_id);
+  if (!advogado) {
+    throw new Error('Advogado não encontrado');
+  }
+
+  // Gerar todas as combinações tribunal × grau
+  const combinacoes: Array<{ tribunal: string; grau: GrauCredencial }> = [];
+  for (const tribunal of tribunais) {
+    for (const grau of graus) {
+      combinacoes.push({ tribunal, grau });
+    }
+  }
+
+  if (combinacoes.length === 0) {
+    return {
+      total: 0,
+      criadas: 0,
+      atualizadas: 0,
+      puladas: 0,
+      erros: 0,
+      detalhes: [],
+    };
+  }
+
+  // Buscar credenciais existentes para este advogado
+  const existentes = await buscarCredenciaisExistentes(advogado_id, tribunais, graus);
+  const existentesMap = new Map(
+    existentes.map((e) => [`${e.tribunal}-${e.grau}`, e])
+  );
+
+  // Separar em: criar, atualizar, pular
+  const aCriar: Array<{ tribunal: string; grau: GrauCredencial }> = [];
+  const aAtualizar: number[] = [];
+  const detalhes: ResultadoCredencialLote[] = [];
+
+  for (const combo of combinacoes) {
+    const key = `${combo.tribunal}-${combo.grau}`;
+    const existente = existentesMap.get(key);
+
+    if (existente) {
+      if (modo_duplicata === 'sobrescrever') {
+        aAtualizar.push(existente.id);
+        detalhes.push({
+          tribunal: combo.tribunal,
+          grau: combo.grau,
+          status: 'atualizada',
+          credencial_id: existente.id,
+        });
+      } else {
+        detalhes.push({
+          tribunal: combo.tribunal,
+          grau: combo.grau,
+          status: 'pulada',
+          mensagem: 'Credencial já existe',
+          credencial_id: existente.id,
+        });
+      }
+    } else {
+      aCriar.push(combo);
+    }
+  }
+
+  // Criar novas credenciais em lote
+  if (aCriar.length > 0) {
+    try {
+      const novas = await criarCredenciaisEmLoteBatch(
+        aCriar.map((c) => ({
+          advogado_id,
+          tribunal: c.tribunal,
+          grau: c.grau,
+          usuario: null,
+          senha,
+          active: true,
+        }))
+      );
+
+      for (const nova of novas) {
+        detalhes.push({
+          tribunal: nova.tribunal,
+          grau: nova.grau as GrauCredencial,
+          status: 'criada',
+          credencial_id: nova.id,
+        });
+      }
+    } catch (error) {
+      // Em caso de erro, marcar todas como erro
+      for (const combo of aCriar) {
+        detalhes.push({
+          tribunal: combo.tribunal,
+          grau: combo.grau,
+          status: 'erro',
+          mensagem: error instanceof Error ? error.message : 'Erro desconhecido',
+        });
+      }
+    }
+  }
+
+  // Atualizar credenciais existentes (atualizar senha e reativar)
+  if (aAtualizar.length > 0) {
+    try {
+      await atualizarSenhaCredenciais(aAtualizar, senha);
+    } catch (error) {
+      // Atualizar status para erro nos detalhes
+      for (const detalhe of detalhes) {
+        if (detalhe.status === 'atualizada' && aAtualizar.includes(detalhe.credencial_id!)) {
+          detalhe.status = 'erro';
+          detalhe.mensagem = error instanceof Error ? error.message : 'Erro ao atualizar';
+        }
+      }
+    }
+  }
+
+  // Calcular resumo
+  const resumo: ResumoCriacaoEmLote = {
+    total: combinacoes.length,
+    criadas: detalhes.filter((d) => d.status === 'criada').length,
+    atualizadas: detalhes.filter((d) => d.status === 'atualizada').length,
+    puladas: detalhes.filter((d) => d.status === 'pulada').length,
+    erros: detalhes.filter((d) => d.status === 'erro').length,
+    detalhes,
+  };
+
+  return resumo;
 }

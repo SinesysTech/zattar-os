@@ -224,8 +224,7 @@ export interface CredencialDisponivel {
   advogado_id: number;
   advogado_nome: string;
   advogado_cpf: string;
-  advogado_oab: string;
-  advogado_uf_oab: string;
+  advogado_oabs: Array<{ numero: string; uf: string }>;
   tribunal: CodigoTRT;
   grau: GrauTRT;
 }

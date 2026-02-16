@@ -55,31 +55,32 @@ export function criarColunasAdvogados({
       ),
     },
     {
-      accessorKey: 'oab',
+      accessorKey: 'oabs',
       header: ({ column }) => <DataTableColumnHeader column={column} title="OAB" />,
       enableSorting: false,
-      size: 160,
+      size: 200,
       meta: { align: 'left' as const },
-      cell: ({ row }) => (
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-sm">{row.original.oab}</span>
-          <Badge variant="outline" tone="soft" className="text-xs">
-            {row.original.uf_oab}
-          </Badge>
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'uf_oab',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="UF" className="justify-center" />
-      ),
-      enableSorting: true,
-      size: 80,
-      meta: { align: 'center' as const },
-      cell: ({ row }) => (
-        <Badge variant="secondary">{row.original.uf_oab}</Badge>
-      ),
+      cell: ({ row }) => {
+        const oabs = row.original.oabs;
+        if (!oabs || oabs.length === 0) return <span className="text-muted-foreground">-</span>;
+        
+        const primaryOab = oabs[0];
+        const hasMultiple = oabs.length > 1;
+        
+        return (
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-sm">{primaryOab.numero}</span>
+            <Badge variant="outline" tone="soft" className="text-xs">
+              {primaryOab.uf}
+            </Badge>
+            {hasMultiple && (
+              <Badge variant="secondary" className="text-xs">
+                +{oabs.length - 1}
+              </Badge>
+            )}
+          </div>
+        );
+      },
     },
     {
       id: 'acoes',

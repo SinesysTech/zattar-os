@@ -55,7 +55,7 @@ import {
 import { obterTimeline } from "@/features/captura/pje-trt/timeline/obter-timeline";
 import { obterDocumento } from "@/features/captura/pje-trt/timeline/obter-documento";
 import { baixarDocumento } from "@/features/captura/pje-trt/timeline/baixar-documento";
-import { uploadToBackblaze } from "@/lib/storage/backblaze-b2.service";
+import { uploadToSupabase } from "@/lib/storage/supabase-storage.service";
 import {
   gerarNomeDocumentoAudiencia,
   gerarCaminhoDocumento,
@@ -642,7 +642,7 @@ export async function audienciasCapture(
               "audiencias",
               nomeArquivo,
             );
-            const upload = await uploadToBackblaze({
+            const upload = await uploadToSupabase({
               buffer: pdf,
               key,
               contentType: "application/pdf",

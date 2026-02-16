@@ -34,7 +34,7 @@ import type {
   FetchDocumentoResult,
   ArquivoInfo,
 } from '../../types/documento-types';
-import { uploadToBackblaze } from '@/lib/storage/backblaze-b2.service';
+import { uploadToSupabase } from '@/lib/storage/supabase-storage.service';
 import { gerarCaminhoCompletoPendente } from '@/lib/storage/file-naming.utils';
 import { atualizarDocumentoPendente } from '@/features/captura/services/persistence/pendentes-persistence.service';
 
@@ -177,7 +177,7 @@ export async function fetchDocumentoConteudo(
  * 2. Valida que é PDF
  * 3. Busca conteúdo (base64)
  * 4. Converte para Buffer
- * 5. Faz upload para Backblaze B2
+ * 5. Faz upload para Supabase Storage
  * 6. Atualiza banco de dados
  *
  * PARÂMETROS:
@@ -203,7 +203,7 @@ export async function fetchDocumentoConteudo(
  *   expedienteId: 999,
  *   arquivoInfo: {
  *     arquivo_nome: "exp_789_doc_234517663_20251121.pdf",
- *     arquivo_url: "https://s3.us-east-005.backblazeb2.com/zattar-advogados/processos/.../exp_789_doc_234517663_20251121.pdf",
+ *     arquivo_url: "https://....supabase.co/storage/v1/object/public/bucket/key.pdf",
  *     arquivo_key: "processos/0010702-80.2025.5.03.0111/pendente_manifestacao/exp_789_doc_234517663_20251121.pdf",
  *     arquivo_bucket: "zattar-advogados"
  *   }
@@ -242,21 +242,21 @@ export async function downloadAndUploadDocumento(
     const buffer = Buffer.from(conteudo.documento, 'base64');
     console.log(`📦 Buffer criado: ${buffer.length} bytes`);
 
-    // 5. Gerar caminho e nome do arquivo no Backblaze
+    // 5. Gerar caminho e nome do arquivo no Storage
     const key = gerarCaminhoCompletoPendente(numeroProcesso, expedienteId, documentoId);
     const nomeArquivo = key.split('/').pop()!; // Extrair nome do arquivo do path
 
-    console.log(`📂 Caminho no Backblaze: ${key}`);
+    console.log(`📂 Caminho no Storage: ${key}`);
     console.log(`📝 Nome do arquivo: ${nomeArquivo}`);
 
-    // 6. Fazer upload para Backblaze B2
-    const uploadResult = await uploadToBackblaze({
+    // 6. Fazer upload para Supabase Storage
+    const uploadResult = await uploadToSupabase({
       buffer,
       key,
       contentType: 'application/pdf',
     });
 
-    console.log(`✅ Upload concluído no Backblaze B2`);
+    console.log(`✅ Upload concluído no Supabase Storage`);
     console.log(`URL: ${uploadResult.url}`);
     console.log(`Key: ${uploadResult.key}`);
     console.log(`Bucket: ${uploadResult.bucket}`);

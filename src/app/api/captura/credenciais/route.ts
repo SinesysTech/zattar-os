@@ -44,10 +44,15 @@ import { createServiceClient } from '@/lib/supabase/service-client';
  *                             type: string
  *                           advogado_cpf:
  *                             type: string
- *                           advogado_oab:
- *                             type: string
- *                           advogado_uf_oab:
- *                             type: string
+ *                           advogado_oabs:
+ *                             type: array
+ *                             items:
+ *                               type: object
+ *                               properties:
+ *                                 numero:
+ *                                   type: string
+ *                                 uf:
+ *                                   type: string
  *                           tribunal:
  *                             type: string
  *                           grau:
@@ -79,10 +84,11 @@ export async function GET(request: NextRequest) {
     // 2. Buscar credenciais com informações dos advogados
     const supabase = createServiceClient();
     
-    // Verificar se há filtro de active na query string
+    // Verificar filtros na query string
     const { searchParams } = new URL(request.url);
     const activeFilter = searchParams.get('active');
-    
+    const advogadoIdFilter = searchParams.get('advogado_id');
+
     let query = supabase
       .from('credenciais')
       .select(`
@@ -90,6 +96,7 @@ export async function GET(request: NextRequest) {
         advogado_id,
         tribunal,
         grau,
+        usuario,
         active,
         created_at,
         updated_at,
@@ -97,14 +104,21 @@ export async function GET(request: NextRequest) {
           id,
           nome_completo,
           cpf,
-          oab,
-          uf_oab
+          oabs
         )
       `);
-    
+
     // Aplicar filtro de active se fornecido
     if (activeFilter !== null) {
       query = query.eq('active', activeFilter === 'true');
+    }
+
+    // Aplicar filtro de advogado_id se fornecido
+    if (advogadoIdFilter) {
+      const advId = parseInt(advogadoIdFilter, 10);
+      if (!isNaN(advId)) {
+        query = query.eq('advogado_id', advId);
+      }
     }
     
     const { data: credenciais, error } = await query
@@ -132,10 +146,10 @@ export async function GET(request: NextRequest) {
         advogado_id: credencial.advogado_id,
         advogado_nome: advogado?.nome_completo || '',
         advogado_cpf: advogado?.cpf || '',
-        advogado_oab: advogado?.oab || '',
-        advogado_uf_oab: advogado?.uf_oab || '',
+        advogado_oabs: advogado?.oabs || [],
         tribunal: credencial.tribunal,
         grau: credencial.grau,
+        usuario: (credencial as { usuario?: string | null }).usuario || null,
         active: credencial.active ?? true,
         created_at: credencial.created_at || new Date().toISOString(),
         updated_at: credencial.updated_at,

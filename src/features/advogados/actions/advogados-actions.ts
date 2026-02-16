@@ -74,7 +74,8 @@ export async function actionCriarAdvogado(params: CriarAdvogadoParams): Promise<
     }
 
     const result = await criarAdvogado(params);
-    revalidatePath('/advogados');
+    revalidatePath('/app/captura/advogados');
+    revalidatePath('/app/captura/credenciais');
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -99,8 +100,8 @@ export async function actionAtualizarAdvogado(
     }
 
     const result = await atualizarAdvogado(id, params);
-    revalidatePath('/advogados');
-    revalidatePath(`/advogados/${id}`);
+    revalidatePath('/app/captura/advogados');
+    revalidatePath('/app/captura/credenciais');
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: String(error) };
