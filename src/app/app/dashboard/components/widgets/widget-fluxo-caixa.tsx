@@ -55,7 +55,7 @@ export function WidgetFluxoCaixa() {
       <CardContent className="flex-1 min-h-70 overflow-x-auto">
         <div className="w-full h-64 sm:h-72 lg:h-80">
           <ClientOnly>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={50} minHeight={50}>
               <BarChart data={data || []} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
                 <XAxis
                   dataKey="mes"

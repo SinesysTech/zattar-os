@@ -92,7 +92,7 @@ export function AtividadesCards({ usuarioId }: AtividadesCardsProps) {
         title="Processos"
         value={stats.processos}
         icon={<Briefcase className="h-4 w-4 text-sky-700 dark:text-sky-400" />}
-        href={`/acervo?responsavel=${usuarioId}`}
+        href={`/app/processos?responsavel=${usuarioId}`}
         color="bg-sky-500/15"
       />
       <StatCard

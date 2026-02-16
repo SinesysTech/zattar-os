@@ -81,7 +81,7 @@ export async function actionCriarRegiaoAtribuicao(
     }
 
     revalidatePath("/processos");
-    revalidatePath("/acervo");
+    revalidatePath("/app/processos");
 
     return {
       success: true,
@@ -145,7 +145,7 @@ export async function actionAtualizarRegiaoAtribuicao(
     }
 
     revalidatePath("/processos");
-    revalidatePath("/acervo");
+    revalidatePath("/app/processos");
 
     return {
       success: true,
@@ -179,7 +179,7 @@ export async function actionExcluirRegiaoAtribuicao(
     }
 
     revalidatePath("/processos");
-    revalidatePath("/acervo");
+    revalidatePath("/app/processos");
 
     return {
       success: true,
@@ -214,7 +214,7 @@ export async function actionAlternarStatusRegiao(
     }
 
     revalidatePath("/processos");
-    revalidatePath("/acervo");
+    revalidatePath("/app/processos");
 
     return {
       success: true,

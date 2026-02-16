@@ -314,7 +314,7 @@ export async function actionCriarProcesso(
 
     // 4. Revalidar cache
     revalidatePath("/processos");
-    revalidatePath("/acervo");
+    revalidatePath("/app/processos");
 
     return {
       success: true,
@@ -403,7 +403,7 @@ export async function actionAtualizarProcesso(
     // 5. Revalidar cache
     revalidatePath("/processos");
     revalidatePath(`/processos/${id}`);
-    revalidatePath("/acervo");
+    revalidatePath("/app/processos");
 
     return {
       success: true,
@@ -912,7 +912,7 @@ export async function actionCriarProcessoManual(
 
     // 6. Revalidar cache
     revalidatePath("/processos");
-    revalidatePath("/acervo");
+    revalidatePath("/app/processos");
 
     return {
       success: true,

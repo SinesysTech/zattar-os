@@ -119,7 +119,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
       <HoverCard openDelay={200} closeDelay={100}>
         <HoverCardTrigger asChild>
           <Link
-            href={`/acervo/${processo.processo_id}`}
+            href={`/app/processos/${processo.processo_id}`}
             className="inline-flex items-center text-xs h-6 px-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             {numeroFormatado}
