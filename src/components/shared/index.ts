@@ -104,6 +104,9 @@ export {
 
 export { YearFilterPopover } from './year-filter-popover';
 
+export { YearCalendarGrid } from './year-calendar-grid';
+export type { YearCalendarGridProps } from './year-calendar-grid';
+
 export type {
   WeekDay,
   WeekNavigatorProps,

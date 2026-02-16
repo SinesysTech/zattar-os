@@ -60,3 +60,6 @@ export {
   actionExcluirQuadroCustom,
   actionAtualizarStatusEntidade,
 } from "./actions/quadro-actions";
+
+// --- Components ---
+export { KanbanPageContent } from "./components/kanban-page-content";

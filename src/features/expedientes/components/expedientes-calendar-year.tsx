@@ -6,6 +6,7 @@ import type { PaginatedResponse } from '@/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { format } from 'date-fns';
+import { YearCalendarGrid } from '@/components/shared/year-calendar-grid';
 
 interface ExpedientesCalendarYearProps {
   /** Data de referência passada pelo parent (ExpedientesContent) */
@@ -91,90 +92,44 @@ export function ExpedientesCalendarYear({
     return mapa;
   }, [expedientes, currentDate]);
 
-  const temExpediente = (mes: number, dia: number) => {
-    // Legacy logic: if pinned items exist, every day is marked? 
-    // This is confusing UX but reproducing legacy "logic" from viewing `expedientes-visualizacao-ano.tsx`.
-    // Actually legacy logic says: `if (semPrazoPendentes.length > 0 || vencidosPendentes.length > 0) return true;`
-    // So if you have ANY overdue/nodate task, the WHOLE YEAR lights up?
-    // That seems aggressive. I'll maintain it for parity but ideally should change.
-    if (semPrazoPendentes.length > 0 || vencidosPendentes.length > 0) return true;
-    return expedientesPorDia.has(`${mes}-${dia}`);
-  };
+  const hasDayContent = React.useCallback(
+    (mes: number, dia: number) => {
+      // Legacy logic: if pinned items exist, every day is marked.
+      if (semPrazoPendentes.length > 0 || vencidosPendentes.length > 0) return true;
+      return expedientesPorDia.has(`${mes}-${dia}`);
+    },
+    [expedientesPorDia, semPrazoPendentes, vencidosPendentes],
+  );
 
-  const getExpedientesDia = (mes: number, dia: number) => {
-    const ano = currentDate.getFullYear();
-    const doDia = expedientes.filter(e => {
-      if (!e.dataPrazoLegalParte) return false;
-      const d = new Date(e.dataPrazoLegalParte);
-      return d.getFullYear() === ano && d.getMonth() === mes && d.getDate() === dia;
-    });
-    // Add pinned
-    const pinned = [...semPrazoPendentes, ...vencidosPendentes];
-    // Filter duplicates if any
-    const unique = new Map();
-    [...pinned, ...doDia].forEach(e => unique.set(e.id, e));
-    return Array.from(unique.values());
-  };
-
-  const handleDiaClick = (mes: number, dia: number) => {
-    const exps = getExpedientesDia(mes, dia);
-    if (exps.length > 0) {
-      setExpedientesDia(exps);
-      setDialogOpen(true);
-    }
-  };
-
-  const meses = [
-    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-  ];
-
-  const getDiasMes = (mes: number) => {
-    const ano = currentDate.getFullYear();
-    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
-    const primeiroDiaSemana = new Date(ano, mes, 1).getDay(); // 0-6
-    // Ajuste para semana começando em segunda-feira (padrão pt-BR)
-    const offset = primeiroDiaSemana === 0 ? 6 : primeiroDiaSemana - 1;
-
-    const dias = [];
-    for (let i = 0; i < offset; i++) dias.push(null);
-    for (let i = 1; i <= ultimoDia; i++) dias.push(i);
-    return dias;
-  };
+  const handleDiaClick = React.useCallback(
+    (mes: number, dia: number) => {
+      const ano = currentDate.getFullYear();
+      const doDia = expedientes.filter(e => {
+        if (!e.dataPrazoLegalParte) return false;
+        const d = new Date(e.dataPrazoLegalParte);
+        return d.getFullYear() === ano && d.getMonth() === mes && d.getDate() === dia;
+      });
+      // Add pinned
+      const pinned = [...semPrazoPendentes, ...vencidosPendentes];
+      // Filter duplicates if any
+      const unique = new Map();
+      [...pinned, ...doDia].forEach(e => unique.set(e.id, e));
+      const exps = Array.from(unique.values());
+      if (exps.length > 0) {
+        setExpedientesDia(exps);
+        setDialogOpen(true);
+      }
+    },
+    [expedientes, currentDate, semPrazoPendentes, vencidosPendentes],
+  );
 
   return (
     <div className="flex flex-col h-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {meses.map((nome, mesIdx) => (
-          <div key={nome} className="border rounded-lg p-4 bg-white dark:bg-card shadow-sm hover:shadow-md transition-shadow">
-            <div className="font-semibold text-center mb-3 text-sm uppercase tracking-wide text-muted-foreground">{nome}</div>
-            <div className="grid grid-cols-7 gap-1 text-center mb-1">
-              {['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((d, i) => <span key={`${d}-${i}`} className="text-[10px] text-muted-foreground">{d}</span>)}
-            </div>
-            <div className="grid grid-cols-7 gap-1 text-center">
-              {getDiasMes(mesIdx).map((dia, i) => {
-                if (!dia) return <span key={i} />;
-                const hasExp = temExpediente(mesIdx, dia);
-                const isToday = new Date().toDateString() === new Date(currentDate.getFullYear(), mesIdx, dia).toDateString();
-
-                return (
-                  <div
-                    key={i}
-                    onClick={() => hasExp && handleDiaClick(mesIdx, dia)}
-                    className={`
-                                        text-xs h-7 w-7 flex items-center justify-center rounded-full transition-all
-                                        ${isToday ? 'bg-blue-600 text-white font-bold' : ''}
-                                        ${!isToday && hasExp ? 'bg-primary/20 text-primary font-medium cursor-pointer hover:bg-primary/40' : 'text-muted-foreground'}
-                                    `}
-                  >
-                    {dia}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
+      <YearCalendarGrid
+        year={currentDate.getFullYear()}
+        hasDayContent={hasDayContent}
+        onDayClick={handleDiaClick}
+      />
 
       <ExpedienteDetalhesDialog
         expediente={null}

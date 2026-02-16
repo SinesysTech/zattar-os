@@ -94,15 +94,15 @@ const MonthCard = React.memo(function MonthCard({
         {monthName}
       </div>
 
-      {/* Grid único: headers dos dias + células dos dias */}
-      <div className="grid grid-cols-7 place-items-center px-2 pb-2">
+      {/* Grid único: headers + dias na mesma grid = alinhamento perfeito */}
+      <div className="grid grid-cols-7 place-items-center gap-y-0.5 px-3 pb-3">
         {/* Headers dos dias da semana */}
         {WEEKDAYS.map((dayName, i) => (
           <div
             key={i}
             className={cn(
-              'pb-2 text-[10px] font-medium text-muted-foreground',
-              i >= 5 && 'text-muted-foreground/60',
+              'flex h-7 w-7 items-center justify-center text-[11px] font-semibold text-muted-foreground',
+              i >= 5 && 'text-muted-foreground/50',
             )}
           >
             {dayName}
