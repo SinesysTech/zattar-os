@@ -58,6 +58,26 @@ function parseDate(dateString: string | null | undefined): string | null {
 }
 
 /**
+ * Atualiza a materialized view acervo_unificado após persistência no acervo.
+ * Necessário porque a view não se atualiza automaticamente.
+ */
+async function refreshAcervoUnificado(): Promise<void> {
+  try {
+    const supabase = createServiceClient();
+    const { error } = await supabase.rpc("refresh_acervo_unificado", {
+      use_concurrent: true,
+    });
+    if (error) {
+      console.warn(`   ⚠️ [refreshAcervoUnificado] Falha no refresh: ${error.message}`);
+    } else {
+      console.log(`   🔄 [refreshAcervoUnificado] View materializada atualizada com sucesso`);
+    }
+  } catch (err) {
+    console.warn(`   ⚠️ [refreshAcervoUnificado] Erro inesperado:`, err);
+  }
+}
+
+/**
  * Busca um processo existente no acervo com todos os campos
  */
 async function buscarProcessoExistente(
@@ -267,6 +287,11 @@ export async function salvarAcervo(
   }
 
   console.log(`   ✅ [salvarAcervo] Persistência concluída: ${inseridos} inseridos, ${atualizados} atualizados, ${naoAtualizados} sem alteração, ${erros} erros`);
+
+  // Refresh da view materializada se houve alterações
+  if (inseridos > 0 || atualizados > 0) {
+    await refreshAcervoUnificado();
+  }
 
   return {
     inseridos,
@@ -548,6 +573,11 @@ export async function salvarAcervoBatch(
   }
 
   console.log(`   🏁 [salvarAcervoBatch] Persistência BATCH concluída: ${inseridos} inseridos, ${atualizados} atualizados, ${naoAtualizados} sem alteração, ${erros} erros`);
+
+  // Refresh da view materializada se houve alterações
+  if (inseridos > 0 || atualizados > 0) {
+    await refreshAcervoUnificado();
+  }
 
   return {
     inseridos,
