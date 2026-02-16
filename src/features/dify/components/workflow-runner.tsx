@@ -156,7 +156,7 @@ export function WorkflowRunner({
                         <StopCircle className="mr-2 h-4 w-4" /> Parar
                     </Button>
                 ) : (
-                    <Button onClick={handleRun} disabled={state.status === 'running'}>
+                    <Button onClick={handleRun}>
                         <Play className="mr-2 h-4 w-4" /> Executar
                     </Button>
                 )}
