@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import {
   checkVersionMismatch,
@@ -246,8 +246,9 @@ export function useNotificacoesRealtime(options?: {
   onContadorChange?: (contador: ContadorNotificacoes) => void;
 }) {
   const { onNovaNotificacao, onContadorChange } = options || {};
-  // Usar useMemo para criar instância estável do cliente Supabase
-  const supabase = useMemo(() => createClient(), []);
+
+  // Usar singleton client para evitar múltiplas conexões Realtime
+  const supabase = getSupabaseBrowserClient();
 
   // Estado para controlar fallback de polling
   const [usePolling, setUsePolling] = useState(false);
@@ -298,8 +299,8 @@ export function useNotificacoesRealtime(options?: {
       const existingChannels = supabase.getChannels().filter((ch) => {
         // Match canais com o mesmo nome ou que terminam com o nome
         return ch.topic === channelName ||
-               ch.topic.endsWith(`:${channelName}`) ||
-               ch.topic.includes(`notifications:`);
+          ch.topic.endsWith(`:${channelName}`) ||
+          ch.topic.includes(`notifications:`);
       });
 
       if (existingChannels.length > 0) {

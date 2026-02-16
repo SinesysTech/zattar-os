@@ -43,6 +43,7 @@ import {
 import { cn } from "@/lib/utils";
 
 import type { TwoFAuthAccount, TwoFAuthGroup, OTPResult } from "@/lib/integrations/twofauth/types";
+import useTwoFAuthAccounts from "../hooks/use-twofauth-accounts";
 
 // =============================================================================
 // TIPOS
@@ -65,19 +66,33 @@ interface ConnectionStatus {
 // =============================================================================
 
 export function TwoFAuthConfigContent() {
-  // Estado
+  // Hook 2FAuth
+  const {
+    accounts,
+    isLoading: accountsLoading,
+    error: accountsError,
+    isPermissionError,
+    fetchAccounts,
+    deleteAccount,
+    selectedAccount,
+    selectAccount,
+    currentOTP,
+    otpLoading,
+    timeRemaining,
+    copyOTPToClipboard,
+    fetchOTP,
+  } = useTwoFAuthAccounts();
+
+  // Derived state
+  const selectedAccountId = selectedAccount?.id;
+
+  // Estado local para Status e Grupos (não cobertos pelo hook)
   const [status, setStatus] = useState<ConnectionStatus | null>(null);
-  const [accounts, setAccounts] = useState<TwoFAuthAccount[]>([]);
   const [groups, setGroups] = useState<TwoFAuthGroup[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-
-  // Estado do OTP
-  const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
-  const [currentOTP, setCurrentOTP] = useState<OTPResult | null>(null);
-  const [otpLoading, setOtpLoading] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(30);
+  const [statusLoading, setStatusLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+
+  const isLoading = statusLoading || accountsLoading;
 
   // Estado de exclusão
   const [accountToDelete, setAccountToDelete] = useState<TwoFAuthAccount | null>(null);
@@ -95,18 +110,8 @@ export function TwoFAuthConfigContent() {
     }
   }, []);
 
-  // Buscar contas
-  const fetchAccounts = useCallback(async () => {
-    try {
-      const response = await fetch("/api/twofauth/accounts");
-      const data = await response.json();
-      if (data.success) {
-        setAccounts(data.data || []);
-      }
-    } catch {
-      console.error("Erro ao buscar contas");
-    }
-  }, []);
+  // Buscar contas (gerenciado pelo hook)
+  // const fetchAccounts = ... (removido)
 
   // Buscar grupos
   const fetchGroups = useCallback(async () => {
@@ -123,88 +128,27 @@ export function TwoFAuthConfigContent() {
 
   // Carregar dados iniciais
   const loadData = useCallback(async () => {
-    setIsLoading(true);
+    setStatusLoading(true);
     await Promise.all([fetchStatus(), fetchAccounts(), fetchGroups()]);
-    setIsLoading(false);
+    setStatusLoading(false);
   }, [fetchStatus, fetchAccounts, fetchGroups]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  // Buscar OTP de uma conta
-  const fetchOTP = useCallback(async (accountId: number) => {
-    setOtpLoading(true);
-    setSelectedAccountId(accountId);
-    try {
-      const response = await fetch(`/api/twofauth/accounts/${accountId}/otp`);
-      const data = await response.json();
-      if (data.success) {
-        setCurrentOTP(data.data);
-        const account = accounts.find((a) => a.id === accountId);
-        const period = account?.period || 30;
-        const now = Math.floor(Date.now() / 1000);
-        setTimeRemaining(period - (now % period));
-      }
-    } catch {
-      setCurrentOTP(null);
-    } finally {
-      setOtpLoading(false);
-    }
-  }, [accounts]);
-
-  // Timer para countdown do OTP
-  useEffect(() => {
-    if (!selectedAccountId || !currentOTP) return;
-
-    const account = accounts.find((a) => a.id === selectedAccountId);
-    const period = account?.period || 30;
-
-    const interval = setInterval(() => {
-      const now = Math.floor(Date.now() / 1000);
-      const remaining = period - (now % period);
-      setTimeRemaining(remaining);
-
-      // Quando o tempo acabar, buscar novo OTP
-      if (remaining === period) {
-        fetchOTP(selectedAccountId);
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [selectedAccountId, currentOTP, accounts, fetchOTP]);
-
-  // Copiar OTP
+  // Handlers
   const handleCopyOTP = async () => {
-    if (!currentOTP?.password) return;
-    try {
-      await navigator.clipboard.writeText(currentOTP.password);
+    const success = await copyOTPToClipboard();
+    if (success) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Ignorar erro de clipboard
     }
   };
 
-  // Excluir conta
   const handleDeleteAccount = async () => {
-    if (!accountToDelete) return;
-
-    try {
-      const response = await fetch(`/api/twofauth/accounts/${accountToDelete.id}`, {
-        method: "DELETE",
-      });
-      const data = await response.json();
-      if (data.success) {
-        setAccounts((prev) => prev.filter((a) => a.id !== accountToDelete.id));
-        if (selectedAccountId === accountToDelete.id) {
-          setSelectedAccountId(null);
-          setCurrentOTP(null);
-        }
-      }
-    } catch {
-      console.error("Erro ao excluir conta");
-    } finally {
+    if (accountToDelete) {
+      await deleteAccount(accountToDelete.id);
       setAccountToDelete(null);
     }
   };
