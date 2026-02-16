@@ -292,12 +292,12 @@ export function RepresentantesTableWrapper() {
         id: 'processos',
         header: 'Processos',
         enableSorting: false,
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         size: 200,
         cell: ({ row }) => {
           const representante = row.original;
           return (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center">
               <ProcessosRelacionadosCell processos={representante.processos_relacionados || []} />
             </div>
           );
@@ -308,12 +308,12 @@ export function RepresentantesTableWrapper() {
         id: 'acoes',
         header: 'Ações',
         enableSorting: false,
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         size: 120,
         cell: ({ row }) => {
           const representante = row.original;
           return (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center">
               <RepresentanteActions representante={representante} onEdit={handleEdit} />
             </div>
           );

@@ -278,7 +278,7 @@ export function ComunicaCNJCapturadas() {
         <TribunalBadge codigo={row.getValue('siglaTribunal')} className="text-xs" />
       ),
       size: 80,
-      meta: { align: 'center' },
+      meta: { align: 'left' },
       enableSorting: true,
     },
     {
@@ -314,7 +314,7 @@ export function ComunicaCNJCapturadas() {
         </Badge>
       ),
       size: 120,
-      meta: { align: 'center' },
+      meta: { align: 'left' },
     },
     {
       accessorKey: 'expedienteId',
@@ -336,7 +336,7 @@ export function ComunicaCNJCapturadas() {
         );
       },
       size: 150,
-      meta: { align: 'center' },
+      meta: { align: 'left' },
     },
     {
       accessorKey: 'createdAt',
@@ -349,13 +349,13 @@ export function ComunicaCNJCapturadas() {
         </div>
       ),
       size: 100,
-      meta: { align: 'center' },
+      meta: { align: 'left' },
     },
     {
       id: 'actions',
       header: 'Ações',
       cell: ({ row }) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center">
           <ActionButtons
             comunicacao={row.original}
             onViewDetails={handleViewDetails}
@@ -364,7 +364,7 @@ export function ComunicaCNJCapturadas() {
         </div>
       ),
       size: 100,
-      meta: { align: 'center' },
+      meta: { align: 'left' },
     },
   ], [handleViewDetails, handleViewPdf]);
 

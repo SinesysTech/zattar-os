@@ -211,11 +211,11 @@ function criarColunas(
     {
       accessorKey: 'tipo_captura',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Tipo" className="justify-center" />
+        <DataTableColumnHeader column={column} title="Tipo" />
       ),
       enableSorting: true,
       size: 140,
-      meta: { align: 'center' },
+      meta: { align: 'left' },
       cell: ({ row }) => (
         <span className="text-sm">{formatarTipoCaptura(row.getValue('tipo_captura'))}</span>
       ),
@@ -223,12 +223,12 @@ function criarColunas(
     {
       accessorKey: 'advogado_id',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Advogado" className="justify-center" />
+        <DataTableColumnHeader column={column} title="Advogado" />
       ),
       enableSorting: true,
       size: 220,
       minSize: 200,
-      meta: { align: 'center' },
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const advogadoId = row.getValue('advogado_id') as number | null;
         const nomeAdvogado = advogadoId ? advogadosMap.get(advogadoId) : null;
@@ -242,11 +242,11 @@ function criarColunas(
     {
       accessorKey: 'credencial_ids',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Tribunais" className="justify-center" />
+        <DataTableColumnHeader column={column} title="Tribunais" />
       ),
       enableSorting: false,
       size: 220,
-      meta: { align: 'center' },
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const credencialIds = row.getValue('credencial_ids') as number[] | null | undefined;
 
@@ -300,7 +300,7 @@ function criarColunas(
         }
 
         return (
-          <div className="flex flex-wrap gap-1 justify-center">
+          <div className="flex flex-wrap gap-1">
             {tribunaisUnicos.slice(0, 3).map((info, idx) => {
               const grau = info.grau || 'primeiro_grau';
               return (
@@ -325,26 +325,26 @@ function criarColunas(
     {
       accessorKey: 'status',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" className="justify-center" />
+        <DataTableColumnHeader column={column} title="Status" />
       ),
       enableSorting: true,
       size: 130,
-      meta: { align: 'center' },
+      meta: { align: 'left' },
       cell: ({ row }) => <StatusBadge status={row.getValue('status')} />,
     },
     {
       accessorKey: 'iniciado_em',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Período" className="justify-center" />
+        <DataTableColumnHeader column={column} title="Período" />
       ),
       enableSorting: true,
       size: 200,
-      meta: { align: 'center' },
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const iniciadoEm = row.getValue('iniciado_em') as string | null;
         const concluidoEm = row.original.concluido_em;
         return (
-          <div className="flex flex-col items-center text-sm">
+          <div className="flex flex-col text-sm">
             <span>
               <span className="text-muted-foreground">Início:</span> {formatarDataHora(iniciadoEm)}
             </span>
@@ -360,11 +360,11 @@ function criarColunas(
     {
       accessorKey: 'erro',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Erros" className="justify-center" />
+        <DataTableColumnHeader column={column} title="Erros" />
       ),
       enableSorting: false,
       size: 200,
-      meta: { align: 'center' },
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const erro = row.getValue('erro') as string | null;
         const resultado = row.original.resultado;
@@ -448,7 +448,7 @@ function criarColunas(
         });
 
         return (
-          <div className="flex flex-wrap gap-1 justify-center">
+          <div className="flex flex-wrap gap-1">
             {Array.from(contagem.values()).slice(0, 2).map((info, idx) => {
               const grau = info.grau || 'primeiro_grau';
               return (
@@ -472,15 +472,15 @@ function criarColunas(
     },
     {
       id: 'acoes',
-      header: () => <span className="text-center w-full block">Ações</span>,
+      header: () => <span>Ações</span>,
       size: 100,
-      meta: { align: 'center' },
+      meta: { align: 'left' },
       enableSorting: false,
       enableHiding: false,
       cell: ({ row }) => {
         const captura = row.original;
         return (
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center gap-2">
             <Button
               variant="ghost"
               size="icon"

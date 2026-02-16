@@ -214,8 +214,7 @@ export type Database = {
           created_at: string
           id: number
           nome_completo: string
-          oab: string
-          uf_oab: string
+          oabs: Json
           updated_at: string
         }
         Insert: {
@@ -223,8 +222,7 @@ export type Database = {
           created_at?: string
           id?: never
           nome_completo: string
-          oab: string
-          uf_oab: string
+          oabs?: Json
           updated_at?: string
         }
         Update: {
@@ -232,8 +230,7 @@ export type Database = {
           created_at?: string
           id?: never
           nome_completo?: string
-          oab?: string
-          uf_oab?: string
+          oabs?: Json
           updated_at?: string
         }
         Relationships: []
@@ -3285,8 +3282,53 @@ export type Database = {
           },
         ]
       }
+      kanban_boards: {
+        Row: {
+          created_at: string
+          icone: string | null
+          id: string
+          ordem: number
+          source: string | null
+          tipo: string
+          titulo: string
+          updated_at: string
+          usuario_id: number
+        }
+        Insert: {
+          created_at?: string
+          icone?: string | null
+          id?: string
+          ordem?: number
+          source?: string | null
+          tipo: string
+          titulo: string
+          updated_at?: string
+          usuario_id: number
+        }
+        Update: {
+          created_at?: string
+          icone?: string | null
+          id?: string
+          ordem?: number
+          source?: string | null
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kanban_boards_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kanban_columns: {
         Row: {
+          board_id: string | null
           created_at: string
           id: string
           position: number
@@ -3295,6 +3337,7 @@ export type Database = {
           usuario_id: number
         }
         Insert: {
+          board_id?: string | null
           created_at?: string
           id?: string
           position?: number
@@ -3303,6 +3346,7 @@ export type Database = {
           usuario_id: number
         }
         Update: {
+          board_id?: string | null
           created_at?: string
           id?: string
           position?: number
@@ -3311,6 +3355,13 @@ export type Database = {
           usuario_id?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "kanban_columns_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "kanban_boards"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "kanban_columns_usuario_id_fkey"
             columns: ["usuario_id"]
@@ -6757,16 +6808,6 @@ export type Database = {
           },
         ]
       }
-      mv_dados_primeiro_grau: {
-        Row: {
-          nome_parte_autora_origem: string | null
-          nome_parte_re_origem: string | null
-          numero_processo: string | null
-          orgao_julgador_origem: string | null
-          trt_origem: Database["public"]["Enums"]["codigo_tribunal"] | null
-        }
-        Relationships: []
-      }
       processos_cliente_por_cpf: {
         Row: {
           advogado_id: number | null
@@ -7065,8 +7106,6 @@ export type Database = {
         Args: { use_concurrent?: boolean }
         Returns: undefined
       }
-      refresh_mv_dados_primeiro_grau: { Args: never; Returns: undefined }
-      refresh_orcamento_vs_realizado: { Args: never; Returns: undefined }
       refresh_processos_cliente_por_cpf: { Args: never; Returns: undefined }
       registrar_baixa_expediente: {
         Args: {

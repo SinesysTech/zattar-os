@@ -64,19 +64,15 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
     },
     {
       id: 'acoes',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <span className="text-sm font-medium text-muted-foreground">Ações</span>
-        </div>
-      ),
+      header: () => <span className="text-sm font-medium text-muted-foreground">Ações</span>,
       enableSorting: false,
       enableHiding: false,
       size: 120,
-      meta: { align: 'center' as const },
+      meta: { align: 'left' as const },
       cell: ({ row }) => {
         const credencial = row.original;
         return (
-          <div className="flex items-center justify-center gap-1">
+          <div className="flex items-center gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

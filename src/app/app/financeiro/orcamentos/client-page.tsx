@@ -227,9 +227,7 @@ function criarColunas(
     {
       accessorKey: 'nome',
       header: ({ column }) => (
-        <div className="flex items-center justify-start">
-          <DataTableColumnHeader column={column} title="Nome" />
-        </div>
+        <DataTableColumnHeader column={column} title="Nome" />
       ),
       enableSorting: true,
       size: 280,
@@ -251,16 +249,14 @@ function criarColunas(
     {
       accessorKey: 'ano',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Ano" />
-        </div>
+        <DataTableColumnHeader column={column} title="Ano" />
       ),
       enableSorting: true,
       size: 80,
-      meta: { align: 'center' as const, headerLabel: 'Ano' },
+      meta: { align: 'left' as const, headerLabel: 'Ano' },
       cell: ({ row }) => {
         return (
-          <div className="flex items-center justify-center font-medium">
+          <div className="flex items-center font-medium">
             {row.getValue('ano')}
           </div>
         );
@@ -269,17 +265,15 @@ function criarColunas(
     {
       accessorKey: 'periodo',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Período" />
-        </div>
+        <DataTableColumnHeader column={column} title="Período" />
       ),
       enableSorting: true,
       size: 100,
-      meta: { align: 'center' as const, headerLabel: 'Período' },
+      meta: { align: 'left' as const, headerLabel: 'Período' },
       cell: ({ row }) => {
         const periodo = row.getValue('periodo') as string;
         return (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center">
             <Badge variant="outline">{PERIODO_LABELS[periodo] || periodo}</Badge>
           </div>
         );
@@ -288,16 +282,14 @@ function criarColunas(
     {
       id: 'dataVigencia',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Vigência" />
-        </div>
+        <DataTableColumnHeader column={column} title="Vigência" />
       ),
       size: 180,
-      meta: { align: 'center' as const, headerLabel: 'Vigência' },
+      meta: { align: 'left' as const, headerLabel: 'Vigência' },
       cell: ({ row }) => {
         const orcamento = row.original;
         return (
-          <div className="flex items-center justify-center text-sm">
+          <div className="flex items-center text-sm">
             {formatarData(orcamento.dataInicio)} - {formatarData(orcamento.dataFim)}
           </div>
         );
@@ -306,16 +298,14 @@ function criarColunas(
     {
       id: 'valorTotal',
       header: ({ column }) => (
-        <div className="flex items-center justify-end">
-          <DataTableColumnHeader column={column} title="Valor Total" />
-        </div>
+        <DataTableColumnHeader column={column} title="Valor Total" />
       ),
       size: 130,
-      meta: { align: 'right' as const, headerLabel: 'Valor Total' },
+      meta: { align: 'left' as const, headerLabel: 'Valor Total' },
       cell: ({ row }) => {
         const total = calcularTotalOrcado(row.original);
         return (
-          <div className="flex items-center justify-end font-mono text-sm font-medium">
+          <div className="flex items-center font-mono text-sm font-medium">
             {formatarValor(total)}
           </div>
         );
@@ -324,14 +314,14 @@ function criarColunas(
     {
       id: 'itens',
       header: () => (
-        <div className="flex items-center justify-center text-sm font-medium">Itens</div>
+        <div className="text-sm font-medium">Itens</div>
       ),
       size: 70,
-      meta: { align: 'center' as const },
+      meta: { align: 'left' as const },
       cell: ({ row }) => {
         const qtdItens = row.original.itens?.length || 0;
         return (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center">
             <Badge variant="outline" className="font-mono">
               {qtdItens}
             </Badge>
@@ -342,18 +332,16 @@ function criarColunas(
     {
       accessorKey: 'status',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Status" />
-        </div>
+        <DataTableColumnHeader column={column} title="Status" />
       ),
       enableSorting: true,
       size: 120,
-      meta: { align: 'center' as const, headerLabel: 'Status' },
+      meta: { align: 'left' as const, headerLabel: 'Status' },
       cell: ({ row }) => {
         const status = row.getValue('status') as StatusOrcamento;
         const config = STATUS_CONFIG[status];
         return (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center">
             <Badge variant={config.tone}>
               {config.label}
             </Badge>
@@ -364,17 +352,15 @@ function criarColunas(
     {
       id: 'acoes',
       header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Ações</div>
-        </div>
+        <div className="text-sm font-medium">Ações</div>
       ),
       enableSorting: false,
       size: 80,
-      meta: { align: 'center' as const },
+      meta: { align: 'left' as const },
       cell: ({ row }) => {
         const orcamento = row.original;
         return (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center">
             <OrcamentosActions
               orcamento={orcamento}
               onVerDetalhes={onVerDetalhes}

@@ -87,7 +87,10 @@ create table if not exists public.terceiros (
   -- Controle
   ativo boolean default true,
   created_at timestamp with time zone default now(),
-  updated_at timestamp with time zone default now()
+  updated_at timestamp with time zone default now(),
+
+  -- Auditoria
+  dados_anteriores jsonb
 );
 
 -- id_pessoa_pje foi movido para a tabela cadastros_pje para permitir múltiplos IDs por pessoa

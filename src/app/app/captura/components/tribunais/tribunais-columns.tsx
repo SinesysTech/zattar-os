@@ -63,17 +63,13 @@ export function criarColunasTribunais({ onEdit }: Params): ColumnDef<TribunalCon
     },
     {
       id: 'acoes',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <span className="text-sm font-medium text-muted-foreground">Ações</span>
-        </div>
-      ),
+      header: () => <span className="text-sm font-medium text-muted-foreground">Ações</span>,
       enableSorting: false,
       enableHiding: false,
       size: 80,
-      meta: { align: 'center' as const },
+      meta: { align: 'left' as const },
       cell: ({ row }) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
