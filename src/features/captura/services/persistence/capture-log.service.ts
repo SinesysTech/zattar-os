@@ -194,3 +194,16 @@ class CaptureLogService {
 // Instância singleton para uso global
 export const captureLogService = new CaptureLogService();
 
+/**
+ * Extrai mensagem de erro de forma segura.
+ * PostgrestError do Supabase NÃO é instância de Error — é um plain object
+ * com { message, details, hint, code }. String(error) produziria "[object Object]".
+ */
+export function extrairMensagemErro(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === "object" && error !== null && "message" in error) {
+    return String((error as Record<string, unknown>).message);
+  }
+  return String(error);
+}
+
