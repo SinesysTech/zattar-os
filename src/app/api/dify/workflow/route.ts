@@ -1,0 +1,62 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createDifyService } from '@/features/dify/factory';
+import { executarWorkflowSchema } from '@/features/dify/domain';
+
+export const runtime = 'nodejs';
+
+export async function POST(req: NextRequest) {
+    try {
+        const json = await req.json();
+
+        const payload = {
+            ...json,
+            inputs: json.inputs || {},
+            user: json.user || 'anonymous-user',
+        };
+
+        // Validar apenas inputs por enquanto, pois o schema pode não esperar user ali dentro
+        const schemaValidation = executarWorkflowSchema.safeParse({
+            inputs: payload.inputs,
+            files: payload.files
+        });
+
+        if (!schemaValidation.success) {
+            return NextResponse.json(
+                { error: 'Parâmetros inválidos', details: schemaValidation.error.format() },
+                { status: 400 }
+            );
+        }
+
+        const { user } = payload;
+        const userId = user || 'anonymous-user';
+
+        const service = await createDifyService(userId);
+
+        const result = await service.executarWorkflowStream({
+            inputs: payload.inputs,
+            files: payload.files,
+        }, userId);
+
+        if (result.isErr()) {
+            console.error('[API Dify Workflow] Erro no service:', result.error);
+            return NextResponse.json({ error: result.error.message }, { status: 500 });
+        }
+
+        const stream = result.value;
+
+        return new Response(stream, {
+            headers: {
+                'Content-Type': 'text/event-stream',
+                'Cache-Control': 'no-cache',
+                'Connection': 'keep-alive',
+            },
+        });
+
+    } catch (error: any) {
+        console.error('[API Dify Workflow] Erro não tratado:', error);
+        return NextResponse.json(
+            { error: 'Erro interno ao processar workflow', details: error.message },
+            { status: 500 }
+        );
+    }
+}

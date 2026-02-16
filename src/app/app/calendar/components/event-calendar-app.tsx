@@ -311,9 +311,9 @@ export default function EventCalendarApp({
         <div className="ml-auto flex items-center gap-1">
           {/* Navigation: [<] Title [>] */}
           <Button
+            type="button"
+            className="flex items-center justify-center h-9 w-9 shrink-0 rounded-md bg-card border hover:bg-accent transition-colors p-0"
             variant="ghost"
-            size="icon"
-            className="h-9 w-9"
             onClick={handlePrevious}
             aria-label="Anterior">
             <ChevronLeftIcon size={16} aria-hidden="true" />
@@ -326,16 +326,16 @@ export default function EventCalendarApp({
             )}
           </span>
           <Button
+            type="button"
+            className="flex items-center justify-center h-9 w-9 shrink-0 rounded-md bg-card border hover:bg-accent transition-colors p-0"
             variant="ghost"
-            size="icon"
-            className="h-9 w-9"
             onClick={handleNext}
             aria-label="Próximo">
             <ChevronRightIcon size={16} aria-hidden="true" />
           </Button>
 
           {/* Hoje */}
-          <Button variant="outline" className="h-9" onClick={handleToday}>
+          <Button variant="outline" className="h-9 bg-card border shadow-sm hover:bg-accent hover:text-accent-foreground" onClick={handleToday}>
             <CalendarCheck className="sm:hidden" size={16} aria-hidden="true" />
             <span className="max-sm:sr-only">Hoje</span>
           </Button>
@@ -357,15 +357,15 @@ export default function EventCalendarApp({
           readOnly
             ? undefined
             : (updatedEvent) =>
-                setLocalEvents((prev) =>
-                  prev.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
-                )
+              setLocalEvents((prev) =>
+                prev.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
+              )
         }
         onEventDelete={
           readOnly
             ? undefined
             : (eventId) =>
-                setLocalEvents((prev) => prev.filter((ev) => ev.id !== eventId))
+              setLocalEvents((prev) => prev.filter((ev) => ev.id !== eventId))
         }
         currentDate={currentDate}
         onCurrentDateChange={setCurrentDate}
@@ -383,7 +383,7 @@ export default function EventCalendarApp({
           setNewEvent(null);
         }}
         onSave={handleCreateSave}
-        onDelete={() => {}}
+        onDelete={() => { }}
       />
     </div>
   );
@@ -409,8 +409,8 @@ function CalendarViewPopover({
               variant="outline"
               size="icon"
               className={cn(
-                "h-9 w-9",
-                "data-[state=open]:bg-card data-[state=open]:text-foreground"
+                "h-9 w-9 bg-card border shadow-sm hover:bg-accent hover:text-accent-foreground",
+                "data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
               )}
               aria-label="Alterar visualização">
               <Eye className="h-4 w-4" aria-hidden="true" />

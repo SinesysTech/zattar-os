@@ -36,13 +36,6 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
     enableHiding: false
   },
   {
-    accessorKey: "id",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
-    cell: ({ row }) => <div className="w-[80px] truncate">{row.getValue("id")}</div>,
-    enableSorting: false,
-    enableHiding: false
-  },
-  {
     accessorKey: "title",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Título" />,
     cell: ({ row }) => {
@@ -77,7 +70,34 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
           )}
         </div>
       );
-    }
+    },
+    meta: {
+      headerLabel: "Título",
+    },
+  },
+  {
+    accessorKey: "label",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Tipo" />,
+    cell: ({ row }) => {
+      const label = labels.find((l) => l.value === row.getValue("label"));
+
+      if (!label) {
+        return null;
+      }
+
+      return (
+        <div className="flex items-center gap-2">
+          {label.icon && <label.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
+          <span>{label.label}</span>
+        </div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+    meta: {
+      headerLabel: "Tipo",
+    },
   },
   {
     accessorKey: "status",
@@ -98,7 +118,10 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
-    }
+    },
+    meta: {
+      headerLabel: "Status",
+    },
   },
   {
     accessorKey: "priority",
@@ -119,7 +142,10 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
-    }
+    },
+    meta: {
+      headerLabel: "Prioridade",
+    },
   },
   {
     id: "actions",

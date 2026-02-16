@@ -1,445 +1,230 @@
+import { getDifyConfig, DIFY_DEFAULT_URL } from './config';
 import {
-  getDifyConfig,
-  getApiKeyForApp,
-  DIFY_REQUEST_TIMEOUT,
-  DIFY_STREAM_TIMEOUT,
-  DIFY_MAX_RETRIES,
-} from './config';
-import { DifyError } from './types';
-import type {
   DifyChatRequest,
-  DifyChatBlockingResponse,
+  DifyChatResponse,
   DifyCompletionRequest,
-  DifyCompletionBlockingResponse,
-  DifyWorkflowRequest,
-  DifyWorkflowBlockingResponse,
-  DifyConversationsRequest,
+  DifyCompletionResponse,
   DifyConversationsResponse,
-  DifyMessagesRequest,
-  DifyMessagesResponse,
   DifyFeedbackRequest,
-  DifySuggestedQuestionsResponse,
   DifyFileUploadResponse,
-  DifyAppInfo,
-  DifyAppParameter,
-  DifyAppMeta,
-  DifyCreateDatasetRequest,
-  DifyDataset,
-  DifyCreateDocumentRequest,
+  DifyMessagesResponse,
+  DifyWorkflowRequest,
+  DifyWorkflowResponse,
+  DifyDatasetsResponse,
+  DifyDocumentCreateRequest,
   DifyDocument,
-  DifyStreamEvent,
 } from './types';
-import { parseDifySSEStream } from './stream';
-
-// ---------------------------------------------------------------------------
-// Dify API Client
-// ---------------------------------------------------------------------------
 
 export class DifyClient {
   private baseUrl: string;
   private apiKey: string;
 
-  constructor(options?: { apiKey?: string; baseUrl?: string }) {
+  constructor(apiKey?: string) {
     const config = getDifyConfig();
-    this.baseUrl = (options?.baseUrl || config.DIFY_API_URL).replace(/\/$/, '');
-    this.apiKey = options?.apiKey || config.DIFY_API_KEY || '';
+    this.baseUrl = config.DIFY_API_URL || DIFY_DEFAULT_URL;
+    // Prioriza a key passada no construtor, senão usa a key padrão
+    this.apiKey = apiKey || config.DIFY_API_KEY || ''; // Deve ser passado ou configurado globalmente
+
+    if (!this.apiKey) {
+      console.warn('DifyClient inicializado sem API Key. As chamadas falharão se não autenticadas.');
+    }
   }
 
-  // -------------------------------------------------------------------------
-  // Chat Messages
-  // -------------------------------------------------------------------------
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    const url = `${this.baseUrl}${endpoint}`;
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.apiKey}`,
+      ...options.headers,
+    };
 
-  /**
-   * Envia uma mensagem de chat (modo blocking).
-   */
-  async chatMessages(params: DifyChatRequest): Promise<DifyChatBlockingResponse> {
-    return this.post<DifyChatBlockingResponse>('/chat-messages', {
-      ...params,
-      response_mode: 'blocking',
+    try {
+      const response = await fetch(url, { ...options, headers });
+
+      if (!response.ok) {
+        const errorBody = await response.text();
+        throw new Error(`Dify API Error (${response.status}): ${errorBody}`);
+      }
+
+      return await response.json() as T;
+    } catch (error) {
+      console.error(`[Dify] Request failed for ${endpoint}:`, error);
+      throw error;
+    }
+  }
+
+  private async streamRequest(endpoint: string, body: any): Promise<ReadableStream<Uint8Array>> {
+    const url = `${this.baseUrl}${endpoint}`;
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.apiKey}`,
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.text();
+        throw new Error(`Dify API Streaming Error (${response.status}): ${errorBody}`);
+      }
+
+      if (!response.body) {
+        throw new Error('Response body is null');
+      }
+
+      return response.body;
+    } catch (error) {
+      console.error(`[Dify] Stream request failed for ${endpoint}:`, error);
+      throw error;
+    }
+  }
+
+  // --- Chat ---
+
+  async chatMessages(params: DifyChatRequest): Promise<DifyChatResponse> {
+    return this.request<DifyChatResponse>('/chat-messages', {
+      method: 'POST',
+      body: JSON.stringify({ ...params, response_mode: 'blocking' }),
     });
   }
 
-  /**
-   * Envia uma mensagem de chat (modo streaming).
-   * Retorna um ReadableStream de eventos SSE.
-   */
-  async chatMessagesStream(params: DifyChatRequest): Promise<ReadableStream<DifyStreamEvent>> {
-    const response = await this.rawPost('/chat-messages', {
-      ...params,
-      response_mode: 'streaming',
-    }, DIFY_STREAM_TIMEOUT);
-
-    return parseDifySSEStream(response);
+  async chatMessagesStream(params: DifyChatRequest): Promise<ReadableStream<Uint8Array>> {
+    return this.streamRequest('/chat-messages', { ...params, response_mode: 'streaming' });
   }
 
-  // -------------------------------------------------------------------------
-  // Completion Messages
-  // -------------------------------------------------------------------------
-
-  /**
-   * Gera uma completion (modo blocking).
-   */
-  async completionMessages(params: DifyCompletionRequest): Promise<DifyCompletionBlockingResponse> {
-    return this.post<DifyCompletionBlockingResponse>('/completion-messages', {
-      ...params,
-      response_mode: 'blocking',
+  async stopChatTask(taskId: string, user: string): Promise<{ result: string }> {
+    return this.request<{ result: string }>(`/chat-messages/${taskId}/stop`, {
+      method: 'POST',
+      body: JSON.stringify({ user }),
     });
   }
 
-  /**
-   * Gera uma completion (modo streaming).
-   */
-  async completionMessagesStream(params: DifyCompletionRequest): Promise<ReadableStream<DifyStreamEvent>> {
-    const response = await this.rawPost('/completion-messages', {
-      ...params,
-      response_mode: 'streaming',
-    }, DIFY_STREAM_TIMEOUT);
+  // --- Workflows ---
 
-    return parseDifySSEStream(response);
-  }
-
-  // -------------------------------------------------------------------------
-  // Workflows
-  // -------------------------------------------------------------------------
-
-  /**
-   * Executa um workflow (modo blocking).
-   */
-  async workflowRun(params: DifyWorkflowRequest): Promise<DifyWorkflowBlockingResponse> {
-    return this.post<DifyWorkflowBlockingResponse>('/workflows/run', {
-      ...params,
-      response_mode: 'blocking',
+  async workflowRun(params: DifyWorkflowRequest): Promise<DifyWorkflowResponse> {
+    return this.request<DifyWorkflowResponse>('/workflows/run', {
+      method: 'POST',
+      body: JSON.stringify({ ...params, response_mode: 'blocking' }),
     });
   }
 
-  /**
-   * Executa um workflow (modo streaming).
-   */
-  async workflowRunStream(params: DifyWorkflowRequest): Promise<ReadableStream<DifyStreamEvent>> {
-    const response = await this.rawPost('/workflows/run', {
-      ...params,
-      response_mode: 'streaming',
-    }, DIFY_STREAM_TIMEOUT);
-
-    return parseDifySSEStream(response);
+  async workflowRunStream(params: DifyWorkflowRequest): Promise<ReadableStream<Uint8Array>> {
+    return this.streamRequest('/workflows/run', { ...params, response_mode: 'streaming' });
   }
 
-  // -------------------------------------------------------------------------
-  // Task Control
-  // -------------------------------------------------------------------------
-
-  /**
-   * Para a geração de uma tarefa.
-   */
-  async stopTask(taskId: string, user: string): Promise<{ result: string }> {
-    return this.post<{ result: string }>(`/chat-messages/${taskId}/stop`, { user });
+  async getWorkflowRunStatus(workflowRunId: string): Promise<DifyWorkflowResponse> {
+    return this.request<DifyWorkflowResponse>(`/workflows/run/${workflowRunId}`);
   }
 
-  // -------------------------------------------------------------------------
-  // Conversations
-  // -------------------------------------------------------------------------
-
-  /**
-   * Lista conversas do usuário.
-   */
-  async getConversations(params: DifyConversationsRequest): Promise<DifyConversationsResponse> {
-    const searchParams = new URLSearchParams({ user: params.user });
-    if (params.last_id) searchParams.set('last_id', params.last_id);
-    if (params.limit) searchParams.set('limit', String(params.limit));
-    if (params.sort_by) searchParams.set('sort_by', params.sort_by);
-
-    return this.get<DifyConversationsResponse>(`/conversations?${searchParams}`);
-  }
-
-  /**
-   * Deleta uma conversa.
-   */
-  async deleteConversation(conversationId: string, user: string): Promise<void> {
-    await this.delete(`/conversations/${conversationId}`, { user });
-  }
-
-  /**
-   * Renomeia uma conversa.
-   */
-  async renameConversation(
-    conversationId: string,
-    name: string,
-    user: string
-  ): Promise<void> {
-    await this.post(`/conversations/${conversationId}/name`, { name, user });
-  }
-
-  // -------------------------------------------------------------------------
-  // Messages
-  // -------------------------------------------------------------------------
-
-  /**
-   * Obtém o histórico de mensagens de uma conversa.
-   */
-  async getMessages(params: DifyMessagesRequest): Promise<DifyMessagesResponse> {
-    const searchParams = new URLSearchParams({
-      conversation_id: params.conversation_id,
-      user: params.user,
+  async stopWorkflowRun(taskId: string, user: string): Promise<{ result: string }> {
+    return this.request<{ result: string }>(`/workflows/run/${taskId}/stop`, {
+      method: 'POST',
+      body: JSON.stringify({ user }),
     });
-    if (params.first_id) searchParams.set('first_id', params.first_id);
-    if (params.limit) searchParams.set('limit', String(params.limit));
-
-    return this.get<DifyMessagesResponse>(`/messages?${searchParams}`);
   }
 
-  // -------------------------------------------------------------------------
-  // Feedback
-  // -------------------------------------------------------------------------
+  // --- Completion ---
 
-  /**
-   * Envia feedback (like/dislike) para uma mensagem.
-   */
-  async sendFeedback(messageId: string, feedback: DifyFeedbackRequest): Promise<{ result: string }> {
-    return this.post<{ result: string }>(`/messages/${messageId}/feedbacks`, feedback);
+  async completionMessages(params: DifyCompletionRequest): Promise<DifyCompletionResponse> {
+    return this.request<DifyCompletionResponse>('/completion-messages', {
+      method: 'POST',
+      body: JSON.stringify({ ...params, response_mode: 'blocking' }),
+    });
   }
 
-  // -------------------------------------------------------------------------
-  // Suggested Questions
-  // -------------------------------------------------------------------------
-
-  /**
-   * Obtém perguntas sugeridas após uma mensagem.
-   */
-  async getSuggestedQuestions(messageId: string, user: string): Promise<DifySuggestedQuestionsResponse> {
-    return this.get<DifySuggestedQuestionsResponse>(`/messages/${messageId}/suggested?user=${encodeURIComponent(user)}`);
+  async completionMessagesStream(params: DifyCompletionRequest): Promise<ReadableStream<Uint8Array>> {
+    return this.streamRequest('/completion-messages', { ...params, response_mode: 'streaming' });
   }
 
-  // -------------------------------------------------------------------------
-  // File Upload
-  // -------------------------------------------------------------------------
+  // --- Messages & Feedback ---
 
-  /**
-   * Faz upload de um arquivo para o Dify.
-   */
+  async getConversations(params: { user: string; last_id?: string; limit?: number; pinned?: boolean }): Promise<DifyConversationsResponse> {
+    const query = new URLSearchParams(params as any).toString();
+    return this.request<DifyConversationsResponse>(`/conversations?${query}`);
+  }
+
+  async getMessages(params: { conversation_id: string; user: string; first_id?: string; limit?: number }): Promise<DifyMessagesResponse> {
+    const query = new URLSearchParams(params as any).toString();
+    return this.request<DifyMessagesResponse>(`/messages?${query}`);
+  }
+
+  async sendFeedback(messageId: string, params: DifyFeedbackRequest): Promise<{ result: string }> {
+    return this.request<{ result: string }>(`/messages/${messageId}/feedbacks`, {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async getSuggestedQuestions(messageId: string, user: string): Promise<{ data: string[] }> {
+    return this.request<{ data: string[] }>(`/messages/${messageId}/suggested?user=${user}`);
+  }
+
+  // --- Files ---
+
   async uploadFile(file: File, user: string): Promise<DifyFileUploadResponse> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('user', user);
 
-    const response = await fetch(`${this.baseUrl}/files/upload`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`,
-      },
-      body: formData,
-      signal: AbortSignal.timeout(DIFY_REQUEST_TIMEOUT),
-    });
+    const url = `${this.baseUrl}/files/upload`;
+    const headers = {
+      Authorization: `Bearer ${this.apiKey}`,
+    };
 
-    if (!response.ok) {
-      await this.handleError(response);
-    }
-
-    return response.json();
-  }
-
-  // -------------------------------------------------------------------------
-  // App Info
-  // -------------------------------------------------------------------------
-
-  /**
-   * Obtém informações do app.
-   */
-  async getAppInfo(): Promise<DifyAppInfo> {
-    return this.get<DifyAppInfo>('/info');
-  }
-
-  /**
-   * Obtém os parâmetros do app (opening statement, forms, etc.).
-   */
-  async getAppParameters(): Promise<DifyAppParameter> {
-    return this.get<DifyAppParameter>('/parameters');
-  }
-
-  /**
-   * Obtém metadados do app.
-   */
-  async getAppMeta(): Promise<DifyAppMeta> {
-    return this.get<DifyAppMeta>('/meta');
-  }
-
-  // -------------------------------------------------------------------------
-  // Knowledge Base (Datasets)
-  // -------------------------------------------------------------------------
-
-  /**
-   * Cria um novo dataset (knowledge base).
-   */
-  async createDataset(params: DifyCreateDatasetRequest): Promise<DifyDataset> {
-    return this.post<DifyDataset>('/datasets', params);
-  }
-
-  /**
-   * Lista datasets.
-   */
-  async listDatasets(page = 1, limit = 20): Promise<{ data: DifyDataset[]; has_more: boolean; limit: number; total: number; page: number }> {
-    return this.get(`/datasets?page=${page}&limit=${limit}`);
-  }
-
-  /**
-   * Cria um documento em um dataset via texto.
-   */
-  async createDocumentByText(
-    datasetId: string,
-    params: DifyCreateDocumentRequest
-  ): Promise<{ document: DifyDocument; batch: string }> {
-    return this.post(`/datasets/${datasetId}/document/create-by-text`, params);
-  }
-
-  /**
-   * Deleta um documento de um dataset.
-   */
-  async deleteDocument(datasetId: string, documentId: string): Promise<{ result: string }> {
-    return this.delete(`/datasets/${datasetId}/documents/${documentId}`);
-  }
-
-  /**
-   * Lista documentos de um dataset.
-   */
-  async listDocuments(
-    datasetId: string,
-    page = 1,
-    limit = 20
-  ): Promise<{ data: DifyDocument[]; has_more: boolean; limit: number; total: number; page: number }> {
-    return this.get(`/datasets/${datasetId}/documents?page=${page}&limit=${limit}`);
-  }
-
-  // -------------------------------------------------------------------------
-  // HTTP helpers
-  // -------------------------------------------------------------------------
-
-  private async get<T>(path: string): Promise<T> {
-    return this.request<T>('GET', path);
-  }
-
-  private async post<T>(path: string, body: unknown): Promise<T> {
-    return this.request<T>('POST', path, body);
-  }
-
-  private async delete<T = void>(path: string, body?: unknown): Promise<T> {
-    return this.request<T>('DELETE', path, body);
-  }
-
-  private async request<T>(
-    method: string,
-    path: string,
-    body?: unknown,
-    timeout = DIFY_REQUEST_TIMEOUT
-  ): Promise<T> {
-    let lastError: Error | null = null;
-
-    for (let attempt = 0; attempt < DIFY_MAX_RETRIES; attempt++) {
-      try {
-        const response = await fetch(`${this.baseUrl}${path}`, {
-          method,
-          headers: {
-            Authorization: `Bearer ${this.apiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: body ? JSON.stringify(body) : undefined,
-          signal: AbortSignal.timeout(timeout),
-        });
-
-        if (!response.ok) {
-          await this.handleError(response);
-        }
-
-        // DELETE may return empty body
-        const text = await response.text();
-        if (!text) return undefined as T;
-        return JSON.parse(text) as T;
-      } catch (error) {
-        lastError = error instanceof Error ? error : new Error(String(error));
-
-        // Don't retry on client errors (4xx)
-        if (error instanceof DifyError && error.status >= 400 && error.status < 500) {
-          throw error;
-        }
-
-        // Exponential backoff for retryable errors
-        if (attempt < DIFY_MAX_RETRIES - 1) {
-          const delay = Math.min(1000 * 2 ** attempt, 10000);
-          console.warn(`[Dify] Tentativa ${attempt + 1} falhou, retentando em ${delay}ms...`);
-          await new Promise((r) => setTimeout(r, delay));
-        }
-      }
-    }
-
-    throw lastError || new Error('Erro desconhecido ao chamar API Dify');
-  }
-
-  /**
-   * Faz uma request POST e retorna a Response raw (para streaming).
-   */
-  private async rawPost(
-    path: string,
-    body: unknown,
-    timeout = DIFY_STREAM_TIMEOUT
-  ): Promise<Response> {
-    const response = await fetch(`${this.baseUrl}${path}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-      signal: AbortSignal.timeout(timeout),
-    });
-
-    if (!response.ok) {
-      await this.handleError(response);
-    }
-
-    return response;
-  }
-
-  private async handleError(response: Response): Promise<never> {
-    let errorBody: { code?: string; message?: string } = {};
     try {
-      errorBody = await response.json();
-    } catch {
-      // Response may not be JSON
-    }
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
 
-    throw new DifyError({
-      status: response.status,
-      code: errorBody.code || `HTTP_${response.status}`,
-      message: errorBody.message || `Erro HTTP ${response.status}: ${response.statusText}`,
+      if (!response.ok) {
+        const errorBody = await response.text();
+        throw new Error(`Dify API Upload Error (${response.status}): ${errorBody}`);
+      }
+      return await response.json() as DifyFileUploadResponse;
+
+    } catch (error) {
+      console.error(`[Dify] Upload failed:`, error);
+      throw error;
+    }
+  }
+
+  // --- App Info ---
+
+  async getAppInfo(): Promise<any> {
+    return this.request<any>('/info');
+  }
+
+  async getAppMeta(): Promise<any> {
+    return this.request<any>('/meta');
+  }
+
+  async getAppParameters(): Promise<any> {
+    return this.request<any>('/parameters');
+  }
+
+  // --- Knowledge Base ---
+
+  async listDatasets(params: { page?: number; limit?: number }): Promise<DifyDatasetsResponse> {
+    const query = new URLSearchParams(params as any).toString();
+    return this.request<DifyDatasetsResponse>(`/datasets?${query}`);
+  }
+
+  async createDocument(datasetId: string, params: DifyDocumentCreateRequest): Promise<DifyDocument> {
+    return this.request<DifyDocument>(`/datasets/${datasetId}/document/create_by_text`, {
+      method: 'POST',
+      body: JSON.stringify(params),
     });
   }
-}
 
-// ---------------------------------------------------------------------------
-// Factory functions
-// ---------------------------------------------------------------------------
-
-/**
- * Cria um DifyClient para o app de chat.
- */
-export function createDifyChatClient(): DifyClient {
-  const apiKey = getApiKeyForApp('chat');
-  if (!apiKey) throw new Error('[Dify] API key para chat não configurada');
-  return new DifyClient({ apiKey });
-}
-
-/**
- * Cria um DifyClient para workflows.
- */
-export function createDifyWorkflowClient(): DifyClient {
-  const apiKey = getApiKeyForApp('workflow');
-  if (!apiKey) throw new Error('[Dify] API key para workflow não configurada');
-  return new DifyClient({ apiKey });
-}
-
-/**
- * Cria um DifyClient com a API key padrão.
- */
-export function createDifyClient(apiKey?: string): DifyClient {
-  const key = apiKey || getApiKeyForApp('default');
-  if (!key) throw new Error('[Dify] API key não configurada');
-  return new DifyClient({ apiKey: key });
+  async deleteDocument(datasetId: string, documentId: string): Promise<{ result: string }> {
+    return this.request<{ result: string }>(`/datasets/${datasetId}/documents/${documentId}`, {
+      method: 'DELETE',
+    });
+  }
 }

@@ -1,52 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDifyConfig } from '@/lib/dify';
+
+export const runtime = 'nodejs';
 
 /**
- * POST /api/dify/webhook
- *
- * Recebe callbacks do Dify (ex: workflow completion).
- * Valida o secret e persiste o resultado no Supabase.
+ * Endpoint para receber Webhooks do Dify.
+ * Pode ser configurado no Dify App -> Settings -> Webhooks.
  */
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    // 1. Validar webhook secret
-    const config = getDifyConfig();
-    const authHeader = request.headers.get('authorization');
-    const providedSecret = authHeader?.replace('Bearer ', '');
+    // Verificar assinatura/segredo se configurado (opcional por enquanto)
+    const secret = req.headers.get('Authorization');
+    const expectedSecret = process.env.DIFY_WEBHOOK_SECRET;
 
-    if (config.DIFY_WEBHOOK_SECRET && providedSecret !== config.DIFY_WEBHOOK_SECRET) {
+    if (expectedSecret && secret !== expectedSecret) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 2. Parsear payload
-    const payload = await request.json();
-    const { event, workflow_run_id, data } = payload;
+    const body = await req.json();
 
-    console.log(`[Dify Webhook] Evento recebido: ${event}`, {
-      workflowRunId: workflow_run_id,
-    });
+    console.log('[Dify Webhook] Evento recebido:', body.event, body.task_id);
 
-    // 3. Processar por tipo de evento
-    if (event === 'workflow_finished' && workflow_run_id && data) {
-      const { createDifyRepository } = await import('@/features/dify/repository');
-      const repo = await createDifyRepository();
+    // Aqui você pode implementar lógica dependendo do evento
+    // Ex: message.end, workflow.completed, etc.
 
-      await repo.atualizarStatusExecucao(
-        workflow_run_id,
-        data.status || 'succeeded',
-        data.outputs,
-        data.error
-      );
+    // Por enquanto apenas logamos e retornamos sucesso
+    return NextResponse.json({ status: 'received' });
 
-      console.log(`[Dify Webhook] Execução ${workflow_run_id} atualizada: ${data.status}`);
-    }
-
-    return NextResponse.json({ received: true });
-  } catch (error) {
+  } catch (error: any) {
     console.error('[Dify Webhook] Erro:', error);
-    return NextResponse.json(
-      { error: 'Erro interno ao processar webhook' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 
 import { getCurrentUser } from "@/lib/auth/server";
 import { PageShell } from "@/components/shared/page-shell";
-import { DataShell } from "@/components/shared/data-shell";
-import { DataTableToolbar } from "@/components/shared/data-shell/data-table-toolbar";
 
 import { columns } from "./components/columns";
 import { DataTable } from "./components/data-table";
@@ -28,9 +26,7 @@ export default async function TaskPage() {
 
   return (
     <PageShell>
-      <DataShell header={<DataTableToolbar title="Tarefas" />}>
-        <DataTable data={result.data} columns={columns} />
-      </DataShell>
+      <DataTable data={result.data} columns={columns} />
     </PageShell>
   );
 }

@@ -1,58 +1,32 @@
-// ---------------------------------------------------------------------------
-// Shared types
-// ---------------------------------------------------------------------------
+export interface DifyUser {
+  inputs: Record<string, any>;
+  query: string;
+  response_mode: 'blocking' | 'streaming';
+  conversation_id?: string;
+  user: string;
+  files?: DifyFile[];
+}
 
-export type DifyResponseMode = 'streaming' | 'blocking';
-
-export interface DifyInputFileObject {
-  type: 'image' | 'document' | 'audio' | 'video';
+export interface DifyFile {
+  type: 'image';
   transfer_method: 'remote_url' | 'local_file';
   url?: string;
   upload_file_id?: string;
 }
 
-export interface DifyUsage {
-  prompt_tokens: number;
-  prompt_unit_price: string;
-  prompt_price_unit: string;
-  prompt_price: string;
-  completion_tokens: number;
-  completion_unit_price: string;
-  completion_price_unit: string;
-  completion_price: string;
-  total_tokens: number;
-  total_price: string;
-  currency: string;
-  latency: number;
-}
-
-export interface DifyRetrieverResource {
-  position: number;
-  dataset_id: string;
-  dataset_name: string;
-  document_id: string;
-  document_name: string;
-  segment_id: string;
-  score: number;
-  content: string;
-}
-
-// ---------------------------------------------------------------------------
-// Chat Messages
-// ---------------------------------------------------------------------------
-
+// Chat API
 export interface DifyChatRequest {
+  inputs: Record<string, any>;
   query: string;
-  user: string;
-  inputs?: Record<string, unknown>;
-  response_mode?: DifyResponseMode;
+  response_mode: 'blocking' | 'streaming';
   conversation_id?: string;
-  files?: DifyInputFileObject[];
+  user: string;
+  files?: DifyFile[];
   auto_generate_name?: boolean;
 }
 
-export interface DifyChatBlockingResponse {
-  event: 'message';
+export interface DifyChatResponse {
+  event?: string;
   task_id: string;
   id: string;
   message_id: string;
@@ -60,150 +34,104 @@ export interface DifyChatBlockingResponse {
   mode: string;
   answer: string;
   metadata: {
-    usage: DifyUsage;
-    retriever_resources: DifyRetrieverResource[];
+    usage: {
+      prompt_tokens: number;
+      completion_tokens: number;
+      total_tokens: number;
+    };
+    retriever_resources?: Array<{
+      position: number;
+      dataset_id: string;
+      dataset_name: string;
+      document_id: string;
+      document_name: string;
+      segment_id: string;
+      score: number;
+      content: string;
+    }>;
   };
   created_at: number;
 }
 
-// ---------------------------------------------------------------------------
-// Completion Messages
-// ---------------------------------------------------------------------------
-
-export interface DifyCompletionRequest {
-  inputs: Record<string, unknown>;
-  user: string;
-  response_mode?: DifyResponseMode;
-  files?: DifyInputFileObject[];
-}
-
-export interface DifyCompletionBlockingResponse {
-  event: 'message';
-  task_id: string;
-  id: string;
-  message_id: string;
-  mode: string;
-  answer: string;
-  metadata: {
-    usage: DifyUsage;
-    retriever_resources: DifyRetrieverResource[];
-  };
-  created_at: number;
-}
-
-// ---------------------------------------------------------------------------
-// Workflow
-// ---------------------------------------------------------------------------
-
+// Workflow API
 export interface DifyWorkflowRequest {
-  inputs: Record<string, unknown>;
+  inputs: Record<string, any>;
+  response_mode: 'blocking' | 'streaming';
   user: string;
-  response_mode?: DifyResponseMode;
-  files?: DifyInputFileObject[];
+  files?: DifyFile[];
 }
 
-export interface DifyWorkflowBlockingResponse {
+export interface DifyWorkflowResponse {
   workflow_run_id: string;
   task_id: string;
   data: {
     id: string;
     workflow_id: string;
-    status: 'running' | 'succeeded' | 'failed' | 'stopped';
-    outputs: Record<string, unknown>;
-    error: string | null;
+    status: 'succeeded' | 'failed' | 'stopped';
+    outputs: Record<string, any>;
+    error?: string;
     elapsed_time: number;
     total_tokens: number;
     total_steps: number;
     created_at: number;
-    finished_at: number | null;
+    finished_at: number;
   };
 }
 
-// ---------------------------------------------------------------------------
-// Conversations
-// ---------------------------------------------------------------------------
-
-export interface DifyConversationsRequest {
+// Completion API
+export interface DifyCompletionRequest {
+  inputs: Record<string, any>;
+  response_mode: 'blocking' | 'streaming';
   user: string;
-  last_id?: string;
-  limit?: number;
-  sort_by?: 'created_at' | '-created_at' | 'updated_at' | '-updated_at';
+  files?: DifyFile[];
 }
 
-export interface DifyConversation {
-  id: string;
-  name: string;
-  inputs: Record<string, unknown>;
-  status: string;
-  introduction: string;
-  created_at: number;
-  updated_at: number;
-}
-
-export interface DifyConversationsResponse {
-  limit: number;
-  has_more: boolean;
-  data: DifyConversation[];
-}
-
-// ---------------------------------------------------------------------------
-// Messages
-// ---------------------------------------------------------------------------
-
-export interface DifyMessagesRequest {
+export interface DifyCompletionResponse {
+  message_id: string;
   conversation_id: string;
-  user: string;
-  first_id?: string;
-  limit?: number;
-}
-
-export interface DifyMessageFile {
-  id: string;
-  type: string;
-  url: string;
-  belongs_to: 'user' | 'assistant';
-}
-
-export interface DifyMessage {
-  id: string;
-  conversation_id: string;
-  inputs: Record<string, unknown>;
-  query: string;
+  mode: string;
   answer: string;
-  message_files: DifyMessageFile[];
-  feedback: { rating: 'like' | 'dislike' | null } | null;
-  retriever_resources: DifyRetrieverResource[];
+  metadata: any;
   created_at: number;
+}
+
+// Common Responses
+export interface DifyConversationsResponse {
+  data: Array<{
+    id: string;
+    name: string;
+    inputs: Record<string, any>;
+    status: string;
+    introduction: string;
+    created_at: number;
+    updated_at: number;
+  }>;
+  has_more: boolean;
+  limit: number;
 }
 
 export interface DifyMessagesResponse {
-  limit: number;
+  data: Array<{
+    id: string;
+    conversation_id: string;
+    inputs: Record<string, any>;
+    query: string;
+    message_files: any[];
+    answer: string;
+    created_at: number;
+    feedback?: {
+      rating: 'like' | 'dislike';
+    };
+  }>;
   has_more: boolean;
-  data: DifyMessage[];
+  limit: number;
 }
 
-// ---------------------------------------------------------------------------
-// Feedback
-// ---------------------------------------------------------------------------
-
 export interface DifyFeedbackRequest {
-  rating: 'like' | 'dislike' | null;
+  rating: 'like' | 'dislike';
   user: string;
   content?: string;
 }
-
-// ---------------------------------------------------------------------------
-// Suggested Questions
-// ---------------------------------------------------------------------------
-
-export interface DifySuggestedQuestionsResponse {
-  result: string;
-  data: string[];
-}
-
-// ---------------------------------------------------------------------------
-// File Upload
-// ---------------------------------------------------------------------------
 
 export interface DifyFileUploadResponse {
   id: string;
@@ -215,78 +143,28 @@ export interface DifyFileUploadResponse {
   created_at: number;
 }
 
-// ---------------------------------------------------------------------------
-// App Info & Parameters
-// ---------------------------------------------------------------------------
-
-export interface DifyAppInfo {
-  name: string;
-  description: string;
-  tags: string[];
-}
-
-export interface DifyAppParameter {
-  opening_statement: string;
-  suggested_questions: string[];
-  suggested_questions_after_answer: { enabled: boolean };
-  speech_to_text: { enabled: boolean };
-  retriever_resource: { enabled: boolean };
-  annotation_reply: { enabled: boolean };
-  user_input_form: Array<{
-    [key: string]: {
-      label: string;
-      variable: string;
-      required: boolean;
-      max_length?: number;
-      default?: string;
-      options?: string[];
-    };
-  }>;
-  file_upload: {
-    image: {
-      enabled: boolean;
-      number_limits: number;
-      transfer_methods: string[];
-    };
-  };
-  system_parameters: {
-    file_size_limit: number;
-    image_file_size_limit: number;
-    audio_file_size_limit: number;
-    video_file_size_limit: number;
-  };
-}
-
-export interface DifyAppMeta {
-  tool_icons: Record<string, string | { background: string; content: string }>;
-}
-
-// ---------------------------------------------------------------------------
-// Knowledge Base (Datasets)
-// ---------------------------------------------------------------------------
-
+// Knowledge Base
 export interface DifyDataset {
   id: string;
   name: string;
   description: string;
-  provider: string;
-  permission: 'only_me' | 'all_team_members';
-  data_source_type: string;
-  indexing_technique: 'high_quality' | 'economy';
-  app_count: number;
-  document_count: number;
-  word_count: number;
-  created_by: string;
+  permission: string;
   created_at: number;
-  updated_by: string;
-  updated_at: number;
+}
+
+export interface DifyDatasetsResponse {
+  data: DifyDataset[];
+  has_more: boolean;
+  limit: number;
+  total: number;
+  page: number;
 }
 
 export interface DifyDocument {
   id: string;
   position: number;
   data_source_type: string;
-  data_source_info: Record<string, unknown>;
+  data_source_info: any;
   dataset_process_rule_id: string;
   name: string;
   created_from: string;
@@ -294,200 +172,41 @@ export interface DifyDocument {
   created_at: number;
   tokens: number;
   indexing_status: string;
-  error: string | null;
+  error: string;
   enabled: boolean;
-  disabled_at: number | null;
-  disabled_by: string | null;
+  disabled_at: number;
+  disabled_by: string;
   archived: boolean;
-  display_status: string;
-  word_count: number;
-  hit_count: number;
-  doc_form: string;
 }
 
-export interface DifyCreateDatasetRequest {
-  name: string;
-  description?: string;
-  indexing_technique?: 'high_quality' | 'economy';
-  permission?: 'only_me' | 'all_team_members';
-}
-
-export interface DifyCreateDocumentRequest {
+export interface DifyDocumentCreateRequest {
   name: string;
   text: string;
   indexing_technique?: 'high_quality' | 'economy';
-  process_rule?: {
-    mode: 'automatic' | 'custom';
-    rules?: {
-      pre_processing_rules?: Array<{ id: string; enabled: boolean }>;
-      segmentation?: { separator: string; max_tokens: number };
-    };
-  };
+  process_rule?: any;
 }
 
-// ---------------------------------------------------------------------------
-// SSE Stream Events
-// ---------------------------------------------------------------------------
-
+// SSE Events
 export type DifyStreamEventType =
   | 'message'
   | 'message_end'
   | 'message_replace'
-  | 'tts_message'
-  | 'tts_message_end'
   | 'agent_message'
   | 'agent_thought'
-  | 'message_file'
-  | 'error'
-  | 'ping'
   | 'workflow_started'
   | 'node_started'
   | 'node_finished'
-  | 'workflow_finished';
+  | 'workflow_finished'
+  | 'error'
+  | 'ping';
 
-export interface DifyStreamEventBase {
+export interface DifyStreamEvent {
   event: DifyStreamEventType;
   task_id?: string;
   message_id?: string;
   conversation_id?: string;
-}
-
-export interface DifyStreamMessageEvent extends DifyStreamEventBase {
-  event: 'message' | 'agent_message';
-  id: string;
-  answer: string;
-  created_at: number;
-}
-
-export interface DifyStreamMessageEndEvent extends DifyStreamEventBase {
-  event: 'message_end';
-  id: string;
-  metadata: {
-    usage: DifyUsage;
-    retriever_resources: DifyRetrieverResource[];
-  };
-}
-
-export interface DifyStreamErrorEvent extends DifyStreamEventBase {
-  event: 'error';
-  status: number;
-  code: string;
-  message: string;
-}
-
-export interface DifyStreamWorkflowStartedEvent extends DifyStreamEventBase {
-  event: 'workflow_started';
-  workflow_run_id: string;
-  data: {
-    id: string;
-    workflow_id: string;
-    sequence_number: number;
-    created_at: number;
-  };
-}
-
-export interface DifyStreamNodeStartedEvent extends DifyStreamEventBase {
-  event: 'node_started';
-  workflow_run_id: string;
-  data: {
-    id: string;
-    node_id: string;
-    node_type: string;
-    title: string;
-    index: number;
-    predecessor_node_id: string | null;
-    inputs: Record<string, unknown>;
-    created_at: number;
-  };
-}
-
-export interface DifyStreamNodeFinishedEvent extends DifyStreamEventBase {
-  event: 'node_finished';
-  workflow_run_id: string;
-  data: {
-    id: string;
-    node_id: string;
-    node_type: string;
-    title: string;
-    index: number;
-    inputs: Record<string, unknown>;
-    outputs: Record<string, unknown>;
-    status: string;
-    error: string | null;
-    elapsed_time: number;
-    execution_metadata: Record<string, unknown>;
-    created_at: number;
-  };
-}
-
-export interface DifyStreamWorkflowFinishedEvent extends DifyStreamEventBase {
-  event: 'workflow_finished';
-  workflow_run_id: string;
-  data: {
-    id: string;
-    workflow_id: string;
-    status: 'running' | 'succeeded' | 'failed' | 'stopped';
-    outputs: Record<string, unknown>;
-    error: string | null;
-    elapsed_time: number;
-    total_tokens: number;
-    total_steps: number;
-    created_at: number;
-    finished_at: number;
-  };
-}
-
-export interface DifyStreamAgentThoughtEvent extends DifyStreamEventBase {
-  event: 'agent_thought';
-  id: string;
-  position: number;
-  thought: string;
-  observation: string;
-  tool: string;
-  tool_labels: Record<string, unknown>;
-  tool_input: string;
-  message_files: string[];
-  created_at: number;
-}
-
-export interface DifyStreamMessageFileEvent extends DifyStreamEventBase {
-  event: 'message_file';
-  id: string;
-  type: string;
-  belongs_to: string;
-  url: string;
-}
-
-export type DifyStreamEvent =
-  | DifyStreamMessageEvent
-  | DifyStreamMessageEndEvent
-  | DifyStreamErrorEvent
-  | DifyStreamWorkflowStartedEvent
-  | DifyStreamNodeStartedEvent
-  | DifyStreamNodeFinishedEvent
-  | DifyStreamWorkflowFinishedEvent
-  | DifyStreamAgentThoughtEvent
-  | DifyStreamMessageFileEvent
-  | DifyStreamEventBase;
-
-// ---------------------------------------------------------------------------
-// Error
-// ---------------------------------------------------------------------------
-
-export interface DifyApiError {
-  status: number;
-  code: string;
-  message: string;
-}
-
-export class DifyError extends Error {
-  status: number;
-  code: string;
-
-  constructor(apiError: DifyApiError) {
-    super(apiError.message);
-    this.name = 'DifyError';
-    this.status = apiError.status;
-    this.code = apiError.code;
-  }
+  answer?: string;
+  created_at?: number;
+  data?: any; // For workflow events
+  metadata?: any;
 }

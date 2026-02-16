@@ -156,9 +156,9 @@ export function PericiasCalendarCompact({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                type="button"
+                className="flex items-center justify-center h-8 w-8 shrink-0 rounded-md bg-card border hover:bg-accent transition-colors p-0"
                 variant="ghost"
-                size="icon"
-                className="h-8 w-8"
                 onClick={handlePreviousMonth}
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -177,9 +177,9 @@ export function PericiasCalendarCompact({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                type="button"
+                className="flex items-center justify-center h-8 w-8 shrink-0 rounded-md bg-card border hover:bg-accent transition-colors p-0"
                 variant="ghost"
-                size="icon"
-                className="h-8 w-8"
                 onClick={handleNextMonth}
               >
                 <ChevronRight className="h-4 w-4" />
@@ -195,7 +195,7 @@ export function PericiasCalendarCompact({
           <Button
             variant="outline"
             size="sm"
-            className="h-7 px-2 text-xs"
+            className="h-7 px-2 text-xs bg-card border shadow-sm hover:bg-accent hover:text-accent-foreground"
             onClick={handleGoToToday}
           >
             Hoje

@@ -1,249 +1,170 @@
-'use client';
-
 import { useState, useCallback, useRef } from 'react';
+// import { fetchEventSource } from '@microsoft/fetch-event-source'; // Removed
+import { v4 as uuidv4 } from 'uuid';
 
-interface DifyMessage {
+export interface Message {
   id: string;
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   content: string;
   createdAt: number;
   feedback?: 'like' | 'dislike' | null;
-  sources?: Array<{
-    datasetName: string;
-    documentName: string;
-    content: string;
-    score: number;
-  }>;
 }
 
 interface UseDifyChatOptions {
   conversationId?: string;
-  inputs?: Record<string, unknown>;
+  initialMessages?: Message[];
+  user?: string;
+  onFinish?: (message: Message) => void;
+  onError?: (error: Error) => void;
 }
 
-interface UseDifyChatReturn {
-  messages: DifyMessage[];
-  isStreaming: boolean;
-  isLoading: boolean;
-  conversationId: string | null;
-  error: string | null;
-  sendMessage: (query: string) => Promise<void>;
-  stopGeneration: () => void;
-  clearChat: () => void;
-  sendFeedback: (messageId: string, rating: 'like' | 'dislike') => Promise<void>;
-}
-
-/**
- * Hook para chat com Dify via streaming SSE.
- * Conecta ao endpoint /api/dify/chat.
- */
-export function useDifyChat(options: UseDifyChatOptions = {}): UseDifyChatReturn {
-  const [messages, setMessages] = useState<DifyMessage[]>([]);
-  const [isStreaming, setIsStreaming] = useState(false);
+export function useDifyChat({
+  conversationId: initialConversationId,
+  initialMessages = [],
+  user = 'user',
+  onFinish,
+  onError,
+}: UseDifyChatOptions = {}) {
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [conversationId, setConversationId] = useState<string | null>(
-    options.conversationId || null
-  );
-  const [error, setError] = useState<string | null>(null);
+  const [conversationId, setConversationId] = useState<string | undefined>(initialConversationId);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const sendMessage = useCallback(
-    async (query: string) => {
-      if (!query.trim() || isStreaming) return;
+  const sendMessage = useCallback(async (content: string, inputs: Record<string, any> = {}) => {
+    if (!content.trim()) return;
 
-      setError(null);
-      setIsLoading(true);
-      setIsStreaming(true);
+    const userMessage: Message = {
+      id: uuidv4(),
+      role: 'user',
+      content,
+      createdAt: Date.now(),
+    };
 
-      // Add user message
-      const userMessage: DifyMessage = {
-        id: `user-${Date.now()}`,
-        role: 'user',
-        content: query,
-        createdAt: Date.now() / 1000,
-      };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
 
-      // Add placeholder for assistant
-      const assistantMessage: DifyMessage = {
-        id: `assistant-${Date.now()}`,
+    const assistantMessageId = uuidv4();
+    // Placeholder message for assistant
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: assistantMessageId,
         role: 'assistant',
         content: '',
-        createdAt: Date.now() / 1000,
-      };
+        createdAt: Date.now(),
+      },
+    ]);
 
-      setMessages((prev) => [...prev, userMessage, assistantMessage]);
+    abortControllerRef.current = new AbortController();
 
-      const abortController = new AbortController();
-      abortControllerRef.current = abortController;
+    try {
+      let fullResponse = '';
 
-      try {
-        const response = await fetch('/api/dify/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query,
-            conversationId,
-            inputs: options.inputs,
-          }),
-          signal: abortController.signal,
-        });
+      const response = await fetch('/api/dify/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: content,
+          inputs,
+          conversation_id: conversationId,
+          user,
+        }),
+        signal: abortControllerRef.current.signal,
+      });
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || `Erro HTTP ${response.status}`);
-        }
+      if (!response.ok) {
+        throw new Error(`Erro na requisição: ${response.statusText}`);
+      }
 
-        const reader = response.body?.getReader();
-        if (!reader) throw new Error('Stream não disponível');
+      if (!response.body) throw new Error('Response body is null');
 
-        const decoder = new TextDecoder();
-        let buffer = '';
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-          buffer += decoder.decode(value, { stream: true });
-          const blocks = buffer.split('\n\n');
-          buffer = blocks.pop() || '';
+        const chunk = decoder.decode(value, { stream: true });
+        buffer += chunk;
 
-          for (const block of blocks) {
-            const trimmed = block.trim();
-            if (!trimmed) continue;
+        const lines = buffer.split('\n\n');
+        buffer = lines.pop() || '';
 
-            let eventType = '';
-            let data = '';
-
-            for (const line of trimmed.split('\n')) {
-              if (line.startsWith('event:')) eventType = line.slice(6).trim();
-              if (line.startsWith('data:')) data += line.slice(5).trim();
-            }
-
-            if (!data) continue;
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const dataStr = line.slice(6);
+            if (dataStr === '[DONE]') continue;
 
             try {
-              const parsed = JSON.parse(data);
+              const data = JSON.parse(dataStr);
 
-              if (eventType === 'message' || eventType === 'agent_message') {
-                setMessages((prev) => {
-                  const updated = [...prev];
-                  const lastIdx = updated.length - 1;
-                  if (lastIdx >= 0 && updated[lastIdx].role === 'assistant') {
-                    updated[lastIdx] = {
-                      ...updated[lastIdx],
-                      content: updated[lastIdx].content + (parsed.answer || ''),
-                    };
-                    if (parsed.conversation_id) {
-                      setConversationId(parsed.conversation_id);
-                    }
-                  }
-                  return updated;
-                });
-                setIsLoading(false);
-              } else if (eventType === 'message_end') {
-                setMessages((prev) => {
-                  const updated = [...prev];
-                  const lastIdx = updated.length - 1;
-                  if (lastIdx >= 0 && updated[lastIdx].role === 'assistant') {
-                    updated[lastIdx] = {
-                      ...updated[lastIdx],
-                      id: parsed.message_id || updated[lastIdx].id,
-                      sources: parsed.metadata?.retriever_resources?.map(
-                        (r: { dataset_name: string; document_name: string; content: string; score: number }) => ({
-                          datasetName: r.dataset_name,
-                          documentName: r.document_name,
-                          content: r.content,
-                          score: r.score,
-                        })
-                      ),
-                    };
-                  }
-                  return updated;
-                });
+              // Tratamento de eventos específicos do Dify
+              if (data.event === 'message' || data.event === 'agent_message') {
+                const delta = data.answer || '';
+                fullResponse += delta;
 
-                if (parsed.conversation_id) {
-                  setConversationId(parsed.conversation_id);
+                setMessages((prev) =>
+                  prev.map((m) =>
+                    m.id === assistantMessageId
+                      ? { ...m, content: fullResponse }
+                      : m
+                  )
+                );
+
+                if (data.conversation_id && !conversationId) {
+                  setConversationId(data.conversation_id);
                 }
-              } else if (eventType === 'error') {
-                setError(parsed.message || 'Erro no stream');
+              } else if (data.event === 'message_end' || data.event === 'workflow_finished') {
+                if (onFinish) {
+                  const finishedMsg = {
+                    id: assistantMessageId,
+                    role: 'assistant' as const,
+                    content: fullResponse,
+                    createdAt: Date.now()
+                  };
+                  onFinish(finishedMsg);
+                }
+              } else if (data.event === 'error') {
+                throw new Error(data.message || 'Erro desconhecido do Dify');
               }
-            } catch {
-              // Ignore parse errors
+            } catch (e) {
+              console.error('Erro ao parsing SSE JSON:', e);
             }
           }
         }
-      } catch (err) {
-        if ((err as Error).name !== 'AbortError') {
-          const errorMessage = err instanceof Error ? err.message : 'Erro ao enviar mensagem';
-          setError(errorMessage);
-
-          // Remove placeholder assistant message on error
-          setMessages((prev) => {
-            const updated = [...prev];
-            const lastIdx = updated.length - 1;
-            if (lastIdx >= 0 && updated[lastIdx].role === 'assistant' && !updated[lastIdx].content) {
-              updated.pop();
-            }
-            return updated;
-          });
-        }
-      } finally {
-        setIsStreaming(false);
-        setIsLoading(false);
-        abortControllerRef.current = null;
       }
-    },
-    [conversationId, isStreaming, options.inputs]
-  );
-
-  const stopGeneration = useCallback(() => {
-    abortControllerRef.current?.abort();
-    setIsStreaming(false);
-    setIsLoading(false);
-  }, []);
-
-  const clearChat = useCallback(() => {
-    setMessages([]);
-    setConversationId(null);
-    setError(null);
-  }, []);
-
-  const sendFeedback = useCallback(
-    async (messageId: string, rating: 'like' | 'dislike') => {
-      try {
-        const response = await fetch('/api/dify/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'feedback',
-            messageId,
-            rating,
-          }),
-        });
-
-        if (response.ok) {
-          setMessages((prev) =>
-            prev.map((msg) =>
-              msg.id === messageId ? { ...msg, feedback: rating } : msg
-            )
-          );
-        }
-      } catch {
-        // Feedback is non-critical
+    } catch (error: any) {
+      if (error.name !== 'AbortError') {
+        if (onError) onError(error);
       }
-    },
-    []
-  );
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+      abortControllerRef.current = null;
+    }
+  }, [conversationId, user, onFinish, onError]);
+
+  const stop = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+      setIsLoading(false);
+    }
+  }, []);
 
   return {
     messages,
-    isStreaming,
-    isLoading,
-    conversationId,
-    error,
+    input,
+    setInput,
     sendMessage,
-    stopGeneration,
-    clearChat,
-    sendFeedback,
+    isLoading,
+    stop,
+    conversationId,
   };
 }

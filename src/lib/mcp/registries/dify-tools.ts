@@ -34,7 +34,7 @@ export async function registerDifyTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { createDifyService } = await import('@/features/dify/service');
+        const { createDifyService } = await import('@/features/dify/factory');
         const service = await createDifyService(SYSTEM_USER_ID);
         const result = await service.enviarMensagemCompleta({
           query: args.mensagem,
@@ -69,10 +69,10 @@ export async function registerDifyTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { createDifyService } = await import('@/features/dify/service');
+        const { createDifyService } = await import('@/features/dify/factory');
         const service = await createDifyService(SYSTEM_USER_ID);
         const result = await service.listarConversas({
-          limite: args.limite,
+          limite: args.limite || 20,
           ordenarPor: args.ordenar_por,
         });
 
@@ -99,11 +99,11 @@ export async function registerDifyTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { createDifyService } = await import('@/features/dify/service');
+        const { createDifyService } = await import('@/features/dify/factory');
         const service = await createDifyService(SYSTEM_USER_ID);
         const result = await service.obterHistorico({
           conversationId: args.conversation_id,
-          limite: args.limite,
+          limite: args.limite || 20,
         });
 
         if (result.isErr()) return errorResult(result.error.message);
@@ -130,13 +130,13 @@ export async function registerDifyTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { createDifyService } = await import('@/features/dify/service');
+        const { createDifyService } = await import('@/features/dify/factory');
         const service = await createDifyService(SYSTEM_USER_ID);
         const result = await service.enviarFeedback({
-          messageId: args.message_id,
+          message_id: args.message_id,
           rating: args.rating,
-          conteudo: args.conteudo,
-        });
+          content: args.conteudo,
+        }, SYSTEM_USER_ID);
 
         if (result.isErr()) return errorResult(result.error.message);
 
@@ -157,7 +157,7 @@ export async function registerDifyTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { createDifyService } = await import('@/features/dify/service');
+        const { createDifyService } = await import('@/features/dify/factory');
         const service = await createDifyService(SYSTEM_USER_ID);
         const result = await service.obterSugestoes(args.message_id);
 
@@ -186,7 +186,7 @@ export async function registerDifyTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { createDifyService } = await import('@/features/dify/service');
+        const { createDifyService } = await import('@/features/dify/factory');
         const service = await createDifyService(SYSTEM_USER_ID);
         const result = await service.executarWorkflowCompleto({
           inputs: args.inputs,
@@ -219,7 +219,7 @@ export async function registerDifyTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { createDifyService } = await import('@/features/dify/service');
+        const { createDifyService } = await import('@/features/dify/factory');
         const service = await createDifyService(SYSTEM_USER_ID);
         const result = await service.pararTarefa(args.task_id);
 
@@ -248,7 +248,7 @@ export async function registerDifyTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { createDifyService } = await import('@/features/dify/service');
+        const { createDifyService } = await import('@/features/dify/factory');
         const service = await createDifyService(SYSTEM_USER_ID);
         const result = await service.completar({ inputs: args.inputs });
 
@@ -277,7 +277,7 @@ export async function registerDifyTools(): Promise<void> {
     schema: z.object({}),
     handler: async () => {
       try {
-        const { createDifyService } = await import('@/features/dify/service');
+        const { createDifyService } = await import('@/features/dify/factory');
         const service = await createDifyService(SYSTEM_USER_ID);
         const result = await service.obterInfoApp();
 
@@ -299,7 +299,7 @@ export async function registerDifyTools(): Promise<void> {
     schema: z.object({}),
     handler: async () => {
       try {
-        const { createDifyService } = await import('@/features/dify/service');
+        const { createDifyService } = await import('@/features/dify/factory');
         const service = await createDifyService(SYSTEM_USER_ID);
         const result = await service.obterParametrosApp();
 
@@ -327,7 +327,7 @@ export async function registerDifyTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { createDifyService } = await import('@/features/dify/service');
+        const { createDifyService } = await import('@/features/dify/factory');
         const service = await createDifyService(SYSTEM_USER_ID);
         const result = await service.listarDatasets(args.pagina, args.limite);
 
@@ -358,7 +358,7 @@ export async function registerDifyTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { createDifyService } = await import('@/features/dify/service');
+        const { createDifyService } = await import('@/features/dify/factory');
         const service = await createDifyService(SYSTEM_USER_ID);
         const result = await service.criarDocumento({
           datasetId: args.dataset_id,
