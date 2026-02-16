@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 
 import { authenticateRequest } from "@/lib/auth/session";
+import { PageShell } from "@/components/shared/page-shell";
 import { kanbanService } from "@/features/kanban";
-import CustomBoardView from "@/features/kanban/components/custom-board-view";
+import { KanbanPageContent } from "@/features/kanban/components/kanban-page-content";
 
 export const metadata: Metadata = {
   title: "Kanban",
@@ -15,10 +16,41 @@ export default async function Page() {
     return <div className="p-6">Você precisa estar autenticado.</div>;
   }
 
-  const result = await kanbanService.obterKanban(user.id);
-  if (!result.success) {
-    return <div className="p-6">Erro ao carregar Kanban: {result.error.message}</div>;
+  // Carregar boards + dados do primeiro board
+  const boardsResult = await kanbanService.listarQuadros(user.id);
+  if (!boardsResult.success) {
+    return <div className="p-6">Erro ao carregar quadros: {boardsResult.error.message}</div>;
   }
 
-  return <CustomBoardView initialBoard={result.data} />;
+  const boards = boardsResult.data;
+  const defaultBoard = boards[0];
+
+  if (!defaultBoard) {
+    return <div className="p-6">Nenhum quadro disponível.</div>;
+  }
+
+  // Carregar dados do board default
+  let initialData;
+  let initialType: "system" | "custom";
+
+  if (defaultBoard.tipo === "system" && defaultBoard.source) {
+    const result = await kanbanService.obterQuadroSistema(defaultBoard.source);
+    initialData = result.success ? result.data : { columns: [], cardsByColumn: {} };
+    initialType = "system";
+  } else {
+    const result = await kanbanService.obterQuadroCustom(user.id, defaultBoard.id);
+    initialData = result.success ? result.data : { columns: [], tasksByColumn: {} };
+    initialType = "custom";
+  }
+
+  return (
+    <PageShell>
+      <KanbanPageContent
+        boards={boards}
+        initialBoardId={defaultBoard.id}
+        initialBoardData={initialData}
+        initialBoardType={initialType}
+      />
+    </PageShell>
+  );
 }
