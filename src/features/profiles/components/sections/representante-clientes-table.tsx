@@ -62,7 +62,7 @@ export function RepresentanteClientesTable({ data, title = 'Carteira de Clientes
       {
         accessorKey: 'tipo_pessoa',
         header: 'Tipo',
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         cell: ({ row }) => {
           const tipo = row.original.tipo_pessoa;
           if (!tipo) return '-';
@@ -76,7 +76,7 @@ export function RepresentanteClientesTable({ data, title = 'Carteira de Clientes
       {
         accessorKey: 'total_processos',
         header: 'Processos',
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         cell: ({ row }) => (
           <span className="text-sm font-medium text-foreground">
             {row.original.total_processos ?? 0}

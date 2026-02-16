@@ -94,7 +94,7 @@ export function EntidadeProcessosTable({ data, title = 'Processos Relacionados' 
       {
         accessorKey: 'trt',
         header: 'TRT',
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         cell: ({ row }) => (
           <SemanticBadge category="tribunal" value={row.original.trt}>
             {row.original.trt}
@@ -104,7 +104,7 @@ export function EntidadeProcessosTable({ data, title = 'Processos Relacionados' 
       {
         accessorKey: 'grau',
         header: 'Grau',
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         cell: ({ row }) => (
           <SemanticBadge category="grau" value={row.original.grau}>
             {getGrauLabel(row.original.grau)}
@@ -114,7 +114,7 @@ export function EntidadeProcessosTable({ data, title = 'Processos Relacionados' 
       {
         accessorKey: 'polo',
         header: 'Polo',
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         cell: ({ row }) => (
           <SemanticBadge category="polo" value={row.original.polo}>
             {row.original.polo}
@@ -124,7 +124,7 @@ export function EntidadeProcessosTable({ data, title = 'Processos Relacionados' 
       {
         accessorKey: 'status',
         header: 'Status',
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         cell: ({ row }) => (
           <StatusSemanticBadge value={row.original.status}>
             {STATUS_PROCESSO_LABELS[row.original.status] || row.original.status}
@@ -134,7 +134,7 @@ export function EntidadeProcessosTable({ data, title = 'Processos Relacionados' 
       {
         accessorKey: 'data_autuacao',
         header: 'Distribuicao',
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         cell: ({ row }) => (
           <span className="text-sm text-muted-foreground">
             {formatarData(row.original.data_autuacao)}

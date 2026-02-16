@@ -112,7 +112,8 @@ create table if not exists public.sala_audiencia (
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now(),
 
-  unique (id_pje, trt, grau, orgao_julgador_id)
+  unique (id_pje, trt, grau, orgao_julgador_id),
+  unique (nome, trt, grau, orgao_julgador_id)
 );
 
 comment on table public.sala_audiencia is 'Salas de audiência do PJE por TRT, grau e órgão julgador';

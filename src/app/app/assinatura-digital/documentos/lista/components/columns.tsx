@@ -168,11 +168,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
     },
     {
       id: "acoes",
-      header: () => (
-        <div className="flex items-center justify-center">
-          <span className="text-sm font-medium">Ações</span>
-        </div>
-      ),
+      header: () => <span className="text-sm font-medium">Ações</span>,
       cell: ({ row }) => {
         const doc = row.original;
         const podeEditar =
@@ -184,7 +180,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         const pdfUrl = doc.pdf_final_url || doc.pdf_original_url;
 
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="min-h-10 flex items-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8">

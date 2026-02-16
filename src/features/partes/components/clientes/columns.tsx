@@ -377,7 +377,7 @@ export const getClientesColumns = (
     {
       id: 'processos',
       header: 'Processos',
-      meta: { align: 'center' },
+      meta: { align: 'left' },
       size: 200,
       cell: ({ row }) => {
         const cliente = row.original;
@@ -385,7 +385,7 @@ export const getClientesColumns = (
         const processosRaw = record.processos_relacionados ?? record.processosRelacionados;
         const processos = Array.isArray(processosRaw) ? (processosRaw as ProcessoRelacionado[]) : [];
         return (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center">
             <ProcessosRelacionadosCell
               processos={processos}
             />
@@ -397,10 +397,10 @@ export const getClientesColumns = (
       id: 'actions',
 
       header: 'Ações',
-      meta: { align: 'center' },
+      meta: { align: 'left' },
       size: 120,
       cell: ({ row }) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center">
           <ClienteActions cliente={row.original} onEdit={onEdit} onDelete={onDelete} />
         </div>
       ),

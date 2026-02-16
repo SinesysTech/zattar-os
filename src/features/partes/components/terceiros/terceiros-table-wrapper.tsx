@@ -254,12 +254,12 @@ export function TerceirosTableWrapper() {
         id: 'processos',
         header: 'Processos',
         enableSorting: false,
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         size: 200,
         cell: ({ row }) => {
           const terceiro = row.original;
           return (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center">
               <ProcessosRelacionadosCell
                 processos={terceiro.processos_relacionados || []}
               />
@@ -271,11 +271,11 @@ export function TerceirosTableWrapper() {
         id: 'acoes',
         header: 'Ações',
         enableSorting: false,
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         size: 120,
         cell: ({ row }) => {
           return (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center">
               <TerceiroActions terceiro={row.original} onEdit={handleEdit} />
             </div>
           );

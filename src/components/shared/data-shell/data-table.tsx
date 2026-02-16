@@ -25,21 +25,25 @@
  *
  * ALINHAMENTO DE COLUNAS:
  * ----------------------
- * O alinhamento é controlado via `meta.align` na definição da coluna:
+ * O alinhamento padrão é `left` (text-left) para headers e cells.
+ * Use `meta.align` na definição da coluna para documentar a intenção:
  *
  * ```tsx
  * {
  *   accessorKey: 'nome',
- *   meta: { align: 'left' | 'center' | 'right' } // default: 'center'
+ *   meta: { align: 'left' | 'center' | 'right' } // default: 'left'
  * }
  * ```
+ *
+ * IMPORTANTE: Todas as colunas devem usar `align: 'left'` como padrão.
+ * Não use `justify-center` nos headers ou cells — o DataTable já aplica
+ * `text-left` uniformemente para garantir alinhamento consistente.
  *
  * COLUNA DE SELEÇÃO:
  * -----------------
  * A coluna de seleção (checkbox) é automaticamente criada quando `rowSelection`
  * é fornecido. Ela:
- * - Tem `meta: { align: 'center' }` por padrão
- * - O checkbox é centralizado via flexbox no conteúdo da célula
+ * - Tem `meta: { align: 'left' }` por padrão
  * - Tamanho fixo de 44px
  *
  * =============================================================================

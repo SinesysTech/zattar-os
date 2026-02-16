@@ -268,12 +268,12 @@ export function PartesContrariasTableWrapper() {
         id: 'processos',
         header: 'Processos',
         enableSorting: false,
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         size: 200,
         cell: ({ row }) => {
           const parte = row.original;
           return (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center">
               <ProcessosRelacionadosCell
                 processos={parte.processos_relacionados || []}
               />
@@ -285,11 +285,11 @@ export function PartesContrariasTableWrapper() {
         id: 'acoes',
         header: 'Ações',
         enableSorting: false,
-        meta: { align: 'center' },
+        meta: { align: 'left' },
         size: 120,
         cell: ({ row }) => {
           return (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center">
               <ParteContrariaActions parte={row.original} onEdit={handleEdit} />
             </div>
           );
