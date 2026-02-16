@@ -32,6 +32,9 @@ import {
   updateTodoSchema,
   removeFileSchema,
 } from "./domain";
+import { atualizarStatusEntidadeOrigem } from "@/lib/event-aggregation/service";
+import type { EventSource } from "@/lib/event-aggregation/domain";
+import { mapSourceStatusToTodoStatus } from "@/lib/event-aggregation/domain";
 
 function validate<T>(schema: z.ZodSchema, input: unknown): Result<T> {
   const parsed = schema.safeParse(input);
@@ -42,6 +45,21 @@ function validate<T>(schema: z.ZodSchema, input: unknown): Result<T> {
 }
 
 export async function listarTodos(usuarioId: number): Promise<Result<Todo[]>> {
+  return repo.listTodos(usuarioId);
+}
+
+/**
+ * Lista to-dos com visibilidade baseada em papel:
+ * - Admin: vê todos os to-dos do sistema
+ * - Usuário normal: vê apenas os seus (filtrado por usuario_id)
+ */
+export async function listarTodosComVisibilidade(
+  usuarioId: number,
+  isSuperAdmin: boolean
+): Promise<Result<Todo[]>> {
+  if (isSuperAdmin) {
+    return repo.listAllTodos();
+  }
   return repo.listTodos(usuarioId);
 }
 
@@ -64,7 +82,30 @@ export async function criarTodo(usuarioId: number, input: unknown): Promise<Resu
 export async function atualizarTodo(usuarioId: number, input: unknown): Promise<Result<Todo>> {
   const val = validate<UpdateTodoInput>(updateTodoSchema, input);
   if (!val.success) return err(val.error);
-  return repo.updateTodo(usuarioId, val.data);
+
+  const result = await repo.updateTodo(usuarioId, val.data);
+  if (!result.success) return result;
+
+  // Sync bidirecional: se o to-do é de um evento e o status mudou,
+  // atualizar a entidade de origem
+  const todo = result.data;
+  if (todo.source && todo.sourceEntityId && val.data.status) {
+    try {
+      await atualizarStatusEntidadeOrigem(
+        {
+          source: todo.source as EventSource,
+          entityId: todo.sourceEntityId,
+          novoStatus: val.data.status,
+        },
+        usuarioId
+      );
+    } catch (e) {
+      // Falha no sync não deve bloquear a operação principal
+      console.error("[todo-service] Erro ao sincronizar status com entidade de origem:", e);
+    }
+  }
+
+  return result;
 }
 
 export async function removerTodo(usuarioId: number, input: unknown): Promise<Result<void>> {

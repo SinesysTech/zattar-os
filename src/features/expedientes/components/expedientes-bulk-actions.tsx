@@ -31,7 +31,7 @@ export function ExpedientesBulkActions({
 
   return (
     <>
-      <div className="flex items-center gap-2 px-6 py-3 border-b bg-muted/30">
+      <div className="flex items-center gap-2">
         <AppBadge variant="secondary" className="font-medium">
           {selectedCount} {selectedCount === 1 ? 'expediente selecionado' : 'expedientes selecionados'}
         </AppBadge>

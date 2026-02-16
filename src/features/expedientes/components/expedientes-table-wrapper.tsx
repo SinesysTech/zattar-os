@@ -407,19 +407,7 @@ export function ExpedientesTableWrapper({
                 }
               />
 
-              {/* Bulk Actions — entre toolbar e week navigator */}
-              {Object.keys(rowSelection).length > 0 && (
-                <ExpedientesBulkActions
-                  selectedRows={expedientes.filter((exp) => rowSelection[exp.id.toString()])}
-                  usuarios={usuarios.map((u: UsuarioData) => ({ id: u.id, nomeExibicao: getUsuarioNome(u) }))}
-                  onSuccess={() => {
-                    setRowSelection({});
-                    handleSucessoOperacao();
-                  }}
-                />
-              )}
-
-              {/* Week Navigator — somente no modo semana */}
+              {/* Week Navigator — somente no modo semana (bulk actions no centerSlot) */}
               {weekNavigatorProps && (
                 <div className="pb-3">
                   <WeekNavigator
@@ -430,6 +418,18 @@ export function ExpedientesTableWrapper({
                     onNextWeek={weekNavigatorProps.onNextWeek}
                     onToday={weekNavigatorProps.onToday}
                     isCurrentWeek={weekNavigatorProps.isCurrentWeek}
+                    centerSlot={
+                      Object.keys(rowSelection).length > 0 ? (
+                        <ExpedientesBulkActions
+                          selectedRows={expedientes.filter((exp) => rowSelection[exp.id.toString()])}
+                          usuarios={usuarios.map((u: UsuarioData) => ({ id: u.id, nomeExibicao: getUsuarioNome(u) }))}
+                          onSuccess={() => {
+                            setRowSelection({});
+                            handleSucessoOperacao();
+                          }}
+                        />
+                      ) : undefined
+                    }
                   />
                 </div>
               )}

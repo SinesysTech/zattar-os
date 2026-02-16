@@ -75,6 +75,8 @@ export interface WeekNavigatorProps {
   onToday: () => void;
   /** Se a semana atual contém hoje */
   isCurrentWeek?: boolean;
+  /** Slot para conteúdo central (entre navegação e seletor de dias) — ex: bulk actions */
+  centerSlot?: React.ReactNode;
   /** Classes CSS adicionais */
   className?: string;
 }
@@ -91,6 +93,7 @@ export function WeekNavigator({
   onNextWeek,
   onToday,
   isCurrentWeek = false,
+  centerSlot,
   className,
 }: WeekNavigatorProps) {
   // Helper para capitalizar primeira letra
@@ -171,6 +174,9 @@ export function WeekNavigator({
           </Button>
         )}
       </div>
+
+      {/* Slot central (ex: bulk actions) */}
+      {centerSlot}
 
       {/* Container direito: Dias da semana */}
       <div

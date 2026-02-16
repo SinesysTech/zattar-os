@@ -18,6 +18,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { todoPriorityBadgeVariant, todoPriorityNamed, todoStatusBadgeVariant, todoStatusNamed } from "../enum";
 import { useTodoStore } from "../store";
 import type { TodoComment, SubTask, Todo, TodoFile } from "../types";
+import { SOURCE_LABELS, SOURCE_BADGE_VARIANTS } from "@/lib/event-aggregation/domain";
+import type { EventSource } from "@/lib/event-aggregation/domain";
 import {
   actionAdicionarAnexo,
   actionAdicionarComentario,
@@ -205,6 +207,17 @@ export default function TodoDetailSheet({ isOpen, onClose, todoId, onEditClick }
         </SheetHeader>
 
         <div className="space-y-6 p-4">
+          {todo.source && (
+            <div className="bg-muted/50 flex items-center gap-2 rounded-md border p-3">
+              <Badge variant={SOURCE_BADGE_VARIANTS[todo.source as EventSource] as "info" | "warning" | "secondary" | "accent"}>
+                {SOURCE_LABELS[todo.source as EventSource]}
+              </Badge>
+              <span className="text-muted-foreground text-xs">
+                Originado do módulo de {SOURCE_LABELS[todo.source as EventSource].toLowerCase()}s. Mudanças de status sincronizam com a entidade de origem.
+              </span>
+            </div>
+          )}
+
           <div className="space-y-2">
             <h4 className="text-sm font-medium">Descrição</h4>
             <p className="text-muted-foreground text-sm">{todo.description || "Sem descrição."}</p>

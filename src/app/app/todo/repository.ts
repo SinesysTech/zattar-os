@@ -131,6 +131,8 @@ function assembleTodo(
         size: f.size_bytes ?? undefined,
         uploadedAt: f.created_at,
       })),
+    source: item.source ?? null,
+    sourceEntityId: item.source_entity_id ?? null,
   };
 }
 
@@ -139,7 +141,7 @@ export async function listTodos(usuarioId: number): Promise<Result<Todo[]>> {
     const db = createDbClient();
     const { data: itemsData, error: itemsError } = await db
       .from(TABLE_ITEMS)
-      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at")
+      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id")
       .eq("usuario_id", usuarioId)
       .order("position", { ascending: true })
       .order("created_at", { ascending: true });
@@ -226,7 +228,7 @@ export async function getTodoById(usuarioId: number, todoId: string): Promise<Re
     const db = createDbClient();
     const { data: item, error } = await db
       .from(TABLE_ITEMS)
-      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at")
+      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id")
       .eq("usuario_id", usuarioId)
       .eq("id", todoId)
       .maybeSingle();
@@ -304,7 +306,7 @@ export async function createTodo(usuarioId: number, input: CreateTodoInput): Pro
         reminder_at: input.reminderDate ?? null,
         position: nextPos,
       })
-      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at")
+      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id")
       .single();
 
     if (insertError) return err(appError("DATABASE_ERROR", insertError.message, { code: insertError.code }));
@@ -523,6 +525,120 @@ export async function removeFile(usuarioId: number, input: RemoveFileInput): Pro
     return ok(full.data);
   } catch (error) {
     return err(appError("DATABASE_ERROR", "Erro ao remover anexo", undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+/**
+ * Lista todos os to-dos sem filtrar por usuario_id (visão admin).
+ */
+export async function listAllTodos(): Promise<Result<Todo[]>> {
+  try {
+    const db = createDbClient();
+    const { data: itemsData, error: itemsError } = await db
+      .from(TABLE_ITEMS)
+      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id")
+      .order("position", { ascending: true })
+      .order("created_at", { ascending: true });
+
+    if (itemsError) return err(appError("DATABASE_ERROR", itemsError.message, { code: itemsError.code }));
+    const items = (itemsData as TodoItemRow[]) ?? [];
+    if (items.length === 0) return ok([]);
+
+    const todoIds = items.map((t) => t.id);
+
+    const [assigneesRes, subTasksRes, commentsRes, filesRes] = await Promise.all([
+      db
+        .from(TABLE_ASSIGNEES)
+        .select(
+          "todo_id, usuario_id, usuarios(id, nome_exibicao, nome_completo, email_corporativo, email_pessoal, avatar_url, ativo)"
+        )
+        .in("todo_id", todoIds),
+      db
+        .from(TABLE_SUBTASKS)
+        .select("id, todo_id, title, completed, position, created_at, updated_at")
+        .in("todo_id", todoIds),
+      db.from(TABLE_COMMENTS).select("id, todo_id, body, created_at").in("todo_id", todoIds),
+      db
+        .from(TABLE_FILES)
+        .select("id, todo_id, file_name, mime_type, size_bytes, url, created_at")
+        .in("todo_id", todoIds),
+    ]);
+
+    if (assigneesRes.error) return err(appError("DATABASE_ERROR", assigneesRes.error.message, { code: assigneesRes.error.code }));
+    if (subTasksRes.error) return err(appError("DATABASE_ERROR", subTasksRes.error.message, { code: subTasksRes.error.code }));
+    if (commentsRes.error) return err(appError("DATABASE_ERROR", commentsRes.error.message, { code: commentsRes.error.code }));
+    if (filesRes.error) return err(appError("DATABASE_ERROR", filesRes.error.message, { code: filesRes.error.code }));
+
+    const assigneesRows = (assigneesRes.data as AssigneeJoinRow[]) ?? [];
+    const subTaskRows = (subTasksRes.data as SubTaskRow[]) ?? [];
+    const commentRows = (commentsRes.data as CommentRow[]) ?? [];
+    const fileRows = (filesRes.data as FileRow[]) ?? [];
+
+    const assigneesByTodo: Record<string, TodoAssignee[]> = {};
+    for (const row of assigneesRows) {
+      const usuarioData = row.usuarios[0];
+      const a = rowToAssignee(usuarioData);
+      if (!a) continue;
+      if (!assigneesByTodo[row.todo_id]) assigneesByTodo[row.todo_id] = [];
+      assigneesByTodo[row.todo_id].push(a);
+    }
+
+    const subTasksByTodo: Record<string, SubTaskRow[]> = {};
+    for (const st of subTaskRows) {
+      if (!subTasksByTodo[st.todo_id]) subTasksByTodo[st.todo_id] = [];
+      subTasksByTodo[st.todo_id].push(st);
+    }
+
+    const commentsByTodo: Record<string, CommentRow[]> = {};
+    for (const c of commentRows) {
+      if (!commentsByTodo[c.todo_id]) commentsByTodo[c.todo_id] = [];
+      commentsByTodo[c.todo_id].push(c);
+    }
+
+    const filesByTodo: Record<string, FileRow[]> = {};
+    for (const f of fileRows) {
+      if (!filesByTodo[f.todo_id]) filesByTodo[f.todo_id] = [];
+      filesByTodo[f.todo_id].push(f);
+    }
+
+    const todos = items.map((item) =>
+      assembleTodo(
+        item,
+        assigneesByTodo[item.id] ?? [],
+        subTasksByTodo[item.id] ?? [],
+        commentsByTodo[item.id] ?? [],
+        filesByTodo[item.id] ?? []
+      )
+    );
+
+    return ok(todos);
+  } catch (error) {
+    return err(appError("DATABASE_ERROR", "Erro ao listar todos os to-dos", undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+/**
+ * Busca um to-do pelo source e source_entity_id (para replicação).
+ */
+export async function findTodoBySource(source: string, sourceEntityId: string): Promise<Result<Todo | null>> {
+  try {
+    const db = createDbClient();
+    const { data: item, error } = await db
+      .from(TABLE_ITEMS)
+      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id")
+      .eq("source", source)
+      .eq("source_entity_id", sourceEntityId)
+      .maybeSingle();
+
+    if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    if (!item) return ok(null);
+
+    const todoId = (item as TodoItemRow).id;
+    const usuarioId = (item as TodoItemRow).usuario_id;
+
+    return getTodoById(usuarioId, todoId);
+  } catch (error) {
+    return err(appError("DATABASE_ERROR", "Erro ao buscar to-do por origem", undefined, error instanceof Error ? error : undefined));
   }
 }
 

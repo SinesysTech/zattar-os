@@ -49,6 +49,9 @@ export type Todo = {
   subTasks: SubTask[];
   starred: boolean;
   position: number;
+  // Campos de rastreamento de origem (eventos replicados)
+  source?: string | null;
+  sourceEntityId?: string | null;
 };
 
 export interface TodoPosition {

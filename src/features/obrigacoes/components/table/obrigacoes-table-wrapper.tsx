@@ -367,18 +367,7 @@ export function ObrigacoesTableWrapper({
                 }
               />
 
-              {/* Bulk Actions — entre toolbar e week navigator */}
-              {Object.keys(rowSelection).length > 0 && (
-                <ObrigacoesBulkActions
-                  selectedRows={obrigacoes.filter((o) => rowSelection[o.id.toString()])}
-                  onSuccess={() => {
-                    setRowSelection({});
-                    handleSucessoOperacao();
-                  }}
-                />
-              )}
-
-              {/* Week Navigator */}
+              {/* Week Navigator (bulk actions no centerSlot) */}
               {weekNavigatorProps && (
                 <div className="pb-3">
                   <WeekNavigator
@@ -389,6 +378,17 @@ export function ObrigacoesTableWrapper({
                     onNextWeek={weekNavigatorProps.onNextWeek}
                     onToday={weekNavigatorProps.onToday}
                     isCurrentWeek={weekNavigatorProps.isCurrentWeek}
+                    centerSlot={
+                      Object.keys(rowSelection).length > 0 ? (
+                        <ObrigacoesBulkActions
+                          selectedRows={obrigacoes.filter((o) => rowSelection[o.id.toString()])}
+                          onSuccess={() => {
+                            setRowSelection({});
+                            handleSucessoOperacao();
+                          }}
+                        />
+                      ) : undefined
+                    }
                   />
                 </div>
               )}

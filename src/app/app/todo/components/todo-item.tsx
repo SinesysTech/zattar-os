@@ -14,6 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { SOURCE_LABELS, SOURCE_BADGE_VARIANTS } from "@/lib/event-aggregation/domain";
+import type { EventSource } from "@/lib/event-aggregation/domain";
 
 interface TodoItemProps {
   todo: Todo;
@@ -93,9 +95,16 @@ export default function TodoItem({
               <div className="flex items-start space-x-3">
                 <Checkbox checked={todo.status === "completed"} onCheckedChange={handleToggleCompleted} onClick={(e) => e.stopPropagation()} />
 
-                <h3 className={cn("text-md flex-1 leading-none font-medium", todo.status === "completed" ? "text-muted-foreground line-through" : "")}>
-                  {todo.title}
-                </h3>
+                <div className="flex flex-1 flex-col gap-1">
+                  <h3 className={cn("text-md leading-none font-medium", todo.status === "completed" ? "text-muted-foreground line-through" : "")}>
+                    {todo.title}
+                  </h3>
+                  {todo.source && (
+                    <Badge variant={SOURCE_BADGE_VARIANTS[todo.source as EventSource] as "info" | "warning" | "secondary" | "accent"} className="w-fit text-[10px]">
+                      {SOURCE_LABELS[todo.source as EventSource]}
+                    </Badge>
+                  )}
+                </div>
 
                 {StarIcon}
               </div>
@@ -167,6 +176,11 @@ export default function TodoItem({
                 <h3 className={cn("text-md leading-none font-medium", todo.status === "completed" ? "text-muted-foreground line-through" : "")}>
                   {todo.title}
                 </h3>
+                {todo.source && (
+                  <Badge variant={SOURCE_BADGE_VARIANTS[todo.source as EventSource] as "info" | "warning" | "secondary" | "accent"} className="shrink-0 text-[10px]">
+                    {SOURCE_LABELS[todo.source as EventSource]}
+                  </Badge>
+                )}
                 {StarIcon}
               </div>
 

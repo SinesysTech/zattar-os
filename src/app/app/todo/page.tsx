@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { authenticateRequest } from "@/lib/auth/session";
+import { getCurrentUser } from "@/lib/auth/server";
 import { PageShell } from "@/components/shared/page-shell";
 import { DataShell } from "@/components/shared/data-shell";
 import { DataTableToolbar } from "@/components/shared/data-shell/data-table-toolbar";
@@ -14,12 +14,13 @@ export const metadata: Metadata = {
 };
 
 export default async function TodoPage() {
-  const user = await authenticateRequest();
+  const user = await getCurrentUser();
   if (!user) {
     return <div className="p-6">Você precisa estar autenticado.</div>;
   }
 
-  const result = await todoService.listarTodos(user.id);
+  const isSuperAdmin = user.roles.includes("admin");
+  const result = await todoService.listarTodosComVisibilidade(user.id, isSuperAdmin);
   if (!result.success) {
     return <div className="p-6">Erro ao carregar to-dos: {result.error.message}</div>;
   }
@@ -32,4 +33,3 @@ export default async function TodoPage() {
     </PageShell>
   );
 }
-
