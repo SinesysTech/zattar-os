@@ -466,14 +466,22 @@ export async function obterQuadroSistema(
     obrigacoes: fetchObrigacoesParaKanban,
   };
 
-  const cards = await fetchers[source]();
+  const rawCards = await fetchers[source]();
+
+  // Deduplicar cards por ID (APIs podem retornar registros duplicados via JOINs)
+  const seen = new Map<string, UnifiedKanbanCard>();
+  for (const card of rawCards) {
+    if (!seen.has(card.id)) {
+      seen.set(card.id, card);
+    }
+  }
 
   // Distribuir cards nas colunas
   const cardsByColumn: Record<string, UnifiedKanbanCard[]> = {};
   for (const col of columns) {
     cardsByColumn[col.id] = [];
   }
-  for (const card of cards) {
+  for (const card of seen.values()) {
     if (cardsByColumn[card.columnId]) {
       cardsByColumn[card.columnId].push(card);
     }

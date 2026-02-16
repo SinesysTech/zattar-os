@@ -120,7 +120,7 @@ export const SYSTEM_BOARDS: KanbanBoardDef[] = [
   },
   {
     id: "sys-audiencias",
-    titulo: "Audiencias",
+    titulo: "Audiências",
     tipo: "system",
     source: "audiencias",
     icone: "Gavel",
@@ -128,7 +128,7 @@ export const SYSTEM_BOARDS: KanbanBoardDef[] = [
   },
   {
     id: "sys-obrigacoes",
-    titulo: "Obrigacoes",
+    titulo: "Obrigações",
     tipo: "system",
     source: "obrigacoes",
     icone: "CircleDollarSign",
