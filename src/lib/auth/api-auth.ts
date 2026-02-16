@@ -18,12 +18,31 @@ export interface AuthResult {
   error?: string; // Mensagem de erro específica quando authenticated = false
 }
 
+// Cache simples em memória para evitar queries repetitivas ao banco
+// Mapeia authUserId (UUID) -> { usuarioId (INT), expiresAt (timestamp) }
+const userIdCache = new Map<string, { usuarioId: number; expiresAt: number }>();
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutos
+
 /**
  * Busca o ID do usuário na tabela usuarios pelo auth_user_id (UUID do Supabase Auth)
+ * Usa cache em memória para evitar hits excessivos no banco
  */
 async function buscarUsuarioIdPorAuthUserId(
   authUserId: string,
 ): Promise<number | null> {
+  // 1. Tentar buscar do cache
+  const cached = userIdCache.get(authUserId);
+  const now = Date.now();
+
+  if (cached && cached.expiresAt > now) {
+    return cached.usuarioId;
+  }
+
+  // Se expirou, remove do cache
+  if (cached) {
+    userIdCache.delete(authUserId);
+  }
+
   try {
     const supabase = createServiceClient();
 
@@ -38,7 +57,26 @@ async function buscarUsuarioIdPorAuthUserId(
       return null;
     }
 
-    return data.id as number;
+    const usuarioId = data.id as number;
+
+    // 2. Salvar no cache
+    userIdCache.set(authUserId, {
+      usuarioId,
+      expiresAt: now + CACHE_TTL_MS
+    });
+
+    // Limpeza periódica do cache (opcional, simples)
+    if (userIdCache.size > 1000) {
+      // Se crescer muito, limpa tudo para evitar memory leak
+      userIdCache.clear();
+      // Readiciona o atual
+      userIdCache.set(authUserId, {
+        usuarioId,
+        expiresAt: now + CACHE_TTL_MS
+      });
+    }
+
+    return usuarioId;
   } catch {
     return null;
   }
@@ -63,7 +101,8 @@ export async function authenticateRequest(
   if (serviceApiKey && expectedServiceKey) {
     // Comparação segura usando timing-safe comparison
     if (serviceApiKey === expectedServiceKey) {
-      console.log("[API Auth] ✓ Autenticação bem-sucedida via Service API Key");
+      // Log removido para reduzir ruído
+      // console.log("[API Auth] ✓ Autenticação bem-sucedida via Service API Key");
       return {
         authenticated: true,
         userId: "system",
@@ -73,9 +112,6 @@ export async function authenticateRequest(
     } else {
       // API key inválida
       console.error("[API Auth] ✗ Service API Key inválida");
-      console.error(
-        "[API Auth] Service API Key inválida (valor redacted por segurança)",
-      );
 
       // Record suspicious activity for invalid API key
       const clientIp = getClientIp(request);
@@ -119,8 +155,8 @@ export async function authenticateRequest(
       } = await supabase.auth.getUser(token);
 
       if (error || !user) {
+        // Log de erro mantido pois indica problema real
         console.error("[API Auth] ✗ Bearer token inválido ou expirado");
-        console.error("[API Auth] Erro do Supabase:", error?.message);
 
         // Record suspicious activity for invalid bearer token
         const clientIp = getClientIp(request);
@@ -132,9 +168,8 @@ export async function authenticateRequest(
 
         return {
           authenticated: false,
-          error: `Bearer token inválido ou expirado: ${
-            error?.message || "Token não encontrado"
-          }`,
+          error: `Bearer token inválido ou expirado: ${error?.message || "Token não encontrado"
+            }`,
         };
       }
 
@@ -145,11 +180,11 @@ export async function authenticateRequest(
         console.warn(
           `[API Auth] ⚠ Usuário autenticado (${user.id}), mas não encontrado na tabela usuarios`,
         );
-      } else {
-        console.log(
-          `[API Auth] ✓ Autenticação bem-sucedida via Bearer token - Usuário ID: ${usuarioId}`,
-        );
       }
+      // Log de sucesso removido para reduzir ruído
+      // else {
+      //   console.log(`[API Auth] ✓ Autenticação bem-sucedida via Bearer token - Usuário ID: ${usuarioId}`);
+      // }
 
       return {
         authenticated: true,
@@ -162,9 +197,8 @@ export async function authenticateRequest(
       console.error("[API Auth] ✗ Erro ao validar Bearer token:", error);
       return {
         authenticated: false,
-        error: `Erro ao validar Bearer token: ${
-          error instanceof Error ? error.message : "Erro desconhecido"
-        }`,
+        error: `Erro ao validar Bearer token: ${error instanceof Error ? error.message : "Erro desconhecido"
+          }`,
       };
     }
   }
@@ -192,8 +226,9 @@ export async function authenticateRequest(
       },
     );
 
-    // Primeiro atualizar a sessão (atualiza cookies se necessário)
-    await supabase.auth.getSession();
+    // Otimização: Remover chamada redundante para getSession()
+    // O middleware já cuida do refresh do token e da sessão
+    // await supabase.auth.getSession();
 
     // Usar getUser() para verificação segura de autenticação
     // Isso valida os dados contactando o servidor Supabase Auth
@@ -203,13 +238,8 @@ export async function authenticateRequest(
     } = await supabase.auth.getUser();
 
     if (error || !user) {
-      console.log("[API Auth] ℹ Nenhuma sessão válida encontrada (cookies)");
-      console.log(
-        "[API Auth] DEBUG - Cookies recebidos:",
-        request.cookies.getAll().map((c) => c.name),
-      );
-      console.log("[API Auth] DEBUG - Erro Supabase:", error?.message);
-      console.log("[API Auth] DEBUG - User:", user);
+      // Logs de debug reduzidos para evitar poluição, mantendo apenas se necessário
+      // console.log("[API Auth] ℹ Nenhuma sessão válida encontrada (cookies)");
       return {
         authenticated: false,
         error:
@@ -217,18 +247,18 @@ export async function authenticateRequest(
       };
     }
 
-    // Buscar ID do usuário na tabela usuarios
+    // Buscar ID do usuário na tabela usuarios (agora com cache)
     const usuarioId = await buscarUsuarioIdPorAuthUserId(user.id);
 
     if (!usuarioId) {
       console.warn(
         `[API Auth] ⚠ Usuário autenticado via sessão (${user.id}), mas não encontrado na tabela usuarios`,
       );
-    } else {
-      console.log(
-        `[API Auth] ✓ Autenticação bem-sucedida via sessão - Usuário ID: ${usuarioId}`,
-      );
     }
+    // Log de sucesso removido para reduzir ruído
+    // else {
+    //   console.log(`[API Auth] ✓ Autenticação bem-sucedida via sessão - Usuário ID: ${usuarioId}`);
+    // }
 
     return {
       authenticated: true,
@@ -241,9 +271,8 @@ export async function authenticateRequest(
     console.error("[API Auth] ✗ Erro ao verificar sessão do Supabase:", error);
     return {
       authenticated: false,
-      error: `Erro ao verificar sessão: ${
-        error instanceof Error ? error.message : "Erro desconhecido"
-      }`,
+      error: `Erro ao verificar sessão: ${error instanceof Error ? error.message : "Erro desconhecido"
+        }`,
     };
   }
 }

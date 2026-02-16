@@ -76,6 +76,10 @@ export async function GET(request: NextRequest) {
           permitido: p.permitido,
         })),
       },
+    }, {
+      headers: {
+        'Cache-Control': 'private, max-age=60, stale-while-revalidate=300',
+      },
     });
   } catch (error) {
     console.error('Erro ao buscar permissões:', error);

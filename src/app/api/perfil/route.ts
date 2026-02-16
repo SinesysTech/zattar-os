@@ -52,7 +52,14 @@ export async function GET(request: NextRequest) {
       avatarUrl: data.avatar_url ?? null,
     };
 
-    return NextResponse.json({ success: true, data: perfil });
+    return NextResponse.json(
+      { success: true, data: perfil },
+      {
+        headers: {
+          'Cache-Control': 'private, max-age=60, stale-while-revalidate=300',
+        },
+      }
+    );
   } catch (error) {
     console.error('Erro ao buscar perfil:', error);
     return NextResponse.json(

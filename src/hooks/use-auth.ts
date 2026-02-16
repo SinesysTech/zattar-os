@@ -139,8 +139,8 @@ export function useAuth(): UseAuthResult {
     // Verificar sessão imediatamente
     verifySession();
 
-    // Verificar sessão a cada 30 segundos
-    intervalId = setInterval(verifySession, 30000);
+    // Verificar sessão a cada 5 minutos (300000ms)
+    intervalId = setInterval(verifySession, 300000);
 
     // Escutar mudanças de autenticação do Supabase
     const {
