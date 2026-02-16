@@ -407,6 +407,18 @@ export function ExpedientesTableWrapper({
                 }
               />
 
+              {/* Bulk Actions — entre toolbar e week navigator */}
+              {Object.keys(rowSelection).length > 0 && (
+                <ExpedientesBulkActions
+                  selectedRows={expedientes.filter((exp) => rowSelection[exp.id.toString()])}
+                  usuarios={usuarios.map((u: UsuarioData) => ({ id: u.id, nomeExibicao: getUsuarioNome(u) }))}
+                  onSuccess={() => {
+                    setRowSelection({});
+                    handleSucessoOperacao();
+                  }}
+                />
+              )}
+
               {/* Week Navigator — somente no modo semana */}
               {weekNavigatorProps && (
                 <div className="pb-3">

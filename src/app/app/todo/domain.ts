@@ -6,6 +6,7 @@
 
 import { z } from "zod";
 import { EnumTodoPriority, EnumTodoStatus } from "./enum";
+import { eventSourceSchema } from "@/lib/event-aggregation/domain";
 
 export const todoStatusSchema = z.enum([
   EnumTodoStatus.Pending,
@@ -70,6 +71,9 @@ export const todoSchema = z.object({
   subTasks: z.array(todoSubTaskSchema),
   comments: z.array(todoCommentSchema),
   files: z.array(todoFileSchema),
+  // Campos de rastreamento de origem (eventos replicados)
+  source: eventSourceSchema.optional().nullable(),
+  sourceEntityId: z.string().optional().nullable(),
 });
 export type Todo = z.infer<typeof todoSchema>;
 

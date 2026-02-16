@@ -367,6 +367,17 @@ export function ObrigacoesTableWrapper({
                 }
               />
 
+              {/* Bulk Actions — entre toolbar e week navigator */}
+              {Object.keys(rowSelection).length > 0 && (
+                <ObrigacoesBulkActions
+                  selectedRows={obrigacoes.filter((o) => rowSelection[o.id.toString()])}
+                  onSuccess={() => {
+                    setRowSelection({});
+                    handleSucessoOperacao();
+                  }}
+                />
+              )}
+
               {/* Week Navigator */}
               {weekNavigatorProps && (
                 <div className="pb-3">

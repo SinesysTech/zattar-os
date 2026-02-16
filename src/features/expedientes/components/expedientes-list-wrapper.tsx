@@ -398,6 +398,18 @@ export function ExpedientesListWrapper({
                 }
               />
 
+              {/* Bulk Actions — entre toolbar e filtros ativos */}
+              {Object.keys(rowSelection).length > 0 && (
+                <ExpedientesBulkActions
+                  selectedRows={expedientes.filter((exp) => rowSelection[exp.id.toString()])}
+                  usuarios={usuarios.map((u: UsuarioData) => ({ id: u.id, nomeExibicao: getUsuarioNome(u) }))}
+                  onSuccess={() => {
+                    setRowSelection({});
+                    handleSucessoOperacao();
+                  }}
+                />
+              )}
+
               {/* Active Filter Chips */}
               {activeFilterChips.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2 px-6 pb-4">

@@ -39,6 +39,8 @@ type TodoItemRow = {
   position: number;
   created_at: string;
   updated_at: string;
+  source: string | null;
+  source_entity_id: string | null;
 };
 
 type AssigneeJoinRow = {
