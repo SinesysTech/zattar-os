@@ -171,17 +171,16 @@ function eventoToTarefaDisplay(evento: UnifiedEventItem): TarefaDisplayItem {
     status: mapSourceStatusToTarefaStatus(evento.source, evento.statusOrigem),
     label: SOURCE_TO_LABEL[evento.source],
     priority: calcularPrioridade(evento.dataVencimento, evento.prazoVencido),
-    // New fields defaults for virtual items
+    position: 0, // Virtual events don't have position in kanban
     description: undefined,
-    dueDate: evento.dataVencimento, // Map event date to dueDate?
+    dueDate: evento.dataVencimento,
     reminderDate: null,
     starred: false,
-    assignees: [], // Virtual events might have responsible users, but we map them to string 'responsavelNome' for now.
+    assignees: [],
     assignedTo: [],
     subTasks: [],
     comments: [],
     files: [],
-    //
     source: evento.source,
     sourceEntityId: String(evento.sourceEntityId),
     url: evento.url,

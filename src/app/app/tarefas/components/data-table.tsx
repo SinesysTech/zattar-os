@@ -26,14 +26,12 @@ import {
 } from "@/components/ui/table";
 
 import { DataShell, DataTableToolbar } from "@/components/shared/data-shell";
-import { ViewModePopover } from "@/components/shared";
+import { ViewModePopover, type ViewModeOption } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { X, List, LayoutGrid } from "lucide-react";
 
 import { priorities, statuses, labels } from "@/app/app/tarefas/data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { TaskDialog } from "./task-dialog";
-import { TaskDetailSheet } from "./task-detail-sheet";
 import { DataTablePagination } from "./data-table-pagination";
 import { useTarefaStore } from "../store";
 import { TarefaDisplayItem } from "../domain";
@@ -42,6 +40,12 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
+
+// Opções de visualização para tarefas
+const TASK_VIEW_OPTIONS: ViewModeOption[] = [
+  { value: 'lista' as any, label: 'Lista', icon: List },
+  { value: 'quadro' as any, label: 'Quadro', icon: LayoutGrid }
+];
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const {
@@ -98,111 +102,106 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   };
 
   return (
-    <>
-      <DataShell
-        footer={<DataTablePagination table={table} />}
-        header={
-          <DataTableToolbar
-            table={table}
-            title="Tarefas"
-            actionButton={{
-              label: "Nova tarefa",
-              onClick: () => setCreateDialogOpen(true),
-            }}
-            viewModeSlot={
-              <ViewModePopover
-                value={viewMode as any}
-                onValueChange={(v) => setViewMode(v as any)}
-                options={[
-                  { value: 'lista' as any, label: 'Lista', icon: List },
-                  { value: 'quadro' as any, label: 'Quadro', icon: LayoutGrid }
-                ]}
-                className="hidden lg:flex"
-              />
-            }
-            filtersSlot={
-              <>
-                {table.getColumn("status") && (
-                  <DataTableFacetedFilter
-                    column={table.getColumn("status")}
-                    title="Status"
-                    options={statuses}
-                  />
-                )}
-                {table.getColumn("priority") && (
-                  <DataTableFacetedFilter
-                    column={table.getColumn("priority")}
-                    title="Prioridade"
-                    options={priorities}
-                  />
-                )}
-                {table.getColumn("label") && (
-                  <DataTableFacetedFilter
-                    column={table.getColumn("label")}
-                    title="Tipo"
-                    options={labels}
-                  />
-                )}
-                {isFiltered && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="bg-card hover:bg-accent"
-                    onClick={() => table.resetColumnFilters()}
-                  >
-                    Limpar
-                    <X className="ml-2 h-4 w-4" />
-                  </Button>
-                )}
-              </>
-            }
-          />
-        }
-      >
-        <div className="rounded-md border bg-card">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    className="cursor-pointer hover:bg-muted/50"
-                    onClick={() => handleRowClick((row.original as TarefaDisplayItem).id)}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
-                    Nenhum resultado.
-                  </TableCell>
-                </TableRow>
+    <DataShell
+      footer={<DataTablePagination table={table} />}
+      header={
+        <DataTableToolbar
+          table={table}
+          title="Tarefas"
+          actionButton={{
+            label: "Nova tarefa",
+            onClick: () => setCreateDialogOpen(true),
+          }}
+          viewModeSlot={
+            <ViewModePopover
+              value={viewMode as any}
+              onValueChange={(v) => setViewMode(v as any)}
+              options={TASK_VIEW_OPTIONS}
+              className="hidden lg:flex"
+            />
+          }
+          filtersSlot={
+            <>
+              {table.getColumn("status") && (
+                <DataTableFacetedFilter
+                  column={table.getColumn("status")}
+                  title="Status"
+                  options={statuses}
+                />
               )}
-            </TableBody>
-          </Table>
-        </div>
-      </DataShell>
-    </>
+              {table.getColumn("priority") && (
+                <DataTableFacetedFilter
+                  column={table.getColumn("priority")}
+                  title="Prioridade"
+                  options={priorities}
+                />
+              )}
+              {table.getColumn("label") && (
+                <DataTableFacetedFilter
+                  column={table.getColumn("label")}
+                  title="Tipo"
+                  options={labels}
+                />
+              )}
+              {isFiltered && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="bg-card hover:bg-accent"
+                  onClick={() => table.resetColumnFilters()}
+                >
+                  Limpar
+                  <X className="ml-2 h-4 w-4" />
+                </Button>
+              )}
+            </>
+          }
+        />
+      }
+    >
+      <div className="rounded-md border bg-card">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className="cursor-pointer hover:bg-muted/50"
+                  onClick={() => handleRowClick((row.original as TarefaDisplayItem).id)}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  Nenhum resultado.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </DataShell>
   );
 }

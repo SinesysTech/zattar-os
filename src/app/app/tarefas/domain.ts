@@ -101,7 +101,8 @@ export const createTaskSchema = taskSchema.omit({ id: true, source: true, source
   subTasks: true,
   comments: true,
   files: true,
-  starred: true
+  starred: true,
+  position: true, // position é opcional na criação (será calculado automaticamente)
 });
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 

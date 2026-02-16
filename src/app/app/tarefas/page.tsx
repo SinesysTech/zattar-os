@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 import { getCurrentUser } from "@/lib/auth/server";
 import { PageShell } from "@/components/shared/page-shell";
 
-import { columns } from "./components/columns";
-import { DataTable } from "./components/data-table";
+import { TarefasClient } from "./tarefas-client";
 import * as tarefasService from "./service";
 
 export const metadata: Metadata = {
@@ -26,7 +25,7 @@ export default async function TaskPage() {
 
   return (
     <PageShell>
-      <DataTable data={result.data} columns={columns} />
+      <TarefasClient data={result.data} />
     </PageShell>
   );
 }

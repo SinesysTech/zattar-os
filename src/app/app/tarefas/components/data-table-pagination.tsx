@@ -16,7 +16,7 @@ interface DataTablePaginationProps<TData> {
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
   return (
-    <div className="flex items-center justify-between px-2">
+    <div className="flex items-center justify-between px-2 py-4">
       <div className="text-muted-foreground hidden flex-1 text-sm lg:inline">
         {table.getFilteredSelectedRowModel().rows.length} de{" "}
         {table.getFilteredRowModel().rows.length} linha(s) selecionada(s).
