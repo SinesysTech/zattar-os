@@ -475,7 +475,6 @@ export function TemplatesClient() {
         <Button
           variant="outline"
           size="sm"
-          className="h-10"
           onClick={handleExportCSV}
         >
           <Download className="h-4 w-4 mr-2" />
@@ -485,7 +484,6 @@ export function TemplatesClient() {
           <Button
             variant="destructive"
             size="sm"
-            className="h-10"
             onClick={handleBulkDelete}
           >
             <Trash2 className="h-4 w-4 mr-2" />
@@ -532,7 +530,7 @@ export function TemplatesClient() {
                     value={filtros.ativo === undefined ? 'all' : filtros.ativo ? 'true' : 'false'}
                     onValueChange={handleAtivoFilterChange}
                   >
-                    <SelectTrigger className="h-10 w-[150px]">
+                    <SelectTrigger className="w-[150px]">
                       <SelectValue placeholder="Disponível" />
                     </SelectTrigger>
                     <SelectContent>
@@ -546,7 +544,7 @@ export function TemplatesClient() {
                     value={filtros.tipo_template === undefined ? 'all' : filtros.tipo_template}
                     onValueChange={handleTipoTemplateFilterChange}
                   >
-                    <SelectTrigger className="h-10 w-[180px]">
+                    <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Tipo de Template" />
                     </SelectTrigger>
                     <SelectContent>

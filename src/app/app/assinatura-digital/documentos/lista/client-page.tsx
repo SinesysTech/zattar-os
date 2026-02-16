@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import type { Table as TanstackTable, SortingState } from "@tanstack/react-table";
 import {
   Copy,
   CheckCircle2,
@@ -13,29 +14,41 @@ import {
   Download,
   Trash2,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  DataTable,
+  DataShell,
+  DataTableToolbar,
+  DataPagination,
+} from "@/components/shared/data-shell";
 import { DialogFormShell } from "@/components/shared/dialog-shell/dialog-form-shell";
-import { toast } from "sonner";
+import { useDebounce } from "@/hooks/use-debounce";
+
 import {
   actionListDocumentos,
   actionGetDocumento,
   actionGetPresignedPdfUrl,
   actionDeleteDocumento,
 } from "../../feature";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import type { AssinaturaDigitalDocumentoStatus } from "../../feature/domain";
+import { createColumns, type DocumentoListItem } from "./components/columns";
 
-import { DataTable } from "./components/data-table";
-import { createColumns, DocumentoListItem } from "./components/columns";
-
-type AssinaturaDigitalDocumentoStatus =
-  | "rascunho"
-  | "pronto"
-  | "concluido"
-  | "cancelado";
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
 type DocumentoCompleto = DocumentoListItem & {
   assinantes: Array<{
@@ -53,6 +66,14 @@ type DocumentoCompleto = DocumentoListItem & {
   }>;
 };
 
+interface DocumentosTableWrapperProps {
+  initialData?: DocumentoListItem[];
+}
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
 const STATUS_LABELS: Record<AssinaturaDigitalDocumentoStatus, string> = {
   rascunho: "Rascunho",
   pronto: "Pronto para Assinatura",
@@ -67,63 +88,127 @@ const STATUS_COLORS: Record<AssinaturaDigitalDocumentoStatus, string> = {
   cancelado: "bg-red-600/10 text-red-600",
 };
 
-const STATUS_ICONS: Record<AssinaturaDigitalDocumentoStatus, React.ReactNode> =
-  {
-    rascunho: <FileText className="h-4 w-4" />,
-    pronto: <Clock className="h-4 w-4" />,
-    concluido: <CheckCircle2 className="h-4 w-4" />,
-    cancelado: <XCircle className="h-4 w-4" />,
-  };
+const STATUS_ICONS: Record<AssinaturaDigitalDocumentoStatus, React.ReactNode> = {
+  rascunho: <FileText className="h-4 w-4" />,
+  pronto: <Clock className="h-4 w-4" />,
+  concluido: <CheckCircle2 className="h-4 w-4" />,
+  cancelado: <XCircle className="h-4 w-4" />,
+};
 
-export function ListaDocumentosClient() {
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
+export function DocumentosTableWrapper({
+  initialData = [],
+}: DocumentosTableWrapperProps) {
   const router = useRouter();
-  const [documentos, setDocumentos] = useState<DocumentoListItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [documentoSelecionado, setDocumentoSelecionado] =
-    useState<DocumentoCompleto | null>(null);
-  const [isLoadingDetalhes, setIsLoadingDetalhes] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [documentoParaDeletar, setDocumentoParaDeletar] =
-    useState<DocumentoListItem | null>(null);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
-  const carregarDocumentos = useCallback(async () => {
+  // -- State: Data
+  const [documentos, setDocumentos] = React.useState<DocumentoListItem[]>(initialData);
+  const [table, setTable] = React.useState<TanstackTable<DocumentoListItem> | null>(null);
+
+  // -- State: Pagination (0-based for UI)
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(50);
+
+  // -- State: Loading/Error
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  // -- State: Filters
+  const [globalFilter, setGlobalFilter] = React.useState("");
+  const [statusFilter, setStatusFilter] = React.useState<string>("all");
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  // -- State: Dialogs
+  const [documentoSelecionado, setDocumentoSelecionado] =
+    React.useState<DocumentoCompleto | null>(null);
+  const [isLoadingDetalhes, setIsLoadingDetalhes] = React.useState(false);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [documentoParaDeletar, setDocumentoParaDeletar] =
+    React.useState<DocumentoListItem | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
+
+  // -- Debounce search
+  const buscaDebounced = useDebounce(globalFilter, 500);
+
+  // -- Data fetching
+  const refetch = React.useCallback(async () => {
     setIsLoading(true);
+    setError(null);
     try {
       const resultado = await actionListDocumentos({
         page: 1,
-        pageSize: 100,
+        pageSize: 200,
+        status:
+          statusFilter !== "all"
+            ? (statusFilter as AssinaturaDigitalDocumentoStatus)
+            : undefined,
       });
 
       if (resultado.success && resultado.data && "documentos" in resultado.data) {
-        const { documentos } = resultado.data as {
+        const { documentos: docs } = resultado.data as {
           documentos: DocumentoListItem[];
         };
-        setDocumentos(documentos ?? []);
+        setDocumentos(docs ?? []);
       } else {
         const errorMessage =
           !resultado.success && "error" in resultado
             ? resultado.error
             : "Erro desconhecido ao carregar documentos";
-        toast.error(`Não foi possível carregar os documentos: ${errorMessage}`);
-        console.error("[ListaDocumentos] Erro:", resultado);
+        setError(typeof errorMessage === "string" ? errorMessage : "Erro ao carregar");
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Erro desconhecido";
-      toast.error(`Não foi possível carregar os documentos: ${errorMessage}`);
-      console.error("[ListaDocumentos] Exception:", error);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro ao carregar documentos");
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [statusFilter]);
 
-  useEffect(() => {
-    carregarDocumentos();
-  }, [carregarDocumentos]);
+  // Skip first render if initialData provided
+  const isFirstRender = React.useRef(true);
 
-  const handleCopyLink = useCallback(async (token: string) => {
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      if (initialData.length > 0) return;
+    }
+    refetch();
+  }, [refetch, initialData.length]);
+
+  // -- Client-side search filter
+  const filteredDocumentos = React.useMemo(() => {
+    if (!buscaDebounced) return documentos;
+    const lower = buscaDebounced.toLowerCase();
+    return documentos.filter(
+      (d) =>
+        d.titulo?.toLowerCase().includes(lower) ||
+        d.documento_uuid.toLowerCase().includes(lower) ||
+        String(d.id).includes(lower)
+    );
+  }, [documentos, buscaDebounced]);
+
+  // -- Client-side pagination
+  const totalFiltered = filteredDocumentos.length;
+  const totalPages = Math.ceil(totalFiltered / pageSize);
+  const paginatedDocumentos = React.useMemo(() => {
+    const start = pageIndex * pageSize;
+    return filteredDocumentos.slice(start, start + pageSize);
+  }, [filteredDocumentos, pageIndex, pageSize]);
+
+  // -- Stats
+  const stats = React.useMemo(() => ({
+    total: documentos.length,
+    rascunho: documentos.filter((d) => d.status === "rascunho").length,
+    pronto: documentos.filter((d) => d.status === "pronto").length,
+    concluido: documentos.filter((d) => d.status === "concluido").length,
+    cancelado: documentos.filter((d) => d.status === "cancelado").length,
+  }), [documentos]);
+
+  // -- Handlers: Actions
+  const handleCopyLink = React.useCallback(async (token: string) => {
     const link = `${window.location.origin}/assinatura/${token}`;
     try {
       await navigator.clipboard.writeText(link);
@@ -133,7 +218,7 @@ export function ListaDocumentosClient() {
     }
   }, []);
 
-  const handleDownloadPdf = useCallback(async (url: string, titulo: string) => {
+  const handleDownloadPdf = React.useCallback(async (url: string, titulo: string) => {
     try {
       const result = await actionGetPresignedPdfUrl({ url });
       const presignedUrl =
@@ -158,7 +243,7 @@ export function ListaDocumentosClient() {
     }
   }, []);
 
-  const handleVerDetalhes = useCallback(async (uuid: string) => {
+  const handleVerDetalhes = React.useCallback(async (uuid: string) => {
     setIsLoadingDetalhes(true);
     setIsDialogOpen(true);
     try {
@@ -176,89 +261,66 @@ export function ListaDocumentosClient() {
             created_at: string;
             updated_at: string;
           };
-          assinantes: Array<{
-            id: number;
-            assinante_tipo: string;
-            dados_snapshot: Record<string, unknown>;
-            token: string;
-            status: "pendente" | "concluido";
-            concluido_em: string | null;
-          }>;
-          ancoras: Array<{
-            id: number;
-            tipo: "assinatura" | "rubrica";
-            pagina: number;
-          }>;
+          assinantes: DocumentoCompleto["assinantes"];
+          ancoras: DocumentoCompleto["ancoras"];
         };
-        const documentoCompleto: DocumentoCompleto = {
-          id: docData.documento.id,
-          documento_uuid: docData.documento.documento_uuid,
-          titulo: docData.documento.titulo,
-          status: docData.documento.status,
-          selfie_habilitada: docData.documento.selfie_habilitada,
-          pdf_original_url: docData.documento.pdf_original_url,
-          pdf_final_url: docData.documento.pdf_final_url,
-          created_at: docData.documento.created_at,
-          updated_at: docData.documento.updated_at,
+        setDocumentoSelecionado({
+          ...docData.documento,
           assinantes: docData.assinantes,
           ancoras: docData.ancoras,
-        };
-        setDocumentoSelecionado(documentoCompleto);
+        });
       } else {
         toast.error("Erro ao carregar detalhes do documento");
         setIsDialogOpen(false);
       }
-    } catch (error) {
+    } catch {
       toast.error("Erro ao carregar detalhes do documento");
-      console.error(error);
       setIsDialogOpen(false);
     } finally {
       setIsLoadingDetalhes(false);
     }
   }, []);
 
-  const handleEditarDocumento = useCallback(
+  const handleEditarDocumento = React.useCallback(
     (uuid: string) => {
       router.push(`/app/assinatura-digital/documentos/editar/${uuid}`);
     },
     [router]
   );
 
-  const handleConfirmarDelete = useCallback((doc: DocumentoListItem) => {
+  const handleConfirmarDelete = React.useCallback((doc: DocumentoListItem) => {
     setDocumentoParaDeletar(doc);
     setIsDeleteDialogOpen(true);
   }, []);
 
-  const handleDeletarDocumento = useCallback(async () => {
+  const handleDeletarDocumento = React.useCallback(async () => {
     if (!documentoParaDeletar) return;
-
     setIsDeleting(true);
     try {
       const resultado = await actionDeleteDocumento({
         uuid: documentoParaDeletar.documento_uuid,
       });
-
       if (resultado.success) {
         toast.success("Documento deletado com sucesso");
         setIsDeleteDialogOpen(false);
         setDocumentoParaDeletar(null);
-        carregarDocumentos();
+        refetch();
       } else {
         const errorMessage =
           "error" in resultado ? resultado.error : "Erro ao deletar documento";
-        toast.error(errorMessage);
+        toast.error(typeof errorMessage === "string" ? errorMessage : "Erro ao deletar");
       }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Erro ao deletar documento";
-      toast.error(errorMessage);
-      console.error(error);
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Erro ao deletar documento"
+      );
     } finally {
       setIsDeleting(false);
     }
-  }, [documentoParaDeletar, carregarDocumentos]);
+  }, [documentoParaDeletar, refetch]);
 
-  const columns = useMemo(
+  // -- Columns
+  const columns = React.useMemo(
     () =>
       createColumns({
         onEdit: handleEditarDocumento,
@@ -269,77 +331,150 @@ export function ListaDocumentosClient() {
     [handleEditarDocumento, handleVerDetalhes, handleConfirmarDelete, handleDownloadPdf]
   );
 
-  const stats = useMemo(() => {
-    return {
-      total: documentos.length,
-      rascunho: documentos.filter((d) => d.status === "rascunho").length,
-      pronto: documentos.filter((d) => d.status === "pronto").length,
-      concluido: documentos.filter((d) => d.status === "concluido").length,
-      cancelado: documentos.filter((d) => d.status === "cancelado").length,
-    };
-  }, [documentos]);
+  // -- Status filter handler
+  const handleStatusFilterChange = React.useCallback(
+    (value: string) => {
+      setStatusFilter(value);
+      setPageIndex(0);
+      // Force refetch when changing server-side status filter
+      isFirstRender.current = false;
+    },
+    []
+  );
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center p-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
+  // ---------------------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------------------
 
   return (
-    <div className="space-y-6">
-      {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-5">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Rascunhos</CardTitle>
-            <FileText className="h-4 w-4 text-gray-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.rascunho}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Prontos</CardTitle>
-            <Clock className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.pronto}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Concluídos</CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.concluido}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Cancelados</CardTitle>
-            <XCircle className="h-4 w-4 text-red-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.cancelado}</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* DataTable com Toolbar e Paginação - sem cards envelopando */}
-      <DataTable columns={columns} data={documentos} />
+    <>
+      <DataShell
+        header={
+          table ? (
+            <DataTableToolbar
+              table={table}
+              title="Documentos"
+              searchValue={globalFilter}
+              onSearchValueChange={(value) => {
+                setGlobalFilter(value);
+                setPageIndex(0);
+              }}
+              searchPlaceholder="Buscar documentos..."
+              actionButton={{
+                label: "Novo Documento",
+                onClick: () =>
+                  router.push("/app/assinatura-digital/documentos/novo"),
+              }}
+              filtersSlot={
+                <Select
+                  value={statusFilter}
+                  onValueChange={handleStatusFilterChange}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os status</SelectItem>
+                    <SelectItem value="rascunho">Rascunho</SelectItem>
+                    <SelectItem value="pronto">Pronto</SelectItem>
+                    <SelectItem value="concluido">Concluído</SelectItem>
+                    <SelectItem value="cancelado">Cancelado</SelectItem>
+                  </SelectContent>
+                </Select>
+              }
+            />
+          ) : (
+            <div className="p-6" />
+          )
+        }
+        subHeader={
+          <div className="grid gap-4 md:grid-cols-5">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total</CardTitle>
+                <FileText className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.total}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Rascunhos</CardTitle>
+                <FileText className="h-4 w-4 text-gray-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.rascunho}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Prontos</CardTitle>
+                <Clock className="h-4 w-4 text-blue-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.pronto}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Concluídos</CardTitle>
+                <CheckCircle2 className="h-4 w-4 text-green-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.concluido}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Cancelados</CardTitle>
+                <XCircle className="h-4 w-4 text-red-600" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.cancelado}</div>
+              </CardContent>
+            </Card>
+          </div>
+        }
+        footer={
+          totalPages > 0 ? (
+            <DataPagination
+              pageIndex={pageIndex}
+              pageSize={pageSize}
+              total={totalFiltered}
+              totalPages={totalPages}
+              onPageChange={setPageIndex}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPageIndex(0);
+              }}
+              isLoading={isLoading}
+            />
+          ) : null
+        }
+      >
+        <DataTable
+          data={paginatedDocumentos}
+          columns={columns}
+          pagination={{
+            pageIndex,
+            pageSize,
+            total: totalFiltered,
+            totalPages,
+            onPageChange: setPageIndex,
+            onPageSizeChange: setPageSize,
+          }}
+          sorting={sorting}
+          onSortingChange={setSorting}
+          isLoading={isLoading}
+          error={error}
+          emptyMessage="Nenhum documento encontrado."
+          onTableReady={(t) =>
+            setTable(t as TanstackTable<DocumentoListItem>)
+          }
+          hidePagination
+        />
+      </DataShell>
 
       {/* Dialog de Detalhes */}
       <DialogFormShell
@@ -355,7 +490,6 @@ export function ListaDocumentosClient() {
           </div>
         ) : documentoSelecionado ? (
           <div className="space-y-6">
-            {/* Informações do Documento */}
             <div className="space-y-3">
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground">
@@ -398,7 +532,6 @@ export function ListaDocumentosClient() {
               </div>
             </div>
 
-            {/* Lista de Assinantes */}
             <div className="space-y-3">
               <h3 className="text-lg font-semibold">
                 Assinantes ({documentoSelecionado.assinantes.length})
@@ -459,9 +592,7 @@ export function ListaDocumentosClient() {
                                 {format(
                                   new Date(assinante.concluido_em),
                                   "dd/MM/yyyy HH:mm",
-                                  {
-                                    locale: ptBR,
-                                  }
+                                  { locale: ptBR }
                                 )}
                               </p>
                             )}
@@ -496,7 +627,6 @@ export function ListaDocumentosClient() {
               </div>
             </div>
 
-            {/* Downloads */}
             <div className="flex gap-3 pt-4 border-t">
               {documentoSelecionado.pdf_original_url && (
                 <Button
@@ -591,6 +721,6 @@ export function ListaDocumentosClient() {
           </div>
         )}
       </DialogFormShell>
-    </div>
+    </>
   );
 }
