@@ -41,7 +41,7 @@ export async function actionCriarCargo(dados: {
 
     // Invalidate cache
     await deleteCached(getCargosListKey({}));
-    revalidatePath("/usuarios");
+    revalidatePath("/app/usuarios");
 
     return { success: true, data };
   } catch (error) {
@@ -69,7 +69,7 @@ export async function actionAtualizarCargo(
     if (error) return { success: false, error: error.message };
 
     await deleteCached(getCargosListKey({}));
-    revalidatePath("/usuarios");
+    revalidatePath("/app/usuarios");
 
     return { success: true, data };
   } catch (error) {
@@ -101,7 +101,7 @@ export async function actionDeletarCargo(id: number) {
     if (error) return { success: false, error: error.message };
 
     await deleteCached(getCargosListKey({}));
-    revalidatePath("/usuarios");
+    revalidatePath("/app/usuarios");
 
     return { success: true };
   } catch (error) {

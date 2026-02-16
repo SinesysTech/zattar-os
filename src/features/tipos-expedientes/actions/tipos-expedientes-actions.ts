@@ -80,7 +80,7 @@ export async function actionCriarTipoExpediente(
 
         const data = await service.criar(input, user.id);
 
-        revalidatePath('/tipos-expedientes');
+        revalidatePath('/app/tipos-expedientes');
 
         return { success: true, data };
     } catch (error) {
@@ -116,7 +116,7 @@ export async function actionAtualizarTipoExpediente(
 
         const data = await service.atualizar(id, input);
 
-        revalidatePath('/tipos-expedientes');
+        revalidatePath('/app/tipos-expedientes');
 
         return { success: true, data };
     } catch (error) {
@@ -141,7 +141,7 @@ export async function actionDeletarTipoExpediente(
 
         await service.deletar(id);
 
-        revalidatePath('/tipos-expedientes');
+        revalidatePath('/app/tipos-expedientes');
 
         return { success: true };
     } catch (error) {

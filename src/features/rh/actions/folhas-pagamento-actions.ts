@@ -106,7 +106,7 @@ export async function actionGerarFolhaPagamento(formData: FormData) {
 
     const folha = await service.gerarFolhaPagamento(validacao.data, userId);
     
-    revalidatePath('/rh/folhas-pagamento');
+    revalidatePath('/app/rh/folhas-pagamento');
     return { success: true, data: folha };
   } catch (error) {
     return { 
@@ -150,9 +150,9 @@ export async function actionAprovarFolhaPagamento(id: number, formData: FormData
 
     const folha = await service.aprovarFolhaPagamento(id, validacao.data, userId);
     
-    revalidatePath('/rh/folhas-pagamento');
-    revalidatePath(`/rh/folhas-pagamento/${id}`);
-    revalidatePath('/financeiro'); // Invalidate financeiro as we created launches
+    revalidatePath('/app/rh/folhas-pagamento');
+    revalidatePath(`/app/rh/folhas-pagamento/${id}`);
+    revalidatePath('/app/financeiro'); // Invalidate financeiro as we created launches
     
     return { success: true, data: folha };
   } catch (error) {
@@ -184,9 +184,9 @@ export async function actionPagarFolhaPagamento(id: number, formData: FormData) 
 
     const folha = await service.pagarFolhaPagamento(id, validacao.data);
     
-    revalidatePath('/rh/folhas-pagamento');
-    revalidatePath(`/rh/folhas-pagamento/${id}`);
-    revalidatePath('/financeiro');
+    revalidatePath('/app/rh/folhas-pagamento');
+    revalidatePath(`/app/rh/folhas-pagamento/${id}`);
+    revalidatePath('/app/financeiro');
     
     return { success: true, data: folha };
   } catch (error) {
@@ -212,8 +212,8 @@ export async function actionAtualizarFolhaPagamento(id: number, formData: FormDa
     
     const folha = await service.atualizarFolhaPagamento(id, dados);
     
-    revalidatePath('/rh/folhas-pagamento');
-    revalidatePath(`/rh/folhas-pagamento/${id}`);
+    revalidatePath('/app/rh/folhas-pagamento');
+    revalidatePath(`/app/rh/folhas-pagamento/${id}`);
     return { success: true, data: folha };
   } catch (error) {
     return { 
@@ -254,9 +254,9 @@ export async function actionCancelarFolhaPagamento(id: number, motivo?: string) 
         await requireAuth(['folhas_pagamento:cancelar']);
         const folha = await service.cancelarFolhaPagamento(id, motivo);
         
-        revalidatePath('/rh/folhas-pagamento');
-        revalidatePath(`/rh/folhas-pagamento/${id}`);
-        revalidatePath('/financeiro');
+        revalidatePath('/app/rh/folhas-pagamento');
+        revalidatePath(`/app/rh/folhas-pagamento/${id}`);
+        revalidatePath('/app/financeiro');
 
         return { success: true, data: folha };
     } catch (error) {
@@ -272,8 +272,8 @@ export async function actionExcluirFolhaPagamento(id: number) {
     await requireAuth(['folhas_pagamento:deletar']); // Only draft deletion
     await service.deletarFolhaPagamento(id);
     
-    revalidatePath('/rh/folhas-pagamento');
-    
+    revalidatePath('/app/rh/folhas-pagamento');
+
     return { success: true };
   } catch (error) {
     return { 

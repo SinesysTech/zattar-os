@@ -117,8 +117,8 @@ export const actionCriarClienteSafe = authenticatedFormAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath('/partes/clientes');
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/clientes');
+    revalidatePath('/app/partes');
     return result.data;
   }
 );
@@ -136,9 +136,9 @@ export const actionAtualizarClienteSafe = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath('/partes/clientes');
-    revalidatePath(`/partes/clientes/${id}`);
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/clientes');
+    revalidatePath(`/app/partes/clientes/${id}`);
+    revalidatePath('/app/partes');
     return result.data;
   }
 );
@@ -153,9 +153,9 @@ export const actionDesativarClienteSafe = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath('/partes/clientes');
-    revalidatePath(`/partes/clientes/${id}`);
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/clientes');
+    revalidatePath(`/app/partes/clientes/${id}`);
+    revalidatePath('/app/partes');
     return null;
   }
 );
@@ -190,8 +190,8 @@ export async function actionAtualizarCliente(id: number, input: Parameters<typeo
   try {
     const result = await service.atualizarCliente(id, input);
     if (!result.success) return { success: false, error: result.error.message };
-    revalidatePath('/partes');
-    revalidatePath(`/partes/clientes/${id}`);
+    revalidatePath('/app/partes');
+    revalidatePath(`/app/partes/clientes/${id}`);
     return { success: true, data: result.data };
   } catch (error) {
     return { success: false, error: String(error) };

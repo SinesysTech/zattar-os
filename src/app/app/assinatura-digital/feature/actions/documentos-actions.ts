@@ -68,7 +68,7 @@ export const actionCreateDocumento = authenticatedAction(
     });
 
     // Revalidar listagem de documentos
-    revalidatePath("/assinatura-digital/documentos");
+    revalidatePath("/app/assinatura-digital/documentos");
 
     // Retornar apenas os dados - o wrapper adiciona success: true automaticamente
     return resultado;
@@ -106,8 +106,8 @@ export const actionSetDocumentoAnchors = authenticatedAction(
     });
 
     // Revalidar documento específico
-    revalidatePath(`/assinatura-digital/documentos/${input.documento_uuid}`);
-    revalidatePath("/assinatura-digital/documentos");
+    revalidatePath(`/app/assinatura-digital/documentos/${input.documento_uuid}`);
+    revalidatePath("/app/assinatura-digital/documentos");
 
     // Retornar os dados - o wrapper adiciona success: true automaticamente
     return result;
@@ -124,7 +124,7 @@ export const actionAddDocumentoSigner = authenticatedAction(
       input.documento_uuid,
       input.signer
     );
-    revalidatePath(`/assinatura-digital/documentos/${input.documento_uuid}`);
+    revalidatePath(`/app/assinatura-digital/documentos/${input.documento_uuid}`);
     return result;
   }
 );
@@ -139,7 +139,7 @@ export const actionRemoveDocumentoSigner = authenticatedAction(
       input.documento_uuid,
       input.signer_id
     );
-    revalidatePath(`/assinatura-digital/documentos/${input.documento_uuid}`);
+    revalidatePath(`/app/assinatura-digital/documentos/${input.documento_uuid}`);
     return { success: true };
   }
 );
@@ -155,7 +155,7 @@ export const actionDeleteDocumento = authenticatedAction(
     const result = await documentosService.deleteDocumento(input.uuid);
 
     // Revalidar listagem de documentos
-    revalidatePath("/assinatura-digital/documentos");
+    revalidatePath("/app/assinatura-digital/documentos");
 
     return result;
   }
@@ -173,8 +173,8 @@ export const actionFinalizeDocumento = authenticatedAction(
     const result = await documentosService.finalizeDocumento(input.uuid);
 
     // Revalidar documento específico e listagem
-    revalidatePath(`/assinatura-digital/documentos/${input.uuid}`);
-    revalidatePath("/assinatura-digital/documentos");
+    revalidatePath(`/app/assinatura-digital/documentos/${input.uuid}`);
+    revalidatePath("/app/assinatura-digital/documentos");
 
     return result;
   }

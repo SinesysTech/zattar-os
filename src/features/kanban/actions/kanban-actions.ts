@@ -17,7 +17,7 @@ export const actionCriarColunaKanban = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath("/kanban");
+    revalidatePath("/app/kanban");
     return result.data;
   }
 );
@@ -29,7 +29,7 @@ export const actionCriarTarefaKanban = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath("/kanban");
+    revalidatePath("/app/kanban");
     return result.data;
   }
 );
@@ -41,7 +41,7 @@ export const actionSincronizarKanban = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath("/kanban");
+    revalidatePath("/app/kanban");
     return { success: true };
   }
 );
@@ -74,7 +74,7 @@ export const actionExcluirColunaKanban = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath("/kanban");
+    revalidatePath("/app/kanban");
     return { success: true };
   }
 );

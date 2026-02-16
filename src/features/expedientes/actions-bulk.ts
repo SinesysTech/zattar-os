@@ -104,11 +104,11 @@ export async function actionBulkTransferirResponsavel(
       };
     }
 
-    revalidatePath("/expedientes");
-    revalidatePath("/expedientes/semana");
-    revalidatePath("/expedientes/mes");
-    revalidatePath("/expedientes/ano");
-    revalidatePath("/expedientes/lista");
+    revalidatePath("/app/expedientes");
+    revalidatePath("/app/expedientes/semana");
+    revalidatePath("/app/expedientes/mes");
+    revalidatePath("/app/expedientes/ano");
+    revalidatePath("/app/expedientes/lista");
 
     return {
       success: true,
@@ -211,11 +211,11 @@ export async function actionBulkBaixar(
       };
     }
 
-    revalidatePath("/expedientes");
-    revalidatePath("/expedientes/semana");
-    revalidatePath("/expedientes/mes");
-    revalidatePath("/expedientes/ano");
-    revalidatePath("/expedientes/lista");
+    revalidatePath("/app/expedientes");
+    revalidatePath("/app/expedientes/semana");
+    revalidatePath("/app/expedientes/mes");
+    revalidatePath("/app/expedientes/ano");
+    revalidatePath("/app/expedientes/lista");
 
     return {
       success: true,

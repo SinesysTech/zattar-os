@@ -44,7 +44,7 @@ export const actionCriarTodo = authenticatedAction(
   async (data, { user }) => {
     const result = await service.criarTodo(user.id, data);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/todo");
+    revalidatePath("/app/todo");
     return result.data;
   }
 );
@@ -54,7 +54,7 @@ export const actionAtualizarTodo = authenticatedAction(
   async (data, { user }) => {
     const result = await service.atualizarTodo(user.id, data);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/todo");
+    revalidatePath("/app/todo");
     return result.data;
   }
 );
@@ -64,7 +64,7 @@ export const actionRemoverTodo = authenticatedAction(
   async (data, { user }) => {
     const result = await service.removerTodo(user.id, data);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/todo");
+    revalidatePath("/app/todo");
     return { success: true };
   }
 );
@@ -74,7 +74,7 @@ export const actionReordenarTodos = authenticatedAction(
   async (data, { user }) => {
     const result = await service.reordenarTodos(user.id, data);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/todo");
+    revalidatePath("/app/todo");
     return { success: true };
   }
 );
@@ -84,7 +84,7 @@ export const actionCriarSubtarefa = authenticatedAction(
   async (data, { user }) => {
     const result = await service.criarSubtarefa(user.id, data);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/todo");
+    revalidatePath("/app/todo");
     return result.data;
   }
 );
@@ -94,7 +94,7 @@ export const actionAtualizarSubtarefa = authenticatedAction(
   async (data, { user }) => {
     const result = await service.atualizarSubtarefa(user.id, data);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/todo");
+    revalidatePath("/app/todo");
     return result.data;
   }
 );
@@ -104,7 +104,7 @@ export const actionRemoverSubtarefa = authenticatedAction(
   async (data, { user }) => {
     const result = await service.removerSubtarefa(user.id, data);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/todo");
+    revalidatePath("/app/todo");
     return result.data;
   }
 );
@@ -114,7 +114,7 @@ export const actionAdicionarComentario = authenticatedAction(
   async (data, { user }) => {
     const result = await service.adicionarComentario(user.id, data);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/todo");
+    revalidatePath("/app/todo");
     return result.data;
   }
 );
@@ -124,7 +124,7 @@ export const actionRemoverComentario = authenticatedAction(
   async (data, { user }) => {
     const result = await service.removerComentario(user.id, data);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/todo");
+    revalidatePath("/app/todo");
     return result.data;
   }
 );
@@ -134,7 +134,7 @@ export const actionAdicionarAnexo = authenticatedAction(
   async (data, { user }) => {
     const result = await service.adicionarAnexo(user.id, data);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/todo");
+    revalidatePath("/app/todo");
     return result.data;
   }
 );
@@ -144,7 +144,7 @@ export const actionRemoverAnexo = authenticatedAction(
   async (data, { user }) => {
     const result = await service.removerAnexo(user.id, data);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/todo");
+    revalidatePath("/app/todo");
     return result.data;
   }
 );

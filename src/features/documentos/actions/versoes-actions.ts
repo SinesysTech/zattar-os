@@ -24,8 +24,8 @@ export async function actionRestaurarVersao(versao_id: number) {
       return { success: false, error: 'Não autenticado' };
     }
     const documento = await service.restaurarVersao(versao_id, user.id);
-    revalidatePath(`/documentos/${documento.id}`);
-    revalidatePath(`/documentos/${documento.id}/versoes`);
+    revalidatePath(`/app/documentos/${documento.id}`);
+    revalidatePath(`/app/documentos/${documento.id}/versoes`);
     return { success: true, data: documento };
   } catch (error) {
     return { success: false, error: String(error) };

@@ -48,7 +48,7 @@ export const actionCriarEndereco = authenticatedAction(
     const result = await service.criarEndereco(input);
 
     if (result.success) {
-      revalidatePath('/enderecos');
+      revalidatePath('/app/enderecos');
     }
 
     return result;
@@ -61,7 +61,7 @@ export const actionAtualizarEndereco = authenticatedAction(
     const result = await service.atualizarEndereco(input);
 
     if (result.success) {
-      revalidatePath('/enderecos');
+      revalidatePath('/app/enderecos');
     }
 
     return result;
@@ -95,7 +95,7 @@ export const actionDeletarEndereco = authenticatedAction(
     const result = await service.deletarEndereco(input.id);
 
     if (result.success) {
-      revalidatePath('/enderecos');
+      revalidatePath('/app/enderecos');
     }
 
     return result;

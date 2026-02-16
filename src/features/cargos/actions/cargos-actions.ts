@@ -83,8 +83,8 @@ export async function actionCriarCargo(
     }
 
     const result = await criarCargo(params, user.id);
-    revalidatePath("/usuarios/cargos"); // Assuming UI location
-    revalidatePath("/usuarios");
+    revalidatePath("/app/usuarios/cargos"); // Assuming UI location
+    revalidatePath("/app/usuarios");
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -110,7 +110,7 @@ export async function actionAtualizarCargo(
     }
 
     const result = await atualizarCargo(id, params);
-    revalidatePath("/usuarios/cargos");
+    revalidatePath("/app/usuarios/cargos");
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -128,7 +128,7 @@ export async function actionDeletarCargo(id: number): Promise<ActionResponse> {
     if (!hasPermission) return { success: false, error: "Sem permissão" };
 
     await deletarCargo(id);
-    revalidatePath("/usuarios/cargos");
+    revalidatePath("/app/usuarios/cargos");
     return { success: true };
   } catch (error) {
     // Check if error is JSON (CargoComUsuariosError)

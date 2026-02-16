@@ -74,7 +74,7 @@ export async function criarSegmentoAction(
     const supabase = await createClient();
     const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const segmento = await assinaturaDigitalService.criarSegmento(input);
-    revalidatePath('/assinatura-digital/segmentos');
+    revalidatePath('/app/assinatura-digital/segmentos');
     return { success: true, data: segmento };
   } catch (error) {
     return handleError(error);
@@ -99,7 +99,7 @@ export async function atualizarSegmentoAction(
     const supabase = await createClient();
     const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const segmento = await assinaturaDigitalService.atualizarSegmento(id, input);
-    revalidatePath('/assinatura-digital/segmentos');
+    revalidatePath('/app/assinatura-digital/segmentos');
     return { success: true, data: segmento };
   } catch (error) {
     return handleError(error);
@@ -187,7 +187,7 @@ export async function criarTemplateAction(
       }
     });
 
-    revalidatePath('/assinatura-digital/templates');
+    revalidatePath('/app/assinatura-digital/templates');
     return { success: true, data: template };
   } catch (error) {
     return handleError(error);

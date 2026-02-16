@@ -1,15 +1,19 @@
 /**
- * TAREFAS SERVICE (TEMPLATE TASKS)
+ * TAREFAS SERVICE (TEMPLATE TASKS + EVENTOS)
  *
- * Camada de regras de negócio para o módulo de tarefas no modelo do template.
- * Sem retrocompatibilidade com o modelo antigo.
+ * Camada de regras de negócio para o módulo de tarefas.
+ * Inclui agregação virtual de eventos (audiências, expedientes, perícias, obrigações).
  */
 
 import { appError, err, ok, Result } from "@/types";
 import { z } from "zod";
-import type { CreateTaskInput, ListTasksParams, Task, UpdateTaskInput } from "./domain";
+import type { CreateTaskInput, ListTasksParams, Task, TarefaDisplayItem, UpdateTaskInput } from "./domain";
 import { createTaskSchema, listTasksSchema, taskSchema, updateTaskSchema } from "./domain";
 import * as repo from "./repository";
+import { listarTodosEventos } from "@/lib/event-aggregation/service";
+import { mapSourceStatusToTarefaStatus, calcularPrioridade } from "@/lib/event-aggregation/domain";
+import type { UnifiedEventItem } from "@/lib/event-aggregation/domain";
+import type { EventSource } from "@/lib/event-aggregation/domain";
 
 function validate<T>(schema: z.ZodSchema, input: unknown): Result<T> {
   const parsed = schema.safeParse(input);
@@ -57,5 +61,83 @@ export async function removerTarefa(usuarioId: number, id: string): Promise<Resu
   const idVal = z.string().min(1).safeParse(id);
   if (!idVal.success) return err(appError("VALIDATION_ERROR", "ID inválido"));
   return repo.deleteTask(usuarioId, idVal.data);
+}
+
+// =============================================================================
+// AGREGAÇÃO VIRTUAL: Tarefas manuais + Eventos do sistema
+// =============================================================================
+
+const SOURCE_TO_LABEL: Record<EventSource, TarefaDisplayItem["label"]> = {
+  audiencias: "audiencia",
+  expedientes: "expediente",
+  pericias: "pericia",
+  obrigacoes: "obrigacao",
+};
+
+function eventoToTarefaDisplay(evento: UnifiedEventItem): TarefaDisplayItem {
+  return {
+    id: evento.id,
+    title: evento.titulo,
+    status: mapSourceStatusToTarefaStatus(evento.source, evento.statusOrigem),
+    label: SOURCE_TO_LABEL[evento.source],
+    priority: calcularPrioridade(evento.dataVencimento, evento.prazoVencido),
+    source: evento.source,
+    sourceEntityId: evento.sourceEntityId,
+    url: evento.url,
+    isVirtual: true,
+    prazoVencido: evento.prazoVencido,
+    responsavelNome: evento.responsavelNome,
+  };
+}
+
+/**
+ * Lista tarefas manuais + eventos virtuais do sistema.
+ * - Admin (isSuperAdmin) vê tudo
+ * - Outros usuários veem apenas eventos atribuídos a eles (default)
+ * - showAll=true permite ver tudo independente do role
+ */
+export async function listarTarefasComEventos(
+  usuarioId: number,
+  isSuperAdmin: boolean,
+  params: ListTasksParams = {},
+  showAll = false
+): Promise<Result<TarefaDisplayItem[]>> {
+  // 1. Buscar tarefas manuais
+  const manualResult = await listarTarefas(usuarioId, params);
+  const manualTasks: TarefaDisplayItem[] = manualResult.success
+    ? manualResult.data.map((t) => ({ ...t, isVirtual: false }))
+    : [];
+
+  // 2. Buscar eventos do sistema
+  let eventos: UnifiedEventItem[] = [];
+  try {
+    const responsavelFilter = isSuperAdmin || showAll ? undefined : usuarioId;
+    eventos = await listarTodosEventos({
+      responsavelId: responsavelFilter,
+    });
+  } catch {
+    // Em caso de erro, retorna apenas as tarefas manuais
+  }
+
+  // 3. Converter eventos para formato de tarefa display
+  let virtualTasks = eventos.map(eventoToTarefaDisplay);
+
+  // 4. Aplicar filtros de params aos eventos virtuais
+  if (params.status) {
+    virtualTasks = virtualTasks.filter((t) => t.status === params.status);
+  }
+  if (params.label) {
+    virtualTasks = virtualTasks.filter((t) => t.label === params.label);
+  }
+  if (params.priority) {
+    virtualTasks = virtualTasks.filter((t) => t.priority === params.priority);
+  }
+  if (params.search) {
+    const search = params.search.toLowerCase();
+    virtualTasks = virtualTasks.filter((t) => t.title.toLowerCase().includes(search));
+  }
+
+  // 5. Merge: tarefas manuais primeiro, depois eventos
+  return ok([...manualTasks, ...virtualTasks]);
 }
 

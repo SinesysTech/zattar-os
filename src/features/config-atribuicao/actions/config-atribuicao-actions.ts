@@ -80,7 +80,6 @@ export async function actionCriarRegiaoAtribuicao(
       };
     }
 
-    revalidatePath("/processos");
     revalidatePath("/app/processos");
 
     return {
@@ -144,7 +143,6 @@ export async function actionAtualizarRegiaoAtribuicao(
       };
     }
 
-    revalidatePath("/processos");
     revalidatePath("/app/processos");
 
     return {
@@ -178,7 +176,6 @@ export async function actionExcluirRegiaoAtribuicao(
       };
     }
 
-    revalidatePath("/processos");
     revalidatePath("/app/processos");
 
     return {
@@ -213,7 +210,6 @@ export async function actionAlternarStatusRegiao(
       };
     }
 
-    revalidatePath("/processos");
     revalidatePath("/app/processos");
 
     return {

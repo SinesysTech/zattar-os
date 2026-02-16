@@ -40,7 +40,7 @@ export const actionCriarNota = authenticatedAction(
       console.error("[actionCriarNota] Erro ao criar nota:", result.error);
       throw new Error(result.error.message);
     }
-    revalidatePath("/notas");
+    revalidatePath("/app/notas");
     console.log("[actionCriarNota] Nota criada com sucesso:", result.data);
     return result.data;
   }
@@ -53,7 +53,7 @@ export const actionAtualizarNota = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath("/notas");
+    revalidatePath("/app/notas");
     return result.data;
   }
 );
@@ -65,7 +65,7 @@ export const actionArquivarNota = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath("/notas");
+    revalidatePath("/app/notas");
     return { success: true };
   }
 );
@@ -77,7 +77,7 @@ export const actionExcluirNota = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath("/notas");
+    revalidatePath("/app/notas");
     return { success: true };
   }
 );
@@ -89,7 +89,7 @@ export const actionCriarEtiqueta = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath("/notas");
+    revalidatePath("/app/notas");
     return result.data;
   }
 );
@@ -101,7 +101,7 @@ export const actionAtualizarEtiqueta = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath("/notas");
+    revalidatePath("/app/notas");
     return result.data;
   }
 );
@@ -113,7 +113,7 @@ export const actionExcluirEtiqueta = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath("/notas");
+    revalidatePath("/app/notas");
     return { success: true };
   }
 );

@@ -415,8 +415,8 @@ export async function actionCriarCliente(
       }
     }
 
-    revalidatePath('/partes/clientes');
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/clientes');
+    revalidatePath('/app/partes');
 
     return {
       success: true,
@@ -513,9 +513,9 @@ export async function actionAtualizarClienteForm(
       };
     }
 
-    revalidatePath('/partes/clientes');
-    revalidatePath(`/partes/clientes/${id}`);
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/clientes');
+    revalidatePath(`/app/partes/clientes/${id}`);
+    revalidatePath('/app/partes');
 
     return {
       success: true,
@@ -581,9 +581,9 @@ export async function actionDesativarCliente(id: number): Promise<ActionResult> 
       };
     }
 
-    revalidatePath('/partes/clientes');
-    revalidatePath(`/partes/clientes/${id}`);
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/clientes');
+    revalidatePath(`/app/partes/clientes/${id}`);
+    revalidatePath('/app/partes');
 
     return {
       success: true,
@@ -663,8 +663,8 @@ export async function actionCriarParteContraria(
       }
     }
 
-    revalidatePath('/partes/partes-contrarias');
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/partes-contrarias');
+    revalidatePath('/app/partes');
 
     return {
       success: true,
@@ -759,9 +759,9 @@ export async function actionAtualizarParteContraria(
       };
     }
 
-    revalidatePath('/partes/partes-contrarias');
-    revalidatePath(`/partes/partes-contrarias/${id}`);
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/partes-contrarias');
+    revalidatePath(`/app/partes/partes-contrarias/${id}`);
+    revalidatePath('/app/partes');
 
     return {
       success: true,
@@ -871,8 +871,8 @@ export async function actionCriarTerceiro(
       }
     }
 
-    revalidatePath('/partes/terceiros');
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/terceiros');
+    revalidatePath('/app/partes');
 
     return {
       success: true,
@@ -973,9 +973,9 @@ export async function actionAtualizarTerceiro(
       };
     }
 
-    revalidatePath('/partes/terceiros');
-    revalidatePath(`/partes/terceiros/${id}`);
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/terceiros');
+    revalidatePath(`/app/partes/terceiros/${id}`);
+    revalidatePath('/app/partes');
 
     return {
       success: true,

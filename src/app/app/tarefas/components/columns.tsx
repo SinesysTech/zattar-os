@@ -1,16 +1,17 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { ExternalLink } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { labels, priorities, statuses } from "../data/data";
-import { Task } from "../data/schema";
+import type { TarefaDisplayItem } from "../domain";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 
-export const columns: ColumnDef<Task>[] = [
+export const columns: ColumnDef<TarefaDisplayItem>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -37,7 +38,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => <div className="w-[80px] truncate">{row.getValue("id")}</div>,
     enableSorting: false,
     enableHiding: false
   },
@@ -45,12 +46,35 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: "title",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Título" />,
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.label);
+      const label = labels.find((l) => l.value === row.original.label);
+      const isVirtual = row.original.isVirtual;
+      const url = row.original.url;
 
       return (
-        <div className="flex gap-2">
-          {label && <Badge variant="outline">{label.label}</Badge>}
-          <span className="max-w-[500px] truncate font-medium">{row.getValue("title")}</span>
+        <div className="flex items-center gap-2">
+          {label && (
+            <Badge variant={isVirtual ? "secondary" : "outline"} className="shrink-0">
+              {"icon" in label && label.icon ? <label.icon className="mr-1 size-3" /> : null}
+              {label.label}
+            </Badge>
+          )}
+          {url ? (
+            <a
+              href={url}
+              className="flex max-w-[500px] items-center gap-1 truncate font-medium text-foreground hover:text-primary hover:underline"
+              title="Abrir no módulo de origem"
+            >
+              <span className="truncate">{row.getValue("title")}</span>
+              <ExternalLink className="size-3 shrink-0 text-muted-foreground" />
+            </a>
+          ) : (
+            <span className="max-w-[500px] truncate font-medium">{row.getValue("title")}</span>
+          )}
+          {row.original.prazoVencido && (
+            <Badge variant="destructive" className="shrink-0 text-[10px]">
+              Vencido
+            </Badge>
+          )}
         </div>
       );
     }
@@ -99,6 +123,10 @@ export const columns: ColumnDef<Task>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />
+    cell: ({ row }) => {
+      // Eventos virtuais não têm ações de edição (gerenciados no módulo de origem)
+      if (row.original.isVirtual) return null;
+      return <DataTableRowActions row={row} />;
+    }
   }
 ];

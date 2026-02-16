@@ -111,14 +111,16 @@ export const criarDocumentoSchema = z.object({
 // Inferred Types
 // ---------------------------------------------------------------------------
 
-export type EnviarMensagemInput = z.infer<typeof enviarMensagemSchema>;
-export type ExecutarWorkflowInput = z.infer<typeof executarWorkflowSchema>;
-export type CompletionInput = z.infer<typeof completionSchema>;
-export type ListarConversasInput = z.infer<typeof listarConversasSchema>;
-export type ObterHistoricoInput = z.infer<typeof obterHistoricoSchema>;
-export type EnviarFeedbackInput = z.infer<typeof enviarFeedbackSchema>;
-export type CriarDatasetInput = z.infer<typeof criarDatasetSchema>;
-export type CriarDocumentoInput = z.infer<typeof criarDocumentoSchema>;
+// z.input → tipo de entrada (antes dos defaults), usado como parâmetro dos services
+// z.infer → tipo de saída (após defaults), usado internamente após validação
+export type EnviarMensagemInput = z.input<typeof enviarMensagemSchema>;
+export type ExecutarWorkflowInput = z.input<typeof executarWorkflowSchema>;
+export type CompletionInput = z.input<typeof completionSchema>;
+export type ListarConversasInput = z.input<typeof listarConversasSchema>;
+export type ObterHistoricoInput = z.input<typeof obterHistoricoSchema>;
+export type EnviarFeedbackInput = z.input<typeof enviarFeedbackSchema>;
+export type CriarDatasetInput = z.input<typeof criarDatasetSchema>;
+export type CriarDocumentoInput = z.input<typeof criarDocumentoSchema>;
 
 // ---------------------------------------------------------------------------
 // Domain Interfaces (camelCase)

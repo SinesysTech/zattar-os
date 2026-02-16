@@ -133,7 +133,7 @@ export async function actionCriarOrcamento(dto: CriarOrcamentoDTO, usuarioId: st
         }
 
         const orcamento = await criarOrcamento(dto, usuarioId);
-        revalidatePath('/financeiro/orcamentos');
+        revalidatePath('/app/financeiro/orcamentos');
 
         return { success: true, data: orcamento };
     } catch (error) {
@@ -162,8 +162,8 @@ export async function actionAtualizarOrcamento(id: number, dto: AtualizarOrcamen
         }
 
         const orcamento = await atualizarOrcamento(id, dto);
-        revalidatePath('/financeiro/orcamentos');
-        revalidatePath(`/financeiro/orcamentos/${id}`);
+        revalidatePath('/app/financeiro/orcamentos');
+        revalidatePath(`/app/financeiro/orcamentos/${id}`);
 
         return { success: true, data: orcamento };
     } catch (error) {
@@ -184,7 +184,7 @@ export async function actionExcluirOrcamento(id: number) {
         }
 
         await deletarOrcamento(id);
-        revalidatePath('/financeiro/orcamentos');
+        revalidatePath('/app/financeiro/orcamentos');
 
         return { success: true, message: 'Orçamento deletado com sucesso' };
     } catch (error) {
@@ -208,8 +208,8 @@ export async function actionExcluirItemOrcamento(orcamentoId: number, itemId: nu
         }
 
         await excluirItemOrcamento(orcamentoId, itemId);
-        revalidatePath(`/financeiro/orcamentos/${orcamentoId}`);
-        revalidatePath('/financeiro/orcamentos');
+        revalidatePath(`/app/financeiro/orcamentos/${orcamentoId}`);
+        revalidatePath('/app/financeiro/orcamentos');
 
         return { success: true, message: 'Item excluído com sucesso' };
     } catch (error) {
@@ -229,7 +229,7 @@ export async function actionCriarItemOrcamento(orcamentoId: number, dto: CriarOr
         }
 
         const item = await OrcamentosService.criarItem(orcamentoId, dto);
-        revalidatePath(`/financeiro/orcamentos/${orcamentoId}`);
+        revalidatePath(`/app/financeiro/orcamentos/${orcamentoId}`);
         return { success: true, data: item };
     } catch (error) {
         const erroMsg = error instanceof Error ? error.message : 'Erro interno';
@@ -254,7 +254,7 @@ export async function actionAtualizarItemOrcamento(
         }
 
         const item = await OrcamentosService.atualizarItem(orcamentoId, itemId, dto);
-        revalidatePath(`/financeiro/orcamentos/${orcamentoId}`);
+        revalidatePath(`/app/financeiro/orcamentos/${orcamentoId}`);
         return { success: true, data: item };
     } catch (error) {
         const erroMsg = error instanceof Error ? error.message : 'Erro interno';
@@ -280,8 +280,8 @@ export async function actionAprovarOrcamento(id: number, usuarioId: string, obse
         }
 
         const orcamento = await aprovarOrcamento(id, usuarioId, observacoes);
-        revalidatePath('/financeiro/orcamentos');
-        revalidatePath(`/financeiro/orcamentos/${id}`);
+        revalidatePath('/app/financeiro/orcamentos');
+        revalidatePath(`/app/financeiro/orcamentos/${id}`);
 
         return { success: true, data: orcamento, message: 'Orçamento aprovado com sucesso' };
     } catch (error) {
@@ -306,8 +306,8 @@ export async function actionIniciarExecucaoOrcamento(id: number, usuarioId: stri
         }
 
         const orcamento = await iniciarExecucaoOrcamento(id, usuarioId);
-        revalidatePath('/financeiro/orcamentos');
-        revalidatePath(`/financeiro/orcamentos/${id}`);
+        revalidatePath('/app/financeiro/orcamentos');
+        revalidatePath(`/app/financeiro/orcamentos/${id}`);
 
         return { success: true, data: orcamento, message: 'Execução do orçamento iniciada' };
     } catch (error) {
@@ -332,8 +332,8 @@ export async function actionEncerrarOrcamento(id: number, usuarioId: string, obs
         }
 
         const orcamento = await encerrarOrcamento(id, usuarioId, observacoes);
-        revalidatePath('/financeiro/orcamentos');
-        revalidatePath(`/financeiro/orcamentos/${id}`);
+        revalidatePath('/app/financeiro/orcamentos');
+        revalidatePath(`/app/financeiro/orcamentos/${id}`);
 
         return { success: true, data: orcamento, message: 'Orçamento encerrado com sucesso' };
     } catch (error) {

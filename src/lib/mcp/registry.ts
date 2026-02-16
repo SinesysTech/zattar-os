@@ -27,6 +27,7 @@
  * - Assinatura Digital (1 tool)
  * - Tarefas (7 tools) - Inclui agendamento de reuniões Zoom
  * - Chatwoot (16 tools) - Integração com Chatwoot Contacts e Conversations
+ * - Dify (13 tools) - Integração com Dify AI Platform (chat, workflows, knowledge base)
  */
 
 import {
@@ -52,6 +53,7 @@ import {
   registerAssinaturaDigitalTools,
   registerTarefasTools,
   registerChatwootTools,
+  registerDifyTools,
 } from './registries';
 
 /**
@@ -98,6 +100,7 @@ export async function registerAllTools(): Promise<void> {
   await registerAssinaturaDigitalTools();
   await registerTarefasTools();
   await registerChatwootTools();
+  await registerDifyTools();
 
   toolsRegistered = true;
   console.log('[MCP Registry] Registro concluído');

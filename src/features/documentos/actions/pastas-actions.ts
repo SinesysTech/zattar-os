@@ -35,7 +35,7 @@ export async function actionCriarPasta(formData: FormData) {
     };
 
     const pasta = await service.criarPasta(params, user.id);
-    revalidatePath('/documentos');
+    revalidatePath('/app/documentos');
     return { success: true, data: pasta };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -49,7 +49,7 @@ export async function actionMoverDocumento(documento_id: number, pasta_id: numbe
       return { success: false, error: 'Não autenticado' };
     }
     const documento = await service.moverDocumento(documento_id, pasta_id, user.id);
-    revalidatePath('/documentos');
+    revalidatePath('/app/documentos');
     return { success: true, data: documento };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -63,7 +63,7 @@ export async function actionDeletarPasta(id: number) {
       return { success: false, error: 'Não autenticado' };
     }
     await service.deletarPasta(id, user.id);
-    revalidatePath('/documentos');
+    revalidatePath('/app/documentos');
     return { success: true };
   } catch (error) {
     return { success: false, error: String(error) };

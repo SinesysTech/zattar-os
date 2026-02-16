@@ -167,7 +167,7 @@ export async function actionCriarLembrete(
 
     if (result.success) {
       // Revalidar a página do dashboard para refletir o novo lembrete
-      revalidatePath('/dashboard/geral');
+      revalidatePath('/app/dashboard/geral');
 
       return {
         success: true,
@@ -212,7 +212,7 @@ export async function actionAtualizarLembrete(
 
     if (result.success) {
       // Revalidar a página do dashboard
-      revalidatePath('/dashboard/geral');
+      revalidatePath('/app/dashboard/geral');
 
       return {
         success: true,
@@ -257,7 +257,7 @@ export async function actionMarcarLembreteConcluido(
 
     if (result.success) {
       // Revalidar a página do dashboard
-      revalidatePath('/dashboard/geral');
+      revalidatePath('/app/dashboard/geral');
 
       return {
         success: true,
@@ -303,7 +303,7 @@ export async function actionDeletarLembrete(
 
     if (result.success) {
       // Revalidar a página do dashboard
-      revalidatePath('/dashboard/geral');
+      revalidatePath('/app/dashboard/geral');
 
       return {
         success: true,

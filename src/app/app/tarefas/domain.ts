@@ -1,16 +1,17 @@
 /**
- * TAREFAS DOMAIN (TEMPLATE TASKS)
+ * TAREFAS DOMAIN (TEMPLATE TASKS + EVENTOS)
  *
- * Domínio do módulo de tarefas alinhado 1:1 ao template de Tarefas (TanStack Table).
- * Sem mapeamentos/compatibilidade: o banco e o código usam exatamente estes campos.
+ * Domínio do módulo de tarefas alinhado ao template de Tarefas (TanStack Table)
+ * com suporte a eventos virtuais (audiências, expedientes, perícias, obrigações).
  */
 
 import { z } from "zod";
+import type { EventSource } from "@/lib/event-aggregation/domain";
 
 export const taskStatusSchema = z.enum(["backlog", "todo", "in progress", "done", "canceled"]);
 export type TaskStatus = z.infer<typeof taskStatusSchema>;
 
-export const taskLabelSchema = z.enum(["bug", "feature", "documentation"]);
+export const taskLabelSchema = z.enum(["bug", "feature", "documentation", "audiencia", "expediente", "pericia", "obrigacao"]);
 export type TaskLabel = z.infer<typeof taskLabelSchema>;
 
 export const taskPrioritySchema = z.enum(["low", "medium", "high"]);
@@ -27,6 +28,18 @@ export const taskSchema = z.object({
   priority: taskPrioritySchema,
 });
 export type Task = z.infer<typeof taskSchema>;
+
+/**
+ * Tipo display unificado: task manual OU evento virtual.
+ */
+export interface TarefaDisplayItem extends Task {
+  source?: EventSource;
+  sourceEntityId?: string | number;
+  url?: string;
+  isVirtual?: boolean;
+  prazoVencido?: boolean;
+  responsavelNome?: string;
+}
 
 /**
  * Criação: id é gerado no banco (ex: TASK-0001)

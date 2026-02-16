@@ -51,7 +51,7 @@ export const actionCriarQuadroCustom = authenticatedAction(
   async (data, { user }) => {
     const result = await service.criarQuadroCustom(user.id, data.titulo);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/kanban");
+    revalidatePath("/app/kanban");
     return result.data;
   }
 );
@@ -61,7 +61,7 @@ export const actionExcluirQuadroCustom = authenticatedAction(
   async (data, { user }) => {
     const result = await service.excluirQuadroCustom(user.id, data.boardId);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/kanban");
+    revalidatePath("/app/kanban");
     return { success: true };
   }
 );
@@ -71,7 +71,7 @@ export const actionAtualizarStatusEntidade = authenticatedAction(
   async (data, { user }) => {
     const result = await service.atualizarStatusEntidade(data, user.id);
     if (!result.success) throw new Error(result.error.message);
-    revalidatePath("/kanban");
+    revalidatePath("/app/kanban");
     return { success: true };
   }
 );

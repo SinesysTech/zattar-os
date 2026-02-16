@@ -75,9 +75,9 @@ export async function actionSalvarPermissoes(usuarioId: number, permissoes: Perm
     
     // Call service to replace permissions
     await substituirPermissoes(usuarioId, permissoes, userId);
-    
-    revalidatePath(`/usuarios/${usuarioId}`);
-    
+
+    revalidatePath(`/app/usuarios/${usuarioId}`);
+
     return { success: true };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : 'Erro ao salvar permissões' };

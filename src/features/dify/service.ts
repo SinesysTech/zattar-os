@@ -28,6 +28,7 @@ import {
   enviarFeedbackSchema,
   criarDatasetSchema,
   criarDocumentoSchema,
+  StatusExecucao,
 } from './domain';
 import type {
   EnviarMensagemInput,
@@ -254,7 +255,7 @@ export class DifyService {
         workflowRunId: response.workflow_run_id,
         workflowId: response.data.workflow_id,
         taskId: response.task_id,
-        status: response.data.status,
+        status: response.data.status as StatusExecucao,
         inputs: validation.data.inputs,
         outputs: response.data.outputs,
         erro: response.data.error,

@@ -63,7 +63,7 @@ export async function actionUploadArquivo(formData: FormData) {
       });
     }
 
-    revalidatePath(`/documentos/${documento_id}`);
+    revalidatePath(`/app/documentos/${documento_id}`);
     return { success: true, data: upload };
   } catch (error) {
     return { success: false, error: String(error) };

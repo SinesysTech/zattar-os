@@ -62,8 +62,8 @@ export async function actionUploadCover(usuarioId: number, formData: FormData) {
     }
 
     await invalidateUsuariosCache();
-    revalidatePath(`/usuarios/${usuarioId}`);
-    revalidatePath('/perfil');
+    revalidatePath(`/app/usuarios/${usuarioId}`);
+    revalidatePath('/app/perfil');
 
     return { success: true, data: publicUrl };
   } catch (error) {
@@ -90,8 +90,8 @@ export async function actionRemoverCover(usuarioId: number) {
     }
 
     await invalidateUsuariosCache();
-    revalidatePath(`/usuarios/${usuarioId}`);
-    revalidatePath('/perfil');
+    revalidatePath(`/app/usuarios/${usuarioId}`);
+    revalidatePath('/app/perfil');
 
     return { success: true };
   } catch (error) {

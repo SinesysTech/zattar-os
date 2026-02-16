@@ -61,8 +61,8 @@ export async function actionCapturarTimeline(
     };
 
     // Revalidate relevant paths
-    revalidatePath(`/processos/${params.processoId}/timeline`);
-    revalidatePath(`/processos/${params.processoId}`);
+    revalidatePath(`/app/processos/${params.processoId}/timeline`);
+    revalidatePath(`/app/processos/${params.processoId}`);
 
     return { success: true, data: resultSanitized };
   } catch (error) {

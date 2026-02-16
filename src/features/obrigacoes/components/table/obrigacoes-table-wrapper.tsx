@@ -309,15 +309,6 @@ export function ObrigacoesTableWrapper({
         header={
           table ? (
             <>
-              {Object.keys(rowSelection).length > 0 && (
-                <ObrigacoesBulkActions
-                  selectedRows={obrigacoes.filter((o) => rowSelection[o.id.toString()])}
-                  onSuccess={() => {
-                    setRowSelection({});
-                    handleSucessoOperacao();
-                  }}
-                />
-              )}
               <DataTableToolbar
                 table={table}
                 title="Obrigações"

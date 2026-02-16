@@ -100,11 +100,11 @@ export async function actionAtribuirResponsavel(
       };
     }
 
-    revalidatePath("/pericias");
-    revalidatePath("/pericias/semana");
-    revalidatePath("/pericias/mes");
-    revalidatePath("/pericias/ano");
-    revalidatePath("/pericias/lista");
+    revalidatePath("/app/pericias");
+    revalidatePath("/app/pericias/semana");
+    revalidatePath("/app/pericias/mes");
+    revalidatePath("/app/pericias/ano");
+    revalidatePath("/app/pericias/lista");
 
     return { success: true, data: true, message: "Responsável atribuído" };
   } catch (error) {
@@ -140,11 +140,11 @@ export async function actionAdicionarObservacao(
       };
     }
 
-    revalidatePath("/pericias");
-    revalidatePath("/pericias/semana");
-    revalidatePath("/pericias/mes");
-    revalidatePath("/pericias/ano");
-    revalidatePath("/pericias/lista");
+    revalidatePath("/app/pericias");
+    revalidatePath("/app/pericias/semana");
+    revalidatePath("/app/pericias/mes");
+    revalidatePath("/app/pericias/ano");
+    revalidatePath("/app/pericias/lista");
 
     return { success: true, data: true, message: "Observações atualizadas" };
   } catch (error) {
@@ -226,11 +226,11 @@ export async function actionCriarPericia(
       };
     }
 
-    revalidatePath("/pericias");
-    revalidatePath("/pericias/semana");
-    revalidatePath("/pericias/mes");
-    revalidatePath("/pericias/ano");
-    revalidatePath("/pericias/lista");
+    revalidatePath("/app/pericias");
+    revalidatePath("/app/pericias/semana");
+    revalidatePath("/app/pericias/mes");
+    revalidatePath("/app/pericias/ano");
+    revalidatePath("/app/pericias/lista");
 
     return {
       success: true,

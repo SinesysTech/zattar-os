@@ -123,7 +123,7 @@ export const actionCriarTarefa = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath('/tarefas');
+    revalidatePath('/app/tarefas');
     return result.data;
   }
 );
@@ -138,7 +138,7 @@ export const actionAtualizarTarefa = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath('/tarefas');
+    revalidatePath('/app/tarefas');
     return result.data;
   }
 );
@@ -153,7 +153,7 @@ export const actionRemoverTarefa = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath('/tarefas');
+    revalidatePath('/app/tarefas');
     return { success: true };
   }
 );
@@ -168,7 +168,7 @@ export const actionMarcarComoDone = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath("/tarefas");
+    revalidatePath("/app/tarefas");
     return result.data;
   }
 );
@@ -180,7 +180,7 @@ export const actionMarcarComoTodo = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath("/tarefas");
+    revalidatePath("/app/tarefas");
     return result.data;
   }
 );

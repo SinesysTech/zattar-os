@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { authenticateRequest } from "@/lib/auth/session";
+import { getCurrentUser } from "@/lib/auth/server";
 import { PageShell } from "@/components/shared/page-shell";
 import { DataShell } from "@/components/shared/data-shell";
 import { DataTableToolbar } from "@/components/shared/data-shell/data-table-toolbar";
@@ -11,16 +11,17 @@ import * as tarefasService from "./service";
 
 export const metadata: Metadata = {
   title: "Tarefas",
-  description: "Gerenciamento de tarefas (template TanStack Table).",
+  description: "Gerenciamento de tarefas e eventos do sistema.",
 };
 
 export default async function TaskPage() {
-  const user = await authenticateRequest();
+  const user = await getCurrentUser();
   if (!user) {
     return <div className="p-6">Você precisa estar autenticado.</div>;
   }
 
-  const result = await tarefasService.listarTarefas(user.id, {});
+  const isSuperAdmin = user.roles.includes("admin");
+  const result = await tarefasService.listarTarefasComEventos(user.id, isSuperAdmin);
   if (!result.success) {
     return <div className="p-6">Erro ao carregar tarefas: {result.error.message}</div>;
   }

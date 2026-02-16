@@ -1,11 +1,2 @@
-import { z } from "zod";
-
-export const taskSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  status: z.string(),
-  label: z.string(),
-  priority: z.string()
-});
-
-export type Task = z.infer<typeof taskSchema>;
+// Re-export do domain.ts para compatibilidade com o template
+export type { TarefaDisplayItem as Task } from "../domain";

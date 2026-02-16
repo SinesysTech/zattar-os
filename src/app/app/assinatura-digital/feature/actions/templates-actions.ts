@@ -36,7 +36,7 @@ export const actionCreateTemplate = authenticatedAction(
     try {
       const template = await templatesService.createTemplate(input);
 
-      revalidatePath("/assinatura-digital/templates");
+      revalidatePath("/app/assinatura-digital/templates");
 
       return {
         success: true,
@@ -65,8 +65,8 @@ export const actionUpdateTemplate = authenticatedAction(
         input.data
       );
 
-      revalidatePath("/assinatura-digital/templates");
-      revalidatePath(`/assinatura-digital/templates/${input.id}`);
+      revalidatePath("/app/assinatura-digital/templates");
+      revalidatePath(`/app/assinatura-digital/templates/${input.id}`);
 
       return {
         success: true,
@@ -91,7 +91,7 @@ export const actionDeleteTemplate = authenticatedAction(
     try {
       await templatesService.deleteTemplate(String(input.id));
 
-      revalidatePath("/assinatura-digital/templates");
+      revalidatePath("/app/assinatura-digital/templates");
 
       return {
         success: true,

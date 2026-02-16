@@ -50,7 +50,7 @@ export async function actionIniciarChamada(
       'group_call_host' // Iniciador é host
     );
 
-    revalidatePath(`/chat/${salaId}`);
+    revalidatePath(`/app/chat/${salaId}`);
     
     return {
       success: true,
@@ -195,7 +195,7 @@ export async function actionFinalizarChamada(
       }
     })();
 
-    revalidatePath("/chat");
+    revalidatePath("/app/chat");
     return { success: true, data: undefined, message: 'Chamada finalizada' };
   } catch (error) {
     return { success: false, message: 'Erro ao finalizar chamada', error: String(error) };
@@ -238,7 +238,7 @@ export async function actionGerarResumo(
       return { success: false, message: result.error.message, error: result.error.message };
     }
 
-    revalidatePath("/chat");
+    revalidatePath("/app/chat");
     return { success: true, data: result.value, message: 'Resumo gerado com sucesso' };
   } catch (error) {
     console.error("Error in actionGerarResumo:", error);
@@ -459,7 +459,7 @@ export async function actionSalvarUrlGravacao(
       return { success: false, message: result.error.message, error: result.error.message };
     }
 
-    revalidatePath('/chat');
+    revalidatePath('/app/chat');
     return { success: true, data: undefined, message: 'URL de gravação salva' };
   } catch (error) {
     console.error('Erro actionSalvarUrlGravacao:', error);

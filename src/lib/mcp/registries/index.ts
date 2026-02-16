@@ -27,3 +27,4 @@ export { registerPericiasTools } from './pericias-tools';
 export { registerAssinaturaDigitalTools } from './assinatura-digital-tools';
 export { registerTarefasTools } from './tarefas-tools';
 export { registerChatwootTools } from './chatwoot-tools';
+export { registerDifyTools } from './dify-tools';

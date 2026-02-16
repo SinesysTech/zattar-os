@@ -122,12 +122,12 @@ export async function actionCriarExpediente(
       };
     }
 
-    revalidatePath("/expedientes");
-    revalidatePath("/expedientes/semana");
-    revalidatePath("/expedientes/mes");
-    revalidatePath("/expedientes/ano");
-    revalidatePath("/expedientes/lista");
-    // revalidatePath('/dashboard'); // Uncomment if dashboard has expedited widget
+    revalidatePath("/app/expedientes");
+    revalidatePath("/app/expedientes/semana");
+    revalidatePath("/app/expedientes/mes");
+    revalidatePath("/app/expedientes/ano");
+    revalidatePath("/app/expedientes/lista");
+    // revalidatePath('/app/dashboard'); // Uncomment if dashboard has expedited widget
 
     // 🆕 AI Indexing Hook
     if (result.success && user) {
@@ -265,12 +265,12 @@ export async function actionAtualizarExpediente(
       };
     }
 
-    revalidatePath("/expedientes");
-    revalidatePath("/expedientes/semana");
-    revalidatePath("/expedientes/mes");
-    revalidatePath("/expedientes/ano");
-    revalidatePath("/expedientes/lista");
-    // revalidatePath('/dashboard'); // Uncomment if dashboard has expedited widget
+    revalidatePath("/app/expedientes");
+    revalidatePath("/app/expedientes/semana");
+    revalidatePath("/app/expedientes/mes");
+    revalidatePath("/app/expedientes/ano");
+    revalidatePath("/app/expedientes/lista");
+    // revalidatePath('/app/dashboard'); // Uncomment if dashboard has expedited widget
 
     return {
       success: true,
@@ -365,12 +365,12 @@ export async function actionBaixarExpediente(
       };
     }
 
-    revalidatePath("/expedientes");
-    revalidatePath("/expedientes/semana");
-    revalidatePath("/expedientes/mes");
-    revalidatePath("/expedientes/ano");
-    revalidatePath("/expedientes/lista");
-    // revalidatePath('/dashboard'); // Uncomment if dashboard has expedited widget
+    revalidatePath("/app/expedientes");
+    revalidatePath("/app/expedientes/semana");
+    revalidatePath("/app/expedientes/mes");
+    revalidatePath("/app/expedientes/ano");
+    revalidatePath("/app/expedientes/lista");
+    // revalidatePath('/app/dashboard'); // Uncomment if dashboard has expedited widget
 
     return {
       success: true,
@@ -441,12 +441,12 @@ export async function actionReverterBaixa(
       };
     }
 
-    revalidatePath("/expedientes");
-    revalidatePath("/expedientes/semana");
-    revalidatePath("/expedientes/mes");
-    revalidatePath("/expedientes/ano");
-    revalidatePath("/expedientes/lista");
-    // revalidatePath('/dashboard'); // Uncomment if dashboard has expedited widget
+    revalidatePath("/app/expedientes");
+    revalidatePath("/app/expedientes/semana");
+    revalidatePath("/app/expedientes/mes");
+    revalidatePath("/app/expedientes/ano");
+    revalidatePath("/app/expedientes/lista");
+    // revalidatePath('/app/dashboard'); // Uncomment if dashboard has expedited widget
 
     return {
       success: true,

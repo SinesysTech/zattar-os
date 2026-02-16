@@ -119,7 +119,7 @@ export async function actionCriarUsuario(
     }
 
     if (result.sucesso) {
-      revalidatePath("/usuarios");
+      revalidatePath("/app/usuarios");
     }
 
     return result;
@@ -144,8 +144,8 @@ export async function actionAtualizarUsuario(
       const { userId } = await requireAuth(["usuarios:editar"]);
       const result = await usuariosService.desativarUsuario(id, userId);
       if (result.sucesso) {
-        revalidatePath("/usuarios");
-        revalidatePath(`/usuarios/${id}`);
+        revalidatePath("/app/usuarios");
+        revalidatePath(`/app/usuarios/${id}`);
       }
       // Garantir que retornamos o resultado completo, incluindo possíveis itensDesatribuidos
       return {
@@ -159,8 +159,8 @@ export async function actionAtualizarUsuario(
     const result = await usuariosService.atualizarUsuario(id, dados);
 
     if (result.sucesso) {
-      revalidatePath("/usuarios");
-      revalidatePath(`/usuarios/${id}`);
+      revalidatePath("/app/usuarios");
+      revalidatePath(`/app/usuarios/${id}`);
     }
 
     return {
@@ -183,8 +183,8 @@ export async function actionDesativarUsuario(id: number) {
     const result = await usuariosService.desativarUsuario(id, userId);
 
     if (result.sucesso) {
-      revalidatePath("/usuarios");
-      revalidatePath(`/usuarios/${id}`);
+      revalidatePath("/app/usuarios");
+      revalidatePath(`/app/usuarios/${id}`);
     }
 
     return result;
@@ -201,7 +201,7 @@ export async function actionSincronizarUsuarios() {
   try {
     await requireAuth(["usuarios:criar"]); // Permissão admin ou criar
     const resultados = await usuariosService.sincronizarUsuariosAuth();
-    revalidatePath("/usuarios");
+    revalidatePath("/app/usuarios");
     return { success: true, data: resultados };
   } catch (error) {
     return {

@@ -86,7 +86,7 @@ export async function actionCriarSala(
     };
   }
 
-  revalidatePath('/chat');
+  revalidatePath('/app/chat');
 
   return {
     success: true,
@@ -123,7 +123,7 @@ export async function actionCriarGrupo(nome: string, membrosIds: number[]): Prom
     };
   }
 
-  revalidatePath('/chat');
+  revalidatePath('/app/chat');
 
   return {
     success: true,
@@ -179,7 +179,7 @@ export async function actionArquivarSala(id: number): Promise<ActionResult> {
     };
   }
 
-  revalidatePath('/chat');
+  revalidatePath('/app/chat');
   return { success: true, data: undefined, message: 'Sala arquivada.' };
 }
 
@@ -203,7 +203,7 @@ export async function actionDesarquivarSala(id: number): Promise<ActionResult> {
     };
   }
 
-  revalidatePath('/chat');
+  revalidatePath('/app/chat');
   return { success: true, data: undefined, message: 'Sala desarquivada.' };
 }
 
@@ -229,7 +229,7 @@ export async function actionRemoverConversa(salaId: number): Promise<ActionResul
     };
   }
 
-  revalidatePath('/chat');
+  revalidatePath('/app/chat');
 
   return {
     success: true,
@@ -259,7 +259,7 @@ export async function actionDeletarSala(id: number): Promise<ActionResult> {
     };
   }
 
-  revalidatePath('/chat');
+  revalidatePath('/app/chat');
 
   return {
     success: true,
@@ -288,7 +288,7 @@ export async function actionAtualizarNomeSala(id: number, nome: string): Promise
     };
   }
 
-  revalidatePath('/chat');
+  revalidatePath('/app/chat');
 
   return {
     success: true,

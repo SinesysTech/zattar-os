@@ -20,7 +20,7 @@ export async function actionCompartilharDocumento(formData: FormData) {
     };
 
     const compartilhamento = await service.compartilharDocumento(params, user.id);
-    revalidatePath(`/documentos/${params.documento_id}`);
+    revalidatePath(`/app/documentos/${params.documento_id}`);
     return { success: true, data: compartilhamento };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -51,7 +51,7 @@ export async function actionAtualizarPermissao(compartilhamento_id: number, perm
       { permissao, pode_deletar },
       user.id
     );
-    revalidatePath(`/documentos/${updatedCompartilhamento.documento_id}`);
+    revalidatePath(`/app/documentos/${updatedCompartilhamento.documento_id}`);
     return { success: true, data: updatedCompartilhamento };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -65,7 +65,7 @@ export async function actionRemoverCompartilhamento(compartilhamento_id: number)
       return { success: false, error: 'Não autenticado' };
     }
     await service.removerCompartilhamento(compartilhamento_id, user.id);
-    revalidatePath('/documentos'); // Revalidar documentos pois um compartilhamento pode ter sido removido
+    revalidatePath('/app/documentos'); // Revalidar documentos pois um compartilhamento pode ter sido removido
     return { success: true };
   } catch (error) {
     return { success: false, error: String(error) };

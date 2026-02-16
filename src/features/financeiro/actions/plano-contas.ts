@@ -17,7 +17,7 @@ export async function actionListarPlanoContas(filters?: PlanoContasFilters) {
 export async function actionCriarConta(dto: CriarPlanoContaDTO) {
     try {
         const data = await PlanoContasService.criar(dto);
-        revalidatePath('/financeiro/plano-contas');
+        revalidatePath('/app/financeiro/plano-contas');
         return { success: true, data };
     } catch (error) {
         console.error('Erro ao criar conta:', error);
@@ -28,7 +28,7 @@ export async function actionCriarConta(dto: CriarPlanoContaDTO) {
 export async function actionAtualizarConta(dto: AtualizarPlanoContaDTO) {
     try {
         const data = await PlanoContasService.atualizar(dto);
-        revalidatePath('/financeiro/plano-contas');
+        revalidatePath('/app/financeiro/plano-contas');
         return { success: true, data };
     } catch (error) {
         console.error('Erro ao atualizar conta:', error);
@@ -39,7 +39,7 @@ export async function actionAtualizarConta(dto: AtualizarPlanoContaDTO) {
 export async function actionExcluirConta(id: number) {
     try {
         await PlanoContasService.excluir(id);
-        revalidatePath('/financeiro/plano-contas');
+        revalidatePath('/app/financeiro/plano-contas');
         return { success: true };
     } catch (error) {
         console.error('Erro ao excluir conta:', error);

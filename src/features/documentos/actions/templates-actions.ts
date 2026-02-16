@@ -33,7 +33,7 @@ export async function actionCriarTemplate(formData: FormData) {
     };
 
     const template = await service.criarTemplate(params, user.id);
-    revalidatePath('/templates');
+    revalidatePath('/app/templates');
     return { success: true, data: template };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -47,7 +47,7 @@ export async function actionUsarTemplate(template_id: number, opcoes?: { titulo?
       return { success: false, error: 'Não autenticado' };
     }
     const documento = await service.usarTemplate(template_id, user.id, opcoes);
-    revalidatePath('/documentos');
+    revalidatePath('/app/documentos');
     return { success: true, data: documento };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -61,7 +61,7 @@ export async function actionDeletarTemplate(id: number) {
       return { success: false, error: 'Não autenticado' };
     }
     await service.deletarTemplate(id, user.id);
-    revalidatePath('/templates');
+    revalidatePath('/app/templates');
     return { success: true };
   } catch (error) {
     return { success: false, error: String(error) };

@@ -49,8 +49,8 @@ export async function actionUploadAvatar(usuarioId: number, formData: FormData) 
     if (updateError) return { success: false, error: `Erro ao atualizar usuário: ${updateError.message}` };
 
     await invalidateUsuariosCache();
-    revalidatePath(`/usuarios/${usuarioId}`);
-    revalidatePath('/perfil');
+    revalidatePath(`/app/usuarios/${usuarioId}`);
+    revalidatePath('/app/perfil');
     
     return { success: true, data: publicUrl };
   } catch (error) {
@@ -72,7 +72,7 @@ export async function actionRemoverAvatar(usuarioId: number) {
     if (error) return { success: false, error: error.message };
 
     await invalidateUsuariosCache();
-    revalidatePath(`/usuarios/${usuarioId}`);
+    revalidatePath(`/app/usuarios/${usuarioId}`);
 
     return { success: true };
   } catch (error) {

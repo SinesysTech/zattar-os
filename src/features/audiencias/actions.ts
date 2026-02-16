@@ -31,15 +31,15 @@ function formatZodErrors(zodError: z.ZodError): Record<string, string[]> {
 
 function revalidateAudienciasPaths() {
   // Rotas do dashboard
-  revalidatePath('/audiencias');
-  revalidatePath('/audiencias/semana');
-  revalidatePath('/audiencias/mes');
-  revalidatePath('/audiencias/ano');
-  revalidatePath('/audiencias/lista');
+  revalidatePath('/app/audiencias');
+  revalidatePath('/app/audiencias/semana');
+  revalidatePath('/app/audiencias/mes');
+  revalidatePath('/app/audiencias/ano');
+  revalidatePath('/app/audiencias/lista');
   // Portal do cliente
   revalidatePath('/portal/audiencias');
   // Dashboard principal (widget de audiências)
-  revalidatePath('/');
+  revalidatePath('/app/dashboard');
 }
 
 // Helper to parse FormData into a cleaner object

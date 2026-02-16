@@ -108,7 +108,7 @@ export async function actionCriarSalario(formData: FormData) {
 
     const salario = await service.criarSalario(validacao.data, userId);
     
-    revalidatePath('/rh/salarios');
+    revalidatePath('/app/rh/salarios');
     return { success: true, data: salario };
   } catch (error) {
     return { 
@@ -141,7 +141,7 @@ export async function actionAtualizarSalario(id: number, formData: FormData) {
 
     const salario = await service.atualizarSalario(id, validacao.data);
     
-    revalidatePath('/rh/salarios');
+    revalidatePath('/app/rh/salarios');
     return { success: true, data: salario };
   } catch (error) {
     return { 
@@ -155,7 +155,7 @@ export async function actionEncerrarVigenciaSalario(id: number, dataFim: string)
   try {
     await requireAuth(['salarios:editar']);
     const salario = await service.encerrarVigenciaSalario(id, dataFim);
-    revalidatePath('/rh/salarios');
+    revalidatePath('/app/rh/salarios');
     return { success: true, data: salario };
   } catch (error) {
     return { 
@@ -169,7 +169,7 @@ export async function actionInativarSalario(id: number) {
   try {
     await requireAuth(['salarios:editar']);
     const salario = await service.inativarSalario(id);
-    revalidatePath('/rh/salarios');
+    revalidatePath('/app/rh/salarios');
     return { success: true, data: salario };
   } catch (error) {
     return { 
@@ -183,7 +183,7 @@ export async function actionExcluirSalario(id: number) {
   try {
     await requireAuth(['salarios:deletar']);
     await service.deletarSalario(id);
-    revalidatePath('/rh/salarios');
+    revalidatePath('/app/rh/salarios');
     return { success: true };
   } catch (error) {
     return { 

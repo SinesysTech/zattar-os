@@ -62,7 +62,7 @@ export async function actionCriarAssistente(
 
     const assistente = await service.criarAssistente(data, userId);
 
-    revalidatePath("/assistentes");
+    revalidatePath("/app/assistentes");
     return { success: true, data: assistente };
   } catch (error) {
     return {
@@ -89,7 +89,7 @@ export async function actionAtualizarAssistente(
 
     const assistente = await service.atualizarAssistente(id, data);
 
-    revalidatePath("/assistentes");
+    revalidatePath("/app/assistentes");
     return { success: true, data: assistente };
   } catch (error) {
     return {
@@ -106,7 +106,7 @@ export async function actionDeletarAssistente(
   try {
     await requireAuth(["assistentes:deletar"]);
     await service.deletarAssistente(id);
-    revalidatePath("/assistentes");
+    revalidatePath("/app/assistentes");
     return { success: true, data: true };
   } catch (error) {
     return {

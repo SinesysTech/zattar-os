@@ -68,8 +68,8 @@ function getErrorMessage(error: unknown): string {
 export async function actionSincronizarParcela(parcelaId: number, forcar: boolean = false): Promise<ActionStatusResponse> {
     try {
         const result = await ObrigacoesService.sincronizarParcela(parcelaId, forcar);
-        revalidatePath('/financeiro');
-        revalidatePath('/acordos-condenacoes');
+        revalidatePath('/app/financeiro');
+        revalidatePath('/app/acordos-condenacoes');
         if (result.sucesso) {
             return { success: true, message: result.mensagem };
         }
@@ -85,7 +85,7 @@ export async function actionSincronizarParcela(parcelaId: number, forcar: boolea
 export async function actionRegistrarDeclaracao(parcelaId: number, urlArquivo: string): Promise<ActionVoidResponse> {
     try {
         await ObrigacoesService.registrarDeclaracao(parcelaId, urlArquivo);
-        revalidatePath('/financeiro');
+        revalidatePath('/app/financeiro');
         return { success: true };
     } catch (error) {
         return { success: false, error: getErrorMessage(error) };
@@ -98,7 +98,7 @@ export async function actionRegistrarDeclaracao(parcelaId: number, urlArquivo: s
 export async function actionGerarRepasse(parcelaId: number, urlArquivo: string, dataRepasse: string): Promise<ActionVoidResponse> {
     try {
         await ObrigacoesService.registrarComprovanteRepasse(parcelaId, urlArquivo, dataRepasse);
-        revalidatePath('/financeiro');
+        revalidatePath('/app/financeiro');
         return { success: true };
     } catch (error) {
         return { success: false, error: getErrorMessage(error) };
@@ -111,9 +111,9 @@ export async function actionGerarRepasse(parcelaId: number, urlArquivo: string, 
 export async function actionSincronizarAcordo(acordoId: number, forcar: boolean = false): Promise<ActionStatusResponse> {
     try {
         const result = await ObrigacoesService.sincronizarAcordo(acordoId, forcar);
-        revalidatePath('/financeiro');
-        revalidatePath('/acordos-condenacoes');
-        revalidatePath(`/acordos-condenacoes/${acordoId}`);
+        revalidatePath('/app/financeiro');
+        revalidatePath('/app/acordos-condenacoes');
+        revalidatePath(`/app/acordos-condenacoes/${acordoId}`);
         if (result.sucesso) {
             return { success: true, message: result.mensagem };
         }

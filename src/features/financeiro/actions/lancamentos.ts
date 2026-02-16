@@ -70,7 +70,7 @@ export async function actionListarLancamentos(params: ListarLancamentosParams): 
 export async function actionExcluirLancamento(id: number): Promise<ActionVoidResponse> {
     try {
         await LancamentosService.excluir(id);
-        revalidatePath('/financeiro');
+        revalidatePath('/app/financeiro');
         return { success: true };
     } catch (error) {
         return { success: false, error: getErrorMessage(error) };
@@ -83,7 +83,7 @@ export async function actionExcluirLancamento(id: number): Promise<ActionVoidRes
 export async function actionCriarLancamento(dados: CriarLancamentoInput): Promise<ActionResponse<Lancamento>> {
     try {
         const lancamento = await LancamentosService.criar(dados);
-        revalidatePath('/financeiro');
+        revalidatePath('/app/financeiro');
         return { success: true, data: lancamento };
     } catch (error) {
         return { success: false, error: getErrorMessage(error) };
@@ -96,7 +96,7 @@ export async function actionCriarLancamento(dados: CriarLancamentoInput): Promis
 export async function actionAtualizarLancamento(id: number, dados: AtualizarLancamentoInput): Promise<ActionResponse<Lancamento>> {
     try {
         const lancamento = await LancamentosService.atualizar(id, dados);
-        revalidatePath('/financeiro');
+        revalidatePath('/app/financeiro');
         return { success: true, data: lancamento };
     } catch (error) {
         return { success: false, error: getErrorMessage(error) };
@@ -112,7 +112,7 @@ export async function actionConfirmarLancamento(id: number): Promise<ActionRespo
             status: 'confirmado',
             dataEfetivacao: new Date().toISOString()
         });
-        revalidatePath('/financeiro');
+        revalidatePath('/app/financeiro');
         return { success: true, data: lancamento };
     } catch (error) {
         return { success: false, error: getErrorMessage(error) };
@@ -125,7 +125,7 @@ export async function actionConfirmarLancamento(id: number): Promise<ActionRespo
 export async function actionCancelarLancamento(id: number): Promise<ActionResponse<Lancamento>> {
     try {
         const lancamento = await LancamentosService.atualizar(id, { status: 'cancelado' });
-        revalidatePath('/financeiro');
+        revalidatePath('/app/financeiro');
         return { success: true, data: lancamento };
     } catch (error) {
         return { success: false, error: getErrorMessage(error) };
@@ -151,7 +151,7 @@ export async function actionBuscarLancamento(id: number): Promise<ActionResponse
 export async function actionEstornarLancamento(id: number): Promise<ActionResponse<Lancamento>> {
     try {
         const lancamento = await LancamentosService.atualizar(id, { status: 'estornado' });
-        revalidatePath('/financeiro');
+        revalidatePath('/app/financeiro');
         return { success: true, data: lancamento };
     } catch (error) {
         return { success: false, error: getErrorMessage(error) };

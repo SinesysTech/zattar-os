@@ -164,7 +164,7 @@ export async function actionCriarTag(input: CreateTagInput): Promise<ActionResul
       };
     }
 
-    revalidatePath("/processos");
+    revalidatePath("/app/processos");
 
     return {
       success: true,
@@ -219,7 +219,7 @@ export async function actionAtualizarTag(
       };
     }
 
-    revalidatePath("/processos");
+    revalidatePath("/app/processos");
 
     return {
       success: true,
@@ -259,7 +259,7 @@ export async function actionExcluirTag(id: number): Promise<ActionResult> {
       };
     }
 
-    revalidatePath("/processos");
+    revalidatePath("/app/processos");
 
     return {
       success: true,
@@ -400,8 +400,8 @@ export async function actionVincularTag(
       };
     }
 
-    revalidatePath("/processos");
-    revalidatePath(`/processos/${processoId}`);
+    revalidatePath("/app/processos");
+    revalidatePath(`/app/processos/${processoId}`);
 
     return {
       success: true,
@@ -452,8 +452,8 @@ export async function actionDesvincularTag(
       };
     }
 
-    revalidatePath("/processos");
-    revalidatePath(`/processos/${processoId}`);
+    revalidatePath("/app/processos");
+    revalidatePath(`/app/processos/${processoId}`);
 
     return {
       success: true,
@@ -496,8 +496,8 @@ export async function actionAtualizarTagsDoProcesso(
       };
     }
 
-    revalidatePath("/processos");
-    revalidatePath(`/processos/${processoId}`);
+    revalidatePath("/app/processos");
+    revalidatePath(`/app/processos/${processoId}`);
 
     return {
       success: true,

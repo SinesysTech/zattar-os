@@ -63,7 +63,7 @@ export async function actionCriarRepresentante(
   try {
     const result = await service.criarRepresentante(params);
     if (result.success) {
-      revalidatePath('/partes');
+      revalidatePath('/app/partes');
       return { success: true, data: result.data };
     }
     return { success: false, error: result.error.message };
@@ -78,8 +78,8 @@ export async function actionAtualizarRepresentante(
   try {
     const result = await service.atualizarRepresentante(params);
     if (result.success) {
-      revalidatePath('/partes');
-      revalidatePath(`/partes/representantes/${params.id}`);
+      revalidatePath('/app/partes');
+      revalidatePath(`/app/partes/representantes/${params.id}`);
       return { success: true, data: result.data };
     }
     return { success: false, error: result.error.message };
@@ -92,7 +92,7 @@ export async function actionDeletarRepresentante(id: number): Promise<ActionResp
   try {
     const result = await service.deletarRepresentante(id);
     if (result.success) {
-      revalidatePath('/partes');
+      revalidatePath('/app/partes');
       return { success: true, data: undefined };
     }
     return { success: false, error: result.error.message };
@@ -107,7 +107,7 @@ export async function actionUpsertRepresentantePorCPF(
   try {
     const result = await service.upsertRepresentantePorCPF(params);
     if (result.success) {
-      revalidatePath('/partes');
+      revalidatePath('/app/partes');
       return { success: true, data: result.data };
     }
     return { success: false, error: result.error.message };

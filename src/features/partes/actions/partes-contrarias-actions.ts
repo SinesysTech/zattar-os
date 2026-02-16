@@ -92,8 +92,8 @@ export const actionCriarParteContrariaSafe = authenticatedFormAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath('/partes/partes-contrarias');
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/partes-contrarias');
+    revalidatePath('/app/partes');
     return result.data;
   }
 );
@@ -111,9 +111,9 @@ export const actionAtualizarParteContrariaSafe = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath('/partes/partes-contrarias');
-    revalidatePath(`/partes/partes-contrarias/${id}`);
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/partes-contrarias');
+    revalidatePath(`/app/partes/partes-contrarias/${id}`);
+    revalidatePath('/app/partes');
     return result.data;
   }
 );
@@ -148,8 +148,8 @@ export async function actionAtualizarParteContraria(id: number, input: Parameter
   try {
     const result = await service.atualizarParteContraria(id, input);
     if (!result.success) return { success: false, error: result.error.message };
-    revalidatePath('/partes');
-    revalidatePath(`/partes/partes-contrarias/${id}`);
+    revalidatePath('/app/partes');
+    revalidatePath(`/app/partes/partes-contrarias/${id}`);
     return { success: true, data: result.data };
   } catch (error) {
     return { success: false, error: String(error) };

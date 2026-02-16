@@ -5,7 +5,11 @@ import {
   CheckCircle,
   Circle,
   CircleOff,
+  CircleDollarSign,
+  Gavel,
+  FileText,
   HelpCircle,
+  Microscope,
   Timer,
 } from "lucide-react"
 
@@ -21,6 +25,26 @@ export const labels = [
   {
     value: "documentation",
     label: "Documentação",
+  },
+  {
+    value: "audiencia",
+    label: "Audiência",
+    icon: Gavel,
+  },
+  {
+    value: "expediente",
+    label: "Expediente",
+    icon: FileText,
+  },
+  {
+    value: "pericia",
+    label: "Perícia",
+    icon: Microscope,
+  },
+  {
+    value: "obrigacao",
+    label: "Obrigação",
+    icon: CircleDollarSign,
   },
 ]
 

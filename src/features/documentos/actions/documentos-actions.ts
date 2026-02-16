@@ -47,8 +47,8 @@ export async function actionCriarDocumento(formData: FormData) {
     };
 
     const documento = await service.criarDocumento(params, user.id);
-    
-    revalidatePath('/documentos');
+
+    revalidatePath('/app/documentos');
     return { success: true, data: documento };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -72,8 +72,8 @@ export async function actionAtualizarDocumento(id: number, formData: FormData) {
 
     const documento = await service.atualizarDocumento(id, params, user.id);
 
-    revalidatePath('/documentos');
-    revalidatePath(`/documentos/${id}`);
+    revalidatePath('/app/documentos');
+    revalidatePath(`/app/documentos/${id}`);
     return { success: true, data: documento };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -87,8 +87,8 @@ export async function actionDeletarDocumento(id: number) {
       return { success: false, error: 'Não autenticado' };
     }
     await service.deletarDocumento(id, user.id);
-    revalidatePath('/documentos');
-    revalidatePath('/documentos/lixeira');
+    revalidatePath('/app/documentos');
+    revalidatePath('/app/documentos/lixeira');
     return { success: true };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -109,7 +109,7 @@ export async function actionAutoSalvar(id: number, formData: FormData) {
     };
 
     const documento = await service.autoSalvarDocumento(payload, user.id);
-    revalidatePath(`/documentos/${id}`); // Revalidar a página específica do documento
+    revalidatePath(`/app/documentos/${id}`); // Revalidar a página específica do documento
     return { success: true, data: documento };
   } catch (error) {
     return { success: false, error: String(error) };

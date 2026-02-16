@@ -110,7 +110,7 @@ export async function actionAtualizarPerfil(dados: Partial<UsuarioDados>) {
     const result = await usuariosService.atualizarUsuario(usuarioDb.id, dados);
 
     if (result.sucesso) {
-      revalidatePath("/perfil");
+      revalidatePath("/app/perfil");
     }
 
     return {

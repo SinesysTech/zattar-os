@@ -20,7 +20,7 @@ export async function actionAnexarDeclaracao(
 ) {
   try {
     const data = await service.anexarDeclaracaoPrestacaoContas(parcelaId, url);
-    revalidatePath('/repasses');
+    revalidatePath('/app/repasses');
     return { success: true, data };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -33,7 +33,7 @@ export async function actionRegistrarRepasse(
 ) {
   try {
     const data = await service.registrarRepasse(parcelaId, dados);
-    revalidatePath('/repasses');
+    revalidatePath('/app/repasses');
     return { success: true, data };
   } catch (error) {
     return { success: false, error: String(error) };

@@ -341,16 +341,6 @@ export function ExpedientesListWrapper({
         header={
           table ? (
             <>
-              {Object.keys(rowSelection).length > 0 && (
-                <ExpedientesBulkActions
-                  selectedRows={expedientes.filter((exp) => rowSelection[exp.id.toString()])}
-                  usuarios={usuarios.map((u: UsuarioData) => ({ id: u.id, nomeExibicao: getUsuarioNome(u) }))}
-                  onSuccess={() => {
-                    setRowSelection({});
-                    handleSucessoOperacao();
-                  }}
-                />
-              )}
               <DataTableToolbar
                 table={table}
                 title="Expedientes"

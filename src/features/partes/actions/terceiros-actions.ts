@@ -94,8 +94,8 @@ export const actionCriarTerceiroSafe = authenticatedFormAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath('/partes/terceiros');
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/terceiros');
+    revalidatePath('/app/partes');
     return result.data;
   }
 );
@@ -113,9 +113,9 @@ export const actionAtualizarTerceiroSafe = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath('/partes/terceiros');
-    revalidatePath(`/partes/terceiros/${id}`);
-    revalidatePath('/partes');
+    revalidatePath('/app/partes/terceiros');
+    revalidatePath(`/app/partes/terceiros/${id}`);
+    revalidatePath('/app/partes');
     return result.data;
   }
 );
@@ -150,8 +150,8 @@ export async function actionAtualizarTerceiro(id: number, input: Parameters<type
   try {
     const result = await service.atualizarTerceiro(id, input);
     if (!result.success) return { success: false, error: result.error.message };
-    revalidatePath('/partes');
-    revalidatePath(`/partes/terceiros/${id}`);
+    revalidatePath('/app/partes');
+    revalidatePath(`/app/partes/terceiros/${id}`);
     return { success: true, data: result.data };
   } catch (error) {
     return { success: false, error: String(error) };

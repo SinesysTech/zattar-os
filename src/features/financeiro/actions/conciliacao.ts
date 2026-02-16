@@ -30,7 +30,7 @@ export async function actionImportarExtrato(formData: FormData) {
         };
 
         const resultado = await conciliacaoService.importarExtrato(dto);
-        revalidatePath('/financeiro/conciliacao-bancaria');
+        revalidatePath('/app/financeiro/conciliacao-bancaria');
         return { success: true, data: resultado };
     } catch (error) {
         console.error('Erro ao importar extrato:', error);
@@ -41,7 +41,7 @@ export async function actionImportarExtrato(formData: FormData) {
 export async function actionConciliarManual(dto: ConciliarManualDTO) {
     try {
         const resultado = await conciliacaoService.conciliarManual(dto);
-        revalidatePath('/financeiro/conciliacao-bancaria');
+        revalidatePath('/app/financeiro/conciliacao-bancaria');
         return { success: true, data: resultado };
     } catch (error) {
         console.error('Erro na conciliação manual:', error);
@@ -73,7 +73,7 @@ export async function actionConciliarAutomaticamente() {
     try {
         // Implementar no serviço futuramente
         // const resultado = await conciliacaoService.conciliarAutomaticamente(dto);
-        revalidatePath('/financeiro/conciliacao-bancaria');
+        revalidatePath('/app/financeiro/conciliacao-bancaria');
         return { success: true, message: 'Conciliação automática iniciada.' };
     } catch (error) {
         console.error('Erro na conciliação automática:', error);
@@ -100,7 +100,7 @@ export async function actionListarTransacoes(params: ListarTransacoesImportadasP
 export async function actionDesconciliar(transacaoId: number) {
     try {
         await conciliacaoService.desconciliar(transacaoId);
-        revalidatePath('/financeiro/conciliacao-bancaria');
+        revalidatePath('/app/financeiro/conciliacao-bancaria');
         return { success: true };
     } catch (error) {
         console.error('Erro ao desconciliar:', error);
