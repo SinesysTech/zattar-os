@@ -14,7 +14,7 @@ import {
   buscarOrgaoJulgadorPorDescricao,
 } from './orgao-julgador-persistence.service';
 import { compararObjetos, removerCamposControle } from './comparison.util';
-import { captureLogService, type TipoEntidade } from './capture-log.service';
+import { captureLogService, extrairMensagemErro, type TipoEntidade } from './capture-log.service';
 
 /**
  * Parâmetros para salvar perícias
@@ -408,7 +408,7 @@ export async function salvarPericias(
       }
     } catch (error) {
       erros++;
-      const erroMsg = error instanceof Error ? error.message : String(error);
+      const erroMsg = extrairMensagemErro(error);
       captureLogService.logErro(entidade, erroMsg, {
         id_pje: pericia.id,
         numero_processo: pericia.numeroProcesso,

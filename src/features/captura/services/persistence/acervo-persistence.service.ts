@@ -5,7 +5,7 @@ import { createServiceClient } from "@/lib/supabase/service-client";
 import type { Processo } from "../../types/types";
 import type { CodigoTRT, GrauTRT } from "../../types/trt-types";
 import { compararObjetos, removerCamposControle } from "./comparison.util";
-import { captureLogService, type TipoEntidade } from "./capture-log.service";
+import { captureLogService, extrairMensagemErro, type TipoEntidade } from "./capture-log.service";
 
 /**
  * Parâmetros para salvar processos no acervo
@@ -252,7 +252,7 @@ export async function salvarAcervo(
       }
     } catch (error) {
       erros++;
-      const erroMsg = error instanceof Error ? error.message : String(error);
+      const erroMsg = extrairMensagemErro(error);
       captureLogService.logErro(entidade, erroMsg, {
         id_pje: processo.id,
         numero_processo: processo.numeroProcesso,
@@ -429,7 +429,7 @@ export async function salvarAcervoBatch(
       }
     } catch (error) {
       erros++;
-      const erroMsg = error instanceof Error ? error.message : String(error);
+      const erroMsg = extrairMensagemErro(error);
       captureLogService.logErro(entidade, erroMsg, {
         id_pje: processo.id,
         numero_processo: processo.numeroProcesso,
@@ -528,7 +528,7 @@ export async function salvarAcervoBatch(
         );
       } catch (error) {
         erros++;
-        const erroMsg = error instanceof Error ? error.message : String(error);
+        const erroMsg = extrairMensagemErro(error);
         captureLogService.logErro(entidade, erroMsg, {
           id_pje: dados.id_pje,
           numero_processo: dados.numero_processo,

@@ -17,7 +17,7 @@ import {
 } from "./tipo-audiencia-persistence.service";
 import { salvarSalaAudiencia } from "./sala-audiencia-persistence.service";
 import { compararObjetos, removerCamposControle } from "./comparison.util";
-import { captureLogService, type TipoEntidade } from "./capture-log.service";
+import { captureLogService, extrairMensagemErro, type TipoEntidade } from "./capture-log.service";
 
 /**
  * Parâmetros para salvar audiências
@@ -470,7 +470,7 @@ export async function salvarAudiencias(
       }
     } catch (error) {
       erros++;
-      const erroMsg = error instanceof Error ? error.message : String(error);
+      const erroMsg = extrairMensagemErro(error);
       captureLogService.logErro(entidade, erroMsg, {
         id_pje: audiencia.id,
         numero_processo: audiencia.processo?.numero,
