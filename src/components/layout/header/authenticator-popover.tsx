@@ -82,12 +82,12 @@ export function AuthenticatorPopover() {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Buscar contas quando o popover abre
+  // Buscar contas quando o popover abre (com guard contra retry infinito em caso de erro)
   useEffect(() => {
-    if (isOpen && accounts.length === 0 && !isLoading) {
+    if (isOpen && accounts.length === 0 && !isLoading && !error) {
       fetchAccounts();
     }
-  }, [isOpen, accounts.length, isLoading, fetchAccounts]);
+  }, [isOpen, accounts.length, isLoading, error, fetchAccounts]);
 
   // Manipular alteracao de estado do popover
   const handleOpenChange = (open: boolean) => {

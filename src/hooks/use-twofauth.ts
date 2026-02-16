@@ -12,6 +12,7 @@ export interface UseTwoFAuthState {
   accounts: TwoFAuthAccount[];
   isLoading: boolean;
   error: string | null;
+  isPermissionError: boolean;
   selectedAccount: TwoFAuthAccount | null;
   currentOTP: OTPResult | null;
   otpLoading: boolean;
@@ -65,18 +66,30 @@ export function useTwoFAuth(): UseTwoFAuthReturn {
   const [otpLoading, setOtpLoading] = useState(false);
   const [otpError, setOtpError] = useState<string | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(30);
+  const [isPermissionError, setIsPermissionError] = useState(false);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const isMountedRef = useRef(true);
+  const permissionErrorRef = useRef(false);
 
   // Buscar lista de contas
   const fetchAccounts = useCallback(async () => {
+    if (permissionErrorRef.current) return;
+
     setIsLoading(true);
     setError(null);
 
     try {
       const response = await fetch("/api/twofauth/accounts");
       const data = await response.json();
+
+      if (response.status === 401 || response.status === 403) {
+        permissionErrorRef.current = true;
+        if (isMountedRef.current) {
+          setIsPermissionError(true);
+        }
+        throw new Error("Não autorizado. Verifique as configurações de API.");
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Erro ao buscar contas");
@@ -206,6 +219,7 @@ export function useTwoFAuth(): UseTwoFAuthReturn {
     accounts,
     isLoading,
     error,
+    isPermissionError,
     selectedAccount,
     currentOTP,
     otpLoading,
