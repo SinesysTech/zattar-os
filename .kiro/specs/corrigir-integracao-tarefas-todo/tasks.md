@@ -53,10 +53,10 @@
 - [x] 8.4 Verificar se há outras referências a `position` no repository
 
 ## 9. Atualizar Actions
-- [~] 9.1 Remover `actionReordenarTarefas` de `actions/tarefas-actions.ts`
-- [~] 9.2 Remover import de `taskPositionsSchema`
-- [~] 9.3 Verificar se `actionCriarTarefa` não passa `position`
-- [~] 9.4 Verificar exports no arquivo de actions
+- [x] 9.1 Remover `actionReordenarTarefas` de `actions/tarefas-actions.ts`
+- [x] 9.2 Remover import de `taskPositionsSchema`
+- [x] 9.3 Verificar se `actionCriarTarefa` não passa `position`
+- [x] 9.4 Verificar exports no arquivo de actions
 
 ## 10. Atualizar MCP Tools
 - [~] 10.1 Remover `position: 0` do tool `criar_tarefa` em `tarefas-tools.ts`

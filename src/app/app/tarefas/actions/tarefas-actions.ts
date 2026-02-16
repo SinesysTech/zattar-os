@@ -25,8 +25,7 @@ import type {
   AddCommentInput,
   DeleteCommentInput,
   AddFileInput,
-  RemoveFileInput,
-  TaskPositionsInput
+  RemoveFileInput
 } from '../domain';
 import {
   createTaskSchema,
@@ -38,8 +37,7 @@ import {
   addCommentSchema,
   deleteCommentSchema,
   addFileSchema,
-  removeFileSchema,
-  taskPositionsSchema
+  removeFileSchema
 } from '../domain';
 
 // =============================================================================
@@ -201,18 +199,6 @@ export const actionMarcarComoTodo = authenticatedAction(
     }
     revalidatePath("/app/tarefas");
     return result.data;
-  }
-);
-
-export const actionReordenarTarefas = authenticatedAction(
-  taskPositionsSchema,
-  async (data, { user }) => {
-    const result = await service.reorderTasks(user.id, data as TaskPositionsInput);
-    if (!result.success) {
-      throw new Error(result.error.message);
-    }
-    revalidatePath('/app/tarefas');
-    return { success: true };
   }
 );
 
