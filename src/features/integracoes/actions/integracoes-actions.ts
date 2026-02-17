@@ -2,6 +2,10 @@
 
 /**
  * Server Actions - Integrações
+ *
+ * IMPORTANTE: `authenticatedAction` já embala o retorno do handler em
+ * `{ success: true, data: <retorno> }`. Os handlers devem retornar
+ * apenas os dados brutos, sem wrapper adicional.
  */
 
 import { revalidatePath } from "next/cache";
@@ -23,9 +27,8 @@ import {
  */
 export const actionListarIntegracoes = authenticatedAction(
   z.void(),
-  async (_, { user }) => {
-    const data = await service.listar();
-    return { success: true, data };
+  async () => {
+    return service.listar();
   }
 );
 
@@ -34,9 +37,8 @@ export const actionListarIntegracoes = authenticatedAction(
  */
 export const actionListarIntegracoesPorTipo = authenticatedAction(
   z.object({ tipo: z.enum(["twofauth", "zapier", "dify", "webhook", "api"]) }),
-  async ({ tipo }, { user }) => {
-    const data = await service.listarPorTipo(tipo);
-    return { success: true, data };
+  async ({ tipo }) => {
+    return service.listarPorTipo(tipo);
   }
 );
 
@@ -45,14 +47,14 @@ export const actionListarIntegracoesPorTipo = authenticatedAction(
  */
 export const actionBuscarIntegracao = authenticatedAction(
   z.object({ id: z.string().uuid() }),
-  async ({ id }, { user }) => {
+  async ({ id }) => {
     const data = await service.buscarPorId(id);
-    
+
     if (!data) {
-      return { success: false, error: "Integração não encontrada" };
+      throw new Error("Integração não encontrada");
     }
-    
-    return { success: true, data };
+
+    return data;
   }
 );
 
@@ -61,9 +63,8 @@ export const actionBuscarIntegracao = authenticatedAction(
  */
 export const actionBuscarConfig2FAuth = authenticatedAction(
   z.object({}),
-  async (_, { user }) => {
-    const data = await service.buscarConfig2FAuth();
-    return { success: true, data };
+  async () => {
+    return service.buscarConfig2FAuth();
   }
 );
 
@@ -76,10 +77,10 @@ export const actionBuscarConfig2FAuth = authenticatedAction(
  */
 export const actionCriarIntegracao = authenticatedAction(
   criarIntegracaoSchema,
-  async (data, { user }) => {
+  async (data) => {
     const result = await service.criar(data);
     revalidatePath("/app/configuracoes");
-    return { success: true, data: result };
+    return result;
   }
 );
 
@@ -88,10 +89,10 @@ export const actionCriarIntegracao = authenticatedAction(
  */
 export const actionAtualizarIntegracao = authenticatedAction(
   atualizarIntegracaoSchema,
-  async (data, { user }) => {
+  async (data) => {
     const result = await service.atualizar(data);
     revalidatePath("/app/configuracoes");
-    return { success: true, data: result };
+    return result;
   }
 );
 
@@ -100,10 +101,9 @@ export const actionAtualizarIntegracao = authenticatedAction(
  */
 export const actionDeletarIntegracao = authenticatedAction(
   z.object({ id: z.string().uuid() }),
-  async ({ id }, { user }) => {
+  async ({ id }) => {
     await service.deletar(id);
     revalidatePath("/app/configuracoes");
-    return { success: true };
   }
 );
 
@@ -115,10 +115,10 @@ export const actionToggleAtivoIntegracao = authenticatedAction(
     id: z.string().uuid(),
     ativo: z.boolean(),
   }),
-  async ({ id, ativo }, { user }) => {
+  async ({ id, ativo }) => {
     const result = await service.toggleAtivo(id, ativo);
     revalidatePath("/app/configuracoes");
-    return { success: true, data: result };
+    return result;
   }
 );
 
@@ -127,9 +127,9 @@ export const actionToggleAtivoIntegracao = authenticatedAction(
  */
 export const actionAtualizarConfig2FAuth = authenticatedAction(
   twofauthConfigSchema,
-  async (data, { user }) => {
+  async (data) => {
     const result = await service.atualizarConfig2FAuth(data);
     revalidatePath("/app/configuracoes");
-    return { success: true, data: result };
+    return result;
   }
 );

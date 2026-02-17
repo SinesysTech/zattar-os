@@ -107,7 +107,7 @@ export async function request<T>(
   options: RequestOptions = {},
   config?: Omit<TwoFAuthConfig, "accountId">
 ): Promise<T> {
-  const { baseUrl, token } = resolveConfig(config);
+  const { baseUrl, token } = await resolveConfigAsync(config);
   const { method = "GET", body, headers = {} } = options;
 
   const url = `${baseUrl}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
@@ -184,7 +184,7 @@ export async function uploadFile(
   fieldName: string = "icon",
   config?: Omit<TwoFAuthConfig, "accountId">
 ): Promise<{ filename: string }> {
-  const { baseUrl, token } = resolveConfig(config);
+  const { baseUrl, token } = await resolveConfigAsync(config);
   const url = `${baseUrl}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 
   const formData = new FormData();
