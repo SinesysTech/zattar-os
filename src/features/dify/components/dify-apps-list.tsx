@@ -17,7 +17,7 @@ interface DifyApp {
     name: string;
     api_url: string;
     api_key: string;
-    app_type: 'chat' | 'workflow' | 'completion' | 'agent';
+    app_type: 'chat' | 'chatflow' | 'workflow' | 'completion' | 'agent';
     is_active: boolean;
     created_at: string;
 }
@@ -161,9 +161,10 @@ export function DifyAppsList() {
                                         <SelectTrigger><SelectValue /></SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="chat">Chatbot</SelectItem>
+                                            <SelectItem value="chatflow">Chatflow</SelectItem>
                                             <SelectItem value="workflow">Workflow</SelectItem>
                                             <SelectItem value="agent">Agente</SelectItem>
-                                            <SelectItem value="completion">Completion</SelectItem>
+                                            <SelectItem value="completion">Text Generator</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>

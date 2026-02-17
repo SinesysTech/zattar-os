@@ -22,19 +22,21 @@ import { MetricasDBContent } from '@/app/app/admin/metricas-db/components/metric
 import { BlockedIpsContent } from '@/app/app/admin/security/blocked-ips/components/blocked-ips-content';
 import { TwoFAuthConfigContent } from '@/features/twofauth';
 import { DifyAppsList } from '@/features/dify/components/dify-apps-list';
+import { TwoFAuthIntegrationCard } from '@/features/integracoes';
 import type { MetricasDB } from '@/features/admin';
+import type { Integracao } from '@/features/integracoes';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
-type ConfiguracoesTab = 'metricas' | 'seguranca' | 'autenticador' | 'integracoes';
+type ConfiguracoesTab = 'metricas' | 'seguranca' | 'integracoes';
 
 // =============================================================================
 // CONFIGURAÇÃO DAS TABS
 // =============================================================================
 
-const VALID_TABS = new Set<ConfiguracoesTab>(['metricas', 'seguranca', 'autenticador', 'integracoes']);
+const VALID_TABS = new Set<ConfiguracoesTab>(['metricas', 'seguranca', 'integracoes']);
 
 // =============================================================================
 // PROPS
@@ -45,6 +47,8 @@ interface ConfiguracoesTabsContentProps {
   initialTab?: ConfiguracoesTab;
   /** Dados de métricas do banco de dados */
   metricas?: MetricasDB;
+  /** Integração 2FAuth */
+  integracao2FAuth?: Integracao | null;
 }
 
 // =============================================================================
@@ -54,6 +58,7 @@ interface ConfiguracoesTabsContentProps {
 export function ConfiguracoesTabsContent({
   initialTab = 'metricas',
   metricas,
+  integracao2FAuth,
 }: ConfiguracoesTabsContentProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -74,15 +79,10 @@ export function ConfiguracoesTabsContent({
 
   return (
     <div className="flex flex-col min-h-0 space-y-6">
-      <div className="flex flex-col space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Configurações</h1>
-        <p className="text-sm text-muted-foreground">
-          Gerencie as configurações gerais e integrações do sistema.
-        </p>
-      </div>
+      <h1 className="text-2xl font-semibold tracking-tight">Configurações</h1>
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 lg:w-[600px]">
+        <TabsList className="grid w-full grid-cols-3 lg:w-[450px]">
           <TabsTrigger value="metricas">
             <Database className="mr-2 h-4 w-4" />
             Métricas
@@ -90,10 +90,6 @@ export function ConfiguracoesTabsContent({
           <TabsTrigger value="seguranca">
             <Shield className="mr-2 h-4 w-4" />
             Segurança
-          </TabsTrigger>
-          <TabsTrigger value="autenticador">
-            <KeyRound className="mr-2 h-4 w-4" />
-            Autenticador
           </TabsTrigger>
           <TabsTrigger value="integracoes">
             <Blocks className="mr-2 h-4 w-4" />
@@ -107,11 +103,12 @@ export function ConfiguracoesTabsContent({
           <TabsContent value="seguranca" className="space-y-4">
             <BlockedIpsContent />
           </TabsContent>
-          <TabsContent value="autenticador" className="space-y-4">
-            <TwoFAuthConfigContent />
-          </TabsContent>
           <TabsContent value="integracoes" className="space-y-4">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* Card 2FAuth */}
+              <TwoFAuthIntegrationCard integracao={integracao2FAuth} />
+
+              {/* Card Dify */}
               <Card>
                 <CardHeader className="pb-3">
                   <Bot className="h-10 w-10 mb-2 text-primary" />

@@ -8,7 +8,7 @@ import {
   CheckCircle2,
   Clock,
   FileText,
-  FileUp,
+  Plus,
   XCircle,
   Loader2,
   ExternalLink,
@@ -358,7 +358,7 @@ export function DocumentosTableWrapper({
             router.push("/app/assinatura-digital/documentos/novo")
           }
         >
-          <FileUp className="h-4 w-4" />
+          <Plus className="h-4 w-4" />
           Novo Documento
         </Button>
       </div>

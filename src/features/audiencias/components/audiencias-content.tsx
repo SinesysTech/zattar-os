@@ -48,6 +48,7 @@ const VIEW_ROUTES: Record<ViewType, string> = {
   mes: '/audiencias/mes',
   ano: '/audiencias/ano',
   lista: '/audiencias/lista',
+  quadro: '/audiencias/quadro',
 };
 
 const ROUTE_TO_VIEW: Record<string, ViewType> = {
@@ -56,6 +57,7 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
   '/audiencias/mes': 'mes',
   '/audiencias/ano': 'ano',
   '/audiencias/lista': 'lista',
+  '/audiencias/quadro': 'quadro',
 };
 
 // =============================================================================
@@ -188,6 +190,14 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
             usuariosData={usuarios}
             tiposAudienciaData={tiposAudiencia}
           />
+        );
+
+      case 'quadro':
+        // TODO: Implement AudienciasQuadroWrapper
+        return (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-muted-foreground">Visualização em quadro em desenvolvimento</p>
+          </div>
         );
 
       default:

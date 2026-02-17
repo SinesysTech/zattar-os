@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 export enum TipoDifyApp {
   CHAT = 'chat',
+  CHATFLOW = 'chatflow',
   WORKFLOW = 'workflow',
   COMPLETION = 'completion',
   AGENT = 'agent',
