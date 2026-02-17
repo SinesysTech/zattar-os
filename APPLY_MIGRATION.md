@@ -1,5 +1,9 @@
 # Aplicar Migration - Tabela Integrações
 
+## ⚠️ IMPORTANTE: Correção Aplicada
+
+A migration foi corrigida para usar `auth_user_id` ao invés de `id` na comparação com `auth.uid()`.
+
 ## Passo 1: Acessar SQL Editor
 
 Acesse: https://supabase.com/dashboard/project/cxxdivtgeslrujpfpivs/sql/new
@@ -9,6 +13,8 @@ Acesse: https://supabase.com/dashboard/project/cxxdivtgeslrujpfpivs/sql/new
 Copie todo o conteúdo do arquivo abaixo e execute no SQL Editor:
 
 `supabase/migrations/20260216212759_create_integracoes_table.sql`
+
+✅ **A migration agora está corrigida e deve funcionar sem erros!**
 
 ## Passo 3: Migrar Dados do .env.local
 

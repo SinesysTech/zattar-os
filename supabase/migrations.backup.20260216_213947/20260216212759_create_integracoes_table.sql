@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS public.integracoes (
   metadata JSONB DEFAULT '{}'::jsonb, -- Metadados adicionais
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-  updated_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  created_by_auth_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  updated_by_auth_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   
   -- Constraints
   CONSTRAINT integracoes_tipo_check CHECK (tipo IN ('twofauth', 'zapier', 'dify', 'webhook', 'api')),
@@ -50,7 +50,7 @@ CREATE POLICY "Apenas admins podem inserir integrações"
   WITH CHECK (
     EXISTS (
       SELECT 1 FROM public.usuarios
-      WHERE usuarios.id = auth.uid()
+      WHERE usuarios.auth_user_id = auth.uid()
       AND usuarios.role = 'admin'
     )
   );
@@ -63,14 +63,14 @@ CREATE POLICY "Apenas admins podem atualizar integrações"
   USING (
     EXISTS (
       SELECT 1 FROM public.usuarios
-      WHERE usuarios.id = auth.uid()
+      WHERE usuarios.auth_user_id = auth.uid()
       AND usuarios.role = 'admin'
     )
   )
   WITH CHECK (
     EXISTS (
       SELECT 1 FROM public.usuarios
-      WHERE usuarios.id = auth.uid()
+      WHERE usuarios.auth_user_id = auth.uid()
       AND usuarios.role = 'admin'
     )
   );
@@ -83,7 +83,7 @@ CREATE POLICY "Apenas admins podem deletar integrações"
   USING (
     EXISTS (
       SELECT 1 FROM public.usuarios
-      WHERE usuarios.id = auth.uid()
+      WHERE usuarios.auth_user_id = auth.uid()
       AND usuarios.role = 'admin'
     )
   );

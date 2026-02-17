@@ -119,8 +119,8 @@ export async function create(params: {
     .from("integracoes")
     .insert({
       ...params,
-      created_by: userData.user?.id,
-      updated_by: userData.user?.id,
+      created_by_auth_id: userData.user?.id,
+      updated_by_auth_id: userData.user?.id,
     })
     .select()
     .single();
@@ -153,7 +153,7 @@ export async function update(
     .from("integracoes")
     .update({
       ...params,
-      updated_by: userData.user?.id,
+      updated_by_auth_id: userData.user?.id,
     })
     .eq("id", id)
     .select()
