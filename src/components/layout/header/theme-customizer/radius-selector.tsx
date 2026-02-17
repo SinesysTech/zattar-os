@@ -5,12 +5,18 @@ import { useThemeConfig } from "@/components/layout/theme/active-theme";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { BanIcon } from "lucide-react";
 
-export function ThemeRadiusSelector() {
+interface ThemeRadiusSelectorProps {
+  label?: string;
+}
+
+export function ThemeRadiusSelector({ 
+  label = "Radius"
+}: ThemeRadiusSelectorProps = {}) {
   const { theme, setTheme } = useThemeConfig();
 
   return (
     <div className="flex flex-col gap-4">
-      <Label htmlFor="roundedCorner">Radius:</Label>
+      <Label htmlFor="roundedCorner">{label}</Label>
       <ToggleGroup
         value={theme.radius}
         type="single"

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Clock, Zap, Hash } from 'lucide-react';
 import type { DifyExecucaoWorkflow } from '../../domain';
-import { STATUS_EXECUCAO_LABELS, StatusExecucao } from '../../domain';
+import { STATUS_EXECUCAO_LABELS, StatusExecucaoDify } from '../../domain';
 
 interface WorkflowHistoryProps {
   className?: string;

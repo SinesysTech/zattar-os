@@ -8,51 +8,51 @@
 - [x] 1.3 Documentar funcionalidades a preservar
 
 ## 2. Migração de Banco de Dados
-- [-] 2.1 Criar migração para adicionar `position INTEGER` em `tasks`
-- [~] 2.2 Criar migração para adicionar `quadro_id UUID` em `tasks`
-- [~] 2.3 Criar tabela `quadros` com schema completo
-- [~] 2.4 Executar migrações no ambiente de desenvolvimento
+- [x] 2.1 Criar migração para adicionar `position INTEGER` em `tasks`
+- [x] 2.2 Criar migração para adicionar `quadro_id UUID` em `tasks`
+- [x] 2.3 Criar tabela `quadros` com schema completo
+- [x] 2.4 Executar migrações no ambiente de desenvolvimento
 
 ## 3. Domain Unificado
-- [~] 3.1 Mesclar `taskSchema` + `kanbanTaskSchema` em `tarefaSchema`
-- [~] 3.2 Adicionar campo `position` ao schema
-- [~] 3.3 Adicionar campo `quadroId` ao schema
-- [~] 3.4 Criar `quadroSchema` para quadros personalizados
-- [~] 3.5 Definir constantes `QUADROS_SISTEMA`
-- [~] 3.6 Atualizar `TarefaDisplayItem` interface
-- [~] 3.7 Criar schemas de input para quadros (criar, excluir)
+- [x] 3.1 Mesclar `taskSchema` + `kanbanTaskSchema` em `tarefaSchema`
+- [x] 3.2 Adicionar campo `position` ao schema
+- [x] 3.3 Adicionar campo `quadroId` ao schema
+- [x] 3.4 Criar `quadroSchema` para quadros personalizados
+- [x] 3.5 Definir constantes `QUADROS_SISTEMA`
+- [x] 3.6 Atualizar `TarefaDisplayItem` interface
+- [x] 3.7 Criar schemas de input para quadros (criar, excluir)
 
 ## 4. Store Unificado
-- [ ] 4.1 Adicionar `viewMode: "lista" | "quadro"` ao store
-- [ ] 4.2 Adicionar `setViewMode` action
-- [ ] 4.3 Adicionar `quadros: Quadro[]` ao store
-- [ ] 4.4 Adicionar `selectedQuadroId: string | null` ao store
-- [ ] 4.5 Adicionar `setQuadros` action
-- [ ] 4.6 Adicionar `setSelectedQuadroId` action
-- [ ] 4.7 Manter todas as actions existentes de tarefas
+- [x] 4.1 Adicionar `viewMode: "lista" | "quadro"` ao store
+- [x] 4.2 Adicionar `setViewMode` action
+- [x] 4.3 Adicionar `quadros: Quadro[]` ao store
+- [x] 4.4 Adicionar `selectedQuadroId: string | null` ao store
+- [x] 4.5 Adicionar `setQuadros` action
+- [x] 4.6 Adicionar `setSelectedQuadroId` action
+- [x] 4.7 Manter todas as actions existentes de tarefas
 
 ## 5. Service Layer Unificado
-- [ ] 5.1 Importar funções de quadros do Kanban service
-- [ ] 5.2 Adaptar `listarQuadros()` para retornar quadros sistema + custom
-- [ ] 5.3 Adicionar `criarQuadroCustom()`
-- [ ] 5.4 Adicionar `excluirQuadroCustom()`
-- [ ] 5.5 Adicionar `obterTarefasDoQuadro(quadroId)`
-- [ ] 5.6 Adicionar `reorderTasks()` do Kanban
-- [ ] 5.7 Manter todas as funções existentes de tarefas
-- [ ] 5.8 Remover imports de `@/features/kanban`
+- [x] 5.1 Importar funções de quadros do Kanban service
+- [x] 5.2 Adaptar `listarQuadros()` para retornar quadros sistema + custom
+- [x] 5.3 Adicionar `criarQuadroCustom()`
+- [x] 5.4 Adicionar `excluirQuadroCustom()`
+- [x] 5.5 Adicionar `obterTarefasDoQuadro(quadroId)`
+- [x] 5.6 Adicionar `reorderTasks()` do Kanban
+- [x] 5.7 Manter todas as funções existentes de tarefas
+- [x] 5.8 Remover imports de `@/features/kanban`
 
 ## 6. Repository Layer Unificado
-- [ ] 6.1 Adicionar `listQuadrosCustom(usuarioId)`
-- [ ] 6.2 Adicionar `createQuadroCustom(usuarioId, titulo)`
-- [ ] 6.3 Adicionar `deleteQuadroCustom(usuarioId, quadroId)`
-- [ ] 6.4 Adicionar `listTarefasByQuadro(usuarioId, quadroId)`
-- [ ] 6.5 Adicionar `updateTaskPosition(taskId, position)`
-- [ ] 6.6 Adicionar `updateTaskQuadro(taskId, quadroId)`
-- [ ] 6.7 Atualizar `createTask` para suportar `position` e `quadroId`
-- [ ] 6.8 Atualizar queries para incluir novos campos
+- [x] 6.1 Adicionar `listQuadrosCustom(usuarioId)`
+- [x] 6.2 Adicionar `createQuadroCustom(usuarioId, titulo)`
+- [x] 6.3 Adicionar `deleteQuadroCustom(usuarioId, quadroId)`
+- [x] 6.4 Adicionar `listTarefasByQuadro(usuarioId, quadroId)`
+- [x] 6.5 Adicionar `updateTaskPosition(taskId, position)`
+- [x] 6.6 Adicionar `updateTaskQuadro(taskId, quadroId)`
+- [x] 6.7 Atualizar `createTask` para suportar `position` e `quadroId`
+- [x] 6.8 Atualizar queries para incluir novos campos
 
 ## 7. Importar Componentes do Kanban
-- [ ] 7.1 Copiar `custom-board-view.tsx` para `src/app/app/tarefas/components/task-board.tsx`
+- [-] 7.1 Copiar `custom-board-view.tsx` para `src/app/app/tarefas/components/task-board.tsx`
 - [ ] 7.2 Copiar `unified-kanban-card.tsx` para `src/app/app/tarefas/components/task-card.tsx`
 - [ ] 7.3 Copiar `board-selector.tsx` para `src/app/app/tarefas/components/quadro-selector.tsx`
 - [ ] 7.4 Adaptar imports para usar domain unificado

@@ -11,7 +11,7 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Database, Shield, KeyRound, Blocks, Bot, ExternalLink } from 'lucide-react';
+import { Database, Shield, KeyRound, Blocks, Bot, ExternalLink, Palette } from 'lucide-react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,6 +23,7 @@ import { BlockedIpsContent } from '@/app/app/admin/security/blocked-ips/componen
 import { TwoFAuthConfigContent } from '@/features/twofauth';
 import { DifyAppsList } from '@/features/dify/components/dify-apps-list';
 import { TwoFAuthIntegrationCard } from '@/features/integracoes';
+import { AparenciaContent } from './aparencia-content';
 import type { MetricasDB } from '@/features/admin';
 import type { Integracao } from '@/features/integracoes';
 
@@ -30,13 +31,13 @@ import type { Integracao } from '@/features/integracoes';
 // TIPOS
 // =============================================================================
 
-type ConfiguracoesTab = 'metricas' | 'seguranca' | 'integracoes';
+type ConfiguracoesTab = 'metricas' | 'seguranca' | 'integracoes' | 'aparencia';
 
 // =============================================================================
 // CONFIGURAÇÃO DAS TABS
 // =============================================================================
 
-const VALID_TABS = new Set<ConfiguracoesTab>(['metricas', 'seguranca', 'integracoes']);
+const VALID_TABS = new Set<ConfiguracoesTab>(['metricas', 'seguranca', 'integracoes', 'aparencia']);
 
 // =============================================================================
 // PROPS
@@ -82,7 +83,7 @@ export function ConfiguracoesTabsContent({
       <h1 className="text-2xl font-semibold tracking-tight">Configurações</h1>
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 lg:w-[450px]">
+        <TabsList className="grid w-full grid-cols-4 lg:w-[800px]">
           <TabsTrigger value="metricas">
             <Database className="mr-2 h-4 w-4" />
             Métricas
@@ -94,6 +95,10 @@ export function ConfiguracoesTabsContent({
           <TabsTrigger value="integracoes">
             <Blocks className="mr-2 h-4 w-4" />
             Integrações
+          </TabsTrigger>
+          <TabsTrigger value="aparencia">
+            <Palette className="mr-2 h-4 w-4" />
+            Aparência
           </TabsTrigger>
         </TabsList>
         <div className="mt-6">
@@ -157,6 +162,9 @@ export function ConfiguracoesTabsContent({
                 </CardFooter>
               </Card>
             </div>
+          </TabsContent>
+          <TabsContent value="aparencia" className="space-y-4">
+            <AparenciaContent />
           </TabsContent>
         </div>
       </Tabs>

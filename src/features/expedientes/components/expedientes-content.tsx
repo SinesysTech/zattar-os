@@ -47,6 +47,7 @@ const VIEW_ROUTES: Record<ViewType, string> = {
   mes: '/expedientes/mes',
   ano: '/expedientes/ano',
   lista: '/expedientes/lista',
+  quadro: '/expedientes/quadro',
 };
 
 const ROUTE_TO_VIEW: Record<string, ViewType> = {

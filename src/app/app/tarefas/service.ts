@@ -235,3 +235,112 @@ export async function listarTarefasComEventos(
   return ok([...manualTasks, ...virtualTasks]);
 }
 
+
+// =============================================================================
+// QUADROS (KANBAN BOARDS)
+// =============================================================================
+
+import type { Quadro, CriarQuadroCustomInput, ExcluirQuadroCustomInput, ReordenarTarefasInput } from "./domain";
+import { QUADROS_SISTEMA, criarQuadroCustomSchema, excluirQuadroCustomSchema, reordenarTarefasSchema } from "./domain";
+
+/**
+ * Lista todos os quadros disponíveis para o usuário:
+ * - Quadros sistema (constantes)
+ * - Quadros custom do usuário
+ */
+export async function listarQuadros(usuarioId: number): Promise<Result<Quadro[]>> {
+  // Quadros sistema (sempre disponíveis)
+  const sistemQuadros: Quadro[] = QUADROS_SISTEMA.map((q) => ({
+    ...q,
+    usuarioId,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }));
+
+  // Quadros custom do DB
+  const customResult = await repo.listQuadrosCustom(usuarioId);
+  if (!customResult.success) return err(customResult.error);
+
+  return ok([...sistemQuadros, ...customResult.data]);
+}
+
+/**
+ * Cria um quadro personalizado
+ */
+export async function criarQuadroCustom(usuarioId: number, input: unknown): Promise<Result<Quadro>> {
+  const val = validate<CriarQuadroCustomInput>(criarQuadroCustomSchema, input);
+  if (!val.success) return err(val.error);
+
+  return repo.createQuadroCustom(usuarioId, val.data);
+}
+
+/**
+ * Exclui um quadro personalizado
+ */
+export async function excluirQuadroCustom(usuarioId: number, input: unknown): Promise<Result<void>> {
+  const val = validate<ExcluirQuadroCustomInput>(excluirQuadroCustomSchema, input);
+  if (!val.success) return err(val.error);
+
+  // Não permitir excluir quadros sistema
+  if (val.data.quadroId.startsWith("sys-")) {
+    return err(appError("VALIDATION_ERROR", "Não é possível excluir quadros do sistema"));
+  }
+
+  return repo.deleteQuadroCustom(usuarioId, val.data.quadroId);
+}
+
+/**
+ * Obtém tarefas de um quadro específico
+ * - quadroId = null: Quadro Sistema (todas as tarefas + eventos virtuais)
+ * - quadroId = uuid: Quadro custom (apenas tarefas associadas)
+ */
+export async function obterTarefasDoQuadro(
+  usuarioId: number,
+  isSuperAdmin: boolean,
+  quadroId: string | null,
+  showAll = false
+): Promise<Result<TarefaDisplayItem[]>> {
+  if (!quadroId) {
+    // Quadro Sistema = todas as tarefas + eventos virtuais
+    return listarTarefasComEventos(usuarioId, isSuperAdmin, {}, showAll);
+  }
+
+  // Quadro custom = apenas tarefas associadas
+  const result = await repo.listTarefasByQuadro(usuarioId, quadroId);
+  if (!result.success) return err(result.error);
+
+  return ok(result.data.map((t) => ({ ...t, isVirtual: false })));
+}
+
+/**
+ * Reordena tarefas no quadro (drag-and-drop)
+ */
+export async function reordenarTarefas(usuarioId: number, input: unknown): Promise<Result<Task>> {
+  const val = validate<ReordenarTarefasInput>(reordenarTarefasSchema, input);
+  if (!val.success) return err(val.error);
+
+  // Atualizar posição e status (se mudou de coluna)
+  const updateInput: UpdateTaskInput = {
+    id: val.data.tarefaId,
+  };
+
+  if (val.data.novoStatus) {
+    updateInput.status = val.data.novoStatus;
+  }
+
+  // Atualizar tarefa
+  const updateResult = await repo.updateTask(usuarioId, updateInput);
+  if (!updateResult.success) return err(updateResult.error);
+
+  // Atualizar posição
+  const positionResult = await repo.updateTaskPosition(val.data.tarefaId, val.data.novaPosicao);
+  if (!positionResult.success) return err(positionResult.error);
+
+  // Se mudou de quadro, atualizar quadroId
+  if (val.data.quadroId !== undefined) {
+    const quadroResult = await repo.updateTaskQuadro(val.data.tarefaId, val.data.quadroId);
+    if (!quadroResult.success) return err(quadroResult.error);
+  }
+
+  return repo.getTaskById(usuarioId, val.data.tarefaId) as Promise<Result<Task>>;
+}

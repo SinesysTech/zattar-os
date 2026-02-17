@@ -4,7 +4,13 @@ import { useThemeConfig } from "@/components/layout/theme/active-theme";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_THEME } from "@/lib/themes";
 
-export function ResetThemeButton() {
+interface ResetThemeButtonProps {
+  label?: string;
+}
+
+export function ResetThemeButton({ 
+  label = "Reset to Default"
+}: ResetThemeButtonProps = {}) {
   const { setTheme } = useThemeConfig();
 
   const resetThemeHandle = () => {
@@ -12,8 +18,8 @@ export function ResetThemeButton() {
   };
 
   return (
-    <Button variant="destructive" className="mt-4 w-full" onClick={resetThemeHandle}>
-      Reset to Default
+    <Button variant="destructive" className="w-full" onClick={resetThemeHandle}>
+      {label}
     </Button>
   );
 }

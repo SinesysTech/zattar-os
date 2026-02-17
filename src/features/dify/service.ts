@@ -344,3 +344,15 @@ export class DifyService {
     }
   }
 }
+
+// --- Factory Function para Compatibilidade ---
+
+/**
+ * Cria uma instância do DifyService
+ * @param apiKey - Chave da API Dify
+ * @param apiUrl - URL base da API Dify
+ * @returns Instância do DifyService
+ */
+export function createDifyService(apiKey: string, apiUrl: string): DifyService {
+  return new DifyService(apiKey, apiUrl);
+}

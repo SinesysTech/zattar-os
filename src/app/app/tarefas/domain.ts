@@ -74,7 +74,10 @@ export const taskSchema = z.object({
   subTasks: z.array(taskSubTaskSchema).default([]),
   comments: z.array(taskCommentSchema).default([]),
   files: z.array(taskFileSchema).default([]),
-  //
+  // Kanban fields
+  position: z.number().int().min(0).default(0),
+  quadroId: z.string().uuid().optional().nullable(), // null = quadro sistema
+  // Virtual events
   source: z.string().optional().nullable(), // from eventSourceSchema
   sourceEntityId: z.string().optional().nullable(),
 });
@@ -176,3 +179,75 @@ export const removeFileSchema = z.object({
   fileId: z.string().min(1),
 });
 export type RemoveFileInput = z.infer<typeof removeFileSchema>;
+
+// =============================================================================
+// QUADROS (KANBAN BOARDS)
+// =============================================================================
+
+export const quadroTipoSchema = z.enum(["sistema", "custom"]);
+export type QuadroTipo = z.infer<typeof quadroTipoSchema>;
+
+export const quadroSourceSchema = z.enum(["expedientes", "audiencias", "obrigacoes"]);
+export type QuadroSource = z.infer<typeof quadroSourceSchema>;
+
+export const quadroSchema = z.object({
+  id: z.string().uuid(),
+  usuarioId: z.number().int().positive(),
+  titulo: z.string().min(1),
+  tipo: quadroTipoSchema,
+  source: quadroSourceSchema.nullable(),
+  icone: z.string().optional(),
+  ordem: z.number().int().min(0),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+export type Quadro = z.infer<typeof quadroSchema>;
+
+/**
+ * Quadros sistema (constantes) - aparecem para todos os usuários
+ */
+export const QUADROS_SISTEMA: Omit<Quadro, "usuarioId" | "createdAt" | "updatedAt">[] = [
+  {
+    id: "sys-expedientes",
+    titulo: "Expedientes",
+    tipo: "sistema",
+    source: "expedientes",
+    icone: "FileText",
+    ordem: 0,
+  },
+  {
+    id: "sys-audiencias",
+    titulo: "Audiências",
+    tipo: "sistema",
+    source: "audiencias",
+    icone: "Gavel",
+    ordem: 1,
+  },
+  {
+    id: "sys-obrigacoes",
+    titulo: "Obrigações",
+    tipo: "sistema",
+    source: "obrigacoes",
+    icone: "CircleDollarSign",
+    ordem: 2,
+  },
+];
+
+export const criarQuadroCustomSchema = z.object({
+  titulo: z.string().min(1).max(100),
+  icone: z.string().optional(),
+});
+export type CriarQuadroCustomInput = z.infer<typeof criarQuadroCustomSchema>;
+
+export const excluirQuadroCustomSchema = z.object({
+  quadroId: z.string().uuid(),
+});
+export type ExcluirQuadroCustomInput = z.infer<typeof excluirQuadroCustomSchema>;
+
+export const reordenarTarefasSchema = z.object({
+  tarefaId: z.string().min(1),
+  novoStatus: taskStatusSchema.optional(),
+  novaPosicao: z.number().int().min(0),
+  quadroId: z.string().uuid().optional().nullable(),
+});
+export type ReordenarTarefasInput = z.infer<typeof reordenarTarefasSchema>;
