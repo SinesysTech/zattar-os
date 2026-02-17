@@ -69,9 +69,9 @@
 - [x] 11.3 Executar linter para identificar código morto
 
 ## 12. Testes
-- [-] 12.1 Executar `npm run type-check` e corrigir erros de tipo
-- [~] 12.2 Executar testes unitários: `npm run test:unit`
-- [~] 12.3 Executar testes de integração relacionados a tarefas
+- [x] 12.1 Executar `npm run type-check` e corrigir erros de tipo
+- [x] 12.2 Executar testes unitários: `npm run test:unit`
+- [x] 12.3 Executar testes de integração relacionados a tarefas
 - [~] 12.4 Testar manualmente no navegador:
   - [ ] 12.4.1 Listar tarefas
   - [ ] 12.4.2 Criar nova tarefa
@@ -85,8 +85,8 @@
   - [ ] 12.4.10 Verificar espaçamento da paginação
 
 ## 13. Documentação
-- [~] 13.1 Adicionar comentário no topo de `tarefas-client.tsx` explicando que é visualização de lista
-- [~] 13.2 Adicionar comentário mencionando que Kanban está em `/kanban`
+- [x] 13.1 Adicionar comentário no topo de `tarefas-client.tsx` explicando que é visualização de lista
+- [x] 13.2 Adicionar comentário mencionando que Kanban está em `/kanban`
 - [~] 13.3 Atualizar README.md do módulo (se existir)
 
 ## 14. Melhorias Opcionais

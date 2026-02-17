@@ -136,7 +136,6 @@ function assembleTask(
     dueDate: item.due_date ?? null,
     reminderDate: item.reminder_at ?? null,
     starred: item.starred,
-    position: item.position,
     assignees,
     assignedTo: assignees.map((a) => a.name),
     subTasks: subTasks
@@ -318,21 +317,15 @@ export async function createTask(usuarioId: number, input: CreateTaskInput): Pro
     let status = input.status === 'todo' ? 'pending' : (input.status === 'in progress' ? 'in-progress' : (input.status === 'done' ? 'completed' : input.status));
     if (!status) status = 'pending';
 
-    const { data: lastPosData } = await db.from(TABLE_ITEMS).select("position").eq("usuario_id", usuarioId).order("position", { ascending: false }).limit(1);
-    const lastPos = (lastPosData?.[0] as { position?: number } | undefined)?.position ?? -1;
-    const nextPos = lastPos + 1;
-
     const { data: item, error: insertError } = await db.from(TABLE_ITEMS).insert({
       usuario_id: usuarioId,
       title: input.title,
       description: input.description ?? null,
       status: status,
       priority: input.priority,
-      // label: input.label // Not supported yet
       due_date: input.dueDate ?? null,
       reminder_at: input.reminderDate ?? null,
       starred: input.starred ?? false,
-      position: nextPos,
       label: input.label,
     }).select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id, label").single();
 
