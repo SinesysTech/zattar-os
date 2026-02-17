@@ -62,8 +62,8 @@ export interface Integracao {
   metadata?: Record<string, unknown>;
   created_at: string;
   updated_at: string;
-  created_by?: string;
-  updated_by?: string;
+  created_by_auth_id?: string;
+  updated_by_auth_id?: string;
 }
 
 export interface TwoFAuthConfig {
