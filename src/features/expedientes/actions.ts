@@ -172,6 +172,40 @@ export async function actionCriarExpediente(
       });
     }
 
+    // 🤖 Geração Automática de Peça Hook
+    if (result.success && rawData.tipoExpedienteId && user) {
+      const expedienteId = result.data.id;
+
+      after(async () => {
+        try {
+          console.log(
+            `🤖 [AUTO-GEN] Verificando geração automática para expediente ${expedienteId}`
+          );
+
+          const { gerarPecaAutomatica } = await import(
+            '@/features/assistentes-tipos/geracao-automatica-service'
+          );
+
+          const resultado = await gerarPecaAutomatica(expedienteId, user.id);
+
+          if (resultado.sucesso) {
+            console.log(
+              `✅ [AUTO-GEN] Peça gerada automaticamente: documento ${resultado.documento_id}`
+            );
+          } else {
+            console.log(
+              `ℹ️ [AUTO-GEN] Geração não executada: ${resultado.mensagem}`
+            );
+          }
+        } catch (error) {
+          console.error(
+            `❌ [AUTO-GEN] Erro ao gerar peça para expediente ${expedienteId}:`,
+            error
+          );
+        }
+      });
+    }
+
     return {
       success: true,
       data: result.data,

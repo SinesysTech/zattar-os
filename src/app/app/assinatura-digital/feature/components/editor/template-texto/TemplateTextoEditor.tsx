@@ -116,14 +116,14 @@ export function TemplateTextoEditor({
         <EditorContainer
           variant="default"
           className={cn(
-            'min-h-[400px] rounded-b-lg border border-t-0',
+            'min-h-100 rounded-b-lg border border-t-0',
             disabled && 'pointer-events-none opacity-50'
           )}
         >
           <Editor
             variant="default"
             placeholder={placeholder}
-            className="min-h-[400px] px-6 py-4"
+            className="min-h-100 px-6 py-4"
           />
         </EditorContainer>
       </Plate>

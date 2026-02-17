@@ -16,11 +16,10 @@ import { Database, Shield, Blocks, Bot, Palette } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import Link from 'next/link';
 
 import { MetricasDBContent } from '@/app/app/admin/metricas-db/components/metricas-db-content';
 import { BlockedIpsContent } from '@/app/app/admin/security/blocked-ips/components/blocked-ips-content';
-import { DifyAppsList } from '@/features/dify';
 import { TwoFAuthIntegrationCard } from '@/features/integracoes';
 import { AparenciaContent } from './aparencia-content';
 import type { MetricasDB } from '@/features/admin';
@@ -125,22 +124,9 @@ export function ConfiguracoesTabsContent({
                   </p>
                 </CardContent>
                 <CardFooter>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" className="w-full">Gerenciar Apps</Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>Aplicativos Dify</DialogTitle>
-                        <DialogDescription>
-                          Configure seus aplicativos Dify para uso no Zattar OS.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="py-2">
-                        <DifyAppsList />
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link href="/app/configuracoes/dify">Gerenciar Apps</Link>
+                  </Button>
                 </CardFooter>
               </Card>
 

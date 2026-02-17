@@ -8,9 +8,11 @@ import {
   criarIntegracaoSchema,
   atualizarIntegracaoSchema,
   twofauthConfigSchema,
+  chatwootConfigSchema,
   type Integracao,
   type TipoIntegracao,
   type TwoFAuthConfig,
+  type ChatwootConfig,
 } from "./domain";
 
 // =============================================================================
@@ -82,6 +84,13 @@ export async function criar(params: unknown): Promise<Integracao> {
     }
   }
 
+  if (validacao.data.tipo === "chatwoot") {
+    const configValidacao = chatwootConfigSchema.safeParse(validacao.data.configuracao);
+    if (!configValidacao.success) {
+      throw new Error(`Configuração Chatwoot inválida: ${configValidacao.error.errors[0].message}`);
+    }
+  }
+
   return repo.create(validacao.data);
 }
 
@@ -103,6 +112,13 @@ export async function atualizar(params: unknown): Promise<Integracao> {
     const configValidacao = twofauthConfigSchema.safeParse(updateData.configuracao);
     if (!configValidacao.success) {
       throw new Error(`Configuração 2FAuth inválida: ${configValidacao.error.errors[0].message}`);
+    }
+  }
+
+  if (updateData.tipo === "chatwoot" && updateData.configuracao) {
+    const configValidacao = chatwootConfigSchema.safeParse(updateData.configuracao);
+    if (!configValidacao.success) {
+      throw new Error(`Configuração Chatwoot inválida: ${configValidacao.error.errors[0].message}`);
     }
   }
 
@@ -149,6 +165,35 @@ export async function atualizarConfig2FAuth(config: TwoFAuthConfig): Promise<Int
   }
 
   // Atualizar integração existente
+  return repo.update(integracao.id, {
+    configuracao: validacao.data,
+    ativo: true,
+  });
+}
+
+/**
+ * Atualizar configuração do Chatwoot
+ */
+export async function atualizarConfigChatwoot(config: ChatwootConfig): Promise<Integracao> {
+  const validacao = chatwootConfigSchema.safeParse(config);
+
+  if (!validacao.success) {
+    throw new Error(validacao.error.errors[0].message);
+  }
+
+  // Buscar integração existente
+  const integracao = await repo.findByTipoAndNome("chatwoot", "Chatwoot Principal");
+
+  if (!integracao) {
+    return repo.create({
+      tipo: "chatwoot",
+      nome: "Chatwoot Principal",
+      descricao: "Sistema de atendimento e conversas",
+      ativo: true,
+      configuracao: validacao.data,
+    });
+  }
+
   return repo.update(integracao.id, {
     configuracao: validacao.data,
     ativo: true,

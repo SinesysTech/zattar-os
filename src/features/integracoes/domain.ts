@@ -55,6 +55,8 @@ export const chatwootConfigSchema = z.object({
   api_key: z.string().min(10, "API key deve ter no mínimo 10 caracteres"),
   account_id: z.number().int("Account ID deve ser um número inteiro").positive("Account ID deve ser positivo"),
   default_inbox_id: z.number().int().positive().optional(),
+  website_token: z.string().min(1, "Token do widget é obrigatório").optional(),
+  widget_base_url: z.string().url("URL do widget inválida").optional(),
 });
 
 // =============================================================================
@@ -86,6 +88,8 @@ export interface ChatwootConfig {
   api_key: string;
   account_id: number;
   default_inbox_id?: number;
+  website_token?: string;
+  widget_base_url?: string;
 }
 
 export type CriarIntegracaoParams = z.infer<typeof criarIntegracaoSchema>;
