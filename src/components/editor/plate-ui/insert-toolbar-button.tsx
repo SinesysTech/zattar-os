@@ -230,7 +230,7 @@ export function InsertToolbarButton(props: DropdownMenuProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className="flex max-h-[500px] min-w-0 flex-col overflow-y-auto"
+        className="flex max-h-125 min-w-0 flex-col overflow-y-auto"
         align="start"
       >
         {groups.map(({ group, items: nestedItems }) => (
@@ -238,7 +238,7 @@ export function InsertToolbarButton(props: DropdownMenuProps) {
             {nestedItems.map(({ icon, label, value, onSelect }) => (
               <DropdownMenuItem
                 key={value}
-                className="min-w-[180px]"
+                className="min-w-45"
                 onSelect={() => {
                   onSelect(editor, value);
                   editor.tf.focus();
