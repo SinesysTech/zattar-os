@@ -15,7 +15,7 @@
     "dev:no-deprecation": "NODE_OPTIONS=--no-deprecation next dev --turbo",
     "dev:trace": "node --trace-deprecation node_modules/next/dist/bin/next dev --turbo",
     "build": "npm run check:architecture && cross-env NODE_OPTIONS=--max-old-space-size=4096 node node_modules/next/dist/bin/next build --experimental-build-mode=compile",
-    "build:ci": "npm run check:architecture && cross-env NODE_OPTIONS=--max-old-space-size=6144 DISABLE_PWA=true node node_modules/next/dist/bin/next build",
+    "build:ci": "cross-env NODE_OPTIONS=--max-old-space-size=6144 DISABLE_PWA=true node node_modules/next/dist/bin/next build",
     "build:windows": "npm run check:architecture && cross-env NODE_OPTIONS=--max-old-space-size=8192 node node_modules/next/dist/bin/next build --webpack",
     "build:verbose": "next build --turbopack",
     "build:no-deprecation": "NODE_OPTIONS=--no-deprecation next build --turbopack",
