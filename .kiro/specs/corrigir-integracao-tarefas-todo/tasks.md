@@ -59,17 +59,17 @@
 - [x] 9.4 Verificar exports no arquivo de actions
 
 ## 10. Atualizar MCP Tools
-- [~] 10.1 Remover `position: 0` do tool `criar_tarefa` em `tarefas-tools.ts`
-- [~] 10.2 Remover `position: 0` do tool `agendar_reuniao_zoom`
-- [~] 10.3 Verificar se há outros tools que usam `position`
+- [x] 10.1 Remover `position: 0` do tool `criar_tarefa` em `tarefas-tools.ts`
+- [x] 10.2 Remover `position: 0` do tool `agendar_reuniao_zoom`
+- [x] 10.3 Verificar se há outros tools que usam `position`
 
 ## 11. Limpeza de Imports e Dependências
-- [~] 11.1 Verificar e remover imports não utilizados em todos os arquivos modificados
-- [~] 11.2 Verificar se `@dnd-kit/*` ainda é necessário (pode ser usado por outros módulos)
-- [~] 11.3 Executar linter para identificar código morto
+- [x] 11.1 Verificar e remover imports não utilizados em todos os arquivos modificados
+- [x] 11.2 Verificar se `@dnd-kit/*` ainda é necessário (pode ser usado por outros módulos)
+- [x] 11.3 Executar linter para identificar código morto
 
 ## 12. Testes
-- [~] 12.1 Executar `npm run type-check` e corrigir erros de tipo
+- [-] 12.1 Executar `npm run type-check` e corrigir erros de tipo
 - [~] 12.2 Executar testes unitários: `npm run test:unit`
 - [~] 12.3 Executar testes de integração relacionados a tarefas
 - [~] 12.4 Testar manualmente no navegador:
