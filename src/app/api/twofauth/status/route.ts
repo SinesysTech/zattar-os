@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateRequest } from "@/lib/auth/api-auth";
 import { checkConnection, getUser, TwoFAuthError } from "@/lib/integrations/twofauth/";
+import { load2FAuthConfig } from "@/lib/integrations/twofauth/config-loader";
 
 /**
  * @swagger
