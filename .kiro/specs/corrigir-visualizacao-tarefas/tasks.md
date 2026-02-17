@@ -16,21 +16,21 @@ As correções são simples e focadas em UI/UX, sem alterações na lógica de n
   - Arquivo: `src/components/shared/data-shell/data-shell.tsx`
   - _Requisitos: 3.1_
 
-- [-] 2. Configurar opções do ViewModePopover no DataTable
+- [x] 2. Configurar opções do ViewModePopover no DataTable
   - Importar ícones List e LayoutGrid do lucide-react
   - Passar array de opções customizadas para ViewModePopover
   - Incluir apenas opções "lista" e "quadro"
   - Arquivo: `src/app/app/tarefas/components/data-table.tsx`
   - _Requisitos: 3.2_
 
-- [~] 3. Configurar opções do ViewModePopover no TaskBoard
+- [x] 3. Configurar opções do ViewModePopover no TaskBoard
   - Importar ícones List e LayoutGrid do lucide-react
   - Passar array de opções customizadas para ViewModePopover
   - Incluir apenas opções "lista" e "quadro"
   - Arquivo: `src/app/app/tarefas/components/task-board.tsx`
   - _Requisitos: 3.2_
 
-- [~] 4. Checkpoint - Testes manuais e validação
+- [-] 4. Checkpoint - Testes manuais e validação
   - Verificar espaçamento visual da paginação (16px)
   - Testar alternância Lista → Quadro
   - Testar alternância Quadro → Lista

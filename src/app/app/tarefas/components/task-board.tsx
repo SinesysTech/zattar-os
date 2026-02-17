@@ -21,6 +21,8 @@ import {
   MoreHorizontal,
   Trash2,
   Plus,
+  List,
+  LayoutGrid,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -40,6 +42,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import * as React from "react";
 
 import { AppBadge } from "@/components/ui/app-badge";
 import { Button } from "@/components/ui/button";
@@ -350,6 +353,10 @@ export function TaskBoard({ quadros }: TaskBoardProps) {
             <ViewModePopover
               value={viewMode}
               onValueChange={(v) => setViewMode(v as "lista" | "quadro")}
+              options={[
+                { value: 'lista', label: 'Lista', icon: List },
+                { value: 'quadro', label: 'Quadro', icon: LayoutGrid },
+              ]}
             />
             <Button
               onClick={() => setCreateDialogOpen(true)}

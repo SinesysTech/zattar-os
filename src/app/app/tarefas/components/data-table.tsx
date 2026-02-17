@@ -27,7 +27,7 @@ import {
 
 import { DataShell, DataTableToolbar } from "@/components/shared/data-shell";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, List, LayoutGrid } from "lucide-react";
 import { ViewModePopover } from "@/components/shared";
 
 import { priorities, statuses, labels } from "@/app/app/tarefas/data/data";
@@ -146,6 +146,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
             <ViewModePopover
               value={viewMode}
               onValueChange={(v) => setViewMode(v as "lista" | "quadro")}
+              options={[
+                { value: 'lista', label: 'Lista', icon: List },
+                { value: 'quadro', label: 'Quadro', icon: LayoutGrid },
+              ]}
             />
           }
         />
