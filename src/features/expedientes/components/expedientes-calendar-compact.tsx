@@ -48,25 +48,6 @@ interface ExpedientesCalendarCompactProps {
 // Dias da semana em português (abreviados)
 const WEEK_DAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-/**
- * Retorna a classe CSS de background para o indicador de status do expediente.
- * - Pendente (não baixado, não vencido): bg-primary (azul)
- * - Vencido (prazoVencido === true AND baixadoEm is null): bg-destructive (vermelho)
- * - Baixado (baixadoEm is not null): bg-success (verde)
- */
-function getStatusIndicatorClass(expediente: Expediente): string {
-  // Baixado tem prioridade máxima
-  if (expediente.baixadoEm !== null) {
-    return 'bg-success';
-  }
-  // Vencido (não baixado)
-  if (expediente.prazoVencido === true) {
-    return 'bg-destructive';
-  }
-  // Pendente (padrão)
-  return 'bg-primary';
-}
-
 // =============================================================================
 // COMPONENTE PRINCIPAL
 // =============================================================================

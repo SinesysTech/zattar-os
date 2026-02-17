@@ -6,7 +6,6 @@
  */
 
 import { z } from "zod";
-import type { EventSource } from "@/lib/event-aggregation/domain";
 
 export const taskStatusSchema = z.enum(["backlog", "todo", "in progress", "done", "canceled"]);
 export type TaskStatus = z.infer<typeof taskStatusSchema>;

@@ -39,6 +39,7 @@ export {
   ProcessosRelacionadosCell,
   CopyButton,
   FilterPopover,
+  FilterPopoverMulti,
   // Clientes
   ClientesTableWrapper,
   ClienteForm,

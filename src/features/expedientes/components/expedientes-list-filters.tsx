@@ -15,11 +15,8 @@ import { FilterPopover, type FilterOption } from '@/features/partes/components/s
 
 import {
   CodigoTribunal,
-  GrauTribunal,
-  OrigemExpediente,
   GRAU_TRIBUNAL_LABELS,
   ORIGEM_EXPEDIENTE_LABELS,
-  type CodigoTribunal as CodigoTribunalType,
 } from '../domain';
 
 // =============================================================================

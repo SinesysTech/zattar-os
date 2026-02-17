@@ -52,10 +52,11 @@ export async function POST(req: NextRequest) {
             },
         });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('[API Dify Workflow] Erro não tratado:', error);
+        const message = error instanceof Error ? error.message : String(error);
         return NextResponse.json(
-            { error: 'Erro interno ao processar workflow', details: error.message },
+            { error: 'Erro interno ao processar workflow', details: message },
             { status: 500 }
         );
     }

@@ -82,7 +82,7 @@ export function WidgetDespesasCategoria() {
       </CardHeader>
       <CardContent className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-70">
         <div className="flex items-center justify-center min-h-55">
-          <div className="w-full h-64 sm:h-72 lg:h-80">
+          <div className="w-full h-64 sm:h-72 lg:h-80" style={{ minHeight: 220 }}>
             <ClientOnly>
               <ResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={220}>
                 <PieChart>

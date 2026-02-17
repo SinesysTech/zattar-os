@@ -15,6 +15,7 @@ export const TIPOS_INTEGRACAO = {
   dify: "dify",
   webhook: "webhook",
   api: "api",
+  chatwoot: "chatwoot",
 } as const;
 
 export type TipoIntegracao = keyof typeof TIPOS_INTEGRACAO;
@@ -25,7 +26,7 @@ export type TipoIntegracao = keyof typeof TIPOS_INTEGRACAO;
 
 // Schema base para integração
 export const integracaoBaseSchema = z.object({
-  tipo: z.enum(["twofauth", "zapier", "dify", "webhook", "api"]),
+  tipo: z.enum(["twofauth", "zapier", "dify", "webhook", "api", "chatwoot"]),
   nome: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
   descricao: z.string().optional(),
   ativo: z.boolean().default(true),
@@ -46,6 +47,14 @@ export const twofauthConfigSchema = z.object({
   api_url: z.string().url("URL inválida"),
   api_token: z.string().min(10, "Token deve ter no mínimo 10 caracteres"),
   account_id: z.number().int("Account ID deve ser um número inteiro").positive("Account ID deve ser positivo").optional(),
+});
+
+// Schema específico para Chatwoot
+export const chatwootConfigSchema = z.object({
+  api_url: z.string().url("URL inválida"),
+  api_key: z.string().min(10, "API key deve ter no mínimo 10 caracteres"),
+  account_id: z.number().int("Account ID deve ser um número inteiro").positive("Account ID deve ser positivo"),
+  default_inbox_id: z.number().int().positive().optional(),
 });
 
 // =============================================================================
@@ -72,6 +81,13 @@ export interface TwoFAuthConfig {
   account_id?: number;
 }
 
+export interface ChatwootConfig {
+  api_url: string;
+  api_key: string;
+  account_id: number;
+  default_inbox_id?: number;
+}
+
 export type CriarIntegracaoParams = z.infer<typeof criarIntegracaoSchema>;
 export type AtualizarIntegracaoParams = z.infer<typeof atualizarIntegracaoSchema>;
 
@@ -82,9 +98,10 @@ export type AtualizarIntegracaoParams = z.infer<typeof atualizarIntegracaoSchema
 export const LABELS_TIPO_INTEGRACAO: Record<TipoIntegracao, string> = {
   twofauth: "2FAuth",
   zapier: "Zapier",
-  dify: "Dify AI",
+  dify: "Dify",
   webhook: "Webhook",
   api: "API",
+  chatwoot: "Chatwoot",
 };
 
 export const DESCRICOES_TIPO_INTEGRACAO: Record<TipoIntegracao, string> = {
@@ -93,4 +110,5 @@ export const DESCRICOES_TIPO_INTEGRACAO: Record<TipoIntegracao, string> = {
   dify: "Agentes e workflows de IA",
   webhook: "Webhooks personalizados",
   api: "Integrações via API",
+  chatwoot: "Sistema de atendimento e conversas",
 };

@@ -14,17 +14,10 @@
 
 import * as React from "react";
 import {
-  GripVertical,
-  Paperclip,
-  MessageSquare,
-  PlusCircleIcon,
-  MoreHorizontal,
-  Trash2,
   Plus,
   List,
   LayoutGrid,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import {
   DndContext,
@@ -45,38 +38,8 @@ import { CSS } from "@dnd-kit/utilities";
 
 import { AppBadge } from "@/components/ui/app-badge";
 import { Button } from "@/components/ui/button";
-import * as Kanban from "@/components/ui/kanban";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { DialogFormShell } from "@/components/shared/dialog-shell";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 
-import type { TarefaDisplayItem, TaskStatus, TaskPriority, Quadro } from "../domain";
+import type { TarefaDisplayItem, TaskStatus, Quadro } from "../domain";
 import { SYSTEM_BOARD_DEFINITIONS } from "../domain";
 import { useTarefaStore } from "../store";
 import { TaskCard } from "./task-card";
@@ -189,7 +152,7 @@ function DraggableTaskCard({ tarefa, onClick }: DraggableTaskCardProps) {
 
 export function TaskBoard({ quadros }: TaskBoardProps) {
   const router = useRouter();
-  const [isPending, startTransition] = React.useTransition();
+  const [_isPending, startTransition] = React.useTransition();
   const [activeId, setActiveId] = React.useState<string | null>(null);
   const [isReordering, setIsReordering] = React.useState(false);
 
@@ -369,7 +332,7 @@ export function TaskBoard({ quadros }: TaskBoardProps) {
             />
             <Button
               onClick={() => setCreateDialogOpen(true)}
-              disabled={isPending || isReordering}
+              disabled={_isPending || isReordering}
               className="bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Plus className="h-4 w-4" />

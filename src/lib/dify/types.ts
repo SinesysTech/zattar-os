@@ -1,5 +1,5 @@
 export interface DifyUser {
-  inputs: Record<string, any>;
+  inputs: Record<string, unknown>;
   query: string;
   response_mode: 'blocking' | 'streaming';
   conversation_id?: string;
@@ -16,7 +16,7 @@ export interface DifyFile {
 
 // Chat API
 export interface DifyChatRequest {
-  inputs: Record<string, any>;
+  inputs: Record<string, unknown>;
   query: string;
   response_mode: 'blocking' | 'streaming';
   conversation_id?: string;
@@ -55,7 +55,7 @@ export interface DifyChatResponse {
 
 // Workflow API
 export interface DifyWorkflowRequest {
-  inputs: Record<string, any>;
+  inputs: Record<string, unknown>;
   response_mode: 'blocking' | 'streaming';
   user: string;
   files?: DifyFile[];
@@ -68,7 +68,7 @@ export interface DifyWorkflowResponse {
     id: string;
     workflow_id: string;
     status: 'succeeded' | 'failed' | 'stopped';
-    outputs: Record<string, any>;
+    outputs: Record<string, unknown>;
     error?: string;
     elapsed_time: number;
     total_tokens: number;
@@ -80,7 +80,7 @@ export interface DifyWorkflowResponse {
 
 // Completion API
 export interface DifyCompletionRequest {
-  inputs: Record<string, any>;
+  inputs: Record<string, unknown>;
   response_mode: 'blocking' | 'streaming';
   user: string;
   files?: DifyFile[];
@@ -91,7 +91,7 @@ export interface DifyCompletionResponse {
   conversation_id: string;
   mode: string;
   answer: string;
-  metadata: any;
+  metadata: Record<string, unknown>;
   created_at: number;
 }
 
@@ -100,7 +100,7 @@ export interface DifyConversationsResponse {
   data: Array<{
     id: string;
     name: string;
-    inputs: Record<string, any>;
+    inputs: Record<string, unknown>
     status: string;
     introduction: string;
     created_at: number;
@@ -114,9 +114,9 @@ export interface DifyMessagesResponse {
   data: Array<{
     id: string;
     conversation_id: string;
-    inputs: Record<string, any>;
+    inputs: Record<string, unknown>;
     query: string;
-    message_files: any[];
+    message_files: Array<Record<string, unknown>>;
     answer: string;
     created_at: number;
     feedback?: {
@@ -164,7 +164,7 @@ export interface DifyDocument {
   id: string;
   position: number;
   data_source_type: string;
-  data_source_info: any;
+  data_source_info: Record<string, unknown>;
   dataset_process_rule_id: string;
   name: string;
   created_from: string;
@@ -183,7 +183,7 @@ export interface DifyDocumentCreateRequest {
   name: string;
   text: string;
   indexing_technique?: 'high_quality' | 'economy';
-  process_rule?: any;
+  process_rule?: Record<string, unknown>;
 }
 
 // SSE Events
@@ -207,6 +207,6 @@ export interface DifyStreamEvent {
   conversation_id?: string;
   answer?: string;
   created_at?: number;
-  data?: any; // For workflow events
-  metadata?: any;
+  data?: Record<string, unknown>; // For workflow events
+  metadata?: Record<string, unknown>;
 }

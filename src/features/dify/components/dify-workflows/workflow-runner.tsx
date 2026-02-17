@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Play, Square, RotateCcw, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
@@ -101,9 +101,13 @@ export function WorkflowRunner({
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               {statusIcon[state.status as StatusExecucaoDify] || statusIcon[StatusExecucaoDify.SUCCEEDED]}
-              <Badge variant="outline">
+              <SemanticBadge
+                category="status"
+                value={state.status}
+                variantOverride="outline"
+              >
                 {STATUS_EXECUCAO_LABELS[state.status as StatusExecucaoDify] || 'Concluído'}
-              </Badge>
+              </SemanticBadge>
             </div>
 
             {state.error && (

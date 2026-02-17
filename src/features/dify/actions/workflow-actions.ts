@@ -4,7 +4,6 @@ import { createClient } from '@/lib/supabase/server';
 import { DifyService } from '../service';
 import { executarWorkflowSchema, StatusExecucaoDify } from '../domain';
 import { difyRepository } from '../repository';
-import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 export async function actionListarExecucoesDify(params?: { limite?: number; offset?: number }) {
@@ -30,19 +29,20 @@ export async function actionListarExecucoesDify(params?: { limite?: number; offs
       return { success: false, error: error.message };
     }
 
-    return { 
-      success: true, 
+    return {
+      success: true,
       data: {
         data: data || [],
         total: count || 0
       }
     };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return { success: false, error: message };
   }
 }
 
-export async function actionExecutarWorkflow(params: any) {
+export async function actionExecutarWorkflow(params: z.infer<typeof executarWorkflowSchema>) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -78,7 +78,7 @@ export async function actionExecutarWorkflow(params: any) {
     total_tokens: execData.total_tokens,
     elapsed_time: execData.elapsed_time,
     total_steps: execData.total_steps,
-    usuario_id: user.id as any, // uuid
+    usuario_id: user.id,
     finished_at: execData.finished_at ? new Date(execData.finished_at * 1000) : undefined,
   });
 

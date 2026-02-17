@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Badge } from '@/components/ui/badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Clock, Zap, Hash } from 'lucide-react';
@@ -39,7 +39,7 @@ export function WorkflowHistory({ className }: WorkflowHistoryProps) {
     load();
   }, []);
 
-  const statusVariant: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+  const statusVariant: Record<string, 'secondary' | 'default' | 'destructive' | 'outline'> = {
     [StatusExecucaoDify.RUNNING]: 'secondary',
     [StatusExecucaoDify.SUCCEEDED]: 'default',
     [StatusExecucaoDify.FAILED]: 'destructive',
@@ -85,9 +85,13 @@ export function WorkflowHistory({ className }: WorkflowHistoryProps) {
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <Badge variant={statusVariant[exec.status] || 'outline'}>
+                    <SemanticBadge
+                      category="status"
+                      value={exec.status}
+                      variantOverride={statusVariant[exec.status] || 'outline'}
+                    >
                       {STATUS_EXECUCAO_LABELS[exec.status as StatusExecucaoDify] || exec.status}
-                    </Badge>
+                    </SemanticBadge>
                     <span className="text-xs text-muted-foreground font-mono">
                       {exec.workflow_run_id?.slice(0, 8) || exec.workflow_id.slice(0, 8)}...
                     </span>

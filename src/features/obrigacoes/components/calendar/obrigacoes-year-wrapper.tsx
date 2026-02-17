@@ -121,7 +121,7 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
       setSelectedDayDate(new Date(selectedYear, mes, dia));
       setDayDialogOpen(true);
     }
-  }, [parcelasPorDia, selectedDate]);
+  }, [parcelasPorDia, selectedYear]);
 
   return (
     <>

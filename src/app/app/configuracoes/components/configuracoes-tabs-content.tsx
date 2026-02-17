@@ -20,7 +20,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 
 import { MetricasDBContent } from '@/app/app/admin/metricas-db/components/metricas-db-content';
 import { BlockedIpsContent } from '@/app/app/admin/security/blocked-ips/components/blocked-ips-content';
-import { DifyAppsList } from '@/features/dify/components/dify-apps-list';
+import { DifyAppsList } from '@/features/dify';
 import { TwoFAuthIntegrationCard } from '@/features/integracoes';
 import { AparenciaContent } from './aparencia-content';
 import type { MetricasDB } from '@/features/admin';

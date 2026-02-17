@@ -127,7 +127,7 @@ export function ContratosTableWrapper({
   const [status, setStatus] = React.useState<string>('');
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
-  const [segmentos, setSegmentos] = React.useState(segmentosOptions);
+  const [segmentos, _setSegmentos] = React.useState(segmentosOptions);
 
   // ---------- Estado de Dialogs/Sheets ----------
   const [createOpen, setCreateOpen] = React.useState(false);

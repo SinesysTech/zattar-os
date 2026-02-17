@@ -7,7 +7,7 @@
  * @see RULES.md para documentação de troubleshooting do Realtime
  */
 
-import { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import {
@@ -242,10 +242,13 @@ export function useNotificacoes(params?: ListarNotificacoesParams) {
  * @see RULES.md para documentação de troubleshooting
  */
 export function useNotificacoesRealtime(options?: {
+  usuarioId?: number;
+  sessionToken?: string | null;
   onNovaNotificacao?: (notificacao: Notificacao) => void;
   onContadorChange?: (contador: ContadorNotificacoes) => void;
 }) {
-  const { onNovaNotificacao, onContadorChange } = options || {};
+  const { usuarioId: _usuarioId, sessionToken, onNovaNotificacao, onContadorChange } = options || {};
+  const usuarioId = _usuarioId;
 
   // Usar singleton client para evitar múltiplas conexões Realtime
   const supabase = getSupabaseBrowserClient();
@@ -341,56 +344,23 @@ export function useNotificacoesRealtime(options?: {
       const startTime = Date.now();
 
       try {
-        const [userResult, sessionResult] = await Promise.all([
-          supabase.auth.getUser(),
-          supabase.auth.getSession(),
-        ]);
-
-        const user = userResult.data.user;
-        const session = sessionResult.data.session;
+        // Validar que temos usuário (dados vêm do UserProvider)
+        if (!usuarioId) {
+          console.warn(
+            "⚠️ [Notificações Realtime] Usuário não disponível - Realtime desabilitado"
+          );
+          isConnectingRef.current = false;
+          return;
+        }
 
         if (!isMounted) {
           isConnectingRef.current = false;
           return;
         }
 
-        // Validar que temos usuário
-        if (!user) {
+        if (!sessionToken) {
           console.warn(
-            "⚠️ [Notificações Realtime] Usuário não autenticado - Realtime desabilitado"
-          );
-          isConnectingRef.current = false;
-          return;
-        }
-
-        const { data: usuarioData, error: usuarioError } = await supabase
-          .from("usuarios")
-          .select("id")
-          .eq("auth_user_id", user.id)
-          .single();
-
-        if (!isMounted) {
-          isConnectingRef.current = false;
-          return;
-        }
-
-        // Validar que temos usuarioId
-        if (!usuarioData || usuarioError) {
-          console.warn(
-            "⚠️ [Notificações Realtime] Usuário não encontrado na tabela usuarios",
-            { authUserId: user.id, error: usuarioError }
-          );
-          isConnectingRef.current = false;
-          return;
-        }
-
-        if (!session?.access_token) {
-          console.warn(
-            "⚠️ [Notificações Realtime] Sessão inválida - ativando polling",
-            {
-              authUserId: user.id,
-              hasSession: Boolean(session),
-            }
+            "⚠️ [Notificações Realtime] Sessão inválida - ativando polling"
           );
           setUsePolling(true);
           isConnectingRef.current = false;
@@ -399,7 +369,7 @@ export function useNotificacoesRealtime(options?: {
 
         // Configurar autenticação do Realtime
         try {
-          await supabase.realtime.setAuth(session.access_token);
+          await supabase.realtime.setAuth(sessionToken);
         } catch (authError) {
           const errorInfo = extractRealtimeErrorInfo(authError);
           console.error(
@@ -411,7 +381,6 @@ export function useNotificacoesRealtime(options?: {
           return;
         }
 
-        const usuarioId = usuarioData.id;
         const channelName = `notifications:${usuarioId}`;
 
         // Limpar canal atual e canais órfãos antes de criar novo
@@ -507,7 +476,6 @@ export function useNotificacoesRealtime(options?: {
               ...errorInfo,
               channelName,
               usuarioId,
-              authUserId: user.id,
               duration,
               tentativa: retryCountRef.current + 1,
               maxTentativas: REALTIME_CONFIG.MAX_RETRIES,
@@ -593,7 +561,7 @@ export function useNotificacoesRealtime(options?: {
       // Cleanup assíncrono do canal
       cleanupChannel();
     };
-  }, [supabase]);
+  }, [supabase, usuarioId, sessionToken]);
 
   // Fallback para polling quando Realtime não está disponível
   useEffect(() => {
@@ -676,7 +644,7 @@ export function useNotificacoesRealtime(options?: {
       // console.log("📊 [Notificações Polling] Desativado");
       clearInterval(interval);
     };
-  }, [usePolling]);
+  }, [usePolling, sessionToken]);
 
   return { isUsingPolling: usePolling };
 }

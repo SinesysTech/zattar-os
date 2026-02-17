@@ -11,7 +11,6 @@ import * as React from "react";
 import { Calendar, User, Paperclip, MessageSquare, CheckSquare, ExternalLink } from "lucide-react";
 
 import { AppBadge } from "@/components/ui/app-badge";
-import { SemanticBadge } from "@/components/ui/semantic-badge";
 import {
   Card,
   CardContent,

@@ -1,12 +1,13 @@
 'use client'
 
-import { useCurrentUserImage } from '@/hooks/use-current-user-image'
-import { useCurrentUserName } from '@/hooks/use-current-user-name'
+import { useUser } from '@/providers/user-provider'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export const CurrentUserAvatar = () => {
-  const profileImage = useCurrentUserImage()
-  const name = useCurrentUserName()
+  const userData = useUser()
+  const name = userData.nomeExibicao || userData.nomeCompleto || '?'
+  const profileImage = userData.avatarUrl
+
   const initials = name
     ?.split(' ')
     ?.map((word) => word[0])

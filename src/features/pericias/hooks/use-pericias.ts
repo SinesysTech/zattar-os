@@ -105,8 +105,7 @@ export const usePericias = (
       params.pagina,
       params.limite,
       params.situacaoCodigo,
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      JSON.stringify(params.situacoesExcluidas),
+      params.situacoesExcluidas,
       params.responsavelId,
       params.semResponsavel,
       params.laudoJuntado,

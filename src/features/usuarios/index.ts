@@ -120,9 +120,6 @@ export { useUsuarios } from "./hooks/use-usuarios";
 export { useUsuario } from "./hooks/use-usuario";
 export { useCargos } from "./hooks/use-cargos";
 export { useUsuarioPermissoes } from "./hooks/use-usuario-permissoes";
-export { useMinhasPermissoes } from "./hooks/use-minhas-permissoes";
-export type { MinhasPermissoesData } from "./hooks/use-minhas-permissoes";
-
 // Components
 export { UsuariosGridView } from "./components/list/usuarios-grid-view";
 export { UsuariosPagination } from "./components/list/usuarios-pagination";

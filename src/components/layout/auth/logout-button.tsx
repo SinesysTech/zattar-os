@@ -1,10 +1,10 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuthSession } from '@/providers/user-provider'
 
 export function LogoutButton() {
-  const { logout } = useAuth()
+  const { logout } = useAuthSession()
 
   return <Button onClick={logout}>Sair</Button>
 }

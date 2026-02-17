@@ -4,6 +4,7 @@ import { BellIcon, ClockIcon, CheckCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useNotificacoes, useNotificacoesRealtime, TIPO_NOTIFICACAO_LABELS } from "@/features/notificacoes";
+import { useUser, useAuthSession } from "@/providers/user-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,14 +20,18 @@ import { ptBR } from "date-fns/locale";
 
 const Notifications = () => {
   const isMobile = useIsMobile();
+  const userData = useUser();
+  const { sessionToken } = useAuthSession();
   const { notificacoes, contador, loading, refetch, marcarComoLida, marcarTodasComoLidas } = useNotificacoes({
     pagina: 1,
     limite: 20,
     lida: false,
   });
 
-  // Escutar novas notificações em tempo real
+  // Escutar novas notificações em tempo real (userId e sessionToken do UserProvider)
   useNotificacoesRealtime({
+    usuarioId: userData.id ?? undefined,
+    sessionToken,
     onNovaNotificacao: (_notificacao) => {
       refetch();
     },

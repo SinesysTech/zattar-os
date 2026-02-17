@@ -25,14 +25,22 @@ import {
 /**
  * Lista todas as contas do 2FAuth
  *
+ * @param options - Opções de filtro
+ * @param options.groupId - Filtrar contas por grupo
  * @param config - Configuração opcional (usa env se não fornecido)
  * @returns Array de contas 2FAuth
  */
 export async function listAccounts(
+  options?: { groupId?: number },
   config?: Omit<TwoFAuthConfig, "accountId">
 ): Promise<TwoFAuthAccount[]> {
+  let endpoint = "/twofaccounts";
+  if (options?.groupId) {
+    endpoint += `?group_id=${options.groupId}`;
+  }
+
   const data = await request<TwoFAuthAccount[] | { data: TwoFAuthAccount[] }>(
-    "/twofaccounts",
+    endpoint,
     { method: "GET" },
     config
   );

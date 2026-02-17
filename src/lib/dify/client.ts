@@ -53,7 +53,7 @@ export class DifyClient {
     }
   }
 
-  private async streamRequest(endpoint: string, body: any): Promise<ReadableStream<Uint8Array>> {
+  private async streamRequest(endpoint: string, body: Record<string, unknown>): Promise<ReadableStream<Uint8Array>> {
     const url = `${this.baseUrl}${endpoint}`;
     const headers = {
       'Content-Type': 'application/json',
@@ -143,12 +143,12 @@ export class DifyClient {
   // --- Messages & Feedback ---
 
   async getConversations(params: { user: string; last_id?: string; limit?: number; pinned?: boolean }): Promise<DifyConversationsResponse> {
-    const query = new URLSearchParams(params as any).toString();
+    const query = new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v ?? '')])).toString();
     return this.request<DifyConversationsResponse>(`/conversations?${query}`);
   }
 
   async getMessages(params: { conversation_id: string; user: string; first_id?: string; limit?: number }): Promise<DifyMessagesResponse> {
-    const query = new URLSearchParams(params as any).toString();
+    const query = new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v ?? '')])).toString();
     return this.request<DifyMessagesResponse>(`/messages?${query}`);
   }
 
@@ -196,16 +196,16 @@ export class DifyClient {
 
   // --- App Info ---
 
-  async getAppInfo(): Promise<any> {
-    return this.request<any>('/info');
+  async getAppInfo(): Promise<Record<string, unknown>> {
+    return this.request<Record<string, unknown>>('/info');
   }
 
-  async getAppMeta(): Promise<any> {
-    return this.request<any>('/meta');
+  async getAppMeta(): Promise<Record<string, unknown>> {
+    return this.request<Record<string, unknown>>('/meta');
   }
 
-  async getAppParameters(): Promise<any> {
-    return this.request<any>('/parameters');
+  async getAppParameters(): Promise<Record<string, unknown>> {
+    return this.request<Record<string, unknown>>('/parameters');
   }
 
   // --- Knowledge Base ---
@@ -225,15 +225,15 @@ export class DifyClient {
     description?: string;
     indexing_technique?: 'high_quality' | 'economy';
     permission?: 'only_me' | 'all_team_members' | 'partial_members';
-  }): Promise<any> {
-    return this.request<any>('/datasets', {
+  }): Promise<Record<string, unknown>> {
+    return this.request<Record<string, unknown>>('/datasets', {
       method: 'POST',
       body: JSON.stringify(params),
     });
   }
 
-  async getDataset(datasetId: string): Promise<any> {
-    return this.request<any>(`/datasets/${datasetId}`);
+  async getDataset(datasetId: string): Promise<Record<string, unknown>> {
+    return this.request<Record<string, unknown>>(`/datasets/${datasetId}`);
   }
 
   async updateDataset(datasetId: string, params: {
@@ -241,8 +241,8 @@ export class DifyClient {
     description?: string;
     indexing_technique?: 'high_quality' | 'economy';
     permission?: 'only_me' | 'all_team_members' | 'partial_members';
-  }): Promise<any> {
-    return this.request<any>(`/datasets/${datasetId}`, {
+  }): Promise<Record<string, unknown>> {
+    return this.request<Record<string, unknown>>(`/datasets/${datasetId}`, {
       method: 'PATCH',
       body: JSON.stringify(params),
     });
@@ -254,13 +254,13 @@ export class DifyClient {
     });
   }
 
-  async listDocuments(datasetId: string, params: { page?: number; limit?: number; keyword?: string }): Promise<any> {
+  async listDocuments(datasetId: string, params: { page?: number; limit?: number; keyword?: string }): Promise<Record<string, unknown>> {
     const query = new URLSearchParams();
     if (params.page) query.append('page', params.page.toString());
     if (params.limit) query.append('limit', params.limit.toString());
     if (params.keyword) query.append('keyword', params.keyword);
     
-    return this.request<any>(`/datasets/${datasetId}/documents?${query.toString()}`);
+    return this.request<Record<string, unknown>>(`/datasets/${datasetId}/documents?${query.toString()}`);
   }
 
   async createDocument(datasetId: string, params: DifyDocumentCreateRequest): Promise<DifyDocument> {

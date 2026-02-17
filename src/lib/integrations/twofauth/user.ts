@@ -32,13 +32,8 @@ export async function getUser(
 export async function getUserName(
   config?: Omit<TwoFAuthConfig, "accountId">
 ): Promise<string> {
-  const data = await request<{ name: string }>(
-    "/user/name",
-    { method: "GET" },
-    config
-  );
-
-  return data.name;
+  const user = await getUser(config);
+  return user.name;
 }
 
 // =============================================================================

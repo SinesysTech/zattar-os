@@ -377,7 +377,7 @@ export async function listarEventosPorSource(
     }));
 
     return ok(items);
-  } catch (error) {
+  } catch (_error) {
     return err(
       appError("INTERNAL_ERROR", `Erro ao carregar eventos de ${source}`)
     );

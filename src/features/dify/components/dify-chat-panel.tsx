@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Bot, User, Loader2, StopCircle } from 'lucide-react';
+import { Send, Bot, User, StopCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -37,7 +37,7 @@ export function DifyChatPanel({
         onFinish,
     });
 
-    const scrollRef = useRef<HTMLDivElement>(null);
+    const _scrollRef = useRef<HTMLDivElement>(null);
     const bottomRef = useRef<HTMLDivElement>(null);
 
     // Auto-scroll to bottom
@@ -98,13 +98,13 @@ export function DifyChatPanel({
                                 )}
                             >
                                 {msg.role === 'assistant' ? (
-                                    <div className="prose dark:prose-invert prose-sm max-w-none break-words">
+                                    <div className="prose dark:prose-invert prose-sm max-w-none wrap-break-words">
                                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                             {msg.content}
                                         </ReactMarkdown>
                                     </div>
                                 ) : (
-                                    <div className="break-words whitespace-pre-wrap">{msg.content}</div>
+                                    <div className="wrap-break-words whitespace-pre-wrap">{msg.content}</div>
                                 )}
                                 {msg.id.startsWith('-') && ( // Identificador de temp/loading se usasse id negativo
                                     <span className="ml-2 inline-block h-2 w-2 rounded-full bg-current opacity-50 animate-pulse" />

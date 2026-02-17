@@ -1,18 +1,12 @@
 'use client';
 
 /**
- * Provider client que obtém e persiste o usuarioId durante a sessão
- * Evita recarregar o server component a cada mudança de tab
- *
- * ARQUITETURA: Importação direta do Supabase permitida aqui pois:
- * - Este é um Provider de autenticação de baixo nível
- * - Precisa acessar diretamente o client do Supabase para auth.getUser()
- * - Não há camada intermediária apropriada (Server Action não funcionaria aqui)
+ * Provider que expõe o usuarioId para componentes do financeiro.
+ * Lê do UserProvider centralizado (zero fetches adicionais).
  */
 
 import * as React from 'react';
-import { createClient } from '@/lib/supabase/client'; // @arch-exception: Provider de autenticação
-import { useRouter } from 'next/navigation';
+import { useUser } from '@/providers/user-provider';
 
 interface UsuarioIdContextValue {
   usuarioId: string | null;
@@ -22,47 +16,14 @@ interface UsuarioIdContextValue {
 const UsuarioIdContext = React.createContext<UsuarioIdContextValue | undefined>(undefined);
 
 export function UsuarioIdProvider({ children }: { children: React.ReactNode }) {
-  const [usuarioId, setUsuarioId] = React.useState<string | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const router = useRouter();
-
-  React.useEffect(() => {
-    async function fetchUsuarioId() {
-      try {
-        const supabase = createClient();
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-        if (authError || !user) {
-          router.push('/app/login');
-          return;
-        }
-
-        const { data, error } = await supabase
-          .from('usuarios')
-          .select('id')
-          .eq('auth_user_id', user.id)
-          .single();
-
-        if (error || !data) {
-          router.push('/app/login');
-          return;
-        }
-
-        setUsuarioId(data.id ? String(data.id) : null);
-      } catch (error) {
-        console.error('Erro ao obter usuarioId:', error);
-        router.push('/app/login');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchUsuarioId();
-  }, [router]);
+  const userData = useUser();
 
   const value = React.useMemo(
-    () => ({ usuarioId, isLoading }),
-    [usuarioId, isLoading]
+    () => ({
+      usuarioId: userData.id ? String(userData.id) : null,
+      isLoading: userData.isLoading,
+    }),
+    [userData.id, userData.isLoading]
   );
 
   return <UsuarioIdContext.Provider value={value}>{children}</UsuarioIdContext.Provider>;
@@ -75,5 +36,3 @@ export function useUsuarioId() {
   }
   return context;
 }
-
-

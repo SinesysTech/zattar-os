@@ -24,7 +24,7 @@ interface UseDifyChatOptions {
   conversationId?: string;
   initialMessages?: Message[];
   user?: string;
-  inputs?: Record<string, any>;
+  inputs?: Record<string, unknown>;
   onFinish?: (message: Message) => void;
   onError?: (error: Error) => void;
 }
@@ -44,7 +44,7 @@ export function useDifyChat({
   const [conversationId, setConversationId] = useState<string | undefined>(initialConversationId);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const sendMessage = useCallback(async (content: string, inputs: Record<string, any> = {}) => {
+  const sendMessage = useCallback(async (content: string, inputs: Record<string, unknown> = {}) => {
     if (!content.trim()) return;
 
     const userMessage: Message = {
@@ -154,10 +154,11 @@ export function useDifyChat({
           }
         }
       }
-    } catch (error: any) {
-      if (error.name !== 'AbortError') {
-        setError(error);
-        if (onError) onError(error);
+    } catch (error: unknown) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      if (err.name !== 'AbortError') {
+        setError(err);
+        if (onError) onError(err);
       }
       setIsLoading(false);
       setIsStreaming(false);

@@ -100,7 +100,7 @@ export function useTwoFAuthAccounts(): UseTwoFAuthAccountsReturn {
         setIsLoading(false);
       }
     }
-  }, []);
+  }, [isPermissionError]);
 
   const getAccount = useCallback(async (id: number): Promise<TwoFAuthAccount | null> => {
     try {

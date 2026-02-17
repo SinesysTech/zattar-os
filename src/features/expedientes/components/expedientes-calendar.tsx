@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/providers/user-provider';
 import {
     Calendar as CalendarIcon,
     RefreshCw,
@@ -70,16 +71,16 @@ export function ExpedientesCalendar() {
     // Aux Data State
     const [usuarios, setUsuarios] = React.useState<UsuarioOption[]>([]);
     const [tiposExpedientes, setTiposExpedientes] = React.useState<TipoExpedienteOption[]>([]);
-    const [currentUserId, setCurrentUserId] = React.useState<number | null>(null);
+    const userData = useUser();
+    const currentUserId = userData.id ?? null;
 
     // Load auxiliary data and current user
     React.useEffect(() => {
         const fetchAuxData = async () => {
             try {
-                const [usersResponse, tiposResponse, userResponse] = await Promise.all([
+                const [usersResponse, tiposResponse] = await Promise.all([
                     fetch('/api/usuarios?ativo=true&limite=100'),
                     fetch('/api/tipos-expedientes?limite=100'),
-                    fetch('/api/me').catch(() => null)
                 ]);
 
                 // Processar resposta de usuários
@@ -104,16 +105,6 @@ export function ExpedientesCalendar() {
                     }
                 }
 
-                // Processar resposta do usuário atual
-                if (userResponse && userResponse.ok) {
-                    const contentType = userResponse.headers.get('content-type');
-                    if (contentType?.includes('application/json')) {
-                        const userRes = await userResponse.json();
-                        if (userRes.success && userRes.data?.id) {
-                            setCurrentUserId(userRes.data.id);
-                        }
-                    }
-                }
             } catch (err) {
                 console.error('Erro ao carregar dados auxiliares:', err);
             }

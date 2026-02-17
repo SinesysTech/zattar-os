@@ -18,8 +18,8 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import { TarefaDisplayItem, taskSchema, TaskLabel } from "../domain";
-import { priorities, statuses, labels } from "@/app/app/tarefas/data/data";
+import { TarefaDisplayItem, TaskLabel } from "../domain";
+import { labels } from "@/app/app/tarefas/data/data";
 import { useTarefaStore } from "../store";
 import * as actions from "../actions/tarefas-actions";
 import { toast } from "sonner";
@@ -32,7 +32,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
   const task = row.original as TarefaDisplayItem;
   const { setSelectedTarefaId, setTarefaSheetOpen, upsertTarefa, removeTarefa } = useTarefaStore();
-  const [isPending, startTransition] = React.useTransition();
+  const [_isPending, startTransition] = React.useTransition();
 
   const handleEdit = () => {
     setSelectedTarefaId(task.id);
@@ -68,10 +68,10 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
     startTransition(async () => {
       const result = await actions.actionAtualizarTarefa({
         id: task.id,
-        label: labelValue as any,
+        label: labelValue as TaskLabel,
       });
       if (result.success) {
-        upsertTarefa({ ...task, label: labelValue as any });
+        upsertTarefa({ ...task, label: labelValue as TaskLabel });
         toast.success("Etiqueta atualizada");
       }
     });
@@ -100,7 +100,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
               value={task.label}
               onValueChange={handleUpdateLabel}
             >
-              {labels.map((label: any) => (
+              {labels.map((label) => (
                 <DropdownMenuRadioItem key={label.value} value={label.value}>
                   {label.label}
                 </DropdownMenuRadioItem>

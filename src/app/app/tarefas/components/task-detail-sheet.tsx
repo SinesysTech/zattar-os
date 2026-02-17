@@ -6,13 +6,10 @@ import { ptBR } from "date-fns/locale";
 import {
     Calendar as CalendarIcon,
     CheckCircle2,
-    ChevronRight,
-    Clock,
     MessageSquare,
     Paperclip,
     Star,
     Trash2,
-    X,
     Plus,
     MoreVertical,
 } from "lucide-react";
@@ -36,13 +33,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
 
+import type { TarefaDisplayItem } from "../domain";
 import { useTarefaStore } from "../store";
 import { labels, priorities, statuses } from "../data/data";
 import * as actions from "../actions/tarefas-actions";
@@ -114,7 +106,7 @@ export function TaskDetailSheet() {
                 title: newSubtask,
             });
             if (result.success) {
-                upsertTarefa(result.data as any);
+                upsertTarefa(result.data as TarefaDisplayItem);
                 setNewSubtask("");
             }
         });
@@ -129,7 +121,7 @@ export function TaskDetailSheet() {
                 completed,
             });
             if (result.success) {
-                upsertTarefa(result.data as any);
+                upsertTarefa(result.data as TarefaDisplayItem);
             }
         });
     };
@@ -142,7 +134,7 @@ export function TaskDetailSheet() {
                 subTaskId,
             });
             if (result.success) {
-                upsertTarefa(result.data as any);
+                upsertTarefa(result.data as TarefaDisplayItem);
             }
         });
     };
@@ -157,7 +149,7 @@ export function TaskDetailSheet() {
                 body: newComment,
             });
             if (result.success) {
-                upsertTarefa(result.data as any);
+                upsertTarefa(result.data as TarefaDisplayItem);
                 setNewComment("");
             }
         });
@@ -171,7 +163,7 @@ export function TaskDetailSheet() {
                 commentId,
             });
             if (result.success) {
-                upsertTarefa(result.data as any);
+                upsertTarefa(result.data as TarefaDisplayItem);
             }
         });
     };

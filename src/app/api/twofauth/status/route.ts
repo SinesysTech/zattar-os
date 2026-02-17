@@ -38,11 +38,17 @@ import { load2FAuthConfig } from "@/lib/integrations/twofauth/config-loader";
  *                       type: string
  */
 export async function GET(request: NextRequest) {
+  let configured = false;
+
   try {
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Verificar se existe configuração (banco ou env)
+    const existingConfig = await load2FAuthConfig();
+    configured = !!existingConfig;
 
     // Verificar conexão
     const connectionResult = await checkConnection();
@@ -53,7 +59,7 @@ export async function GET(request: NextRequest) {
         data: {
           connected: false,
           error: connectionResult.error,
-          configured: !!(process.env.TWOFAUTH_API_URL && process.env.TWOFAUTH_API_TOKEN),
+          configured,
         },
       });
     }
@@ -92,7 +98,7 @@ export async function GET(request: NextRequest) {
         success: true,
         data: {
           connected: false,
-          configured: !!(process.env.TWOFAUTH_API_URL && process.env.TWOFAUTH_API_TOKEN),
+          configured,
           error: error.message,
         },
       });

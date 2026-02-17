@@ -123,7 +123,7 @@ export function EventCalendar({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isEventDialogOpen]);
+  }, [isEventDialogOpen, setView]);
 
   const handlePrevious = () => {
     if (view === "month") {

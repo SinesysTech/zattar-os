@@ -10,8 +10,6 @@ import {
   twofauthConfigSchema,
   type Integracao,
   type TipoIntegracao,
-  type CriarIntegracaoParams,
-  type AtualizarIntegracaoParams,
   type TwoFAuthConfig,
 } from "./domain";
 

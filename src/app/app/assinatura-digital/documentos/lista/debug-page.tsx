@@ -9,7 +9,7 @@ import { actionListDocumentos } from "../../feature";
 
 export function DebugPage() {
   const [loading, setLoading] = useState(true);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<unknown>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -53,18 +53,18 @@ export function DebugPage() {
         </div>
       )}
       
-      {result && (
+      {result && typeof result === 'object' && (
         <div className="space-y-4">
           <div className="p-4 bg-blue-100 rounded">
             <h2 className="font-bold">Success:</h2>
-            <p>{result.success ? "✅ true" : "❌ false"}</p>
+            <p>{(result as Record<string, unknown>).success ? "✅ true" : "❌ false"}</p>
           </div>
-          
-          {result.data && (
+
+          {(result as Record<string, unknown>).data && (
             <div className="p-4 bg-green-100 rounded">
               <h2 className="font-bold">Data:</h2>
               <pre className="mt-2 text-xs overflow-auto max-h-96">
-                {JSON.stringify(result.data, null, 2)}
+                {JSON.stringify((result as Record<string, unknown>).data, null, 2)}
               </pre>
             </div>
           )}

@@ -1,4 +1,5 @@
 // Components
+export * from './components/dify-apps-list';
 export * from './components/dify-chat-panel';
 export * from './components/workflow-runner';
 export * from './components/dify-config-form';

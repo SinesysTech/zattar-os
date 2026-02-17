@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 import { FormSchemaBuilder, type DynamicFormSchema, type AssinaturaDigitalFormulario } from '../../../feature';
-import { useMinhasPermissoes } from '@/features/usuarios';
+import { usePermissoes } from '@/providers/user-provider';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -69,7 +69,7 @@ async function getFormulario(id: string): Promise<AssinaturaDigitalFormulario> {
 export default function FormularioSchemaPage({ params }: PageProps) {
   const { id } = use(params);
   const router = useRouter();
-  const { temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes('assinatura_digital');
+  const { temPermissao, isLoading: isLoadingPermissoes } = usePermissoes();
   const canEdit = temPermissao('assinatura_digital', 'editar');
   const [formulario, setFormulario] = useState<AssinaturaDigitalFormulario | null>(null);
   const [loading, setLoading] = useState(true);

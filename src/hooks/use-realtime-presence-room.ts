@@ -1,7 +1,6 @@
 'use client'
 
-import { useCurrentUserImage } from '@/hooks/use-current-user-image'
-import { useCurrentUserName } from '@/hooks/use-current-user-name'
+import { useUser } from '@/providers/user-provider'
 import { createClient } from '@/lib/supabase/client'
 import { REALTIME_SUBSCRIBE_STATES } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
@@ -15,8 +14,9 @@ export type RealtimeUser = {
 }
 
 export const useRealtimePresenceRoom = (roomName: string) => {
-  const currentUserImage = useCurrentUserImage()
-  const currentUserName = useCurrentUserName()
+  const userData = useUser()
+  const currentUserName = userData.nomeExibicao || userData.nomeCompleto || '?'
+  const currentUserImage = userData.avatarUrl || ''
 
   const [users, setUsers] = useState<Record<string, RealtimeUser>>({})
 

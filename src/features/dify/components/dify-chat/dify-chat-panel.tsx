@@ -8,11 +8,8 @@ import { cn } from '@/lib/utils';
 import {
   SendHorizontal,
   Square,
-  ThumbsUp,
-  ThumbsDown,
   RotateCcw,
   Bot,
-  User,
 } from 'lucide-react';
 import { useDifyChat } from '../../hooks/use-dify-chat';
 import { DifyMessage } from './dify-message';

@@ -26,8 +26,9 @@ export async function POST(req: NextRequest) {
     // Por enquanto apenas logamos e retornamos sucesso
     return NextResponse.json({ status: 'received' });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[Dify Webhook] Erro:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

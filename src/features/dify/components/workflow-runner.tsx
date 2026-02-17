@@ -1,18 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useDifyWorkflow, WorkflowRunState } from '../hooks/use-dify-workflow';
+import { useDifyWorkflow } from '../hooks/use-dify-workflow';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Play, StopCircle, CheckCircle, AlertCircle, FileText } from 'lucide-react';
+import { Play, StopCircle, CheckCircle, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface WorkflowRunnerProps {
     inputsSchema?: Record<string, 'string' | 'number' | 'boolean' | 'file'>; // Schema simplificado para gerar form
-    onFinish?: (outputs: any) => void;
+    onFinish?: (outputs: Record<string, unknown>) => void;
     className?: string;
     title?: string;
     description?: string;
@@ -34,9 +34,9 @@ export function WorkflowRunner({
         user
     });
 
-    const [inputs, setInputs] = useState<Record<string, any>>({});
+    const [inputs, setInputs] = useState<Record<string, unknown>>({});
 
-    const handleInputChange = (key: string, value: any) => {
+    const handleInputChange = (key: string, value: unknown) => {
         setInputs(prev => ({ ...prev, [key]: value }));
     };
 
@@ -61,7 +61,7 @@ export function WorkflowRunner({
                             {type === 'string' && (
                                 <Input
                                     id={key}
-                                    value={inputs[key] || ''}
+                                    value={(inputs[key] as string) || ''}
                                     onChange={e => handleInputChange(key, e.target.value)}
                                     disabled={state.status === 'running'}
                                 />
@@ -70,7 +70,7 @@ export function WorkflowRunner({
                                 <Input
                                     id={key}
                                     type="number"
-                                    value={inputs[key] || ''}
+                                    value={(inputs[key] as number) || ''}
                                     onChange={e => handleInputChange(key, Number(e.target.value))}
                                     disabled={state.status === 'running'}
                                 />
@@ -98,7 +98,7 @@ export function WorkflowRunner({
                             onChange={e => {
                                 try {
                                     setInputs(JSON.parse(e.target.value));
-                                } catch (err) {
+                                } catch (_err) {
                                     // ignore parse error while typing
                                 }
                             }}

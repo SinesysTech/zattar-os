@@ -25,7 +25,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
 async function testTableExists() {
   console.log('📋 Teste 1: Verificar se a tabela integracoes existe...');
   
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('integracoes')
     .select('id')
     .limit(1);

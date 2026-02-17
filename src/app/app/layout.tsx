@@ -18,6 +18,7 @@ import "@copilotkit/react-ui/styles.css"
 import { CopilotSidebar, useChatContext } from "@copilotkit/react-ui"
 import { SYSTEM_PROMPT } from "@/lib/copilotkit/system-prompt"
 import { cn } from "@/lib/utils"
+import { UserProvider } from "@/providers/user-provider"
 
 const AUTH_ROUTES = [
   "/app/login",
@@ -93,18 +94,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <CopilotKit runtimeUrl="/api/copilotkit" useSingleEndpoint>
-      <CopilotSidebar
-        defaultOpen={false}
-        instructions={SYSTEM_PROMPT}
-        labels={{
-          title: "Pedrinho",
-          initial: "Olá! Como posso ajudar você hoje?",
-        }}
-        Button={() => null}
-      >
-        <DashboardContent>{children}</DashboardContent>
-      </CopilotSidebar>
-    </CopilotKit>
+    <UserProvider>
+      <CopilotKit runtimeUrl="/api/copilotkit" useSingleEndpoint>
+        <CopilotSidebar
+          defaultOpen={false}
+          instructions={SYSTEM_PROMPT}
+          labels={{
+            title: "Pedrinho",
+            initial: "Olá! Como posso ajudar você hoje?",
+          }}
+          Button={() => null}
+        >
+          <DashboardContent>{children}</DashboardContent>
+        </CopilotSidebar>
+      </CopilotKit>
+    </UserProvider>
   )
 }

@@ -19,17 +19,31 @@ export enum StatusExecucaoDify {
 
 // --- Schemas ---
 
-export const enviarMensagemSchema = z.object({
+export interface EnviarMensagemParams {
+  query: string;
+  conversation_id?: string;
+  inputs: Record<string, unknown>;
+  files?: unknown[];
+  user?: string;
+}
+
+export const enviarMensagemSchema: z.ZodType<EnviarMensagemParams> = z.object({
   query: z.string().min(1, 'A mensagem não pode estar vazia'),
   conversation_id: z.string().optional(),
-  inputs: z.record(z.any()).default({}),
-  files: z.array(z.any()).optional(), // Refinar tipo de arquivo se necessário
+  inputs: z.record(z.unknown()).default({}),
+  files: z.array(z.unknown()).optional(), // Refinar tipo de arquivo se necessário
   user: z.string().optional(),
 });
 
-export const executarWorkflowSchema = z.object({
-  inputs: z.record(z.any()).default({}),
-  files: z.array(z.any()).optional(),
+export interface ExecutarWorkflowParams {
+  inputs: Record<string, unknown>;
+  files?: unknown[];
+  user?: string;
+}
+
+export const executarWorkflowSchema: z.ZodType<ExecutarWorkflowParams> = z.object({
+  inputs: z.record(z.unknown()).default({}),
+  files: z.array(z.unknown()).optional(),
   user: z.string().optional(),
 });
 
@@ -44,7 +58,7 @@ export const feedbackSchema = z.object({
 export interface DifyConversation {
   id: string;
   name: string;
-  inputs: Record<string, any>;
+  inputs: Record<string, unknown>;
   status: string;
   introduction: string;
   created_at: number;
@@ -54,7 +68,7 @@ export interface DifyConversation {
 export interface DifyMessage {
   id: string;
   conversation_id: string;
-  inputs: Record<string, any>;
+  inputs: Record<string, unknown>;
   query: string;
   answer: string;
   created_at: number;
@@ -68,15 +82,26 @@ export interface DifyWorkflowExecution {
   workflow_run_id: string;
   task_id?: string;
   status: StatusExecucaoDify;
-  inputs: Record<string, any>;
-  outputs: Record<string, any>;
+  inputs: Record<string, unknown>;
+  outputs: Record<string, unknown>;
   error?: string;
   elapsed_time: number;
   total_tokens: number;
   total_steps: number;
   created_at: Date;
   finished_at?: Date;
-  usuario_id: number;
+  usuario_id: string | number;
+}
+
+export interface DifyApp {
+  id: string;
+  name: string;
+  api_url: string;
+  api_key: string;
+  app_type: TipoDifyApp | string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 // --- Schemas Adicionais ---
@@ -99,8 +124,8 @@ export interface DifyExecucaoWorkflow {
   workflow_id: string;
   workflow_run_id?: string;
   status: StatusExecucaoDify;
-  inputs: Record<string, any>;
-  outputs: Record<string, any>;
+  inputs: Record<string, unknown>;
+  outputs: Record<string, unknown>;
   created_at: string;
   finished_at: string | null;
   error?: string;

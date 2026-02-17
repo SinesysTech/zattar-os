@@ -39,7 +39,7 @@ async function applyMigration() {
 
   try {
     // Executar SQL
-    const { data, error } = await supabase.rpc('exec_sql', { sql_query: sql });
+    const { error } = await supabase.rpc('exec_sql', { sql_query: sql });
 
     if (error) {
       // Se a função exec_sql não existir, tentar via REST API diretamente
@@ -77,7 +77,7 @@ async function applyMigration() {
     console.log('✅ Migration aplicada com sucesso!\n');
 
     // Verificar se a tabela foi criada
-    const { data: tables, error: tablesError } = await supabase
+    const { error: tablesError } = await supabase
       .from('integracoes')
       .select('*')
       .limit(1);

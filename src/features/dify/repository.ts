@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import { DifyConversation, DifyWorkflowExecution, StatusExecucaoDify } from './domain';
+import { DifyConversation, DifyWorkflowExecution, DifyApp } from './domain';
 import { Result, err, ok } from 'neverthrow';
 
 export class DifyRepository {
@@ -9,8 +9,8 @@ export class DifyRepository {
       const { error } = await supabase.from('dify_execucoes').insert(data);
       if (error) throw error;
       return ok(undefined);
-    } catch (error: any) {
-      return err(new Error(`Erro ao salvar execução de workflow: ${error.message}`));
+    } catch (error: unknown) {
+      return err(new Error(`Erro ao salvar execução de workflow: ${error instanceof Error ? error.message : String(error)}`, { cause: error }));
     }
   }
 
@@ -23,8 +23,8 @@ export class DifyRepository {
         .eq('workflow_run_id', workflowRunId);
       if (error) throw error;
       return ok(undefined);
-    } catch (error: any) {
-      return err(new Error(`Erro ao atualizar execução de workflow: ${error.message}`));
+    } catch (error: unknown) {
+      return err(new Error(`Erro ao atualizar execução de workflow: ${error instanceof Error ? error.message : String(error)}`, { cause: error }));
     }
   }
 
@@ -35,8 +35,8 @@ export class DifyRepository {
       const { error } = await supabase.from('dify_conversas').upsert(data, { onConflict: 'conversation_id' });
       if (error) throw error;
       return ok(undefined);
-    } catch (error: any) {
-      return err(new Error(`Erro ao salvar conversa Dify: ${error.message}`));
+    } catch (error: unknown) {
+      return err(new Error(`Erro ao salvar conversa Dify: ${error instanceof Error ? error.message : String(error)}`, { cause: error }));
     }
   }
 
@@ -51,12 +51,12 @@ export class DifyRepository {
 
       if (error) throw error;
       return ok(data as unknown as DifyConversation[]);
-    } catch (error: any) {
-      return err(new Error(`Erro ao listar conversas do usuário: ${error.message}`));
+    } catch (error: unknown) {
+      return err(new Error(`Erro ao listar conversas do usuário: ${error instanceof Error ? error.message : String(error)}`, { cause: error }));
     }
   }
 
-  async listDifyApps(): Promise<Result<any[], Error>> {
+  async listDifyApps(): Promise<Result<DifyApp[], Error>> {
     const supabase = await createClient();
     try {
       const { data, error } = await supabase
@@ -65,13 +65,13 @@ export class DifyRepository {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return ok(data || []);
-    } catch (error: any) {
-      return err(new Error(`Erro ao listar apps Dify: ${error.message}`));
+      return ok((data || []) as DifyApp[]);
+    } catch (error: unknown) {
+      return err(new Error(`Erro ao listar apps Dify: ${error instanceof Error ? error.message : String(error)}`, { cause: error }));
     }
   }
 
-  async getDifyApp(id: string): Promise<Result<any | null, Error>> {
+  async getDifyApp(id: string): Promise<Result<DifyApp | null, Error>> {
     const supabase = await createClient();
     try {
       const { data, error } = await supabase
@@ -81,13 +81,13 @@ export class DifyRepository {
         .single();
 
       if (error) throw error;
-      return ok(data);
-    } catch (error: any) {
-      return err(new Error(`Erro ao buscar app Dify: ${error.message}`));
+      return ok(data as DifyApp | null);
+    } catch (error: unknown) {
+      return err(new Error(`Erro ao buscar app Dify: ${error instanceof Error ? error.message : String(error)}`, { cause: error }));
     }
   }
 
-  async getActiveDifyApp(type?: string): Promise<Result<any | null, Error>> {
+  async getActiveDifyApp(type?: string): Promise<Result<DifyApp | null, Error>> {
     const supabase = await createClient();
     try {
       let query = supabase
@@ -103,13 +103,13 @@ export class DifyRepository {
       const { data, error } = await query.limit(1).maybeSingle();
 
       if (error) throw error;
-      return ok(data);
-    } catch (error: any) {
-      return err(new Error(`Erro ao buscar app Dify ativo: ${error.message}`));
+      return ok(data as DifyApp | null);
+    } catch (error: unknown) {
+      return err(new Error(`Erro ao buscar app Dify ativo: ${error instanceof Error ? error.message : String(error)}`, { cause: error }));
     }
   }
 
-  async createDifyApp(data: { name: string; api_url: string; api_key: string; app_type: string; is_active?: boolean }): Promise<Result<any, Error>> {
+  async createDifyApp(data: { name: string; api_url: string; api_key: string; app_type: string; is_active?: boolean }): Promise<Result<DifyApp, Error>> {
     const supabase = await createClient();
     try {
       const { data: newApp, error } = await supabase
@@ -119,9 +119,9 @@ export class DifyRepository {
         .single();
 
       if (error) throw error;
-      return ok(newApp);
-    } catch (error: any) {
-      return err(new Error(`Erro ao criar app Dify: ${error.message}`));
+      return ok(newApp as DifyApp);
+    } catch (error: unknown) {
+      return err(new Error(`Erro ao criar app Dify: ${error instanceof Error ? error.message : String(error)}`, { cause: error }));
     }
   }
 
@@ -135,8 +135,8 @@ export class DifyRepository {
 
       if (error) throw error;
       return ok(undefined);
-    } catch (error: any) {
-      return err(new Error(`Erro ao atualizar app Dify: ${error.message}`));
+    } catch (error: unknown) {
+      return err(new Error(`Erro ao atualizar app Dify: ${error instanceof Error ? error.message : String(error)}`, { cause: error }));
     }
   }
 
@@ -150,8 +150,8 @@ export class DifyRepository {
 
       if (error) throw error;
       return ok(undefined);
-    } catch (error: any) {
-      return err(new Error(`Erro ao deletar app Dify: ${error.message}`));
+    } catch (error: unknown) {
+      return err(new Error(`Erro ao deletar app Dify: ${error instanceof Error ? error.message : String(error)}`, { cause: error }));
     }
   }
 }

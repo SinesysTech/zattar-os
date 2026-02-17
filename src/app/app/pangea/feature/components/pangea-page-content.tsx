@@ -52,7 +52,7 @@ import {
   type PangeaTipo,
   type PangeaOrdenacao,
 } from '@/app/app/pangea/feature';
-import { useMinhasPermissoes } from '@/features/usuarios';
+import { usePermissoes } from '@/providers/user-provider';
 import { PangeaResults } from './pangea-results';
 
 const formSchema = z.object({
@@ -100,7 +100,8 @@ const PANGEA_ORDENACAO_LABELS: Record<PangeaOrdenacao, string> = {
 };
 
 export function PangeaPageContent() {
-  const { temPermissao, isLoading: loadingPerms, error: permsError } = useMinhasPermissoes('pangea');
+  const { temPermissao, isLoading: loadingPerms } = usePermissoes();
+  const permsError = null;
   const canList = temPermissao('pangea', 'listar');
 
   const [isLoading, setIsLoading] = React.useState(false);

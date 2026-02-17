@@ -12,6 +12,7 @@ import {
   sincronizarParteComChatwoot,
   sincronizarChatwootParaApp,
   type SincronizarChatwootParaAppResult,
+  type WebhookEventType,
 } from './service';
 import type { TipoEntidadeChatwoot } from './domain';
 import {
@@ -824,4 +825,206 @@ export async function sincronizarCompletoComChatwoot(
   console.log('[Sync Completo] Sincronização completa finalizada:', resultado.resumo);
 
   return ok(resultado);
+}
+
+// =============================================================================
+// Endpoints para Webhooks e API
+// =============================================================================
+
+/**
+ * Processa webhook POST de eventos do Chatwoot
+ * Endpoint: POST /api/webhooks/chatwoot
+ */
+export async function processarWebhookChatwoot(
+  event: string,
+  payload: Record<string, unknown>
+): Promise<Result<void>> {
+  try {
+    if (!isChatwootConfigured()) {
+      return err(
+        appError(
+          'EXTERNAL_SERVICE_ERROR',
+          'Chatwoot não está configurado'
+        )
+      );
+    }
+
+    const { processarWebhook } = await import('./service');
+
+    // Processa o webhook usando o router de eventos
+    const result = await processarWebhook(
+      event as WebhookEventType,
+      {
+        event: event as WebhookEventType,
+        data: payload,
+        account_id: (payload.account_id as number) || 0,
+      }
+    );
+
+    if (!result.success) {
+      console.error('[Webhook Chatwoot] Erro ao processar:', result.error);
+      return err(result.error);
+    }
+
+    console.log(`[Webhook Chatwoot] Evento ${event} processado com sucesso`);
+    return ok(undefined);
+  } catch (error) {
+    console.error('[Webhook Chatwoot] Exceção ao processar:', error);
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Erro ao processar webhook Chatwoot',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Sincroniza uma conversa específica manualmente
+ * PUT /api/chatwoot/conversas/{conversationId}
+ */
+export async function sincronizarConversaManual(
+  conversationId: number,
+  accountId: number
+): Promise<Result<{ sincronizado: boolean }>> {
+  try {
+    if (!isChatwootConfigured()) {
+      return err(
+        appError(
+          'EXTERNAL_SERVICE_ERROR',
+          'Chatwoot não está configurado'
+        )
+      );
+    }
+
+    const {
+      sincronizarConversaChatwoot,
+    } = await import('./service');
+
+    // Busca detalhes da conversa no Chatwoot
+    const conversationDetail = await fetch(
+      `${process.env.CHATWOOT_API_URL}/api/v1/accounts/${accountId}/conversations/${conversationId}`,
+      {
+        headers: {
+          'api_access_token': process.env.CHATWOOT_API_KEY!,
+        },
+      }
+    );
+
+    if (!conversationDetail.ok) {
+      return err(
+        appError(
+          'NOT_FOUND',
+          `Conversa ${conversationId} não encontrada no Chatwoot`
+        )
+      );
+    }
+
+    const convData = await conversationDetail.json();
+
+    // Sincroniza para o banco local
+    const syncResult = await sincronizarConversaChatwoot({
+      chatwoot_conversation_id: conversationId,
+      chatwoot_account_id: accountId,
+      chatwoot_inbox_id: convData.conversation?.inbox_id || 0,
+      status: convData.conversation?.status || 'open',
+      assignee_id: convData.conversation?.assignee_id,
+      message_count: convData.conversation?.messages_count || 0,
+      unread_count: convData.conversation?.unread_count || 0,
+    });
+
+    if (!syncResult.success) {
+      return err(syncResult.error);
+    }
+
+    console.log(`[Chatwoot] Conversa ${conversationId} sincronizada manualmente`);
+
+    return ok({ sincronizado: true });
+  } catch (error) {
+    console.error('[Sincronizar Conversa Manual] Erro:', error);
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Erro ao sincronizar conversa',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Atualiza status de uma conversa
+ * PATCH /api/chatwoot/conversas/{conversationId}
+ */
+export async function atualizarStatusConversaAPI(
+  conversationId: number,
+  accountId: number,
+  novoStatus: 'open' | 'resolved' | 'pending' | 'snoozed'
+): Promise<Result<void>> {
+  try {
+    if (!isChatwootConfigured()) {
+      return err(
+        appError(
+          'EXTERNAL_SERVICE_ERROR',
+          'Chatwoot não está configurado'
+        )
+      );
+    }
+
+    // Primeiro atualiza no Chatwoot via API
+    const updateResponse = await fetch(
+      `${process.env.CHATWOOT_API_URL}/api/v1/accounts/${accountId}/conversations/${conversationId}`,
+      {
+        method: 'PUT',
+        headers: {
+          'api_access_token': process.env.CHATWOOT_API_KEY!,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: novoStatus }),
+      }
+    );
+
+    if (!updateResponse.ok) {
+      const error = await updateResponse.text();
+      return err(
+        appError(
+          'EXTERNAL_SERVICE_ERROR',
+          `Erro ao atualizar conversa no Chatwoot: ${error}`
+        )
+      );
+    }
+
+    // Depois atualiza no banco local
+    const { atualizarStatusConversa } = await import('./service');
+
+    const localUpdateResult = await atualizarStatusConversa(
+      conversationId,
+      accountId,
+      novoStatus
+    );
+
+    if (!localUpdateResult.success) {
+      console.warn('Erro ao atualizar status local:', localUpdateResult.error);
+      // Não falha, pois a atualização remota foi bem-sucedida
+    }
+
+    console.log(
+      `[Chatwoot] Status da conversa ${conversationId} atualizado para ${novoStatus}`
+    );
+
+    return ok(undefined);
+  } catch (error) {
+    console.error('[Atualizar Status Conversa] Erro:', error);
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Erro ao atualizar status da conversa',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
 }

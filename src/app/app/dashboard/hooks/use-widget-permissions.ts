@@ -8,7 +8,7 @@
  */
 
 import { useMemo } from 'react';
-import { useMinhasPermissoes } from '@/features/usuarios';
+import { usePermissoes } from '@/providers/user-provider';
 
 export interface WidgetPermissions {
   podeVerProcessos: boolean;
@@ -37,7 +37,7 @@ export interface WidgetPermissions {
  * );
  */
 export function useWidgetPermissions(): WidgetPermissions {
-  const { data, isLoading, temPermissao } = useMinhasPermissoes();
+  const { data, isLoading, temPermissao } = usePermissoes();
 
   const permissions = useMemo(() => {
     // Se é superadmin, tem acesso a tudo

@@ -1,4 +1,4 @@
-import { DifyStreamEvent, DifyStreamEventType } from './types';
+import { DifyStreamEvent } from './types';
 
 /**
  * Faz parse de um stream de Server-Sent Events (SSE) do Dify.

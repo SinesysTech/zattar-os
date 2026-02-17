@@ -4,13 +4,13 @@ export interface WorkflowRunState {
   workflowRunId?: string;
   taskId?: string;
   status: 'idle' | 'running' | 'succeeded' | 'failed' | 'stopped';
-  outputs?: Record<string, any>;
+  outputs?: Record<string, unknown>;
   error?: string;
   logs: string[];
 }
 
 interface UseDifyWorkflowOptions {
-  onFinish?: (result: any) => void;
+  onFinish?: (result: Record<string, unknown>) => void;
   onError?: (error: Error) => void;
   user?: string;
 }
@@ -24,14 +24,14 @@ export function useDifyWorkflow({
     status: 'idle',
     logs: [],
   });
-  const [result, setResult] = useState<any | null>(null);
+  const [result, setResult] = useState<Record<string, unknown> | null>(null);
   const [error, setError] = useState<Error | null>(null);
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const isRunning = state.status === 'running';
 
-  const execute = useCallback(async (inputs: Record<string, any>, files?: any[]) => {
+  const execute = useCallback(async (inputs: Record<string, unknown>, files?: unknown[]) => {
     setState({
       status: 'running',
       logs: [],
@@ -112,11 +112,12 @@ export function useDifyWorkflow({
         }
       }
 
-    } catch (error: any) {
-      if (error.name !== 'AbortError') {
-        setState(s => ({ ...s, status: 'failed', error: error.message }));
-        setError(error);
-        if (onError) onError(error);
+    } catch (error: unknown) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      if (err.name !== 'AbortError') {
+        setState(s => ({ ...s, status: 'failed', error: err.message }));
+        setError(err);
+        if (onError) onError(err);
       }
       abortControllerRef.current = null;
     }
@@ -130,7 +131,7 @@ export function useDifyWorkflow({
     }
   }, []);
 
-  const runWorkflow = useCallback(async (inputs: Record<string, any>) => {
+  const runWorkflow = useCallback(async (inputs: Record<string, unknown>) => {
     await execute(inputs);
   }, [execute]);
 

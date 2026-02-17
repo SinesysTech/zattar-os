@@ -2,12 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
 import { Plus, Trash2, Edit2, Play, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 import { listDifyAppsAction, createDifyAppAction, updateDifyAppAction, deleteDifyAppAction, checkDifyAppConnectionAction } from '../actions';
 import { toast } from 'sonner';
@@ -47,9 +46,10 @@ export function DifyAppsList() {
         setLoading(true);
         try {
             const data = await listDifyAppsAction();
-            setApps(data);
-        } catch (error: any) {
-            toast.error('Erro ao listar apps: ' + error.message);
+            setApps(data as Array<DifyApp>);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            toast.error('Erro ao listar apps: ' + message);
         } finally {
             setLoading(false);
         }
@@ -84,8 +84,9 @@ export function DifyAppsList() {
             await deleteDifyAppAction(id);
             toast.success('App removido com sucesso.');
             loadApps();
-        } catch (error: any) {
-            toast.error('Erro ao remover app: ' + error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            toast.error('Erro ao remover app: ' + message);
         }
     };
 
@@ -100,9 +101,10 @@ export function DifyAppsList() {
                 setTestStatus('error');
                 toast.error('Falha na conexão: ' + result.message);
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             setTestStatus('error');
-            toast.error('Erro ao testar: ' + error.message);
+            const message = error instanceof Error ? error.message : String(error);
+            toast.error('Erro ao testar: ' + message);
         } finally {
             setSaving(false);
         }
@@ -126,8 +128,9 @@ export function DifyAppsList() {
             setIsDialogOpen(false);
             loadApps();
             resetForm();
-        } catch (error: any) {
-            toast.error('Erro ao salvar: ' + error.message);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            toast.error('Erro ao salvar: ' + message);
         } finally {
             setSaving(false);
         }
@@ -144,7 +147,7 @@ export function DifyAppsList() {
                     <DialogTrigger asChild>
                         <Button><Plus className="mr-2 h-4 w-4" /> Adicionar App</Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[500px]">
+                    <DialogContent className="sm:max-w-125">
                         <DialogHeader>
                             <DialogTitle>{editingApp ? 'Editar App' : 'Novo App Dify'}</DialogTitle>
                             <DialogDescription>Conecte um novo aplicativo do Dify fornecendo a chave de API.</DialogDescription>
@@ -210,7 +213,7 @@ export function DifyAppsList() {
                             <CardHeader className="pb-2">
                                 <div className="flex justify-between items-start">
                                     <CardTitle className="text-base truncate" title={app.name}>{app.name}</CardTitle>
-                                    <Badge variant={app.is_active ? 'default' : 'secondary'}>{app.app_type}</Badge>
+                                    <span className="text-xs px-2 py-1 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">{app.app_type}</span>
                                 </div>
                                 <CardDescription className="text-xs truncate">{app.api_url}</CardDescription>
                             </CardHeader>

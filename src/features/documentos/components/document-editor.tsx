@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import { useUser } from '@/providers/user-provider';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import {
@@ -122,12 +123,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
 
   const saving = manualSaving || autoSaving;
 
-  const [
-    currentUser,
-    setCurrentUser,
-  ] = React.useState<
-    { id: number; nomeCompleto: string; emailCorporativo: string } | null
-  >(null);
+  const userData = useUser();
   const [exporting, setExporting] = React.useState<'pdf' | 'docx' | null>(
     null
   );
@@ -139,28 +135,10 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
     isConnected,
   } = useRealtimeCollaboration({
     documentoId,
-    userId: currentUser?.id || 0,
-    userName: currentUser?.nomeCompleto || 'Usuário',
-    userEmail: currentUser?.emailCorporativo || '',
+    userId: userData.id || 0,
+    userName: userData.nomeCompleto || 'Usuário',
+    userEmail: userData.emailCorporativo || '',
   });
-
-  // Carregar usuário atual via API
-  React.useEffect(() => {
-    async function fetchUser() {
-      try {
-        const response = await fetch('/api/perfil');
-        const data = await response.json();
-
-        if (data.success && data.data) {
-          setCurrentUser(data.data);
-        }
-      } catch (error) {
-        console.error('Erro ao carregar usuário:', error);
-      }
-    }
-
-    fetchUser();
-  }, []);
 
   const handleManualSave = async () => {
     if (!documento) return;
@@ -383,12 +361,12 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
         </div>
 
         {/* Chat Sidebar (conditional) */}
-        {chatOpen && currentUser && (
+        {chatOpen && userData.id && (
           <div className="w-80 border-l bg-muted/10">
             <DocumentChat
               documentoId={documentoId}
-              currentUserName={currentUser.nomeCompleto || 'Usuário'}
-              currentUserId={currentUser.id}
+              currentUserName={userData.nomeCompleto || 'Usuário'}
+              currentUserId={userData.id}
             />
           </div>
         )}

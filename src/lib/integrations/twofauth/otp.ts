@@ -59,7 +59,7 @@ export async function generateTOTP(
   options?: {
     digits?: number;
     period?: number;
-    algorithm?: "sha1" | "sha256" | "sha512";
+    algorithm?: "sha1" | "sha256" | "sha512" | "md5";
   },
   config?: Omit<TwoFAuthConfig, "accountId">
 ): Promise<OTPResult> {
@@ -89,7 +89,7 @@ export async function generateHOTP(
   counter: number,
   options?: {
     digits?: number;
-    algorithm?: "sha1" | "sha256" | "sha512";
+    algorithm?: "sha1" | "sha256" | "sha512" | "md5";
   },
   config?: Omit<TwoFAuthConfig, "accountId">
 ): Promise<OTPResult> {

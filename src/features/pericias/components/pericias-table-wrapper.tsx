@@ -14,7 +14,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
-import { format, startOfDay, addDays, startOfWeek, endOfWeek } from 'date-fns';
+import { format } from 'date-fns';
 import { X } from 'lucide-react';
 
 import {

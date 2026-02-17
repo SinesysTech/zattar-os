@@ -1,0 +1,348 @@
+'use client';
+
+/**
+ * Provider unificado de autenticação, perfil e permissões do usuário.
+ *
+ * Faz UMA única chamada a GET /api/auth/me após o login e distribui
+ * todos os dados via React Context, eliminando fetches duplicados.
+ *
+ * Hooks expostos:
+ * - useUser()        → dados do perfil (id, nome, email, avatar, isSuperAdmin)
+ * - usePermissoes()  → permissões + temPermissao(recurso, operacao)
+ * - useAuthSession() → isAuthenticated, sessionToken, logout
+ */
+
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+  type ReactNode,
+} from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import type { Permissao } from '@/features/usuarios/domain';
+
+// ─── Tipos ───────────────────────────────────────────────
+
+export interface UserData {
+  id: number;
+  authUserId: string;
+  nomeCompleto: string;
+  nomeExibicao: string;
+  emailCorporativo: string;
+  emailPessoal: string | null;
+  avatarUrl: string | null;
+  isSuperAdmin: boolean;
+}
+
+interface UserContextValue {
+  // Dados do usuário
+  user: UserData | null;
+
+  // Permissões
+  permissoes: Permissao[];
+  temPermissao: (recurso: string, operacao: string) => boolean;
+
+  // Auth
+  isAuthenticated: boolean;
+  sessionToken: string | null;
+  isLoading: boolean;
+
+  // Ações
+  logout: () => Promise<void>;
+  refetch: () => Promise<void>;
+}
+
+// ─── Context ─────────────────────────────────────────────
+
+const UserContext = createContext<UserContextValue | undefined>(undefined);
+
+// ─── Rotas públicas (não fazem logout automático) ────────
+
+const PUBLIC_ROUTES = [
+  '/app/login',
+  '/app/sign-up',
+  '/app/sign-up-success',
+  '/app/confirm',
+  '/app/forgot-password',
+  '/app/update-password',
+  '/app/error',
+];
+
+// ─── Provider ────────────────────────────────────────────
+
+export function UserProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<UserData | null>(null);
+  const [permissoes, setPermissoes] = useState<Permissao[]>([]);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
+  const logoutInProgressRef = useRef(false);
+  const hasFetchedRef = useRef(false);
+
+  /**
+   * Logout: limpa sessão, cookies e redireciona para login
+   */
+  const logout = useCallback(async () => {
+    if (logoutInProgressRef.current) return;
+    logoutInProgressRef.current = true;
+
+    try {
+      try {
+        await supabase.auth.signOut();
+      } catch {
+        // Sessão pode já ter expirado
+      }
+
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      }).catch(() => {});
+
+      // Limpar localStorage
+      if (typeof window !== 'undefined') {
+        ['chat-notifications', 'chat-unread-counts', 'call-layout'].forEach(
+          (key) => localStorage.removeItem(key)
+        );
+      }
+    } catch {
+      // Continuar com redirect mesmo com erro
+    } finally {
+      setUser(null);
+      setPermissoes([]);
+      setSessionToken(null);
+      logoutInProgressRef.current = false;
+      router.push('/app/login');
+    }
+  }, [supabase, router]);
+
+  /**
+   * Busca dados do usuário + permissões da API consolidada
+   */
+  const fetchUserData = useCallback(async () => {
+    if (typeof window === 'undefined') return;
+
+    try {
+      // Validar sessão Supabase primeiro
+      const [userResult, sessionResult] = await Promise.all([
+        supabase.auth.getUser(),
+        supabase.auth.getSession(),
+      ]);
+
+      if (userResult.error || !userResult.data.user) {
+        setUser(null);
+        setPermissoes([]);
+        setSessionToken(null);
+        setIsLoading(false);
+        return;
+      }
+
+      setSessionToken(sessionResult.data.session?.access_token ?? null);
+
+      // Buscar dados consolidados da API
+      const response = await fetch('/api/auth/me', {
+        credentials: 'include',
+      });
+
+      if (response.status === 401) {
+        setUser(null);
+        setPermissoes([]);
+        setSessionToken(null);
+        setIsLoading(false);
+
+        const currentPath = window.location.pathname;
+        const isPublicRoute = PUBLIC_ROUTES.some((r) => currentPath.startsWith(r));
+        if (!isPublicRoute) {
+          await logout();
+        }
+        return;
+      }
+
+      if (!response.ok) {
+        console.error('Erro ao buscar dados do usuário:', response.status);
+        setIsLoading(false);
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        setUser({
+          id: data.data.id,
+          authUserId: data.data.authUserId,
+          nomeCompleto: data.data.nomeCompleto,
+          nomeExibicao: data.data.nomeExibicao,
+          emailCorporativo: data.data.emailCorporativo,
+          emailPessoal: data.data.emailPessoal,
+          avatarUrl: data.data.avatarUrl,
+          isSuperAdmin: data.data.isSuperAdmin,
+        });
+        setPermissoes(data.data.permissoes);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar dados do usuário:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [supabase, logout]);
+
+  // Fetch inicial + listener de auth state
+  useEffect(() => {
+    let mounted = true;
+    let intervalId: NodeJS.Timeout | null = null;
+
+    const init = async () => {
+      if (!mounted || hasFetchedRef.current) return;
+      hasFetchedRef.current = true;
+      await fetchUserData();
+    };
+
+    init();
+
+    // Verificar sessão periodicamente (5 minutos)
+    intervalId = setInterval(async () => {
+      if (!mounted || logoutInProgressRef.current) return;
+
+      const { error } = await supabase.auth.getUser();
+      if (error) {
+        const currentPath = window.location.pathname;
+        const isPublicRoute = PUBLIC_ROUTES.some((r) => currentPath.startsWith(r));
+        if (!isPublicRoute) {
+          console.log('Sessão expirada detectada, fazendo logout automático');
+          await logout();
+        }
+      }
+    }, 300000);
+
+    // Escutar mudanças de autenticação
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!mounted || logoutInProgressRef.current) return;
+
+      if (session?.user) {
+        setSessionToken(session.access_token);
+        // Se é um novo login (não tínhamos user antes), buscar dados
+        if (!user) {
+          hasFetchedRef.current = false;
+          await fetchUserData();
+        }
+      } else {
+        setUser(null);
+        setPermissoes([]);
+        setSessionToken(null);
+
+        const currentPath = window.location.pathname;
+        const isPublicRoute = PUBLIC_ROUTES.some((r) => currentPath.startsWith(r));
+        if (!isPublicRoute) {
+          await logout();
+        }
+      }
+    });
+
+    return () => {
+      mounted = false;
+      if (intervalId) clearInterval(intervalId);
+      subscription.unsubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /**
+   * Verifica se o usuário tem uma permissão específica
+   */
+  const temPermissao = useCallback(
+    (recurso: string, operacao: string): boolean => {
+      if (!user) return false;
+      if (user.isSuperAdmin) return true;
+      return permissoes.some(
+        (p) => p.recurso === recurso && p.operacao === operacao && p.permitido
+      );
+    },
+    [user, permissoes]
+  );
+
+  const refetch = useCallback(async () => {
+    hasFetchedRef.current = false;
+    setIsLoading(true);
+    await fetchUserData();
+  }, [fetchUserData]);
+
+  const value = useMemo<UserContextValue>(
+    () => ({
+      user,
+      permissoes,
+      temPermissao,
+      isAuthenticated: !!user,
+      sessionToken,
+      isLoading,
+      logout,
+      refetch,
+    }),
+    [user, permissoes, temPermissao, sessionToken, isLoading, logout, refetch]
+  );
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+}
+
+// ─── Hooks derivados ─────────────────────────────────────
+
+/**
+ * Dados do perfil do usuário logado.
+ * Lê do UserProvider (zero fetches).
+ */
+export function useUser() {
+  const ctx = useContext(UserContext);
+  if (!ctx) throw new Error('useUser deve ser usado dentro de <UserProvider>');
+
+  return {
+    ...ctx.user,
+    isLoading: ctx.isLoading,
+    refetch: ctx.refetch,
+  };
+}
+
+/**
+ * Permissões do usuário logado.
+ * Lê do UserProvider (zero fetches).
+ */
+export function usePermissoes() {
+  const ctx = useContext(UserContext);
+  if (!ctx) throw new Error('usePermissoes deve ser usado dentro de <UserProvider>');
+
+  return {
+    data: ctx.user
+      ? {
+          usuarioId: ctx.user.id,
+          isSuperAdmin: ctx.user.isSuperAdmin,
+          permissoes: ctx.permissoes,
+        }
+      : null,
+    permissoes: ctx.permissoes,
+    temPermissao: ctx.temPermissao,
+    isLoading: ctx.isLoading,
+  };
+}
+
+/**
+ * Estado de autenticação e ações de sessão.
+ * Lê do UserProvider (zero fetches).
+ */
+export function useAuthSession() {
+  const ctx = useContext(UserContext);
+  if (!ctx) throw new Error('useAuthSession deve ser usado dentro de <UserProvider>');
+
+  return {
+    user: ctx.user,
+    isAuthenticated: ctx.isAuthenticated,
+    sessionToken: ctx.sessionToken,
+    isLoading: ctx.isLoading,
+    logout: ctx.logout,
+  };
+}

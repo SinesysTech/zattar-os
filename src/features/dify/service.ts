@@ -1,14 +1,13 @@
 import { err, ok, Result } from 'neverthrow';
 import { DifyClient } from '../../lib/dify/client';
-import { DifyChatResponse, DifyWorkflowResponse } from '../../lib/dify/types';
+import { DifyChatResponse, DifyWorkflowResponse, DifyConversationsResponse, DifyMessagesResponse, DifyFileUploadResponse, DifyDataset, DifyDocument, DifyChatRequest, DifyWorkflowRequest, DifyFile } from '../../lib/dify/types';
 import {
   enviarMensagemSchema,
   executarWorkflowSchema,
-  feedbackSchema,
-  TipoDifyApp
+  feedbackSchema
 } from './domain';
 import { z } from 'zod';
-import { getDifyConfig, isDifyConfigured } from '../../lib/dify/config';
+import { isDifyConfigured } from '../../lib/dify/config';
 
 export class DifyService {
   private client: DifyClient;
@@ -52,12 +51,12 @@ export class DifyService {
     // Se tiver no banco, usa. 
     // Se não, fallback para env vars (via DifyClient default logic) APENAS SE não foi solicitado um app específico que falhou.
 
-    let apiKey = undefined;
-    let baseUrl = undefined;
+    let apiKey: string | undefined = undefined;
+    let baseUrl: string | undefined = undefined;
 
     if (dbConfig) {
-      apiKey = dbConfig.api_key;
-      baseUrl = dbConfig.api_url;
+      apiKey = dbConfig.api_key as string;
+      baseUrl = dbConfig.api_url as string;
     } else if (appId) {
       // Se pediu um app específico e não achou, erro.
       throw new Error(`App Dify com ID ${appId} não encontrado.`);
@@ -77,14 +76,17 @@ export class DifyService {
     user: string
   ): Promise<Result<DifyChatResponse, Error>> {
     try {
-      const result = await this.client.chatMessages({
+      const requestPayload: DifyChatRequest = {
         ...params,
         user,
         response_mode: 'blocking',
-      });
+        files: params.files as DifyFile[] | undefined,
+      };
+      const result = await this.client.chatMessages(requestPayload);
       return ok(result);
-    } catch (error: any) {
-      return err(new Error(`Erro ao enviar mensagem Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao enviar mensagem Dify: ${message}`));
     }
   }
 
@@ -93,14 +95,17 @@ export class DifyService {
     user: string
   ): Promise<Result<ReadableStream<Uint8Array>, Error>> {
     try {
-      const stream = await this.client.chatMessagesStream({
+      const requestPayload: DifyChatRequest = {
         ...params,
         user,
         response_mode: 'streaming',
-      });
+        files: params.files as DifyFile[] | undefined,
+      };
+      const stream = await this.client.chatMessagesStream(requestPayload);
       return ok(stream);
-    } catch (error: any) {
-      return err(new Error(`Erro ao iniciar stream de mensagem Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao iniciar stream de mensagem Dify: ${message}`));
     }
   }
 
@@ -108,8 +113,9 @@ export class DifyService {
     try {
       const result = await this.client.stopChatTask(taskId, user);
       return ok(result);
-    } catch (error: any) {
-      return err(new Error(`Erro ao parar geração do chat: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao parar geração do chat: ${message}`));
     }
   }
 
@@ -120,14 +126,17 @@ export class DifyService {
     user: string
   ): Promise<Result<DifyWorkflowResponse, Error>> {
     try {
-      const result = await this.client.workflowRun({
+      const requestPayload: DifyWorkflowRequest = {
         ...params,
         user,
         response_mode: 'blocking',
-      });
+        files: params.files as DifyFile[] | undefined,
+      };
+      const result = await this.client.workflowRun(requestPayload);
       return ok(result);
-    } catch (error: any) {
-      return err(new Error(`Erro ao executar workflow Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao executar workflow Dify: ${message}`));
     }
   }
 
@@ -136,14 +145,17 @@ export class DifyService {
     user: string
   ): Promise<Result<ReadableStream<Uint8Array>, Error>> {
     try {
-      const stream = await this.client.workflowRunStream({
+      const requestPayload: DifyWorkflowRequest = {
         ...params,
         user,
-        response_mode: 'streaming'
-      });
+        response_mode: 'streaming',
+        files: params.files as DifyFile[] | undefined,
+      };
+      const stream = await this.client.workflowRunStream(requestPayload);
       return ok(stream);
-    } catch (error: any) {
-      return err(new Error(`Erro ao iniciar stream de workflow Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao iniciar stream de workflow Dify: ${message}`));
     }
   }
 
@@ -151,15 +163,16 @@ export class DifyService {
     try {
       const result = await this.client.stopWorkflowRun(taskId, user);
       return ok(result);
-    } catch (error: any) {
-      return err(new Error(`Erro ao parar workflow: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao parar workflow: ${message}`));
     }
   }
 
 
   // --- Conversas & Mensagens ---
 
-  async listarConversas(params: { limite: number; ordenarPor?: string }, user: string = 'system'): Promise<Result<{ conversas: any[]; temMais: boolean }, Error>> {
+  async listarConversas(params: { limite: number; ordenarPor?: string }, user: string = 'system'): Promise<Result<{ conversas: DifyConversationsResponse['data']; temMais: boolean }, Error>> {
     try {
       const result = await this.client.getConversations({
         user,
@@ -170,12 +183,13 @@ export class DifyService {
         conversas: result.data,
         temMais: result.has_more,
       });
-    } catch (error: any) {
-      return err(new Error(`Erro ao listar conversas Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao listar conversas Dify: ${message}`));
     }
   }
 
-  async obterHistorico(params: { conversationId: string; limite: number }, user: string = 'system'): Promise<Result<{ mensagens: any[]; temMais: boolean }, Error>> {
+  async obterHistorico(params: { conversationId: string; limite: number }, user: string = 'system'): Promise<Result<{ mensagens: DifyMessagesResponse['data']; temMais: boolean }, Error>> {
     try {
       const result = await this.client.getMessages({
         conversation_id: params.conversationId,
@@ -186,8 +200,9 @@ export class DifyService {
         mensagens: result.data,
         temMais: result.has_more,
       });
-    } catch (error: any) {
-      return err(new Error(`Erro ao obter histórico Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao obter histórico Dify: ${message}`));
     }
   }
 
@@ -202,32 +217,35 @@ export class DifyService {
         content: params.content,
       });
       return ok(result);
-    } catch (error: any) {
-      return err(new Error(`Erro ao enviar feedback Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao enviar feedback Dify: ${message}`));
     }
   }
 
   // --- Info ---
 
-  async obterInfoApp(): Promise<Result<any, Error>> {
+  async obterInfoApp(): Promise<Result<Record<string, unknown>, Error>> {
     try {
       const result = await this.client.getAppInfo();
       return ok(result);
-    } catch (error: any) {
-      return err(new Error(`Erro ao obter info do app Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao obter info do app Dify: ${message}`));
     }
   }
 
-  async obterParametrosApp(): Promise<Result<any, Error>> {
+  async obterParametrosApp(): Promise<Result<Record<string, unknown>, Error>> {
     try {
       const result = await this.client.getAppParameters();
       return ok(result);
-    } catch (error: any) {
-      return err(new Error(`Erro ao obter parâmetros do app Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao obter parâmetros do app Dify: ${message}`));
     }
   }
 
-  async completar(params: { inputs: Record<string, any> }, user: string = 'system'): Promise<Result<{ answer: string; messageId: string; usage: any }, Error>> {
+  async completar(params: { inputs: Record<string, unknown> }, user: string = 'system'): Promise<Result<{ answer: string; messageId: string; usage: DifyChatResponse['metadata']['usage'] }, Error>> {
     try {
       const result = await this.client.completionMessages({
         inputs: params.inputs,
@@ -237,25 +255,27 @@ export class DifyService {
       return ok({
         answer: result.answer,
         messageId: result.message_id,
-        usage: result.metadata.usage,
+        usage: result.metadata.usage as DifyChatResponse['metadata']['usage'],
       });
-    } catch (error: any) {
-      return err(new Error(`Erro ao completar mensagem Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao completar mensagem Dify: ${message}`));
     }
   }
 
-  async uploadArquivo(file: File, user: string): Promise<Result<any, Error>> {
+  async uploadArquivo(file: File, user: string): Promise<Result<DifyFileUploadResponse, Error>> {
     try {
       const result = await this.client.uploadFile(file, user);
       return ok(result);
-    } catch (error: any) {
-      return err(new Error(`Erro ao fazer upload de arquivo Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao fazer upload de arquivo Dify: ${message}`));
     }
   }
 
   // --- Métodos Extras para MCP Tools ---
 
-  async enviarMensagemCompleta(params: { query: string; conversationId?: string; inputs?: Record<string, any> }, user: string = 'system'): Promise<Result<{ answer: string; conversationId: string; messageId: string }, Error>> {
+  async enviarMensagemCompleta(params: { query: string; conversationId?: string; inputs?: Record<string, unknown> }, user: string = 'system'): Promise<Result<{ answer: string; conversationId: string; messageId: string }, Error>> {
     try {
       const result = await this.client.chatMessages({
         query: params.query,
@@ -269,12 +289,13 @@ export class DifyService {
         conversationId: result.conversation_id,
         messageId: result.message_id,
       });
-    } catch (error: any) {
-      return err(new Error(`Erro ao enviar mensagem completa Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao enviar mensagem completa Dify: ${message}`));
     }
   }
 
-  async executarWorkflowCompleto(params: { inputs: Record<string, any> }, user: string = 'system'): Promise<Result<{ workflowRunId: string; status: string; outputs: any; totalTokens: number; tempoDecorrido: number; totalPassos: number }, Error>> {
+  async executarWorkflowCompleto(params: { inputs: Record<string, unknown> }, user: string = 'system'): Promise<Result<{ workflowRunId: string; status: string; outputs: Record<string, unknown>; totalTokens: number; tempoDecorrido: number; totalPassos: number }, Error>> {
     try {
       const result = await this.client.workflowRun({
         inputs: params.inputs,
@@ -290,8 +311,9 @@ export class DifyService {
         tempoDecorrido: data.elapsed_time,
         totalPassos: data.total_steps,
       });
-    } catch (error: any) {
-      return err(new Error(`Erro ao executar workflow completo Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao executar workflow completo Dify: ${message}`));
     }
   }
 
@@ -299,8 +321,9 @@ export class DifyService {
     try {
       const result = await this.client.getSuggestedQuestions(messageId, user);
       return ok(result.data);
-    } catch (error: any) {
-      return err(new Error(`Erro ao obter sugestões Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao obter sugestões Dify: ${message}`));
     }
   }
 
@@ -310,12 +333,13 @@ export class DifyService {
       // Ou assume que é chat messages stop task
       await this.client.stopChatTask(taskId, user);
       return ok(true);
-    } catch (error: any) {
-      return err(new Error(`Erro ao parar tarefa Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao parar tarefa Dify: ${message}`));
     }
   }
 
-  async listarDatasets(page = 1, limit = 20): Promise<Result<{ datasets: any[]; temMais: boolean; total: number }, Error>> {
+  async listarDatasets(page = 1, limit = 20): Promise<Result<{ datasets: DifyDataset[]; temMais: boolean; total: number }, Error>> {
     try {
       const result = await this.client.listDatasets({ page, limit });
       return ok({
@@ -323,38 +347,41 @@ export class DifyService {
         temMais: result.has_more,
         total: result.total,
       });
-    } catch (error: any) {
-      return err(new Error(`Erro ao listar datasets Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao listar datasets Dify: ${message}`));
     }
   }
 
-  async criarDataset(params: { name: string; description?: string }): Promise<Result<any, Error>> {
+  async criarDataset(params: { name: string; description?: string }): Promise<Result<DifyDataset, Error>> {
     try {
       const result = await this.client.createDataset({
         name: params.name,
         description: params.description,
         indexing_technique: 'high_quality',
       });
-      return ok(result);
-    } catch (error: any) {
-      return err(new Error(`Erro ao criar dataset Dify: ${error.message}`));
+      return ok(result as unknown as DifyDataset);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao criar dataset Dify: ${message}`));
     }
   }
 
-  async listarDocumentos(datasetId: string, page = 1, limit = 20): Promise<Result<{ documents: any[]; temMais: boolean; total: number }, Error>> {
+  async listarDocumentos(datasetId: string, page = 1, limit = 20): Promise<Result<{ documents: DifyDocument[]; temMais: boolean; total: number }, Error>> {
     try {
       const result = await this.client.listDocuments(datasetId, { page, limit });
       return ok({
-        documents: result.data,
-        temMais: result.has_more,
-        total: result.total,
+        documents: result.data as DifyDocument[],
+        temMais: result.has_more as boolean,
+        total: result.total as number,
       });
-    } catch (error: any) {
-      return err(new Error(`Erro ao listar documentos Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao listar documentos Dify: ${message}`));
     }
   }
 
-  async criarDocumento(params: { datasetId: string; nome: string; texto: string }): Promise<Result<any, Error>> {
+  async criarDocumento(params: { datasetId: string; nome: string; texto: string }): Promise<Result<DifyDocument, Error>> {
     try {
       const result = await this.client.createDocument(params.datasetId, {
         name: params.nome,
@@ -365,8 +392,9 @@ export class DifyService {
         },
       });
       return ok(result);
-    } catch (error: any) {
-      return err(new Error(`Erro ao criar documento Dify: ${error.message}`));
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao criar documento Dify: ${message}`));
     }
   }
 }

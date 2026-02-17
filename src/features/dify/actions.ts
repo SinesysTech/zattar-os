@@ -55,8 +55,9 @@ export async function checkDifyAppConnectionAction(apiUrl: string, apiKey: strin
         }
 
         return { success: true, data: infoResult.value };
-    } catch (error: any) {
-        return { success: false, message: error.message };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        return { success: false, message };
     }
 }
 
@@ -74,7 +75,7 @@ export async function saveDifyConfigAction(data: { api_url: string; api_key: str
     
     if (activeResult.isOk() && activeResult.value) {
         // Atualiza existente
-        const updateResult = await difyRepository.updateDifyApp(activeResult.value.id, {
+        const updateResult = await difyRepository.updateDifyApp(activeResult.value.id as string, {
             api_url: data.api_url,
             api_key: data.api_key,
         });
@@ -105,5 +106,5 @@ export async function checkDifyConnectionAction() {
     }
     
     const config = configResult.value;
-    return checkDifyAppConnectionAction(config.api_url, config.api_key);
+    return checkDifyAppConnectionAction(config.api_url as string, config.api_key as string);
 }

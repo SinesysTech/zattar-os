@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CheckCircle, XCircle, RefreshCw, Save } from 'lucide-react';
@@ -31,8 +31,8 @@ export function DifyConfigForm() {
             const config = await getDifyConfigAction();
             if (config) {
                 setFormData({
-                    api_url: config.api_url,
-                    api_key: config.api_key,
+                    api_url: config.api_url as string,
+                    api_key: config.api_key as string,
                 });
             }
         } catch (error) {
@@ -54,9 +54,10 @@ export function DifyConfigForm() {
             await saveDifyConfigAction(formData);
             toast.success('Configurações salvas com sucesso!');
             setConnectionStatus('idle'); // Reseta status para forçar novo teste se quiser
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Erro ao salvar:', error);
-            toast.error(`Erro ao salvar: ${error.message}`);
+            const message = error instanceof Error ? error.message : String(error);
+            toast.error(`Erro ao salvar: ${message}`);
         } finally {
             setIsSaving(false);
         }
@@ -84,9 +85,10 @@ export function DifyConfigForm() {
                 setConnectionMessage(result.message || 'Falha na conexão.');
                 toast.error('Falha na conexão com Dify.');
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             setConnectionStatus('error');
-            setConnectionMessage(error.message);
+            const message = error instanceof Error ? error.message : String(error);
+            setConnectionMessage(message);
         } finally {
             setIsLoading(false);
         }

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuthSession } from '@/providers/user-provider';
 import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
 import {
   TTL_MS,
@@ -45,7 +45,7 @@ export function useSecureStorage<T>(
   initialValue: T,
   options?: UseSecureStorageOptions
 ): [T, SetValue<T>, UseSecureStorageState] {
-  const { sessionToken } = useAuth();
+  const { sessionToken } = useAuthSession();
 
   const hasWindow = typeof window !== 'undefined';
   const ttl = options?.ttl ?? TTL_MS;

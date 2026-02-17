@@ -4,9 +4,9 @@ import { createClient } from '@/lib/supabase/server';
 import { DifyService } from '../service';
 import { enviarMensagemSchema, feedbackSchema } from '../domain';
 import { difyRepository } from '../repository';
-import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 
-export async function actionEnviarMensagemDify(params: any) {
+export async function actionEnviarMensagemDify(params: z.infer<typeof enviarMensagemSchema>) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -39,7 +39,7 @@ export async function actionEnviarMensagemDify(params: any) {
       conversation_id: result.value.conversation_id,
       usuario_id: user.id,
       app_key: process.env.DIFY_CHAT_APP_KEY || 'default',
-      updated_at: new Date().toISOString() as any, // Ajuste de tipo
+      updated_at: Math.floor(Date.now() / 1000),
     });
   }
 
@@ -92,7 +92,7 @@ export async function actionObterHistoricoDify(conversationId: string) {
   return { data: result.value };
 }
 
-export async function actionEnviarFeedbackDify(params: any) {
+export async function actionEnviarFeedbackDify(params: z.infer<typeof feedbackSchema>) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

@@ -22,7 +22,6 @@ import {
   TemporalViewError,
 } from '@/components/shared';
 
-import type { Expediente } from '../domain';
 import { useExpedientes } from '../hooks/use-expedientes';
 import { useUsuarios } from '@/features/usuarios';
 import { useTiposExpedientes } from '@/features/tipos-expedientes';

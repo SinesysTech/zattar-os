@@ -25,7 +25,7 @@
 
 // Domain
 export {
-  // Types
+  // Types - Partes
   type TipoEntidadeChatwoot,
   type PartesChatwoot,
   type CreatePartesChatwootInput,
@@ -34,11 +34,27 @@ export {
   type DadosSincronizados,
   type SincronizacaoResult,
 
+  // Types - Conversas
+  type ConversaChatwoot,
+  type CreateConversaChatwootInput,
+  type UpdateConversaChatwootInput,
+  type ListarConversasParams,
+  type StatusConversa,
+
+  // Types - Usuários
+  type UsuarioChatwoot,
+  type CreateUsuarioChatwootInput,
+  type UpdateUsuarioChatwootInput,
+  type ListarUsuariosParams,
+  type RoleUsuario,
+
   // Schemas
   tipoEntidadeChatwootSchema,
   createPartesChatwootSchema,
   updatePartesChatwootSchema,
   listarMapeamentosSchema,
+  statusConversaSchema,
+  roleUsuarioSchema,
 
   // Utils
   formatarTelefoneInternacional,
@@ -49,6 +65,7 @@ export {
 
 // Repository
 export {
+  // Partes Chatwoot
   findMapeamentoById,
   findMapeamentoPorEntidade,
   findMapeamentoPorChatwootId,
@@ -61,10 +78,30 @@ export {
   removerMapeamentoPorChatwootId,
   contarMapeamentos,
   upsertMapeamentoPorEntidade,
+
+  // Conversas Chatwoot
+  findConversaById,
+  findConversaPorChatwootId,
+  listarConversas,
+  criarConversa,
+  atualizarConversa,
+  removerConversa,
+
+  // Usuários Chatwoot
+  findUsuarioById,
+  findUsuarioPorUUID,
+  findUsuarioPorChatwootId,
+  listarUsuarios,
+  criarUsuario,
+  atualizarUsuario,
+  atualizarUsuarioPorUUID,
+  listarAgentesDisponíveis,
+  removerUsuario,
 } from './repository';
 
 // Service
 export {
+  // Partes sync (existing)
   parteParaChatwootContact,
   parteParaChatwootUpdate,
   sincronizarParteComChatwoot,
@@ -84,6 +121,23 @@ export {
   buscarHistoricoConversa,
   buscarHistoricoConversaFormatado,
   buscarMetricasConversas,
+  // Conversas table sync (NEW)
+  sincronizarConversaChatwoot,
+  atribuirConversaInteligente,
+  atualizarStatusConversa,
+  // Usuários table sync (NEW)
+  sincronizarAgenteChatwoot,
+  atualizarDisponibilidadeAgente,
+  // Webhook handling (NEW)
+  processarWebhookConversa,
+  processarWebhookAgente,
+  processarWebhook,
+  // Types (NEW)
+  type SincronizarConversaParams,
+  type AtribuirConversaInteligentParams,
+  type SincronizarAgenteParams,
+  type WebhookEventType,
+  type WebhookPayload,
 } from './service';
 
 // Sync Hooks (wrapper functions com auto-sync)
@@ -104,6 +158,10 @@ export {
   sincronizarCompletoComChatwoot,
   type SincronizarCompletoParams,
   type SincronizarCompletoResult,
+  // Webhook & API endpoints (NEW)
+  processarWebhookChatwoot,
+  sincronizarConversaManual,
+  atualizarStatusConversaAPI,
   // Legacy actions (for clientes only - retrocompatibilidade)
   sincronizarTodosClientes,
   sincronizarCliente,
@@ -114,3 +172,21 @@ export {
 
 // Components
 export { ChatwootSyncButton } from './components';
+
+// Hooks (React hooks para UI)
+export {
+  useChatwootConversations,
+  type UseChatwootConversationsOptions,
+  type UseChatwootConversationsState,
+  useChatwootAgents,
+  useChatwootAgentAvailability,
+  type UseChatwootAgentsOptions,
+  type UseChatwootAgentsState,
+  useChatwootRealtime,
+  useChatwootConversationChanges,
+  useChatwootUserChanges,
+  type RealtimeEventType,
+  type RealtimeEvent,
+  type UseChatwootRealtimeOptions,
+  type UseChatwootRealtimeState,
+} from './hooks';

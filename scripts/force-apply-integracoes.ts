@@ -44,7 +44,7 @@ async function applyMigration() {
 
   try {
     // Executar SQL via RPC (se disponível)
-    const { data, error } = await supabase.rpc('exec_sql', { sql_query: sql });
+    const { error } = await supabase.rpc('exec_sql', { sql_query: sql });
 
     if (error) {
       console.error('❌ Erro ao executar SQL:', error.message);

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import { listarTemplatesAction } from '../feature/actions';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useMinhasPermissoes } from '@/features/usuarios';
+import { usePermissoes } from '@/providers/user-provider';
 import { DataTable, DataShell, DataTableToolbar, DataPagination } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
@@ -358,7 +358,7 @@ export function TemplatesClient() {
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
-  const { temPermissao } = useMinhasPermissoes('assinatura_digital');
+  const { temPermissao } = usePermissoes();
   const canCreate = temPermissao('assinatura_digital', 'criar');
   const canEdit = temPermissao('assinatura_digital', 'editar');
   const canDelete = temPermissao('assinatura_digital', 'deletar');

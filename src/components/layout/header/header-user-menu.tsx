@@ -28,10 +28,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Switch } from "@/components/ui/switch"
-import { createClient } from "@/lib/supabase/client"
-import { useAuth } from "@/hooks/use-auth"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useMinhasPermissoes } from "@/features/usuarios"
+import { useUser, useAuthSession } from "@/providers/user-provider"
 
 function getInitials(name: string): string {
   if (!name) return "U"
@@ -52,138 +50,36 @@ function getAvatarPublicUrl(avatarPath: string | null | undefined): string {
 }
 
 export function HeaderUserMenu() {
-  const [user, setUser] = React.useState<{
-    name: string
-    email: string
-    avatar: string
-  } | null>(null)
-
-  const hasLoadedRef = React.useRef(false)
-  const { isAuthenticated, logout } = useAuth()
+  const userData = useUser()
+  const { logout } = useAuthSession()
   const router = useRouter()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
-  const { data: permissoesData } = useMinhasPermissoes()
-  const isSuperAdmin = permissoesData?.isSuperAdmin || false
 
   React.useEffect(() => {
     setMounted(true)
   }, [])
 
-  React.useEffect(() => {
-    if (!isAuthenticated) {
-      setUser(null)
-      return
-    }
-
-    if (hasLoadedRef.current) {
-      return
-    }
-
-    async function loadUser() {
-      try {
-        hasLoadedRef.current = true
-
-        const response = await fetch('/api/perfil', {
-          credentials: 'include',
-        })
-
-        if (response.status === 401) {
-          hasLoadedRef.current = false
-          setUser(null)
-          await logout()
-          return
-        }
-
-        if (!response.ok) {
-          try {
-            const supabase = createClient()
-            const { data: { user: authUser }, error } = await supabase.auth.getUser()
-
-            if (error || !authUser) {
-              hasLoadedRef.current = false
-              setUser(null)
-              await logout()
-              return
-            }
-
-            setUser({
-              name: authUser.user_metadata?.full_name || authUser.email?.split("@")[0] || "Usuário",
-              email: authUser.email || "",
-              avatar: authUser.user_metadata?.avatar_url || "",
-            })
-          } catch {
-            hasLoadedRef.current = false
-          }
-          return
-        }
-
-        const data = await response.json()
-
-        if (data.success && data.data) {
-          const usuario = data.data
-          setUser({
-            name: usuario.nomeExibicao || usuario.nomeCompleto || "Usuário",
-            email: usuario.emailCorporativo || usuario.emailPessoal || "",
-            avatar: getAvatarPublicUrl(usuario.avatarUrl),
-          })
-        }
-      } catch (error) {
-        console.error("Erro ao carregar dados do usuário:", error)
-        hasLoadedRef.current = false
-
-        if (error instanceof Error && error.message.includes('auth')) {
-          await logout()
-        }
-      }
-    }
-
-    loadUser()
-  }, [isAuthenticated, logout])
-
-  const handleLogout = async () => {
-    try {
-      try {
-        const supabase = createClient()
-        await supabase.auth.signOut()
-      } catch {
-        console.log('Sessão já expirada, limpando cookies via API')
-      }
-
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        console.warn('Erro ao fazer logout via API, mas continuando...')
-      }
-
-      router.push("/app/login")
-      router.refresh()
-    } catch (error) {
-      console.error('Erro ao fazer logout:', error)
-      router.push("/app/login")
-      router.refresh()
-    }
-  }
-
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark")
   }
 
-  if (!user) {
+  if (userData.isLoading || !userData.nomeExibicao) {
     return <Skeleton className="h-8 w-8 rounded-full" />
   }
 
-  const initials = getInitials(user.name)
+  const name = userData.nomeExibicao || userData.nomeCompleto || "Usuário"
+  const email = userData.emailCorporativo || userData.emailPessoal || ""
+  const avatar = getAvatarPublicUrl(userData.avatarUrl)
+  const isSuperAdmin = userData.isSuperAdmin || false
+  const initials = getInitials(name)
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="flex items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
           <Avatar className="h-8 w-8 cursor-pointer">
-            <AvatarImage src={user.avatar} alt={user.name} />
+            <AvatarImage src={avatar} alt={name} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
         </button>
@@ -196,12 +92,12 @@ export function HeaderUserMenu() {
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="h-8 w-8 rounded-lg">
-              <AvatarImage src={user.avatar} alt={user.name} />
+              <AvatarImage src={avatar} alt={name} />
               <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{user.name}</span>
-              <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+              <span className="truncate font-medium">{name}</span>
+              <span className="truncate text-xs text-muted-foreground">{email}</span>
             </div>
           </div>
         </DropdownMenuLabel>
@@ -247,7 +143,7 @@ export function HeaderUserMenu() {
           )}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
+        <DropdownMenuItem onClick={() => logout()}>
           <LogOut className="mr-2 h-4 w-4" />
           Sair
         </DropdownMenuItem>

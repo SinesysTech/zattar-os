@@ -42,7 +42,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 
-import type { TwoFAuthAccount, TwoFAuthGroup, OTPResult } from "@/lib/integrations/twofauth/types";
+import type { TwoFAuthAccount, TwoFAuthGroup } from "@/lib/integrations/twofauth/types";
 import useTwoFAuthAccounts from "../hooks/use-twofauth-accounts";
 
 // =============================================================================
@@ -70,12 +70,12 @@ export function TwoFAuthConfigContent() {
   const {
     accounts,
     isLoading: accountsLoading,
-    error: accountsError,
-    isPermissionError,
+    error: _accountsError,
+    isPermissionError: _isPermissionError,
     fetchAccounts,
     deleteAccount,
     selectedAccount,
-    selectAccount,
+    selectAccount: _selectAccount,
     currentOTP,
     otpLoading,
     timeRemaining,
@@ -134,7 +134,8 @@ export function TwoFAuthConfigContent() {
   }, [fetchStatus, fetchAccounts, fetchGroups]);
 
   useEffect(() => {
-    loadData();
+    const timer = setTimeout(() => loadData(), 0);
+    return () => clearTimeout(timer);
   }, [loadData]);
 
   // Handlers

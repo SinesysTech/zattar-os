@@ -132,7 +132,7 @@ export function ExpedientesDayList({
                     {/* Segunda linha: tipo expediente + descrição arquivos */}
                     <div className="text-xs text-muted-foreground">
                       <span className="font-medium">
-                        {(expediente as any).tipoExpediente?.tipoExpediente || 'Sem tipo'}
+                        {(expediente as Expediente & { tipoExpediente?: { tipoExpediente?: string } }).tipoExpediente?.tipoExpediente || 'Sem tipo'}
                       </span>
                       {expediente.descricaoArquivos && (
                         <span className="ml-1.5">

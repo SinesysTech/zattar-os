@@ -40,7 +40,7 @@ import {
   type CalendarView
 } from "./";
 import { actionListarEventosCalendar, type UnifiedCalendarEvent } from "@/features/calendar";
-import { FilterPopoverMulti, type FilterOption } from "@/features/partes/components/shared";
+import { FilterPopoverMulti, type FilterOption } from "@/features/partes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -172,21 +172,24 @@ export default function EventCalendarApp({
     const rangeEnd = endOfMonth(addMonths(center, 1));
 
     let cancelled = false;
-    setIsLoading(true);
 
-    actionListarEventosCalendar({
-      startAt: rangeStart.toISOString(),
-      endAt: rangeEnd.toISOString()
-    })
-      .then((result) => {
+    const fetchData = async () => {
+      setTimeout(() => setIsLoading(true), 0);
+      try {
+        const result = await actionListarEventosCalendar({
+          startAt: rangeStart.toISOString(),
+          endAt: rangeEnd.toISOString()
+        });
         if (cancelled) return;
         if (result.success) {
           setServerEvents(result.data);
         }
-      })
-      .finally(() => {
+      } finally {
         if (!cancelled) setIsLoading(false);
-      });
+      }
+    };
+
+    fetchData();
 
     return () => {
       cancelled = true;

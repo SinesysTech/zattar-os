@@ -46,7 +46,7 @@ function bucketEvents(
 
 export function SystemBoardClient({ board, events, quadros }: SystemBoardClientProps) {
   const router = useRouter();
-  const [isPending, startTransition] = React.useTransition();
+  const [_isPending, startTransition] = React.useTransition();
 
   const initialColumns = React.useMemo(
     () => bucketEvents(board, events),

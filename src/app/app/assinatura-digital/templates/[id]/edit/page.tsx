@@ -18,7 +18,7 @@ import { AlertCircle, RefreshCw } from 'lucide-react';
 import { FieldMappingEditor, type Template } from '../../../feature';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useMinhasPermissoes } from '@/features/usuarios';
+import { usePermissoes } from '@/providers/user-provider';
 
 async function getTemplate(id: string): Promise<Template> {
   const response = await fetch(`/api/assinatura-digital/templates/${id}`, {
@@ -67,7 +67,7 @@ export default function EditTemplatePage({ params }: PageProps) {
   const { id } = use(params);
   const router = useRouter();
 
-  const { temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes('assinatura_digital');
+  const { temPermissao, isLoading: isLoadingPermissoes } = usePermissoes();
   const canEdit = temPermissao('assinatura_digital', 'editar');
 
   // Shared auth error handler for DRY

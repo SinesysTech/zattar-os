@@ -42,6 +42,7 @@ import {
   TipoEntidadeChatwoot,
   PartesChatwoot,
   SincronizacaoResult,
+  StatusConversa,
   formatarTelefoneInternacional,
   normalizarDocumentoParaIdentifier,
   obterPrimeiroEmail,
@@ -1298,4 +1299,573 @@ export async function buscarMetricasConversas(
       )
     );
   }
+}
+
+// =============================================================================
+// Sincronização de Conversas (conversas_chatwoot table)
+// =============================================================================
+
+export interface SincronizarConversaParams {
+  chatwoot_conversation_id: number;
+  chatwoot_account_id: number;
+  chatwoot_inbox_id: number;
+  mapeamento_partes_chatwoot_id?: number;
+  status?: "open" | "resolved" | "pending" | "snoozed";
+  assignee_id?: number | null;
+  message_count?: number;
+  unread_count?: number;
+}
+
+/**
+ * Sincroniza uma conversa do Chatwoot para a tabela conversas_chatwoot
+ * Cria ou atualiza a conversa com dados sincronizados
+ */
+export async function sincronizarConversaChatwoot(
+  params: SincronizarConversaParams
+): Promise<Result<{ id: bigint; criada: boolean }>> {
+  try {
+    // Verifica se conversa já existe
+    const {
+      criarConversa,
+      atualizarConversa,
+      findConversaPorChatwootId,
+    } = await import("./repository");
+
+    const contatoExistente = await findConversaPorChatwootId(
+      BigInt(params.chatwoot_conversation_id),
+      BigInt(params.chatwoot_account_id)
+    );
+
+    if (!contatoExistente.success) {
+      return err(contatoExistente.error);
+    }
+
+    if (contatoExistente.data) {
+      // Atualiza conversa existente
+      const updateResult = await atualizarConversa(contatoExistente.data.id, {
+        status: params.status,
+        sincronizado: true,
+        ultima_sincronizacao: new Date().toISOString(),
+      });
+
+      if (!updateResult.success) {
+        return err(updateResult.error);
+      }
+
+      return ok({ id: contatoExistente.data.id, criada: false });
+    }
+
+    // Cria nova conversa
+    const criarResult = await criarConversa({
+      chatwoot_conversation_id: BigInt(params.chatwoot_conversation_id),
+      chatwoot_account_id: BigInt(params.chatwoot_account_id),
+      chatwoot_inbox_id: BigInt(params.chatwoot_inbox_id),
+      mapeamento_partes_chatwoot_id: params.mapeamento_partes_chatwoot_id,
+      status: params.status || "open",
+      assignee_chatwoot_id: params.assignee_id ? BigInt(params.assignee_id) : undefined,
+      dados_sincronizados: {
+        criada_em: new Date().toISOString(),
+        versao_schema: 1,
+      },
+    });
+
+    if (!criarResult.success) {
+      return err(criarResult.error);
+    }
+
+    return ok({ id: criarResult.data.id, criada: true });
+  } catch (error) {
+    return err(
+      appError(
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao sincronizar conversa Chatwoot",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Interface para parâmetros de atribuição inteligente
+ */
+export interface AtribuirConversaInteligentParams {
+  conversacao_id?: bigint;
+  chatwoot_conversation_id?: number;
+  chatwoot_account_id: number;
+  habilidades_requeridas?: string[];
+  prioridade?: "alta" | "media" | "baixa";
+}
+
+/**
+ * Atribui uma conversa a um agente disponível (smart assignment)
+ * Lógica:
+ * 1. Lista agentes disponíveis da conta
+ * 2. Filtra por habilidades se especificadas
+ * 3. Ordena por número de conversas ativas (ascending) para distribuição de carga
+ * 4. Retorna o agente com menos conversas ativas
+ */
+export async function atribuirConversaInteligente(
+  params: AtribuirConversaInteligentParams
+): Promise<Result<{ usuario_id: string; agente_id: bigint; nome: string | null }>> {
+  try {
+    const {
+      listarAgentesDisponíveis,
+      atualizarConversa,
+    } = await import("./repository");
+
+    // Lista agentes disponíveis ordenados por carga
+    const agentesResult = await listarAgentesDisponíveis(
+      BigInt(params.chatwoot_account_id),
+      { skills: params.habilidades_requeridas }
+    );
+
+    if (!agentesResult.success) {
+      return err(agentesResult.error);
+    }
+
+    if (!agentesResult.data || agentesResult.data.length === 0) {
+      return err(
+        appError(
+          "NOT_FOUND",
+          "Nenhum agente disponível para atribuição"
+        )
+      );
+    }
+
+    // Pega o primeiro agente (ordenado por menor carga)
+    const agenteSelecionado = agentesResult.data[0];
+
+    // Se houver conversa para atualizar, marca como atribuída
+    if (params.conversacao_id) {
+      const updateResult = await atualizarConversa(params.conversacao_id, {
+        assignee_chatwoot_id: agenteSelecionado.chatwoot_agent_id,
+        sincronizado: false, // Marca para re-sincronizar com Chatwoot
+      });
+
+      if (!updateResult.success) {
+        console.error("Erro ao atualizar conversa:", updateResult.error);
+        // Não falha a atribuição, apenas loga o erro
+      }
+    }
+
+    return ok({
+      usuario_id: agenteSelecionado.usuario_id,
+      agente_id: agenteSelecionado.chatwoot_agent_id,
+      nome: agenteSelecionado.nome_chatwoot,
+    });
+  } catch (error) {
+    return err(
+      appError(
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao atribuir conversa",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Atualiza o status de uma conversa e sincroniza com Chatwoot
+ */
+export async function atualizarStatusConversa(
+  chatwoot_conversation_id: number,
+  chatwoot_account_id: number,
+  novo_status: "open" | "resolved" | "pending" | "snoozed"
+): Promise<Result<void>> {
+  try {
+    if (!isChatwootConfigured()) {
+      return err(
+        appError("EXTERNAL_SERVICE_ERROR", "Chatwoot não está configurado")
+      );
+    }
+
+    const { findConversaPorChatwootId, atualizarConversa } = await import("./repository");
+    const _client = getChatwootClient();
+
+    // Busca conversa local
+    const contatoLocal = await findConversaPorChatwootId(
+      BigInt(chatwoot_conversation_id),
+      BigInt(chatwoot_account_id)
+    );
+
+    if (!contatoLocal.success) {
+      return err(contatoLocal.error);
+    }
+
+    if (!contatoLocal.data) {
+      return err(appError("NOT_FOUND", "Conversa não encontrada"));
+    }
+
+    // Atualiza no Chatwoot via API (se implementado no cliente)
+    // Por enquanto, apenas atualiza localmente
+    const updateResult = await atualizarConversa(contatoLocal.data.id, {
+      status: novo_status,
+      ultima_sincronizacao: new Date().toISOString(),
+    });
+
+    if (!updateResult.success) {
+      return err(updateResult.error);
+    }
+
+    return ok(undefined);
+  } catch (error) {
+    return err(
+      appError(
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao atualizar status da conversa",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+// =============================================================================
+// Sincronização de Agentes (usuarios_chatwoot table)
+// =============================================================================
+
+export interface SincronizarAgenteParams {
+  usuario_id?: string;
+  chatwoot_agent_id: number;
+  chatwoot_account_id: number;
+  email: string;
+  nome_chatwoot: string;
+  role: "agent" | "supervisor" | "admin";
+  disponivel?: boolean;
+  habilidades?: string[];
+  max_conversas_simultaneas?: number;
+}
+
+/**
+ * Sincroniza um agente do Chatwoot para a tabela usuarios_chatwoot
+ */
+export async function sincronizarAgenteChatwoot(
+  params: SincronizarAgenteParams
+): Promise<Result<{ id: bigint; criado: boolean }>> {
+  try {
+    const {
+      findUsuarioPorChatwootId,
+      criarUsuario,
+      atualizarUsuario,
+      atualizarUsuarioPorUUID,
+    } = await import("./repository");
+
+    // Busca agente existente
+    const agenteExistente = await findUsuarioPorChatwootId(
+      BigInt(params.chatwoot_agent_id),
+      BigInt(params.chatwoot_account_id)
+    );
+
+    if (!agenteExistente.success) {
+      return err(agenteExistente.error);
+    }
+
+    if (agenteExistente.data) {
+      // Atualiza agente existente
+      const updateResult = params.usuario_id
+        ? await atualizarUsuarioPorUUID(
+            agenteExistente.data.usuario_id,
+            {
+              role: params.role,
+              ultima_sincronizacao: new Date().toISOString(),
+            }
+          )
+        : await atualizarUsuario(agenteExistente.data.id, {
+            role: params.role,
+            ultima_sincronizacao: new Date().toISOString(),
+          });
+
+      if (!updateResult.success) {
+        return err(updateResult.error);
+      }
+
+      return ok({ id: agenteExistente.data.id, criado: false });
+    }
+
+    // Cria novo agente
+    const criarResult = await criarUsuario({
+      usuario_id: params.usuario_id,
+      chatwoot_agent_id: BigInt(params.chatwoot_agent_id),
+      chatwoot_account_id: BigInt(params.chatwoot_account_id),
+      email: params.email,
+      nome_chatwoot: params.nome_chatwoot,
+      role: params.role,
+      skills: params.habilidades || [],
+      max_conversas_simultaneas: params.max_conversas_simultaneas || 10,
+      dados_sincronizados: {
+        sincronizado_em: new Date().toISOString(),
+      },
+    });
+
+    if (!criarResult.success) {
+      return err(criarResult.error);
+    }
+
+    return ok({ id: criarResult.data.id, criado: true });
+  } catch (error) {
+    return err(
+      appError(
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao sincronizar agente Chatwoot",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Atualiza a disponibilidade de um agente
+ */
+export async function atualizarDisponibilidadeAgente(
+  usuario_id: string,
+  disponivel: boolean,
+  disponivel_em?: Date
+): Promise<Result<void>> {
+  try {
+    const { atualizarUsuarioPorUUID } = await import("./repository");
+
+    const updateResult = await atualizarUsuarioPorUUID(usuario_id, {
+      disponivel,
+      disponivel_em: disponivel_em ? disponivel_em.toISOString() : (disponivel ? undefined : new Date().toISOString()),
+      ultima_sincronizacao: new Date().toISOString(),
+    });
+
+    if (!updateResult.success) {
+      return err(updateResult.error);
+    }
+
+    return ok(undefined);
+  } catch (error) {
+    return err(
+      appError(
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao atualizar disponibilidade do agente",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+// =============================================================================
+// Webhook Handling
+// =============================================================================
+
+/**
+ * Tipos de eventos webhook do Chatwoot
+ */
+export type WebhookEventType =
+  | "conversation.created"
+  | "conversation.updated"
+  | "conversation.status_changed"
+  | "conversation.assignment_changed"
+  | "message.created"
+  | "message.updated"
+  | "agent.status_changed"
+  | "contact.created"
+  | "contact.updated";
+
+/**
+ * Payload base do webhook
+ */
+export interface WebhookPayload {
+  event: WebhookEventType;
+  data?: Record<string, unknown>;
+  account_id?: number;
+}
+
+/**
+ * Processa webhook de conversa criada/atualizada
+ */
+export async function processarWebhookConversa(
+  event: WebhookEventType,
+  payload: WebhookPayload
+): Promise<Result<void>> {
+  try {
+    if (!isChatwootConfigured()) {
+      return err(
+        appError("EXTERNAL_SERVICE_ERROR", "Chatwoot não está configurado")
+      );
+    }
+
+    const data = payload.data || {};
+    const conversationId = (data.id as number | undefined) || ((data.conversation as Record<string, unknown>)?.id as number | undefined) || 0;
+    const accountId = payload.account_id || Number((payload.data?.account_id as string) || 0);
+
+    if (!conversationId || !accountId) {
+      return err(
+        appError(
+          "VALIDATION_ERROR",
+          "Webhook payload inválido: faltam conversation_id ou account_id"
+        )
+      );
+    }
+
+    if (event === "conversation.created") {
+      // Sincroniza nova conversa
+      const syncResult = await sincronizarConversaChatwoot({
+        chatwoot_conversation_id: conversationId,
+        chatwoot_account_id: accountId,
+        chatwoot_inbox_id: (data.inbox_id as number) || 0,
+        status: (data.status as StatusConversa) || "open",
+        message_count: (data.messages_count as number) || 0,
+        unread_count: (data.unread_count as number) || 0,
+      });
+
+      if (!syncResult.success) {
+        return err(syncResult.error);
+      }
+
+      // Se conversa criada sem agente atribuído, tenta atribuir
+      if (!data.assignee_id) {
+        const atribuirResult = await atribuirConversaInteligente({
+          conversacao_id: syncResult.data.id,
+          chatwoot_conversation_id: conversationId,
+          chatwoot_account_id: accountId,
+        });
+
+        if (!atribuirResult.success) {
+          console.warn(
+            `Não foi possível atribuir conversa ${conversationId}:`,
+            atribuirResult.error.message
+          );
+        }
+      }
+    } else if (event === "conversation.updated") {
+      // Atualiza dados da conversa
+      const syncResult = await sincronizarConversaChatwoot({
+        chatwoot_conversation_id: conversationId,
+        chatwoot_account_id: accountId,
+        chatwoot_inbox_id: (data.inbox_id as number) || 0,
+        status: (data.status as StatusConversa) || "open",
+        assignee_id: (data.assignee_id as number) || undefined,
+        message_count: (data.messages_count as number) || 0,
+        unread_count: (data.unread_count as number) || 0,
+      });
+
+      if (!syncResult.success) {
+        return err(syncResult.error);
+      }
+    } else if (event === "conversation.status_changed") {
+      // Atualiza status da conversa
+      const novo_status = (data.status as "open" | "resolved" | "pending" | "snoozed") || "open";
+      const statusResult = await atualizarStatusConversa(
+        conversationId,
+        accountId,
+        novo_status
+      );
+
+      if (!statusResult.success) {
+        return err(statusResult.error);
+      }
+    }
+
+    return ok(undefined);
+  } catch (error) {
+    return err(
+      appError(
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao processar webhook de conversa",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Processa webhook de mudança de status de agente
+ */
+export async function processarWebhookAgente(
+  event: WebhookEventType,
+  payload: WebhookPayload
+): Promise<Result<void>> {
+  try {
+    if (!isChatwootConfigured()) {
+      return err(
+        appError("EXTERNAL_SERVICE_ERROR", "Chatwoot não está configurado")
+      );
+    }
+
+    const data = payload.data || {};
+    const agentId = (data.id as number) || (data.agent_id as number);
+    const accountId = payload.account_id || Number((payload.data?.account_id as string) || 0);
+
+    if (!agentId || !accountId) {
+      return err(
+        appError(
+          "VALIDATION_ERROR",
+          "Webhook payload inválido: faltam agent_id ou account_id"
+        )
+      );
+    }
+
+    if (event === "agent.status_changed") {
+      // Busca usuário associado e atualiza disponibilidade
+      const { findUsuarioPorChatwootId } = await import("./repository");
+
+      const usuarioResult = await findUsuarioPorChatwootId(
+        BigInt(agentId),
+        BigInt(accountId)
+      );
+
+      if (!usuarioResult.success) {
+        // Pode ser que o agente ainda não tenha sido sincronizado
+        console.warn(`Agente ${agentId} não encontrado no banco local`);
+        return ok(undefined);
+      }
+
+      if (!usuarioResult.data) {
+        return ok(undefined);
+      }
+
+      // Atualiza disponibilidade com base no status Chatwoot
+      const disponivel = (data.availability_status as string) === "available" || 
+                        data.presence_status !== "offline";
+
+      const disponibilidadeResult = await atualizarDisponibilidadeAgente(
+        usuarioResult.data.usuario_id,
+        disponivel,
+        disponivel ? undefined : new Date()
+      );
+
+      if (!disponibilidadeResult.success) {
+        return err(disponibilidadeResult.error);
+      }
+    }
+
+    return ok(undefined);
+  } catch (error) {
+    return err(
+      appError(
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao processar webhook de agente",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Processa webhook genérico e roteia para o handler específico
+ */
+export async function processarWebhook(
+  event: WebhookEventType,
+  payload: WebhookPayload
+): Promise<Result<void>> {
+  // Roteia para o handler específico
+  if (event.startsWith("conversation")) {
+    return processarWebhookConversa(event, payload);
+  } else if (event.startsWith("agent")) {
+    return processarWebhookAgente(event, payload);
+  }
+
+  // Para outros eventos (contact, message), apenas loga por enquanto
+  console.log(`Webhook recebido: ${event}`, payload);
+
+  return ok(undefined);
 }

@@ -21,7 +21,6 @@ import {
   TemporalViewError,
 } from '@/components/shared';
 
-import type { Pericia } from '../domain';
 import { SituacaoPericiaCodigo } from '../domain';
 import { usePericias } from '../hooks/use-pericias';
 import { useUsuarios } from '@/features/usuarios';

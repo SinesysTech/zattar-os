@@ -40,7 +40,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const accounts = await listAccounts();
+    const groupIdParam = request.nextUrl.searchParams.get("group_id");
+    const accounts = await listAccounts(
+      groupIdParam ? { groupId: parseInt(groupIdParam, 10) } : undefined
+    );
 
     return NextResponse.json({
       success: true,
@@ -144,11 +147,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Validar otp_type
-    if (!["totp", "hotp"].includes(body.otp_type)) {
+    if (!["totp", "hotp", "steamtotp"].includes(body.otp_type)) {
       return NextResponse.json(
         {
           success: false,
-          error: "otp_type deve ser 'totp' ou 'hotp'",
+          error: "otp_type deve ser 'totp', 'hotp' ou 'steamtotp'",
         },
         { status: 400 }
       );

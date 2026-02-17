@@ -31,7 +31,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { useMinhasPermissoes } from "@/features/usuarios"
+import { usePermissoes } from "@/providers/user-provider"
 
 // Nav Principal - Funcionalidades core do escritório
 const navPrincipal = [
@@ -177,9 +177,9 @@ const navGestao = [
 ]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: permissoesData, temPermissao, isLoading: loadingPermissoes } = useMinhasPermissoes()
+  const { data, temPermissao, isLoading: loadingPermissoes } = usePermissoes()
   const canSeePangea = !loadingPermissoes && temPermissao("pangea", "listar")
-  const isSuperAdmin = permissoesData?.isSuperAdmin || false
+  const isSuperAdmin = data?.isSuperAdmin || false
 
   const navServicosFiltrado = React.useMemo(() => {
     return navServicos.map((item) => {
