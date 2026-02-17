@@ -52,7 +52,7 @@ function logSyncError(message: string, error: unknown): void {
  * Não bloqueia a operação principal
  */
 async function triggerClienteSync(cliente: Cliente): Promise<void> {
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     logSync('Chatwoot não configurado, pulando sincronização');
     return;
   }

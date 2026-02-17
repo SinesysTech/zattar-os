@@ -28,7 +28,7 @@ export * from "./types";
 // CLIENTE
 // =============================================================================
 
-export { checkConnection, resolveConfig } from "./client";
+export { checkConnection } from "./client";
 
 // =============================================================================
 // CONTAS (ACCOUNTS)

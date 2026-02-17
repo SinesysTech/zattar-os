@@ -210,18 +210,18 @@ export async function getOTP(
 }
 
 /**
- * Obtém OTP usando a conta padrão configurada nas variáveis de ambiente
+ * Obtém OTP usando a conta padrão configurada no banco de dados
  *
  * @param config - Configuração opcional
  * @returns OTP atual e próximo (se disponível)
  */
 export async function getDefaultOTP(config?: TwoFAuthConfig): Promise<OTPResult> {
-  const accountId = config?.accountId || process.env.TWOFAUTH_ACCOUNT_ID;
+  const accountId = config?.accountId;
 
   if (!accountId) {
     throw new TwoFAuthError(
       500,
-      "2FAuth: ID da conta não configurado. Defina TWOFAUTH_ACCOUNT_ID"
+      "2FAuth: ID da conta não configurado. Configure em Configurações > Integrações."
     );
   }
 

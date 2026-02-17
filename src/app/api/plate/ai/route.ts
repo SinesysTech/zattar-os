@@ -181,7 +181,7 @@ export async function POST(req: NextRequest) {
               : ['generate', 'comment'],
             model: gatewayProvider(model || TOOL_CHOICE_MODEL),
             output: 'enum',
-            prompt: getChooseToolPrompt({ messages: messagesRaw }),
+            prompt: await getChooseToolPrompt({ messages: messagesRaw }),
           });
 
           writer.write({
@@ -212,7 +212,7 @@ export async function POST(req: NextRequest) {
             }
 
             if (toolName === 'edit') {
-              const editPrompt = getEditPrompt(editor, {
+              const editPrompt = await getEditPrompt(editor, {
                 isSelecting,
                 messages: messagesRaw,
               });
@@ -230,7 +230,7 @@ export async function POST(req: NextRequest) {
             }
 
             if (toolName === 'generate') {
-              const generatePrompt = getGeneratePrompt(editor, {
+              const generatePrompt = await getGeneratePrompt(editor, {
                 messages: messagesRaw,
               });
 
@@ -298,7 +298,7 @@ const getCommentTool = (
       const { elementStream } = streamObject({
         model,
         output: 'array',
-        prompt: getCommentPrompt(editor, {
+        prompt: await getCommentPrompt(editor, {
           messages: messagesRaw,
         }),
         schema: z

@@ -17,17 +17,17 @@ export const CopilotKit = [
       completeOptions: {
         api: '/api/ai/copilot',
         body: {
-          system: `You are an advanced AI writing assistant, similar to VSCode Copilot but for general text. Your task is to predict and generate the next part of the text based on the given context.
-  
-  Rules:
-  - Continue the text naturally up to the next punctuation mark (., ,, ;, :, ?, or !).
-  - Maintain style and tone. Don't repeat given text.
-  - For unclear context, provide the most likely continuation.
-  - Handle code snippets, lists, or structured text if needed.
-  - Don't include """ in your response.
-  - CRITICAL: Always end with a punctuation mark.
-  - CRITICAL: Avoid starting a new block. Do not use block formatting like >, #, 1., 2., -, etc. The suggestion should continue in the same block as the context.
-  - If no context is provided or you can't generate a continuation, return "0" without explanation.`,
+          system: `Você é um assistente avançado de escrita jurídica, similar ao VSCode Copilot mas para documentos legais brasileiros. Sua tarefa é prever e gerar a próxima parte do texto baseado no contexto fornecido.
+
+  Regras:
+  - Continue o texto naturalmente até o próximo sinal de pontuação (., ,, ;, :, ? ou !).
+  - Mantenha o estilo, tom e terminologia jurídica do texto. Não repita o texto já fornecido.
+  - Para contexto incerto, forneça a continuação mais provável usando linguagem formal e juridicamente precisa.
+  - Trate trechos de código, listas ou texto estruturado quando necessário.
+  - Não inclua """ na sua resposta.
+  - CRÍTICO: Sempre termine com um sinal de pontuação.
+  - CRÍTICO: Evite iniciar um novo bloco. Não use formatação de bloco como >, #, 1., 2., -, etc. A sugestão deve continuar no mesmo bloco que o contexto.
+  - Se nenhum contexto for fornecido ou não for possível gerar uma continuação, retorne "0" sem explicação.`,
         },
         onError: () => {
           // Mock the API response. Remove it when you implement the route /api/ai/copilot
@@ -54,7 +54,7 @@ export const CopilotKit = [
           value: [contextEntry[0] as TElement],
         });
 
-        return `Continue the text up to the next punctuation mark:
+        return `Continue o texto até o próximo sinal de pontuação:
   """
   ${prompt}
   """`;

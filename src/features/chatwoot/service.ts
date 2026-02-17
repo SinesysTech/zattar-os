@@ -289,7 +289,7 @@ export async function sincronizarParteComChatwoot(
   terceiroInfo?: TerceiroInfo
 ): Promise<Result<SincronizacaoResult>> {
   // Verifica se Chatwoot está configurado
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         "EXTERNAL_SERVICE_ERROR",
@@ -299,7 +299,7 @@ export async function sincronizarParteComChatwoot(
   }
 
   try {
-    const client = getChatwootClient();
+    const client = await getChatwootClient();
     const accountId = client.getAccountId();
 
     // Verifica se já existe mapeamento
@@ -550,7 +550,7 @@ export async function vincularParteAContato(
   chatwootContactId: number
 ): Promise<Result<PartesChatwoot>> {
   // Verifica se Chatwoot está configurado
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         "EXTERNAL_SERVICE_ERROR",
@@ -560,7 +560,7 @@ export async function vincularParteAContato(
   }
 
   try {
-    const client = getChatwootClient();
+    const client = await getChatwootClient();
     const accountId = client.getAccountId();
 
     // Verifica se contato existe no Chatwoot
@@ -652,7 +652,7 @@ export async function excluirContatoEMapeamento(
   entidadeId: number
 ): Promise<Result<void>> {
   // Verifica se Chatwoot está configurado
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         "EXTERNAL_SERVICE_ERROR",
@@ -662,7 +662,7 @@ export async function excluirContatoEMapeamento(
   }
 
   try {
-    const client = getChatwootClient();
+    const client = await getChatwootClient();
 
     // Busca mapeamento
     const mapeamento = await findMapeamentoPorEntidade(
@@ -717,7 +717,7 @@ export async function buscarContatoVinculado(
   entidadeId: number
 ): Promise<Result<ChatwootContact | null>> {
   // Verifica se Chatwoot está configurado
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         "EXTERNAL_SERVICE_ERROR",
@@ -727,7 +727,7 @@ export async function buscarContatoVinculado(
   }
 
   try {
-    const client = getChatwootClient();
+    const client = await getChatwootClient();
 
     // Busca mapeamento
     const mapeamento = await findMapeamentoPorEntidade(
@@ -989,7 +989,7 @@ export async function sincronizarChatwootParaApp(): Promise<
   Result<SincronizarChatwootParaAppResult>
 > {
   // Verifica se Chatwoot está configurado
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         "EXTERNAL_SERVICE_ERROR",
@@ -998,7 +998,7 @@ export async function sincronizarChatwootParaApp(): Promise<
     );
   }
 
-  const client = getChatwootClient();
+  const client = await getChatwootClient();
   const accountId = client.getAccountId();
 
   const result: SincronizarChatwootParaAppResult = {
@@ -1127,7 +1127,7 @@ export async function buscarConversasDaParte(
   status?: "open" | "resolved" | "pending" | "all"
 ): Promise<Result<ChatwootConversation[]>> {
   // Verifica se Chatwoot está configurado
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         "EXTERNAL_SERVICE_ERROR",
@@ -1137,7 +1137,7 @@ export async function buscarConversasDaParte(
   }
 
   try {
-    const client = getChatwootClient();
+    const client = await getChatwootClient();
 
     // Busca mapeamento da parte
     const mapeamento = await findMapeamentoPorEntidade(
@@ -1185,7 +1185,7 @@ export async function buscarHistoricoConversa(
   limite?: number
 ): Promise<Result<ChatwootMessage[]>> {
   // Verifica se Chatwoot está configurado
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         "EXTERNAL_SERVICE_ERROR",
@@ -1195,7 +1195,7 @@ export async function buscarHistoricoConversa(
   }
 
   try {
-    const client = getChatwootClient();
+    const client = await getChatwootClient();
 
     const result = await getConversationHistory(conversationId, limite, client);
 
@@ -1224,7 +1224,7 @@ export async function buscarHistoricoConversaFormatado(
   limite = 50
 ): Promise<Result<string>> {
   // Verifica se Chatwoot está configurado
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         "EXTERNAL_SERVICE_ERROR",
@@ -1234,7 +1234,7 @@ export async function buscarHistoricoConversaFormatado(
   }
 
   try {
-    const client = getChatwootClient();
+    const client = await getChatwootClient();
 
     const result = await formatConversationForAI(
       conversationId,
@@ -1267,7 +1267,7 @@ export async function buscarMetricasConversas(
   teamId?: number
 ): Promise<Result<ChatwootConversationCounts>> {
   // Verifica se Chatwoot está configurado
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         "EXTERNAL_SERVICE_ERROR",
@@ -1277,7 +1277,7 @@ export async function buscarMetricasConversas(
   }
 
   try {
-    const client = getChatwootClient();
+    const client = await getChatwootClient();
 
     const result = await getConversationCounts(
       { inbox_id: inboxId, team_id: teamId },
@@ -1475,14 +1475,14 @@ export async function atualizarStatusConversa(
   novo_status: "open" | "resolved" | "pending" | "snoozed"
 ): Promise<Result<void>> {
   try {
-    if (!isChatwootConfigured()) {
+    if (!(await isChatwootConfigured())) {
       return err(
         appError("EXTERNAL_SERVICE_ERROR", "Chatwoot não está configurado")
       );
     }
 
     const { findConversaPorChatwootId, atualizarConversa } = await import("./repository");
-    const _client = getChatwootClient();
+    const _client = await getChatwootClient();
 
     // Busca conversa local
     const contatoLocal = await findConversaPorChatwootId(
@@ -1685,7 +1685,7 @@ export async function processarWebhookConversa(
   payload: WebhookPayload
 ): Promise<Result<void>> {
   try {
-    if (!isChatwootConfigured()) {
+    if (!(await isChatwootConfigured())) {
       return err(
         appError("EXTERNAL_SERVICE_ERROR", "Chatwoot não está configurado")
       );
@@ -1784,7 +1784,7 @@ export async function processarWebhookAgente(
   payload: WebhookPayload
 ): Promise<Result<void>> {
   try {
-    if (!isChatwootConfigured()) {
+    if (!(await isChatwootConfigured())) {
       return err(
         appError("EXTERNAL_SERVICE_ERROR", "Chatwoot não está configurado")
       );

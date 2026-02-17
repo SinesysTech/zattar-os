@@ -2,7 +2,7 @@
  * Operações de Contact Labels da API do Chatwoot
  */
 
-import { ChatwootClient, getChatwootClient } from './client';
+import { type ChatwootClient, getChatwootClient } from './client';
 import {
   ChatwootResult,
   ContactLabelsResponse,
@@ -52,7 +52,7 @@ export async function listContactLabels(
   contactId: number,
   client?: ChatwootClient
 ): Promise<ChatwootResult<string[]>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   const result = await chatwoot.get<ContactLabelsResponse>(
@@ -75,7 +75,7 @@ export async function updateContactLabels(
   labels: string[],
   client?: ChatwootClient
 ): Promise<ChatwootResult<string[]>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   const body: UpdateContactLabelsRequest = { labels };

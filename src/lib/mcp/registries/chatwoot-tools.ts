@@ -59,7 +59,7 @@ import { findTerceiroById } from '@/features/partes/repositories/terceiros-repos
  */
 export async function registerChatwootTools(): Promise<void> {
   // Verifica se Chatwoot está configurado
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     console.warn('[MCP] Chatwoot não configurado - tools não serão registradas');
     return;
   }

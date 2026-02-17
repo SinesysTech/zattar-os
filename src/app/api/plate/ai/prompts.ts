@@ -11,21 +11,18 @@ import {
   getMarkdownWithSelection,
   isMultiBlocks,
 } from '../../ai/command/utils';
+import { getPromptContent } from '@/features/system-prompts/get-prompt';
 
 /**
  * System prompts especializados em Direito Brasileiro para o editor de documentos.
- * Estes prompts são injetados em todas as requisições de IA do editor Plate.
+ * O conteúdo dos prompts (campo `task`) é carregado do banco de dados via getPromptContent().
+ * Caso não exista no banco, usa o fallback hardcoded em defaults.ts.
+ * Os examples e rules permanecem hardcoded pois são acoplados à API do editor.
  */
 
-const JURIDICO_CONTEXT = dedent`
-  Você é um Assistente Jurídico Sênior especializado em Direito Brasileiro.
-  Sua função é auxiliar na redação de contratos, petições e documentos legais.
-  Use linguagem formal, culta e juridicamente precisa.
-  Ao sugerir textos, priorize a segurança jurídica e a clareza.
-  Formate o texto usando estruturas de Rich Text (títulos, listas) quando apropriado.
-`;
+export async function getChooseToolPrompt({ messages }: { messages: ChatMessage[] }) {
+  const task = await getPromptContent('plate_choose_tool');
 
-export function getChooseToolPrompt({ messages }: { messages: ChatMessage[] }) {
   return buildStructuredPrompt({
     examples: [
       // GENERATE
@@ -52,11 +49,11 @@ export function getChooseToolPrompt({ messages }: { messages: ChatMessage[] }) {
       - Retorne "comment" apenas se o usuário pedir explicitamente comentários, feedback, anotações ou revisão. Não infira "comment" implicitamente.
       - Retorne apenas um valor enum sem explicação.
     `,
-    task: `Você é um classificador estrito. Classifique a última requisição do usuário como "generate", "edit" ou "comment".`,
+    task,
   });
 }
 
-export function getCommentPrompt(
+export async function getCommentPrompt(
   editor: SlateEditor,
   {
     messages,
@@ -67,6 +64,8 @@ export function getCommentPrompt(
   const selectingMarkdown = getMarkdown(editor, {
     type: 'blockWithBlockId',
   });
+
+  const task = await getPromptContent('plate_comment');
 
   return buildStructuredPrompt({
     backgroundData: selectingMarkdown,
@@ -133,26 +132,11 @@ export function getCommentPrompt(
       - Se existir <Selection>, seus comentários devem focar no texto selecionado. Se a <Selection> for muito longa, deve haver mais de um comentário.
       - CONTEXTO JURÍDICO: Sempre considere aspectos de segurança jurídica, conformidade legal, clareza contratual e boas práticas de redação jurídica brasileira.
     `,
-    task: dedent`
-      Você é um revisor jurídico sênior especializado em Direito Brasileiro.
-      Sua função é revisar documentos legais e fornecer comentários técnicos.
-      Identifique questões de segurança jurídica, clareza, precisão terminológica e conformidade legal.
-      Forneça sugestões construtivas para melhorar a qualidade do documento.
-
-      Você receberá um documento MDX envolvido em tags <block id="..."> content </block>.
-      <Selection> é o texto destacado pelo usuário.
-
-      Sua tarefa:
-      - Leia o conteúdo de todos os blocos e forneça comentários jurídicos.
-      - Para cada comentário, gere um objeto JSON:
-        - blockId: o id do bloco sendo comentado.
-        - content: o fragmento original do documento que precisa de comentário.
-        - comments: um breve comentário ou explicação para esse fragmento.
-    `,
+    task,
   });
 }
 
-export function getGeneratePrompt(
+export async function getGeneratePrompt(
   editor: SlateEditor,
   { messages }: { messages: ChatMessage[] }
 ) {
@@ -161,6 +145,8 @@ export function getGeneratePrompt(
   }
 
   const selectingMarkdown = getMarkdownWithSelection(editor);
+
+  const task = await getPromptContent('plate_generate');
 
   return buildStructuredPrompt({
     backgroundData: selectingMarkdown,
@@ -187,23 +173,19 @@ export function getGeneratePrompt(
       - Preserve indentação e quebras de linha ao editar dentro de colunas ou layouts estruturados.
       - CONTEXTO JURÍDICO: Use linguagem formal e juridicamente precisa. Cite artigos de lei quando relevante. Priorize clareza e segurança jurídica.
     `,
-    task: dedent`
-      ${JURIDICO_CONTEXT}
-
-      Você é um assistente avançado de geração de conteúdo jurídico.
-      Gere conteúdo baseado nas instruções do usuário, usando os dados de contexto fornecidos.
-      Se a instrução solicitar criação ou transformação (resumir, traduzir, reescrever, criar tabela), produza diretamente o resultado final usando apenas os dados de background fornecidos.
-      Não peça ao usuário conteúdo adicional.
-    `,
+    task,
   });
 }
 
-export function getEditPrompt(
+export async function getEditPrompt(
   editor: SlateEditor,
   { isSelecting, messages }: { isSelecting: boolean; messages: ChatMessage[] }
 ) {
   if (!isSelecting)
     throw new Error('Edit tool is only available when selecting');
+
+  const task = await getPromptContent('plate_edit');
+
   if (isMultiBlocks(editor)) {
     const selectingMarkdown = getMarkdownWithSelection(editor);
 
@@ -230,10 +212,7 @@ export function getEditPrompt(
         - CONTEXTO JURÍDICO: Mantenha a terminologia legal adequada e a estrutura formal de documentos jurídicos brasileiros.
       `,
       task: dedent`
-        Você é um revisor jurídico especializado em Direito Brasileiro.
-        Atue como um revisor ortográfico e gramatical implacável.
-        Corrija o texto mantendo o tom original, mas elevando a eloquência e a precisão jurídica.
-        Mantenha a terminologia legal adequada e a estrutura formal de documentos jurídicos.
+        ${task}
 
         O seguinte <backgroundData> é conteúdo Markdown fornecido pelo usuário que precisa de melhorias.
         Modifique-o de acordo com a instrução do usuário.
@@ -283,9 +262,7 @@ export function getEditPrompt(
       - CONTEXTO JURÍDICO: Priorize precisão terminológica e adequação ao padrão formal de documentos jurídicos brasileiros.
     `,
     task: dedent`
-      Você é um revisor jurídico especializado em Direito Brasileiro.
-      Atue como um revisor ortográfico e gramatical implacável.
-      Corrija o texto mantendo o tom original, mas elevando a eloquência e a precisão jurídica.
+      ${task}
 
       Os dados de background a seguir são texto fornecido pelo usuário que contém uma ou mais tags <Selection> marcando as partes editáveis.
       Você deve modificar apenas o texto dentro de <Selection>.

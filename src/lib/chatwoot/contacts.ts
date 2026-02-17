@@ -2,7 +2,7 @@
  * Operações de Contacts da API do Chatwoot
  */
 
-import { ChatwootClient, getChatwootClient } from './client';
+import { type ChatwootClient, getChatwootClient } from './client';
 import {
   ChatwootContact,
   ChatwootResult,
@@ -32,7 +32,7 @@ export async function listContacts(
   params?: ListContactsParams,
   client?: ChatwootClient
 ): Promise<ChatwootResult<ListContactsResponse>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   return chatwoot.get<ListContactsResponse>(
@@ -52,7 +52,7 @@ export async function createContact(
   data: CreateContactRequest,
   client?: ChatwootClient
 ): Promise<ChatwootResult<ChatwootContact>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   // Usa inbox_id padrão se não fornecido
@@ -97,7 +97,7 @@ export async function getContact(
   contactId: number,
   client?: ChatwootClient
 ): Promise<ChatwootResult<ChatwootContact>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   const result = await chatwoot.get<GetContactResponse>(
@@ -120,7 +120,7 @@ export async function updateContact(
   data: UpdateContactRequest,
   client?: ChatwootClient
 ): Promise<ChatwootResult<ChatwootContact>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   const result = await chatwoot.put<UpdateContactResponse>(
@@ -152,7 +152,7 @@ export async function deleteContact(
   contactId: number,
   client?: ChatwootClient
 ): Promise<ChatwootResult<void>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   const result = await chatwoot.delete<DeleteContactResponse>(
@@ -174,7 +174,7 @@ export async function searchContacts(
   params: SearchContactsParams,
   client?: ChatwootClient
 ): Promise<ChatwootResult<ListContactsResponse>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   return chatwoot.get<ListContactsResponse>(
@@ -195,7 +195,7 @@ export async function mergeContacts(
   data: MergeContactsRequest,
   client?: ChatwootClient
 ): Promise<ChatwootResult<ChatwootContact>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   const result = await chatwoot.post<MergeContactsResponse>(

@@ -76,37 +76,10 @@ export async function isChatwootConfiguredInDatabase(): Promise<boolean> {
 }
 
 /**
- * Obtém configuração do Chatwoot com fallback: DB -> Env -> null
- *
- * Durante a migração, tenta ler do banco de dados primeiro,
- * depois fallback para variáveis de ambiente para compatibilidade.
+ * Obtém configuração do Chatwoot do banco de dados
  *
  * @returns Promise com configuração ou null
  */
 export async function getChatwootConfigWithFallback(): Promise<ChatwootConfig | null> {
-  // Primeiro, tenta ler do banco de dados
-  const configDB = await getChatwootConfigFromDatabase();
-  if (configDB) {
-    console.debug('[Chatwoot Config] Usando configuração do banco de dados');
-    return configDB;
-  }
-
-  // Fallback para variáveis de ambiente (durante migração)
-  const apiUrl = process.env.CHATWOOT_API_URL;
-  const apiKey = process.env.CHATWOOT_API_KEY;
-  const accountId = process.env.CHATWOOT_ACCOUNT_ID;
-  const defaultInboxId = process.env.CHATWOOT_DEFAULT_INBOX_ID;
-
-  if (apiUrl && apiKey && accountId) {
-    console.debug('[Chatwoot Config] Usando configuração de variáveis de ambiente (fallback)');
-    return {
-      apiUrl: apiUrl.replace(/\/$/, ''),
-      apiKey,
-      accountId: parseInt(accountId, 10),
-      defaultInboxId: defaultInboxId ? parseInt(defaultInboxId, 10) : undefined,
-    };
-  }
-
-  console.warn('[Chatwoot Config] Nenhuma configuração encontrada (DB ou Env)');
-  return null;
+  return getChatwootConfigFromDatabase();
 }

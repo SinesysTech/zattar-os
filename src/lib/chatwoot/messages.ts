@@ -2,7 +2,7 @@
  * Operações de Messages da API do Chatwoot
  */
 
-import { ChatwootClient, getChatwootClient } from './client';
+import { type ChatwootClient, getChatwootClient } from './client';
 import {
   ChatwootMessage,
   ChatwootResult,
@@ -21,7 +21,7 @@ export async function getMessages(
   conversationId: number,
   client?: ChatwootClient
 ): Promise<ChatwootResult<GetMessagesResponse>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   return chatwoot.get<GetMessagesResponse>(

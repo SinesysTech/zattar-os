@@ -7,10 +7,10 @@
  */
 
 import { Result, ok, err, appError } from '@/types';
-import { getChatwootConfigWithFallback } from '@/lib/chatwoot/config';
+import { getChatwootConfigFromDatabase } from '@/lib/chatwoot/config';
 
 async function isChatwootConfigured(): Promise<boolean> {
-  const config = await getChatwootConfigWithFallback();
+  const config = await getChatwootConfigFromDatabase();
   return config !== null;
 }
 
