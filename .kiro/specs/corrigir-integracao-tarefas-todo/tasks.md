@@ -96,7 +96,7 @@
 
 ## 15. Code Review e Deploy
 - [~] 15.1 Executar `npm run build` para verificar build de produção
-- [~] 15.2 Revisar todas as mudanças no Git
+- [x] 15.2 Revisar todas as mudanças no Git
 - [~] 15.3 Criar Pull Request com descrição detalhada
 - [~] 15.4 Solicitar code review
 - [~] 15.5 Fazer merge após aprovação

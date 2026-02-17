@@ -5,6 +5,7 @@
  */
 
 import { TwoFAuthConfig, TwoFAuthError, TwoFAuthErrorResponse } from "./types";
+import { load2FAuthConfig, load2FAuthConfigSync } from "./config-loader";
 
 /**
  * Configuração resolvida do cliente
@@ -16,16 +17,62 @@ interface ResolvedConfig {
 
 /**
  * Resolve a configuração do cliente 2FAuth
- * Usa variáveis de ambiente se não fornecido
+ * Prioridade: config fornecido > banco de dados > variáveis de ambiente
  */
-export function resolveConfig(config?: Omit<TwoFAuthConfig, "accountId">): ResolvedConfig {
-  const apiUrl = config?.apiUrl || process.env.TWOFAUTH_API_URL;
-  const token = config?.token || process.env.TWOFAUTH_API_TOKEN;
+export async function resolveConfigAsync(
+  config?: Omit<TwoFAuthConfig, "accountId">
+): Promise<ResolvedConfig> {
+  let apiUrl = config?.apiUrl;
+  let token = config?.token;
+
+  // Se não fornecido, buscar do banco ou env
+  if (!apiUrl || !token) {
+    const dbConfig = await load2FAuthConfig();
+    apiUrl = apiUrl || dbConfig?.apiUrl;
+    token = token || dbConfig?.token;
+  }
 
   if (!apiUrl || !token) {
     throw new TwoFAuthError(
       500,
-      "2FAuth não configurado. Defina variáveis de ambiente: TWOFAUTH_API_URL, TWOFAUTH_API_TOKEN"
+      "2FAuth não configurado. Configure via interface ou defina variáveis de ambiente: TWOFAUTH_API_URL, TWOFAUTH_API_TOKEN"
+    );
+  }
+
+  // Normalizar URL da API
+  let baseUrl = apiUrl.endsWith("/") ? apiUrl.slice(0, -1) : apiUrl;
+
+  if (baseUrl.endsWith("/api/v1")) {
+    // URL já está completa
+  } else if (baseUrl.endsWith("/api")) {
+    baseUrl = `${baseUrl}/v1`;
+  } else if (!baseUrl.includes("/api")) {
+    baseUrl = `${baseUrl}/api/v1`;
+  }
+
+  return { baseUrl, token };
+}
+
+/**
+ * Resolve a configuração do cliente 2FAuth de forma síncrona
+ * Usa apenas variáveis de ambiente (fallback para código legado)
+ * @deprecated Use resolveConfigAsync quando possível
+ */
+export function resolveConfig(config?: Omit<TwoFAuthConfig, "accountId">): ResolvedConfig {
+  let apiUrl = config?.apiUrl;
+  let token = config?.token;
+
+  // Se não fornecido, buscar apenas de env vars
+  if (!apiUrl || !token) {
+    const envConfig = load2FAuthConfigSync();
+    apiUrl = apiUrl || envConfig?.apiUrl;
+    token = token || envConfig?.token;
+  }
+
+  if (!apiUrl || !token) {
+    throw new TwoFAuthError(
+      500,
+      "2FAuth não configurado. Configure via interface ou defina variáveis de ambiente: TWOFAUTH_API_URL, TWOFAUTH_API_TOKEN"
     );
   }
 

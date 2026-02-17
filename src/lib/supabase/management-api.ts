@@ -368,6 +368,10 @@ export async function obterComputeAtual(): Promise<ComputeTier | null> {
   const { projectRef, accessToken } = getManagementApiConfig();
 
   if (!projectRef || !accessToken) {
+    console.warn(
+      "[Management API] Credenciais não configuradas. " +
+      "Configure SUPABASE_PROJECT_REF e SUPABASE_ACCESS_TOKEN para habilitar métricas de compute."
+    );
     return null;
   }
 
@@ -381,7 +385,14 @@ export async function obterComputeAtual(): Promise<ComputeTier | null> {
     });
 
     if (!response.ok) {
-      console.error(`[Management API] Erro ${response.status}: ${response.statusText}`);
+      if (response.status === 401) {
+        console.error(
+          "[Management API] Erro 401: Token de acesso inválido ou expirado. " +
+          "Gere um novo token em: https://supabase.com/dashboard/account/tokens"
+        );
+      } else {
+        console.error(`[Management API] Erro ${response.status}: ${response.statusText}`);
+      }
       return null;
     }
 
