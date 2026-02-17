@@ -1,9 +1,6 @@
 import type {
   AssistenteTipo,
   AssistenteTipoComRelacoes,
-  CriarAssistenteTipoInput,
-  AtualizarAssistenteTipoInput,
-  ListarAssistentesTiposParams,
 } from './domain';
 import {
   criarAssistenteTipoSchema,

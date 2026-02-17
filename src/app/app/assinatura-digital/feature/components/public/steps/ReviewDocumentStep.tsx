@@ -172,7 +172,7 @@ export function ReviewDocumentStep({
       </div>
 
       {/* Custom scrollbar styles */}
-      <style jsx global nonce={nonce}>{`
+      <style nonce={nonce} dangerouslySetInnerHTML={{__html: `
         .pdf-scrollbar::-webkit-scrollbar {
           width: 8px;
         }
@@ -186,7 +186,7 @@ export function ReviewDocumentStep({
         .pdf-scrollbar::-webkit-scrollbar-thumb:hover {
           background-color: rgba(156, 163, 175, 0.7);
         }
-      `}</style>
+      `}} />
     </PublicStepLayout>
   );
 }

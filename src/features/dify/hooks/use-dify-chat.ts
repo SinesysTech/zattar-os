@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useCallback, useRef } from 'react';
 // import { fetchEventSource } from '@microsoft/fetch-event-source'; // Removed
 import { v4 as uuidv4 } from 'uuid';

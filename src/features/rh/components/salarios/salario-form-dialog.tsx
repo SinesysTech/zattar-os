@@ -75,7 +75,6 @@ export function SalarioFormDialog({
       : undefined,
   });
 
-  // eslint-disable-next-line react-hooks/incompatible-library -- React Hook Form's watch() cannot be memoized by React Compiler, but it's safe to use
   const usuarioIdSelecionado = form.watch('usuarioId');
 
   // Buscar salários quando usuário for selecionado

@@ -58,7 +58,6 @@ fi
 # Variáveis obrigatórias para o build
 require_env NEXT_PUBLIC_SUPABASE_URL
 require_env NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
-require_env NEXT_PUBLIC_DYTE_ORG_ID
 
 # Garante que buildx está pronto
 if ! docker buildx inspect >/dev/null 2>&1; then
@@ -74,7 +73,6 @@ echo "   Platform: ${PLATFORM}"
 echo ""
 echo "🔑 Build Args (NEXT_PUBLIC_*):"
 echo "   SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:0:40}..."
-echo "   DYTE_ORG_ID: ${NEXT_PUBLIC_DYTE_ORG_ID}"
 echo ""
 echo "🚀 Starting build and push..."
 echo ""
@@ -86,13 +84,6 @@ docker buildx build \
   -t "${DOCKER_IMAGE}:${TAG_SHA}" \
   --build-arg "NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}" \
   --build-arg "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}" \
-  --build-arg "NEXT_PUBLIC_DYTE_ORG_ID=${NEXT_PUBLIC_DYTE_ORG_ID}" \
-  --build-arg "NEXT_PUBLIC_DASHBOARD_URL=${NEXT_PUBLIC_DASHBOARD_URL:-}" \
-  --build-arg "NEXT_PUBLIC_MEU_PROCESSO_URL=${NEXT_PUBLIC_MEU_PROCESSO_URL:-}" \
-  --build-arg "NEXT_PUBLIC_WEBSITE_URL=${NEXT_PUBLIC_WEBSITE_URL:-}" \
-  --build-arg "NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-}" \
-  --build-arg "NEXT_PUBLIC_AI_FAKE_STREAMING=${NEXT_PUBLIC_AI_FAKE_STREAMING:-}" \
-  --build-arg "NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED=${NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED:-}" \
   .
 
 echo ""

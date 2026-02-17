@@ -212,7 +212,7 @@ describe('ResponsiveGrid Property Tests', () => {
                             {imageSrcs.map((src, idx) => (
                                 <Card key={idx}>
                                     <CardContent>
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        { }
                                         <img src={src} alt={`Test ${idx}`} />
                                     </CardContent>
                                 </Card>
@@ -338,7 +338,7 @@ describe('ResponsiveGrid Property Tests', () => {
                     const { container } = render(
                         <ResponsiveGrid scaleImages imageAspectRatio={aspectRatio as 'auto' | 'square' | 'video' | '4/3' | '16/9'}>
                             <Card>
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                { }
                                 <img src="test.jpg" alt="Test" />
                             </Card>
                         </ResponsiveGrid>

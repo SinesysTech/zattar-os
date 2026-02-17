@@ -16,6 +16,8 @@ import {
   criarIntegracaoSchema,
   atualizarIntegracaoSchema,
   twofauthConfigSchema,
+  chatwootConfigSchema,
+  dyteConfigSchema,
 } from "../domain";
 
 // =============================================================================
@@ -36,7 +38,7 @@ export const actionListarIntegracoes = authenticatedAction(
  * Listar integrações por tipo
  */
 export const actionListarIntegracoesPorTipo = authenticatedAction(
-  z.object({ tipo: z.enum(["twofauth", "zapier", "dify", "webhook", "api"]) }),
+  z.object({ tipo: z.enum(["twofauth", "zapier", "dify", "webhook", "api", "chatwoot", "dyte"]) }),
   async ({ tipo }) => {
     return service.listarPorTipo(tipo);
   }
@@ -129,6 +131,30 @@ export const actionAtualizarConfig2FAuth = authenticatedAction(
   twofauthConfigSchema,
   async (data) => {
     const result = await service.atualizarConfig2FAuth(data);
+    revalidatePath("/app/configuracoes");
+    return result;
+  }
+);
+
+/**
+ * Atualizar configuração do Chatwoot
+ */
+export const actionAtualizarConfigChatwoot = authenticatedAction(
+  chatwootConfigSchema,
+  async (data) => {
+    const result = await service.atualizarConfigChatwoot(data);
+    revalidatePath("/app/configuracoes");
+    return result;
+  }
+);
+
+/**
+ * Atualizar configuração do Dyte
+ */
+export const actionAtualizarConfigDyte = authenticatedAction(
+  dyteConfigSchema,
+  async (data) => {
+    const result = await service.atualizarConfigDyte(data);
     revalidatePath("/app/configuracoes");
     return result;
   }

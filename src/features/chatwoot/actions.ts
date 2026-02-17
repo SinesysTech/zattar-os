@@ -7,7 +7,13 @@
  */
 
 import { Result, ok, err, appError } from '@/types';
-import { isChatwootConfigured } from '@/lib/chatwoot';
+import { getChatwootConfigWithFallback } from '@/lib/chatwoot/config';
+
+async function isChatwootConfigured(): Promise<boolean> {
+  const config = await getChatwootConfigWithFallback();
+  return config !== null;
+}
+
 import {
   sincronizarParteComChatwoot,
   sincronizarChatwootParaApp,
@@ -116,7 +122,7 @@ export async function sincronizarTodosClientes(
   params: SincronizarClientesParams = {}
 ): Promise<Result<SincronizarClientesResult>> {
   // Verifica configuração
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         'EXTERNAL_SERVICE_ERROR',
@@ -261,7 +267,7 @@ export async function sincronizarCliente(
   clienteId: number
 ): Promise<Result<{ chatwoot_contact_id: number | null; criado: boolean }>> {
   // Verifica configuração
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         'EXTERNAL_SERVICE_ERROR',
@@ -311,7 +317,7 @@ export async function sincronizarClientesPorIds(
   delayEntreSync = 100
 ): Promise<Result<SincronizarClientesResult>> {
   // Verifica configuração
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         'EXTERNAL_SERVICE_ERROR',
@@ -385,7 +391,7 @@ export async function sincronizarTodasPartes(
   params: SincronizarPartesParams
 ): Promise<Result<SincronizarPartesResult>> {
   // Verifica configuração
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         'EXTERNAL_SERVICE_ERROR',
@@ -583,7 +589,7 @@ export async function sincronizarParte(
   entidadeId: number
 ): Promise<Result<{ chatwoot_contact_id: number | null; criado: boolean }>> {
   // Verifica configuração
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         'EXTERNAL_SERVICE_ERROR',
@@ -710,7 +716,7 @@ export async function sincronizarCompletoComChatwoot(
   params: SincronizarCompletoParams = {}
 ): Promise<Result<SincronizarCompletoResult>> {
   // Verifica configuração
-  if (!isChatwootConfigured()) {
+  if (!(await isChatwootConfigured())) {
     return err(
       appError(
         'EXTERNAL_SERVICE_ERROR',
@@ -840,7 +846,7 @@ export async function processarWebhookChatwoot(
   payload: Record<string, unknown>
 ): Promise<Result<void>> {
   try {
-    if (!isChatwootConfigured()) {
+    if (!(await isChatwootConfigured())) {
       return err(
         appError(
           'EXTERNAL_SERVICE_ERROR',
@@ -890,7 +896,7 @@ export async function sincronizarConversaManual(
   accountId: number
 ): Promise<Result<{ sincronizado: boolean }>> {
   try {
-    if (!isChatwootConfigured()) {
+    if (!(await isChatwootConfigured())) {
       return err(
         appError(
           'EXTERNAL_SERVICE_ERROR',
@@ -903,12 +909,17 @@ export async function sincronizarConversaManual(
       sincronizarConversaChatwoot,
     } = await import('./service');
 
+    const chatwootConfig = await getChatwootConfigWithFallback();
+    if (!chatwootConfig) {
+      return err(appError('EXTERNAL_SERVICE_ERROR', 'Chatwoot não configurado'));
+    }
+
     // Busca detalhes da conversa no Chatwoot
     const conversationDetail = await fetch(
-      `${process.env.CHATWOOT_API_URL}/api/v1/accounts/${accountId}/conversations/${conversationId}`,
+      `${chatwootConfig.apiUrl}/api/v1/accounts/${accountId}/conversations/${conversationId}`,
       {
         headers: {
-          'api_access_token': process.env.CHATWOOT_API_KEY!,
+          'api_access_token': chatwootConfig.apiKey,
         },
       }
     );
@@ -965,7 +976,7 @@ export async function atualizarStatusConversaAPI(
   novoStatus: 'open' | 'resolved' | 'pending' | 'snoozed'
 ): Promise<Result<void>> {
   try {
-    if (!isChatwootConfigured()) {
+    if (!(await isChatwootConfigured())) {
       return err(
         appError(
           'EXTERNAL_SERVICE_ERROR',
@@ -974,13 +985,18 @@ export async function atualizarStatusConversaAPI(
       );
     }
 
+    const chatwootConfig = await getChatwootConfigWithFallback();
+    if (!chatwootConfig) {
+      return err(appError('EXTERNAL_SERVICE_ERROR', 'Chatwoot não configurado'));
+    }
+
     // Primeiro atualiza no Chatwoot via API
     const updateResponse = await fetch(
-      `${process.env.CHATWOOT_API_URL}/api/v1/accounts/${accountId}/conversations/${conversationId}`,
+      `${chatwootConfig.apiUrl}/api/v1/accounts/${accountId}/conversations/${conversationId}`,
       {
         method: 'PUT',
         headers: {
-          'api_access_token': process.env.CHATWOOT_API_KEY!,
+          'api_access_token': chatwootConfig.apiKey,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ status: novoStatus }),

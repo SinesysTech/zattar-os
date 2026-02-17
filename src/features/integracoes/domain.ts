@@ -16,6 +16,7 @@ export const TIPOS_INTEGRACAO = {
   webhook: "webhook",
   api: "api",
   chatwoot: "chatwoot",
+  dyte: "dyte",
 } as const;
 
 export type TipoIntegracao = keyof typeof TIPOS_INTEGRACAO;
@@ -26,7 +27,7 @@ export type TipoIntegracao = keyof typeof TIPOS_INTEGRACAO;
 
 // Schema base para integração
 export const integracaoBaseSchema = z.object({
-  tipo: z.enum(["twofauth", "zapier", "dify", "webhook", "api", "chatwoot"]),
+  tipo: z.enum(["twofauth", "zapier", "dify", "webhook", "api", "chatwoot", "dyte"]),
   nome: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
   descricao: z.string().optional(),
   ativo: z.boolean().default(true),
@@ -57,6 +58,16 @@ export const chatwootConfigSchema = z.object({
   default_inbox_id: z.number().int().positive().optional(),
   website_token: z.string().min(1, "Token do widget é obrigatório").optional(),
   widget_base_url: z.string().url("URL do widget inválida").optional(),
+});
+
+// Schema específico para Dyte
+export const dyteConfigSchema = z.object({
+  org_id: z.string().min(5, "Organization ID deve ter no mínimo 5 caracteres"),
+  api_key: z.string().min(10, "API Key deve ter no mínimo 10 caracteres"),
+  enable_recording: z.boolean().optional().default(false),
+  enable_transcription: z.boolean().optional().default(false),
+  transcription_language: z.string().optional().default("pt-BR"),
+  preferred_region: z.string().optional(),
 });
 
 // =============================================================================
@@ -92,6 +103,15 @@ export interface ChatwootConfig {
   widget_base_url?: string;
 }
 
+export interface DyteConfig {
+  org_id: string;
+  api_key: string;
+  enable_recording?: boolean;
+  enable_transcription?: boolean;
+  transcription_language?: string;
+  preferred_region?: string;
+}
+
 export type CriarIntegracaoParams = z.infer<typeof criarIntegracaoSchema>;
 export type AtualizarIntegracaoParams = z.infer<typeof atualizarIntegracaoSchema>;
 
@@ -106,6 +126,7 @@ export const LABELS_TIPO_INTEGRACAO: Record<TipoIntegracao, string> = {
   webhook: "Webhook",
   api: "API",
   chatwoot: "Chatwoot",
+  dyte: "Dyte",
 };
 
 export const DESCRICOES_TIPO_INTEGRACAO: Record<TipoIntegracao, string> = {
@@ -115,4 +136,5 @@ export const DESCRICOES_TIPO_INTEGRACAO: Record<TipoIntegracao, string> = {
   webhook: "Webhooks personalizados",
   api: "Integrações via API",
   chatwoot: "Sistema de atendimento e conversas",
+  dyte: "Videoconferência e chamadas de áudio",
 };

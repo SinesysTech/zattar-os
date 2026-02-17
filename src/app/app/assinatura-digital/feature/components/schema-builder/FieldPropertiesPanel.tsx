@@ -276,7 +276,6 @@ export default function FieldPropertiesPanel({
     );
   }
 
-  // eslint-disable-next-line react-hooks/incompatible-library -- react-hook-form watch é necessário para renderização condicional
   const fieldType = form.watch('type');
   const showMinMax = [FormFieldType.TEXT, FormFieldType.TEXTAREA, FormFieldType.EMAIL, FormFieldType.NUMBER].includes(fieldType);
   const showPattern = [FormFieldType.TEXT, FormFieldType.EMAIL, FormFieldType.TEXTAREA].includes(fieldType);

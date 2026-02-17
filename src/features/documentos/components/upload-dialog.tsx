@@ -159,7 +159,7 @@ export function UploadDialog({
               <div className="border rounded-lg p-3 sm:p-4 space-y-3">
                 {previewUrl && (
                   <div className="relative w-full aspect-video rounded-md overflow-hidden bg-muted">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    { }
                     <img
                       src={previewUrl}
                       alt="Preview"

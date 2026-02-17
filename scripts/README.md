@@ -13,6 +13,7 @@ Este diretório contém **scripts standalone** para desenvolvimento, manutençã
 
 ```
 scripts/
+├── ai/                  # Scripts de IA e indexação de documentos
 ├── captura/             # Testes de captura de dados PJE/TRT
 │   ├── acervo-geral/   # Captura de acervo geral
 │   ├── arquivados/     # Captura de processos arquivados
@@ -21,16 +22,29 @@ scripts/
 │   ├── pendentes/      # Captura de pendentes de manifestação
 │   └── timeline/       # Captura de timeline e documentos
 ├── database/            # Scripts de banco de dados
-│   ├── migrations/     # Aplicação e gestão de migrations
+│   ├── migrations/     # Aplicação, gestão e criação de migrations
 │   └── population/     # População e seeding de dados
+├── dev-tools/           # Ferramentas de desenvolvimento
+│   ├── architecture/   # Validação de arquitetura
+│   ├── build/          # Análise de build e memória
+│   ├── design/         # Validação de design system
+│   └── pwa/            # Verificação de PWA
+├── docker/              # Scripts de Docker e deployment
+├── integrations/        # Scripts de configuração de integrações
+│   ├── migrate-integrations-to-db.ts
+│   ├── test-integration-config.ts
+│   └── sync-dify-metadata.py
+├── mcp/                 # Scripts de Model Context Protocol
+├── pangea/              # Scripts de integração Pangea
+├── security/            # Scripts de segurança e auditoria
+├── setup/               # Scripts de instalação e setup inicial
 ├── sincronizacao/       # Scripts de sincronização de dados
 │   ├── usuarios/       # Sincronização de usuários
 │   ├── entidades/      # Sincronização de entidades (partes, endereços)
 │   └── processos/      # Sincronização de processos e partes
 ├── storage/             # Configuração de armazenamento (Backblaze B2)
-├── dev-tools/           # Ferramentas de desenvolvimento
-│   ├── design/         # Análise e validação de design system
-│   └── build/          # Análise de build e memória
+├── tribunais/           # Scripts específicos de tribunais
+├── usuarios/            # Scripts de gestão de usuários
 └── results/             # Resultados de execução de scripts (gitignored)
 ```
 
@@ -110,7 +124,6 @@ Scripts de gestão e manutenção do banco de dados PostgreSQL (Supabase).
 **Principais scripts:**
 
 - **`migrations/`**
-
   - `apply-migrations-via-supabase-sdk.ts` - Aplica migrations via SDK
   - `apply-migrations-manual.ts` - Aplica migrations manualmente
   - `check-applied-migrations.ts` - Verifica migrations aplicadas
@@ -132,18 +145,45 @@ npx tsx scripts/database/migrations/check-applied-migrations.ts
 npx tsx scripts/database/population/populate-database.ts
 ```
 
-### 🔄 Sincronização (`sincronizacao/`)
+### � Integrações (`integrations/`)
+
+Scripts para configuração e teste de integrações externas (2FAuth, Dify, Zapier).
+
+**Principais scripts:**
+
+- `migrate-integrations-to-db.ts` - Migra configurações de env para banco
+- `test-integration-config.ts` - Testa configurações de integrações
+- `sync-dify-metadata.py` - Sincroniza metadados do Dify
+
+**Características:**
+
+- ✅ Migra variáveis de ambiente para tabela `integracoes`
+- ✅ Valida conectividade e configurações
+- ✅ Suporta múltiplas integrações (2FAuth, Dify, Zapier)
+- ✅ Logs detalhados do status de cada integração
+
+**Exemplo de uso:**
+
+```bash
+# Migrar integrações para o banco
+npx tsx scripts/integrations/migrate-integrations-to-db.ts
+
+# Testar configurações
+npx tsx scripts/integrations/test-integration-config.ts
+```
+
+📖 **Documentação detalhada:** Ver [integrations/README_INTEGRATIONS.md](integrations/README_INTEGRATIONS.md)
+
+### �🔄 Sincronização (`sincronizacao/`)
 
 Scripts para sincronizar e corrigir dados entre diferentes fontes.
 
 **Principais scripts:**
 
 - **`usuarios/`**
-
   - `sincronizar-usuarios.ts` - Sincroniza auth.users → public.usuarios
 
 - **`entidades/`**
-
   - `corrigir-entidades-polo.ts` - Corrige polo das entidades
 
 - **`processos/`**
@@ -184,14 +224,34 @@ Scripts de configuração e gestão do Backblaze B2.
 npx tsx scripts/storage/configure-backblaze-bucket.ts
 ```
 
+### ⚙️ Setup (`setup/`)
+
+Scripts de instalação e configuração inicial do projeto.
+
+**Principais scripts:**
+
+- `install_deps.sh` - Instala dependências do sistema e projeto
+- `setup-pdfjs.js` - Configura PDF.js (executado automaticamente no postinstall)
+
+**Exemplo de uso:**
+
+```bash
+# Instalar dependências
+bash scripts/setup/install_deps.sh
+```
+
 ### 🛠️ Dev Tools (`dev-tools/`)
 
 Ferramentas de desenvolvimento, análise e validação.
 
 **Principais scripts:**
 
-- **`design/`**
+- **`architecture/`**
+  - `check-architecture-imports.js` - Valida imports da arquitetura
+  - `validate-architecture.ts` - Valida estrutura da arquitetura
+  - `validate-exports.ts` - Valida exports dos módulos
 
+- **`design/`**
   - `analyze-typography.ts` - Analisa uso de tipografia
   - `validate-design-system.ts` - Valida conformidade com design system
 
@@ -199,8 +259,13 @@ Ferramentas de desenvolvimento, análise e validação.
   - `check-build-memory.sh` - Verifica memória durante build
   - `run-analyze.js` - Analisa bundle do build
   - `run-build-debug-memory.js` - Debug de memória no build
-  - `check-mcp-fetch.sh` - Verifica configuração MCP
-  - `setup-mcp-fetch.sh` - Configura integração MCP
+  - `validate-build-performance.js` - Valida performance do build
+  - `analyze-build-performance.js` - Analisa métricas de build
+
+- **`pwa/`**
+  - `check-pwa.js` - Verifica configuração PWA
+
+- `update-types.sh` - Atualiza tipos do TypeScript
 
 **Exemplo de uso:**
 
@@ -208,11 +273,14 @@ Ferramentas de desenvolvimento, análise e validação.
 # Validar design system
 npm run validate:design-system
 
-# Analisar tipografia
-npx tsx scripts/dev-tools/design/analyze-typography.ts
+# Validar arquitetura
+npm run validate:arch
 
 # Verificar PWA
 npm run check:pwa
+
+# Atualizar tipos
+bash scripts/dev-tools/update-types.sh
 ```
 
 ## ⚙️ Requisitos

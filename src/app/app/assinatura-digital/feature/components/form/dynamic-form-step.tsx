@@ -296,37 +296,15 @@ export default function DynamicFormStep() {
         dados: orderedData, // Ordered and enriched form data
       };
 
-      // 5. Check if submission is enabled (graceful degradation)
-      const submitEnabled = process.env.NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED === 'true';
-
       // Structured logging for telemetry
-      console.log('[FORMSIGN] form_action_submit', {
+      console.log('[ASSINATURA_DIGITAL] form_action_submit', {
         event: 'form_action_submit',
-        status: submitEnabled ? 'attempting' : 'mock',
+        status: 'attempting',
         payloadKeys: Object.keys(payload),
         formularioId: formularioIdValue,
       });
 
-      if (!submitEnabled) {
-        // Mock success when backend route not yet available
-        const mockContratoId = `mock-${crypto.randomUUID()}`;
-
-        // Save to store with mock ID
-        setDadosContrato({
-          ...orderedData,
-          contrato_id: mockContratoId as unknown as number, // Temporary mock ID
-        });
-
-        toast.message('Salvamento simulado - avançando...', {
-          description: 'Funcionalidade de salvamento em desenvolvimento',
-        });
-
-        // Advance to next step
-        proximaEtapa();
-        return;
-      }
-
-      // 6. Call API (when enabled)
+      // Call API
       const response = await fetch('/api/assinatura-digital/signature/salvar-acao', {
         method: 'POST',
         headers: {
@@ -338,13 +316,13 @@ export default function DynamicFormStep() {
       // Verificar content-type antes de parsear (pode ser HTML em caso de erro)
       const contentType = response.headers.get('content-type');
 
-      // Handle 404 or network errors with mock fallback
+      // Handle errors
       if (!response.ok) {
-        // If route not implemented (404), fallback to mock success
+        // If route not implemented (404)
         if (response.status === 404) {
-          console.log('[FORMSIGN] form_action_submit', {
+          console.log('[ASSINATURA_DIGITAL] form_action_submit', {
             event: 'form_action_submit',
-            status: 'mock_fallback_404',
+            status: 'error_404',
             payloadKeys: Object.keys(payload),
             formularioId: formularioIdValue,
           });

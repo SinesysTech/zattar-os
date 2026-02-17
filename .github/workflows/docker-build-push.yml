@@ -8,13 +8,6 @@
 #   DOCKERHUB_TOKEN               - Access Token Docker Hub (nao use senha)
 #   NEXT_PUBLIC_SUPABASE_URL      - URL do Supabase (obrigatorio)
 #   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY - Anon key Supabase (obrigatorio)
-#
-# Variables (Settings > Secrets and variables > Actions > Variables):
-#   NEXT_PUBLIC_DASHBOARD_URL     - URL do dashboard (opcional)
-#   NEXT_PUBLIC_MEU_PROCESSO_URL  - URL do portal cliente (opcional)
-#   NEXT_PUBLIC_WEBSITE_URL       - URL do website (opcional)
-#   NEXT_PUBLIC_APP_URL           - URL base do app (opcional)
-#   NEXT_PUBLIC_DYTE_ORG_ID       - Org ID do Dyte (opcional)
 # =============================================================================
 
 name: Docker Build & Push
@@ -45,11 +38,6 @@ env:
   PLATFORM: linux/amd64
   NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY }}
-  NEXT_PUBLIC_DASHBOARD_URL: ${{ vars['NEXT_PUBLIC_DASHBOARD_URL'] }}
-  NEXT_PUBLIC_MEU_PROCESSO_URL: ${{ vars['NEXT_PUBLIC_MEU_PROCESSO_URL'] }}
-  NEXT_PUBLIC_WEBSITE_URL: ${{ vars['NEXT_PUBLIC_WEBSITE_URL'] }}
-  NEXT_PUBLIC_APP_URL: ${{ vars['NEXT_PUBLIC_APP_URL'] }}
-  NEXT_PUBLIC_DYTE_ORG_ID: ${{ vars['NEXT_PUBLIC_DYTE_ORG_ID'] }}
 
 jobs:
   build-and-push:
@@ -115,11 +103,6 @@ jobs:
           build-args: |
             NEXT_PUBLIC_SUPABASE_URL=${{ env.NEXT_PUBLIC_SUPABASE_URL }}
             NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${{ env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY }}
-            NEXT_PUBLIC_DASHBOARD_URL=${{ env.NEXT_PUBLIC_DASHBOARD_URL }}
-            NEXT_PUBLIC_MEU_PROCESSO_URL=${{ env.NEXT_PUBLIC_MEU_PROCESSO_URL }}
-            NEXT_PUBLIC_WEBSITE_URL=${{ env.NEXT_PUBLIC_WEBSITE_URL }}
-            NEXT_PUBLIC_APP_URL=${{ env.NEXT_PUBLIC_APP_URL }}
-            NEXT_PUBLIC_DYTE_ORG_ID=${{ env.NEXT_PUBLIC_DYTE_ORG_ID }}
           # Cache de layers via GitHub Actions cache (gha)
           cache-from: type=gha
           cache-to: type=gha,mode=max

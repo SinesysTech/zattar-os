@@ -28,8 +28,11 @@
 export {
   ChatwootClient,
   getChatwootClient,
+  getChatwootClientAsync,
   getChatwootConfig,
+  getChatwootConfigFromEnv,
   isChatwootConfigured,
+  isChatwootConfiguredAsync,
   resetChatwootClient,
 } from './client';
 

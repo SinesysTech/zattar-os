@@ -118,7 +118,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
                   <a
                     href={user.website}
                     target="_blank"
-                    className="text-muted-foreground hover:text-primary hover:underline">
+                    className="text-muted-foreground hover:text-primary hover:underline" rel="noreferrer">
                     {user.website}
                   </a>
                 </div>

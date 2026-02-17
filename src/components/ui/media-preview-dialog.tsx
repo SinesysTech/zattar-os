@@ -171,7 +171,6 @@ function ScaleInput(props: React.ComponentProps<'input'>) {
   const setRef = React.useCallback((element: HTMLInputElement | null) => {
     // Set the ref from useScaleInput if it's a mutable ref object
     if (scaleInputRef && typeof scaleInputRef === 'object' && 'current' in scaleInputRef) {
-      // eslint-disable-next-line react-hooks/immutability
       (scaleInputRef as React.MutableRefObject<HTMLInputElement | null>).current = element;
     }
   }, [scaleInputRef]);

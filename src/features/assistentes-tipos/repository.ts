@@ -111,7 +111,7 @@ export async function listar(
     throw new Error(`Erro ao listar relações: ${error.message}`);
   }
 
-  const mappedData = (data || []).map((item: any) => ({
+  const mappedData = (data || []).map((item: { assistente?: { nome?: string; dify_app_id?: string | null }; tipo_expediente?: { tipo_expediente?: string }; criador?: { nome_completo?: string } }) => ({
     ...item,
     assistente_nome: item.assistente?.nome || 'Desconhecido',
     assistente_dify_app_id: item.assistente?.dify_app_id || null,

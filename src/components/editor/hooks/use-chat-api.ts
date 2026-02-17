@@ -6,7 +6,6 @@ import { DefaultChatTransport } from 'ai';
 import type { PlateEditor } from 'platejs/react';
 
 import { aiChatPlugin } from '../plate/ai-kit';
-import { fakeStreamText } from '../utils/fake-streaming';
 
 export type UseChatApiOptions = {
   api?: string;
@@ -14,17 +13,12 @@ export type UseChatApiOptions = {
 
 /**
  * Hook that provides API transport configuration for the chat.
- * Handles error responses (401, 500) with toast notifications and
- * falls back to fake streaming for testing/development.
+ * Handles error responses (401, 500) with toast notifications.
  */
 export function useChatApi(editor: PlateEditor, options: UseChatApiOptions = {}) {
-  const abortControllerRef = useRef<AbortController | null>(null);
-
+  // Keep for backwards compatibility, but no longer used
   const abortFakeStream = useCallback(() => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-      abortControllerRef.current = null;
-    }
+    // No-op: fake streaming removed
   }, []);
 
   const transport = new DefaultChatTransport({
@@ -127,59 +121,6 @@ export function useChatApi(editor: PlateEditor, options: UseChatApiOptions = {})
           throw new Error(
             errorDetails.error || 'Erro ao processar requisição AI'
           );
-        }
-
-        // Only use fake streaming in development mode with explicit flag
-        const useFakeStreaming = process.env.NEXT_PUBLIC_AI_FAKE_STREAMING === 'true';
-
-        if (useFakeStreaming) {
-          let sample: 'comment' | 'markdown' | 'mdx' | null = null;
-
-          try {
-            const parsedBody = JSON.parse(init?.body as string) as {
-              messages: Array<{ parts: Array<{ type: string; text?: string }> }>;
-            };
-
-            const lastMessage = parsedBody.messages.at(-1);
-            const lastTextPart = lastMessage?.parts.find(
-              (p): p is { type: 'text'; text: string } =>
-                typeof p === 'object' &&
-                p !== null &&
-                p.type === 'text' &&
-                typeof p.text === 'string'
-            );
-
-            const content = lastTextPart?.text ?? '';
-
-            if (content.includes('Generate a markdown sample')) {
-              sample = 'markdown';
-            } else if (content.includes('Generate a mdx sample')) {
-              sample = 'mdx';
-            } else if (content.includes('comment')) {
-              sample = 'comment';
-            }
-          } catch {
-            sample = null;
-          }
-
-          abortControllerRef.current = new AbortController();
-
-          await new Promise((resolve) => setTimeout(resolve, 400));
-
-          const stream = fakeStreamText({
-            editor,
-            sample,
-            signal: abortControllerRef.current.signal,
-          });
-
-          const response = new Response(stream, {
-            headers: {
-              Connection: 'keep-alive',
-              'Content-Type': 'text/plain',
-            },
-          });
-
-          return response;
         }
 
         // For any other unhandled error status, propagate the error

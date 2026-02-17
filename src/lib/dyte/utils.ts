@@ -1,22 +1,8 @@
 /**
  * DYTE UTILS
- * 
+ *
  * Helper functions for Dyte integration.
  */
-
-/**
- * Validate that necessary environment variables are set.
- */
-export function validateDyteConfig() {
-  const orgId = process.env.NEXT_PUBLIC_DYTE_ORG_ID;
-  const apiKey = process.env.DYTE_API_KEY;
-
-  if (!orgId || !apiKey) {
-    throw new Error('Dyte configuration missing. Please set NEXT_PUBLIC_DYTE_ORG_ID and DYTE_API_KEY.');
-  }
-
-  return { orgId, apiKey };
-}
 
 /**
  * Generate a descriptive meeting title based on room info.

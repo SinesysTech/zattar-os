@@ -288,7 +288,7 @@ export function sincronizarTimelineEmBackground(
 
   console.log(`🔄 [SincronizarTimeline] Disparando captura para ${processos.length} processos em background`);
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const baseUrl = 'http://localhost:3000';
   const serviceApiKey = process.env.SERVICE_API_KEY;
 
   if (!serviceApiKey) {

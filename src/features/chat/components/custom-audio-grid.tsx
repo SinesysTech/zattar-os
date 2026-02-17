@@ -39,7 +39,7 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
             "group-hover:scale-105"
           )}>
             {p.picture ? (
-               // eslint-disable-next-line @next/next/no-img-element
+                
                <img src={p.picture} alt={p.name} className="w-full h-full rounded-full object-cover" />
             ) : (
                <span>{p.name?.charAt(0).toUpperCase()}</span>

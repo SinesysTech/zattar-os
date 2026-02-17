@@ -203,7 +203,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         {/* Banner/Capa */}
         <div className="relative h-48 bg-linear-to-r from-blue-500/20 to-purple-500/20">
           {usuario.coverUrl && (
-            // eslint-disable-next-line @next/next/no-img-element
+             
             <img
               src={getCoverUrl(usuario.coverUrl) || undefined}
               alt="Capa do perfil"

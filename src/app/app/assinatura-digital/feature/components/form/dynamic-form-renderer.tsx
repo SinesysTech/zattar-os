@@ -154,7 +154,6 @@ export default function DynamicFormRenderer({
   };
 
   // Watch all values for conditional rendering
-  // eslint-disable-next-line react-hooks/incompatible-library -- react-hook-form watch é necessário para renderização condicional
   const formValues = form.watch() as DynamicFormData;
 
   // Collect all field IDs from schema for CEP auto-fill detection

@@ -9,10 +9,12 @@ import {
   atualizarIntegracaoSchema,
   twofauthConfigSchema,
   chatwootConfigSchema,
+  dyteConfigSchema,
   type Integracao,
   type TipoIntegracao,
   type TwoFAuthConfig,
   type ChatwootConfig,
+  type DyteConfig,
 } from "./domain";
 
 // =============================================================================
@@ -61,6 +63,26 @@ export async function buscarConfig2FAuth(): Promise<TwoFAuthConfig | null> {
   return result.data;
 }
 
+/**
+ * Buscar configuração do Dyte
+ */
+export async function buscarConfigDyte(): Promise<DyteConfig | null> {
+  const integracao = await repo.findByTipoAndNome("dyte", "Dyte Principal");
+
+  if (!integracao || !integracao.ativo) {
+    return null;
+  }
+
+  const result = dyteConfigSchema.safeParse(integracao.configuracao);
+
+  if (!result.success) {
+    console.error("Configuração Dyte inválida:", result.error);
+    return null;
+  }
+
+  return result.data as DyteConfig;
+}
+
 // =============================================================================
 // MUTATIONS
 // =============================================================================
@@ -88,6 +110,13 @@ export async function criar(params: unknown): Promise<Integracao> {
     const configValidacao = chatwootConfigSchema.safeParse(validacao.data.configuracao);
     if (!configValidacao.success) {
       throw new Error(`Configuração Chatwoot inválida: ${configValidacao.error.errors[0].message}`);
+    }
+  }
+
+  if (validacao.data.tipo === "dyte") {
+    const configValidacao = dyteConfigSchema.safeParse(validacao.data.configuracao);
+    if (!configValidacao.success) {
+      throw new Error(`Configuração Dyte inválida: ${configValidacao.error.errors[0].message}`);
     }
   }
 
@@ -119,6 +148,13 @@ export async function atualizar(params: unknown): Promise<Integracao> {
     const configValidacao = chatwootConfigSchema.safeParse(updateData.configuracao);
     if (!configValidacao.success) {
       throw new Error(`Configuração Chatwoot inválida: ${configValidacao.error.errors[0].message}`);
+    }
+  }
+
+  if (updateData.tipo === "dyte" && updateData.configuracao) {
+    const configValidacao = dyteConfigSchema.safeParse(updateData.configuracao);
+    if (!configValidacao.success) {
+      throw new Error(`Configuração Dyte inválida: ${configValidacao.error.errors[0].message}`);
     }
   }
 
@@ -189,6 +225,34 @@ export async function atualizarConfigChatwoot(config: ChatwootConfig): Promise<I
       tipo: "chatwoot",
       nome: "Chatwoot Principal",
       descricao: "Sistema de atendimento e conversas",
+      ativo: true,
+      configuracao: validacao.data,
+    });
+  }
+
+  return repo.update(integracao.id, {
+    configuracao: validacao.data,
+    ativo: true,
+  });
+}
+
+/**
+ * Atualizar configuração do Dyte
+ */
+export async function atualizarConfigDyte(config: DyteConfig): Promise<Integracao> {
+  const validacao = dyteConfigSchema.safeParse(config);
+
+  if (!validacao.success) {
+    throw new Error(validacao.error.errors[0].message);
+  }
+
+  const integracao = await repo.findByTipoAndNome("dyte", "Dyte Principal");
+
+  if (!integracao) {
+    return repo.create({
+      tipo: "dyte",
+      nome: "Dyte Principal",
+      descricao: "Videoconferência e chamadas de áudio",
       ativo: true,
       configuracao: validacao.data,
     });

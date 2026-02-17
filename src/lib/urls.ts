@@ -19,26 +19,13 @@ function appendPath(base: string, path?: string): string {
   return `${base}${cleanPath}`;
 }
 
-// URLs base dos apps (absolutas)
-export const DASHBOARD_URL = normalizeBaseUrl(
-  process.env.NEXT_PUBLIC_DASHBOARD_URL || DEFAULT_ORIGIN
-);
-
-export const MEU_PROCESSO_URL = normalizeBaseUrl(
-  process.env.NEXT_PUBLIC_MEU_PROCESSO_URL || `${DEFAULT_ORIGIN}/portal`
-);
-
-export const WEBSITE_URL = normalizeBaseUrl(
-  process.env.NEXT_PUBLIC_WEBSITE_URL || `${DEFAULT_ORIGIN}/website`
-);
-
 /**
  * Retorna a URL do Dashboard Principal
  * @param path - Caminho opcional a ser adicionado à URL base
  * @returns URL completa do dashboard
  */
 export function getDashboardUrl(path?: string): string {
-  return appendPath(DASHBOARD_URL, path);
+  return appendPath(DEFAULT_ORIGIN, path);
 }
 
 /**
@@ -47,7 +34,8 @@ export function getDashboardUrl(path?: string): string {
  * @returns URL completa do portal
  */
 export function getMeuProcessoUrl(path?: string): string {
-  return appendPath(MEU_PROCESSO_URL, path);
+  const portalBase = `${DEFAULT_ORIGIN}/portal`;
+  return appendPath(portalBase, path);
 }
 
 /**
@@ -56,7 +44,8 @@ export function getMeuProcessoUrl(path?: string): string {
  * @returns URL completa do website
  */
 export function getWebsiteUrl(path?: string): string {
-  return appendPath(WEBSITE_URL, path);
+  const websiteBase = `${DEFAULT_ORIGIN}/website`;
+  return appendPath(websiteBase, path);
 }
 
 // Alias legado

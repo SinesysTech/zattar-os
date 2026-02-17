@@ -352,7 +352,7 @@ function EmojiPickerContent({
           if (typeof contentRootRef === 'function') {
             contentRootRef(node);
           } else if (contentRootRef && 'current' in contentRootRef) {
-            // eslint-disable-next-line
+             
             (contentRootRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
           }
         }
@@ -377,7 +377,7 @@ function EmojiPickerContent({
             if (typeof contentRef === 'function') {
               contentRef(node);
             } else if (contentRef && 'current' in contentRef) {
-              // eslint-disable-next-line
+               
               (contentRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
             }
           }

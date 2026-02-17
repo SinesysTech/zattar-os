@@ -53,7 +53,7 @@ export default function PreviewAssinatura({
             <div className="space-y-2">
               <p className="text-sm font-medium text-muted-foreground">Foto do Cliente</p>
               <div className="relative aspect-square w-full max-w-[300px] overflow-hidden rounded-md border border-input">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+                { }
                 <img src={fotoBase64} alt="Foto do cliente" className="w-full h-full object-cover" />
               </div>
             </div>
@@ -62,7 +62,7 @@ export default function PreviewAssinatura({
             <div className="space-y-2">
               <p className="text-sm font-medium text-muted-foreground">Assinatura Manuscrita</p>
               <div className="relative w-full max-w-[400px] aspect-[2/1] overflow-hidden rounded-md border border-input bg-white">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+                { }
                 <img src={assinaturaBase64} alt="Assinatura" className="w-full h-full object-contain" />
               </div>
             </div>

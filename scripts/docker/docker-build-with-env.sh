@@ -27,11 +27,6 @@ if [ ! -f "$ENV_FILE" ]; then
     cat <<EOF
 NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=eyJ...
-NEXT_PUBLIC_DASHBOARD_URL=https://app.zataradvogados.com
-NEXT_PUBLIC_MEU_PROCESSO_URL=https://cliente.zataradvogados.com
-NEXT_PUBLIC_WEBSITE_URL=https://www.zataradvogados.com
-NEXT_PUBLIC_APP_URL=https://app.zataradvogados.com
-NEXT_PUBLIC_DYTE_ORG_ID=sua_organization_id
 EOF
     echo ""
     exit 1
@@ -74,24 +69,6 @@ echo ""
 BUILD_ARGS=""
 for var in "${REQUIRED_VARS[@]}"; do
     BUILD_ARGS="$BUILD_ARGS --build-arg $var=${!var}"
-done
-
-# Adicionar variáveis opcionais se estiverem definidas
-OPTIONAL_VARS=(
-    "NEXT_PUBLIC_DASHBOARD_URL"
-    "NEXT_PUBLIC_MEU_PROCESSO_URL"
-    "NEXT_PUBLIC_WEBSITE_URL"
-    "NEXT_PUBLIC_APP_URL"
-    "NEXT_PUBLIC_DYTE_ORG_ID"
-    "NEXT_PUBLIC_AI_FAKE_STREAMING"
-    "NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED"
-)
-
-for var in "${OPTIONAL_VARS[@]}"; do
-    if [ ! -z "${!var}" ]; then
-        BUILD_ARGS="$BUILD_ARGS --build-arg $var=${!var}"
-        echo -e "${GREEN}✓ Incluindo $var${NC}"
-    fi
 done
 
 echo ""

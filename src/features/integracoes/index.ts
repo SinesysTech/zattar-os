@@ -11,6 +11,8 @@ export type {
   Integracao,
   TipoIntegracao,
   TwoFAuthConfig,
+  ChatwootConfig,
+  DyteConfig,
   CriarIntegracaoParams,
   AtualizarIntegracaoParams,
 } from "./domain";
@@ -22,6 +24,8 @@ export {
   criarIntegracaoSchema,
   atualizarIntegracaoSchema,
   twofauthConfigSchema,
+  chatwootConfigSchema,
+  dyteConfigSchema,
 } from "./domain";
 
 // Actions - Server Actions (safe for client)
@@ -35,11 +39,17 @@ export {
   actionDeletarIntegracao,
   actionToggleAtivoIntegracao,
   actionAtualizarConfig2FAuth,
+  actionAtualizarConfigChatwoot,
+  actionAtualizarConfigDyte,
 } from "./actions/integracoes-actions";
 
 // Components (safe for client)
 export { TwoFAuthIntegrationCard } from "./components/twofauth-integration-card";
 export { TwoFAuthConfigForm } from "./components/twofauth-config-form";
+export { ChatwootIntegrationCard } from "./components/chatwoot-integration-card";
+export { ChatwootConfigForm } from "./components/chatwoot-config-form";
+export { DyteIntegrationCard } from "./components/dyte-integration-card";
+export { DyteConfigForm } from "./components/dyte-config-form";
 
 // Service - Server-only exports (use in Server Components and Actions only)
 // Import directly from "./service" when needed in server context

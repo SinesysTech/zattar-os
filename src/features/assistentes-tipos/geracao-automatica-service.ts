@@ -2,6 +2,7 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 import { DifyService } from '../dify/service';
 import * as documentosService from '../documentos/service';
 import * as expedientesRepository from '../expedientes/repository';
+import type { Expediente } from '../expedientes/domain';
 import * as assistentesTiposRepository from './repository';
 import type { Value } from 'platejs';
 
@@ -233,7 +234,7 @@ function extrairCamposFormulario(metadata: MetadataDify): CampoFormulario[] {
  * Prepara dados do expediente/processo para enviar ao Dify
  */
 async function prepararDadosExpediente(
-  expediente: any,
+  expediente: Expediente,
   campos: CampoFormulario[]
 ): Promise<Record<string, string>> {
   const dados: Record<string, string> = {};
@@ -252,7 +253,7 @@ async function prepararDadosExpediente(
     'orgao_julgador': expediente.siglaOrgaoJulgador || '',
     'relato_entrevista': expediente.descricaoArquivos || expediente.observacoes || '',
     'observacoes': expediente.observacoes || '',
-    'prazo': expediente.dataPrazoLegal || '',
+    'prazo': expediente.dataPrazoLegalParte || '',
   };
 
   // Preencher apenas os campos que o formulário solicita
@@ -288,7 +289,7 @@ function preparQueryChat(dados: Record<string, string>): string {
 /**
  * Extrai texto do resultado de workflow
  */
-function extrairTextoDeWorkflow(workflowData: any): string {
+function extrairTextoDeWorkflow(workflowData: { data?: { outputs?: { text?: string; output?: string } } }): string {
   // Tentar extrair de diferentes possíveis estruturas
   if (workflowData.data?.outputs?.text) {
     return workflowData.data.outputs.text;

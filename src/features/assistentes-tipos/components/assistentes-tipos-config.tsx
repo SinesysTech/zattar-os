@@ -49,14 +49,12 @@ export function AssistentesTiposConfig({
       setLoading(true);
       setError(null);
 
-      const result = await listarAssistentesTiposAction({
-        apenasAtivos: false,
-      });
+      const result = await listarAssistentesTiposAction({});
 
       if (result.success && result.data) {
-        setRelacoes(result.data.items);
-      } else if (result.failure) {
-        setError(result.failure.reason);
+        setRelacoes(result.data.data);
+      } else if (!result.success) {
+        setError(result.message);
       }
     } catch (err) {
       setError('Erro ao carregar configurações');
@@ -78,8 +76,8 @@ export function AssistentesTiposConfig({
       setSuccess(null);
 
       const result = await criarAssistenteTipoAction({
-        assistenteId: Number(assistenteId),
-        tipoExpedienteId: Number(tipoExpedienteId),
+        assistente_id: Number(assistenteId),
+        tipo_expediente_id: Number(tipoExpedienteId),
       });
 
       if (result.success && result.data) {
@@ -87,8 +85,8 @@ export function AssistentesTiposConfig({
         setAssistenteId('');
         setTipoExpedienteId('');
         await carregarRelacoes();
-      } else if (result.failure) {
-        setError(result.failure.reason);
+      } else if (!result.success) {
+        setError(result.message);
       }
     } catch (err) {
       setError('Erro ao criar configuração');
@@ -108,13 +106,13 @@ export function AssistentesTiposConfig({
       setError(null);
       setSuccess(null);
 
-      const result = await deletarAssistenteTipoAction({ id: String(id) });
+      const result = await deletarAssistenteTipoAction({ id });
 
       if (result.success) {
         setSuccess('Configuração deletada com sucesso!');
         await carregarRelacoes();
-      } else if (result.failure) {
-        setError(result.failure.reason);
+      } else if (!result.success) {
+        setError(result.message);
       }
     } catch (err) {
       setError('Erro ao deletar configuração');
@@ -130,13 +128,13 @@ export function AssistentesTiposConfig({
       setError(null);
       setSuccess(null);
 
-      const result = await ativarAssistenteTipoAction({ id: String(id), ativo });
+      const result = await ativarAssistenteTipoAction({ id });
 
       if (result.success && result.data) {
         setSuccess(`Configuração ${ativo ? 'ativada' : 'desativada'} com sucesso!`);
         await carregarRelacoes();
-      } else if (result.failure) {
-        setError(result.failure.reason);
+      } else if (!result.success) {
+        setError(result.message);
       }
     } catch (err) {
       setError('Erro ao atualizar configuração');

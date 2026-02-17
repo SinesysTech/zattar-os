@@ -9,6 +9,7 @@ import {
   ChatwootApiError,
   ChatwootResult,
 } from "./types";
+import { getChatwootConfigWithFallback } from "./config";
 
 // =============================================================================
 // Configuração
@@ -19,9 +20,9 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY_BASE = 1000; // 1 segundo
 
 /**
- * Obtém configuração do Chatwoot das variáveis de ambiente
+ * Obtém configuração do Chatwoot das variáveis de ambiente (fallback síncrono)
  */
-export function getChatwootConfig(): ChatwootConfig | null {
+export function getChatwootConfigFromEnv(): ChatwootConfig | null {
   const apiUrl = process.env.CHATWOOT_API_URL;
   const apiKey = process.env.CHATWOOT_API_KEY;
   const accountId = process.env.CHATWOOT_ACCOUNT_ID;
@@ -32,18 +33,29 @@ export function getChatwootConfig(): ChatwootConfig | null {
   }
 
   return {
-    apiUrl: apiUrl.replace(/\/$/, ""), // Remove trailing slash
+    apiUrl: apiUrl.replace(/\/$/, ""),
     apiKey,
     accountId: parseInt(accountId, 10),
     defaultInboxId: defaultInboxId ? parseInt(defaultInboxId, 10) : undefined,
   };
 }
 
+/** @deprecated Use getChatwootConfigFromEnv() ou getChatwootConfigWithFallback() */
+export const getChatwootConfig = getChatwootConfigFromEnv;
+
 /**
- * Verifica se o Chatwoot está configurado
+ * Verifica se o Chatwoot está configurado (síncrono, env vars apenas)
  */
 export function isChatwootConfigured(): boolean {
-  return getChatwootConfig() !== null;
+  return getChatwootConfigFromEnv() !== null;
+}
+
+/**
+ * Verifica se o Chatwoot está configurado (async, banco de dados + env)
+ */
+export async function isChatwootConfiguredAsync(): Promise<boolean> {
+  const config = await getChatwootConfigWithFallback();
+  return config !== null;
 }
 
 // =============================================================================
@@ -218,16 +230,28 @@ export class ChatwootClient {
   private config: ChatwootConfig;
 
   constructor(config?: ChatwootConfig) {
-    const resolvedConfig = config ?? getChatwootConfig();
+    const resolvedConfig = config ?? getChatwootConfigFromEnv();
 
     if (!resolvedConfig) {
       throw new Error(
-        "Chatwoot não configurado. Defina as variáveis de ambiente: " +
-          "CHATWOOT_API_URL, CHATWOOT_API_KEY, CHATWOOT_ACCOUNT_ID"
+        "Chatwoot não configurado. Configure via Integrações ou variáveis de ambiente."
       );
     }
 
     this.config = resolvedConfig;
+  }
+
+  /**
+   * Cria instância do client com config do banco de dados (com fallback para env)
+   */
+  static async create(): Promise<ChatwootClient> {
+    const config = await getChatwootConfigWithFallback();
+    if (!config) {
+      throw new Error(
+        "Chatwoot não configurado. Configure via Integrações ou variáveis de ambiente."
+      );
+    }
+    return new ChatwootClient(config);
   }
 
   /**
@@ -311,11 +335,22 @@ export class ChatwootClient {
 let clientInstance: ChatwootClient | null = null;
 
 /**
- * Obtém instância singleton do cliente Chatwoot
+ * Obtém instância singleton do cliente Chatwoot (síncrono, env vars apenas)
+ * @deprecated Use getChatwootClientAsync() para suporte a config do banco
  */
 export function getChatwootClient(): ChatwootClient {
   if (!clientInstance) {
     clientInstance = new ChatwootClient();
+  }
+  return clientInstance;
+}
+
+/**
+ * Obtém instância singleton do cliente Chatwoot (async, banco de dados + env)
+ */
+export async function getChatwootClientAsync(): Promise<ChatwootClient> {
+  if (!clientInstance) {
+    clientInstance = await ChatwootClient.create();
   }
   return clientInstance;
 }

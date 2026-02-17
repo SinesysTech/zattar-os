@@ -78,7 +78,6 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
   };
 
   // Sync form state when event prop changes - this is intentional for form initialization
-  /* eslint-disable react-hooks/set-state-in-effect -- Form sync from props is a valid pattern */
   useEffect(() => {
     if (event) {
       setTitle(event.title || "");
@@ -99,7 +98,6 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
       resetForm();
     }
   }, [event]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Memoize time options so they're only calculated once
   const timeOptions = useMemo(() => {
@@ -217,7 +215,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>{event?.id ? "Edit Event" : "Create Event"}</DialogTitle>
           <DialogDescription className="sr-only">

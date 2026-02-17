@@ -13,6 +13,15 @@
       "headers": {
         "CONTEXT7_API_KEY": "ctx7sk-06b2f0d5-de5a-4871-b7bb-99dbfbe72e23"
       }
+    },
+    "plate": {
+      "description": "Plate editors, plugins and components",
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
     }
   }
 }

@@ -66,7 +66,7 @@ Busca semântica / RAG:
 Opcionais (dependem dos módulos):
 - Redis/cache: `ENABLE_REDIS_CACHE`, `REDIS_URL`, `REDIS_PASSWORD`, `REDIS_CACHE_TTL`
 - Plate AI editor: `AI_GATEWAY_API_KEY`
-- Dyte (chamadas): `NEXT_PUBLIC_DYTE_ORG_ID`, `DYTE_API_KEY`, `DYTE_ENABLE_RECORDING`
+- Dyte (chamadas): configurado via UI em Configurações > Integrações
 - Storage Backblaze B2: `STORAGE_PROVIDER`, `B2_*`
 - Browser service (scraping): `BROWSER_WS_ENDPOINT`, `BROWSER_SERVICE_URL`, `BROWSER_SERVICE_TOKEN`
 - MCP (integrações): `MCP_SINESYS_API_URL`, `MCP_SINESYS_API_KEY`

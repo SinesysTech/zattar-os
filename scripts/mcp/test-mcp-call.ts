@@ -50,7 +50,6 @@ function parseArgs(argv: string[]): Args {
   const baseUrl =
     get("baseUrl") ||
     process.env.MCP_SINESYS_API_URL ||
-    process.env.NEXT_PUBLIC_DASHBOARD_URL ||
     "http://localhost:3000";
 
   const endpointRaw = get("endpoint") || "/api/mcp/stream";

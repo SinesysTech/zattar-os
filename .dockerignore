@@ -1,7 +1,7 @@
 # ============================================================================
 # .dockerignore - Otimiza contexto de build do Docker
 # ============================================================================
-# Reduz contexto de ~1GB para ~100MB, acelerando builds e reduzindo uso de RAM
+# Reduz contexto de ~1GB para <50MB, acelerando builds e reduzindo uso de RAM
 # ============================================================================
 
 # Dependências (serão instaladas no container)
@@ -10,18 +10,21 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Next.js build output (exceto cache para builds incrementais)
+# Next.js build output (sempre reconstruído no container)
 .next/
-!.next/cache
 out/
 
-# Arquivos de desenvolvimento
-.git
-.gitignore
+# Documentação (desnecessária em runtime)
 *.md
-!README.md
 docs/
 openspec/
+design-system/
+
+# Git e controle de versão
+.git
+.gitignore
+.husky/
+.gitleaks.toml
 
 # Testes
 e2e/
@@ -36,37 +39,43 @@ coverage/
 __tests__/
 __mocks__/
 *.integration.test.ts
+jest.config.js
+playwright.config.ts
+codecov.yml
+tsconfig.test.json
 
 # Sandbox (páginas de desenvolvimento/teste)
 src/app/sandbox/
 src/app/(dev)/
 
-# Scripts de desenvolvimento
+# Scripts de desenvolvimento (todos desnecessários em runtime)
 scripts/
-!scripts/dev-tools/
-!scripts/setup/
 dev_data/
 
-# Análise e debug
-analyze/
-*.heapprofile
-*.cpuprofile
-
-# Variáveis de ambiente (serão configuradas no CapRover)
-.env
-.env.local
-.env.development
-.env.test
-.env.production
-.env*.local
-
-# IDEs
+# IDEs e ferramentas de desenvolvimento (AI agents, editores, etc)
 .vscode/
 .idea/
+.cursor/
+.cursorignore
+.claude/
+.codex/
+.agent/
+.gemini/
+.kiro/
+.opencode/
+.shared/
 *.swp
 *.swo
 *~
 .DS_Store
+.hintrc
+
+# Configurações de desenvolvimento
+.editorconfig
+.eslintcache
+.npmrc
+.nvmrc
+tsconfig.tsbuildinfo
 
 # Logs
 logs/
@@ -78,18 +87,24 @@ tmp/
 temp/
 *.tmp
 
-# Configurações locais
-.editorconfig
-.eslintcache
-tsconfig.tsbuildinfo
+# Análise e debug
+analyze/
+*.heapprofile
+*.cpuprofile
 
-# Serwist (service worker gerado no build)
+# Variáveis de ambiente (serão configuradas no CapRover)
+.env*
+!.env.example
+!.env.build.example
+
+# Service worker (gerado no build)
 public/sw*
 public/swe-worker*
 
-# Docker
+# Docker e infraestrutura
 Dockerfile*
 docker-compose*.yml
+docker/
 .dockerignore
 captain-definition
 
@@ -97,6 +112,12 @@ captain-definition
 .github/
 .gitlab-ci.yml
 
-# Outros
+# Banco de dados e migrations (não usados em runtime)
+supabase/
+
+# Outros arquivos desnecessários
 *.pem
-.npmrc
+.mcp.json
+eslint.config.mjs
+proxy.ts
+

@@ -85,7 +85,6 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
 
   useEffect(() => {
     // This is used to prevent hydration mismatch in SSR
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
   }, []);
 

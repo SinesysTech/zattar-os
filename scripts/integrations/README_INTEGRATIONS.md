@@ -5,22 +5,26 @@ Scripts para gerenciar a migração e configuração de integrações no Sinesys
 ## 📁 Arquivos
 
 ### `migrate-integrations-to-db.ts`
+
 Migra configurações de integrações de variáveis de ambiente para a tabela `integracoes`.
 
 **Uso:**
+
 ```bash
 npm run integrations:migrate
 # ou
-tsx scripts/migrate-integrations-to-db.ts
+tsx scripts/integrations/migrate-integrations-to-db.ts
 ```
 
 **O que faz:**
-- Lê variáveis de ambiente (TWOFAUTH_*, DIFY_*, ZAPIER_*)
+
+- Lê variáveis de ambiente (TWOFAUTH*\*, DIFY*\_, ZAPIER\_\_)
 - Insere na tabela `integracoes`
 - Verifica duplicatas antes de inserir
 - Logs detalhados do processo
 
 **Variáveis suportadas:**
+
 - `TWOFAUTH_API_URL` + `TWOFAUTH_API_TOKEN` + `TWOFAUTH_ACCOUNT_ID`
 - `DIFY_API_URL` + `DIFY_API_KEY`
 - `ZAPIER_WEBHOOK_URL`
@@ -28,16 +32,19 @@ tsx scripts/migrate-integrations-to-db.ts
 ---
 
 ### `test-integration-config.ts`
+
 Testa se as integrações estão configuradas corretamente.
 
 **Uso:**
+
 ```bash
 npm run integrations:test
 # ou
-tsx scripts/test-integration-config.ts
+tsx scripts/integrations/test-integration-config.ts
 ```
 
 **O que testa:**
+
 1. ✅ Tabela `integracoes` existe
 2. ✅ Listar todas as integrações
 3. ✅ Configuração 2FAuth
@@ -45,6 +52,7 @@ tsx scripts/test-integration-config.ts
 5. ✅ Configuração Zapier
 
 **Output:**
+
 ```
 🧪 Testando Configuração de Integrações
 ============================================================
@@ -78,23 +86,21 @@ tsx scripts/test-integration-config.ts
 
 ---
 
-### `apply-integracoes-migration.ts`
-Aplica a migration SQL no banco remoto do Supabase.
+### `sync-dify-metadata.py`
+
+Script Python para sincronizar metadados do Dify AI.
 
 **Uso:**
+
 ```bash
-npm run integrations:apply-migration
-# ou
-tsx scripts/apply-integracoes-migration.ts
+python scripts/integrations/sync-dify-metadata.py
 ```
 
 **O que faz:**
-- Lê arquivo de migration SQL
-- Executa no banco remoto
-- Verifica se a tabela foi criada
-- Migra configuração 2FAuth automaticamente
 
-**Nota:** Prefira usar `npx supabase db push` se tiver Supabase CLI instalado.
+- Sincroniza metadados e configurações do Dify
+- Atualiza informações de workflows e chatflows
+- Mantém dados consistentes entre sistemas
 
 ---
 
@@ -103,23 +109,20 @@ tsx scripts/apply-integracoes-migration.ts
 ### 1. Aplicar Migration
 
 ```bash
-# Opção A: Via Supabase CLI (recomendado)
+# Via Supabase CLI (recomendado)
 npx supabase db push
-
-# Opção B: Via script
-npm run integrations:apply-migration
 ```
 
 ### 2. Migrar Configurações
 
 ```bash
-npm run integrations:migrate
+tsx scripts/integrations/migrate-integrations-to-db.ts
 ```
 
 ### 3. Testar
 
 ```bash
-npm run integrations:test
+tsx scripts/integrations/test-integration-config.ts
 ```
 
 ### 4. Verificar na Interface
@@ -131,6 +134,7 @@ Acesse: `/app/configuracoes?tab=integracoes`
 ## 📋 Variáveis de Ambiente
 
 ### 2FAuth
+
 ```env
 TWOFAUTH_API_URL=https://2fauth.example.com
 TWOFAUTH_API_TOKEN=your-token-here
@@ -138,12 +142,14 @@ TWOFAUTH_ACCOUNT_ID=1
 ```
 
 ### Dify AI
+
 ```env
 DIFY_API_URL=https://api.dify.ai/v1
 DIFY_API_KEY=app-xxxxxxxxxxxxx
 ```
 
 ### Zapier
+
 ```env
 ZAPIER_WEBHOOK_URL=https://hooks.zapier.com/hooks/catch/123456/abcdef
 ```
@@ -170,9 +176,9 @@ npm run integrations:migrate
 
 ```sql
 -- Verificar duplicatas
-SELECT tipo, nome, COUNT(*) 
-FROM integracoes 
-GROUP BY tipo, nome 
+SELECT tipo, nome, COUNT(*)
+FROM integracoes
+GROUP BY tipo, nome
 HAVING COUNT(*) > 1;
 
 -- Remover duplicatas (manter a mais recente)
@@ -207,4 +213,3 @@ WHERE a.id < b.id
 
 **Última atualização:** 2026-02-16  
 **Autor:** Kiro AI Assistant
-

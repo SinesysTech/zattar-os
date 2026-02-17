@@ -315,7 +315,6 @@ export function TableRecentProjects() {
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table is known incompatible with React Compiler
   const table = useReactTable({
     data,
     columns,

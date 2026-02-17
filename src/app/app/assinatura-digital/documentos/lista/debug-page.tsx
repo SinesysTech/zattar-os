@@ -66,7 +66,7 @@ export function DebugPage() {
             <div className="p-4 bg-green-100 rounded">
               <h2 className="font-bold">Data:</h2>
               <pre className="mt-2 text-xs overflow-auto max-h-96">
-                {JSON.stringify(resultObject.data, null, 2)}
+                {JSON.stringify(resultObject?.data, null, 2)}
               </pre>
             </div>
           )}

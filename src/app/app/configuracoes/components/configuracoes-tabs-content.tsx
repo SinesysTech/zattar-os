@@ -20,7 +20,7 @@ import Link from 'next/link';
 
 import { MetricasDBContent } from '@/app/app/admin/metricas-db/components/metricas-db-content';
 import { BlockedIpsContent } from '@/app/app/admin/security/blocked-ips/components/blocked-ips-content';
-import { TwoFAuthIntegrationCard } from '@/features/integracoes';
+import { TwoFAuthIntegrationCard, ChatwootIntegrationCard, DyteIntegrationCard } from '@/features/integracoes';
 import { AparenciaContent } from './aparencia-content';
 import type { MetricasDB } from '@/features/admin';
 import type { Integracao } from '@/features/integracoes';
@@ -48,6 +48,10 @@ interface ConfiguracoesTabsContentProps {
   metricas?: MetricasDB;
   /** Integração 2FAuth */
   integracao2FAuth?: Integracao | null;
+  /** Integração Chatwoot */
+  integracaoChatwoot?: Integracao | null;
+  /** Integração Dyte */
+  integracaoDyte?: Integracao | null;
 }
 
 // =============================================================================
@@ -58,6 +62,8 @@ export function ConfiguracoesTabsContent({
   initialTab = 'metricas',
   metricas,
   integracao2FAuth,
+  integracaoChatwoot,
+  integracaoDyte,
 }: ConfiguracoesTabsContentProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -110,6 +116,12 @@ export function ConfiguracoesTabsContent({
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {/* Card 2FAuth */}
               <TwoFAuthIntegrationCard integracao={integracao2FAuth} />
+
+              {/* Card Chatwoot */}
+              <ChatwootIntegrationCard integracao={integracaoChatwoot} />
+
+              {/* Card Dyte */}
+              <DyteIntegrationCard integracao={integracaoDyte} />
 
               {/* Card Dify */}
               <Card>

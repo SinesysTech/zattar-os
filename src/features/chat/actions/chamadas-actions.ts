@@ -375,7 +375,7 @@ export async function actionIniciarGravacao(
 
     // Verificar se gravação está habilitada
     const { isDyteRecordingEnabled } = await import('@/lib/dyte/config');
-    if (!isDyteRecordingEnabled()) {
+    if (!(await isDyteRecordingEnabled())) {
       return { success: false, message: 'Gravação não habilitada', error: 'Feature Disabled' };
     }
 

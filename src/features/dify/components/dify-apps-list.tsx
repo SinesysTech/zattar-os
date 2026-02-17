@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -245,17 +245,25 @@ export function DifyAppsList() {
                                 <TableRow key={app.id}>
                                     <TableCell className="font-medium">{app.name}</TableCell>
                                     <TableCell>
-                                        <Badge variant={APP_TYPE_VARIANTS[app.app_type] ?? 'secondary'}>
+                                        <SemanticBadge 
+                                            category="status" 
+                                            value={app.app_type}
+                                            variantOverride={APP_TYPE_VARIANTS[app.app_type] ?? 'secondary'}
+                                        >
                                             {APP_TYPE_LABELS[app.app_type] ?? app.app_type}
-                                        </Badge>
+                                        </SemanticBadge>
                                     </TableCell>
                                     <TableCell className="font-mono text-sm text-muted-foreground max-w-75 truncate" title={app.api_url}>
                                         {app.api_url}
                                     </TableCell>
                                     <TableCell>
-                                        <Badge variant={app.is_active ? 'default' : 'outline'}>
+                                        <SemanticBadge 
+                                            category="status" 
+                                            value={app.is_active ? 'active' : 'inactive'}
+                                            variantOverride={app.is_active ? 'default' : 'outline'}
+                                        >
                                             {app.is_active ? 'Ativo' : 'Inativo'}
-                                        </Badge>
+                                        </SemanticBadge>
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-1">

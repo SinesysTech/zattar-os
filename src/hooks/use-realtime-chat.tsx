@@ -71,7 +71,6 @@ export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatP
   useEffect(() => {
     // Limpar mensagens ao trocar de sala
     if (currentRoomRef.current !== roomName) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- necessário para limpar estado ao trocar de sala
       setMessages([])
       setTypingUsers(new Map())
       currentRoomRef.current = roomName

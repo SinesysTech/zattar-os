@@ -76,7 +76,7 @@ export function SuccessStep({
   const fileName = documento.titulo || "Documento Assinado";
 
   return (
-    <div className="max-w-[480px] mx-auto space-y-8 animate-in fade-in zoom-in duration-500">
+    <div className="max-w- mx-auto space-y-8 animate-in fade-in zoom-in duration-500">
       {/* Seção de Sucesso */}
       <div className="text-center space-y-4">
         {/* Ícone Animado */}
@@ -107,8 +107,8 @@ export function SuccessStep({
       {/* Card do Documento */}
       <div className="bg-card rounded-xl border border-border shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
         {/* Thumbnail PDF */}
-        <div className="relative h-32 bg-gradient-to-br from-muted to-muted/80 flex items-center justify-center">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+        <div className="relative h-32 bg-linear-to-br from-muted to-muted/80 flex items-center justify-center">
+          <div className="absolute inset-0 bg-linear-to-t from-black/10 to-transparent" />
           <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-red-500/10 rounded-lg text-red-500">
             <FileText className="w-8 h-8" aria-hidden="true" />
           </div>
@@ -201,7 +201,7 @@ export function SuccessStep({
       </footer>
 
       {/* CSS para animação loading */}
-      <style jsx nonce={nonce}>{`
+      <style nonce={nonce} dangerouslySetInnerHTML={{__html: `
         @keyframes loading {
           from {
             width: 0%;
@@ -210,7 +210,7 @@ export function SuccessStep({
             width: 100%;
           }
         }
-      `}</style>
+      `}} />
     </div>
   );
 }

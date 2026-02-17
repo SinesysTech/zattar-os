@@ -62,7 +62,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     setTarefas(data as TarefaDisplayItem[]);
   }, [data, setTarefas]);
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,

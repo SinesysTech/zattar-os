@@ -79,11 +79,8 @@ Utilizamos um sistema centralizado (`call-error-handler.ts`) que converte erros 
 
 ## Configuração
 
-As chaves de API devem estar no `.env`:
-```bash
-NEXT_PUBLIC_DYTE_ORG_ID=...
-DYTE_API_KEY=...
-```
+As credenciais do Dyte são gerenciadas via UI em **Configurações > Integrações**.
+A configuração é armazenada na tabela `integracoes` (tipo `dyte`).
 
 ## Customização de Estilos
 

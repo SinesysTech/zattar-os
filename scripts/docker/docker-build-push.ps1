@@ -61,24 +61,6 @@ $buildArgs = @(
     "--build-arg", "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=$env:NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY"
 )
 
-# Adicionar variáveis opcionais se disponíveis
-$optionalVars = @(
-    "NEXT_PUBLIC_DASHBOARD_URL",
-    "NEXT_PUBLIC_MEU_PROCESSO_URL",
-    "NEXT_PUBLIC_WEBSITE_URL",
-    "NEXT_PUBLIC_APP_URL",
-    "NEXT_PUBLIC_DYTE_ORG_ID",
-    "NEXT_PUBLIC_AI_FAKE_STREAMING",
-    "NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED"
-)
-
-foreach ($var in $optionalVars) {
-    if (![string]::IsNullOrEmpty([Environment]::GetEnvironmentVariable($var))) {
-        $buildArgs += "--build-arg", "$var=$([Environment]::GetEnvironmentVariable($var))"
-        Write-Host "✓ Incluindo $var" -ForegroundColor Green
-    }
-}
-
 Write-Host ""
 Write-Host "🔨 Iniciando build..." -ForegroundColor Cyan
 Write-Host "   Imagem: $TAG_LATEST" -ForegroundColor Gray

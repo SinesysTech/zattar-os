@@ -29,7 +29,7 @@ export function ProfileHeader({ config, data, onEdit }: ProfileHeaderProps) {
       {config.showBanner && (
         <div className="relative aspect-video w-full rounded-t-md bg-cover bg-center md:max-h-60 overflow-hidden bg-muted">
           {coverUrl ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
+             
             <img src={coverUrl} alt="Profile Banner" className="w-full h-full object-cover" />
           ) : (
             <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-primary/10 to-secondary/20" />

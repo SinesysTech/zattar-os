@@ -21,7 +21,10 @@
       "mcp__context7__query-docs",
       "mcp__supabase__list_migrations",
       "mcp__supabase__generate_typescript_types",
-      "WebFetch(domain:docs.dify.ai)"
+      "WebFetch(domain:docs.dify.ai)",
+      "mcp__plate__get_project_registries",
+      "mcp__plate__list_items_in_registries",
+      "mcp__plate__search_items_in_registries"
     ]
   },
   "enableAllProjectMcpServers": true,
