@@ -24,8 +24,12 @@ export function useDifyWorkflow({
     status: 'idle',
     logs: [],
   });
+  const [result, setResult] = useState<any | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  const isRunning = state.status === 'running';
 
   const execute = useCallback(async (inputs: Record<string, any>, files?: any[]) => {
     setState({
@@ -34,6 +38,8 @@ export function useDifyWorkflow({
       outputs: undefined,
       error: undefined
     });
+    setError(null);
+    setResult(null);
 
     abortControllerRef.current = new AbortController();
 
@@ -93,6 +99,7 @@ export function useDifyWorkflow({
                   outputs: data.data.outputs,
                   logs: [...s.logs, 'Workflow finalizado com sucesso.']
                 }));
+                setResult(data.data.outputs);
                 if (onFinish) onFinish(data.data.outputs);
               } else if (data.event === 'error' || (data.status === 'failed')) {
                 throw new Error(data.message || 'Falha no workflow');
@@ -108,18 +115,12 @@ export function useDifyWorkflow({
     } catch (error: any) {
       if (error.name !== 'AbortError') {
         setState(s => ({ ...s, status: 'failed', error: error.message }));
+        setError(error);
         if (onError) onError(error);
-      }
-      // The original finally block content was moved here as per instruction,
-      // but it's generally better to keep it in a 'finally' block if it should always run.
-      // However, following the instruction to "fix bracket closure" and the provided snippet,
-      // this means the finally block is removed and its content is integrated into the catch block.
-      if (state.status === 'running') {
-        // Cleanup if needed
       }
       abortControllerRef.current = null;
     }
-  }, [user, onFinish, onError]); // Removed state.status to avoid loop
+  }, [user, onFinish, onError]);
 
   const stop = useCallback(() => {
     if (abortControllerRef.current) {
@@ -129,9 +130,29 @@ export function useDifyWorkflow({
     }
   }, []);
 
+  const runWorkflow = useCallback(async (inputs: Record<string, any>) => {
+    await execute(inputs);
+  }, [execute]);
+
+  const reset = useCallback(() => {
+    setState({
+      status: 'idle',
+      logs: [],
+      outputs: undefined,
+      error: undefined,
+    });
+    setResult(null);
+    setError(null);
+  }, []);
+
   return {
     state,
     execute,
-    stop
+    stop,
+    result,
+    isRunning,
+    error,
+    runWorkflow,
+    reset,
   };
 }

@@ -52,66 +52,66 @@
 - [x] 6.8 Atualizar queries para incluir novos campos
 
 ## 7. Importar Componentes do Kanban
-- [-] 7.1 Copiar `custom-board-view.tsx` para `src/app/app/tarefas/components/task-board.tsx`
-- [ ] 7.2 Copiar `unified-kanban-card.tsx` para `src/app/app/tarefas/components/task-card.tsx`
-- [ ] 7.3 Copiar `board-selector.tsx` para `src/app/app/tarefas/components/quadro-selector.tsx`
-- [ ] 7.4 Adaptar imports para usar domain unificado
-- [ ] 7.5 Adaptar TaskBoard para usar `TarefaDisplayItem`
-- [ ] 7.6 Adaptar TaskCard para mostrar subtarefas, comentários, anexos
-- [ ] 7.7 Adaptar QuadroSelector para usar store unificado
+- [x] 7.1 Copiar `custom-board-view.tsx` para `src/app/app/tarefas/components/task-board.tsx`
+- [x] 7.2 Copiar `unified-kanban-card.tsx` para `src/app/app/tarefas/components/task-card.tsx`
+- [x] 7.3 Copiar `board-selector.tsx` para `src/app/app/tarefas/components/quadro-selector.tsx`
+- [x] 7.4 Adaptar imports para usar domain unificado
+- [x] 7.5 Adaptar TaskBoard para usar `TarefaDisplayItem`
+- [x] 7.6 Adaptar TaskCard para mostrar subtarefas, comentários, anexos
+- [x] 7.7 Adaptar QuadroSelector para usar store unificado
 
 ## 8. Atualizar TarefasClient
-- [ ] 8.1 Adicionar `viewMode` do store
-- [ ] 8.2 Adicionar renderização condicional (lista vs quadro)
-- [ ] 8.3 Passar `quadros` como prop do page.tsx
-- [ ] 8.4 Inicializar `setQuadros` no useEffect
-- [ ] 8.5 Manter TaskDetailSheet e TaskDialog globais
+- [x] 8.1 Adicionar `viewMode` do store
+- [x] 8.2 Adicionar renderização condicional (lista vs quadro)
+- [x] 8.3 Passar `quadros` como prop do page.tsx
+- [x] 8.4 Inicializar `setQuadros` no useEffect
+- [x] 8.5 Manter TaskDetailSheet e TaskDialog globais
 
 ## 9. Atualizar DataTable (Lista)
-- [ ] 9.1 Adicionar `ViewModePopover` ao toolbar
-- [ ] 9.2 Configurar opções: Lista e Quadro
-- [ ] 9.3 Posicionar ao lado do botão de export
-- [ ] 9.4 Manter todos os filtros e funcionalidades existentes
+- [x] 9.1 Adicionar `ViewModePopover` ao toolbar
+- [x] 9.2 Configurar opções: Lista e Quadro
+- [x] 9.3 Posicionar ao lado do botão de export
+- [x] 9.4 Manter todos os filtros e funcionalidades existentes
 
 ## 10. Atualizar TaskBoard (Quadro)
-- [ ] 10.1 Adicionar toolbar com `ViewModePopover` + `QuadroSelector`
-- [ ] 10.2 Implementar colunas por status (Backlog, To Do, In Progress, Done, Canceled)
-- [ ] 10.3 Implementar drag-and-drop entre colunas (muda status)
-- [ ] 10.4 Implementar drag-and-drop dentro da coluna (reordena)
-- [ ] 10.5 Filtrar tarefas por `selectedQuadroId`
-- [ ] 10.6 Marcar eventos virtuais como não arrastáveis
-- [ ] 10.7 Clique no card abre TaskDetailSheet
+- [x] 10.1 Adicionar toolbar com `ViewModePopover` + `QuadroSelector`
+- [x] 10.2 Implementar colunas por status (Backlog, To Do, In Progress, Done, Canceled)
+- [x] 10.3 Implementar drag-and-drop entre colunas (muda status)
+- [x] 10.4 Implementar drag-and-drop dentro da coluna (reordena)
+- [x] 10.5 Filtrar tarefas por `selectedQuadroId`
+- [x] 10.6 Marcar eventos virtuais como não arrastáveis
+- [x] 10.7 Clique no card abre TaskDetailSheet
 
 ## 11. Actions
-- [ ] 11.1 Adicionar `actionListarQuadros`
-- [ ] 11.2 Adicionar `actionCriarQuadroCustom`
-- [ ] 11.3 Adicionar `actionExcluirQuadroCustom`
-- [ ] 11.4 Adicionar `actionReordenarTarefas`
-- [ ] 11.5 Adicionar `actionMoverTarefaParaQuadro`
-- [ ] 11.6 Atualizar `actionCriarTarefa` para suportar `quadroId`
-- [ ] 11.7 Manter todas as actions existentes de tarefas
+- [x] 11.1 Adicionar `actionListarQuadros`
+- [x] 11.2 Adicionar `actionCriarQuadroCustom`
+- [x] 11.3 Adicionar `actionExcluirQuadroCustom`
+- [x] 11.4 Adicionar `actionReordenarTarefas`
+- [x] 11.5 Adicionar `actionMoverTarefaParaQuadro`
+- [x] 11.6 Atualizar `actionCriarTarefa` para suportar `quadroId`
+- [x] 11.7 Manter todas as actions existentes de tarefas
 
 ## 12. Atualizar page.tsx
-- [ ] 12.1 Buscar quadros: `await tarefasService.listarQuadros(user.id)`
-- [ ] 12.2 Passar `quadros` como prop para `TarefasClient`
-- [ ] 12.3 Manter busca de tarefas + eventos virtuais
+- [x] 12.1 Buscar quadros: `await tarefasService.listarQuadros(user.id)`
+- [x] 12.2 Passar `quadros` como prop para `TarefasClient`
+- [x] 12.3 Manter busca de tarefas + eventos virtuais
 
 ## 13. MCP Tools
-- [ ] 13.1 Adicionar tool `listar_quadros`
-- [ ] 13.2 Adicionar tool `criar_quadro_custom`
-- [ ] 13.3 Adicionar tool `excluir_quadro_custom`
-- [ ] 13.4 Atualizar tool `criar_tarefa` para suportar `quadroId`
+- [x] 13.1 Adicionar tool `listar_quadros`
+- [x] 13.2 Adicionar tool `criar_quadro_custom`
+- [x] 13.3 Adicionar tool `excluir_quadro_custom`
+- [x] 13.4 Atualizar tool `criar_tarefa` para suportar `quadroId`
 
 ## 14. Remover Módulo Kanban
-- [ ] 14.1 Remover pasta `src/features/kanban/`
-- [ ] 14.2 Remover rota `/app/kanban/page.tsx`
-- [ ] 14.3 Remover entrada "Kanban" da sidebar
-- [ ] 14.4 Verificar e remover todos os imports de `@/features/kanban`
-- [ ] 14.5 Verificar e remover referências a `/kanban` no código
+- [x] 14.1 Remover pasta `src/features/kanban/`
+- [x] 14.2 Remover rota `/app/kanban/page.tsx`
+- [x] 14.3 Remover entrada "Kanban" da sidebar
+- [x] 14.4 Verificar e remover todos os imports de `@/features/kanban`
+- [x] 14.5 Verificar e remover referências a `/kanban` no código
 
 ## 15. Testes
-- [ ] 15.1 Executar `npm run type-check` e corrigir erros
-- [ ] 15.2 Executar `npm run build` e verificar build
+- [x] 15.1 Executar `npm run type-check` e corrigir erros
+- [x] 15.2 Executar `npm run build` e verificar build
 - [ ] 15.3 Testar visualização de lista:
   - [ ] 15.3.1 Listar tarefas
   - [ ] 15.3.2 Filtrar por status, prioridade, tipo

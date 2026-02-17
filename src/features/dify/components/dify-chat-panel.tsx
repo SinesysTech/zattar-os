@@ -98,9 +98,11 @@ export function DifyChatPanel({
                                 )}
                             >
                                 {msg.role === 'assistant' ? (
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]} className="prose dark:prose-invert prose-sm max-w-none break-words">
-                                        {msg.content}
-                                    </ReactMarkdown>
+                                    <div className="prose dark:prose-invert prose-sm max-w-none break-words">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                            {msg.content}
+                                        </ReactMarkdown>
+                                    </div>
                                 ) : (
                                     <div className="break-words whitespace-pre-wrap">{msg.content}</div>
                                 )}

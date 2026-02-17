@@ -4,16 +4,27 @@ import { v4 as uuidv4 } from 'uuid';
 
 export interface Message {
   id: string;
-  role: 'user' | 'assistant' | 'system';
+  role: 'user' | 'assistant';
   content: string;
   createdAt: number;
   feedback?: 'like' | 'dislike' | null;
+  sources?: Array<{
+    position: number;
+    dataset_id: string;
+    dataset_name: string;
+    document_id: string;
+    document_name: string;
+    segment_id: string;
+    score: number;
+    content: string;
+  }>;
 }
 
 interface UseDifyChatOptions {
   conversationId?: string;
   initialMessages?: Message[];
   user?: string;
+  inputs?: Record<string, any>;
   onFinish?: (message: Message) => void;
   onError?: (error: Error) => void;
 }
@@ -28,6 +39,8 @@ export function useDifyChat({
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
   const [conversationId, setConversationId] = useState<string | undefined>(initialConversationId);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -44,6 +57,8 @@ export function useDifyChat({
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
+    setIsStreaming(true);
+    setError(null);
 
     const assistantMessageId = uuidv4();
     // Placeholder message for assistant
@@ -141,11 +156,14 @@ export function useDifyChat({
       }
     } catch (error: any) {
       if (error.name !== 'AbortError') {
+        setError(error);
         if (onError) onError(error);
       }
       setIsLoading(false);
+      setIsStreaming(false);
     } finally {
       setIsLoading(false);
+      setIsStreaming(false);
       abortControllerRef.current = null;
     }
   }, [conversationId, user, onFinish, onError]);
@@ -155,6 +173,40 @@ export function useDifyChat({
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
       setIsLoading(false);
+      setIsStreaming(false);
+    }
+  }, []);
+
+  const stopGeneration = useCallback(() => {
+    stop();
+  }, [stop]);
+
+  const clearChat = useCallback(() => {
+    setMessages([]);
+    setConversationId(undefined);
+    setError(null);
+  }, []);
+
+  const sendFeedback = useCallback(async (messageId: string, rating: 'like' | 'dislike') => {
+    try {
+      await fetch('/api/dify/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message_id: messageId,
+          rating,
+        }),
+      });
+
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === messageId ? { ...m, feedback: rating } : m
+        )
+      );
+    } catch (error) {
+      console.error('Erro ao enviar feedback:', error);
     }
   }, []);
 
@@ -164,7 +216,12 @@ export function useDifyChat({
     setInput,
     sendMessage,
     isLoading,
+    isStreaming,
+    error,
     stop,
+    stopGeneration,
+    clearChat,
+    sendFeedback,
     conversationId,
   };
 }

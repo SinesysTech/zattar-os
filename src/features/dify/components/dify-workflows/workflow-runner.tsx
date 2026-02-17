@@ -27,7 +27,7 @@ export function WorkflowRunner({
     defaultInputs ? JSON.stringify(defaultInputs, null, 2) : '{}'
   );
 
-  const { result, isRunning, error, runWorkflow, reset } = useDifyWorkflow();
+  const { result, isRunning, error, runWorkflow, reset, state } = useDifyWorkflow();
 
   const handleRun = async () => {
     try {
@@ -39,10 +39,10 @@ export function WorkflowRunner({
   };
 
   const statusIcon = {
-    [StatusExecucao.Running]: <Loader2 className="h-4 w-4 animate-spin" />,
-    [StatusExecucao.Succeeded]: <CheckCircle2 className="h-4 w-4 text-green-500" />,
-    [StatusExecucao.Failed]: <XCircle className="h-4 w-4 text-red-500" />,
-    [StatusExecucao.Stopped]: <Square className="h-4 w-4 text-yellow-500" />,
+    [StatusExecucaoDify.RUNNING]: <Loader2 className="h-4 w-4 animate-spin" />,
+    [StatusExecucaoDify.SUCCEEDED]: <CheckCircle2 className="h-4 w-4 text-green-500" />,
+    [StatusExecucaoDify.FAILED]: <XCircle className="h-4 w-4 text-red-500" />,
+    [StatusExecucaoDify.STOPPED]: <Square className="h-4 w-4 text-yellow-500" />,
   };
 
   return (
@@ -92,7 +92,7 @@ export function WorkflowRunner({
         {/* Error */}
         {error && (
           <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-            {error}
+            {error.message}
           </div>
         )}
 
@@ -100,28 +100,23 @@ export function WorkflowRunner({
         {result && (
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              {statusIcon[result.status]}
+              {statusIcon[state.status as StatusExecucaoDify] || statusIcon[StatusExecucaoDify.SUCCEEDED]}
               <Badge variant="outline">
-                {STATUS_EXECUCAO_LABELS[result.status]}
+                {STATUS_EXECUCAO_LABELS[state.status as StatusExecucaoDify] || 'Concluído'}
               </Badge>
-              <span className="text-xs text-muted-foreground">
-                {result.tempoDecorrido.toFixed(1)}s &middot;{' '}
-                {result.totalTokens} tokens &middot;{' '}
-                {result.totalPassos} passos
-              </span>
             </div>
 
-            {result.erro && (
+            {state.error && (
               <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                {result.erro}
+                {state.error}
               </div>
             )}
 
-            {Object.keys(result.outputs).length > 0 && (
+            {result && Object.keys(result).length > 0 && (
               <div>
                 <label className="text-sm font-medium mb-1.5 block">Resultado</label>
                 <pre className="rounded-md bg-muted p-3 text-xs font-mono overflow-auto max-h-[300px]">
-                  {JSON.stringify(result.outputs, null, 2)}
+                  {JSON.stringify(result, null, 2)}
                 </pre>
               </div>
             )}

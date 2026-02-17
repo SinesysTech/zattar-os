@@ -40,10 +40,10 @@ export function WorkflowHistory({ className }: WorkflowHistoryProps) {
   }, []);
 
   const statusVariant: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-    [StatusExecucao.Running]: 'secondary',
-    [StatusExecucao.Succeeded]: 'default',
-    [StatusExecucao.Failed]: 'destructive',
-    [StatusExecucao.Stopped]: 'outline',
+    [StatusExecucaoDify.RUNNING]: 'secondary',
+    [StatusExecucaoDify.SUCCEEDED]: 'default',
+    [StatusExecucaoDify.FAILED]: 'destructive',
+    [StatusExecucaoDify.STOPPED]: 'outline',
   };
 
   if (isLoading) {
@@ -86,29 +86,29 @@ export function WorkflowHistory({ className }: WorkflowHistoryProps) {
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <Badge variant={statusVariant[exec.status] || 'outline'}>
-                      {STATUS_EXECUCAO_LABELS[exec.status as StatusExecucao] || exec.status}
+                      {STATUS_EXECUCAO_LABELS[exec.status as StatusExecucaoDify] || exec.status}
                     </Badge>
                     <span className="text-xs text-muted-foreground font-mono">
-                      {exec.workflowRunId.slice(0, 8)}...
+                      {exec.workflow_run_id?.slice(0, 8) || exec.workflow_id.slice(0, 8)}...
                     </span>
                   </div>
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
-                      {exec.tempoDecorrido.toFixed(1)}s
+                      {exec.elapsed_time?.toFixed(1) || '0.0'}s
                     </span>
                     <span className="flex items-center gap-1">
                       <Zap className="h-3 w-3" />
-                      {exec.totalTokens} tokens
+                      {exec.total_tokens || 0} tokens
                     </span>
                     <span className="flex items-center gap-1">
                       <Hash className="h-3 w-3" />
-                      {exec.totalPassos} passos
+                      {exec.total_steps || 0} passos
                     </span>
                   </div>
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {new Date(exec.criadoEm * 1000).toLocaleString('pt-BR')}
+                  {new Date(exec.created_at).toLocaleString('pt-BR')}
                 </div>
               </div>
             ))}

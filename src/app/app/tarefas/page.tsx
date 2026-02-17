@@ -18,14 +18,20 @@ export default async function TaskPage() {
   }
 
   const isSuperAdmin = user.roles.includes("admin");
+  
+  // Buscar tarefas + eventos virtuais
   const result = await tarefasService.listarTarefasComEventos(user.id, isSuperAdmin);
   if (!result.success) {
     return <div className="p-6">Erro ao carregar tarefas: {result.error.message}</div>;
   }
 
+  // Buscar quadros
+  const quadrosResult = await tarefasService.listarQuadros(user.id);
+  const quadros = quadrosResult.success ? quadrosResult.data : [];
+
   return (
     <PageShell>
-      <TarefasClient data={result.data} />
+      <TarefasClient data={result.data} quadros={quadros} />
     </PageShell>
   );
 }

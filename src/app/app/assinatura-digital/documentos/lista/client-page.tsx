@@ -277,7 +277,14 @@ export function DocumentosTableWrapper({
           ...docData.documento,
           assinantes: docData.assinantes,
           ancoras: docData.ancoras,
-        });
+          // Campos opcionais de DocumentoListItem que podem não vir da API
+          hash_original_sha256: null,
+          hash_final_sha256: null,
+          created_by: null,
+          contrato_id: null,
+          _assinantes_count: docData.assinantes.length,
+          _assinantes_concluidos: docData.assinantes.filter(a => a.status === 'concluido').length,
+        } as DocumentoCompleto);
       } else {
         toast.error("Erro ao carregar detalhes do documento");
         setIsDialogOpen(false);

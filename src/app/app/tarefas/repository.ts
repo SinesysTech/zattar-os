@@ -136,6 +136,7 @@ function assembleTask(
     dueDate: item.due_date ?? null,
     reminderDate: item.reminder_at ?? null,
     starred: item.starred,
+    position: item.position ?? 0,
     assignees,
     assignedTo: assignees.map((a) => a.name),
     subTasks: subTasks

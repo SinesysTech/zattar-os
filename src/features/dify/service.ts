@@ -328,6 +328,32 @@ export class DifyService {
     }
   }
 
+  async criarDataset(params: { name: string; description?: string }): Promise<Result<any, Error>> {
+    try {
+      const result = await this.client.createDataset({
+        name: params.name,
+        description: params.description,
+        indexing_technique: 'high_quality',
+      });
+      return ok(result);
+    } catch (error: any) {
+      return err(new Error(`Erro ao criar dataset Dify: ${error.message}`));
+    }
+  }
+
+  async listarDocumentos(datasetId: string, page = 1, limit = 20): Promise<Result<{ documents: any[]; temMais: boolean; total: number }, Error>> {
+    try {
+      const result = await this.client.listDocuments(datasetId, { page, limit });
+      return ok({
+        documents: result.data,
+        temMais: result.has_more,
+        total: result.total,
+      });
+    } catch (error: any) {
+      return err(new Error(`Erro ao listar documentos Dify: ${error.message}`));
+    }
+  }
+
   async criarDocumento(params: { datasetId: string; nome: string; texto: string }): Promise<Result<any, Error>> {
     try {
       const result = await this.client.createDocument(params.datasetId, {
