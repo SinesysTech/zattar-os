@@ -30,7 +30,7 @@ As correções são simples e focadas em UI/UX, sem alterações na lógica de n
   - Arquivo: `src/app/app/tarefas/components/task-board.tsx`
   - _Requisitos: 3.2_
 
-- [-] 4. Checkpoint - Testes manuais e validação
+- [x] 4. Checkpoint - Testes manuais e validação
   - Verificar espaçamento visual da paginação (16px)
   - Testar alternância Lista → Quadro
   - Testar alternância Quadro → Lista
