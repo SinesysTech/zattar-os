@@ -368,6 +368,26 @@ export const actionReordenarTarefas = authenticatedAction(
 );
 
 /**
+ * DnD bidirecional: atualiza status da entidade de origem
+ * quando um card é arrastado para outra coluna em quadro de sistema.
+ */
+export const actionAtualizarStatusQuadroSistema = authenticatedAction(
+  z.object({
+    source: z.enum(["expedientes", "audiencias", "pericias", "obrigacoes"]),
+    entityId: z.string().min(1),
+    targetColumnId: z.string().min(1),
+  }),
+  async (data, { user }) => {
+    const result = await service.atualizarStatusViaQuadroSistema(user.id, data);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return { success: true };
+  }
+);
+
+/**
  * Move uma tarefa para outro quadro
  */
 export const actionMoverTarefaParaQuadro = authenticatedAction(

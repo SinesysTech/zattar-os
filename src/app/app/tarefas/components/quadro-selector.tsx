@@ -12,6 +12,7 @@ import {
   FileText,
   Gavel,
   CircleDollarSign,
+  Microscope,
   LayoutGrid,
   Check,
 } from "lucide-react";
@@ -38,6 +39,7 @@ import type { Quadro } from "../domain";
 const SOURCE_ICONS: Record<string, React.ElementType> = {
   expedientes: FileText,
   audiencias: Gavel,
+  pericias: Microscope,
   obrigacoes: CircleDollarSign,
 };
 

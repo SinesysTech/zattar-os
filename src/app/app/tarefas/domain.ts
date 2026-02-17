@@ -187,7 +187,7 @@ export type RemoveFileInput = z.infer<typeof removeFileSchema>;
 export const quadroTipoSchema = z.enum(["sistema", "custom"]);
 export type QuadroTipo = z.infer<typeof quadroTipoSchema>;
 
-export const quadroSourceSchema = z.enum(["expedientes", "audiencias", "obrigacoes"]);
+export const quadroSourceSchema = z.enum(["expedientes", "audiencias", "pericias", "obrigacoes"]);
 export type QuadroSource = z.infer<typeof quadroSourceSchema>;
 
 export const quadroSchema = z.object({
@@ -224,14 +224,116 @@ export const QUADROS_SISTEMA: Omit<Quadro, "usuarioId" | "createdAt" | "updatedA
     ordem: 1,
   },
   {
+    id: "sys-pericias",
+    titulo: "Perícias",
+    tipo: "sistema",
+    source: "pericias",
+    icone: "Microscope",
+    ordem: 2,
+  },
+  {
     id: "sys-obrigacoes",
     titulo: "Obrigações",
     tipo: "sistema",
     source: "obrigacoes",
     icone: "CircleDollarSign",
-    ordem: 2,
+    ordem: 3,
   },
 ];
+
+// =============================================================================
+// QUADROS DE SISTEMA - DEFINIÇÕES COM COLUNAS ESPECÍFICAS
+// =============================================================================
+
+export type SystemBoardSource = QuadroSource;
+
+/** Coluna de um quadro de sistema */
+export interface SystemBoardColumn {
+  id: string;
+  label: string;
+  /** statusOrigem values do UnifiedEventItem que mapeiam para esta coluna */
+  matchStatuses: string[];
+  /** Status enviado ao atualizarStatusEntidadeOrigem. null = coluna somente leitura (não aceita drops) */
+  targetStatus: string | null;
+}
+
+/** Definição completa de um quadro de sistema */
+export interface SystemBoardDefinition {
+  id: string;
+  slug: string;
+  titulo: string;
+  source: SystemBoardSource;
+  icone: string;
+  columns: SystemBoardColumn[];
+  dndEnabled: boolean;
+}
+
+export const SYSTEM_BOARD_DEFINITIONS: SystemBoardDefinition[] = [
+  {
+    id: "sys-expedientes",
+    slug: "expedientes",
+    titulo: "Expedientes",
+    source: "expedientes",
+    icone: "FileText",
+    dndEnabled: true,
+    columns: [
+      { id: "pendentes", label: "Pendentes", matchStatuses: ["pendente"], targetStatus: null },
+      { id: "prazo-vencido", label: "Prazo Vencido", matchStatuses: ["vencido"], targetStatus: null },
+      { id: "baixados", label: "Baixados", matchStatuses: ["baixado"], targetStatus: "done" },
+    ],
+  },
+  {
+    id: "sys-audiencias",
+    slug: "audiencias",
+    titulo: "Audiências",
+    source: "audiencias",
+    icone: "Gavel",
+    dndEnabled: true,
+    columns: [
+      { id: "marcadas", label: "Marcadas", matchStatuses: ["M"], targetStatus: "todo" },
+      { id: "realizadas", label: "Realizadas", matchStatuses: ["F"], targetStatus: "done" },
+      { id: "canceladas", label: "Canceladas", matchStatuses: ["C"], targetStatus: "canceled" },
+    ],
+  },
+  {
+    id: "sys-pericias",
+    slug: "pericias",
+    titulo: "Perícias",
+    source: "pericias",
+    icone: "Microscope",
+    dndEnabled: true,
+    columns: [
+      { id: "ativas", label: "Ativas", matchStatuses: ["S", "L", "P", "R"], targetStatus: null },
+      { id: "finalizadas", label: "Finalizadas", matchStatuses: ["F"], targetStatus: "done" },
+      { id: "canceladas", label: "Canceladas", matchStatuses: ["C"], targetStatus: "canceled" },
+    ],
+  },
+  {
+    id: "sys-obrigacoes",
+    slug: "obrigacoes",
+    titulo: "Obrigações",
+    source: "obrigacoes",
+    icone: "CircleDollarSign",
+    dndEnabled: false,
+    columns: [
+      { id: "pendentes", label: "Pendentes", matchStatuses: ["pendente"], targetStatus: null },
+      { id: "atrasadas", label: "Atrasadas", matchStatuses: ["atrasada", "atrasado", "vencida"], targetStatus: null },
+      { id: "pagas", label: "Pagas", matchStatuses: ["pago_total", "recebida", "paga"], targetStatus: null },
+    ],
+  },
+];
+
+export function getSystemBoardBySlug(slug: string): SystemBoardDefinition | undefined {
+  return SYSTEM_BOARD_DEFINITIONS.find((b) => b.slug === slug);
+}
+
+/** Input para DnD bidirecional em quadro de sistema */
+export const systemBoardDndSchema = z.object({
+  source: quadroSourceSchema,
+  entityId: z.string().min(1),
+  targetColumnId: z.string().min(1),
+});
+export type SystemBoardDndInput = z.infer<typeof systemBoardDndSchema>;
 
 export const criarQuadroCustomSchema = z.object({
   titulo: z.string().min(1).max(100),

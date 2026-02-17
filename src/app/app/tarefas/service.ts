@@ -241,8 +241,9 @@ export async function listarTarefasComEventos(
 // QUADROS (KANBAN BOARDS)
 // =============================================================================
 
-import type { Quadro, CriarQuadroCustomInput, ExcluirQuadroCustomInput, ReordenarTarefasInput } from "./domain";
-import { QUADROS_SISTEMA, criarQuadroCustomSchema, excluirQuadroCustomSchema, reordenarTarefasSchema } from "./domain";
+import type { Quadro, CriarQuadroCustomInput, ExcluirQuadroCustomInput, ReordenarTarefasInput, SystemBoardDndInput, SystemBoardSource } from "./domain";
+import { QUADROS_SISTEMA, criarQuadroCustomSchema, excluirQuadroCustomSchema, reordenarTarefasSchema, SYSTEM_BOARD_DEFINITIONS, systemBoardDndSchema } from "./domain";
+import { atualizarStatusEntidadeOrigem } from "@/lib/event-aggregation/service";
 
 /**
  * Lista todos os quadros disponíveis para o usuário:
@@ -344,4 +345,75 @@ export async function reordenarTarefas(usuarioId: number, input: unknown): Promi
   }
 
   return repo.getTaskById(usuarioId, val.data.tarefaId) as Promise<Result<Task>>;
+}
+
+// =============================================================================
+// QUADROS DE SISTEMA - EVENTOS POR SOURCE
+// =============================================================================
+
+export interface SystemBoardEventItem extends TarefaDisplayItem {
+  statusOrigem: string;
+}
+
+/**
+ * Busca eventos de uma única fonte para quadro de sistema.
+ * Preserva statusOrigem para distribuição nas colunas específicas.
+ */
+export async function listarEventosPorSource(
+  usuarioId: number,
+  isSuperAdmin: boolean,
+  source: SystemBoardSource
+): Promise<Result<SystemBoardEventItem[]>> {
+  try {
+    const responsavelFilter = isSuperAdmin ? undefined : usuarioId;
+    const eventos = await listarTodosEventos({
+      responsavelId: responsavelFilter,
+      sources: [source],
+    });
+
+    const items: SystemBoardEventItem[] = eventos.map((evento) => ({
+      ...eventoToTarefaDisplay(evento),
+      statusOrigem: evento.statusOrigem,
+    }));
+
+    return ok(items);
+  } catch (error) {
+    return err(
+      appError("INTERNAL_ERROR", `Erro ao carregar eventos de ${source}`)
+    );
+  }
+}
+
+/**
+ * DnD bidirecional: atualiza status da entidade de origem
+ * quando um card é arrastado para outra coluna em quadro de sistema.
+ */
+export async function atualizarStatusViaQuadroSistema(
+  userId: number,
+  input: SystemBoardDndInput
+): Promise<Result<void>> {
+  const val = validate<SystemBoardDndInput>(systemBoardDndSchema, input);
+  if (!val.success) return err(val.error);
+
+  const board = SYSTEM_BOARD_DEFINITIONS.find((b) => b.source === val.data.source);
+  if (!board) {
+    return err(appError("VALIDATION_ERROR", "Quadro não encontrado"));
+  }
+  if (!board.dndEnabled) {
+    return err(appError("VALIDATION_ERROR", "Este quadro não suporta alterações de status"));
+  }
+
+  const targetColumn = board.columns.find((c) => c.id === val.data.targetColumnId);
+  if (!targetColumn || targetColumn.targetStatus === null) {
+    return err(appError("VALIDATION_ERROR", "Não é possível mover para esta coluna"));
+  }
+
+  return atualizarStatusEntidadeOrigem(
+    {
+      source: val.data.source,
+      entityId: val.data.entityId,
+      novoStatus: targetColumn.targetStatus,
+    },
+    userId
+  );
 }

@@ -91,8 +91,8 @@ const navServicos = [
     icon: CalendarCheck,
     items: [
       { title: "Agenda", url: "/app/calendar" },
-      { title: "Notas", url: "/app/notas" },
       { title: "Tarefas", url: "/app/tarefas" },
+      { title: "Notas", url: "/app/notas" },
     ],
   },
   {

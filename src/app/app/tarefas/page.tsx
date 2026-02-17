@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { getCurrentUser } from "@/lib/auth/server";
-import { PageShell } from "@/components/shared/page-shell";
 
 import { TarefasClient } from "./tarefas-client";
 import * as tarefasService from "./service";
@@ -29,9 +28,5 @@ export default async function TaskPage() {
   const quadrosResult = await tarefasService.listarQuadros(user.id);
   const quadros = quadrosResult.success ? quadrosResult.data : [];
 
-  return (
-    <PageShell>
-      <TarefasClient data={result.data} quadros={quadros} />
-    </PageShell>
-  );
+  return <TarefasClient data={result.data} quadros={quadros} />;
 }

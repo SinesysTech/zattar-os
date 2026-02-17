@@ -77,6 +77,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 
 import type { TarefaDisplayItem, TaskStatus, TaskPriority, Quadro } from "../domain";
+import { SYSTEM_BOARD_DEFINITIONS } from "../domain";
 import { useTarefaStore } from "../store";
 import { TaskCard } from "./task-card";
 import { QuadroSelector } from "./quadro-selector";
@@ -344,7 +345,16 @@ export function TaskBoard({ quadros }: TaskBoardProps) {
             <QuadroSelector
               quadros={quadros}
               value={selectedQuadroId}
-              onValueChange={setSelectedQuadroId}
+              onValueChange={(id) => {
+                // Quadros de sistema → navegar para sub-rota
+                const sysBoard = id ? SYSTEM_BOARD_DEFINITIONS.find((b) => b.id === id) : null;
+                if (sysBoard) {
+                  router.push(`/app/tarefas/quadro/${sysBoard.slug}`);
+                  return;
+                }
+                // null (Todas as Tarefas) ou custom board → filtro client-side
+                setSelectedQuadroId(id);
+              }}
             />
           </div>
 

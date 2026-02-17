@@ -1,6 +1,6 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
-export const dynamic = 'force-dynamic';
 import { actionObterMetricasDB } from "@/features/admin";
 import { actionListarIntegracoesPorTipo } from "@/features/integracoes";
 import { ConfiguracoesTabsContent } from "./components/configuracoes-tabs-content";
@@ -28,9 +28,11 @@ export default async function ConfiguracoesPage() {
   }
 
   return (
-    <ConfiguracoesTabsContent
-      metricas={metricasResult.data}
-      integracao2FAuth={integracao2FAuth}
-    />
+    <Suspense>
+      <ConfiguracoesTabsContent
+        metricas={metricasResult.data}
+        integracao2FAuth={integracao2FAuth}
+      />
+    </Suspense>
   );
 }

@@ -2,6 +2,7 @@
  * API Route para verificar status da conexão 2FAuth
  *
  * GET /api/twofauth/status - Verifica se a conexão com o servidor 2FAuth está funcionando
+ * POST /api/twofauth/status - Testa conexão com configuração customizada (antes de salvar)
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -91,6 +92,85 @@ export async function GET(request: NextRequest) {
         data: {
           connected: false,
           configured: !!(process.env.TWOFAUTH_API_URL && process.env.TWOFAUTH_API_TOKEN),
+          error: error.message,
+        },
+      });
+    }
+
+    return NextResponse.json(
+      { success: false, error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * POST /api/twofauth/status
+ * Testa conexão com configuração customizada (antes de salvar)
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const authResult = await authenticateRequest(request);
+    if (!authResult.authenticated) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { api_url, api_token } = body;
+
+    if (!api_url || !api_token) {
+      return NextResponse.json(
+        { success: false, error: "api_url e api_token são obrigatórios" },
+        { status: 400 }
+      );
+    }
+
+    // Testar conexão com a configuração fornecida
+    const config = { apiUrl: api_url, token: api_token };
+    const connectionResult = await checkConnection(config);
+
+    if (!connectionResult.connected) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          connected: false,
+          error: connectionResult.error,
+        },
+      });
+    }
+
+    // Se conectado, buscar dados do usuário com a config customizada
+    try {
+      const user = await getUser(config);
+      return NextResponse.json({
+        success: true,
+        data: {
+          connected: true,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            is_admin: user.is_admin,
+          },
+        },
+      });
+    } catch {
+      return NextResponse.json({
+        success: true,
+        data: {
+          connected: true,
+          user: null,
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Error in twofauth status POST:", error);
+
+    if (error instanceof TwoFAuthError) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          connected: false,
           error: error.message,
         },
       });

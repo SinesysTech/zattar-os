@@ -11,7 +11,7 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Database, Shield, KeyRound, Blocks, Bot, ExternalLink, Palette } from 'lucide-react';
+import { Database, Shield, Blocks, Bot, Palette } from 'lucide-react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,7 +20,6 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 
 import { MetricasDBContent } from '@/app/app/admin/metricas-db/components/metricas-db-content';
 import { BlockedIpsContent } from '@/app/app/admin/security/blocked-ips/components/blocked-ips-content';
-import { TwoFAuthConfigContent } from '@/features/twofauth';
 import { DifyAppsList } from '@/features/dify/components/dify-apps-list';
 import { TwoFAuthIntegrationCard } from '@/features/integracoes';
 import { AparenciaContent } from './aparencia-content';
