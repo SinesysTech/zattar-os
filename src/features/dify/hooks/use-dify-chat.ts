@@ -21,6 +21,7 @@ export interface Message {
 }
 
 interface UseDifyChatOptions {
+  appId?: string;
   conversationId?: string;
   initialMessages?: Message[];
   user?: string;
@@ -30,6 +31,7 @@ interface UseDifyChatOptions {
 }
 
 export function useDifyChat({
+  appId,
   conversationId: initialConversationId,
   initialMessages = [],
   user = 'user',
@@ -87,6 +89,7 @@ export function useDifyChat({
           inputs,
           conversation_id: conversationId,
           user,
+          app_id: appId,
         }),
         signal: abortControllerRef.current.signal,
       });
@@ -167,7 +170,7 @@ export function useDifyChat({
       setIsStreaming(false);
       abortControllerRef.current = null;
     }
-  }, [conversationId, user, onFinish, onError]);
+  }, [appId, conversationId, user, onFinish, onError]);
 
   const stop = useCallback(() => {
     if (abortControllerRef.current) {

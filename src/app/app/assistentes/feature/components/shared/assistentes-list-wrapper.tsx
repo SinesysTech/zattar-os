@@ -13,6 +13,7 @@ import { DataTableToolbar } from '@/components/shared/data-shell/data-table-tool
 
 interface AssistentesListWrapperProps {
   initialData: Assistente[];
+  difyAppTypes?: Record<string, string>;
   permissions: {
     canCreate: boolean;
     canEdit: boolean;
@@ -20,7 +21,7 @@ interface AssistentesListWrapperProps {
   };
 }
 
-export function AssistentesListWrapper({ initialData, permissions }: AssistentesListWrapperProps) {
+export function AssistentesListWrapper({ initialData, difyAppTypes = {}, permissions }: AssistentesListWrapperProps) {
   const router = useRouter();
 
   const {
@@ -81,6 +82,7 @@ export function AssistentesListWrapper({ initialData, permissions }: Assistentes
       >
         <GridView
           assistentes={assistentes}
+          difyAppTypes={difyAppTypes}
           onView={handleView}
           onEdit={handleEdit}
           onDelete={handleDelete}

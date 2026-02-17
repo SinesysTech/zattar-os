@@ -10,12 +10,14 @@ export interface WorkflowRunState {
 }
 
 interface UseDifyWorkflowOptions {
+  appId?: string;
   onFinish?: (result: Record<string, unknown>) => void;
   onError?: (error: Error) => void;
   user?: string;
 }
 
 export function useDifyWorkflow({
+  appId,
   onFinish,
   onError,
   user = 'user',
@@ -53,6 +55,7 @@ export function useDifyWorkflow({
           inputs,
           files,
           user,
+          app_id: appId,
         }),
         signal: abortControllerRef.current.signal,
       });
@@ -121,7 +124,7 @@ export function useDifyWorkflow({
       }
       abortControllerRef.current = null;
     }
-  }, [user, onFinish, onError]);
+  }, [appId, user, onFinish, onError]);
 
   const stop = useCallback(() => {
     if (abortControllerRef.current) {

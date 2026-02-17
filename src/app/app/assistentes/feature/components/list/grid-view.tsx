@@ -8,6 +8,7 @@ import { Assistente } from '../../domain';
 
 interface GridViewProps {
   assistentes: Assistente[];
+  difyAppTypes?: Record<string, string>;
   onView: (assistente: Assistente) => void;
   onEdit: (assistente: Assistente) => void;
   onDelete: (assistente: Assistente) => void;
@@ -17,6 +18,7 @@ interface GridViewProps {
 
 export function GridView({
   assistentes,
+  difyAppTypes = {},
   onView,
   onEdit,
   onDelete,
@@ -42,6 +44,7 @@ export function GridView({
         <AssistenteCard
           key={assistente.id}
           assistente={assistente}
+          difyAppType={assistente.dify_app_id ? difyAppTypes[assistente.dify_app_id] : undefined}
           onView={onView}
           onEdit={onEdit}
           onDelete={onDelete}

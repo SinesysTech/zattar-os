@@ -82,7 +82,7 @@ export function ConfiguracoesTabsContent({
       <h1 className="text-2xl font-semibold tracking-tight">Configurações</h1>
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 lg:w-[800px]">
+        <TabsList className="grid w-full grid-cols-4 lg:w-200">
           <TabsTrigger value="metricas">
             <Database className="mr-2 h-4 w-4" />
             Métricas

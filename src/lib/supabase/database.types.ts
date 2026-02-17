@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       acervo: {
@@ -880,9 +855,11 @@ export type Database = {
           created_at: string
           criado_por: number
           descricao: string | null
+          dify_app_id: string | null
           id: number
-          iframe_code: string
+          iframe_code: string | null
           nome: string
+          tipo: string
           updated_at: string
         }
         Insert: {
@@ -890,9 +867,11 @@ export type Database = {
           created_at?: string
           criado_por: number
           descricao?: string | null
+          dify_app_id?: string | null
           id?: never
-          iframe_code: string
+          iframe_code?: string | null
           nome: string
+          tipo?: string
           updated_at?: string
         }
         Update: {
@@ -900,9 +879,11 @@ export type Database = {
           created_at?: string
           criado_por?: number
           descricao?: string | null
+          dify_app_id?: string | null
           id?: never
-          iframe_code?: string
+          iframe_code?: string | null
           nome?: string
+          tipo?: string
           updated_at?: string
         }
         Relationships: [
@@ -911,6 +892,13 @@ export type Database = {
             columns: ["criado_por"]
             isOneToOne: false
             referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assistentes_dify_app_id_fkey"
+            columns: ["dify_app_id"]
+            isOneToOne: false
+            referencedRelation: "dify_apps"
             referencedColumns: ["id"]
           },
         ]
@@ -2441,6 +2429,74 @@ export type Database = {
           },
         ]
       }
+      conversas_chatwoot: {
+        Row: {
+          assignee_chatwoot_id: number | null
+          assignee_id: number | null
+          chatwoot_account_id: number
+          chatwoot_conversation_id: number
+          chatwoot_inbox_id: number
+          contador_mensagens_nao_lidas: number
+          contador_mensagens_total: number
+          created_at: string
+          dados_sincronizados: Json | null
+          erro_sincronizacao: string | null
+          id: number
+          mapeamento_partes_chatwoot_id: number | null
+          sincronizado: boolean
+          status: string
+          ultima_mensagem_em: string | null
+          ultima_sincronizacao: string | null
+          updated_at: string
+        }
+        Insert: {
+          assignee_chatwoot_id?: number | null
+          assignee_id?: number | null
+          chatwoot_account_id: number
+          chatwoot_conversation_id: number
+          chatwoot_inbox_id: number
+          contador_mensagens_nao_lidas?: number
+          contador_mensagens_total?: number
+          created_at?: string
+          dados_sincronizados?: Json | null
+          erro_sincronizacao?: string | null
+          id?: never
+          mapeamento_partes_chatwoot_id?: number | null
+          sincronizado?: boolean
+          status?: string
+          ultima_mensagem_em?: string | null
+          ultima_sincronizacao?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assignee_chatwoot_id?: number | null
+          assignee_id?: number | null
+          chatwoot_account_id?: number
+          chatwoot_conversation_id?: number
+          chatwoot_inbox_id?: number
+          contador_mensagens_nao_lidas?: number
+          contador_mensagens_total?: number
+          created_at?: string
+          dados_sincronizados?: Json | null
+          erro_sincronizacao?: string | null
+          id?: never
+          mapeamento_partes_chatwoot_id?: number | null
+          sincronizado?: boolean
+          status?: string
+          ultima_mensagem_em?: string | null
+          ultima_sincronizacao?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_conversas_chatwoot_partes_mapeamento"
+            columns: ["mapeamento_partes_chatwoot_id"]
+            isOneToOne: false
+            referencedRelation: "partes_chatwoot"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       credenciais: {
         Row: {
           active: boolean
@@ -3277,6 +3333,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      integracoes: {
+        Row: {
+          ativo: boolean
+          configuracao: Json
+          created_at: string
+          created_by_auth_id: string | null
+          descricao: string | null
+          id: string
+          metadata: Json | null
+          nome: string
+          tipo: string
+          updated_at: string
+          updated_by_auth_id: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          configuracao?: Json
+          created_at?: string
+          created_by_auth_id?: string | null
+          descricao?: string | null
+          id?: string
+          metadata?: Json | null
+          nome: string
+          tipo: string
+          updated_at?: string
+          updated_by_auth_id?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          configuracao?: Json
+          created_at?: string
+          created_by_auth_id?: string | null
+          descricao?: string | null
+          id?: string
+          metadata?: Json | null
+          nome?: string
+          tipo?: string
+          updated_at?: string
+          updated_by_auth_id?: string | null
+        }
+        Relationships: []
       }
       itens_folha_pagamento: {
         Row: {
@@ -6615,6 +6713,69 @@ export type Database = {
           },
         ]
       }
+      usuarios_chatwoot: {
+        Row: {
+          chatwoot_account_id: number
+          chatwoot_agent_id: number
+          contador_conversas_ativas: number
+          created_at: string
+          dados_sincronizados: Json | null
+          disponivel: boolean
+          disponivel_em: string | null
+          email: string | null
+          erro_sincronizacao: string | null
+          id: number
+          max_conversas_simultaneas: number
+          nome_chatwoot: string | null
+          role: string
+          sincronizado: boolean
+          skills: Json | null
+          ultima_sincronizacao: string | null
+          updated_at: string
+          usuario_id: string
+        }
+        Insert: {
+          chatwoot_account_id: number
+          chatwoot_agent_id: number
+          contador_conversas_ativas?: number
+          created_at?: string
+          dados_sincronizados?: Json | null
+          disponivel?: boolean
+          disponivel_em?: string | null
+          email?: string | null
+          erro_sincronizacao?: string | null
+          id?: never
+          max_conversas_simultaneas?: number
+          nome_chatwoot?: string | null
+          role?: string
+          sincronizado?: boolean
+          skills?: Json | null
+          ultima_sincronizacao?: string | null
+          updated_at?: string
+          usuario_id: string
+        }
+        Update: {
+          chatwoot_account_id?: number
+          chatwoot_agent_id?: number
+          contador_conversas_ativas?: number
+          created_at?: string
+          dados_sincronizados?: Json | null
+          disponivel?: boolean
+          disponivel_em?: string | null
+          email?: string | null
+          erro_sincronizacao?: string | null
+          id?: never
+          max_conversas_simultaneas?: number
+          nome_chatwoot?: string | null
+          role?: string
+          sincronizado?: boolean
+          skills?: Json | null
+          ultima_sincronizacao?: string | null
+          updated_at?: string
+          usuario_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       acervo_unificado: {
@@ -7557,9 +7718,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       codigo_tribunal: [

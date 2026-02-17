@@ -3,6 +3,7 @@ import {
   Assistente,
   AssistentesParams,
   CriarAssistenteInput,
+  CriarAssistenteDifyInput,
   AtualizarAssistenteInput,
 } from "./domain";
 
@@ -12,7 +13,9 @@ function converterParaAssistente(data: Record<string, unknown>): Assistente {
     id: data.id as number,
     nome: data.nome as string,
     descricao: (data.descricao as string | null) ?? null,
-    iframe_code: data.iframe_code as string,
+    tipo: (data.tipo as "iframe" | "dify") ?? "iframe",
+    iframe_code: (data.iframe_code as string | null) ?? null,
+    dify_app_id: (data.dify_app_id as string | null) ?? null,
     ativo: data.ativo as boolean,
     criado_por: data.criado_por as number,
     created_at: data.created_at as string,
@@ -67,6 +70,22 @@ export async function findById(id: number): Promise<Assistente | null> {
   return data ? converterParaAssistente(data) : null;
 }
 
+export async function findByDifyAppId(difyAppId: string): Promise<Assistente | null> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from("assistentes")
+    .select("*")
+    .eq("dify_app_id", difyAppId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Erro ao buscar assistente por dify_app_id: ${error.message}`);
+  }
+
+  return data ? converterParaAssistente(data) : null;
+}
+
 export async function create(
   data: CriarAssistenteInput & { criado_por: number }
 ): Promise<Assistente> {
@@ -75,6 +94,7 @@ export async function create(
   const query = supabase.from("assistentes").insert({
     nome: data.nome.trim(),
     descricao: data.descricao?.trim() || null,
+    tipo: "iframe" as const,
     iframe_code: data.iframe_code.trim(),
     criado_por: data.criado_por,
     ativo: true,
@@ -85,6 +105,31 @@ export async function create(
 
   if (error) {
     throw new Error(`Erro ao criar assistente: ${error.message}`);
+  }
+
+  return converterParaAssistente(inserted);
+}
+
+export async function createDify(
+  data: CriarAssistenteDifyInput & { criado_por: number }
+): Promise<Assistente> {
+  const supabase = createServiceClient();
+
+  const { data: inserted, error } = await supabase
+    .from("assistentes")
+    .insert({
+      nome: data.nome.trim(),
+      descricao: data.descricao?.trim() || null,
+      tipo: "dify" as const,
+      dify_app_id: data.dify_app_id,
+      criado_por: data.criado_por,
+      ativo: true,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Erro ao criar assistente Dify: ${error.message}`);
   }
 
   return converterParaAssistente(inserted);
@@ -102,7 +147,7 @@ export async function update(
   if (data.descricao !== undefined)
     updateData.descricao = data.descricao?.trim() || null;
   if (data.iframe_code !== undefined)
-    updateData.iframe_code = data.iframe_code.trim();
+    updateData.iframe_code = data.iframe_code?.trim() || null;
   if (data.ativo !== undefined) updateData.ativo = data.ativo;
 
   const query = supabase.from("assistentes").update(updateData);
@@ -126,6 +171,21 @@ export async function deleteAssistente(id: number): Promise<boolean> {
 
   if (error) {
     throw new Error(`Erro ao deletar assistente: ${error.message}`);
+  }
+
+  return true;
+}
+
+export async function deleteByDifyAppId(difyAppId: string): Promise<boolean> {
+  const supabase = createServiceClient();
+
+  const { error } = await supabase
+    .from("assistentes")
+    .delete()
+    .eq("dify_app_id", difyAppId);
+
+  if (error) {
+    throw new Error(`Erro ao deletar assistente por dify_app_id: ${error.message}`);
   }
 
   return true;

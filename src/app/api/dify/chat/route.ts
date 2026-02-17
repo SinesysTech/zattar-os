@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createDifyServiceForUser } from '@/features/dify/factory';
+import { createDifyServiceForUser, createDifyServiceForApp } from '@/features/dify/factory';
 import { enviarMensagemSchema } from '@/features/dify/domain';
 
 // Definir runtime como edge para melhor performance em streaming se suportado pela infra
@@ -29,9 +29,12 @@ export async function POST(req: NextRequest) {
     const { query, inputs, conversation_id, user } = parseResult.data;
 
     const userId = user || 'anonymous-user';
+    const appId = json.app_id as string | undefined;
 
-    // Inicializa o serviço
-    const service = await createDifyServiceForUser(userId);
+    // Inicializa o serviço (por app específico ou pelo usuário)
+    const service = appId
+      ? await createDifyServiceForApp(appId)
+      : await createDifyServiceForUser(userId);
 
     // Chama o método de stream do service
     const result = await service.enviarMensagemStream({

@@ -1,6 +1,35 @@
 import { err, ok, Result } from 'neverthrow';
 import { DifyClient } from '../../lib/dify/client';
-import { DifyChatResponse, DifyWorkflowResponse, DifyConversationsResponse, DifyMessagesResponse, DifyFileUploadResponse, DifyDataset, DifyDocument, DifyChatRequest, DifyWorkflowRequest, DifyFile } from '../../lib/dify/types';
+import {
+  DifyChatResponse,
+  DifyWorkflowResponse,
+  DifyConversationsResponse,
+  DifyMessagesResponse,
+  DifyFileUploadResponse,
+  DifyDataset,
+  DifyDocument,
+  DifyChatRequest,
+  DifyWorkflowRequest,
+  DifyFile,
+  DifyConversationVariablesResponse,
+  DifyWorkflowLogsResponse,
+  DifySpeechToTextResponse,
+  DifyFileUploadWorkflowResponse,
+  DifyAnnotation,
+  DifyAnnotationsResponse,
+  DifyAnnotationReplyStatusResponse,
+  DifyAppFeedbacksResponse,
+  DifyRetrieveResponse,
+  DifyDocumentDetail,
+  DifyBatchEmbeddingStatusResponse,
+  DifySegment,
+  DifySegmentsResponse,
+  DifyChunk,
+  DifyChunksResponse,
+  DifyTag,
+  DifyTagsResponse,
+  DifyEmbeddingModelsResponse,
+} from '../../lib/dify/types';
 import {
   enviarMensagemSchema,
   executarWorkflowSchema,
@@ -263,6 +292,20 @@ export class DifyService {
     }
   }
 
+  async completarStream(params: { inputs: Record<string, unknown> }, user: string = 'system'): Promise<Result<ReadableStream<Uint8Array>, Error>> {
+    try {
+      const stream = await this.client.completionMessagesStream({
+        inputs: params.inputs,
+        user,
+        response_mode: 'streaming',
+      });
+      return ok(stream);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao stream completion Dify: ${message}`));
+    }
+  }
+
   async uploadArquivo(file: File, user: string): Promise<Result<DifyFileUploadResponse, Error>> {
     try {
       const result = await this.client.uploadFile(file, user);
@@ -395,6 +438,666 @@ export class DifyService {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       return err(new Error(`Erro ao criar documento Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Conversations Extended
+  // =========================================================================
+
+  async renomearConversa(
+    params: { conversationId: string; nome?: string; autoGenerate?: boolean },
+    user: string
+  ): Promise<Result<{ result: string }, Error>> {
+    try {
+      const result = await this.client.renameConversation(params.conversationId, {
+        name: params.nome || '',
+        auto_generate: params.autoGenerate ?? false,
+        user,
+      });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao renomear conversa Dify: ${message}`));
+    }
+  }
+
+  async deletarConversa(conversationId: string, user: string): Promise<Result<void, Error>> {
+    try {
+      await this.client.deleteConversation(conversationId, user);
+      return ok(undefined);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao deletar conversa Dify: ${message}`));
+    }
+  }
+
+  async obterMensagensConversa(
+    params: { conversationId: string; limite?: number; firstId?: string },
+    user: string = 'system'
+  ): Promise<Result<{ mensagens: DifyMessagesResponse['data']; temMais: boolean }, Error>> {
+    try {
+      const result = await this.client.getConversationMessages(params.conversationId, {
+        user,
+        limit: params.limite,
+        first_id: params.firstId,
+      });
+      return ok({
+        mensagens: result.data,
+        temMais: result.has_more,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao obter mensagens da conversa Dify: ${message}`));
+    }
+  }
+
+  async obterVariaveisConversa(
+    conversationId: string,
+    user: string = 'system'
+  ): Promise<Result<DifyConversationVariablesResponse, Error>> {
+    try {
+      const result = await this.client.getConversationVariables(conversationId, { user });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao obter variáveis da conversa Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Completion Stop
+  // =========================================================================
+
+  async pararCompletion(taskId: string, user: string = 'system'): Promise<Result<{ result: string }, Error>> {
+    try {
+      const result = await this.client.stopCompletionTask(taskId, user);
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao parar completion Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Workflow Logs
+  // =========================================================================
+
+  async listarLogsWorkflow(
+    params: { keyword?: string; status?: 'succeeded' | 'failed' | 'stopped' | 'running'; page?: number; limit?: number } = {}
+  ): Promise<Result<{ logs: DifyWorkflowLogsResponse['data']; temMais: boolean; total: number }, Error>> {
+    try {
+      const result = await this.client.getWorkflowLogs(params);
+      return ok({
+        logs: result.data,
+        temMais: result.has_more,
+        total: result.total,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao listar logs de workflow Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Audio API
+  // =========================================================================
+
+  async transcreverAudio(file: File, user: string): Promise<Result<{ texto: string }, Error>> {
+    try {
+      const result = await this.client.speechToText(file, user);
+      return ok({ texto: result.text });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao transcrever áudio Dify: ${message}`));
+    }
+  }
+
+  async sintetizarAudio(
+    params: { texto?: string; messageId?: string; streaming?: boolean },
+    user: string = 'system'
+  ): Promise<Result<ArrayBuffer, Error>> {
+    try {
+      const result = await this.client.textToAudio({
+        text: params.texto,
+        message_id: params.messageId,
+        user,
+        streaming: params.streaming,
+      });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao sintetizar áudio Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Files Extended
+  // =========================================================================
+
+  async previewArquivo(fileId: string): Promise<Result<ArrayBuffer, Error>> {
+    try {
+      const result = await this.client.getFilePreview(fileId);
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao obter preview de arquivo Dify: ${message}`));
+    }
+  }
+
+  async uploadArquivoWorkflow(file: File, user: string): Promise<Result<DifyFileUploadWorkflowResponse, Error>> {
+    try {
+      const result = await this.client.uploadFileWorkflow(file, user);
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao fazer upload de arquivo para workflow Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Annotations API
+  // =========================================================================
+
+  async listarAnotacoes(
+    page = 1,
+    limit = 20
+  ): Promise<Result<{ anotacoes: DifyAnnotationsResponse['data']; temMais: boolean; total: number }, Error>> {
+    try {
+      const result = await this.client.listAnnotations({ page, limit });
+      return ok({
+        anotacoes: result.data,
+        temMais: result.has_more,
+        total: result.total,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao listar anotações Dify: ${message}`));
+    }
+  }
+
+  async criarAnotacao(params: { pergunta: string; resposta: string }): Promise<Result<DifyAnnotation, Error>> {
+    try {
+      const result = await this.client.createAnnotation({
+        question: params.pergunta,
+        answer: params.resposta,
+      });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao criar anotação Dify: ${message}`));
+    }
+  }
+
+  async atualizarAnotacao(
+    anotacaoId: string,
+    params: { pergunta: string; resposta: string }
+  ): Promise<Result<DifyAnnotation, Error>> {
+    try {
+      const result = await this.client.updateAnnotation(anotacaoId, {
+        question: params.pergunta,
+        answer: params.resposta,
+      });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao atualizar anotação Dify: ${message}`));
+    }
+  }
+
+  async deletarAnotacao(anotacaoId: string): Promise<Result<void, Error>> {
+    try {
+      await this.client.deleteAnnotation(anotacaoId);
+      return ok(undefined);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao deletar anotação Dify: ${message}`));
+    }
+  }
+
+  async habilitarRespostaAnotacao(
+    params: { embeddingProviderName: string; embeddingModelName: string; scoreThreshold: number }
+  ): Promise<Result<{ jobId: string; jobStatus: string }, Error>> {
+    try {
+      const result = await this.client.enableAnnotationReply({
+        embedding_provider_name: params.embeddingProviderName,
+        embedding_model_name: params.embeddingModelName,
+        score_threshold: params.scoreThreshold,
+      });
+      return ok({ jobId: result.job_id, jobStatus: result.job_status });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao habilitar resposta por anotação Dify: ${message}`));
+    }
+  }
+
+  async desabilitarRespostaAnotacao(): Promise<Result<{ jobId: string; jobStatus: string }, Error>> {
+    try {
+      const result = await this.client.disableAnnotationReply();
+      return ok({ jobId: result.job_id, jobStatus: result.job_status });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao desabilitar resposta por anotação Dify: ${message}`));
+    }
+  }
+
+  async obterStatusRespostaAnotacao(
+    action: 'enable' | 'disable',
+    jobId: string
+  ): Promise<Result<DifyAnnotationReplyStatusResponse, Error>> {
+    try {
+      const result = await this.client.getAnnotationReplyStatus(action, jobId);
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao obter status de resposta por anotação Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // App Feedbacks
+  // =========================================================================
+
+  async listarFeedbacksApp(
+    page = 1,
+    limit = 20
+  ): Promise<Result<{ feedbacks: DifyAppFeedbacksResponse['data']; temMais: boolean; total: number }, Error>> {
+    try {
+      const result = await this.client.getAppFeedbacks({ page, limit });
+      return ok({
+        feedbacks: result.data,
+        temMais: result.has_more,
+        total: result.total,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao listar feedbacks do app Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Knowledge Base Retrieve
+  // =========================================================================
+
+  async buscarDataset(
+    params: { datasetId: string; query: string; searchMethod?: string; topK?: number; scoreThreshold?: number }
+  ): Promise<Result<DifyRetrieveResponse, Error>> {
+    try {
+      const result = await this.client.retrieveDataset(params.datasetId, {
+        query: params.query,
+        retrieval_model: {
+          search_method: (params.searchMethod as 'keyword_search' | 'semantic_search' | 'full_text_search' | 'hybrid_search') || 'semantic_search',
+          top_k: params.topK || 5,
+          score_threshold_enabled: params.scoreThreshold !== undefined,
+          score_threshold: params.scoreThreshold,
+        },
+      });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao buscar no dataset Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Documents Extended
+  // =========================================================================
+
+  async criarDocumentoPorArquivo(
+    datasetId: string,
+    file: File,
+    processRule?: Record<string, unknown>
+  ): Promise<Result<{ document: DifyDocument; batch: string }, Error>> {
+    try {
+      const result = await this.client.createDocumentByFile(datasetId, file, {
+        indexing_technique: 'high_quality',
+        process_rule: processRule || { mode: 'automatic' },
+      });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao criar documento por arquivo Dify: ${message}`));
+    }
+  }
+
+  async obterDetalheDocumento(documentId: string): Promise<Result<DifyDocumentDetail, Error>> {
+    try {
+      const result = await this.client.getDocumentDetail(documentId);
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao obter detalhe do documento Dify: ${message}`));
+    }
+  }
+
+  async atualizarDocumentoTexto(
+    documentId: string,
+    params: { nome?: string; texto?: string }
+  ): Promise<Result<{ document: DifyDocument; batch: string }, Error>> {
+    try {
+      const result = await this.client.updateDocumentText(documentId, {
+        name: params.nome,
+        text: params.texto,
+      });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao atualizar documento Dify: ${message}`));
+    }
+  }
+
+  async atualizarDocumentoArquivo(
+    documentId: string,
+    file: File,
+    processRule?: Record<string, unknown>
+  ): Promise<Result<{ document: DifyDocument; batch: string }, Error>> {
+    try {
+      const result = await this.client.updateDocumentFile(documentId, file, {
+        process_rule: processRule,
+      });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao atualizar documento por arquivo Dify: ${message}`));
+    }
+  }
+
+  async obterStatusEmbedding(
+    datasetId: string,
+    batch: string
+  ): Promise<Result<DifyBatchEmbeddingStatusResponse, Error>> {
+    try {
+      const result = await this.client.getBatchEmbeddingStatus(datasetId, batch);
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao obter status de embedding Dify: ${message}`));
+    }
+  }
+
+  async deletarDocumento(
+    datasetId: string,
+    documentId: string
+  ): Promise<Result<{ result: string }, Error>> {
+    try {
+      const result = await this.client.deleteDocument(datasetId, documentId);
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao deletar documento Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Segments API
+  // =========================================================================
+
+  async listarSegmentos(
+    datasetId: string,
+    documentId: string,
+    params: { keyword?: string; status?: string } = {}
+  ): Promise<Result<{ segmentos: DifySegmentsResponse['data']; temMais: boolean; total: number; docForm: string }, Error>> {
+    try {
+      const result = await this.client.listSegments(datasetId, documentId, params);
+      return ok({
+        segmentos: result.data,
+        temMais: result.has_more,
+        total: result.total,
+        docForm: result.doc_form,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao listar segmentos Dify: ${message}`));
+    }
+  }
+
+  async criarSegmentos(
+    datasetId: string,
+    documentId: string,
+    segmentos: Array<{ content: string; answer?: string; keywords?: string[] }>
+  ): Promise<Result<{ data: DifySegment[]; docForm: string }, Error>> {
+    try {
+      const result = await this.client.createSegments(datasetId, documentId, { segments: segmentos });
+      return ok({ data: result.data, docForm: result.doc_form });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao criar segmentos Dify: ${message}`));
+    }
+  }
+
+  async atualizarSegmento(
+    datasetId: string,
+    documentId: string,
+    segmentId: string,
+    params: { content: string; answer?: string; keywords?: string[]; enabled?: boolean }
+  ): Promise<Result<{ data: DifySegment; docForm: string }, Error>> {
+    try {
+      const result = await this.client.updateSegment(datasetId, documentId, segmentId, {
+        segment: params,
+      });
+      return ok({ data: result.data, docForm: result.doc_form });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao atualizar segmento Dify: ${message}`));
+    }
+  }
+
+  async deletarSegmento(
+    datasetId: string,
+    documentId: string,
+    segmentId: string
+  ): Promise<Result<{ result: string }, Error>> {
+    try {
+      const result = await this.client.deleteSegment(datasetId, documentId, segmentId);
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao deletar segmento Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Chunks API
+  // =========================================================================
+
+  async obterDetalheChunk(chunkId: string): Promise<Result<DifyChunk, Error>> {
+    try {
+      const result = await this.client.getChunkDetail(chunkId);
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao obter detalhe do chunk Dify: ${message}`));
+    }
+  }
+
+  async atualizarChunk(chunkId: string, content: string): Promise<Result<DifyChunk, Error>> {
+    try {
+      const result = await this.client.updateChunk(chunkId, { content });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao atualizar chunk Dify: ${message}`));
+    }
+  }
+
+  async deletarChunk(chunkId: string): Promise<Result<{ result: string }, Error>> {
+    try {
+      const result = await this.client.deleteChunk(chunkId);
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao deletar chunk Dify: ${message}`));
+    }
+  }
+
+  async criarChunkFilho(chunkId: string, content: string): Promise<Result<DifyChunk, Error>> {
+    try {
+      const result = await this.client.createChildChunk(chunkId, { content });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao criar chunk filho Dify: ${message}`));
+    }
+  }
+
+  async listarChunksFilhos(
+    chunkId: string,
+    page = 1,
+    limit = 20
+  ): Promise<Result<{ chunks: DifyChunksResponse['data']; temMais: boolean; total: number }, Error>> {
+    try {
+      const result = await this.client.listChildChunks(chunkId, { page, limit });
+      return ok({
+        chunks: result.data,
+        temMais: result.has_more,
+        total: result.total,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao listar chunks filhos Dify: ${message}`));
+    }
+  }
+
+  async atualizarChunkFilho(
+    parentChunkId: string,
+    childChunkId: string,
+    content: string
+  ): Promise<Result<DifyChunk, Error>> {
+    try {
+      const result = await this.client.updateChildChunk(parentChunkId, childChunkId, { content });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao atualizar chunk filho Dify: ${message}`));
+    }
+  }
+
+  async deletarChunkFilho(
+    parentChunkId: string,
+    childChunkId: string
+  ): Promise<Result<{ result: string }, Error>> {
+    try {
+      const result = await this.client.deleteChildChunk(parentChunkId, childChunkId);
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao deletar chunk filho Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Tags API
+  // =========================================================================
+
+  async listarTags(tipo?: string): Promise<Result<{ tags: DifyTagsResponse['data']; temMais: boolean; total: number }, Error>> {
+    try {
+      const result = await this.client.listTags({ type: tipo });
+      return ok({
+        tags: result.data,
+        temMais: result.has_more,
+        total: result.total,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao listar tags Dify: ${message}`));
+    }
+  }
+
+  async criarTag(params: { nome: string; tipo?: string }): Promise<Result<DifyTag, Error>> {
+    try {
+      const result = await this.client.createTag({ name: params.nome, type: params.tipo });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao criar tag Dify: ${message}`));
+    }
+  }
+
+  async atualizarTag(tagId: string, nome: string): Promise<Result<DifyTag, Error>> {
+    try {
+      const result = await this.client.updateTag(tagId, { name: nome });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao atualizar tag Dify: ${message}`));
+    }
+  }
+
+  async deletarTag(tagId: string): Promise<Result<void, Error>> {
+    try {
+      await this.client.deleteTag(tagId);
+      return ok(undefined);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao deletar tag Dify: ${message}`));
+    }
+  }
+
+  async vincularTagDataset(datasetId: string, tagIds: string[]): Promise<Result<void, Error>> {
+    try {
+      await this.client.bindDatasetTag(datasetId, { tag_ids: tagIds });
+      return ok(undefined);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao vincular tag ao dataset Dify: ${message}`));
+    }
+  }
+
+  async listarTagsDataset(datasetId: string): Promise<Result<{ tags: DifyTagsResponse['data']; temMais: boolean; total: number }, Error>> {
+    try {
+      const result = await this.client.listDatasetTags(datasetId);
+      return ok({
+        tags: result.data,
+        temMais: result.has_more,
+        total: result.total,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao listar tags do dataset Dify: ${message}`));
+    }
+  }
+
+  async desvincularTagDataset(datasetId: string, tagId: string): Promise<Result<void, Error>> {
+    try {
+      await this.client.unbindDatasetTag(datasetId, tagId);
+      return ok(undefined);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao desvincular tag do dataset Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Models API
+  // =========================================================================
+
+  async listarModelosEmbedding(): Promise<Result<DifyEmbeddingModelsResponse, Error>> {
+    try {
+      const result = await this.client.listEmbeddingModels();
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao listar modelos de embedding Dify: ${message}`));
+    }
+  }
+
+  // =========================================================================
+  // Batch Operations
+  // =========================================================================
+
+  async atualizarStatusDocumentos(
+    documentIds: string[],
+    habilitado: boolean
+  ): Promise<Result<{ result: string }, Error>> {
+    try {
+      const result = await this.client.batchUpdateDocumentStatus({
+        document_ids: documentIds,
+        enabled: habilitado,
+      });
+      return ok(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      return err(new Error(`Erro ao atualizar status de documentos Dify: ${message}`));
     }
   }
 }

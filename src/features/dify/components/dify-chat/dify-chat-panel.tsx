@@ -15,6 +15,7 @@ import { useDifyChat } from '../../hooks/use-dify-chat';
 import { DifyMessage } from './dify-message';
 
 interface DifyChatPanelProps {
+  appId?: string;
   conversationId?: string;
   inputs?: Record<string, unknown>;
   placeholder?: string;
@@ -22,6 +23,7 @@ interface DifyChatPanelProps {
 }
 
 export function DifyChatPanel({
+  appId,
   conversationId,
   inputs,
   placeholder = 'Digite sua mensagem...',
@@ -40,7 +42,7 @@ export function DifyChatPanel({
     stopGeneration,
     clearChat,
     sendFeedback,
-  } = useDifyChat({ conversationId, inputs });
+  } = useDifyChat({ appId, conversationId, inputs });
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {

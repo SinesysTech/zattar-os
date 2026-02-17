@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createDifyServiceForUser } from '@/features/dify/factory';
+import { createDifyServiceForUser, createDifyServiceForApp } from '@/features/dify/factory';
 import { executarWorkflowSchema } from '@/features/dify/domain';
 
 export const runtime = 'nodejs';
@@ -29,8 +29,11 @@ export async function POST(req: NextRequest) {
 
         const { user } = payload;
         const userId = user || 'anonymous-user';
+        const appId = json.app_id as string | undefined;
 
-        const service = await createDifyServiceForUser(userId);
+        const service = appId
+            ? await createDifyServiceForApp(appId)
+            : await createDifyServiceForUser(userId);
 
         const result = await service.executarWorkflowStream({
             inputs: payload.inputs,

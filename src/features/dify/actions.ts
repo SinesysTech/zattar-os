@@ -3,9 +3,23 @@
 import { difyRepository } from './repository';
 import { DifyService } from './service';
 import { revalidatePath } from 'next/cache';
+import { authenticateRequest } from '@/lib/auth/session';
+import {
+    criarAssistenteDify,
+    deletarAssistentePorDifyApp,
+    sincronizarAssistenteDify,
+} from '@/app/app/assistentes/feature/service';
 
 export async function listDifyAppsAction() {
     const result = await difyRepository.listDifyApps();
+    if (result.isErr()) {
+        throw new Error(result.error.message);
+    }
+    return result.value;
+}
+
+export async function getDifyAppAction(id: string) {
+    const result = await difyRepository.getDifyApp(id);
     if (result.isErr()) {
         throw new Error(result.error.message);
     }
@@ -17,8 +31,29 @@ export async function createDifyAppAction(data: { name: string; api_url: string;
     if (result.isErr()) {
         throw new Error(result.error.message);
     }
+
+    const difyApp = result.value;
+
+    // Auto-criar assistente vinculado
+    try {
+        const user = await authenticateRequest();
+        if (user) {
+            await criarAssistenteDify(
+                {
+                    nome: difyApp.name,
+                    descricao: `Assistente ${difyApp.app_type} via Dify`,
+                    dify_app_id: difyApp.id,
+                },
+                user.id
+            );
+        }
+    } catch (error) {
+        console.error('[Dify] Erro ao auto-criar assistente:', error);
+    }
+
     revalidatePath('/app/configuracoes');
-    return { success: true, data: result.value };
+    revalidatePath('/app/assistentes');
+    return { success: true, data: difyApp };
 }
 
 export async function updateDifyAppAction(id: string, data: Partial<{ name: string; api_url: string; api_key: string; app_type: string; is_active: boolean }>) {
@@ -26,28 +61,46 @@ export async function updateDifyAppAction(id: string, data: Partial<{ name: stri
     if (result.isErr()) {
         throw new Error(result.error.message);
     }
+
+    // Sincronizar assistente vinculado
+    try {
+        await sincronizarAssistenteDify(id, {
+            nome: data.name,
+            ativo: data.is_active,
+        });
+    } catch (error) {
+        console.error('[Dify] Erro ao sincronizar assistente:', error);
+    }
+
     revalidatePath('/app/configuracoes');
+    revalidatePath('/app/assistentes');
     return { success: true };
 }
 
 export async function deleteDifyAppAction(id: string) {
+    // Deletar assistente vinculado primeiro
+    try {
+        await deletarAssistentePorDifyApp(id);
+    } catch (error) {
+        console.error('[Dify] Erro ao deletar assistente vinculado:', error);
+    }
+
     const result = await difyRepository.deleteDifyApp(id);
     if (result.isErr()) {
         throw new Error(result.error.message);
     }
+
     revalidatePath('/app/configuracoes');
+    revalidatePath('/app/assistentes');
     return { success: true };
 }
 
 export async function checkDifyAppConnectionAction(apiUrl: string, apiKey: string) {
     try {
-        // Cria serviço temporário com as credenciais passadas
         const serviceResult = DifyService.create(apiKey, apiUrl);
         if (serviceResult.isErr()) throw serviceResult.error;
 
         const service = serviceResult.value;
-
-        // Tenta obter info da aplicação
         const infoResult = await service.obterInfoApp();
 
         if (infoResult.isErr()) {
@@ -70,11 +123,9 @@ export async function getDifyConfigAction() {
 }
 
 export async function saveDifyConfigAction(data: { api_url: string; api_key: string }) {
-    // Busca app ativo ou cria um novo
     const activeResult = await difyRepository.getActiveDifyApp();
-    
+
     if (activeResult.isOk() && activeResult.value) {
-        // Atualiza existente
         const updateResult = await difyRepository.updateDifyApp(activeResult.value.id as string, {
             api_url: data.api_url,
             api_key: data.api_key,
@@ -83,7 +134,6 @@ export async function saveDifyConfigAction(data: { api_url: string; api_key: str
             throw new Error(updateResult.error.message);
         }
     } else {
-        // Cria novo
         const createResult = await difyRepository.createDifyApp({
             name: 'Dify App',
             api_url: data.api_url,
@@ -94,7 +144,7 @@ export async function saveDifyConfigAction(data: { api_url: string; api_key: str
             throw new Error(createResult.error.message);
         }
     }
-    
+
     revalidatePath('/app/configuracoes');
     return { success: true };
 }
@@ -104,7 +154,7 @@ export async function checkDifyConnectionAction() {
     if (configResult.isErr() || !configResult.value) {
         return { success: false, message: 'Configuração não encontrada' };
     }
-    
+
     const config = configResult.value;
     return checkDifyAppConnectionAction(config.api_url as string, config.api_key as string);
 }

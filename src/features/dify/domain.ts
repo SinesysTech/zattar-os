@@ -134,6 +134,123 @@ export interface DifyExecucaoWorkflow {
   total_steps?: number;
 }
 
+// --- Schemas de Conversas ---
+
+export const renomearConversaSchema = z.object({
+  conversationId: z.string().min(1, 'ID da conversa é obrigatório'),
+  nome: z.string().optional(),
+  autoGenerate: z.boolean().optional().default(false),
+});
+
+export const deletarConversaSchema = z.object({
+  conversationId: z.string().min(1, 'ID da conversa é obrigatório'),
+});
+
+// --- Schemas de Anotações ---
+
+export const criarAnotacaoSchema = z.object({
+  pergunta: z.string().min(1, 'Pergunta é obrigatória'),
+  resposta: z.string().min(1, 'Resposta é obrigatória'),
+});
+
+export const atualizarAnotacaoSchema = z.object({
+  anotacaoId: z.string().min(1, 'ID da anotação é obrigatório'),
+  pergunta: z.string().min(1, 'Pergunta é obrigatória'),
+  resposta: z.string().min(1, 'Resposta é obrigatória'),
+});
+
+export const deletarAnotacaoSchema = z.object({
+  anotacaoId: z.string().min(1, 'ID da anotação é obrigatório'),
+});
+
+export const habilitarRespostaAnotacaoSchema = z.object({
+  embeddingProviderName: z.string().min(1),
+  embeddingModelName: z.string().min(1),
+  scoreThreshold: z.number().min(0).max(1).default(0.7),
+});
+
+// --- Schemas de Knowledge Base ---
+
+export const buscarDatasetSchema = z.object({
+  datasetId: z.string().min(1, 'ID do dataset é obrigatório'),
+  query: z.string().min(1, 'Query de busca é obrigatória'),
+  searchMethod: z
+    .enum(['keyword_search', 'semantic_search', 'full_text_search', 'hybrid_search'])
+    .optional()
+    .default('semantic_search'),
+  topK: z.number().int().min(1).max(100).optional().default(5),
+  scoreThreshold: z.number().min(0).max(1).optional(),
+});
+
+export const atualizarDocumentoTextoSchema = z.object({
+  documentId: z.string().min(1, 'ID do documento é obrigatório'),
+  nome: z.string().optional(),
+  texto: z.string().optional(),
+});
+
+export const atualizarStatusDocumentosSchema = z.object({
+  documentIds: z.array(z.string()).min(1, 'Ao menos um documento é obrigatório'),
+  habilitado: z.boolean(),
+});
+
+// --- Schemas de Segmentos ---
+
+export const criarSegmentosSchema = z.object({
+  datasetId: z.string().min(1),
+  documentId: z.string().min(1),
+  segmentos: z
+    .array(
+      z.object({
+        content: z.string().min(1),
+        answer: z.string().optional(),
+        keywords: z.array(z.string()).optional(),
+      })
+    )
+    .min(1),
+});
+
+export const atualizarSegmentoSchema = z.object({
+  datasetId: z.string().min(1),
+  documentId: z.string().min(1),
+  segmentId: z.string().min(1),
+  content: z.string().min(1),
+  answer: z.string().optional(),
+  keywords: z.array(z.string()).optional(),
+  enabled: z.boolean().optional(),
+});
+
+export const deletarSegmentoSchema = z.object({
+  datasetId: z.string().min(1),
+  documentId: z.string().min(1),
+  segmentId: z.string().min(1),
+});
+
+// --- Schemas de Tags ---
+
+export const criarTagSchema = z.object({
+  nome: z.string().min(1, 'Nome da tag é obrigatório'),
+  tipo: z.string().optional(),
+});
+
+export const atualizarTagSchema = z.object({
+  tagId: z.string().min(1),
+  nome: z.string().min(1),
+});
+
+export const deletarTagSchema = z.object({
+  tagId: z.string().min(1),
+});
+
+export const vincularTagDatasetSchema = z.object({
+  datasetId: z.string().min(1),
+  tagIds: z.array(z.string()).min(1),
+});
+
+export const desvincularTagDatasetSchema = z.object({
+  datasetId: z.string().min(1),
+  tagId: z.string().min(1),
+});
+
 // --- Labels ---
 
 export const STATUS_EXECUCAO_LABELS: Record<StatusExecucaoDify, string> = {

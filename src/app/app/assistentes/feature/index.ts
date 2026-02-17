@@ -1,12 +1,15 @@
 // Types
-export type { Assistente, AssistentesParams } from "./domain";
+export type { Assistente, AssistentesParams, TipoAssistente } from "./domain";
 
 // Domain
 export {
   assistenteSchema,
   criarAssistenteSchema,
+  criarAssistenteDifySchema,
   atualizarAssistenteSchema,
   STATUS_LABELS,
+  TIPO_ASSISTENTE,
+  TIPO_ASSISTENTE_LABELS,
 } from "./domain";
 
 // Utils

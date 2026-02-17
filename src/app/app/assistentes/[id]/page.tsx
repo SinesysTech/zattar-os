@@ -1,10 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
+import { Metadata } from 'next';
 import { actionBuscarAssistente, requireAuth } from '@/app/app/assistentes/feature';
-// import { checkMultiplePermissions } from '@/lib/auth/authorization';
+import { getDifyAppAction } from '@/features/dify/actions';
+import { AssistenteNativoView } from './components/assistente-nativo-view';
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id: idStr } = await params;
   const id = parseInt(idStr);
   const result = await actionBuscarAssistente(id);
@@ -41,6 +43,43 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
 
   const assistente = result.data;
 
+  // Renderização nativa para assistentes Dify
+  if (assistente.tipo === 'dify' && assistente.dify_app_id) {
+    const difyApp = await getDifyAppAction(assistente.dify_app_id);
+
+    if (!difyApp) {
+      return (
+        <div className="flex flex-col items-center justify-center p-8 space-y-4">
+          <h2 className="text-xl font-semibold text-red-500">App Dify não encontrado</h2>
+          <p className="text-sm text-muted-foreground">
+            O app Dify vinculado a este assistente foi removido.
+          </p>
+          <Button asChild variant="outline">
+            <Link href="/assistentes">Voltar</Link>
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex-1 p-4 md:p-6 h-full flex flex-col">
+        <div className="flex items-center gap-2 mb-2">
+          <Button asChild variant="ghost" size="icon">
+            <Link href="/assistentes">
+              <ChevronLeft className="h-4 w-4" />
+            </Link>
+          </Button>
+          <span className="text-sm font-medium text-muted-foreground">{assistente.nome}</span>
+        </div>
+
+        <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0">
+          <AssistenteNativoView appId={difyApp.id} appType={difyApp.app_type} />
+        </div>
+      </div>
+    );
+  }
+
+  // Renderização iframe (comportamento original)
   return (
     <div className="flex-1 p-4 md:p-6 h-full flex flex-col">
       <div className="flex items-center gap-2 mb-2">
@@ -55,7 +94,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
       <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0">
         <div
           className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
-          dangerouslySetInnerHTML={{ __html: assistente.iframe_code }}
+          dangerouslySetInnerHTML={{ __html: assistente.iframe_code || '' }}
         />
       </div>
     </div>

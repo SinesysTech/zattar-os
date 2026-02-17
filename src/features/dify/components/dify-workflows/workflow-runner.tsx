@@ -11,6 +11,7 @@ import { useDifyWorkflow } from '../../hooks/use-dify-workflow';
 import { STATUS_EXECUCAO_LABELS, StatusExecucaoDify } from '../../domain';
 
 interface WorkflowRunnerProps {
+  appId?: string;
   title?: string;
   description?: string;
   defaultInputs?: Record<string, unknown>;
@@ -18,6 +19,7 @@ interface WorkflowRunnerProps {
 }
 
 export function WorkflowRunner({
+  appId,
   title = 'Executar Workflow',
   description,
   defaultInputs,
@@ -27,7 +29,7 @@ export function WorkflowRunner({
     defaultInputs ? JSON.stringify(defaultInputs, null, 2) : '{}'
   );
 
-  const { result, isRunning, error, runWorkflow, reset, state } = useDifyWorkflow();
+  const { result, isRunning, error, runWorkflow, reset, state } = useDifyWorkflow({ appId });
 
   const handleRun = async () => {
     try {
@@ -61,7 +63,7 @@ export function WorkflowRunner({
           <Textarea
             value={inputJson}
             onChange={(e) => setInputJson(e.target.value)}
-            className="font-mono text-xs min-h-[100px]"
+            className="font-mono text-xs min-h-25"
             disabled={isRunning}
           />
         </div>
@@ -119,7 +121,7 @@ export function WorkflowRunner({
             {result && Object.keys(result).length > 0 && (
               <div>
                 <label className="text-sm font-medium mb-1.5 block">Resultado</label>
-                <pre className="rounded-md bg-muted p-3 text-xs font-mono overflow-auto max-h-[300px]">
+                <pre className="rounded-md bg-muted p-3 text-xs font-mono overflow-auto max-h-75">
                   {JSON.stringify(result, null, 2)}
                 </pre>
               </div>

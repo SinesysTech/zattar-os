@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { AssistentesListWrapper, actionListarAssistentes, requireAuth } from '@/app/app/assistentes/feature';
 import { checkMultiplePermissions } from '@/lib/auth/authorization';
 import { PageShell } from '@/components/shared/page-shell';
+import { listDifyAppsAction } from '@/features/dify/actions';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -34,11 +35,23 @@ export default async function AssistentesPage() {
 
   const initialData = result.data;
 
+  // Carregar mapa de tipos dos apps Dify para badges nos cards
+  let difyAppTypes: Record<string, string> = {};
+  try {
+    const difyApps = await listDifyAppsAction();
+    difyAppTypes = Object.fromEntries(
+      difyApps.map(app => [app.id, app.app_type])
+    );
+  } catch {
+    // Silently ignore - badges won't show but list still works
+  }
+
   return (
     <PageShell>
       <Suspense fallback={<div>Carregando...</div>}>
         <AssistentesListWrapper
           initialData={initialData}
+          difyAppTypes={difyAppTypes}
           permissions={{
             canCreate,
             canEdit,

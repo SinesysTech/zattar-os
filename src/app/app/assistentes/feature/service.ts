@@ -1,12 +1,16 @@
 import {
   findAll,
   findById,
+  findByDifyAppId,
   create,
+  createDify,
   update,
   deleteAssistente as deleteRepo,
+  deleteByDifyAppId,
 } from "./repository";
 import {
   criarAssistenteSchema,
+  criarAssistenteDifySchema,
   atualizarAssistenteSchema,
   Assistente,
   AssistentesParams,
@@ -31,6 +35,12 @@ export async function buscarAssistentePorId(
   return findById(id);
 }
 
+export async function buscarAssistentePorDifyAppId(
+  difyAppId: string
+): Promise<Assistente | null> {
+  return findByDifyAppId(difyAppId);
+}
+
 export async function criarAssistente(
   data: unknown,
   usuarioId: number
@@ -51,8 +61,61 @@ export async function criarAssistente(
   }
 
   // 3. Persistir
-  logger.log("Criando assistente", { usuarioId, nome: input.nome });
+  logger.log("Criando assistente iframe", { usuarioId, nome: input.nome });
   return create({ ...input, criado_por: usuarioId });
+}
+
+/**
+ * Cria um assistente nativo vinculado a um app Dify.
+ * Chamado automaticamente quando um app Dify é criado em Configurações.
+ */
+export async function criarAssistenteDify(
+  data: { nome: string; descricao?: string | null; dify_app_id: string },
+  usuarioId: number
+): Promise<Assistente> {
+  const parsed = criarAssistenteDifySchema.safeParse(data);
+  if (!parsed.success) {
+    throw new Error(`Dados inválidos para assistente Dify: ${parsed.error.message}`);
+  }
+
+  // Verificar se já existe um assistente para este app
+  const existente = await findByDifyAppId(data.dify_app_id);
+  if (existente) {
+    logger.log("Assistente Dify já existe, atualizando", { dify_app_id: data.dify_app_id });
+    return update(existente.id, { nome: data.nome, descricao: data.descricao });
+  }
+
+  logger.log("Criando assistente Dify", { usuarioId, nome: data.nome, dify_app_id: data.dify_app_id });
+  return createDify({ ...parsed.data, criado_por: usuarioId });
+}
+
+/**
+ * Remove o assistente vinculado a um app Dify.
+ * Chamado automaticamente quando um app Dify é deletado em Configurações.
+ */
+export async function deletarAssistentePorDifyApp(difyAppId: string): Promise<boolean> {
+  logger.log("Deletando assistente vinculado ao Dify app", { dify_app_id: difyAppId });
+  return deleteByDifyAppId(difyAppId);
+}
+
+/**
+ * Sincroniza nome/status do assistente quando o app Dify é atualizado.
+ */
+export async function sincronizarAssistenteDify(
+  difyAppId: string,
+  data: { nome?: string; ativo?: boolean }
+): Promise<Assistente | null> {
+  const assistente = await findByDifyAppId(difyAppId);
+  if (!assistente) return null;
+
+  const updateData: AtualizarAssistenteInput = {};
+  if (data.nome !== undefined) updateData.nome = data.nome;
+  if (data.ativo !== undefined) updateData.ativo = data.ativo;
+
+  if (Object.keys(updateData).length === 0) return assistente;
+
+  logger.log("Sincronizando assistente Dify", { dify_app_id: difyAppId, ...updateData });
+  return update(assistente.id, updateData);
 }
 
 export async function atualizarAssistente(
@@ -73,8 +136,8 @@ export async function atualizarAssistente(
 
   const input = parsed.data;
 
-  // 3. Sanitizar iframe_code se fornecido
-  if (input.iframe_code) {
+  // 3. Sanitizar iframe_code se fornecido (só para tipo iframe)
+  if (input.iframe_code && existing.tipo === "iframe") {
     try {
       input.iframe_code = sanitizarIframeCode(input.iframe_code);
     } catch (e) {
