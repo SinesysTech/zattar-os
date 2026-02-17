@@ -60,7 +60,7 @@ export const actionBuscarIntegracao = authenticatedAction(
  * Buscar configuração do 2FAuth
  */
 export const actionBuscarConfig2FAuth = authenticatedAction(
-  null,
+  z.object({}),
   async (_, { user }) => {
     const data = await service.buscarConfig2FAuth();
     return { success: true, data };

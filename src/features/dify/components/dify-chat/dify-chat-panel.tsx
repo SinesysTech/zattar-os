@@ -89,7 +89,12 @@ export function DifyChatPanel({
               key={msg.id}
               role={msg.role}
               content={msg.content}
-              sources={msg.sources}
+              sources={msg.sources?.map(s => ({
+                datasetName: s.dataset_name,
+                documentName: s.document_name,
+                content: s.content,
+                score: s.score,
+              }))}
               feedback={msg.feedback}
               isStreaming={isStreaming && msg.role === 'assistant' && msg === messages[messages.length - 1]}
               onFeedback={(rating) => sendFeedback(msg.id, rating)}
@@ -112,7 +117,7 @@ export function DifyChatPanel({
       {/* Error */}
       {error && (
         <div className="px-4 py-2 text-sm text-destructive bg-destructive/10 border-t">
-          {error}
+          {error.message}
         </div>
       )}
 

@@ -75,7 +75,7 @@ export const taskSchema = z.object({
   comments: z.array(taskCommentSchema).default([]),
   files: z.array(taskFileSchema).default([]),
   // Kanban fields
-  position: z.number().int().min(0).default(0),
+  position: z.number().int().min(0).default(0).optional(),
   quadroId: z.string().uuid().optional().nullable(), // null = quadro sistema
   // Virtual events
   source: z.string().optional().nullable(), // from eventSourceSchema

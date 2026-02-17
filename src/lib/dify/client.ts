@@ -210,9 +210,57 @@ export class DifyClient {
 
   // --- Knowledge Base ---
 
-  async listDatasets(params: { page?: number; limit?: number }): Promise<DifyDatasetsResponse> {
-    const query = new URLSearchParams(params as any).toString();
-    return this.request<DifyDatasetsResponse>(`/datasets?${query}`);
+  async listDatasets(params: { page?: number; limit?: number; keyword?: string; tag_ids?: string[] }): Promise<DifyDatasetsResponse> {
+    const query = new URLSearchParams();
+    if (params.page) query.append('page', params.page.toString());
+    if (params.limit) query.append('limit', params.limit.toString());
+    if (params.keyword) query.append('keyword', params.keyword);
+    if (params.tag_ids) params.tag_ids.forEach(id => query.append('tag_ids', id));
+    
+    return this.request<DifyDatasetsResponse>(`/datasets?${query.toString()}`);
+  }
+
+  async createDataset(params: {
+    name: string;
+    description?: string;
+    indexing_technique?: 'high_quality' | 'economy';
+    permission?: 'only_me' | 'all_team_members' | 'partial_members';
+  }): Promise<any> {
+    return this.request<any>('/datasets', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async getDataset(datasetId: string): Promise<any> {
+    return this.request<any>(`/datasets/${datasetId}`);
+  }
+
+  async updateDataset(datasetId: string, params: {
+    name?: string;
+    description?: string;
+    indexing_technique?: 'high_quality' | 'economy';
+    permission?: 'only_me' | 'all_team_members' | 'partial_members';
+  }): Promise<any> {
+    return this.request<any>(`/datasets/${datasetId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async deleteDataset(datasetId: string): Promise<void> {
+    return this.request<void>(`/datasets/${datasetId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async listDocuments(datasetId: string, params: { page?: number; limit?: number; keyword?: string }): Promise<any> {
+    const query = new URLSearchParams();
+    if (params.page) query.append('page', params.page.toString());
+    if (params.limit) query.append('limit', params.limit.toString());
+    if (params.keyword) query.append('keyword', params.keyword);
+    
+    return this.request<any>(`/datasets/${datasetId}/documents?${query.toString()}`);
   }
 
   async createDocument(datasetId: string, params: DifyDocumentCreateRequest): Promise<DifyDocument> {

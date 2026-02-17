@@ -28,6 +28,7 @@ import {
 import { DataShell, DataTableToolbar } from "@/components/shared/data-shell";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import { ViewModePopover } from "@/components/shared";
 
 import { priorities, statuses, labels } from "@/app/app/tarefas/data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
@@ -46,6 +47,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     setSelectedTarefaId,
     setTarefaSheetOpen,
     setCreateDialogOpen,
+    viewMode,
+    setViewMode,
   } = useTarefaStore();
 
   const [rowSelection, setRowSelection] = React.useState({});
@@ -138,6 +141,12 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                 </Button>
               )}
             </>
+          }
+          viewModeSlot={
+            <ViewModePopover
+              value={viewMode}
+              onValueChange={(v) => setViewMode(v as "lista" | "quadro")}
+            />
           }
         />
       }

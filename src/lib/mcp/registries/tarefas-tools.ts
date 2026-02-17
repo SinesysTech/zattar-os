@@ -4,11 +4,14 @@
  * Tools disponíveis:
  * - listar_tarefas: Lista tarefas com filtros
  * - buscar_tarefa: Busca tarefa por ID
- * - criar_tarefa: Cria nova tarefa
+ * - criar_tarefa: Cria nova tarefa (suporta quadroId)
  * - atualizar_tarefa: Atualiza tarefa existente
  * - deletar_tarefa: Remove uma tarefa
  * - agendar_reuniao_zoom: Cria tarefa de reunião Zoom com cliente
  * - listar_horarios_disponiveis: Lista horários disponíveis para reuniões
+ * - listar_quadros: Lista quadros Kanban (sistema + custom)
+ * - criar_quadro_custom: Cria quadro personalizado
+ * - excluir_quadro_custom: Exclui quadro personalizado
  */
 
 import { z } from 'zod';
@@ -25,9 +28,16 @@ const SYSTEM_AGENT_USER_ID = Number(process.env.SYSTEM_AGENT_USER_ID) || 1;
  * Registra ferramentas MCP do módulo Tarefas
  */
 export async function registerTarefasTools(): Promise<void> {
-  const { listarTarefas, buscarTarefa, criarTarefa, atualizarTarefa, removerTarefa } = await import(
-    '@/app/app/tarefas/service'
-  );
+  const { 
+    listarTarefas, 
+    buscarTarefa, 
+    criarTarefa, 
+    atualizarTarefa, 
+    removerTarefa,
+    listarQuadros,
+    criarQuadroCustom,
+    excluirQuadroCustom,
+  } = await import('@/app/app/tarefas/service');
 
   /**
    * Lista tarefas do sistema com filtros
@@ -118,6 +128,7 @@ export async function registerTarefasTools(): Promise<void> {
         .describe('Status inicial'),
       label: z.enum(['bug', 'feature', 'documentation']).default('feature').describe('Label da tarefa'),
       priority: z.enum(['low', 'medium', 'high']).default('medium').describe('Prioridade'),
+      quadroId: z.string().uuid().optional().nullable().describe('ID do quadro personalizado (opcional)'),
     }),
     handler: async (args) => {
       try {
@@ -126,6 +137,7 @@ export async function registerTarefasTools(): Promise<void> {
           status: args.status ?? 'todo',
           label: args.label ?? 'feature',
           priority: args.priority ?? 'medium',
+          quadroId: args.quadroId,
         });
 
         if (!result.success) {
@@ -353,6 +365,97 @@ export async function registerTarefasTools(): Promise<void> {
         });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar horários disponíveis');
+      }
+    },
+  });
+
+  /**
+   * Lista todos os quadros disponíveis (sistema + custom)
+   */
+  registerMcpTool({
+    name: 'listar_quadros',
+    description: 'Lista todos os quadros Kanban disponíveis (quadros do sistema e personalizados)',
+    feature: 'tarefas',
+    requiresAuth: true,
+    schema: z.object({}),
+    handler: async () => {
+      try {
+        const result = await listarQuadros(SYSTEM_AGENT_USER_ID);
+
+        if (!result.success) {
+          return errorResult(result.error.message);
+        }
+
+        return jsonResult({
+          message: `${result.data.length} quadro(s) encontrado(s)`,
+          quadros: result.data,
+        });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar quadros');
+      }
+    },
+  });
+
+  /**
+   * Cria um quadro personalizado
+   */
+  registerMcpTool({
+    name: 'criar_quadro_custom',
+    description: 'Cria um novo quadro Kanban personalizado para organizar tarefas',
+    feature: 'tarefas',
+    requiresAuth: true,
+    schema: z.object({
+      titulo: z.string().min(1).max(100).describe('Título do quadro'),
+      icone: z.string().optional().describe('Ícone do quadro (emoji ou nome do ícone)'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await criarQuadroCustom(SYSTEM_AGENT_USER_ID, {
+          titulo: args.titulo,
+          icone: args.icone,
+        });
+
+        if (!result.success) {
+          return errorResult(result.error.message);
+        }
+
+        return jsonResult({
+          message: 'Quadro criado com sucesso',
+          quadro: result.data,
+        });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao criar quadro');
+      }
+    },
+  });
+
+  /**
+   * Exclui um quadro personalizado
+   */
+  registerMcpTool({
+    name: 'excluir_quadro_custom',
+    description: 'Exclui um quadro Kanban personalizado. Não é possível excluir quadros do sistema.',
+    feature: 'tarefas',
+    requiresAuth: true,
+    schema: z.object({
+      quadroId: z.string().uuid().describe('ID do quadro a ser excluído'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await excluirQuadroCustom(SYSTEM_AGENT_USER_ID, {
+          quadroId: args.quadroId,
+        });
+
+        if (!result.success) {
+          return errorResult(result.error.message);
+        }
+
+        return jsonResult({
+          message: 'Quadro excluído com sucesso',
+          quadroId: args.quadroId,
+        });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao excluir quadro');
       }
     },
   });

@@ -289,3 +289,102 @@ export const actionRemoverAnexo = authenticatedAction(
     return result.data;
   }
 );
+
+// =============================================================================
+// ACTIONS DE QUADROS (KANBAN BOARDS)
+// =============================================================================
+
+/**
+ * Lista todos os quadros disponíveis (sistema + custom)
+ */
+export const actionListarQuadros = authenticatedAction(
+  z.object({}),
+  async (_, { user }) => {
+    const result = await service.listarQuadros(user.id);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    return result.data;
+  }
+);
+
+/**
+ * Cria um quadro personalizado
+ */
+export const actionCriarQuadroCustom = authenticatedAction(
+  z.object({
+    titulo: z.string().min(1).max(100),
+    icone: z.string().optional(),
+  }),
+  async (data, { user }) => {
+    const result = await service.criarQuadroCustom(user.id, data);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return result.data;
+  }
+);
+
+/**
+ * Exclui um quadro personalizado
+ */
+export const actionExcluirQuadroCustom = authenticatedAction(
+  z.object({
+    quadroId: z.string().uuid(),
+  }),
+  async (data, { user }) => {
+    const result = await service.excluirQuadroCustom(user.id, data);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return { success: true };
+  }
+);
+
+/**
+ * Reordena tarefas no quadro (drag-and-drop)
+ * Suporta:
+ * - Mover entre colunas (muda status)
+ * - Reordenar dentro da coluna (muda position)
+ * - Mover entre quadros (muda quadroId)
+ */
+export const actionReordenarTarefas = authenticatedAction(
+  z.object({
+    tarefaId: z.string().min(1),
+    novaPosicao: z.number().int().min(0),
+    novoStatus: z.enum(["backlog", "todo", "in progress", "done", "canceled"]).optional(),
+    quadroId: z.string().uuid().optional().nullable(),
+  }),
+  async (data, { user }) => {
+    const result = await service.reordenarTarefas(user.id, data);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return result.data;
+  }
+);
+
+/**
+ * Move uma tarefa para outro quadro
+ */
+export const actionMoverTarefaParaQuadro = authenticatedAction(
+  z.object({
+    tarefaId: z.string().min(1),
+    quadroId: z.string().uuid().nullable(),
+  }),
+  async (data, { user }) => {
+    const result = await service.reordenarTarefas(user.id, {
+      tarefaId: data.tarefaId,
+      novaPosicao: 0, // Move to top of new board
+      quadroId: data.quadroId,
+    });
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
+    return result.data;
+  }
+);

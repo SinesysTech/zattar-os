@@ -87,9 +87,9 @@ export const criarDatasetSchema = z.object({
 });
 
 export const criarDocumentoSchema = z.object({
-  name: z.string().min(1, 'Nome é obrigatório'),
-  text: z.string().optional(),
-  file: z.any().optional(),
+  datasetId: z.string().min(1, 'ID do dataset é obrigatório'),
+  nome: z.string().min(1, 'Nome é obrigatório'),
+  texto: z.string().min(1, 'Texto é obrigatório'),
 });
 
 // --- Interfaces Adicionais ---
@@ -97,12 +97,16 @@ export const criarDocumentoSchema = z.object({
 export interface DifyExecucaoWorkflow {
   id: string;
   workflow_id: string;
+  workflow_run_id?: string;
   status: StatusExecucaoDify;
   inputs: Record<string, any>;
   outputs: Record<string, any>;
   created_at: string;
   finished_at: string | null;
   error?: string;
+  elapsed_time?: number;
+  total_tokens?: number;
+  total_steps?: number;
 }
 
 // --- Labels ---

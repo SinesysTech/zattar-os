@@ -27,7 +27,7 @@ async function applyMigration() {
   // Ler arquivo de migration
   const migrationPath = path.join(
     process.cwd(),
-    'supabase/migrations/20260216212759_create_integracoes_table.sql'
+    'supabase/migrations/20260216220000_create_integracoes_table.sql'
   );
 
   if (!fs.existsSync(migrationPath)) {

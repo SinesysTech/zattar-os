@@ -116,7 +116,8 @@ export function DataShell({
       </div>
 
       {footer && (
-        <div data-slot="data-shell-footer">
+        <div data-slot="data-shell-footer" className="mt-4">
+          {/* Spacing follows 4px grid: mt-4 = 16px */}
           {footer}
         </div>
       )}

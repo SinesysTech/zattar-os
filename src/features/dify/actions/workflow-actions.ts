@@ -5,6 +5,42 @@ import { DifyService } from '../service';
 import { executarWorkflowSchema, StatusExecucaoDify } from '../domain';
 import { difyRepository } from '../repository';
 import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
+
+export async function actionListarExecucoesDify(params?: { limite?: number; offset?: number }) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, error: 'Usuário não autenticado' };
+  }
+
+  try {
+    const limite = params?.limite || 50;
+    const offset = params?.offset || 0;
+
+    const { data, error, count } = await supabase
+      .from('dify_workflow_executions')
+      .select('*', { count: 'exact' })
+      .eq('usuario_id', user.id)
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limite - 1);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { 
+      success: true, 
+      data: {
+        data: data || [],
+        total: count || 0
+      }
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
 
 export async function actionExecutarWorkflow(params: any) {
   const supabase = await createClient();

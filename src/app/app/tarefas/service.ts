@@ -172,6 +172,7 @@ function eventoToTarefaDisplay(evento: UnifiedEventItem): TarefaDisplayItem {
     subTasks: [],
     comments: [],
     files: [],
+    position: 0,
     source: evento.source,
     sourceEntityId: String(evento.sourceEntityId),
     url: evento.url,
