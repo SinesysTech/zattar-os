@@ -20,7 +20,8 @@
       "mcp__context7__resolve-library-id",
       "mcp__context7__query-docs",
       "mcp__supabase__list_migrations",
-      "mcp__supabase__generate_typescript_types"
+      "mcp__supabase__generate_typescript_types",
+      "WebFetch(domain:docs.dify.ai)"
     ]
   },
   "enableAllProjectMcpServers": true,
