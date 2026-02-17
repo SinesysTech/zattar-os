@@ -25,6 +25,7 @@ import {
   TableRow
 } from "@/components/ui/table";
 
+import { useRouter } from "next/navigation";
 import { DataShell, DataTableToolbar } from "@/components/shared/data-shell";
 import { Button } from "@/components/ui/button";
 import { X, List, LayoutGrid } from "lucide-react";
@@ -34,6 +35,7 @@ import { priorities, statuses, labels } from "@/app/app/tarefas/data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { DataTablePagination } from "./data-table-pagination";
 import { useTarefaStore } from "../store";
+import { SYSTEM_BOARD_DEFINITIONS } from "../domain";
 import { TarefaDisplayItem } from "../domain";
 
 interface DataTableProps<TData, TValue> {
@@ -42,13 +44,12 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
   const {
     setTarefas,
     setSelectedTarefaId,
     setTarefaSheetOpen,
     setCreateDialogOpen,
-    viewMode,
-    setViewMode,
   } = useTarefaStore();
 
   const [rowSelection, setRowSelection] = React.useState({});
@@ -144,8 +145,13 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           }
           viewModeSlot={
             <ViewModePopover
-              value={viewMode}
-              onValueChange={(v) => setViewMode(v as "lista" | "quadro")}
+              value="lista"
+              onValueChange={(v) => {
+                if (v === "quadro") {
+                  const firstBoard = SYSTEM_BOARD_DEFINITIONS[0];
+                  router.push(`/app/tarefas/quadro/${firstBoard.slug}`);
+                }
+              }}
               options={[
                 { value: 'lista', label: 'Lista', icon: List },
                 { value: 'quadro', label: 'Quadro', icon: LayoutGrid },

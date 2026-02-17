@@ -7,7 +7,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Save, TestTube } from "lucide-react";
+import { Loader2, Save, TestTube, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,10 +44,10 @@ export function TwoFAuthConfigForm({ integracao, onSuccess }: TwoFAuthConfigForm
 
   const onSubmit = async (data: TwoFAuthConfig) => {
     setIsLoading(true);
-    
+
     try {
       const result = await actionAtualizarConfig2FAuth(data);
-      
+
       if (result.success) {
         toast({
           title: "Configuração salva",
@@ -62,6 +62,7 @@ export function TwoFAuthConfigForm({ integracao, onSuccess }: TwoFAuthConfigForm
         });
       }
     } catch (error) {
+      console.error("[TwoFAuthConfigForm] Erro ao salvar:", error);
       toast({
         title: "Erro ao salvar",
         description: error instanceof Error ? error.message : "Erro desconhecido",
@@ -72,21 +73,29 @@ export function TwoFAuthConfigForm({ integracao, onSuccess }: TwoFAuthConfigForm
     }
   };
 
+  const onValidationError = () => {
+    toast({
+      title: "Campos inválidos",
+      description: "Verifique os campos destacados em vermelho.",
+      variant: "error",
+    });
+  };
+
   const handleTest = async () => {
     setIsTesting(true);
-    
+
     try {
       const values = getValues();
-      
+
       // Testar conexão
       const response = await fetch("/api/twofauth/status", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success && data.data.connected) {
         toast({
           title: "Conexão bem-sucedida",
@@ -95,11 +104,12 @@ export function TwoFAuthConfigForm({ integracao, onSuccess }: TwoFAuthConfigForm
       } else {
         toast({
           title: "Falha na conexão",
-          description: data.data.error || "Não foi possível conectar ao servidor 2FAuth.",
+          description: data.data?.error || "Não foi possível conectar ao servidor 2FAuth.",
           variant: "error",
         });
       }
     } catch (error) {
+      console.error("[TwoFAuthConfigForm] Erro ao testar:", error);
       toast({
         title: "Erro ao testar",
         description: error instanceof Error ? error.message : "Erro desconhecido",
@@ -110,15 +120,30 @@ export function TwoFAuthConfigForm({ integracao, onSuccess }: TwoFAuthConfigForm
     }
   };
 
+  const hasErrors = Object.keys(errors).length > 0;
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit, onValidationError)} noValidate className="space-y-6">
+      {/* Resumo de erros visível */}
+      {hasErrors && (
+        <div className="flex items-start gap-2 rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
+          <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+          <div>
+            Corrija os campos abaixo antes de salvar.
+            {errors.api_url && <div>- {errors.api_url.message}</div>}
+            {errors.api_token && <div>- {errors.api_token.message}</div>}
+            {errors.account_id && <div>- {String(errors.account_id.message)}</div>}
+          </div>
+        </div>
+      )}
+
       <div className="space-y-4">
         {/* URL da API */}
         <div className="space-y-2">
           <Label htmlFor="api_url">URL da API</Label>
           <Input
             id="api_url"
-            type="url"
+            type="text"
             placeholder="https://authenticator.example.com/api/v1"
             {...register("api_url")}
           />
@@ -154,7 +179,7 @@ export function TwoFAuthConfigForm({ integracao, onSuccess }: TwoFAuthConfigForm
             {...register("account_id", { valueAsNumber: true })}
           />
           {errors.account_id && (
-            <p className="text-sm text-destructive">{errors.account_id.message}</p>
+            <p className="text-sm text-destructive">{String(errors.account_id.message)}</p>
           )}
           <p className="text-xs text-muted-foreground">
             ID da conta padrão para operações automáticas

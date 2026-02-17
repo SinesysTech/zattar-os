@@ -6,6 +6,7 @@
  */
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { KeyRound, Settings, CheckCircle, XCircle, ExternalLink, Globe } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,12 +21,19 @@ interface TwoFAuthIntegrationCardProps {
 }
 
 export function TwoFAuthIntegrationCard({ integracao }: TwoFAuthIntegrationCardProps) {
+  const router = useRouter();
   const [configOpen, setConfigOpen] = useState(false);
   const [accountsOpen, setAccountsOpen] = useState(false);
 
   const isConfigured = !!integracao;
   const isActive = integracao?.ativo ?? false;
   const config = integracao?.configuracao as TwoFAuthConfig | undefined;
+
+  // Após salvar configuração: fecha dialog e recarrega dados do servidor
+  const handleConfigSuccess = () => {
+    setConfigOpen(false);
+    router.refresh();
+  };
 
   // Extrair hostname da URL da API para exibição
   const apiHost = (() => {
@@ -66,7 +74,7 @@ export function TwoFAuthIntegrationCard({ integracao }: TwoFAuthIntegrationCardP
                   Configure a conexão com seu servidor 2FAuth para gerenciar tokens de autenticação de dois fatores.
                 </DialogDescription>
               </DialogHeader>
-              <TwoFAuthConfigForm integracao={integracao} onSuccess={() => setConfigOpen(false)} />
+              <TwoFAuthConfigForm integracao={integracao} onSuccess={handleConfigSuccess} />
             </DialogContent>
           </Dialog>
         </CardFooter>
@@ -142,7 +150,7 @@ export function TwoFAuthIntegrationCard({ integracao }: TwoFAuthIntegrationCardP
                 Edite a conexão com seu servidor 2FAuth.
               </DialogDescription>
             </DialogHeader>
-            <TwoFAuthConfigForm integracao={integracao} onSuccess={() => setConfigOpen(false)} />
+            <TwoFAuthConfigForm integracao={integracao} onSuccess={handleConfigSuccess} />
           </DialogContent>
         </Dialog>
       </CardFooter>

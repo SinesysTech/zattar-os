@@ -66,13 +66,9 @@ export function QuadroSelector({
         <Button variant="outline" className="h-9 border-dashed bg-card">
           <LayoutGrid className="h-4 w-4" />
           <span>Quadro</span>
-          {selectedQuadro ? (
+          {selectedQuadro && (
             <AppBadge variant="secondary" className="ml-1 rounded-sm px-1.5 font-normal">
               {selectedQuadro.titulo}
-            </AppBadge>
-          ) : (
-            <AppBadge variant="secondary" className="ml-1 rounded-sm px-1.5 font-normal">
-              Sistema
             </AppBadge>
           )}
         </Button>
@@ -83,23 +79,8 @@ export function QuadroSelector({
           <CommandList>
             <CommandEmpty>Nenhum quadro encontrado.</CommandEmpty>
 
-            {/* Sistema (all tasks) */}
-            <CommandGroup heading="Sistema">
-              <CommandItem
-                onSelect={() => {
-                  onValueChange(null);
-                  setOpen(false);
-                }}
-              >
-                <LayoutGrid className="h-4 w-4 text-muted-foreground" />
-                <span>Todas as Tarefas</span>
-                {value === null && <Check className="ml-auto h-4 w-4" />}
-              </CommandItem>
-            </CommandGroup>
-
             {systemQuadros.length > 0 && (
               <>
-                <CommandSeparator />
                 <CommandGroup heading="Quadros do Sistema">
                   {systemQuadros.map((quadro) => {
                     const Icon = SOURCE_ICONS[quadro.source ?? ""] ?? LayoutGrid;

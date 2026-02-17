@@ -1,16 +1,8 @@
 /**
- * Módulo de Tarefas - Visualizações Lista e Quadro
- * 
- * Este módulo fornece duas visualizações alternáveis:
- * - Lista: Tabela com filtros, ordenação e paginação
- * - Quadro: Kanban com drag-and-drop e quadros personalizados
- * 
- * Funcionalidades:
- * - Tarefas manuais criadas pelo usuário
- * - Eventos virtuais do sistema (audiências, expedientes, perícias, obrigações)
- * - Alternância entre visualizações via ViewModePopover
- * - Quadros personalizados (apenas em modo quadro)
- * - Detalhes completos (subtarefas, comentários, anexos)
+ * Módulo de Tarefas - Visualização Lista
+ *
+ * A visualização em quadro/kanban vive nas sub-rotas:
+ * /app/tarefas/quadro/[boardSlug] (expedientes, audiencias, pericias, obrigacoes)
  */
 
 "use client";
@@ -20,7 +12,6 @@ import type { TarefaDisplayItem, Quadro } from "./domain";
 import { useTarefaStore } from "./store";
 import { DataTable } from "./components/data-table";
 import { columns } from "./components/columns";
-import { TaskBoard } from "./components/task-board";
 import { TaskDetailSheet } from "./components/task-detail-sheet";
 import { TaskDialog } from "./components/task-dialog";
 
@@ -30,7 +21,7 @@ interface TarefasClientProps {
 }
 
 export function TarefasClient({ data, quadros }: TarefasClientProps) {
-    const { viewMode, setTarefas, setQuadros, isCreateDialogOpen, setCreateDialogOpen } = useTarefaStore();
+    const { setTarefas, setQuadros, isCreateDialogOpen, setCreateDialogOpen } = useTarefaStore();
 
     React.useEffect(() => {
         setTarefas(data);
@@ -39,11 +30,7 @@ export function TarefasClient({ data, quadros }: TarefasClientProps) {
 
     return (
         <>
-            {viewMode === "lista" ? (
-                <DataTable data={data} columns={columns} />
-            ) : (
-                <TaskBoard quadros={quadros} />
-            )}
+            <DataTable data={data} columns={columns} />
             <TaskDetailSheet />
             <TaskDialog open={isCreateDialogOpen} onOpenChange={setCreateDialogOpen} />
         </>
