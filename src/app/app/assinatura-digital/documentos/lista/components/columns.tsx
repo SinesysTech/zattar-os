@@ -38,8 +38,12 @@ export type DocumentoListItem = {
   selfie_habilitada: boolean;
   pdf_original_url: string;
   pdf_final_url: string | null;
+  hash_original_sha256: string | null;
+  hash_final_sha256: string | null;
+  created_by: number | null;
   created_at: string;
   updated_at: string;
+  contrato_id: number | null;
   _assinantes_count?: number;
   _assinantes_concluidos?: number;
 };

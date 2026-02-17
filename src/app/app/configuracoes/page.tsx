@@ -22,9 +22,10 @@ export default async function ConfiguracoesPage() {
   }
 
   // Buscar integração 2FAuth (primeira ativa ou primeira encontrada)
-  const integracao2FAuth = integracoesResult.success
-    ? integracoesResult.data.find(i => i.ativo) || integracoesResult.data[0] || null
-    : null;
+  let integracao2FAuth = null;
+  if (integracoesResult.success && Array.isArray(integracoesResult.data)) {
+    integracao2FAuth = integracoesResult.data.find((i) => i.ativo) || integracoesResult.data[0] || null;
+  }
 
   return (
     <ConfiguracoesTabsContent

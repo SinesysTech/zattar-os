@@ -1,9 +1,12 @@
 /**
  * Feature: Integrações
  * Barrel exports
+ * 
+ * IMPORTANT: Only export types, schemas, actions, and components here.
+ * DO NOT export service or repository functions to avoid client/server boundary violations.
  */
 
-// Domain
+// Domain - Types and Schemas (safe for client)
 export type {
   Integracao,
   TipoIntegracao,
@@ -21,20 +24,7 @@ export {
   twofauthConfigSchema,
 } from "./domain";
 
-// Service
-export {
-  listar,
-  listarPorTipo,
-  buscarPorId,
-  buscarConfig2FAuth,
-  criar,
-  atualizar,
-  deletar,
-  toggleAtivo,
-  atualizarConfig2FAuth,
-} from "./service";
-
-// Actions
+// Actions - Server Actions (safe for client)
 export {
   actionListarIntegracoes,
   actionListarIntegracoesPorTipo,
@@ -47,6 +37,9 @@ export {
   actionAtualizarConfig2FAuth,
 } from "./actions/integracoes-actions";
 
-// Components
+// Components (safe for client)
 export { TwoFAuthIntegrationCard } from "./components/twofauth-integration-card";
 export { TwoFAuthConfigForm } from "./components/twofauth-config-form";
+
+// Service - Server-only exports (use in Server Components and Actions only)
+// Import directly from "./service" when needed in server context

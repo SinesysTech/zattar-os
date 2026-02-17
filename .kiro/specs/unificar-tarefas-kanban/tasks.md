@@ -3,24 +3,24 @@
 ## Status: Not Started
 
 ## 1. Preparação
-- [ ] 1.1 Criar branch `feat/unificar-tarefas-kanban`
-- [ ] 1.2 Revisar código de Tarefas e Kanban
-- [ ] 1.3 Documentar funcionalidades a preservar
+- [x] 1.1 Criar branch `feat/unificar-tarefas-kanban`
+- [x] 1.2 Revisar código de Tarefas e Kanban
+- [x] 1.3 Documentar funcionalidades a preservar
 
 ## 2. Migração de Banco de Dados
-- [ ] 2.1 Criar migração para adicionar `position INTEGER` em `tasks`
-- [ ] 2.2 Criar migração para adicionar `quadro_id UUID` em `tasks`
-- [ ] 2.3 Criar tabela `quadros` com schema completo
-- [ ] 2.4 Executar migrações no ambiente de desenvolvimento
+- [-] 2.1 Criar migração para adicionar `position INTEGER` em `tasks`
+- [~] 2.2 Criar migração para adicionar `quadro_id UUID` em `tasks`
+- [~] 2.3 Criar tabela `quadros` com schema completo
+- [~] 2.4 Executar migrações no ambiente de desenvolvimento
 
 ## 3. Domain Unificado
-- [ ] 3.1 Mesclar `taskSchema` + `kanbanTaskSchema` em `tarefaSchema`
-- [ ] 3.2 Adicionar campo `position` ao schema
-- [ ] 3.3 Adicionar campo `quadroId` ao schema
-- [ ] 3.4 Criar `quadroSchema` para quadros personalizados
-- [ ] 3.5 Definir constantes `QUADROS_SISTEMA`
-- [ ] 3.6 Atualizar `TarefaDisplayItem` interface
-- [ ] 3.7 Criar schemas de input para quadros (criar, excluir)
+- [~] 3.1 Mesclar `taskSchema` + `kanbanTaskSchema` em `tarefaSchema`
+- [~] 3.2 Adicionar campo `position` ao schema
+- [~] 3.3 Adicionar campo `quadroId` ao schema
+- [~] 3.4 Criar `quadroSchema` para quadros personalizados
+- [~] 3.5 Definir constantes `QUADROS_SISTEMA`
+- [~] 3.6 Atualizar `TarefaDisplayItem` interface
+- [~] 3.7 Criar schemas de input para quadros (criar, excluir)
 
 ## 4. Store Unificado
 - [ ] 4.1 Adicionar `viewMode: "lista" | "quadro"` ao store

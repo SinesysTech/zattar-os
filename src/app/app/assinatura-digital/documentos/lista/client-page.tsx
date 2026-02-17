@@ -143,7 +143,7 @@ export function DocumentosTableWrapper({
     try {
       const resultado = await actionListDocumentos({
         page: 1,
-        pageSize: 200,
+        pageSize: 100, // Máximo permitido pelo schema
       });
 
       if (resultado.success && resultado.data && "documentos" in resultado.data) {
