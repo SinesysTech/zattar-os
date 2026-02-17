@@ -126,7 +126,6 @@ export async function registerTarefasTools(): Promise<void> {
           status: args.status ?? 'todo',
           label: args.label ?? 'feature',
           priority: args.priority ?? 'medium',
-          position: 0, // Default position for new tasks
         });
 
         if (!result.success) {
@@ -259,7 +258,6 @@ export async function registerTarefasTools(): Promise<void> {
           status: 'todo',
           label: 'feature',
           priority: 'high',
-          position: 0, // Default position for new tasks
         });
 
         if (!result.success) {
