@@ -58,14 +58,14 @@ export function TwoFAuthConfigForm({ integracao, onSuccess }: TwoFAuthConfigForm
         toast({
           title: "Erro ao salvar",
           description: result.error || "Não foi possível salvar a configuração.",
-          variant: "destructive",
+          variant: "error",
         });
       }
     } catch (error) {
       toast({
         title: "Erro ao salvar",
         description: error instanceof Error ? error.message : "Erro desconhecido",
-        variant: "destructive",
+        variant: "error",
       });
     } finally {
       setIsLoading(false);
@@ -96,14 +96,14 @@ export function TwoFAuthConfigForm({ integracao, onSuccess }: TwoFAuthConfigForm
         toast({
           title: "Falha na conexão",
           description: data.data.error || "Não foi possível conectar ao servidor 2FAuth.",
-          variant: "destructive",
+          variant: "error",
         });
       }
     } catch (error) {
       toast({
         title: "Erro ao testar",
         description: error instanceof Error ? error.message : "Erro desconhecido",
-        variant: "destructive",
+        variant: "error",
       });
     } finally {
       setIsTesting(false);

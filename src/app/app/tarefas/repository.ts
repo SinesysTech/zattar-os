@@ -491,3 +491,229 @@ export async function deleteTask(usuarioId: number, id: string): Promise<Result<
     return err(appError("DATABASE_ERROR", "Erro ao remover tarefa", undefined, error instanceof Error ? error : undefined));
   }
 }
+
+// =============================================================================
+// QUADROS (KANBAN BOARDS)
+// =============================================================================
+
+import type { Quadro, CriarQuadroCustomInput } from "./domain";
+
+const TABLE_QUADROS = "quadros";
+
+type QuadroRow = {
+  id: string;
+  usuario_id: number;
+  titulo: string;
+  tipo: string;
+  source: string | null;
+  icone: string | null;
+  ordem: number;
+  created_at: string;
+  updated_at: string;
+};
+
+function rowToQuadro(row: QuadroRow): Quadro {
+  return {
+    id: row.id,
+    usuarioId: row.usuario_id,
+    titulo: row.titulo,
+    tipo: row.tipo as Quadro["tipo"],
+    source: row.source as Quadro["source"],
+    icone: row.icone ?? undefined,
+    ordem: row.ordem,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+export async function listQuadrosCustom(usuarioId: number): Promise<Result<Quadro[]>> {
+  try {
+    const db = createDbClient();
+    const { data, error } = await db
+      .from(TABLE_QUADROS)
+      .select("*")
+      .eq("usuario_id", usuarioId)
+      .eq("tipo", "custom")
+      .order("ordem", { ascending: true });
+
+    if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+
+    const quadros = (data as QuadroRow[]) ?? [];
+    return ok(quadros.map(rowToQuadro));
+  } catch (error) {
+    return err(appError("DATABASE_ERROR", "Erro ao listar quadros", undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+export async function createQuadroCustom(usuarioId: number, input: CriarQuadroCustomInput): Promise<Result<Quadro>> {
+  try {
+    const db = createDbClient();
+
+    // Get next ordem
+    const { data: lastOrdemData } = await db
+      .from(TABLE_QUADROS)
+      .select("ordem")
+      .eq("usuario_id", usuarioId)
+      .order("ordem", { ascending: false })
+      .limit(1);
+
+    const lastOrdem = (lastOrdemData?.[0] as { ordem?: number } | undefined)?.ordem ?? 2; // Sistema tem 0, 1, 2
+
+    const { data, error } = await db
+      .from(TABLE_QUADROS)
+      .insert({
+        usuario_id: usuarioId,
+        titulo: input.titulo,
+        tipo: "custom",
+        source: null,
+        icone: input.icone ?? null,
+        ordem: lastOrdem + 1,
+      })
+      .select("*")
+      .single();
+
+    if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+
+    return ok(rowToQuadro(data as QuadroRow));
+  } catch (error) {
+    return err(appError("DATABASE_ERROR", "Erro ao criar quadro", undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+export async function deleteQuadroCustom(usuarioId: number, quadroId: string): Promise<Result<void>> {
+  try {
+    const db = createDbClient();
+
+    // Set quadro_id to null for all tasks in this board
+    await db
+      .from(TABLE_ITEMS)
+      .update({ quadro_id: null })
+      .eq("quadro_id", quadroId)
+      .eq("usuario_id", usuarioId);
+
+    const { error } = await db
+      .from(TABLE_QUADROS)
+      .delete()
+      .eq("id", quadroId)
+      .eq("usuario_id", usuarioId)
+      .eq("tipo", "custom"); // Safety: only delete custom boards
+
+    if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+
+    return ok(undefined);
+  } catch (error) {
+    return err(appError("DATABASE_ERROR", "Erro ao excluir quadro", undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+export async function listTarefasByQuadro(usuarioId: number, quadroId: string): Promise<Result<Task[]>> {
+  try {
+    const db = createDbClient();
+    const { data: itemsData, error: itemsError } = await db
+      .from(TABLE_ITEMS)
+      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id, label")
+      .eq("usuario_id", usuarioId)
+      .eq("quadro_id", quadroId)
+      .order("position", { ascending: true })
+      .order("created_at", { ascending: true });
+
+    if (itemsError) return err(appError("DATABASE_ERROR", itemsError.message, { code: itemsError.code }));
+
+    const items = (itemsData as TodoItemRow[]) ?? [];
+    if (items.length === 0) return ok([]);
+
+    // Fetch relations (same as listTasks)
+    const todoIds = items.map((t) => t.id);
+
+    const [assigneesRes, subTasksRes, commentsRes, filesRes] = await Promise.all([
+      db.from(TABLE_ASSIGNEES)
+        .select("todo_id, usuario_id, usuarios(id, nome_exibicao, nome_completo, email_corporativo, email_pessoal, avatar_url, ativo)")
+        .in("todo_id", todoIds),
+      db.from(TABLE_SUBTASKS)
+        .select("id, todo_id, title, completed, position, created_at, updated_at")
+        .in("todo_id", todoIds),
+      db.from(TABLE_COMMENTS).select("id, todo_id, body, created_at").in("todo_id", todoIds),
+      db.from(TABLE_FILES)
+        .select("id, todo_id, file_name, mime_type, size_bytes, url, created_at")
+        .in("todo_id", todoIds),
+    ]);
+
+    const assigneesRows = (assigneesRes.data as AssigneeJoinRow[]) ?? [];
+    const subTaskRows = (subTasksRes.data as SubTaskRow[]) ?? [];
+    const commentRows = (commentsRes.data as CommentRow[]) ?? [];
+    const fileRows = (filesRes.data as FileRow[]) ?? [];
+
+    const assigneesByTodo: Record<string, TaskAssignee[]> = {};
+    for (const row of assigneesRows) {
+      const usuarioData = row.usuarios[0];
+      const a = rowToAssignee(usuarioData);
+      if (!a) continue;
+      if (!assigneesByTodo[row.todo_id]) assigneesByTodo[row.todo_id] = [];
+      assigneesByTodo[row.todo_id].push(a);
+    }
+
+    const subTasksByTodo: Record<string, SubTaskRow[]> = {};
+    for (const st of subTaskRows) {
+      if (!subTasksByTodo[st.todo_id]) subTasksByTodo[st.todo_id] = [];
+      subTasksByTodo[st.todo_id].push(st);
+    }
+
+    const commentsByTodo: Record<string, CommentRow[]> = {};
+    for (const c of commentRows) {
+      if (!commentsByTodo[c.todo_id]) commentsByTodo[c.todo_id] = [];
+      commentsByTodo[c.todo_id].push(c);
+    }
+
+    const filesByTodo: Record<string, FileRow[]> = {};
+    for (const f of fileRows) {
+      if (!filesByTodo[f.todo_id]) filesByTodo[f.todo_id] = [];
+      filesByTodo[f.todo_id].push(f);
+    }
+
+    const tasks = items.map((item) =>
+      assembleTask(
+        item,
+        assigneesByTodo[item.id] ?? [],
+        subTasksByTodo[item.id] ?? [],
+        commentsByTodo[item.id] ?? [],
+        filesByTodo[item.id] ?? []
+      )
+    );
+
+    return ok(tasks);
+  } catch (error) {
+    return err(appError("DATABASE_ERROR", "Erro ao listar tarefas do quadro", undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+export async function updateTaskPosition(taskId: string, position: number): Promise<Result<void>> {
+  try {
+    const db = createDbClient();
+    const { error } = await db
+      .from(TABLE_ITEMS)
+      .update({ position })
+      .eq("id", taskId);
+
+    if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+
+    return ok(undefined);
+  } catch (error) {
+    return err(appError("DATABASE_ERROR", "Erro ao atualizar posição", undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+export async function updateTaskQuadro(taskId: string, quadroId: string | null): Promise<Result<void>> {
+  try {
+    const db = createDbClient();
+    const { error } = await db
+      .from(TABLE_ITEMS)
+      .update({ quadro_id: quadroId })
+      .eq("id", taskId);
+
+    if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+
+    return ok(undefined);
+  } catch (error) {
+    return err(appError("DATABASE_ERROR", "Erro ao atualizar quadro", undefined, error instanceof Error ? error : undefined));
+  }
+}

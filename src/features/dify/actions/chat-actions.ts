@@ -60,7 +60,7 @@ export async function actionListarConversasDify(limit = 20) {
   }
   const service = difyServiceResult.value;
 
-  const result = await service.listarConversas(user.email || 'anonymous', limit);
+  const result = await service.listarConversas({ limite: limit }, user.email || 'anonymous');
 
   if (result.isErr()) {
     return { error: result.error.message };
@@ -83,7 +83,7 @@ export async function actionObterHistoricoDify(conversationId: string) {
   }
   const service = difyServiceResult.value;
 
-  const result = await service.obterHistorico(conversationId, user.email || 'anonymous');
+  const result = await service.obterHistorico({ conversationId, limite: 50 }, user.email || 'anonymous');
 
   if (result.isErr()) {
     return { error: result.error.message };

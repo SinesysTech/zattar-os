@@ -78,3 +78,38 @@ export interface DifyWorkflowExecution {
   finished_at?: Date;
   usuario_id: number;
 }
+
+// --- Schemas Adicionais ---
+
+export const criarDatasetSchema = z.object({
+  name: z.string().min(1, 'Nome é obrigatório'),
+  description: z.string().optional(),
+});
+
+export const criarDocumentoSchema = z.object({
+  name: z.string().min(1, 'Nome é obrigatório'),
+  text: z.string().optional(),
+  file: z.any().optional(),
+});
+
+// --- Interfaces Adicionais ---
+
+export interface DifyExecucaoWorkflow {
+  id: string;
+  workflow_id: string;
+  status: StatusExecucaoDify;
+  inputs: Record<string, any>;
+  outputs: Record<string, any>;
+  created_at: string;
+  finished_at: string | null;
+  error?: string;
+}
+
+// --- Labels ---
+
+export const STATUS_EXECUCAO_LABELS: Record<StatusExecucaoDify, string> = {
+  [StatusExecucaoDify.RUNNING]: 'Em execução',
+  [StatusExecucaoDify.SUCCEEDED]: 'Concluído',
+  [StatusExecucaoDify.FAILED]: 'Falhou',
+  [StatusExecucaoDify.STOPPED]: 'Parado',
+};

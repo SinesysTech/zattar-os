@@ -1,9 +1,20 @@
 "use client";
 
 import { create } from "zustand";
-import type { TarefaDisplayItem } from "./domain";
+import type { TarefaDisplayItem, Quadro } from "./domain";
 
 interface TarefaStore {
+    // Visualização
+    viewMode: "lista" | "quadro";
+    setViewMode: (mode: "lista" | "quadro") => void;
+
+    // Quadros
+    quadros: Quadro[];
+    selectedQuadroId: string | null; // null = Sistema (todas as tarefas)
+    setQuadros: (quadros: Quadro[]) => void;
+    setSelectedQuadroId: (id: string | null) => void;
+
+    // Tarefas
     tarefas: TarefaDisplayItem[];
     selectedTarefaId: string | null;
     isTarefaSheetOpen: boolean;
@@ -18,6 +29,17 @@ interface TarefaStore {
 }
 
 export const useTarefaStore = create<TarefaStore>((set) => ({
+    // Visualização
+    viewMode: "lista",
+    setViewMode: (mode) => set(() => ({ viewMode: mode })),
+
+    // Quadros
+    quadros: [],
+    selectedQuadroId: null,
+    setQuadros: (quadros) => set(() => ({ quadros })),
+    setSelectedQuadroId: (id) => set(() => ({ selectedQuadroId: id })),
+
+    // Tarefas
     tarefas: [],
     selectedTarefaId: null,
     isTarefaSheetOpen: false,

@@ -33,7 +33,7 @@ export async function load2FAuthConfig(): Promise<TwoFAuthConfig | null> {
         return {
           apiUrl: config.api_url,
           token: config.api_token,
-          accountId: typeof config.account_id === "number" ? config.account_id : undefined,
+          accountId: typeof config.account_id === "number" ? config.account_id.toString() : undefined,
         };
       }
     }
@@ -50,7 +50,7 @@ export async function load2FAuthConfig(): Promise<TwoFAuthConfig | null> {
     return {
       apiUrl,
       token,
-      accountId: accountId ? parseInt(accountId, 10) : undefined,
+      accountId,
     };
   }
 
@@ -70,7 +70,7 @@ export function load2FAuthConfigSync(): TwoFAuthConfig | null {
     return {
       apiUrl,
       token,
-      accountId: accountId ? parseInt(accountId, 10) : undefined,
+      accountId,
     };
   }
 

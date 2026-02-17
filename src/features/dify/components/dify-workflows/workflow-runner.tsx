@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Play, Square, RotateCcw, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import { useDifyWorkflow } from '../../hooks/use-dify-workflow';
-import { STATUS_EXECUCAO_LABELS, StatusExecucao } from '../../domain';
+import { STATUS_EXECUCAO_LABELS, StatusExecucaoDify } from '../../domain';
 
 interface WorkflowRunnerProps {
   title?: string;

@@ -59,3 +59,51 @@ export async function checkDifyAppConnectionAction(apiUrl: string, apiKey: strin
         return { success: false, message: error.message };
     }
 }
+
+export async function getDifyConfigAction() {
+    const result = await difyRepository.getActiveDifyApp();
+    if (result.isErr()) {
+        return null;
+    }
+    return result.value;
+}
+
+export async function saveDifyConfigAction(data: { api_url: string; api_key: string }) {
+    // Busca app ativo ou cria um novo
+    const activeResult = await difyRepository.getActiveDifyApp();
+    
+    if (activeResult.isOk() && activeResult.value) {
+        // Atualiza existente
+        const updateResult = await difyRepository.updateDifyApp(activeResult.value.id, {
+            api_url: data.api_url,
+            api_key: data.api_key,
+        });
+        if (updateResult.isErr()) {
+            throw new Error(updateResult.error.message);
+        }
+    } else {
+        // Cria novo
+        const createResult = await difyRepository.createDifyApp({
+            name: 'Dify App',
+            api_url: data.api_url,
+            api_key: data.api_key,
+            app_type: 'chat',
+        });
+        if (createResult.isErr()) {
+            throw new Error(createResult.error.message);
+        }
+    }
+    
+    revalidatePath('/app/configuracoes');
+    return { success: true };
+}
+
+export async function checkDifyConnectionAction() {
+    const configResult = await difyRepository.getActiveDifyApp();
+    if (configResult.isErr() || !configResult.value) {
+        return { success: false, message: 'Configuração não encontrada' };
+    }
+    
+    const config = configResult.value;
+    return checkDifyAppConnectionAction(config.api_url, config.api_key);
+}

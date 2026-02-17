@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       acervo: {
@@ -2457,6 +2482,39 @@ export type Database = {
           },
         ]
       }
+      dify_apps: {
+        Row: {
+          api_key: string
+          api_url: string
+          app_type: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          api_key: string
+          api_url: string
+          app_type?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          api_key?: string
+          api_url?: string
+          app_type?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       documentos: {
         Row: {
           conteudo: Json
@@ -3285,8 +3343,53 @@ export type Database = {
           },
         ]
       }
+      kanban_boards: {
+        Row: {
+          created_at: string
+          icone: string | null
+          id: string
+          ordem: number
+          source: string | null
+          tipo: string
+          titulo: string
+          updated_at: string
+          usuario_id: number
+        }
+        Insert: {
+          created_at?: string
+          icone?: string | null
+          id?: string
+          ordem?: number
+          source?: string | null
+          tipo: string
+          titulo: string
+          updated_at?: string
+          usuario_id: number
+        }
+        Update: {
+          created_at?: string
+          icone?: string | null
+          id?: string
+          ordem?: number
+          source?: string | null
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kanban_boards_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kanban_columns: {
         Row: {
+          board_id: string | null
           created_at: string
           id: string
           position: number
@@ -3295,6 +3398,7 @@ export type Database = {
           usuario_id: number
         }
         Insert: {
+          board_id?: string | null
           created_at?: string
           id?: string
           position?: number
@@ -3303,6 +3407,7 @@ export type Database = {
           usuario_id: number
         }
         Update: {
+          board_id?: string | null
           created_at?: string
           id?: string
           position?: number
@@ -3311,6 +3416,13 @@ export type Database = {
           usuario_id?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "kanban_columns_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "kanban_boards"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "kanban_columns_usuario_id_fkey"
             columns: ["usuario_id"]
@@ -6124,6 +6236,8 @@ export type Database = {
           position: number
           priority: string
           reminder_at: string | null
+          source: string | null
+          source_entity_id: string | null
           starred: boolean
           status: string
           title: string
@@ -6138,6 +6252,8 @@ export type Database = {
           position?: number
           priority?: string
           reminder_at?: string | null
+          source?: string | null
+          source_entity_id?: string | null
           starred?: boolean
           status?: string
           title: string
@@ -6152,6 +6268,8 @@ export type Database = {
           position?: number
           priority?: string
           reminder_at?: string | null
+          source?: string | null
+          source_entity_id?: string | null
           starred?: boolean
           status?: string
           title?: string
@@ -7439,6 +7557,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       codigo_tribunal: [

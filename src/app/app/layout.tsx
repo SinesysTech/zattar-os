@@ -6,7 +6,6 @@ import Search from "@/components/layout/header/search"
 import Notifications from "@/components/layout/header/notifications"
 import { AiSphere } from "@/components/layout/header/ai-sphere"
 import { AuthenticatorPopover } from "@/components/layout/header/authenticator-popover"
-import { ThemeCustomizerPanel } from "@/components/layout/header/theme-customizer/panel"
 import { HeaderUserMenu } from "@/components/layout/header/header-user-menu"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -52,7 +51,6 @@ function DashboardHeader() {
         <Search />
       </div>
       <div className="flex items-center gap-2">
-        <ThemeCustomizerPanel />
         <AuthenticatorPopover />
         <Notifications />
         <AiSphere onClick={() => setOpen(!open)} />

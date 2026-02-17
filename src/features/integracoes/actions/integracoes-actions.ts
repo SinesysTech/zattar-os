@@ -22,7 +22,7 @@ import {
  * Listar todas as integrações
  */
 export const actionListarIntegracoes = authenticatedAction(
-  null,
+  z.void(),
   async (_, { user }) => {
     const data = await service.listar();
     return { success: true, data };
