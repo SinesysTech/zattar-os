@@ -5,7 +5,7 @@
  */
 
 import { TwoFAuthConfig, TwoFAuthError, TwoFAuthErrorResponse } from "./types";
-import { load2FAuthConfig, load2FAuthConfigSync } from "./config-loader";
+import { load2FAuthConfig } from "./config-loader";
 
 /**
  * Configuração resolvida do cliente
@@ -17,7 +17,7 @@ interface ResolvedConfig {
 
 /**
  * Resolve a configuração do cliente 2FAuth
- * Prioridade: config fornecido > banco de dados > variáveis de ambiente
+ * Prioridade: config fornecido > banco de dados
  */
 export async function resolveConfigAsync(
   config?: Omit<TwoFAuthConfig, "accountId">
@@ -25,7 +25,7 @@ export async function resolveConfigAsync(
   let apiUrl = config?.apiUrl;
   let token = config?.token;
 
-  // Se não fornecido, buscar do banco ou env
+  // Se não fornecido, buscar do banco
   if (!apiUrl || !token) {
     const dbConfig = await load2FAuthConfig();
     apiUrl = apiUrl || dbConfig?.apiUrl;
@@ -35,44 +35,7 @@ export async function resolveConfigAsync(
   if (!apiUrl || !token) {
     throw new TwoFAuthError(
       500,
-      "2FAuth não configurado. Configure via interface ou defina variáveis de ambiente: TWOFAUTH_API_URL, TWOFAUTH_API_TOKEN"
-    );
-  }
-
-  // Normalizar URL da API
-  let baseUrl = apiUrl.endsWith("/") ? apiUrl.slice(0, -1) : apiUrl;
-
-  if (baseUrl.endsWith("/api/v1")) {
-    // URL já está completa
-  } else if (baseUrl.endsWith("/api")) {
-    baseUrl = `${baseUrl}/v1`;
-  } else if (!baseUrl.includes("/api")) {
-    baseUrl = `${baseUrl}/api/v1`;
-  }
-
-  return { baseUrl, token };
-}
-
-/**
- * Resolve a configuração do cliente 2FAuth de forma síncrona
- * Usa apenas variáveis de ambiente (fallback para código legado)
- * @deprecated Use resolveConfigAsync quando possível
- */
-export function resolveConfig(config?: Omit<TwoFAuthConfig, "accountId">): ResolvedConfig {
-  let apiUrl = config?.apiUrl;
-  let token = config?.token;
-
-  // Se não fornecido, buscar apenas de env vars
-  if (!apiUrl || !token) {
-    const envConfig = load2FAuthConfigSync();
-    apiUrl = apiUrl || envConfig?.apiUrl;
-    token = token || envConfig?.token;
-  }
-
-  if (!apiUrl || !token) {
-    throw new TwoFAuthError(
-      500,
-      "2FAuth não configurado. Configure via interface ou defina variáveis de ambiente: TWOFAUTH_API_URL, TWOFAUTH_API_TOKEN"
+      "2FAuth não configurado. Configure em Configurações > Integrações."
     );
   }
 

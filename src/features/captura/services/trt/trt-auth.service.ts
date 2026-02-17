@@ -371,14 +371,10 @@ async function realizarLogin(
   await delay(3000);
 
   // Processar OTP (sempre necessário para TRT)
-  // Usa variáveis de ambiente se config não fornecido
-  const hasTwoFAuthConfig = twofauthConfig || 
-    (process.env.TWOFAUTH_API_URL && process.env.TWOFAUTH_API_TOKEN && process.env.TWOFAUTH_ACCOUNT_ID);
-  
-  if (!hasTwoFAuthConfig) {
-    throw new Error('2FAuth não configurado. Defina TWOFAUTH_API_URL, TWOFAUTH_API_TOKEN e TWOFAUTH_ACCOUNT_ID ou forneça twofauthConfig.');
+  if (!twofauthConfig) {
+    throw new Error('2FAuth não configurado. Configure em Configurações > Integrações.');
   }
-  
+
   await processOTP(page, twofauthConfig, targetHost);
 
   await page.waitForLoadState('networkidle', { timeout: 60000 });

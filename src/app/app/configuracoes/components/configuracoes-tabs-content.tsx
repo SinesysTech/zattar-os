@@ -11,7 +11,7 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Database, Shield, Blocks, Bot, Palette } from 'lucide-react';
+import { Database, Shield, Blocks, Bot, Palette, Sparkles } from 'lucide-react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,21 +21,23 @@ import Link from 'next/link';
 import { MetricasDBContent } from '@/app/app/admin/metricas-db/components/metricas-db-content';
 import { BlockedIpsContent } from '@/app/app/admin/security/blocked-ips/components/blocked-ips-content';
 import { TwoFAuthIntegrationCard, ChatwootIntegrationCard, DyteIntegrationCard } from '@/features/integracoes';
+import { PromptsIAContent } from '@/features/system-prompts';
 import { AparenciaContent } from './aparencia-content';
 import type { MetricasDB } from '@/features/admin';
 import type { Integracao } from '@/features/integracoes';
+import type { SystemPrompt } from '@/features/system-prompts';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
-type ConfiguracoesTab = 'metricas' | 'seguranca' | 'integracoes' | 'aparencia';
+type ConfiguracoesTab = 'metricas' | 'seguranca' | 'integracoes' | 'aparencia' | 'prompts-ia';
 
 // =============================================================================
 // CONFIGURAÇÃO DAS TABS
 // =============================================================================
 
-const VALID_TABS = new Set<ConfiguracoesTab>(['metricas', 'seguranca', 'integracoes', 'aparencia']);
+const VALID_TABS = new Set<ConfiguracoesTab>(['metricas', 'seguranca', 'integracoes', 'aparencia', 'prompts-ia']);
 
 // =============================================================================
 // PROPS
@@ -52,6 +54,8 @@ interface ConfiguracoesTabsContentProps {
   integracaoChatwoot?: Integracao | null;
   /** Integração Dyte */
   integracaoDyte?: Integracao | null;
+  /** System prompts de IA */
+  systemPrompts?: SystemPrompt[];
 }
 
 // =============================================================================
@@ -64,6 +68,7 @@ export function ConfiguracoesTabsContent({
   integracao2FAuth,
   integracaoChatwoot,
   integracaoDyte,
+  systemPrompts,
 }: ConfiguracoesTabsContentProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -87,7 +92,7 @@ export function ConfiguracoesTabsContent({
       <h1 className="text-2xl font-semibold tracking-tight">Configurações</h1>
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 lg:w-200">
+        <TabsList className="grid w-full grid-cols-5 lg:w-250">
           <TabsTrigger value="metricas">
             <Database className="mr-2 h-4 w-4" />
             Métricas
@@ -103,6 +108,10 @@ export function ConfiguracoesTabsContent({
           <TabsTrigger value="aparencia">
             <Palette className="mr-2 h-4 w-4" />
             Aparência
+          </TabsTrigger>
+          <TabsTrigger value="prompts-ia">
+            <Sparkles className="mr-2 h-4 w-4" />
+            Prompts IA
           </TabsTrigger>
         </TabsList>
         <div className="mt-6">
@@ -162,6 +171,9 @@ export function ConfiguracoesTabsContent({
           </TabsContent>
           <TabsContent value="aparencia" className="space-y-4">
             <AparenciaContent />
+          </TabsContent>
+          <TabsContent value="prompts-ia" className="space-y-4">
+            <PromptsIAContent systemPrompts={systemPrompts} />
           </TabsContent>
         </div>
       </Tabs>

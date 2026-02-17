@@ -2,7 +2,7 @@
  * Operações de Conversations da API do Chatwoot
  */
 
-import { ChatwootClient, getChatwootClient } from './client';
+import { type ChatwootClient, getChatwootClient } from './client';
 import {
   ChatwootConversation,
   ChatwootConversationCounts,
@@ -29,7 +29,7 @@ export async function getConversationCounts(
   params?: GetConversationCountsParams,
   client?: ChatwootClient
 ): Promise<ChatwootResult<ChatwootConversationCounts>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   const result = await chatwoot.get<ConversationCountsResponse>(
@@ -58,7 +58,7 @@ export async function listConversations(
   params?: ListConversationsParams,
   client?: ChatwootClient
 ): Promise<ChatwootResult<{ meta: ChatwootConversationCounts; conversations: ChatwootConversation[] }>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   const result = await chatwoot.get<ListConversationsResponse>(
@@ -95,7 +95,7 @@ export async function getConversation(
   conversationId: number,
   client?: ChatwootClient
 ): Promise<ChatwootResult<ChatwootConversation>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   return chatwoot.get<ChatwootConversation>(
@@ -111,7 +111,7 @@ export async function createConversation(
   data: CreateConversationRequest,
   client?: ChatwootClient
 ): Promise<ChatwootResult<CreateConversationResponse>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   // Usa inbox_id padrão se não fornecido
@@ -142,7 +142,7 @@ export async function filterConversations(
   page?: number,
   client?: ChatwootClient
 ): Promise<ChatwootResult<{ meta: ChatwootConversationCounts; conversations: ChatwootConversation[] }>> {
-  const chatwoot = client ?? getChatwootClient();
+  const chatwoot = client ?? await getChatwootClient();
   const accountId = chatwoot.getAccountId();
 
   const result = await chatwoot.post<ListConversationsResponse>(
