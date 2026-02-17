@@ -45,10 +45,7 @@ export const atualizarIntegracaoSchema = integracaoBaseSchema.partial().extend({
 export const twofauthConfigSchema = z.object({
   api_url: z.string().url("URL inválida"),
   api_token: z.string().min(10, "Token deve ter no mínimo 10 caracteres"),
-  account_id: z.preprocess(
-    (val) => (val === "" || val === null || Number.isNaN(val) ? undefined : val),
-    z.number().int().positive().optional()
-  ),
+  account_id: z.number().int("Account ID deve ser um número inteiro").positive("Account ID deve ser positivo").optional(),
 });
 
 // =============================================================================
