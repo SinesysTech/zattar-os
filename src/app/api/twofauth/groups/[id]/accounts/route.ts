@@ -147,7 +147,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const result = await assignAccountsToGroup(groupId, body.ids);
+    const result = await assignAccountsToGroup(groupId, body);
 
     return NextResponse.json({
       success: true,

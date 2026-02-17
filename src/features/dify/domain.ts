@@ -27,7 +27,7 @@ export interface EnviarMensagemParams {
   user?: string;
 }
 
-export const enviarMensagemSchema: z.ZodType<EnviarMensagemParams> = z.object({
+export const enviarMensagemSchema = z.object({
   query: z.string().min(1, 'A mensagem não pode estar vazia'),
   conversation_id: z.string().optional(),
   inputs: z.record(z.unknown()).default({}),
@@ -41,7 +41,7 @@ export interface ExecutarWorkflowParams {
   user?: string;
 }
 
-export const executarWorkflowSchema: z.ZodType<ExecutarWorkflowParams> = z.object({
+export const executarWorkflowSchema = z.object({
   inputs: z.record(z.unknown()).default({}),
   files: z.array(z.unknown()).optional(),
   user: z.string().optional(),
