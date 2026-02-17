@@ -81,7 +81,7 @@ function DroppableColumn({ status, label, tasks, onCardClick }: DroppableColumnP
   return (
     <div
       ref={setNodeRef}
-      className="w-[340px] min-w-[340px] rounded-xl border border-border bg-card p-3"
+      className="w-85 min-w-85 rounded-xl border border-border bg-card p-3"
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">

@@ -11,6 +11,8 @@ export function DebugPage() {
   const [loading, setLoading] = useState(true);
   const [result, setResult] = useState<unknown>(null);
   const [error, setError] = useState<string | null>(null);
+  const hasResult = typeof result === "object" && result !== null;
+  const resultObject = hasResult ? (result as Record<string, unknown>) : null;
 
   useEffect(() => {
     async function load() {
@@ -53,23 +55,23 @@ export function DebugPage() {
         </div>
       )}
       
-      {result && typeof result === 'object' && (
+      {hasResult ? (
         <div className="space-y-4">
           <div className="p-4 bg-blue-100 rounded">
             <h2 className="font-bold">Success:</h2>
-            <p>{(result as Record<string, unknown>).success ? "✅ true" : "❌ false"}</p>
+            <p>{resultObject?.success ? "✅ true" : "❌ false"}</p>
           </div>
 
-          {(result as Record<string, unknown>).data && (
+          {Boolean(resultObject?.data) && (
             <div className="p-4 bg-green-100 rounded">
               <h2 className="font-bold">Data:</h2>
               <pre className="mt-2 text-xs overflow-auto max-h-96">
-                {JSON.stringify((result as Record<string, unknown>).data, null, 2)}
+                {JSON.stringify(resultObject.data, null, 2)}
               </pre>
             </div>
           )}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

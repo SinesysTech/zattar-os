@@ -51,6 +51,12 @@ export async function createDifyAppAction(data: { name: string; api_url: string;
         console.error('[Dify] Erro ao auto-criar assistente:', error);
     }
 
+    try {
+        await sincronizarDifyAppMetadata(difyApp.id);
+    } catch (error) {
+        console.error('[Dify] Erro ao sincronizar metadata do app:', error);
+    }
+
     revalidatePath('/app/configuracoes');
     revalidatePath('/app/assistentes');
     return { success: true, data: difyApp };
@@ -70,6 +76,12 @@ export async function updateDifyAppAction(id: string, data: Partial<{ name: stri
         });
     } catch (error) {
         console.error('[Dify] Erro ao sincronizar assistente:', error);
+    }
+
+    try {
+        await sincronizarDifyAppMetadata(id);
+    } catch (error) {
+        console.error('[Dify] Erro ao sincronizar metadata do app:', error);
     }
 
     revalidatePath('/app/configuracoes');
@@ -108,6 +120,30 @@ export async function checkDifyAppConnectionAction(apiUrl: string, apiKey: strin
         }
 
         return { success: true, data: infoResult.value };
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        return { success: false, message };
+    }
+}
+
+async function sincronizarDifyAppMetadata(appId: string) {
+    const service = await DifyService.createAsync('system', appId);
+    const metadataResult = await service.obterMetadataCompleta();
+    if (metadataResult.isErr()) {
+        throw metadataResult.error;
+    }
+
+    const updateResult = await difyRepository.updateDifyAppMetadata(appId, metadataResult.value);
+    if (updateResult.isErr()) {
+        throw updateResult.error;
+    }
+}
+
+export async function syncDifyAppMetadataAction(appId: string) {
+    try {
+        await sincronizarDifyAppMetadata(appId);
+        revalidatePath('/app/configuracoes');
+        return { success: true };
     } catch (error: unknown) {
         const message = error instanceof Error ? error.message : String(error);
         return { success: false, message };

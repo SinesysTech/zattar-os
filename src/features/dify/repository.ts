@@ -140,6 +140,24 @@ export class DifyRepository {
     }
   }
 
+  async updateDifyAppMetadata(id: string, metadata: Record<string, unknown>): Promise<Result<void, Error>> {
+    const supabase = await createClient();
+    try {
+      const { error } = await supabase
+        .from('dify_apps')
+        .update({
+          metadata,
+          metadata_updated_at: new Date().toISOString(),
+        })
+        .eq('id', id);
+
+      if (error) throw error;
+      return ok(undefined);
+    } catch (error: unknown) {
+      return err(new Error(`Erro ao atualizar metadata do app Dify: ${error instanceof Error ? error.message : String(error)}`, { cause: error }));
+    }
+  }
+
   async deleteDifyApp(id: string): Promise<Result<void, Error>> {
     const supabase = await createClient();
     try {

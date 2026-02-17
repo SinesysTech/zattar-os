@@ -138,6 +138,12 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
 
   return (
     <div className="space-y-4">
+      <div className="flex flex-col gap-1.5">
+        <h1 className="text-2xl font-bold tracking-tight font-heading text-foreground sm:text-3xl">
+          Quadro - {board.titulo}
+        </h1>
+      </div>
+
       {/* Toolbar */}
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
@@ -171,7 +177,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
             <Kanban.KanbanColumn
               key={col.id}
               value={col.id}
-              className="w-[340px] min-w-[340px] rounded-xl border border-border bg-card"
+              className="w-85 min-w-85 rounded-xl border border-border bg-card"
               disabled={!board.dndEnabled}
             >
               <div className="flex items-center justify-between p-3 pb-0">
@@ -188,7 +194,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
                     key={item.id}
                     value={item.id}
                     asHandle
-                    disabled={!board.dndEnabled || col.targetStatus === null}
+                    disabled={!board.dndEnabled}
                   >
                     <SystemBoardCard event={item} />
                   </Kanban.KanbanItem>

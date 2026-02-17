@@ -617,7 +617,7 @@ export async function registerDifyTools(): Promise<void> {
         const result = await service.habilitarRespostaAnotacao({
           embeddingProviderName: args.embedding_provider,
           embeddingModelName: args.embedding_model,
-          scoreThreshold: args.score_threshold,
+          scoreThreshold: args.score_threshold ?? 0.7,
         });
         if (result.isErr()) return errorResult(result.error.message);
         return jsonResult(result.value);

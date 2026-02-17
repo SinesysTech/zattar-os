@@ -1,8 +1,6 @@
 'use client';
 
-import { DifyChatPanel } from '@/features/dify/components/dify-chat/dify-chat-panel';
-import { WorkflowRunner } from '@/features/dify/components/dify-workflows/workflow-runner';
-import { CompletionPanel } from '@/features/dify/components/dify-completion/completion-panel';
+import { DifyChatPanel, WorkflowRunner, CompletionPanel } from '@/features/dify';
 
 interface AssistenteNativoViewProps {
   appId: string;

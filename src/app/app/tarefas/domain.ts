@@ -276,8 +276,8 @@ export const SYSTEM_BOARD_DEFINITIONS: SystemBoardDefinition[] = [
     icone: "FileText",
     dndEnabled: true,
     columns: [
-      { id: "pendentes", label: "Pendentes", matchStatuses: ["pendente"], targetStatus: null },
-      { id: "prazo-vencido", label: "Prazo Vencido", matchStatuses: ["vencido"], targetStatus: null },
+      { id: "pendentes", label: "Pendentes", matchStatuses: ["pendente"], targetStatus: "todo" },
+      { id: "prazo-vencido", label: "Prazo Vencido", matchStatuses: ["vencido"], targetStatus: "todo" },
       { id: "baixados", label: "Baixados", matchStatuses: ["baixado"], targetStatus: "done" },
     ],
   },

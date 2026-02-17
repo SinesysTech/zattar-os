@@ -100,6 +100,8 @@ export interface DifyApp {
   api_key: string;
   app_type: TipoDifyApp | string;
   is_active: boolean;
+  metadata?: Record<string, unknown> | null;
+  metadata_updated_at?: string | null;
   created_at: string;
   updated_at: string;
 }

@@ -78,7 +78,7 @@ export function CompletionPanel({
           onChange={(e) => setInputValue(e.target.value)}
           placeholder={placeholder}
           disabled={isStreaming}
-          className="min-h-[100px] resize-none"
+          className="min-h-25 resize-none"
         />
         <div className="flex gap-2">
           {isStreaming ? (

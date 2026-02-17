@@ -21,7 +21,10 @@ import { atualizarStatusAudiencia } from "@/features/audiencias/service";
 
 import type { Expediente } from "@/features/expedientes";
 import { listarExpedientes } from "@/features/expedientes";
-import { realizarBaixa as realizarBaixaExpediente } from "@/features/expedientes/service";
+import {
+  realizarBaixa as realizarBaixaExpediente,
+  reverterBaixa as reverterBaixaExpediente
+} from "@/features/expedientes/service";
 
 import type { Pericia } from "@/features/pericias";
 import { listarPericias, SituacaoPericiaCodigo } from "@/features/pericias";
@@ -344,8 +347,12 @@ export async function atualizarStatusEntidadeOrigem(
             userId
           );
           if (!result.success) return err(result.error);
+          return ok(undefined);
         }
-        // Para outros status, prazoVencido é calculado, não editável
+
+        const result = await reverterBaixaExpediente(numericId, userId);
+        if (!result.success) return err(result.error);
+        // prazoVencido continua calculado por data, nao e editavel via DnD
         return ok(undefined);
       }
 

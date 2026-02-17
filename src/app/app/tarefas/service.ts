@@ -261,7 +261,10 @@ export async function listarQuadros(usuarioId: number): Promise<Result<Quadro[]>
 
   // Quadros custom do DB
   const customResult = await repo.listQuadrosCustom(usuarioId);
-  if (!customResult.success) return err(customResult.error);
+  if (!customResult.success) {
+    console.warn("Falha ao carregar quadros customizados:", customResult.error.message);
+    return ok([...sistemQuadros]);
+  }
 
   return ok([...sistemQuadros, ...customResult.data]);
 }

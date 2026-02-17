@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Plus, Trash2, Edit2, Play, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
-import { listDifyAppsAction, createDifyAppAction, updateDifyAppAction, deleteDifyAppAction, checkDifyAppConnectionAction } from '../actions';
+import { listDifyAppsAction, createDifyAppAction, updateDifyAppAction, deleteDifyAppAction, checkDifyAppConnectionAction, syncDifyAppMetadataAction } from '../actions';
 import { toast } from 'sonner';
 
 interface DifyApp {
@@ -37,6 +37,7 @@ export function DifyAppsList() {
 
     const [testStatus, setTestStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [saving, setSaving] = useState(false);
+    const [syncingAppId, setSyncingAppId] = useState<string | null>(null);
 
     useEffect(() => {
         loadApps();
@@ -136,6 +137,23 @@ export function DifyAppsList() {
         }
     };
 
+    const handleSyncMetadata = async (appId: string) => {
+        setSyncingAppId(appId);
+        try {
+            const result = await syncDifyAppMetadataAction(appId);
+            if (result.success) {
+                toast.success('Metadata sincronizada com sucesso.');
+            } else {
+                toast.error('Erro ao sincronizar metadata: ' + result.message);
+            }
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            toast.error('Erro ao sincronizar metadata: ' + message);
+        } finally {
+            setSyncingAppId(null);
+        }
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
@@ -218,6 +236,15 @@ export function DifyAppsList() {
                                 <CardDescription className="text-xs truncate">{app.api_url}</CardDescription>
                             </CardHeader>
                             <CardFooter className="pt-2 flex justify-end gap-2">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleSyncMetadata(app.id)}
+                                    disabled={syncingAppId === app.id}
+                                    title="Sincronizar metadata"
+                                >
+                                    <RefreshCw className={syncingAppId === app.id ? 'h-3 w-3 animate-spin' : 'h-3 w-3'} />
+                                </Button>
                                 <Button variant="ghost" size="sm" onClick={() => handleEdit(app)}><Edit2 className="h-3 w-3" /></Button>
                                 <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => handleDelete(app.id)}><Trash2 className="h-3 w-3" /></Button>
                             </CardFooter>

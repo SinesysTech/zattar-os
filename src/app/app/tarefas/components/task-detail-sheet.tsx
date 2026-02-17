@@ -364,7 +364,7 @@ export function TaskDetailSheet() {
                                                 placeholder="Escreva um comentário..."
                                                 value={newComment}
                                                 onChange={(e) => setNewComment(e.target.value)}
-                                                className="min-h-[80px] text-sm resize-none"
+                                                className="min-h-20 text-sm resize-none"
                                                 disabled={tarefa.isVirtual}
                                             />
                                             <div className="flex justify-end">
