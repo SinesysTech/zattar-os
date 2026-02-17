@@ -87,7 +87,7 @@
 ## 13. Documentação
 - [x] 13.1 Adicionar comentário no topo de `tarefas-client.tsx` explicando que é visualização de lista
 - [x] 13.2 Adicionar comentário mencionando que Kanban está em `/kanban`
-- [~] 13.3 Atualizar README.md do módulo (se existir)
+- [x] 13.3 Atualizar README.md do módulo (se existir)
 
 ## 14. Melhorias Opcionais
 - [ ] 14.1* Adicionar link/botão "Ver em Kanban" que redireciona para `/kanban`
