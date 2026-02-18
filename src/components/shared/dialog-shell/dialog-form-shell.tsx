@@ -97,6 +97,7 @@ export function DialogFormShell({
           maxWidthClass,
           "bg-white", // Background branco explícito
           "p-0 gap-0", // Removemos padding padrão para controlar layout
+          "transition-[max-width] duration-300 ease-in-out", // Transição suave ao mudar largura
           className
         )}
       >
@@ -107,7 +108,7 @@ export function DialogFormShell({
 
           {/* Barra de progresso para multi-step */}
           {multiStep && (
-            <div className="mt-4 space-y-2">
+            <div className="mt-3 space-y-1.5">
               <div className="flex items-center justify-between text-sm text-muted-foreground">
                 <span className="font-medium text-foreground">
                   {multiStep.stepTitle}
@@ -116,7 +117,7 @@ export function DialogFormShell({
                   Etapa {multiStep.current} de {multiStep.total}
                 </span>
               </div>
-              <Progress value={progressValue} className="h-2" />
+              <Progress value={progressValue} className="h-1.5" />
             </div>
           )}
         </ResponsiveDialogHeader>
