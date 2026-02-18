@@ -123,8 +123,8 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
           <div className="rounded-md border p-3">
             <p className="text-xs text-muted-foreground">IOPS</p>
             <p className="mt-1 text-lg font-semibold">
-              {disk_iops_consumption.toLocaleString()}
-              <span className="text-sm font-normal text-muted-foreground"> / {disk_iops_limit.toLocaleString()}</span>
+              {disk_iops_consumption.toLocaleString('pt-BR')}
+              <span className="text-sm font-normal text-muted-foreground"> / {disk_iops_limit.toLocaleString('pt-BR')}</span>
             </p>
           </div>
 

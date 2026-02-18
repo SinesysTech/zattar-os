@@ -1,3 +1,4 @@
+Initialising login role...
 export type Json =
   | string
   | number
@@ -11,6 +12,31 @@ export type Database = {
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
+  }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
   public: {
     Tables: {
@@ -899,6 +925,58 @@ export type Database = {
             columns: ["dify_app_id"]
             isOneToOne: false
             referencedRelation: "dify_apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assistentes_tipos_expedientes: {
+        Row: {
+          assistente_id: number
+          ativo: boolean
+          created_at: string
+          criado_por: number
+          id: number
+          tipo_expediente_id: number
+          updated_at: string
+        }
+        Insert: {
+          assistente_id: number
+          ativo?: boolean
+          created_at?: string
+          criado_por: number
+          id?: number
+          tipo_expediente_id: number
+          updated_at?: string
+        }
+        Update: {
+          assistente_id?: number
+          ativo?: boolean
+          created_at?: string
+          criado_por?: number
+          id?: number
+          tipo_expediente_id?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assistentes_tipos_expedientes_assistente_id_fkey"
+            columns: ["assistente_id"]
+            isOneToOne: false
+            referencedRelation: "assistentes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assistentes_tipos_expedientes_criado_por_fkey"
+            columns: ["criado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assistentes_tipos_expedientes_tipo_expediente_id_fkey"
+            columns: ["tipo_expediente_id"]
+            isOneToOne: false
+            referencedRelation: "tipos_expedientes"
             referencedColumns: ["id"]
           },
         ]
@@ -2546,6 +2624,8 @@ export type Database = {
           created_at: string | null
           id: string
           is_active: boolean | null
+          metadata: Json | null
+          metadata_updated_at: string | null
           name: string
           updated_at: string | null
         }
@@ -2556,6 +2636,8 @@ export type Database = {
           created_at?: string | null
           id?: string
           is_active?: boolean | null
+          metadata?: Json | null
+          metadata_updated_at?: string | null
           name: string
           updated_at?: string | null
         }
@@ -2566,6 +2648,8 @@ export type Database = {
           created_at?: string | null
           id?: string
           is_active?: boolean | null
+          metadata?: Json | null
+          metadata_updated_at?: string | null
           name?: string
           updated_at?: string | null
         }
@@ -5833,6 +5917,51 @@ export type Database = {
         }
         Relationships: []
       }
+      system_prompts: {
+        Row: {
+          ativo: boolean
+          categoria: string
+          conteudo: string
+          created_at: string
+          created_by_auth_id: string | null
+          descricao: string | null
+          id: string
+          metadata: Json | null
+          nome: string
+          slug: string
+          updated_at: string
+          updated_by_auth_id: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          categoria: string
+          conteudo: string
+          created_at?: string
+          created_by_auth_id?: string | null
+          descricao?: string | null
+          id?: string
+          metadata?: Json | null
+          nome: string
+          slug: string
+          updated_at?: string
+          updated_by_auth_id?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          categoria?: string
+          conteudo?: string
+          created_at?: string
+          created_by_auth_id?: string | null
+          descricao?: string | null
+          id?: string
+          metadata?: Json | null
+          nome?: string
+          slug?: string
+          updated_at?: string
+          updated_by_auth_id?: string | null
+        }
+        Relationships: []
+      }
       tags: {
         Row: {
           cor: string | null
@@ -7718,6 +7847,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       codigo_tribunal: [

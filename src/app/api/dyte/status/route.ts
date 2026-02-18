@@ -30,9 +30,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Testar conexão listando meetings (limit=1 para ser rápido)
+    // Testar conexão listando meetings
     const token = Buffer.from(`${org_id}:${api_key}`).toString("base64");
-    const response = await fetch(`${DYTE_API_BASE}/meetings?limit=1`, {
+    const response = await fetch(`${DYTE_API_BASE}/meetings`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
