@@ -180,8 +180,8 @@ module.exports = class CacheHandler {
 
   /**
    * Revalidate all entries with a specific tag
-          const entryTagsRaw = data.tags;
-          const entryTags = Array.isArray(entryTagsRaw) ? entryTagsRaw : [];
+   * @param {string | string[]} tag - Tag(s) to revalidate
+   */
   async revalidateTag(tag) {
     const tags = loadTags();
     const tagList = Array.isArray(tag) ? tag : [tag];

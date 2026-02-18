@@ -12,7 +12,7 @@
  */
 
 import * as React from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import { format, startOfDay, addDays, startOfWeek, endOfWeek } from 'date-fns';
 import { X } from 'lucide-react';
@@ -83,7 +83,6 @@ export function ExpedientesListWrapper({
   usuariosData,
   tiposExpedientesData,
 }: ExpedientesListWrapperProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   // ---------- Estado da Tabela ----------
@@ -222,14 +221,12 @@ export function ExpedientesListWrapper({
   const handleSucessoOperacao = React.useCallback(() => {
     setRowSelection({});
     refetch();
-    router.refresh();
-  }, [refetch, router]);
+  }, [refetch]);
 
   const handleCreateSuccess = React.useCallback(() => {
     refetch();
     setIsCreateDialogOpen(false);
-    router.refresh();
-  }, [refetch, router]);
+  }, [refetch]);
 
   // Handler para limpar todos os filtros
   const handleClearAllFilters = React.useCallback(() => {
@@ -483,7 +480,7 @@ export function ExpedientesListWrapper({
             meta: {
               usuarios,
               tiposExpedientes,
-              onSuccess: handleSucessoOperacao,
+              onSuccessAction: handleSucessoOperacao,
             },
           }}
         />

@@ -371,7 +371,7 @@ export function ExpedientesCalendar() {
                         meta: {
                             usuarios,
                             tiposExpedientes,
-                            onSuccess: handleSucessoOperacao,
+                            onSuccessAction: handleSucessoOperacao,
                         },
                     }}
                 />
