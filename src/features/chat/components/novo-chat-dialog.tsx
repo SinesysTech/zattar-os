@@ -103,7 +103,19 @@ export function NovoChatDialog({ open, onOpenChange, onChatCreated }: NovoChatDi
         handleOpenChange(false);
 
         if (result.data) {
-          const novoChat = result.data as ChatItem;
+          // O service retorna SalaChat (sem name/image/usuario).
+          // Precisamos montar o ChatItem completo para exibição correta.
+          const salaBase = result.data as ChatItem;
+          const novoChat: ChatItem = {
+            ...salaBase,
+            name: usuarioSelecionado.nome,
+            usuario: {
+              id: Number(selectedUsuarioId),
+              nomeCompleto: usuarioSelecionado.nome,
+              nomeExibicao: null,
+              emailCorporativo: null,
+            },
+          };
           adicionarSala(novoChat);
           setSelectedChat(novoChat);
           onChatCreated?.(novoChat);
@@ -131,25 +143,23 @@ export function NovoChatDialog({ open, onOpenChange, onChatCreated }: NovoChatDi
         </Button>
       }
     >
-      <div className="space-y-4 p-6">
-        <div className="space-y-2">
-          <Label>Com quem você quer conversar?</Label>
-          <Select
-            onValueChange={setSelectedUsuarioId}
-            value={selectedUsuarioId}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder={loadingUsuarios ? "Carregando..." : "Selecione uma pessoa"} />
-            </SelectTrigger>
-            <SelectContent>
-              {usuarios.map((usuario) => (
-                <SelectItem key={usuario.id} value={usuario.id.toString()}>
-                  {usuario.nome}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="space-y-2 px-6 py-4">
+        <Label>Com quem você quer conversar?</Label>
+        <Select
+          onValueChange={setSelectedUsuarioId}
+          value={selectedUsuarioId}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={loadingUsuarios ? "Carregando..." : "Selecione uma pessoa"} />
+          </SelectTrigger>
+          <SelectContent>
+            {usuarios.map((usuario) => (
+              <SelectItem key={usuario.id} value={usuario.id.toString()}>
+                {usuario.nome}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </DialogFormShell>
   );

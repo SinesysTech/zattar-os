@@ -100,7 +100,7 @@ export function DialogFormShell({
           className
         )}
       >
-        <ResponsiveDialogHeader className="px-6 py-4 border-b shrink-0">
+        <ResponsiveDialogHeader className="px-6 py-4 shrink-0">
           <ResponsiveDialogTitle className="text-lg font-semibold leading-none tracking-tight">
             {title}
           </ResponsiveDialogTitle>
@@ -127,19 +127,17 @@ export function DialogFormShell({
 
         {!hideFooter && (
           <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0 bg-white">
-            <div className="flex w-full items-center gap-2">
-              {/* Botão Cancelar padrão à esquerda */}
+            <div className="flex w-full items-center justify-between gap-2">
               <Button
                 type="button"
-                variant="destructive"
+                variant="outline"
                 onClick={() => onOpenChange(false)}
-                className="mr-auto"
               >
                 Cancelar
               </Button>
-
-              {/* Botões de ação personalizados */}
-              {footer}
+              <div className="flex items-center gap-2">
+                {footer}
+              </div>
             </div>
           </ResponsiveDialogFooter>
         )}
