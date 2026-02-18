@@ -204,7 +204,7 @@ export function TipoDescricaoCell({
                   <SelectTrigger className="w-full h-8 text-sm">
                     <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-[200px]">
+                  <SelectContent className="max-h-50">
                     <SelectItem value="null">Sem tipo</SelectItem>
                     {tiposExpedientes.length > 0 ? (
                       tiposExpedientes.map((tipo) => (
@@ -367,7 +367,7 @@ export function ResponsavelCell({ expediente, usuarios = [], onSuccess }: { expe
                 {getInitials(responsavel.nomeExibicao)}
               </AvatarFallback>
             </Avatar>
-            <span className="truncate max-w-[120px]">{responsavel.nomeExibicao}</span>
+            <span className="truncate max-w-30">{responsavel.nomeExibicao}</span>
           </>
         ) : (
           <span className="text-muted-foreground">Sem responsável</span>
