@@ -22,13 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { FilterPopover } from '@/features/partes';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import {
   getFormularioDisplayName,
@@ -121,55 +115,55 @@ function criarColunas(onEditSchema: (formulario: AssinaturaDigitalFormulario) =>
     { 
       accessorKey: 'nome', 
       header: ({ column }) => (
-        <div className="flex items-center justify-start"><DataTableColumnHeader column={column} title="Nome" /></div>
-      ), 
-      enableSorting: true, 
-      size: 250, 
-      meta: { align: 'left', headerLabel: 'Nome' }, 
+        <DataTableColumnHeader column={column} title="Nome" />
+      ),
+      enableSorting: true,
+      size: 250,
+      meta: { align: 'left', headerLabel: 'Nome' },
       cell: ({ row }) => {
         const formulario = row.original;
         const displayName = getFormularioDisplayName(formulario);
         return (
-          <div className="min-h-10 flex items-center justify-start text-sm gap-2">
+          <div className="flex items-center text-sm gap-2">
             <span>{displayName}</span>
           </div>
         );
       } 
     },
-    { 
-      accessorKey: 'segmento', 
+    {
+      accessorKey: 'segmento',
       header: ({ column }) => (
-        <div className="flex items-center justify-center"><DataTableColumnHeader column={column} title="Segmento" /></div>
-      ), 
-      enableSorting: false, 
-      size: 150, 
-      meta: { headerLabel: 'Segmento' },
+        <DataTableColumnHeader column={column} title="Segmento" />
+      ),
+      enableSorting: false,
+      size: 150,
+      meta: { align: 'left', headerLabel: 'Segmento' },
       cell: ({ row }) => {
         const segmento = row.original.segmento;
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center">
             <Badge variant="outline" className="capitalize">{segmento?.nome || 'N/A'}</Badge>
           </div>
         );
-      } 
+      }
     },
     { 
       accessorKey: 'descricao', 
       header: ({ column }) => (
-        <div className="flex items-center justify-start"><DataTableColumnHeader column={column} title="Descrição" /></div>
-      ), 
-      enableSorting: false, 
-      size: 200, 
-      meta: { align: 'left', headerLabel: 'Descrição' }, 
+        <DataTableColumnHeader column={column} title="Descrição" />
+      ),
+      enableSorting: false,
+      size: 200,
+      meta: { align: 'left', headerLabel: 'Descrição' },
       cell: ({ row }) => {
         const descricao = row.getValue('descricao') as string | null;
         const truncated = descricao ? (descricao.length > 50 ? descricao.substring(0, 50) + '...' : descricao) : '';
         return (
-          <div className="min-h-10 flex items-center justify-start text-sm">
+          <div className="flex items-center text-sm">
             {truncated ? (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="truncate max-w-[180px]">{truncated}</span>
+                  <span className="truncate max-w-45">{truncated}</span>
                 </TooltipTrigger>
                 <TooltipContent>{descricao}</TooltipContent>
               </Tooltip>
@@ -180,20 +174,20 @@ function criarColunas(onEditSchema: (formulario: AssinaturaDigitalFormulario) =>
         );
       } 
     },
-    { 
-      accessorKey: 'template_ids', 
+    {
+      accessorKey: 'template_ids',
       header: ({ column }) => (
-        <div className="flex items-center justify-center"><DataTableColumnHeader column={column} title="Templates" /></div>
-      ), 
-      enableSorting: false, 
-      size: 120, 
-      meta: { headerLabel: 'Templates' },
+        <DataTableColumnHeader column={column} title="Templates" />
+      ),
+      enableSorting: false,
+      size: 120,
+      meta: { align: 'left', headerLabel: 'Templates' },
       cell: ({ row }) => {
         const templateIds = row.getValue('template_ids') as string[] | null;
         const count = templateIds ? templateIds.length : 0;
         const previewText = templateIds && templateIds.length > 0 ? getTemplatePreviewText(templateIds, templates) : 'Nenhum template';
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Badge variant="secondary" className="capitalize cursor-help">{count}</Badge>
@@ -202,23 +196,23 @@ function criarColunas(onEditSchema: (formulario: AssinaturaDigitalFormulario) =>
             </Tooltip>
           </div>
         );
-      } 
+      }
     },
-    { 
-      id: 'verificadores', 
+    {
+      id: 'verificadores',
       header: ({ column }) => (
-        <div className="flex items-center justify-center"><DataTableColumnHeader column={column} title="Verificadores" /></div>
-      ), 
-      enableSorting: false, 
-      size: 200, 
-      meta: { headerLabel: 'Verificadores' },
+        <DataTableColumnHeader column={column} title="Verificadores" />
+      ),
+      enableSorting: false,
+      size: 200,
+      meta: { align: 'left', headerLabel: 'Verificadores' },
       cell: ({ row }) => {
         const formulario = row.original;
         const fotoNecessaria = formulario.foto_necessaria ?? false;
         const geolocationNecessaria = formulario.geolocation_necessaria ?? false;
-        
+
         return (
-          <div className="min-h-10 flex items-center justify-center gap-2">
+          <div className="flex items-center gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Badge variant={getBooleanBadgeVariant(fotoNecessaria)} className="capitalize">
@@ -241,43 +235,41 @@ function criarColunas(onEditSchema: (formulario: AssinaturaDigitalFormulario) =>
             </Tooltip>
           </div>
         );
-      } 
+      }
     },
-    { 
-      accessorKey: 'ativo', 
+    {
+      accessorKey: 'ativo',
       header: ({ column }) => (
-        <div className="flex items-center justify-center"><DataTableColumnHeader column={column} title="Ativo" /></div>
-      ), 
-      enableSorting: true, 
-      size: 100, 
+        <DataTableColumnHeader column={column} title="Ativo" />
+      ),
+      enableSorting: true,
+      size: 100,
       enableHiding: true,
-      meta: { headerLabel: 'Ativo' },
+      meta: { align: 'left', headerLabel: 'Ativo' },
       cell: ({ row }) => {
         const ativo = row.getValue('ativo') as boolean;
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center">
             <Badge variant={ativo ? 'success' : 'secondary'} className="capitalize">{formatAtivoStatus(ativo)}</Badge>
           </div>
         );
-      } 
+      }
     },
-    { 
-      id: 'acoes', 
-      header: () => (
-        <div className="flex items-center justify-center"><div className="text-sm font-medium">Ações</div></div>
-      ), 
-      enableSorting: false, 
-      size: 150, 
+    {
+      id: 'acoes',
+      header: 'Ações',
+      enableSorting: false,
+      size: 150,
       enableHiding: false,
-      meta: { headerLabel: 'Ações' },
+      meta: { align: 'left', headerLabel: 'Ações' },
       cell: ({ row }) => {
         const formulario = row.original;
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center">
             <FormularioActions formulario={formulario} onEditSchema={onEditSchema} onDuplicate={onDuplicate} onDelete={onDelete} canEdit={canEdit} canCreate={canCreate} canDelete={canDelete} />
           </div>
         );
-      } 
+      }
     },
   ];
 }
@@ -443,19 +435,26 @@ export function FormulariosClient() {
   const handleDuplicateSuccess = React.useCallback(() => { refetch(); setDuplicateOpen(false); setSelectedFormulario(null); }, [refetch]);
   const handleDeleteSuccess = React.useCallback(() => { refetch(); setDeleteOpen(false); setSelectedFormularios([]); setRowSelection({}); }, [refetch]);
 
+  const [ativoFilter, setAtivoFilter] = React.useState<string>('all');
+  const [fotoFilter, setFotoFilter] = React.useState<string>('all');
+  const [geoFilter, setGeoFilter] = React.useState<string>('all');
+
   const handleAtivoFilterChange = React.useCallback((value: string) => {
+    setAtivoFilter(value);
     const ativo = value === 'all' ? undefined : value === 'true';
     setFiltros(prev => ({ ...prev, ativo }));
     setPagina(0);
   }, []);
 
   const handleFotoNecessariaFilterChange = React.useCallback((value: string) => {
+    setFotoFilter(value);
     const fotoNecessaria = value === 'all' ? undefined : value === 'true';
     setFiltros(prev => ({ ...prev, foto_necessaria: fotoNecessaria }));
     setPagina(0);
   }, []);
 
   const handleGeolocationNecessariaFilterChange = React.useCallback((value: string) => {
+    setGeoFilter(value);
     const geolocationNecessaria = value === 'all' ? undefined : value === 'true';
     setFiltros(prev => ({ ...prev, geolocation_necessaria: geolocationNecessaria }));
     setPagina(0);
@@ -525,47 +524,35 @@ export function FormulariosClient() {
               } : undefined}
               filtersSlot={
                 <>
-                  <Select
-                    value={filtros.ativo === undefined ? 'all' : filtros.ativo ? 'true' : 'false'}
+                  <FilterPopover
+                    label="Ativo"
+                    options={[
+                      { value: 'true', label: 'Ativo' },
+                      { value: 'false', label: 'Inativo' },
+                    ]}
+                    value={ativoFilter}
                     onValueChange={handleAtivoFilterChange}
-                  >
-                    <SelectTrigger className="w-[150px]">
-                      <SelectValue placeholder="Ativo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
-                      <SelectItem value="true">Ativo</SelectItem>
-                      <SelectItem value="false">Inativo</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
 
-                  <Select
-                    value={filtros.foto_necessaria === undefined ? 'all' : filtros.foto_necessaria ? 'true' : 'false'}
+                  <FilterPopover
+                    label="Foto"
+                    options={[
+                      { value: 'true', label: 'Sim' },
+                      { value: 'false', label: 'Não' },
+                    ]}
+                    value={fotoFilter}
                     onValueChange={handleFotoNecessariaFilterChange}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Foto necessária" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todas</SelectItem>
-                      <SelectItem value="true">Sim</SelectItem>
-                      <SelectItem value="false">Não</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
 
-                  <Select
-                    value={filtros.geolocation_necessaria === undefined ? 'all' : filtros.geolocation_necessaria ? 'true' : 'false'}
+                  <FilterPopover
+                    label="Geolocalização"
+                    options={[
+                      { value: 'true', label: 'Sim' },
+                      { value: 'false', label: 'Não' },
+                    ]}
+                    value={geoFilter}
                     onValueChange={handleGeolocationNecessariaFilterChange}
-                  >
-                    <SelectTrigger className="w-[200px]">
-                      <SelectValue placeholder="Geolocalização necessária" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todas</SelectItem>
-                      <SelectItem value="true">Sim</SelectItem>
-                      <SelectItem value="false">Não</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
 
                   {bulkActions}
 

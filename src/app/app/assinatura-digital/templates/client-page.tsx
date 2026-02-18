@@ -10,25 +10,14 @@ import { DataTable, DataShell, DataTableToolbar, DataPagination } from '@/compon
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Edit, MoreHorizontal, Copy, Trash2, Download } from 'lucide-react';
+import { Pencil, Copy, Trash2, Download } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { ButtonGroup } from '@/components/ui/button-group';
+import { FilterPopover } from '@/features/partes';
 import {
   formatFileSize,
   formatTemplateStatus,
@@ -166,7 +155,7 @@ function criarColunas(
             {truncated ? (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="truncate max-w-[180px]">{truncated}</span>
+                  <span className="truncate max-w-45">{truncated}</span>
                 </TooltipTrigger>
                 <TooltipContent>
                   {descricao}
@@ -182,17 +171,15 @@ function criarColunas(
     {
       accessorKey: 'tipo_template',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Tipo" />
-        </div>
+        <DataTableColumnHeader column={column} title="Tipo" />
       ),
       enableSorting: true,
       size: 100,
-      meta: { headerLabel: 'Tipo' },
+      meta: { align: 'left', headerLabel: 'Tipo' },
       cell: ({ row }) => {
         const tipo = row.getValue('tipo_template') as TipoTemplate;
         return (
-          <div className="min-h-10 flex items-center justify-center text-sm capitalize">
+          <div className="flex items-center text-sm capitalize">
             {tipo === 'pdf' ? 'PDF' : 'Markdown'}
           </div>
         );
@@ -201,17 +188,15 @@ function criarColunas(
     {
       accessorKey: 'status',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Status" />
-        </div>
+        <DataTableColumnHeader column={column} title="Status" />
       ),
       enableSorting: true,
       size: 120,
-      meta: { headerLabel: 'Status' },
+      meta: { align: 'left', headerLabel: 'Status' },
       cell: ({ row }) => {
         const status = row.getValue('status') as 'ativo' | 'inativo' | 'rascunho';
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center">
             <Badge variant={getStatusBadgeVariant(status)} className="capitalize">
               {formatTemplateStatus(status)}
             </Badge>
@@ -222,15 +207,13 @@ function criarColunas(
     {
       accessorKey: 'versao',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Versão" />
-        </div>
+        <DataTableColumnHeader column={column} title="Versão" />
       ),
       enableSorting: true,
       size: 100,
-      meta: { headerLabel: 'Versão' },
+      meta: { align: 'left', headerLabel: 'Versão' },
       cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-center text-sm">
+        <div className="flex items-center text-sm">
           v{row.getValue('versao')}
         </div>
       ),
@@ -238,17 +221,15 @@ function criarColunas(
     {
       accessorKey: 'arquivo_tamanho',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Tamanho" />
-        </div>
+        <DataTableColumnHeader column={column} title="Tamanho" />
       ),
       enableSorting: true,
       size: 120,
-      meta: { headerLabel: 'Tamanho' },
+      meta: { align: 'left', headerLabel: 'Tamanho' },
       cell: ({ row }) => {
         const tamanho = row.original.arquivo_tamanho as number | undefined;
         return (
-          <div className="min-h-10 flex items-center justify-center text-sm">
+          <div className="flex items-center text-sm">
             {formatFileSize(tamanho || 0)}
           </div>
         );
@@ -256,19 +237,15 @@ function criarColunas(
     },
     {
       id: 'acoes',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Ações</div>
-        </div>
-      ),
+      header: 'Ações',
       enableSorting: false,
       size: 120,
       enableHiding: false,
-      meta: { headerLabel: 'Ações' },
+      meta: { align: 'left', headerLabel: 'Ações' },
       cell: ({ row }) => {
         const template = row.original;
         return (
-          <div className="min-h-10 flex items-center justify-center gap-2">
+          <div className="flex items-center">
             <TemplateActions
               template={template}
               onEdit={onEdit}
@@ -303,43 +280,42 @@ function TemplateActions({
   canCreate: boolean;
   canDelete: boolean;
 }) {
-  const handleEdit = () => {
-    onEdit(template);
-  };
-
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8"
-        >
-          <MoreHorizontal className="h-4 w-4" />
-          <span className="sr-only">Ações do template</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        {canEdit && (
-          <DropdownMenuItem onClick={handleEdit}>
-            <Edit className="mr-2 h-4 w-4" />
-            Editar
-          </DropdownMenuItem>
-        )}
-        {canCreate && (
-          <DropdownMenuItem onClick={() => onDuplicate(template)}>
-            <Copy className="mr-2 h-4 w-4" />
-            Duplicar
-          </DropdownMenuItem>
-        )}
-        {canDelete && (
-          <DropdownMenuItem onClick={() => onDelete(template)} className="text-destructive">
-            <Trash2 className="mr-2 h-4 w-4" />
-            Deletar
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <ButtonGroup>
+      {canEdit && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(template)}>
+              <Pencil className="h-4 w-4" />
+              <span className="sr-only">Editar template</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Editar</TooltipContent>
+        </Tooltip>
+      )}
+      {canCreate && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onDuplicate(template)}>
+              <Copy className="h-4 w-4" />
+              <span className="sr-only">Duplicar template</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Duplicar</TooltipContent>
+        </Tooltip>
+      )}
+      {canDelete && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onDelete(template)}>
+              <Trash2 className="h-4 w-4" />
+              <span className="sr-only">Deletar template</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Deletar</TooltipContent>
+        </Tooltip>
+      )}
+    </ButtonGroup>
   );
 }
 
@@ -448,14 +424,19 @@ export function TemplatesClient() {
 
 
 
-  // Handlers para filtros
+  // Handlers para filtros (FilterPopover usa 'all' como default para "sem filtro")
+  const [ativoFilter, setAtivoFilter] = React.useState<string>('all');
+  const [tipoFilter, setTipoFilter] = React.useState<string>('all');
+
   const handleAtivoFilterChange = React.useCallback((value: string) => {
+    setAtivoFilter(value);
     const ativo = value === 'all' ? undefined : value === 'true';
     setFiltros(prev => ({ ...prev, ativo }));
     setPagina(0);
   }, []);
 
   const handleTipoTemplateFilterChange = React.useCallback((value: string) => {
+    setTipoFilter(value);
     const tipo_template = value === 'all' ? undefined : value as TipoTemplate;
     setFiltros(prev => ({ ...prev, tipo_template }));
     setPagina(0);
@@ -526,33 +507,25 @@ export function TemplatesClient() {
               } : undefined}
               filtersSlot={
                 <>
-                  <Select
-                    value={filtros.ativo === undefined ? 'all' : filtros.ativo ? 'true' : 'false'}
+                  <FilterPopover
+                    label="Disponível"
+                    options={[
+                      { value: 'true', label: 'Ativo' },
+                      { value: 'false', label: 'Inativo' },
+                    ]}
+                    value={ativoFilter}
                     onValueChange={handleAtivoFilterChange}
-                  >
-                    <SelectTrigger className="w-[150px]">
-                      <SelectValue placeholder="Disponível" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
-                      <SelectItem value="true">Ativo</SelectItem>
-                      <SelectItem value="false">Inativo</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
 
-                  <Select
-                    value={filtros.tipo_template === undefined ? 'all' : filtros.tipo_template}
+                  <FilterPopover
+                    label="Tipo"
+                    options={[
+                      { value: 'pdf', label: 'PDF' },
+                      { value: 'markdown', label: 'Markdown' },
+                    ]}
+                    value={tipoFilter}
                     onValueChange={handleTipoTemplateFilterChange}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Tipo de Template" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os tipos</SelectItem>
-                      <SelectItem value="pdf">PDF</SelectItem>
-                      <SelectItem value="markdown">Markdown</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
 
                   {bulkActions}
                 </>
