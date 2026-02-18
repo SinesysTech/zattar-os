@@ -522,6 +522,24 @@ export function FormulariosClient() {
                 label: 'Novo Formulário',
                 onClick: () => setCreateOpen(true),
               } : undefined}
+              actionSlot={
+                canCreate ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="bg-white dark:bg-card"
+                        onClick={() => setSegmentosDialogOpen(true)}
+                      >
+                        <Tags className="h-4 w-4" />
+                        <span className="sr-only">Segmentos</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Segmentos</TooltipContent>
+                  </Tooltip>
+                ) : undefined
+              }
               filtersSlot={
                 <>
                   <FilterPopover
@@ -555,17 +573,6 @@ export function FormulariosClient() {
                   />
 
                   {bulkActions}
-
-                  {canCreate && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSegmentosDialogOpen(true)}
-                    >
-                      <Tags className="h-4 w-4 mr-2" />
-                      Segmentos
-                    </Button>
-                  )}
                 </>
               }
             />

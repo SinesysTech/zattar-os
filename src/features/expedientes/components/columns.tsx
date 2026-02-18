@@ -34,6 +34,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ExpedientesAlterarResponsavelDialog } from './expedientes-alterar-responsavel-dialog';
 import { ParteBadge } from '@/components/ui/parte-badge';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { toast } from 'sonner';
 
 // =============================================================================
 // TYPES
@@ -132,6 +133,7 @@ export function TipoDescricaoCell({
       onSuccessAction();
     } catch (error) {
       console.error('Erro ao atualizar tipo:', error);
+      toast.error('Erro ao atualizar tipo do expediente');
     } finally {
       setIsLoadingTipo(false);
     }
@@ -153,6 +155,7 @@ export function TipoDescricaoCell({
       onSuccessAction();
     } catch (error) {
       console.error('Erro ao atualizar descrição:', error);
+      toast.error('Erro ao atualizar descrição do expediente');
     } finally {
       setIsLoadingDescricao(false);
     }
@@ -193,7 +196,7 @@ export function TipoDescricaoCell({
                 )}
               </button>
             </PopoverTrigger>
-            <PopoverContent className="w-64 p-2" align="start">
+            <PopoverContent className="w-64 p-2" align="start" onInteractOutside={(e) => e.preventDefault()}>
               <div className="space-y-2">
                 <p className="text-xs font-medium text-muted-foreground">Tipo de Expediente</p>
                 <Select
