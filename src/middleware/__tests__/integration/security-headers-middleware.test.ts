@@ -224,14 +224,14 @@ describe("Security Headers Middleware Integration", () => {
       expect(headers.get("Referrer-Policy")).toBe("strict-origin-when-cross-origin");
     });
 
-    it("should disable unnecessary browser features", () => {
+    it("should configure browser features appropriately", () => {
       const headers = new Headers();
       applySecurityHeaders(headers);
 
       const policy = headers.get("Permissions-Policy");
       expect(policy).toContain("geolocation=()");
-      expect(policy).toContain("camera=()");
-      expect(policy).toContain("microphone=()");
+      expect(policy).toContain("camera=(self)");
+      expect(policy).toContain("microphone=(self)");
       expect(policy).toContain("payment=()");
     });
 

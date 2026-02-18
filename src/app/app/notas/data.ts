@@ -4,10 +4,9 @@ export const notes: Note[] = [
   {
     id: 1,
     title: "Mountain Sunset Photography",
-    type: "image",
+    type: "text",
     labels: [1, 3],
     isArchived: false,
-    image: `/images/extra/image5.jpg`,
     content:
       "Captured this beautiful sunset during our hiking trip. The colors were absolutely stunning!"
   },
@@ -39,10 +38,9 @@ export const notes: Note[] = [
   {
     id: 4,
     title: "Desert Road Trip Ideas",
-    type: "image",
+    type: "text",
     labels: [3],
     isArchived: false,
-    image: `/images/extra/image3.jpg`,
     content:
       "Potential routes for our upcoming desert adventure. Need to plan stops and accommodation."
   },

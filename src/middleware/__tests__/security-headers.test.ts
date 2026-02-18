@@ -106,7 +106,7 @@ describe("Security Headers Module", () => {
       expect(csp).toContain("script-src");
     });
 
-    it("should keep <style> strict and allow style attributes when nonce provided", () => {
+    it("should use unsafe-inline for style-src-elem and style-src-attr (pragmatic for third-party widgets)", () => {
       const nonce = "my-test-nonce";
       const csp = buildCSPDirectives(nonce);
 
@@ -115,13 +115,13 @@ describe("Security Headers Module", () => {
       const styleSrcElem = directives["style-src-elem"];
       const styleSrcAttr = directives["style-src-attr"];
 
+      // style-src still uses nonce (general fallback)
       expect(styleSrc).toBeTruthy();
       expect(styleSrc).toContain(`'nonce-${nonce}'`);
-      expect(styleSrc).not.toContain("'unsafe-inline'");
 
+      // style-src-elem uses unsafe-inline (third-party widgets like Chatwoot/Dyte inject inline styles)
       expect(styleSrcElem).toBeTruthy();
-      expect(styleSrcElem).toContain(`'nonce-${nonce}'`);
-      expect(styleSrcElem).not.toContain("'unsafe-inline'");
+      expect(styleSrcElem).toContain("'unsafe-inline'");
 
       expect(styleSrcAttr).toBeTruthy();
       expect(styleSrcAttr).toContain("'unsafe-inline'");
@@ -205,14 +205,14 @@ describe("Security Headers Module", () => {
       expect(policy).toContain("geolocation=()");
     });
 
-    it("should disable camera", () => {
+    it("should allow camera for self (required by Dyte)", () => {
       const policy = buildPermissionsPolicy();
-      expect(policy).toContain("camera=()");
+      expect(policy).toContain("camera=(self)");
     });
 
-    it("should disable microphone", () => {
+    it("should allow microphone for self (required by Dyte)", () => {
       const policy = buildPermissionsPolicy();
-      expect(policy).toContain("microphone=()");
+      expect(policy).toContain("microphone=(self)");
     });
 
     it("should disable payment", () => {

@@ -6,6 +6,7 @@ import 'server-only';
 
 import { Browser, BrowserContext, Page } from 'playwright';
 import { getOTP, type TwoFAuthConfig } from '@/lib/integrations/twofauth';
+import { load2FAuthConfig } from '@/lib/integrations/twofauth/config-loader';
 import type { CredenciaisTRT, ConfigTRT } from '../../types/trt-types';
 import { getFirefoxConnection } from '../../services/browser/browser-connection.service';
 
@@ -551,9 +552,22 @@ export async function autenticarPJE(options: TRTAuthOptions): Promise<AuthResult
   const {
     credential,
     config,
-    twofauthConfig,
+    twofauthConfig: twofauthConfigParam,
     headless = true,
   } = options;
+
+  // Se twofauthConfig não foi fornecido explicitamente, carregar do banco
+  let twofauthConfig = twofauthConfigParam;
+  if (!twofauthConfig) {
+    log('info', '🔑 twofauthConfig não fornecido, carregando do banco de dados...');
+    const dbConfig = await load2FAuthConfig();
+    if (dbConfig) {
+      twofauthConfig = dbConfig;
+      log('success', '✅ Configuração 2FAuth carregada do banco de dados');
+    } else {
+      log('warn', '⚠️ Configuração 2FAuth não encontrada no banco de dados');
+    }
+  }
 
   log('info', '🚀 Iniciando autenticação PJE...', {
     loginUrl: config.loginUrl,

@@ -107,9 +107,11 @@ export function buildCSPDirectives(nonce?: string): string {
     : `'self' 'unsafe-inline' ${TRUSTED_DOMAINS.fonts[0]} ${TRUSTED_DOMAINS.chatwoot[0]}`;
 
   // CSP3: separar <style> (elem) de style="..." (attr)
-  // Muitos componentes (ex: popovers/modals, recharts) usam style attributes para positioning.
-  // Permitimos unsafe-inline para attributes para compatibilidade com bibliotecas de terceiros
-  const styleSrcElem = styleSrc;
+  // Widgets de terceiros (Chatwoot, Dyte) injetam <style> sem nonce.
+  // Com nonce no CSP3, 'unsafe-inline' é ignorado, causando violações inevitáveis.
+  // Solução pragmática: usar 'unsafe-inline' para style-src-elem (risco baixo)
+  // e manter nonce apenas para script-src (risco alto - XSS).
+  const styleSrcElem = `'self' 'unsafe-inline' ${TRUSTED_DOMAINS.fonts[0]} ${TRUSTED_DOMAINS.chatwoot[0]}`;
   const styleSrcAttr = "'unsafe-inline'";
 
   const directives: Record<string, string> = {
@@ -141,7 +143,7 @@ export function buildCSPDirectives(nonce?: string): string {
 
     "media-src": `'self' blob: ${
       TRUSTED_DOMAINS.supabase[0]
-    } ${TRUSTED_DOMAINS.storage.join(" ")}`,
+    } ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.dyte.join(" ")}`,
 
     "worker-src": "'self' blob:",
 
@@ -177,8 +179,8 @@ export function buildPermissionsPolicy(): string {
   const policies: Record<string, string> = {
     // Desabilitados - não utilizados pela aplicação
     geolocation: "()",
-    camera: "()", // Dyte gerencia via getUserMedia
-    microphone: "()", // Dyte gerencia via getUserMedia
+    camera: "(self)", // Dyte precisa de acesso via getUserMedia
+    microphone: "(self)", // Dyte precisa de acesso via getUserMedia
     payment: "()",
     usb: "()",
     magnetometer: "()",

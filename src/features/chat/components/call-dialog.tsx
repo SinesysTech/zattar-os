@@ -183,7 +183,7 @@ export function CallDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
         "p-0 overflow-hidden bg-gray-900 border-none text-white transition-all duration-300",
-        showLarge ? "max-w-4xl h-[80vh]" : "max-w-md h-[500px]"
+        showLarge ? "max-w-4xl h-[80vh]" : "max-w-md h-125"
       )}>
         <VisuallyHidden>
           <DialogTitle>Audio Call: {salaNome}</DialogTitle>

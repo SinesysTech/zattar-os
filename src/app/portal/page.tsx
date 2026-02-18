@@ -39,7 +39,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="relative z-10 w-full py-6 shrink-0 text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} Zattar Advogados. Todos os direitos reservados.</p>
+        <p suppressHydrationWarning>&copy; {new Date().getFullYear()} Zattar Advogados. Todos os direitos reservados.</p>
       </footer>
     </div>
   );
