@@ -24,7 +24,8 @@
       "WebFetch(domain:docs.dify.ai)",
       "mcp__plate__get_project_registries",
       "mcp__plate__list_items_in_registries",
-      "mcp__plate__search_items_in_registries"
+      "mcp__plate__search_items_in_registries",
+      "WebFetch(domain:supabase.com)"
     ]
   },
   "enableAllProjectMcpServers": true,

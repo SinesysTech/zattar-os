@@ -28,27 +28,38 @@ export class MembersRepository {
   // ===========================================================================
 
   /**
-   * Adiciona um membro a uma sala
+   * Adiciona um membro a uma sala.
+   * Usa insert ao invés de upsert para evitar conflitos com RLS UPDATE policy.
+   * Se o membro já existe, trata como sucesso (idempotente).
+   * Se já existe mas está inativo, reativa via update separado.
    */
   async addMembro(salaId: number, usuarioId: number): Promise<Result<void, Error>> {
     try {
       const { error } = await this.supabase
         .from("membros_sala_chat")
-        .upsert(
-          {
-            sala_id: salaId,
-            usuario_id: usuarioId,
-            is_active: true,
-            deleted_at: null,
-          },
-          {
-            onConflict: "sala_id,usuario_id",
-          }
-        );
+        .insert({
+          sala_id: salaId,
+          usuario_id: usuarioId,
+          is_active: true,
+        });
 
-      if (error) return err(new Error("Erro ao adicionar membro à sala."));
+      if (error) {
+        // Unique constraint violation = membro já existe
+        if (error.code === "23505") {
+          // Reativar se estava inativo
+          await this.supabase
+            .from("membros_sala_chat")
+            .update({ is_active: true, deleted_at: null })
+            .eq("sala_id", salaId)
+            .eq("usuario_id", usuarioId);
+          return ok(undefined);
+        }
+        console.error("[Chat] Erro addMembro:", { salaId, usuarioId, code: error.code, message: error.message });
+        return err(new Error(`Erro ao adicionar membro à sala: ${error.message}`));
+      }
       return ok(undefined);
-    } catch {
+    } catch (e) {
+      console.error("[Chat] Erro inesperado addMembro:", e);
       return err(new Error("Erro inesperado ao adicionar membro."));
     }
   }

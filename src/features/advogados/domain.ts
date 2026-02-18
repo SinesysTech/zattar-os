@@ -194,13 +194,14 @@ export const atualizarCredencialSchema = criarCredencialSchema.partial();
  * Obtem a OAB principal (primeira do array)
  */
 export function getPrimaryOab(advogado: Advogado): OabEntry | null {
-  return advogado.oabs[0] || null;
+  return advogado.oabs?.[0] || null;
 }
 
 /**
  * Formata OABs para exibição (ex: "12345/SP, 67890/MG")
  */
-export function formatOabs(oabs: OabEntry[]): string {
+export function formatOabs(oabs: OabEntry[] | undefined | null): string {
+  if (!oabs || oabs.length === 0) return '';
   return oabs.map((oab) => `${oab.numero}/${oab.uf}`).join(', ');
 }
 

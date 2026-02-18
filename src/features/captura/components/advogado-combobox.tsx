@@ -28,7 +28,7 @@ export function AdvogadoCombobox({
       const oabsDisplay = formatOabs(advogado.oabs);
 
       // Texto de busca inclui todas as OABs
-      const oabsSearch = advogado.oabs
+      const oabsSearch = (advogado.oabs ?? [])
         .map((oab) => `${oab.numero} ${oab.uf}`)
         .join(' ');
 

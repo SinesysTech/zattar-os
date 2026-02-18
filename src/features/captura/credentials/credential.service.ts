@@ -376,8 +376,7 @@ export async function getAdvogadoByCredentialId(credentialId: number) {
         id,
         cpf,
         nome_completo,
-        oab,
-        uf_oab
+        oabs
       )
     `)
     .eq('id', credentialId)
@@ -395,15 +394,13 @@ export async function getAdvogadoByCredentialId(credentialId: number) {
         id: number;
         cpf: string;
         nome_completo: string;
-        oab: string;
-        uf_oab: string;
+        oabs: { numero: string; uf: string }[];
       } | undefined)
     : (advogadoRaw as {
         id: number;
         cpf: string;
         nome_completo: string;
-        oab: string;
-        uf_oab: string;
+        oabs: { numero: string; uf: string }[];
       } | null);
 
   if (!advogado) {

@@ -80,27 +80,51 @@ export class RoomsRepository {
   }
 
   /**
-   * Lista salas do usuário com paginação e dados expandidos
-   * Filtra apenas salas onde o usuário é membro ativo (soft delete por usuário)
+   * Lista salas do usuário com paginação e dados expandidos.
+   * Combina duas fontes para garantir que salas privadas apareçam:
+   * 1. membros_sala_chat (para grupos e salas com membership ativa)
+   * 2. salas_chat.criado_por/participante_id (para salas privadas, como fallback)
    */
   async findSalasByUsuario(
     usuarioId: number,
     params: ListarSalasParams
   ): Promise<Result<PaginatedResponse<ChatItem>, Error>> {
     try {
-      // Primeiro, buscar IDs de salas onde o usuário é membro ativo
-      const { data: membrosData, error: membrosError } = await this.supabase
-        .from("membros_sala_chat")
-        .select("sala_id")
-        .eq("usuario_id", usuarioId)
-        .eq("is_active", true);
+      // Buscar IDs de salas por duas vias em paralelo
+      const [membrosResult, privateSalasResult, inactiveMembrosResult] = await Promise.all([
+        // Via 1: Memberships ativas
+        this.supabase
+          .from("membros_sala_chat")
+          .select("sala_id")
+          .eq("usuario_id", usuarioId)
+          .eq("is_active", true),
+        // Via 2: Salas privadas onde o usuário é criador ou participante
+        this.supabase
+          .from("salas_chat")
+          .select("id")
+          .eq("tipo", "privado")
+          .or(`criado_por.eq.${usuarioId},participante_id.eq.${usuarioId}`),
+        // Via 3: Salas soft-deleted pelo usuário (para excluí-las)
+        this.supabase
+          .from("membros_sala_chat")
+          .select("sala_id")
+          .eq("usuario_id", usuarioId)
+          .eq("is_active", false),
+      ]);
 
-      if (membrosError) {
-        console.error("Erro ao buscar membros:", membrosError);
+      if (membrosResult.error) {
+        console.error("Erro ao buscar membros:", membrosResult.error);
         return err(new Error("Erro ao buscar conversas."));
       }
 
-      const salasAtivasIds = membrosData?.map((m) => m.sala_id) || [];
+      const memberSalaIds = membrosResult.data?.map((m) => m.sala_id) || [];
+      const privateSalaIds = privateSalasResult.data?.map((s) => s.id) || [];
+      const softDeletedIds = new Set(inactiveMembrosResult.data?.map((m) => m.sala_id) || []);
+
+      // Combinar e remover duplicatas, excluindo salas soft-deleted
+      const salasAtivasIds = [
+        ...new Set([...memberSalaIds, ...privateSalaIds]),
+      ].filter((id) => !softDeletedIds.has(id));
 
       // Se não há salas ativas, retornar lista vazia
       if (salasAtivasIds.length === 0) {

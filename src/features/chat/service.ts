@@ -398,8 +398,10 @@ export class ChatService {
       }
 
       if (salaExistenteResult.value) {
-        // Sala privada já existe - restaurar para o usuário se estava inativa
-        await this.membersRepo.restaurarSalaParaUsuario(salaExistenteResult.value.id, usuarioId);
+        const salaId = salaExistenteResult.value.id;
+        // Sala privada já existe - garantir memberships para ambos os usuários
+        await this.membersRepo.addMembro(salaId, usuarioId);
+        await this.membersRepo.addMembro(salaId, validation.data.participanteId);
         return ok(salaExistenteResult.value);
       }
     }
@@ -416,11 +418,17 @@ export class ChatService {
 
     // Adicionar membros automaticamente
     // Criador é sempre membro
-    await this.membersRepo.addMembro(sala.id, usuarioId);
+    const criadorResult = await this.membersRepo.addMembro(sala.id, usuarioId);
+    if (criadorResult.isErr()) {
+      console.error('[ChatService] Falha ao adicionar criador como membro:', criadorResult.error.message);
+    }
 
     // Para salas privadas, adicionar o participante também
     if (validation.data.tipo === TipoSalaChat.Privado && validation.data.participanteId) {
-      await this.membersRepo.addMembro(sala.id, validation.data.participanteId);
+      const participanteResult = await this.membersRepo.addMembro(sala.id, validation.data.participanteId);
+      if (participanteResult.isErr()) {
+        console.error('[ChatService] Falha ao adicionar participante como membro:', participanteResult.error.message);
+      }
     }
 
     return ok(sala);
