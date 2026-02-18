@@ -11,7 +11,7 @@
  */
 
 import * as React from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import { format, startOfDay, addDays, startOfWeek, endOfWeek } from 'date-fns';
 import { X } from 'lucide-react';
@@ -90,7 +90,6 @@ export function ExpedientesTableWrapper({
   usuariosData,
   tiposExpedientesData,
 }: ExpedientesTableWrapperProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const isWeekMode = !!weekNavigatorProps;
@@ -239,14 +238,12 @@ export function ExpedientesTableWrapper({
   const handleSucessoOperacao = React.useCallback(() => {
     setRowSelection({});
     refetch();
-    router.refresh();
-  }, [refetch, router]);
+  }, [refetch]);
 
   const handleCreateSuccess = React.useCallback(() => {
     refetch();
     setIsCreateDialogOpen(false);
-    router.refresh();
-  }, [refetch, router]);
+  }, [refetch]);
 
   const handleClearAllFilters = React.useCallback(() => {
     setStatusFilter('pendentes');
@@ -507,7 +504,7 @@ export function ExpedientesTableWrapper({
             meta: {
               usuarios,
               tiposExpedientes,
-              onSuccess: handleSucessoOperacao,
+              onSuccessAction: handleSucessoOperacao,
             },
           }}
         />
