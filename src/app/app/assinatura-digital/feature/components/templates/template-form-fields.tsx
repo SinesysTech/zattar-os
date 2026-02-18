@@ -51,6 +51,8 @@ export interface TemplateFormFieldsProps {
   segmentos: Segmento[];
   /** Se o formulário está sendo submetido */
   isSubmitting: boolean;
+  /** Ocultar seção de conteúdo (editor/upload) - usado no wizard */
+  hideContent?: boolean;
 }
 
 /**
@@ -69,6 +71,7 @@ export function TemplateFormFields({
   onTipoTemplateChange,
   segmentos,
   isSubmitting,
+  hideContent,
 }: TemplateFormFieldsProps) {
   const {
     register,
@@ -136,9 +139,9 @@ export function TemplateFormFields({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Seletor de Tipo de Template */}
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <Label>
           Tipo de Template <span className="text-destructive">*</span>
         </Label>
@@ -159,7 +162,7 @@ export function TemplateFormFields({
       {/* Grid responsivo para campos básicos */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Nome */}
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <Label htmlFor="nome">
             Nome do Template <span className="text-destructive">*</span>
           </Label>
@@ -175,7 +178,7 @@ export function TemplateFormFields({
         </div>
 
         {/* Segmento */}
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <Label htmlFor="segmento_id">Segmento (Opcional)</Label>
           <Select
             onValueChange={(value) => setValue('segmento_id', Number(value))}
@@ -211,47 +214,19 @@ export function TemplateFormFields({
       </div>
 
       {/* Descrição - largura total */}
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <Label htmlFor="descricao">Descrição</Label>
         <Textarea
           id="descricao"
           {...register('descricao')}
           placeholder="Breve descrição do template"
           disabled={isSubmitting}
-          rows={3}
+          rows={2}
         />
         {getErrorMessage('descricao') && (
           <p className="text-sm text-destructive">{getErrorMessage('descricao')}</p>
         )}
       </div>
-
-      {/* Editor Markdown (condicional) */}
-      {tipoTemplate === 'markdown' && (
-        <div className="space-y-2">
-          <Label htmlFor="conteudo_markdown">
-            Conteúdo Markdown <span className="text-destructive">*</span>
-          </Label>
-          <MarkdownRichTextEditor
-            value={conteudoMarkdown || ''}
-            onChange={(value) => setValue('conteudo_markdown', value)}
-            formularios={[]}
-          />
-          {getErrorMessage('conteudo_markdown') && (
-            <p className="text-sm text-destructive">{getErrorMessage('conteudo_markdown')}</p>
-          )}
-        </div>
-      )}
-
-      {/* Upload de PDF (condicional) */}
-      {tipoTemplate === 'pdf' && (
-        <PdfUploadField
-          value={pdfValue}
-          onChange={handlePdfChange}
-          disabled={isSubmitting}
-          error={getErrorMessage('pdf_url') || getErrorMessage('arquivo_original')}
-          required
-        />
-      )}
 
       {/* Checkbox Ativo */}
       <div className="flex items-center space-x-2">
@@ -265,6 +240,39 @@ export function TemplateFormFields({
           Template ativo
         </Label>
       </div>
+
+      {/* Conteúdo (editor/upload) - ocultável no modo wizard */}
+      {!hideContent && (
+        <>
+          {/* Editor Markdown (condicional) */}
+          {tipoTemplate === 'markdown' && (
+            <div className="space-y-1.5">
+              <Label htmlFor="conteudo_markdown">
+                Conteúdo Markdown <span className="text-destructive">*</span>
+              </Label>
+              <MarkdownRichTextEditor
+                value={conteudoMarkdown || ''}
+                onChange={(value) => setValue('conteudo_markdown', value)}
+                formularios={[]}
+              />
+              {getErrorMessage('conteudo_markdown') && (
+                <p className="text-sm text-destructive">{getErrorMessage('conteudo_markdown')}</p>
+              )}
+            </div>
+          )}
+
+          {/* Upload de PDF (condicional) */}
+          {tipoTemplate === 'pdf' && (
+            <PdfUploadField
+              value={pdfValue}
+              onChange={handlePdfChange}
+              disabled={isSubmitting}
+              error={getErrorMessage('pdf_url') || getErrorMessage('arquivo_original')}
+              required
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }
