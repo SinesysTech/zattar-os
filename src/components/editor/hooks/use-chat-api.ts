@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 
 import { DefaultChatTransport } from 'ai';
 import type { PlateEditor } from 'platejs/react';

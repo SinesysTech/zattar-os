@@ -18,6 +18,7 @@ import {
   twofauthConfigSchema,
   chatwootConfigSchema,
   dyteConfigSchema,
+  editorIAConfigSchema,
 } from "../domain";
 
 // =============================================================================
@@ -38,7 +39,7 @@ export const actionListarIntegracoes = authenticatedAction(
  * Listar integrações por tipo
  */
 export const actionListarIntegracoesPorTipo = authenticatedAction(
-  z.object({ tipo: z.enum(["twofauth", "zapier", "dify", "webhook", "api", "chatwoot", "dyte"]) }),
+  z.object({ tipo: z.enum(["twofauth", "zapier", "dify", "webhook", "api", "chatwoot", "dyte", "editor_ia"]) }),
   async ({ tipo }) => {
     return service.listarPorTipo(tipo);
   }
@@ -155,6 +156,20 @@ export const actionAtualizarConfigDyte = authenticatedAction(
   dyteConfigSchema,
   async (data) => {
     const result = await service.atualizarConfigDyte(data);
+    revalidatePath("/app/configuracoes");
+    return result;
+  }
+);
+
+/**
+ * Atualizar configuração do Editor de Texto IA
+ */
+export const actionAtualizarConfigEditorIA = authenticatedAction(
+  editorIAConfigSchema,
+  async (data) => {
+    const { invalidateEditorIAConfigCache } = await import("@/lib/ai-editor/config");
+    const result = await service.atualizarConfigEditorIA(data);
+    invalidateEditorIAConfigCache();
     revalidatePath("/app/configuracoes");
     return result;
   }

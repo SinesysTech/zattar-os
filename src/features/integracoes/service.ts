@@ -10,11 +10,13 @@ import {
   twofauthConfigSchema,
   chatwootConfigSchema,
   dyteConfigSchema,
+  editorIAConfigSchema,
   type Integracao,
   type TipoIntegracao,
   type TwoFAuthConfig,
   type ChatwootConfig,
   type DyteConfig,
+  type EditorIAConfig,
 } from "./domain";
 
 // =============================================================================
@@ -83,6 +85,26 @@ export async function buscarConfigDyte(): Promise<DyteConfig | null> {
   return result.data as DyteConfig;
 }
 
+/**
+ * Buscar configuração do Editor de Texto IA
+ */
+export async function buscarConfigEditorIA(): Promise<EditorIAConfig | null> {
+  const integracao = await repo.findByTipoAndNome("editor_ia", "Editor de Texto IA Principal");
+
+  if (!integracao || !integracao.ativo) {
+    return null;
+  }
+
+  const result = editorIAConfigSchema.safeParse(integracao.configuracao);
+
+  if (!result.success) {
+    console.error("Configuração Editor IA inválida:", result.error);
+    return null;
+  }
+
+  return result.data as EditorIAConfig;
+}
+
 // =============================================================================
 // MUTATIONS
 // =============================================================================
@@ -117,6 +139,13 @@ export async function criar(params: unknown): Promise<Integracao> {
     const configValidacao = dyteConfigSchema.safeParse(validacao.data.configuracao);
     if (!configValidacao.success) {
       throw new Error(`Configuração Dyte inválida: ${configValidacao.error.errors[0].message}`);
+    }
+  }
+
+  if (validacao.data.tipo === "editor_ia") {
+    const configValidacao = editorIAConfigSchema.safeParse(validacao.data.configuracao);
+    if (!configValidacao.success) {
+      throw new Error(`Configuração Editor IA inválida: ${configValidacao.error.errors[0].message}`);
     }
   }
 
@@ -155,6 +184,13 @@ export async function atualizar(params: unknown): Promise<Integracao> {
     const configValidacao = dyteConfigSchema.safeParse(updateData.configuracao);
     if (!configValidacao.success) {
       throw new Error(`Configuração Dyte inválida: ${configValidacao.error.errors[0].message}`);
+    }
+  }
+
+  if (updateData.tipo === "editor_ia" && updateData.configuracao) {
+    const configValidacao = editorIAConfigSchema.safeParse(updateData.configuracao);
+    if (!configValidacao.success) {
+      throw new Error(`Configuração Editor IA inválida: ${configValidacao.error.errors[0].message}`);
     }
   }
 
@@ -253,6 +289,34 @@ export async function atualizarConfigDyte(config: DyteConfig): Promise<Integraca
       tipo: "dyte",
       nome: "Dyte Principal",
       descricao: "Videoconferência e chamadas de áudio",
+      ativo: true,
+      configuracao: validacao.data,
+    });
+  }
+
+  return repo.update(integracao.id, {
+    configuracao: validacao.data,
+    ativo: true,
+  });
+}
+
+/**
+ * Atualizar configuração do Editor de Texto IA
+ */
+export async function atualizarConfigEditorIA(config: EditorIAConfig): Promise<Integracao> {
+  const validacao = editorIAConfigSchema.safeParse(config);
+
+  if (!validacao.success) {
+    throw new Error(validacao.error.errors[0].message);
+  }
+
+  const integracao = await repo.findByTipoAndNome("editor_ia", "Editor de Texto IA Principal");
+
+  if (!integracao) {
+    return repo.create({
+      tipo: "editor_ia",
+      nome: "Editor de Texto IA Principal",
+      descricao: "Inteligência artificial para o editor de documentos",
       ativo: true,
       configuracao: validacao.data,
     });

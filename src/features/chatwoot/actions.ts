@@ -909,7 +909,7 @@ export async function sincronizarConversaManual(
       sincronizarConversaChatwoot,
     } = await import('./service');
 
-    const chatwootConfig = await getChatwootConfigWithFallback();
+    const chatwootConfig = await getChatwootConfigFromDatabase();
     if (!chatwootConfig) {
       return err(appError('EXTERNAL_SERVICE_ERROR', 'Chatwoot não configurado'));
     }
@@ -985,7 +985,7 @@ export async function atualizarStatusConversaAPI(
       );
     }
 
-    const chatwootConfig = await getChatwootConfigWithFallback();
+    const chatwootConfig = await getChatwootConfigFromDatabase();
     if (!chatwootConfig) {
       return err(appError('EXTERNAL_SERVICE_ERROR', 'Chatwoot não configurado'));
     }

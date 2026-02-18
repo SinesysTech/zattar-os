@@ -7,10 +7,6 @@
 
 const DEFAULT_ORIGIN = "http://localhost:3000";
 
-function normalizeBaseUrl(url: string): string {
-  return url.replace(/\/$/, "");
-}
-
 function appendPath(base: string, path?: string): string {
   if (path === undefined) return base;
   if (path === "") return `${base}/`;

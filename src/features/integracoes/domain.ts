@@ -17,6 +17,7 @@ export const TIPOS_INTEGRACAO = {
   api: "api",
   chatwoot: "chatwoot",
   dyte: "dyte",
+  editor_ia: "editor_ia",
 } as const;
 
 export type TipoIntegracao = keyof typeof TIPOS_INTEGRACAO;
@@ -27,7 +28,7 @@ export type TipoIntegracao = keyof typeof TIPOS_INTEGRACAO;
 
 // Schema base para integração
 export const integracaoBaseSchema = z.object({
-  tipo: z.enum(["twofauth", "zapier", "dify", "webhook", "api", "chatwoot", "dyte"]),
+  tipo: z.enum(["twofauth", "zapier", "dify", "webhook", "api", "chatwoot", "dyte", "editor_ia"]),
   nome: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
   descricao: z.string().optional(),
   ativo: z.boolean().default(true),
@@ -68,6 +69,19 @@ export const dyteConfigSchema = z.object({
   enable_transcription: z.boolean().optional().default(false),
   transcription_language: z.string().optional().default("pt-BR"),
   preferred_region: z.string().optional(),
+});
+
+// Schema específico para Editor de Texto IA
+export const AI_PROVIDER_TYPES = ["gateway", "openai", "openrouter", "anthropic", "google"] as const;
+export type AIProviderType = (typeof AI_PROVIDER_TYPES)[number];
+
+export const editorIAConfigSchema = z.object({
+  provider: z.enum(AI_PROVIDER_TYPES),
+  api_key: z.string().min(10, "API Key deve ter no mínimo 10 caracteres"),
+  base_url: z.string().url("URL base inválida").optional().or(z.literal("")),
+  default_model: z.string().min(1, "Modelo padrão é obrigatório"),
+  tool_choice_model: z.string().optional().or(z.literal("")),
+  comment_model: z.string().optional().or(z.literal("")),
 });
 
 // =============================================================================
@@ -112,6 +126,15 @@ export interface DyteConfig {
   preferred_region?: string;
 }
 
+export interface EditorIAConfig {
+  provider: AIProviderType;
+  api_key: string;
+  base_url?: string;
+  default_model: string;
+  tool_choice_model?: string;
+  comment_model?: string;
+}
+
 export type CriarIntegracaoParams = z.infer<typeof criarIntegracaoSchema>;
 export type AtualizarIntegracaoParams = z.infer<typeof atualizarIntegracaoSchema>;
 
@@ -127,6 +150,7 @@ export const LABELS_TIPO_INTEGRACAO: Record<TipoIntegracao, string> = {
   api: "API",
   chatwoot: "Chatwoot",
   dyte: "Dyte",
+  editor_ia: "Editor de Texto IA",
 };
 
 export const DESCRICOES_TIPO_INTEGRACAO: Record<TipoIntegracao, string> = {
@@ -137,4 +161,13 @@ export const DESCRICOES_TIPO_INTEGRACAO: Record<TipoIntegracao, string> = {
   api: "Integrações via API",
   chatwoot: "Sistema de atendimento e conversas",
   dyte: "Videoconferência e chamadas de áudio",
+  editor_ia: "Inteligência artificial para o editor de documentos",
+};
+
+export const LABELS_AI_PROVIDER: Record<AIProviderType, string> = {
+  gateway: "Vercel AI Gateway",
+  openai: "OpenAI",
+  openrouter: "OpenRouter",
+  anthropic: "Anthropic",
+  google: "Google AI",
 };

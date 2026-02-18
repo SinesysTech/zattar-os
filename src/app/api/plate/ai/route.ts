@@ -5,8 +5,9 @@
  *     summary: Processa comandos AI no editor de documentos
  *     description: |
  *       Endpoint seguro para processar comandos de AI no editor Plate.
- *       A API key é gerenciada exclusivamente no servidor via variável de ambiente.
- *       Inclui system prompts especializados em Direito Brasileiro.
+ *       A configuração de IA (provider, API key, modelos) é lida do banco de dados
+ *       com fallback para variáveis de ambiente. Inclui system prompts especializados
+ *       em Direito Brasileiro.
  *     tags:
  *       - AI
  *       - Documentos
@@ -63,7 +64,6 @@ import type { NextRequest } from 'next/server';
 import {
   type LanguageModel,
   type UIMessageStreamWriter,
-  createGateway,
   createUIMessageStream,
   createUIMessageStreamResponse,
   generateObject,
@@ -84,6 +84,8 @@ import {
 } from '@/lib/mcp/rate-limit';
 import { getClientIp } from '@/lib/utils/get-client-ip';
 import { recordSuspiciousActivity } from '@/lib/security/ip-blocking';
+import { getEditorIAConfig } from '@/lib/ai-editor/config';
+import { createAIEditorProvider } from '@/lib/ai-editor/provider';
 
 import {
   getChooseToolPrompt,
@@ -91,12 +93,6 @@ import {
   getEditPrompt,
   getGeneratePrompt,
 } from './prompts';
-
-// Modelos padrão para o editor de documentos jurídicos
-const DEFAULT_MODEL = process.env.AI_DEFAULT_MODEL || 'openai/gpt-4o-mini';
-const TOOL_CHOICE_MODEL =
-  process.env.AI_TOOL_CHOICE_MODEL || 'google/gemini-2.5-flash';
-const COMMENT_MODEL = process.env.AI_COMMENT_MODEL || 'google/gemini-2.5-flash';
 
 export async function POST(req: NextRequest) {
   const startedAt = Date.now();
@@ -148,26 +144,27 @@ export async function POST(req: NextRequest) {
     value: children,
   });
 
-  // SEGURANÇA: Usar APENAS a API key do servidor
-  // Não aceitar API key do cliente para evitar exposição de chaves
-  const apiKey = process.env.AI_GATEWAY_API_KEY;
-
-  if (!apiKey) {
-    console.warn('[Plate AI] API key não configurada. Configure AI_GATEWAY_API_KEY para habilitar recursos de IA.');
+  // Buscar configuração do banco (com fallback para env vars)
+  let editorConfig;
+  try {
+    editorConfig = await getEditorIAConfig();
+  } catch {
+    console.warn('[Plate AI] Nenhuma configuração de IA encontrada (nem DB nem env vars).');
     return NextResponse.json(
       {
-        error: 'AI Gateway API key não configurada no servidor. Configure a variável de ambiente AI_GATEWAY_API_KEY.',
+        error: 'Editor de Texto IA não configurado. Configure em Configurações > Integrações.',
         code: 'MISSING_API_KEY'
       },
       { status: 401, headers: rateLimitHeaders }
     );
   }
 
-  const isSelecting = editor.api.isExpanded();
+  const aiProvider = createAIEditorProvider(editorConfig);
+  const DEFAULT_MODEL = editorConfig.default_model;
+  const TOOL_CHOICE_MODEL = editorConfig.tool_choice_model || editorConfig.default_model;
+  const COMMENT_MODEL = editorConfig.comment_model || editorConfig.default_model;
 
-  const gatewayProvider = createGateway({
-    apiKey,
-  });
+  const isSelecting = editor.api.isExpanded();
 
   try {
     const stream = createUIMessageStream<ChatMessage>({
@@ -179,7 +176,7 @@ export async function POST(req: NextRequest) {
             enum: isSelecting
               ? ['generate', 'edit', 'comment']
               : ['generate', 'comment'],
-            model: gatewayProvider(model || TOOL_CHOICE_MODEL),
+            model: aiProvider(model || TOOL_CHOICE_MODEL),
             output: 'enum',
             prompt: await getChooseToolPrompt({ messages: messagesRaw }),
           });
@@ -193,13 +190,13 @@ export async function POST(req: NextRequest) {
         }
 
         const stream = streamText({
-          model: gatewayProvider(model || DEFAULT_MODEL),
+          model: aiProvider(model || DEFAULT_MODEL),
           // Not used
           prompt: '',
           tools: {
             comment: getCommentTool(editor, {
               messagesRaw,
-              model: gatewayProvider(model || COMMENT_MODEL),
+              model: aiProvider(model || COMMENT_MODEL),
               writer,
             }),
           },
@@ -243,7 +240,7 @@ export async function POST(req: NextRequest) {
                     role: 'user',
                   },
                 ],
-                model: gatewayProvider(model || DEFAULT_MODEL),
+                model: aiProvider(model || DEFAULT_MODEL),
               };
             }
           },

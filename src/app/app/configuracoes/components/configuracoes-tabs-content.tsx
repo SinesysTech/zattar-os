@@ -20,7 +20,7 @@ import Link from 'next/link';
 
 import { MetricasDBContent } from '@/app/app/admin/metricas-db/components/metricas-db-content';
 import { BlockedIpsContent } from '@/app/app/admin/security/blocked-ips/components/blocked-ips-content';
-import { TwoFAuthIntegrationCard, ChatwootIntegrationCard, DyteIntegrationCard } from '@/features/integracoes';
+import { TwoFAuthIntegrationCard, ChatwootIntegrationCard, DyteIntegrationCard, EditorIAIntegrationCard } from '@/features/integracoes';
 import { PromptsIAContent } from '@/features/system-prompts';
 import { AparenciaContent } from './aparencia-content';
 import type { MetricasDB } from '@/features/admin';
@@ -54,6 +54,8 @@ interface ConfiguracoesTabsContentProps {
   integracaoChatwoot?: Integracao | null;
   /** Integração Dyte */
   integracaoDyte?: Integracao | null;
+  /** Integração Editor de Texto IA */
+  integracaoEditorIA?: Integracao | null;
   /** System prompts de IA */
   systemPrompts?: SystemPrompt[];
 }
@@ -68,6 +70,7 @@ export function ConfiguracoesTabsContent({
   integracao2FAuth,
   integracaoChatwoot,
   integracaoDyte,
+  integracaoEditorIA,
   systemPrompts,
 }: ConfiguracoesTabsContentProps) {
   const router = useRouter();
@@ -131,6 +134,9 @@ export function ConfiguracoesTabsContent({
 
               {/* Card Dyte */}
               <DyteIntegrationCard integracao={integracaoDyte} />
+
+              {/* Card Editor de Texto IA */}
+              <EditorIAIntegrationCard integracao={integracaoEditorIA} />
 
               {/* Card Dify */}
               <Card>

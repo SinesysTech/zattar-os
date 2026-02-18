@@ -7,11 +7,12 @@ import { actionListarSystemPrompts } from "@/features/system-prompts";
 import { ConfiguracoesTabsContent } from "./components/configuracoes-tabs-content";
 
 export default async function ConfiguracoesPage() {
-  const [metricasResult, integracoes2FAuthResult, integracoesChatwootResult, integracoesDyteResult, systemPromptsResult] = await Promise.all([
+  const [metricasResult, integracoes2FAuthResult, integracoesChatwootResult, integracoesDyteResult, integracoesEditorIAResult, systemPromptsResult] = await Promise.all([
     actionObterMetricasDB(),
     actionListarIntegracoesPorTipo({ tipo: "twofauth" }),
     actionListarIntegracoesPorTipo({ tipo: "chatwoot" }),
     actionListarIntegracoesPorTipo({ tipo: "dyte" }),
+    actionListarIntegracoesPorTipo({ tipo: "editor_ia" }),
     actionListarSystemPrompts(),
   ]);
 
@@ -43,6 +44,12 @@ export default async function ConfiguracoesPage() {
     integracaoDyte = integracoesDyteResult.data.find((i) => i.ativo) || integracoesDyteResult.data[0] || null;
   }
 
+  // Buscar integração Editor de Texto IA
+  let integracaoEditorIA = null;
+  if (integracoesEditorIAResult.success && Array.isArray(integracoesEditorIAResult.data)) {
+    integracaoEditorIA = integracoesEditorIAResult.data.find((i) => i.ativo) || integracoesEditorIAResult.data[0] || null;
+  }
+
   // System prompts
   const systemPrompts = systemPromptsResult.success && Array.isArray(systemPromptsResult.data)
     ? systemPromptsResult.data
@@ -55,6 +62,7 @@ export default async function ConfiguracoesPage() {
         integracao2FAuth={integracao2FAuth}
         integracaoChatwoot={integracaoChatwoot}
         integracaoDyte={integracaoDyte}
+        integracaoEditorIA={integracaoEditorIA}
         systemPrompts={systemPrompts}
       />
     </Suspense>
