@@ -196,24 +196,22 @@ export function DifyAppsList() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between gap-4">
+                <h1 className="text-2xl font-semibold tracking-tight">Aplicativos Dify</h1>
+                <div className="flex items-center gap-2">
                     <Button
-                        variant="ghost"
-                        size="icon"
+                        variant="outline"
+                        size="sm"
                         onClick={() => router.push('/app/configuracoes?tab=integracoes')}
                     >
-                        <ArrowLeft className="h-4 w-4" />
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Voltar para Configurações
                     </Button>
-                    <div>
-                        <h1 className="text-2xl font-semibold tracking-tight">Aplicativos Dify</h1>
-                        <p className="text-sm text-muted-foreground">Gerencie seus chatbots e workflows conectados.</p>
-                    </div>
+                    <Button onClick={() => { resetForm(); setIsDialogOpen(true); }}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Adicionar App
+                    </Button>
                 </div>
-                <Button onClick={() => { resetForm(); setIsDialogOpen(true); }}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Adicionar App
-                </Button>
             </div>
 
             {/* Table */}

@@ -151,9 +151,14 @@ export function ConfiguracoesTabsContent({
                   </p>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full" asChild>
-                    <Link href="/app/configuracoes/dify">Gerenciar Apps</Link>
-                  </Button>
+                  <div className="flex w-full flex-col gap-2">
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link href="/app/configuracoes/dify">Gerenciar Apps</Link>
+                    </Button>
+                    <Button variant="secondary" className="w-full" asChild>
+                      <Link href="/app/configuracoes/assistentes-tipos">Vincular por Tipo de Expediente</Link>
+                    </Button>
+                  </div>
                 </CardFooter>
               </Card>
 
