@@ -1,11 +1,11 @@
 /**
- * Serviço de Upload de Documentos da Timeline para Supabase Storage
+ * Serviço de Upload de Documentos da Timeline para Backblaze B2
  * 
  * Responsável por fazer upload de PDFs capturados da timeline do PJE
- * para o Supabase Storage com organização padronizada.
+ * para o Backblaze B2 com organização padronizada.
  */
 
-import { uploadToSupabase, type SupabaseUploadResult } from '@/lib/storage/supabase-storage.service';
+import { uploadToBackblaze, type BackblazeUploadResult } from '@/lib/storage/backblaze-b2.service';
 import { gerarCaminhoCompletoTimeline } from '@/lib/storage/file-naming.utils';
 
 /**
@@ -37,7 +37,7 @@ export interface UploadDocumentoTimelineResult {
 }
 
 /**
- * Faz upload de um documento da timeline para o Supabase Storage
+ * Faz upload de um documento da timeline para o Backblaze B2
  * 
  * @param params - Parâmetros do upload
  * @returns Resultado com URLs e metadados do arquivo
@@ -47,7 +47,7 @@ export async function uploadDocumentoTimeline(
 ): Promise<UploadDocumentoTimelineResult> {
     const { pdfBuffer, numeroProcesso, documentoId } = params;
 
-    console.log(`📤 [uploadDocumentoTimeline] Iniciando upload para Supabase Storage`, {
+    console.log(`📤 [uploadDocumentoTimeline] Iniciando upload para Backblaze B2`, {
         numeroProcesso,
         documentoId,
         tamanho: `${(pdfBuffer.length / 1024).toFixed(2)} KB`,
@@ -58,8 +58,8 @@ export async function uploadDocumentoTimeline(
     const key = gerarCaminhoCompletoTimeline(numeroProcesso, documentoId);
     const fileName = key.split('/').pop() || `doc_${documentoId}.pdf`;
 
-    // Upload para Supabase Storage
-    const uploadResult: SupabaseUploadResult = await uploadToSupabase({
+    // Upload para Backblaze B2
+    const uploadResult: BackblazeUploadResult = await uploadToBackblaze({
         buffer: pdfBuffer,
         key,
         contentType: 'application/pdf',
