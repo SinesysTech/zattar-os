@@ -253,6 +253,85 @@ export const desvincularTagDatasetSchema = z.object({
   tagId: z.string().min(1),
 });
 
+// --- Tipos do User Input Form (metadados do app) ---
+
+export interface DifyTextInputField {
+  type: 'text-input';
+  label: string;
+  variable: string;
+  required: boolean;
+  max_length?: number;
+  default?: string;
+  options?: string[];
+}
+
+export interface DifyParagraphField {
+  type: 'paragraph';
+  label: string;
+  variable: string;
+  required: boolean;
+  max_length?: number | null;
+  hide?: boolean;
+  options?: string[];
+}
+
+export interface DifyFileListField {
+  type: 'file-list';
+  label: string;
+  variable: string;
+  required: boolean;
+  max_length?: number;
+  allowed_file_types: string[];
+  allowed_file_extensions: string[];
+  allowed_file_upload_methods: string[];
+  options?: string[];
+}
+
+export type DifyUserInputField = DifyTextInputField | DifyParagraphField | DifyFileListField;
+
+/** Estrutura bruta: cada item é { "paragraph": {...} } ou { "text-input": {...} } etc. */
+export type DifyUserInputFormRaw = Array<Record<string, DifyUserInputField>>;
+
+export interface DifyAppParameters {
+  opening_statement?: string;
+  suggested_questions?: string[];
+  user_input_form: DifyUserInputFormRaw;
+  file_upload?: {
+    enabled: boolean;
+    number_limits?: number;
+    allowed_file_types?: string[];
+    allowed_file_extensions?: string[];
+    allowed_file_upload_methods?: string[];
+    image?: {
+      enabled: boolean;
+      number_limits?: number;
+      transfer_methods?: string[];
+    };
+  };
+  system_parameters?: {
+    file_size_limit?: number;
+    image_file_size_limit?: number;
+    audio_file_size_limit?: number;
+    video_file_size_limit?: number;
+  };
+}
+
+/** Extrai campo tipado do formato raw { "paragraph": {...} } */
+export function parseUserInputFormField(
+  raw: Record<string, DifyUserInputField>
+): DifyUserInputField | null {
+  const keys = Object.keys(raw);
+  if (keys.length === 0) return null;
+  const fieldType = keys[0];
+  const field = raw[fieldType];
+  return { ...field, type: fieldType } as DifyUserInputField;
+}
+
+/** Extrai todos os campos do user_input_form raw */
+export function parseUserInputForm(raw: DifyUserInputFormRaw): DifyUserInputField[] {
+  return raw.map(parseUserInputFormField).filter((f): f is DifyUserInputField => f !== null);
+}
+
 // --- Labels ---
 
 export const STATUS_EXECUCAO_LABELS: Record<StatusExecucaoDify, string> = {

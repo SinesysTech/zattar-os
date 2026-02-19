@@ -73,7 +73,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
         </div>
 
         <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0">
-          <AssistenteNativoView appId={difyApp.id} appType={difyApp.app_type} />
+          <AssistenteNativoView appId={difyApp.id} appType={difyApp.app_type} metadata={difyApp.metadata ?? null} />
         </div>
       </div>
     );

@@ -57,7 +57,7 @@ export function DifyChatPanel({
 
     const message = inputValue;
     setInputValue('');
-    await sendMessage(message);
+    await sendMessage(message, inputs || {});
     inputRef.current?.focus();
   };
 

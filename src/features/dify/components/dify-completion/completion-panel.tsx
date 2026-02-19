@@ -18,12 +18,14 @@ import remarkGfm from 'remark-gfm';
 
 interface CompletionPanelProps {
   appId?: string;
+  inputs?: Record<string, unknown>;
   placeholder?: string;
   className?: string;
 }
 
 export function CompletionPanel({
   appId,
+  inputs,
   placeholder = 'Digite seu prompt aqui...',
   className,
 }: CompletionPanelProps) {
@@ -43,7 +45,7 @@ export function CompletionPanel({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim() || isStreaming) return;
-    await generate({ query: inputValue });
+    await generate({ ...inputs, query: inputValue });
   };
 
   const handleCopy = async () => {
