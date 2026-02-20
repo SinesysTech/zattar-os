@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Eye, Pencil, FileText, ExternalLink } from 'lucide-react';
+import { Eye, Pencil, FileText, ExternalLink, MessageSquareText, Loader2, Check } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
@@ -27,7 +27,9 @@ import type { Audiencia, GrauTribunal } from '../domain';
 import { GRAU_TRIBUNAL_LABELS, StatusAudiencia } from '../domain';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
+import { Textarea } from '@/components/ui/textarea';
 import { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
+import { actionAtualizarObservacoes } from '../actions';
 
 // =============================================================================
 // HELPER COMPONENTS
@@ -135,6 +137,105 @@ interface Usuario {
   id: number;
   nomeExibicao?: string;
   nomeCompleto?: string;
+}
+
+// =============================================================================
+// OBSERVAÇÕES CELL - Edição inline via Popover
+// =============================================================================
+
+function ObservacoesCell({
+  audiencia,
+  onSuccessAction,
+}: {
+  audiencia: AudienciaComResponsavel;
+  onSuccessAction?: () => void;
+}) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [value, setValue] = React.useState(audiencia.observacoes || '');
+  const [isSaving, setIsSaving] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setValue(audiencia.observacoes || '');
+    }
+  }, [isOpen, audiencia.observacoes]);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const obs = value.trim() || null;
+      const result = await actionAtualizarObservacoes(audiencia.id, obs);
+      if (result.success) {
+        setIsOpen(false);
+        onSuccessAction?.();
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const hasObservacoes = !!audiencia.observacoes?.trim();
+
+  return (
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className={cn(
+            'flex items-center gap-1.5 text-sm w-full min-w-0 text-left rounded px-1 -mx-1 transition-colors',
+            'hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1',
+            hasObservacoes ? 'text-foreground' : 'text-muted-foreground'
+          )}
+          title={hasObservacoes ? audiencia.observacoes! : 'Clique para adicionar observações'}
+        >
+          <MessageSquareText className={cn('h-4 w-4 shrink-0', hasObservacoes ? 'text-primary' : 'text-muted-foreground/50')} />
+          {hasObservacoes ? (
+            <span className="truncate max-w-45">{audiencia.observacoes}</span>
+          ) : (
+            <span className="italic">Sem observações</span>
+          )}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 p-4" align="start">
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <MessageSquareText className="h-4 w-4 text-primary" />
+            <h4 className="font-semibold text-sm">Observações</h4>
+          </div>
+          <Textarea
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="Adicionar observações..."
+            className="min-h-25 resize-y"
+            disabled={isSaving}
+            autoFocus
+          />
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsOpen(false)}
+              disabled={isSaving}
+            >
+              Cancelar
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleSave}
+              disabled={isSaving}
+            >
+              {isSaving ? (
+                <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+              ) : (
+                <Check className="mr-1 h-3 w-3" />
+              )}
+              Salvar
+            </Button>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
 }
 
 // =============================================================================
@@ -353,14 +454,14 @@ export function getAudienciasColumns(
       cell: ({ row }) => {
         const audiencia = row.original;
         return (
-          <div className="flex flex-col gap-1.5 py-2">
+          <div className="flex flex-col gap-1.5 py-2 min-w-0">
             {/* Modalidade primeiro */}
             {audiencia.modalidade ? (
               <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
             ) : null}
             {/* Tipo segundo */}
             {audiencia.tipoDescricao ? (
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-muted-foreground whitespace-normal wrap-break-word">
                 {audiencia.tipoDescricao}
               </span>
             ) : null}
@@ -368,6 +469,32 @@ export function getAudienciasColumns(
             {!audiencia.modalidade && !audiencia.tipoDescricao && (
               <span className="text-sm text-muted-foreground">-</span>
             )}
+          </div>
+        );
+      },
+      enableSorting: false,
+    },
+    {
+      accessorKey: 'observacoes',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Observações" />
+      ),
+      meta: {
+        align: 'left' as const,
+        headerLabel: 'Observações',
+      },
+      size: 220,
+      cell: ({ row, table }) => {
+        const audiencia = row.original;
+        const meta = table.options.meta as { onSuccessAction?: () => void } | undefined;
+        const onSuccessAction = meta?.onSuccessAction;
+
+        return (
+          <div className="flex items-center py-2">
+            <ObservacoesCell
+              audiencia={audiencia}
+              onSuccessAction={onSuccessAction}
+            />
           </div>
         );
       },

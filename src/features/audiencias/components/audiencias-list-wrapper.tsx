@@ -270,6 +270,13 @@ export function AudienciasListWrapper({
           density={density}
           onTableReady={(t: TanstackTable<AudienciaComResponsavel>) => setTable(t)}
           emptyMessage="Nenhuma audiência encontrada."
+          options={{
+            meta: {
+              usuarios,
+              tiposAudiencia,
+              onSuccessAction: refetch,
+            },
+          }}
         />
       </DataShell>
 
