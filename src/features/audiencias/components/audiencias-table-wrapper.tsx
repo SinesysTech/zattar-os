@@ -630,7 +630,7 @@ export function AudienciasTableWrapper({
             meta: {
               usuarios,
               tiposAudiencia,
-              onSuccess: handleSucessoOperacao,
+              onSuccessAction: handleSucessoOperacao,
             },
           }}
         />

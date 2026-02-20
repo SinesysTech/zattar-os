@@ -189,6 +189,29 @@ export async function actionAtualizarStatusAudiencia(
   };
 }
 
+export async function actionAtualizarObservacoes(
+  id: number,
+  observacoes: string | null
+): Promise<ActionResult> {
+  const result = await service.atualizarObservacoesAudiencia(id, observacoes);
+
+  if (!result.success) {
+    return {
+      success: false,
+      error: result.error.message,
+      message: 'Falha ao atualizar observações da audiência.',
+    };
+  }
+
+  revalidateAudienciasPaths();
+
+  return {
+    success: true,
+    data: result.data,
+    message: 'Observações atualizadas com sucesso.',
+  };
+}
+
 export async function actionListarAudiencias(
   params: ListarAudienciasParams
 ): Promise<ActionResult<PaginatedResponse<Audiencia>>> {

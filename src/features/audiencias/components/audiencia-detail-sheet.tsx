@@ -73,7 +73,7 @@ interface InfoRowProps {
 function InfoRow({ label, children }: InfoRowProps) {
   return (
     <div className="flex items-start gap-2 text-sm">
-      <span className="text-muted-foreground min-w-[100px] shrink-0">{label}:</span>
+      <span className="text-muted-foreground min-w-25 shrink-0">{label}:</span>
       <span className="text-foreground">{children}</span>
     </div>
   );
@@ -168,7 +168,7 @@ export function AudienciaDetailSheet({
   if (shouldFetch && isLoading) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent className="w-[400px] sm:w-[540px] flex flex-col bg-background">
+        <SheetContent className="w-100 sm:w-135 flex flex-col bg-background">
           <SheetHeader className="border-b pb-4">
             <SheetTitle className="sr-only">Carregando</SheetTitle>
             <Skeleton className="h-7 w-48" />
@@ -191,7 +191,7 @@ export function AudienciaDetailSheet({
   if (shouldFetch && error) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent className="w-[400px] sm:w-[540px] flex flex-col bg-background">
+        <SheetContent className="w-100 sm:w-135 flex flex-col bg-background">
           <SheetHeader className="border-b pb-4">
             <SheetTitle className="sr-only">Erro</SheetTitle>
           </SheetHeader>
@@ -223,7 +223,7 @@ export function AudienciaDetailSheet({
   if (!audiencia) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent className="w-[400px] sm:w-[540px] flex flex-col bg-background">
+        <SheetContent className="w-100 sm:w-135 flex flex-col bg-background">
           <SheetHeader className="border-b pb-4">
             <SheetTitle className="sr-only">Não encontrada</SheetTitle>
           </SheetHeader>
@@ -264,7 +264,7 @@ export function AudienciaDetailSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-[400px] sm:w-[540px] flex flex-col bg-background">
+      <SheetContent className="w-100 sm:w-135 flex flex-col bg-background">
         {/* Header */}
         <SheetHeader className="border-b pb-4">
           <div className="flex items-start justify-between gap-4">
