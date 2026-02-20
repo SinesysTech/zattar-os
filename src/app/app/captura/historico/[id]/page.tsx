@@ -72,7 +72,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           {captura.resultado && (
             <div className="mt-6">
               <h3 className="text-lg font-medium mb-2">Dados Brutos</h3>
-              <pre className="p-4 rounded-lg bg-muted overflow-auto max-h-[500px] text-xs">
+              <pre className="p-4 rounded-lg bg-muted overflow-auto max-h-125 text-xs">
                 {JSON.stringify(captura.resultado, null, 2)}
               </pre>
             </div>
