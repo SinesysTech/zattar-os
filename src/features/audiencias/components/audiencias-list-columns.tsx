@@ -148,11 +148,11 @@ function getUsuarioNome(u: Usuario): string {
 export function ResponsavelCell({
   audiencia,
   usuarios = [],
-  onSuccess,
+  onSuccessAction,
 }: {
   audiencia: AudienciaComResponsavel;
   usuarios?: Usuario[];
-  onSuccess?: () => void;
+  onSuccessAction?: () => void;
 }) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const responsavel = usuarios.find((u) => u.id === audiencia.responsavelId);
@@ -174,7 +174,7 @@ export function ResponsavelCell({
                 {getInitials(nomeExibicao)}
               </AvatarFallback>
             </Avatar>
-            <span className="truncate max-w-[120px]">{nomeExibicao}</span>
+            <span className="truncate max-w-30">{nomeExibicao}</span>
           </>
         ) : (
           <span className="text-muted-foreground">Sem responsável</span>
@@ -187,7 +187,7 @@ export function ResponsavelCell({
         audiencia={audiencia}
         usuarios={usuarios}
         onSuccess={() => {
-          onSuccess?.();
+          onSuccessAction?.();
         }}
       />
     </>
@@ -385,16 +385,16 @@ export function getAudienciasColumns(
       size: 200,
       cell: ({ row, table }) => {
         const audiencia = row.original;
-        const meta = table.options.meta as { usuarios?: Usuario[]; onSuccess?: () => void } | undefined;
+        const meta = table.options.meta as { usuarios?: Usuario[]; onSuccessAction?: () => void } | undefined;
         const usuarios = meta?.usuarios || [];
-        const onSuccess = meta?.onSuccess;
+        const onSuccessAction = meta?.onSuccessAction;
 
         return (
           <div className="flex items-center py-2">
             <ResponsavelCell
               audiencia={audiencia}
               usuarios={usuarios}
-              onSuccess={onSuccess}
+              onSuccessAction={onSuccessAction}
             />
           </div>
         );

@@ -134,6 +134,22 @@ export async function atualizarAudiencia(
   }
 }
 
+export async function atualizarObservacoesAudiencia(
+  id: number,
+  observacoes: string | null
+): Promise<Result<Audiencia>> {
+  if (id <= 0) {
+    return err(appError("VALIDATION_ERROR", "ID inválido."));
+  }
+
+  const audienciaExistenteResult = await repo.findAudienciaById(id);
+  if (!audienciaExistenteResult.success || !audienciaExistenteResult.data) {
+    return err(appError("NOT_FOUND", "Audiência não encontrada."));
+  }
+
+  return repo.atualizarObservacoes(id, observacoes);
+}
+
 export async function atualizarStatusAudiencia(
   id: number,
   status: StatusAudiencia,

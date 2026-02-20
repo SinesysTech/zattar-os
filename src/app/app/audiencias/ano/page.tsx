@@ -9,10 +9,10 @@ function AudienciasLoading() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Skeleton className="h-10 w-[200px]" />
-        <Skeleton className="h-10 w-[300px]" />
+        <Skeleton className="h-10 w-50" />
+        <Skeleton className="h-10 w-150" />
       </div>
-      <Skeleton className="h-[600px] w-full" />
+      <Skeleton className="h-150 w-full" />
     </div>
   );
 }
