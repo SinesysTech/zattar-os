@@ -145,6 +145,28 @@ export const actionRemoveDocumentoSigner = authenticatedAction(
 );
 
 /**
+ * Atualiza título e/ou selfie de um documento existente.
+ */
+export const actionUpdateDocumentoSettings = authenticatedAction(
+  z.object({
+    documento_uuid: z.string().uuid(),
+    titulo: z.string().optional(),
+    selfie_habilitada: z.boolean().optional(),
+  }),
+  async (input) => {
+    const result = await documentosService.updateDocumentoSettings(
+      input.documento_uuid,
+      {
+        titulo: input.titulo,
+        selfie_habilitada: input.selfie_habilitada,
+      }
+    );
+    revalidatePath(`/app/assinatura-digital/documentos/${input.documento_uuid}`);
+    return result;
+  }
+);
+
+/**
  * Deleta um documento de assinatura digital.
  *
  * Documentos concluídos ou com assinaturas concluídas não podem ser deletados.

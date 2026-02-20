@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { SignatureFlowShell } from "../components/signature-flow-shell";
 import { NovoDocumentoClient } from "./client-page";
 
 export const metadata: Metadata = {
@@ -10,9 +9,5 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default function NovoDocumentoPage() {
-  return (
-    <SignatureFlowShell>
-      <NovoDocumentoClient />
-    </SignatureFlowShell>
-  );
+  return <NovoDocumentoClient />;
 }

@@ -573,6 +573,49 @@ export async function finalizeDocumento(documentoUuid: string): Promise<{
   return { finalized: true, status: "pronto" };
 }
 
+export async function updateDocumentoSettings(
+  documentoUuid: string,
+  updates: { titulo?: string; selfie_habilitada?: boolean }
+): Promise<{ updated: boolean }> {
+  const supabase = createServiceClient();
+
+  const { data: doc, error: docError } = await supabase
+    .from(TABLE_DOCUMENTOS)
+    .select("id, status")
+    .eq("documento_uuid", documentoUuid)
+    .single();
+
+  if (docError) {
+    if (docError.code === "PGRST116") {
+      throw new Error("Documento não encontrado");
+    }
+    throw new Error(`Erro ao buscar documento: ${docError.message}`);
+  }
+
+  if (doc.status === "concluido") {
+    throw new Error("Documento concluído não pode ser modificado");
+  }
+
+  const payload: Record<string, unknown> = {};
+  if (updates.titulo !== undefined) payload.titulo = updates.titulo;
+  if (updates.selfie_habilitada !== undefined) payload.selfie_habilitada = updates.selfie_habilitada;
+
+  if (Object.keys(payload).length === 0) {
+    return { updated: false };
+  }
+
+  const { error: updateError } = await supabase
+    .from(TABLE_DOCUMENTOS)
+    .update(payload)
+    .eq("id", doc.id);
+
+  if (updateError) {
+    throw new Error(`Erro ao atualizar documento: ${updateError.message}`);
+  }
+
+  return { updated: true };
+}
+
 export async function updatePublicSignerIdentification(params: {
   token: string;
   dados: {

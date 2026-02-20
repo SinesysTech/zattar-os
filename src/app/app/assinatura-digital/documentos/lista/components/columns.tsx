@@ -8,7 +8,6 @@ import {
   Trash2,
   Users,
   Calendar,
-  MoreHorizontal,
 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -16,12 +15,10 @@ import { ptBR } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { DataTableColumnHeader } from "@/components/shared/data-shell/data-table-column-header";
 import type { AssinaturaDigitalDocumentoStatus } from "../../../feature/domain";
 import { statuses } from "./data/data";
@@ -79,7 +76,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         </div>
       ),
       enableSorting: false,
-      enableHiding: false,
+      enableHiding: true,
       size: 80,
       meta: { align: "left" as const, headerLabel: "ID" },
     },
@@ -184,57 +181,78 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         const pdfUrl = doc.pdf_final_url || doc.pdf_original_url;
 
         return (
-          <div className="min-h-10 flex items-center">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <MoreHorizontal className="h-4 w-4" />
-                  <span className="sr-only">Abrir menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[160px]">
-                <DropdownMenuItem
+          <div className="min-h-10 flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
                   onClick={() => actions.onView(doc.documento_uuid)}
                 >
-                  <Eye className="mr-2 h-4 w-4" />
-                  Ver detalhes
-                </DropdownMenuItem>
-                {podeEditar && (
-                  <DropdownMenuItem
+                  <Eye className="h-4 w-4" />
+                  <span className="sr-only">Ver detalhes</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Ver detalhes</TooltipContent>
+            </Tooltip>
+
+            {podeEditar && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
                     onClick={() => actions.onEdit(doc.documento_uuid)}
                   >
-                    <Pencil className="mr-2 h-4 w-4" />
-                    Editar
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuItem
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Editar</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Editar</TooltipContent>
+              </Tooltip>
+            )}
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
                   onClick={() =>
                     actions.onDownload(pdfUrl, doc.titulo || "documento")
                   }
                 >
-                  <Download className="mr-2 h-4 w-4" />
-                  Download PDF
-                </DropdownMenuItem>
-                {podeDeletar && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => actions.onDelete(doc)}
-                      className="text-destructive focus:text-destructive"
-                    >
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Deletar
-                    </DropdownMenuItem>
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <Download className="h-4 w-4" />
+                  <span className="sr-only">Download PDF</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Download PDF</TooltipContent>
+            </Tooltip>
+
+            {podeDeletar && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-destructive hover:text-destructive"
+                    onClick={() => actions.onDelete(doc)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">Deletar</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Deletar</TooltipContent>
+              </Tooltip>
+            )}
           </div>
         );
       },
       enableSorting: false,
       enableHiding: false,
-      size: 80,
+      size: 160,
       meta: { headerLabel: "Ações" },
     },
   ];

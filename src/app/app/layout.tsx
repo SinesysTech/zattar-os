@@ -30,12 +30,6 @@ const AUTH_ROUTES = [
   "/app/error",
 ]
 
-const SIGNATURE_FLOW_ROUTES = [
-  "/app/assinatura-digital/documentos/novo",
-  "/app/assinatura-digital/documentos/editar",
-  "/app/assinatura-digital/documentos/revisar",
-]
-
 function DashboardHeader() {
   const { open, setOpen } = useChatContext()
 
@@ -63,20 +57,14 @@ function DashboardHeader() {
 }
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-  const isSignatureFlow = SIGNATURE_FLOW_ROUTES.some(route => pathname?.startsWith(route))
-
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset className="h-screen overflow-hidden flex flex-col bg-muted/30">
-        {!isSignatureFlow && <DashboardHeader />}
+        <DashboardHeader />
         <div
           id="portal-content"
-          className={cn(
-            "flex min-h-0 flex-1 flex-col overflow-y-auto scroll-smooth",
-            !isSignatureFlow && "gap-6 p-6"
-          )}
+          className="flex min-h-0 flex-1 flex-col overflow-y-auto scroll-smooth gap-6 p-6"
         >
           {children}
         </div>

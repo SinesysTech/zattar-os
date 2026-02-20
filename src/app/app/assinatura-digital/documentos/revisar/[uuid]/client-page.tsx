@@ -81,8 +81,17 @@ function getSignerColor(index: number) {
   return SIGNER_COLORS[index % SIGNER_COLORS.length];
 }
 
+const STATUS_LABELS: Record<string, string> = {
+  rascunho: "Rascunho",
+  pronto: "Pronto",
+  concluido: "Concluído",
+  cancelado: "Cancelado",
+};
+
 function getSignerName(assinante: DocumentoCompleto["assinantes"][0]): string {
-  const nome = assinante.dados_snapshot?.nome_completo as string | undefined;
+  const nome =
+    (assinante.dados_snapshot?.nome_completo as string | undefined) ||
+    (assinante.dados_snapshot?.nome as string | undefined);
   if (nome) return nome;
 
   const tipoLabels: Record<string, string> = {
@@ -123,8 +132,11 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
           return;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const docData = resultado.data as any;
+        const docData = resultado.data as {
+          documento: Omit<DocumentoCompleto, "assinantes" | "ancoras">;
+          assinantes: DocumentoCompleto["assinantes"];
+          ancoras: DocumentoCompleto["ancoras"];
+        };
         if (!docData?.documento) {
           toast.error("Documento não encontrado");
           router.push("/app/assinatura-digital/documentos/lista");
@@ -228,7 +240,6 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
 
   return (
     <div className="max-w-6xl mx-auto w-full space-y-6">
-      {/* Header simplificado - stepper ja fornece contexto de navegacao */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold">
@@ -241,7 +252,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         <Badge
           variant={documento.status === "pronto" ? "default" : "secondary"}
         >
-          {documento.status}
+          {STATUS_LABELS[documento.status] ?? documento.status}
         </Badge>
       </div>
 
@@ -266,7 +277,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
                 <div>
                   <p className="text-sm text-muted-foreground">Status</p>
                   <Badge variant="outline" className="mt-1">
-                    {documento.status}
+                    {STATUS_LABELS[documento.status] ?? documento.status}
                   </Badge>
                 </div>
                 <div>

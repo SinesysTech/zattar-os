@@ -1,14 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import {
   PenTool,
   BadgeIcon,
   Plus,
   Settings,
   ArrowRight,
+  Camera,
+  FileText,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
@@ -17,7 +22,6 @@ import type { EditorField, Signatario, SignatureFieldType } from '../types';
 import SignerCard from './SignerCard';
 import SignerDialog from './SignerDialog';
 import { SectionHeader } from './SectionHeader';
-import { ProTip, ProTipLabel, Kbd } from './ProTip';
 
 interface FloatingSidebarProps {
   signers: Signatario[];
@@ -32,6 +36,10 @@ interface FloatingSidebarProps {
   onPaletteDragEnd: () => void;
   onReviewAndSend?: () => void;
   className?: string;
+  // Configurações do documento
+  documentTitle?: string;
+  selfieEnabled?: boolean;
+  onUpdateSettings?: (updates: { titulo?: string; selfie_habilitada?: boolean }) => void;
 }
 
 // --- FIELD PALETTE CARD ---
@@ -87,27 +95,78 @@ function SidebarContent(props: FloatingSidebarProps) {
     onDeleteSigner,
     onPaletteDragStart,
     onPaletteDragEnd,
-    onReviewAndSend
+    onReviewAndSend,
+    documentTitle,
+    selfieEnabled,
+    onUpdateSettings,
   } = props;
 
   const [isAddSignerOpen, setIsAddSignerOpen] = useState(false);
+  const titleDebounceRef = useRef<ReturnType<typeof setTimeout>>();
+
+  const handleTitleChange = useCallback((value: string) => {
+    if (titleDebounceRef.current) clearTimeout(titleDebounceRef.current);
+    titleDebounceRef.current = setTimeout(() => {
+      onUpdateSettings?.({ titulo: value });
+    }, 600);
+  }, [onUpdateSettings]);
 
   const FIELD_TYPES = [
     { type: 'signature' as const, label: 'Assinatura', icon: PenTool },
     { type: 'initials' as const, label: 'Rubrica', icon: BadgeIcon },
   ];
 
+  const hasFieldsAndSigners = signers.length > 0 && props.fields.length > 0;
+
   return (
-    <div className="flex flex-col h-full bg-slate-50/50 dark:bg-zinc-900/50">
+    <div className="flex flex-col h-full bg-background">
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-8">
+      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+        {/* Document Settings Section */}
+        <div className="space-y-4">
+          <SectionHeader title="Configurações" />
+
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="doc-titulo" className="flex items-center gap-1.5">
+                <FileText className="size-3.5" />
+                Título
+              </Label>
+              <Input
+                id="doc-titulo"
+                placeholder="Ex: Contrato de Prestação de Serviços"
+                defaultValue={documentTitle ?? ''}
+                onChange={(e) => handleTitleChange(e.target.value)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg border bg-background p-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <Camera className="size-4 text-muted-foreground shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-sm font-medium">Selfie de verificação</p>
+                  <p className="text-xs text-muted-foreground">
+                    Exigir foto do assinante
+                  </p>
+                </div>
+              </div>
+              <Switch
+                checked={selfieEnabled ?? false}
+                onCheckedChange={(checked) =>
+                  onUpdateSettings?.({ selfie_habilitada: checked })
+                }
+                aria-label="Exigir selfie de verificação"
+              />
+            </div>
+          </div>
+        </div>
+
+        <Separator />
+
         {/* Signers Section */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <SectionHeader title="Quem vai assinar?" />
-          </div>
+          <SectionHeader title="Quem vai assinar?" />
 
-          {/* Signers List */}
           <div className="space-y-3">
             {signers.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl bg-background/50 hover:bg-background transition-colors text-center">
@@ -168,7 +227,6 @@ function SidebarContent(props: FloatingSidebarProps) {
             </p>
           </div>
 
-          {/* Grid 2x2 */}
           <div className="grid grid-cols-2 gap-3">
             {FIELD_TYPES.map(ft => (
               <FieldPaletteCard
@@ -182,24 +240,16 @@ function SidebarContent(props: FloatingSidebarProps) {
             ))}
           </div>
         </div>
-
-        {/* ProTip */}
-        <div className="pt-2">
-          <ProTip className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/50">
-            <ProTipLabel><span className="text-blue-600 dark:text-blue-400">Dica Pro:</span></ProTipLabel> Segure{' '}
-            <Kbd>Shift</Kbd> ao clicar para selecionar múltiplos campos e alinhá-los automaticamente.
-          </ProTip>
-        </div>
       </div>
 
       {/* Footer */}
-      <div className="p-6 bg-background border-t shadow-[0_-2px_10px_rgba(0,0,0,0.03)] z-10">
+      <div className="p-6 border-t">
         <Button
           className="w-full h-12 text-base font-semibold shadow-md active:scale-[0.98] transition-all"
           onClick={onReviewAndSend}
-          disabled={!onReviewAndSend}
+          disabled={!hasFieldsAndSigners}
         >
-          Salvar e Continuar
+          Salvar e Revisar
           <ArrowRight className="ml-2 size-5" />
         </Button>
       </div>
@@ -215,14 +265,13 @@ function SidebarContent(props: FloatingSidebarProps) {
 }
 
 /**
- * FloatingSidebar - Responsive sidebar for signer management and field palette
+ * FloatingSidebar - Responsive sidebar for document configuration and field palette
  *
- * Layout based on design system:
- * - Header: "Configuração" with subtitle
- * - Section "QUEM VAI ASSINAR?" with signers list
- * - Section "ARRASTE OS CAMPOS" with 2x2 grid
- * - ProTip with highlight color
- * - Footer with primary CTA
+ * Sections:
+ * - Document settings (title, selfie)
+ * - Signers management
+ * - Field palette (signature, initials)
+ * - CTA button (save & review)
  *
  * Desktop: Renders inside a card container provided by parent
  * Mobile: Sheet (drawer) triggered by FAB
@@ -255,7 +304,6 @@ export default function FloatingSidebar(props: FloatingSidebarProps) {
     );
   }
 
-  // Desktop: Content rendered inside card container from parent
   return (
     <div className={cn('flex flex-col h-full', props.className)}>
       <SidebarContent {...props} />

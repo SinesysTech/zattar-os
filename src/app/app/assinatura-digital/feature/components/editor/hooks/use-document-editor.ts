@@ -9,6 +9,7 @@ import {
   actionGetPresignedPdfUrl,
   actionAddDocumentoSigner,
   actionRemoveDocumentoSigner,
+  actionUpdateDocumentoSettings,
 } from "../../../actions/documentos-actions";
 import { PDF_CANVAS_SIZE } from "../../../types/pdf-preview.types";
 import {
@@ -259,6 +260,34 @@ export function useDocumentEditor({ uuid }: UseDocumentEditorProps) {
     );
   };
 
+  const handleUpdateSettings = async (updates: {
+    titulo?: string;
+    selfie_habilitada?: boolean;
+  }) => {
+    if (!documento) return;
+    try {
+      const res = await actionUpdateDocumentoSettings({
+        documento_uuid: documento.documento_uuid,
+        ...updates,
+      });
+      if (res.success) {
+        setDocumento((prev) =>
+          prev
+            ? {
+                ...prev,
+                ...(updates.titulo !== undefined && { titulo: updates.titulo }),
+                ...(updates.selfie_habilitada !== undefined && {
+                  selfie_habilitada: updates.selfie_habilitada,
+                }),
+              }
+            : prev
+        );
+      }
+    } catch (error) {
+      toast.error("Erro ao atualizar configurações.");
+    }
+  };
+
   const handleSaveAndReview = async () => {
     if (!documento) return;
 
@@ -367,6 +396,9 @@ export function useDocumentEditor({ uuid }: UseDocumentEditorProps) {
       // Drag
       handleCanvasDragOver,
       handleCanvasDrop,
+
+      // Settings
+      handleUpdateSettings,
 
       // Save
       handleSaveAndReview,

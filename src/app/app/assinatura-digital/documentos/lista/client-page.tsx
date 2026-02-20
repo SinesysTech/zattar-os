@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import type { Table as TanstackTable, SortingState } from "@tanstack/react-table";
+import type { Table as TanstackTable, SortingState, RowSelectionState, VisibilityState } from "@tanstack/react-table";
 import {
   Copy,
   CheckCircle2,
@@ -117,6 +117,10 @@ export function DocumentosTableWrapper({
   // -- State: Loading/Error
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+
+  // -- State: Selection & Column Visibility
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({ id: false });
 
   // -- State: Filters
   const [globalFilter, setGlobalFilter] = React.useState("");
@@ -335,6 +339,60 @@ export function DocumentosTableWrapper({
     }
   }, [documentoParaDeletar, refetch]);
 
+  // -- Selected rows
+  const selectedCount = Object.keys(rowSelection).length;
+
+  const handleBulkDownload = React.useCallback(async () => {
+    const selectedIndices = Object.keys(rowSelection).map(Number);
+    const selectedDocs = selectedIndices
+      .map((i) => paginatedDocumentos[i])
+      .filter(Boolean);
+
+    for (const doc of selectedDocs) {
+      const pdfUrl = doc.pdf_final_url || doc.pdf_original_url;
+      await handleDownloadPdf(pdfUrl, doc.titulo || "documento");
+    }
+  }, [rowSelection, paginatedDocumentos, handleDownloadPdf]);
+
+  const handleBulkDelete = React.useCallback(async () => {
+    const selectedIndices = Object.keys(rowSelection).map(Number);
+    const selectedDocs = selectedIndices
+      .map((i) => paginatedDocumentos[i])
+      .filter(Boolean)
+      .filter(
+        (doc) =>
+          doc.status !== "concluido" &&
+          (doc._assinantes_concluidos ?? 0) === 0
+      );
+
+    if (selectedDocs.length === 0) {
+      toast.error("Nenhum documento selecionado pode ser deletado");
+      return;
+    }
+
+    setIsDeleting(true);
+    let successCount = 0;
+    for (const doc of selectedDocs) {
+      try {
+        const resultado = await actionDeleteDocumento({
+          uuid: doc.documento_uuid,
+        });
+        if (resultado.success) successCount++;
+      } catch {
+        // continua com os próximos
+      }
+    }
+    setIsDeleting(false);
+    setRowSelection({});
+
+    if (successCount > 0) {
+      toast.success(`${successCount} documento(s) deletado(s) com sucesso`);
+      refetch();
+    } else {
+      toast.error("Nenhum documento foi deletado");
+    }
+  }, [rowSelection, paginatedDocumentos, refetch]);
+
   // -- Columns
   const columns = React.useMemo(
     () =>
@@ -443,6 +501,34 @@ export function DocumentosTableWrapper({
                   defaultValue="all"
                 />
               }
+              actionSlot={
+                selectedCount > 0 ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">
+                      {selectedCount} selecionado(s)
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-9"
+                      onClick={handleBulkDownload}
+                    >
+                      <Download className="h-4 w-4 mr-1" />
+                      Download
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-9 text-destructive hover:text-destructive"
+                      onClick={handleBulkDelete}
+                      disabled={isDeleting}
+                    >
+                      <Trash2 className="h-4 w-4 mr-1" />
+                      Deletar
+                    </Button>
+                  </div>
+                ) : undefined
+              }
             />
           ) : (
             <div className="p-6" />
@@ -478,6 +564,12 @@ export function DocumentosTableWrapper({
           }}
           sorting={sorting}
           onSortingChange={setSorting}
+          columnVisibility={columnVisibility}
+          onColumnVisibilityChange={setColumnVisibility}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+          }}
           isLoading={isLoading}
           error={error}
           emptyMessage="Nenhum documento encontrado."
