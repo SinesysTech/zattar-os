@@ -72,7 +72,38 @@ jobs:
         run: npm run check:architecture
 
       # -----------------------------------------------------------------
-      # 3. Metadados para tags da imagem
+      # 3. Preflight: validar secrets obrigatorios
+      # -----------------------------------------------------------------
+      - name: Validate required secrets
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ env.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY: ${{ env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY }}
+        run: |
+          missing=()
+
+          [[ -z "${DOCKERHUB_USERNAME:-}" ]] && missing+=("DOCKERHUB_USERNAME")
+          [[ -z "${DOCKERHUB_TOKEN:-}" ]] && missing+=("DOCKERHUB_TOKEN")
+          [[ -z "${NEXT_PUBLIC_SUPABASE_URL:-}" ]] && missing+=("NEXT_PUBLIC_SUPABASE_URL")
+          [[ -z "${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY:-}" ]] && missing+=("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY")
+
+          if (( ${#missing[@]} > 0 )); then
+            echo "::error::Missing required secrets: ${missing[*]}"
+            echo "## ❌ Missing required secrets" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Configure os secrets abaixo em Settings > Secrets and variables > Actions:" >> "$GITHUB_STEP_SUMMARY"
+            for name in "${missing[@]}"; do
+              echo "- ${name}" >> "$GITHUB_STEP_SUMMARY"
+            done
+            exit 1
+          fi
+
+          echo "## ✅ Required secrets validated" >> "$GITHUB_STEP_SUMMARY"
+          echo "All mandatory Docker/Supabase secrets are present." >> "$GITHUB_STEP_SUMMARY"
+
+      # -----------------------------------------------------------------
+      # 4. Metadados para tags da imagem
       # -----------------------------------------------------------------
       - name: Docker metadata
         id: meta
@@ -88,13 +119,13 @@ jobs:
             type=raw,value=${{ inputs.tag }},enable=${{ inputs.tag != '' }}
 
       # -----------------------------------------------------------------
-      # 4. Setup Docker Buildx (necessario para cache e platform)
+      # 5. Setup Docker Buildx (necessario para cache e platform)
       # -----------------------------------------------------------------
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       # -----------------------------------------------------------------
-      # 5. Login no Docker Hub
+      # 6. Login no Docker Hub
       # -----------------------------------------------------------------
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -103,7 +134,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # -----------------------------------------------------------------
-      # 6. Build e Push
+      # 7. Build e Push
       # -----------------------------------------------------------------
       - name: Build and push image
         id: build_push
@@ -124,7 +155,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       # -----------------------------------------------------------------
-      # 7. Diagnostico em caso de falha do build
+      # 8. Diagnostico em caso de falha do build
       # -----------------------------------------------------------------
       - name: Diagnostics (on failure)
         if: failure()
@@ -145,7 +176,7 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
 
       # -----------------------------------------------------------------
-      # 8. Resumo do build
+      # 9. Resumo do build
       # -----------------------------------------------------------------
 
       # -----------------------------------------------------------------
