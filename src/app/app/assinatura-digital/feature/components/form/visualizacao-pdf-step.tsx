@@ -200,10 +200,10 @@ export default function VisualizacaoPdfStep() {
 
       // Preparar payload
       const payload = {
-        templateId,
-        clienteId: dadosPessoais.cliente_id,
-        contratoId: dadosContrato.contrato_id,
-        ...(fotoBase64 && { fotoBase64 }),
+        template_id: templateId,
+        cliente_id: dadosPessoais.cliente_id,
+        contrato_id: dadosContrato.contrato_id,
+        ...(fotoBase64 && { foto_base64: fotoBase64 }),
         incluirAssinatura: false,
       };
 

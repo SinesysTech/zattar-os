@@ -1,22 +1,38 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as repository from '../../repository';
 import { criarPericiaMock, criarEspecialidadeMock } from '../fixtures';
+import { SituacaoPericiaCodigo } from '../../domain';
+import { GrauTribunal } from '@/features/expedientes/domain';
 
 // Mock Supabase
-const mockSupabaseClient = {
-  from: jest.fn(() => mockSupabaseClient),
-  select: jest.fn(() => mockSupabaseClient),
-  update: jest.fn(() => mockSupabaseClient),
-  eq: jest.fn(() => mockSupabaseClient),
-  is: jest.fn(() => mockSupabaseClient),
-  or: jest.fn(() => mockSupabaseClient),
-  gte: jest.fn(() => mockSupabaseClient),
-  lt: jest.fn(() => mockSupabaseClient),
-  order: jest.fn(() => mockSupabaseClient),
-  range: jest.fn(() => mockSupabaseClient),
-  limit: jest.fn(() => mockSupabaseClient),
-  maybeSingle: jest.fn(),
+type MockSupabaseClient = {
+  from: jest.Mock;
+  select: jest.Mock;
+  update: jest.Mock;
+  eq: jest.Mock;
+  is: jest.Mock;
+  or: jest.Mock;
+  gte: jest.Mock;
+  lt: jest.Mock;
+  order: jest.Mock;
+  range: jest.Mock;
+  limit: jest.Mock;
+  maybeSingle: jest.Mock;
 };
+
+const mockSupabaseClient = {} as MockSupabaseClient;
+mockSupabaseClient.from = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.select = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.update = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.eq = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.is = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.or = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.gte = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.lt = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.order = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.range = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.limit = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.maybeSingle = jest.fn();
 
 jest.mock('@/lib/supabase', () => ({
   createDbClient: jest.fn(() => mockSupabaseClient),
@@ -176,8 +192,9 @@ describe('Perícias - Fluxos de Integração', () => {
 
       expect(resultFiltrar.success).toBe(true);
       if (resultFiltrar.success) {
-        expect(resultFiltrar.data.data[0].especialidadeId).toBe(1);
+        expect(resultFiltrar.data.data).toHaveLength(1);
       }
+      expect(mockSupabaseClient.eq).toHaveBeenCalledWith('especialidade_id', 1);
     });
   });
 
@@ -248,9 +265,9 @@ describe('Perícias - Fluxos de Integração', () => {
       const pericias = [
         criarPericiaMock({
           id: 1,
-          trt: '02',
-          grau: 'primeiro_grau',
-          situacaoCodigo: 'L',
+          trt: 'TRT2',
+          grau: GrauTribunal.PRIMEIRO_GRAU,
+          situacaoCodigo: SituacaoPericiaCodigo.AGUARDANDO_LAUDO,
           responsavelId: 5,
           laudoJuntado: false,
           segredoJustica: false,
@@ -268,9 +285,9 @@ describe('Perícias - Fluxos de Integração', () => {
 
       // Act
       const result = await repository.findAllPericias({
-        trt: '02',
-        grau: 'primeiro_grau',
-        situacaoCodigo: 'L',
+        trt: 'TRT2',
+        grau: GrauTribunal.PRIMEIRO_GRAU,
+        situacaoCodigo: SituacaoPericiaCodigo.AGUARDANDO_LAUDO,
         responsavelId: 5,
         laudoJuntado: false,
         segredoJustica: false,
@@ -279,8 +296,8 @@ describe('Perícias - Fluxos de Integração', () => {
 
       // Assert
       expect(result.success).toBe(true);
-      expect(mockSupabaseClient.eq).toHaveBeenCalledWith('trt', '02');
-      expect(mockSupabaseClient.eq).toHaveBeenCalledWith('grau', 'primeiro_grau');
+      expect(mockSupabaseClient.eq).toHaveBeenCalledWith('trt', 'TRT2');
+      expect(mockSupabaseClient.eq).toHaveBeenCalledWith('grau', GrauTribunal.PRIMEIRO_GRAU);
       expect(mockSupabaseClient.eq).toHaveBeenCalledWith('situacao_codigo', 'L');
       expect(mockSupabaseClient.eq).toHaveBeenCalledWith('responsavel_id', 5);
       expect(mockSupabaseClient.eq).toHaveBeenCalledWith('laudo_juntado', false);
@@ -292,17 +309,23 @@ describe('Perícias - Fluxos de Integração', () => {
   describe('Fluxo de Joins Complexos', () => {
     it('deve buscar perícia com todos os joins (especialidade, perito, responsavel, processo)', async () => {
       // Arrange
-      const pericia = criarPericiaMock({
-        id: 1,
+      const pericia = {
+        ...criarPericiaMock({
+          id: 1,
+          especialidade: undefined,
+          perito: undefined,
+          responsavel: undefined,
+          processo: undefined,
+        }),
         especialidade: { descricao: 'Medicina do Trabalho' },
         perito: { nome: 'Dr. João Silva' },
-        responsavel: { nomeExibicao: 'Maria Santos' },
+        responsavel: { nome_exibicao: 'Maria Santos' },
         processo: {
-          numeroProcesso: '0001234-56.2023.5.02.0001',
-          nomeParteAutora: 'João da Silva',
-          nomeParteRe: 'Empresa XPTO Ltda',
+          numero_processo: '0001234-56.2023.5.02.0001',
+          nome_parte_autora: 'João da Silva',
+          nome_parte_re: 'Empresa XPTO Ltda',
         },
-      });
+      };
 
       mockSupabaseClient.select.mockReturnThis();
       mockSupabaseClient.eq.mockReturnThis();

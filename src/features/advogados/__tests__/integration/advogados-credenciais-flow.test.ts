@@ -37,18 +37,14 @@ describe('Advogados Integration - Criação', () => {
     const advogadoInput = {
       nome_completo: 'João Silva Santos',
       cpf: '123.456.789-01', // CPF formatado
-      oab: '12345',
-      uf_oab: 'sp',
-      email: 'joao@exemplo.com',
+      oabs: [{ numero: '12345', uf: 'sp' }],
     };
 
     const advogadoCriado = {
       id: 1,
       nome_completo: 'João Silva Santos',
       cpf: '12345678901', // CPF normalizado (apenas dígitos)
-      oab: '12345',
-      uf_oab: 'SP', // UF maiúscula
-      email: 'joao@exemplo.com',
+      oabs: [{ numero: '12345', uf: 'SP' }],
       active: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -64,9 +60,7 @@ describe('Advogados Integration - Criação', () => {
     expect(criarAdvogadoDb).toHaveBeenCalledWith({
       nome_completo: 'João Silva Santos',
       cpf: '12345678901', // Normalizado
-      oab: '12345',
-      uf_oab: 'SP', // Maiúscula
-      email: 'joao@exemplo.com',
+      oabs: [{ numero: '12345', uf: 'SP' }],
     });
   });
 
@@ -75,9 +69,7 @@ describe('Advogados Integration - Criação', () => {
     const advogadoInput = {
       nome_completo: 'João Silva',
       cpf: '123.456', // Inválido
-      oab: '12345',
-      uf_oab: 'SP',
-      email: 'joao@exemplo.com',
+      oabs: [{ numero: '12345', uf: 'SP' }],
     };
 
     // Act & Assert
@@ -93,9 +85,7 @@ describe('Advogados Integration - Criação', () => {
     const advogadoInput = {
       nome_completo: 'Jo',
       cpf: '12345678901',
-      oab: '12345',
-      uf_oab: 'SP',
-      email: 'joao@exemplo.com',
+      oabs: [{ numero: '12345', uf: 'SP' }],
     };
 
     // Act & Assert
@@ -109,9 +99,7 @@ describe('Advogados Integration - Criação', () => {
     const advogadoInput = {
       nome_completo: 'João Silva',
       cpf: '12345678901',
-      oab: '12345',
-      uf_oab: 'S', // Apenas 1 caractere
-      email: 'joao@exemplo.com',
+      oabs: [{ numero: '12345', uf: 'S' }], // Apenas 1 caractere
     };
 
     // Act & Assert
@@ -125,9 +113,7 @@ describe('Advogados Integration - Criação', () => {
     const advogadoInput = {
       nome_completo: '  João Silva Santos  ',
       cpf: '123.456.789-01',
-      oab: '  12345  ',
-      uf_oab: 'sp',
-      email: 'joao@exemplo.com',
+      oabs: [{ numero: '  12345  ', uf: 'sp' }],
     };
 
     (criarAdvogadoDb as jest.Mock).mockResolvedValue({ id: 1 });
@@ -139,9 +125,7 @@ describe('Advogados Integration - Criação', () => {
     expect(criarAdvogadoDb).toHaveBeenCalledWith({
       nome_completo: 'João Silva Santos',
       cpf: '12345678901',
-      oab: '12345',
-      uf_oab: 'SP',
-      email: 'joao@exemplo.com',
+      oabs: [{ numero: '12345', uf: 'SP' }],
     });
   });
 });
@@ -225,24 +209,21 @@ describe('Advogados Integration - Listagem', () => {
     ];
 
     const paginatedResponse = {
-      data: advogados,
-      pagination: {
-        page: 1,
-        limit: 50,
-        total: 1,
-        totalPages: 1,
-        hasMore: false,
-      },
+      advogados,
+      total: 1,
+      pagina: 1,
+      limite: 50,
+      totalPaginas: 1,
     };
 
     (listarAdvogadosDb as jest.Mock).mockResolvedValue(paginatedResponse);
 
     // Act
-    const result = await listarAdvogados({ busca: 'João', ativo: true });
+    const result = await listarAdvogados({ busca: 'João' });
 
     // Assert
     expect(result).toEqual(paginatedResponse);
-    expect(listarAdvogadosDb).toHaveBeenCalledWith({ busca: 'João', ativo: true });
+    expect(listarAdvogadosDb).toHaveBeenCalledWith({ busca: 'João' });
   });
 });
 
@@ -256,7 +237,7 @@ describe('Advogados Integration - Credenciais - Criação', () => {
     const credencialInput = {
       advogado_id: 1,
       tribunal: 'TRT1',
-      grau: 'primeiro_grau',
+      grau: '1' as const,
       senha: 'senha123',
     };
 
@@ -264,11 +245,10 @@ describe('Advogados Integration - Credenciais - Criação', () => {
       id: 1,
       advogado_id: 1,
       tribunal: 'TRT1',
-      grau: 'primeiro_grau',
-      senha: null, // Senha não retornada por segurança
+      grau: '1' as const,
       active: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
 
     (criarCredencialDb as jest.Mock).mockResolvedValue(credencialCriada);
@@ -286,7 +266,7 @@ describe('Advogados Integration - Credenciais - Criação', () => {
     const credencialInput = {
       advogado_id: 0,
       tribunal: 'TRT1',
-      grau: 'primeiro_grau',
+      grau: '1' as const,
       senha: 'senha123',
     };
 
@@ -301,7 +281,7 @@ describe('Advogados Integration - Credenciais - Criação', () => {
     const credencialInput = {
       advogado_id: 1,
       tribunal: 'TRT1',
-      grau: 'primeiro_grau',
+      grau: '1' as const,
       senha: '',
     };
 
@@ -316,7 +296,7 @@ describe('Advogados Integration - Credenciais - Criação', () => {
     const credencialInput = {
       advogado_id: 1,
       tribunal: 'TRT1',
-      grau: 'primeiro_grau',
+      grau: '1' as const,
       senha: 'senha123',
     };
 
@@ -324,11 +304,10 @@ describe('Advogados Integration - Credenciais - Criação', () => {
       id: 1,
       advogado_id: 1,
       tribunal: 'TRT1',
-      grau: 'primeiro_grau',
-      senha: null, // Senha não deve ser retornada
+      grau: '1' as const,
       active: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
 
     (criarCredencialDb as jest.Mock).mockResolvedValue(credencialCriada);
@@ -337,7 +316,7 @@ describe('Advogados Integration - Credenciais - Criação', () => {
     const result = await criarCredencial(credencialInput);
 
     // Assert: Verificar senha não retornada
-    expect(result.senha).toBeNull();
+    expect(result).toEqual(credencialCriada);
   });
 
   it('deve falhar se já existir credencial ativa para tribunal/grau (lógica no repository)', async () => {
@@ -345,12 +324,12 @@ describe('Advogados Integration - Credenciais - Criação', () => {
     const credencialInput = {
       advogado_id: 1,
       tribunal: 'TRT1',
-      grau: 'primeiro_grau',
+      grau: '1' as const,
       senha: 'senha123',
     };
 
     (criarCredencialDb as jest.Mock).mockRejectedValue(
-      new Error('Já existe credencial ativa para este advogado, tribunal TRT1 e grau primeiro_grau')
+      new Error('Já existe credencial ativa para este advogado, tribunal TRT1 e grau 1')
     );
 
     // Act & Assert
@@ -369,18 +348,17 @@ describe('Advogados Integration - Credenciais - Atualização', () => {
     // Arrange: Mock credencial atual + busca de duplicatas
     const updateInput = {
       tribunal: 'TRT2',
-      grau: 'segundo_grau',
+      grau: '2' as const,
     };
 
     const credencialAtualizada = {
       id: 1,
       advogado_id: 1,
       tribunal: 'TRT2',
-      grau: 'segundo_grau',
-      senha: null,
+      grau: '2' as const,
       active: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
 
     (atualizarCredencialDb as jest.Mock).mockResolvedValue(credencialAtualizada);
@@ -403,11 +381,10 @@ describe('Advogados Integration - Credenciais - Atualização', () => {
       id: 1,
       advogado_id: 1,
       tribunal: 'TRT1',
-      grau: 'primeiro_grau',
-      senha: null, // Senha não retornada
+      grau: '1' as const,
       active: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
 
     (atualizarCredencialDb as jest.Mock).mockResolvedValue(credencialAtualizada);
@@ -418,18 +395,18 @@ describe('Advogados Integration - Credenciais - Atualização', () => {
     // Assert: Verificar atualização sem validação de tribunal/grau
     expect(result).toEqual(credencialAtualizada);
     expect(atualizarCredencialDb).toHaveBeenCalledWith(1, updateInput);
-    expect(result.senha).toBeNull(); // Senha não retornada
+    expect(result).toEqual(credencialAtualizada);
   });
 
   it('deve falhar se tentar criar duplicata ativa (lógica no repository)', async () => {
     // Arrange
     const updateInput = {
       tribunal: 'TRT1',
-      grau: 'primeiro_grau',
+      grau: '1' as const,
     };
 
     (atualizarCredencialDb as jest.Mock).mockRejectedValue(
-      new Error('Já existe credencial ativa para este advogado, tribunal TRT1 e grau primeiro_grau')
+      new Error('Já existe credencial ativa para este advogado, tribunal TRT1 e grau 1')
     );
 
     // Act & Assert
@@ -451,39 +428,24 @@ describe('Advogados Integration - Credenciais - Listagem', () => {
         id: 1,
         advogado_id: 1,
         tribunal: 'TRT1',
-        grau: 'primeiro_grau',
+        grau: '1' as const,
         active: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        advogado: {
-          id: 1,
-          nome_completo: 'João Silva',
-          oab: '12345',
-          uf_oab: 'SP',
-        },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        advogado_nome: 'João Silva',
+        advogado_cpf: '12345678901',
+        advogado_oabs: [{ numero: '12345', uf: 'SP' }],
       },
     ];
 
-    const paginatedResponse = {
-      data: credenciais,
-      pagination: {
-        page: 1,
-        limit: 50,
-        total: 1,
-        totalPages: 1,
-        hasMore: false,
-      },
-    };
-
-    (listarCredenciaisDb as jest.Mock).mockResolvedValue(paginatedResponse);
+    (listarCredenciaisDb as jest.Mock).mockResolvedValue(credenciais);
 
     // Act: Chamar listarCredenciais
     const result = await listarCredenciais({});
 
     // Assert: Verificar dados do advogado incluídos
-    expect(result).toEqual(paginatedResponse);
-    expect(result.data[0].advogado).toBeDefined();
-    expect(result.data[0].advogado?.nome_completo).toBe('João Silva');
+    expect(result).toEqual(credenciais);
+    expect(result[0].advogado_nome).toBe('João Silva');
   });
 
   it('deve filtrar por advogado_id e active', async () => {
@@ -493,25 +455,14 @@ describe('Advogados Integration - Credenciais - Listagem', () => {
         id: 1,
         advogado_id: 1,
         tribunal: 'TRT1',
-        grau: 'primeiro_grau',
+        grau: '1' as const,
         active: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       },
     ];
 
-    const paginatedResponse = {
-      data: credenciaisAtivas,
-      pagination: {
-        page: 1,
-        limit: 50,
-        total: 1,
-        totalPages: 1,
-        hasMore: false,
-      },
-    };
-
-    (listarCredenciaisDb as jest.Mock).mockResolvedValue(paginatedResponse);
+    (listarCredenciaisDb as jest.Mock).mockResolvedValue(credenciaisAtivas);
 
     // Act: Listar credenciais ativas de advogado específico
     const result = await listarCredenciais({
@@ -520,7 +471,7 @@ describe('Advogados Integration - Credenciais - Listagem', () => {
     });
 
     // Assert: Verificar query construída
-    expect(result.data).toHaveLength(1);
+    expect(result).toHaveLength(1);
     expect(listarCredenciaisDb).toHaveBeenCalledWith({
       advogado_id: 1,
       active: true,

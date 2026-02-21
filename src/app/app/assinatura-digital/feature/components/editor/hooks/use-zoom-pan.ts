@@ -37,8 +37,9 @@ export function useZoomPan({ canvasSize }: UseZoomPanProps) {
     const updateZoomForViewport = () => {
       if (typeof window === 'undefined') return;
 
-      const availableWidth = window.innerWidth - 64; // Horizontal padding/sidebar
-      const availableHeight = window.innerHeight - 140; // Vertical padding (header + margins)
+      // Account for: app sidebar (~256px collapsed ~48px), docked toolbar (~44px), canvas padding (64px)
+      const availableWidth = window.innerWidth - 200; // sidebar + toolbar + padding
+      const availableHeight = window.innerHeight - 180; // app header (56px) + editor header (48px) + canvas padding (76px)
 
       const zoomX = availableWidth / canvasSize.width;
       const zoomY = availableHeight / canvasSize.height;

@@ -9,6 +9,7 @@ import "server-only";
 
 import { createDbClient } from "@/lib/supabase";
 import { appError, err, ok, Result } from "@/types";
+import { QUADRO_CUSTOM_UNAVAILABLE_MESSAGE } from "./errors";
 import type {
   Task,
   TaskAssignee,
@@ -536,7 +537,7 @@ function isQuadroInfraMissingError(error: { code?: string; message?: string } | 
 function quadroCustomUnavailableError() {
   return appError(
     "VALIDATION_ERROR",
-    "Quadros personalizados indisponíveis neste ambiente. Aplique as migrations de tarefas/kanban para habilitar este recurso."
+    QUADRO_CUSTOM_UNAVAILABLE_MESSAGE
   );
 }
 
@@ -674,7 +675,12 @@ export async function listTarefasByQuadro(usuarioId: number, quadroId: string): 
       .order("position", { ascending: true })
       .order("created_at", { ascending: true });
 
-    if (itemsError) return err(appError("DATABASE_ERROR", itemsError.message, { code: itemsError.code }));
+    if (itemsError) {
+      if (isQuadroInfraMissingError(itemsError)) {
+        return err(quadroCustomUnavailableError());
+      }
+      return err(appError("DATABASE_ERROR", itemsError.message, { code: itemsError.code }));
+    }
 
     const items = (itemsData as TodoItemRow[]) ?? [];
     if (items.length === 0) return ok([]);
@@ -767,7 +773,12 @@ export async function updateTaskQuadro(taskId: string, quadroId: string | null):
       .update({ quadro_id: quadroId })
       .eq("id", taskId);
 
-    if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    if (error) {
+      if (isQuadroInfraMissingError(error)) {
+        return err(quadroCustomUnavailableError());
+      }
+      return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    }
 
     return ok(undefined);
   } catch (error) {

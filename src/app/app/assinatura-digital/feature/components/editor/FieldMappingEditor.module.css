@@ -1,4 +1,4 @@
-/* FieldMappingEditor - Estilos para toolbar flutuante e elementos dinâmicos */
+/* FieldMappingEditor - Estilos para toolbar flutuante e canvas de edição */
 
 /**
  * Toolbar flutuante e arrastável
@@ -14,4 +14,13 @@
 
 .floatingToolbar:active {
   cursor: grabbing;
+}
+
+/**
+ * Background sutil com padrão de pontos para a área do canvas.
+ * Distingue visualmente a área de edição do resto da interface.
+ */
+.canvasBackground {
+  background-image: radial-gradient(circle, oklch(0.8 0 0 / 0.3) 1px, transparent 1px);
+  background-size: 20px 20px;
 }

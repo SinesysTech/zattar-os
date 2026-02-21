@@ -46,6 +46,7 @@ import {
 } from './components';
 // Extracted utilities
 import { validateFieldHeight } from './utils/field-helpers';
+import styles from './FieldMappingEditor.module.css';
 
 import type { EditorField, EditorMode } from './types';
 
@@ -636,12 +637,12 @@ export default function FieldMappingEditor({
   };
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="-m-6 flex flex-col overflow-hidden" style={{ height: 'calc(100vh - 3.5rem)' }}>
       {/* Mobile Toolbar (horizontal at top) */}
       <EditorToolbarMobile {...toolbarProps} />
 
-      {/* Main Layout: Toolbar + Canvas */}
-      <div className="flex-1 flex gap-3 items-center min-h-0 px-3 pb-6">
+      {/* Canvas Area with floating toolbar */}
+      <div className={`relative flex-1 overflow-auto bg-muted/40 ${styles.canvasBackground}`}>
         {/* Desktop Toolbar - Floating & Draggable */}
         <EditorToolbar
           toolbarPosition={toolbarPosition}
@@ -650,7 +651,7 @@ export default function FieldMappingEditor({
           {...toolbarProps}
         />
 
-        {/* Popovers (separate, not nested) */}
+        {/* Popovers (rendered outside layout flow) */}
         <PropertiesPopover
           trigger={<div />}
           open={showProperties}
@@ -672,42 +673,44 @@ export default function FieldMappingEditor({
           pdfFile={uploadedFile || undefined}
         />
 
-        {/* PDF Canvas with Context Menu */}
-        <EditorCanvas
-          canvasRef={canvasRef}
-          canvasSize={canvasSize}
-          zoom={zoom}
-          pdfUrl={pdfUrl}
-          previewKey={previewKey}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          onLoadSuccess={handlePdfLoadSuccess}
-          onLoadError={(error) => {
-            toast.error('Não foi possível carregar o preview do PDF.', {
-              description: error.message,
-            });
-          }}
-          fields={fields}
-          fieldsWithHeightWarning={fieldsWithHeightWarning}
-          onCanvasClick={handleCanvasClick}
-          onFieldClick={handleFieldClick}
-          onFieldMouseDown={handleMouseDown}
-          onFieldKeyboard={handleFieldKeyboard}
-          onResizeMouseDown={handleResizeMouseDown}
-          selectedField={selectedField}
-          onOpenProperties={handleOpenProperties}
-          onDuplicateField={duplicateField}
-          onDeleteField={deleteField}
-          onAddTextField={handleAddTextField}
-          onAddImageField={handleAddImageField}
-          onAddRichTextField={handleAddRichTextField}
-          onEditRichText={handleEditRichText}
-          onAdjustHeight={handleAdjustHeightAutomatically}
-          onZoomIn={handleZoomIn}
-          onZoomOut={handleZoomOut}
-          onResetZoom={handleResetZoom}
-        />
+        {/* Centered PDF Canvas */}
+        <div className="flex min-h-full items-start justify-center p-8">
+          <EditorCanvas
+            canvasRef={canvasRef}
+            canvasSize={canvasSize}
+            zoom={zoom}
+            pdfUrl={pdfUrl}
+            previewKey={previewKey}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            onLoadSuccess={handlePdfLoadSuccess}
+            onLoadError={(error) => {
+              toast.error('Não foi possível carregar o preview do PDF.', {
+                description: error.message,
+              });
+            }}
+            fields={fields}
+            fieldsWithHeightWarning={fieldsWithHeightWarning}
+            onCanvasClick={handleCanvasClick}
+            onFieldClick={handleFieldClick}
+            onFieldMouseDown={handleMouseDown}
+            onFieldKeyboard={handleFieldKeyboard}
+            onResizeMouseDown={handleResizeMouseDown}
+            selectedField={selectedField}
+            onOpenProperties={handleOpenProperties}
+            onDuplicateField={duplicateField}
+            onDeleteField={deleteField}
+            onAddTextField={handleAddTextField}
+            onAddImageField={handleAddImageField}
+            onAddRichTextField={handleAddRichTextField}
+            onEditRichText={handleEditRichText}
+            onAdjustHeight={handleAdjustHeightAutomatically}
+            onZoomIn={handleZoomIn}
+            onZoomOut={handleZoomOut}
+            onResetZoom={handleResetZoom}
+          />
+        </div>
       </div>
 
       {/* Exit Confirmation Dialog */}

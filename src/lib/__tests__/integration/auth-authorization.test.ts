@@ -512,34 +512,36 @@ describe('Auth - Authorization', () => {
   });
 
   describe('checkMultiplePermissions', () => {
-    beforeEach(() => {
-      mockSupabase.from.mockReturnValue({
-        select: jest.fn().mockReturnValue({
-          eq: jest.fn().mockReturnValue({
-            single: jest.fn().mockResolvedValue({
-              data: { is_super_admin: false },
-              error: null,
-            }),
-          }),
-        }),
-      });
-    });
-
     it('deve retornar true quando usuário tem todas as permissões (requireAll=true)', async () => {
       // Arrange
-      mockSupabase.from.mockReturnValue({
-        select: jest.fn().mockReturnValue({
-          eq: jest.fn().mockReturnValue({
-            eq: jest.fn().mockReturnValue({
+      mockSupabase.from.mockImplementation((table: string) => {
+        if (table === 'usuarios') {
+          return {
+            select: jest.fn().mockReturnValue({
               eq: jest.fn().mockReturnValue({
                 single: jest.fn().mockResolvedValue({
-                  data: { permitido: true },
+                  data: { is_super_admin: false },
                   error: null,
                 }),
               }),
             }),
+          };
+        }
+
+        return {
+          select: jest.fn().mockReturnValue({
+            eq: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                eq: jest.fn().mockReturnValue({
+                  single: jest.fn().mockResolvedValue({
+                    data: { permitido: true },
+                    error: null,
+                  }),
+                }),
+              }),
+            }),
           }),
-        }),
+        };
       });
 
       // Act
@@ -558,21 +560,36 @@ describe('Auth - Authorization', () => {
 
     it('deve retornar false quando falta alguma permissão (requireAll=true)', async () => {
       // Arrange
-      let callCount = 0;
-      mockSupabase.from.mockImplementation(() => ({
-        select: jest.fn().mockReturnValue({
-          eq: jest.fn().mockReturnValue({
-            eq: jest.fn().mockReturnValue({
+      let permissionCallCount = 0;
+      mockSupabase.from.mockImplementation((table: string) => {
+        if (table === 'usuarios') {
+          return {
+            select: jest.fn().mockReturnValue({
               eq: jest.fn().mockReturnValue({
                 single: jest.fn().mockResolvedValue({
-                  data: callCount++ === 0 ? { permitido: true } : null,
-                  error: callCount > 1 ? { code: 'PGRST116' } : null,
+                  data: { is_super_admin: false },
+                  error: null,
+                }),
+              }),
+            }),
+          };
+        }
+
+        return {
+          select: jest.fn().mockReturnValue({
+            eq: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                eq: jest.fn().mockReturnValue({
+                  single: jest.fn().mockResolvedValue({
+                    data: permissionCallCount++ === 0 ? { permitido: true } : null,
+                    error: permissionCallCount > 1 ? { code: 'PGRST116' } : null,
+                  }),
                 }),
               }),
             }),
           }),
-        }),
-      }));
+        };
+      });
 
       // Act
       const result = await checkMultiplePermissions(
@@ -590,21 +607,36 @@ describe('Auth - Authorization', () => {
 
     it('deve retornar true quando tem pelo menos uma permissão (requireAll=false)', async () => {
       // Arrange
-      let callCount = 0;
-      mockSupabase.from.mockImplementation(() => ({
-        select: jest.fn().mockReturnValue({
-          eq: jest.fn().mockReturnValue({
-            eq: jest.fn().mockReturnValue({
+      let permissionCallCount = 0;
+      mockSupabase.from.mockImplementation((table: string) => {
+        if (table === 'usuarios') {
+          return {
+            select: jest.fn().mockReturnValue({
               eq: jest.fn().mockReturnValue({
                 single: jest.fn().mockResolvedValue({
-                  data: callCount++ === 0 ? { permitido: true } : null,
-                  error: callCount > 1 ? { code: 'PGRST116' } : null,
+                  data: { is_super_admin: false },
+                  error: null,
+                }),
+              }),
+            }),
+          };
+        }
+
+        return {
+          select: jest.fn().mockReturnValue({
+            eq: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                eq: jest.fn().mockReturnValue({
+                  single: jest.fn().mockResolvedValue({
+                    data: permissionCallCount++ === 0 ? { permitido: true } : null,
+                    error: permissionCallCount > 1 ? { code: 'PGRST116' } : null,
+                  }),
                 }),
               }),
             }),
           }),
-        }),
-      }));
+        };
+      });
 
       // Act
       const result = await checkMultiplePermissions(

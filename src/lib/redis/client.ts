@@ -5,24 +5,22 @@ import Redis from 'ioredis';
 
 // Next.js: Estas funções não são Server Actions
 let redisClient: Redis | null = null;
-
-const ENABLE_REDIS_CACHE = process.env.ENABLE_REDIS_CACHE === 'true';
-// IMPORTANTE: Não inclua a senha na URL. Use REDIS_PASSWORD separadamente.
-// O ioredis dá precedência à opção 'password' sobre senha embutida na URL.
-const REDIS_URL = process.env.REDIS_URL;
-const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
 const _REDIS_CACHE_TTL = parseInt(process.env.REDIS_CACHE_TTL || '600', 10);
 const _REDIS_CACHE_MAX_MEMORY = process.env.REDIS_CACHE_MAX_MEMORY || '256mb';
 
 export function getRedisClient(): Redis | null {
-  if (!ENABLE_REDIS_CACHE) {
+  const enableRedisCache = process.env.ENABLE_REDIS_CACHE === 'true';
+  const redisUrl = process.env.REDIS_URL;
+  const redisPassword = process.env.REDIS_PASSWORD;
+
+  if (!enableRedisCache) {
     return null;
   }
 
   if (!redisClient) {
     try {
-      redisClient = new Redis(REDIS_URL!, {
-        password: REDIS_PASSWORD,
+      redisClient = new Redis(redisUrl!, {
+        password: redisPassword,
         maxRetriesPerRequest: 3,
         enableReadyCheck: false,
         retryStrategy: (times) => {

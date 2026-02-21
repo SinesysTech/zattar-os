@@ -37,6 +37,7 @@ export function ExpedientesAlterarResponsavelDialog({
   onSuccess,
 }: ExpedientesAlterarResponsavelDialogProps) {
   const [responsavelId, setResponsavelId] = React.useState<string>('');
+  const wasSuccessRef = React.useRef(false);
   
   const submitAction = async (state: ActionResult, payload: FormData) => {
     return actionAtualizarExpediente(expediente?.id || 0, state, payload);
@@ -54,10 +55,20 @@ export function ExpedientesAlterarResponsavelDialog({
   }, [open, expediente]);
 
   React.useEffect(() => {
-    if (formState.success) {
+    if (!open) {
+      wasSuccessRef.current = false;
+    }
+  }, [open]);
+
+  React.useEffect(() => {
+    const hasJustSucceeded = formState.success && !wasSuccessRef.current;
+
+    if (hasJustSucceeded) {
       onSuccess();
       onOpenChange(false);
     }
+
+    wasSuccessRef.current = formState.success;
   }, [formState.success, onSuccess, onOpenChange]);
 
   if (!expediente) {

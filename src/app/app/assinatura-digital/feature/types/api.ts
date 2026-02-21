@@ -369,7 +369,7 @@ export interface DadosGeracao {
 export interface SalvarAcaoRequest {
   segmentoId: number;
   segmentoNome: string;
-  formularioId: string;
+  formularioId: string | number;
   formularioNome: string;
   clienteId: number;
   clienteNome: string;

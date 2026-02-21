@@ -119,6 +119,8 @@ describe('Portal Cliente - Dashboard Flow', () => {
       // Act
       mockCookies.set('portal-cpf-session', cookieValue, {
         httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 60 * 60 * 24 * 7,
       });
 
       // Assert
@@ -139,7 +141,9 @@ describe('Portal Cliente - Dashboard Flow', () => {
 
       // Act
       mockCookies.set('portal-cpf-session', cookieValue, {
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
+        maxAge: 60 * 60 * 24 * 7,
       });
 
       // Assert
@@ -162,6 +166,8 @@ describe('Portal Cliente - Dashboard Flow', () => {
 
       // Act
       mockCookies.set('portal-cpf-session', cookieValue, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
         maxAge,
       });
 

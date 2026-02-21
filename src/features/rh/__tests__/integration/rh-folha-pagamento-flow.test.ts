@@ -223,7 +223,7 @@ describe('RH Integration - Geração de Folha', () => {
     // Act & Assert
     await expect(gerarFolhaPagamento(input, 1))
       .rejects
-      .toThrow(/inválido/);
+      .toThrow(/Mês deve estar entre 1 e 12/);
   });
 });
 
@@ -392,12 +392,11 @@ describe('RH Integration - Aprovação', () => {
       .mockResolvedValueOnce({
         data: { id: 10, ativo: true },
         error: null,
+      })
+      .mockResolvedValue({
+        data: { id: 1000 },
+        error: null,
       });
-
-    mockSupabase.insert.mockResolvedValue({
-      data: { id: 1000 },
-      error: null,
-    });
 
     (vincularLancamentoAoItem as jest.Mock).mockResolvedValue({});
     (atualizarStatusFolha as jest.Mock).mockResolvedValue({});
@@ -492,7 +491,6 @@ describe('RH Integration - Pagamento', () => {
       error: null,
     });
 
-    mockSupabase.update.mockResolvedValue({ error: null });
     (atualizarStatusFolha as jest.Mock).mockResolvedValue({});
 
     // Act: Chamar pagarFolhaPagamento
@@ -561,6 +559,8 @@ describe('RH Integration - Pagamento', () => {
 describe('RH Integration - Cancelamento', () => {
   let mockSupabase: {
     from: jest.MockedFunction<(table: string) => unknown>;
+    select: jest.MockedFunction<(...args: unknown[]) => unknown>;
+    single: jest.MockedFunction<(...args: unknown[]) => unknown>;
     update: jest.MockedFunction<(...args: unknown[]) => unknown>;
     eq: jest.MockedFunction<(...args: unknown[]) => unknown>;
     [key: string]: unknown;
@@ -571,6 +571,8 @@ describe('RH Integration - Cancelamento', () => {
 
     mockSupabase = {
       from: jest.fn().mockReturnThis(),
+      select: jest.fn().mockReturnThis(),
+      single: jest.fn(),
       update: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),
       in: jest.fn().mockResolvedValue({ error: null }),
@@ -647,6 +649,11 @@ describe('RH Integration - Cancelamento', () => {
         status: 'cancelada',
       });
 
+    mockSupabase.single.mockResolvedValue({
+      data: { status: 'pendente', observacoes: null },
+      error: null,
+    });
+
     (atualizarStatusFolha as jest.Mock).mockResolvedValue({});
 
     // Act: Cancelar folha
@@ -655,8 +662,11 @@ describe('RH Integration - Cancelamento', () => {
     // Assert: Verificar lançamentos marcados como 'cancelado'
     expect(result.status).toBe('cancelada');
     expect(mockSupabase.from).toHaveBeenCalledWith('lancamentos_financeiros');
-    expect(mockSupabase.update).toHaveBeenCalledWith({ status: 'cancelado' });
-    expect(mockSupabase.in).toHaveBeenCalledWith('id', [1000]);
+    expect(mockSupabase.select).toHaveBeenCalledWith('status, observacoes');
+    expect(mockSupabase.update).toHaveBeenCalledWith(
+      expect.objectContaining({ status: 'cancelado' })
+    );
+    expect(mockSupabase.eq).toHaveBeenCalledWith('id', 1000);
   });
 
   it('deve falhar se folha já estiver paga', async () => {

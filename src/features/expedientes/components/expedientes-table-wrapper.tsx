@@ -236,7 +236,13 @@ export function ExpedientesTableWrapper({
 
   // ---------- Handlers ----------
   const handleSucessoOperacao = React.useCallback(() => {
-    setRowSelection({});
+    setRowSelection((currentSelection) => {
+      if (Object.keys(currentSelection).length === 0) {
+        return currentSelection;
+      }
+
+      return {};
+    });
     refetch();
   }, [refetch]);
 

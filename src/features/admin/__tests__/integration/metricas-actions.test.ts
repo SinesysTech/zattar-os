@@ -6,6 +6,7 @@ import * as cacheUtils from "@/lib/redis/cache-utils";
 import * as repo from "../../repositories/metricas-db-repository";
 import * as managementApi from "@/lib/supabase/management-api";
 import * as fsPromises from "fs/promises";
+import * as fs from "fs";
 
 // Mock modules
 jest.mock("@/lib/auth/server");
@@ -13,6 +14,7 @@ jest.mock("@/lib/redis/cache-utils");
 jest.mock("../../repositories/metricas-db-repository");
 jest.mock("@/lib/supabase/management-api");
 jest.mock("fs/promises");
+jest.mock("fs");
 
 describe("metricas-actions", () => {
   const mockUser = { id: 123, roles: ["admin"] };
@@ -44,9 +46,10 @@ describe("metricas-actions", () => {
       (repo.buscarTabelasSequentialScan as unknown as jest.Mock).mockResolvedValue([]);
       (repo.buscarBloatTabelas as unknown as jest.Mock).mockResolvedValue([]);
       (repo.buscarIndicesNaoUtilizados as unknown as jest.Mock).mockResolvedValue([]);
-      (repo.buscarMetricasDiskIO as unknown as jest.Mock).mockResolvedValue(mockDiskIO);
-
-      (managementApi.isDiskIOMetricsConfigured as unknown as jest.Mock).mockReturnValue(true);
+      (repo.buscarMetricasDiskIO as unknown as jest.Mock).mockResolvedValue({
+        metrics: mockDiskIO,
+        status: "ok",
+      });
 
       // Mock cache
       (cacheUtils.withCache as unknown as jest.Mock).mockImplementation(
@@ -68,9 +71,10 @@ describe("metricas-actions", () => {
       (repo.buscarTabelasSequentialScan as unknown as jest.Mock).mockResolvedValue([]);
       (repo.buscarBloatTabelas as unknown as jest.Mock).mockResolvedValue([]);
       (repo.buscarIndicesNaoUtilizados as unknown as jest.Mock).mockResolvedValue([]);
-      (repo.buscarMetricasDiskIO as unknown as jest.Mock).mockResolvedValue(null);
-
-      (managementApi.isDiskIOMetricsConfigured as unknown as jest.Mock).mockReturnValue(true);
+      (repo.buscarMetricasDiskIO as unknown as jest.Mock).mockResolvedValue({
+        metrics: null,
+        status: "api_error",
+      });
 
       (cacheUtils.withCache as unknown as jest.Mock).mockImplementation(
         async (_key: string, fn: () => Promise<unknown>) => await fn()
@@ -80,7 +84,7 @@ describe("metricas-actions", () => {
 
       expect(result.success).toBe(true);
       expect(result.data?.diskIO).toBeNull();
-      expect(result.data?.diskIOStatus).toBe("unavailable");
+      expect(result.data?.diskIOStatus).toBe("api_error");
     });
 
     it("deve negar acesso se não for super_admin", async () => {
@@ -103,8 +107,15 @@ describe("metricas-actions", () => {
       ]);
 
       (managementApi.obterMetricasDiskIO as unknown as jest.Mock).mockResolvedValue({
-        disk_io_budget_percent: 92,
-        compute_tier: "small",
+        status: "ok",
+        metrics: {
+          disk_io_budget_percent: 92,
+          disk_io_consumption_mbps: 50,
+          disk_io_limit_mbps: 87,
+          disk_iops_consumption: 1500,
+          disk_iops_limit: 2085,
+          compute_tier: "small",
+        },
       });
 
       (managementApi.obterComputeAtual as unknown as jest.Mock).mockResolvedValue({
@@ -152,8 +163,9 @@ describe("metricas-actions", () => {
 |------|------|-----------|---------|
 `;
 
-  (fsPromises.readFile as unknown as jest.Mock).mockResolvedValue(mockContent);
-  (fsPromises.writeFile as unknown as jest.Mock).mockResolvedValue(undefined);
+      (fs.existsSync as unknown as jest.Mock).mockReturnValue(true);
+      (fsPromises.readFile as unknown as jest.Mock).mockResolvedValue(mockContent);
+      (fsPromises.writeFile as unknown as jest.Mock).mockResolvedValue(undefined);
 
       const result = await actionDocumentarDecisao(
         "manter",
@@ -169,6 +181,7 @@ describe("metricas-actions", () => {
       );
 
       expect(result.success).toBe(true);
+      expect(fs.existsSync).toHaveBeenCalled();
       expect(fsPromises.writeFile).toHaveBeenCalled();
     });
 

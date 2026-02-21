@@ -19,6 +19,7 @@
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import * as arquivosRepo from "../../repositories/arquivos-repository";
 import * as pastasRepo from "../../repositories/pastas-repository";
+import * as b2Service from "../../services/b2-upload.service";
 import type {
   Arquivo,
   ArquivoComUsuario,
@@ -195,9 +196,6 @@ describe("Arquivos API Integration", () => {
     });
 
     it("deve classificar tipos de arquivo via getTipoMedia", async () => {
-      // Setup
-      const b2Service = await import("../../services/b2-upload.service");
-
       // Assert - Testar classificação de tipos
       expect(b2Service.getTipoMedia("application/pdf")).toBe("pdf");
       expect(b2Service.getTipoMedia("image/jpeg")).toBe("imagem");
@@ -207,9 +205,6 @@ describe("Arquivos API Integration", () => {
     });
 
     it("deve validar tipo de arquivo", async () => {
-      // Setup
-      const b2Service = await import("../../services/b2-upload.service");
-
       // Assert - validateFileType retorna true por padrão no mock
       expect(b2Service.validateFileType("application/pdf")).toBe(true);
 
@@ -221,9 +216,6 @@ describe("Arquivos API Integration", () => {
     });
 
     it("deve validar tamanho de arquivo", async () => {
-      // Setup
-      const b2Service = await import("../../services/b2-upload.service");
-
       // Assert - validateFileSize retorna true por padrão no mock
       expect(b2Service.validateFileSize(1024)).toBe(true);
 

@@ -27,7 +27,8 @@ describe('Redis - Client', () => {
   const originalEnv = process.env;
   let mockRedisInstance: MockRedisInstance;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await closeRedisClient();
     jest.clearAllMocks();
     jest.spyOn(console, 'error').mockImplementation(() => {});
     jest.spyOn(console, 'log').mockImplementation(() => {});
@@ -47,7 +48,8 @@ describe('Redis - Client', () => {
     );
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    await closeRedisClient();
     process.env = originalEnv;
     jest.restoreAllMocks();
   });

@@ -162,9 +162,11 @@ export default function AssinaturaManuscritaStep() {
         return;
       }
 
-      // Validação não-impeditiva de formularioId (não é usado em /api/finalizar-assinatura)
-      if (!formularioId) {
-        console.warn('⚠️ ID do formulário não definido (não crítico para finalização)');
+      if (!formularioId || typeof formularioId !== 'number' || formularioId <= 0) {
+        toast.error('Erro: ID do formulário não definido');
+        setLoading(false);
+        setSubmitting(false);
+        return;
       }
 
       // Validar sessaoId com fallback defensivo
@@ -247,6 +249,27 @@ export default function AssinaturaManuscritaStep() {
       // Extrair IDs do store
       const clienteId = dadosCPF?.clienteId || dadosPessoais?.cliente_id;
       const contratoId = dadosContrato?.contrato_id;
+      const parteContrariaDados = Array.isArray(dadosContrato?.parte_contraria_dados)
+        ? (dadosContrato.parte_contraria_dados as Array<{ id: number; nome: string; cpf?: string | null; cnpj?: string | null }>)
+        : undefined;
+      const clienteDadosPayload = dadosPessoais
+        ? {
+            id: dadosPessoais.cliente_id,
+            nome: dadosPessoais.nome_completo,
+            cpf: dadosPessoais.cpf,
+            email: dadosPessoais.email,
+            endereco: [
+              dadosPessoais.endereco_logradouro,
+              dadosPessoais.endereco_numero,
+              dadosPessoais.endereco_bairro,
+              dadosPessoais.endereco_cidade,
+              dadosPessoais.endereco_uf,
+              dadosPessoais.endereco_cep,
+            ]
+              .filter(Boolean)
+              .join(', '),
+          }
+        : undefined;
 
       // Log de debug para diagnosticar problemas (apenas IDs técnicos, sem PII)
       // PII (CPF, email, nome) é removido para segurança
@@ -387,6 +410,7 @@ export default function AssinaturaManuscritaStep() {
       const basePayload: Record<string, unknown> = {
         cliente_id: clienteId,
         contrato_id: contratoId ?? null,
+        formulario_id: formularioId,
         assinatura_base64: assinatura,
         user_agent: userAgent,
         segmento_id: segmentoId,
@@ -397,6 +421,14 @@ export default function AssinaturaManuscritaStep() {
         termos_aceite: termosAceite,
         termos_aceite_versao: termosVersao, // Renomeado de termos_versao para alinhar com backend
       };
+
+      if (clienteDadosPayload) {
+        basePayload.cliente_dados = clienteDadosPayload;
+      }
+
+      if (parteContrariaDados && parteContrariaDados.length > 0) {
+        basePayload.parte_contraria_dados = parteContrariaDados;
+      }
 
       // Incluir device fingerprint se coletado
       if (deviceFingerprint) {
