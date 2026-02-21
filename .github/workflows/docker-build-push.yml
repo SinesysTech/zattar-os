@@ -106,6 +106,7 @@ jobs:
       # 6. Build e Push
       # -----------------------------------------------------------------
       - name: Build and push image
+        id: build_push
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -123,7 +124,30 @@ jobs:
           cache-to: type=gha,mode=max
 
       # -----------------------------------------------------------------
-      # 7. Resumo do build
+      # 7. Diagnostico em caso de falha do build
+      # -----------------------------------------------------------------
+      - name: Diagnostics (on failure)
+        if: failure()
+        run: |
+          echo "## Diagnostics (Failure)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Runner info" >> $GITHUB_STEP_SUMMARY
+          echo "- Date: $(date -u '+%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_STEP_SUMMARY
+          echo "- Kernel: $(uname -a)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Resource snapshot" >> $GITHUB_STEP_SUMMARY
+          echo '```bash' >> $GITHUB_STEP_SUMMARY
+          df -h >> $GITHUB_STEP_SUMMARY || true
+          echo "" >> $GITHUB_STEP_SUMMARY
+          free -h >> $GITHUB_STEP_SUMMARY || true
+          echo "" >> $GITHUB_STEP_SUMMARY
+          docker system df >> $GITHUB_STEP_SUMMARY || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      # -----------------------------------------------------------------
+      # 8. Resumo do build
+      # -----------------------------------------------------------------
+
       # -----------------------------------------------------------------
       - name: Build summary
         run: |
