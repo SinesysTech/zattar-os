@@ -510,6 +510,36 @@ type QuadroRow = {
   updated_at: string;
 };
 
+function isQuadrosTableMissingError(error: { code?: string; message?: string } | null | undefined): boolean {
+  if (!error) return false;
+
+  const message = error.message ?? "";
+  return (
+    error.code === "PGRST205" ||
+    message.includes("Could not find the table 'public.quadros' in the schema cache") ||
+    message.includes("relation \"public.quadros\" does not exist")
+  );
+}
+
+function isQuadroInfraMissingError(error: { code?: string; message?: string } | null | undefined): boolean {
+  if (!error) return false;
+
+  const message = error.message ?? "";
+  return (
+    isQuadrosTableMissingError(error) ||
+    error.code === "42703" ||
+    message.includes("column \"quadro_id\" does not exist") ||
+    message.includes("Could not find the column 'quadro_id' of 'todo_items' in the schema cache")
+  );
+}
+
+function quadroCustomUnavailableError() {
+  return appError(
+    "VALIDATION_ERROR",
+    "Quadros personalizados indisponíveis neste ambiente. Aplique as migrations de tarefas/kanban para habilitar este recurso."
+  );
+}
+
 function rowToQuadro(row: QuadroRow): Quadro {
   return {
     id: row.id,
@@ -534,7 +564,12 @@ export async function listQuadrosCustom(usuarioId: number): Promise<Result<Quadr
       .eq("tipo", "custom")
       .order("ordem", { ascending: true });
 
-    if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    if (error) {
+      if (isQuadrosTableMissingError(error)) {
+        return ok([]);
+      }
+      return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    }
 
     const quadros = (data as QuadroRow[]) ?? [];
     return ok(quadros.map(rowToQuadro));
@@ -548,12 +583,19 @@ export async function createQuadroCustom(usuarioId: number, input: CriarQuadroCu
     const db = createDbClient();
 
     // Get next ordem
-    const { data: lastOrdemData } = await db
+    const { data: lastOrdemData, error: lastOrdemError } = await db
       .from(TABLE_QUADROS)
       .select("ordem")
       .eq("usuario_id", usuarioId)
       .order("ordem", { ascending: false })
       .limit(1);
+
+    if (lastOrdemError) {
+      if (isQuadroInfraMissingError(lastOrdemError)) {
+        return err(quadroCustomUnavailableError());
+      }
+      return err(appError("DATABASE_ERROR", lastOrdemError.message, { code: lastOrdemError.code }));
+    }
 
     const lastOrdem = (lastOrdemData?.[0] as { ordem?: number } | undefined)?.ordem ?? 2; // Sistema tem 0, 1, 2
 
@@ -570,7 +612,12 @@ export async function createQuadroCustom(usuarioId: number, input: CriarQuadroCu
       .select("*")
       .single();
 
-    if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    if (error) {
+      if (isQuadroInfraMissingError(error)) {
+        return err(quadroCustomUnavailableError());
+      }
+      return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    }
 
     return ok(rowToQuadro(data as QuadroRow));
   } catch (error) {
@@ -583,11 +630,18 @@ export async function deleteQuadroCustom(usuarioId: number, quadroId: string): P
     const db = createDbClient();
 
     // Set quadro_id to null for all tasks in this board
-    await db
+    const { error: detachError } = await db
       .from(TABLE_ITEMS)
       .update({ quadro_id: null })
       .eq("quadro_id", quadroId)
       .eq("usuario_id", usuarioId);
+
+    if (detachError) {
+      if (isQuadroInfraMissingError(detachError)) {
+        return err(quadroCustomUnavailableError());
+      }
+      return err(appError("DATABASE_ERROR", detachError.message, { code: detachError.code }));
+    }
 
     const { error } = await db
       .from(TABLE_QUADROS)
@@ -596,7 +650,12 @@ export async function deleteQuadroCustom(usuarioId: number, quadroId: string): P
       .eq("usuario_id", usuarioId)
       .eq("tipo", "custom"); // Safety: only delete custom boards
 
-    if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    if (error) {
+      if (isQuadroInfraMissingError(error)) {
+        return err(quadroCustomUnavailableError());
+      }
+      return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    }
 
     return ok(undefined);
   } catch (error) {

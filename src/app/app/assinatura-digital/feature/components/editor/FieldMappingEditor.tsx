@@ -33,8 +33,6 @@ import {
   usePdfOperations,
   usePreview,
   useFieldOperations,
-  useSigners,
-  usePaletteDrag,
 } from './hooks';
 
 // Extracted components
@@ -46,8 +44,6 @@ import {
   CreateModePanelUpload,
   CreateModePanelForm,
 } from './components';
-import FloatingSidebar from './components/FloatingSidebar';
-
 // Extracted utilities
 import { validateFieldHeight } from './utils/field-helpers';
 
@@ -106,7 +102,6 @@ export default function FieldMappingEditor({
     setSelectedField,
     previewKey,
     setPreviewKey,
-    initialSigners,
   } = useTemplateLoader({ template, mode });
 
   // PDF operations (for create mode)
@@ -222,43 +217,13 @@ export default function FieldMappingEditor({
     selectedField,
   });
 
-  // Signers management
-  const {
-    signers,
-    activeSigner,
-    setActiveSigner,
-    addSigner,
-    updateSigner,
-    deleteSigner,
-    getSignerById,
-    getSignerColor,
-  } = useSigners({ initialSigners });
-
-  // Save operations (autosave + manual save) - must come after useSigners
+  // Save operations (autosave + manual save)
   const { saveTemplate } = useSaveOperations({
     templateId: template.id,
     template,
     fields,
-    signers,
     hasUnsavedChanges,
     setHasUnsavedChanges,
-  });
-
-  // Palette drag & drop
-  const {
-    handlePaletteDragStart,
-    handlePaletteDragEnd,
-    handleCanvasDrop,
-    handleCanvasDragOver,
-  } = usePaletteDrag({
-    canvasRef: canvasRef as React.RefObject<HTMLDivElement>,
-    zoom,
-    templateId: template.id,
-    currentPage,
-    fieldsLength: fields.length,
-    setFields,
-    setSelectedField,
-    markDirty,
   });
 
   // ===== Event Handlers =====
@@ -272,13 +237,6 @@ export default function FieldMappingEditor({
       if (editorMode === 'select') {
         setFields((prev) => prev.map((field) => ({ ...field, isSelected: false })));
         setSelectedField(null);
-        return;
-      }
-
-      // Block field creation if no active signer is selected
-      if (!activeSigner) {
-        toast.error('Selecione um signatário antes de adicionar campos');
-        setEditorMode('select');
         return;
       }
 
@@ -339,7 +297,6 @@ export default function FieldMappingEditor({
           config.tipo === 'texto_composto'
             ? { json: { type: 'doc', content: [{ type: 'paragraph' }] }, template: '' }
             : undefined,
-        signatario_id: activeSigner.id,
         criado_em: new Date(),
         atualizado_em: new Date(),
         isSelected: true,
@@ -351,7 +308,7 @@ export default function FieldMappingEditor({
       setSelectedField(newField);
       setEditorMode('select');
       markDirty();
-      toast.success(`Campo adicionado para ${activeSigner.nome}`);
+      toast.success('Campo adicionado');
 
       // Validate height for rich text fields
       if (config.tipo === 'texto_composto') {
@@ -368,7 +325,7 @@ export default function FieldMappingEditor({
         );
       }, 1000);
     },
-    [editorMode, zoom, fields.length, template.id, markDirty, currentPage, setFields, setSelectedField, activeSigner, setEditorMode]
+    [editorMode, zoom, fields.length, template.id, markDirty, currentPage, setFields, setSelectedField, setEditorMode]
   );
 
   // Field click handler
@@ -470,35 +427,6 @@ export default function FieldMappingEditor({
       }
     },
     [getFieldForRichTextEdit]
-  );
-
-  // Reassign field to signer handler
-  const handleReassignField = useCallback(
-    (fieldId: string, signerId: string) => {
-      setFields((prev) =>
-        prev.map((field) =>
-          field.id === fieldId
-            ? { ...field, signatario_id: signerId, atualizado_em: new Date() }
-            : field
-        )
-      );
-
-      // Update selectedField if it was reassigned
-      if (selectedField?.id === fieldId) {
-        setSelectedField({
-          ...selectedField,
-          signatario_id: signerId,
-          atualizado_em: new Date(),
-        });
-      }
-
-      markDirty();
-      const signer = getSignerById(signerId);
-      if (signer) {
-        toast.success(`Campo atribuído a ${signer.nome}`);
-      }
-    },
-    [setFields, selectedField, setSelectedField, markDirty, getSignerById]
   );
 
   // Template info update handler
@@ -779,25 +707,6 @@ export default function FieldMappingEditor({
           onZoomIn={handleZoomIn}
           onZoomOut={handleZoomOut}
           onResetZoom={handleResetZoom}
-          onDragOver={handleCanvasDragOver}
-          onDrop={(e) => handleCanvasDrop(e, activeSigner)}
-          getSignerColor={getSignerColor}
-          getSignerById={getSignerById}
-          signers={signers}
-          onReassignField={handleReassignField}
-        />
-
-        {/* Floating Sidebar for signer management and field palette */}
-        <FloatingSidebar
-          signers={signers}
-          activeSigner={activeSigner}
-          onSelectSigner={setActiveSigner}
-          onAddSigner={addSigner}
-          onUpdateSigner={updateSigner}
-          onDeleteSigner={deleteSigner}
-          fields={fields}
-          onPaletteDragStart={handlePaletteDragStart}
-          onPaletteDragEnd={handlePaletteDragEnd}
         />
       </div>
 

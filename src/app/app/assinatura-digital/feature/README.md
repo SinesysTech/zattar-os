@@ -370,23 +370,25 @@ Indicador de progresso multi-step:
 
 **Documentação**: `src/features/assinatura-digital/components/workflow/README.md`
 
-#### FloatingSidebar
+#### FloatingSidebar (somente fluxo Documentos)
 
-Sidebar flutuante para configuração:
+Sidebar flutuante para configuração de assinatura de documentos:
 
 - Lista de signatários (avatares, nomes, emails)
-- Paleta de campos drag & drop
-- Pro tips contextuais
+- Paleta de campos drag & drop (assinatura, rubrica)
+- Configurações do documento (título, selfie)
 - Responsivo (drawer em mobile)
+- **Não é usada no editor de templates** — templates configuram variáveis de formulário, não signatários
 
-#### FieldMappingEditor (Refatorado)
+#### FieldMappingEditor (somente fluxo Templates)
 
-Editor visual de campos com novo layout:
+Editor visual de mapeamento de variáveis de formulário em templates PDF:
 
 - Canvas central com preview de PDF
+- Toolbar com ferramentas para adicionar campos (texto, imagem, rich text)
 - Zoom/pan controls
-- Posicionamento de campos via drag & drop
-- Indicadores visuais por signatário
+- Posicionamento de campos de variáveis via click ou drag
+- Sem sidebar de signatários (templates são sobre variáveis de formulário, não sobre quem assina)
 
 ### Screenshots
 
@@ -475,7 +477,8 @@ import { DocumentUploadDropzone, SignatureWorkflowStepper } from '@/features/ass
 
 3. **Rotas atualizadas**:
    - `/assinatura-digital/documentos/novo` → Usa `DocumentUploadDropzone`
-   - `/assinatura-digital/documentos/editar/[uuid]` → Usa `FieldMappingEditor` refatorado
+   - `/assinatura-digital/documentos/editar/[uuid]` → Usa `EditorCanvas` + `FloatingSidebar` (fluxo de documentos)
+   - `/assinatura-digital/templates/[id]/edit` → Usa `FieldMappingEditor` (fluxo de templates, sem sidebar)
 
 ### Testes
 
