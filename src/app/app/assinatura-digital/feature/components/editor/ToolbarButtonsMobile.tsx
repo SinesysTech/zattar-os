@@ -6,6 +6,7 @@ import {
   ChevronRight,
   Eye,
   EyeOff,
+  FileCheck,
   FileText,
   Image,
   MousePointer,
@@ -100,7 +101,7 @@ export default function ToolbarButtonsMobile({
   hasPreviewPdf = false,
 }: ToolbarButtonsMobileProps) {
   return (
-    <div className="lg:hidden w-full overflow-x-auto pb-2">
+    <div className="w-full overflow-x-auto">
       <ButtonGroup
         orientation="horizontal"
         className="w-fit"
@@ -152,7 +153,7 @@ export default function ToolbarButtonsMobile({
                 onClick={() => onModeChange('add_image')}
                 aria-label="Imagem"
               >
-                <Image className="h-4 w-4" aria-hidden="true" aria-label="Ícone de imagem" />
+                <Image className="h-4 w-4" aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
@@ -188,25 +189,6 @@ export default function ToolbarButtonsMobile({
               <Button
                 variant="outline"
                 size="icon"
-                onClick={onZoomIn}
-                disabled={!canZoomIn}
-                aria-label="Zoom +"
-              >
-                <ZoomIn className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <p>Zoom: {zoomPercentage}%</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
                 onClick={onZoomOut}
                 disabled={!canZoomOut}
                 aria-label="Zoom -"
@@ -235,6 +217,25 @@ export default function ToolbarButtonsMobile({
             </TooltipTrigger>
             <TooltipContent side="bottom">
               <p>Resetar zoom (100%)</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={onZoomIn}
+                disabled={!canZoomIn}
+                aria-label="Zoom +"
+              >
+                <ZoomIn className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <p>Zoom: {zoomPercentage}%</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -290,7 +291,7 @@ export default function ToolbarButtonsMobile({
         </TooltipProvider>
 
         <div className="flex items-center px-2 text-xs text-muted-foreground whitespace-nowrap">
-          Pág. {currentPage}/{totalPages}
+          {currentPage}/{totalPages}
         </div>
 
         <TooltipProvider>
@@ -370,27 +371,39 @@ export default function ToolbarButtonsMobile({
           </Tooltip>
         </TooltipProvider>
 
+        {onGenerateTestPreview && (
+          <>
+            <ButtonGroupSeparator />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={onGenerateTestPreview}
+                    disabled={isGeneratingPreview || !pdfUrl || isCreateMode || !hasTemplateId}
+                    aria-label="PDF de Teste"
+                  >
+                    <FileCheck className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p>
+                    {isGeneratingPreview
+                      ? 'Gerando...'
+                      : isCreateMode || !hasTemplateId
+                        ? 'Salve primeiro'
+                        : 'PDF de Teste'}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </>
+        )}
+
         <ButtonGroupSeparator />
 
         {/* Ações */}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={onCancel}
-                aria-label="Cancelar"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <p>Cancelar</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -409,32 +422,23 @@ export default function ToolbarButtonsMobile({
           </Tooltip>
         </TooltipProvider>
 
-        {onGenerateTestPreview && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={onGenerateTestPreview}
-                  disabled={isGeneratingPreview || !pdfUrl || isCreateMode || !hasTemplateId}
-                  aria-label="PDF de Teste"
-                >
-                  <Eye className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p>
-                  {isGeneratingPreview
-                    ? 'Gerando...'
-                    : isCreateMode || !hasTemplateId
-                      ? 'Salve primeiro'
-                      : 'PDF de Teste'}
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={onCancel}
+                aria-label="Fechar"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <p>Fechar</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </ButtonGroup>
     </div>
   );

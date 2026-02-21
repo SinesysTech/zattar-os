@@ -121,7 +121,7 @@ describe("Arquivos Actions Integration", () => {
       // Assert
       expect(result.success).toBe(true);
       expect(result.data).toEqual(mockArquivo);
-      expect(revalidatePath).toHaveBeenCalledWith("/documentos");
+      expect(revalidatePath).toHaveBeenCalledWith("/app/documentos");
     });
 
     it("deve fazer upload para pasta específica", async () => {
@@ -266,7 +266,7 @@ describe("Arquivos Actions Integration", () => {
       // Assert
       expect(result.success).toBe(true);
       expect(result.data?.pasta_id).toBe(10);
-      expect(revalidatePath).toHaveBeenCalledWith("/documentos");
+      expect(revalidatePath).toHaveBeenCalledWith("/app/documentos");
     });
 
     it("deve mover arquivo para raiz (null)", async () => {
@@ -327,8 +327,8 @@ describe("Arquivos Actions Integration", () => {
       // Assert
       expect(result.success).toBe(true);
       expect(service.deletarArquivo).toHaveBeenCalledWith(1, mockUser.id);
-      expect(revalidatePath).toHaveBeenCalledWith("/documentos");
-      expect(revalidatePath).toHaveBeenCalledWith("/documentos/lixeira");
+      expect(revalidatePath).toHaveBeenCalledWith("/app/documentos");
+      expect(revalidatePath).toHaveBeenCalledWith("/app/documentos/lixeira");
     });
 
     it("deve tratar erro de acesso negado", async () => {

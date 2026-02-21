@@ -353,6 +353,9 @@ export function ResponsavelCell({ expediente, usuarios = [], onSuccessAction }: 
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const responsavel = usuarios.find(u => u.id === expediente.responsavelId);
   const nomeExibicao = responsavel?.nomeExibicao || '-';
+  const handleSuccess = React.useCallback(() => {
+    onSuccessAction?.();
+  }, [onSuccessAction]);
 
   return (
     <>
@@ -382,9 +385,7 @@ export function ResponsavelCell({ expediente, usuarios = [], onSuccessAction }: 
         onOpenChange={setIsDialogOpen}
         expediente={expediente}
         usuarios={usuarios}
-        onSuccess={() => {
-          onSuccessAction?.();
-        }}
+        onSuccess={handleSuccess}
       />
     </>
   );

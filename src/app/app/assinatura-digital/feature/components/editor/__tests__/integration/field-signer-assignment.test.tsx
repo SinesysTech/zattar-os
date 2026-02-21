@@ -1,5 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { usePaletteDrag } from '../../hooks/use-palette-drag';
+import { toast } from 'sonner';
 import { SIGNER_COLORS } from '../../types';
 import type { EditorField, Signatario, SignatureFieldType } from '../../types';
 
@@ -62,28 +63,25 @@ describe('Field Signer Assignment', () => {
     });
 
     it('should show error when dropping without active signer', async () => {
-      const sonner = await import('sonner');
-      const { toast } = sonner;
       const { result } = renderHook(() => usePaletteDrag(defaultProps));
 
-      // Mock canvas element
-      const mockCanvas = {
-        getBoundingClientRect: () => ({
-          left: 0,
-          top: 0,
-          width: 600,
-          height: 800,
-        }),
-      };
-      mockCanvasRef.current = mockCanvas as any;
+      const pageElement = {
+        dataset: { page: '1' },
+        getBoundingClientRect: () => ({ left: 0, top: 0, width: 600, height: 800 }),
+      } as unknown as HTMLElement;
+
+      const target = {
+        closest: jest.fn(() => pageElement),
+      } as unknown as HTMLElement;
 
       const mockEvent = {
         preventDefault: jest.fn(),
         dataTransfer: {
-          getData: () => 'signature',
+          getData: (key: string) => (key === 'field-type' ? 'signature' : ''),
         },
         clientX: 100,
         clientY: 100,
+        target,
       } as unknown as React.DragEvent<HTMLDivElement>;
 
       act(() => {
@@ -95,20 +93,16 @@ describe('Field Signer Assignment', () => {
     });
 
     it('should create field with signer ID when dropping with active signer', async () => {
-      const sonner = await import('sonner');
-      const { toast } = sonner;
       const { result } = renderHook(() => usePaletteDrag(defaultProps));
 
-      // Mock canvas element
-      const mockCanvas = {
-        getBoundingClientRect: () => ({
-          left: 0,
-          top: 0,
-          width: 600,
-          height: 800,
-        }),
-      };
-      mockCanvasRef.current = mockCanvas as any;
+      const pageElement = {
+        dataset: { page: '1' },
+        getBoundingClientRect: () => ({ left: 0, top: 0, width: 600, height: 800 }),
+      } as unknown as HTMLElement;
+
+      const target = {
+        closest: jest.fn(() => pageElement),
+      } as unknown as HTMLElement;
 
       const activeSigner: Signatario = {
         id: 'signer-1',
@@ -121,10 +115,11 @@ describe('Field Signer Assignment', () => {
       const mockEvent = {
         preventDefault: jest.fn(),
         dataTransfer: {
-          getData: () => 'signature',
+          getData: (key: string) => (key === 'field-type' ? 'signature' : ''),
         },
         clientX: 100,
         clientY: 100,
+        target,
       } as unknown as React.DragEvent<HTMLDivElement>;
 
       act(() => {
@@ -242,9 +237,15 @@ describe('Field Signer Assignment', () => {
 
         const mockEvent = {
           preventDefault: jest.fn(),
-          dataTransfer: { getData: () => fieldType },
+          dataTransfer: { getData: (key: string) => (key === 'field-type' ? fieldType : '') },
           clientX: 100,
           clientY: 100,
+          target: {
+            closest: jest.fn(() => ({
+              dataset: { page: '1' },
+              getBoundingClientRect: () => ({ left: 0, top: 0, width: 600, height: 800 }),
+            })),
+          },
         } as unknown as React.DragEvent<HTMLDivElement>;
 
         act(() => {

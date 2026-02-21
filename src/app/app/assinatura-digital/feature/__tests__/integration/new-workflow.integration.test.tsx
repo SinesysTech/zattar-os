@@ -1,16 +1,16 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { DocumentUploadDropzone } from "../components/upload/document-upload-dropzone";
-import { SignatureWorkflowStepper } from "../components/workflow/signature-workflow-stepper";
-import { FloatingSidebar } from "../components/editor/components/FloatingSidebar";
-import { useFormularioStore } from "../store/formulario-store";
-import { useDocumentUpload } from "../components/upload/hooks/use-document-upload";
-import { useSigners } from "../components/editor/hooks/use-signers";
+import { DocumentUploadDropzone } from "../../components/upload/document-upload-dropzone";
+import { SignatureWorkflowStepper } from "../../components/workflow/signature-workflow-stepper";
+import FloatingSidebar from "../../components/editor/components/FloatingSidebar";
+import { useFormularioStore } from "../../store/formulario-store";
+import { useDocumentUpload } from "../../components/upload/hooks/use-document-upload";
+import { useSigners } from "../../components/editor/hooks/use-signers";
 
 // Mocks
-jest.mock("../components/upload/hooks/use-document-upload");
-jest.mock("../components/editor/hooks/use-signers");
-jest.mock("../store/formulario-store");
+jest.mock("../../components/upload/hooks/use-document-upload");
+jest.mock("../../components/editor/hooks/use-signers");
+jest.mock("../../store/formulario-store");
 jest.mock("sonner", () => ({
   toast: { success: jest.fn(), error: jest.fn() },
 }));
@@ -74,18 +74,16 @@ describe("Assinatura Digital - New Workflow Integration", () => {
     );
 
     // Verify Stepper
-    expect(screen.getByText(/Upload/i)).toBeInTheDocument();
+    expect(screen.getByTestId("workflow-stepper")).toBeInTheDocument();
 
     // Simular fluxo de upload
-    const continueBtn = screen.getByRole("button", { name: /continuar/i });
+    const continueBtn = screen.getByRole("button", {
+      name: /confirmar e enviar documento/i,
+    });
     await user.click(continueBtn);
 
     await waitFor(() => {
-      // Check if proximaEtapa was called?
-      // Actually, since I mocked the store, the component will call 'proximaEtapa' from the mock.
-      // We can check if the mock was called.
-      const api = useFormularioStore();
-      expect(api.proximaEtapa).toHaveBeenCalled();
+      expect(mockUpload.uploadFile).toHaveBeenCalled();
     });
   });
 
@@ -96,7 +94,19 @@ describe("Assinatura Digital - New Workflow Integration", () => {
       getTotalSteps: jest.fn(() => 3),
     });
 
-    render(<FloatingSidebar />); // Sidebar is part of editor
+    render(
+      <FloatingSidebar
+        signers={[]}
+        activeSigner={null}
+        onSelectSigner={jest.fn()}
+        onAddSigner={jest.fn()}
+        onUpdateSigner={jest.fn()}
+        onDeleteSigner={jest.fn()}
+        fields={[]}
+        onPaletteDragStart={jest.fn()}
+        onPaletteDragEnd={jest.fn()}
+      />
+    );
 
     // Simular abre modal de adicionar (assuming button exists in sidebar)
     const addBtn = screen.getByRole("button", { name: /adicionar/i });

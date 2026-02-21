@@ -176,7 +176,7 @@ function SidebarContent(props: FloatingSidebarProps) {
                 <p className="text-sm font-medium text-foreground mb-1">
                   Nenhum assinante
                 </p>
-                <p className="text-xs text-muted-foreground mb-4 max-w-[180px]">
+                <p className="text-xs text-muted-foreground mb-4 max-w-45">
                   Adicione as pessoas que precisam assinar este documento.
                 </p>
                 <Button

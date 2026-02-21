@@ -12,7 +12,7 @@ import { DocumentUploadDropzone } from "../../feature/components/upload";
 
 export function NovoDocumentoClient() {
   return (
-    <div className="-m-6 h-[calc(100vh-theme(spacing.14)-theme(spacing.12))] flex overflow-hidden bg-background">
+    <div className="-m-6 h-[calc(100vh-(--spacing(14))-(--spacing(12)))] flex overflow-hidden bg-background">
       {/* Área principal — dropzone no lugar do PDF canvas */}
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         <div className="flex-1 overflow-auto bg-muted/30">
@@ -21,7 +21,7 @@ export function NovoDocumentoClient() {
       </div>
 
       {/* Sidebar placeholder — consistência visual com o editor */}
-      <div className="hidden lg:block w-[340px] shrink-0 border-l">
+      <div className="hidden lg:block w-85 shrink-0 border-l">
         <div className="h-full bg-background flex flex-col items-center justify-center p-6 text-center">
           <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-4">
             <svg className="h-6 w-6 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -31,7 +31,7 @@ export function NovoDocumentoClient() {
           <p className="text-sm font-medium text-foreground mb-1">
             Envie um documento
           </p>
-          <p className="text-xs text-muted-foreground max-w-[200px]">
+          <p className="text-xs text-muted-foreground max-w-50">
             Faça upload de um PDF para configurar os assinantes e posicionar os campos de assinatura.
           </p>
         </div>

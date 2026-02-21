@@ -4,17 +4,30 @@ import { criarEnderecoMock } from '../fixtures';
 import { ok as _ok } from '@/types';
 
 // Mock Supabase
-const mockSupabaseClient = {
-  from: jest.fn(() => mockSupabaseClient),
-  select: jest.fn(() => mockSupabaseClient),
-  insert: jest.fn(() => mockSupabaseClient),
-  update: jest.fn(() => mockSupabaseClient),
-  upsert: jest.fn(() => mockSupabaseClient),
-  eq: jest.fn(() => mockSupabaseClient),
-  order: jest.fn(() => mockSupabaseClient),
-  range: jest.fn(() => mockSupabaseClient),
-  single: jest.fn(),
+type MockSupabaseClient = {
+  from: jest.Mock;
+  select: jest.Mock;
+  insert: jest.Mock;
+  update: jest.Mock;
+  upsert: jest.Mock;
+  eq: jest.Mock;
+  or: jest.Mock;
+  order: jest.Mock;
+  range: jest.Mock;
+  single: jest.Mock;
 };
+
+const mockSupabaseClient = {} as MockSupabaseClient;
+mockSupabaseClient.from = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.select = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.insert = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.update = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.upsert = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.eq = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.or = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.order = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.range = jest.fn(() => mockSupabaseClient);
+mockSupabaseClient.single = jest.fn();
 
 jest.mock('@/lib/supabase', () => ({
   createDbClient: jest.fn(() => mockSupabaseClient),
@@ -23,6 +36,18 @@ jest.mock('@/lib/supabase', () => ({
 describe('Endereços - Fluxos de Integração', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockSupabaseClient.single.mockReset();
+    mockSupabaseClient.range.mockReset();
+    mockSupabaseClient.order.mockReset();
+    mockSupabaseClient.from.mockReturnValue(mockSupabaseClient);
+    mockSupabaseClient.select.mockReturnValue(mockSupabaseClient);
+    mockSupabaseClient.insert.mockReturnValue(mockSupabaseClient);
+    mockSupabaseClient.update.mockReturnValue(mockSupabaseClient);
+    mockSupabaseClient.upsert.mockReturnValue(mockSupabaseClient);
+    mockSupabaseClient.eq.mockReturnValue(mockSupabaseClient);
+    mockSupabaseClient.or.mockReturnValue(mockSupabaseClient);
+    mockSupabaseClient.order.mockReturnValue(mockSupabaseClient);
+    mockSupabaseClient.range.mockReturnValue(mockSupabaseClient);
   });
 
   describe('Fluxo CRUD Completo', () => {
@@ -51,13 +76,6 @@ describe('Endereços - Fluxos de Integração', () => {
         data: enderecoAtualizado,
         error: null,
       });
-
-      // Mock deletar
-      const mockDeleteChain = {
-        update: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockResolvedValue({ error: null }),
-      };
-      mockSupabaseClient.from.mockReturnValueOnce(mockDeleteChain);
 
       // Act - Criar
       const resultCriar = await repository.criarEndereco({
@@ -89,6 +107,9 @@ describe('Endereços - Fluxos de Integração', () => {
         expect(resultAtualizar.data.logradouro).toBe('Rua Atualizada');
       }
 
+      // Mock deletar
+      mockSupabaseClient.eq.mockResolvedValueOnce({ error: null });
+
       // Act - Deletar
       const resultDeletar = await repository.deletarEndereco(1);
 
@@ -114,16 +135,11 @@ describe('Endereços - Fluxos de Integração', () => {
       }
 
       // Mock listar com paginação
-      const mockListChain = {
-        select: jest.fn().mockReturnThis(),
-        order: jest.fn().mockReturnThis(),
-        range: jest.fn().mockResolvedValue({
-          data: enderecos.slice(0, 2),
-          error: null,
-          count: 3,
-        }),
-      };
-      mockSupabaseClient.from.mockReturnValueOnce(mockListChain);
+      mockSupabaseClient.range.mockResolvedValueOnce({
+        data: enderecos.slice(0, 2),
+        error: null,
+        count: 3,
+      });
 
       // Act - Criar
       for (let i = 0; i < 3; i++) {
@@ -170,16 +186,10 @@ describe('Endereços - Fluxos de Integração', () => {
         }),
       ];
 
-      const mockBuscaChain = {
-        select: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockReturnThis(),
-        order: jest.fn().mockResolvedValue({
-          data: enderecos,
-          error: null,
-        }),
-      };
-
-      mockSupabaseClient.from.mockReturnValue(mockBuscaChain);
+      mockSupabaseClient.order.mockResolvedValueOnce({
+        data: enderecos,
+        error: null,
+      });
 
       // Act
       const result = await repository.buscarEnderecosPorEntidade({
@@ -192,7 +202,7 @@ describe('Endereços - Fluxos de Integração', () => {
       if (result.success) {
         expect(result.data).toHaveLength(2);
         // Verifica se foi ordenado por correspondencia desc, situacao asc
-        expect(mockBuscaChain.order).toHaveBeenCalledWith('correspondencia', {
+        expect(mockSupabaseClient.order).toHaveBeenCalledWith('correspondencia', {
           ascending: false,
         });
       }
@@ -282,19 +292,11 @@ describe('Endereços - Fluxos de Integração', () => {
         }),
       ];
 
-      const mockFilterChain = {
-        select: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockReturnThis(),
-        or: jest.fn().mockReturnThis(),
-        order: jest.fn().mockReturnThis(),
-        range: jest.fn().mockResolvedValue({
-          data: enderecos,
-          error: null,
-          count: 1,
-        }),
-      };
-
-      mockSupabaseClient.from.mockReturnValue(mockFilterChain);
+      mockSupabaseClient.range.mockResolvedValueOnce({
+        data: enderecos,
+        error: null,
+        count: 1,
+      });
 
       // Act
       const result = await repository.listarEnderecos({
@@ -307,9 +309,9 @@ describe('Endereços - Fluxos de Integração', () => {
 
       // Assert
       expect(result.success).toBe(true);
-      expect(mockFilterChain.eq).toHaveBeenCalledWith('entidade_tipo', 'cliente');
-      expect(mockFilterChain.eq).toHaveBeenCalledWith('ativo', true);
-      expect(mockFilterChain.or).toHaveBeenCalledWith(
+      expect(mockSupabaseClient.eq).toHaveBeenCalledWith('entidade_tipo', 'cliente');
+      expect(mockSupabaseClient.eq).toHaveBeenCalledWith('ativo', true);
+      expect(mockSupabaseClient.or).toHaveBeenCalledWith(
         expect.stringContaining('São Paulo')
       );
     });

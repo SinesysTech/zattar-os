@@ -187,7 +187,81 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await finalizeSignature(payload);
-    return NextResponse.json({ success: true, data: result }, { status: 201 });
+
+    const warnings: string[] = [];
+
+    if (payload.contrato_id) {
+      try {
+        const { data: contratoAtual } = await supabase
+          .from('contratos')
+          .select('id, status, documentos')
+          .eq('id', payload.contrato_id)
+          .single();
+
+        if (contratoAtual) {
+          if (contratoAtual.status !== 'contratado') {
+            const { error: statusError } = await supabase
+              .from('contratos')
+              .update({ status: 'contratado' })
+              .eq('id', payload.contrato_id);
+
+            if (statusError) {
+              throw new Error(`Falha ao atualizar status do contrato: ${statusError.message}`);
+            }
+
+            await supabase.from('contrato_status_historico').insert({
+              contrato_id: payload.contrato_id,
+              from_status: contratoAtual.status,
+              to_status: 'contratado',
+              changed_at: new Date().toISOString(),
+              reason: 'Contrato assinado via assinatura digital',
+            });
+          }
+
+          const documentoAssinatura = {
+            tipo: 'assinatura_digital',
+            assinatura_id: result.assinatura_id,
+            template_id: payload.template_id,
+            protocolo: result.protocolo,
+            pdf_url: result.pdf_url,
+            assinado_em: new Date().toISOString(),
+          };
+
+          let documentosList: Array<Record<string, unknown>> = [];
+          if (typeof contratoAtual.documentos === 'string' && contratoAtual.documentos.trim()) {
+            try {
+              const parsed = JSON.parse(contratoAtual.documentos) as unknown;
+              if (Array.isArray(parsed)) {
+                documentosList = parsed.filter((item): item is Record<string, unknown> =>
+                  typeof item === 'object' && item !== null
+                );
+              }
+            } catch {
+              documentosList = [];
+            }
+          }
+
+          documentosList.push(documentoAssinatura);
+
+          await supabase
+            .from('contratos')
+            .update({ documentos: JSON.stringify(documentosList) })
+            .eq('id', payload.contrato_id);
+        }
+      } catch (contractError) {
+        console.error('Erro ao sincronizar contrato após assinatura:', contractError);
+        warnings.push(
+          contractError instanceof Error
+            ? contractError.message
+            : 'Falha ao atualizar dados do contrato pós-assinatura'
+        );
+      }
+    }
+
+    return NextResponse.json(
+      { success: true, data: result, warnings: warnings.length > 0 ? warnings : undefined },
+      { status: 201 }
+    );
   } catch (error) {
     if (error instanceof z.ZodError) {
       // Retornar mensagem descritiva com detalhes dos campos inválidos

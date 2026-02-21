@@ -15,6 +15,7 @@ import { z } from 'zod';
 import { authenticatedAction } from '@/lib/safe-action';
 import { authenticateRequest } from '@/lib/auth/session';
 import * as service from '../service';
+import { normalizeQuadroActionErrorMessage } from '../errors';
 import type {
   CreateTaskInput,
   ListTasksParams,
@@ -302,7 +303,7 @@ export const actionListarQuadros = authenticatedAction(
   async (_, { user }) => {
     const result = await service.listarQuadros(user.id);
     if (!result.success) {
-      throw new Error(result.error.message);
+      throw new Error(normalizeQuadroActionErrorMessage(result.error.message));
     }
     return result.data;
   }
@@ -319,7 +320,7 @@ export const actionCriarQuadroCustom = authenticatedAction(
   async (data, { user }) => {
     const result = await service.criarQuadroCustom(user.id, data);
     if (!result.success) {
-      throw new Error(result.error.message);
+      throw new Error(normalizeQuadroActionErrorMessage(result.error.message));
     }
     revalidatePath('/app/tarefas');
     return result.data;
@@ -336,7 +337,7 @@ export const actionExcluirQuadroCustom = authenticatedAction(
   async (data, { user }) => {
     const result = await service.excluirQuadroCustom(user.id, data);
     if (!result.success) {
-      throw new Error(result.error.message);
+      throw new Error(normalizeQuadroActionErrorMessage(result.error.message));
     }
     revalidatePath('/app/tarefas');
     return { success: true };
@@ -360,7 +361,7 @@ export const actionReordenarTarefas = authenticatedAction(
   async (data, { user }) => {
     const result = await service.reordenarTarefas(user.id, data);
     if (!result.success) {
-      throw new Error(result.error.message);
+      throw new Error(normalizeQuadroActionErrorMessage(result.error.message));
     }
     revalidatePath('/app/tarefas');
     return result.data;

@@ -283,7 +283,7 @@ export function useDocumentEditor({ uuid }: UseDocumentEditorProps) {
             : prev
         );
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error("Erro ao atualizar configurações.");
     }
   };

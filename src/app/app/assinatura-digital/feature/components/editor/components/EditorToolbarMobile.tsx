@@ -48,8 +48,8 @@ interface EditorToolbarMobileProps {
 }
 
 /**
- * EditorToolbarMobile - Mobile toolbar wrapper for ToolbarButtonsMobile
- * Horizontal layout for mobile devices
+ * EditorToolbarMobile - Horizontal toolbar for mobile devices
+ * Styled with background and border for visual consistency
  */
 export default function EditorToolbarMobile({
   editorMode,
@@ -82,35 +82,37 @@ export default function EditorToolbarMobile({
   hasPreviewPdf = false,
 }: EditorToolbarMobileProps) {
   return (
-    <ToolbarButtonsMobile
-      editorMode={editorMode}
-      onModeChange={onModeChange}
-      onAddRichTextField={onAddRichTextField}
-      zoomPercentage={zoomPercentage}
-      canZoomIn={canZoomIn}
-      canZoomOut={canZoomOut}
-      canResetZoom={canResetZoom}
-      onZoomIn={onZoomIn}
-      onZoomOut={onZoomOut}
-      onResetZoom={onResetZoom}
-      currentPage={currentPage}
-      totalPages={totalPages}
-      onNextPage={onNextPage}
-      onPreviousPage={onPreviousPage}
-      hasSelectedField={hasSelectedField}
-      onOpenProperties={onOpenProperties}
-      onOpenTemplateInfo={onOpenTemplateInfo}
-      onReplacePdf={onReplacePdf}
-      onCancel={onCancel}
-      onSave={onSave}
-      onGenerateTestPreview={onGenerateTestPreview}
-      isGeneratingPreview={isGeneratingPreview}
-      pdfUrl={pdfUrl}
-      isCreateMode={isCreateMode}
-      hasTemplateId={hasTemplateId}
-      showFilledPreview={showFilledPreview}
-      onTogglePreview={onTogglePreview}
-      hasPreviewPdf={hasPreviewPdf}
-    />
+    <div className="shrink-0 border-b bg-background px-3 py-1.5 lg:hidden">
+      <ToolbarButtonsMobile
+        editorMode={editorMode}
+        onModeChange={onModeChange}
+        onAddRichTextField={onAddRichTextField}
+        zoomPercentage={zoomPercentage}
+        canZoomIn={canZoomIn}
+        canZoomOut={canZoomOut}
+        canResetZoom={canResetZoom}
+        onZoomIn={onZoomIn}
+        onZoomOut={onZoomOut}
+        onResetZoom={onResetZoom}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onNextPage={onNextPage}
+        onPreviousPage={onPreviousPage}
+        hasSelectedField={hasSelectedField}
+        onOpenProperties={onOpenProperties}
+        onOpenTemplateInfo={onOpenTemplateInfo}
+        onReplacePdf={onReplacePdf}
+        onCancel={onCancel}
+        onSave={onSave}
+        onGenerateTestPreview={onGenerateTestPreview}
+        isGeneratingPreview={isGeneratingPreview}
+        pdfUrl={pdfUrl}
+        isCreateMode={isCreateMode}
+        hasTemplateId={hasTemplateId}
+        showFilledPreview={showFilledPreview}
+        onTogglePreview={onTogglePreview}
+        hasPreviewPdf={hasPreviewPdf}
+      />
+    </div>
   );
 }

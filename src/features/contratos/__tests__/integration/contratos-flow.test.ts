@@ -38,6 +38,7 @@ describe('Contratos Integration - Criação', () => {
       papelClienteNoContrato: 'autora',
       tipoContrato: 'consultoria',
       tipoCobranca: 'pro_labore',
+      status: 'em_contratacao',
       partes: [
         {
           tipoEntidade: 'cliente',
@@ -94,6 +95,8 @@ describe('Contratos Integration - Criação', () => {
       papelClienteNoContrato: 'autora',
       tipoContrato: 'consultoria',
       tipoCobranca: 'pro_labore',
+      status: 'em_contratacao',
+      partes: [],
     };
 
     (clienteExists as jest.Mock).mockResolvedValue(ok(false));
@@ -117,6 +120,7 @@ describe('Contratos Integration - Criação', () => {
       papelClienteNoContrato: 'autora',
       tipoContrato: 'consultoria',
       tipoCobranca: 'pro_labore',
+      status: 'em_contratacao',
       partes: [
         {
           tipoEntidade: 'parte_contraria',
@@ -205,7 +209,8 @@ describe('Contratos Integration - Atualização', () => {
       expect.objectContaining({
         status: 'contratado',
         observacoes: 'Contrato assinado',
-      })
+      }),
+      expect.any(Object)
     );
 
     if (result.success) {
@@ -276,7 +281,7 @@ describe('Contratos Integration - Atualização', () => {
       partes: expect.arrayContaining([
         expect.objectContaining({ entidadeId: 2 }),
       ]),
-    }));
+    }), expect.any(Object));
   });
 
   it('deve falhar se contrato não existir', async () => {
@@ -302,10 +307,10 @@ describe('Contratos Integration - Atualização', () => {
     // Act: Chamar atualizarContrato com objeto vazio
     const result = await atualizarContrato(1, {});
 
-    // Assert: Verificar erro BAD_REQUEST
+    // Assert: Verificar erro VALIDATION_ERROR
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.code).toBe('BAD_REQUEST');
+      expect(result.error.code).toBe('VALIDATION_ERROR');
       expect(result.error.message).toContain('Nenhum campo');
     }
     expect(updateContratoRepo).not.toHaveBeenCalled();
@@ -502,7 +507,7 @@ describe('Contratos Integration - Busca por ID', () => {
     // Assert
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.code).toBe('BAD_REQUEST');
+      expect(result.error.code).toBe('VALIDATION_ERROR');
     }
     expect(findContratoById).not.toHaveBeenCalled();
   });

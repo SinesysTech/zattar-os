@@ -12,6 +12,7 @@ import {
   atribuirResponsavel,
   listarExpedientes,
 } from '../../service';
+import { GrauTribunal, OrigemExpediente } from '../../domain';
 import {
   saveExpediente,
   findExpedienteById,
@@ -39,8 +40,9 @@ describe('Expedientes Integration - Criação', () => {
     const input = {
       numeroProcesso: '1234567-89.2023.5.01.0001',
       trt: 'TRT1' as const,
-      grau: 'primeiro_grau' as const,
+      grau: GrauTribunal.PRIMEIRO_GRAU,
       dataPrazoLegalParte: '2024-12-31',
+      origem: OrigemExpediente.MANUAL,
       processoId: 1,
     };
 
@@ -77,8 +79,9 @@ describe('Expedientes Integration - Criação', () => {
     const input = {
       numeroProcesso: '1234567-89.2023.5.01.0001',
       trt: 'TRT1' as const,
-      grau: 'primeiro_grau' as const,
+      grau: GrauTribunal.PRIMEIRO_GRAU,
       dataPrazoLegalParte: '2024-12-31',
+      origem: OrigemExpediente.MANUAL,
       tipoExpedienteId: 5,
     };
 
@@ -101,8 +104,9 @@ describe('Expedientes Integration - Criação', () => {
     const input = {
       numeroProcesso: '1234567-89.2023.5.01.0001',
       trt: 'TRT1' as const,
-      grau: 'primeiro_grau' as const,
+      grau: GrauTribunal.PRIMEIRO_GRAU,
       dataPrazoLegalParte: '2024-12-31',
+      origem: OrigemExpediente.MANUAL,
       processoId: 999,
     };
 
@@ -124,8 +128,9 @@ describe('Expedientes Integration - Criação', () => {
     const input = {
       numeroProcesso: '1234567-89.2023.5.01.0001',
       trt: 'TRT1' as const,
-      grau: 'primeiro_grau' as const,
+      grau: GrauTribunal.PRIMEIRO_GRAU,
       dataPrazoLegalParte: '2024-12-31',
+      origem: OrigemExpediente.MANUAL,
     };
 
     const expectedExpediente = mockExpediente();
@@ -148,6 +153,7 @@ describe('Expedientes Integration - Baixa', () => {
     auth: {
       getSession: jest.MockedFunction<() => Promise<{ data: { session: unknown }; error: unknown }>>;
     };
+    from: jest.MockedFunction<(...args: unknown[]) => unknown>;
   };
 
   beforeEach(() => {
@@ -299,6 +305,7 @@ describe('Expedientes Integration - Reversão', () => {
     auth: {
       getSession: jest.MockedFunction<() => Promise<{ data: { session: unknown }; error: unknown }>>;
     };
+    from: jest.MockedFunction<(...args: unknown[]) => unknown>;
   };
 
   beforeEach(() => {
@@ -425,6 +432,7 @@ describe('Expedientes Integration - Atribuição de Responsável', () => {
     auth: {
       getSession: jest.MockedFunction<() => Promise<{ data: { session: unknown }; error: unknown }>>;
     };
+    from: jest.MockedFunction<(...args: unknown[]) => unknown>;
   };
 
   beforeEach(() => {
@@ -563,7 +571,7 @@ describe('Expedientes Integration - Listagem', () => {
     // Act
     const result = await listarExpedientes({
       trt: 'TRT2',
-      grau: 'segundo_grau',
+      grau: GrauTribunal.SEGUNDO_GRAU,
       baixado: false,
     });
 
@@ -572,7 +580,7 @@ describe('Expedientes Integration - Listagem', () => {
     expect(findAllExpedientes).toHaveBeenCalledWith(
       expect.objectContaining({
         trt: 'TRT2',
-        grau: 'segundo_grau',
+        grau: GrauTribunal.SEGUNDO_GRAU,
         baixado: false,
         pagina: 1,
         limite: 50,
@@ -606,7 +614,7 @@ describe('Expedientes Integration - Listagem', () => {
     expect(findAllExpedientes).toHaveBeenCalledWith(
       expect.objectContaining({
         pagina: 1, // Sanitizado
-        limite: 100, // Sanitizado
+        limite: 50, // Sanitizado (fallback quando inválido)
       })
     );
   });

@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { DynamicFormData, DynamicFormSchema, SalvarAcaoRequest } from '../../types';
 import DynamicFormRenderer from './dynamic-form-renderer';
 import FormStepLayout from './form-step-layout';
+import { API_ROUTES } from '../../constants';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 
@@ -286,7 +287,7 @@ export default function DynamicFormStep() {
       const payload: SalvarAcaoRequest = {
         segmentoId: segmentoIdValue,
         segmentoNome: segmentoNome || 'Segmento',
-        formularioId: formularioIdValue.toString(),
+        formularioId: formularioIdValue,
         formularioNome: formularioNome || 'Formulário Dinâmico',
         clienteId: dadosPessoaisValid.cliente_id,
         clienteNome: dadosPessoaisValid.nome_completo,
@@ -305,7 +306,7 @@ export default function DynamicFormStep() {
       });
 
       // Call API
-      const response = await fetch('/api/assinatura-digital/signature/salvar-acao', {
+      const response = await fetch(API_ROUTES.salvarAcao, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -375,6 +376,8 @@ export default function DynamicFormStep() {
       setDadosContrato({
         ...orderedData,
         contrato_id: result.data.contrato_id,
+        cliente_dados: result.data.cliente_dados,
+        parte_contraria_dados: result.data.parte_contraria_dados,
       });
 
       // 8. Success toast

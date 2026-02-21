@@ -10,6 +10,7 @@ export const API_ROUTES = {
 
   // Assinatura
   preview: '/api/assinatura-digital/signature/preview',
+  salvarAcao: '/api/assinatura-digital/signature/salvar-acao',
   finalize: '/api/assinatura-digital/signature/finalizar',
   sessoes: '/api/assinatura-digital/signature/sessoes',
 

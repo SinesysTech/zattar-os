@@ -195,7 +195,13 @@ export function ExpedientesCalendar() {
     };
 
     const handleSucessoOperacao = React.useCallback(() => {
-        setRowSelection({});
+        setRowSelection((currentSelection) => {
+            if (Object.keys(currentSelection).length === 0) {
+                return currentSelection;
+            }
+
+            return {};
+        });
         fetchData();
         router.refresh();
     }, [fetchData, router]);
