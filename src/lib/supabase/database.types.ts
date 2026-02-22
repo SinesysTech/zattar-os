@@ -795,8 +795,11 @@ export type Database = {
           descricao: string | null
           id: number
           nome: string
+          pdf_url: string | null
+          segmento_id: number | null
           status: string | null
           template_uuid: string
+          tipo_template: string | null
           updated_at: string | null
           versao: number | null
         }
@@ -813,8 +816,11 @@ export type Database = {
           descricao?: string | null
           id?: never
           nome: string
+          pdf_url?: string | null
+          segmento_id?: number | null
           status?: string | null
           template_uuid?: string
+          tipo_template?: string | null
           updated_at?: string | null
           versao?: number | null
         }
@@ -831,8 +837,11 @@ export type Database = {
           descricao?: string | null
           id?: never
           nome?: string
+          pdf_url?: string | null
+          segmento_id?: number | null
           status?: string | null
           template_uuid?: string
+          tipo_template?: string | null
           updated_at?: string | null
           versao?: number | null
         }
@@ -842,6 +851,13 @@ export type Database = {
             columns: ["contrato_id"]
             isOneToOne: false
             referencedRelation: "contratos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assinatura_digital_templates_segmento_id_fkey"
+            columns: ["segmento_id"]
+            isOneToOne: false
+            referencedRelation: "segmentos"
             referencedColumns: ["id"]
           },
         ]
@@ -2556,6 +2572,7 @@ export type Database = {
           senha: string
           tribunal: Database["public"]["Enums"]["codigo_tribunal"]
           updated_at: string
+          usuario: string | null
         }
         Insert: {
           active?: boolean
@@ -2566,6 +2583,7 @@ export type Database = {
           senha: string
           tribunal: Database["public"]["Enums"]["codigo_tribunal"]
           updated_at?: string
+          usuario?: string | null
         }
         Update: {
           active?: boolean
@@ -2576,6 +2594,7 @@ export type Database = {
           senha?: string
           tribunal?: Database["public"]["Enums"]["codigo_tribunal"]
           updated_at?: string
+          usuario?: string | null
         }
         Relationships: [
           {
@@ -4230,6 +4249,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      n8n_chat_histories: {
+        Row: {
+          id: number
+          message: Json
+          session_id: string
+        }
+        Insert: {
+          id?: number
+          message: Json
+          session_id: string
+        }
+        Update: {
+          id?: number
+          message?: Json
+          session_id?: string
+        }
+        Relationships: []
       }
       nota_etiqueta_vinculos: {
         Row: {
@@ -8025,3 +8062,4 @@ export const Constants = {
     },
   },
 } as const
+

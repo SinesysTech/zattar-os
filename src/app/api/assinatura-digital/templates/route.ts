@@ -22,6 +22,7 @@ const upsertTemplateSchema = z.object({
   campos: z.string().optional(),
   conteudo_markdown: z.string().optional().nullable(),
   criado_por: z.string().optional().nullable(),
+  pdf_url: z.string().optional().nullable(),
 });
 
 export async function GET(request: NextRequest) {

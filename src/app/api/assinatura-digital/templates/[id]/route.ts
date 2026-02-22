@@ -15,6 +15,7 @@ const updateSchema = z.object({
   arquivo_original: z.string().min(1).optional(),
   arquivo_nome: z.string().min(1).optional(),
   arquivo_tamanho: z.coerce.number().optional(),
+  pdf_url: z.string().optional().nullable(),
   status: z.string().optional(),
   versao: z.coerce.number().int().optional(),
   ativo: z.boolean().optional(),

@@ -27,6 +27,7 @@ function buildTemplatePayload(input: UpsertTemplateInput) {
     arquivo_original: input.arquivo_original,
     arquivo_nome: input.arquivo_nome,
     arquivo_tamanho: input.arquivo_tamanho,
+    pdf_url: input.pdf_url ?? null,
     status: input.status ?? 'ativo',
     versao: input.versao ?? 1,
     ativo: input.ativo ?? true,
@@ -50,6 +51,7 @@ function buildPartialTemplatePayload(input: Partial<UpsertTemplateInput>) {
   if (input.campos !== undefined) payload.campos = input.campos;
   if (input.conteudo_markdown !== undefined) payload.conteudo_markdown = input.conteudo_markdown ?? null;
   if (input.criado_por !== undefined) payload.criado_por = input.criado_por ?? null;
+  if (input.pdf_url !== undefined) payload.pdf_url = input.pdf_url ?? null;
   return payload;
 }
 

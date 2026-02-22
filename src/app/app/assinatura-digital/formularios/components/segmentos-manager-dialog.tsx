@@ -77,13 +77,10 @@ export function SegmentosManagerDialog({
         title="Segmentos"
         maxWidth="3xl"
         footer={
-          <div className="flex w-full items-center justify-between gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-            <Button onClick={() => setCreateOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Novo segmento
-            </Button>
-          </div>
+          <Button onClick={() => setCreateOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Novo segmento
+          </Button>
         }
       >
         <div className="space-y-4">

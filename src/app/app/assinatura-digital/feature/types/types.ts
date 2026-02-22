@@ -25,6 +25,7 @@ export interface AssinaturaDigitalTemplate {
   arquivo_original: string;
   arquivo_nome: string;
   arquivo_tamanho: number;
+  pdf_url?: string | null;
   status: string;
   versao: number;
   ativo: boolean;
@@ -56,6 +57,7 @@ export interface UpsertTemplateInput {
   arquivo_tamanho: number;
   template_uuid?: string;
   descricao?: string | null;
+  pdf_url?: string | null;
   status?: string;
   versao?: number;
   ativo?: boolean;
