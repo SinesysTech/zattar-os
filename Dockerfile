@@ -128,6 +128,8 @@ ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHA
 # Economiza ~1min e ~2GB de memoria
 ENV NEXT_BUILD_LINT_DISABLED=1
 ENV SKIP_TYPE_CHECK=true
+ENV TURBOPACK=0
+ENV NEXT_DISABLE_TURBOPACK=1
 
 # Copiar dependencias do stage anterior
 COPY --from=deps /app/node_modules ./node_modules
