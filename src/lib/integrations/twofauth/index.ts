@@ -52,7 +52,7 @@ export {
 // OTP (GERAÇÃO SOB DEMANDA)
 // =============================================================================
 
-export { generateOTP, generateTOTP, generateHOTP } from "./otp";
+export { generateOTP } from "./otp";
 
 // =============================================================================
 // GRUPOS

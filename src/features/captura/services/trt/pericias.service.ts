@@ -230,7 +230,6 @@ export async function periciasCapture(
     authResult = await autenticarPJE({
       credential: params.credential,
       config: params.config,
-      twofauthConfig: params.twofauthConfig,
       headless: true,
     });
 

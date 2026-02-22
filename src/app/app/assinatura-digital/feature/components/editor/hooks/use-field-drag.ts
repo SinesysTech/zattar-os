@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { EditorField, DragState } from '../types';
 
 interface UseFieldDragProps {
@@ -45,8 +45,20 @@ export function useFieldDrag({
 }: UseFieldDragProps) {
   const [dragState, setDragState] = useState<DragState>(INITIAL_DRAG_STATE);
 
+  // Synchronous ref to track if user actually moved the mouse during drag.
+  // Unlike dragState (async state), this ref updates instantly and is readable
+  // in the click handler without stale closure issues.
+  const hasMovedRef = useRef(false);
+
   const handleMouseDown = useCallback(
     (field: EditorField, event: React.MouseEvent) => {
+      // Reset moved flag on every mousedown (including right-click)
+      // so context menu and click handlers see the correct value
+      hasMovedRef.current = false;
+
+      // Only allow drag with left mouse button (button 0)
+      if (event.button !== 0) return;
+
       // Only allow drag in 'select' mode
       if (editorMode !== 'select') return;
 
@@ -96,6 +108,8 @@ export function useFieldDrag({
       handle: 'nw' | 'ne' | 'sw' | 'se' | 'n' | 's' | 'e' | 'w',
       event: React.MouseEvent
     ) => {
+      // Only allow resize with left mouse button
+      if (event.button !== 0) return;
       if (editorMode !== 'select') return;
 
       event.stopPropagation();
@@ -141,8 +155,9 @@ export function useFieldDrag({
 
       const rect = canvasRef.current.getBoundingClientRect();
 
-      // Mark that real movement occurred
+      // Mark that real movement occurred (both ref and state)
       if (!dragState.hasMoved) {
+        hasMovedRef.current = true;
         setDragState((prev) => ({ ...prev, hasMoved: true }));
         // Mark the field as being dragged
         setFields((prev) =>
@@ -342,6 +357,7 @@ export function useFieldDrag({
 
   return {
     dragState,
+    hasMovedRef,
     handleMouseDown,
     handleResizeMouseDown,
   };

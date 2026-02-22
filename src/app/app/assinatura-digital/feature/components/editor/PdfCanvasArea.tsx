@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   AlignLeft,
   Copy,
@@ -150,6 +151,17 @@ export default function PdfCanvasArea({
   signers,
   onReassignField,
 }: PdfCanvasAreaProps) {
+  // Track which field was right-clicked for context menu
+  const [contextMenuField, setContextMenuField] = useState<EditorField | null>(null);
+
+  // The active field for context menu actions (right-clicked field takes priority)
+  const activeField = contextMenuField || selectedField;
+
+  // Mock event for context menu actions that need to call onFieldClick (which requires event.stopPropagation)
+  const selectFieldFromMenu = (field: EditorField) => {
+    onFieldClick(field, { stopPropagation: () => {} } as unknown as React.MouseEvent);
+  };
+
   // Criar array de páginas para renderizar (scroll contínuo)
   const pages = Array.from({ length: totalPages || 1 }, (_, i) => i + 1);
 
@@ -209,7 +221,11 @@ export default function PdfCanvasArea({
         onDoubleClick={(e) => {
           e.stopPropagation();
           if (isRichTextField && onEditRichText) onEditRichText(field.id);
-          else { onFieldClick(field, e); onOpenProperties(); }
+          else onOpenProperties();
+        }}
+        onContextMenu={() => {
+          // Track which field was right-clicked so context menu shows field-specific options
+          setContextMenuField(field);
         }}
         onMouseDown={(e) => onFieldMouseDown(field, e)}
         onKeyDown={(e) => onFieldKeyboard(field, e)}
@@ -218,8 +234,18 @@ export default function PdfCanvasArea({
         aria-label={`Campo ${field.nome} do tipo ${typeLabel}`}
         data-state={field.isSelected ? "selected" : "idle"}
       >
-        <div className="absolute inset-0 flex items-center justify-center px-1 text-center">
-          <span className="truncate text-xs font-medium text-foreground">{displayText}</span>
+        <div className={cn(
+          "absolute inset-0 px-1 overflow-hidden",
+          isRichTextField
+            ? "flex items-start p-1.5 text-left"
+            : "flex items-center justify-center text-center"
+        )}>
+          <span className={cn(
+            "text-xs font-medium text-foreground",
+            isRichTextField
+              ? "line-clamp-20 wrap-break-word whitespace-pre-wrap leading-tight"
+              : "truncate"
+          )}>{displayText}</span>
         </div>
         {signer && (
           <div className="pointer-events-none absolute -top-6 left-0 flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] font-medium text-white shadow-sm" style={{ backgroundColor: signerColor }}>
@@ -232,20 +258,23 @@ export default function PdfCanvasArea({
               {isImageField ? <ImageIcon className="h-3 w-3" aria-hidden="true" /> : isRichTextField ? <AlignLeft className="h-3 w-3" aria-hidden="true" /> : <Type className="h-3 w-3" aria-hidden="true" />}
               {typeLabel}
             </AppBadge>
-            {/* Resize handles */}
-            {(["nw", "ne", "sw", "se", "n", "s", "e", "w"] as const).map(handle => (
+            {/* Resize handles - smaller for compact fields */}
+            {(["nw", "ne", "sw", "se", "n", "s", "e", "w"] as const).map(handle => {
+              const isSmallField = field.posicao.height <= 30;
+              return (
               <div
                 key={handle}
                 className={cn(
-                  "resize-handle absolute w-3 h-3 bg-primary rounded-full z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1",
-                  handle === "nw" && "-top-1.5 -left-1.5 cursor-nw-resize",
-                  handle === "ne" && "-top-1.5 -right-1.5 cursor-ne-resize",
-                  handle === "sw" && "-bottom-1.5 -left-1.5 cursor-sw-resize",
-                  handle === "se" && "-bottom-1.5 -right-1.5 cursor-se-resize",
-                  handle === "n" && "-top-1.5 left-1/2 -translate-x-1/2 cursor-n-resize",
-                  handle === "s" && "-bottom-1.5 left-1/2 -translate-x-1/2 cursor-s-resize",
-                  handle === "w" && "top-1/2 -translate-y-1/2 -left-1.5 cursor-w-resize",
-                  handle === "e" && "top-1/2 -translate-y-1/2 -right-1.5 cursor-e-resize"
+                  "resize-handle absolute bg-primary rounded-full z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1",
+                  isSmallField ? "w-2 h-2" : "w-3 h-3",
+                  handle === "nw" && (isSmallField ? "-top-1 -left-1 cursor-nw-resize" : "-top-1.5 -left-1.5 cursor-nw-resize"),
+                  handle === "ne" && (isSmallField ? "-top-1 -right-1 cursor-ne-resize" : "-top-1.5 -right-1.5 cursor-ne-resize"),
+                  handle === "sw" && (isSmallField ? "-bottom-1 -left-1 cursor-sw-resize" : "-bottom-1.5 -left-1.5 cursor-sw-resize"),
+                  handle === "se" && (isSmallField ? "-bottom-1 -right-1 cursor-se-resize" : "-bottom-1.5 -right-1.5 cursor-se-resize"),
+                  handle === "n" && (isSmallField ? "-top-1 left-1/2 -translate-x-1/2 cursor-n-resize" : "-top-1.5 left-1/2 -translate-x-1/2 cursor-n-resize"),
+                  handle === "s" && (isSmallField ? "-bottom-1 left-1/2 -translate-x-1/2 cursor-s-resize" : "-bottom-1.5 left-1/2 -translate-x-1/2 cursor-s-resize"),
+                  handle === "w" && (isSmallField ? "top-1/2 -translate-y-1/2 -left-1 cursor-w-resize" : "top-1/2 -translate-y-1/2 -left-1.5 cursor-w-resize"),
+                  handle === "e" && (isSmallField ? "top-1/2 -translate-y-1/2 -right-1 cursor-e-resize" : "top-1/2 -translate-y-1/2 -right-1.5 cursor-e-resize")
                 )}
                 onMouseDown={(e) => { e.stopPropagation(); onResizeMouseDown(field, handle, e); }}
                 onClick={(e) => e.stopPropagation()}
@@ -253,7 +282,7 @@ export default function PdfCanvasArea({
                 tabIndex={0}
                 aria-label={`Redimensionar ${handle}`}
               />
-            ))}
+            );})}
           </>
         )}
       </div>
@@ -261,7 +290,7 @@ export default function PdfCanvasArea({
   };
 
   return (
-    <ContextMenu>
+    <ContextMenu onOpenChange={(open) => { if (!open) setContextMenuField(null); }}>
       <ContextMenuTrigger asChild>
         <div
           ref={canvasRef}
@@ -324,24 +353,30 @@ export default function PdfCanvasArea({
       </ContextMenuTrigger>
 
       <ContextMenuContent className="w-56">
-        {/* Ações específicas do campo selecionado */}
-        {selectedField && (
+        {/* Ações específicas do campo (right-clicked ou selecionado) */}
+        {activeField && (
           <>
-            <ContextMenuItem onClick={onOpenProperties}>
+            <ContextMenuItem onClick={() => {
+              selectFieldFromMenu(activeField);
+              onOpenProperties();
+            }}>
               <Settings className="mr-2 h-4 w-4" />
               <span>Editar Propriedades</span>
             </ContextMenuItem>
-            {selectedField.tipo === "texto_composto" && onEditRichText && (
-              <ContextMenuItem onClick={() => onEditRichText(selectedField.id)}>
+            {activeField.tipo === "texto_composto" && onEditRichText && (
+              <ContextMenuItem onClick={() => {
+                selectFieldFromMenu(activeField);
+                onEditRichText(activeField.id);
+              }}>
                 <Edit className="mr-2 h-4 w-4" />
                 <span>Editar Texto Composto</span>
               </ContextMenuItem>
             )}
-            {selectedField.tipo === "texto_composto" &&
-              fieldsWithHeightWarning.has(selectedField.id) &&
+            {activeField.tipo === "texto_composto" &&
+              fieldsWithHeightWarning.has(activeField.id) &&
               onAdjustHeight && (
                 <ContextMenuItem
-                  onClick={() => onAdjustHeight(selectedField.id)}
+                  onClick={() => onAdjustHeight(activeField.id)}
                   className="text-orange-600 focus:text-orange-600"
                 >
                   <svg
@@ -360,7 +395,7 @@ export default function PdfCanvasArea({
                   <span>Ajustar Altura Automaticamente</span>
                 </ContextMenuItem>
               )}
-            <ContextMenuItem onClick={() => onDuplicateField(selectedField.id)}>
+            <ContextMenuItem onClick={() => onDuplicateField(activeField.id)}>
               <Copy className="mr-2 h-4 w-4" />
               <span>Duplicar Campo</span>
             </ContextMenuItem>
@@ -375,9 +410,9 @@ export default function PdfCanvasArea({
                   {signers.map((s) => (
                     <ContextMenuItem
                       key={s.id}
-                      onClick={() => onReassignField(selectedField.id, s.id)}
+                      onClick={() => onReassignField(activeField.id, s.id)}
                       className={cn(
-                        selectedField.signatario_id === s.id && "bg-accent"
+                        activeField.signatario_id === s.id && "bg-accent"
                       )}
                     >
                       <div
@@ -385,7 +420,7 @@ export default function PdfCanvasArea({
                         style={{ backgroundColor: s.cor }}
                       />
                       <span className="truncate">{s.nome}</span>
-                      {selectedField.signatario_id === s.id && (
+                      {activeField.signatario_id === s.id && (
                         <span className="ml-auto text-xs text-muted-foreground">atual</span>
                       )}
                     </ContextMenuItem>
@@ -395,7 +430,7 @@ export default function PdfCanvasArea({
             )}
             <ContextMenuSeparator />
             <ContextMenuItem
-              onClick={() => onDeleteField(selectedField.id)}
+              onClick={() => onDeleteField(activeField.id)}
               className="text-destructive focus:text-destructive"
             >
               <Trash2 className="mr-2 h-4 w-4" />

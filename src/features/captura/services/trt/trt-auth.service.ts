@@ -5,8 +5,7 @@
 import 'server-only';
 
 import { Browser, BrowserContext, Page } from 'playwright';
-import { getOTP, type TwoFAuthConfig } from '@/lib/integrations/twofauth';
-import { load2FAuthConfig } from '@/lib/integrations/twofauth/config-loader';
+import { getDefaultOTP } from '@/lib/integrations/twofauth/';
 import type { CredenciaisTRT, ConfigTRT } from '../../types/trt-types';
 import { getFirefoxConnection } from '../../services/browser/browser-connection.service';
 
@@ -36,7 +35,6 @@ export interface AuthResult {
 export interface TRTAuthOptions {
   credential: CredenciaisTRT;
   config: ConfigTRT;
-  twofauthConfig?: TwoFAuthConfig;
   headless?: boolean;
 }
 
@@ -91,7 +89,6 @@ async function aplicarConfiguracoesAntiDeteccao(page: Page): Promise<void> {
 
 async function processOTP(
   page: Page,
-  twofauthConfig: TwoFAuthConfig | undefined,
   targetHost: string
 ): Promise<void> {
   log('info', '🔍 Aguardando campo OTP aparecer...', { url: await page.url() });
@@ -137,8 +134,8 @@ async function processOTP(
 
   log('info', '📱 Campo OTP detectado, obtendo código...');
 
-  // Obter OTP atual e próximo (a API sempre retorna ambos quando disponível)
-  const otpResult = await getOTP(twofauthConfig);
+  // Obter OTP atual e próximo (configuração carregada do banco de dados)
+  const otpResult = await getDefaultOTP();
   const currentOtp = otpResult.password;
   const nextOtp = otpResult.nextPassword;
 
@@ -297,7 +294,6 @@ async function realizarLogin(
   baseUrl: string,
   cpf: string,
   senha: string,
-  twofauthConfig?: TwoFAuthConfig | undefined
 ): Promise<void> {
   log('info', '🌐 Navegando para página de login...', { url: loginUrl });
   await page.goto(loginUrl, { waitUntil: 'networkidle', timeout: 60000 });
@@ -372,11 +368,8 @@ async function realizarLogin(
   await delay(3000);
 
   // Processar OTP (sempre necessário para TRT)
-  if (!twofauthConfig) {
-    throw new Error('2FAuth não configurado. Configure em Configurações > Integrações.');
-  }
-
-  await processOTP(page, twofauthConfig, targetHost);
+  // Configuração 2FAuth é carregada do banco de dados automaticamente
+  await processOTP(page, targetHost);
 
   await page.waitForLoadState('networkidle', { timeout: 60000 });
   await delay(3000);
@@ -552,22 +545,8 @@ export async function autenticarPJE(options: TRTAuthOptions): Promise<AuthResult
   const {
     credential,
     config,
-    twofauthConfig: twofauthConfigParam,
     headless = true,
   } = options;
-
-  // Se twofauthConfig não foi fornecido explicitamente, carregar do banco
-  let twofauthConfig = twofauthConfigParam;
-  if (!twofauthConfig) {
-    log('info', '🔑 twofauthConfig não fornecido, carregando do banco de dados...');
-    const dbConfig = await load2FAuthConfig();
-    if (dbConfig) {
-      twofauthConfig = dbConfig;
-      log('success', '✅ Configuração 2FAuth carregada do banco de dados');
-    } else {
-      log('warn', '⚠️ Configuração 2FAuth não encontrada no banco de dados');
-    }
-  }
 
   log('info', '🚀 Iniciando autenticação PJE...', {
     loginUrl: config.loginUrl,
@@ -588,7 +567,7 @@ export async function autenticarPJE(options: TRTAuthOptions): Promise<AuthResult
   await aplicarConfiguracoesAntiDeteccao(page);
 
   // Realizar login
-  await realizarLogin(page, config.loginUrl, config.baseUrl, credential.cpf, credential.senha, twofauthConfig);
+  await realizarLogin(page, config.loginUrl, config.baseUrl, credential.cpf, credential.senha);
 
   // Obter ID do advogado e tokens do JWT
   const advogadoInfo = await obterIdAdvogado(page);

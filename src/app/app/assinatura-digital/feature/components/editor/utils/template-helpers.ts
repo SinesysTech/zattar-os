@@ -31,22 +31,23 @@ export function normalizeTemplateFields(campos: TemplateCampo[]): EditorField[] 
   // Ensure campos is always an array (defensive against inconsistent backend data)
   const normalizedCampos = Array.isArray(campos) ? campos : [];
 
-  // Diagnostic: Log fields without valid ID
-  const camposSemId = normalizedCampos.filter((c) => c.id == null);
-  if (camposSemId.length > 0) {
-    console.warn(
-      `[normalizeTemplateFields] ${camposSemId.length} campo(s) returned from backend without valid ID:`,
-      camposSemId.map((c) => ({ nome: c.nome, variavel: c.variavel, tipo: c.tipo }))
-    );
-  }
+  // Diagnostic: Log fields without valid ID (expected — backend campos often lack IDs, they are generated here)
+  if (process.env.NODE_ENV === 'development') {
+    const camposSemId = normalizedCampos.filter((c) => c.id == null);
+    if (camposSemId.length > 0) {
+      console.debug(
+        `[normalizeTemplateFields] ${camposSemId.length} campo(s) without ID (IDs will be generated):`,
+        camposSemId.map((c) => ({ nome: c.nome, variavel: c.variavel, tipo: c.tipo }))
+      );
+    }
 
-  // Diagnostic: Log fields without valid position
-  const camposSemPosicao = normalizedCampos.filter((c) => !c.posicao);
-  if (camposSemPosicao.length > 0) {
-    console.warn(
-      `[normalizeTemplateFields] ${camposSemPosicao.length} campo(s) without valid position (using default):`,
-      camposSemPosicao.map((c) => ({ nome: c.nome, variavel: c.variavel, tipo: c.tipo }))
-    );
+    const camposSemPosicao = normalizedCampos.filter((c) => !c.posicao);
+    if (camposSemPosicao.length > 0) {
+      console.debug(
+        `[normalizeTemplateFields] ${camposSemPosicao.length} campo(s) without position (using default):`,
+        camposSemPosicao.map((c) => ({ nome: c.nome, variavel: c.variavel, tipo: c.tipo }))
+      );
+    }
   }
 
   const editorFields: EditorField[] = normalizedCampos.map((campo) => ({

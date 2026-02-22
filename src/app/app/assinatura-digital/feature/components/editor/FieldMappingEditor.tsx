@@ -164,7 +164,7 @@ export default function FieldMappingEditor({
   });
 
   // Field drag and resize
-  const { dragState, handleMouseDown, handleResizeMouseDown } = useFieldDrag({
+  const { dragState, hasMovedRef, handleMouseDown, handleResizeMouseDown } = useFieldDrag({
     canvasRef,
     zoom,
     canvasWidth: canvasSize.width,
@@ -236,8 +236,6 @@ export default function FieldMappingEditor({
   // Canvas click handler
   const handleCanvasClick = useCallback(
     (event: React.MouseEvent) => {
-      if (!canvasRef.current) return;
-
       // In select mode, deselect all fields when clicking empty canvas
       if (editorMode === 'select') {
         setFields((prev) => prev.map((field) => ({ ...field, isSelected: false })));
@@ -245,9 +243,14 @@ export default function FieldMappingEditor({
         return;
       }
 
-      const rect = canvasRef.current.getBoundingClientRect();
+      // Use the clicked page element for position relative to that specific page
+      const pageElement = event.currentTarget as HTMLDivElement;
+      const rect = pageElement.getBoundingClientRect();
       const x = (event.clientX - rect.left) / zoom;
       const y = (event.clientY - rect.top) / zoom;
+
+      // Get the page number from the clicked page element's data attribute
+      const clickedPage = parseInt(pageElement.dataset.page || String(currentPage), 10);
 
       // Create new field based on editor mode
       const fieldConfig = {
@@ -288,7 +291,7 @@ export default function FieldMappingEditor({
           y: Math.round(y),
           width: config.width,
           height: config.height,
-          pagina: currentPage,
+          pagina: clickedPage,
         },
         estilo: {
           fonte: 'Open Sans',
@@ -333,14 +336,18 @@ export default function FieldMappingEditor({
     [editorMode, zoom, fields.length, template.id, markDirty, currentPage, setFields, setSelectedField, setEditorMode]
   );
 
-  // Field click handler
+  // Field click handler — select + open properties
+  // Uses hasMovedRef (synchronous ref) instead of dragState.isDragging (async state)
+  // to avoid stale closure: mousedown sets isDragging=true via setState, but the
+  // click event fires before React re-renders with isDragging=false from mouseup.
   const handleFieldClick = useCallback(
     (field: EditorField, event: React.MouseEvent) => {
       event.stopPropagation();
-      if (dragState.isDragging) return;
+      if (hasMovedRef.current) return; // Only skip if user actually dragged
       selectField(field.id);
+      setShowProperties(true);
     },
-    [selectField, dragState.isDragging]
+    [selectField, hasMovedRef]
   );
 
   // Field keyboard handler
@@ -407,10 +414,8 @@ export default function FieldMappingEditor({
 
   // Open properties handler
   const handleOpenProperties = useCallback(() => {
-    if (selectedField) {
-      setShowProperties(true);
-    }
-  }, [selectedField]);
+    setShowProperties(true);
+  }, []);
 
   // Open template info handler
   const handleOpenTemplateInfo = useCallback(() => {
@@ -429,6 +434,7 @@ export default function FieldMappingEditor({
       if (field) {
         setEditingRichTextField(field);
         setShowRichTextEditor(true);
+        setShowProperties(false); // Close properties when opening rich text editor
       }
     },
     [getFieldForRichTextEdit]
@@ -570,13 +576,6 @@ export default function FieldMappingEditor({
     }
   }, [selectedField]);
 
-  // Clear selection when changing pages if selected field is on different page
-  useEffect(() => {
-    if (selectedField && selectedField.posicao.pagina !== currentPage) {
-      setFields((prev) => prev.map((field) => ({ ...field, isSelected: false })));
-      setSelectedField(null);
-    }
-  }, [currentPage, selectedField, setFields, setSelectedField]);
 
   // ===== Render =====
 
@@ -657,7 +656,6 @@ export default function FieldMappingEditor({
 
         {/* Popovers (rendered outside layout flow) */}
         <PropertiesPopover
-          trigger={<div />}
           open={showProperties}
           onOpenChange={setShowProperties}
           selectedField={selectedField}
@@ -668,7 +666,6 @@ export default function FieldMappingEditor({
         />
 
         <TemplateInfoPopover
-          trigger={<div />}
           open={showTemplateInfo}
           onOpenChange={setShowTemplateInfo}
           template={createdTemplate || template}

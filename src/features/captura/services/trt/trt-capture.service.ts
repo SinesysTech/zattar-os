@@ -1,17 +1,17 @@
 // Tipos e interfaces comuns para captura TRT
-// (Não usa mais herança - cada serviço chama autenticação diretamente)
 
 import type { CredenciaisTRT, ConfigTRT, FiltroPrazoPendentes } from '../../types/trt-types';
-import type { TwoFAuthConfig } from '@/lib/integrations/twofauth';
 
 /**
  * Parâmetros base para captura TRT
  * Usado por todos os serviços específicos (acervo-geral, arquivados, etc.)
+ *
+ * A configuração do 2FAuth é carregada diretamente do banco de dados
+ * em autenticarPJE() — não precisa ser passada como parâmetro.
  */
 export interface CapturaTRTParams {
   credential: CredenciaisTRT;
   config: ConfigTRT;
-  twofauthConfig?: TwoFAuthConfig;
 }
 
 /**
@@ -36,7 +36,7 @@ export interface CapturaAudienciasParams extends CapturaTRTParams {
 
 /**
  * Parâmetros para captura combinada
- * 
+ *
  * Executa múltiplas capturas em uma única sessão:
  * - Audiências Designadas (hoje → +1 ano)
  * - Audiências Realizadas (ontem)

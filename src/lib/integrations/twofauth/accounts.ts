@@ -5,6 +5,7 @@
  */
 
 import { request } from "./client";
+import { load2FAuthConfig } from "./config-loader";
 import {
   TwoFAuthConfig,
   TwoFAuthAccount,
@@ -210,22 +211,22 @@ export async function getOTP(
 }
 
 /**
- * Obtém OTP usando a conta padrão configurada no banco de dados
+ * Obtém OTP usando a conta padrão configurada no banco de dados.
+ * Carrega apiUrl, token e accountId da tabela integracoes.
  *
- * @param config - Configuração opcional
  * @returns OTP atual e próximo (se disponível)
  */
-export async function getDefaultOTP(config?: TwoFAuthConfig): Promise<OTPResult> {
-  const accountId = config?.accountId;
+export async function getDefaultOTP(): Promise<OTPResult> {
+  const dbConfig = await load2FAuthConfig();
 
-  if (!accountId) {
+  if (!dbConfig?.accountId) {
     throw new TwoFAuthError(
       500,
       "2FAuth: ID da conta não configurado. Configure em Configurações > Integrações."
     );
   }
 
-  return getOTP(accountId, config);
+  return getOTP(dbConfig.accountId, dbConfig);
 }
 
 // =============================================================================

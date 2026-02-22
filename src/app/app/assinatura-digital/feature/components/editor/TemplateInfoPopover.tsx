@@ -22,12 +22,14 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Separator } from '@/components/ui/separator';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
 import {
   Select,
   SelectContent,
@@ -40,13 +42,12 @@ import type { Template } from '../../types/template.types';
 import { validateMarkdownForForm } from './editor-helpers';
 
 interface TemplateInfoPopoverProps {
-  trigger: React.ReactNode;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  template?: Template;  // Opcional para modo criação
+  template?: Template;
   onUpdate: (updates: Partial<Template>) => Promise<void>;
-  isCreating?: boolean;  // Modo criação
-  pdfFile?: File;        // Arquivo PDF para upload (modo criação)
+  isCreating?: boolean;
+  pdfFile?: File;
 }
 
 const STATUS_OPTIONS: Array<{ value: StatusTemplate; label: string; variant: 'default' | 'secondary' | 'destructive' }> = [
@@ -56,7 +57,6 @@ const STATUS_OPTIONS: Array<{ value: StatusTemplate; label: string; variant: 'de
 ];
 
 export default function TemplateInfoPopover({
-  trigger,
   open,
   onOpenChange,
   template,
@@ -78,7 +78,7 @@ export default function TemplateInfoPopover({
 
   const handleOpenPreview = () => {
     if (!formData.conteudo_markdown.trim()) {
-      toast.error('Adicione conteúdo Markdown para visualizar');
+      toast.error('Adicione conteudo Markdown para visualizar');
       return;
     }
     setPreviewContent(formData.conteudo_markdown);
@@ -91,13 +91,12 @@ export default function TemplateInfoPopover({
     formData.status !== template.status ||
     formData.conteudo_markdown !== (template.conteudo_markdown || '')
   ) : (
-    // Modo criação: validar se tem dados mínimos
     formData.nome.trim() !== ''
   );
 
   const handleSave = async () => {
     if (!formData.nome.trim()) {
-      toast.error('Nome do template é obrigatório');
+      toast.error('Nome do template e obrigatorio');
       return;
     }
 
@@ -110,9 +109,8 @@ export default function TemplateInfoPopover({
     setIsSaving(true);
     try {
       if (isCreating) {
-        // Modo criação: fazer upload via FormData
         if (!pdfFile) {
-          toast.error('Arquivo PDF é obrigatório');
+          toast.error('Arquivo PDF e obrigatorio');
           return;
         }
 
@@ -138,13 +136,11 @@ export default function TemplateInfoPopover({
         const result = await response.json();
         toast.success('Template criado com sucesso!');
 
-        // Chamar onUpdate com o template criado para que o editor possa atualizar
         await onUpdate(result.data);
         onOpenChange(false);
       } else {
-        // Modo edição: enviar payload completo com TODAS as colunas da tabela templates
         if (!template) {
-          toast.error('Template não encontrado');
+          toast.error('Template nao encontrado');
           return;
         }
 
@@ -163,7 +159,7 @@ export default function TemplateInfoPopover({
           criado_por: template.criado_por,
         });
 
-        toast.success('Informações do template atualizadas com sucesso!');
+        toast.success('Informacoes do template atualizadas com sucesso!');
         onOpenChange(false);
       }
     } catch (error) {
@@ -177,7 +173,6 @@ export default function TemplateInfoPopover({
   };
 
   const handleCancel = () => {
-    // Resetar formulário para valores originais
     if (template) {
       setFormData({
         nome: template.nome,
@@ -189,28 +184,18 @@ export default function TemplateInfoPopover({
     onOpenChange(false);
   };
 
-  /**
-   * Salvar conteúdo markdown diretamente no backend (sem segundo clique)
-   * Usado pelo MarkdownRichTextEditorDialog para salvamento imediato
-   *
-   * IMPORTANTE: Envia payload completo com todos os campos atualizáveis,
-   * não apenas o campo modificado. Isso garante consistência com n8n.
-   */
   const handleSaveMarkdownDirectly = async (markdown: string) => {
     if (isCreating) {
-      // Modo criação: apenas atualizar estado local, criação completa acontece em handleSave
       setFormData(prev => ({ ...prev, conteudo_markdown: markdown }));
-      toast.success('Conteúdo markdown atualizado');
+      toast.success('Conteudo markdown atualizado');
       return;
     }
 
     if (!template) {
-      toast.error('Template não encontrado');
+      toast.error('Template nao encontrado');
       return;
     }
 
-    // Modo edição: enviar payload completo com TODAS as colunas da tabela templates
-    // (exceto id, createdAt, updatedAt que são gerenciados pelo sistema)
     await onUpdate({
       template_uuid: template.template_uuid,
       nome: formData.nome,
@@ -226,153 +211,151 @@ export default function TemplateInfoPopover({
       criado_por: template.criado_por,
     });
 
-    // Atualizar estado local também
     setFormData(prev => ({ ...prev, conteudo_markdown: markdown }));
-    toast.success('Conteúdo markdown salvo com sucesso!');
+    toast.success('Conteudo markdown salvo com sucesso!');
   };
 
   return (
-    <Popover open={open} onOpenChange={onOpenChange}>
-      <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-      <PopoverContent
-        side="right"
-        sideOffset={12}
-        className="w-96 max-h-[85vh] overflow-auto p-4"
-      >
-        <div className="space-y-4">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              <h3 className="text-sm font-semibold">
-                {isCreating ? 'Informações do Novo Template' : 'Informações do Template'}
-              </h3>
+    <>
+      <Sheet open={open} onOpenChange={onOpenChange}>
+        <SheetContent side="right" className="w-96 overflow-auto p-4 pt-8">
+          <SheetHeader className="p-0">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                <SheetTitle className="text-sm font-semibold">
+                  {isCreating ? 'Informacoes do Novo Template' : 'Informacoes do Template'}
+                </SheetTitle>
+              </div>
+              {!isCreating && (
+                <Badge
+                  variant={STATUS_OPTIONS.find(s => s.value === formData.status)?.variant || 'default'}
+                  className="text-xs"
+                >
+                  {STATUS_OPTIONS.find(s => s.value === formData.status)?.label}
+                </Badge>
+              )}
             </div>
-            {!isCreating && (
-              <Badge
-                variant={STATUS_OPTIONS.find(s => s.value === formData.status)?.variant || 'default'}
-                className="text-xs"
-              >
-                {STATUS_OPTIONS.find(s => s.value === formData.status)?.label}
-              </Badge>
-            )}
-          </div>
+            <SheetDescription>Editar nome, descricao e status do template</SheetDescription>
+          </SheetHeader>
 
-          {/* Nome */}
-          <div className="space-y-2">
-            <Label htmlFor="template-nome" className="text-xs font-medium">
-              Nome do Template *
-            </Label>
-            <Input
-              id="template-nome"
-              value={formData.nome}
-              onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
-              className="h-9 text-sm"
-              placeholder="Ex: Contrato Apps - Uber 2024"
-            />
-          </div>
+          <div className="space-y-4 pt-4">
+            {/* Nome */}
+            <div className="space-y-2">
+              <Label htmlFor="template-nome" className="text-xs font-medium">
+                Nome do Template *
+              </Label>
+              <Input
+                id="template-nome"
+                value={formData.nome}
+                onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
+                className="h-9 text-sm"
+                placeholder="Ex: Contrato Apps - Uber 2024"
+              />
+            </div>
 
-          {/* Descrição */}
-          <div className="space-y-2">
-            <Label htmlFor="template-descricao" className="text-xs font-medium">
-              Descrição
-            </Label>
-            <Textarea
-              id="template-descricao"
-              value={formData.descricao}
-              onChange={(e) => setFormData(prev => ({ ...prev, descricao: e.target.value }))}
-              className="text-sm resize-none"
-              rows={3}
-              placeholder="Informações adicionais sobre o uso deste template (opcional)"
-            />
-          </div>
+            {/* Descricao */}
+            <div className="space-y-2">
+              <Label htmlFor="template-descricao" className="text-xs font-medium">
+                Descricao
+              </Label>
+              <Textarea
+                id="template-descricao"
+                value={formData.descricao}
+                onChange={(e) => setFormData(prev => ({ ...prev, descricao: e.target.value }))}
+                className="text-sm resize-none"
+                rows={3}
+                placeholder="Informacoes adicionais sobre o uso deste template (opcional)"
+              />
+            </div>
 
-          <Separator />
+            <Separator />
 
-          {/* Conteúdo Markdown */}
-          <div className="space-y-2">
-            <Label htmlFor="template-markdown" className="text-xs font-medium">
-              Conteúdo Markdown (Opcional)
-            </Label>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowMarkdownEditor(true)}
-                className="flex-1 gap-2"
-              >
-                <Edit className="h-4 w-4" />
-                {formData.conteudo_markdown.trim() === '' ? 'Adicionar Conteúdo' : 'Editar Conteúdo'}
-              </Button>
-              {formData.conteudo_markdown.trim() !== '' && (
+            {/* Conteudo Markdown */}
+            <div className="space-y-2">
+              <Label htmlFor="template-markdown" className="text-xs font-medium">
+                Conteudo Markdown (Opcional)
+              </Label>
+              <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleOpenPreview}
+                  onClick={() => setShowMarkdownEditor(true)}
                   className="flex-1 gap-2"
                 >
-                  <Eye className="h-4 w-4" />
-                  Pré-visualizar
+                  <Edit className="h-4 w-4" />
+                  {formData.conteudo_markdown.trim() === '' ? 'Adicionar Conteudo' : 'Editar Conteudo'}
                 </Button>
-              )}
+                {formData.conteudo_markdown.trim() !== '' && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleOpenPreview}
+                    className="flex-1 gap-2"
+                  >
+                    <Eye className="h-4 w-4" />
+                    Pre-visualizar
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Status */}
+            <div className="space-y-2">
+              <Label htmlFor="template-status" className="text-xs font-medium">
+                Status *
+              </Label>
+              <Select
+                value={formData.status}
+                onValueChange={(value: StatusTemplate) =>
+                  setFormData(prev => ({ ...prev, status: value }))
+                }
+              >
+                <SelectTrigger id="template-status" className="h-9">
+                  <SelectValue placeholder="Selecione o status" />
+                </SelectTrigger>
+                <SelectContent>
+                  {STATUS_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Acoes */}
+            <div className="flex gap-2 pt-2 border-t">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1"
+                onClick={handleCancel}
+                disabled={isSaving}
+              >
+                Cancelar
+              </Button>
+              <Button
+                size="sm"
+                className="flex-1 gap-2"
+                onClick={handleSave}
+                disabled={!hasChanges || isSaving}
+              >
+                {isSaving ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {isCreating ? 'Criando...' : 'Salvando...'}
+                  </>
+                ) : (
+                  isCreating ? 'Criar Template' : 'Salvar Alteracoes'
+                )}
+              </Button>
             </div>
           </div>
-
-          <Separator />
-
-          {/* Status */}
-          <div className="space-y-2">
-            <Label htmlFor="template-status" className="text-xs font-medium">
-              Status *
-            </Label>
-            <Select
-              value={formData.status}
-              onValueChange={(value: StatusTemplate) =>
-                setFormData(prev => ({ ...prev, status: value }))
-              }
-            >
-              <SelectTrigger id="template-status" className="h-9">
-                <SelectValue placeholder="Selecione o status" />
-              </SelectTrigger>
-              <SelectContent>
-                {STATUS_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Ações */}
-          <div className="flex gap-2 pt-2 border-t">
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex-1"
-              onClick={handleCancel}
-              disabled={isSaving}
-            >
-              Cancelar
-            </Button>
-            <Button
-              size="sm"
-              className="flex-1 gap-2"
-              onClick={handleSave}
-              disabled={!hasChanges || isSaving}
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  {isCreating ? 'Criando...' : 'Salvando...'}
-                </>
-              ) : (
-                isCreating ? 'Criar Template' : 'Salvar Alterações'
-              )}
-            </Button>
-          </div>
-        </div>
-      </PopoverContent>
+        </SheetContent>
+      </Sheet>
 
       <MarkdownRichTextEditorDialog
         open={showMarkdownEditor}
@@ -380,7 +363,7 @@ export default function TemplateInfoPopover({
         value={formData.conteudo_markdown}
         onChange={(markdown) => setFormData(prev => ({ ...prev, conteudo_markdown: markdown }))}
         formularios={[]}
-        title="Editar Conteúdo Markdown do Template"
+        title="Editar Conteudo Markdown do Template"
         onSaveToBackend={handleSaveMarkdownDirectly}
       />
 
@@ -389,12 +372,12 @@ export default function TemplateInfoPopover({
           <DialogHeader>
             <DialogTitle>Preview do Markdown</DialogTitle>
             <DialogDescription>
-              Visualização do conteúdo formatado (variáveis não são substituídas neste preview)
+              Visualizacao do conteudo formatado (variaveis nao sao substituidas neste preview)
             </DialogDescription>
           </DialogHeader>
-          
+
           <Separator />
-          
+
           <div className="prose prose-slate dark:prose-invert max-w-none">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
@@ -403,7 +386,7 @@ export default function TemplateInfoPopover({
               {previewContent}
             </ReactMarkdown>
           </div>
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowPreview(false)}>
               Fechar
@@ -411,6 +394,6 @@ export default function TemplateInfoPopover({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </Popover>
+    </>
   );
 }

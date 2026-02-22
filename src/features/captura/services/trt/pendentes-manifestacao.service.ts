@@ -144,7 +144,6 @@ export async function pendentesManifestacaoCapture(
     authResult = await autenticarPJE({
       credential: params.credential,
       config: params.config,
-      twofauthConfig: params.twofauthConfig,
       headless: true,
     });
 

@@ -267,7 +267,6 @@ export async function capturaCombinada(
     authResult = await autenticarPJE({
       credential: params.credential,
       config: params.config,
-      twofauthConfig: params.twofauthConfig,
       headless: true,
     });
 
