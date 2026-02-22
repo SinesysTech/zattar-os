@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Template, TemplateSignatario } from '../../../types/template.types';
+import type { Template, TemplateCampo, TemplateSignatario } from '../../../types/template.types';
 import type { EditorField, Signatario } from '../types';
 import { normalizeTemplateFields } from '../utils/template-helpers';
 
@@ -80,20 +80,29 @@ export function useTemplateLoader({
 
       try {
         // Normalize campos from backend to EditorField format
-        const campos = Array.isArray(template.campos) ? template.campos : [];
+        // campos can be a JSON string (from DB) or an array
+        let campos: TemplateCampo[];
+        if (Array.isArray(template.campos)) {
+          campos = template.campos;
+        } else if (typeof template.campos === 'string' && template.campos.trim()) {
+          try {
+            const parsed = JSON.parse(template.campos);
+            campos = Array.isArray(parsed) ? parsed : [];
+          } catch {
+            console.warn('[useTemplateLoader] Failed to parse campos JSON string');
+            campos = [];
+          }
+        } else {
+          campos = [];
+        }
         const editorFields = normalizeTemplateFields(campos);
 
         // Normalize signatarios from backend
         const signers = normalizeTemplateSigners(template.signatarios);
 
-        // DEBUG: Log loaded fields
-        console.log('[DEBUG LOAD] Total campos carregados:', editorFields.length);
-        console.log('[DEBUG LOAD] IDs únicos:', new Set(editorFields.map((f) => f.id)).size);
-        console.log(
-          '[DEBUG LOAD] Campos:',
-          editorFields.map((f) => ({ id: f.id, nome: f.nome, tipo: f.tipo }))
-        );
-        console.log('[DEBUG LOAD] Signatários carregados:', signers.length);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[useTemplateLoader] Loaded ${editorFields.length} fields, ${signers.length} signers`);
+        }
 
         setFields(editorFields);
         setInitialSigners(signers);

@@ -341,14 +341,10 @@ export function useNotificacoesRealtime(options?: {
       }
 
       isConnectingRef.current = true;
-      const startTime = Date.now();
 
       try {
-        // Validar que temos usuário (dados vêm do UserProvider)
+        // Aguardar dados do usuário (UserProvider pode não ter carregado ainda)
         if (!usuarioId) {
-          console.warn(
-            "⚠️ [Notificações Realtime] Usuário não disponível - Realtime desabilitado"
-          );
           isConnectingRef.current = false;
           return;
         }
@@ -359,9 +355,6 @@ export function useNotificacoesRealtime(options?: {
         }
 
         if (!sessionToken) {
-          console.warn(
-            "⚠️ [Notificações Realtime] Sessão inválida - ativando polling"
-          );
           setUsePolling(true);
           isConnectingRef.current = false;
           return;
@@ -456,8 +449,7 @@ export function useNotificacoesRealtime(options?: {
         );
 
         // Subscrever ao canal com tratamento de status
-        channel.subscribe((status, err) => {
-          const duration = Date.now() - startTime;
+        channel.subscribe((status) => {
           isConnectingRef.current = false;
 
           if (status === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
@@ -468,26 +460,9 @@ export function useNotificacoesRealtime(options?: {
             retryCountRef.current = 0;
             setUsePolling(false);
           } else if (status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
-            // Usar a função de extração para obter informações úteis do erro
-            const errorInfo = extractRealtimeErrorInfo(err);
-
-            console.warn("⚠️ [Notificações Realtime] Erro no canal:", {
-              status,
-              ...errorInfo,
-              channelName,
-              usuarioId,
-              duration,
-              tentativa: retryCountRef.current + 1,
-              maxTentativas: REALTIME_CONFIG.MAX_RETRIES,
-            });
-
             // Tentar reconectar com backoff exponencial
             scheduleRetry(isMounted);
           } else if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT) {
-            console.warn(
-              `⏱️ [Notificações Realtime] Timeout após ${duration}ms`,
-              { tentativa: retryCountRef.current + 1 }
-            );
             scheduleRetry(isMounted);
           } else if (status === REALTIME_SUBSCRIBE_STATES.CLOSED) {
             // CLOSED é disparado quando NÓS removemos o canal (cleanup).
@@ -496,15 +471,7 @@ export function useNotificacoesRealtime(options?: {
             // Retries já são tratados em CHANNEL_ERROR e TIMED_OUT.
           }
         });
-      } catch (error) {
-        const duration = Date.now() - startTime;
-        const errorInfo = extractRealtimeErrorInfo(error);
-
-        console.warn(
-          `⚠️ [Notificações Realtime] Falha ao configurar (tentativa ${retryCountRef.current + 1}): ${errorInfo.message}`,
-          { ...errorInfo, duration }
-        );
-
+      } catch {
         isConnectingRef.current = false;
         scheduleRetry(isMounted);
       }

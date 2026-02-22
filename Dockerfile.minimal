@@ -24,8 +24,7 @@ RUN --mount=type=cache,target=/root/.npm \
 FROM node:22-alpine AS builder
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV TURBOPACK=0
-ENV NEXT_DISABLE_TURBOPACK=1
+# Webpack é forçado via --webpack no script build:ci (package.json)
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .

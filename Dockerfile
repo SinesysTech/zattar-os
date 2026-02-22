@@ -128,8 +128,8 @@ ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHA
 # Economiza ~1min e ~2GB de memoria
 ENV NEXT_BUILD_LINT_DISABLED=1
 ENV SKIP_TYPE_CHECK=true
-ENV TURBOPACK=0
-ENV NEXT_DISABLE_TURBOPACK=1
+# Webpack é forçado via --webpack no script build:ci (package.json)
+# NÃO definir TURBOPACK=0 aqui — Next.js 16 rejeita múltiplas flags de bundler
 
 # Copiar dependencias do stage anterior
 COPY --from=deps /app/node_modules ./node_modules

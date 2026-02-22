@@ -132,7 +132,7 @@
 }
 
 .minimal-tiptap-editor .ProseMirror p {
-  @apply break-words;
+  @apply wrap-break-word;
 }
 
 .minimal-tiptap-editor .ProseMirror li .text-node:has(+ .list-node),
@@ -148,15 +148,15 @@
 
 .minimal-tiptap-editor .ProseMirror blockquote::before,
 .minimal-tiptap-editor .ProseMirror blockquote.is-empty::before {
-  @apply absolute bottom-0 left-0 top-0 h-full w-1 rounded-sm bg-[var(--color-accent-foreground)]/15 content-[''];
+  @apply absolute bottom-0 left-0 top-0 h-full w-1 rounded-sm bg-(--color-accent-foreground)/15 content-[''];
 }
 
 .minimal-tiptap-editor .ProseMirror hr {
-  @apply my-3 h-0.5 w-full border-none bg-[var(--mt-hr)];
+  @apply my-3 h-0.5 w-full border-none bg-(--mt-hr);
 }
 
 .minimal-tiptap-editor .ProseMirror-focused hr.ProseMirror-selectednode {
-  @apply rounded-full outline outline-2 outline-offset-1;
+  @apply rounded-full outline outline-offset-1;
 }
 
 .minimal-tiptap-editor .ProseMirror .ProseMirror-gapcursor {
@@ -182,7 +182,7 @@
 .minimal-tiptap-editor .ProseMirror .selection,
 .minimal-tiptap-editor .ProseMirror *::selection,
 ::selection {
-  @apply bg-[var(--primary)]/25;
+  @apply bg-(--primary)/25;
 }
 
 /* Override native selection when custom selection is present */
