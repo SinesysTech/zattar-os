@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
@@ -264,15 +264,15 @@ export default function FieldPropertiesPanel({
 
   if (!field) {
     return (
-      <Card className="h-full flex items-center justify-center">
-        <CardContent className="text-center space-y-2 py-12">
-          <Info className="h-12 w-12 text-muted-foreground mx-auto" />
-          <p className="text-sm font-medium">Nenhum campo selecionado</p>
-          <p className="text-xs text-muted-foreground">
+      <div className="h-full flex items-center justify-center border rounded-lg bg-card">
+        <div className="text-center space-y-2 px-6">
+          <Info className="size-10 text-muted-foreground/40 mx-auto" />
+          <p className="text-sm font-medium text-muted-foreground">Nenhum campo selecionado</p>
+          <p className="text-xs text-muted-foreground/70">
             Selecione um campo no canvas para editar suas propriedades
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
@@ -283,15 +283,16 @@ export default function FieldPropertiesPanel({
   const availableFields = allFieldIds.filter(id => id !== field.id);
 
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base">Propriedades do Campo</CardTitle>
-        <CardDescription className="text-xs">{field.label}</CardDescription>
-      </CardHeader>
+    <div className="h-full flex flex-col border rounded-lg bg-card">
+      <div className="shrink-0 px-4 pt-4 pb-3">
+        <h3 className="text-sm font-semibold">Propriedades do Campo</h3>
+        <p className="text-xs text-muted-foreground mt-0.5 truncate">{field.label}</p>
+      </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleApply)} className="flex-1 flex flex-col overflow-hidden">
-          <CardContent className="flex-1 overflow-y-auto space-y-3">
+          <ScrollArea className="flex-1">
+            <div className="px-4 space-y-3">
             {/* Seção Básico */}
             <Collapsible
               open={expandedSections.has('basico')}
@@ -818,7 +819,7 @@ export default function FieldPropertiesPanel({
                           variant="ghost"
                           size="icon-sm"
                           onClick={() => deleteOption(index)}
-                          className="text-red-600 hover:text-red-700 shrink-0"
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -954,7 +955,7 @@ export default function FieldPropertiesPanel({
                                 delete newMappings[entityField];
                                 setAutoFillMappings(newMappings);
                               }}
-                              className="text-red-600 hover:text-red-700"
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
@@ -971,15 +972,16 @@ export default function FieldPropertiesPanel({
                 </Collapsible>
               </>
             )}
-          </CardContent>
+          </div>
+          </ScrollArea>
 
-          <CardFooter className="border-t pt-4 flex gap-2">
+          <div className="shrink-0 border-t px-4 py-3 flex gap-2">
             <Button
               type="submit"
               size="sm"
               className="flex-1"
             >
-              <Save className="w-4 h-4 mr-2" />
+              <Save className="size-4" />
               Aplicar
             </Button>
             <Button
@@ -988,12 +990,12 @@ export default function FieldPropertiesPanel({
               size="sm"
               onClick={onDelete}
             >
-              <Trash2 className="w-4 h-4 mr-2" />
+              <Trash2 className="size-4" />
               Deletar
             </Button>
-          </CardFooter>
+          </div>
         </form>
       </Form>
-    </Card>
+    </div>
   );
 }

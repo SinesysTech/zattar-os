@@ -33,6 +33,7 @@ import {
   usePdfOperations,
   usePreview,
   useFieldOperations,
+  useTemplateFormularios,
 } from './hooks';
 
 // Extracted components
@@ -87,6 +88,9 @@ export default function FieldMappingEditor({
   const [fieldsWithHeightWarning, setFieldsWithHeightWarning] = useState<Set<string>>(new Set());
 
   // ===== Custom Hooks =====
+
+  // Formulario field names for variable insertion
+  const formularioFieldNames = useTemplateFormularios(template);
 
   // Template loading
   const {
@@ -780,7 +784,7 @@ export default function FieldMappingEditor({
             }
           }}
           fieldName={editingRichTextField.nome || ''}
-          formularios={[]}
+          formularios={formularioFieldNames}
           fieldWidth={editingRichTextField.posicao.width}
           fieldHeight={editingRichTextField.posicao.height}
           fontSize={editingRichTextField.estilo?.tamanho_fonte || 12}

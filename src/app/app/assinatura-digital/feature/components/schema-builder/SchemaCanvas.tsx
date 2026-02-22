@@ -4,7 +4,6 @@ import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -67,105 +66,82 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
   };
 
   return (
-    <Card
+    <div
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group transition-all",
-        isSelected && "border-2 border-primary shadow-md",
+        "group flex items-center gap-3 rounded-lg border bg-card px-3 py-2.5 transition-all",
+        isSelected ? "border-primary ring-1 ring-primary/20" : "border-transparent hover:border-border",
         isDragging && "opacity-50"
       )}
+      onClick={onSelect}
     >
-      <CardContent className="p-3 flex items-center gap-3">
-        <div
-          {...attributes}
-          {...listeners}
-          className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-primary transition-colors"
-        >
-          <GripVertical className="w-4 h-4" />
-        </div>
+      <div
+        {...attributes}
+        {...listeners}
+        className="cursor-grab active:cursor-grabbing text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+      >
+        <GripVertical className="size-4" />
+      </div>
 
-        {React.createElement(getFieldIcon(field.type), { className: "w-4 h-4 text-muted-foreground shrink-0" })}
+      {React.createElement(getFieldIcon(field.type), { className: "size-4 text-muted-foreground shrink-0" })}
 
-        <div className="flex-1 min-w-0">
-          <div className="font-medium text-sm truncate">{field.label}</div>
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-medium truncate">{field.label}</div>
+        {(field.validation?.required || field.conditional || (field.options && field.options.length > 0)) && (
           <div className="flex gap-1 mt-1 flex-wrap">
             {field.validation?.required && (
-              <Badge variant="destructive" className="text-xs">
+              <Badge variant="destructive" className="text-[10px] px-1.5 py-0">
                 Obrigatório
               </Badge>
             )}
             {field.conditional && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0">
                 Condicional
               </Badge>
             )}
             {field.options && field.options.length > 0 && (
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
                 {field.options.length} opções
               </Badge>
             )}
           </div>
-        </div>
+        )}
+      </div>
 
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  onClick={onSelect}
-                  aria-label="Editar campo"
-                >
-                  <Edit className="w-4 h-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Editar</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={(e) => { e.stopPropagation(); onDuplicate(); }}
+                aria-label="Duplicar campo"
+              >
+                <Copy className="size-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Duplicar</TooltipContent>
+          </Tooltip>
 
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  onClick={onDuplicate}
-                  aria-label="Duplicar campo"
-                >
-                  <Copy className="w-4 h-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Duplicar</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  onClick={onDelete}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                  aria-label="Deletar campo"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Deletar</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      </CardContent>
-    </Card>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                aria-label="Deletar campo"
+              >
+                <Trash2 className="size-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Deletar</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+    </div>
   );
 }
 
@@ -202,72 +178,61 @@ function DroppableSectionCard({
   const isSelected = selectedSectionId === section.id;
 
   return (
-    <Card
+    <div
       ref={setNodeRef}
       className={cn(
-        "transition-all cursor-pointer",
-        isOver && "border-2 border-dashed border-primary bg-primary/5",
-        isSelected && "border-2 border-primary shadow-md"
+        "rounded-xl border bg-card transition-all cursor-pointer",
+        isOver && "border-dashed border-primary bg-primary/5",
+        isSelected && !isOver && "border-primary/50 shadow-sm"
       )}
       onClick={() => onSectionSelect(section.id)}
     >
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-base">{section.title}</CardTitle>
-            {section.description && (
-              <CardDescription className="mt-1">{section.description}</CardDescription>
-            )}
-          </div>
-          <div className="flex items-center gap-1 shrink-0">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={onSectionEdit}
-                    aria-label="Editar seção"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Editar Seção</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={onSectionDelete}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                    aria-label="Deletar seção"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Deletar Seção</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+      <div className="flex items-start justify-between gap-3 px-4 pt-4 pb-3">
+        <div className="flex-1 min-w-0">
+          <h4 className="text-sm font-semibold">{section.title}</h4>
+          {section.description && (
+            <p className="text-xs text-muted-foreground mt-0.5">{section.description}</p>
+          )}
         </div>
-      </CardHeader>
+        <div className="flex items-center gap-0.5 shrink-0">
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={(e) => { e.stopPropagation(); onSectionEdit(); }}
+                  aria-label="Editar seção"
+                >
+                  <Edit className="size-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Editar Seção</TooltipContent>
+            </Tooltip>
 
-      <CardContent className="space-y-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={(e) => { e.stopPropagation(); onSectionDelete(); }}
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  aria-label="Deletar seção"
+                >
+                  <Trash2 className="size-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Deletar Seção</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      </div>
+
+      <div className="px-4 pb-4 space-y-1">
         {fields.length === 0 ? (
-          <div className="border-2 border-dashed rounded-lg p-8 text-center">
-            <AlertCircle className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground">Nenhum campo nesta seção</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Arraste campos da paleta para adicionar
-            </p>
+          <div className="border border-dashed rounded-lg p-6 text-center">
+            <AlertCircle className="size-6 text-muted-foreground/50 mx-auto mb-1.5" />
+            <p className="text-xs text-muted-foreground">Arraste campos da paleta para adicionar</p>
           </div>
         ) : (
           <SortableContext items={fields.map(f => f.id)} strategy={verticalListSortingStrategy}>
@@ -284,8 +249,8 @@ function DroppableSectionCard({
             ))}
           </SortableContext>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
@@ -302,23 +267,21 @@ export default function SchemaCanvas({
   onSectionDelete
 }: SchemaCanvasProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {schema.sections.length === 0 ? (
-        <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-12 gap-4">
-            <AlertCircle className="h-12 w-12 text-muted-foreground" />
-            <div className="text-center space-y-2">
-              <p className="text-sm font-medium">Nenhuma seção criada</p>
-              <p className="text-xs text-muted-foreground">
-                Clique em &quot;Adicionar Seção&quot; para começar
-              </p>
-            </div>
-            <Button onClick={onSectionAdd} size="sm">
-              <Plus className="w-4 h-4 mr-2" />
-              Adicionar Seção
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-16 gap-3">
+          <AlertCircle className="size-10 text-muted-foreground/40" />
+          <div className="text-center space-y-1">
+            <p className="text-sm font-medium text-muted-foreground">Nenhuma seção criada</p>
+            <p className="text-xs text-muted-foreground/70">
+              Clique abaixo para começar a construir o formulário
+            </p>
+          </div>
+          <Button onClick={onSectionAdd} size="sm">
+            <Plus className="size-4" />
+            Adicionar Seção
+          </Button>
+        </div>
       ) : (
         <>
           {schema.sections.map(section => (
@@ -337,10 +300,13 @@ export default function SchemaCanvas({
             />
           ))}
 
-          <Button onClick={onSectionAdd} variant="outline" className="w-full">
-            <Plus className="w-4 h-4 mr-2" />
+          <button
+            onClick={onSectionAdd}
+            className="w-full rounded-xl border border-dashed py-3 text-sm text-muted-foreground hover:border-primary/50 hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer"
+          >
+            <Plus className="size-4 inline-block mr-1.5 -mt-0.5" />
             Adicionar Seção
-          </Button>
+          </button>
         </>
       )}
     </div>

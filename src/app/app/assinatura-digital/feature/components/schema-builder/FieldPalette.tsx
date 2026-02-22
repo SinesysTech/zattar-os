@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
 import { FormFieldType } from '../../types/domain';
 import { getFieldIcon } from './SchemaCanvas';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -47,25 +47,23 @@ function DraggableFieldItem({ field }: DraggableFieldItemProps) {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Card
+          <div
             ref={setNodeRef}
             {...listeners}
             {...attributes}
             className={cn(
-              "cursor-grab active:cursor-grabbing border-2 border-dashed transition-all hover:border-primary hover:shadow-md p-0 gap-0",
+              "flex items-center gap-2 rounded-md border border-dashed border-border bg-card px-3 py-2 cursor-grab active:cursor-grabbing transition-colors hover:border-primary/50 hover:bg-accent/50",
               isDragging && "opacity-50 border-primary"
             )}
           >
-            <CardContent className="p-2.5 flex items-center gap-2 px-3">
-              <Icon className="w-4 h-4 text-muted-foreground shrink-0" />
-              <span className="text-sm font-medium truncate flex-1">{field.label}</span>
-              {field.badge && (
-                <Badge variant="secondary" className="text-xs shrink-0">
-                  {field.badge}
-                </Badge>
-              )}
-            </CardContent>
-          </Card>
+            <Icon className="size-4 text-muted-foreground shrink-0" />
+            <span className="text-sm truncate flex-1">{field.label}</span>
+            {field.badge && (
+              <Badge variant="secondary" className="text-[10px] px-1.5 py-0 shrink-0">
+                {field.badge}
+              </Badge>
+            )}
+          </div>
         </TooltipTrigger>
         <TooltipContent side="right">
           <p className="text-xs">{field.description}</p>
@@ -118,25 +116,25 @@ export default function FieldPalette() {
   })).filter(category => category.fields.length > 0);
 
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base">Campos Disponíveis</CardTitle>
-      </CardHeader>
-      <CardContent className="flex-1 flex flex-col gap-3 overflow-hidden">
-        <div className="relative shrink-0">
-          <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+    <div className="h-full flex flex-col border rounded-lg bg-card">
+      <div className="shrink-0 p-4 pb-3 space-y-3">
+        <h3 className="text-sm font-semibold text-foreground">Campos Disponíveis</h3>
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
             placeholder="Buscar campos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-8 h-9"
+            className="pl-8 h-8 text-sm"
           />
         </div>
+      </div>
 
-        <div className="flex-1 overflow-y-auto space-y-3">
+      <ScrollArea className="flex-1">
+        <div className="px-4 pb-4 space-y-1">
           {filteredCategories.length === 0 ? (
             <div className="text-center py-8 text-sm text-muted-foreground">
-              <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <Search className="size-8 mx-auto mb-2 opacity-50" />
               <p>Nenhum campo encontrado</p>
             </div>
           ) : (
@@ -150,17 +148,17 @@ export default function FieldPalette() {
                   open={isExpanded}
                   onOpenChange={() => toggleCategory(category.id)}
                 >
-                  <CollapsibleTrigger className="flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors">
-                    <CategoryIcon className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm font-medium flex-1 text-left">{category.label}</span>
+                  <CollapsibleTrigger className="flex items-center gap-2 w-full px-1 py-2 rounded-md hover:bg-accent/50 transition-colors">
+                    <CategoryIcon className="size-4 text-muted-foreground" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex-1 text-left">{category.label}</span>
                     <ChevronDown
                       className={cn(
-                        "w-4 h-4 text-muted-foreground transition-transform",
-                        isExpanded && "transform rotate-180"
+                        "size-3.5 text-muted-foreground transition-transform",
+                        isExpanded && "rotate-180"
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="pt-2 space-y-2">
+                  <CollapsibleContent className="pt-1 pb-2 space-y-1">
                     {category.fields.map(field => (
                       <DraggableFieldItem key={`${category.id}-${field.fieldName}`} field={field} />
                     ))}
@@ -170,7 +168,7 @@ export default function FieldPalette() {
             })
           )}
         </div>
-      </CardContent>
-    </Card>
+      </ScrollArea>
+    </div>
   );
 }
