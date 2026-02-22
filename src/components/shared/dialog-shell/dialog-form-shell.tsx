@@ -31,9 +31,9 @@ interface DialogFormShellProps {
    */
   children: React.ReactNode;
   /**
-   * Botões de ação do rodapé
-   * Deve incluir botões de ação (Salvar, Próximo, etc.)
-   * O botão Cancelar é opcional, mas recomendado se não houver outra forma de fechar
+   * Botões de ação do rodapé (Salvar, Próximo, Deletar, etc.)
+   * NÃO inclua botão Cancelar — o shell já renderiza um automaticamente à esquerda.
+   * O conteúdo passado aqui será posicionado à direita do footer.
    */
   footer?: React.ReactNode;
   /**

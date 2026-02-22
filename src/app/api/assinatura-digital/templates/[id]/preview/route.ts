@@ -26,14 +26,14 @@ export async function GET(
       return NextResponse.json({ error: 'Template não encontrado' }, { status: 404 });
     }
 
-    const pdfUrl = template.arquivo_original;
+    const pdfUrl = template.pdf_url || template.arquivo_original;
     if (!pdfUrl) {
       return NextResponse.json({ error: 'Template não possui PDF associado' }, { status: 404 });
     }
 
     // Determinar URL para fetch
     let fetchUrl = pdfUrl;
-    const bucket = process.env.B2_BUCKET;
+    const bucket = process.env.BACKBLAZE_BUCKET_NAME || process.env.B2_BUCKET;
 
     // Se a URL contém o bucket, gerar URL presigned para acesso
     if (bucket && pdfUrl.includes(`/${bucket}/`)) {
@@ -60,7 +60,7 @@ export async function GET(
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `inline; filename="${template.arquivo_nome || 'template.pdf'}"`,
+        'Content-Disposition': `inline; filename="${encodeURIComponent(template.arquivo_nome || 'template.pdf')}"`,
         'Cache-Control': 'public, max-age=3600',
       },
     });

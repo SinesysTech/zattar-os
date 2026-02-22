@@ -6,14 +6,7 @@ import { AlertCircle, Check, Loader2, Upload, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { DialogFormShell } from '@/components/shared/dialog-shell/dialog-form-shell';
 import PdfPreviewDynamic from '../pdf/PdfPreviewDynamic';
 const PdfPreview = PdfPreviewDynamic;
 
@@ -41,20 +34,20 @@ export default function ReplacePdfDialog({
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Validação de arquivo PDF
+  // Validacao de arquivo PDF
   const validateFile = useCallback((file: File): { isValid: boolean; error?: string } => {
     // Verificar tipo
     if (file.type !== 'application/pdf') {
       return { isValid: false, error: 'Apenas arquivos PDF são aceitos' };
     }
 
-    // Verificar tamanho (máximo 10MB)
+    // Verificar tamanho (maximo 10MB)
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
       return { isValid: false, error: 'Arquivo muito grande. Máximo 10MB' };
     }
 
-    // Verificar tamanho mínimo (10KB)
+    // Verificar tamanho minimo (10KB)
     const minSize = 10 * 1024; // 10KB
     if (file.size < minSize) {
       return { isValid: false, error: 'Arquivo muito pequeno. Mínimo 10KB' };
@@ -63,7 +56,7 @@ export default function ReplacePdfDialog({
     return { isValid: true };
   }, []);
 
-  // Configuração do dropzone
+  // Configuracao do dropzone
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return;
 
@@ -129,23 +122,45 @@ export default function ReplacePdfDialog({
     setIsUploading(true);
 
     try {
+      // 1. Upload do arquivo para o storage
       const formData = new FormData();
       formData.append('file', uploadedFile.file);
 
-      const response = await fetch(`/api/assinatura-digital/admin/templates/${templateId}/replace-pdf`, {
-        method: 'PUT',
+      const uploadResponse = await fetch('/api/assinatura-digital/templates/upload', {
+        method: 'POST',
         credentials: 'include',
         body: formData,
       });
 
-      if (response.status === 401) {
+      if (uploadResponse.status === 401) {
         toast.error('Sessão expirada. Faça login novamente.');
         return;
       }
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Erro ao substituir PDF do template');
+      if (!uploadResponse.ok) {
+        const error = await uploadResponse.json().catch(() => null);
+        throw new Error(error?.error || 'Erro ao fazer upload do PDF');
+      }
+
+      const uploadResult = await uploadResponse.json();
+      const { url, nome, tamanho } = uploadResult.data;
+
+      // 2. Atualizar template com a nova URL do PDF
+      const updateResponse = await fetch(`/api/assinatura-digital/templates/${templateId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          arquivo_original: url,
+          pdf_url: url,
+          arquivo_nome: nome,
+          arquivo_tamanho: tamanho,
+        }),
+      });
+
+      if (!updateResponse.ok) {
+        const error = await updateResponse.json().catch(() => null);
+        throw new Error(error?.error || 'Erro ao atualizar template com novo PDF');
       }
 
       toast.success('PDF substituído com sucesso!');
@@ -163,132 +178,110 @@ export default function ReplacePdfDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-        <DialogHeader>
-          <DialogTitle>Substituir PDF do Template</DialogTitle>
-          <DialogDescription>
-            Faça upload de um novo arquivo PDF. O arquivo atual será substituído permanentemente.
-          </DialogDescription>
-        </DialogHeader>
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Substituir PDF do Template"
+      maxWidth="2xl"
+      footer={
+        <Button
+          onClick={handleReplace}
+          disabled={!uploadedFile || !uploadedFile.isValid || isUploading}
+          className="gap-2"
+        >
+          {isUploading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Substituindo...
+            </>
+          ) : (
+            'Substituir PDF'
+          )}
+        </Button>
+      }
+    >
+      <div className="flex flex-col gap-3">
+        <p className="text-sm text-muted-foreground">
+          Faça upload de um novo arquivo PDF. O arquivo atual será substituído permanentemente.
+        </p>
 
-        <div className="flex-1 min-h-0 overflow-auto py-4">
-          {/* Upload de Novo PDF */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium">Novo PDF</h4>
-              {uploadedFile && (
-                <span className="text-xs text-muted-foreground">
-                  {uploadedFile.file.name} • {(uploadedFile.file.size / 1024 / 1024).toFixed(2)} MB
-                </span>
-              )}
+        {!uploadedFile ? (
+          <div
+            {...getRootProps()}
+            className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors flex flex-col items-center justify-center min-h-50 ${
+              isDragActive
+                ? 'border-primary bg-primary/5'
+                : 'border-input hover:border-primary/50'
+            }`}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input {...getInputProps()} ref={fileInputRef} className="hidden" />
+            <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+            <p className="text-sm font-medium mb-1">
+              {isDragActive ? 'Solte o arquivo aqui' : 'Arraste um PDF ou clique para selecionar'}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Apenas arquivos PDF, máximo 10MB
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Indicador de arquivo selecionado */}
+            <div className="border rounded-lg p-3 bg-card">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <div className={`shrink-0 p-1.5 rounded-full ${
+                    uploadedFile.isValid
+                      ? 'bg-success/10'
+                      : 'bg-destructive/10'
+                  }`}>
+                    {uploadedFile.isValid ? (
+                      <Check className="h-4 w-4 text-success" />
+                    ) : (
+                      <AlertCircle className="h-4 w-4 text-destructive" />
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium truncate">{uploadedFile.file.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {(uploadedFile.file.size / 1024 / 1024).toFixed(2)} MB
+                    </p>
+                    {!uploadedFile.isValid && uploadedFile.error && (
+                      <p className="text-xs text-destructive mt-0.5">{uploadedFile.error}</p>
+                    )}
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={removeFile}
+                  disabled={isUploading}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
-            {!uploadedFile ? (
-              <div className="flex-1 min-h-[400px] flex items-center justify-center">
-                <div
-                  {...getRootProps()}
-                  className={`w-full h-full border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors flex flex-col items-center justify-center ${
-                    isDragActive
-                      ? 'border-primary bg-primary/5'
-                      : 'border-input hover:border-primary/50'
-                  }`}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <input {...getInputProps()} ref={fileInputRef} className="hidden" />
-                  <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-sm font-medium mb-1">
-                    {isDragActive ? 'Solte o arquivo aqui' : 'Arraste um PDF ou clique para selecionar'}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Apenas arquivos PDF, máximo 10MB
-                  </p>
-                </div>
+            {/* Preview do novo PDF */}
+            {uploadedFile.isValid && (
+              <div className="min-h-87.5 bg-muted/30 rounded-lg overflow-hidden">
+                <PdfPreview
+                  pdfUrl={uploadedFile.preview}
+                  initialZoom={0.8}
+                  showControls={true}
+                  showPageIndicator={true}
+                  maxHeight="100%"
+                  renderTextLayer={false}
+                  renderAnnotationLayer={false}
+                  onLoadError={(error) => {
+                    toast.error(`Erro ao carregar preview: ${error.message}`);
+                  }}
+                />
               </div>
-            ) : (
-              <>
-                {/* Indicador de arquivo selecionado */}
-                <div className="border rounded-lg p-3 bg-card">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2 min-w-0 flex-1">
-                      <div className={`shrink-0 p-1.5 rounded-full ${
-                        uploadedFile.isValid
-                          ? 'bg-success/10'
-                          : 'bg-destructive/10'
-                      }`}>
-                        {uploadedFile.isValid ? (
-                          <Check className="h-4 w-4 text-success" />
-                        ) : (
-                          <AlertCircle className="h-4 w-4 text-destructive" />
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium truncate">{uploadedFile.file.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {(uploadedFile.file.size / 1024 / 1024).toFixed(2)} MB
-                        </p>
-                        {!uploadedFile.isValid && uploadedFile.error && (
-                          <p className="text-xs text-destructive mt-0.5">{uploadedFile.error}</p>
-                        )}
-                      </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={removeFile}
-                      disabled={isUploading}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Preview do novo PDF */}
-                {uploadedFile.isValid && (
-                  <div className="flex-1 min-h-[350px] bg-muted/30 rounded-lg overflow-hidden">
-                    <PdfPreview
-                      pdfUrl={uploadedFile.preview}
-                      initialZoom={0.8}
-                      showControls={true}
-                      showPageIndicator={true}
-                      maxHeight="100%"
-                      renderTextLayer={false}
-                      renderAnnotationLayer={false}
-                      onLoadError={(error) => {
-                        toast.error(`Erro ao carregar preview: ${error.message}`);
-                      }}
-                    />
-                  </div>
-                )}
-              </>
             )}
-          </div>
-        </div>
-
-        <DialogFooter className="shrink-0">
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={isUploading}
-          >
-            Cancelar
-          </Button>
-          <Button
-            onClick={handleReplace}
-            disabled={!uploadedFile || !uploadedFile.isValid || isUploading}
-            className="gap-2"
-          >
-            {isUploading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Substituindo...
-              </>
-            ) : (
-              'Substituir PDF'
-            )}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          </>
+        )}
+      </div>
+    </DialogFormShell>
   );
 }

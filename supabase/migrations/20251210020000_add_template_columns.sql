@@ -11,7 +11,7 @@ comment on column public.assinatura_digital_templates.tipo_template is 'Tipo do 
 
 -- Adicionar coluna segmento_id para vincular templates a segmentos
 alter table public.assinatura_digital_templates
-  add column if not exists segmento_id bigint references public.assinatura_digital_segmentos(id);
+  add column if not exists segmento_id bigint references public.segmentos(id);
 
 comment on column public.assinatura_digital_templates.segmento_id is 'ID do segmento associado ao template (null = template global)';
 

@@ -776,35 +776,23 @@ export function DocumentosTableWrapper({
         title="Confirmar Exclusão"
         maxWidth="md"
         footer={
-          <div className="flex justify-end gap-3">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setIsDeleteDialogOpen(false);
-                setDocumentoParaDeletar(null);
-              }}
-              disabled={isDeleting}
-            >
-              Cancelar
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDeletarDocumento}
-              disabled={isDeleting}
-            >
-              {isDeleting ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Deletando...
-                </>
-              ) : (
-                <>
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Deletar
-                </>
-              )}
-            </Button>
-          </div>
+          <Button
+            variant="destructive"
+            onClick={handleDeletarDocumento}
+            disabled={isDeleting}
+          >
+            {isDeleting ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Deletando...
+              </>
+            ) : (
+              <>
+                <Trash2 className="h-4 w-4 mr-2" />
+                Deletar
+              </>
+            )}
+          </Button>
         }
       >
         {documentoParaDeletar && (

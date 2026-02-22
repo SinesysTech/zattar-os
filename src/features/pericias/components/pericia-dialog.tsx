@@ -101,14 +101,9 @@ export function PericiaDialog({
       title="Editar perícia"
       maxWidth="lg"
       footer={
-        <div className="flex w-full justify-end gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
-            Cancelar
-          </Button>
-          <Button onClick={handleSave} disabled={isSaving || !pericia}>
-            {isSaving ? 'Salvando...' : 'Salvar'}
-          </Button>
-        </div>
+        <Button onClick={handleSave} disabled={isSaving || !pericia}>
+          {isSaving ? 'Salvando...' : 'Salvar'}
+        </Button>
       }
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

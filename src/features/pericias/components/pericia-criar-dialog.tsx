@@ -121,14 +121,9 @@ export function PericiaCriarDialog({
       title="Nova Perícia"
       maxWidth="lg"
       footer={
-        <div className="flex w-full justify-end gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
-            Cancelar
-          </Button>
-          <Button onClick={handleSave} disabled={isSaving || !isFormValid}>
-            {isSaving ? 'Criando...' : 'Criar Perícia'}
-          </Button>
-        </div>
+        <Button onClick={handleSave} disabled={isSaving || !isFormValid}>
+          {isSaving ? 'Criando...' : 'Criar Perícia'}
+        </Button>
       }
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

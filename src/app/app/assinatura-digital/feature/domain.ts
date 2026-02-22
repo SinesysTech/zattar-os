@@ -119,6 +119,7 @@ export const createTemplateSchema = z.object({
   campos: z.string().optional(),
   conteudo_markdown: z.string().optional().nullable(),
   criado_por: z.string().optional().nullable(),
+  pdf_url: z.string().optional().nullable(),
 });
 
 export const updateTemplateSchema = createTemplateSchema.partial();
@@ -329,6 +330,7 @@ export interface AssinaturaDigitalTemplate {
   arquivo_original: string;
   arquivo_nome: string;
   arquivo_tamanho: number;
+  pdf_url?: string | null;
   status: string;
   versao: number;
   ativo: boolean;

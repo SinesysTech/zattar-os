@@ -114,23 +114,43 @@ export default function TemplateInfoPopover({
           return;
         }
 
+        // 1. Upload do arquivo para o storage
         const formDataToSend = new FormData();
         formDataToSend.append('file', pdfFile);
-        formDataToSend.append('nome', formData.nome.trim());
-        formDataToSend.append('descricao', formData.descricao.trim());
-        if (formData.conteudo_markdown.trim()) {
-          formDataToSend.append('conteudo_markdown', formData.conteudo_markdown.trim());
-        }
 
-        const response = await fetch('/api/assinatura-digital/admin/templates', {
+        const uploadResponse = await fetch('/api/assinatura-digital/templates/upload', {
           method: 'POST',
           body: formDataToSend,
           credentials: 'include',
         });
 
+        if (!uploadResponse.ok) {
+          const error = await uploadResponse.json().catch(() => null);
+          throw new Error(error?.error || 'Erro ao fazer upload do PDF');
+        }
+
+        const uploadResult = await uploadResponse.json();
+        const { url, nome: arquivoNome, tamanho } = uploadResult.data;
+
+        // 2. Criar template com os dados do upload
+        const response = await fetch('/api/assinatura-digital/templates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            nome: formData.nome.trim(),
+            descricao: formData.descricao.trim() || null,
+            arquivo_original: url,
+            pdf_url: url,
+            arquivo_nome: arquivoNome,
+            arquivo_tamanho: tamanho,
+            conteudo_markdown: formData.conteudo_markdown.trim() || null,
+          }),
+        });
+
         if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error || 'Erro ao criar template');
+          const error = await response.json().catch(() => null);
+          throw new Error(error?.error || 'Erro ao criar template');
         }
 
         const result = await response.json();
