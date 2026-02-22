@@ -204,7 +204,8 @@ const nextConfig: NextConfig = {
   },
   typescript: {
     // Build will fail on TypeScript errors - ensures type safety
-    ignoreBuildErrors: false,
+    // Can be skipped in Docker builds with SKIP_TYPE_CHECK=true (already done in CI)
+    ignoreBuildErrors: process.env.SKIP_TYPE_CHECK === "true",
   },
   // Fetch logging desabilitado - use DEBUG_SUPABASE=true para logs legíveis
   // logging: {

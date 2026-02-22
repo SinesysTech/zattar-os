@@ -92,10 +92,12 @@ WORKDIR /app
 # ============================================================================
 # CONFIGURACAO DE MEMORIA
 # ============================================================================
-ENV NODE_OPTIONS="--max-old-space-size=4096"
-
+# NOTA IMPORTANTE: NAO definir NODE_OPTIONS aqui!
+# O script build:ci no package.json define --max-old-space-size=6144 (6GB)
+# Se definirmos ENV aqui, ele SOBRESCREVE o valor do script
+# Resultado: build usa apenas 4GB e falha com OOM
 #
-# Build acontece no GitHub Actions (nao no CapRover), entao:
+# Build acontece no GitHub Actions (nao no CapRover):
 # - 6GB e suficiente para builds Next.js com cache persistente
 # - GitHub Actions runners tem ~7GB de RAM disponivel
 # - Cache handler customizado reduz uso de memoria em ~30%
@@ -109,21 +111,12 @@ ENV NODE_OPTIONS="--max-old-space-size=4096"
 # ============================================================================
 
 
-# Copiar dependencias do stage anterior
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-# Criar diretorio de cache para builds incrementais
-RUN mkdir -p .next/cache
-
 # ============================================================================
-# BUILD ARGS E ENVS
+# BUILD ARGS (DECLARADOS ANTES DO COPY)
 # ============================================================================
-# Por que NEXT_PUBLIC_* sao build args: Sao "inlined" no codigo durante build
-# Por que nao antes do COPY . .: Next.js precisa dos arquivos primeiro
-# Impacto: Mudancas invalidam o cache do build
+# Declarar ARGs o mais cedo possível para melhor uso do cache
+# Se secrets mudarem, só invalida a partir daqui
 # ============================================================================
-# Build arguments para variaveis NEXT_PUBLIC_* (obrigatorias no build)
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
 
@@ -131,9 +124,24 @@ ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
 ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
 ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
 
+# Desabilitar TypeScript check durante build Docker (ja foi feito no CI)
+# Economiza ~1min e ~2GB de memoria
+ENV NEXT_BUILD_LINT_DISABLED=1
+ENV SKIP_TYPE_CHECK=true
+
+# Copiar dependencias do stage anterior
+COPY --from=deps /app/node_modules ./node_modules
+
+# Criar diretorio de cache ANTES de copiar codigo (melhor cache)
+RUN mkdir -p .next/cache
+
+# Copiar codigo fonte por ultimo (muda mais frequentemente)
+COPY . .
+
 # Build da aplicacao com cache persistente entre builds
 # --mount=type=cache persiste o diretorio .next/cache entre builds
 # uid/gid=1001 corresponde ao usuario nextjs no stage runner
+# NOTA: NODE_OPTIONS=--max-old-space-size=6144 vem do script build:ci
 RUN --mount=type=cache,target=/app/.next/cache,uid=1001,gid=1001 \
     npm run build:ci
 

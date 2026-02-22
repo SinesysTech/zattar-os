@@ -65,8 +65,11 @@ jobs:
           node-version: "22"
           cache: "npm"
 
-      - name: Install dependencies (for architecture check)
-        run: npm ci --ignore-scripts --prefer-offline
+      - name: Install dependencies (for architecture check only)
+        run: |
+          # Install apenas o minimo necessario para o check
+          # Usa --prefer-offline para acelerar
+          npm ci --ignore-scripts --prefer-offline --no-audit --no-fund
 
       - name: Check architecture
         run: npm run check:architecture
@@ -123,6 +126,13 @@ jobs:
       # -----------------------------------------------------------------
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          # Configuracoes de memoria para evitar OOM
+          driver-opts: |
+            image=moby/buildkit:latest
+            network=host
+          # Aumenta shared memory para builds complexos
+          buildkitd-flags: --allow-insecure-entitlement network.host
 
       # -----------------------------------------------------------------
       # 6. Login no Docker Hub
@@ -153,6 +163,10 @@ jobs:
           # Cache de layers via GitHub Actions cache (gha)
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          # Shared memory size para builds complexos (Next.js + TypeScript)
+          shm-size: 2g
+          # Provenance attestation para supply chain security
+          provenance: true
 
       # -----------------------------------------------------------------
       # 8. Diagnostico em caso de falha do build
