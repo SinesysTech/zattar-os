@@ -42,20 +42,6 @@ async function getTemplate(id: string): Promise<Template> {
     throw new Error('Resposta inválida do servidor.');
   }
 
-  // Log para debug do template carregado
-  console.log('[EDIT PAGE] Template carregado:', {
-    id,
-    templateId: template.id,
-    templateUuid: template.template_uuid,
-    nome: template.nome,
-    hasCampos: template.campos !== undefined && template.campos !== null,
-    camposType: typeof template.campos,
-    camposLength: Array.isArray(template.campos) ? template.campos.length : 'not_array',
-    camposSample: Array.isArray(template.campos) ? template.campos.slice(0, 2) : template.campos,
-  });
-
-  // Normalize campos array
-  template.campos = template.campos || [];
   return template as Template;
 }
 
@@ -90,16 +76,6 @@ export default function EditTemplatePage({ params }: PageProps) {
 
     const fetchTemplate = async () => {
       try {
-        // Log para debug do ID recebido
-        console.log('[EDIT PAGE] Carregando template com ID:', {
-          id,
-          idType: typeof id,
-          isUndefined: id === undefined,
-          isNull: id === null,
-          isEmpty: id === '',
-          isString: typeof id === 'string',
-        });
-
         // Validar ID antes de fazer a requisição
         if (!id || id === 'undefined' || id === 'null' || id === '') {
           throw new Error('ID de template inválido. Retorne à lista de templates e tente novamente.');

@@ -87,6 +87,11 @@ export function RichTextEditor({ value, onChange, formularios }: RichTextEditorP
     },
     // Evitar hydration mismatch em SSR/Next.js
     immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        class: 'outline-none min-h-40 cursor-text',
+      },
+    },
   });
 
   // Sync editor content when value prop changes

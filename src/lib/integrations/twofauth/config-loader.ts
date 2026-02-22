@@ -1,9 +1,13 @@
 /**
  * Config Loader - 2FAuth
  * Carrega configuração do banco de dados
+ *
+ * Usa createServiceClient (secret key) em vez de createClient (cookies)
+ * porque esta função é chamada em contextos background (capturas assíncronas)
+ * onde cookies do request HTTP não estão disponíveis.
  */
 
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service-client";
 import type { TwoFAuthConfig } from "./types";
 
 /**
@@ -11,7 +15,7 @@ import type { TwoFAuthConfig } from "./types";
  */
 export async function load2FAuthConfig(): Promise<TwoFAuthConfig | null> {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     // Buscar integração 2FAuth ativa
     const { data, error } = await supabase

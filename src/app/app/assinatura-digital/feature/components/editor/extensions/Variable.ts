@@ -44,8 +44,16 @@ export const Variable = Node.create({
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
-    return ['span', mergeAttributes(HTMLAttributes, { class: 'variable' }), 0];
+  renderHTML({ node, HTMLAttributes }) {
+    return [
+      'span',
+      mergeAttributes(HTMLAttributes, {
+        class: 'variable',
+        style:
+          'background-color: #ede9fe; color: #6d28d9; padding: 1px 6px; border-radius: 4px; font-size: 0.85em; font-family: monospace; white-space: nowrap;',
+      }),
+      `{{${node.attrs.key}}}`,
+    ];
   },
 
   renderText({ node }) {

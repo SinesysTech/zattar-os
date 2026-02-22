@@ -32,6 +32,10 @@
     {
       "name": "@custom-variant",
       "description": "Tailwind CSS v4 directive to define custom variant modifiers."
+    },
+    {
+      "name": "@reference",
+      "description": "Tailwind CSS v4 directive to reference design tokens and utilities from another stylesheet."
     }
   ]
 }
