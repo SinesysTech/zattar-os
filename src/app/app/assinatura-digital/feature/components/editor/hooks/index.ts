@@ -18,3 +18,4 @@ export { usePreview } from './use-preview';
 export { useFieldOperations } from './use-field-operations';
 export { useSigners } from './use-signers';
 export { usePaletteDrag } from './use-palette-drag';
+export { useTemplateFormularios } from './use-template-formularios';

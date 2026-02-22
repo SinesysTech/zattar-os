@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+
 import { toast } from 'sonner';
 import { DynamicFormSchema, FormFieldSchema, FormSectionSchema, FormFieldType } from '../../';
 import { validateFormSchema } from '../../utils';
@@ -16,8 +16,10 @@ import DynamicFormRenderer from '../form/dynamic-form-renderer';
 import FieldPalette from './FieldPalette';
 import SchemaCanvas, { getFieldIcon } from './SchemaCanvas';
 import FieldPropertiesPanel from './FieldPropertiesPanel';
-import { Eye, Code, Save, X, AlertTriangle } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Eye, Code, Save, X, AlertTriangle, Pencil } from 'lucide-react';
+
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface FormSchemaBuilderProps {
   initialSchema?: DynamicFormSchema;
@@ -480,12 +482,10 @@ export function FormSchemaBuilder({
         : fieldType;
 
       return (
-        <Card className="bg-card border-2 border-primary shadow-lg opacity-90 w-64">
-          <CardContent className="p-3 flex items-center gap-2">
-            <Icon className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm font-medium capitalize">{label}</span>
-          </CardContent>
-        </Card>
+        <div className="flex items-center gap-2 rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56">
+          <Icon className="size-4 text-muted-foreground" />
+          <span className="text-sm font-medium capitalize">{label}</span>
+        </div>
       );
     }
 
@@ -495,12 +495,10 @@ export function FormSchemaBuilder({
       const Icon = getFieldIcon(field.type);
 
       return (
-        <Card className="bg-card border-2 border-primary shadow-lg opacity-90 w-64">
-          <CardContent className="p-3 flex items-center gap-2">
-            <Icon className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm font-medium">{field.label}</span>
-          </CardContent>
-        </Card>
+        <div className="flex items-center gap-2 rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56">
+          <Icon className="size-4 text-muted-foreground" />
+          <span className="text-sm font-medium">{field.label}</span>
+        </div>
       );
     }
 
@@ -510,54 +508,74 @@ export function FormSchemaBuilder({
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="shrink-0 flex items-center justify-between gap-4 pb-4 border-b">
-        <div className="flex items-center gap-3">
+      <div className="shrink-0 flex items-center justify-between pb-4">
+        <div className="flex items-center gap-2">
           <h2 className="text-lg font-semibold">{formularioNome}</h2>
           {isDirty && <Badge variant="outline">Não salvo</Badge>}
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleToggleMode}
-            disabled={isSaving}
-          >
-            {mode === 'edit' ? <Eye className="w-4 h-4 mr-2" /> : <Code className="w-4 h-4 mr-2" />}
-            {mode === 'edit' ? 'Preview' : 'Editar'}
-          </Button>
+        <TooltipProvider delayDuration={0}>
+          <div className="flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={handleToggleMode}
+                  disabled={isSaving}
+                  aria-label={mode === 'edit' ? 'Preview' : 'Editar'}
+                >
+                  {mode === 'edit' ? <Eye className="size-4" /> : <Pencil className="size-4" />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{mode === 'edit' ? 'Preview' : 'Editar'}</TooltipContent>
+            </Tooltip>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleShowJson}
-            disabled={isSaving}
-          >
-            <Code className="w-4 h-4 mr-2" />
-            Ver JSON
-          </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={handleShowJson}
+                  disabled={isSaving}
+                  aria-label="Ver JSON"
+                >
+                  <Code className="size-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Ver JSON</TooltipContent>
+            </Tooltip>
 
-          <Separator orientation="vertical" className="h-6" />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={handleCancel}
+                  disabled={isSaving}
+                  aria-label="Cancelar"
+                >
+                  <X className="size-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Cancelar</TooltipContent>
+            </Tooltip>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleCancel}
-            disabled={isSaving}
-          >
-            <X className="w-4 h-4 mr-2" />
-            Cancelar
-          </Button>
-
-          <Button
-            size="sm"
-            onClick={handleSave}
-            disabled={isSaving || !isDirty}
-          >
-            <Save className="w-4 h-4 mr-2" />
-            {isSaving ? 'Salvando...' : 'Salvar'}
-          </Button>
-        </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="icon-sm"
+                  onClick={handleSave}
+                  disabled={isSaving || !isDirty}
+                  aria-label={isSaving ? 'Salvando...' : 'Salvar'}
+                >
+                  <Save className="size-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{isSaving ? 'Salvando...' : 'Salvar'}</TooltipContent>
+            </Tooltip>
+          </div>
+        </TooltipProvider>
       </div>
 
       {/* Content */}
@@ -569,38 +587,36 @@ export function FormSchemaBuilder({
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >
-            <div className="h-full grid grid-cols-[250px_1fr_350px] gap-4">
+            <div className="h-full grid grid-cols-[250px_1fr_350px] gap-6">
               {/* Paleta */}
-              <div className="overflow-y-auto">
-                <FieldPalette />
-              </div>
+              <FieldPalette />
 
               {/* Canvas */}
-              <div className="overflow-y-auto border rounded-lg bg-muted/20 p-4">
-                <SchemaCanvas
-                  schema={schema}
-                  selectedFieldId={selectedFieldId}
-                  selectedSectionId={selectedSectionId}
-                  onFieldSelect={handleFieldSelect}
-                  onSectionSelect={setSelectedSectionId}
-                  onFieldDelete={handleFieldDelete}
-                  onFieldDuplicate={handleFieldDuplicate}
-                  onSectionAdd={handleSectionAdd}
-                  onSectionEdit={handleSectionEdit}
-                  onSectionDelete={handleSectionDelete}
-                />
-              </div>
+              <ScrollArea className="h-full">
+                <div className="p-4">
+                  <SchemaCanvas
+                    schema={schema}
+                    selectedFieldId={selectedFieldId}
+                    selectedSectionId={selectedSectionId}
+                    onFieldSelect={handleFieldSelect}
+                    onSectionSelect={setSelectedSectionId}
+                    onFieldDelete={handleFieldDelete}
+                    onFieldDuplicate={handleFieldDuplicate}
+                    onSectionAdd={handleSectionAdd}
+                    onSectionEdit={handleSectionEdit}
+                    onSectionDelete={handleSectionDelete}
+                  />
+                </div>
+              </ScrollArea>
 
               {/* Propriedades */}
-              <div className="overflow-y-auto">
-                <FieldPropertiesPanel
-                  field={selectedFieldId ? findFieldById(selectedFieldId) : null}
-                  allFieldIds={getAllFieldIds()}
-                  allFieldNames={getAllFieldNames()}
-                  onChange={handleFieldUpdate}
-                  onDelete={() => selectedFieldId && handleFieldDelete(selectedFieldId)}
-                />
-              </div>
+              <FieldPropertiesPanel
+                field={selectedFieldId ? findFieldById(selectedFieldId) : null}
+                allFieldIds={getAllFieldIds()}
+                allFieldNames={getAllFieldNames()}
+                onChange={handleFieldUpdate}
+                onDelete={() => selectedFieldId && handleFieldDelete(selectedFieldId)}
+              />
             </div>
 
             <DragOverlay>
@@ -611,12 +627,12 @@ export function FormSchemaBuilder({
           // Preview mode
           <div className="h-full overflow-y-auto">
             <div className="max-w-3xl mx-auto">
-              <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
-                <div className="flex items-center gap-2 text-sm text-blue-900 dark:text-blue-100">
-                  <Eye className="w-4 h-4" />
+              <div className="mb-4 p-3 bg-muted/50 border rounded-lg">
+                <div className="flex items-center gap-2 text-sm text-foreground">
+                  <Eye className="size-4 text-muted-foreground" />
                   <span className="font-medium">Preview do Formulário</span>
                 </div>
-                <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   Visualização de como o formulário será exibido aos usuários
                 </p>
               </div>

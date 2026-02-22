@@ -295,22 +295,25 @@ export function RichTextEditor({ value, onChange, formularios }: RichTextEditorP
               <CommandInput placeholder="Buscar variável..." />
               <CommandList>
                 <CommandEmpty>Nenhuma variável encontrada.</CommandEmpty>
-                {['comum', 'apps', 'trabalhista'].map((category: string) => {
-                  const categoryVariables = variables.filter((v: VariableOption) => v.category === category);
-                  if (categoryVariables.length === 0) return null;
-                  return (
-                    <CommandGroup key={category} heading={category.charAt(0).toUpperCase() + category.slice(1)}>
-                      {categoryVariables.map((variable: VariableOption) => (
-                        <CommandItem
-                          key={variable.value}
-                          onSelect={() => insertVariable(variable)}
-                        >
-                          {variable.label}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  );
-                })}
+                {Object.entries(
+                  variables.reduce<Record<string, VariableOption[]>>((groups, v) => {
+                    const group = v.label.split(':')[0]?.trim() || 'Outros';
+                    if (!groups[group]) groups[group] = [];
+                    groups[group].push(v);
+                    return groups;
+                  }, {})
+                ).map(([group, groupVars]) => (
+                  <CommandGroup key={group} heading={group}>
+                    {groupVars.map((variable: VariableOption) => (
+                      <CommandItem
+                        key={variable.value}
+                        onSelect={() => insertVariable(variable)}
+                      >
+                        {variable.label}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                ))}
               </CommandList>
             </Command>
           </PopoverContent>
@@ -318,7 +321,7 @@ export function RichTextEditor({ value, onChange, formularios }: RichTextEditorP
       </div>
 
       {/* Editor */}
-      <div className="p-4 min-h-[200px]">
+      <div className="p-4 min-h-50">
         <EditorContent editor={editor} />
       </div>
     </div>

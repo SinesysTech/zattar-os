@@ -116,7 +116,7 @@ export function FormularioSelect({
                 <div className="flex items-center gap-2">
                   <span>{formulario.nome}</span>
                   {formulario.descricao && (
-                    <span className="text-xs text-muted-foreground truncate max-w-[200px]">
+                    <span className="text-xs text-muted-foreground truncate max-w-50">
                       {formulario.descricao}
                     </span>
                   )}
