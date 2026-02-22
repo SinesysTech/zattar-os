@@ -160,9 +160,9 @@ jobs:
           build-args: |
             NEXT_PUBLIC_SUPABASE_URL=${{ env.NEXT_PUBLIC_SUPABASE_URL }}
             NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${{ env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY }}
-          # Cache de layers via GitHub Actions cache (gha)
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # Cache de layers via registry (alternativa ao gha cache)
+          cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache,mode=max
           # Shared memory size para builds complexos (Next.js + TypeScript)
           shm-size: 2g
           # Provenance attestation para supply chain security
