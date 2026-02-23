@@ -14,7 +14,9 @@ export interface TemplateBasico {
   nome: string;
   ativo: boolean;
   arquivo_original: string;
+  pdf_url?: string | null;
   campos: string;
+  conteudo_markdown?: string | null;
 }
 
 export interface FormularioBasico {
@@ -63,7 +65,7 @@ export async function getTemplateBasico(id: string): Promise<TemplateBasico | nu
   const parsed = parseTemplateId(id);
   const { data, error } = await supabase
     .from('assinatura_digital_templates')
-    .select('id, template_uuid, nome, ativo, arquivo_original, campos')
+    .select('id, template_uuid, nome, ativo, arquivo_original, pdf_url, campos, conteudo_markdown')
     .eq(parsed.column, parsed.value)
     .single();
 

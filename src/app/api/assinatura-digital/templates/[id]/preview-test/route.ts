@@ -116,6 +116,7 @@ export async function POST(
       nome: template.nome,
       ativo: template.ativo,
       arquivo_original: template.arquivo_original,
+      pdf_url: template.pdf_url,
       campos: JSON.stringify(finalCampos),
       conteudo_markdown: template.conteudo_markdown,
     };

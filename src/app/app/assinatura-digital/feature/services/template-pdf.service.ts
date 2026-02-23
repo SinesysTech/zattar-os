@@ -197,7 +197,17 @@ function formatValue(tipo: string, raw: string) {
 }
 
 async function loadTemplatePdf(url: string): Promise<Uint8Array> {
-  const res = await fetch(url);
+  let fetchUrl = url;
+
+  // Se a URL é do Backblaze (bucket privado), gerar presigned URL
+  const bucket = process.env.BACKBLAZE_BUCKET_NAME || process.env.B2_BUCKET;
+  if (bucket && url.includes(`/${bucket}/`)) {
+    const { generatePresignedUrl } = await import('@/lib/storage/backblaze-b2.service');
+    const fileKey = url.split(`/${bucket}/`)[1];
+    fetchUrl = await generatePresignedUrl(fileKey, 3600);
+  }
+
+  const res = await fetch(fetchUrl);
   if (!res.ok) {
     throw new Error(
       `Falha ao baixar template PDF: ${res.status} ${res.statusText}`
@@ -289,7 +299,8 @@ export async function generatePdfFromTemplate(
 ): Promise<Buffer> {
   const pdfLib = await loadPdfLib();
   const tpl = parseCampos(template);
-  const pdfBytes = await loadTemplatePdf(template.arquivo_original);
+  const pdfUrl = template.pdf_url || template.arquivo_original;
+  const pdfBytes = await loadTemplatePdf(pdfUrl);
   const pdfDoc = await pdfLib.PDFDocument.load(pdfBytes);
 
   const helvetica = await pdfDoc.embedFont(pdfLib.StandardFonts.Helvetica);
