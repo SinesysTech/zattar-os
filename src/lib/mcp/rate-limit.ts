@@ -37,9 +37,12 @@ export interface RateLimitResult {
 /**
  * Modo de falha quando Redis está indisponível
  * - 'closed': Bloqueia requisições (mais seguro)
- * - 'open': Permite requisições (mais disponível)
+ * - 'open': Permite requisições (mais disponível, padrão)
+ *
+ * Padrão alterado para 'open' porque fail-closed derruba a
+ * aplicação inteira quando o Redis está inacessível.
  */
-const FAIL_MODE = (process.env.RATE_LIMIT_FAIL_MODE || 'closed') as 'open' | 'closed';
+const FAIL_MODE = (process.env.RATE_LIMIT_FAIL_MODE || 'open') as 'open' | 'closed';
 
 const DEFAULT_LIMITS: Record<RateLimitTier, RateLimitConfig> = {
   anonymous: { windowMs: 60000, maxRequests: 5 }, // 5 req/min (reduzido de 10)

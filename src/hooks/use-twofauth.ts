@@ -74,21 +74,19 @@ export function useTwoFAuth(): UseTwoFAuthReturn {
 
   // Buscar lista de contas
   const fetchAccounts = useCallback(async () => {
-    if (permissionErrorRef.current) return;
-
     setIsLoading(true);
     setError(null);
+    setIsPermissionError(false);
 
     try {
       const response = await fetch("/api/twofauth/accounts");
       const data = await response.json();
 
       if (response.status === 401 || response.status === 403) {
-        permissionErrorRef.current = true;
         if (isMountedRef.current) {
           setIsPermissionError(true);
         }
-        throw new Error("Não autorizado. Verifique as configurações de API.");
+        throw new Error(data.error || "Não autorizado. Verifique as configurações de API.");
       }
 
       if (!response.ok) {

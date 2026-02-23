@@ -123,7 +123,7 @@ function criarColunas(
         return (
           <div className="min-h-10 flex items-center justify-start text-sm gap-2">
             <span>{displayName}</span>
-            {template.tipo_template === 'pdf' && !template.pdf_url && (
+            {template.tipo_template === 'pdf' && !template.pdf_url && !template.arquivo_original && (
               <Badge variant="outline" className="text-xs">
                 Sem PDF
               </Badge>

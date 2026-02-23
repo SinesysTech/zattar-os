@@ -165,6 +165,7 @@ export async function middleware(request: NextRequest) {
       '/api/templates',
       '/api/tipos-expedientes',
       '/api/tribunais',
+      '/api/twofauth',
       '/api/webhooks',
     ];
 

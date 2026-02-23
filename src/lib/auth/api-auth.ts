@@ -1,6 +1,7 @@
 // Utilitário de autenticação dual: Supabase Auth (front-end) + Bearer Token (API externa) + Service API Key (jobs do sistema)
 
 import { NextRequest } from "next/server";
+import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { createServiceClient } from "@/lib/supabase/service-client";
 import { getClientIp } from "@/lib/utils/get-client-ip";
@@ -202,19 +203,27 @@ export async function authenticateRequest(
   // getSession() pode retornar dados não autenticados do storage
   // getUser() valida os dados contactando o servidor Supabase Auth
   try {
-    // Criar cliente Supabase a partir dos cookies da requisição
-    // Isso é necessário porque em rotas de API não podemos usar cookies() do Next.js
+    // Criar cliente Supabase usando cookies() do next/headers
+    // Isso permite tanto leitura quanto escrita de cookies em Route Handlers,
+    // habilitando o refresh automático de tokens expirados
+    const cookieStore = await cookies();
+
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!,
       {
         cookies: {
           getAll() {
-            return request.cookies.getAll();
+            return cookieStore.getAll();
           },
-          setAll() {
-            // Em rotas de API, não podemos modificar cookies diretamente
-            // Os cookies serão gerenciados pelo middleware
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              );
+            } catch {
+              // Pode falhar em Server Components, mas em Route Handlers funciona
+            }
           },
         },
       },
