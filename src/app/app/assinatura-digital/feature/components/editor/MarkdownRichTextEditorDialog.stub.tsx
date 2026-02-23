@@ -28,8 +28,8 @@ export function MarkdownRichTextEditorDialog({
         <Alert>
           <Info className="h-4 w-4" />
           <AlertDescription>
-            Editor de Markdown será implementado em FORMSIGN-008.
-            Por enquanto, use o campo de texto simples.
+            Editor visual de Markdown em desenvolvimento.
+            Por enquanto, use o campo de texto simples na aba de informações do template.
           </AlertDescription>
         </Alert>
       </DialogContent>

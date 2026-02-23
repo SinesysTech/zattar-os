@@ -130,7 +130,7 @@ export default function PropertiesPopover({
             <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium hover:bg-muted/50">
               <div className="flex items-center gap-2">
                 <Info className="h-4 w-4" aria-hidden="true" />
-                <span>Informacoes gerais</span>
+                <span>Informações gerais</span>
               </div>
               <ChevronsUpDown className="h-4 w-4" aria-hidden="true" />
             </CollapsibleTrigger>
@@ -138,7 +138,7 @@ export default function PropertiesPopover({
               {/* Variavel selector (ocultar para texto_composto) */}
               {selectedField.tipo !== 'texto_composto' && (
                 <div className="space-y-2">
-                  <Label htmlFor="field-variavel" className="text-xs font-medium">Variavel</Label>
+                  <Label htmlFor="field-variavel" className="text-xs font-medium">Variável</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -146,7 +146,7 @@ export default function PropertiesPopover({
                         variant="outline"
                         role="combobox"
                         className="h-8 w-full justify-between text-sm font-normal"
-                        aria-label="Selecionar variavel vinculada ao campo"
+                        aria-label="Selecionar variável vinculada ao campo"
                       >
                         <span className="truncate">{selectedVariableLabel}</span>
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -154,9 +154,9 @@ export default function PropertiesPopover({
                     </PopoverTrigger>
                     <PopoverContent className="w-75 p-0">
                       <Command>
-                        <CommandInput placeholder="Buscar variavel..." />
+                        <CommandInput placeholder="Buscar variável..." />
                         <CommandList>
-                          <CommandEmpty>Nenhuma variavel encontrada.</CommandEmpty>
+                          <CommandEmpty>Nenhuma variável encontrada.</CommandEmpty>
                           {Object.entries(
                             AVAILABLE_VARIABLES.reduce(
                               (acc, item) => {
@@ -197,12 +197,12 @@ export default function PropertiesPopover({
                     </PopoverContent>
                   </Popover>
                   <p className="text-[11px] text-muted-foreground">
-                    O nome do campo sera automaticamente definido como o nome da variavel
+                    O nome do campo será automaticamente definido como o nome da variável
                   </p>
                 </div>
               )}
               <div className="space-y-2">
-                <Label htmlFor="field-ordem" className="text-xs font-medium">Ordem de Exibicao</Label>
+                <Label htmlFor="field-ordem" className="text-xs font-medium">Ordem de Exibição</Label>
                 <Input
                   id="field-ordem"
                   type="number"
@@ -233,7 +233,7 @@ export default function PropertiesPopover({
             <CollapsibleContent className="space-y-3 px-2 pt-2">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="field-pos-x" className="text-xs font-medium">Posicao X</Label>
+                  <Label htmlFor="field-pos-x" className="text-xs font-medium">Posição X</Label>
                   <Input
                     id="field-pos-x"
                     type="number"
@@ -250,7 +250,7 @@ export default function PropertiesPopover({
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="field-pos-y" className="text-xs font-medium">Posicao Y</Label>
+                  <Label htmlFor="field-pos-y" className="text-xs font-medium">Posição Y</Label>
                   <Input
                     id="field-pos-y"
                     type="number"
@@ -337,7 +337,7 @@ export default function PropertiesPopover({
 
                 <div className="space-y-2">
                   <Label htmlFor="font-family-select" className="text-xs font-medium">
-                    Familia da fonte
+                    Família da fonte
                   </Label>
                   <select
                     id="font-family-select"
@@ -351,7 +351,7 @@ export default function PropertiesPopover({
                       })
                     }
                     className="w-full h-8 text-sm rounded-md border border-input bg-background px-3 py-1"
-                    aria-label="Selecionar familia da fonte"
+                    aria-label="Selecionar família da fonte"
                   >
                     <option value="Helvetica">Helvetica</option>
                     <option value="Open Sans">Open Sans</option>
