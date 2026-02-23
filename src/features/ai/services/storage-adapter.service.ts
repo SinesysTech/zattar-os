@@ -9,7 +9,7 @@ export async function downloadFile(provider: StorageProvider, key: string): Prom
       const url = await getBackblazeUrl(key);
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`Falha ao baixar de Backblaze: ${response.statusText}`);
+        throw new Error(`Falha ao baixar de Backblaze: ${response.status} ${response.statusText || 'erro desconhecido'} (key: ${key})`);
       }
       const arrayBuffer = await response.arrayBuffer();
       return Buffer.from(arrayBuffer);
@@ -42,10 +42,17 @@ export function extractKeyFromUrl(url: string): string {
 
     // Backblaze B2
     if (urlObj.hostname.includes('backblazeb2.com')) {
-      // URL format: https://f005.backblazeb2.com/file/bucket-name/path/to/file.pdf
       const pathParts = urlObj.pathname.split('/');
-      // Remove /file/bucket-name e retorna o resto
-      return pathParts.slice(3).join('/');
+
+      // Formato B2 nativo: https://f005.backblazeb2.com/file/bucket-name/path/to/file.pdf
+      // pathname: /file/bucket-name/path/to/file.pdf → slice(3)
+      if (pathParts[1] === 'file') {
+        return pathParts.slice(3).join('/');
+      }
+
+      // Formato S3-compatible: https://s3.region.backblazeb2.com/bucket-name/path/to/file.pdf
+      // pathname: /bucket-name/path/to/file.pdf → slice(2)
+      return pathParts.slice(2).join('/');
     }
 
     // Supabase Storage

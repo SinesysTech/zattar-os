@@ -78,7 +78,7 @@ export default function TemplateInfoPopover({
 
   const handleOpenPreview = () => {
     if (!formData.conteudo_markdown.trim()) {
-      toast.error('Adicione conteudo Markdown para visualizar');
+      toast.error('Adicione conteúdo Markdown para visualizar');
       return;
     }
     setPreviewContent(formData.conteudo_markdown);
@@ -96,7 +96,7 @@ export default function TemplateInfoPopover({
 
   const handleSave = async () => {
     if (!formData.nome.trim()) {
-      toast.error('Nome do template e obrigatorio');
+      toast.error('Nome do template é obrigatório');
       return;
     }
 
@@ -110,7 +110,7 @@ export default function TemplateInfoPopover({
     try {
       if (isCreating) {
         if (!pdfFile) {
-          toast.error('Arquivo PDF e obrigatorio');
+          toast.error('Arquivo PDF é obrigatório');
           return;
         }
 
@@ -160,7 +160,7 @@ export default function TemplateInfoPopover({
         onOpenChange(false);
       } else {
         if (!template) {
-          toast.error('Template nao encontrado');
+          toast.error('Template não encontrado');
           return;
         }
 
@@ -179,7 +179,7 @@ export default function TemplateInfoPopover({
           criado_por: template.criado_por,
         });
 
-        toast.success('Informacoes do template atualizadas com sucesso!');
+        toast.success('Informações do template atualizadas com sucesso!');
         onOpenChange(false);
       }
     } catch (error) {
@@ -207,12 +207,12 @@ export default function TemplateInfoPopover({
   const handleSaveMarkdownDirectly = async (markdown: string) => {
     if (isCreating) {
       setFormData(prev => ({ ...prev, conteudo_markdown: markdown }));
-      toast.success('Conteudo markdown atualizado');
+      toast.success('Conteúdo Markdown atualizado');
       return;
     }
 
     if (!template) {
-      toast.error('Template nao encontrado');
+      toast.error('Template não encontrado');
       return;
     }
 
@@ -232,7 +232,7 @@ export default function TemplateInfoPopover({
     });
 
     setFormData(prev => ({ ...prev, conteudo_markdown: markdown }));
-    toast.success('Conteudo markdown salvo com sucesso!');
+    toast.success('Conteúdo Markdown salvo com sucesso!');
   };
 
   return (
@@ -244,7 +244,7 @@ export default function TemplateInfoPopover({
               <div className="flex items-center gap-2">
                 <FileText className="h-4 w-4" />
                 <SheetTitle className="text-sm font-semibold">
-                  {isCreating ? 'Informacoes do Novo Template' : 'Informacoes do Template'}
+                  {isCreating ? 'Informações do Novo Template' : 'Informações do Template'}
                 </SheetTitle>
               </div>
               {!isCreating && (
@@ -256,7 +256,7 @@ export default function TemplateInfoPopover({
                 </Badge>
               )}
             </div>
-            <SheetDescription>Editar nome, descricao e status do template</SheetDescription>
+            <SheetDescription>Editar nome, descrição e status do template</SheetDescription>
           </SheetHeader>
 
           <div className="space-y-4 pt-4">
@@ -277,7 +277,7 @@ export default function TemplateInfoPopover({
             {/* Descricao */}
             <div className="space-y-2">
               <Label htmlFor="template-descricao" className="text-xs font-medium">
-                Descricao
+                Descrição
               </Label>
               <Textarea
                 id="template-descricao"
@@ -285,7 +285,7 @@ export default function TemplateInfoPopover({
                 onChange={(e) => setFormData(prev => ({ ...prev, descricao: e.target.value }))}
                 className="text-sm resize-none"
                 rows={3}
-                placeholder="Informacoes adicionais sobre o uso deste template (opcional)"
+                placeholder="Informações adicionais sobre o uso deste template (opcional)"
               />
             </div>
 
@@ -294,7 +294,7 @@ export default function TemplateInfoPopover({
             {/* Conteudo Markdown */}
             <div className="space-y-2">
               <Label htmlFor="template-markdown" className="text-xs font-medium">
-                Conteudo Markdown (Opcional)
+                Conteúdo Markdown (Opcional)
               </Label>
               <div className="flex gap-2">
                 <Button
@@ -304,7 +304,7 @@ export default function TemplateInfoPopover({
                   className="flex-1 gap-2"
                 >
                   <Edit className="h-4 w-4" />
-                  {formData.conteudo_markdown.trim() === '' ? 'Adicionar Conteudo' : 'Editar Conteudo'}
+                  {formData.conteudo_markdown.trim() === '' ? 'Adicionar Conteúdo' : 'Editar Conteúdo'}
                 </Button>
                 {formData.conteudo_markdown.trim() !== '' && (
                   <Button
@@ -314,7 +314,7 @@ export default function TemplateInfoPopover({
                     className="flex-1 gap-2"
                   >
                     <Eye className="h-4 w-4" />
-                    Pre-visualizar
+                    Pré-visualizar
                   </Button>
                 )}
               </div>
@@ -369,7 +369,7 @@ export default function TemplateInfoPopover({
                     {isCreating ? 'Criando...' : 'Salvando...'}
                   </>
                 ) : (
-                  isCreating ? 'Criar Template' : 'Salvar Alteracoes'
+                  isCreating ? 'Criar Template' : 'Salvar Alterações'
                 )}
               </Button>
             </div>
@@ -383,7 +383,7 @@ export default function TemplateInfoPopover({
         value={formData.conteudo_markdown}
         onChange={(markdown) => setFormData(prev => ({ ...prev, conteudo_markdown: markdown }))}
         formularios={[]}
-        title="Editar Conteudo Markdown do Template"
+        title="Editar Conteúdo Markdown do Template"
         onSaveToBackend={handleSaveMarkdownDirectly}
       />
 
@@ -392,7 +392,7 @@ export default function TemplateInfoPopover({
           <DialogHeader>
             <DialogTitle>Preview do Markdown</DialogTitle>
             <DialogDescription>
-              Visualizacao do conteudo formatado (variaveis nao sao substituidas neste preview)
+              Visualização do conteúdo formatado (variáveis não são substituídas neste preview)
             </DialogDescription>
           </DialogHeader>
 
