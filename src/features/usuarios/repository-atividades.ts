@@ -17,11 +17,14 @@ export async function buscarEstatisticasAtividades(
 
   try {
     // Buscar contagens em paralelo
+    // Processos usa RPC count_processos_unicos para contar por numero_processo distinto
     const [processosRes, audienciasRes, pendentesRes, contratosRes] = await Promise.all([
-      supabase
-        .from('acervo')
-        .select('*', { count: 'exact', head: true })
-        .eq('responsavel_id', usuarioId),
+      supabase.rpc('count_processos_unicos', {
+        p_responsavel_id: usuarioId,
+        p_origem: null,
+        p_data_inicio: null,
+        p_data_fim: null,
+      }),
       supabase
         .from('audiencias')
         .select('*', { count: 'exact', head: true })
@@ -37,7 +40,7 @@ export async function buscarEstatisticasAtividades(
     ]);
 
     return {
-      processos: processosRes.count ?? 0,
+      processos: (processosRes.data as number) ?? 0,
       audiencias: audienciasRes.count ?? 0,
       pendentes: pendentesRes.count ?? 0,
       contratos: contratosRes.count ?? 0,
