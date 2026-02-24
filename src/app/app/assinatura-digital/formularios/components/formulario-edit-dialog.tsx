@@ -11,7 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Combobox } from '@/components/ui/combobox';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Loader2, X } from 'lucide-react';
+import { Loader2, Pencil, X } from 'lucide-react';
 import {
   generateSlug,
   type AssinaturaDigitalFormulario,
@@ -40,6 +40,7 @@ interface FormularioEditDialogProps {
   onOpenChange: (open: boolean) => void;
   formulario: AssinaturaDigitalFormulario | null;
   onSuccess: () => void;
+  onEditSchema: (formulario: AssinaturaDigitalFormulario) => void;
   segmentos: AssinaturaDigitalSegmento[];
   templates: AssinaturaDigitalTemplate[];
 }
@@ -49,6 +50,7 @@ export function FormularioEditDialog({
   onOpenChange,
   formulario,
   onSuccess,
+  onEditSchema,
   segmentos,
   templates,
 }: FormularioEditDialogProps) {
@@ -340,6 +342,22 @@ export function FormularioEditDialog({
           <Label htmlFor="edit-ativo" className="cursor-pointer">
             Formulário ativo
           </Label>
+        </div>
+
+        <div className="pt-2 border-t">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={() => {
+              onOpenChange(false);
+              onEditSchema(formulario);
+            }}
+            disabled={isSubmitting}
+          >
+            <Pencil className="mr-2 h-4 w-4" />
+            Editar campos do formulário
+          </Button>
         </div>
       </form>
     </DialogFormShell>

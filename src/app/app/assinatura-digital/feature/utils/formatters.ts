@@ -141,7 +141,9 @@ export const parseCEP = (cep: string): string => {
  * Formata data ISO para exibição brasileira: DD/MM/YYYY
  */
 export const formatData = (data: string | Date): string => {
+  if (!data) return '';
   const date = typeof data === 'string' ? new Date(data) : data;
+  if (isNaN(date.getTime())) return '';
   // Usa UTC para evitar deslocamento de fuso horário em datas sem hora
   return new Intl.DateTimeFormat('pt-BR', {
     day: '2-digit',

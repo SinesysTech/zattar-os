@@ -40,6 +40,22 @@ import {
   type ProcessoParaCaptura,
 } from '@/features/captura/services/partes/partes-capture.service';
 import { getCredentialByTribunalAndGrau } from '@/features/captura/credentials/credential.service';
+import { buscarProcessosPorIdsNoPainel } from '@/features/captura/services/trt/buscar-processos-painel.service';
+
+/**
+ * Converte data ISO string para timestamptz ou null
+ * Assume Brasília (UTC-3) para datas sem timezone explícito
+ */
+function parseDate(dateString: string | null | undefined): string | null {
+  if (!dateString) return null;
+  try {
+    const hasTimezone = /Z|[+-]\d{2}:\d{2}$/.test(dateString);
+    if (hasTimezone) return new Date(dateString).toISOString();
+    return new Date(dateString + '-03:00').toISOString();
+  } catch {
+    return null;
+  }
+}
 
 interface RecaptureResult {
   instanciaId: number;
@@ -51,6 +67,7 @@ interface RecaptureResult {
   totalDocumentos?: number;
   totalMovimentos?: number;
   partesCapturadas?: number;
+  dadosCapaAtualizados?: boolean;
 }
 
 /**
@@ -636,6 +653,56 @@ export async function recapturarTimelineUnificada(acervoId: number): Promise<Rec
 
               console.log(`[recapture] ✅ Partes persistidas e vínculos criados`);
             }
+          }
+
+          // FASE 3: Buscar e atualizar dados de capa do painel PJE
+          try {
+            const idAdvogado = parseInt(authResult.advogadoInfo.idAdvogado, 10);
+            if (!isNaN(idAdvogado)) {
+              console.log(`[recapture] 📋 Buscando dados de capa no painel PJE para ${inst.grau} (${inst.trt})...`);
+
+              const { processosPorOrigem } = await buscarProcessosPorIdsNoPainel(
+                authResult.page,
+                { idAdvogado, processosIds: [inst.id_pje] }
+              );
+
+              const processoAtualizado =
+                processosPorOrigem.acervo_geral.find(p => p.id === inst.id_pje) ||
+                processosPorOrigem.arquivado.find(p => p.id === inst.id_pje);
+
+              if (processoAtualizado) {
+                const classeJudicial = processoAtualizado.classeJudicial
+                  ? processoAtualizado.classeJudicial.trim()
+                  : 'Não informada';
+
+                const { error: updateCapaError } = await supabase
+                  .from('acervo')
+                  .update({
+                    classe_judicial: classeJudicial,
+                    descricao_orgao_julgador: processoAtualizado.descricaoOrgaoJulgador?.trim() || '',
+                    codigo_status_processo: processoAtualizado.codigoStatusProcesso?.trim() || '',
+                    data_autuacao: parseDate(processoAtualizado.dataAutuacao),
+                    segredo_justica: processoAtualizado.segredoDeJustica ?? false,
+                    prioridade_processual: processoAtualizado.prioridadeProcessual ?? 0,
+                    juizo_digital: processoAtualizado.juizoDigital ?? false,
+                    data_arquivamento: parseDate(processoAtualizado.dataArquivamento),
+                    data_proxima_audiencia: parseDate(processoAtualizado.dataProximaAudiencia),
+                    tem_associacao: processoAtualizado.temAssociacao ?? false,
+                  })
+                  .eq('id', inst.id);
+
+                if (updateCapaError) {
+                  console.error(`[recapture] ⚠️ Erro ao atualizar dados de capa:`, updateCapaError);
+                } else {
+                  resultado.dadosCapaAtualizados = true;
+                  console.log(`[recapture] ✅ Dados de capa atualizados para ${inst.grau}: classe=${classeJudicial}`);
+                }
+              } else {
+                console.warn(`[recapture] ⚠️ Processo ${inst.id_pje} não encontrado no painel PJE`);
+              }
+            }
+          } catch (capaError) {
+            console.warn(`[recapture] ⚠️ Erro ao buscar dados de capa (não-fatal):`, capaError);
           }
         } finally {
           // Sempre fechar o browser
