@@ -176,12 +176,7 @@ export {
   getAtivoBadgeTone,
   formatBooleanBadge,
   getBooleanBadgeVariant,
-  // Cliente adapters
-  mapClienteFormToCliente,
-  clienteSinesysToAssinaturaDigital,
 } from "./utils";
-
-export type { ClienteFormsignPayload } from "./utils";
 
 // =============================================================================
 // STORE

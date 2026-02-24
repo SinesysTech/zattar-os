@@ -85,13 +85,6 @@ export {
   validateSlug,
 } from "./slug-helpers";
 
-// Cliente Adapters
-export type { ClienteFormsignPayload } from "./cliente-adapters";
-export {
-  mapClienteFormToCliente,
-  clienteSinesysToAssinaturaDigital,
-} from "./cliente-adapters";
-
 // Rate Limiting - Server-only, import directly:
 // import { applyRateLimit, checkPublicRateLimit } from "@/app/app/assinatura-digital/feature/utils/rate-limit";
 

@@ -117,16 +117,6 @@ export type {
   TemplateCampo as TemplateCampoPdf, // Alias para retrocompatibilidade
 } from "./template.types";
 
-// Cliente adapter types and functions
-export type {
-  ClienteFormsignPayload,
-} from "./cliente-adapter.types";
-
-export {
-  mapClienteFormToCliente,
-  clienteSinesysToAssinaturaDigital,
-} from "./cliente-adapter.types";
-
 // Editor helper types and functions (from components/editor/editor-helpers.ts)
 // Note: These are re-exported for convenience, but the original source is in components
 export type {

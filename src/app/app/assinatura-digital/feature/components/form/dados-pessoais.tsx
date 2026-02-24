@@ -7,9 +7,6 @@ import { Info } from 'lucide-react';
 import {
   dadosPessoaisSchema,
   DadosPessoaisFormData,
-  getEstadoCivilText,
-  getGeneroText,
-  getNacionalidadeText,
 } from '../../validations/dados-pessoais.schema';
 import InputCPF from '../inputs/input-cpf';
 import { InputTelefone } from '@/components/ui/input-telefone';
@@ -43,7 +40,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { mapClienteFormToCliente } from '../../utils';
 import {
   TEXT_LIMITS,
   validateBirthDate,
@@ -243,29 +239,31 @@ export default function DadosPessoais() {
       return;
     }
 
-    const sanitizedForm: DadosPessoaisFormData = {
-      ...data,
-      cpf: rawCpf,
-      celular: localCelular,
-      telefone: data.telefone ? localTelefone : '',
-      cep: parseCEP(data.cep ?? ''),
-    };
-
     try {
       setIsSubmitting(true);
 
-      const mappedCliente = mapClienteFormToCliente(sanitizedForm);
-
       const payload = {
-        segmentoId,
         cpf: rawCpf,
         operation: dadosCPF?.clienteExistente ? 'update' : 'insert',
         clienteId: dadosCPF?.clienteId,
         dados: {
-          ...mappedCliente,
-          estado_civil_txt: getEstadoCivilText(data.estadoCivil),
-          genero_txt: getGeneroText(mappedCliente.genero),
-          nacionalidade_txt: getNacionalidadeText(mappedCliente.nacionalidade_id),
+          nome: data.name.trim(),
+          cpf: rawCpf,
+          email: data.email.trim(),
+          celular: localCelular,
+          telefone: localTelefone || undefined,
+          rg: data.rg?.trim() || undefined,
+          dataNascimento: data.dataNascimento,
+          cep: parseCEP(data.cep ?? ''),
+          logradouro: data.logradouro?.trim(),
+          numero: data.numero?.trim(),
+          complemento: data.complemento?.trim(),
+          bairro: data.bairro?.trim(),
+          cidade: data.cidade?.trim(),
+          estado: data.estado,
+          estadoCivil: data.estadoCivil,
+          genero: data.genero,
+          nacionalidade: data.nacionalidade,
         },
       };
 
