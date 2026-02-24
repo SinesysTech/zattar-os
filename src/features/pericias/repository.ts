@@ -143,6 +143,7 @@ export async function findAllPericias(
       );
     }
 
+    if (params.processoId) query = query.eq("processo_id", params.processoId);
     if (params.trt) query = query.eq("trt", params.trt);
     if (params.grau) query = query.eq("grau", params.grau);
     if (params.situacaoCodigo)

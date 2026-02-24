@@ -16,6 +16,7 @@ import {
   type TimelineUnificadaMetadata,
 } from '../hooks/use-processo-timeline';
 import { ProcessoHeader } from './processo-header';
+import { ProcessoDetailsTabs } from './processo-details-tabs';
 import { TimelineSidebar } from './timeline-sidebar';
 import { DocumentViewerPanel } from './document-viewer-panel';
 import { TimelineLoading } from './timeline-loading';
@@ -182,6 +183,12 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
         }
         onAtualizarTimeline={forceRecapture}
         isCapturing={isCapturing}
+      />
+
+      {/* Audiências, Expedientes e Perícias */}
+      <ProcessoDetailsTabs
+        processoId={processo.id}
+        numeroProcesso={processo.numeroProcesso}
       />
 
       {/* Estado: Capturando timeline */}
