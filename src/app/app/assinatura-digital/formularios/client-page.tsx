@@ -9,7 +9,7 @@ import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Copy, Trash2, Download, Pencil, Tags } from 'lucide-react';
+import { Copy, Trash2, Download, Pencil, Tags, SquarePen } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   AlertDialog,
@@ -36,6 +36,7 @@ import {
 } from '../feature';
 import { toast } from 'sonner';
 import { FormularioCreateDialog } from './components/formulario-create-dialog';
+import { FormularioEditDialog } from './components/formulario-edit-dialog';
 import { FormularioDuplicateDialog } from './components/formulario-duplicate-dialog';
 import { FormularioDeleteDialog } from './components/formulario-delete-dialog';
 import { SegmentoEditDialog, SegmentoDeleteDialog, SegmentoDuplicateDialog, SegmentosManagerDialog } from './components';
@@ -110,7 +111,7 @@ function useTemplates() {
   return { ...data, refetch: fetchTemplates };
 }
 
-function criarColunas(onEditSchema: (formulario: AssinaturaDigitalFormulario) => void, onDuplicate: (formulario: AssinaturaDigitalFormulario) => void, onDelete: (formulario: AssinaturaDigitalFormulario) => void, templates: AssinaturaDigitalTemplate[], canEdit: boolean, canCreate: boolean, canDelete: boolean): ColumnDef<AssinaturaDigitalFormulario>[] {
+function criarColunas(onEdit: (formulario: AssinaturaDigitalFormulario) => void, onEditSchema: (formulario: AssinaturaDigitalFormulario) => void, onDuplicate: (formulario: AssinaturaDigitalFormulario) => void, onDelete: (formulario: AssinaturaDigitalFormulario) => void, templates: AssinaturaDigitalTemplate[], canEdit: boolean, canCreate: boolean, canDelete: boolean): ColumnDef<AssinaturaDigitalFormulario>[] {
   return [
     { 
       accessorKey: 'nome', 
@@ -266,7 +267,7 @@ function criarColunas(onEditSchema: (formulario: AssinaturaDigitalFormulario) =>
         const formulario = row.original;
         return (
           <div className="flex items-center">
-            <FormularioActions formulario={formulario} onEditSchema={onEditSchema} onDuplicate={onDuplicate} onDelete={onDelete} canEdit={canEdit} canCreate={canCreate} canDelete={canDelete} />
+            <FormularioActions formulario={formulario} onEdit={onEdit} onEditSchema={onEditSchema} onDuplicate={onDuplicate} onDelete={onDelete} canEdit={canEdit} canCreate={canCreate} canDelete={canDelete} />
           </div>
         );
       }
@@ -276,6 +277,7 @@ function criarColunas(onEditSchema: (formulario: AssinaturaDigitalFormulario) =>
 
 function FormularioActions({
   formulario,
+  onEdit,
   onEditSchema,
   onDuplicate,
   onDelete,
@@ -284,6 +286,7 @@ function FormularioActions({
   canDelete,
 }: {
   formulario: AssinaturaDigitalFormulario;
+  onEdit: (formulario: AssinaturaDigitalFormulario) => void;
   onEditSchema: (formulario: AssinaturaDigitalFormulario) => void;
   onDuplicate: (formulario: AssinaturaDigitalFormulario) => void;
   onDelete: (formulario: AssinaturaDigitalFormulario) => void;
@@ -293,6 +296,22 @@ function FormularioActions({
 }) {
   return (
     <ButtonGroup>
+      {canEdit && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => onEdit(formulario)}
+            >
+              <SquarePen className="h-4 w-4" />
+              <span className="sr-only">Editar Formulário</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Editar Formulário</TooltipContent>
+        </Tooltip>
+      )}
       {canEdit && (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -368,6 +387,7 @@ export function FormulariosClient() {
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<FormulariosFilters>({});
   const [createOpen, setCreateOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
   const [duplicateOpen, setDuplicateOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [selectedFormulario, setSelectedFormulario] = React.useState<AssinaturaDigitalFormulario | null>(null);
@@ -405,6 +425,8 @@ export function FormulariosClient() {
   const { formularios, total, isLoading, error, refetch } = useFormularios(params);
 
   const handleCreateSuccess = React.useCallback(() => { refetch(); setCreateOpen(false); }, [refetch]);
+  const handleEdit = React.useCallback((formulario: AssinaturaDigitalFormulario) => { setSelectedFormulario(formulario); setEditOpen(true); }, []);
+  const handleEditSuccess = React.useCallback(() => { refetch(); setEditOpen(false); setSelectedFormulario(null); }, [refetch]);
   const handleEditSchema = React.useCallback((formulario: AssinaturaDigitalFormulario) => { router.push(`/assinatura-digital/formularios/${formulario.id}/schema`); }, [router]);
   const handleDuplicate = React.useCallback((formulario: AssinaturaDigitalFormulario) => { setSelectedFormulario(formulario); setDuplicateOpen(true); }, []);
   const handleDelete = React.useCallback(async (formulario: AssinaturaDigitalFormulario) => {
@@ -460,7 +482,7 @@ export function FormulariosClient() {
     setPagina(0);
   }, []);
 
-  const colunas = React.useMemo(() => criarColunas(handleEditSchema, handleDuplicate, handleDelete, templates, canEdit, canCreate, canDelete), [handleEditSchema, handleDuplicate, handleDelete, templates, canEdit, canCreate, canDelete]);
+  const colunas = React.useMemo(() => criarColunas(handleEdit, handleEditSchema, handleDuplicate, handleDelete, templates, canEdit, canCreate, canDelete), [handleEdit, handleEditSchema, handleDuplicate, handleDelete, templates, canEdit, canCreate, canDelete]);
 
   const bulkActions = React.useMemo(() => {
     const selectedCount = Object.keys(rowSelection).length;
@@ -630,6 +652,15 @@ export function FormulariosClient() {
         open={createOpen}
         onOpenChange={setCreateOpen}
         onSuccess={handleCreateSuccess}
+        segmentos={segmentos}
+        templates={templates}
+      />
+
+      <FormularioEditDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        formulario={selectedFormulario}
+        onSuccess={handleEditSuccess}
         segmentos={segmentos}
         templates={templates}
       />

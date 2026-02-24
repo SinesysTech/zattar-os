@@ -165,7 +165,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
   const dataProximaAudiencia = processo.dataProximaAudiencia;
 
   return (
-    <div className="flex flex-col items-start justify-center gap-1.5 py-2 max-w-[min(92vw,23.75rem)] group">
+    <div className="flex flex-col items-start justify-center gap-1.5 py-2 min-w-0 group">
       <div className="flex items-center gap-1.5 flex-wrap">
         <SemanticBadge category="tribunal" value={trt} className="w-fit text-xs">
           {trt}
@@ -267,7 +267,7 @@ function ProcessoResponsavelCell({
                 {getInitials(responsavel.nomeExibicao)}
               </AvatarFallback>
             </Avatar>
-            <span>{responsavel.nomeExibicao}</span>
+            <span className="truncate">{responsavel.nomeExibicao}</span>
           </>
         ) : (
           <span className="text-muted-foreground">Não atribuído</span>
@@ -309,7 +309,7 @@ function criarColunas(
         </span>
       ),
       enableSorting: true,
-      size: 140,
+      size: 100,
       meta: {
         align: 'left' as const,
         headerLabel: 'Data Autuação',
@@ -320,7 +320,6 @@ function criarColunas(
       header: ({ column }) => <DataTableColumnHeader column={column} title="Processo" />,
       cell: ({ row }) => <ProcessoNumeroCell row={row} />,
       enableSorting: true,
-      size: 380,
       meta: {
         align: 'left' as const,
         headerLabel: 'Processo',
@@ -335,16 +334,16 @@ function criarColunas(
         const parteAutora = row.original.nomeParteAutoraOrigem || row.original.nomeParteAutora || '-';
         const parteRe = row.original.nomeParteReOrigem || row.original.nomeParteRe || '-';
         return (
-          <div className="flex flex-col items-start justify-center gap-1.5 py-2">
+          <div className="flex flex-col items-start justify-center gap-1.5 py-2 min-w-0">
             <ParteBadge
               polo="ATIVO"
-              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+              className="block whitespace-normal break-words text-left font-normal text-sm"
             >
               {parteAutora}
             </ParteBadge>
             <ParteBadge
               polo="PASSIVO"
-              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+              className="block whitespace-normal break-words text-left font-normal text-sm"
             >
               {parteRe}
             </ParteBadge>
@@ -352,7 +351,6 @@ function criarColunas(
         );
       },
       enableSorting: false,
-      size: 300,
       meta: {
         align: 'left' as const,
         headerLabel: 'Partes',
@@ -364,7 +362,7 @@ function criarColunas(
       cell: ({ row }) => {
         const processoTags = tagsMap[row.original.id] || [];
         return (
-          <div className="flex items-center py-2">
+          <div className="flex items-center py-2 min-w-0">
             <TagBadgeList
               tags={processoTags}
               maxVisible={3}
@@ -374,7 +372,6 @@ function criarColunas(
         );
       },
       enableSorting: false,
-      size: 200,
       meta: {
         align: 'left' as const,
         headerLabel: 'Etiquetas',
@@ -385,7 +382,7 @@ function criarColunas(
       header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" />,
       cell: ({ row }) => {
         return (
-          <div className="flex items-center py-2">
+          <div className="flex items-center py-2 min-w-0">
             <ProcessoResponsavelCell
               processo={row.original}
               usuarios={usuarios}
@@ -395,7 +392,6 @@ function criarColunas(
         );
       },
       enableSorting: false,
-      size: 200,
       meta: {
         align: 'left' as const,
         headerLabel: 'Responsável',
@@ -414,7 +410,6 @@ function criarColunas(
         );
       },
       enableSorting: false,
-      size: 120,
       meta: {
         align: 'left' as const,
         headerLabel: 'Status',
@@ -446,7 +441,7 @@ function criarColunas(
         );
       },
       enableSorting: false,
-      size: 80,
+      size: 50,
       meta: {
         align: 'left' as const,
         headerLabel: 'Ações',
@@ -476,7 +471,6 @@ function criarColunas(
         );
       },
       enableSorting: true,
-      size: 100,
       meta: {
         align: 'left' as const,
         headerLabel: 'Prioridade',
@@ -494,7 +488,6 @@ function criarColunas(
         </span>
       ),
       enableSorting: true,
-      size: 110,
       meta: {
         align: 'left' as const,
         headerLabel: 'Qtde Autores',
@@ -512,7 +505,6 @@ function criarColunas(
         </span>
       ),
       enableSorting: true,
-      size: 100,
       meta: {
         align: 'left' as const,
         headerLabel: 'Qtde Réus',
@@ -534,7 +526,6 @@ function criarColunas(
         return <span className="text-sm text-muted-foreground">-</span>;
       },
       enableSorting: true,
-      size: 110,
       meta: {
         align: 'left' as const,
         headerLabel: 'Juízo Digital',
@@ -552,7 +543,6 @@ function criarColunas(
         </span>
       ),
       enableSorting: true,
-      size: 120,
       meta: {
         align: 'left' as const,
         headerLabel: 'Arquivamento',
@@ -574,7 +564,6 @@ function criarColunas(
         return <span className="text-sm text-muted-foreground">-</span>;
       },
       enableSorting: true,
-      size: 100,
       meta: {
         align: 'left' as const,
         headerLabel: 'Associação',
@@ -604,7 +593,6 @@ function criarColunas(
         );
       },
       enableSorting: true,
-      size: 120,
       meta: {
         align: 'left' as const,
         headerLabel: 'Origem',
@@ -622,7 +610,6 @@ function criarColunas(
         </span>
       ),
       enableSorting: true,
-      size: 150,
       meta: {
         align: 'left' as const,
         headerLabel: 'Criado Em',
@@ -640,7 +627,6 @@ function criarColunas(
         </span>
       ),
       enableSorting: true,
-      size: 150,
       meta: {
         align: 'left' as const,
         headerLabel: 'Atualizado Em',
@@ -938,7 +924,7 @@ export function ProcessosTableWrapper({
         {/* Linha 2: Filtros à esquerda, Config + Colunas à direita */}
         <div className="flex items-center gap-4 pb-4">
           <div className="flex gap-2 flex-1">
-            <div className="relative w-80">
+            <div className="relative flex-1 max-w-80 min-w-40">
               <Search
                 className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                 aria-hidden="true"
@@ -973,7 +959,7 @@ export function ProcessosTableWrapper({
               }}
             />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -1041,6 +1027,7 @@ export function ProcessosTableWrapper({
           <DataTable
             columns={colunas}
             data={processos || []}
+            tableLayout="auto"
             isLoading={isLoading}
             error={error}
             columnVisibility={columnVisibility}
