@@ -1,31 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
+import { NACIONALIDADES } from '@/app/app/assinatura-digital/feature/constants/nacionalidades';
 
 /**
- * Schema para dados do cliente no formato Formsign.
- *
- * Campos obrigatórios apenas: nome, cpf, email, celular
- * Demais campos são opcionais para permitir clientes com dados parciais.
- *
- * Campos _txt são textos descritivos adicionados pelo DadosPessoais component
- * para facilitar a leitura em PDFs e logs.
+ * Schema de entrada — mantém o formato que o frontend envia (ClienteFormsignPayload).
+ * A transformação para o schema real do DB acontece dentro da rota.
  */
 const clienteFormsignSchema = z.object({
-  // Identificador (presente em updates, gerado pelo form como placeholder em inserts)
   id: z.number().optional(),
-
-  // Campos obrigatórios
   nome: z.string().min(1, 'Nome é obrigatório'),
   cpf: z.string().length(11, 'CPF deve ter 11 dígitos'),
   email: z.string().email('Email inválido'),
   celular: z.string().min(10, 'Celular inválido'),
-
-  // Campos opcionais de identificação
+  telefone: z.string().optional(),
   rg: z.string().nullable().optional(),
   data_nascimento: z.string().nullable().optional(),
 
-  // Campos opcionais de endereço
   endereco_completo: z.string().optional(),
   endereco_rua: z.string().optional(),
   endereco_numero: z.string().optional(),
@@ -35,18 +26,14 @@ const clienteFormsignSchema = z.object({
   endereco_uf: z.string().optional(),
   endereco_cep: z.string().optional(),
 
-  // Campos opcionais de estado civil/gênero/nacionalidade (códigos)
   estado_civil: z.string().optional(),
   genero: z.number().optional(),
   nacionalidade_id: z.number().optional(),
 
-  // Campos descritivos (textos legíveis para estado_civil, genero, nacionalidade)
+  // Campos descritivos (ignorados na escrita ao DB)
   estado_civil_txt: z.string().optional(),
   genero_txt: z.string().optional(),
   nacionalidade_txt: z.string().optional(),
-
-  // Campos adicionais de contato
-  telefone: z.string().optional(),
 });
 
 const schema = z.object({
@@ -56,6 +43,103 @@ const schema = z.object({
   clienteId: z.number().optional(),
   dados: clienteFormsignSchema,
 });
+
+// ---------------------------------------------------------------------------
+// Mapeamentos: código do form → enum do DB
+// ---------------------------------------------------------------------------
+const ESTADO_CIVIL_TO_ENUM: Record<string, string> = {
+  '1': 'solteiro',
+  '2': 'casado',
+  '4': 'divorciado',
+  '5': 'viuvo',
+};
+
+const GENERO_TO_ENUM: Record<number, string> = {
+  1: 'masculino',
+  2: 'feminino',
+  3: 'outro',
+  4: 'prefiro_nao_informar',
+};
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Separa telefone em DDD + número. Ex: "11999999999" → ["11", "999999999"] */
+function splitPhone(phone: string | undefined): { ddd: string | null; numero: string | null } {
+  if (!phone || phone.length < 10) return { ddd: null, numero: null };
+  return { ddd: phone.slice(0, 2), numero: phone.slice(2) };
+}
+
+/** Converte "dd/mm/yyyy" → "yyyy-mm-dd" para o tipo date do PostgreSQL */
+function parseDataNascimento(value: string | null | undefined): string | null {
+  if (!value) return null;
+  // Formato dd/mm/yyyy
+  const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (match) {
+    return `${match[3]}-${match[2]}-${match[1]}`;
+  }
+  // Já em formato ISO (yyyy-mm-dd) ou outro — retorna como está
+  return value;
+}
+
+/** Verifica se há dados de endereço preenchidos */
+function hasEnderecoData(dados: z.infer<typeof clienteFormsignSchema>): boolean {
+  return Boolean(
+    dados.endereco_rua ||
+    dados.endereco_numero ||
+    dados.endereco_bairro ||
+    dados.endereco_cidade ||
+    dados.endereco_uf ||
+    dados.endereco_cep
+  );
+}
+
+/** Monta o objeto de dados do cliente para insert/update na tabela clientes */
+function buildClienteData(dados: z.infer<typeof clienteFormsignSchema>) {
+  const { ddd: dddCelular, numero: numeroCelular } = splitPhone(dados.celular);
+  const { ddd: dddResidencial, numero: numeroResidencial } = splitPhone(dados.telefone);
+
+  return {
+    nome: dados.nome,
+    cpf: dados.cpf,
+    rg: dados.rg || null,
+    data_nascimento: parseDataNascimento(dados.data_nascimento),
+    emails: dados.email ? [dados.email] : null,
+    ddd_celular: dddCelular,
+    numero_celular: numeroCelular,
+    ddd_residencial: dddResidencial,
+    numero_residencial: numeroResidencial,
+    estado_civil: dados.estado_civil
+      ? ESTADO_CIVIL_TO_ENUM[dados.estado_civil] ?? null
+      : null,
+    genero: dados.genero != null
+      ? GENERO_TO_ENUM[dados.genero] ?? null
+      : null,
+    nacionalidade: dados.nacionalidade_id != null
+      ? NACIONALIDADES[dados.nacionalidade_id] ?? null
+      : null,
+  };
+}
+
+/** Monta o objeto de endereço para insert/update na tabela enderecos */
+function buildEnderecoData(dados: z.infer<typeof clienteFormsignSchema>, clienteId: number) {
+  return {
+    entidade_tipo: 'cliente' as const,
+    entidade_id: clienteId,
+    logradouro: dados.endereco_rua || null,
+    numero: dados.endereco_numero || null,
+    complemento: dados.endereco_complemento || null,
+    bairro: dados.endereco_bairro || null,
+    cep: dados.endereco_cep || null,
+    municipio: dados.endereco_cidade || null,
+    estado_sigla: dados.endereco_uf || null,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Route Handler
+// ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest) {
   try {
@@ -72,32 +156,102 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
 
     if (payload.operation === 'insert') {
-      const { id: _, ...insertData } = payload.dados;
-      const { data, error } = await supabase
+      // ---- INSERT cliente ----
+      const clienteData = {
+        ...buildClienteData(payload.dados),
+        tipo_pessoa: 'pf' as const,
+      };
+
+      const { data: newCliente, error: insertError } = await supabase
         .from('clientes')
-        .insert({ ...insertData, segmento_id: payload.segmentoId })
+        .insert(clienteData)
         .select('id')
         .single();
 
-      if (error) {
-        if (error.code === '23505') {
+      if (insertError) {
+        if (insertError.code === '23505') {
           return NextResponse.json(
             { success: false, error: 'CPF já cadastrado' },
             { status: 409 }
           );
         }
-        throw error;
+        throw insertError;
       }
 
-      return NextResponse.json({ success: true, data: { cliente_id: data.id } });
+      // ---- INSERT endereço (se houver dados) ----
+      if (hasEnderecoData(payload.dados)) {
+        const enderecoData = buildEnderecoData(payload.dados, newCliente.id);
+
+        const { data: newEndereco, error: enderecoError } = await supabase
+          .from('enderecos')
+          .insert(enderecoData)
+          .select('id')
+          .single();
+
+        if (enderecoError) {
+          console.error('Error creating address:', enderecoError);
+          // Endereço falhou, mas cliente foi criado — não bloqueia o fluxo
+        } else {
+          // Vincular endereço ao cliente
+          await supabase
+            .from('clientes')
+            .update({ endereco_id: newEndereco.id })
+            .eq('id', newCliente.id);
+        }
+      }
+
+      return NextResponse.json({ success: true, data: { cliente_id: newCliente.id } });
+
     } else {
-      const { id: __, ...updateData } = payload.dados;
-      const { error } = await supabase
+      // ---- UPDATE cliente ----
+      const clienteData = buildClienteData(payload.dados);
+
+      const { error: updateError } = await supabase
         .from('clientes')
-        .update(updateData)
+        .update(clienteData)
         .eq('id', payload.clienteId!);
 
-      if (error) throw error;
+      if (updateError) throw updateError;
+
+      // ---- UPDATE ou INSERT endereço ----
+      if (hasEnderecoData(payload.dados)) {
+        // Buscar endereco_id atual do cliente
+        const { data: currentCliente } = await supabase
+          .from('clientes')
+          .select('endereco_id')
+          .eq('id', payload.clienteId!)
+          .single();
+
+        const enderecoFields = buildEnderecoData(payload.dados, payload.clienteId!);
+
+        if (currentCliente?.endereco_id) {
+          // Update endereço existente
+          const { error: enderecoError } = await supabase
+            .from('enderecos')
+            .update(enderecoFields)
+            .eq('id', currentCliente.endereco_id);
+
+          if (enderecoError) {
+            console.error('Error updating address:', enderecoError);
+          }
+        } else {
+          // Inserir novo endereço e vincular
+          const { data: newEndereco, error: enderecoError } = await supabase
+            .from('enderecos')
+            .insert(enderecoFields)
+            .select('id')
+            .single();
+
+          if (enderecoError) {
+            console.error('Error creating address:', enderecoError);
+          } else {
+            await supabase
+              .from('clientes')
+              .update({ endereco_id: newEndereco.id })
+              .eq('id', payload.clienteId!);
+          }
+        }
+      }
 
       return NextResponse.json({ success: true, data: { cliente_id: payload.clienteId! } });
     }

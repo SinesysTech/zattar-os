@@ -211,8 +211,13 @@ comment on function public.trigger_refresh_acervo_unificado is 'Trigger function
 -- for each statement
 -- execute function public.trigger_refresh_acervo_unificado();
 
--- Habilitar RLS na VIEW materializada
+-- Owner e permissões
 alter materialized view public.acervo_unificado owner to postgres;
+
+-- GRANTs: IMPORTANTE - sempre incluir ao recriar a view (DROP perde permissões)
+grant select on table public.acervo_unificado to service_role;
+grant select on table public.acervo_unificado to authenticated;
+grant select on table public.acervo_unificado to anon;
 
 -- Comentários nas colunas principais
 comment on column public.acervo_unificado.id is 'ID da instância principal (grau atual) do processo';

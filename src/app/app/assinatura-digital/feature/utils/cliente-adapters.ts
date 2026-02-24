@@ -1,10 +1,13 @@
 /**
  * Cliente Adapters for Assinatura Digital
  *
- * Functions to map between different client data formats
+ * Functions to map between different client data formats:
+ * - mapClienteFormToCliente: Form (DadosPessoais) → API payload (ClienteFormsignPayload)
+ * - clienteSinesysToAssinaturaDigital: DB row (clientes + enderecos) → ClienteAssinaturaDigital
  */
 
 import type { DadosPessoaisFormData } from "../validations/dados-pessoais.schema";
+import { NACIONALIDADES } from "../constants/nacionalidades";
 
 export type ClienteFormsignPayload = {
   id?: number;
@@ -79,6 +82,10 @@ export function mapClienteFormToCliente(
   };
 }
 
+// ---------------------------------------------------------------------------
+// DB → ClienteAssinaturaDigital (leitura)
+// ---------------------------------------------------------------------------
+
 type EnderecoRow = Record<string, unknown>;
 type ClienteRow = Record<string, unknown>;
 
@@ -92,9 +99,55 @@ function pickNumber(value: unknown): number | undefined {
     : undefined;
 }
 
+/** DB enum → código do select do formulário */
+const ENUM_TO_ESTADO_CIVIL: Record<string, string> = {
+  solteiro: "1",
+  casado: "2",
+  divorciado: "4",
+  viuvo: "5",
+};
+
+const ENUM_TO_GENERO: Record<string, string> = {
+  masculino: "1",
+  feminino: "2",
+  outro: "3",
+  prefiro_nao_informar: "4",
+};
+
+/** Mapa reverso: texto da nacionalidade → código numérico como string */
+const NACIONALIDADE_TEXT_TO_CODE: Record<string, string> = {};
+for (const [code, text] of Object.entries(NACIONALIDADES)) {
+  NACIONALIDADE_TEXT_TO_CODE[text] = String(code);
+}
+
+/** Extrai o primeiro email do campo jsonb `emails` */
+function extractEmail(emails: unknown): string | undefined {
+  if (Array.isArray(emails) && emails.length > 0) {
+    // Pode ser array de strings ["email@..."] ou array de objetos [{email: "..."}]
+    const first = emails[0];
+    if (typeof first === "string") return first;
+    if (typeof first === "object" && first !== null && "email" in first) {
+      return typeof first.email === "string" ? first.email : undefined;
+    }
+  }
+  return undefined;
+}
+
+/** Combina DDD + número em uma string única (ex: "11999999999") */
+function combinePhone(ddd: unknown, numero: unknown): string | undefined {
+  const d = pickString(ddd);
+  const n = pickString(numero);
+  if (d && n) return `${d}${n}`;
+  if (n) return n;
+  return undefined;
+}
+
 /**
- * Converte o registro de `clientes` (Sinesys) + `enderecos(*)` para o formato usado pelo fluxo público.
- * Mantém nomes em snake_case compatíveis com o endpoint `/api/assinatura-digital/forms/save-client`.
+ * Converte o registro de `clientes` + `enderecos(*)` do DB para o formato
+ * `ClienteAssinaturaDigital` usado pelo fluxo público de assinatura digital.
+ *
+ * Retorna campos com nomes compatíveis com a interface ClienteAssinaturaDigital
+ * e com os códigos de select usados pelo formulário DadosPessoais.
  */
 export function clienteSinesysToAssinaturaDigital(
   cliente: ClienteRow,
@@ -102,64 +155,66 @@ export function clienteSinesysToAssinaturaDigital(
 ) {
   const endereco = Array.isArray(enderecos) ? enderecos[0] : undefined;
 
-  const endereco_cep =
-    pickString(cliente.endereco_cep) ??
-    pickString(endereco?.cep) ??
-    pickString(endereco?.nro_cep) ??
-    pickString(endereco?.codigo_postal);
+  // Email: extrair de `emails` (jsonb) com fallback para campo legado `email`
+  const email =
+    extractEmail(cliente.emails) ?? pickString(cliente.email);
 
-  const endereco_rua =
-    pickString(cliente.endereco_rua) ??
-    pickString(endereco?.logradouro) ??
-    pickString(endereco?.rua);
+  // Telefones: reconstituir de DDD + número
+  const celular =
+    combinePhone(cliente.ddd_celular, cliente.numero_celular) ??
+    pickString(cliente.celular);
 
-  const endereco_numero =
-    pickString(cliente.endereco_numero) ?? pickString(endereco?.numero);
+  const telefone =
+    combinePhone(cliente.ddd_residencial, cliente.numero_residencial) ??
+    pickString(cliente.telefone);
 
-  const endereco_complemento =
-    pickString(cliente.endereco_complemento) ??
-    pickString(endereco?.complemento);
+  // Estado civil: enum DB → código do select
+  const estadoCivilEnum = pickString(cliente.estado_civil);
+  const estado_civil = estadoCivilEnum
+    ? ENUM_TO_ESTADO_CIVIL[estadoCivilEnum] ?? estadoCivilEnum
+    : undefined;
 
-  const endereco_bairro =
-    pickString(cliente.endereco_bairro) ?? pickString(endereco?.bairro);
+  // Gênero: enum DB → código do select (como string)
+  const generoEnum = pickString(cliente.genero);
+  const genero = generoEnum
+    ? ENUM_TO_GENERO[generoEnum] ?? generoEnum
+    : undefined;
 
-  const endereco_cidade =
-    pickString(cliente.endereco_cidade) ??
-    pickString(endereco?.cidade) ??
-    pickString(endereco?.municipio);
+  // Nacionalidade: texto DB → código do select
+  const nacionalidadeText = pickString(cliente.nacionalidade);
+  const nacionalidade = nacionalidadeText
+    ? NACIONALIDADE_TEXT_TO_CODE[nacionalidadeText] ?? nacionalidadeText
+    : undefined;
 
-  const endereco_uf =
-    pickString(cliente.endereco_uf) ??
-    pickString(endereco?.uf) ??
-    pickString(
-      (endereco?.estado as Record<string, unknown> | undefined)?.sigla
-    );
-
-  const endereco_completo =
-    pickString(cliente.endereco_completo) ??
-    pickString(endereco?.endereco_completo);
+  // Endereço: da tabela enderecos (join)
+  const cep = pickString(endereco?.cep);
+  const logradouro = pickString(endereco?.logradouro);
+  const numero = pickString(endereco?.numero);
+  const complemento = pickString(endereco?.complemento);
+  const bairro = pickString(endereco?.bairro);
+  const cidade =
+    pickString(endereco?.municipio) ?? pickString(endereco?.cidade);
+  const uf =
+    pickString(endereco?.estado_sigla) ?? pickString(endereco?.uf);
 
   return {
     id: pickNumber(cliente.id),
     nome: pickString(cliente.nome) ?? pickString(cliente.nome_completo),
     cpf: pickString(cliente.cpf),
-    email: pickString(cliente.email),
-    celular: pickString(cliente.celular),
-    telefone: pickString(cliente.telefone),
     rg: pickString(cliente.rg) ?? null,
     data_nascimento: pickString(cliente.data_nascimento) ?? null,
-
-    endereco_cep,
-    endereco_rua,
-    endereco_numero,
-    endereco_complemento,
-    endereco_bairro,
-    endereco_cidade,
-    endereco_uf,
-    endereco_completo,
-
-    estado_civil: pickString(cliente.estado_civil),
-    genero: pickNumber(cliente.genero),
-    nacionalidade_id: pickNumber(cliente.nacionalidade_id),
+    estado_civil: estado_civil ?? null,
+    genero: genero ?? null,
+    nacionalidade: nacionalidade ?? null,
+    email,
+    celular,
+    telefone,
+    cep,
+    logradouro,
+    numero,
+    complemento,
+    bairro,
+    cidade,
+    uf,
   };
 }
