@@ -6,6 +6,7 @@ import {
   storePdf,
   generateMockDataForPreview,
 } from "@/app/app/assinatura-digital/feature";
+import { generatePresignedUrl } from "@/lib/storage/backblaze-b2.service";
 import type {
   TemplateCampo,
   StatusTemplate,
@@ -137,7 +138,8 @@ export async function POST(
 
     // Armazenar PDF temporariamente
     const stored = await storePdf(pdfBuffer);
-    const pdfUrl = stored.url;
+    // Gerar URL presigned para acesso ao bucket privado (1h de validade)
+    const pdfUrl = await generatePresignedUrl(stored.key, 3600);
     // Derivar nome do arquivo do key retornado pelo storage (ex: "assinatura-digital/pdfs/documento-xxx.pdf" -> "documento-xxx.pdf")
     const storedFileName = stored.key.split("/").pop() || `preview-${id}.pdf`;
 

@@ -41,6 +41,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
+import { cn } from '@/lib/utils';
 import type { ConteudoComposto } from '../../types/template.types';
 import {
   getAvailableVariables,
@@ -53,9 +54,13 @@ interface RichTextEditorProps {
   value?: ConteudoComposto;
   onChange: (value: ConteudoComposto) => void;
   formularios: string[];
+  /** Elemento extra renderizado no final da toolbar (ex: botão de ajustar altura) */
+  toolbarExtra?: React.ReactNode;
+  /** Classes adicionais para o container externo */
+  className?: string;
 }
 
-export function RichTextEditor({ value, onChange, formularios }: RichTextEditorProps) {
+export function RichTextEditor({ value, onChange, formularios, toolbarExtra, className }: RichTextEditorProps) {
   const [isVariableOpen, setIsVariableOpen] = useState(false);
 
   const variables = getAvailableVariables(formularios);
@@ -140,9 +145,9 @@ export function RichTextEditor({ value, onChange, formularios }: RichTextEditorP
   }
 
   return (
-    <div className="border rounded-lg">
-      {/* Toolbar */}
-      <div className="border-b p-2 flex flex-wrap gap-1">
+    <div className={cn("border rounded-lg flex flex-col", className)}>
+      {/* Toolbar - fixa no topo */}
+      <div className="border-b p-2 flex flex-wrap items-center gap-1 shrink-0">
         {/* Formatting buttons */}
         <Button
           variant={editor.isActive('bold') ? 'default' : 'ghost'}
@@ -323,10 +328,18 @@ export function RichTextEditor({ value, onChange, formularios }: RichTextEditorP
             </Command>
           </PopoverContent>
         </Popover>
+
+        {/* Extra toolbar actions (ex: Ajustar Altura) */}
+        {toolbarExtra && (
+          <>
+            <Separator orientation="vertical" className="h-6" />
+            {toolbarExtra}
+          </>
+        )}
       </div>
 
-      {/* Editor */}
-      <div className="p-4 min-h-50">
+      {/* Editor - área scrollável */}
+      <div className="flex-1 min-h-0 overflow-y-auto p-4">
         <EditorContent editor={editor} />
       </div>
     </div>

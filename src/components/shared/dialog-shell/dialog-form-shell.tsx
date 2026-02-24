@@ -6,6 +6,7 @@ import {
   ResponsiveDialogContent,
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
+  ResponsiveDialogDescription,
   ResponsiveDialogBody,
   ResponsiveDialogFooter,
 } from "@/components/ui/responsive-dialog";
@@ -26,6 +27,10 @@ interface DialogFormShellProps {
    * Título do diálogo
    */
   title: React.ReactNode;
+  /**
+   * Descrição/subtítulo abaixo do título (ex: metadados, instruções)
+   */
+  description?: React.ReactNode;
   /**
    * Conteúdo do formulário
    */
@@ -48,11 +53,16 @@ interface DialogFormShellProps {
    * Largura máxima do diálogo (apenas desktop)
    * @default "lg"
    */
-  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
   /**
    * Classes adicionais para o container do conteúdo
    */
   className?: string;
+  /**
+   * Classes adicionais para o body (área de conteúdo scrollável).
+   * Use para override de overflow, layout flex, etc.
+   */
+  bodyClassName?: string;
   /**
    * Ocultar o rodapé padrão do shell (útil quando o formulário tem seu próprio rodapé)
    */
@@ -63,12 +73,13 @@ export function DialogFormShell({
   open,
   onOpenChange,
   title,
+  description,
   children,
   footer,
   multiStep,
   maxWidth = "lg",
-
   className,
+  bodyClassName,
   hideFooter,
 }: DialogFormShellProps) {
   // Calcular largura máxima
@@ -80,6 +91,7 @@ export function DialogFormShell({
     "2xl": "sm:max-w-2xl",
     "3xl": "sm:max-w-3xl",
     "4xl": "sm:max-w-4xl",
+    "5xl": "sm:max-w-5xl",
   }[maxWidth];
 
   // Calcular progresso para multi-step
@@ -101,10 +113,16 @@ export function DialogFormShell({
           className
         )}
       >
-        <ResponsiveDialogHeader className="px-6 py-4 shrink-0">
+        <ResponsiveDialogHeader className="px-6 py-4 shrink-0 border-b">
           <ResponsiveDialogTitle className="text-lg font-semibold leading-none tracking-tight">
             {title}
           </ResponsiveDialogTitle>
+
+          {description && (
+            <ResponsiveDialogDescription className="text-sm text-muted-foreground">
+              {description}
+            </ResponsiveDialogDescription>
+          )}
 
           {/* Barra de progresso para multi-step */}
           {multiStep && (
@@ -122,7 +140,7 @@ export function DialogFormShell({
           )}
         </ResponsiveDialogHeader>
 
-        <ResponsiveDialogBody className="flex-1 min-h-0">
+        <ResponsiveDialogBody className={cn("flex-1 min-h-0", bodyClassName)}>
           {children}
         </ResponsiveDialogBody>
 

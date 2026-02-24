@@ -1,15 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertTriangle, Check, ArrowUpDown } from 'lucide-react';
+import { DialogFormShell } from '@/components/shared/dialog-shell/dialog-form-shell';
 import { RichTextEditor } from './RichTextEditor';
 import type { ConteudoComposto } from '../../types/template.types';
 
@@ -37,6 +32,7 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
     fontSize = 12,
     onHeightAdjust,
     onOpenChange,
+    open,
   } = props;
   const [localValue, setLocalValue] = useState<ConteudoComposto | undefined>(value);
 
@@ -47,6 +43,7 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
 
   const isOverflow = estimatedHeight > fieldHeight;
   const lineCount = Math.ceil(estimatedHeight / (fontSize * 1.2));
+  const heightDiff = Math.ceil(estimatedHeight - fieldHeight + 14);
 
   const handleSave = () => {
     if (localValue) {
@@ -62,76 +59,78 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
     }
   };
 
+  // Botão de ajustar altura para a toolbar do editor
+  const toolbarHeightAction = onHeightAdjust && isOverflow ? (
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={handleAutoAdjust}
+      className="gap-1.5 text-xs"
+    >
+      <ArrowUpDown className="h-3.5 w-3.5" />
+      Ajustar Altura (+{heightDiff}px)
+    </Button>
+  ) : undefined;
+
   return (
-    <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-      <DialogHeader>
-        <DialogTitle>Editar {fieldName}</DialogTitle>
-      </DialogHeader>
-
-      {/* Field metadata */}
-      <div className="text-sm text-muted-foreground mb-4">
-        Largura: {fieldWidth}px | Altura: {fieldHeight}px | Tamanho da fonte: {fontSize}pt
-      </div>
-
-      {/* Height estimation alert */}
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title={`Editar ${fieldName}`}
+      description={`Largura: ${fieldWidth}px · Altura: ${fieldHeight}px · Fonte: ${fontSize}pt`}
+      maxWidth="5xl"
+      bodyClassName="overflow-hidden flex flex-col"
+      footer={<Button onClick={handleSave}>Salvar</Button>}
+    >
+      {/* Alerta de overflow — fica fixo acima do editor */}
       {localValue?.template && (
-        <Alert className={`mb-4 ${isOverflow ? 'border-orange-500 bg-orange-50' : 'border-green-500 bg-green-50'}`}>
-          <AlertDescription>
+        <div className="shrink-0 mb-3">
+          <Alert
+            variant={isOverflow ? 'destructive' : 'default'}
+            className={
+              isOverflow
+                ? 'border-amber-500/50 bg-amber-500/10 text-amber-900 dark:text-amber-200 [&>svg]:text-amber-600 dark:[&>svg]:text-amber-400'
+                : 'border-emerald-500/50 bg-emerald-500/10 text-emerald-900 dark:text-emerald-200 [&>svg]:text-emerald-600 dark:[&>svg]:text-emerald-400'
+            }
+          >
             {isOverflow ? (
-              <>
-                <strong>Atenção:</strong> O texto pode exceder a altura do campo ({lineCount} linhas estimadas).
-                Considere ajustar a altura ou reduzir o conteúdo.
-              </>
+              <AlertTriangle className="h-4 w-4" />
             ) : (
-              <>
-                <strong>OK:</strong> O texto cabe no campo ({lineCount} linhas estimadas).
-              </>
+              <Check className="h-4 w-4" />
             )}
-            <br />
-            <small className="text-muted-foreground">
-              Estimativa com margem de erro de ±10-15%.
-            </small>
-          </AlertDescription>
-        </Alert>
+            <AlertDescription>
+              {isOverflow ? (
+                <>
+                  O texto pode exceder a altura do campo ({lineCount} linhas estimadas).
+                  Considere ajustar a altura ou reduzir o conteúdo.
+                </>
+              ) : (
+                <>O texto cabe no campo ({lineCount} linhas estimadas).</>
+              )}
+              <span className="ml-1 text-muted-foreground text-xs">
+                Margem de erro: ±10-15%.
+              </span>
+            </AlertDescription>
+          </Alert>
+        </div>
       )}
 
-      {/* Editor */}
-      <div className="flex-1 overflow-auto">
-        <RichTextEditor
-          value={localValue}
-          onChange={setLocalValue}
-          formularios={formularios}
-        />
-      </div>
-
-      <DialogFooter className="flex justify-between">
-        <div>
-          {onHeightAdjust && isOverflow && (
-            <Button variant="outline" onClick={handleAutoAdjust}>
-              Ajustar Altura (+{Math.ceil(estimatedHeight - fieldHeight + 14)}px)
-            </Button>
-          )}
-        </div>
-        <div className="space-x-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancelar
-          </Button>
-          <Button onClick={handleSave}>
-            Salvar
-          </Button>
-        </div>
-      </DialogFooter>
-    </DialogContent>
+      {/* Editor — preenche o espaço restante com scroll interno */}
+      <RichTextEditor
+        className="flex-1 min-h-0"
+        value={localValue}
+        onChange={setLocalValue}
+        formularios={formularios}
+        toolbarExtra={toolbarHeightAction}
+      />
+    </DialogFormShell>
   );
 }
 
 export function RichTextEditorPopover(props: RichTextEditorPopoverProps) {
-  const { open, onOpenChange } = props;
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      {open && <RichTextEditorPopoverContent {...props} />}
-    </Dialog>
-  );
+  const { open } = props;
+  if (!open) return null;
+  return <RichTextEditorPopoverContent {...props} />;
 }
 
 // Simplified height estimation function
