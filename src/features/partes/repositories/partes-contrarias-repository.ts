@@ -10,6 +10,7 @@ import { fromSnakeToCamel } from '@/lib/utils';
 import { Result, ok, err, appError, PaginatedResponse } from '@/types';
 import type {
   ParteContraria,
+  ParteContrariaComEndereco,
   CreateParteContrariaInput,
   UpdateParteContrariaInput,
   ListarPartesContrariasParams,
@@ -253,6 +254,66 @@ export async function findAllPartesContrarias(
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao listar partes contrarias', undefined, error instanceof Error ? error : undefined)
+    );
+  }
+}
+
+/**
+ * Busca partes contrárias por termo (nome, CPF ou CNPJ) com endereço populado.
+ * Retorna até `limite` resultados ordenados por nome.
+ * Usada no typeahead de busca de parte contrária na assinatura digital.
+ */
+export async function searchPartesContrariaComEndereco(
+  busca: string,
+  limite = 10
+): Promise<Result<ParteContrariaComEndereco[]>> {
+  try {
+    const db = createDbClient();
+    const buscaTrimmed = busca.trim();
+
+    if (buscaTrimmed.length < 2) {
+      return ok([]);
+    }
+
+    const { data, error } = await db
+      .from(TABLE_PARTES_CONTRARIAS)
+      .select(`*, endereco:enderecos(*)`)
+      .or(
+        `nome.ilike.%${buscaTrimmed}%,nome_social_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
+      )
+      .order('nome', { ascending: true })
+      .limit(limite);
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    const results: ParteContrariaComEndereco[] = (data || []).map((row) => {
+      const parteContraria = converterParaParteContraria(row as Record<string, unknown>);
+      const enderecoRaw = row.endereco as Record<string, unknown> | null;
+
+      return {
+        ...parteContraria,
+        endereco: enderecoRaw
+          ? {
+              id: enderecoRaw.id as number,
+              cep: enderecoRaw.cep as string | null,
+              logradouro: enderecoRaw.logradouro as string | null,
+              numero: enderecoRaw.numero as string | null,
+              complemento: enderecoRaw.complemento as string | null,
+              bairro: enderecoRaw.bairro as string | null,
+              municipio: enderecoRaw.municipio as string | null,
+              estado_sigla: enderecoRaw.estado_sigla as string | null,
+              pais: enderecoRaw.pais as string | null,
+            }
+          : null,
+      } as ParteContrariaComEndereco;
+    });
+
+    return ok(results);
+  } catch (error) {
+    return err(
+      appError('DATABASE_ERROR', 'Erro ao buscar partes contrárias', undefined, error instanceof Error ? error : undefined)
     );
   }
 }

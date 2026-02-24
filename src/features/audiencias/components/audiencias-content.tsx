@@ -30,8 +30,7 @@ import {
   type ViewType,
 } from '@/components/shared';
 
-import { useTiposAudiencias } from '../hooks';
-import { useUsuarios } from '@/features/usuarios';
+import type { TipoAudiencia } from '../domain';
 
 import { AudienciasListWrapper } from './audiencias-list-wrapper';
 import { AudienciasTableWrapper } from './audiencias-table-wrapper';
@@ -66,13 +65,21 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
 
 interface AudienciasContentProps {
   visualizacao?: ViewType;
+  /** Dados de usuários pré-carregados no servidor (elimina fetch client-side) */
+  initialUsuarios?: { id: number; nomeExibicao?: string; nomeCompleto?: string }[];
+  /** Dados de tipos de audiência pré-carregados no servidor (elimina fetch client-side) */
+  initialTiposAudiencia?: TipoAudiencia[];
 }
 
 // =============================================================================
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function AudienciasContent({ visualizacao: initialView = 'semana' }: AudienciasContentProps) {
+export function AudienciasContent({
+  visualizacao: initialView = 'semana',
+  initialUsuarios = [],
+  initialTiposAudiencia = [],
+}: AudienciasContentProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -93,9 +100,9 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
   // Dialog State (compartilhado)
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
 
-  // Dados Auxiliares (passados como props para evitar fetch duplicado nos wrappers)
-  const { usuarios } = useUsuarios();
-  const { tiposAudiencia } = useTiposAudiencias();
+  // Dados Auxiliares pré-carregados no servidor (passados como props)
+  const usuarios = initialUsuarios;
+  const tiposAudiencia = initialTiposAudiencia;
 
   // Week Navigator (apenas para view semana)
   const weekNav = useWeekNavigator();

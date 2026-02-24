@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, AlertCircle, Loader2, User, Shield, Camera, Image as ImageIcon, Calendar, Clock, Key, Pencil } from 'lucide-react';
+import { ArrowLeft, AlertCircle, Loader2, User, Shield, Camera, Calendar, Clock, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,7 +19,6 @@ import {
   useUsuario,
   useUsuarioPermissoes,
   AvatarEditDialog,
-  CoverEditDialog,
   UsuarioEditDialog,
   PermissoesMatriz,
   AuthLogsTimeline,
@@ -31,7 +30,6 @@ import {
   formatarGenero,
   formatarEnderecoCompleto,
   getAvatarUrl,
-  getCoverUrl,
   type Usuario
 } from '@/features/usuarios';
 import { actionAtualizarUsuario } from '@/features/usuarios';
@@ -69,25 +67,24 @@ function formatarDataCadastro(dateStr: string | null | undefined): string {
 
 export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   const router = useRouter();
-  
+
   // Usuario Data Hook
   const { usuario, isLoading: isLoadingUsuario, error: errorUsuario, refetch: refetchUsuario } = useUsuario(id);
-  
+
   // Permissoes Hook
-  const { 
-    matriz, 
-    isLoading: isLoadingPermissoes, 
-    isSaving: isSavingPermissoes, 
-    togglePermissao, 
-    save: savePermissoes, 
+  const {
+    matriz,
+    isLoading: isLoadingPermissoes,
+    isSaving: isSavingPermissoes,
+    togglePermissao,
+    save: savePermissoes,
     resetar,
-    hasChanges 
+    hasChanges
   } = useUsuarioPermissoes(id);
 
   // States for UI
   const [usuarioLogado, setUsuarioLogado] = useState<UsuarioComPermissao | null>(null);
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
-  const [coverDialogOpen, setCoverDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [isSavingSuperAdmin, setIsSavingSuperAdmin] = useState(false);
 
@@ -100,10 +97,6 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
     });
   }, []);
 
-  // Is Super Admin check local (for toggle)
-  // We can trust `usuario.isSuperAdmin` from hook, but instant feedback needs local state or optimistic update?
-  // `useUsuario` returns `usuario` which is state. We can update it via `refetchUsuario`.
-  
   const salvarSuperAdmin = async (novoValor: boolean) => {
     if (!usuario || !usuarioLogado) return;
 
@@ -122,13 +115,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
       }
 
       toast.success(`Status de Super Admin ${novoValor ? 'ativado' : 'desativado'}`);
-      
-      // Refetch
       refetchUsuario();
-      // Permissions might change implicitly? If super admin, permissions are all true conceptually but backend handles it.
-      // But the permissions matrix might need reload if we show effective permissions. 
-      // Our implementation shows saved permissions + alert if super admin.
-      
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Erro ao salvar');
     } finally {
@@ -198,109 +185,82 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-6 max-w-400">
-      {/* Header com Banner/Capa */}
-      <Card className="overflow-hidden p-0">
-        {/* Banner/Capa */}
-        <div className="relative h-48 bg-linear-to-r from-blue-500/20 to-purple-500/20">
-          {usuario.coverUrl && (
-             
-            <img
-              src={getCoverUrl(usuario.coverUrl) || undefined}
-              alt="Capa do perfil"
-              className="w-full h-full object-cover"
-            />
-          )}
-          {/* Botões de ação */}
-          <div className="absolute top-4 right-4 flex gap-2">
-            <Button
-              size="sm"
-              variant="secondary"
-              className="gap-2"
-              onClick={() => setEditDialogOpen(true)}
-            >
-              <Pencil className="h-4 w-4" />
-              Editar Usuário
-            </Button>
-            <Button
-              size="sm"
-              variant="secondary"
-              className="gap-2"
-              onClick={() => setCoverDialogOpen(true)}
-            >
-              <ImageIcon className="h-4 w-4" />
-              Editar Capa
-            </Button>
-          </div>
+      {/* Header do Perfil */}
+      <Card className="p-6">
+        <div className="flex items-start gap-5">
           {/* Botão voltar */}
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => router.push('/app/usuarios')}
-            className="absolute top-4 left-4 flex items-center justify-center w-10 h-10 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors"
+            className="shrink-0 -ml-2 -mt-1"
             title="Voltar para Usuários"
           >
             <ArrowLeft className="h-5 w-5" />
-          </button>
-        </div>
+          </Button>
 
-        {/* Avatar e Info Principal */}
-        <div className="px-6 pb-6">
-          <div className="flex items-end gap-6 -mt-12">
-            {/* Avatar */}
-            <div
-              className="relative group cursor-pointer shrink-0"
-              onClick={() => setAvatarDialogOpen(true)}
-            >
-              <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
-                <AvatarImage src={getAvatarUrl(usuario.avatarUrl) || undefined} alt={usuario.nomeExibicao} />
-                <AvatarFallback className="text-2xl font-medium">
-                  {getInitials(usuario.nomeExibicao)}
-                </AvatarFallback>
-              </Avatar>
-              {/* Overlay de hover */}
-              <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Camera className="h-6 w-6 text-white" />
+          {/* Avatar */}
+          <div
+            className="relative group cursor-pointer shrink-0"
+            onClick={() => setAvatarDialogOpen(true)}
+          >
+            <Avatar className="h-20 w-20 border-2 border-muted">
+              <AvatarImage src={getAvatarUrl(usuario.avatarUrl) || undefined} alt={usuario.nomeExibicao} />
+              <AvatarFallback className="text-xl font-medium">
+                {getInitials(usuario.nomeExibicao)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Camera className="h-5 w-5 text-white" />
+            </div>
+          </div>
+
+          {/* Info Principal */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <Typography.H2 className="truncate">{usuario.nomeCompleto}</Typography.H2>
+                <p className="text-sm text-muted-foreground mt-0.5">{usuario.emailCorporativo}</p>
               </div>
+              <Button
+                size="sm"
+                variant="outline"
+                className="shrink-0 gap-2"
+                onClick={() => setEditDialogOpen(true)}
+              >
+                <Pencil className="h-3.5 w-3.5" />
+                Editar
+              </Button>
             </div>
 
-            {/* Nome e Badges */}
-            <div className="flex-1 min-w-0 pt-4">
-              <Typography.H1 className="truncate">{usuario.nomeCompleto}</Typography.H1>
-              <p className="text-muted-foreground">{usuario.emailCorporativo}</p>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {usuario.cargo && (
-                  <Badge variant="outline">{usuario.cargo.nome}</Badge>
-                )}
-                {usuario.isSuperAdmin && (
-                  <Badge variant="destructive" className="gap-1">
-                    <Shield className="h-3 w-3" />
-                    Super Admin
-                  </Badge>
-                )}
-                <Badge variant={usuario.ativo ? 'success' : 'outline'}>
-                  {usuario.ativo ? 'Ativo' : 'Inativo'}
+            {/* Badges */}
+            <div className="flex flex-wrap gap-2 mt-3">
+              {usuario.cargo && (
+                <Badge variant="outline">{usuario.cargo.nome}</Badge>
+              )}
+              {usuario.isSuperAdmin && (
+                <Badge variant="destructive" className="gap-1">
+                  <Shield className="h-3 w-3" />
+                  Super Admin
                 </Badge>
+              )}
+              <Badge variant={usuario.ativo ? 'success' : 'outline'}>
+                {usuario.ativo ? 'Ativo' : 'Inativo'}
+              </Badge>
+            </div>
+
+            {/* Metadados */}
+            <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                <span>Cadastro: {formatarDataCadastro(usuario.createdAt)}</span>
               </div>
-              {/* Metadados do usuário */}
-              <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-muted-foreground">
+              {usuario.updatedAt && (
                 <div className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  <span>Cadastro: {formatarDataCadastro(usuario.createdAt)}</span>
+                  <Clock className="h-3 w-3" />
+                  <span>Atualizado: {formatarDataCadastro(usuario.updatedAt)}</span>
                 </div>
-                {usuario.updatedAt && (
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    <span>Atualizado: {formatarDataCadastro(usuario.updatedAt)}</span>
-                  </div>
-                )}
-                {usuarioLogado?.isSuperAdmin && usuario.authUserId && (
-                  <div className="flex items-center gap-1">
-                    <Key className="h-3 w-3" />
-                    <span title="Auth User ID" className="font-mono text-[10px]">
-                      {usuario.authUserId.substring(0, 8)}...
-                    </span>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -318,10 +278,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
         {/* Tab: Visão Geral */}
         <TabsContent value="visao-geral" className="space-y-6">
-          {/* Cards de Estatísticas */}
           <AtividadesCards usuarioId={usuario.id} />
-
-          {/* Timeline de Atividades Recentes */}
           <AtividadesRecentes usuarioId={usuario.id} />
         </TabsContent>
 
@@ -400,14 +357,8 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
         {/* Tab: Atividades */}
         <TabsContent value="atividades" className="space-y-6">
-          {/* Cards de estatísticas (resumo) */}
           <AtividadesCards usuarioId={usuario.id} />
-
-          {/* Timeline de atividades */}
           <AtividadesRecentes usuarioId={usuario.id} />
-
-          {/* Nota: Tabelas detalhadas de processos, audiências, pendentes e contratos
-              serão implementadas quando o sistema de auditoria estiver disponível */}
         </TabsContent>
 
         {/* Tab: Permissões */}
@@ -427,10 +378,8 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
         {/* Tab: Segurança */}
         <TabsContent value="seguranca" className="space-y-6">
-          {/* Logs de Autenticação */}
           <AuthLogsTimeline usuarioId={usuario.id} />
 
-          {/* Configurações de Segurança - Visível apenas para Super Admins */}
           {usuarioLogado?.isSuperAdmin && (
             <Card>
               <CardHeader>
@@ -472,14 +421,6 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         usuarioId={usuario.id}
         avatarUrl={getAvatarUrl(usuario.avatarUrl)}
         nomeExibicao={usuario.nomeExibicao}
-        onSuccess={() => refetchUsuario()}
-      />
-
-      <CoverEditDialog
-        open={coverDialogOpen}
-        onOpenChange={setCoverDialogOpen}
-        usuarioId={usuario.id}
-        coverUrl={getCoverUrl(usuario.coverUrl)}
         onSuccess={() => refetchUsuario()}
       />
 

@@ -235,56 +235,57 @@ export function UsuarioEditDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Editar Usuário"
-      maxWidth="2xl"
+      maxWidth="4xl"
       footer={
-        <>
-            <Button
-              type="submit"
-              onClick={() => formRef.current?.requestSubmit()}
-              disabled={isSaving}
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Salvando...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Salvar
-                </>
-              )}
-            </Button>
-        </>
+        <Button
+          type="submit"
+          onClick={() => formRef.current?.requestSubmit()}
+          disabled={isSaving}
+        >
+          {isSaving ? (
+            <>
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              Salvando...
+            </>
+          ) : (
+            <>
+              <Save className="h-4 w-4 mr-2" />
+              Salvar
+            </>
+          )}
+        </Button>
       }
     >
-        <form ref={formRef} onSubmit={handleSubmit}>
-          <div className="grid gap-4">
-            {/* Seção de Avatar */}
-            <div className="flex items-center gap-4 pb-4 border-b">
-              <div
-                className="relative group cursor-pointer"
-                onClick={() => setAvatarDialogOpen(true)}
-              >
-                <Avatar className="h-16 w-16 border-2 border-muted">
-                  <AvatarImage src={currentAvatarUrl || undefined} alt={formData.nomeExibicao || usuario.nomeExibicao} />
-                  <AvatarFallback className="text-lg font-medium">
-                    {getInitials(formData.nomeExibicao || usuario.nomeExibicao)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Camera className="h-5 w-5 text-white" />
-                </div>
-              </div>
-              <div className="flex-1">
-                <Typography.Small className="font-medium">Foto de Perfil</Typography.Small>
-                <p className="text-xs text-muted-foreground">
-                  Clique na imagem para alterar o avatar do usuário
-                </p>
+      <form ref={formRef} onSubmit={handleSubmit}>
+        <div className="grid gap-6">
+          {/* Avatar */}
+          <div className="flex items-center gap-4 pb-4 border-b">
+            <div
+              className="relative group cursor-pointer"
+              onClick={() => setAvatarDialogOpen(true)}
+            >
+              <Avatar className="h-16 w-16 border-2 border-muted">
+                <AvatarImage src={currentAvatarUrl || undefined} alt={formData.nomeExibicao || usuario.nomeExibicao} />
+                <AvatarFallback className="text-lg font-medium">
+                  {getInitials(formData.nomeExibicao || usuario.nomeExibicao)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Camera className="h-5 w-5 text-white" />
               </div>
             </div>
+            <div className="flex-1">
+              <Typography.Small className="font-medium">Foto de Perfil</Typography.Small>
+              <p className="text-xs text-muted-foreground">
+                Clique na imagem para alterar o avatar do usuário
+              </p>
+            </div>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Dados Pessoais */}
+          <div className="grid gap-4">
+            <Typography.Small className="font-medium text-muted-foreground">Dados Pessoais</Typography.Small>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="nomeCompleto">
                   Nome Completo <span className="text-destructive">*</span>
@@ -298,7 +299,6 @@ export function UsuarioEditDialog({
                   required
                 />
               </div>
-
               <div className="grid gap-2">
                 <Label htmlFor="nomeExibicao">
                   Nome de Exibição <span className="text-destructive">*</span>
@@ -312,9 +312,6 @@ export function UsuarioEditDialog({
                   required
                 />
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="dataNascimento">Data de Nascimento</Label>
                 <FormDatePicker
@@ -324,7 +321,28 @@ export function UsuarioEditDialog({
                   className="w-full"
                 />
               </div>
-
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="cpf">CPF</Label>
+                <Input
+                  id="cpf"
+                  value={formData.cpf}
+                  onChange={(e) =>
+                    setFormData({ ...formData, cpf: e.target.value })
+                  }
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="rg">RG</Label>
+                <Input
+                  id="rg"
+                  value={formData.rg}
+                  onChange={(e) =>
+                    setFormData({ ...formData, rg: e.target.value })
+                  }
+                />
+              </div>
               <div className="grid gap-2">
                 <Label htmlFor="genero">Gênero</Label>
                 <Select
@@ -347,55 +365,11 @@ export function UsuarioEditDialog({
                 </Select>
               </div>
             </div>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="cpf">CPF</Label>
-                <Input
-                  id="cpf"
-                  value={formData.cpf}
-                  onChange={(e) =>
-                    setFormData({ ...formData, cpf: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="rg">RG</Label>
-                <Input
-                  id="rg"
-                  value={formData.rg}
-                  onChange={(e) =>
-                    setFormData({ ...formData, rg: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="telefone">Telefone</Label>
-                <Input
-                  id="telefone"
-                  value={formData.telefone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, telefone: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="ramal">Ramal</Label>
-                <Input
-                  id="ramal"
-                  value={formData.ramal}
-                  onChange={(e) =>
-                    setFormData({ ...formData, ramal: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-
+          {/* Contato */}
+          <div className="border-t pt-4 grid gap-4">
+            <Typography.Small className="font-medium text-muted-foreground">Contato</Typography.Small>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="emailCorporativo">
@@ -411,7 +385,6 @@ export function UsuarioEditDialog({
                   required
                 />
               </div>
-
               <div className="grid gap-2">
                 <Label htmlFor="emailPessoal">E-mail Pessoal</Label>
                 <Input
@@ -424,7 +397,33 @@ export function UsuarioEditDialog({
                 />
               </div>
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="telefone">Telefone</Label>
+                <Input
+                  id="telefone"
+                  value={formData.telefone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, telefone: e.target.value })
+                  }
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="ramal">Ramal</Label>
+                <Input
+                  id="ramal"
+                  value={formData.ramal}
+                  onChange={(e) =>
+                    setFormData({ ...formData, ramal: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+          </div>
 
+          {/* Profissional */}
+          <div className="border-t pt-4 grid gap-4">
+            <Typography.Small className="font-medium text-muted-foreground">Profissional</Typography.Small>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="cargo">Cargo</Label>
@@ -451,7 +450,6 @@ export function UsuarioEditDialog({
                   </SelectContent>
                 </Select>
               </div>
-
               <div className="grid gap-2">
                 <Label htmlFor="oab">OAB</Label>
                 <Input
@@ -462,7 +460,6 @@ export function UsuarioEditDialog({
                   }
                 />
               </div>
-
               <div className="grid gap-2">
                 <Label htmlFor="ufOab">UF OAB</Label>
                 <Input
@@ -478,197 +475,193 @@ export function UsuarioEditDialog({
                 />
               </div>
             </div>
+          </div>
 
-            <div className="border-t pt-4 mt-2">
-              <Typography.Small className="font-medium mb-3 block">Endereço</Typography.Small>
-
-              <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="cep">CEP</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="cep"
-                      value={formData.endereco.cep}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          endereco: { ...formData.endereco, cep: e.target.value },
-                        })
-                      }
-                      placeholder="00000-000"
-                      maxLength={9}
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      onClick={handleBuscarCep}
-                      disabled={isBuscandoCep}
-                      title="Buscar CEP"
-                    >
-                      {isBuscandoCep ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Search className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="logradouro">Logradouro</Label>
-                    <Input
-                      id="logradouro"
-                      value={formData.endereco.logradouro}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          endereco: {
-                            ...formData.endereco,
-                            logradouro: e.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="numero">Número</Label>
-                    <Input
-                      id="numero"
-                      value={formData.endereco.numero}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          endereco: { ...formData.endereco, numero: e.target.value },
-                        })
-                      }
-                    />
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="complemento">Complemento</Label>
-                    <Input
-                      id="complemento"
-                      value={formData.endereco.complemento}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          endereco: {
-                            ...formData.endereco,
-                            complemento: e.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="bairro">Bairro</Label>
-                    <Input
-                      id="bairro"
-                      value={formData.endereco.bairro}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          endereco: { ...formData.endereco, bairro: e.target.value },
-                        })
-                      }
-                    />
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="cidade">Cidade</Label>
-                    <Input
-                      id="cidade"
-                      value={formData.endereco.cidade}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          endereco: { ...formData.endereco, cidade: e.target.value },
-                        })
-                      }
-                    />
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="estado">UF</Label>
-                    <Input
-                      id="estado"
-                      maxLength={2}
-                      value={formData.endereco.estado}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          endereco: {
-                            ...formData.endereco,
-                            estado: e.target.value.toUpperCase(),
-                          },
-                        })
-                      }
-                    />
-                  </div>
+          {/* Endereço */}
+          <div className="border-t pt-4 grid gap-4">
+            <Typography.Small className="font-medium text-muted-foreground">Endereço</Typography.Small>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="cep">CEP</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="cep"
+                    value={formData.endereco.cep}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        endereco: { ...formData.endereco, cep: e.target.value },
+                      })
+                    }
+                    placeholder="00000-000"
+                    maxLength={9}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={handleBuscarCep}
+                    disabled={isBuscandoCep}
+                    title="Buscar CEP"
+                  >
+                    {isBuscandoCep ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Search className="h-4 w-4" />
+                    )}
+                  </Button>
                 </div>
               </div>
             </div>
-
-            <div className="border-t pt-4 mt-2">
-              <Typography.Small className="font-medium mb-3 block">Status do Usuário</Typography.Small>
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="ativo"
-                    checked={formData.ativo}
-                    onCheckedChange={(checked) =>
-                      setFormData({ ...formData, ativo: !!checked })
-                    }
-                  />
-                  <Label htmlFor="ativo" className="cursor-pointer font-normal">
-                    Usuário ativo
-                  </Label>
-                </div>
-
-                {!formData.ativo && usuario.ativo && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      <strong>Atenção:</strong> Desativar este usuário irá desatribuí-lo
-                      automaticamente de todos os processos, audiências, pendentes,
-                      expedientes e contratos atribuídos a ele. Você receberá um relatório
-                      detalhado dos itens desatribuídos.
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                {formData.ativo && !usuario.ativo && (
-                  <Alert>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      Este usuário será reativado e poderá acessar o sistema normalmente.
-                    </AlertDescription>
-                  </Alert>
-                )}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="logradouro">Logradouro</Label>
+                <Input
+                  id="logradouro"
+                  value={formData.endereco.logradouro}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      endereco: {
+                        ...formData.endereco,
+                        logradouro: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="numero">Número</Label>
+                <Input
+                  id="numero"
+                  value={formData.endereco.numero}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      endereco: { ...formData.endereco, numero: e.target.value },
+                    })
+                  }
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="complemento">Complemento</Label>
+                <Input
+                  id="complemento"
+                  value={formData.endereco.complemento}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      endereco: {
+                        ...formData.endereco,
+                        complemento: e.target.value,
+                      },
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="bairro">Bairro</Label>
+                <Input
+                  id="bairro"
+                  value={formData.endereco.bairro}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      endereco: { ...formData.endereco, bairro: e.target.value },
+                    })
+                  }
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="cidade">Cidade</Label>
+                <Input
+                  id="cidade"
+                  value={formData.endereco.cidade}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      endereco: { ...formData.endereco, cidade: e.target.value },
+                    })
+                  }
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="estado">UF</Label>
+                <Input
+                  id="estado"
+                  maxLength={2}
+                  value={formData.endereco.estado}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      endereco: {
+                        ...formData.endereco,
+                        estado: e.target.value.toUpperCase(),
+                      },
+                    })
+                  }
+                />
               </div>
             </div>
           </div>
-        </form>
 
-        {/* Avatar Edit Dialog */}
-        <AvatarEditDialog
-          open={avatarDialogOpen}
-          onOpenChange={setAvatarDialogOpen}
-          usuarioId={usuario.id}
-          avatarUrl={currentAvatarUrl}
-          nomeExibicao={formData.nomeExibicao || usuario.nomeExibicao}
-          onSuccess={() => {
-            // Atualiza o avatar localmente após sucesso
-            setCurrentAvatarUrl(getAvatarUrl(usuario.avatarUrl) + `?t=${Date.now()}`);
-            onSuccess?.();
-          }}
-        />
+          {/* Status */}
+          <div className="border-t pt-4 grid gap-4">
+            <Typography.Small className="font-medium text-muted-foreground">Status do Usuário</Typography.Small>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="ativo"
+                  checked={formData.ativo}
+                  onCheckedChange={(checked) =>
+                    setFormData({ ...formData, ativo: !!checked })
+                  }
+                />
+                <Label htmlFor="ativo" className="cursor-pointer font-normal">
+                  Usuário ativo
+                </Label>
+              </div>
+
+              {!formData.ativo && usuario.ativo && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    <strong>Atenção:</strong> Desativar este usuário irá desatribuí-lo
+                    automaticamente de todos os processos, audiências, pendentes,
+                    expedientes e contratos atribuídos a ele. Você receberá um relatório
+                    detalhado dos itens desatribuídos.
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {formData.ativo && !usuario.ativo && (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    Este usuário será reativado e poderá acessar o sistema normalmente.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+          </div>
+        </div>
+      </form>
+
+      {/* Avatar Edit Dialog */}
+      <AvatarEditDialog
+        open={avatarDialogOpen}
+        onOpenChange={setAvatarDialogOpen}
+        usuarioId={usuario.id}
+        avatarUrl={currentAvatarUrl}
+        nomeExibicao={formData.nomeExibicao || usuario.nomeExibicao}
+        onSuccess={() => {
+          // Atualiza o avatar localmente após sucesso
+          setCurrentAvatarUrl(getAvatarUrl(usuario.avatarUrl) + `?t=${Date.now()}`);
+          onSuccess?.();
+        }}
+      />
     </DialogFormShell>
   );
 }
