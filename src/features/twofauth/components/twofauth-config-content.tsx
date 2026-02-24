@@ -279,7 +279,7 @@ export function TwoFAuthConfigContent() {
               <p className="text-muted-foreground">Nenhuma conta 2FA cadastrada</p>
             </div>
           ) : (
-            <ScrollArea className="h-[400px] pr-4">
+            <ScrollArea className="h-100 pr-4">
               <div className="space-y-2">
                 {accounts.map((account) => (
                   <div

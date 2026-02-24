@@ -147,7 +147,7 @@ export async function buscarAgendamentoPorId(id: number): Promise<Agendamento | 
  */
 export async function atualizarAgendamento(
   id: number,
-  params: AtualizarAgendamentoParams & { proxima_execucao?: string }
+  params: AtualizarAgendamentoParams & { proxima_execucao?: string; ultima_execucao?: string }
 ): Promise<Agendamento> {
   const supabase = createServiceClient();
 
@@ -194,6 +194,7 @@ export async function atualizarAgendamento(
   if (params.ativo !== undefined) updateData.ativo = params.ativo;
   if (params.parametros_extras !== undefined) updateData.parametros_extras = params.parametros_extras;
   if (params.proxima_execucao !== undefined) updateData.proxima_execucao = params.proxima_execucao;
+  if (params.ultima_execucao !== undefined) updateData.ultima_execucao = params.ultima_execucao;
 
   const { data, error } = await supabase
     .from(TABLE_NAME)

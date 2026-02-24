@@ -10,7 +10,7 @@ import { pendentesManifestacaoCapture, type PendentesManifestacaoResult } from '
 import { periciasCapture, type PericiasResult } from '../trt/pericias.service';
 import { capturaCombinada, type CapturaCombinAdaResult } from '../trt/captura-combinada.service';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '../captura-log.service';
-import { atualizarAgendamento } from '../agendamentos/atualizar-agendamento.service';
+import { atualizarAgendamento } from '../persistence/agendamento-persistence.service';
 import { recalcularProximaExecucaoAposExecucao } from '../agendamentos/calcular-proxima-execucao.service';
 import type { FiltroPrazoPendentes, CodigoTRT, GrauTRT } from '../../types/trt-types';
 import { registrarCapturaRawLog } from '../persistence/captura-raw-log.service';
@@ -504,70 +504,80 @@ export async function executarAgendamento(
     return resultados;
   };
 
-  // Executar captura e atualizar histórico
-  executarCaptura()
-    .then(async (resultados) => {
-      if (logId) {
-        try {
-          const errosColetados = resultados.flatMap((r) => {
-            const errosFiltro = r.filtros
-              ?.filter((f) => f.erro)
-              .map((f) => `${r.tribunal} ${r.grau} (ID ${r.credencial_id}) - ${f.filtroPrazo}: ${f.erro}`) || [];
+  // IMPORTANTE: Atualizar proxima_execucao ANTES de executar a captura.
+  // Isso evita que o cron (que roda a cada minuto) encontre o mesmo agendamento
+  // com proxima_execucao no passado e dispare capturas duplicadas em loop.
+  if (atualizarProximaExecucao) {
+    try {
+      const proximaExecucao = recalcularProximaExecucaoAposExecucao(
+        agendamento.periodicidade,
+        agendamento.dias_intervalo,
+        agendamento.horario
+      );
+      await atualizarAgendamento(agendamento.id, {
+        proxima_execucao: proximaExecucao,
+      });
+      console.log(`[Scheduler] Agendamento ID ${agendamento.id} - proxima_execucao atualizada para ${proximaExecucao} (antes da execução)`);
+    } catch (error) {
+      console.error(`[Scheduler] Erro ao atualizar proxima_execucao do agendamento ID ${agendamento.id} antes da execução:`, error);
+      // Se não conseguiu atualizar, não executa para evitar loop
+      throw error;
+    }
+  }
 
-            if (r.erro) {
-              return [`${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${r.erro}`, ...errosFiltro];
-            }
+  // Executar captura e atualizar histórico (agora com await)
+  try {
+    const resultados = await executarCaptura();
 
-            return errosFiltro;
-          });
-
-          if (errosColetados.length > 0) {
-            await finalizarCapturaLogErro(logId, errosColetados.join('; '));
-          } else {
-            const filtrosExecutados = Array.from(
-              new Set(
-                resultados.flatMap((r) => r.filtros?.map((f) => f.filtroPrazo) || [])
-              )
-            );
-
-            await finalizarCapturaLogSucesso(logId, {
-              credenciais_processadas: resultados.length,
-              filtros_prazo: filtrosExecutados.length > 0 ? filtrosExecutados : undefined,
-              resultados,
-            });
-          }
-        } catch (error) {
-          console.error('Erro ao atualizar histórico de captura:', error);
-        }
-      }
-
-      // Atualizar agendamento: última execução e próxima execução (se solicitado)
+    if (logId) {
       try {
-        const updateData: Record<string, unknown> = {
-          ultima_execucao: new Date().toISOString(),
-        };
+        const errosColetados = resultados.flatMap((r) => {
+          const errosFiltro = r.filtros
+            ?.filter((f) => f.erro)
+            .map((f) => `${r.tribunal} ${r.grau} (ID ${r.credencial_id}) - ${f.filtroPrazo}: ${f.erro}`) || [];
 
-        if (atualizarProximaExecucao) {
-          const proximaExecucao = recalcularProximaExecucaoAposExecucao(
-            agendamento.periodicidade,
-            agendamento.dias_intervalo,
-            agendamento.horario
+          if (r.erro) {
+            return [`${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${r.erro}`, ...errosFiltro];
+          }
+
+          return errosFiltro;
+        });
+
+        if (errosColetados.length > 0) {
+          await finalizarCapturaLogErro(logId, errosColetados.join('; '));
+        } else {
+          const filtrosExecutados = Array.from(
+            new Set(
+              resultados.flatMap((r) => r.filtros?.map((f) => f.filtroPrazo) || [])
+            )
           );
-          updateData.proxima_execucao = proximaExecucao;
-        }
 
-        await atualizarAgendamento(agendamento.id, updateData);
-        console.log(`[Scheduler] Agendamento ID ${agendamento.id} atualizado após execução`);
+          await finalizarCapturaLogSucesso(logId, {
+            credenciais_processadas: resultados.length,
+            filtros_prazo: filtrosExecutados.length > 0 ? filtrosExecutados : undefined,
+            resultados,
+          });
+        }
       } catch (error) {
-        console.error('Erro ao atualizar agendamento após execução:', error);
+        console.error('Erro ao atualizar histórico de captura:', error);
       }
-    })
-    .catch(async (error) => {
-      console.error('Erro ao executar captura do agendamento:', error);
-      if (logId) {
-        await finalizarCapturaLogErro(logId, error instanceof Error ? error.message : 'Erro desconhecido');
-      }
-    });
+    }
+
+    // Atualizar ultima_execucao após conclusão
+    try {
+      await atualizarAgendamento(agendamento.id, {
+        ultima_execucao: new Date().toISOString(),
+      });
+      console.log(`[Scheduler] Agendamento ID ${agendamento.id} - ultima_execucao atualizada após conclusão`);
+    } catch (error) {
+      console.error('Erro ao atualizar ultima_execucao do agendamento:', error);
+    }
+  } catch (error) {
+    console.error('Erro ao executar captura do agendamento:', error);
+    if (logId) {
+      await finalizarCapturaLogErro(logId, error instanceof Error ? error.message : 'Erro desconhecido');
+    }
+  }
 
   return { captureId: logId };
 }
