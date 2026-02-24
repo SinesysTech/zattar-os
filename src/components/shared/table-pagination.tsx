@@ -64,9 +64,7 @@ export function TablePagination({
     <div
       className={cn(
         'flex items-center justify-between',
-        variant === 'integrated'
-          ? 'pt-4'
-          : 'px-2',
+        variant === 'standalone' && 'px-2',
         className
       )}
     >
@@ -82,7 +80,7 @@ export function TablePagination({
             onValueChange={handlePageSizeChange}
             disabled={isLoading}
           >
-            <SelectTrigger className="h-8 w-[72px] bg-card" suppressHydrationWarning>
+            <SelectTrigger className="h-8 w-18 bg-card" suppressHydrationWarning>
               <SelectValue />
             </SelectTrigger>
             <SelectContent side="top">

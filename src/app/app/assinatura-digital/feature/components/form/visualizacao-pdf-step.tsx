@@ -103,7 +103,7 @@ export default function VisualizacaoPdfStep() {
 
           // If not cached, fetch and cache
           try {
-            const response = await fetch(`/api/templates/${id}`);
+            const response = await fetch(API_ROUTES.templateById(id));
             const data = await response.json();
 
             if (data.success && data.data) {

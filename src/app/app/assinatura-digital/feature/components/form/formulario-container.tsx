@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import type { Template } from "../../types/domain";
 import type { StepConfig } from "../../types/store";
+import { API_ROUTES } from "../../constants";
 
 export default function FormularioContainer() {
   const etapaAtual = useFormularioStore((state) => state.etapaAtual);
@@ -111,7 +112,7 @@ export default function FormularioContainer() {
     (async () => {
       const validationPromises = templateIds.map(async (templateId) => {
         try {
-          const response = await fetch(`/api/templates/${templateId}`);
+          const response = await fetch(API_ROUTES.templateById(templateId));
           const data = await response.json();
 
           if (!data.success || !data.data) {
@@ -188,7 +189,7 @@ export default function FormularioContainer() {
     let cancelled = false;
     (async () => {
       try {
-        const response = await fetch(`/api/templates/${effectiveTemplateId}`);
+        const response = await fetch(API_ROUTES.templateById(effectiveTemplateId));
         const data = await response.json();
 
         if (!cancelled) {

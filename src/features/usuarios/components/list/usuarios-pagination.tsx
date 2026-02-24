@@ -44,7 +44,7 @@ export function UsuariosPagination({
           {Math.min((pageIndex + 1) * pageSize, total)} de {total} resultados
         </Typography.Muted>
         <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
-          <SelectTrigger className="h-8 w-[70px]">
+          <SelectTrigger className="h-8 w-17.5">
             <SelectValue />
           </SelectTrigger>
           <SelectContent side="top">

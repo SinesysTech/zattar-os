@@ -21,6 +21,11 @@ type AnyDynamicFormSchema = {
         message?: string;
       };
       options?: Array<{ value: string | number }>;
+      conditional?: {
+        field: string;
+        value?: unknown;
+        operator: string;
+      };
     }>;
   }>;
 };
@@ -33,7 +38,9 @@ function emptyStringToUndefined(value: unknown): unknown {
 function buildFieldSchema(
   field: AnyDynamicFormSchema["sections"][number]["fields"][number]
 ) {
-  const required = Boolean(field.validation?.required);
+  // Campos condicionais são sempre opcionais no schema estático,
+  // pois podem estar ocultos no UI quando a condição não é atendida.
+  const required = field.conditional ? false : Boolean(field.validation?.required);
   const min = field.validation?.min;
   const max = field.validation?.max;
   const pattern = field.validation?.pattern;
@@ -119,7 +126,13 @@ function buildFieldSchema(
         ? base.refine((v) => !!v, { message: requiredMessage })
         : base.optional();
       schema = schema.refine(
-        (v: unknown) => v == null || validateTelefone(String(v)),
+        (v: unknown) => {
+          if (v == null || v === undefined) return true;
+          // Se não tem dígitos, considerar vazio (campo opcional não preenchido)
+          const digits = String(v).replace(/\D/g, '');
+          if (digits.length === 0) return true;
+          return validateTelefone(String(v));
+        },
         { message: message || "Telefone inválido" }
       );
       return schema;

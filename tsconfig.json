@@ -65,6 +65,7 @@
   },
   "include": [
     "next-env.d.ts",
+    "proxy.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
     "**/*.mts",

@@ -40,6 +40,7 @@ export type Recurso =
   | 'contas_receber'
   | 'orcamentos'
   | 'conciliacao_bancaria'
+  | 'documentos'
   | 'pangea';
 
 /**
@@ -427,6 +428,9 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
     'desconciliar',
     'exportar',
   ],
+
+  // Documentos - Gestão de documentos, arquivos e pastas (5 permissões)
+  documentos: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
 
   // Pangea - Banco Nacional de Precedentes (3 permissões)
   pangea: [

@@ -115,6 +115,14 @@ export {
   actionBuscarContratosAtribuidos,
 } from "./actions/atividades-actions";
 
+export {
+  actionBuscarAtividadesUsuario,
+} from "./actions/audit-atividades-actions";
+
+export type {
+  AtividadeLog,
+} from "./repository-audit-atividades";
+
 // Hooks
 export { useUsuarios } from "./hooks/use-usuarios";
 export { useUsuario } from "./hooks/use-usuario";

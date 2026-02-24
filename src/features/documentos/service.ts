@@ -42,6 +42,7 @@ import {
   validateFileSize,
 } from "./services/b2-upload.service";
 import { checkQuota, incrementQuota } from "@/lib/mcp/quotas"; // Moved to feature
+import { checkPermission } from "@/lib/auth/authorization";
 import { generatePresignedUrl as generatePresignedDownloadUrl } from "@/lib/storage/backblaze-b2.service";
 
 // ============================================================================
@@ -157,10 +158,14 @@ export async function deletarDocumento(
     id,
     usuario_id
   );
-  if (!temAcesso || permissao !== "proprietario") {
-    throw new Error(
-      "Acesso negado: apenas o proprietário pode deletar o documento."
-    );
+  const isProprietario = temAcesso && permissao === "proprietario";
+  if (!isProprietario) {
+    const podeDeletar = await checkPermission(usuario_id, "documentos", "deletar");
+    if (!podeDeletar) {
+      throw new Error(
+        "Acesso negado: apenas o proprietário ou usuários com permissão podem deletar o documento."
+      );
+    }
   }
   await documentosRepo.deletarDocumento(id);
 }
@@ -353,10 +358,16 @@ export async function deletarPasta(
   usuario_id: number
 ): Promise<void> {
   const pasta = await pastasRepo.buscarPastaPorId(id);
-  if (!pasta || pasta.criado_por !== usuario_id) {
-    throw new Error(
-      "Acesso negado: apenas o proprietário pode deletar a pasta."
-    );
+  if (!pasta) {
+    throw new Error("Pasta não encontrada.");
+  }
+  if (pasta.criado_por !== usuario_id) {
+    const podeDeletar = await checkPermission(usuario_id, "documentos", "deletar");
+    if (!podeDeletar) {
+      throw new Error(
+        "Acesso negado: apenas o proprietário ou usuários com permissão podem deletar a pasta."
+      );
+    }
   }
 
   const { documentos, subpastas } = await pastasRepo
@@ -892,9 +903,12 @@ export async function deletarDocumentoPermanentemente(
   }
 
   if (documento.criado_por !== usuario_id) {
-    throw new Error(
-      "Acesso negado: apenas o proprietário pode excluir permanentemente."
-    );
+    const podeDeletar = await checkPermission(usuario_id, "documentos", "deletar");
+    if (!podeDeletar) {
+      throw new Error(
+        "Acesso negado: apenas o proprietário ou usuários com permissão podem excluir permanentemente."
+      );
+    }
   }
 
   return documentosRepo.deletarDocumentoPermanentemente(documento_id);
@@ -989,10 +1003,16 @@ export async function deletarArquivo(
   usuario_id: number
 ): Promise<void> {
   const arquivo = await arquivosRepo.buscarArquivoPorId(arquivo_id);
-  if (!arquivo || arquivo.criado_por !== usuario_id) {
-    throw new Error(
-      "Acesso negado: apenas o proprietário pode deletar o arquivo."
-    );
+  if (!arquivo) {
+    throw new Error("Arquivo não encontrado.");
+  }
+  if (arquivo.criado_por !== usuario_id) {
+    const podeDeletar = await checkPermission(usuario_id, "documentos", "deletar");
+    if (!podeDeletar) {
+      throw new Error(
+        "Acesso negado: apenas o proprietário ou usuários com permissão podem deletar o arquivo."
+      );
+    }
   }
 
   await arquivosRepo.deletarArquivo(arquivo_id);

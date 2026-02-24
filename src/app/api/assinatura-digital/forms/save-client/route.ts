@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createClient } from '@/lib/supabase/server';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { NACIONALIDADES } from '@/app/app/assinatura-digital/feature/constants/nacionalidades';
 
 // ---------------------------------------------------------------------------
@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     if (payload.operation === 'insert') {
       const clienteRow = { ...buildClienteRow(payload.dados), tipo_pessoa: 'pf' as const };
