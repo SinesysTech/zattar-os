@@ -77,7 +77,7 @@ export function PdfViewerDialog({
                 maxWidth="4xl"
                 footer={footerButton}
             >
-                <div className="flex flex-col items-center justify-center flex-1 gap-4 h-[60vh] min-h-[400px]">
+                <div className="flex flex-col items-center justify-center flex-1 gap-4 h-[60vh] min-h-100">
                     <FileText className="h-16 w-16 text-muted-foreground" />
                     <p className="text-muted-foreground">Documento não disponível</p>
                 </div>
@@ -93,7 +93,7 @@ export function PdfViewerDialog({
             maxWidth="4xl"
             footer={footerButton}
         >
-            <div className="relative w-full h-[75vh] min-h-[500px] border rounded-md overflow-hidden bg-muted/10">
+            <div className="relative w-full h-[75vh] min-h-125 border rounded-md overflow-hidden bg-muted/10">
                 {isLoading && (
                     <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />

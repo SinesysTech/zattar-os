@@ -302,7 +302,7 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
       {/* Instâncias do Processo (modo unificado) */}
       {instancias && instancias.length > 1 && (
         <>
-          <Separator />
+          <Separator className="my-4" />
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Layers className="h-4 w-4 text-muted-foreground" />

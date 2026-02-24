@@ -379,30 +379,41 @@ export async function salvarAcervoBatch(
   const entidade: TipoEntidade = "acervo";
   const totalProcessos = processos.length;
 
+  // Tamanho dos lotes para SELECT e INSERT (evita timeouts e payloads grandes)
+  const BATCH_SIZE = 100;
+
   console.log(`   🚀 [salvarAcervoBatch] Iniciando persistência BATCH de ${totalProcessos} processos (${origem})...`);
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // FASE 1: BATCH SELECT - Buscar todos os existentes de uma vez
+  // FASE 1: BATCH SELECT - Buscar existentes em lotes para evitar timeout
   // ═══════════════════════════════════════════════════════════════════════════
   console.log(`   📥 [salvarAcervoBatch] Fase 1: Buscando registros existentes...`);
 
   const idsPje = processos.map(p => p.id);
 
-  const { data: existentes, error: erroBusca } = await supabase
-    .from("acervo")
-    .select("*")
-    .in("id_pje", idsPje)
-    .eq("trt", trt)
-    .eq("grau", grau);
+  // Buscar em lotes de BATCH_SIZE para evitar statement_timeout no PostgreSQL
+  const todosExistentes: Record<string, unknown>[] = [];
+  for (let i = 0; i < idsPje.length; i += BATCH_SIZE) {
+    const loteIds = idsPje.slice(i, i + BATCH_SIZE);
 
-  if (erroBusca) {
-    throw new Error(`Erro ao buscar processos existentes: ${erroBusca.message}`);
+    const { data, error: erroBusca } = await supabase
+      .from("acervo")
+      .select("*")
+      .in("id_pje", loteIds)
+      .eq("trt", trt)
+      .eq("grau", grau);
+
+    if (erroBusca) {
+      throw new Error(`Erro ao buscar processos existentes (lote ${Math.floor(i / BATCH_SIZE) + 1}): ${erroBusca.message}`);
+    }
+
+    todosExistentes.push(...((data ?? []) as Record<string, unknown>[]));
   }
 
   // Criar mapa de existentes: id_pje → registro completo
   const mapaExistentes = new Map<number, Record<string, unknown>>();
-  for (const registro of (existentes ?? [])) {
-    mapaExistentes.set(registro.id_pje as number, registro as Record<string, unknown>);
+  for (const registro of todosExistentes) {
+    mapaExistentes.set(registro.id_pje as number, registro);
     // Já mapeia os IDs existentes
     mapeamentoIds.set(registro.id_pje as number, registro.id as number);
   }
@@ -474,8 +485,6 @@ export async function salvarAcervoBatch(
   if (novos.length > 0) {
     console.log(`   📤 [salvarAcervoBatch] Fase 3: Inserindo ${novos.length} novos registros em batch...`);
 
-    // Inserir em lotes de 100 para evitar problemas com payloads muito grandes
-    const BATCH_SIZE = 100;
     for (let i = 0; i < novos.length; i += BATCH_SIZE) {
       const lote = novos.slice(i, i + BATCH_SIZE);
 

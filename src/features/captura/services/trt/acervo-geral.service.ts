@@ -248,44 +248,49 @@ export async function acervoGeralCapture(
     // 5.4 Persistir partes (usa dados já buscados, sem refetch da API)
     console.log('   👥 Persistindo partes...');
     let partesPersistidas = 0;
-    for (const [processoId, dados] of dadosComplementares.porProcesso) {
-      if (dados.partes && dados.partes.length > 0) {
-        const idAcervo = mapeamentoIds.get(processoId);
 
-        if (!idAcervo) {
-          console.log(`   ⚠️ Processo ${processoId} não encontrado no mapeamento, pulando partes...`);
-          continue;
-        }
+    if (mapeamentoIds.size === 0 && dadosComplementares.porProcesso.size > 0) {
+      console.warn('   ⚠️ Pulando persistência de partes: mapeamento de IDs do acervo está vazio (salvarAcervoBatch pode ter falhado)');
+    } else {
+      for (const [processoId, dados] of dadosComplementares.porProcesso) {
+        if (dados.partes && dados.partes.length > 0) {
+          const idAcervo = mapeamentoIds.get(processoId);
 
-        try {
-          const processo = processos.find(p => p.id === processoId);
-          const numeroProcesso = processo?.numeroProcesso;
+          if (!idAcervo) {
+            console.log(`   ⚠️ Processo ${processoId} não encontrado no mapeamento, pulando partes...`);
+            continue;
+          }
 
-          // Usa persistirPartesProcesso em vez de capturarPartesProcesso
-          // para evitar refetch da API (partes já foram buscadas em dados-complementares)
-          await persistirPartesProcesso(
-            dados.partes,
-            {
-              id_pje: processoId,
+          try {
+            const processo = processos.find(p => p.id === processoId);
+            const numeroProcesso = processo?.numeroProcesso;
+
+            // Usa persistirPartesProcesso em vez de capturarPartesProcesso
+            // para evitar refetch da API (partes já foram buscadas em dados-complementares)
+            await persistirPartesProcesso(
+              dados.partes,
+              {
+                id_pje: processoId,
+                trt: params.config.codigo,
+                grau: params.config.grau === 'primeiro_grau' ? 'primeiro_grau' : 'segundo_grau',
+                id: idAcervo,
+                numero_processo: numeroProcesso,
+              },
+              {
+                id: parseInt(advogadoInfo.idAdvogado, 10),
+                documento: advogadoInfo.cpf,
+                nome: advogadoInfo.nome,
+              }
+            );
+            partesPersistidas++;
+          } catch (e) {
+            console.warn(`   ⚠️ Erro ao persistir partes do processo ${processoId}:`, e);
+            captureLogService.logErro('partes', e instanceof Error ? e.message : String(e), {
+              processoId,
               trt: params.config.codigo,
-              grau: params.config.grau === 'primeiro_grau' ? 'primeiro_grau' : 'segundo_grau',
-              id: idAcervo,
-              numero_processo: numeroProcesso,
-            },
-            {
-              id: parseInt(advogadoInfo.idAdvogado, 10),
-              documento: advogadoInfo.cpf,
-              nome: advogadoInfo.nome,
-            }
-          );
-          partesPersistidas++;
-        } catch (e) {
-          console.warn(`   ⚠️ Erro ao persistir partes do processo ${processoId}:`, e);
-          captureLogService.logErro('partes', e instanceof Error ? e.message : String(e), {
-            processoId,
-            trt: params.config.codigo,
-            grau: params.config.grau,
-          });
+              grau: params.config.grau,
+            });
+          }
         }
       }
     }

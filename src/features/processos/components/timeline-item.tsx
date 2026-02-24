@@ -14,6 +14,7 @@ import { FileText, Activity, Download, ExternalLink, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import type { GrauProcesso } from '@/features/partes';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Card } from '@/components/ui/card';
@@ -64,7 +65,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
   const grauOrigem = item.grauOrigem;
 
   /**
-   * Gera presigned URL e abre o documento
+   * Gera presigned URL e abre o documento em nova aba
    */
   const handleOpenDocument = async () => {
     if (!item.backblaze?.key) return;
@@ -80,7 +81,36 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
       window.open(result.data.url, '_blank');
     } catch (error) {
       console.error('Erro ao abrir documento:', error);
-      alert('Erro ao abrir documento. Tente novamente.');
+      toast.error('Erro ao abrir documento. Tente novamente.');
+    } finally {
+      setIsLoadingPresignedUrl(false);
+    }
+  };
+
+  /**
+   * Gera presigned URL e faz download do documento
+   */
+  const handleDownloadDocument = async () => {
+    if (!item.backblaze?.key) return;
+
+    setIsLoadingPresignedUrl(true);
+    try {
+      const result = await actionGerarUrlDownload(item.backblaze.key);
+
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Erro ao gerar URL de download');
+      }
+
+      const link = document.createElement('a');
+      link.href = result.data.url;
+      link.download = item.backblaze.fileName || 'documento.pdf';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Erro ao baixar documento:', error);
+      toast.error('Erro ao baixar documento. Tente novamente.');
     } finally {
       setIsLoadingPresignedUrl(false);
     }
@@ -184,7 +214,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
                       <Button
                         size="icon"
                         variant="outline"
-                        onClick={handleOpenDocument}
+                        onClick={handleDownloadDocument}
                         disabled={isLoadingPresignedUrl}
                       >
                         <Download className="h-4 w-4" />
