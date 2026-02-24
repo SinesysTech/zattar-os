@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import * as service from './service';
 import {
   createAudienciaSchema,
+  EnderecoPresencial,
   ListarAudienciasParams,
   StatusAudiencia,
   updateAudienciaSchema,
@@ -209,6 +210,52 @@ export async function actionAtualizarObservacoes(
     success: true,
     data: result.data,
     message: 'Observações atualizadas com sucesso.',
+  };
+}
+
+export async function actionAtualizarUrlVirtual(
+  id: number,
+  urlAudienciaVirtual: string | null
+): Promise<ActionResult> {
+  const result = await service.atualizarUrlVirtualAudiencia(id, urlAudienciaVirtual);
+
+  if (!result.success) {
+    return {
+      success: false,
+      error: result.error.message,
+      message: 'Falha ao atualizar URL da audiência virtual.',
+    };
+  }
+
+  revalidateAudienciasPaths();
+
+  return {
+    success: true,
+    data: result.data,
+    message: 'URL da audiência virtual atualizada com sucesso.',
+  };
+}
+
+export async function actionAtualizarEnderecoPresencial(
+  id: number,
+  enderecoPresencial: EnderecoPresencial | null
+): Promise<ActionResult> {
+  const result = await service.atualizarEnderecoPresencialAudiencia(id, enderecoPresencial);
+
+  if (!result.success) {
+    return {
+      success: false,
+      error: result.error.message,
+      message: 'Falha ao atualizar endereço presencial da audiência.',
+    };
+  }
+
+  revalidateAudienciasPaths();
+
+  return {
+    success: true,
+    data: result.data,
+    message: 'Endereço presencial atualizado com sucesso.',
   };
 }
 
