@@ -2,6 +2,7 @@ import { z } from "zod";
 import { Result, err, appError, PaginatedResponse } from "@/types";
 import {
   Audiencia,
+  EnderecoPresencial,
   createAudienciaSchema,
   updateAudienciaSchema,
   ListarAudienciasParams,
@@ -148,6 +149,36 @@ export async function atualizarObservacoesAudiencia(
   }
 
   return repo.atualizarObservacoes(id, observacoes);
+}
+
+export async function atualizarUrlVirtualAudiencia(
+  id: number,
+  urlAudienciaVirtual: string | null
+): Promise<Result<Audiencia>> {
+  if (id <= 0) {
+    return err(appError("VALIDATION_ERROR", "ID inválido."));
+  }
+
+  if (urlAudienciaVirtual) {
+    try {
+      new URL(urlAudienciaVirtual);
+    } catch {
+      return err(appError("VALIDATION_ERROR", "URL inválida."));
+    }
+  }
+
+  return repo.atualizarUrlVirtual(id, urlAudienciaVirtual);
+}
+
+export async function atualizarEnderecoPresencialAudiencia(
+  id: number,
+  enderecoPresencial: EnderecoPresencial | null
+): Promise<Result<Audiencia>> {
+  if (id <= 0) {
+    return err(appError("VALIDATION_ERROR", "ID inválido."));
+  }
+
+  return repo.atualizarEnderecoPresencial(id, enderecoPresencial);
 }
 
 export async function atualizarStatusAudiencia(

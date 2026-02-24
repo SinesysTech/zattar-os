@@ -493,6 +493,59 @@ export async function atualizarObservacoes(id: number, observacoes: string | nul
   }
 }
 
+export async function atualizarUrlVirtual(id: number, urlAudienciaVirtual: string | null): Promise<Result<Audiencia>> {
+  try {
+    const db = createDbClient();
+    const { data, error } = await db
+      .from('audiencias')
+      .update({ url_audiencia_virtual: urlAudienciaVirtual })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating audiencia url virtual:', error);
+      return err(appError('DATABASE_ERROR', 'Erro ao atualizar URL da audiência virtual.', { code: error.code }));
+    }
+
+    const audiencia = converterParaAudiencia(data);
+    await deleteCached(`${CACHE_PREFIXES.audiencias}:id:${id}`);
+    await invalidateAudienciasCache();
+    return ok(audiencia);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error('Unexpected error updating audiencia url virtual:', e);
+    return err(appError('DATABASE_ERROR', 'Erro inesperado ao atualizar URL virtual.', { originalError: message }));
+  }
+}
+
+export async function atualizarEnderecoPresencial(id: number, enderecoPresencial: EnderecoPresencial | null): Promise<Result<Audiencia>> {
+  try {
+    const db = createDbClient();
+    const endereco = enderecoPresencial ? fromCamelToSnake(enderecoPresencial) : null;
+    const { data, error } = await db
+      .from('audiencias')
+      .update({ endereco_presencial: endereco })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating audiencia endereco presencial:', error);
+      return err(appError('DATABASE_ERROR', 'Erro ao atualizar endereço presencial da audiência.', { code: error.code }));
+    }
+
+    const audiencia = converterParaAudiencia(data);
+    await deleteCached(`${CACHE_PREFIXES.audiencias}:id:${id}`);
+    await invalidateAudienciasCache();
+    return ok(audiencia);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error('Unexpected error updating audiencia endereco presencial:', e);
+    return err(appError('DATABASE_ERROR', 'Erro inesperado ao atualizar endereço presencial.', { originalError: message }));
+  }
+}
+
 export async function atualizarStatus(id: number, status: StatusAudiencia, statusDescricao?: string): Promise<Result<Audiencia>> {
   try {
     const db = createDbClient();

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Eye, Pencil, FileText, ExternalLink, MessageSquareText, Loader2, Check } from 'lucide-react';
+import { Eye, Pencil, FileText, ExternalLink, MessageSquareText, Loader2, Check, Copy, MapPin } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
@@ -23,13 +23,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { ParteBadge } from '@/components/ui/parte-badge';
 
-import type { Audiencia, GrauTribunal } from '../domain';
-import { GRAU_TRIBUNAL_LABELS, StatusAudiencia } from '../domain';
+import { Input } from '@/components/ui/input';
+import type { Audiencia, EnderecoPresencial, GrauTribunal } from '../domain';
+import { GRAU_TRIBUNAL_LABELS, ModalidadeAudiencia, StatusAudiencia } from '../domain';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 import { Textarea } from '@/components/ui/textarea';
 import { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
-import { actionAtualizarObservacoes } from '../actions';
+import { actionAtualizarObservacoes, actionAtualizarUrlVirtual, actionAtualizarEnderecoPresencial } from '../actions';
 
 // =============================================================================
 // HELPER COMPONENTS
@@ -182,15 +183,14 @@ function ObservacoesCell({
         <button
           type="button"
           className={cn(
-            'flex items-center gap-1.5 text-sm w-full min-w-0 text-left rounded px-1 -mx-1 transition-colors',
+            'text-sm w-full min-w-0 text-left rounded px-1 -mx-1 transition-colors',
             'hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1',
             hasObservacoes ? 'text-foreground' : 'text-muted-foreground'
           )}
           title={hasObservacoes ? audiencia.observacoes! : 'Clique para adicionar observações'}
         >
-          <MessageSquareText className={cn('h-4 w-4 shrink-0', hasObservacoes ? 'text-primary' : 'text-muted-foreground/50')} />
           {hasObservacoes ? (
-            <span className="truncate max-w-45">{audiencia.observacoes}</span>
+            <span className="whitespace-normal wrap-break-word">{audiencia.observacoes}</span>
           ) : (
             <span className="italic">Sem observações</span>
           )}
@@ -232,6 +232,207 @@ function ObservacoesCell({
               Salvar
             </Button>
           </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+// =============================================================================
+// MODALIDADE CELL - Badge clicável com Popover para link/endereço
+// =============================================================================
+
+function formatEndereco(endereco: EnderecoPresencial): string {
+  const parts = [
+    endereco.logradouro,
+    endereco.numero,
+    endereco.complemento,
+    endereco.bairro,
+    `${endereco.cidade} - ${endereco.uf}`,
+    endereco.cep ? `CEP: ${endereco.cep}` : null,
+  ].filter(Boolean);
+  return parts.join(', ');
+}
+
+function ModalidadeCell({
+  audiencia,
+  onSuccessAction,
+}: {
+  audiencia: AudienciaComResponsavel;
+  onSuccessAction?: () => void;
+}) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [urlValue, setUrlValue] = React.useState(audiencia.urlAudienciaVirtual || '');
+  const [enderecoValue, setEnderecoValue] = React.useState('');
+  const [isSaving, setIsSaving] = React.useState(false);
+  const [copied, setCopied] = React.useState(false);
+
+  const isVirtual = audiencia.modalidade === ModalidadeAudiencia.Virtual || audiencia.modalidade === ModalidadeAudiencia.Hibrida;
+  const isPresencial = audiencia.modalidade === ModalidadeAudiencia.Presencial || audiencia.modalidade === ModalidadeAudiencia.Hibrida;
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setUrlValue(audiencia.urlAudienciaVirtual || '');
+      setEnderecoValue(
+        audiencia.enderecoPresencial ? formatEndereco(audiencia.enderecoPresencial) : ''
+      );
+      setCopied(false);
+    }
+  }, [isOpen, audiencia.urlAudienciaVirtual, audiencia.enderecoPresencial]);
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSaveUrl = async () => {
+    setIsSaving(true);
+    try {
+      const url = urlValue.trim() || null;
+      const result = await actionAtualizarUrlVirtual(audiencia.id, url);
+      if (result.success) {
+        onSuccessAction?.();
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleSaveEndereco = async () => {
+    setIsSaving(true);
+    try {
+      // Para endereço, só suportamos texto livre formatado como logradouro
+      // (endereço completo fica no formulário de edição da audiência)
+      const texto = enderecoValue.trim();
+      const endereco: EnderecoPresencial | null = texto
+        ? { logradouro: texto, numero: '', bairro: '', cidade: '', uf: '', cep: '' }
+        : null;
+      const result = await actionAtualizarEnderecoPresencial(audiencia.id, endereco);
+      if (result.success) {
+        onSuccessAction?.();
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Determinar o que mostrar baseado na modalidade
+  const currentValue = isVirtual
+    ? audiencia.urlAudienciaVirtual
+    : audiencia.enderecoPresencial
+      ? formatEndereco(audiencia.enderecoPresencial)
+      : null;
+
+  return (
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <button type="button" className="cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded">
+          <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 p-4" align="start">
+        <div className="space-y-3">
+          {/* Seção Virtual */}
+          {isVirtual && (
+            <div className="space-y-2">
+              <h4 className="font-semibold text-sm flex items-center gap-2">
+                <ExternalLink className="h-4 w-4 text-primary" />
+                Link da Audiência Virtual
+              </h4>
+              {audiencia.urlAudienciaVirtual ? (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={audiencia.urlAudienciaVirtual}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-primary underline truncate flex-1"
+                      title={audiencia.urlAudienciaVirtual}
+                    >
+                      {audiencia.urlAudienciaVirtual}
+                    </a>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 shrink-0"
+                          onClick={() => copyToClipboard(audiencia.urlAudienciaVirtual!)}
+                        >
+                          {copied ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{copied ? 'Copiado!' : 'Copiar link'}</TooltipContent>
+                    </Tooltip>
+                  </div>
+                </div>
+              ) : null}
+              <Input
+                value={urlValue}
+                onChange={(e) => setUrlValue(e.target.value)}
+                placeholder="https://..."
+                className="h-8 text-xs"
+                disabled={isSaving}
+              />
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} disabled={isSaving}>
+                  Cancelar
+                </Button>
+                <Button size="sm" onClick={handleSaveUrl} disabled={isSaving}>
+                  {isSaving ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Check className="mr-1 h-3 w-3" />}
+                  Salvar
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Seção Presencial */}
+          {isPresencial && (
+            <div className="space-y-2">
+              {isVirtual && <div className="border-t pt-3" />}
+              <h4 className="font-semibold text-sm flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-primary" />
+                Endereço Presencial
+              </h4>
+              {audiencia.enderecoPresencial ? (
+                <div className="flex items-start gap-2">
+                  <p className="text-xs text-muted-foreground flex-1">
+                    {formatEndereco(audiencia.enderecoPresencial)}
+                  </p>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 shrink-0"
+                        onClick={() => copyToClipboard(formatEndereco(audiencia.enderecoPresencial!))}
+                      >
+                        {copied ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>{copied ? 'Copiado!' : 'Copiar endereço'}</TooltipContent>
+                  </Tooltip>
+                </div>
+              ) : null}
+              <Textarea
+                value={enderecoValue}
+                onChange={(e) => setEnderecoValue(e.target.value)}
+                placeholder="Endereço completo..."
+                className="min-h-16 resize-y text-xs"
+                disabled={isSaving}
+              />
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} disabled={isSaving}>
+                  Cancelar
+                </Button>
+                <Button size="sm" onClick={handleSaveEndereco} disabled={isSaving}>
+                  {isSaving ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Check className="mr-1 h-3 w-3" />}
+                  Salvar
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </PopoverContent>
     </Popover>
@@ -451,13 +652,16 @@ export function getAudienciasColumns(
         headerLabel: 'Detalhes',
       },
       size: 220,
-      cell: ({ row }) => {
+      cell: ({ row, table }) => {
         const audiencia = row.original;
+        const meta = table.options.meta as { onSuccessAction?: () => void } | undefined;
+        const onSuccessAction = meta?.onSuccessAction;
+
         return (
           <div className="flex flex-col gap-1.5 py-2 min-w-0">
-            {/* Modalidade primeiro */}
+            {/* Modalidade - clicável com popover para link/endereço */}
             {audiencia.modalidade ? (
-              <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
+              <ModalidadeCell audiencia={audiencia} onSuccessAction={onSuccessAction} />
             ) : null}
             {/* Tipo segundo */}
             {audiencia.tipoDescricao ? (
@@ -490,7 +694,7 @@ export function getAudienciasColumns(
         const onSuccessAction = meta?.onSuccessAction;
 
         return (
-          <div className="flex items-center py-2">
+          <div className="py-2">
             <ObservacoesCell
               audiencia={audiencia}
               onSuccessAction={onSuccessAction}
