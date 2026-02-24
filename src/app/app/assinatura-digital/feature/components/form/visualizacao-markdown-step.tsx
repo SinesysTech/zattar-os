@@ -281,10 +281,10 @@ export default function VisualizacaoMarkdownStep() {
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-12 space-y-4">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="text-lg font-medium text-gray-700">
+          <p className="text-lg font-medium text-foreground">
             {isFetchingTemplate ? "Buscando template..." : "Processando documento..."}
           </p>
-          <p className="text-sm text-gray-500">Isso pode levar alguns segundos</p>
+          <p className="text-sm text-muted-foreground">Isso pode levar alguns segundos</p>
         </div>
       )}
 
@@ -310,8 +310,8 @@ export default function VisualizacaoMarkdownStep() {
         <div className="space-y-4">
           {/* Seletor de múltiplos templates */}
           {templateMetadatas.length > 1 && (
-            <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
-              <Label className="text-sm font-medium text-gray-700">
+            <div className="bg-card border rounded-lg p-4 space-y-3">
+              <Label className="text-sm font-medium text-muted-foreground">
                 Escolha o modelo do documento
               </Label>
               <RadioGroup
@@ -332,14 +332,14 @@ export default function VisualizacaoMarkdownStep() {
           )}
 
           {/* Alert informativo */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-sm text-blue-900">
+          <div className="bg-blue-600/10 border border-blue-600/20 rounded-lg p-4">
+            <p className="text-sm text-blue-600">
               <strong>Importante:</strong> Revise cuidadosamente todas as informações do documento antes de prosseguir para a assinatura.
             </p>
           </div>
 
           {/* Conteúdo Markdown renderizado */}
-          <div className="border rounded-lg overflow-hidden bg-white">
+          <div className="border rounded-lg overflow-hidden bg-card">
             <div className="container">
               <div className="prose prose-sm max-w-none">
                 <ReactMarkdown

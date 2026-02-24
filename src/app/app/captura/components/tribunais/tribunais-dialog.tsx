@@ -72,7 +72,7 @@ export function TribunaisDialog({ tribunal, open, onOpenChange, onSuccess }: Pro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-white sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>
             {tribunal ? `Editar ${tribunal.tribunal_codigo}` : 'Editar Tribunal'}

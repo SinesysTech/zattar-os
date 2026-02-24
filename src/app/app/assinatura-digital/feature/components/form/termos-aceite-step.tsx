@@ -51,20 +51,20 @@ export default function TermosAceiteStep() {
       cardClassName="w-full max-w-2xl mx-auto"
     >
       <div className="space-y-6">
-        <Alert variant="default" className="border-blue-200 bg-blue-50">
+        <Alert variant="default" className="border-blue-600/20 bg-blue-600/10">
           <Info className="h-4 w-4 text-blue-600" />
-          <AlertTitle className="text-blue-900 font-semibold">
+          <AlertTitle className="text-blue-600 font-semibold">
             Importância Legal do seu Acordo
           </AlertTitle>
-          <AlertDescription className="text-blue-800">
+          <AlertDescription className="text-blue-600/90">
             Ao marcar a caixa abaixo, você está concordando legalmente com os
             termos do documento. Esta ação tem validade jurídica e é um passo
             essencial para a conclusão do processo.
           </AlertDescription>
         </Alert>
 
-        <Card className="border-gray-300 shadow-md">
-          <CardHeader className="flex flex-row items-center space-x-4 bg-gray-50/70">
+        <Card className="shadow-md">
+          <CardHeader className="flex flex-row items-center space-x-4 bg-muted/50">
             <ShieldCheck className="h-8 w-8 text-primary" />
             <div className="flex-1">
               <CardTitle>Declaração de Aceite</CardTitle>
@@ -74,7 +74,7 @@ export default function TermosAceiteStep() {
             </div>
           </CardHeader>
           <CardContent className="pt-6">
-            <div className="flex items-start space-x-4 rounded-md border border-gray-200 p-4 bg-white">
+            <div className="flex items-start space-x-4 rounded-md border p-4 bg-background">
               <Checkbox
                 id="termos-aceite"
                 checked={aceiteCheckbox}
@@ -84,7 +84,7 @@ export default function TermosAceiteStep() {
               />
               <Label
                 htmlFor="termos-aceite"
-                className="flex-1 text-base font-normal text-gray-800 leading-relaxed cursor-pointer"
+                className="flex-1 text-base font-normal text-foreground leading-relaxed cursor-pointer"
               >
                 {TERMOS_TEXTO_DECLARACAO}
               </Label>

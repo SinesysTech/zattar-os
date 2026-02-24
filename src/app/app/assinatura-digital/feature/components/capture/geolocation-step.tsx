@@ -212,8 +212,8 @@ export default function GeolocationStep() {
               <Loader2 className="h-8 w-8 text-blue-600 animate-spin absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
             </div>
             <div className="text-center space-y-2">
-              <p className="text-lg font-medium text-gray-900">Capturando sua localização...</p>
-              <p className="text-sm text-gray-600">Aguarde enquanto obtemos suas coordenadas GPS</p>
+              <p className="text-lg font-medium text-foreground">Capturando sua localização...</p>
+              <p className="text-sm text-muted-foreground">Aguarde enquanto obtemos suas coordenadas GPS</p>
             </div>
           </div>
         )}
@@ -232,8 +232,8 @@ export default function GeolocationStep() {
                 Tentar Novamente
               </Button>
 
-              <div className="text-xs text-gray-600 space-y-2 p-4 bg-gray-50 rounded-md border border-gray-200">
-                <p className="font-semibold text-gray-900 text-sm">Como habilitar permissões de localização:</p>
+              <div className="text-xs text-muted-foreground space-y-2 p-4 bg-muted/50 rounded-md border">
+                <p className="font-semibold text-foreground text-sm">Como habilitar permissões de localização:</p>
                 <ul className="list-disc list-inside space-y-2 ml-2">
                   <li>
                     <strong>Chrome/Edge:</strong> Clique no ícone de cadeado ao lado da URL → Permissões do site →
@@ -250,7 +250,7 @@ export default function GeolocationStep() {
                     <strong>Safari (macOS):</strong> Safari → Preferências → Sites → Localização → Permitir
                   </li>
                 </ul>
-                <p className="mt-2 text-gray-700">
+                <p className="mt-2">
                   <strong>Dica:</strong> Se o GPS estiver desativado, vá para as configurações do dispositivo e
                   ative os serviços de localização.
                 </p>
@@ -269,24 +269,24 @@ export default function GeolocationStep() {
               </AlertDescription>
             </Alert>
 
-            <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-4">
+            <div className="bg-card border rounded-lg p-6 space-y-4">
               <div className="flex items-start space-x-3">
-                <MapPin className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
+                <MapPin className="h-6 w-6 text-blue-600 mt-1 shrink-0" />
                 <div className="flex-1 space-y-3">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Coordenadas GPS</p>
+                    <p className="text-sm font-medium text-muted-foreground">Coordenadas GPS</p>
                     <div className="mt-2 space-y-1 font-mono text-sm">
-                      <p className="text-gray-900">
-                        <span className="text-gray-600">Latitude:</span>{" "}
+                      <p className="text-foreground">
+                        <span className="text-muted-foreground">Latitude:</span>{" "}
                         <span className="font-semibold">{latitude?.toFixed(6)}°</span>
                       </p>
-                      <p className="text-gray-900">
-                        <span className="text-gray-600">Longitude:</span>{" "}
+                      <p className="text-foreground">
+                        <span className="text-muted-foreground">Longitude:</span>{" "}
                         <span className="font-semibold">{longitude?.toFixed(6)}°</span>
                       </p>
                       {geolocationAccuracy !== null && geolocationAccuracy !== undefined && (
-                        <p className="text-gray-900">
-                          <span className="text-gray-600">Precisão:</span>{" "}
+                        <p className="text-foreground">
+                          <span className="text-muted-foreground">Precisão:</span>{" "}
                           <span className="font-semibold">{geolocationAccuracy.toFixed(1)}m</span>
                         </p>
                       )}

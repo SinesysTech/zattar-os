@@ -99,7 +99,6 @@ export function AddReminderDialog() {
                 setNewReminder({ ...newReminder, texto: e.target.value })
               }
               disabled={isPending}
-              className="bg-white dark:bg-gray-950"
               required
             />
           </div>
@@ -155,11 +154,11 @@ export function AddReminderDialog() {
             >
               <SelectTrigger
                 id="reminder-category"
-                className="w-full bg-white dark:bg-gray-950"
+                className="w-full"
               >
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-gray-950">
+              <SelectContent>
                 {CATEGORIAS_LEMBRETE.map((categoria) => (
                   <SelectItem key={categoria} value={categoria}>
                     {categoria}

@@ -95,7 +95,7 @@ export function DialogFormShell({
         showCloseButton={false} // Removemos o botão X padrão
         className={cn(
           maxWidthClass,
-          "bg-white", // Background branco explícito
+          "bg-background",
           "p-0 gap-0", // Removemos padding padrão para controlar layout
           "transition-[max-width] duration-300 ease-in-out", // Transição suave ao mudar largura
           className
@@ -122,12 +122,12 @@ export function DialogFormShell({
           )}
         </ResponsiveDialogHeader>
 
-        <ResponsiveDialogBody className="flex-1 min-h-0 bg-white">
+        <ResponsiveDialogBody className="flex-1 min-h-0">
           {children}
         </ResponsiveDialogBody>
 
         {!hideFooter && (
-          <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0 bg-white">
+          <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0">
             <div className="flex w-full items-center justify-between gap-2">
               <Button
                 type="button"
