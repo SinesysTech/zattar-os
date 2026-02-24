@@ -36,6 +36,7 @@ yarn-error.log*
 !.env.local
 .env*.local.bak
 .env.build
+docker-compose.portainer.yml
 
 # vercel
 #.vercel
