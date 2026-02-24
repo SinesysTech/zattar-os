@@ -794,6 +794,81 @@ function extrairNumeroSequencialCNJ(numeroProcesso: string): number {
  * - numero: derivado do número CNJ
  * - codigoStatusProcesso: "ATIVO"
  */
+/**
+ * Busca dados complementares do processo: audiências, expedientes e perícias.
+ * Retorna tudo em uma única chamada para eficiência.
+ */
+export async function actionObterDetalhesComplementaresProcesso(
+  processoId: number,
+  numeroProcesso: string
+): Promise<
+  ActionResult<{
+    audiencias: unknown[];
+    expedientes: unknown[];
+    pericias: unknown[];
+  }>
+> {
+  try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Unauthorized",
+        message: "Você precisa estar autenticado para realizar esta ação",
+      };
+    }
+
+    // Buscar audiências, expedientes e perícias em paralelo
+    const [audienciasResult, expedientesResult, periciasResult] =
+      await Promise.allSettled([
+        // Audiências: usar repo direto (findAudienciasByProcessoId)
+        import("@/features/audiencias/repository").then((mod) =>
+          mod.findAudienciasByProcessoId(processoId)
+        ),
+        // Expedientes: usar service (listarExpedientes com processoId)
+        import("@/features/expedientes/service").then((mod) =>
+          mod.listarExpedientes({ processoId, limite: 100 })
+        ),
+        // Perícias: usar service (listarPericias com processoId)
+        import("@/features/pericias/service").then((mod) =>
+          mod.listarPericias({ processoId, limite: 100 })
+        ),
+      ]);
+
+    const audiencias =
+      audienciasResult.status === "fulfilled" &&
+      audienciasResult.value.success
+        ? audienciasResult.value.data
+        : [];
+
+    const expedientes =
+      expedientesResult.status === "fulfilled" &&
+      expedientesResult.value.success
+        ? (expedientesResult.value.data as { data: unknown[] }).data
+        : [];
+
+    const pericias =
+      periciasResult.status === "fulfilled" &&
+      periciasResult.value.success
+        ? (periciasResult.value.data as { data: unknown[] }).data
+        : [];
+
+    return {
+      success: true,
+      data: { audiencias, expedientes, pericias },
+      message: "Dados complementares carregados",
+    };
+  } catch (error) {
+    console.error("Erro ao buscar dados complementares:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar dados complementares.",
+    };
+  }
+}
+
 export async function actionCriarProcessoManual(
   prevState: ActionResult | null,
   formData: FormData

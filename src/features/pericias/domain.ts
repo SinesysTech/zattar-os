@@ -121,6 +121,7 @@ export type ListarPericiasParams = {
   pagina?: number;
   limite?: number;
   busca?: string;
+  processoId?: number;
   trt?: CodigoTribunal;
   grau?: GrauTribunal;
   situacaoCodigo?: SituacaoPericiaCodigo;
