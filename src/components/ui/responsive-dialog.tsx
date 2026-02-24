@@ -203,7 +203,7 @@ function ResponsiveDialogFooter({
             <SheetFooter
                 className={cn(
                     // Sticky no bottom em mobile
-                    "sticky bottom-0 bg-white border-t pt-4 mt-auto",
+                    "sticky bottom-0 bg-background border-t pt-4 mt-auto",
                     // Garantir espaçamento adequado
                     "pb-safe",
                     className
