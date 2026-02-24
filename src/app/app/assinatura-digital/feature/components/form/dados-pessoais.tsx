@@ -667,7 +667,7 @@ export default function DadosPessoais() {
                 name="complemento"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Complemento (opcional)</FormLabel>
+                    <FormLabel>Complemento</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Apto, Bloco, etc."

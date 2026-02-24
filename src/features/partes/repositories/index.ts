@@ -50,6 +50,7 @@ export {
   updateParteContraria,
   upsertParteContrariaByCPF,
   upsertParteContrariaByCNPJ,
+  searchPartesContrariaComEndereco,
   softDeleteParteContraria,
   countPartesContrarias,
   countPartesContrariasAteData,

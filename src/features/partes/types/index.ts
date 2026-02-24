@@ -14,6 +14,7 @@ export type {
   ClientePessoaFisica,
   ClientePessoaJuridica,
   ParteContraria,
+  ParteContrariaComEndereco,
   ParteContrariaPessoaFisica,
   ParteContrariaPessoaJuridica,
   Terceiro,

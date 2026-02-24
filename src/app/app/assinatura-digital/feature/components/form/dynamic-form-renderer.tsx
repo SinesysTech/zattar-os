@@ -38,7 +38,7 @@ import { InputCPF, InputData, InputCPFCNPJ, ClientSearchInput, ParteContrariaSea
 import { InputTelefone } from '@/components/ui/input-telefone';
 import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { Cliente, ParteContraria } from '@/features/partes/types';
+import type { Cliente, ParteContraria, ParteContrariaComEndereco } from '@/features/partes/types';
 import { UseFormReturn } from 'react-hook-form';
 
 interface DynamicFormRendererProps {
@@ -90,12 +90,12 @@ export default function DynamicFormRenderer({
    * Auto-fill fields based on entity data and mapping configuration
    */
   const autoFillFields = (
-    entityData: Cliente | ParteContraria,
+    entityData: Cliente | ParteContraria | Record<string, unknown>,
     autoFillMap: Record<string, string>,
     formInstance: UseFormReturn<DynamicFormData>
   ) => {
     Object.entries(autoFillMap).forEach(([entityField, formFieldId]) => {
-      // Get value from entity (support nested paths like 'emails[0]')
+      // Get value from entity (support nested paths like 'endereco.cep' and 'emails[0]')
       let value: unknown = null;
 
       // Handle array access (e.g., 'emails[0]')
@@ -106,6 +106,19 @@ export default function DynamicFormRenderer({
         if (Array.isArray(arrayValue) && arrayValue[Number(index)]) {
           value = arrayValue[Number(index)];
         }
+      } else if (entityField.includes('.')) {
+        // Handle dot-notation for nested objects (e.g., 'endereco.cep')
+        const parts = entityField.split('.');
+        let current: unknown = entityData;
+        for (const part of parts) {
+          if (current && typeof current === 'object' && current !== null) {
+            current = (current as Record<string, unknown>)[part];
+          } else {
+            current = undefined;
+            break;
+          }
+        }
+        value = current;
       } else {
         value = (entityData as unknown as Record<string, unknown>)[entityField];
       }

@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { AudienciasContent } from '@/features/audiencias';
+import { fetchAudienciasPageData } from '@/features/audiencias/queries';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const dynamic = 'force-dynamic';
@@ -17,10 +18,16 @@ function AudienciasLoading() {
   );
 }
 
-export default function AudienciasAnoPage() {
+export default async function AudienciasAnoPage() {
+  const { usuarios, tiposAudiencia } = await fetchAudienciasPageData();
+
   return (
     <Suspense fallback={<AudienciasLoading />}>
-      <AudienciasContent visualizacao="ano" />
+      <AudienciasContent
+        visualizacao="ano"
+        initialUsuarios={usuarios}
+        initialTiposAudiencia={tiposAudiencia}
+      />
     </Suspense>
   );
 }

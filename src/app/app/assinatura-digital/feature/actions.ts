@@ -20,9 +20,10 @@ import {
   findParteContrariaByCPF,
   findParteContrariaByCNPJ,
   findAllPartesContrarias,
+  searchPartesContrariaComEndereco,
 } from '@/features/partes/repositories';
 import { normalizarDocumento } from '@/features/partes/domain';
-import type { Cliente, ParteContraria } from '@/features/partes/types';
+import type { Cliente, ParteContraria, ParteContrariaComEndereco } from '@/features/partes/types';
 
 // Helper para lidar com erros
 const handleError = (error: unknown) => {
@@ -354,6 +355,34 @@ export async function searchParteContraria(params: {
 
     // Não encontrado
     return { success: true, data: null };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro desconhecido',
+    };
+  }
+}
+
+/**
+ * Busca partes contrárias por termo com endereço populado (para typeahead)
+ */
+export async function searchPartesContrariasList(busca: string): Promise<{
+  success: boolean;
+  data?: ParteContrariaComEndereco[];
+  error?: string;
+}> {
+  try {
+    if (!busca || busca.trim().length < 2) {
+      return { success: true, data: [] };
+    }
+
+    const result = await searchPartesContrariaComEndereco(busca.trim(), 10);
+
+    if (!result.success) {
+      return { success: false, error: result.error.message };
+    }
+
+    return { success: true, data: result.data };
   } catch (error) {
     return {
       success: false,
