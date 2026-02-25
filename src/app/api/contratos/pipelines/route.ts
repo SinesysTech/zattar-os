@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/lib/auth/require-permission';
+import { requirePermission, requireAuthentication } from '@/lib/auth/require-permission';
 import {
   findAllPipelines,
   savePipeline,
@@ -21,7 +21,8 @@ import {
  *   ativo?: boolean
  */
 export async function GET(request: NextRequest) {
-  const authOrError = await requirePermission(request, 'contratos', 'listar');
+  // Pipelines são dados de referência/lookup — qualquer usuário autenticado pode ler
+  const authOrError = await requireAuthentication(request);
   if (authOrError instanceof NextResponse) return authOrError;
 
   try {

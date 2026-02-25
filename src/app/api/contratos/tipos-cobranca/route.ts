@@ -7,14 +7,15 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { requirePermission } from '@/lib/auth/require-permission';
+import { requirePermission, requireAuthentication } from '@/lib/auth/require-permission';
 import {
   contratoTiposCobrancaRepo,
   createContratoTipoSchema,
 } from '@/features/contratos/tipos-config';
 
 export async function GET(request: NextRequest) {
-  const authOrError = await requirePermission(request, 'contratos', 'listar');
+  // Tipos de cobrança são dados de referência/lookup — qualquer usuário autenticado pode ler
+  const authOrError = await requireAuthentication(request);
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }

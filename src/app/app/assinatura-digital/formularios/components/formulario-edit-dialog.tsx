@@ -150,10 +150,16 @@ export function FormularioEditDialog({
         if (tiposRes.ok) {
           const json = await tiposRes.json();
           setTiposContrato(json.data ?? []);
+        } else {
+          console.error('Falha ao carregar tipos de contrato:', tiposRes.status);
+          toast.error('Falha ao carregar tipos de contrato.');
         }
         if (cobrancaRes.ok) {
           const json = await cobrancaRes.json();
           setTiposCobranca(json.data ?? []);
+        } else {
+          console.error('Falha ao carregar tipos de cobrança:', cobrancaRes.status);
+          toast.error('Falha ao carregar tipos de cobrança.');
         }
       } finally {
         setLoadingOptions(false);
