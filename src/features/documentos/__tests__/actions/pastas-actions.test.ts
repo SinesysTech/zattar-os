@@ -103,13 +103,13 @@ describe('Pastas Actions - Unit Tests', () => {
           nome: 'Nova Pasta',
           pasta_pai_id: null,
           tipo: 'comum',
-          descricao: undefined,
-          cor: undefined,
-          icone: undefined,
+          descricao: null,
+          cor: null,
+          icone: null,
         },
         mockUser.id
       );
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/documentos');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/documentos');
     });
 
     it('deve criar pasta privada com sucesso', async () => {
@@ -251,7 +251,7 @@ describe('Pastas Actions - Unit Tests', () => {
         5,
         mockUser.id
       );
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/documentos');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/documentos');
     });
 
     it('deve mover documento para raiz (pasta_id = null)', async () => {
@@ -306,7 +306,7 @@ describe('Pastas Actions - Unit Tests', () => {
 
       expect(result).toEqual({ success: true });
       expect(mockService.deletarPasta).toHaveBeenCalledWith(1, mockUser.id);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/documentos');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/documentos');
     });
 
     it('deve retornar erro quando acesso negado', async () => {

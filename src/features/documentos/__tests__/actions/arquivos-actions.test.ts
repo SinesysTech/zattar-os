@@ -80,7 +80,7 @@ describe('Arquivos Actions - Unit Tests', () => {
         null,
         mockUser.id
       );
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/documentos');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/documentos');
     });
 
     it('deve fazer upload com sucesso com pasta_id', async () => {
@@ -104,7 +104,7 @@ describe('Arquivos Actions - Unit Tests', () => {
         5,
         mockUser.id
       );
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/documentos');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/documentos');
     });
 
     it('deve retornar erro quando service lança exceção', async () => {
@@ -244,7 +244,7 @@ describe('Arquivos Actions - Unit Tests', () => {
         data: mockArquivo,
       });
       expect(mockService.moverArquivo).toHaveBeenCalledWith(1, 5, mockUser.id);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/documentos');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/documentos');
     });
 
     it('deve mover arquivo para raiz (pasta_id = null)', async () => {
@@ -261,7 +261,7 @@ describe('Arquivos Actions - Unit Tests', () => {
         null,
         mockUser.id
       );
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/documentos');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/documentos');
     });
 
     it('deve retornar erro quando acesso negado', async () => {
@@ -299,8 +299,8 @@ describe('Arquivos Actions - Unit Tests', () => {
 
       expect(result).toEqual({ success: true });
       expect(mockService.deletarArquivo).toHaveBeenCalledWith(1, mockUser.id);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/documentos');
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/documentos/lixeira');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/documentos');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/documentos/lixeira');
     });
 
     it('deve retornar erro quando acesso negado', async () => {

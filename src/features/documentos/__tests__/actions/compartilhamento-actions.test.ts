@@ -76,7 +76,7 @@ describe('Compartilhamento Actions - Unit Tests', () => {
         },
         mockUser.id
       );
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/documentos/1');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/documentos/1');
     });
 
     it('deve compartilhar documento com permissão editar', async () => {
@@ -277,7 +277,7 @@ describe('Compartilhamento Actions - Unit Tests', () => {
         { permissao: 'editar', pode_deletar: undefined },
         mockUser.id
       );
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/documentos/1');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/documentos/1');
     });
 
     it('deve atualizar pode_deletar', async () => {
@@ -361,7 +361,7 @@ describe('Compartilhamento Actions - Unit Tests', () => {
         1,
         mockUser.id
       );
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/documentos');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/documentos');
     });
 
     it('deve retornar erro quando acesso negado', async () => {
