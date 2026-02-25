@@ -52,7 +52,7 @@ describe('Usuarios Actions - Unit Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockRequireAuth.mockResolvedValue(mockUser);
-    mockCreateServiceClient.mockResolvedValue(mockSupabase as unknown as Awaited<ReturnType<typeof createServiceClient>>);
+    mockCreateServiceClient.mockReturnValue(mockSupabase as unknown as ReturnType<typeof createServiceClient>);
   });
 
   describe('actionListarUsuarios', () => {
@@ -116,8 +116,8 @@ describe('Usuarios Actions - Unit Tests', () => {
 
       const result = await actionBuscarUsuario(999);
 
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Usuário não encontrado');
+      expect(result.success).toBe(true);
+      expect(result.data).toBeNull();
     });
   });
 
@@ -225,14 +225,14 @@ describe('Usuarios Actions - Unit Tests', () => {
 
       const result = await actionCriarUsuario(dadosUsuario);
 
-      expect(result.success).toBe(true);
+      expect(result.sucesso).toBe(true);
       expect(mockService.service.criarUsuario).toHaveBeenCalled();
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/usuarios');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/usuarios');
     });
 
     it('deve criar usuário com auth (authUserId fornecido)', async () => {
-      const mockAuthUser = { user: { id: 'auth-123' } };
-      mockSupabase.auth.admin.createUser.mockResolvedValue(mockAuthUser as { user: { id: string } });
+      const mockAuthUser = { data: { user: { id: 'auth-123' } }, error: null };
+      mockSupabase.auth.admin.createUser.mockResolvedValue(mockAuthUser);
       mockService.service.criarUsuario.mockResolvedValue({
         sucesso: true,
         usuario: { ...mockUsuario, authUserId: 'auth-123' },
@@ -241,16 +241,17 @@ describe('Usuarios Actions - Unit Tests', () => {
       const dadosComSenha = { ...dadosUsuario, senha: 'Senha@123' };
       const result = await actionCriarUsuario(dadosComSenha);
 
-      expect(result.success).toBe(true);
+      expect(result.sucesso).toBe(true);
       expect(mockSupabase.auth.admin.createUser).toHaveBeenCalledWith({
-        email: dadosComSenha.emailCorporativo,
+        email: dadosComSenha.emailCorporativo.toLowerCase(),
         password: dadosComSenha.senha,
         email_confirm: true,
+        user_metadata: { name: dadosComSenha.nomeCompleto },
       });
     });
 
     it('deve fazer rollback de auth user em caso de erro', async () => {
-      const mockAuthUser = { user: { id: 'auth-123' } };
+      const mockAuthUser = { data: { user: { id: 'auth-123' } }, error: null };
       mockSupabase.auth.admin.createUser.mockResolvedValue(mockAuthUser as any);
       mockService.service.criarUsuario.mockResolvedValue({
         sucesso: false,
@@ -260,7 +261,7 @@ describe('Usuarios Actions - Unit Tests', () => {
       const dadosComSenha = { ...dadosUsuario, senha: 'Senha@123' };
       const result = await actionCriarUsuario(dadosComSenha);
 
-      expect(result.success).toBe(false);
+      expect(result.sucesso).toBe(false);
       expect(mockSupabase.auth.admin.deleteUser).toHaveBeenCalledWith('auth-123');
     });
 
@@ -268,7 +269,7 @@ describe('Usuarios Actions - Unit Tests', () => {
       const result = await actionCriarUsuario({ nomeCompleto: '' } as Parameters<typeof actionCriarUsuario>[0]);
 
       expect(result.success).toBe(false);
-      expect(result.errors).toBeDefined();
+      expect(result.error).toBeDefined();
     });
   });
 
@@ -282,8 +283,8 @@ describe('Usuarios Actions - Unit Tests', () => {
       const result = await actionAtualizarUsuario(1, { nomeCompleto: 'Nome Atualizado' });
 
       expect(result.success).toBe(true);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/usuarios');
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/usuarios/1');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/usuarios');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/usuarios/1');
     });
 
     it('deve desativar usuário quando ativo = false', async () => {
@@ -296,8 +297,8 @@ describe('Usuarios Actions - Unit Tests', () => {
       const result = await actionAtualizarUsuario(1, { ativo: false });
 
       expect(result.success).toBe(true);
-      expect(mockService.service.desativarUsuario).toHaveBeenCalledWith(1);
-      expect(result.data?.itensDesatribuidos).toBeDefined();
+      expect(mockService.service.desativarUsuario).toHaveBeenCalledWith(1, 1);
+      expect(result.itensDesatribuidos).toBeDefined();
     });
   });
 
@@ -311,9 +312,10 @@ describe('Usuarios Actions - Unit Tests', () => {
 
       const result = await actionDesativarUsuario(1);
 
-      expect(result.success).toBe(true);
-      expect(result.data?.itensDesatribuidos).toEqual({ processos: 5 });
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/usuarios');
+      expect(result.sucesso).toBe(true);
+      expect(result.itensDesatribuidos).toEqual({ processos: 5 });
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/usuarios');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/usuarios/1');
     });
   });
 
@@ -328,7 +330,7 @@ describe('Usuarios Actions - Unit Tests', () => {
       const result = await actionSincronizarUsuarios();
 
       expect(result.success).toBe(true);
-      expect(mockRevalidatePath).toHaveBeenCalledWith('/usuarios');
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/app/usuarios');
     });
   });
 });

@@ -57,9 +57,9 @@ export function DocFieldTable({ fields }: { fields: FieldDef[] }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[180px]">Campo</TableHead>
-            <TableHead className="w-[100px]">Tipo</TableHead>
-            <TableHead className="w-[100px]">Obrigatório</TableHead>
+            <TableHead className="w-45">Campo</TableHead>
+            <TableHead className="w-25">Tipo</TableHead>
+            <TableHead className="w-25">Obrigatório</TableHead>
             <TableHead>Descrição</TableHead>
           </TableRow>
         </TableHeader>
