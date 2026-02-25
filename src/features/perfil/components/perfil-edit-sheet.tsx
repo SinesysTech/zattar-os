@@ -100,7 +100,7 @@ export function PerfilEditSheet({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] w-[400px] sm:w-[540px] overflow-y-auto p-6">
+      <DialogContent className="max-h-[90vh] w-100 sm:w-135 overflow-y-auto p-6">
         <form onSubmit={handleSubmit}>
           <DialogHeader className="pb-5">
             <DialogTitle className="text-xl font-semibold">Editar Perfil</DialogTitle>
@@ -187,6 +187,7 @@ export function PerfilEditSheet({
                     <option value="masculino">Masculino</option>
                     <option value="feminino">Feminino</option>
                     <option value="outro">Outro</option>
+                    <option value="prefiro_nao_informar">Prefiro não informar</option>
                   </select>
                 </div>
               </div>

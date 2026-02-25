@@ -7,6 +7,13 @@ import {
 } from '@/app/app/assinatura-digital/feature/services/formularios.service';
 import type { UpsertFormularioInput } from '@/app/app/assinatura-digital/feature';
 
+const contratoConfigSchema = z.object({
+  tipo_contrato_id: z.number().int().positive(),
+  tipo_cobranca_id: z.number().int().positive(),
+  papel_cliente: z.enum(['autora', 're']),
+  pipeline_id: z.number().int().positive(),
+});
+
 const upsertFormularioSchema = z.object({
   nome: z.string().min(1),
   slug: z.string().min(1),
@@ -21,6 +28,8 @@ const upsertFormularioSchema = z.object({
   geolocation_necessaria: z.boolean().optional(),
   metadados_seguranca: z.string().optional(),
   criado_por: z.string().optional().nullable(),
+  tipo_formulario: z.enum(['contrato', 'documento', 'cadastro']).nullable().optional(),
+  contrato_config: contratoConfigSchema.nullable().optional(),
 });
 
 export async function GET(request: NextRequest) {

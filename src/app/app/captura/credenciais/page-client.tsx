@@ -423,7 +423,7 @@ export default function CredenciaisPage() {
         open={selecionarAdvogadoDialog}
         onOpenChange={setSelecionarAdvogadoDialog}
       >
-        <DialogContent className="sm:max-w-[450px]">
+        <DialogContent className="sm:max-w-112.5">
           <DialogHeader>
             <DialogTitle>Nova Credencial</DialogTitle>
             <DialogDescription>

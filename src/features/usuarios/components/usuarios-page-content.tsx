@@ -19,9 +19,7 @@ import {
   useUsuarios,
   UsuarioCreateDialog,
   CargosManagementDialog,
-  RedefinirSenhaDialog,
   UsuariosGridView,
-  type Usuario,
 } from '@/features/usuarios';
 
 // =============================================================================
@@ -40,8 +38,6 @@ export function UsuariosPageContent() {
   // Dialogs state
   const [createOpen, setCreateOpen] = React.useState(false);
   const [cargosManagementOpen, setCargosManagementOpen] = React.useState(false);
-  const [redefinirSenhaOpen, setRedefinirSenhaOpen] = React.useState(false);
-  const [usuarioParaRedefinirSenha, setUsuarioParaRedefinirSenha] = React.useState<Usuario | null>(null);
 
   // Debounce search
   const buscaDebounced = useDebounce(busca, 500);
@@ -65,35 +61,30 @@ export function UsuariosPageContent() {
   }, []);
 
   const handleView = React.useCallback(
-    (usuario: Usuario) => {
+    (usuario: { id: number }) => {
       router.push(`/app/usuarios/${usuario.id}`);
     },
     [router]
   );
 
-  const handleRedefinirSenha = React.useCallback((usuario: Usuario) => {
-    setUsuarioParaRedefinirSenha(usuario);
-    setRedefinirSenhaOpen(true);
-  }, []);
-
-  const handleRedefinirSenhaSuccess = React.useCallback(() => {
-    // Password reset success - no need to refetch since it doesn't affect displayed data
-  }, []);
-
   return (
     <PageShell
-      title="Equipe"
-      actions={
-        <Button
-          type="button"
-          className="h-9"
-          onClick={() => setCreateOpen(true)}
-        >
-          <Plus className="h-4 w-4" />
-          Novo Membro
-        </Button>
-      }
+      className="space-y-4"
     >
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <h1 className="text-2xl font-bold tracking-tight font-heading">Equipe</h1>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            type="button"
+            className="h-9"
+            onClick={() => setCreateOpen(true)}
+          >
+            <Plus className="h-4 w-4" />
+            Novo Membro
+          </Button>
+        </div>
+      </div>
+
       {/* Toolbar: Search + Filters + Settings */}
       <div className="flex items-center gap-2">
         <div className="relative w-80">
@@ -145,7 +136,6 @@ export function UsuariosPageContent() {
         <UsuariosGridView
           usuarios={usuarios}
           onView={handleView}
-          onRedefinirSenha={handleRedefinirSenha}
         />
       )}
 
@@ -154,17 +144,13 @@ export function UsuariosPageContent() {
         open={cargosManagementOpen}
         onOpenChange={setCargosManagementOpen}
       />
-      <UsuarioCreateDialog
-        open={createOpen}
-        onOpenChange={setCreateOpen}
-        onSuccess={handleCreateSuccess}
-      />
-      <RedefinirSenhaDialog
-        open={redefinirSenhaOpen}
-        onOpenChange={setRedefinirSenhaOpen}
-        usuario={usuarioParaRedefinirSenha}
-        onSuccess={handleRedefinirSenhaSuccess}
-      />
+      {createOpen && (
+        <UsuarioCreateDialog
+          open={createOpen}
+          onOpenChange={setCreateOpen}
+          onSuccess={handleCreateSuccess}
+        />
+      )}
     </PageShell>
   );
 }

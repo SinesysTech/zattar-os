@@ -148,3 +148,28 @@ export {
   ContratoForm,
   ContratoDeleteDialog,
 } from './components';
+
+// =============================================================================
+// PIPELINES
+// =============================================================================
+export type {
+  ContratoPipeline,
+  ContratoPipelineEstagio,
+  CreatePipelineInput,
+  UpdatePipelineInput,
+  CreateEstagioInput,
+  UpdateEstagioInput,
+  ReorderEstagiosInput,
+  ListarPipelinesParams,
+} from './pipelines/types';
+
+// =============================================================================
+// TIPOS CONFIG
+// =============================================================================
+export type {
+  ContratoTipo,
+  ContratoTipoCobranca,
+  CreateContratoTipoInput,
+  UpdateContratoTipoInput,
+  ListarTiposParams,
+} from './tipos-config/types';

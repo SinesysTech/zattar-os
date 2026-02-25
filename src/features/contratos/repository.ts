@@ -152,6 +152,7 @@ function converterParaContrato(data: Record<string, unknown>): Contrato {
       (data.dados_anteriores as Record<string, unknown> | null) ?? null,
     createdAt: data.created_at as string,
     updatedAt: data.updated_at as string,
+    estagioId: (data.estagio_id as number | null) ?? null,
     partes: partesRaw.map((p) =>
       converterParaContratoParte(p as Record<string, unknown>),
     ),

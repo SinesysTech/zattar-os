@@ -6,19 +6,14 @@ import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { FilterPopover, type FilterOption } from '@/features/partes/components/shared/filter-popover';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
 import { ComunicacaoDetalhesDialog } from './detalhes-dialog';
@@ -29,6 +24,7 @@ import {
   ExternalLink,
   RefreshCw,
   Link2,
+  AlertCircle,
 } from 'lucide-react';
 
 import { actionListarComunicacoesCapturadas } from '../../actions/comunica-cnj-actions';
@@ -36,6 +32,11 @@ import { actionListarComunicacoesCapturadas } from '../../actions/comunica-cnj-a
 import type { ComunicacaoCNJ, ComunicacaoItem } from '../../comunica-cnj/domain';
 import { DataShell, DataTableToolbar, DataPagination, DataTable, DataTableColumnHeader } from '@/components/shared/data-shell';
 import type { ColumnDef } from '@tanstack/react-table';
+
+const VINCULACAO_OPTIONS: FilterOption[] = [
+  { value: 'vinculadas', label: 'Com expediente' },
+  { value: 'nao_vinculadas', label: 'Sem expediente' },
+];
 
 // Helper para converter ComunicacaoCNJ para ComunicacaoItem
 const convertToItem = (c: ComunicacaoCNJ): ComunicacaoItem => ({
@@ -74,8 +75,8 @@ interface ActionButtonsProps {
 }
 
 const ActionButtons = ({ comunicacao, onViewDetails, onViewPdf }: ActionButtonsProps) => (
-  <div className="flex items-center gap-1">
-    <TooltipProvider>
+  <TooltipProvider>
+    <div className="flex items-center gap-1">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
@@ -90,9 +91,7 @@ const ActionButtons = ({ comunicacao, onViewDetails, onViewPdf }: ActionButtonsP
         </TooltipTrigger>
         <TooltipContent>Ver detalhes</TooltipContent>
       </Tooltip>
-    </TooltipProvider>
 
-    <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
@@ -107,10 +106,8 @@ const ActionButtons = ({ comunicacao, onViewDetails, onViewPdf }: ActionButtonsP
         </TooltipTrigger>
         <TooltipContent>Ver certidão PDF</TooltipContent>
       </Tooltip>
-    </TooltipProvider>
 
-    {comunicacao.link && (
-      <TooltipProvider>
+      {comunicacao.link && (
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
@@ -126,9 +123,9 @@ const ActionButtons = ({ comunicacao, onViewDetails, onViewPdf }: ActionButtonsP
           </TooltipTrigger>
           <TooltipContent>Abrir no PJE</TooltipContent>
         </Tooltip>
-      </TooltipProvider>
-    )}
-  </div>
+      )}
+    </div>
+  </TooltipProvider>
 );
 
 /**
@@ -137,7 +134,7 @@ const ActionButtons = ({ comunicacao, onViewDetails, onViewPdf }: ActionButtonsP
 export function ComunicaCNJCapturadas() {
   const [comunicacoes, setComunicacoes] = useState<ComunicacaoCNJ[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Filters
   const [tribunalFilter, setTribunalFilter] = useState<string>('all');
@@ -203,10 +200,10 @@ export function ComunicaCNJCapturadas() {
     fetchComunicacoes();
   }, [fetchComunicacoes]);
 
-  // Extrair valores únicos para filtros
-  const uniqueTribunais = useMemo(() => {
+  // Extrair opções de filtro a partir dos dados
+  const tribunalOptions = useMemo<FilterOption[]>(() => {
     const tribunais = new Set(comunicacoes.map((c) => c.siglaTribunal).filter(Boolean));
-    return Array.from(tribunais).sort();
+    return Array.from(tribunais).sort().map((t) => ({ value: t, label: t }));
   }, [comunicacoes]);
 
   // Client-side processing (sorting)
@@ -370,6 +367,12 @@ export function ComunicaCNJCapturadas() {
 
   return (
     <>
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
       <DataShell
         header={
           <DataTableToolbar
@@ -378,48 +381,38 @@ export function ComunicaCNJCapturadas() {
             searchPlaceholder="Filtrar por processo..."
             filtersSlot={
               <>
-                <Select value={tribunalFilter} onValueChange={setTribunalFilter}>
-                  <SelectTrigger className="h-10 w-32.5">
-                    <SelectValue placeholder="Tribunal" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas</SelectItem>
-                    {uniqueTribunais.map((tribunal) => (
-                      <SelectItem key={tribunal} value={tribunal}>
-                        {tribunal}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Select value={vinculacaoFilter} onValueChange={setVinculacaoFilter}>
-                  <SelectTrigger className="h-10 w-37.5">
-                    <SelectValue placeholder="Vinculação" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas</SelectItem>
-                    <SelectItem value="vinculadas">Com expediente</SelectItem>
-                    <SelectItem value="nao_vinculadas">Sem expediente</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={fetchComunicacoes}
-                        className="h-10 w-10"
-                        aria-label="Atualizar"
-                      >
-                        <RefreshCw className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Atualizar lista</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <FilterPopover
+                  label="Tribunal"
+                  placeholder="Buscar tribunal..."
+                  options={tribunalOptions}
+                  value={tribunalFilter}
+                  onValueChange={setTribunalFilter}
+                />
+                <FilterPopover
+                  label="Vinculação"
+                  options={VINCULACAO_OPTIONS}
+                  value={vinculacaoFilter}
+                  onValueChange={setVinculacaoFilter}
+                />
               </>
+            }
+            actionSlot={
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-9 w-9 bg-card"
+                    onClick={fetchComunicacoes}
+                    disabled={isLoading}
+                    aria-label="Atualizar"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                    <span className="sr-only">Atualizar</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Atualizar lista</TooltipContent>
+              </Tooltip>
             }
           />
         }

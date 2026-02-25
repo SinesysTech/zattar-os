@@ -230,6 +230,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Buscar configuração de contrato do formulário (contrato_config JSONB)
+    const { data: formularioData } = await supabase
+      .from('assinatura_digital_formularios')
+      .select('tipo_formulario, contrato_config')
+      .eq('id', formularioId)
+      .maybeSingle();
+
+    const contratoConfig = formularioData?.contrato_config as {
+      tipo_contrato_id?: number;
+      tipo_cobranca_id?: number;
+      papel_cliente?: 'autora' | 're';
+      pipeline_id?: number;
+    } | null;
+
+    // Se contrato_config presente, buscar estágio default do pipeline
+    let estagioDefaultId: number | null = null;
+    if (contratoConfig?.pipeline_id) {
+      const { data: estagioDefault } = await supabase
+        .from('contrato_pipeline_estagios')
+        .select('id')
+        .eq('pipeline_id', contratoConfig.pipeline_id)
+        .eq('is_default', true)
+        .maybeSingle();
+      estagioDefaultId = estagioDefault?.id ?? null;
+    }
+
     const { data: cliente, error: clienteError } = await supabase
       .from('clientes')
       .select('id, nome, cpf, cnpj, email')
@@ -247,6 +273,10 @@ export async function POST(request: NextRequest) {
     const parteContraria = partePayload
       ? await upsertParteContraria(supabase, partePayload)
       : null;
+
+    // Determinar papel do cliente e polo da parte contrária
+    const papelCliente = contratoConfig?.papel_cliente ?? 'autora';
+    const papelParteContraria = papelCliente === 'autora' ? 're' : 'autora';
 
     // Idempotência: verificar se já existe contrato recente (últimos 5 min)
     // para este cliente + segmento com status em_contratacao.
@@ -271,21 +301,37 @@ export async function POST(request: NextRequest) {
       // Reutilizar contrato existente (idempotente)
       contrato = existingContrato;
     } else {
-      // Criar novo contrato
+      // Montar dados de inserção: usa contrato_config se disponível, senão fallback
+      const contratoInsert: Record<string, unknown> = {
+        segmento_id: payload.segmentoId,
+        cliente_id: payload.clienteId,
+        cadastrado_em: new Date().toISOString(),
+        observacoes:
+          pickString(payload.dados, ['observacoes', 'descricao_caso']) ??
+          `Contrato iniciado via formulário ${payload.formularioNome}`,
+      };
+
+      if (contratoConfig) {
+        // Usar configuração do formulário (novas colunas FK)
+        contratoInsert.tipo_contrato_id = contratoConfig.tipo_contrato_id ?? null;
+        contratoInsert.tipo_cobranca_id = contratoConfig.tipo_cobranca_id ?? null;
+        contratoInsert.papel_cliente_no_contrato = papelCliente;
+        contratoInsert.estagio_id = estagioDefaultId;
+        // Manter colunas enum para backward compat durante transição
+        contratoInsert.tipo_contrato = 'ajuizamento';
+        contratoInsert.tipo_cobranca = 'pro_exito';
+        contratoInsert.status = 'em_contratacao';
+      } else {
+        // Fallback: valores hard-coded originais (backward compat)
+        contratoInsert.tipo_contrato = 'ajuizamento';
+        contratoInsert.tipo_cobranca = 'pro_exito';
+        contratoInsert.papel_cliente_no_contrato = 'autora';
+        contratoInsert.status = 'em_contratacao';
+      }
+
       const { data: novoContrato, error: contratoError } = await supabase
         .from('contratos')
-        .insert({
-          segmento_id: payload.segmentoId,
-          tipo_contrato: 'ajuizamento',
-          tipo_cobranca: 'pro_exito',
-          cliente_id: payload.clienteId,
-          papel_cliente_no_contrato: 'autora',
-          status: 'em_contratacao',
-          cadastrado_em: new Date().toISOString(),
-          observacoes:
-            pickString(payload.dados, ['observacoes', 'descricao_caso']) ??
-            `Contrato iniciado via formulário ${payload.formularioNome}`,
-        })
+        .insert(contratoInsert)
         .select('id, status')
         .single();
 
@@ -303,7 +349,7 @@ export async function POST(request: NextRequest) {
           contrato_id: contrato.id,
           tipo_entidade: 'cliente',
           entidade_id: payload.clienteId,
-          papel_contratual: 'autora',
+          papel_contratual: papelCliente,
           ordem: 0,
         },
       ];
@@ -313,7 +359,7 @@ export async function POST(request: NextRequest) {
           contrato_id: contrato.id,
           tipo_entidade: 'parte_contraria',
           entidade_id: parteContraria.id,
-          papel_contratual: 're',
+          papel_contratual: papelParteContraria,
           ordem: 1,
         });
       }

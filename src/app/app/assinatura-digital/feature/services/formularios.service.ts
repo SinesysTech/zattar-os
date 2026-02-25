@@ -6,6 +6,64 @@ import type {
   ListFormulariosParams,
   UpsertFormularioInput,
 } from '../types/types';
+import { FormFieldType } from '../types/domain';
+import type { DynamicFormSchema } from '../types/domain';
+
+/**
+ * Gera um form_schema base com 3 seções predefinidas para formulários de contrato.
+ * Este scaffold é um ponto de partida editável pelo admin no schema builder.
+ */
+export function generateContratoFormScaffold(): DynamicFormSchema {
+  return {
+    id: 'contrato-scaffold',
+    version: '1.0.0',
+    sections: [
+      {
+        id: 'dados_cliente',
+        title: 'Dados do Cliente',
+        description: 'Informações preenchidas automaticamente com base no CPF verificado',
+        fields: [],
+      },
+      {
+        id: 'parte_contraria',
+        title: 'Parte Contrária',
+        description: 'Dados da parte contrária no contrato',
+        fields: [
+          {
+            id: 'aplicativo',
+            name: 'aplicativo',
+            type: FormFieldType.SELECT,
+            label: 'Parte Contrária',
+            placeholder: 'Selecione a parte contrária',
+            validation: { required: true },
+            options: [],
+          },
+          {
+            id: 'valor_causa',
+            name: 'valor_causa',
+            type: FormFieldType.NUMBER,
+            label: 'Valor da Causa',
+            placeholder: '0,00',
+          },
+        ],
+      },
+      {
+        id: 'dados_contrato',
+        title: 'Dados do Contrato',
+        description: 'Informações adicionais sobre o contrato',
+        fields: [
+          {
+            id: 'observacoes',
+            name: 'observacoes',
+            type: FormFieldType.TEXTAREA,
+            label: 'Observações',
+            placeholder: 'Observações sobre o contrato...',
+          },
+        ],
+      },
+    ],
+  };
+}
 
 const FORMULARIO_SELECT = '*, segmento:segmentos(*)';
 
@@ -18,7 +76,7 @@ function parseFormularioId(id: string): { column: 'id' | 'formulario_uuid'; valu
 }
 
 function buildFormularioPayload(input: UpsertFormularioInput) {
-  return {
+  const payload: Record<string, unknown> = {
     nome: input.nome,
     slug: input.slug,
     segmento_id: input.segmento_id,
@@ -33,6 +91,27 @@ function buildFormularioPayload(input: UpsertFormularioInput) {
     metadados_seguranca: input.metadados_seguranca ?? '["ip","user_agent"]',
     criado_por: input.criado_por ?? null,
   };
+
+  // tipo_formulario e contrato_config
+  if (input.tipo_formulario !== undefined) {
+    payload.tipo_formulario = input.tipo_formulario;
+  }
+  if (input.tipo_formulario === 'contrato' && input.contrato_config) {
+    payload.contrato_config = input.contrato_config;
+  } else if (input.tipo_formulario && input.tipo_formulario !== 'contrato') {
+    // Limpar contrato_config ao mudar para tipo diferente de contrato
+    payload.contrato_config = null;
+  }
+
+  // Auto-scaffold: gerar form_schema base quando tipo = contrato e schema vazio
+  if (
+    input.tipo_formulario === 'contrato' &&
+    !input.form_schema
+  ) {
+    payload.form_schema = generateContratoFormScaffold();
+  }
+
+  return payload;
 }
 
 export async function listFormularios(
@@ -175,6 +254,14 @@ export async function updateFormulario(
     payload.metadados_seguranca = input.metadados_seguranca;
   }
   if (input.criado_por !== undefined) payload.criado_por = input.criado_por ?? null;
+  if (input.tipo_formulario !== undefined) {
+    payload.tipo_formulario = input.tipo_formulario;
+  }
+  if (input.tipo_formulario === 'contrato' && input.contrato_config !== undefined) {
+    payload.contrato_config = input.contrato_config;
+  } else if (input.tipo_formulario && input.tipo_formulario !== 'contrato') {
+    payload.contrato_config = null;
+  }
 
   const { data, error } = await supabase
     .from(TABLE_FORMULARIOS)

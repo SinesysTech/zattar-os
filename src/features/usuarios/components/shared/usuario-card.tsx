@@ -4,20 +4,8 @@
 import * as React from 'react';
 import type { Usuario } from '../../domain';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { Eye, KeyRound, MoreHorizontal, ShieldAlert } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 import {
   formatarOab,
   formatarTelefone,
@@ -37,16 +25,27 @@ function getInitials(name: string): string {
 interface UsuarioCardProps {
   usuario: Usuario;
   onView: (usuario: Usuario) => void;
-  onRedefinirSenha?: (usuario: Usuario) => void;
 }
 
-export function UsuarioCard({ usuario, onView, onRedefinirSenha }: UsuarioCardProps) {
+export function UsuarioCard({ usuario, onView }: UsuarioCardProps) {
   // Verifica se deve exibir OAB (apenas para Advogado e Diretor)
   const cargoNome = usuario.cargo?.nome?.toLowerCase();
-  const deveExibirOab = cargoNome === 'advogado' || cargoNome === 'diretor';
+  const temOab = Boolean(usuario.oab?.trim());
+  const deveExibirOab = (cargoNome === 'advogado' || cargoNome === 'diretor') && temOab;
 
   return (
-    <Card className="cursor-pointer flex flex-col h-full p-3 sm:p-4 gap-3 sm:gap-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5">
+    <Card
+      role="button"
+      tabIndex={0}
+      onClick={() => onView(usuario)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onView(usuario);
+        }
+      }}
+      className="cursor-pointer flex flex-col h-full min-h-48 p-3 sm:p-4 gap-3 sm:gap-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+    >
       <CardHeader className="px-0 py-0 gap-1.5">
         <div className="flex items-center gap-2.5">
           <Avatar className="h-9 w-9 shrink-0">
@@ -103,38 +102,6 @@ export function UsuarioCard({ usuario, onView, onRedefinirSenha }: UsuarioCardPr
         )}
       </CardContent>
 
-      <div className="mt-auto flex items-center justify-end">
-        <DropdownMenu>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                  <span className="sr-only">Ações do usuário</span>
-                </Button>
-              </DropdownMenuTrigger>
-            </TooltipTrigger>
-            <TooltipContent>Ações</TooltipContent>
-          </Tooltip>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onView(usuario)}>
-              <Eye className="h-4 w-4 mr-2" />
-              Visualizar
-            </DropdownMenuItem>
-            {onRedefinirSenha && (
-              <DropdownMenuItem onClick={() => onRedefinirSenha(usuario)}>
-                <KeyRound className="h-4 w-4 mr-2" />
-                Redefinir Senha
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
     </Card>
   );
 }

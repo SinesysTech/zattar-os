@@ -10,13 +10,11 @@ import type { Usuario } from '../../domain';
 interface UsuariosGridViewProps {
   usuarios: Usuario[];
   onView: (usuario: Usuario) => void;
-  onRedefinirSenha?: (usuario: Usuario) => void;
 }
 
 export function UsuariosGridView({
   usuarios,
   onView,
-  onRedefinirSenha,
 }: UsuariosGridViewProps) {
   if (usuarios.length === 0) {
     return (
@@ -38,7 +36,6 @@ export function UsuariosGridView({
           key={usuario.id}
           usuario={usuario}
           onView={onView}
-          onRedefinirSenha={onRedefinirSenha}
         />
       ))}
     </div>

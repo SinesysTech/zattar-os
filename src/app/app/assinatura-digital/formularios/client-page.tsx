@@ -9,7 +9,7 @@ import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Link2, Trash2, Download, Pencil, Tags } from 'lucide-react';
+import { Link2, Trash2, Download, Pencil, Tags, Eye } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   AlertDialog,
@@ -533,22 +533,40 @@ export function FormulariosClient() {
                 onClick: () => setCreateOpen(true),
               } : undefined}
               actionSlot={
-                canCreate ? (
+                <>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
                         variant="outline"
                         size="icon"
                         className="bg-white dark:bg-card"
-                        onClick={() => setSegmentosDialogOpen(true)}
+                        onClick={() => router.push('/app/contratos/kanban')}
+                        title="Visualizar Kanban de Contratos"
                       >
-                        <Tags className="h-4 w-4" />
-                        <span className="sr-only">Segmentos</span>
+                        <Eye className="h-4 w-4" />
+                        <span className="sr-only">Visualizar Kanban de Contratos</span>
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Segmentos</TooltipContent>
+                    <TooltipContent>Kanban de Contratos</TooltipContent>
                   </Tooltip>
-                ) : undefined
+
+                  {canCreate && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="bg-white dark:bg-card"
+                          onClick={() => setSegmentosDialogOpen(true)}
+                        >
+                          <Tags className="h-4 w-4" />
+                          <span className="sr-only">Segmentos</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Segmentos</TooltipContent>
+                    </Tooltip>
+                  )}
+                </>
               }
               filtersSlot={
                 <>

@@ -18,21 +18,25 @@ Esta change resolve todos esses problemas e adiciona a funcionalidade de Templat
 ### Fase 1: Correções Críticas de Segurança e Tipos
 
 #### Verificação de Permissões
-- Implementar verificação `formsign_admin` em todas as 7 actions sem proteção
+
+- Implementar verificação `assinatura_digital_admin` em todas as 7 actions sem proteção
 - Criar helper `checkAssinaturaDigitalPermission()` reutilizável
 
 #### Consolidação de Tipos
+
 - Mover tipos de `src/types/assinatura-digital/` para `src/features/assinatura-digital/types/`
 - Unificar `TemplateCampo` (manter versão portuguesa de `template.types.ts`)
 - Remover definição duplicada em `types/domain.ts`
 - Atualizar barrel export em `types/index.ts`
 
 #### Remoção de Componentes Duplicados
+
 - Excluir `components/form/inputs/client-search-input.tsx`
 - Excluir `components/form/inputs/parte-contraria-search-input.tsx`
 - Atualizar imports em `dynamic-form-renderer.tsx`
 
 #### Integração com Processos
+
 - Adicionar campo `processo_id` em templates e assinaturas
 - Adicionar variáveis de processo: `@processo.numero`, `@processo.vara`, etc.
 - Vincular documentos assinados a processos específicos
@@ -40,25 +44,30 @@ Esta change resolve todos esses problemas e adiciona a funcionalidade de Templat
 ### Fase 2: Refatoração de Componentes
 
 #### Dividir FieldMappingEditor
+
 Dividir componente de 2229 linhas em estrutura modular:
+
 - `FieldMappingEditor.tsx` - Orquestrador (~300 linhas)
 - `PdfCanvas/` - Componentes de canvas
 - `FieldProperties/` - Edição de propriedades
 - `hooks/` - Lógica extraída (useFieldDrag, useZoomPan, useAutosave)
 
 #### Extrair Hooks Comuns
+
 - `useTemplates()` - Fetch e gerenciamento de templates
 - `useFormularios()` - Fetch e gerenciamento de formulários
 - `useSegmentos()` - Fetch e gerenciamento de segmentos
 - `useDataFetch<T>()` - Hook genérico de fetch
 
 #### Componentes Base para Dialogs
+
 - `BaseDeleteDialog` - Dialog genérico de exclusão
 - `BaseDuplicateDialog` - Dialog genérico de duplicação
 
 ### Fase 3: Templates de Texto (Nova Funcionalidade)
 
 #### Novos Componentes
+
 - **TemplateTypeSelector**: Seleção entre "Upload de PDF" e "Documento de Texto"
 - **TemplateTextoCreateForm**: Formulário de criação com Plate Editor
 - **TemplateTextoEditor**: Editor completo para templates texto
@@ -67,10 +76,12 @@ Dividir componente de 2229 linhas em estrutura modular:
 - **VariaveisPlugin**: Plugin do Plate para menções (@variavel)
 
 #### Novos Serviços
+
 - **template-texto-pdf.service**: Conversão Plate → HTML → PDF via Puppeteer
 - **template-texto-html.template**: Template HTML base para A4
 
 #### Novas Actions e API Routes
+
 - **templates-texto-actions**: Server actions para CRUD
 - **preview-texto/route.ts**: API de preview PDF
 
@@ -100,11 +111,11 @@ Dividir componente de 2229 linhas em estrutura modular:
 
 ## Metrics
 
-| Métrica | Antes | Depois |
-|---------|-------|--------|
-| TODOs de segurança | 7 | 0 |
-| Locais de tipos | 3 | 1 |
-| Interfaces duplicadas | 2 | 1 |
-| Linhas FieldMappingEditor | 2229 | ~300 |
-| Componentes duplicados | 2 | 0 |
-| Hooks inline | 3 | 0 |
+| Métrica                   | Antes | Depois |
+| ------------------------- | ----- | ------ |
+| TODOs de segurança        | 7     | 0      |
+| Locais de tipos           | 3     | 1      |
+| Interfaces duplicadas     | 2     | 1      |
+| Linhas FieldMappingEditor | 2229  | ~300   |
+| Componentes duplicados    | 2     | 0      |
+| Hooks inline              | 3     | 0      |

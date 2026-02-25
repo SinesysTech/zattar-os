@@ -55,6 +55,13 @@ const navPrincipal = [
     title: "Contratos",
     url: "/app/contratos",
     icon: FileText,
+    items: [
+      { title: "Lista", url: "/app/contratos" },
+      { title: "Kanban", url: "/app/contratos/kanban" },
+      { title: "Tipos de Contrato", url: "/app/contratos/tipos" },
+      { title: "Tipos de Cobrança", url: "/app/contratos/tipos-cobranca" },
+      { title: "Pipelines", url: "/app/contratos/pipelines" },
+    ],
   },
   {
     title: "Processos",

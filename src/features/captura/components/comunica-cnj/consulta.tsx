@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ComunicaCNJSearchForm } from './search-form';
 import { ComunicaCNJResultsTable } from './results-table';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, Info, Search } from 'lucide-react';
+import { AlertCircle, Search, Zap } from 'lucide-react';
 import { actionConsultarComunicacoes } from '../../actions/comunica-cnj-actions';
 import type { ComunicacaoItem, RateLimitStatus } from '../../comunica-cnj/domain';
 
@@ -20,7 +20,7 @@ interface SearchResult {
 }
 
 /**
- * Componente de consulta na API do CNJ
+ * Componente de consulta na API do Diário Oficial (CNJ)
  * Contém o formulário de busca e a tabela de resultados
  */
 export function ComunicaCNJConsulta() {
@@ -49,7 +49,7 @@ export function ComunicaCNJConsulta() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Formulário de busca */}
       <ComunicaCNJSearchForm onSearch={handleSearch} isLoading={isLoading} />
 
@@ -61,26 +61,28 @@ export function ComunicaCNJConsulta() {
         </Alert>
       )}
 
-      {/* Rate limit info */}
-      {result?.rateLimit && (
-        <Alert>
-          <Info className="h-4 w-4" />
-          <AlertDescription>
-            Rate Limit: {result.rateLimit.remaining}/{result.rateLimit.limit} requisições restantes
-            {result.rateLimit.resetAt && (
-              <span className="ml-2 text-muted-foreground">
-                (reset em {new Date(result.rateLimit.resetAt).toLocaleTimeString('pt-BR')})
-              </span>
+      {/* Rate limit + contagem de resultados */}
+      {result && (
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted-foreground">
+            {result.comunicacoes.length} comunicações encontradas
+            {result.paginacao.total > result.paginacao.itensPorPagina && (
+              <span> (página {result.paginacao.pagina} de {result.paginacao.totalPaginas})</span>
             )}
-          </AlertDescription>
-        </Alert>
+          </span>
+          {result.rateLimit && (
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Zap className="h-3 w-3" />
+              {result.rateLimit.remaining}/{result.rateLimit.limit} requisições
+            </span>
+          )}
+        </div>
       )}
 
       {/* Resultados */}
       {result && (
         <ComunicaCNJResultsTable
           comunicacoes={result.comunicacoes}
-          paginacao={result.paginacao}
           isLoading={isLoading}
         />
       )}
@@ -89,7 +91,7 @@ export function ComunicaCNJConsulta() {
       {!result && !error && !isLoading && (
         <div className="text-center py-12 text-muted-foreground">
           <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p>Use os filtros acima para buscar comunicações no CNJ</p>
+          <p>Use os filtros acima para buscar comunicações no Diário Oficial</p>
           <p className="text-sm mt-2">
             Pelo menos um filtro deve ser preenchido para realizar a busca
           </p>

@@ -179,7 +179,10 @@ export const criarUsuarioSchema = z.object({
   dataNascimento: z.string().nullable().optional(), // ISO string YYYY-MM-DD
   genero: z.enum(['masculino', 'feminino', 'outro', 'prefiro_nao_informar']).nullable().optional(),
   oab: z.string().optional().nullable(),
-  ufOab: z.string().length(2, 'UF da OAB deve ter 2 letras').optional().nullable(),
+  ufOab: z.preprocess(
+    (val) => (val === '' ? null : val),
+    z.string().length(2, 'UF da OAB deve ter 2 letras').nullable().optional()
+  ),
   emailPessoal: emailSchema.nullable().optional().or(z.literal('')),
   emailCorporativo: emailSchema,
   telefone: telefoneSchema.optional(),

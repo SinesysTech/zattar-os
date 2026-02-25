@@ -116,7 +116,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
           Histórico de Acesso
         </CardTitle>
         <CardDescription>
-          Registro de logins, logouts e renovações de sessão
+          Sessões de login registradas pelo sistema
         </CardDescription>
       </CardHeader>
       <CardContent>

@@ -35,17 +35,17 @@ O sistema MUST permitir filtrar contratos por múltiplos critérios simultaneame
 #### Scenario: Filtro por tipo de contrato
 - **WHEN** o usuário seleciona tipo de contrato no filtro
 - **THEN** o sistema deve mostrar apenas contratos do tipo selecionado
-- **AND** aceitar valores: ajuizamento, defesa, ato_processual, assessoria, consultoria, extrajudicial, parecer
+- **AND** popular o select a partir da tabela `contrato_tipos` (registros ativos)
 
 #### Scenario: Filtro por tipo de cobrança
 - **WHEN** o usuário seleciona tipo de cobrança no filtro
 - **THEN** o sistema deve mostrar apenas contratos com cobrança selecionada
-- **AND** aceitar valores: pro_exito, pro_labore
+- **AND** popular o select a partir da tabela `contrato_tipos_cobranca` (registros ativos)
 
-#### Scenario: Filtro por status
-- **WHEN** o usuário seleciona status no filtro
-- **THEN** o sistema deve mostrar apenas contratos com status selecionado
-- **AND** aceitar valores: em_contratacao, contratado, distribuido, desistencia
+#### Scenario: Filtro por estágio do pipeline
+- **WHEN** o usuário seleciona estágio no filtro
+- **THEN** o sistema deve mostrar apenas contratos no estágio selecionado
+- **AND** popular o select a partir dos estágios do pipeline do segmento filtrado
 
 #### Scenario: Filtro por cliente
 - **WHEN** o usuário seleciona cliente no filtro
@@ -87,11 +87,11 @@ O sistema MUST permitir criar novos contratos através de formulário modal.
 #### Scenario: Abrir formulário de criação
 - **WHEN** o usuário clica em "Novo Contrato"
 - **THEN** o sistema deve abrir sheet com formulário vazio
-- **AND** exibir campos obrigatórios: área de direito, tipo de contrato, tipo de cobrança, cliente, polo do cliente
+- **AND** exibir campos obrigatórios: área de direito, tipo de contrato (select da tabela contrato_tipos), tipo de cobrança (select da tabela contrato_tipos_cobranca), cliente, polo do cliente
 
 #### Scenario: Criar contrato com sucesso
 - **WHEN** o usuário preenche campos obrigatórios e submete
-- **THEN** o sistema deve chamar POST /api/contratos
+- **THEN** o sistema deve criar contrato com `tipo_contrato_id`, `tipo_cobranca_id` e `estagio_id` (estágio default do pipeline do segmento)
 - **AND** fechar sheet após sucesso
 - **AND** recarregar listagem de contratos
 - **AND** exibir mensagem de sucesso
@@ -138,20 +138,20 @@ O sistema MUST formatar dados de contratos para exibição consistente.
 
 #### Scenario: Formatar tipo de contrato
 - **WHEN** o sistema exibe tipo de contrato
-- **THEN** deve converter: ajuizamento → Ajuizamento, defesa → Defesa, ato_processual → Ato Processual, assessoria → Assessoria, consultoria → Consultoria, extrajudicial → Extrajudicial, parecer → Parecer
+- **THEN** deve exibir o campo `nome` do registro correspondente na tabela `contrato_tipos`
 
 #### Scenario: Formatar tipo de cobrança
 - **WHEN** o sistema exibe tipo de cobrança
-- **THEN** deve converter: pro_exito → Pró-Êxito, pro_labore → Pró-Labore
+- **THEN** deve exibir o campo `nome` do registro correspondente na tabela `contrato_tipos_cobranca`
 
-#### Scenario: Formatar status do contrato
-- **WHEN** o sistema exibe status
-- **THEN** deve converter: em_contratacao → Em Contratação, contratado → Contratado, distribuido → Distribuído, desistencia → Desistência
-- **AND** aplicar badge colorida conforme status
+#### Scenario: Formatar estágio do contrato
+- **WHEN** o sistema exibe o estágio do contrato
+- **THEN** deve exibir o campo `nome` do estágio correspondente na tabela `contrato_pipeline_estagios`
+- **AND** aplicar badge com a cor definida no estágio
 
 #### Scenario: Formatar polo processual
 - **WHEN** o sistema exibe polo do cliente
-- **THEN** deve converter: autor → Autor, re → Réu
+- **THEN** deve converter: autora → Autora, re → Ré
 
 #### Scenario: Formatar datas
 - **WHEN** o sistema exibe datas
@@ -257,4 +257,21 @@ O módulo de Contratos SHALL seguir a arquitetura Feature-Sliced Design, consoli
   - `service.ts` - Lógica de negócio
   - `repository.ts` - Acesso ao banco de dados
   - `components/` - Componentes React específicos da feature
+
+### Requirement: Colunas FK para tipos configuráveis e estágio
+O sistema SHALL adicionar colunas `tipo_contrato_id`, `tipo_cobranca_id` e `estagio_id` na tabela `contratos` como referências para as novas tabelas configuráveis.
+
+#### Scenario: Estrutura das novas colunas
+- **WHEN** a migration é executada
+- **THEN** a tabela `contratos` recebe:
+  - `tipo_contrato_id` bigint nullable FK para `contrato_tipos(id)`
+  - `tipo_cobranca_id` bigint nullable FK para `contrato_tipos_cobranca(id)`
+  - `estagio_id` bigint nullable FK para `contrato_pipeline_estagios(id)`
+- **AND** índices criados para cada nova coluna FK
+
+#### Scenario: Backfill de contratos existentes
+- **WHEN** a migration de backfill é executada
+- **THEN** o sistema popula `tipo_contrato_id` baseado no valor da coluna enum `tipo_contrato` → registro correspondente em `contrato_tipos`
+- **AND** popula `tipo_cobranca_id` baseado no valor da coluna enum `tipo_cobranca` → registro correspondente em `contrato_tipos_cobranca`
+- **AND** popula `estagio_id` baseado no valor da coluna `status` → estágio correspondente no pipeline default do segmento do contrato
 

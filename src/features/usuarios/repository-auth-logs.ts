@@ -8,7 +8,8 @@ export interface AuthLogEntry {
 }
 
 /**
- * Busca logs de autenticação do usuário a partir da tabela auth.audit_log_entries
+ * Busca sessões de autenticação do usuário via RPC SQL (SECURITY DEFINER).
+ * Cada sessão representa um login realizado.
  */
 export async function buscarAuthLogsPorUsuario(
   authUserId: string,
@@ -17,19 +18,13 @@ export async function buscarAuthLogsPorUsuario(
   const supabase = createServiceClient();
 
   try {
-    // Query na tabela de audit logs do Supabase Auth (schema auth)
-    // Seleciona colunas corretas: created_at, action, ip_address, user_agent
-    const { data, error } = await supabase
-      .schema('auth')
-      .from('audit_log_entries')
-      .select('created_at, action, ip_address, user_agent')
-      .eq('user_id', authUserId)
-      .in('action', ['user_signedin', 'user_signedout', 'token_refreshed'])
-      .order('created_at', { ascending: false })
-      .limit(limite);
+    const { data, error } = await supabase.rpc('get_user_auth_sessions', {
+      p_user_id: authUserId,
+      p_limit: limite,
+    });
 
     if (error) {
-      console.error('Erro ao buscar logs de autenticação:', error);
+      console.error('Erro ao buscar sessões de autenticação:', error);
       return [];
     }
 
@@ -37,16 +32,14 @@ export async function buscarAuthLogsPorUsuario(
       return [];
     }
 
-    // Mapear dados para o formato esperado
-    // Campos vêm diretamente da tabela: action, ip_address, user_agent
-    return data.map((entry) => ({
-      timestamp: entry.created_at,
-      eventType: parseEventType(entry.action),
-      ipAddress: entry.ip_address || null,
-      userAgent: entry.user_agent || null,
+    return data.map((session) => ({
+      timestamp: session.created_at,
+      eventType: parseEventType(session.event_type),
+      ipAddress: session.ip_address || null,
+      userAgent: session.user_agent || null,
     }));
   } catch (error) {
-    console.error('Erro ao buscar logs de autenticação:', error);
+    console.error('Erro ao buscar sessões de autenticação:', error);
     return [];
   }
 }
@@ -54,8 +47,8 @@ export async function buscarAuthLogsPorUsuario(
 /**
  * Parse do tipo de evento
  */
-function parseEventType(action: string | undefined): AuthLogEntry['eventType'] {
-  switch (action) {
+function parseEventType(eventType: string | null | undefined): AuthLogEntry['eventType'] {
+  switch (eventType) {
     case 'user_signedin':
       return 'user_signedin';
     case 'user_signedout':

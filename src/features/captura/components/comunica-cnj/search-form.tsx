@@ -27,8 +27,13 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
-import { Check, ChevronDown, Loader2, Search, RotateCcw } from 'lucide-react';
+import { Check, ChevronDown, ChevronsUpDown, Loader2, Search, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAdvogados } from '@/features/advogados';
 import { formatOabs, formatOab, getPrimaryOab } from '@/features/advogados/domain';
@@ -38,13 +43,11 @@ import type { TribunalInfo } from '../../comunica-cnj/domain';
 // Ordem de prioridade dos grupos de tribunais
 const TRIBUNAL_GROUP_ORDER = ['TRT', 'TRF', 'TRE', 'STJ', 'STF', 'TST', 'TSE', 'STM', 'CNJ', 'TJ', 'TJMM', 'TJMMG'];
 
-// Função para extrair número do tribunal (ex: TRT1 -> 1, TRT24 -> 24)
 const extractTribunalNumber = (sigla: string): number => {
   const match = sigla.match(/\d+/);
   return match ? parseInt(match[0], 10) : 999;
 };
 
-// Função para identificar o grupo do tribunal
 const getTribunalGroup = (sigla: string): string => {
   if (/^TRT\d+$/i.test(sigla)) return 'TRT';
   if (/^TRF\d+$/i.test(sigla)) return 'TRF';
@@ -60,7 +63,6 @@ const getTribunalGroup = (sigla: string): string => {
   return 'OUTROS';
 };
 
-// Labels para os grupos
 const GROUP_LABELS: Record<string, string> = {
   TRT: 'Tribunais Regionais do Trabalho',
   TRF: 'Tribunais Regionais Federais',
@@ -76,7 +78,6 @@ const GROUP_LABELS: Record<string, string> = {
   OUTROS: 'Outros Tribunais',
 };
 
-// Schema de validação
 const searchSchema = z
   .object({
     siglaTribunal: z.string().optional(),
@@ -111,7 +112,6 @@ interface ComunicaCNJSearchFormProps {
   isLoading: boolean;
 }
 
-// Helper para formatar data
 const formatDateToYYYYMMDD = (date: Date): string => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -120,7 +120,8 @@ const formatDateToYYYYMMDD = (date: Date): string => {
 };
 
 /**
- * Formulário de busca de comunicações CNJ
+ * Formulário de busca de comunicações no Diário Oficial (CNJ)
+ * Campos principais sempre visíveis, filtros avançados em seção colapsável
  */
 export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearchFormProps) {
   const [tribunais, setTribunais] = useState<TribunalInfo[]>([]);
@@ -132,6 +133,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
   const [selectedOabIndex, setSelectedOabIndex] = useState<number>(0);
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>();
   const [selectedMeio, setSelectedMeio] = useState<string>('');
+  const [advancedOpen, setAdvancedOpen] = useState(false);
 
   const { advogados, isLoading: loadingAdvogados } = useAdvogados();
 
@@ -151,14 +153,11 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
 
   const selectedTribunal = watch('siglaTribunal');
 
-  // Buscar tribunais
   useEffect(() => {
     const fetchTribunais = async () => {
       try {
         const result = await actionListarTribunaisDisponiveis();
         if (result.success && result.data) {
-          // Mapping to unknown first if needed, but TribunalInfo[] is expected.
-          // Using reduce with typed accumulator to avoid overload errors.
           const uniqueTribunais = (result.data as TribunalInfo[]).reduce<TribunalInfo[]>((acc, tribunal) => {
             if (!acc.find((t) => t.sigla === tribunal.sigla)) {
               acc.push(tribunal);
@@ -176,9 +175,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
     fetchTribunais();
   }, []);
 
-  // Agrupar e ordenar tribunais
   const groupedTribunais = useMemo(() => {
-    // Filtrar por termo de busca
     let filtered = tribunais;
     if (tribunalSearchTerm) {
       const searchLower = tribunalSearchTerm.toLowerCase();
@@ -189,7 +186,6 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
       );
     }
 
-    // Agrupar por tipo
     const groups: Record<string, TribunalInfo[]> = {};
     filtered.forEach((tribunal) => {
       const group = getTribunalGroup(tribunal.sigla);
@@ -197,19 +193,15 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
       groups[group].push(tribunal);
     });
 
-    // Ordenar cada grupo
     Object.keys(groups).forEach((group) => {
       groups[group].sort((a, b) => {
-        // TRTs e TRFs: ordenar por número
         if (group === 'TRT' || group === 'TRF') {
           return extractTribunalNumber(a.sigla) - extractTribunalNumber(b.sigla);
         }
-        // Demais: ordenar alfabeticamente pela sigla
         return a.sigla.localeCompare(b.sigla);
       });
     });
 
-    // Ordenar grupos pela prioridade definida
     const sortedGroups = Object.entries(groups).sort(([a], [b]) => {
       const indexA = TRIBUNAL_GROUP_ORDER.indexOf(a);
       const indexB = TRIBUNAL_GROUP_ORDER.indexOf(b);
@@ -222,24 +214,25 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
     return sortedGroups;
   }, [tribunais, tribunalSearchTerm]);
 
-  // Encontrar tribunal selecionado
   const selectedTribunalData = tribunais.find((t) => t.sigla === selectedTribunal);
-
-  // Encontrar advogado selecionado
   const selectedAdvogado = advogados?.find((a) => a.id === selectedAdvogadoId);
 
+  // Contar filtros avançados ativos
+  const advancedFilterCount = [
+    watch('nomeParte'),
+    watch('texto'),
+    selectedMeio && selectedMeio !== 'all' ? selectedMeio : undefined,
+    dateRange?.from,
+  ].filter(Boolean).length;
+
   const onSubmit = async (data: SearchFormData) => {
-    // Obter a OAB selecionada do advogado
     const selectedOab = selectedAdvogado?.oabs[selectedOabIndex];
 
     await onSearch({
       ...data,
-      // Adicionar datas do range picker
       dataInicio: dateRange?.from ? formatDateToYYYYMMDD(dateRange.from) : undefined,
       dataFim: dateRange?.to ? formatDateToYYYYMMDD(dateRange.to) : undefined,
-      // Adicionar meio (se não for vazio)
-      meio: selectedMeio || undefined,
-      // Adicionar OAB do advogado selecionado
+      meio: selectedMeio && selectedMeio !== 'all' ? selectedMeio : undefined,
       ...(selectedOab && {
         numeroOab: selectedOab.numero,
         ufOab: selectedOab.uf,
@@ -253,11 +246,12 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
     setSelectedOabIndex(0);
     setDateRange(undefined);
     setSelectedMeio('');
+    setAdvancedOpen(false);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4 border rounded-lg bg-card">
-      {/* Primeira linha: Tribunal, Parte, Texto - larguras iguais */}
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 p-4 border rounded-lg bg-card">
+      {/* Linha principal: Tribunal, Processo, Advogado + Botões */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
         {/* Tribunal */}
         <div className="space-y-1.5 lg:col-span-4">
@@ -268,6 +262,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                 variant="outline"
                 role="combobox"
                 aria-expanded={tribunalSearchOpen}
+                aria-label="Selecionar tribunal"
                 className="w-full justify-between font-normal h-9 text-sm"
                 disabled={loadingTribunais}
               >
@@ -332,23 +327,8 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
           </Popover>
         </div>
 
-        {/* Nome da Parte */}
-        <div className="space-y-1.5 lg:col-span-4">
-          <Label className="text-xs">Parte</Label>
-          <Input {...register('nomeParte')} placeholder="Nome da parte" className="h-9 text-sm" />
-        </div>
-
-        {/* Busca Textual */}
-        <div className="space-y-1.5 lg:col-span-4">
-          <Label className="text-xs">Texto</Label>
-          <Input {...register('texto')} placeholder="Busca textual" className="h-9 text-sm" />
-        </div>
-      </div>
-
-      {/* Segunda linha: Processo, Advogado, Meio, Período + Botões */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
-        {/* Número do Processo */}
-        <div className="space-y-1.5 lg:col-span-4">
+        {/* Processo */}
+        <div className="space-y-1.5 lg:col-span-3">
           <Label className="text-xs">Processo</Label>
           <Input
             {...register('numeroProcesso')}
@@ -358,7 +338,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
         </div>
 
         {/* Advogado (OAB) */}
-        <div className="space-y-1.5 lg:col-span-2">
+        <div className="space-y-1.5 lg:col-span-3">
           <Label className="text-xs">Advogado</Label>
           <Popover open={advogadoSearchOpen} onOpenChange={setAdvogadoSearchOpen}>
             <PopoverTrigger asChild>
@@ -366,6 +346,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                 variant="outline"
                 role="combobox"
                 aria-expanded={advogadoSearchOpen}
+                aria-label="Selecionar advogado"
                 className="w-full justify-between font-normal h-9 text-sm"
                 disabled={loadingAdvogados}
               >
@@ -390,7 +371,6 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                   <CommandEmpty>Nenhum advogado encontrado</CommandEmpty>
                   <CommandGroup>
                     {advogados?.map((advogado) => {
-                      // Texto de busca inclui todas as OABs
                       const oabsSearch = advogado.oabs.map((oab) => `${oab.numero} ${oab.uf}`).join(' ');
                       return (
                         <CommandItem
@@ -398,7 +378,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                           value={`${advogado.nome_completo} ${oabsSearch}`}
                           onSelect={() => {
                             setSelectedAdvogadoId(advogado.id);
-                            setSelectedOabIndex(0); // Reset para primeira OAB
+                            setSelectedOabIndex(0);
                             setAdvogadoSearchOpen(false);
                           }}
                           className="py-1.5"
@@ -425,54 +405,22 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
           </Popover>
         </div>
 
-        {/* Meio - largura fixa para alinhar com dropdown */}
+        {/* Botões */}
         <div className="space-y-1.5 lg:col-span-2">
-          <Label className="text-xs">Meio</Label>
-          <Select
-            value={selectedMeio}
-            onValueChange={setSelectedMeio}
-          >
-            <SelectTrigger className="h-9 text-sm w-full">
-              <SelectValue placeholder="Todos" />
-            </SelectTrigger>
-            <SelectContent className="min-w-40">
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="E">Edital</SelectItem>
-              <SelectItem value="D">Diário Eletrônico</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Período */}
-        <div className="space-y-1.5 lg:col-span-2">
-          <Label className="text-xs">Período</Label>
-          <DateRangePicker
-            value={dateRange}
-            onChange={setDateRange}
-            placeholder="Selecione o período"
-          />
-        </div>
-
-        {/* Botões - alinhados à direita */}
-        <div className="space-y-1.5 lg:col-span-2">
-          <Label className="text-xs invisible">Ações</Label>
+          <Label className="text-xs invisible" aria-hidden="true">Ações</Label>
           <div className="flex gap-2 justify-end">
             <Button type="submit" disabled={isLoading} className="h-9">
               {isLoading ? (
-                <>
-                  <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
-                  Buscando...
-                </>
+                <Loader2 className="h-3 w-3 animate-spin" />
               ) : (
-                <>
-                  <Search className="mr-1.5 h-3 w-3" />
-                  Buscar
-                </>
+                <Search className="h-3 w-3" />
               )}
+              <span className="hidden sm:inline ml-1.5">
+                {isLoading ? 'Buscando...' : 'Buscar'}
+              </span>
             </Button>
-            <Button type="button" variant="outline" onClick={handleReset} className="h-9">
-              <RotateCcw className="mr-1.5 h-3 w-3" />
-              Limpar
+            <Button type="button" variant="outline" onClick={handleReset} className="h-9" aria-label="Limpar filtros">
+              <RotateCcw className="h-3 w-3" />
             </Button>
           </div>
         </div>
@@ -482,7 +430,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
       {selectedAdvogado && selectedAdvogado.oabs.length > 1 && (
         <div className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg">
           <span className="text-sm text-muted-foreground">
-            Advogado com múltiplas OABs. Selecione qual usar na busca:
+            Advogado com múltiplas OABs:
           </span>
           <Select
             value={selectedOabIndex.toString()}
@@ -501,6 +449,69 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
           </Select>
         </div>
       )}
+
+      {/* Filtros avançados (colapsável) */}
+      <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
+        <CollapsibleTrigger asChild>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground gap-1"
+          >
+            <ChevronsUpDown className="h-3 w-3" />
+            Filtros avançados
+            {advancedFilterCount > 0 && (
+              <span className="ml-1 rounded-full bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 leading-none">
+                {advancedFilterCount}
+              </span>
+            )}
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="pt-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
+            {/* Parte */}
+            <div className="space-y-1.5 lg:col-span-4">
+              <Label className="text-xs">Parte</Label>
+              <Input {...register('nomeParte')} placeholder="Nome da parte" className="h-9 text-sm" />
+            </div>
+
+            {/* Texto */}
+            <div className="space-y-1.5 lg:col-span-4">
+              <Label className="text-xs">Texto</Label>
+              <Input {...register('texto')} placeholder="Busca textual" className="h-9 text-sm" />
+            </div>
+
+            {/* Meio */}
+            <div className="space-y-1.5 lg:col-span-2">
+              <Label className="text-xs">Meio</Label>
+              <Select
+                value={selectedMeio}
+                onValueChange={setSelectedMeio}
+              >
+                <SelectTrigger className="h-9 text-sm w-full">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent className="min-w-40">
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="E">Edital</SelectItem>
+                  <SelectItem value="D">Diário Eletrônico</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Período */}
+            <div className="space-y-1.5 lg:col-span-2">
+              <Label className="text-xs">Período</Label>
+              <DateRangePicker
+                value={dateRange}
+                onChange={setDateRange}
+                placeholder="Selecione"
+              />
+            </div>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
 
       {/* Erro de validação */}
       {errors.root && (

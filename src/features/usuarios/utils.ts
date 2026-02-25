@@ -134,10 +134,10 @@ export function getAvatarUrl(avatarUrl: string | null | undefined): string | nul
   if (avatarUrl.startsWith('http://') || avatarUrl.startsWith('https://')) {
     return avatarUrl;
   }
-  // Caso contrário, construir URL (retrocompatibilidade)
+  // Caso contrário, construir URL (bucket: "avatar")
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!supabaseUrl) return null;
-  return `${supabaseUrl}/storage/v1/object/public/avatars/${avatarUrl}`;
+  return `${supabaseUrl}/storage/v1/object/public/avatar/${avatarUrl}`;
 }
 
 /**

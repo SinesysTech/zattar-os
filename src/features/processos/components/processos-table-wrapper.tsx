@@ -337,13 +337,13 @@ function criarColunas(
           <div className="flex flex-col items-start justify-center gap-1.5 py-2 min-w-0">
             <ParteBadge
               polo="ATIVO"
-              className="block whitespace-normal break-words text-left font-normal text-sm"
+              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
             >
               {parteAutora}
             </ParteBadge>
             <ParteBadge
               polo="PASSIVO"
-              className="block whitespace-normal break-words text-left font-normal text-sm"
+              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
             >
               {parteRe}
             </ParteBadge>

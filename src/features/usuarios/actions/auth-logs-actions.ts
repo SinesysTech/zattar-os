@@ -1,7 +1,7 @@
 'use server';
 
 import { buscarAuthLogsPorUsuario } from '../repository-auth-logs';
-import { usuarioRepository } from '../repository';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { requireAuth } from './utils';
 
 export async function actionBuscarAuthLogs(usuarioId: number) {
@@ -9,10 +9,16 @@ export async function actionBuscarAuthLogs(usuarioId: number) {
     // Validar permissão para visualizar logs (pode ser ajustado conforme necessário)
     await requireAuth(['usuarios:visualizar']);
 
-    // Buscar usuário para obter auth_user_id
-    const usuario = await usuarioRepository.findById(usuarioId);
+    const supabase = createServiceClient();
 
-    if (!usuario) {
+    // Buscar usuário sem cache para garantir auth_user_id atualizado
+    const { data: usuario, error: usuarioError } = await supabase
+      .from('usuarios')
+      .select('auth_user_id, email_corporativo')
+      .eq('id', usuarioId)
+      .single();
+
+    if (usuarioError || !usuario) {
       return {
         success: false,
         error: 'Usuário não encontrado',
@@ -20,8 +26,22 @@ export async function actionBuscarAuthLogs(usuarioId: number) {
       };
     }
 
+    let authUserId: string | null = usuario.auth_user_id;
+
+    // Fallback para exceções: resolve pelo e-mail na tabela auth.users
+    if (!authUserId && usuario.email_corporativo) {
+      const { data: authUser } = await supabase
+        .schema('auth')
+        .from('users')
+        .select('id')
+        .eq('email', usuario.email_corporativo)
+        .maybeSingle();
+
+      authUserId = authUser?.id ?? null;
+    }
+
     // Se o usuário não tem auth_user_id, retornar array vazio
-    if (!usuario.authUserId) {
+    if (!authUserId) {
       return {
         success: true,
         data: [],
@@ -29,7 +49,7 @@ export async function actionBuscarAuthLogs(usuarioId: number) {
     }
 
     // Buscar logs de autenticação
-    const logs = await buscarAuthLogsPorUsuario(usuario.authUserId);
+    const logs = await buscarAuthLogsPorUsuario(authUserId);
 
     return {
       success: true,

@@ -47,24 +47,32 @@ src/features/assinatura-digital/
 ### Imports Atualizados
 
 **Antes:**
+
 ```typescript
-import { Segmento } from '@/core/assinatura-digital/domain';
-import { formatCPF } from '@/app/_lib/assinatura-digital/formatters/cpf';
-import { useFormularioStore } from '@/app/_lib/stores/assinatura-digital';
+import { Segmento } from "@/core/assinatura-digital/domain";
+import { formatCPF } from "@/app/_lib/assinatura-digital/formatters/cpf";
+import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital";
 ```
 
 **Depois:**
+
 ```typescript
-import { Segmento, formatCPF, useFormularioStore } from '@/features/assinatura-digital';
+import {
+  Segmento,
+  formatCPF,
+  useFormularioStore,
+} from "@/features/assinatura-digital";
 ```
 
 ## Impact
 
 ### Specs Afetadas
-- `openspec/specs/formsign-signature/spec.md` - Módulo de assinatura
-- `openspec/specs/formsign-admin/spec.md` - Admin de assinatura
+
+- `openspec/specs/assinatura-digital-assinatura/spec.md` - Módulo de assinatura
+- `openspec/specs/assinatura-digital-admin/spec.md` - Admin de assinatura
 
 ### Código Afetado
+
 - Todas as páginas em `src/app/(dashboard)/assinatura-digital/`
 - Todas as páginas em `src/app/formulario/`
 - Todos os componentes em `src/components/assinatura-digital/`

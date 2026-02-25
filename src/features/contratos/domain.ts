@@ -138,6 +138,8 @@ export interface Contrato {
   dadosAnteriores: Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;
+  /** Estágio do pipeline ao qual este contrato pertence (nullable) */
+  estagioId: number | null;
 
   partes: ContratoParte[];
   statusHistorico: ContratoStatusHistorico[];

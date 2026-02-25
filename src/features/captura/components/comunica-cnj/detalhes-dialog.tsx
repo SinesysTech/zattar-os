@@ -1,5 +1,6 @@
 'use client';
 
+import DOMPurify from 'dompurify';
 import {
   Dialog,
   DialogContent,
@@ -42,7 +43,6 @@ export function ComunicacaoDetalhesDialog({
 
   if (!comunicacao) return null;
 
-  // Conteúdo compartilhado entre Dialog e Sheet
   const renderContent = () => (
     <div className="space-y-6">
       {/* Processo */}
@@ -157,13 +157,13 @@ export function ComunicacaoDetalhesDialog({
         </div>
       )}
 
-      {/* Conteúdo da comunicação */}
+      {/* Conteúdo da comunicação - sanitizado com DOMPurify */}
       {comunicacao.texto && (
         <div>
           <h3 className="font-semibold mb-3 text-sm">Conteúdo</h3>
           <div
             className="text-sm p-3 bg-muted/50 rounded-md border prose prose-sm max-w-none dark:prose-invert"
-            dangerouslySetInnerHTML={{ __html: comunicacao.texto }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comunicacao.texto) }}
           />
         </div>
       )}
@@ -179,17 +179,18 @@ export function ComunicacaoDetalhesDialog({
           <FileText className="h-4 w-4 mr-2" />
           Ver Certidão
         </Button>
-        <Button variant="outline" size="sm" asChild className="flex-1 sm:flex-none">
-          <a href={comunicacao.link} target="_blank" rel="noopener noreferrer">
-            <ExternalLink className="h-4 w-4 mr-2" />
-            Abrir no PJE
-          </a>
-        </Button>
+        {comunicacao.link && (
+          <Button variant="outline" size="sm" asChild className="flex-1 sm:flex-none">
+            <a href={comunicacao.link} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="h-4 w-4 mr-2" />
+              Abrir no PJE
+            </a>
+          </Button>
+        )}
       </div>
     </div>
   );
 
-  // Mobile: usar Sheet
   if (isMobile) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
@@ -206,7 +207,6 @@ export function ComunicacaoDetalhesDialog({
     );
   }
 
-  // Desktop: usar Dialog
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">

@@ -358,7 +358,7 @@ export default function DynamicFormStep() {
       }
 
       // Log success
-      console.log('[FORMSIGN] form_action_submit', {
+      console.log('[ASSINATURA_DIGITAL] form_action_submit', {
         event: 'form_action_submit',
         status: 'success',
         payloadKeys: Object.keys(payload),

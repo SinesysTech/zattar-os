@@ -117,6 +117,8 @@ export interface AssinaturaDigitalFormulario {
   created_at?: string;
   updated_at?: string;
   segmento?: AssinaturaDigitalSegmento;
+  tipo_formulario?: 'contrato' | 'documento' | 'cadastro' | null;
+  contrato_config?: ContratoConfigInput | null;
 }
 
 export interface ListFormulariosParams {
@@ -130,6 +132,13 @@ export interface ListFormulariosParams {
 export interface AssinaturaDigitalFormularioList {
   formularios: AssinaturaDigitalFormulario[];
   total: number;
+}
+
+export interface ContratoConfigInput {
+  tipo_contrato_id: number;
+  tipo_cobranca_id: number;
+  papel_cliente: 'autora' | 're';
+  pipeline_id: number;
 }
 
 export interface UpsertFormularioInput {
@@ -146,6 +155,8 @@ export interface UpsertFormularioInput {
   geolocation_necessaria?: boolean;
   metadados_seguranca?: string;
   criado_por?: string | null;
+  tipo_formulario?: 'contrato' | 'documento' | 'cadastro' | null;
+  contrato_config?: ContratoConfigInput | null;
 }
 
 export interface AssinaturaDigitalDashboardStats {

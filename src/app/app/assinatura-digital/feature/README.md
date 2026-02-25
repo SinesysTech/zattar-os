@@ -28,7 +28,7 @@ src/features/assinatura-digital/
 ├── __tests__/                          # Testes
 │   ├── e2e/
 │   │   ├── documento-flow.spec.ts     # Teste E2E completo
-│   │   └── formsign.spec.ts
+│   │   └── assinatura-digital.spec.ts
 │   ├── integration/
 │   └── unit/
 ├── types/                              # Tipos TypeScript
@@ -466,12 +466,10 @@ import { DocumentUploadDropzone, SignatureWorkflowStepper } from '@/features/ass
 #### Breaking Changes
 
 1. **Componente removido**: `assinatura-fluxo-form.tsx`
-
    - **Substituído por**: `DocumentUploadDropzone` + `SignatureWorkflowStepper`
    - **Motivo**: Separação de responsabilidades, melhor testabilidade
 
 2. **Store atualizado**: `formulario-store.ts`
-
    - **Novos campos**: `documentoUrl`, `documentoNome`
    - **Novos métodos**: `proximaEtapa()`, `etapaAnterior()`
 
@@ -514,5 +512,5 @@ npm run test:e2e -- new-workflow.spec.ts
 Para dúvidas ou problemas, consulte:
 
 - `docs/assinatura-digital/conformidade-legal.md` - Detalhes de conformidade legal
-- `openspec/changes/add-formsign-pdf-upload-links/` - Especificação da change proposal
+- `openspec/archive/add-formsign-pdf-upload-links/` - Especificação histórica da change proposal
 - `src/features/assinatura-digital/__tests__/` - Exemplos de uso nos testes

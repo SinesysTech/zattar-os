@@ -23,6 +23,9 @@ import { Loader2, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { generateSlug, type AssinaturaDigitalSegmento, type AssinaturaDigitalTemplate } from '../../feature';
 
+const SELECT_CLASS =
+  'flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50';
+
 const createFormularioSchema = z.object({
   nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
   slug: z.string().min(3, 'Slug deve ter pelo menos 3 caracteres'),
@@ -32,9 +35,30 @@ const createFormularioSchema = z.object({
   ativo: z.boolean(),
   foto_necessaria: z.boolean(),
   geolocation_necessaria: z.boolean(),
+  tipo_formulario: z.enum(['contrato', 'documento', 'cadastro']).nullable().optional(),
+  contrato_config: z
+    .object({
+      tipo_contrato_id: z.coerce.number().int().positive(),
+      tipo_cobranca_id: z.coerce.number().int().positive(),
+      papel_cliente: z.enum(['autora', 're']),
+      pipeline_id: z.coerce.number().int().positive(),
+    })
+    .nullable()
+    .optional(),
 });
 
 type CreateFormularioFormData = z.infer<typeof createFormularioSchema>;
+
+interface TipoOption {
+  id: number;
+  nome: string;
+}
+
+interface PipelineOption {
+  id: number;
+  nome: string;
+  segmentoId: number;
+}
 
 interface FormularioCreateDialogProps {
   open: boolean;
@@ -62,6 +86,8 @@ export function FormularioCreateDialog({
       ativo: true,
       foto_necessaria: true,
       geolocation_necessaria: false,
+      tipo_formulario: null,
+      contrato_config: null,
     },
   });
 
@@ -70,7 +96,14 @@ export function FormularioCreateDialog({
   const [segmentoId, setSegmentoId] = React.useState<string>('');
   const [templateIds, setTemplateIds] = React.useState<string[]>([]);
 
+  // Contrato config options
+  const [tiposContrato, setTiposContrato] = React.useState<TipoOption[]>([]);
+  const [tiposCobranca, setTiposCobranca] = React.useState<TipoOption[]>([]);
+  const [pipelines, setPipelines] = React.useState<PipelineOption[]>([]);
+  const [loadingOptions, setLoadingOptions] = React.useState(false);
+
   const nome = watch('nome');
+  const tipoFormulario = watch('tipo_formulario');
 
   // Auto-generate slug when nome changes
   React.useEffect(() => {
@@ -86,6 +119,9 @@ export function FormularioCreateDialog({
       reset();
       setSegmentoId('');
       setTemplateIds([]);
+      setTiposContrato([]);
+      setTiposCobranca([]);
+      setPipelines([]);
     }
   }, [open, reset]);
 
@@ -97,6 +133,62 @@ export function FormularioCreateDialog({
   React.useEffect(() => {
     setValue('template_ids', templateIds);
   }, [templateIds, setValue]);
+
+  // Fetch tipos de contrato and tipos de cobrança when tipo_formulario = 'contrato'
+  React.useEffect(() => {
+    if (tipoFormulario !== 'contrato') return;
+
+    const fetchOptions = async () => {
+      setLoadingOptions(true);
+      try {
+        const [tiposRes, cobrancaRes] = await Promise.all([
+          fetch('/api/contratos/tipos?ativo=true'),
+          fetch('/api/contratos/tipos-cobranca?ativo=true'),
+        ]);
+        if (tiposRes.ok) {
+          const json = await tiposRes.json();
+          setTiposContrato(json.data ?? []);
+        }
+        if (cobrancaRes.ok) {
+          const json = await cobrancaRes.json();
+          setTiposCobranca(json.data ?? []);
+        }
+      } finally {
+        setLoadingOptions(false);
+      }
+    };
+
+    fetchOptions();
+  }, [tipoFormulario]);
+
+  // Fetch pipelines when tipo_formulario = 'contrato' and segmentoId is set
+  React.useEffect(() => {
+    if (tipoFormulario !== 'contrato' || !segmentoId) {
+      setPipelines([]);
+      return;
+    }
+
+    const fetchPipelines = async () => {
+      try {
+        const res = await fetch(`/api/contratos/pipelines?segmentoId=${segmentoId}&ativo=true`);
+        if (res.ok) {
+          const json = await res.json();
+          setPipelines(json.data ?? []);
+        }
+      } catch {
+        // silently fail — pipelines select will just be empty
+      }
+    };
+
+    fetchPipelines();
+  }, [tipoFormulario, segmentoId]);
+
+  // When tipo_formulario changes away from 'contrato', clear contrato_config
+  React.useEffect(() => {
+    if (tipoFormulario !== 'contrato') {
+      setValue('contrato_config', null);
+    }
+  }, [tipoFormulario, setValue]);
 
   const segmentoOptions = segmentos.map((s) => ({
     value: s.id.toString(),
@@ -111,12 +203,18 @@ export function FormularioCreateDialog({
 
   const onSubmit = async (data: CreateFormularioFormData) => {
     try {
+      const body = {
+        ...data,
+        tipo_formulario: data.tipo_formulario ?? null,
+        contrato_config: data.tipo_formulario === 'contrato' ? (data.contrato_config ?? null) : null,
+      };
+
       const response = await fetch('/api/assinatura-digital/formularios', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
@@ -233,7 +331,7 @@ export function FormularioCreateDialog({
                         variant="secondary"
                         className="gap-1 pr-1"
                       >
-                        <span className="truncate max-w-[150px]">
+                        <span className="truncate max-w-37.5">
                           {template?.nome || templateUuid}
                         </span>
                         <button
@@ -251,6 +349,141 @@ export function FormularioCreateDialog({
                 </div>
               )}
             </div>
+
+            {/* Tipo de formulário */}
+            <div className="space-y-2">
+              <Label htmlFor="tipo_formulario">Tipo de Formulário</Label>
+              <select
+                id="tipo_formulario"
+                className={SELECT_CLASS}
+                disabled={isSubmitting}
+                value={tipoFormulario ?? ''}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setValue(
+                    'tipo_formulario',
+                    val === '' ? null : (val as 'contrato' | 'documento' | 'cadastro'),
+                  );
+                }}
+              >
+                <option value="">Selecione o tipo (opcional)</option>
+                <option value="contrato">Contrato</option>
+                <option value="documento">Documento</option>
+                <option value="cadastro">Cadastro</option>
+              </select>
+            </div>
+
+            {/* Campos de configuração de contrato */}
+            {tipoFormulario === 'contrato' && (
+              <div className="space-y-4 rounded-md border p-4">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Configuração do Contrato
+                </p>
+
+                <div className="space-y-2">
+                  <Label htmlFor="tipo_contrato_id">
+                    Tipo de Contrato <span className="text-destructive">*</span>
+                  </Label>
+                  <select
+                    id="tipo_contrato_id"
+                    className={SELECT_CLASS}
+                    disabled={isSubmitting || loadingOptions}
+                    {...register('contrato_config.tipo_contrato_id')}
+                  >
+                    <option value="">
+                      {loadingOptions ? 'Carregando...' : 'Selecione o tipo de contrato'}
+                    </option>
+                    {tiposContrato.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.nome}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.contrato_config?.tipo_contrato_id && (
+                    <p className="text-sm text-destructive">
+                      {errors.contrato_config.tipo_contrato_id.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="tipo_cobranca_id">
+                    Tipo de Cobrança <span className="text-destructive">*</span>
+                  </Label>
+                  <select
+                    id="tipo_cobranca_id"
+                    className={SELECT_CLASS}
+                    disabled={isSubmitting || loadingOptions}
+                    {...register('contrato_config.tipo_cobranca_id')}
+                  >
+                    <option value="">
+                      {loadingOptions ? 'Carregando...' : 'Selecione o tipo de cobrança'}
+                    </option>
+                    {tiposCobranca.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.nome}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.contrato_config?.tipo_cobranca_id && (
+                    <p className="text-sm text-destructive">
+                      {errors.contrato_config.tipo_cobranca_id.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="papel_cliente">
+                    Papel do Cliente <span className="text-destructive">*</span>
+                  </Label>
+                  <select
+                    id="papel_cliente"
+                    className={SELECT_CLASS}
+                    disabled={isSubmitting}
+                    {...register('contrato_config.papel_cliente')}
+                  >
+                    <option value="">Selecione o papel do cliente</option>
+                    <option value="autora">Autora</option>
+                    <option value="re">Ré</option>
+                  </select>
+                  {errors.contrato_config?.papel_cliente && (
+                    <p className="text-sm text-destructive">
+                      {errors.contrato_config.papel_cliente.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="pipeline_id">
+                    Pipeline <span className="text-destructive">*</span>
+                  </Label>
+                  <select
+                    id="pipeline_id"
+                    className={SELECT_CLASS}
+                    disabled={isSubmitting || !segmentoId}
+                    {...register('contrato_config.pipeline_id')}
+                  >
+                    <option value="">
+                      {!segmentoId
+                        ? 'Selecione um segmento primeiro'
+                        : pipelines.length === 0
+                          ? 'Nenhum pipeline disponível'
+                          : 'Selecione o pipeline'}
+                    </option>
+                    {pipelines.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.nome}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.contrato_config?.pipeline_id && (
+                    <p className="text-sm text-destructive">
+                      {errors.contrato_config.pipeline_id.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="flex items-center space-x-2">
               <Switch

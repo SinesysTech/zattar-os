@@ -20,6 +20,7 @@ import {
   useUsuarioPermissoes,
   AvatarEditDialog,
   UsuarioEditDialog,
+  RedefinirSenhaDialog,
   PermissoesMatriz,
   AuthLogsTimeline,
   AtividadesCards,
@@ -30,10 +31,19 @@ import {
   formatarGenero,
   formatarEnderecoCompleto,
   getAvatarUrl,
-  type Usuario
+  type Usuario,
+  actionAtualizarUsuario,
 } from '@/features/usuarios';
-import { actionAtualizarUsuario } from '@/features/usuarios';
 import { actionObterPerfil } from '@/features/perfil';
+
+function DataField({ label, value }: { label: string; value: string | null | undefined }) {
+  return (
+    <div className="space-y-1">
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{label}</p>
+      <p className="text-sm">{value || '-'}</p>
+    </div>
+  );
+}
 
 // Extended Usuario type with permission flag
 interface UsuarioComPermissao extends Usuario {
@@ -86,6 +96,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   const [usuarioLogado, setUsuarioLogado] = useState<UsuarioComPermissao | null>(null);
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [redefinirSenhaOpen, setRedefinirSenhaOpen] = useState(false);
   const [isSavingSuperAdmin, setIsSavingSuperAdmin] = useState(false);
 
   // Fetch logged user profile
@@ -133,7 +144,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
     return success;
   };
 
-  const isLoading = isLoadingUsuario || isLoadingPermissoes;
+  const isLoading = isLoadingUsuario;
   const error = errorUsuario;
 
   if (isLoading) {
@@ -279,7 +290,6 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         {/* Tab: Visão Geral */}
         <TabsContent value="visao-geral" className="space-y-6">
           <AtividadesCards usuarioId={usuario.id} />
-          <AtividadesRecentes usuarioId={usuario.id} />
         </TabsContent>
 
         {/* Tab: Dados Cadastrais */}
@@ -292,63 +302,27 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Nome Completo</p>
-                  <p className="text-sm">{usuario.nomeCompleto}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Nome de Exibição</p>
-                  <p className="text-sm">{usuario.nomeExibicao}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">CPF</p>
-                  <p className="text-sm">{formatarCpf(usuario.cpf)}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">RG</p>
-                  <p className="text-sm">{usuario.rg || '-'}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Data de Nascimento</p>
-                  <p className="text-sm">{formatarData(usuario.dataNascimento)}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Gênero</p>
-                  <p className="text-sm">{formatarGenero(usuario.genero)}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">E-mail Corporativo</p>
-                  <p className="text-sm">{usuario.emailCorporativo}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">E-mail Pessoal</p>
-                  <p className="text-sm">{usuario.emailPessoal || '-'}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Telefone</p>
-                  <p className="text-sm">{formatarTelefone(usuario.telefone)}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Ramal</p>
-                  <p className="text-sm">{usuario.ramal || '-'}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">OAB</p>
-                  <p className="text-sm">
-                    {usuario.oab && usuario.ufOab ? `${usuario.oab} / ${usuario.ufOab}` : '-'}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">Cargo</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
+                <DataField label="Nome Completo" value={usuario.nomeCompleto} />
+                <DataField label="Nome de Exibição" value={usuario.nomeExibicao} />
+                <DataField label="CPF" value={formatarCpf(usuario.cpf)} />
+                <DataField label="RG" value={usuario.rg} />
+                <DataField label="Data de Nascimento" value={formatarData(usuario.dataNascimento)} />
+                <DataField label="Gênero" value={formatarGenero(usuario.genero)} />
+                <DataField label="E-mail Corporativo" value={usuario.emailCorporativo} />
+                <DataField label="E-mail Pessoal" value={usuario.emailPessoal} />
+                <DataField label="Telefone" value={formatarTelefone(usuario.telefone)} />
+                <DataField label="Ramal" value={usuario.ramal} />
+                <DataField label="OAB" value={usuario.oab && usuario.ufOab ? `${usuario.oab} / ${usuario.ufOab}` : null} />
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Cargo</p>
                   <p className="text-sm">{usuario.cargo ? usuario.cargo.nome : '-'}</p>
                   {usuario.cargo?.descricao && (
-                    <p className="text-xs text-muted-foreground mt-0.5">{usuario.cargo.descricao}</p>
+                    <p className="text-xs text-muted-foreground">{usuario.cargo.descricao}</p>
                   )}
                 </div>
                 <div className="md:col-span-2 lg:col-span-3">
-                  <p className="text-sm font-medium text-muted-foreground">Endereço</p>
-                  <p className="text-sm">{formatarEnderecoCompleto(usuario.endereco)}</p>
+                  <DataField label="Endereço" value={formatarEnderecoCompleto(usuario.endereco)} />
                 </div>
               </div>
             </CardContent>
@@ -378,6 +352,29 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
         {/* Tab: Segurança */}
         <TabsContent value="seguranca" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Credenciais de Acesso</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-1">
+                  <div className="text-sm font-medium">Redefinir Senha</div>
+                  <div className="text-sm text-muted-foreground">
+                    Define uma nova senha para o usuário selecionado.
+                  </div>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setRedefinirSenhaOpen(true)}
+                >
+                  Redefinir Senha
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           <AuthLogsTimeline usuarioId={usuario.id} />
 
           {usuarioLogado?.isSuperAdmin && (
@@ -429,6 +426,13 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         onOpenChange={setEditDialogOpen}
         usuario={usuario}
         onSuccess={() => refetchUsuario()}
+      />
+
+      <RedefinirSenhaDialog
+        open={redefinirSenhaOpen}
+        onOpenChange={setRedefinirSenhaOpen}
+        usuario={usuario}
+        onSuccess={() => undefined}
       />
     </div>
   );

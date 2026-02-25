@@ -29,6 +29,7 @@ export const mockContrato = (overrides?: Partial<Contrato>): Contrato => ({
   dadosAnteriores: null,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
+  estagioId: null,
   partes: [],
   statusHistorico: [],
   processos: [],

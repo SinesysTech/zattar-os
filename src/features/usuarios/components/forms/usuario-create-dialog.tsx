@@ -7,10 +7,18 @@ import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useCargos } from '@/features/cargos';
 import { actionCriarUsuario } from '../../actions/usuarios-actions';
-import type { UsuarioDados, GeneroUsuario } from '../../domain';
+import type { UsuarioDados, GeneroUsuario, Endereco } from '../../domain';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 interface UsuarioCreateDialogProps {
@@ -26,6 +34,7 @@ export function UsuarioCreateDialog({
 }: UsuarioCreateDialogProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const { cargos, isLoading: isLoadingCargos } = useCargos();
 
   // Form state
   // Nota: senha é obrigatória na criação pela interface
@@ -33,16 +42,46 @@ export function UsuarioCreateDialog({
     Partial<UsuarioDados & { senha?: string }>
   >({
     ativo: true,
+    endereco: {
+      logradouro: '',
+      numero: '',
+      complemento: '',
+      bairro: '',
+      cidade: '',
+      estado: '',
+      cep: '',
+    },
   });
 
   const formRef = React.useRef<HTMLFormElement>(null);
 
   React.useEffect(() => {
     if (!open) {
-      setFormData({ ativo: true });
+      setFormData({
+        ativo: true,
+        endereco: {
+          logradouro: '',
+          numero: '',
+          complemento: '',
+          bairro: '',
+          cidade: '',
+          estado: '',
+          cep: '',
+        },
+      });
       setError(null);
     }
   }, [open]);
+
+  const handleEnderecoChange = (campo: keyof Endereco, valor: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      endereco: {
+        ...(prev.endereco || {}),
+        [campo]: valor,
+      },
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,6 +115,10 @@ export function UsuarioCreateDialog({
          emailPessoal: formData.emailPessoal,
          telefone: formData.telefone,
          ramal: formData.ramal,
+         endereco: formData.endereco && Object.values(formData.endereco).some((v) => Boolean(v))
+           ? formData.endereco
+           : null,
+         cargoId: formData.cargoId,
          ativo: formData.ativo,
       };
 
@@ -304,31 +347,130 @@ export function UsuarioCreateDialog({
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="ramal">Ramal</Label>
-              <Input
-                id="ramal"
-                value={formData.ramal || ''}
-                onChange={(e) => handleChange('ramal', e.target.value)}
-                disabled={isLoading}
-                className="max-w-xs"
-              />
-            </div>
-
-            <div className="border-t pt-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="ativo"
-                  checked={formData.ativo ?? true}
-                  onCheckedChange={(checked) =>
-                    handleChange('ativo', !!checked)
-                  }
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="ramal">Ramal</Label>
+                <Input
+                  id="ramal"
+                  value={formData.ramal || ''}
+                  onChange={(e) => handleChange('ramal', e.target.value)}
                   disabled={isLoading}
                 />
-                <Label htmlFor="ativo" className="cursor-pointer">
-                  Usuário ativo
-                </Label>
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="cargoId">Cargo</Label>
+                <Select
+                  value={formData.cargoId?.toString() || 'none'}
+                  onValueChange={(value) =>
+                    handleChange('cargoId', value === 'none' ? null : parseInt(value, 10))
+                  }
+                  disabled={isLoading || isLoadingCargos}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Nenhum</SelectItem>
+                    {cargos.map((cargo) => (
+                      <SelectItem key={cargo.id} value={cargo.id.toString()}>
+                        {cargo.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-4 pt-2 border-t">
+              <Label className="text-sm font-medium">Endereço</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2 space-y-2">
+                  <Label htmlFor="logradouro">Logradouro</Label>
+                  <Input
+                    id="logradouro"
+                    value={formData.endereco?.logradouro || ''}
+                    onChange={(e) => handleEnderecoChange('logradouro', e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="numero">Número</Label>
+                  <Input
+                    id="numero"
+                    value={formData.endereco?.numero || ''}
+                    onChange={(e) => handleEnderecoChange('numero', e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="complemento">Complemento</Label>
+                  <Input
+                    id="complemento"
+                    value={formData.endereco?.complemento || ''}
+                    onChange={(e) => handleEnderecoChange('complemento', e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="bairro">Bairro</Label>
+                  <Input
+                    id="bairro"
+                    value={formData.endereco?.bairro || ''}
+                    onChange={(e) => handleEnderecoChange('bairro', e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="cidade">Cidade</Label>
+                  <Input
+                    id="cidade"
+                    value={formData.endereco?.cidade || ''}
+                    onChange={(e) => handleEnderecoChange('cidade', e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="estado">UF</Label>
+                  <Input
+                    id="estado"
+                    value={formData.endereco?.estado || ''}
+                    onChange={(e) => handleEnderecoChange('estado', e.target.value.toUpperCase())}
+                    maxLength={2}
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="cep">CEP</Label>
+                  <Input
+                    id="cep"
+                    value={formData.endereco?.cep || ''}
+                    onChange={(e) => handleEnderecoChange('cep', e.target.value)}
+                    placeholder="00000-000"
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2 pt-2">
+              <Checkbox
+                id="ativo"
+                checked={formData.ativo ?? true}
+                onCheckedChange={(checked) =>
+                  handleChange('ativo', !!checked)
+                }
+                disabled={isLoading}
+              />
+              <Label htmlFor="ativo" className="cursor-pointer">
+                Usuário ativo
+              </Label>
             </div>
           </div>
         </form>
