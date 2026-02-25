@@ -34,17 +34,15 @@ describe('Sincronização', () => {
   describe('actionSincronizarParcela', () => {
     it('deve chamar service e revalidar paths', async () => {
       (ObrigacoesService.sincronizarParcela as jest.Mock).mockResolvedValue({
-        success: true,
-        message: 'Parcela sincronizada com sucesso',
+        sucesso: true,
+        mensagem: 'Parcela sincronizada com sucesso',
       });
 
-      const result = await actionSincronizarParcela({
-        parcelaId: 1,
-      });
+      const result = await actionSincronizarParcela(1);
 
-      expect(ObrigacoesService.sincronizarParcela).toHaveBeenCalledWith(1);
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro');
-      expect(revalidatePath).toHaveBeenCalledWith('/acordos-condenacoes');
+      expect(ObrigacoesService.sincronizarParcela).toHaveBeenCalledWith(1, false);
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/acordos-condenacoes');
       expect(result).toEqual({
         success: true,
         message: 'Parcela sincronizada com sucesso',
@@ -53,13 +51,11 @@ describe('Sincronização', () => {
 
     it('deve retornar mensagem de erro em caso de falha', async () => {
       (ObrigacoesService.sincronizarParcela as jest.Mock).mockResolvedValue({
-        success: false,
-        error: 'Erro ao sincronizar parcela',
+        sucesso: false,
+        mensagem: 'Erro ao sincronizar parcela',
       });
 
-      const result = await actionSincronizarParcela({
-        parcelaId: 1,
-      });
+      const result = await actionSincronizarParcela(1);
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Erro ao sincronizar parcela');
@@ -70,9 +66,7 @@ describe('Sincronização', () => {
         new Error('Erro inesperado')
       );
 
-      const result = await actionSincronizarParcela({
-        parcelaId: 1,
-      });
+      const result = await actionSincronizarParcela(1);
 
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
@@ -81,45 +75,29 @@ describe('Sincronização', () => {
 
   describe('actionSincronizarAcordo', () => {
     it('deve sincronizar todas as parcelas do acordo', async () => {
-      const mockParcelas = [
-        criarParcelaMock({ id: 1 }),
-        criarParcelaMock({ id: 2 }),
-        criarParcelaMock({ id: 3 }),
-      ];
-
-      (ObrigacoesService.buscarParcelasPorAcordo as jest.Mock).mockResolvedValue(
-        mockParcelas
-      );
-      (ObrigacoesService.sincronizarParcela as jest.Mock).mockResolvedValue({
-        success: true,
+      (ObrigacoesService.sincronizarAcordo as jest.Mock).mockResolvedValue({
+        sucesso: true,
+        mensagem: 'Acordo sincronizado. 3 parcelas processadas.',
       });
 
-      const result = await actionSincronizarAcordo({
-        acordoId: 1,
-      });
+      const result = await actionSincronizarAcordo(1);
 
-      expect(ObrigacoesService.buscarParcelasPorAcordo).toHaveBeenCalledWith(1);
-      expect(ObrigacoesService.sincronizarParcela).toHaveBeenCalledTimes(3);
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro');
-      expect(revalidatePath).toHaveBeenCalledWith('/acordos-condenacoes/1');
+      expect(ObrigacoesService.sincronizarAcordo).toHaveBeenCalledWith(1, false);
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/acordos-condenacoes');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/acordos-condenacoes/1');
       expect(result.success).toBe(true);
     });
 
     it('deve revalidar paths específicos do acordo', async () => {
-      const mockParcelas = [criarParcelaMock()];
-
-      (ObrigacoesService.buscarParcelasPorAcordo as jest.Mock).mockResolvedValue(
-        mockParcelas
-      );
-      (ObrigacoesService.sincronizarParcela as jest.Mock).mockResolvedValue({
-        success: true,
+      (ObrigacoesService.sincronizarAcordo as jest.Mock).mockResolvedValue({
+        sucesso: true,
+        mensagem: 'Acordo sincronizado',
       });
 
-      await actionSincronizarAcordo({
-        acordoId: 123,
-      });
+      await actionSincronizarAcordo(123);
 
-      expect(revalidatePath).toHaveBeenCalledWith('/acordos-condenacoes/123');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/acordos-condenacoes/123');
     });
   });
 
@@ -132,7 +110,7 @@ describe('Sincronização', () => {
 
       (verificarConsistencia as jest.Mock).mockResolvedValue(mockInconsistencias);
 
-      const result = await actionVerificarConsistencia();
+      const result = await actionVerificarConsistencia(1);
 
       expect(verificarConsistencia).toHaveBeenCalled();
       expect(result).toEqual({
@@ -144,7 +122,7 @@ describe('Sincronização', () => {
     it('deve retornar array vazio se não houver inconsistências', async () => {
       (verificarConsistencia as jest.Mock).mockResolvedValue([]);
 
-      const result = await actionVerificarConsistencia();
+      const result = await actionVerificarConsistencia(1);
 
       expect(result).toEqual({
         success: true,
@@ -165,27 +143,25 @@ describe('Repasses', () => {
     it('deve validar URL obrigatória e registrar declaração', async () => {
       (ObrigacoesService.registrarDeclaracao as jest.Mock).mockResolvedValue(mockRepasse);
 
-      const result = await actionRegistrarDeclaracao({
-        parcelaId: 1,
-        declaracaoUrl: 'https://example.com/declaracao.pdf',
-      });
+      const result = await actionRegistrarDeclaracao(1, 'https://example.com/declaracao.pdf');
 
-      expect(ObrigacoesService.registrarDeclaracao).toHaveBeenCalledWith({
-        parcelaId: 1,
-        declaracaoUrl: 'https://example.com/declaracao.pdf',
-      });
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro');
+      expect(ObrigacoesService.registrarDeclaracao).toHaveBeenCalledWith(
+        1,
+        'https://example.com/declaracao.pdf'
+      );
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro');
       expect(result.success).toBe(true);
     });
 
-    it('deve validar URL obrigatória', async () => {
-      const result = await actionRegistrarDeclaracao({
-        parcelaId: 1,
-        declaracaoUrl: '',
-      });
+    it('deve retornar erro quando service falha', async () => {
+      (ObrigacoesService.registrarDeclaracao as jest.Mock).mockRejectedValue(
+        new Error('URL inválida')
+      );
+
+      const result = await actionRegistrarDeclaracao(1, '');
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('URL');
+      expect(result.error).toContain('URL inválida');
     });
   });
 
@@ -195,27 +171,27 @@ describe('Repasses', () => {
         mockRepasse
       );
 
-      const result = await actionGerarRepasse({
-        parcelaId: 1,
-        comprovanteUrl: 'https://example.com/comprovante.pdf',
-        dataRepasse: '2024-01-15',
-      });
+      const result = await actionGerarRepasse(
+        1,
+        'https://example.com/comprovante.pdf',
+        '2024-01-15'
+      );
 
-      expect(ObrigacoesService.registrarComprovanteRepasse).toHaveBeenCalledWith({
-        parcelaId: 1,
-        comprovanteUrl: 'https://example.com/comprovante.pdf',
-        dataRepasse: '2024-01-15',
-      });
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro');
+      expect(ObrigacoesService.registrarComprovanteRepasse).toHaveBeenCalledWith(
+        1,
+        'https://example.com/comprovante.pdf',
+        '2024-01-15'
+      );
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro');
       expect(result.success).toBe(true);
     });
 
-    it('deve validar campos obrigatórios', async () => {
-      const result = await actionGerarRepasse({
-        parcelaId: 1,
-        comprovanteUrl: '',
-        dataRepasse: '',
-      });
+    it('deve retornar erro quando service falha', async () => {
+      (ObrigacoesService.registrarComprovanteRepasse as jest.Mock).mockRejectedValue(
+        new Error('Campos obrigatórios')
+      );
+
+      const result = await actionGerarRepasse(1, '', '');
 
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
@@ -237,19 +213,19 @@ describe('Resumos e Alertas', () => {
       const mockInconsistencias = [criarInconsistenciaMock()];
       const mockRepasses = [criarRepasseMock()];
 
-      (ObrigacoesService.buscarParcelasPendentes as jest.Mock).mockResolvedValue(
+      (ObrigacoesService.listarParcelasComLancamentos as jest.Mock).mockResolvedValue(
         mockParcelas
       );
-      (verificarConsistencia as jest.Mock).mockResolvedValue(mockInconsistencias);
-      (ObrigacoesService.buscarRepassesPendentes as jest.Mock).mockResolvedValue(
+      (ObrigacoesService.detectarInconsistencias as jest.Mock).mockResolvedValue(mockInconsistencias);
+      (ObrigacoesService.listarRepassesPendentes as jest.Mock).mockResolvedValue(
         mockRepasses
       );
 
       const result = await actionObterResumoObrigacoes();
 
-      expect(ObrigacoesService.buscarParcelasPendentes).toHaveBeenCalled();
-      expect(verificarConsistencia).toHaveBeenCalled();
-      expect(ObrigacoesService.buscarRepassesPendentes).toHaveBeenCalled();
+      expect(ObrigacoesService.listarParcelasComLancamentos).toHaveBeenCalled();
+      expect(ObrigacoesService.detectarInconsistencias).toHaveBeenCalled();
+      expect(ObrigacoesService.listarRepassesPendentes).toHaveBeenCalled();
       expect(result.success).toBe(true);
     });
 
@@ -260,28 +236,28 @@ describe('Resumos e Alertas', () => {
       const mockParcelas = [
         criarParcelaMock({
           status: 'pendente',
-          data_vencimento: dataPassada,
-          valor: 1000,
+          dataVencimento: dataPassada,
+          valorBrutoCreditoPrincipal: 1000,
         }),
         criarParcelaMock({
           status: 'pendente',
-          data_vencimento: dataPassada,
-          valor: 2000,
+          dataVencimento: dataPassada,
+          valorBrutoCreditoPrincipal: 2000,
         }),
       ];
 
-      (ObrigacoesService.buscarParcelasPendentes as jest.Mock).mockResolvedValue(
+      (ObrigacoesService.listarParcelasComLancamentos as jest.Mock).mockResolvedValue(
         mockParcelas
       );
-      (verificarConsistencia as jest.Mock).mockResolvedValue([]);
-      (ObrigacoesService.buscarRepassesPendentes as jest.Mock).mockResolvedValue([]);
+      (ObrigacoesService.detectarInconsistencias as jest.Mock).mockResolvedValue([]);
+      (ObrigacoesService.listarRepassesPendentes as jest.Mock).mockResolvedValue([]);
 
       const result = await actionObterResumoObrigacoes();
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.totalVencidas).toBeGreaterThan(0);
-        expect(result.data.valorTotalVencido).toBeGreaterThan(0);
+        expect(result.data.resumo.totalVencidas).toBeGreaterThan(0);
+        expect(result.data.resumo.valorTotalVencido).toBeGreaterThan(0);
       }
     });
 
@@ -289,18 +265,18 @@ describe('Resumos e Alertas', () => {
       const mockParcelas = [
         criarParcelaMock({
           status: 'pendente',
-          data_vencimento: '2024-01-01',
+          dataVencimento: '2024-01-01',
         }),
       ];
       const mockInconsistencias = [
         criarInconsistenciaMock({ tipo: 'valor_divergente' }),
       ];
 
-      (ObrigacoesService.buscarParcelasPendentes as jest.Mock).mockResolvedValue(
+      (ObrigacoesService.listarParcelasComLancamentos as jest.Mock).mockResolvedValue(
         mockParcelas
       );
-      (verificarConsistencia as jest.Mock).mockResolvedValue(mockInconsistencias);
-      (ObrigacoesService.buscarRepassesPendentes as jest.Mock).mockResolvedValue([]);
+      (ObrigacoesService.detectarInconsistencias as jest.Mock).mockResolvedValue(mockInconsistencias);
+      (ObrigacoesService.listarRepassesPendentes as jest.Mock).mockResolvedValue([]);
 
       const result = await actionObterResumoObrigacoes();
 
@@ -322,7 +298,7 @@ describe('Resumos e Alertas', () => {
         }),
       ];
 
-      (verificarConsistencia as jest.Mock).mockResolvedValue(mockInconsistencias);
+      (ObrigacoesService.detectarInconsistencias as jest.Mock).mockResolvedValue(mockInconsistencias);
 
       const result = await actionObterAlertasFinanceiros();
 
@@ -340,7 +316,7 @@ describe('Resumos e Alertas', () => {
         criarInconsistenciaMock({ tipo: 'parcela_sem_lancamento' }),
       ];
 
-      (verificarConsistencia as jest.Mock).mockResolvedValue(mockInconsistencias);
+      (ObrigacoesService.detectarInconsistencias as jest.Mock).mockResolvedValue(mockInconsistencias);
 
       const result = await actionObterAlertasFinanceiros();
 
@@ -392,7 +368,7 @@ describe('Resumos e Alertas', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data.resumo).toBeDefined();
-        expect(result.data.resumo.total).toBe(2);
+        expect(result.data.meta.total).toBe(2);
       }
     });
   });

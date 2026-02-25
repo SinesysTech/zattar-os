@@ -2,17 +2,10 @@
 'use client';
 
 import * as React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { actionRedefinirSenha } from '../../actions/senha-actions';
 import type { Usuario } from '../../domain';
@@ -30,6 +23,7 @@ export function RedefinirSenhaDialog({
   usuario,
   onSuccess,
 }: RedefinirSenhaDialogProps) {
+  const formRef = React.useRef<HTMLFormElement>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [successMessage, setSuccessMessage] = React.useState<string | null>(null);
@@ -120,106 +114,100 @@ export function RedefinirSenhaDialog({
   if (!usuario) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-106.25">
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Redefinir Senha</DialogTitle>
-            <DialogDescription>
-              Digite a nova senha para o usuário <strong>{usuario.nomeExibicao}</strong>.
-              A senha deve ter no mínimo 8 caracteres.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4 py-4">
-            {error && (
-              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
-                {error}
-              </div>
-            )}
-
-            {successMessage && (
-              <div className="rounded-md bg-green-500/15 p-3 text-sm text-green-700 dark:text-green-400 border border-green-500/20">
-                {successMessage}
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <Label htmlFor="novaSenha">Nova Senha *</Label>
-              <div className="relative">
-                <Input
-                  id="novaSenha"
-                  type={showNovaSenha ? 'text' : 'password'}
-                  value={novaSenha}
-                  onChange={(e) => setNovaSenha(e.target.value)}
-                  placeholder="Digite a nova senha"
-                  required
-                  disabled={isLoading || !!successMessage}
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowNovaSenha(!showNovaSenha)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  disabled={isLoading || !!successMessage}
-                >
-                  {showNovaSenha ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Mínimo de 8 caracteres, máximo de 72
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="confirmarSenha">Confirmar Nova Senha *</Label>
-              <div className="relative">
-                <Input
-                  id="confirmarSenha"
-                  type={showConfirmarSenha ? 'text' : 'password'}
-                  value={confirmarSenha}
-                  onChange={(e) => setConfirmarSenha(e.target.value)}
-                  placeholder="Digite novamente a nova senha"
-                  required
-                  disabled={isLoading || !!successMessage}
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmarSenha(!showConfirmarSenha)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  disabled={isLoading || !!successMessage}
-                >
-                  {showConfirmarSenha ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
-            </div>
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Redefinir Senha"
+      description={(
+        <>
+          Digite a nova senha para o usuário <strong>{usuario.nomeExibicao}</strong>.
+          A senha deve ter no mínimo 8 caracteres.
+        </>
+      )}
+      maxWidth="2xl"
+      footer={
+        <Button
+          type="submit"
+          onClick={() => formRef.current?.requestSubmit()}
+          disabled={isLoading || !!successMessage}
+        >
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Redefinir Senha
+        </Button>
+      }
+    >
+      <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 p-6">
+        {error && (
+          <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+            {error}
           </div>
+        )}
 
-          <DialogFooter>
-            <Button
+        {successMessage && (
+          <div className="rounded-md bg-green-500/15 p-3 text-sm text-green-700 dark:text-green-400 border border-green-500/20">
+            {successMessage}
+          </div>
+        )}
+
+        <div className="space-y-2">
+          <Label htmlFor="novaSenha">Nova Senha *</Label>
+          <div className="relative">
+            <Input
+              id="novaSenha"
+              type={showNovaSenha ? 'text' : 'password'}
+              value={novaSenha}
+              onChange={(e) => setNovaSenha(e.target.value)}
+              placeholder="Digite a nova senha"
+              required
+              disabled={isLoading || !!successMessage}
+              className="pr-10"
+            />
+            <button
               type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={() => setShowNovaSenha(!showNovaSenha)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               disabled={isLoading || !!successMessage}
             >
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={isLoading || !!successMessage}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Redefinir Senha
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+              {showNovaSenha ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Mínimo de 8 caracteres, máximo de 72
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="confirmarSenha">Confirmar Nova Senha *</Label>
+          <div className="relative">
+            <Input
+              id="confirmarSenha"
+              type={showConfirmarSenha ? 'text' : 'password'}
+              value={confirmarSenha}
+              onChange={(e) => setConfirmarSenha(e.target.value)}
+              placeholder="Digite novamente a nova senha"
+              required
+              disabled={isLoading || !!successMessage}
+              className="pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmarSenha(!showConfirmarSenha)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              disabled={isLoading || !!successMessage}
+            >
+              {showConfirmarSenha ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+        </div>
+      </form>
+    </DialogFormShell>
   );
 }

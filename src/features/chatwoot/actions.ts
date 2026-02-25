@@ -17,6 +17,9 @@ async function isChatwootConfigured(): Promise<boolean> {
 import {
   sincronizarParteComChatwoot,
   sincronizarChatwootParaApp,
+  processarWebhook,
+  sincronizarConversaChatwoot,
+  atualizarStatusConversa,
   type SincronizarChatwootParaAppResult,
   type WebhookEventType,
 } from './service';
@@ -855,8 +858,6 @@ export async function processarWebhookChatwoot(
       );
     }
 
-    const { processarWebhook } = await import('./service');
-
     // Processa o webhook usando o router de eventos
     const result = await processarWebhook(
       event as WebhookEventType,
@@ -904,10 +905,6 @@ export async function sincronizarConversaManual(
         )
       );
     }
-
-    const {
-      sincronizarConversaChatwoot,
-    } = await import('./service');
 
     const chatwootConfig = await getChatwootConfigFromDatabase();
     if (!chatwootConfig) {
@@ -1014,8 +1011,6 @@ export async function atualizarStatusConversaAPI(
     }
 
     // Depois atualiza no banco local
-    const { atualizarStatusConversa } = await import('./service');
-
     const localUpdateResult = await atualizarStatusConversa(
       conversationId,
       accountId,

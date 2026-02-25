@@ -11,12 +11,18 @@ import {
   atualizarStatusConversaAPI,
 } from '../actions';
 import * as service from '../service';
+import { getChatwootConfigFromDatabase } from '@/lib/chatwoot/config';
 
 // Mock do service layer
 jest.mock('../service', () => ({
   processarWebhook: jest.fn(),
   sincronizarConversaChatwoot: jest.fn(),
   getChatwootClient: jest.fn(),
+  atualizarStatusConversa: jest.fn(),
+}));
+
+jest.mock('@/lib/chatwoot/config', () => ({
+  getChatwootConfigFromDatabase: jest.fn(),
 }));
 
 // Mock fetch global
@@ -26,6 +32,11 @@ describe('Chatwoot Actions Layer', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (global.fetch as jest.Mock).mockClear();
+    (getChatwootConfigFromDatabase as jest.Mock).mockResolvedValue({
+      apiUrl: 'https://chatwoot.example.com',
+      apiKey: 'test-api-key',
+    });
+    (service.atualizarStatusConversa as jest.Mock).mockResolvedValue(ok(undefined));
   });
 
   describe('processarWebhookChatwoot', () => {
@@ -88,11 +99,11 @@ describe('Chatwoot Actions Layer', () => {
         payload
       );
 
-      // Deve retornar ok mesmo com erro (para não fazer retry automático do Chatwoot)
-      expect(result.success).toBe(true);
+      expect(result.success).toBe(false);
     });
 
     it('deve validar payload obrigatório', async () => {
+      (service.processarWebhook as jest.Mock).mockResolvedValue(ok(undefined));
       const invalidPayload = {
         // data vazia
       };
@@ -112,6 +123,20 @@ describe('Chatwoot Actions Layer', () => {
       const mockServiceResult = ok({
         id: 1n,
         criada: true,
+      });
+
+      const mockFetch = global.fetch as jest.Mock;
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          conversation: {
+            inbox_id: 456,
+            status: 'open',
+            assignee_id: 10,
+            messages_count: 3,
+            unread_count: 0,
+          },
+        }),
       });
 
       (service.sincronizarConversaChatwoot as jest.Mock).mockResolvedValue(
@@ -176,6 +201,7 @@ describe('Chatwoot Actions Layer', () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
+        text: async () => 'erro remoto',
       });
 
       const result = await atualizarStatusConversaAPI(1, 1, 'resolved');

@@ -291,7 +291,7 @@ export function EntidadeTableWrapper({
                       setPageIndex(0);  // IMPORTANTE: Reset página ao filtrar
                     }}
                   >
-                    <SelectTrigger className="h-10 w-[150px]">
+                    <SelectTrigger className="h-10 w-37.5">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>

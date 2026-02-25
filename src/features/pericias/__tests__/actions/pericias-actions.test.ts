@@ -207,11 +207,11 @@ describe('Perícias Actions', () => {
       }
 
       // Verify cache revalidation
-      expect(revalidatePath).toHaveBeenCalledWith('/pericias');
-      expect(revalidatePath).toHaveBeenCalledWith('/pericias/semana');
-      expect(revalidatePath).toHaveBeenCalledWith('/pericias/mes');
-      expect(revalidatePath).toHaveBeenCalledWith('/pericias/ano');
-      expect(revalidatePath).toHaveBeenCalledWith('/pericias/lista');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/pericias');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/pericias/semana');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/pericias/mes');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/pericias/ano');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/pericias/lista');
     });
 
     it('deve retornar erro quando service falha', async () => {
@@ -281,11 +281,11 @@ describe('Perícias Actions', () => {
       }
 
       // Verify cache revalidation
-      expect(revalidatePath).toHaveBeenCalledWith('/pericias');
-      expect(revalidatePath).toHaveBeenCalledWith('/pericias/semana');
-      expect(revalidatePath).toHaveBeenCalledWith('/pericias/mes');
-      expect(revalidatePath).toHaveBeenCalledWith('/pericias/ano');
-      expect(revalidatePath).toHaveBeenCalledWith('/pericias/lista');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/pericias');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/pericias/semana');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/pericias/mes');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/pericias/ano');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/pericias/lista');
     });
 
     it('deve retornar erro quando service falha', async () => {
