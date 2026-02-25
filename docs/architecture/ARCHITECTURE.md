@@ -1,4 +1,4 @@
-# Arquitetura Sinesys 2.0
+# Arquitetura Sinesys
 
 ## Visão Geral
 
@@ -41,7 +41,7 @@ O Sinesys é um sistema de gestão jurídica desenvolvido com arquitetura AI-Fir
 ## Estrutura de Diretórios
 
 ```
-sinesys/
+zattar-os/
 ├── src/
 │   ├── app/                    # App Router (Next.js 16)
 │   │   ├── (auth)/             # Rotas autenticadas
@@ -49,7 +49,7 @@ sinesys/
 │   │   │   └── mcp/            # Endpoint MCP SSE
 │   │   └── layout.tsx
 │   │
-│   ├── features/               # Feature-Sliced Design (22 módulos)
+│   ├── features/               # Feature-Sliced Design (37 módulos)
 │   │   ├── processos/          # Gestão de processos
 │   │   │   ├── actions/        # Server Actions
 │   │   │   ├── components/     # Componentes React
@@ -102,7 +102,9 @@ sinesys/
 Cada feature segue a estrutura Domain → Service → Repository → Actions:
 
 ### domain.ts
+
 Define entidades, enums, schemas Zod e tipos:
+
 ```typescript
 // Entidade
 export interface Processo { ... }
@@ -116,10 +118,12 @@ export type CreateProcessoInput = z.infer<typeof createProcessoSchema>;
 ```
 
 ### service.ts
+
 Implementa lógica de negócio:
+
 ```typescript
 export async function criarProcesso(
-  input: CreateProcessoInput
+  input: CreateProcessoInput,
 ): Promise<Result<Processo, ServiceError>> {
   // Validação de regras de negócio
   // Chamada ao repository
@@ -128,10 +132,12 @@ export async function criarProcesso(
 ```
 
 ### repository.ts
+
 Acesso a dados via Supabase:
+
 ```typescript
 export async function create(
-  data: CreateProcessoInput
+  data: CreateProcessoInput,
 ): Promise<Result<Processo, RepositoryError>> {
   const supabase = await createClient();
   // Query Supabase
@@ -139,29 +145,35 @@ export async function create(
 ```
 
 ### actions/
+
 Server Actions para UI e MCP:
+
 ```typescript
 export const actionCriarProcesso = authenticatedAction(
   createProcessoSchema,
   async (data, { user }) => {
     const result = await criarProcesso(data);
-    revalidatePath('/processos');
+    revalidatePath("/processos");
     return result.data;
-  }
+  },
 );
 ```
 
 ### RULES.md
+
 Contexto de regras de negócio para agentes de IA:
+
 ```markdown
 # Regras de Negócio - Processos
 
 ## Validação
+
 - Número CNJ: formato NNNNNNN-DD.AAAA.J.TT.OOOO
 
 ## Regras
+
 - Não arquivar processo com audiências pendentes
-...
+  ...
 ```
 
 ## Integração MCP
@@ -169,17 +181,19 @@ Contexto de regras de negócio para agentes de IA:
 O servidor MCP expõe Server Actions como ferramentas para agentes de IA:
 
 ### Endpoint SSE
+
 ```
 GET  /api/mcp      → Inicia conexão SSE
 POST /api/mcp      → Executa ferramenta
 ```
 
 ### Registro de Ferramentas
+
 ```typescript
 // src/lib/mcp/registry.ts
 registerMcpTool({
-  name: 'criar_processo',
-  description: 'Cria um novo processo no sistema',
+  name: "criar_processo",
+  description: "Cria um novo processo no sistema",
   schema: createProcessoSchema,
   handler: async (args) => {
     const result = await actionCriarProcesso(args);
@@ -189,6 +203,7 @@ registerMcpTool({
 ```
 
 ### Configuração
+
 ```json
 // .mcp.json
 {
@@ -206,36 +221,39 @@ registerMcpTool({
 Pipeline para busca semântica e contexto para LLMs:
 
 ### Indexação
+
 ```typescript
-import { indexarDocumento } from '@/lib/ai/indexing';
+import { indexarDocumento } from "@/lib/ai/indexing";
 
 // Após criar processo
 after(async () => {
   await indexarDocumento({
     texto: `Processo ${processo.numeroProcesso}...`,
-    metadata: { tipo: 'processo', id: processo.id }
+    metadata: { tipo: "processo", id: processo.id },
   });
 });
 ```
 
 ### Busca Semântica
-```typescript
-import { buscaSemantica } from '@/lib/ai/retrieval';
 
-const resultados = await buscaSemantica('trabalhista RJ', {
+```typescript
+import { buscaSemantica } from "@/lib/ai/retrieval";
+
+const resultados = await buscaSemantica("trabalhista RJ", {
   limite: 10,
   threshold: 0.7,
-  filtros: { tipo: 'processo' }
+  filtros: { tipo: "processo" },
 });
 ```
 
 ### Contexto RAG
+
 ```typescript
-import { obterContextoRAG } from '@/lib/ai/retrieval';
+import { obterContextoRAG } from "@/lib/ai/retrieval";
 
 const { contexto, fontes } = await obterContextoRAG(
-  'Quais processos estão com audiência próxima?',
-  2000 // max tokens
+  "Quais processos estão com audiência próxima?",
+  2000, // max tokens
 );
 ```
 

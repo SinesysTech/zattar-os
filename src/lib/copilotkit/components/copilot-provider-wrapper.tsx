@@ -36,7 +36,7 @@ export function CopilotProviderWrapper({ children }: CopilotProviderWrapperProps
   return (
     <CopilotKit
       runtimeUrl={COPILOTKIT_CONFIG.runtimeUrl}
-      publicApiKey="ck_pub_b5b202514d1736f9e6f6675a87238818"
+      publicApiKey={process.env.NEXT_PUBLIC_COPILOT_CLOUD_PUBLIC_API_KEY}
     >
       {/* Registra ações globais (navegação, visualização) */}
       <CopilotGlobalActions />

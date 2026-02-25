@@ -1,23 +1,24 @@
 # Zattar OS - Sistema de Gestão Jurídica by Sinesys
 
-Sistema de gestão jurídica
- com foco em automação e IA.
+Sistema de gestão jurídica com foco em automação e IA.
 
-**Stack**: Next.js 16 (App Router), React 19, TypeScript, Supabase (PostgreSQL + RLS), Redis (opcional), Tailwind CSS 4, shadcn/ui.
+**Stack**: Next.js 16 (App Router), React 19, TypeScript 5, Supabase (PostgreSQL + RLS), Redis (opcional), Tailwind CSS 4, shadcn/ui.
 
-## Status de Desenvolvimento (2026-01-05)
+## Status de Desenvolvimento (2026-02-25)
 
-| Status | Features |
-|--------|----------|
-| ✅ **Totalmente Migrado** | `acervo`, `advogados`, `ai`, `assistentes`, `captura`, `cargos`, `contratos`, `enderecos`, `expedientes`, `notificacoes`, `obrigacoes`, `pangea`, `pericias`, `processos`, `rh`, `tipos-expedientes`, `usuarios` |
-| ⚠️ **Parcialmente Migrado** | `assinatura-digital`, `audiencias`, `chat`, `documentos`, `partes`, `perfil`, `portal-cliente` |
-| ❌ **Em Desenvolvimento** | `busca`, `calendar`, `financeiro`, `profiles`, `repasses`, `tasks` |
+`src/features` possui **37 módulos** atualmente.
 
-Consulte [STATUS.md](./STATUS.md) e [AGENTS.md](./AGENTS.md) para detalhes completos.
+Classificação estrutural (critério: `domain.ts`, `service.ts`, `repository.ts`, `index.ts`, `actions/`, `components/`):
+
+- ✅ **Completos (17)**: `acervo`, `advogados`, `ai`, `captura`, `config-atribuicao`, `contratos`, `dify`, `enderecos`, `integracoes`, `notificacoes`, `obrigacoes`, `pecas-juridicas`, `pericias`, `processos`, `rh`, `tipos-expedientes`, `usuarios`
+- ⚠️ **Parciais (14)**: `assistentes-tipos`, `audiencias`, `calendar`, `cargos`, `chat`, `chatwoot`, `documentos`, `expedientes`, `financeiro`, `partes`, `perfil`, `profiles`, `system-prompts`, `tags`
+- 🧩 **Iniciais (6)**: `admin`, `audit`, `busca`, `repasses`, `tasks`, `twofauth`
+
+Consulte [STATUS de arquitetura](./docs/architecture/STATUS.md) e [AGENTS](./docs/architecture/AGENTS.md) para detalhes completos.
 
 ## Requisitos
 
-- Node.js `>= 24.9.0`
+- Node.js `>= 22.0.0`
 - npm `>= 10`
 - (Opcional) Docker
 
@@ -25,25 +26,26 @@ Consulte [STATUS.md](./STATUS.md) e [AGENTS.md](./AGENTS.md) para detalhes compl
 
 ## Início rápido
 
-1) Instalar dependências
+1. Instalar dependências
 
 ```bash
 npm install
 ```
 
-2) Variáveis de ambiente
+2. Variáveis de ambiente
 
 ```bash
 cp .env.example .env.local
 ```
 
-3) Rodar em desenvolvimento (Turbopack)
+3. Rodar em desenvolvimento (Turbopack)
 
 ```bash
 npm run dev
 ```
 
 Acesse:
+
 - App: http://localhost:3000
 - Health: http://localhost:3000/api/health
 
@@ -52,6 +54,7 @@ Acesse:
 A lista completa está em `.env.example`. Principais:
 
 Obrigatórias (para o app funcionar):
+
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`
 - `SUPABASE_SECRET_KEY`
@@ -59,11 +62,13 @@ Obrigatórias (para o app funcionar):
 - `CRON_SECRET`
 
 Busca semântica / RAG:
+
 - `OPENAI_API_KEY`
 - `OPENAI_EMBEDDING_MODEL` (padrão: `text-embedding-3-small`)
 - `ENABLE_AI_INDEXING` (padrão: `true`)
 
 Opcionais (dependem dos módulos):
+
 - Redis/cache: `ENABLE_REDIS_CACHE`, `REDIS_URL`, `REDIS_PASSWORD`, `REDIS_CACHE_TTL`
 - Plate AI editor: `AI_GATEWAY_API_KEY`
 - Dyte (chamadas): configurado via UI em Configurações > Integrações
@@ -75,6 +80,7 @@ Opcionais (dependem dos módulos):
 ## Comandos úteis
 
 Dev:
+
 ```bash
 npm run dev
 npm run dev:webpack
@@ -82,6 +88,7 @@ npm run type-check
 ```
 
 Build:
+
 ```bash
 npm run build
 npm run build:ci
@@ -89,6 +96,7 @@ npm run build:prod
 ```
 
 Testes:
+
 ```bash
 npm test
 npm run test:ci
@@ -99,6 +107,7 @@ npm run test:e2e
 ```
 
 Arquitetura/exports:
+
 ```bash
 npm run check:architecture
 npm run validate:arch
@@ -106,6 +115,7 @@ npm run validate:exports
 ```
 
 MCP / IA:
+
 ```bash
 npm run mcp:check
 npm run mcp:dev
@@ -116,6 +126,7 @@ npm run ai:index-existing
 ```
 
 Segurança:
+
 ```bash
 npm run security:scan
 npm run security:gitleaks
@@ -153,6 +164,7 @@ import { actionListarClientes } from "@/features/partes";
 ## MCP (Model Context Protocol)
 
 Endpoint:
+
 - `GET /api/mcp` — conexão SSE
 - `POST /api/mcp` — execução de ferramenta
 
@@ -169,7 +181,8 @@ Também existe `docker-compose.yml` para subir o app via env vars.
 
 ## Docs
 
-- [STATUS.md](./STATUS.md)
-- [AGENTS.md](./AGENTS.md)
-- `docs/modules/` (Documentação por módulo)
-- `docs/guia-desenvolvimento.md`
+- [Documentação geral](./docs/README.md)
+- [Índice da documentação](./docs/INDEX.md)
+- [Status da arquitetura](./docs/architecture/STATUS.md)
+- [Guia para agentes](./docs/architecture/AGENTS.md)
+- [Módulos](./docs/modules/README.md)

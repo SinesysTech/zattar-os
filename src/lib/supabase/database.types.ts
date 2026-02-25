@@ -666,6 +666,7 @@ export type Database = {
       assinatura_digital_formularios: {
         Row: {
           ativo: boolean | null
+          contrato_config: Json | null
           created_at: string | null
           criado_por: string | null
           descricao: string | null
@@ -681,10 +682,12 @@ export type Database = {
           segmento_id: number
           slug: string
           template_ids: string[] | null
+          tipo_formulario: string | null
           updated_at: string | null
         }
         Insert: {
           ativo?: boolean | null
+          contrato_config?: Json | null
           created_at?: string | null
           criado_por?: string | null
           descricao?: string | null
@@ -700,10 +703,12 @@ export type Database = {
           segmento_id: number
           slug: string
           template_ids?: string[] | null
+          tipo_formulario?: string | null
           updated_at?: string | null
         }
         Update: {
           ativo?: boolean | null
+          contrato_config?: Json | null
           created_at?: string | null
           criado_por?: string | null
           descricao?: string | null
@@ -719,6 +724,7 @@ export type Database = {
           segmento_id?: number
           slug?: string
           template_ids?: string[] | null
+          tipo_formulario?: string | null
           updated_at?: string | null
         }
         Relationships: [
@@ -2267,6 +2273,88 @@ export type Database = {
           },
         ]
       }
+      contrato_pipeline_estagios: {
+        Row: {
+          cor: string
+          created_at: string
+          id: number
+          is_default: boolean
+          nome: string
+          ordem: number
+          pipeline_id: number
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          cor?: string
+          created_at?: string
+          id?: never
+          is_default?: boolean
+          nome: string
+          ordem?: number
+          pipeline_id: number
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          cor?: string
+          created_at?: string
+          id?: never
+          is_default?: boolean
+          nome?: string
+          ordem?: number
+          pipeline_id?: number
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contrato_pipeline_estagios_pipeline_id_fkey"
+            columns: ["pipeline_id"]
+            isOneToOne: false
+            referencedRelation: "contrato_pipelines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contrato_pipelines: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao: string | null
+          id: number
+          nome: string
+          segmento_id: number
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          id?: never
+          nome: string
+          segmento_id: number
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          id?: never
+          nome?: string
+          segmento_id?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contrato_pipelines_segmento_id_fkey"
+            columns: ["segmento_id"]
+            isOneToOne: true
+            referencedRelation: "segmentos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contrato_processos: {
         Row: {
           contrato_id: number
@@ -2404,6 +2492,72 @@ export type Database = {
           },
         ]
       }
+      contrato_tipos: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao: string | null
+          id: number
+          nome: string
+          ordem: number
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          id?: never
+          nome: string
+          ordem?: number
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          id?: never
+          nome?: string
+          ordem?: number
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      contrato_tipos_cobranca: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao: string | null
+          id: number
+          nome: string
+          ordem: number
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          id?: never
+          nome: string
+          ordem?: number
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          id?: never
+          nome?: string
+          ordem?: number
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contratos: {
         Row: {
           cadastrado_em: string
@@ -2412,6 +2566,7 @@ export type Database = {
           created_by: number | null
           dados_anteriores: Json | null
           documentos: string | null
+          estagio_id: number | null
           id: number
           observacoes: string | null
           papel_cliente_no_contrato: Database["public"]["Enums"]["papel_contratual"]
@@ -2419,7 +2574,9 @@ export type Database = {
           segmento_id: number | null
           status: Database["public"]["Enums"]["status_contrato"]
           tipo_cobranca: Database["public"]["Enums"]["tipo_cobranca"]
+          tipo_cobranca_id: number | null
           tipo_contrato: Database["public"]["Enums"]["tipo_contrato"]
+          tipo_contrato_id: number | null
           updated_at: string
         }
         Insert: {
@@ -2429,6 +2586,7 @@ export type Database = {
           created_by?: number | null
           dados_anteriores?: Json | null
           documentos?: string | null
+          estagio_id?: number | null
           id?: never
           observacoes?: string | null
           papel_cliente_no_contrato: Database["public"]["Enums"]["papel_contratual"]
@@ -2436,7 +2594,9 @@ export type Database = {
           segmento_id?: number | null
           status?: Database["public"]["Enums"]["status_contrato"]
           tipo_cobranca: Database["public"]["Enums"]["tipo_cobranca"]
+          tipo_cobranca_id?: number | null
           tipo_contrato: Database["public"]["Enums"]["tipo_contrato"]
+          tipo_contrato_id?: number | null
           updated_at?: string
         }
         Update: {
@@ -2446,6 +2606,7 @@ export type Database = {
           created_by?: number | null
           dados_anteriores?: Json | null
           documentos?: string | null
+          estagio_id?: number | null
           id?: never
           observacoes?: string | null
           papel_cliente_no_contrato?: Database["public"]["Enums"]["papel_contratual"]
@@ -2453,7 +2614,9 @@ export type Database = {
           segmento_id?: number | null
           status?: Database["public"]["Enums"]["status_contrato"]
           tipo_cobranca?: Database["public"]["Enums"]["tipo_cobranca"]
+          tipo_cobranca_id?: number | null
           tipo_contrato?: Database["public"]["Enums"]["tipo_contrato"]
+          tipo_contrato_id?: number | null
           updated_at?: string
         }
         Relationships: [
@@ -2479,6 +2642,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "contratos_estagio_id_fkey"
+            columns: ["estagio_id"]
+            isOneToOne: false
+            referencedRelation: "contrato_pipeline_estagios"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "contratos_responsavel_id_fkey"
             columns: ["responsavel_id"]
             isOneToOne: false
@@ -2490,6 +2660,20 @@ export type Database = {
             columns: ["segmento_id"]
             isOneToOne: false
             referencedRelation: "segmentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contratos_tipo_cobranca_id_fkey"
+            columns: ["tipo_cobranca_id"]
+            isOneToOne: false
+            referencedRelation: "contrato_tipos_cobranca"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contratos_tipo_contrato_id_fkey"
+            columns: ["tipo_contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contrato_tipos"
             referencedColumns: ["id"]
           },
         ]
@@ -7404,6 +7588,15 @@ export type Database = {
       get_landlord_org_id: { Args: never; Returns: string }
       get_my_admin_org_ids: { Args: never; Returns: string[] }
       get_my_org_ids: { Args: never; Returns: string[] }
+      get_user_auth_sessions: {
+        Args: { p_limit?: number; p_user_id: string }
+        Returns: {
+          created_at: string
+          event_type: string
+          ip_address: string
+          user_agent: string
+        }[]
+      }
       get_usuario_id_from_auth: { Args: never; Returns: number }
       is_current_user_active: { Args: never; Returns: boolean }
       is_current_user_in_landlord: { Args: never; Returns: boolean }
@@ -8062,4 +8255,3 @@ export const Constants = {
     },
   },
 } as const
-
