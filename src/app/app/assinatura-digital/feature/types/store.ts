@@ -81,7 +81,7 @@ export interface DadosPessoaisStore {
 }
 
 export interface DadosContratoStore {
-  contrato_id: number;
+  contrato_id: number | null;
   [key: string]: unknown;
 }
 

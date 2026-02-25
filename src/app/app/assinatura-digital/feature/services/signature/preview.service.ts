@@ -9,6 +9,7 @@
 
 import { generatePdfFromTemplate } from "../template-pdf.service";
 import { storePdf } from "../storage.service";
+import { generatePresignedUrl } from "@/lib/storage/backblaze-b2.service";
 import { getClienteBasico, getTemplateBasico } from "../data.service";
 import { logger, createTimer, LogServices, LogOperations } from "../logger";
 import type { PreviewPayload, PreviewResult } from "../../types/types";
@@ -108,8 +109,12 @@ export async function generatePreview(
   logger.debug("Armazenando PDF de preview", context);
   const stored = await storePdf(pdfBuffer);
 
+  // Gerar presigned URL para acesso temporário do navegador (15 min)
+  // A URL direta do Backblaze não funciona no browser por CORS/bucket privado
+  const presignedUrl = await generatePresignedUrl(stored.key, 900);
+
   timer.log("Preview gerado com sucesso", context, {
     pdf_size: pdfBuffer.length,
   });
-  return { pdf_url: stored.url };
+  return { pdf_url: presignedUrl };
 }

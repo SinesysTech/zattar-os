@@ -293,7 +293,7 @@ export function ComunicaCNJCapturadas() {
             <span className="font-medium">
               {c.numeroProcessoMascara || c.numeroProcesso}
             </span>
-            <span className="text-muted-foreground text-[10px] truncate max-w-[180px]" title={c.nomeClasse || undefined}>
+            <span className="text-muted-foreground text-[10px] truncate max-w-45" title={c.nomeClasse || undefined}>
               {c.nomeClasse}
             </span>
           </div>
@@ -379,7 +379,7 @@ export function ComunicaCNJCapturadas() {
             filtersSlot={
               <>
                 <Select value={tribunalFilter} onValueChange={setTribunalFilter}>
-                  <SelectTrigger className="h-10 w-[130px]">
+                  <SelectTrigger className="h-10 w-32.5">
                     <SelectValue placeholder="Tribunal" />
                   </SelectTrigger>
                   <SelectContent>
@@ -393,7 +393,7 @@ export function ComunicaCNJCapturadas() {
                 </Select>
 
                 <Select value={vinculacaoFilter} onValueChange={setVinculacaoFilter}>
-                  <SelectTrigger className="h-10 w-[150px]">
+                  <SelectTrigger className="h-10 w-37.5">
                     <SelectValue placeholder="Vinculação" />
                   </SelectTrigger>
                   <SelectContent>

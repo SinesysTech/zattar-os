@@ -163,7 +163,7 @@ export default function PdfPreview({
               <Button variant="outline" size="sm" disabled>
                 <ZoomOut className="w-4 h-4" />
               </Button>
-              <span className="text-sm font-medium min-w-[60px] text-center">
+              <span className="text-sm font-medium min-w-15 text-center">
                 {Math.round(zoom * 100)}%
               </span>
               <Button variant="outline" size="sm" disabled>
@@ -242,7 +242,7 @@ export default function PdfPreview({
             >
               <ZoomOut className="w-4 h-4" />
             </Button>
-            <span className="text-sm font-medium min-w-[60px] text-center">
+            <span className="text-sm font-medium min-w-15 text-center">
               {Math.round(zoom * 100)}%
             </span>
             <Button

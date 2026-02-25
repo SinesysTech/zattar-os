@@ -199,12 +199,8 @@ export default function VisualizacaoPdfStep() {
       }
 
       // Preparar payload
-      // contrato_id pode ser um mock string (ex: "mock-...") quando salvar-acao retorna 404.
-      // A API de preview espera number | null, então sanitizamos aqui.
-      const rawContratoId = dadosContrato.contrato_id;
-      const contratoId = typeof rawContratoId === 'number' && Number.isFinite(rawContratoId)
-        ? rawContratoId
-        : null;
+      // contrato_id pode ser null quando salvar-acao retorna 404 ou não cria contrato.
+      const contratoId = dadosContrato.contrato_id;
 
       const payload = {
         template_id: templateId,

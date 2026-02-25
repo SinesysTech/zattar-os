@@ -287,7 +287,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
               </Button>
             </PopoverTrigger>
             <PopoverContent
-              className="p-0 w-[480px]"
+              className="p-0 w-120"
               align="start"
             >
               <Command>
@@ -297,7 +297,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                   onValueChange={setTribunalSearchTerm}
                   className="h-9"
                 />
-                <CommandList className="max-h-[300px]">
+                <CommandList className="max-h-75">
                   <CommandEmpty>Nenhum tribunal encontrado</CommandEmpty>
                   {groupedTribunais.map(([groupKey, tribunaisDoGrupo]) => (
                     <CommandGroup key={groupKey} heading={GROUP_LABELS[groupKey] || groupKey}>
@@ -383,7 +383,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                 <ChevronDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[350px] p-0" align="start">
+            <PopoverContent className="w-87.5 p-0" align="start">
               <Command>
                 <CommandInput placeholder="Buscar advogado..." className="h-9" />
                 <CommandList>
@@ -435,7 +435,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
             <SelectTrigger className="h-9 text-sm w-full">
               <SelectValue placeholder="Todos" />
             </SelectTrigger>
-            <SelectContent className="min-w-[160px]">
+            <SelectContent className="min-w-40">
               <SelectItem value="all">Todos</SelectItem>
               <SelectItem value="E">Edital</SelectItem>
               <SelectItem value="D">Diário Eletrônico</SelectItem>
@@ -488,7 +488,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
             value={selectedOabIndex.toString()}
             onValueChange={(v) => setSelectedOabIndex(parseInt(v, 10))}
           >
-            <SelectTrigger className="h-9 text-sm w-[180px]">
+            <SelectTrigger className="h-9 text-sm w-45">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

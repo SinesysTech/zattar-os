@@ -51,10 +51,10 @@ export default function DynamicFormStep() {
   };
 
   /**
-   * Enriquece e transforma dados do formulário para o formato esperado pelo n8n
+   * Enriquece e transforma dados do formulário para o formato esperado pela API.
    *
    * Transformações aplicadas:
-   * 1. Aplicativo: Remove 'aplicativo', adiciona reclamada_id e reclamada_nome (baseado no schema)
+   * 1. Aplicativo: Remove 'aplicativo', adiciona parte_contraria_id e parte_contraria_nome
    * 2. Modalidade: Adiciona modalidade_nome (baseado no schema)
    * 3. Situação: Remove 'situacao', adiciona flags ativo/bloqueado (V/F)
    * 4. Booleanos: Converte acidenteTrabalho e adoecimentoTrabalho de boolean para "V"/"F"
@@ -64,7 +64,7 @@ export default function DynamicFormStep() {
 
     if (!formSchema) return enriched;
 
-    // 1. Enriquecer aplicativo (reclamada)
+    // 1. Enriquecer aplicativo → parte_contraria
     if (data.aplicativo !== undefined) {
       const aplicativoField = formSchema.sections
         .flatMap(s => s.fields)
@@ -73,9 +73,8 @@ export default function DynamicFormStep() {
       if (aplicativoField?.options) {
         const selectedOption = aplicativoField.options.find(opt => opt.value === data.aplicativo);
         if (selectedOption) {
-          enriched.reclamada_id = data.aplicativo;
-          enriched.reclamada_nome = selectedOption.label;
-          // Remove duplicate 'aplicativo' key (reclamada_id is the same thing)
+          enriched.parte_contraria_id = data.aplicativo;
+          enriched.parte_contraria_nome = selectedOption.label;
           delete enriched.aplicativo;
         }
       }
@@ -99,7 +98,6 @@ export default function DynamicFormStep() {
     if (data.situacao !== undefined) {
       enriched.ativo = data.situacao === 'V' ? 'V' : 'F';
       enriched.bloqueado = data.situacao === 'F' ? 'V' : 'F';
-      // Remove duplicate 'situacao' key (ativo/bloqueado replace it)
       delete enriched.situacao;
     }
 
@@ -128,27 +126,27 @@ export default function DynamicFormStep() {
   const reorderEnrichedData = (enriched: DynamicFormData): DynamicFormData => {
     const ordered: DynamicFormData = {};
 
-    // 📋 SEÇÃO 1: RECLAMADA
-    if (enriched.reclamada_id !== undefined) ordered.reclamada_id = enriched.reclamada_id;
-    if (enriched.reclamada_nome !== undefined) ordered.reclamada_nome = enriched.reclamada_nome;
+    // SEÇÃO 1: PARTE CONTRÁRIA
+    if (enriched.parte_contraria_id !== undefined) ordered.parte_contraria_id = enriched.parte_contraria_id;
+    if (enriched.parte_contraria_nome !== undefined) ordered.parte_contraria_nome = enriched.parte_contraria_nome;
 
-    // 👤 SEÇÃO 2: TRABALHADOR
+    // SEÇÃO 2: TRABALHADOR
     if (enriched.modalidade !== undefined) ordered.modalidade = enriched.modalidade;
     if (enriched.modalidade_nome !== undefined) ordered.modalidade_nome = enriched.modalidade_nome;
     if (enriched.ativo !== undefined) ordered.ativo = enriched.ativo;
     if (enriched.bloqueado !== undefined) ordered.bloqueado = enriched.bloqueado;
 
-    // 📅 SEÇÃO 3: DATAS
+    // SEÇÃO 3: DATAS
     if (enriched.dataInicio !== undefined) ordered.dataInicio = enriched.dataInicio;
     if (enriched.dataBloqueio !== undefined) ordered.dataBloqueio = enriched.dataBloqueio;
 
-    // 🏥 SEÇÃO 4: SAÚDE E SEGURANÇA
+    // SEÇÃO 4: SAÚDE E SEGURANÇA
     if (enriched.acidenteTrabalho !== undefined) ordered.acidenteTrabalho = enriched.acidenteTrabalho;
     if (enriched.acidenteDescricao !== undefined) ordered.acidenteDescricao = enriched.acidenteDescricao;
     if (enriched.adoecimentoTrabalho !== undefined) ordered.adoecimentoTrabalho = enriched.adoecimentoTrabalho;
     if (enriched.adoecimentoDescricao !== undefined) ordered.adoecimentoDescricao = enriched.adoecimentoDescricao;
 
-    // 📝 SEÇÃO 5: OBSERVAÇÕES
+    // SEÇÃO 5: OBSERVAÇÕES
     if (enriched.observacoes !== undefined) ordered.observacoes = enriched.observacoes;
 
     // Adicionar qualquer campo não mapeado (para compatibilidade futura)
@@ -321,21 +319,17 @@ export default function DynamicFormStep() {
       if (!response.ok) {
         // If route not implemented (404)
         if (response.status === 404) {
-          console.log('[ASSINATURA_DIGITAL] form_action_submit', {
-            event: 'form_action_submit',
-            status: 'error_404',
-            payloadKeys: Object.keys(payload),
+          console.warn('[ASSINATURA_DIGITAL] form_action_submit: endpoint 404', {
             formularioId: formularioIdValue,
           });
 
-          const mockContratoId = `mock-${crypto.randomUUID()}`;
           setDadosContrato({
             ...orderedData,
-            contrato_id: mockContratoId as unknown as number,
+            contrato_id: null,
           });
 
-          toast.message('Salvamento simulado - avançando...', {
-            description: 'Endpoint em desenvolvimento (404)',
+          toast.warning('Dados salvos localmente', {
+            description: 'O endpoint de criação de contrato não está disponível. Continuando sem contrato.',
           });
 
           proximaEtapa();
