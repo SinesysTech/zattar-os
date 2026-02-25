@@ -4,6 +4,65 @@ import type { Permissao, PermissaoMatriz } from './domain';
 
 export { obterTotal as obterTotalPermissoes };
 
+const MODULOS_PERMISSOES: Record<string, { titulo: string; ordem: number }> = {
+  administracao: { titulo: 'Administração', ordem: 1 },
+  cadastros: { titulo: 'Cadastros', ordem: 2 },
+  processos: { titulo: 'Processos', ordem: 3 },
+  financeiro: { titulo: 'Financeiro', ordem: 4 },
+  captura_integracoes: { titulo: 'Captura e Integrações', ordem: 5 },
+  ia_assistentes: { titulo: 'IA e Assistentes', ordem: 6 },
+  outros: { titulo: 'Outros', ordem: 7 },
+};
+
+const RECURSO_MODULO: Record<string, keyof typeof MODULOS_PERMISSOES> = {
+  usuarios: 'administracao',
+  cargos: 'administracao',
+  credenciais: 'administracao',
+  assinatura_digital: 'administracao',
+
+  clientes: 'cadastros',
+  partes_contrarias: 'cadastros',
+  terceiros: 'cadastros',
+  representantes: 'cadastros',
+  enderecos: 'cadastros',
+  advogados: 'cadastros',
+  tipos_expedientes: 'cadastros',
+
+  acervo: 'processos',
+  audiencias: 'processos',
+  pendentes: 'processos',
+  expedientes_manuais: 'processos',
+  contratos: 'processos',
+  processo_partes: 'processos',
+  acordos_condenacoes: 'processos',
+  parcelas: 'processos',
+  agendamentos: 'processos',
+  documentos: 'processos',
+
+  obrigacoes: 'financeiro',
+  lancamentos_financeiros: 'financeiro',
+  salarios: 'financeiro',
+  folhas_pagamento: 'financeiro',
+  dre: 'financeiro',
+  plano_contas: 'financeiro',
+  contas_pagar: 'financeiro',
+  contas_receber: 'financeiro',
+  orcamentos: 'financeiro',
+  conciliacao_bancaria: 'financeiro',
+
+  captura: 'captura_integracoes',
+  comunica_cnj: 'captura_integracoes',
+
+  assistentes: 'ia_assistentes',
+  pangea: 'ia_assistentes',
+};
+
+export interface GrupoPermissaoModulo {
+  chave: string;
+  titulo: string;
+  itens: PermissaoMatriz[];
+}
+
 /**
  * Transforma array de permissões em matriz agrupada por recurso
  */
@@ -30,6 +89,41 @@ export function formatarPermissoesParaMatriz(
       operacoes,
     };
   });
+}
+
+export function agruparPermissoesPorModulo(matriz: PermissaoMatriz[]): GrupoPermissaoModulo[] {
+  const grupos = new Map<string, GrupoPermissaoModulo>();
+
+  matriz.forEach((item) => {
+    const chaveModulo = RECURSO_MODULO[item.recurso] ?? 'outros';
+    const config = MODULOS_PERMISSOES[chaveModulo];
+
+    if (!grupos.has(chaveModulo)) {
+      grupos.set(chaveModulo, {
+        chave: chaveModulo,
+        titulo: config.titulo,
+        itens: [],
+      });
+    }
+
+    const grupo = grupos.get(chaveModulo);
+    if (!grupo) return;
+    grupo.itens.push(item);
+  });
+
+  return Array.from(grupos.values())
+    .map((grupo) => ({
+      ...grupo,
+      itens: [...grupo.itens].sort((a, b) =>
+        formatarNomeRecurso(a.recurso).localeCompare(formatarNomeRecurso(b.recurso), 'pt-BR')
+      ),
+    }))
+    .sort((a, b) => {
+      const ordemA = MODULOS_PERMISSOES[a.chave]?.ordem ?? Number.MAX_SAFE_INTEGER;
+      const ordemB = MODULOS_PERMISSOES[b.chave]?.ordem ?? Number.MAX_SAFE_INTEGER;
+      if (ordemA !== ordemB) return ordemA - ordemB;
+      return a.titulo.localeCompare(b.titulo, 'pt-BR');
+    });
 }
 
 /**

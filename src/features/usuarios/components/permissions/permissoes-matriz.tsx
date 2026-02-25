@@ -24,7 +24,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Shield, Save, RotateCcw, Info, Loader2, AlertCircle } from 'lucide-react';
 import type { PermissaoMatriz } from '../../domain';
-import { formatarNomeRecurso, formatarNomeOperacao, contarPermissoesAtivas, obterTotalPermissoes } from '../../permissions-utils';
+import {
+  agruparPermissoesPorModulo,
+  formatarNomeRecurso,
+  formatarNomeOperacao,
+  contarPermissoesAtivas,
+  obterTotalPermissoes,
+} from '../../permissions-utils';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Typography } from '@/components/ui/typography';
 
@@ -66,6 +72,7 @@ export function PermissoesMatriz({
 
   const totalPermissoesAtivas = contarPermissoesAtivas(matriz);
   const totalPermissoes = obterTotalPermissoes();
+  const gruposModulo = agruparPermissoesPorModulo(matriz);
 
   if (isLoading) {
     return (
@@ -148,54 +155,76 @@ export function PermissoesMatriz({
                 </Alert>
               )}
 
-              <Accordion type="multiple" className="w-full">
-                {matriz.map((item) => {
-                  const permissoesAtivas = Object.values(item.operacoes).filter(Boolean).length;
-                  const totalOperacoes = Object.keys(item.operacoes).length;
-                  const todasAtivas = permissoesAtivas === totalOperacoes;
-                  const nenhumaAtiva = permissoesAtivas === 0;
+              <div className="space-y-5">
+                {gruposModulo.map((grupo) => {
+                  const permissoesAtivasModulo = grupo.itens.reduce((acc, item) => {
+                    return acc + Object.values(item.operacoes).filter(Boolean).length;
+                  }, 0);
+                  const totalModulo = grupo.itens.reduce((acc, item) => {
+                    return acc + Object.keys(item.operacoes).length;
+                  }, 0);
 
                   return (
-                    <AccordionItem key={item.recurso} value={item.recurso}>
-                      <AccordionTrigger className="hover:no-underline">
-                        <div className="flex items-center gap-2 w-full">
-                          <span className="font-medium text-sm">
-                            {formatarNomeRecurso(item.recurso)}
-                          </span>
-                          <AppBadge variant={todasAtivas ? 'success' : nenhumaAtiva ? 'neutral' : 'info'} className="ml-auto mr-2">
-                            {permissoesAtivas}/{totalOperacoes}
-                          </AppBadge>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 pt-2">
-                          {Object.entries(item.operacoes).map(([operacao, permitido]) => (
-                            <label
-                              key={`${item.recurso}-${operacao}`}
-                              className="flex items-center gap-2 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors"
-                            >
-                              <Checkbox
-                                id={`perm-${item.recurso}-${operacao}`}
-                                checked={Boolean(permitido)}
-                                onCheckedChange={() => {
-                                  if (canEdit) {
-                                    onTogglePermissao(item.recurso, operacao);
-                                  }
-                                }}
-                                disabled={!canEdit || isSaving}
-                                aria-label={`Permitir ${formatarNomeOperacao(operacao)} em ${formatarNomeRecurso(item.recurso)}`}
-                              />
-                              <span className="text-sm">
-                                {formatarNomeOperacao(operacao)}
-                              </span>
-                            </label>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
+                    <div key={grupo.chave} className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-sm font-semibold text-foreground">{grupo.titulo}</h4>
+                        <AppBadge variant="neutral">
+                          {permissoesAtivasModulo}/{totalModulo}
+                        </AppBadge>
+                      </div>
+
+                      <Accordion type="multiple" className="w-full">
+                        {grupo.itens.map((item) => {
+                          const permissoesAtivas = Object.values(item.operacoes).filter(Boolean).length;
+                          const totalOperacoes = Object.keys(item.operacoes).length;
+                          const todasAtivas = permissoesAtivas === totalOperacoes;
+                          const nenhumaAtiva = permissoesAtivas === 0;
+
+                          return (
+                            <AccordionItem key={item.recurso} value={item.recurso}>
+                              <AccordionTrigger className="hover:no-underline">
+                                <div className="flex items-center gap-2 w-full">
+                                  <span className="font-medium text-sm">
+                                    {formatarNomeRecurso(item.recurso)}
+                                  </span>
+                                  <AppBadge variant={todasAtivas ? 'success' : nenhumaAtiva ? 'neutral' : 'info'} className="ml-auto mr-2">
+                                    {permissoesAtivas}/{totalOperacoes}
+                                  </AppBadge>
+                                </div>
+                              </AccordionTrigger>
+                              <AccordionContent>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 pt-2">
+                                  {Object.entries(item.operacoes).map(([operacao, permitido]) => (
+                                    <label
+                                      key={`${item.recurso}-${operacao}`}
+                                      className="flex items-center gap-2 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors"
+                                    >
+                                      <Checkbox
+                                        id={`perm-${item.recurso}-${operacao}`}
+                                        checked={Boolean(permitido)}
+                                        onCheckedChange={() => {
+                                          if (canEdit) {
+                                            onTogglePermissao(item.recurso, operacao);
+                                          }
+                                        }}
+                                        disabled={!canEdit || isSaving}
+                                        aria-label={`Permitir ${formatarNomeOperacao(operacao)} em ${formatarNomeRecurso(item.recurso)}`}
+                                      />
+                                      <span className="text-sm">
+                                        {formatarNomeOperacao(operacao)}
+                                      </span>
+                                    </label>
+                                  ))}
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          );
+                        })}
+                      </Accordion>
+                    </div>
                   );
                 })}
-              </Accordion>
+              </div>
 
               {matriz.length === 0 && (
                 <Empty>

@@ -5,8 +5,9 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { Loader2, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { actionRedefinirSenha } from '../../actions/senha-actions';
 import type { Usuario } from '../../domain';
 
@@ -144,9 +145,10 @@ export function RedefinirSenhaDialog({
         )}
 
         {successMessage && (
-          <div className="rounded-md bg-green-500/15 p-3 text-sm text-green-700 dark:text-green-400 border border-green-500/20">
-            {successMessage}
-          </div>
+          <Alert>
+            <CheckCircle2 />
+            <AlertDescription>{successMessage}</AlertDescription>
+          </Alert>
         )}
 
         <div className="space-y-2">

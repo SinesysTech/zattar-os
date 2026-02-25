@@ -21,7 +21,8 @@ export async function requireAuth(permissions: string[] = []): Promise<{ userId:
     .select('id')
     .eq('auth_user_id', user.id)
     .eq('ativo', true)
-    .single();
+    .limit(1)
+    .maybeSingle();
 
   if (userError || !userData) {
     throw new Error('Usuário não encontrado ou inativo.');

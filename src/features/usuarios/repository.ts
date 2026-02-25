@@ -78,7 +78,7 @@ export const usuarioRepository = {
       .from("usuarios")
       .select(getUsuarioColumnsWithCargo())
       .eq("id", id)
-      .single();
+      .maybeSingle();
 
     if (error) {
       if (error.code === "PGRST116") return null;
@@ -332,9 +332,10 @@ export const usuarioRepository = {
       .update(dadosAtualizacao)
       .eq("id", id)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) throw new Error(`Erro ao atualizar usuário: ${error.message}`);
+    if (!data) throw new Error("Erro ao atualizar usuário: registro não retornado após atualização");
 
     await invalidateUsuariosCache();
     await deleteCached(`usuarios:id:${id}`);
@@ -499,7 +500,7 @@ export async function listarPermissoesUsuario(
 export async function atribuirPermissoesBatch(
   usuarioId: number,
   permissoes: Permissao[],
-  executorId: number
+  _executorId: number
 ): Promise<void> {
   const supabase = createServiceClient();
 
@@ -509,7 +510,6 @@ export async function atribuirPermissoesBatch(
     recurso: p.recurso,
     operacao: p.operacao,
     permitido: p.permitido,
-    created_by: executorId,
   }));
 
   // Upsert em batch
@@ -528,7 +528,7 @@ export async function atribuirPermissoesBatch(
 export async function substituirPermissoes(
   usuarioId: number,
   permissoes: Permissao[],
-  executorId: number
+  _executorId: number
 ): Promise<void> {
   const supabase = createServiceClient();
 
@@ -551,7 +551,6 @@ export async function substituirPermissoes(
       recurso: p.recurso,
       operacao: p.operacao,
       permitido: p.permitido,
-      created_by: executorId,
     }));
 
     const { error: insertError } = await supabase
