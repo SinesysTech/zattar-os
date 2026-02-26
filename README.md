@@ -4,7 +4,7 @@ Sistema de gestão jurídica com foco em automação e IA.
 
 **Stack**: Next.js 16 (App Router), React 19, TypeScript 5, Supabase (PostgreSQL + RLS), Redis (opcional), Tailwind CSS 4, shadcn/ui.
 
-## Status de Desenvolvimento (2026-02-25)
+## Status de Desenvolvimento (2026-02-26)
 
 `src/features` possui **37 módulos** atualmente.
 
