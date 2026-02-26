@@ -8,7 +8,6 @@ import {
   DocSteps,
 } from '../../components/doc-components';
 import {
-  Plus,
   Calendar,
   Clock,
   Link2,
@@ -194,7 +193,7 @@ export default function AgendaDoc() {
           ]}
         />
         <DocTip>
-          Para editar uma audiência ou expediente exibido na Agenda, clique no evento e depois em "Ver Detalhes".
+          Para editar uma audiência ou expediente exibido na Agenda, clique no evento e depois em &quot;Ver Detalhes&quot;.
           Edições realizadas diretamente no calendário não estão disponíveis para eventos gerados automaticamente.
         </DocTip>
       </DocSection>
@@ -226,8 +225,8 @@ export default function AgendaDoc() {
 
       <DocSection title="Editando e Excluindo Eventos">
         <p className="text-muted-foreground mb-4">
-          Para editar um evento manual, clique sobre ele no calendário e selecione "Editar". Para excluir,
-          clique sobre o evento e depois em "Excluir". Eventos sincronizados automaticamente
+          Para editar um evento manual, clique sobre ele no calendário e selecione &quot;Editar&quot;. Para excluir,
+          clique sobre o evento e depois em &quot;Excluir&quot;. Eventos sincronizados automaticamente
           (audiências e expedientes) devem ser editados nos seus respectivos módulos.
         </p>
         <DocTip>

@@ -143,12 +143,20 @@ export const listarPlanoContas = async (
 
   // Filtro de tipo de conta
   if (tipoConta) {
-    query = query.eq('tipo_conta', tipoConta);
+    if (Array.isArray(tipoConta)) {
+      query = query.in('tipo_conta', tipoConta);
+    } else {
+      query = query.eq('tipo_conta', tipoConta);
+    }
   }
 
   // Filtro de nível
   if (nivel) {
-    query = query.eq('nivel', nivel);
+    if (Array.isArray(nivel)) {
+      query = query.in('nivel', nivel as unknown as number[]);
+    } else {
+      query = query.eq('nivel', nivel as unknown as number);
+    }
   }
 
   // Filtro de ativo
@@ -191,7 +199,7 @@ export const listarPlanoContas = async (
   const totalPaginas = Math.ceil(total / limite);
 
   const result: ListarPlanoContasResponse = {
-    items: (data || []).map(mapearPlanoContaComPai),
+    items: (data || []).map((item) => mapearPlanoContaComPai(item as unknown as PlanoContaRecordComPai)),
     pagina,
     limite,
     total,
@@ -234,7 +242,7 @@ export const buscarPlanoContaPorId = async (id: number): Promise<PlanoContaComPa
     throw new Error(`Erro ao buscar conta: ${error.message}`);
   }
 
-  const result = mapearPlanoContaComPai(data);
+  const result = mapearPlanoContaComPai(data as unknown as PlanoContaRecordComPai);
   await setCached(cacheKey, result, 900); // 15 minutos TTL
   return result;
 };
@@ -271,7 +279,7 @@ export const buscarPlanoContaPorCodigo = async (codigo: string): Promise<PlanoCo
     throw new Error(`Erro ao buscar conta por código: ${error.message}`);
   }
 
-  const result = mapearPlanoContaComPai(data);
+  const result = mapearPlanoContaComPai(data as unknown as PlanoContaRecordComPai);
   await setCached(cacheKey, result, 900); // 15 minutos TTL
   return result;
 };
@@ -302,7 +310,7 @@ export const listarPlanoContasHierarquico = async (): Promise<PlanoContaHierarqu
   }
 
   // Converter registros para interface PlanoConta
-  const contas = (data || []).map(mapearPlanoConta);
+  const contas = (data || []).map((item) => mapearPlanoConta(item as unknown as PlanoContaRecord));
 
   // Construir árvore hierárquica
   const contasMap = new Map<number, PlanoContaHierarquico>();
@@ -360,7 +368,7 @@ export const criarPlanoConta = async (
       throw new Error('Conta pai não encontrada');
     }
 
-    if (contaPai.nivel !== 'sintetica') {
+    if ((contaPai.nivel as unknown as string) !== 'sintetica') {
       throw new Error('Conta pai deve ser sintética para receber contas filhas');
     }
   }
@@ -373,7 +381,7 @@ export const criarPlanoConta = async (
       descricao: data.descricao?.trim() || null,
       tipo_conta: data.tipoConta,
       natureza: data.natureza,
-      nivel: data.nivel,
+      nivel: data.nivel as unknown as number,
       conta_pai_id: data.contaPaiId || null,
       aceita_lancamento: aceitaLancamento,
       ordem_exibicao: data.ordemExibicao || null,
@@ -395,7 +403,7 @@ export const criarPlanoConta = async (
     throw new Error(`Erro ao criar conta: ${error.message}`);
   }
 
-  const result = mapearPlanoConta(registro);
+  const result = mapearPlanoConta(registro as unknown as PlanoContaRecord);
   await invalidatePlanoContasCache();
   return result;
 };
@@ -432,12 +440,12 @@ export const atualizarPlanoConta = async (
       throw new Error('Nova conta pai não encontrada');
     }
 
-    if (contaPai.nivel !== 'sintetica') {
+    if ((contaPai.nivel as unknown as string) !== 'sintetica') {
       throw new Error('Nova conta pai deve ser sintética');
     }
   }
 
-  const updateData: Partial<PlanoContaRecord> = {};
+  const updateData: Partial<Omit<PlanoContaRecord, 'id'>> = {};
 
   if (data.nome !== undefined) {
     updateData.nome = data.nome.trim();
@@ -463,7 +471,7 @@ export const atualizarPlanoConta = async (
 
   const { data: registro, error } = await supabase
     .from('plano_contas')
-    .update(updateData)
+    .update(updateData as Record<string, unknown>)
     .eq('id', id)
     .select()
     .single();
@@ -478,7 +486,7 @@ export const atualizarPlanoConta = async (
     throw new Error(`Erro ao atualizar conta: ${error.message}`);
   }
 
-  const result = mapearPlanoConta(registro);
+  const result = mapearPlanoConta(registro as unknown as PlanoContaRecord);
   await invalidatePlanoContasCache();
   return result;
 };
@@ -683,7 +691,7 @@ export const listarContasSinteticas = async (): Promise<PlanoConta[]> => {
   const { data, error } = await supabase
     .from('plano_contas')
     .select('*')
-    .eq('nivel', 'sintetica')
+    .eq('nivel', 'sintetica' as unknown as number)
     .eq('ativo', true)
     .order('codigo', { ascending: true });
 
@@ -691,7 +699,7 @@ export const listarContasSinteticas = async (): Promise<PlanoConta[]> => {
     throw new Error(`Erro ao listar contas sintéticas: ${error.message}`);
   }
 
-  const result = (data || []).map(mapearPlanoConta);
+  const result = (data || []).map((item) => mapearPlanoConta(item as unknown as PlanoContaRecord));
   await setCached(cacheKey, result, 900);
   return result;
 };

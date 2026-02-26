@@ -9,7 +9,6 @@ import {
 } from '../../components/doc-components';
 import {
   UserPlus,
-  KeyRound,
   Building2,
   Pencil,
   Trash2,

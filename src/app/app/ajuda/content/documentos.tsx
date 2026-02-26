@@ -2,7 +2,6 @@
 
 import {
   DocSection,
-  DocFieldTable,
   DocActionList,
   DocTip,
   DocSteps,

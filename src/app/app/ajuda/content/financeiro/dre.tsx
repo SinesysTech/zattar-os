@@ -42,7 +42,7 @@ export default function Dre() {
           <li>Período personalizado com datas de início e fim</li>
         </ul>
         <DocTip>
-          Para análises anuais, selecione a visualização "Mensal" para ver o detalhamento mês a
+          Para análises anuais, selecione a visualização &quot;Mensal&quot; para ver o detalhamento mês a
           mês em uma única tabela, facilitando a identificação de sazonalidades.
         </DocTip>
       </DocSection>

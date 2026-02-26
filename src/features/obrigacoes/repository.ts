@@ -45,9 +45,9 @@ interface ParcelaDB {
   acordo_condenacao_id: number;
   numero_parcela: number;
   valor_bruto_credito_principal: number;
-  honorarios_contratuais: number;
+  honorarios_contratuais: number | null;
   honorarios_sucumbenciais: number;
-  valor_repasse_cliente: number;
+  valor_repasse_cliente: number | null;
   data_vencimento: string;
   data_efetivacao: string | null;
   status: StatusParcela;
@@ -67,20 +67,20 @@ interface ParcelaDB {
 }
 
 interface RepassePendenteDB {
-  parcela_id: number;
-  acordo_condenacao_id: number;
-  numero_parcela: number;
-  valor_bruto_credito_principal: number;
-  valor_repasse_cliente: number;
-  status_repasse: StatusRepasse;
-  data_efetivacao: string;
+  parcela_id: number | null;
+  acordo_condenacao_id: number | null;
+  numero_parcela: number | null;
+  valor_bruto_credito_principal: number | null;
+  valor_repasse_cliente: number | null;
+  status_repasse: StatusRepasse | null;
+  data_efetivacao: string | null;
   arquivo_declaracao_prestacao_contas: string | null;
   data_declaracao_anexada: string | null;
-  processo_id: number;
-  tipo: TipoObrigacao;
-  acordo_valor_total: number;
-  percentual_cliente: number;
-  acordo_numero_parcelas: number;
+  processo_id: number | null;
+  tipo: TipoObrigacao | null;
+  acordo_valor_total: number | null;
+  percentual_cliente: number | null;
+  acordo_numero_parcelas: number | null;
 }
 
 interface AcervoDB {
@@ -145,20 +145,20 @@ function mapParcela(db: ParcelaDB): Parcela {
 
 function mapRepassePendente(db: RepassePendenteDB): RepassePendente {
   return {
-    parcelaId: db.parcela_id,
-    acordoCondenacaoId: db.acordo_condenacao_id,
-    numeroParcela: db.numero_parcela,
-    valorBrutoCreditoPrincipal: Number(db.valor_bruto_credito_principal),
-    valorRepasseCliente: Number(db.valor_repasse_cliente),
-    statusRepasse: db.status_repasse,
-    dataEfetivacao: db.data_efetivacao,
+    parcelaId: db.parcela_id ?? 0,
+    acordoCondenacaoId: db.acordo_condenacao_id ?? 0,
+    numeroParcela: db.numero_parcela ?? 0,
+    valorBrutoCreditoPrincipal: Number(db.valor_bruto_credito_principal ?? 0),
+    valorRepasseCliente: Number(db.valor_repasse_cliente ?? 0),
+    statusRepasse: db.status_repasse ?? 'pendente_declaracao',
+    dataEfetivacao: db.data_efetivacao ?? '',
     arquivoDeclaracaoPrestacaoContas: db.arquivo_declaracao_prestacao_contas,
     dataDeclaracaoAnexada: db.data_declaracao_anexada,
-    processoId: db.processo_id,
-    tipo: db.tipo,
-    acordoValorTotal: Number(db.acordo_valor_total),
-    percentualCliente: Number(db.percentual_cliente),
-    acordoNumeroParcelas: db.acordo_numero_parcelas,
+    processoId: db.processo_id ?? 0,
+    tipo: db.tipo ?? 'acordo',
+    acordoValorTotal: Number(db.acordo_valor_total ?? 0),
+    percentualCliente: Number(db.percentual_cliente ?? 0),
+    acordoNumeroParcelas: db.acordo_numero_parcelas ?? 0,
   };
 }
 
@@ -190,7 +190,7 @@ export async function criarAcordo(
     .single();
 
   if (error) throw error;
-  return mapAcordo(data);
+  return mapAcordo(data as unknown as AcordoDB);
 }
 
 interface AcordoJoinResult extends AcordoDB {
@@ -441,7 +441,7 @@ export async function atualizarAcordo(
     .single();
 
   if (error) throw error;
-  return mapAcordo(data);
+  return mapAcordo(data as unknown as AcordoDB);
 }
 
 export async function deletarAcordo(id: number) {
@@ -477,12 +477,12 @@ export async function criarParcelas(parcelas: Partial<Parcela>[]) {
   const supabase = createServiceClient();
 
   const parcelasInsert = parcelas.map((p) => ({
-    acordo_condenacao_id: p.acordoCondenacaoId,
-    numero_parcela: p.numeroParcela,
-    valor_bruto_credito_principal: p.valorBrutoCreditoPrincipal,
+    acordo_condenacao_id: p.acordoCondenacaoId!,
+    numero_parcela: p.numeroParcela!,
+    valor_bruto_credito_principal: p.valorBrutoCreditoPrincipal!,
     honorarios_sucumbenciais: p.honorariosSucumbenciais || 0,
-    data_vencimento: p.dataVencimento,
-    forma_pagamento: p.formaPagamento,
+    data_vencimento: p.dataVencimento!,
+    forma_pagamento: p.formaPagamento ?? null,
     editado_manualmente: p.editadoManualmente || false,
   }));
 
@@ -491,7 +491,7 @@ export async function criarParcelas(parcelas: Partial<Parcela>[]) {
     .insert(parcelasInsert)
     .select();
   if (error) throw error;
-  return (data || []).map(mapParcela);
+  return (data || []).map((item) => mapParcela(item as unknown as ParcelaDB));
 }
 
 export async function buscarParcelaPorId(id: number): Promise<Parcela | null> {
@@ -506,7 +506,7 @@ export async function buscarParcelaPorId(id: number): Promise<Parcela | null> {
     if (error.code === "PGRST116") return null;
     throw error;
   }
-  return mapParcela(data);
+  return mapParcela(data as unknown as ParcelaDB);
 }
 
 export async function atualizarParcela(
@@ -532,7 +532,7 @@ export async function atualizarParcela(
     .single();
 
   if (error) throw error;
-  return mapParcela(data);
+  return mapParcela(data as unknown as ParcelaDB);
 }
 
 export async function marcarParcelaComoRecebida(
@@ -558,7 +558,7 @@ export async function marcarParcelaComoRecebida(
     .single();
 
   if (error) throw error;
-  return mapParcela(data);
+  return mapParcela(data as unknown as ParcelaDB);
 }
 
 export async function deletarParcelasDoAcordo(acordoId: number) {
@@ -581,7 +581,7 @@ export async function buscarParcelasPorAcordo(
     .order("numero_parcela");
 
   if (error) throw error;
-  return (data || []).map(mapParcela);
+  return (data || []).map((item) => mapParcela(item as unknown as ParcelaDB));
 }
 
 // --- Repasses Repository ---
@@ -606,7 +606,7 @@ export async function listarRepassesPendentes(
   const { data, error } = await query;
   if (error) throw error;
 
-  return (data || []).map(mapRepassePendente);
+  return (data || []).map((item) => mapRepassePendente(item as unknown as RepassePendenteDB));
 }
 
 export async function anexarDeclaracaoPrestacaoContas(

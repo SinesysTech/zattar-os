@@ -164,7 +164,7 @@ export default function FieldMappingEditor({
   });
 
   // Field drag and resize
-  const { dragState, hasMovedRef, handleMouseDown, handleResizeMouseDown } = useFieldDrag({
+  const { dragState: _dragState, hasMovedRef, handleMouseDown, handleResizeMouseDown } = useFieldDrag({
     canvasRef,
     zoom,
     canvasWidth: canvasSize.width,

@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import {
   Clock,
   UserPlus,
@@ -228,9 +228,9 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
                           <div className="space-y-1">
                             <div className="flex items-center gap-2">
                               <p className={`font-medium ${colorClass}`}>{label}</p>
-                              <Badge variant="outline" className="text-xs">
+                              <AppBadge variant="outline" className="text-xs">
                                 {entidadeLabel}
-                              </Badge>
+                              </AppBadge>
                             </div>
                             <p className="text-sm text-muted-foreground">{descricao}</p>
                           </div>

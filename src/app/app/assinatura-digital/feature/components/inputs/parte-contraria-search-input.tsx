@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Loader2, CheckCircle2, XCircle, Building2, User } from 'lucide-react';
+import { Loader2, CheckCircle2, Building2, User } from 'lucide-react';
 import { searchPartesContrariasList } from '../../actions';
 import type { ParteContrariaComEndereco } from '@/features/partes/types';
 import { cn } from '@/lib/utils';

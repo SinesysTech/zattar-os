@@ -18,6 +18,11 @@
 - [audiencias](./modules/audiencias/README.md)
 - [contratos](./modules/contratos/README.md)
 - [documentos](./modules/documentos/README.md)
+- [assistentes-tipos](./modules/assistentes-tipos/README.md)
+- [dify](./modules/dify/README.md)
+- [integracoes](./modules/integracoes/README.md)
+- [system-prompts](./modules/system-prompts/README.md)
+- [twofauth](./modules/twofauth/README.md)
 - [usuarios](./modules/usuarios/README.md)
 
 ### 🔌 Integrações

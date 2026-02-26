@@ -49,7 +49,7 @@ async function buscarPorId(id: number): Promise<Representante | null> {
     throw new Error(`Erro ao buscar representante: ${error.message}`);
   }
 
-  return (data as Representante) || null;
+  return (data as unknown as Representante) || null;
 }
 
 export async function buscarRepresentantePorId(id: number): Promise<Representante | null> {
@@ -90,7 +90,7 @@ export async function buscarRepresentantePorCPF(cpf: string): Promise<Representa
     throw new Error(`Erro ao buscar representante por CPF: ${error.message}`);
   }
 
-  return (data as Representante) || null;
+  return (data as unknown as Representante) || null;
 }
 
 export async function listarRepresentantes(
@@ -147,7 +147,7 @@ export async function listarRepresentantes(
   const totalPaginas = Math.max(1, Math.ceil(total / limite));
 
   return {
-    representantes: (data as Representante[]) || [],
+    representantes: (data as unknown as Representante[]) || [],
     total,
     pagina,
     limite,
@@ -248,7 +248,7 @@ export async function listarRepresentantesComEnderecoEProcessos(
     }
     processosMap.get(p.entidade_id)!.push({
       processo_id: p.processo_id,
-      numero_processo: p.numero_processo,
+      numero_processo: p.numero_processo ?? '',
       tipo_parte: p.tipo_parte,
       polo: p.polo,
     });
@@ -272,14 +272,12 @@ export async function criarRepresentante(
   const supabase = createServiceClient();
   const cpf = normalizarCpf(params.cpf);
 
-  const { data, error } = await supabase
-    .from('representantes')
-    .insert({
+  const insertData = {
       cpf,
       nome: params.nome.trim(),
       sexo: params.sexo ?? null,
       tipo: params.tipo ?? null,
-      oabs: params.oabs ?? [],
+      oabs: (params.oabs ?? []) as unknown as import('@/lib/supabase/database.types').Json,
       emails: params.emails ?? null,
       email: params.email ?? null,
       ddd_celular: params.ddd_celular ?? null,
@@ -289,8 +287,12 @@ export async function criarRepresentante(
       ddd_comercial: params.ddd_comercial ?? null,
       numero_comercial: params.numero_comercial ?? null,
       endereco_id: params.endereco_id ?? null,
-      dados_anteriores: params.dados_anteriores ?? null,
-    })
+      dados_anteriores: (params.dados_anteriores ?? null) as unknown as import('@/lib/supabase/database.types').Json,
+    };
+
+  const { data, error } = await supabase
+    .from('representantes')
+    .insert(insertData)
     .select('*')
     .single();
 
@@ -406,7 +408,7 @@ export async function buscarRepresentantePorNome(nome: string): Promise<Represen
     .limit(50);
 
   if (error) throw new Error(error.message);
-  return (data as Representante[]) || [];
+  return (data as unknown as Representante[]) || [];
 }
 
 export async function buscarRepresentantesPorOAB(
@@ -426,7 +428,7 @@ export async function buscarRepresentantesPorOAB(
 
   const { data, error } = await query.order('nome', { ascending: true }).limit(100);
   if (error) throw new Error(error.message);
-  return (data as Representante[]) || [];
+  return (data as unknown as Representante[]) || [];
 }
 
 

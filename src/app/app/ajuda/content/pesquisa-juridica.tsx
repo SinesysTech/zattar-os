@@ -8,7 +8,6 @@ import {
   DocSteps,
 } from '../components/doc-components';
 import {
-  Search,
   Newspaper,
   BookOpen,
   Filter,
@@ -230,8 +229,8 @@ export default function PesquisaJuridicaDoc() {
         />
         <DocTip>
           Pesquisas semânticas produzem melhores resultados quando a consulta é descritiva e contextualizada.
-          Evite consultas muito curtas como "acidente trabalho" — prefira "responsabilidade objetiva do empregador
-          em acidente de trabalho com culpa exclusiva da vítima".
+          Evite consultas muito curtas como &quot;acidente trabalho&quot; — prefira &quot;responsabilidade objetiva do empregador
+          em acidente de trabalho com culpa exclusiva da vítima&quot;.
         </DocTip>
       </DocSection>
     </div>

@@ -7,7 +7,6 @@ import {
   type ActionDef,
 } from '../components/doc-components';
 import {
-  LayoutDashboard,
   Gavel,
   FileText,
   Mail,
@@ -118,7 +117,7 @@ export default function DashboardDoc() {
         <p className="text-muted-foreground">
           Os widgets exibem informações de forma resumida. Muitos deles são clicáveis: ao clicar em um
           número ou gráfico, o sistema navega diretamente para a lista filtrada correspondente —
-          por exemplo, clicar em "Processos com prazo hoje" abre a tela de Processos já filtrada
+          por exemplo, clicar em &quot;Processos com prazo hoje&quot; abre a tela de Processos já filtrada
           pelos registros do dia.
         </p>
         <ul className="list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2">

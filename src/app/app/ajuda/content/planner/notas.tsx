@@ -8,7 +8,6 @@ import {
   DocSteps,
 } from '../../components/doc-components';
 import {
-  Plus,
   Folder,
   Tag,
   Share2,

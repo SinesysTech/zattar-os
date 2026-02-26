@@ -2,14 +2,12 @@
 
 import {
   DocSection,
-  DocFieldTable,
   DocActionList,
   DocTip,
   DocSteps,
 } from '../components/doc-components';
 import {
   MessageSquare,
-  Plus,
   History,
   Sparkles,
   BookOpen,
@@ -125,8 +123,8 @@ export default function ChatDoc() {
         />
         <DocTip>
           Para melhores resultados ao analisar contratos longos, indique à IA qual cláusula ou aspecto
-          específico você quer que ela analise. Ex: "Analise as cláusulas de rescisão deste contrato
-          e identifique riscos para o cliente."
+          específico você quer que ela analise. Ex: &quot;Analise as cláusulas de rescisão deste contrato
+          e identifique riscos para o cliente.&quot;
         </DocTip>
       </DocSection>
 

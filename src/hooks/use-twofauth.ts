@@ -70,7 +70,7 @@ export function useTwoFAuth(): UseTwoFAuthReturn {
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const isMountedRef = useRef(true);
-  const permissionErrorRef = useRef(false);
+  const _permissionErrorRef = useRef(false);
 
   // Buscar lista de contas
   const fetchAccounts = useCallback(async () => {

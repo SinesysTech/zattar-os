@@ -13,11 +13,11 @@ Este status foi atualizado com base na árvore atual do repositório (não em pr
 
 Critério de completude: presença simultânea de `domain.ts`, `service.ts`, `repository.ts`, `index.ts`, `actions/` e `components/`.
 
-| Status           | Total | Módulos                                                                                                                                                                                                                       |
-| ---------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ✅ **Completos** | 17    | `acervo`, `advogados`, `ai`, `captura`, `config-atribuicao`, `contratos`, `dify`, `enderecos`, `integracoes`, `notificacoes`, `obrigacoes`, `pecas-juridicas`, `pericias`, `processos`, `rh`, `tipos-expedientes`, `usuarios` |
-| ⚠️ **Parciais**  | 14    | `assistentes-tipos`, `audiencias`, `calendar`, `cargos`, `chat`, `chatwoot`, `documentos`, `expedientes`, `financeiro`, `partes`, `perfil`, `profiles`, `system-prompts`, `tags`                                              |
-| 🧩 **Iniciais**  | 6     | `admin`, `audit`, `busca`, `repasses`, `tasks`, `twofauth`                                                                                                                                                                    |
+| Status           | Total | Módulos                                                                                                                                                                                                                                         |
+| ---------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ✅ **Completos** | 18    | `acervo`, `advogados`, `ai`, `captura`, `config-atribuicao`, `contratos`, `dify`, `enderecos`, `integracoes`, `notificacoes`, `obrigacoes`, `pecas-juridicas`, `pericias`, `processos`, `rh`, `system-prompts`, `tipos-expedientes`, `usuarios` |
+| ⚠️ **Parciais**  | 13    | `assistentes-tipos`, `audiencias`, `calendar`, `cargos`, `chat`, `chatwoot`, `documentos`, `expedientes`, `financeiro`, `partes`, `perfil`, `profiles`, `tags`                                                                                  |
+| 🧩 **Iniciais**  | 6     | `admin`, `audit`, `busca`, `repasses`, `tasks`, `twofauth`                                                                                                                                                                                      |
 
 ## 3. Cobertura de Artefatos (37 módulos)
 
@@ -32,12 +32,11 @@ Critério de completude: presença simultânea de `domain.ts`, `service.ts`, `re
 
 ## 4. Estado da Documentação por Módulo
 
-- Módulos com pasta em `src/features` sem correspondência em `docs/modules`: `assistentes-tipos`, `dify`, `integracoes`, `system-prompts`, `twofauth`.
+- Não há módulos em `src/features` sem pasta correspondente em `docs/modules`.
 - Pasta em `docs/modules` sem módulo correspondente em `src/features`: `assinatura-digital` (mantida como documentação histórica/funcional).
 
 ## 5. Próximos Passos Recomendados
 
-1. Padronizar os 14 módulos parciais no contrato FSD completo.
-2. Criar documentação em `docs/modules` para os 5 módulos sem página.
-3. Expandir `RULES.md` e `README.md` por módulo para melhorar suporte a IA e onboarding.
-4. Tratar módulos iniciais (`admin`, `audit`, `busca`, `repasses`, `tasks`, `twofauth`) com roadmap explícito.
+1. Padronizar os 13 módulos parciais no contrato FSD completo.
+2. Expandir `RULES.md` e `README.md` por módulo para melhorar suporte a IA e onboarding.
+3. Tratar módulos iniciais (`admin`, `audit`, `busca`, `repasses`, `tasks`, `twofauth`) com roadmap explícito.

@@ -157,7 +157,7 @@ export default function Orcamentos() {
 
       <DocSection title="Comparativo Orçado x Realizado">
         <p className="text-muted-foreground mb-4">
-          Ao clicar em "Ver Análise", o sistema exibe uma tabela e gráfico comparando o valor
+          Ao clicar em &quot;Ver Análise&quot;, o sistema exibe uma tabela e gráfico comparando o valor
           orçado com o realizado para cada categoria do plano de contas. São apresentados:
         </p>
         <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
@@ -179,7 +179,7 @@ export default function Orcamentos() {
           custos e receitas entre exercícios.
         </p>
         <DocTip>
-          Utilize a função "Duplicar" para criar o orçamento do ano seguinte com base nos valores
+          Utilize a função &quot;Duplicar&quot; para criar o orçamento do ano seguinte com base nos valores
           do ano anterior já preenchidos, ajustando apenas as categorias que sofreram mudanças.
         </DocTip>
       </DocSection>

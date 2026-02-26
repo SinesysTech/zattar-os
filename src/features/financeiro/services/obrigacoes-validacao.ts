@@ -412,7 +412,7 @@ export async function validarSincronizacaoAcordo(acordoId: number): Promise<Resu
 
   // 4) Parcelas existem?
   const { data: parcelas, error: parcelasError } = await supabase
-    .from('parcelas_acordos_condenacoes')
+    .from('parcelas')
     .select('id')
     .eq('acordo_condenacao_id', acordoId);
 

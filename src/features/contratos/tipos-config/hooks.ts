@@ -51,7 +51,7 @@ export function useContratoTipos(params?: UseContratoTiposParams): UseContratoTi
     } finally {
       setIsLoading(false);
     }
-  }, [params?.ativo]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [params?.ativo]);
 
   useEffect(() => {
     void fetchData();
@@ -100,7 +100,7 @@ export function useContratoTiposCobranca(params?: UseContratoTiposCobrancaParams
     } finally {
       setIsLoading(false);
     }
-  }, [params?.ativo]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [params?.ativo]);
 
   useEffect(() => {
     void fetchData();
@@ -153,7 +153,7 @@ export function usePipelines(params?: UsePipelinesParams): UsePipelinesResult {
     } finally {
       setIsLoading(false);
     }
-  }, [params?.segmentoId, params?.ativo]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [params?.segmentoId, params?.ativo]);
 
   useEffect(() => {
     void fetchData();

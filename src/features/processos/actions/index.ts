@@ -800,7 +800,7 @@ function extrairNumeroSequencialCNJ(numeroProcesso: string): number {
  */
 export async function actionObterDetalhesComplementaresProcesso(
   processoId: number,
-  numeroProcesso: string
+  _numeroProcesso: string
 ): Promise<
   ActionResult<{
     audiencias: unknown[];

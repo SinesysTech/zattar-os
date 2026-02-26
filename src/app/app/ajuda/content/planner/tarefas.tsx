@@ -36,8 +36,8 @@ export default function TarefasDoc() {
           projetos ou áreas do escritório.
         </p>
         <DocTip>
-          Crie quadros separados para diferentes áreas do escritório, como "Gestão de Processos",
-          "Administrativo" e "Projetos Internos", mantendo o trabalho de cada área organizado.
+          Crie quadros separados para diferentes áreas do escritório, como &quot;Gestão de Processos&quot;,
+          &quot;Administrativo&quot; e &quot;Projetos Internos&quot;, mantendo o trabalho de cada área organizado.
         </DocTip>
       </DocSection>
 
@@ -183,7 +183,7 @@ export default function TarefasDoc() {
           ]}
         />
         <DocTip>
-          Ao mover uma tarefa para a coluna "Concluído" (ou equivalente configurada), o sistema
+          Ao mover uma tarefa para a coluna &quot;Concluído&quot; (ou equivalente configurada), o sistema
           registra automaticamente a data de conclusão para fins de controle e relatórios.
         </DocTip>
       </DocSection>

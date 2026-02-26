@@ -167,7 +167,7 @@ export function PermissoesMatriz({
                   return (
                     <div key={grupo.chave} className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-semibold text-foreground">{grupo.titulo}</h4>
+                        <Typography.H4 className="text-sm font-semibold text-foreground">{grupo.titulo}</Typography.H4>
                         <AppBadge variant="neutral">
                           {permissoesAtivasModulo}/{totalModulo}
                         </AppBadge>

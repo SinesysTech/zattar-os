@@ -27,8 +27,7 @@ import { autenticarPJE, type AuthResult } from '@/features/captura/services/trt/
 import { getTribunalConfig } from '@/features/captura/services/trt/config';
 import { getCredentialByTribunalAndGrau } from '@/features/captura/credentials/credential.service';
 import { buscarProcessosPorIdsNoPainel } from '@/features/captura/services/trt/buscar-processos-painel.service';
-import type { CodigoTRT, GrauTRT } from '@/features/captura/types/trt-types';
-import type { Processo } from '@/features/captura/types/types';
+import type { CodigoTRT, GrauTRT, Processo } from '@/features/captura';
 
 // ============================================================================
 // PROCESSOS ALVO (números dos processos com dados incompletos)

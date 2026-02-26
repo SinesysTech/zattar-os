@@ -213,7 +213,7 @@ export default function ContasPagar() {
           <li>Busca por texto na descrição ou número do documento</li>
         </ul>
         <DocTip>
-          Use o filtro "Vencido" combinado com o filtro de categoria para identificar quais tipos
+          Use o filtro &quot;Vencido&quot; combinado com o filtro de categoria para identificar quais tipos
           de despesa geram mais atrasos e priorize seu pagamento.
         </DocTip>
       </DocSection>

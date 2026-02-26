@@ -136,7 +136,7 @@ export default function Salarios() {
         />
         <DocTip>
           Crie componentes padrão para encargos recorrentes (INSS, FGTS, IR) e ative a opção
-          "Incide na Folha" para que sejam incluídos automaticamente na geração mensal.
+          &quot;Incide na Folha&quot; para que sejam incluídos automaticamente na geração mensal.
         </DocTip>
       </DocSection>
 

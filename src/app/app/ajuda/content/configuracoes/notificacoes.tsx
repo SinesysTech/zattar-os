@@ -177,7 +177,7 @@ export default function Notificacoes() {
           ]}
         />
         <DocTip>
-          Configure o "Horário Silencioso" para não ser incomodado com notificações de e-mail
+          Configure o &quot;Horário Silencioso&quot; para não ser incomodado com notificações de e-mail
           durante à noite e nos fins de semana.
         </DocTip>
       </DocSection>

@@ -9,7 +9,6 @@ import {
 } from '../components/doc-components';
 import {
   Plus,
-  FileText,
   Download,
   Edit,
   Code,

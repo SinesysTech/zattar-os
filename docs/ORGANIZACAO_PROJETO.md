@@ -84,8 +84,8 @@ Os scripts estão organizados por domínio em subpastas (ex.: `ai/`, `captura/`,
 ## 📊 Estatísticas
 
 - `src/features`: 37 módulos
-- `docs/modules`: 33 pastas de módulo + `README.md`
-- Gap atual de documentação por módulo: 5 módulos sem pasta dedicada em `docs/modules`
+- `docs/modules`: 38 pastas de módulo + `README.md`
+- Gap atual de documentação por módulo: 0 módulos sem pasta dedicada em `docs/modules`
 
 ## 🎯 Benefícios
 
@@ -145,10 +145,9 @@ grep -r "migration" docs/
 
 ## 🚀 Próximos Passos
 
-1. Criar páginas em `docs/modules` para `assistentes-tipos`, `dify`, `integracoes`, `system-prompts`, `twofauth`
-2. Manter `docs/INDEX.md` sincronizado com novas páginas
-3. Expandir READMEs dos módulos com maior uso operacional
-4. Revisar semestralmente documentos históricos para arquivamento
+1. Manter `docs/INDEX.md` sincronizado com novas páginas
+2. Expandir READMEs dos módulos com maior uso operacional
+3. Revisar semestralmente documentos históricos para arquivamento
 
 ## 📚 Links Úteis
 

@@ -167,7 +167,7 @@ export default function CapturaHistorico() {
 
       <DocSection title="Movimentações Capturadas">
         <p className="text-muted-foreground">
-          Dentro do detalhamento de uma captura bem-sucedida, a aba "Movimentações" lista todas
+          Dentro do detalhamento de uma captura bem-sucedida, a aba &quot;Movimentações&quot; lista todas
           as novidades encontradas nessa execução, com o número do processo, a data do ato no
           tribunal, o conteúdo da movimentação e o link direto para o processo no Sinesys. Clique
           em qualquer movimentação para navegar ao processo correspondente.

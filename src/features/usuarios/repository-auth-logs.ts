@@ -1,5 +1,12 @@
 import { createServiceClient } from '@/lib/supabase/service-client';
 
+interface AuthSessionRow {
+  created_at: string;
+  event_type: string | null;
+  ip_address: string | null;
+  user_agent: string | null;
+}
+
 export interface AuthLogEntry {
   timestamp: string;
   eventType: 'user_signedin' | 'user_signedout' | 'token_refreshed' | 'other';
@@ -32,7 +39,7 @@ export async function buscarAuthLogsPorUsuario(
       return [];
     }
 
-    return data.map((session) => ({
+    return data.map((session: AuthSessionRow) => ({
       timestamp: session.created_at,
       eventType: parseEventType(session.event_type),
       ipAddress: session.ip_address || null,

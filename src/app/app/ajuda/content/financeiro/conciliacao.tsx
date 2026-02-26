@@ -153,7 +153,7 @@ export default function Conciliacao() {
         />
         <DocTip>
           Conciliações confirmadas ficam bloqueadas para edição. Caso precise corrigir um período
-          já conciliado, utilize a função "Reabrir Conciliação" disponível para usuários administradores.
+          já conciliado, utilize a função &quot;Reabrir Conciliação&quot; disponível para usuários administradores.
         </DocTip>
       </DocSection>
 

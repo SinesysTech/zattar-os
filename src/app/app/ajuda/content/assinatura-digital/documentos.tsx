@@ -8,8 +8,6 @@ import {
   DocSteps,
 } from '../../components/doc-components';
 import {
-  Plus,
-  Send,
   Eye,
   CheckCircle,
   Clock,

@@ -257,7 +257,7 @@ export async function sincronizarParcelaParaFinanceiro(
             data_competencia: parcela.dataVencimento.split('T')[0],
             data_vencimento: parcela.dataVencimento.split('T')[0],
             data_efetivacao: parcela.dataEfetivacao ? parcela.dataEfetivacao.split('T')[0] : null,
-            status: parcela.dataEfetivacao ? 'confirmado' : 'pendente',
+            status: (parcela.dataEfetivacao ? 'confirmado' : 'pendente') as 'confirmado' | 'pendente',
             origem: 'acordo_judicial' as const,
             forma_pagamento: formaPagamento,
             conta_contabil_id: contaContabilId,
@@ -272,7 +272,7 @@ export async function sincronizarParcelaParaFinanceiro(
                 honorarios_contratuais: parcela.honorariosContratuais,
                 tipo_acordo: acordo.tipo,
                 direcao: acordo.direcao,
-            },
+            } as import('@/lib/supabase/database.types').Json,
         };
         
         let lancamentoId: number;

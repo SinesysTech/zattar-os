@@ -10,7 +10,6 @@ import {
   Loader2,
   ExternalLink,
   Video,
-  MapPin,
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
@@ -28,7 +27,6 @@ import {
   StatusAudiencia,
   STATUS_AUDIENCIA_LABELS,
   MODALIDADE_AUDIENCIA_LABELS,
-  type ModalidadeAudiencia,
 } from '@/features/audiencias/domain';
 import type { Expediente } from '@/features/expedientes/domain';
 import type { Pericia } from '@/features/pericias/domain';

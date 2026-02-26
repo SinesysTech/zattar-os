@@ -258,7 +258,7 @@ export async function vincularParteProcesso(
       numero_processo: params.numero_processo,
       principal: params.principal ?? false,
       ordem: params.ordem ?? 0,
-      dados_pje_completo: params.dados_pje_completo ?? null,
+      dados_pje_completo: (params.dados_pje_completo ?? null) as import('@/lib/supabase/database.types').Json,
     };
 
     const { data, error } = await supabase

@@ -3,7 +3,6 @@
 // Este cliente bypassa RLS e deve ser usado apenas em serviços backend
 
 import { createClient } from '@supabase/supabase-js';
-import type { Database } from './database.types';
 
 /**
  * Obtém configuração do Supabase a partir das variáveis de ambiente
@@ -46,7 +45,7 @@ function getSupabaseConfig() {
 export function createServiceClient() {
   const config = getSupabaseConfig();
   
-  return createClient<Database>(
+  return createClient(
     config.url,
     config.secretKey,
     {

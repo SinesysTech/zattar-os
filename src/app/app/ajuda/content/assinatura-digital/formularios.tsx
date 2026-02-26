@@ -8,7 +8,6 @@ import {
   DocSteps,
 } from '../../components/doc-components';
 import {
-  Plus,
   Link2,
   Eye,
   Download,
@@ -245,7 +244,7 @@ export default function AssinaturaDigitalFormulariosDoc() {
 
       <DocSection title="Gerenciando Respostas">
         <p className="text-muted-foreground mb-4">
-          Todas as respostas são registradas e ficam disponíveis na aba "Respostas" do formulário.
+          Todas as respostas são registradas e ficam disponíveis na aba &quot;Respostas&quot; do formulário.
         </p>
         <DocActionList
           actions={[

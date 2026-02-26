@@ -54,7 +54,7 @@ export async function upsertCadastroPJE(
     sistema: params.sistema ?? 'pje_trt',
     tribunal: params.tribunal,
     grau: params.grau ?? null,
-    dados_cadastro_pje: params.dados_cadastro_pje ?? null,
+    dados_cadastro_pje: (params.dados_cadastro_pje ?? null) as import('@/lib/supabase/database.types').Json,
   };
 
   const { data, error } = await supabase

@@ -9,7 +9,6 @@ import {
 } from '../../components/doc-components';
 import {
   Plus,
-  Upload,
   Edit,
   Copy,
   Trash2,
@@ -247,7 +246,7 @@ export default function AssinaturaDigitalTemplatesDoc() {
         <DocTip>
           Mantenha os templates organizados por categoria. Use nomes descritivos que incluam
           a área do direito e o tipo de documento para facilitar a busca da equipe. Ex:
-          "Trabalhista — Acordo Extrajudicial de Rescisão".
+          &quot;Trabalhista — Acordo Extrajudicial de Rescisão&quot;.
         </DocTip>
       </DocSection>
     </div>

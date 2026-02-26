@@ -213,7 +213,7 @@ export default function Equipe() {
 
       <DocSection title="Gestão de Acesso">
         <p className="text-muted-foreground">
-          A aba "Acesso" no perfil de cada usuário exibe um histórico dos últimos logins, os
+          A aba &quot;Acesso&quot; no perfil de cada usuário exibe um histórico dos últimos logins, os
           dispositivos utilizados e permite revogar sessões ativas em caso de suspeita de acesso
           não autorizado. Usuários com autenticação em dois fatores (2FA) habilitada apresentam
           um cadeado na listagem da equipe.

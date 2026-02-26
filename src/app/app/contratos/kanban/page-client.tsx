@@ -34,7 +34,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -120,7 +119,7 @@ function KanbanColumnContent({
   return (
     <KanbanColumn
       value={estagioId}
-      className="bg-muted/60 min-w-[280px] max-w-[280px] flex-shrink-0"
+      className="bg-muted/60 min-w-70 max-w-70 shrink-0"
     >
       {/* Header da coluna */}
       <div
@@ -129,7 +128,7 @@ function KanbanColumnContent({
       >
         <div className="flex items-center gap-2">
           <span
-            className="inline-block w-2.5 h-2.5 rounded-full flex-shrink-0"
+            className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
             style={{ backgroundColor: cor }}
             aria-hidden="true"
           />
@@ -177,7 +176,7 @@ function KanbanBoardSkeleton() {
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
-          className="flex flex-col gap-2 min-w-[280px] max-w-[280px] bg-muted/60 rounded-lg p-2.5"
+          className="flex flex-col gap-2 min-w-70 max-w-70 bg-muted/60 rounded-lg p-2.5"
         >
           <div className="flex items-center justify-between mb-1">
             <Skeleton className="h-5 w-32" />
@@ -370,7 +369,7 @@ function KanbanBoardContent({
             : '#6B7280';
 
           return (
-            <div className="min-w-[280px] max-w-[280px] opacity-95 shadow-lg rotate-1">
+            <div className="min-w-70 max-w-70 opacity-95 shadow-lg rotate-1">
               <ContratoCard contrato={contrato} stageCor={cor} />
             </div>
           );
@@ -449,7 +448,7 @@ export function KanbanContratosClient() {
               disabled={segmentosLoading}
             >
               <SelectTrigger
-                className="w-[200px] bg-card"
+                className="w-50 bg-card"
                 aria-label="Selecionar segmento"
               >
                 <SelectValue
