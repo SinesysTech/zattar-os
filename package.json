@@ -95,6 +95,7 @@
     "validate:arch:strict": "npx tsx scripts/dev-tools/architecture/validate-architecture.ts --strict",
     "validate:exports": "npx tsx scripts/dev-tools/architecture/validate-exports.ts",
     "validate:exports:verbose": "npx tsx scripts/dev-tools/architecture/validate-exports.ts --verbose",
+    "docs:sync:modules": "npx tsx scripts/dev-tools/docs/sync-modules-index.ts",
     "mcp:check": "tsx scripts/mcp/check-registry.ts",
     "mcp:dev": "tsx scripts/mcp/dev-server.ts",
     "mcp:generate": "tsx scripts/mcp/generate-tools.ts",

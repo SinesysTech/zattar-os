@@ -1,6 +1,6 @@
 # Relatório de Status do Projeto Sinesys
 
-**Data:** 2026-02-25  
+**Data:** 2026-02-26  
 **Versão:** Next.js 16 / React 19
 
 ## 1. Resumo Executivo
@@ -21,13 +21,13 @@ Critério de completude: presença simultânea de `domain.ts`, `service.ts`, `re
 
 ## 3. Cobertura de Artefatos (37 módulos)
 
-- `index.ts`: 37 (100%)
-- `components/`: 32 (86%)
-- `domain.ts`: 30 (81%)
-- `actions/`: 30 (81%)
-- `service.ts`: 29 (78%)
-- `repository.ts`: 26 (70%)
-- `RULES.md`: 8 (22%)
+- `index.ts`: 36 (97%)
+- `components/`: 31 (84%)
+- `domain.ts`: 29 (78%)
+- `actions/`: 28 (76%)
+- `service.ts`: 27 (73%)
+- `repository.ts`: 24 (65%)
+- `RULES.md`: 9 (24%)
 - `README.md` no módulo: 6 (16%)
 
 ## 4. Estado da Documentação por Módulo
