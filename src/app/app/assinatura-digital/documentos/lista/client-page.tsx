@@ -97,6 +97,11 @@ const STATUS_FILTER_OPTIONS: readonly FilterOption[] = [
   { value: "cancelado", label: "Cancelado" },
 ];
 
+const ORIGEM_FILTER_OPTIONS: readonly FilterOption[] = [
+  { value: "documento", label: "Documento" },
+  { value: "formulario", label: "Formulário" },
+];
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
@@ -125,6 +130,7 @@ export function DocumentosTableWrapper({
   // -- State: Filters
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState<string>("all");
+  const [origemFilter, setOrigemFilter] = React.useState<string>("all");
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   // -- State: Dialogs
@@ -180,13 +186,18 @@ export function DocumentosTableWrapper({
     refetch();
   }, [refetch, initialData.length]);
 
-  // -- Client-side search + status filter
+  // -- Client-side search + status + origem filter
   const filteredDocumentos = React.useMemo(() => {
     let result = documentos;
 
     // Status filter
     if (statusFilter !== "all") {
       result = result.filter((d) => d.status === statusFilter);
+    }
+
+    // Origem filter
+    if (origemFilter !== "all") {
+      result = result.filter((d) => (d._origem ?? "documento") === origemFilter);
     }
 
     // Search filter
@@ -196,12 +207,14 @@ export function DocumentosTableWrapper({
         (d) =>
           d.titulo?.toLowerCase().includes(lower) ||
           d.documento_uuid.toLowerCase().includes(lower) ||
-          String(d.id).includes(lower)
+          String(d.id).includes(lower) ||
+          d._protocolo?.toLowerCase().includes(lower) ||
+          d._cliente_nome?.toLowerCase().includes(lower)
       );
     }
 
     return result;
-  }, [documentos, statusFilter, buscaDebounced]);
+  }, [documentos, statusFilter, origemFilter, buscaDebounced]);
 
   // -- Client-side pagination
   const totalFiltered = filteredDocumentos.length;
@@ -257,6 +270,25 @@ export function DocumentosTableWrapper({
   }, []);
 
   const handleVerDetalhes = React.useCallback(async (uuid: string) => {
+    // Itens de formulário usam "ass-{id}" como UUID sintético e não existem
+    // em assinatura_digital_documentos — exibir dados da listagem diretamente.
+    const isFormulario = uuid.startsWith("ass-");
+
+    if (isFormulario) {
+      const docFromList = documentos.find((d) => d.documento_uuid === uuid);
+      if (docFromList) {
+        setDocumentoSelecionado({
+          ...docFromList,
+          assinantes: [],
+          ancoras: [],
+        } as DocumentoCompleto);
+        setIsDialogOpen(true);
+      } else {
+        toast.error("Documento não encontrado na listagem");
+      }
+      return;
+    }
+
     setIsLoadingDetalhes(true);
     setIsDialogOpen(true);
     try {
@@ -299,7 +331,7 @@ export function DocumentosTableWrapper({
     } finally {
       setIsLoadingDetalhes(false);
     }
-  }, []);
+  }, [documentos]);
 
   const handleEditarDocumento = React.useCallback(
     (uuid: string) => {
@@ -361,6 +393,7 @@ export function DocumentosTableWrapper({
       .filter(Boolean)
       .filter(
         (doc) =>
+          doc._origem !== "formulario" &&
           doc.status !== "concluido" &&
           (doc._assinantes_concluidos ?? 0) === 0
       );
@@ -488,18 +521,30 @@ export function DocumentosTableWrapper({
                 setGlobalFilter(value);
                 setPageIndex(0);
               }}
-              searchPlaceholder="Buscar documentos..."
+              searchPlaceholder="Buscar por título, protocolo, cliente..."
               filtersSlot={
-                <FilterPopover
-                  label="Status"
-                  options={STATUS_FILTER_OPTIONS}
-                  value={statusFilter}
-                  onValueChange={(v) => {
-                    setStatusFilter(v);
-                    setPageIndex(0);
-                  }}
-                  defaultValue="all"
-                />
+                <div className="flex items-center gap-2">
+                  <FilterPopover
+                    label="Status"
+                    options={STATUS_FILTER_OPTIONS}
+                    value={statusFilter}
+                    onValueChange={(v) => {
+                      setStatusFilter(v);
+                      setPageIndex(0);
+                    }}
+                    defaultValue="all"
+                  />
+                  <FilterPopover
+                    label="Origem"
+                    options={ORIGEM_FILTER_OPTIONS}
+                    value={origemFilter}
+                    onValueChange={(v) => {
+                      setOrigemFilter(v);
+                      setPageIndex(0);
+                    }}
+                    defaultValue="all"
+                  />
+                </div>
               }
               actionSlot={
                 selectedCount > 0 ? (
@@ -618,118 +663,165 @@ export function DocumentosTableWrapper({
                   </span>
                 </Badge>
               </div>
+
+              {/* Informações específicas de formulário */}
+              {documentoSelecionado._origem === "formulario" ? (
+                <>
+                  {documentoSelecionado._cliente_nome && (
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground">
+                        Cliente
+                      </h3>
+                      <p className="text-base">{documentoSelecionado._cliente_nome}</p>
+                    </div>
+                  )}
+                  {documentoSelecionado._protocolo && (
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground">
+                        Protocolo
+                      </h3>
+                      <p className="text-xs font-mono bg-muted p-2 rounded">
+                        {documentoSelecionado._protocolo}
+                      </p>
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground">
+                      Origem
+                    </h3>
+                    <Badge variant="outline" className="border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">
+                      Formulário
+                    </Badge>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground">
+                      Selfie Habilitada
+                    </h3>
+                    <p className="text-base">
+                      {documentoSelecionado.selfie_habilitada ? "Sim" : "Não"}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground">
+                      UUID do Documento
+                    </h3>
+                    <p className="text-xs font-mono bg-muted p-2 rounded">
+                      {documentoSelecionado.documento_uuid}
+                    </p>
+                  </div>
+                </>
+              )}
+
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground">
-                  Selfie Habilitada
+                  Criado em
                 </h3>
                 <p className="text-base">
-                  {documentoSelecionado.selfie_habilitada ? "Sim" : "Não"}
-                </p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">
-                  UUID do Documento
-                </h3>
-                <p className="text-xs font-mono bg-muted p-2 rounded">
-                  {documentoSelecionado.documento_uuid}
+                  {format(new Date(documentoSelecionado.created_at), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                 </p>
               </div>
             </div>
 
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold">
-                Assinantes ({documentoSelecionado.assinantes.length})
-              </h3>
+            {/* Seção de assinantes — só para documentos do editor */}
+            {documentoSelecionado._origem !== "formulario" && documentoSelecionado.assinantes.length > 0 && (
               <div className="space-y-3">
-                {documentoSelecionado.assinantes.map((assinante) => (
-                  <Card key={assinante.id}>
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1 space-y-2">
-                          <div className="flex items-center gap-2">
-                            <Badge variant="outline">
-                              {assinante.assinante_tipo}
-                            </Badge>
-                            <Badge
-                              className={
-                                assinante.status === "concluido"
-                                  ? "bg-green-600/10 text-green-600"
-                                  : "bg-orange-600/10 text-orange-600"
-                              }
-                              variant="secondary"
+                <h3 className="text-lg font-semibold">
+                  Assinantes ({documentoSelecionado.assinantes.length})
+                </h3>
+                <div className="space-y-3">
+                  {documentoSelecionado.assinantes.map((assinante) => (
+                    <Card key={assinante.id}>
+                      <CardContent className="p-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1 space-y-2">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline">
+                                {assinante.assinante_tipo}
+                              </Badge>
+                              <Badge
+                                className={
+                                  assinante.status === "concluido"
+                                    ? "bg-green-600/10 text-green-600"
+                                    : "bg-orange-600/10 text-orange-600"
+                                }
+                                variant="secondary"
+                              >
+                                {assinante.status === "concluido"
+                                  ? "Concluído"
+                                  : "Pendente"}
+                              </Badge>
+                            </div>
+                            <div className="text-sm space-y-1">
+                              {(assinante.dados_snapshot.nome_completo as
+                                | string
+                                | undefined) && (
+                                <p>
+                                  <span className="font-medium">Nome:</span>{" "}
+                                  {String(assinante.dados_snapshot.nome_completo)}
+                                </p>
+                              )}
+                              {(assinante.dados_snapshot.email as
+                                | string
+                                | undefined) && (
+                                <p>
+                                  <span className="font-medium">Email:</span>{" "}
+                                  {String(assinante.dados_snapshot.email)}
+                                </p>
+                              )}
+                              {(assinante.dados_snapshot.cpf as
+                                | string
+                                | undefined) && (
+                                <p>
+                                  <span className="font-medium">CPF:</span>{" "}
+                                  {String(assinante.dados_snapshot.cpf)}
+                                </p>
+                              )}
+                              {assinante.concluido_em && (
+                                <p className="text-muted-foreground">
+                                  <span className="font-medium">
+                                    Concluído em:
+                                  </span>{" "}
+                                  {format(
+                                    new Date(assinante.concluido_em),
+                                    "dd/MM/yyyy HH:mm",
+                                    { locale: ptBR }
+                                  )}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleCopyLink(assinante.token)}
                             >
-                              {assinante.status === "concluido"
-                                ? "Concluído"
-                                : "Pendente"}
-                            </Badge>
-                          </div>
-                          <div className="text-sm space-y-1">
-                            {(assinante.dados_snapshot.nome_completo as
-                              | string
-                              | undefined) && (
-                              <p>
-                                <span className="font-medium">Nome:</span>{" "}
-                                {String(assinante.dados_snapshot.nome_completo)}
-                              </p>
-                            )}
-                            {(assinante.dados_snapshot.email as
-                              | string
-                              | undefined) && (
-                              <p>
-                                <span className="font-medium">Email:</span>{" "}
-                                {String(assinante.dados_snapshot.email)}
-                              </p>
-                            )}
-                            {(assinante.dados_snapshot.cpf as
-                              | string
-                              | undefined) && (
-                              <p>
-                                <span className="font-medium">CPF:</span>{" "}
-                                {String(assinante.dados_snapshot.cpf)}
-                              </p>
-                            )}
-                            {assinante.concluido_em && (
-                              <p className="text-muted-foreground">
-                                <span className="font-medium">
-                                  Concluído em:
-                                </span>{" "}
-                                {format(
-                                  new Date(assinante.concluido_em),
-                                  "dd/MM/yyyy HH:mm",
-                                  { locale: ptBR }
-                                )}
-                              </p>
-                            )}
+                              <Copy className="h-4 w-4 mr-1" />
+                              Copiar Link
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                window.open(
+                                  `/assinatura/${assinante.token}`,
+                                  "_blank"
+                                )
+                              }
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                            </Button>
                           </div>
                         </div>
-                        <div className="flex gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleCopyLink(assinante.token)}
-                          >
-                            <Copy className="h-4 w-4 mr-1" />
-                            Copiar Link
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              window.open(
-                                `/assinatura/${assinante.token}`,
-                                "_blank"
-                              )
-                            }
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="flex gap-3 pt-4 border-t">
               {documentoSelecionado.pdf_original_url && (
@@ -743,7 +835,7 @@ export function DocumentosTableWrapper({
                   }
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  Download PDF Original
+                  {documentoSelecionado._origem === "formulario" ? "Download PDF Assinado" : "Download PDF Original"}
                 </Button>
               )}
               {documentoSelecionado.pdf_final_url && (

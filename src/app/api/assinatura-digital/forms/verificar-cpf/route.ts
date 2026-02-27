@@ -68,7 +68,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ exists: false, cliente: null });
     }
 
-    const endereco = Array.isArray(data.enderecos) ? data.enderecos[0] : null;
+    // Supabase retorna objeto único (não array) para relações many-to-one (clientes.endereco_id → enderecos.id)
+    const endereco = Array.isArray(data.enderecos) ? data.enderecos[0] : data.enderecos;
 
     const cliente = {
       id: data.id,

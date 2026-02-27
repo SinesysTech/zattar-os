@@ -21,6 +21,7 @@ import {
   storePhotoImage,
   storeSignatureImage,
 } from "../storage.service";
+import { generatePresignedUrl } from "@/lib/storage/backblaze-b2.service";
 import { calculateHash } from "../integrity.service";
 import {
   getClienteBasico,
@@ -613,6 +614,11 @@ export async function finalizeSignature(
     storedImages.fotoUrl
   );
 
+  // Gerar presigned URL para acesso temporário do navegador (1 hora)
+  // O record.pdf_url contém a URL raw do Backblaze (bucket privado),
+  // que não é acessível diretamente pelo browser.
+  const presignedPdfUrl = await generatePresignedUrl(pdfStored.key, 3600);
+
   timer.log(
     "Assinatura finalizada com sucesso",
     {
@@ -626,6 +632,9 @@ export async function finalizeSignature(
   return {
     assinatura_id: record.id,
     protocolo: record.protocolo,
-    pdf_url: record.pdf_url,
+    pdf_url: presignedPdfUrl,
+    pdf_raw_url: pdfStored.url,
+    pdf_key: pdfStored.key,
+    pdf_size: finalPdf.buffer.length,
   };
 }

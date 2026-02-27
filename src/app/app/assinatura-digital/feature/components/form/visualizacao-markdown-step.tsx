@@ -14,6 +14,7 @@ import { renderMarkdownWithVariables, getMarkdownPlugins } from "../../utils/mar
 import type { Template } from "../../types/domain";
 import type { VisualizacaoMarkdownData, ClienteDadosGeracao, DadosGeracao } from "../../types/api";
 import { apiFetch } from "@/lib/http/api-fetch";
+import { formatCPF, formatCEP, formatTelefone } from "../../utils/formatters";
 
 interface TemplateMetadata {
   id: string;
@@ -130,23 +131,26 @@ export default function VisualizacaoMarkdownStep() {
       }
 
       // Preparar dados para geração
+      const rawCelular = dadosPessoais?.celular || '';
+      const rawTelefone = dadosPessoais?.telefone || '';
       const cliente: ClienteDadosGeracao = {
         nome: dadosPessoais?.nome_completo || '',
-        cpf: dadosPessoais?.cpf || '',
+        cpf: formatCPF(dadosPessoais?.cpf || ''),
         rg: dadosPessoais?.rg || undefined,
         data_nascimento: dadosPessoais?.data_nascimento || '',
         estado_civil: dadosPessoais?.estado_civil || '',
         genero: dadosPessoais?.genero || '',
         nacionalidade: dadosPessoais?.nacionalidade || '',
         email: dadosPessoais?.email || '',
-        celular: dadosPessoais?.celular || '',
+        celular: formatTelefone(rawCelular),
+        telefone: formatTelefone(rawTelefone || rawCelular),
         logradouro: dadosPessoais?.endereco_logradouro || '',
         numero: dadosPessoais?.endereco_numero || '',
         complemento: dadosPessoais?.endereco_complemento || undefined,
         bairro: dadosPessoais?.endereco_bairro || '',
         cidade: dadosPessoais?.endereco_cidade || '',
         estado: dadosPessoais?.endereco_uf || '',
-        cep: dadosPessoais?.endereco_cep || '',
+        cep: formatCEP(dadosPessoais?.endereco_cep || ''),
       };
       const dadosGeracao: DadosGeracao = {
         template_id: effectiveTemplateId,

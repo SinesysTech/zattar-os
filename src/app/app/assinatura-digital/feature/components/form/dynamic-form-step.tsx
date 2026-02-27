@@ -317,9 +317,26 @@ export default function DynamicFormStep() {
 
       // Handle errors
       if (!response.ok) {
-        // If route not implemented (404)
+        if (contentType?.includes('application/json')) {
+          const errorBody = await response.json();
+          const errorMessage = errorBody.error || errorBody.message || 'Erro ao salvar dados';
+
+          // 404 com body JSON = erro de negócio (ex: cliente não encontrado)
+          // 404 sem JSON = rota não implementada
+          if (response.status === 404) {
+            console.warn('[ASSINATURA_DIGITAL] form_action_submit: 404 com erro de negócio', {
+              formularioId: formularioIdValue,
+              error: errorMessage,
+            });
+          }
+
+          throw new Error(errorMessage);
+        }
+
+        // Resposta não-JSON (HTML do Next.js ou erro do servidor)
         if (response.status === 404) {
-          console.warn('[ASSINATURA_DIGITAL] form_action_submit: endpoint 404', {
+          // Rota realmente não existe (Next.js retorna HTML para 404)
+          console.warn('[ASSINATURA_DIGITAL] form_action_submit: endpoint 404 (rota não encontrada)', {
             formularioId: formularioIdValue,
           });
 
@@ -336,19 +353,14 @@ export default function DynamicFormStep() {
           return;
         }
 
-        if (contentType?.includes('application/json')) {
-          const error = await response.json();
-          throw new Error(error.error || error.message || 'Erro ao salvar dados');
-        } else {
-          // Resposta HTML (erro do servidor/n8n)
-          const text = await response.text();
-          console.error('[SALVAR-ACAO] Resposta HTML recebida:', {
-            status: response.status,
-            contentType,
-            preview: text.substring(0, 500),
-          });
-          throw new Error(`Erro do servidor (${response.status}): Resposta inválida. Verifique os logs.`);
-        }
+        // Outros erros com resposta HTML
+        const text = await response.text();
+        console.error('[SALVAR-ACAO] Resposta HTML recebida:', {
+          status: response.status,
+          contentType,
+          preview: text.substring(0, 500),
+        });
+        throw new Error(`Erro do servidor (${response.status}): Resposta inválida. Verifique os logs.`);
       }
 
       const result = await response.json();

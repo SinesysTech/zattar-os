@@ -35,7 +35,7 @@ export async function actionIniciarChamada(
     }
     
     // 1. Criar meeting no Dyte with transcription enabled
-    const meetingId = await createMeeting(`Sala ${salaResult.value?.nome} - ${tipo}`, true);
+    const meetingId = await createMeeting(`Sala ${salaResult.value?.nome} - ${tipo}`);
 
     // 2. Persistir chamada no banco
     const chamadaResult = await service.iniciarChamada(salaId, tipo, user.id, meetingId);
@@ -64,7 +64,8 @@ export async function actionIniciarChamada(
 
   } catch (error) {
     console.error('Erro actionIniciarChamada:', error);
-    return { success: false, message: 'Erro ao iniciar chamada', error: String(error) };
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return { success: false, message: errorMessage, error: errorMessage };
   }
 }
 

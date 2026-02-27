@@ -72,22 +72,16 @@ export async function ensureTranscriptionPreset(presetName: string = 'group_call
 /**
  * Create a new meeting in Dyte.
  */
-export async function createMeeting(title: string, enableTranscription: boolean = true) {
-  const config = await getDyteConfig();
+export async function createMeeting(title: string) {
+  await getDyteConfig();
   const body: Record<string, unknown> = {
     title,
     record_on_start: false,
     live_stream_on_start: false,
   };
 
-  // Add transcription config if enabled
-  const transcriptionEnabled = await isDyteTranscriptionEnabled();
-  if (enableTranscription && transcriptionEnabled) {
-    body.transcription_enabled = true;
-    body.transcription_config = {
-      language: getDyteTranscriptionLanguage(config),
-    };
-  }
+  // Transcription is configured via presets (ensureTranscriptionPreset),
+  // not via the meeting creation endpoint.
 
   const response = await fetch(`${DYTE_API_BASE}/meetings`, {
     method: 'POST',

@@ -26,6 +26,7 @@ import { actionIniciarChamada } from "../actions/chamadas-actions";
 import type { MensagemComUsuario, MensagemChat, ChatMessageData, SelectedDevices, PaginatedResponse, UsuarioChat } from "../domain";
 import { TipoChamada } from "../domain";
 import { useUsuarios } from "@/features/usuarios/hooks/use-usuarios";
+import { toast } from "sonner";
 
 interface ChatWindowProps {
   currentUserId: number;
@@ -241,8 +242,10 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
           setAudioCallOpen(true);
         }
       } else {
-        console.error("Erro ao iniciar chamada:", result.message);
-        // TODO: Show toast error
+        console.error("Erro ao iniciar chamada:", result.error || result.message);
+        toast.error("Erro ao iniciar chamada", {
+          description: result.error || result.message,
+        });
       }
     } catch (e) {
       console.error(e);

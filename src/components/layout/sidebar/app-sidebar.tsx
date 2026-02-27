@@ -9,6 +9,7 @@ import {
   Database,
   FileEdit,
   FileText,
+  FolderKanban,
   FolderOpen,
   Handshake,
   LayoutDashboard,
@@ -141,6 +142,16 @@ const navServicos = [
       { title: "Formulários", url: "/app/assinatura-digital/formularios" },
     ],
   },
+  {
+    title: "Projetos",
+    url: "/app/project-management",
+    icon: FolderKanban,
+    items: [
+      { title: "Dashboard", url: "/app/project-management" },
+      { title: "Projetos", url: "/app/project-management/projects" },
+      { title: "Tarefas", url: "/app/project-management/tasks" },
+    ],
+  },
 ]
 
 // Nav Gestão - Ferramentas administrativas (apenas super admin)
@@ -186,23 +197,32 @@ const navGestao = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data, temPermissao, isLoading: loadingPermissoes } = usePermissoes()
   const canSeePangea = !loadingPermissoes && temPermissao("pangea", "listar")
+  const canSeeProjetos = !loadingPermissoes && temPermissao("projetos", "listar")
   const isSuperAdmin = data?.isSuperAdmin || false
 
   const navServicosFiltrado = React.useMemo(() => {
-    return navServicos.map((item) => {
-      // Filtrar sub-itens do Pangea se não tiver permissão
-      if (item.items) {
-        const filteredItems = item.items.filter((subItem) => {
-          if (subItem.url === "/app/pangea") {
-            return canSeePangea
-          }
-          return true
-        })
-        return { ...item, items: filteredItems }
-      }
-      return item
-    })
-  }, [canSeePangea])
+    return navServicos
+      .filter((item) => {
+        // Ocultar módulo "Projetos" inteiro se sem permissão
+        if (item.url === "/app/project-management") {
+          return canSeeProjetos
+        }
+        return true
+      })
+      .map((item) => {
+        // Filtrar sub-itens do Pangea se não tiver permissão
+        if (item.items) {
+          const filteredItems = item.items.filter((subItem) => {
+            if (subItem.url === "/app/pangea") {
+              return canSeePangea
+            }
+            return true
+          })
+          return { ...item, items: filteredItems }
+        }
+        return item
+      })
+  }, [canSeePangea, canSeeProjetos])
 
   const todosItens = React.useMemo(() => {
     const items = [...navPrincipal, ...navServicosFiltrado]

@@ -112,6 +112,31 @@ export function stripHtmlTags(html: string | null | undefined): string {
 /**
  * Gera as iniciais de um nome para fallback de avatar.
  */
+/**
+ * Gera um objeto de metadados para páginas Next.js.
+ */
+export function generateMeta(opts: {
+  title: string;
+  description?: string;
+  canonical?: string;
+}) {
+  return {
+    title: opts.title,
+    ...(opts.description && { description: opts.description }),
+    ...(opts.canonical && { alternates: { canonical: opts.canonical } }),
+  };
+}
+
+/**
+ * Alias para generateAvatarFallback — extrai iniciais de um nome.
+ */
+export function getInitials(name?: string | null): string {
+  return generateAvatarFallback(name);
+}
+
+/**
+ * Gera as iniciais de um nome para fallback de avatar.
+ */
 export function generateAvatarFallback(name?: string | null): string {
   if (!name) return "??";
   const trimmed = name.trim();
