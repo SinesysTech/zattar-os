@@ -164,7 +164,7 @@ const CanvasAssinatura = forwardRef<CanvasAssinaturaRef, CanvasAssinaturaProps>(
   }));
 
   return (
-    <div ref={containerRef} className="space-y-4 w-full max-w-[600px] mx-auto">
+    <div ref={containerRef} className="space-y-4 w-full max-w-150 mx-auto">
       <div className="border border-input rounded-md bg-white overflow-hidden">
         <SignatureCanvas
           ref={signatureRef}
