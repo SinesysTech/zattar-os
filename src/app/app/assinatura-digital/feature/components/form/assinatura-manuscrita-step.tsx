@@ -258,6 +258,8 @@ export default function AssinaturaManuscritaStep() {
             nome: dadosPessoais.nome_completo,
             cpf: dadosPessoais.cpf,
             email: dadosPessoais.email,
+            celular: dadosPessoais.celular || null,
+            telefone: dadosPessoais.telefone || null,
             endereco: [
               dadosPessoais.endereco_logradouro,
               dadosPessoais.endereco_numero,

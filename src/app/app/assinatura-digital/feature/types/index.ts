@@ -95,6 +95,7 @@ export type {
 // Store types
 export type {
   ClienteAssinaturaDigital,
+  ContratoPendente,
   DadosCPF,
   DadosPessoaisStore,
   DadosContratoStore,

@@ -145,7 +145,7 @@ const Notifications = () => {
                     <div className="flex-none">
                       <Avatar className="size-8">
                         <AvatarFallback>
-                          {TIPO_NOTIFICACAO_LABELS[item.tipo].charAt(0)}
+                          {(TIPO_NOTIFICACAO_LABELS[item.tipo] ?? item.tipo ?? "N").charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                     </div>

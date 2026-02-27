@@ -16,6 +16,7 @@ import type {
   PdfGerado,
   StepConfig,
   FormularioFlowConfig,
+  ContratoPendente,
 } from '../types';
 import type {
   DynamicFormSchema,
@@ -55,6 +56,7 @@ const initialState: FormularioState = {
   termosAceite: null,
   termosVersao: null,
   termosDataAceite: null,
+  contratosPendentes: null,
   stepConfigs: null,
   pdfUrlFinal: null,
   isLoading: false,
@@ -186,6 +188,11 @@ export const useFormularioStore = create<FormularioStore>((set, get) => ({
       termosDataAceite: null,
     }),
 
+  setContratosPendentes: (contratos: ContratoPendente[]) =>
+    set({ contratosPendentes: contratos }),
+
+  clearContratosPendentes: () => set({ contratosPendentes: null }),
+
   setStepConfigs: (configs: StepConfig[]) => set({ stepConfigs: configs }),
 
   getStepByIndex: (index: number) => {
@@ -228,6 +235,7 @@ export const useFormularioStore = create<FormularioStore>((set, get) => ({
       termosAceite: null,
       termosVersao: null,
       termosDataAceite: null,
+      contratosPendentes: null,
       stepConfigs: null,
       sessaoId: null,
       formularioFlowConfig: null,

@@ -212,13 +212,15 @@ export interface FinalizePayload {
   formulario_id: number;
 
   // Dados completos acoplados a domain types (nome, endereço, CPF, partes contrárias)
-  /** Cliente completo para geração de PDF (inclui nome, CPF, endereço) */
+  /** Cliente completo para geração de PDF (inclui nome, CPF, telefone, endereço) */
   cliente_dados?: {
     id: number;
     nome: string;
     cpf?: string | null;
     cnpj?: string | null;
     email?: string | null;
+    celular?: string | null;
+    telefone?: string | null;
     endereco?: string;
   };
   /** Partes contrárias para contratos (nome, CPF/CNPJ) */

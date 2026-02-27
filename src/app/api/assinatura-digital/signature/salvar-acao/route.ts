@@ -72,10 +72,13 @@ function splitTelefone(telefone?: string): { ddd?: string; numero?: string } {
 }
 
 function parseParteContraria(dados: Record<string, unknown>): ParteContrariaPayload | null {
+  console.log('[SALVAR-ACAO] parseParteContraria: keys disponíveis:', Object.keys(dados));
+
   const id = pickNumber(dados, [
     'parte_contraria_id',
     'id_parte_contraria',
     'parteContrariaId',
+    'parte_contraria',
   ]);
 
   const tipoPessoaRaw = pickString(dados, [
@@ -86,7 +89,8 @@ function parseParteContraria(dados: Record<string, unknown>): ParteContrariaPayl
 
   const tipo_pessoa: 'pf' | 'pj' = tipoPessoaRaw?.toLowerCase() === 'pf' ? 'pf' : 'pj';
 
-  const nome = pickString(dados, [
+  // Busca por nome usando chaves explícitas
+  let nome = pickString(dados, [
     'parte_contraria_nome',
     'nome_parte_contraria',
     'parte_contraria_razao_social',
@@ -97,17 +101,43 @@ function parseParteContraria(dados: Record<string, unknown>): ParteContrariaPayl
     'reclamada',
     'empregadora',
     'nome_empresa',
+    // Variações adicionais (camelCase e alternativas)
+    'nomeEmpresa',
+    'nome_reclamada',
+    'empresa_nome',
+    'razaoSocial',
+    'nomeRazaoSocial',
+    'parteContrariaNome',
   ]);
 
+  // Fallback fuzzy: buscar qualquer chave que contenha padrões de parte contrária
+  if (!nome) {
+    const fuzzyPatterns = ['empresa', 'reclamad', 'empregador', 'parte_contraria', 'razao_social', 'razaosocial'];
+    for (const key of Object.keys(dados)) {
+      const keyLower = key.toLowerCase();
+      const isFuzzyMatch = fuzzyPatterns.some(p => keyLower.includes(p));
+      // Só pegar se parecer um campo de nome (não de cpf, cnpj, email, telefone, id, tipo)
+      const isExcluded = /cpf|cnpj|email|telefone|phone|id$|tipo|observ/i.test(key);
+      if (isFuzzyMatch && !isExcluded) {
+        const value = dados[key];
+        if (typeof value === 'string' && value.trim().length > 1) {
+          nome = value.trim();
+          console.log('[SALVAR-ACAO] parseParteContraria: nome encontrado via fuzzy match', { key, nome });
+          break;
+        }
+      }
+    }
+  }
+
   const cpf = normalizeDigits(
-    pickString(dados, ['parte_contraria_cpf', 'cpf_parte_contraria', 'cpf_empresa'])
+    pickString(dados, ['parte_contraria_cpf', 'cpf_parte_contraria', 'cpf_empresa', 'cpfEmpresa', 'cpfParteContraria'])
   );
   const cnpj = normalizeDigits(
-    pickString(dados, ['parte_contraria_cnpj', 'cnpj_parte_contraria', 'cnpj_empresa', 'cnpj'])
+    pickString(dados, ['parte_contraria_cnpj', 'cnpj_parte_contraria', 'cnpj_empresa', 'cnpj', 'cnpjEmpresa', 'cnpjParteContraria'])
   );
 
   if (!nome && !cpf && !cnpj && !id) {
-    console.log('[SALVAR-ACAO] parseParteContraria: nenhum dado de parte contrária encontrado. Keys disponíveis:', Object.keys(dados));
+    console.log('[SALVAR-ACAO] parseParteContraria: nenhum dado de parte contrária encontrado.');
     return null;
   }
 
@@ -122,8 +152,8 @@ function parseParteContraria(dados: Record<string, unknown>): ParteContrariaPayl
     nome,
     cpf,
     cnpj,
-    email: pickString(dados, ['parte_contraria_email', 'email_parte_contraria']),
-    telefone: pickString(dados, ['parte_contraria_telefone', 'telefone_parte_contraria']),
+    email: pickString(dados, ['parte_contraria_email', 'email_parte_contraria', 'emailEmpresa', 'emailParteContraria']),
+    telefone: pickString(dados, ['parte_contraria_telefone', 'telefone_parte_contraria', 'telefoneEmpresa', 'telefoneParteContraria']),
     observacoes: pickString(dados, ['parte_contraria_observacoes', 'observacoes_parte_contraria']),
   };
 

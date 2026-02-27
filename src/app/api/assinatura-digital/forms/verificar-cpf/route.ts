@@ -92,7 +92,65 @@ export async function POST(request: NextRequest) {
       uf: endereco?.estado_sigla ?? null,
     };
 
-    return NextResponse.json({ exists: true, cliente });
+    // Buscar contratos pendentes (em_contratacao) do cliente
+    let contratos_pendentes: Array<Record<string, unknown>> = [];
+    try {
+      const { data: contratosPendentes } = await supabase
+        .from("contratos")
+        .select(`
+          id,
+          segmento_id,
+          cadastrado_em,
+          observacoes,
+          segmentos(nome),
+          contrato_partes(
+            tipo_entidade,
+            nome_snapshot,
+            cpf_cnpj_snapshot,
+            papel_contratual
+          )
+        `)
+        .eq("cliente_id", data.id)
+        .eq("status", "em_contratacao")
+        .order("cadastrado_em", { ascending: false })
+        .limit(10);
+
+      if (contratosPendentes && contratosPendentes.length > 0) {
+        // Filtrar contratos que já possuem assinatura concluída
+        const contractIds = contratosPendentes.map((c) => c.id);
+        const { data: assinaturasExistentes } = await supabase
+          .from("assinatura_digital_assinaturas")
+          .select("contrato_id")
+          .in("contrato_id", contractIds)
+          .eq("status", "concluida");
+
+        const signedIds = new Set(
+          (assinaturasExistentes || []).map((a) => a.contrato_id)
+        );
+
+        contratos_pendentes = contratosPendentes
+          .filter((c) => !signedIds.has(c.id))
+          .map((c) => ({
+            id: c.id,
+            segmento_id: c.segmento_id,
+            segmento_nome: Array.isArray(c.segmentos)
+              ? (c.segmentos[0] as Record<string, unknown>)?.nome ?? null
+              : (c.segmentos as Record<string, unknown> | null)?.nome ?? null,
+            cadastrado_em: c.cadastrado_em,
+            observacoes: c.observacoes,
+            partes: (c.contrato_partes as Array<Record<string, unknown>>) || [],
+          }));
+      }
+    } catch (pendingError) {
+      // Não bloquear o fluxo se a busca de pendentes falhar
+      console.error("Erro ao buscar contratos pendentes:", pendingError);
+    }
+
+    return NextResponse.json({
+      exists: true,
+      cliente,
+      contratos_pendentes,
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "CPF inválido" }, { status: 400 });

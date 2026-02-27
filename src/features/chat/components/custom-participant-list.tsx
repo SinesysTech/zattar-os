@@ -59,7 +59,7 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
                      
                     <img src={p.picture} alt={p.name} className="w-full h-full rounded-full object-cover" />
                  ) : (
-                    <span>{p.name?.charAt(0).toUpperCase()}</span>
+                    <span>{p.name?.charAt(0)?.toUpperCase() ?? "?"}</span>
                  )}
               </div>
 
