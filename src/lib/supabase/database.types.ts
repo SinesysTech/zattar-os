@@ -1311,6 +1311,44 @@ export type Database = {
           },
         ]
       }
+      cargo_permissoes: {
+        Row: {
+          cargo_id: number
+          created_at: string | null
+          id: number
+          operacao: string
+          permitido: boolean | null
+          recurso: string
+          updated_at: string | null
+        }
+        Insert: {
+          cargo_id: number
+          created_at?: string | null
+          id?: never
+          operacao: string
+          permitido?: boolean | null
+          recurso: string
+          updated_at?: string | null
+        }
+        Update: {
+          cargo_id?: number
+          created_at?: string | null
+          id?: never
+          operacao?: string
+          permitido?: boolean | null
+          recurso?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cargo_permissoes_cargo_id_fkey"
+            columns: ["cargo_id"]
+            isOneToOne: false
+            referencedRelation: "cargos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cargos: {
         Row: {
           ativo: boolean | null
@@ -4575,8 +4613,9 @@ export type Database = {
           created_at: string
           dados_adicionais: Json | null
           descricao: string
-          entidade_id: number
+          entidade_id: number | null
           entidade_tipo: string
+          entidade_uuid: string | null
           id: number
           lida: boolean
           lida_em: string | null
@@ -4589,8 +4628,9 @@ export type Database = {
           created_at?: string
           dados_adicionais?: Json | null
           descricao: string
-          entidade_id: number
+          entidade_id?: number | null
           entidade_tipo: string
+          entidade_uuid?: string | null
           id?: never
           lida?: boolean
           lida_em?: string | null
@@ -4603,8 +4643,9 @@ export type Database = {
           created_at?: string
           dados_adicionais?: Json | null
           descricao?: string
-          entidade_id?: number
+          entidade_id?: number | null
           entidade_tipo?: string
+          entidade_uuid?: string | null
           id?: never
           lida?: boolean
           lida_em?: string | null
@@ -5632,6 +5673,425 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pm_anexos: {
+        Row: {
+          created_at: string
+          id: string
+          nome_arquivo: string
+          projeto_id: string | null
+          tamanho_bytes: number | null
+          tarefa_id: string | null
+          tipo_mime: string | null
+          url: string
+          usuario_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nome_arquivo: string
+          projeto_id?: string | null
+          tamanho_bytes?: number | null
+          tarefa_id?: string | null
+          tipo_mime?: string | null
+          url: string
+          usuario_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nome_arquivo?: string
+          projeto_id?: string | null
+          tamanho_bytes?: number | null
+          tarefa_id?: string | null
+          tipo_mime?: string | null
+          url?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pm_anexos_projeto_id_fkey"
+            columns: ["projeto_id"]
+            isOneToOne: false
+            referencedRelation: "pm_projetos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_anexos_tarefa_id_fkey"
+            columns: ["tarefa_id"]
+            isOneToOne: false
+            referencedRelation: "pm_tarefas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_anexos_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pm_comentarios: {
+        Row: {
+          conteudo: string
+          created_at: string
+          id: string
+          projeto_id: string | null
+          tarefa_id: string | null
+          updated_at: string
+          usuario_id: number
+        }
+        Insert: {
+          conteudo: string
+          created_at?: string
+          id?: string
+          projeto_id?: string | null
+          tarefa_id?: string | null
+          updated_at?: string
+          usuario_id: number
+        }
+        Update: {
+          conteudo?: string
+          created_at?: string
+          id?: string
+          projeto_id?: string | null
+          tarefa_id?: string | null
+          updated_at?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pm_comentarios_projeto_id_fkey"
+            columns: ["projeto_id"]
+            isOneToOne: false
+            referencedRelation: "pm_projetos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_comentarios_tarefa_id_fkey"
+            columns: ["tarefa_id"]
+            isOneToOne: false
+            referencedRelation: "pm_tarefas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_comentarios_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pm_lembretes: {
+        Row: {
+          concluido: boolean
+          created_at: string
+          data_hora: string
+          id: string
+          prioridade: Database["public"]["Enums"]["pm_prioridade"]
+          projeto_id: string | null
+          tarefa_id: string | null
+          texto: string
+          usuario_id: number
+        }
+        Insert: {
+          concluido?: boolean
+          created_at?: string
+          data_hora: string
+          id?: string
+          prioridade?: Database["public"]["Enums"]["pm_prioridade"]
+          projeto_id?: string | null
+          tarefa_id?: string | null
+          texto: string
+          usuario_id: number
+        }
+        Update: {
+          concluido?: boolean
+          created_at?: string
+          data_hora?: string
+          id?: string
+          prioridade?: Database["public"]["Enums"]["pm_prioridade"]
+          projeto_id?: string | null
+          tarefa_id?: string | null
+          texto?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pm_lembretes_projeto_id_fkey"
+            columns: ["projeto_id"]
+            isOneToOne: false
+            referencedRelation: "pm_projetos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_lembretes_tarefa_id_fkey"
+            columns: ["tarefa_id"]
+            isOneToOne: false
+            referencedRelation: "pm_tarefas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_lembretes_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pm_membros_projeto: {
+        Row: {
+          adicionado_em: string
+          id: string
+          papel: Database["public"]["Enums"]["pm_papel_projeto"]
+          projeto_id: string
+          usuario_id: number
+        }
+        Insert: {
+          adicionado_em?: string
+          id?: string
+          papel?: Database["public"]["Enums"]["pm_papel_projeto"]
+          projeto_id: string
+          usuario_id: number
+        }
+        Update: {
+          adicionado_em?: string
+          id?: string
+          papel?: Database["public"]["Enums"]["pm_papel_projeto"]
+          projeto_id?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pm_membros_projeto_projeto_id_fkey"
+            columns: ["projeto_id"]
+            isOneToOne: false
+            referencedRelation: "pm_projetos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_membros_projeto_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pm_projetos: {
+        Row: {
+          cliente_id: number | null
+          contrato_id: number | null
+          created_at: string
+          criado_por: number
+          data_conclusao: string | null
+          data_inicio: string | null
+          data_previsao_fim: string | null
+          descricao: string | null
+          id: string
+          nome: string
+          orcamento: number | null
+          prioridade: Database["public"]["Enums"]["pm_prioridade"]
+          processo_id: number | null
+          progresso: number | null
+          progresso_manual: number | null
+          responsavel_id: number
+          status: Database["public"]["Enums"]["pm_status_projeto"]
+          tags: string[] | null
+          updated_at: string
+          valor_gasto: number | null
+        }
+        Insert: {
+          cliente_id?: number | null
+          contrato_id?: number | null
+          created_at?: string
+          criado_por: number
+          data_conclusao?: string | null
+          data_inicio?: string | null
+          data_previsao_fim?: string | null
+          descricao?: string | null
+          id?: string
+          nome: string
+          orcamento?: number | null
+          prioridade?: Database["public"]["Enums"]["pm_prioridade"]
+          processo_id?: number | null
+          progresso?: number | null
+          progresso_manual?: number | null
+          responsavel_id: number
+          status?: Database["public"]["Enums"]["pm_status_projeto"]
+          tags?: string[] | null
+          updated_at?: string
+          valor_gasto?: number | null
+        }
+        Update: {
+          cliente_id?: number | null
+          contrato_id?: number | null
+          created_at?: string
+          criado_por?: number
+          data_conclusao?: string | null
+          data_inicio?: string | null
+          data_previsao_fim?: string | null
+          descricao?: string | null
+          id?: string
+          nome?: string
+          orcamento?: number | null
+          prioridade?: Database["public"]["Enums"]["pm_prioridade"]
+          processo_id?: number | null
+          progresso?: number | null
+          progresso_manual?: number | null
+          responsavel_id?: number
+          status?: Database["public"]["Enums"]["pm_status_projeto"]
+          tags?: string[] | null
+          updated_at?: string
+          valor_gasto?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pm_projetos_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_projetos_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "processos_cliente_por_cpf"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "pm_projetos_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_projetos_criado_por_fkey"
+            columns: ["criado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_projetos_processo_id_fkey"
+            columns: ["processo_id"]
+            isOneToOne: false
+            referencedRelation: "acervo"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_projetos_processo_id_fkey"
+            columns: ["processo_id"]
+            isOneToOne: false
+            referencedRelation: "acervo_unificado"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_projetos_processo_id_fkey"
+            columns: ["processo_id"]
+            isOneToOne: false
+            referencedRelation: "processos_cliente_por_cpf"
+            referencedColumns: ["processo_id"]
+          },
+          {
+            foreignKeyName: "pm_projetos_responsavel_id_fkey"
+            columns: ["responsavel_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pm_tarefas: {
+        Row: {
+          created_at: string
+          criado_por: number
+          data_conclusao: string | null
+          data_prazo: string | null
+          descricao: string | null
+          estimativa_horas: number | null
+          horas_registradas: number | null
+          id: string
+          ordem_kanban: number
+          prioridade: Database["public"]["Enums"]["pm_prioridade"]
+          projeto_id: string
+          responsavel_id: number | null
+          status: Database["public"]["Enums"]["pm_status_tarefa"]
+          tarefa_pai_id: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          criado_por: number
+          data_conclusao?: string | null
+          data_prazo?: string | null
+          descricao?: string | null
+          estimativa_horas?: number | null
+          horas_registradas?: number | null
+          id?: string
+          ordem_kanban?: number
+          prioridade?: Database["public"]["Enums"]["pm_prioridade"]
+          projeto_id: string
+          responsavel_id?: number | null
+          status?: Database["public"]["Enums"]["pm_status_tarefa"]
+          tarefa_pai_id?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          criado_por?: number
+          data_conclusao?: string | null
+          data_prazo?: string | null
+          descricao?: string | null
+          estimativa_horas?: number | null
+          horas_registradas?: number | null
+          id?: string
+          ordem_kanban?: number
+          prioridade?: Database["public"]["Enums"]["pm_prioridade"]
+          projeto_id?: string
+          responsavel_id?: number | null
+          status?: Database["public"]["Enums"]["pm_status_tarefa"]
+          tarefa_pai_id?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pm_tarefas_criado_por_fkey"
+            columns: ["criado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_tarefas_projeto_id_fkey"
+            columns: ["projeto_id"]
+            isOneToOne: false
+            referencedRelation: "pm_projetos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_tarefas_responsavel_id_fkey"
+            columns: ["responsavel_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_tarefas_tarefa_pai_id_fkey"
+            columns: ["tarefa_pai_id"]
+            isOneToOne: false
+            referencedRelation: "pm_tarefas"
             referencedColumns: ["id"]
           },
         ]
@@ -7551,6 +8011,18 @@ export type Database = {
         }
         Returns: number
       }
+      criar_notificacao_pm: {
+        Args: {
+          p_dados_adicionais?: Json
+          p_descricao: string
+          p_entidade_tipo: string
+          p_entidade_uuid: string
+          p_tipo: Database["public"]["Enums"]["tipo_notificacao_usuario"]
+          p_titulo: string
+          p_usuario_id: number
+        }
+        Returns: number
+      }
       desatribuir_todas_audiencias_usuario: {
         Args: { p_usuario_id: number }
         Returns: undefined
@@ -7630,6 +8102,11 @@ export type Database = {
           parent_id: number
           similarity: number
         }[]
+      }
+      pm_current_user_id: { Args: never; Returns: number }
+      pm_user_has_project_access: {
+        Args: { p_projeto_id: string; p_user_id: number }
+        Returns: boolean
       }
       random_acervo_sample: {
         Args: { limit_n: number }
@@ -7735,6 +8212,7 @@ export type Database = {
           prazos_vencidos: number
         }[]
       }
+      verificar_prazos_tarefas_pm: { Args: never; Returns: undefined }
     }
     Enums: {
       codigo_tribunal:
@@ -7810,6 +8288,20 @@ export type Database = {
         | "recorrente"
       papel_contratual: "autora" | "re"
       periodo_orcamento: "mensal" | "trimestral" | "semestral" | "anual"
+      pm_papel_projeto: "gerente" | "membro" | "observador"
+      pm_prioridade: "baixa" | "media" | "alta" | "urgente"
+      pm_status_projeto:
+        | "planejamento"
+        | "ativo"
+        | "pausado"
+        | "concluido"
+        | "cancelado"
+      pm_status_tarefa:
+        | "a_fazer"
+        | "em_progresso"
+        | "em_revisao"
+        | "concluido"
+        | "cancelado"
       polo_processual: "autor" | "re"
       situacao_pericia: "S" | "L" | "C" | "F" | "P" | "R"
       status_audiencia: "C" | "M" | "F"
@@ -7873,6 +8365,10 @@ export type Database = {
         | "prazo_vencendo"
         | "prazo_vencido"
         | "sistema_alerta"
+        | "tarefa_atribuida"
+        | "projeto_status_alterado"
+        | "membro_adicionado"
+        | "prazo_proximo"
       tipo_peca_juridica:
         | "peticao_inicial"
         | "contestacao"
@@ -8129,6 +8625,22 @@ export const Constants = {
       ],
       papel_contratual: ["autora", "re"],
       periodo_orcamento: ["mensal", "trimestral", "semestral", "anual"],
+      pm_papel_projeto: ["gerente", "membro", "observador"],
+      pm_prioridade: ["baixa", "media", "alta", "urgente"],
+      pm_status_projeto: [
+        "planejamento",
+        "ativo",
+        "pausado",
+        "concluido",
+        "cancelado",
+      ],
+      pm_status_tarefa: [
+        "a_fazer",
+        "em_progresso",
+        "em_revisao",
+        "concluido",
+        "cancelado",
+      ],
       polo_processual: ["autor", "re"],
       situacao_pericia: ["S", "L", "C", "F", "P", "R"],
       status_audiencia: ["C", "M", "F"],
@@ -8198,6 +8710,10 @@ export const Constants = {
         "prazo_vencendo",
         "prazo_vencido",
         "sistema_alerta",
+        "tarefa_atribuida",
+        "projeto_status_alterado",
+        "membro_adicionado",
+        "prazo_proximo",
       ],
       tipo_peca_juridica: [
         "peticao_inicial",
