@@ -88,7 +88,7 @@ COMMENT ON COLUMN representantes.parte_tipo IS 'Type of party represented: clien
 COMMENT ON COLUMN representantes.parte_id IS 'Foreign key to specific party table (polymorphic relation)';
 COMMENT ON COLUMN representantes.numero_processo IS 'Process number this representation is for';
 COMMENT ON COLUMN representantes.polo IS 'Procedural pole: ativo, passivo, outros';
-COMMENT ON COLUMN representantes.tipo_pessoa IS 'Person type: pf (pessoa física) or pj (pessoa jurídica)';
+COMMENT ON COLUMN representantes.tipo_pessoa IS 'Person type: pf (pessoa fÃ­sica) or pj (pessoa jurÃ­dica)';
 COMMENT ON COLUMN representantes.nome IS 'Full name or corporate name';
 COMMENT ON COLUMN representantes.numero_oab IS 'OAB registration number (e.g., "MG128404")';
 COMMENT ON COLUMN representantes.situacao_oab IS 'OAB status: REGULAR, SUSPENSO, CANCELADO, LICENCIADO, FALECIDO';
