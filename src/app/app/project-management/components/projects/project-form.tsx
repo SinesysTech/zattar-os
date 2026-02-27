@@ -26,6 +26,7 @@ import {
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import {
   STATUS_PROJETO_LABELS,
   STATUS_PROJETO_VALUES,
@@ -117,11 +118,14 @@ export function ProjectForm({
       }
 
       if (result.success) {
+        toast.success(isEditing ? "Projeto atualizado com sucesso!" : "Projeto criado com sucesso!");
         router.push(
           isEditing
             ? `/app/project-management/projects/${projeto.id}`
             : "/app/project-management/projects"
         );
+      } else {
+        toast.error(result.error?.message ?? "Erro ao salvar projeto. Tente novamente.");
       }
     });
   };

@@ -217,6 +217,29 @@ function resolveVariable(
     "formulario.nome": ctx.formulario.nome,
     "formulario.slug": ctx.formulario.slug,
     "formulario.id": ctx.formulario.id,
+
+    // Aliases sem prefixo (para templates que usam {{celular}} ao invés de {{cliente.celular}})
+    "nome_completo": c.nome,
+    "nome": c.nome,
+    "cpf": c.cpf,
+    "cnpj": c.cnpj,
+    "rg": c.rg,
+    "email": email,
+    "celular": celular,
+    "telefone": telefone || celular,
+    "data_nascimento": formatDataNascimentoBR(c.data_nascimento),
+    "estado_civil": estadoCivil,
+    "genero": genero,
+    "nacionalidade": c.nacionalidade,
+    "logradouro": end?.logradouro,
+    "numero": end?.numero,
+    "complemento": end?.complemento,
+    "bairro": end?.bairro,
+    "cep": end?.cep,
+    "cidade": end?.municipio,
+    "municipio": end?.municipio,
+    "uf": end?.estado_sigla,
+    "estado": end?.estado_sigla,
   };
 
   // Tentar resolver do contexto primeiro, depois de extras

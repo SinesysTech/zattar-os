@@ -56,6 +56,24 @@ export interface DadosCPF {
 }
 
 /**
+ * Contrato pendente (em_contratacao sem assinatura concluída).
+ * Retornado pela API verificar-cpf quando o cliente tem contratos não assinados.
+ */
+export interface ContratoPendente {
+  id: number;
+  segmento_id: number;
+  segmento_nome: string | null;
+  cadastrado_em: string;
+  observacoes: string | null;
+  partes: Array<{
+    tipo_entidade: string;
+    nome_snapshot: string | null;
+    cpf_cnpj_snapshot: string | null;
+    papel_contratual: string;
+  }>;
+}
+
+/**
  * Dados pessoais do cliente armazenados no store.
  * Todos os campos usam snake_case para compatibilidade com API.
  */
@@ -177,6 +195,9 @@ export interface FormularioState {
   termosVersao: string | null;
   termosDataAceite: string | null;
 
+  // Contratos pendentes (não assinados)
+  contratosPendentes: ContratoPendente[] | null;
+
   // Configuração dinâmica
   stepConfigs: StepConfig[] | null;
   pdfUrlFinal: string | null;
@@ -219,6 +240,8 @@ export interface FormularioActions {
   clearGeolocation: () => void;
   setTermosAceite: (aceite: boolean, versao: string, dataAceite: string) => void;
   clearTermosAceite: () => void;
+  setContratosPendentes: (contratos: ContratoPendente[]) => void;
+  clearContratosPendentes: () => void;
   setStepConfigs: (configs: StepConfig[]) => void;
   getStepByIndex: (index: number) => StepConfig | undefined;
   getTotalSteps: () => number;

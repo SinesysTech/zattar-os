@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useFormularioStore } from "../../store";
 import VerificarCPF from "./verificar-cpf";
+import ContratosPendentesStep from "./contratos-pendentes-step";
 import DadosPessoais from "./dados-pessoais";
 import DynamicFormStep from "./dynamic-form-step";
 import CapturaFotoStep from "../capture/captura-foto-step";
@@ -31,6 +32,7 @@ export default function FormularioContainer() {
   const stepConfigs = useFormularioStore((state) => state.stepConfigs);
   const setStepConfigs = useFormularioStore((state) => state.setStepConfigs);
   const formularioFlowConfig = useFormularioStore((state) => state.formularioFlowConfig);
+  const contratosPendentes = useFormularioStore((state) => state.contratosPendentes);
 
   const [templateHasMarkdown, setTemplateHasMarkdown] = useState<boolean | null>(null);
   const [hasTemplateError, setHasTemplateError] = useState<boolean>(false);
@@ -39,20 +41,33 @@ export default function FormularioContainer() {
   const [unavailableTemplateIds, setUnavailableTemplateIds] = useState<string[]>([]);
 
   // Função que constrói configuração de etapas baseado na configuração do formulário
-  const buildStepConfigs = (formularioConfig: { foto_necessaria?: boolean; geolocation_necessaria?: boolean } | null): StepConfig[] => {
+  const buildStepConfigs = (
+    formularioConfig: { foto_necessaria?: boolean; geolocation_necessaria?: boolean } | null,
+    temContratosPendentes: boolean = false,
+  ): StepConfig[] => {
     console.log('📋 Construindo configuração de etapas do formulário:', {
       fotoNecessaria: formularioConfig?.foto_necessaria,
       geolocationNecessaria: formularioConfig?.geolocation_necessaria,
+      temContratosPendentes,
     });
 
     const configs: StepConfig[] = [
       { id: 'cpf', index: 0, component: 'VerificarCPF', required: true, enabled: true },
-      { id: 'pessoais', index: 1, component: 'DadosPessoais', required: true, enabled: true },
-      { id: 'acao', index: 2, component: 'DynamicFormStep', required: true, enabled: true },
-      { id: 'visualizacao', index: 3, component: 'VisualizacaoPdfStep', required: true, enabled: true },
     ];
 
-    let currentIndex = 4;
+    let currentIndex = 1;
+
+    // Inserir step de contratos pendentes se houver contratos aguardando assinatura
+    if (temContratosPendentes) {
+      configs.push({ id: 'pendentes', index: currentIndex++, component: 'ContratosPendentesStep', required: false, enabled: true });
+      console.log('📄 Etapa de contratos pendentes adicionada ao fluxo (índice:', currentIndex - 1, ')');
+    }
+
+    configs.push(
+      { id: 'pessoais', index: currentIndex++, component: 'DadosPessoais', required: true, enabled: true },
+      { id: 'acao', index: currentIndex++, component: 'DynamicFormStep', required: true, enabled: true },
+      { id: 'visualizacao', index: currentIndex++, component: 'VisualizacaoPdfStep', required: true, enabled: true },
+    );
 
     // Adicionar etapa de foto se necessária (padrão: true)
     const fotoNecessaria = formularioConfig?.foto_necessaria ?? true; // undefined = necessária (default true)
@@ -148,20 +163,26 @@ export default function FormularioContainer() {
 
   // useEffect: Inicializar configuração de etapas baseado na configuração do formulário
   useEffect(() => {
+    const temPendentes = (contratosPendentes?.length ?? 0) > 0;
     console.log('🔧 Inicializando configuração de etapas:', {
       formularioFlowConfig,
+      temContratosPendentes: temPendentes,
     });
 
     // Construir configuração de etapas usando dados do formulário
-    const configs = buildStepConfigs(formularioFlowConfig);
+    const configs = buildStepConfigs(formularioFlowConfig, temPendentes);
     setStepConfigs(configs);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formularioFlowConfig]);
+  }, [formularioFlowConfig, contratosPendentes]);
 
   // useEffect: Verificar se template possui conteúdo Markdown
   useEffect(() => {
-    if (etapaAtual !== 3) {
+    // Verificar se a etapa atual é a de visualização (índice dinâmico, não fixo)
+    const isVisualizacaoStep = stepConfigs?.find(
+      (s) => s.index === etapaAtual && s.component === 'VisualizacaoPdfStep'
+    );
+    if (!isVisualizacaoStep) {
       setTemplateHasMarkdown(null);
       setHasTemplateError(false);
       return;
@@ -218,7 +239,7 @@ export default function FormularioContainer() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [etapaAtual, templateIdSelecionado, templateIds]);
+  }, [etapaAtual, templateIdSelecionado, templateIds, stepConfigs]);
   // Note: Deliberately excluding getCachedTemplate and setCachedTemplate to prevent infinite loops
   // These are stable Zustand actions that don't need to be in dependencies
 
@@ -245,6 +266,8 @@ export default function FormularioContainer() {
     switch (currentStepConfig.component) {
       case 'VerificarCPF':
         return <VerificarCPF />;
+      case 'ContratosPendentesStep':
+        return <ContratosPendentesStep />;
       case 'DadosPessoais':
         return <DadosPessoais />;
       case 'DynamicFormStep':

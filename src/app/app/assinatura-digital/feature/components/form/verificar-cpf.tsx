@@ -17,17 +17,18 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import type { ClienteAssinaturaDigital } from '../../types/store';
+import type { ClienteAssinaturaDigital, ContratoPendente } from '../../types/store';
 import FormStepLayout from './form-step-layout';
 
 type VerificarCPFResponse = {
   exists: boolean;
   cliente?: ClienteAssinaturaDigital | null;
+  contratos_pendentes?: ContratoPendente[];
 };
 
 export default function VerificarCPF() {
   const [isValidating, setIsValidating] = useState(false);
-  const { setDadosCPF, proximaEtapa, getTotalSteps, etapaAtual } = useFormularioStore();
+  const { setDadosCPF, setContratosPendentes, proximaEtapa, getTotalSteps, etapaAtual } = useFormularioStore();
 
   const form = useForm<VerificarCPFFormData>({
     resolver: zodResolver(verificarCPFSchema),
@@ -69,16 +70,24 @@ export default function VerificarCPF() {
 
       // Cenário 1: Cliente existe no sistema
       if (apiResult.exists === true && apiResult.cliente) {
-        toast.success('CPF encontrado!', {
-          description: 'Seus dados foram localizados no sistema.',
-        });
-
         setDadosCPF({
           cpf: cpfDigits,
           clienteExistente: true,
           clienteId: apiResult.cliente.id,
           dadosCliente: apiResult.cliente,
         });
+
+        // Verificar se há contratos pendentes de assinatura
+        if (apiResult.contratos_pendentes && apiResult.contratos_pendentes.length > 0) {
+          setContratosPendentes(apiResult.contratos_pendentes);
+          toast.info('Contratos pendentes encontrados', {
+            description: `Você possui ${apiResult.contratos_pendentes.length} contrato(s) aguardando assinatura.`,
+          });
+        } else {
+          toast.success('CPF encontrado!', {
+            description: 'Seus dados foram localizados no sistema.',
+          });
+        }
 
         proximaEtapa();
         return;

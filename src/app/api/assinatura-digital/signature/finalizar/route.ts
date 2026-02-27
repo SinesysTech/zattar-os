@@ -48,6 +48,8 @@ const schema = z.object({
     cpf: z.string().optional().nullable(),
     cnpj: z.string().optional().nullable(),
     email: z.string().optional().nullable(),
+    celular: z.string().optional().nullable(),
+    telefone: z.string().optional().nullable(),
     endereco: z.string().optional(),
   }).optional(),
 
