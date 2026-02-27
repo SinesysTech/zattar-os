@@ -384,45 +384,113 @@ export async function setDocumentoAnchors(params: {
 export async function listDocumentos(
   params: {
     limit?: number;
+    origem?: 'todos' | 'documento' | 'formulario';
   } = {}
 ): Promise<{
   documentos: (AssinaturaDigitalDocumento & {
     _assinantes_count: number;
     _assinantes_concluidos: number;
+    _origem: 'documento' | 'formulario';
+    _cliente_nome?: string;
+    _protocolo?: string;
   })[];
 }> {
   const supabase = createServiceClient();
   const limit = params.limit ?? 50;
+  const origem = params.origem ?? 'todos';
 
-  const { data, error } = await supabase
-    .from(TABLE_DOCUMENTOS)
-    .select(
-      `
-      *,
-      assinantes:assinatura_digital_documento_assinantes(id, status)
-    `
-    )
-    .order("created_at", { ascending: false })
-    .limit(limit);
+  // Query 1: Documentos do editor (assinatura_digital_documentos)
+  const documentosPromise = origem !== 'formulario'
+    ? supabase
+        .from(TABLE_DOCUMENTOS)
+        .select(`
+          *,
+          assinantes:assinatura_digital_documento_assinantes(id, status)
+        `)
+        .order("created_at", { ascending: false })
+        .limit(limit)
+    : Promise.resolve({ data: [], error: null });
 
-  if (error) {
-    throw new Error(`Erro ao listar documentos: ${error.message}`);
+  // Query 2: Assinaturas de formulário (assinatura_digital_assinaturas)
+  const assinaturasPromise = origem !== 'documento'
+    ? supabase
+        .from('assinatura_digital_assinaturas')
+        .select(`
+          id,
+          cliente_id,
+          contrato_id,
+          template_uuid,
+          protocolo,
+          pdf_url,
+          status,
+          data_assinatura,
+          created_at:data_assinatura,
+          clientes(nome)
+        `)
+        .order("data_assinatura", { ascending: false })
+        .limit(limit)
+    : Promise.resolve({ data: [], error: null });
+
+  const [docResult, assResult] = await Promise.all([documentosPromise, assinaturasPromise]);
+
+  if (docResult.error) {
+    throw new Error(`Erro ao listar documentos: ${docResult.error.message}`);
   }
 
-  // Processar dados para incluir contagens
-  const documentosComContagem = (data ?? []).map((doc) => {
+  // Mapear documentos do editor
+  const documentosEditor = (docResult.data ?? []).map((doc) => {
     const assinantes = doc.assinantes || [];
     return {
       ...doc,
-      assinantes: undefined, // Remover assinantes da resposta principal
+      assinantes: undefined,
       _assinantes_count: assinantes.length,
       _assinantes_concluidos: assinantes.filter(
         (a: { status: string }) => a.status === "concluido"
       ).length,
+      _origem: 'documento' as const,
+      _cliente_nome: undefined,
+      _protocolo: undefined,
     };
   });
 
-  return { documentos: documentosComContagem };
+  // Mapear assinaturas de formulário para o formato de DocumentoListItem
+  const assinaturasFormulario = (assResult.data ?? []).map((ass) => {
+    const clienteRaw = ass.clientes as unknown;
+    const clienteNome = clienteRaw && typeof clienteRaw === 'object' && 'nome' in clienteRaw
+      ? (clienteRaw as { nome: string }).nome
+      : Array.isArray(clienteRaw) && clienteRaw.length > 0
+        ? (clienteRaw[0] as { nome: string }).nome
+        : undefined;
+    return {
+      id: ass.id,
+      documento_uuid: `ass-${ass.id}`,
+      titulo: clienteNome
+        ? `Contrato Assinado - ${clienteNome}`
+        : `Contrato Assinado - ${ass.protocolo}`,
+      status: 'concluido' as const,
+      selfie_habilitada: false,
+      pdf_original_url: ass.pdf_url,
+      pdf_final_url: null,
+      hash_original_sha256: null,
+      hash_final_sha256: null,
+      created_by: null,
+      created_at: ass.data_assinatura,
+      updated_at: ass.data_assinatura,
+      contrato_id: ass.contrato_id ?? null,
+      _assinantes_count: 1,
+      _assinantes_concluidos: 1,
+      _origem: 'formulario' as const,
+      _cliente_nome: clienteNome || undefined,
+      _protocolo: ass.protocolo,
+    };
+  });
+
+  // Merge e ordenar por data decrescente
+  const todos = [...documentosEditor, ...assinaturasFormulario]
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .slice(0, limit);
+
+  return { documentos: todos };
 }
 
 /**

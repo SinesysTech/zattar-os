@@ -227,7 +227,7 @@ export function Combobox({
           )}
 
           {/* Lista de opções */}
-          <div className="max-h-[300px] overflow-auto p-1 scroll-smooth">
+          <div className="max-h-75 overflow-auto p-1 scroll-smooth">
             {filteredOptions.length === 0 ? (
               <Empty className="border-0 py-4 h-auto min-h-0">
                 <EmptyHeader>

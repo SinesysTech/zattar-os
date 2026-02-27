@@ -260,6 +260,12 @@ export interface FinalizeResult {
   assinatura_id: number;
   protocolo: string;
   pdf_url: string;
+  /** URL raw do Backblaze (bucket privado, para armazenar em arquivos.b2_url) */
+  pdf_raw_url: string;
+  /** Key do objeto no Backblaze (ex: assinatura-digital/pdfs/documento-xxx.pdf) */
+  pdf_key: string;
+  /** Tamanho do PDF em bytes */
+  pdf_size: number;
 }
 
 export interface PreviewResult {

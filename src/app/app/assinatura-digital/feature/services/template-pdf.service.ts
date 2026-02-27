@@ -115,6 +115,33 @@ function parseCampos(template: TemplateBasico): TemplateWithCampos {
   return { ...template, campos_parsed };
 }
 
+// Mapeamento reverso de enums do DB para labels legíveis
+const ESTADO_CIVIL_LABEL: Record<string, string> = {
+  solteiro: "solteiro(a)",
+  casado: "casado(a)",
+  divorciado: "divorciado(a)",
+  viuvo: "viúvo(a)",
+};
+
+const GENERO_LABEL: Record<string, string> = {
+  masculino: "masculino",
+  feminino: "feminino",
+  outro: "outro",
+  prefiro_nao_informar: "prefiro não informar",
+};
+
+function formatPhone(ddd?: string | null, numero?: string | null): string {
+  if (!ddd || !numero) return "";
+  return `(${ddd}) ${numero}`;
+}
+
+function formatDataNascimentoBR(value?: string | null): string {
+  if (!value) return "";
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return value;
+  return d.toLocaleDateString("pt-BR", { timeZone: "UTC" });
+}
+
 function resolveVariable(
   variable: TipoVariavel | undefined,
   ctx: PdfDataContext,
@@ -122,37 +149,83 @@ function resolveVariable(
 ) {
   if (!variable) return "";
 
-  // Mapeamento de variáveis do contexto básico
+  const c = ctx.cliente;
+  const end = c.endereco;
+  const email = Array.isArray(c.emails) && c.emails.length > 0 ? c.emails[0] : "";
+  const celular = formatPhone(c.ddd_celular, c.numero_celular);
+  const telefone = formatPhone(c.ddd_residencial, c.numero_residencial);
+  const estadoCivil = c.estado_civil ? (ESTADO_CIVIL_LABEL[c.estado_civil] ?? c.estado_civil) : "";
+  const genero = c.genero ? (GENERO_LABEL[c.genero] ?? c.genero) : "";
+
   const map: Record<string, unknown> = {
-    "cliente.nome_completo": ctx.cliente.nome,
-    "cliente.nome": ctx.cliente.nome,
-    "cliente.cpf": ctx.cliente.cpf,
-    "cliente.cnpj": ctx.cliente.cnpj,
-    "cliente.tipo_pessoa": ctx.cliente.tipo_pessoa,
+    // Cliente - identificação
+    "cliente.nome_completo": c.nome,
+    "cliente.nome": c.nome,
+    "cliente.cpf": c.cpf,
+    "cliente.cnpj": c.cnpj,
+    "cliente.tipo_pessoa": c.tipo_pessoa,
+    "cliente.rg": c.rg,
+
+    // Cliente - dados pessoais
+    "cliente.data_nascimento": formatDataNascimentoBR(c.data_nascimento),
+    "cliente.estado_civil": estadoCivil,
+    "cliente.genero": genero,
+    "cliente.nacionalidade": c.nacionalidade,
+
+    // Cliente - contato
+    "cliente.email": email,
+    "cliente.celular": celular,
+    "cliente.telefone": telefone || celular,
+
+    // Cliente - endereço (com prefixo endereco_)
+    "cliente.endereco_logradouro": end?.logradouro,
+    "cliente.endereco_numero": end?.numero,
+    "cliente.endereco_complemento": end?.complemento,
+    "cliente.endereco_bairro": end?.bairro,
+    "cliente.endereco_cep": end?.cep,
+    "cliente.endereco_cidade": end?.municipio,
+    "cliente.endereco_uf": end?.estado_sigla,
+
+    // Cliente - endereço (aliases sem prefixo)
+    "cliente.logradouro": end?.logradouro,
+    "cliente.numero": end?.numero,
+    "cliente.complemento": end?.complemento,
+    "cliente.bairro": end?.bairro,
+    "cliente.cep": end?.cep,
+    "cliente.cidade": end?.municipio,
+    "cliente.municipio": end?.municipio,
+    "cliente.uf": end?.estado_sigla,
+    "cliente.estado": end?.estado_sigla,
+
+    // Parte contrária
     "parte_contraria.nome": ctx.parte_contraria?.nome,
+
+    // Segmento
     "segmento.id": ctx.segmento.id,
     "segmento.nome": ctx.segmento.nome,
     "segmento.slug": ctx.segmento.slug,
     "segmento.descricao": (
       ctx.segmento as SegmentoBasico & { descricao?: string }
     ).descricao,
+
+    // Sistema
     "sistema.protocolo": ctx.protocolo,
     "sistema.ip_cliente": ctx.ip,
     "sistema.user_agent": ctx.user_agent,
+
+    // Formulário
     "formulario.nome": ctx.formulario.nome,
     "formulario.slug": ctx.formulario.slug,
     "formulario.id": ctx.formulario.id,
   };
 
   // Tentar resolver do contexto primeiro, depois de extras
-  // Extras pode conter dados completos do cliente (cliente_dados do payload)
   let value = map[variable];
 
   if (value === undefined || value === null) {
-    // Tentar resolver de extras (dados completos do cliente podem estar aqui)
     value = extras[variable];
 
-    // Se a variável começa com "cliente." e não foi encontrada, tentar buscar em extras com prefixo
+    // Fallback: buscar em extras.cliente_dados
     if (value === undefined && variable.startsWith("cliente.")) {
       const clienteKey = variable.replace("cliente.", "");
       const clienteDados = extras.cliente_dados as

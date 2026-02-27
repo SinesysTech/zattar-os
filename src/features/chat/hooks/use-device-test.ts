@@ -22,21 +22,24 @@ export const useDeviceTest = () => {
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const audioAnimationRef = useRef<number | null>(null);
   const audioStreamRef = useRef<MediaStream | null>(null);
+  const videoStreamRef = useRef<MediaStream | null>(null);
 
   const stopVideoTest = useCallback(() => {
-    if (state.videoStream) {
-      state.videoStream.getTracks().forEach(track => track.stop());
-      setState(prev => ({ ...prev, videoStream: null, isTestingVideo: false }));
+    if (videoStreamRef.current) {
+      videoStreamRef.current.getTracks().forEach(track => track.stop());
+      videoStreamRef.current = null;
     }
-  }, [state.videoStream]);
+    setState(prev => ({ ...prev, videoStream: null, isTestingVideo: false }));
+  }, []);
 
   const startVideoTest = useCallback(async (deviceId: string) => {
-    stopVideoTest(); // Stop any existing test first
+    stopVideoTest();
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { deviceId: { exact: deviceId } }
       });
+      videoStreamRef.current = stream;
       setState(prev => ({ ...prev, videoStream: stream, isTestingVideo: true, error: null }));
     } catch (err) {
       console.error('Error starting video test:', err);

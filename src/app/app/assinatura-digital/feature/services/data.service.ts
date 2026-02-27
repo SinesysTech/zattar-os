@@ -1,11 +1,32 @@
 import { createServiceClient } from '@/lib/supabase/service-client';
 
+export interface ClienteEndereco {
+  logradouro?: string | null;
+  numero?: string | null;
+  complemento?: string | null;
+  bairro?: string | null;
+  cep?: string | null;
+  municipio?: string | null;
+  estado_sigla?: string | null;
+}
+
 export interface ClienteBasico {
   id: number;
   nome: string;
   cpf?: string | null;
   cnpj?: string | null;
   tipo_pessoa?: string | null;
+  rg?: string | null;
+  data_nascimento?: string | null;
+  emails?: string[] | null;
+  ddd_celular?: string | null;
+  numero_celular?: string | null;
+  ddd_residencial?: string | null;
+  numero_residencial?: string | null;
+  estado_civil?: string | null;
+  genero?: string | null;
+  nacionalidade?: string | null;
+  endereco?: ClienteEndereco | null;
 }
 
 export interface TemplateBasico {
@@ -40,7 +61,17 @@ export async function getClienteBasico(id: number): Promise<ClienteBasico | null
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from('clientes')
-    .select('id, nome, cpf, cnpj, tipo_pessoa')
+    .select(`
+      id, nome, cpf, cnpj, tipo_pessoa,
+      rg, data_nascimento, emails,
+      ddd_celular, numero_celular,
+      ddd_residencial, numero_residencial,
+      estado_civil, genero, nacionalidade,
+      endereco:enderecos!endereco_id(
+        logradouro, numero, complemento,
+        bairro, cep, municipio, estado_sigla
+      )
+    `)
     .eq('id', id)
     .single();
 

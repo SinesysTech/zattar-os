@@ -8,6 +8,8 @@ import {
   Trash2,
   Users,
   Calendar,
+  FileText,
+  ClipboardList,
 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -43,6 +45,9 @@ export type DocumentoListItem = {
   contrato_id: number | null;
   _assinantes_count?: number;
   _assinantes_concluidos?: number;
+  _origem?: 'documento' | 'formulario';
+  _cliente_nome?: string;
+  _protocolo?: string;
 };
 
 interface ColumnActions {
@@ -90,7 +95,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         const id = row.original.id;
         return (
           <div className="min-h-10 flex items-center text-sm">
-            <span className="max-w-[300px] truncate font-medium">
+            <span className="max-w-75 truncate font-medium">
               {titulo || `Documento #${id}`}
             </span>
           </div>
@@ -99,6 +104,44 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
       enableSorting: true,
       size: 250,
       meta: { align: "left" as const, headerLabel: "Título" },
+    },
+    {
+      id: "origem",
+      accessorFn: (row) => row._origem ?? "documento",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Origem" />
+      ),
+      cell: ({ row }) => {
+        const origem = row.original._origem ?? "documento";
+        const isFormulario = origem === "formulario";
+        return (
+          <div className="min-h-10 flex items-center">
+            <Badge
+              variant="outline"
+              className={
+                isFormulario
+                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                  : "border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-400"
+              }
+            >
+              <span className="flex items-center gap-1.5">
+                {isFormulario ? (
+                  <ClipboardList className="h-3 w-3" />
+                ) : (
+                  <FileText className="h-3 w-3" />
+                )}
+                {isFormulario ? "Formulário" : "Documento"}
+              </span>
+            </Badge>
+          </div>
+        );
+      },
+      filterFn: (row, _id, value) => {
+        return value.includes(row.original._origem ?? "documento");
+      },
+      enableSorting: false,
+      size: 140,
+      meta: { align: "left" as const, headerLabel: "Origem" },
     },
     {
       accessorKey: "status",
@@ -172,10 +215,13 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
       header: () => <span className="text-sm font-medium">Ações</span>,
       cell: ({ row }) => {
         const doc = row.original;
+        const isFormulario = doc._origem === "formulario";
         const podeEditar =
-          doc.status === "rascunho" ||
-          (doc.status === "pronto" && (doc._assinantes_concluidos ?? 0) === 0);
+          !isFormulario &&
+          (doc.status === "rascunho" ||
+            (doc.status === "pronto" && (doc._assinantes_concluidos ?? 0) === 0));
         const podeDeletar =
+          !isFormulario &&
           doc.status !== "concluido" &&
           (doc._assinantes_concluidos ?? 0) === 0;
         const pdfUrl = doc.pdf_final_url || doc.pdf_original_url;

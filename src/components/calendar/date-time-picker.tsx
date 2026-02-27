@@ -90,7 +90,7 @@ export function DateTimePicker({ form, field }: DatePickerProps) {
 							onSelect={handleDateSelect}
 							initialFocus
 						/>
-						<div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
+						<div className="flex flex-col sm:flex-row sm:h-75 divide-y sm:divide-y-0 sm:divide-x">
 							<ScrollArea className="w-64 sm:w-auto">
 								<div className="flex sm:flex-col p-2">
 									{Array.from(

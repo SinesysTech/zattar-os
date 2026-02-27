@@ -210,17 +210,16 @@ export const actionListDocumentos = authenticatedAction(
     page: z.number().int().positive().optional(),
     pageSize: z.number().int().positive().max(100).optional(),
     status: z.enum(["rascunho", "pronto", "concluido", "cancelado"]).optional(),
+    origem: z.enum(["todos", "documento", "formulario"]).optional(),
   }),
   async (input) => {
-    // O authenticatedAction já trata erros e retorna { success, data }
-    // O handler só precisa retornar os dados ou lançar um erro
     const params = {
       limit: input.pageSize ?? 20,
+      origem: input.origem as 'todos' | 'documento' | 'formulario' | undefined,
     };
 
     const resultado = await documentosService.listDocumentos(params);
 
-    // Retornar apenas os dados - o wrapper adiciona success: true automaticamente
     return resultado;
   }
 );

@@ -66,7 +66,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
   }
 
   return (
-    <div className="-m-6 h-[calc(100vh-theme(spacing.14)-theme(spacing.12))] flex overflow-hidden bg-background">
+    <div className="-m-6 h-[calc(100vh-(--spacing(14))-(--spacing(12)))] flex overflow-hidden bg-background">
       {/* PDF Canvas Area */}
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Indicador de salvamento — discreto no topo */}
@@ -125,7 +125,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
       </div>
 
       {/* Right Sidebar */}
-      <div className="hidden lg:block w-[340px] shrink-0 border-l">
+      <div className="hidden lg:block w-85 shrink-0 border-l">
         <FloatingSidebar
           className="h-full flex flex-col"
           signers={signers}

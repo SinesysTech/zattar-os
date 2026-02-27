@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Info } from 'lucide-react';
@@ -88,16 +88,14 @@ export default function DadosPessoais() {
     },
   });
 
-  // Removidas variáveis watch não utilizadas
-  // const watchEmail = form.watch('email');
-  // const watchCelular = form.watch('celular');
-  // const watchTelefone = form.watch('telefone');
-  // const watchDataNascimento = form.watch('dataNascimento');
-  // const watchCep = form.watch('cep');
-  // const watchLogradouro = form.watch('logradouro');
-  // const watchComplemento = form.watch('complemento');
-  // const watchBairro = form.watch('bairro');
-  // const watchCidade = form.watch('cidade');
+  // Validação manual via safeParse para contornar dessincronização do
+  // formState.isValid com inputs mascarados (IMaskInput).
+  // form.watch() subscreve a todas as mudanças de campo e safeParse valida
+  // diretamente contra o schema Zod, independente do estado interno do RHF.
+  const watchedValues = form.watch();
+  const isFormValid = useMemo(() => {
+    return dadosPessoaisSchema.safeParse(watchedValues).success;
+  }, [watchedValues]);
 
 
 
@@ -139,8 +137,8 @@ export default function DadosPessoais() {
         // Trigger validation to update isValid state
         await form.trigger();
       } else if (dadosCPF?.cpf) {
-        // Cliente novo - preencher apenas CPF
-        form.setValue('cpf', formatCPF(dadosCPF.cpf));
+        // Cliente novo - preencher apenas CPF (shouldValidate garante que a validação é disparada)
+        form.setValue('cpf', formatCPF(dadosCPF.cpf), { shouldValidate: true });
       }
     };
 
@@ -327,7 +325,7 @@ export default function DadosPessoais() {
       totalSteps={getTotalSteps()}
       onPrevious={etapaAnterior}
       nextLabel="Próximo"
-      isNextDisabled={isSubmitting || !form.formState.isValid || !isContextReady}
+      isNextDisabled={isSubmitting || !isFormValid || !isContextReady}
       isPreviousDisabled={isSubmitting}
       isLoading={isSubmitting}
       cardClassName="w-full max-w-3xl mx-auto"

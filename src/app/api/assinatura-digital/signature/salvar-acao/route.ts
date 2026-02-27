@@ -93,24 +93,30 @@ function parseParteContraria(dados: Record<string, unknown>): ParteContrariaPayl
     'razao_social_parte_contraria',
     'parte_contraria_nome_razao_social',
     'razao_social',
+    'empresa',
+    'reclamada',
+    'empregadora',
+    'nome_empresa',
   ]);
 
   const cpf = normalizeDigits(
-    pickString(dados, ['parte_contraria_cpf', 'cpf_parte_contraria'])
+    pickString(dados, ['parte_contraria_cpf', 'cpf_parte_contraria', 'cpf_empresa'])
   );
   const cnpj = normalizeDigits(
-    pickString(dados, ['parte_contraria_cnpj', 'cnpj_parte_contraria'])
+    pickString(dados, ['parte_contraria_cnpj', 'cnpj_parte_contraria', 'cnpj_empresa', 'cnpj'])
   );
 
   if (!nome && !cpf && !cnpj && !id) {
+    console.log('[SALVAR-ACAO] parseParteContraria: nenhum dado de parte contrária encontrado. Keys disponíveis:', Object.keys(dados));
     return null;
   }
 
   if (!nome) {
+    console.log('[SALVAR-ACAO] parseParteContraria: ID/CPF/CNPJ encontrado mas sem nome.', { id, cpf, cnpj });
     return null;
   }
 
-  return {
+  const result: ParteContrariaPayload = {
     id,
     tipo_pessoa,
     nome,
@@ -120,6 +126,15 @@ function parseParteContraria(dados: Record<string, unknown>): ParteContrariaPayl
     telefone: pickString(dados, ['parte_contraria_telefone', 'telefone_parte_contraria']),
     observacoes: pickString(dados, ['parte_contraria_observacoes', 'observacoes_parte_contraria']),
   };
+
+  console.log('[SALVAR-ACAO] parseParteContraria: dados extraídos com sucesso', {
+    id: result.id,
+    nome: result.nome,
+    cpf: result.cpf ? '***' : undefined,
+    cnpj: result.cnpj ? '***' : undefined,
+  });
+
+  return result;
 }
 
 async function upsertParteContraria(
@@ -258,11 +273,12 @@ export async function POST(request: NextRequest) {
 
     const { data: cliente, error: clienteError } = await supabase
       .from('clientes')
-      .select('id, nome, cpf, cnpj, email')
+      .select('id, nome, cpf, cnpj, emails')
       .eq('id', payload.clienteId)
       .single();
 
     if (clienteError || !cliente) {
+      console.error('[SALVAR-ACAO] Erro ao buscar cliente:', { clienteId: payload.clienteId, error: clienteError });
       return NextResponse.json(
         { success: false, error: 'Cliente não encontrado para criar o contrato' },
         { status: 404 }
@@ -273,6 +289,13 @@ export async function POST(request: NextRequest) {
     const parteContraria = partePayload
       ? await upsertParteContraria(supabase, partePayload)
       : null;
+
+    if (partePayload && !parteContraria) {
+      console.warn('[SALVAR-ACAO] Parte contrária foi parseada mas upsert retornou null', { partePayload });
+    }
+    if (parteContraria) {
+      console.log('[SALVAR-ACAO] Parte contrária salva com sucesso:', { id: parteContraria.id, nome: parteContraria.nome });
+    }
 
     // Determinar papel do cliente e polo da parte contrária
     const papelCliente = contratoConfig?.papel_cliente ?? 'autora';
@@ -351,6 +374,8 @@ export async function POST(request: NextRequest) {
           entidade_id: payload.clienteId,
           papel_contratual: papelCliente,
           ordem: 0,
+          nome_snapshot: cliente.nome,
+          cpf_cnpj_snapshot: cliente.cpf || cliente.cnpj || null,
         },
       ];
 
@@ -361,6 +386,8 @@ export async function POST(request: NextRequest) {
           entidade_id: parteContraria.id,
           papel_contratual: papelParteContraria,
           ordem: 1,
+          nome_snapshot: parteContraria.nome,
+          cpf_cnpj_snapshot: parteContraria.cpf || parteContraria.cnpj || null,
         });
       }
 
@@ -396,7 +423,9 @@ export async function POST(request: NextRequest) {
           nome: cliente.nome,
           cpf: cliente.cpf,
           cnpj: cliente.cnpj,
-          email: cliente.email,
+          email: Array.isArray(cliente.emails) && cliente.emails.length > 0
+            ? cliente.emails[0]
+            : null,
         },
         parte_contraria_dados: parteContraria
           ? [

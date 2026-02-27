@@ -130,6 +130,9 @@ export interface FinalizeResult {
   assinatura_id: number;
   protocolo: string;
   pdf_url: string;
+  pdf_raw_url: string;
+  pdf_key: string;
+  pdf_size: number;
 }
 
 // =============================================================================
@@ -339,6 +342,7 @@ export interface ClienteDadosGeracao {
   nacionalidade: string;
   email: string;
   celular: string;
+  telefone?: string;
   logradouro: string;
   numero: string;
   complemento?: string;

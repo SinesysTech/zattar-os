@@ -194,7 +194,7 @@ export async function POST(request: NextRequest) {
       try {
         const { data: contratoAtual } = await supabase
           .from('contratos')
-          .select('id, status, documentos')
+          .select('id, status, documentos, created_by, responsavel_id')
           .eq('id', payload.contrato_id)
           .single();
 
@@ -218,6 +218,7 @@ export async function POST(request: NextRequest) {
             });
           }
 
+          // Legacy: salvar referência no campo texto contratos.documentos
           const documentoAssinatura = {
             tipo: 'assinatura_digital',
             assinatura_id: result.assinatura_id,
@@ -247,6 +248,46 @@ export async function POST(request: NextRequest) {
             .from('contratos')
             .update({ documentos: JSON.stringify(documentosList) })
             .eq('id', payload.contrato_id);
+
+          // Vincular PDF ao contrato via arquivos + contrato_documentos
+          const criadorId = contratoAtual.created_by || contratoAtual.responsavel_id;
+          if (criadorId && result.pdf_key && result.pdf_raw_url) {
+            const { data: arquivo, error: arquivoError } = await supabase
+              .from('arquivos')
+              .insert({
+                nome: `Contrato Assinado - ${result.protocolo}.pdf`,
+                tipo_mime: 'application/pdf',
+                tamanho_bytes: result.pdf_size,
+                b2_key: result.pdf_key,
+                b2_url: result.pdf_raw_url,
+                tipo_media: 'pdf',
+                criado_por: criadorId,
+              })
+              .select('id')
+              .single();
+
+            if (arquivoError) {
+              console.error('[FINALIZAR] Erro ao criar registro de arquivo:', arquivoError);
+            } else if (arquivo) {
+              const { error: vinculoError } = await supabase
+                .from('contrato_documentos')
+                .insert({
+                  contrato_id: payload.contrato_id,
+                  arquivo_id: arquivo.id,
+                  tipo_peca: null,
+                  created_by: criadorId,
+                });
+
+              if (vinculoError) {
+                console.error('[FINALIZAR] Erro ao vincular arquivo ao contrato:', vinculoError);
+              } else {
+                console.log('[FINALIZAR] PDF vinculado ao contrato com sucesso:', {
+                  contrato_id: payload.contrato_id,
+                  arquivo_id: arquivo.id,
+                });
+              }
+            }
+          }
         }
       } catch (contractError) {
         console.error('Erro ao sincronizar contrato após assinatura:', contractError);
@@ -258,8 +299,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Não expor campos internos (pdf_raw_url, pdf_key, pdf_size) na resposta
+    const { pdf_raw_url: _rawUrl, pdf_key: _key, pdf_size: _size, ...publicResult } = result;
+
     return NextResponse.json(
-      { success: true, data: result, warnings: warnings.length > 0 ? warnings : undefined },
+      { success: true, data: publicResult, warnings: warnings.length > 0 ? warnings : undefined },
       { status: 201 }
     );
   } catch (error) {

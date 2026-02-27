@@ -152,7 +152,7 @@ export function AdvogadosDialog({ advogado, open, onOpenChangeAction, onSuccessA
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>{isEditing ? 'Editar Advogado' : 'Novo Advogado'}</DialogTitle>
           <DialogDescription>
