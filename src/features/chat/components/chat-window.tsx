@@ -241,7 +241,7 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
         } else {
           setAudioCallOpen(true);
         }
-      } else {
+      } else if (!result.success) {
         console.error("Erro ao iniciar chamada:", result.error || result.message);
         toast.error("Erro ao iniciar chamada", {
           description: result.error || result.message,

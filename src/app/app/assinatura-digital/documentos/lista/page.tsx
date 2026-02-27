@@ -20,7 +20,7 @@ function DocumentosLoading() {
           <Skeleton key={i} className="h-24 w-full" />
         ))}
       </div>
-      <Skeleton className="h-[400px] w-full" />
+      <Skeleton className="h-100 w-full" />
     </div>
   );
 }
