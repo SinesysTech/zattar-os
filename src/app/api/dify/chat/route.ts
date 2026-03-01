@@ -50,6 +50,15 @@ export async function POST(req: NextRequest) {
 
     const stream = result.value;
 
+    // Cancelar o stream upstream se o cliente desconectar
+    req.signal.addEventListener('abort', () => {
+      try {
+        stream.cancel();
+      } catch {
+        // Stream já foi fechado
+      }
+    });
+
     // Retorna o stream como resposta SSE
     return new Response(stream, {
       headers: {

@@ -437,6 +437,10 @@ export async function listDocumentos(
     throw new Error(`Erro ao listar documentos: ${docResult.error.message}`);
   }
 
+  if (assResult.error) {
+    console.error('[listDocumentos] Erro ao listar assinaturas de formulário:', assResult.error.message);
+  }
+
   // Mapear documentos do editor
   const documentosEditor = (docResult.data ?? []).map((doc) => {
     const assinantes = doc.assinantes || [];
@@ -454,6 +458,7 @@ export async function listDocumentos(
   });
 
   // Mapear assinaturas de formulário para o formato de DocumentoListItem
+  // O status na tabela é 'concluida' (feminino) — normalizar para 'concluido' do enum de documentos
   const assinaturasFormulario = (assResult.data ?? []).map((ass) => {
     const clienteRaw = ass.clientes as unknown;
     const clienteNome = clienteRaw && typeof clienteRaw === 'object' && 'nome' in clienteRaw
@@ -461,13 +466,22 @@ export async function listDocumentos(
       : Array.isArray(clienteRaw) && clienteRaw.length > 0
         ? (clienteRaw[0] as { nome: string }).nome
         : undefined;
+
+    const statusRaw = (ass.status ?? 'concluida') as string;
+    const statusNormalizado = statusRaw === 'concluida' || statusRaw === 'concluido'
+      ? 'concluido' as const
+      : statusRaw === 'cancelada' || statusRaw === 'cancelado'
+        ? 'cancelado' as const
+        : 'concluido' as const;
+    const isConcluido = statusNormalizado === 'concluido';
+
     return {
       id: ass.id,
       documento_uuid: `ass-${ass.id}`,
       titulo: clienteNome
         ? `Contrato Assinado - ${clienteNome}`
         : `Contrato Assinado - ${ass.protocolo}`,
-      status: 'concluido' as const,
+      status: statusNormalizado,
       selfie_habilitada: false,
       pdf_original_url: ass.pdf_url,
       pdf_final_url: null,
@@ -478,7 +492,7 @@ export async function listDocumentos(
       updated_at: ass.data_assinatura,
       contrato_id: ass.contrato_id ?? null,
       _assinantes_count: 1,
-      _assinantes_concluidos: 1,
+      _assinantes_concluidos: isConcluido ? 1 : 0,
       _origem: 'formulario' as const,
       _cliente_nome: clienteNome || undefined,
       _protocolo: ass.protocolo,

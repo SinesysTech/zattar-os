@@ -202,11 +202,17 @@ export default function VisualizacaoPdfStep() {
       // contrato_id pode ser null quando salvar-acao retorna 404 ou não cria contrato.
       const contratoId = dadosContrato.contrato_id;
 
+      // Extrair parte contrária do store (se disponível)
+      const parteContrariaDados = Array.isArray(dadosContrato.parte_contraria_dados)
+        ? (dadosContrato.parte_contraria_dados as Array<{ id: number; nome: string; cpf?: string | null; cnpj?: string | null }>)
+        : undefined;
+
       const payload = {
         template_id: templateId,
         cliente_id: dadosPessoais.cliente_id,
         contrato_id: contratoId,
         ...(fotoBase64 && { foto_base64: fotoBase64 }),
+        ...(parteContrariaDados && parteContrariaDados.length > 0 && { parte_contraria_dados: parteContrariaDados }),
       };
 
       console.log('[PDF-PREVIEW] Payload completo:', payload);

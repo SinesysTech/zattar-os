@@ -103,6 +103,8 @@ export async function GET(request: NextRequest): Promise<Response> {
 
   const stream = new ReadableStream({
     start(controller) {
+      let isClosed = false;
+
       // Enviar evento de conexão estabelecida
       const connectEvent = `event: connected\ndata: ${JSON.stringify({
         connectionId,
@@ -113,11 +115,13 @@ export async function GET(request: NextRequest): Promise<Response> {
 
       // Configurar ping para manter conexão viva
       const pingInterval = setInterval(() => {
+        if (isClosed) return;
         try {
           const pingEvent = `event: ping\ndata: ${JSON.stringify({ timestamp: Date.now() })}\n\n`;
           controller.enqueue(encoder.encode(pingEvent));
         } catch {
           clearInterval(pingInterval);
+          isClosed = true;
         }
       }, 30000); // Ping a cada 30 segundos
 
@@ -126,7 +130,14 @@ export async function GET(request: NextRequest): Promise<Response> {
         console.log(`[MCP API] Conexão ${connectionId} encerrada`);
         clearInterval(pingInterval);
         activeConnections.delete(connectionId);
-        controller.close();
+        if (!isClosed) {
+          isClosed = true;
+          try {
+            controller.close();
+          } catch {
+            // Stream já foi fechado pelo runtime
+          }
+        }
       });
 
       // Armazenar conexão

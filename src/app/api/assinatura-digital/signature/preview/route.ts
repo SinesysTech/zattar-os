@@ -9,6 +9,12 @@ const schema = z.object({
   contrato_id: z.number().optional().nullable(),
   template_id: z.string().min(1),
   foto_base64: z.string().optional().nullable(),
+  parte_contraria_dados: z.array(z.object({
+    id: z.number(),
+    nome: z.string(),
+    cpf: z.string().optional().nullable(),
+    cnpj: z.string().optional().nullable(),
+  })).optional(),
 });
 
 export async function POST(request: NextRequest) {
