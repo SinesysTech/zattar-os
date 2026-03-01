@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useFormularioStore } from "../../store";
 import FormStepLayout from "../form/form-step-layout";
 import { toast } from "sonner";
@@ -27,11 +27,14 @@ export default function GeolocationStep() {
     getTotalSteps,
   } = useFormularioStore();
 
+  // Ref para evitar state updates após componente desmontar
+  const mountedRef = useRef(true);
+
   /**
    * Captura geolocalização usando API nativa do navegador.
    * Solicita permissão ao usuário e obtém coordenadas GPS de alta precisão.
    */
-  const handleCaptureLocation = () => {
+  const handleCaptureLocation = useCallback(() => {
     // Verificar se API está disponível no navegador
     if (!navigator.geolocation) {
       console.error("❌ API de geolocalização não disponível no navegador");
@@ -40,11 +43,7 @@ export default function GeolocationStep() {
       return;
     }
 
-    console.log("🌍 Iniciando captura de geolocalização...", {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0,
-    });
+    console.log("🌍 Iniciando captura de geolocalização...");
 
     setLoading(true);
     setError(null);
@@ -52,6 +51,8 @@ export default function GeolocationStep() {
     navigator.geolocation.getCurrentPosition(
       // Success callback
       (position) => {
+        if (!mountedRef.current) return;
+
         const { latitude, longitude, accuracy } = position.coords;
         const timestamp = new Date(position.timestamp).toISOString();
 
@@ -60,10 +61,6 @@ export default function GeolocationStep() {
           longitude,
           accuracy: `${accuracy.toFixed(1)}m`,
           timestamp,
-          altitude: position.coords.altitude,
-          altitudeAccuracy: position.coords.altitudeAccuracy,
-          heading: position.coords.heading,
-          speed: position.coords.speed,
         });
 
         // Salvar no store
@@ -75,13 +72,11 @@ export default function GeolocationStep() {
       },
       // Error callback
       (err) => {
+        if (!mountedRef.current) return;
+
         setLoading(false);
 
-        console.error("❌ Erro ao capturar geolocalização:", {
-          code: err.code,
-          message: err.message,
-          timestamp: new Date().toISOString(),
-        });
+        console.error("❌ Erro ao capturar geolocalização:", `code=${err.code}`, err.message);
 
         // Mapear códigos de erro para mensagens amigáveis
         switch (err.code) {
@@ -90,32 +85,28 @@ export default function GeolocationStep() {
               "Permissao negada. Por favor, permita o acesso a localizacao nas configuracoes do navegador."
             );
             toast.error("Permissao de localizacao negada");
-            console.warn("⚠️ Usuário negou permissão de geolocalização. Verifique configurações do navegador.");
             break;
           case 2: // POSITION_UNAVAILABLE
             setError("Localizacao indisponivel. Verifique se o GPS esta ativado.");
             toast.error("GPS indisponivel");
-            console.warn("⚠️ Posição GPS indisponível. Verifique se GPS está ativado e se há sinal.");
             break;
           case 3: // TIMEOUT
             setError("Tempo esgotado ao tentar obter localizacao. Tente novamente.");
             toast.error("Timeout ao capturar localizacao");
-            console.warn("⚠️ Timeout ao capturar geolocalização. Rede ou GPS podem estar lentos.");
             break;
           default:
             setError("Erro desconhecido ao capturar localizacao.");
             toast.error("Erro ao capturar localizacao");
-            console.error("❌ Erro desconhecido:", err);
         }
       },
       // Options
       {
         enableHighAccuracy: true, // Solicitar GPS de alta precisão
-        timeout: 10000, // Timeout de 10 segundos
-        maximumAge: 0, // Não usar cache, sempre obter posição atual
+        timeout: 30000, // Timeout de 30 segundos (GPS pode demorar em dispositivos móveis)
+        maximumAge: 60000, // Aceitar posição de até 1 minuto atrás
       }
     );
-  };
+  }, [setGeolocation]);
 
   /**
    * Permite retry em caso de erro.
@@ -157,22 +148,19 @@ export default function GeolocationStep() {
    * Caso contrário, captura automaticamente para melhor UX.
    */
   useEffect(() => {
-    console.log("📍 GeolocationStep montado - verificando estado:", {
-      latitudeExistente: latitude,
-      longitudeExistente: longitude,
-      accuracyExistente: geolocationAccuracy,
-      timestampExistente: geolocationTimestamp,
-    });
+    mountedRef.current = true;
 
     // Se já tem dados no store, marcar como capturado
     if (latitude !== null && latitude !== undefined && longitude !== null && longitude !== undefined) {
-      console.log("✅ Geolocalização já capturada anteriormente, reutilizando dados do store");
       setCaptured(true);
     } else {
-      console.log("🌍 Geolocalização não encontrada no store, iniciando captura automática...");
       // Auto-capturar ao montar
       handleCaptureLocation();
     }
+
+    return () => {
+      mountedRef.current = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Executar apenas uma vez ao montar
 

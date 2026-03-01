@@ -1,25 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getClientIp } from '@/lib/utils/get-client-ip';
 
 export async function GET(request: NextRequest) {
-  const headers = request.headers;
-  let ip = 'unknown';
-  let source = 'none';
+  let ip = getClientIp(request);
+  let source = 'headers';
 
-  if (headers.get('x-forwarded-for')) {
-    ip = headers.get('x-forwarded-for')!.split(',')[0].trim();
-    source = 'x-forwarded-for';
-  } else if (headers.get('x-real-ip')) {
-    ip = headers.get('x-real-ip')!;
-    source = 'x-real-ip';
-  } else if (headers.get('cf-connecting-ip')) {
-    ip = headers.get('cf-connecting-ip')!;
-    source = 'cf-connecting-ip';
-  } else if (headers.get('x-client-ip')) {
-    ip = headers.get('x-client-ip')!;
-    source = 'x-client-ip';
-  } else if (headers.get('x-cluster-client-ip')) {
-    ip = headers.get('x-cluster-client-ip')!;
-    source = 'x-cluster-client-ip';
+  // Fallback: request.ip (disponível em plataformas como Vercel)
+  if (ip === 'unknown' && 'ip' in request && typeof (request as Record<string, unknown>).ip === 'string') {
+    ip = (request as Record<string, unknown>).ip as string;
+    source = 'request.ip';
+  }
+
+  // Fallback: host header para ambiente de desenvolvimento local
+  if (ip === 'unknown') {
+    const host = request.headers.get('host') || '';
+    if (host.startsWith('localhost') || host.startsWith('127.0.0.1') || host.startsWith('[::1]')) {
+      ip = '127.0.0.1';
+      source = 'localhost-fallback';
+    }
   }
 
   const warning = ip === 'unknown' ? 'IP não capturado. Verifique configuração de proxy/headers.' : undefined;
