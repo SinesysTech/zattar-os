@@ -47,6 +47,15 @@ export async function POST(req: NextRequest) {
 
         const stream = result.value;
 
+        // Cancelar o stream upstream se o cliente desconectar
+        req.signal.addEventListener('abort', () => {
+            try {
+                stream.cancel();
+            } catch {
+                // Stream já foi fechado
+            }
+        });
+
         return new Response(stream, {
             headers: {
                 'Content-Type': 'text/event-stream',

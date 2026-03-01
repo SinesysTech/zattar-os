@@ -65,6 +65,7 @@ export type TipoVariavel =
   | "segmento.descricao"
   // Sistema
   | "sistema.protocolo"
+  | "sistema.data_geracao"
   | "sistema.ip_cliente"
   | "sistema.user_agent"
   // Formulário

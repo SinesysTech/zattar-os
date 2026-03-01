@@ -93,7 +93,7 @@ create index if not exists idx_assinatura_digital_sessoes_created_at on public.a
 -- Assinaturas finalizadas
 create table if not exists public.assinatura_digital_assinaturas (
   id bigint generated always as identity primary key,
-  cliente_id bigint not null,
+  cliente_id bigint not null references public.clientes(id) on delete restrict,
   acao_id bigint not null,
   template_uuid text not null,
   segmento_id bigint not null references public.segmentos(id) on delete restrict,

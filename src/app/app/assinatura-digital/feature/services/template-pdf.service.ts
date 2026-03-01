@@ -135,11 +135,31 @@ function formatPhone(ddd?: string | null, numero?: string | null): string {
   return `(${ddd}) ${numero}`;
 }
 
+function formatFullPhone(phone?: string | null): string {
+  if (!phone) return "";
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length >= 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  }
+  return phone;
+}
+
 function formatDataNascimentoBR(value?: string | null): string {
   if (!value) return "";
   const d = new Date(value);
   if (isNaN(d.getTime())) return value;
   return d.toLocaleDateString("pt-BR", { timeZone: "UTC" });
+}
+
+function formatDataExtenso(date: Date): string {
+  const meses = [
+    "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+    "julho", "agosto", "setembro", "outubro", "novembro", "dezembro",
+  ];
+  const dia = date.getDate();
+  const mes = meses[date.getMonth()];
+  const ano = date.getFullYear();
+  return `${dia} de ${mes} de ${ano}`;
 }
 
 function resolveVariable(
@@ -151,9 +171,12 @@ function resolveVariable(
 
   const c = ctx.cliente;
   const end = c.endereco;
+  const clienteDados = extras.cliente_dados as Record<string, unknown> | undefined;
   const email = Array.isArray(c.emails) && c.emails.length > 0 ? c.emails[0] : "";
-  const celular = formatPhone(c.ddd_celular, c.numero_celular);
-  const telefone = formatPhone(c.ddd_residencial, c.numero_residencial);
+  const celular = formatPhone(c.ddd_celular, c.numero_celular)
+    || formatFullPhone(clienteDados?.celular as string);
+  const telefone = formatPhone(c.ddd_residencial, c.numero_residencial)
+    || formatFullPhone(clienteDados?.telefone as string);
   const estadoCivil = c.estado_civil ? (ESTADO_CIVIL_LABEL[c.estado_civil] ?? c.estado_civil) : "";
   const genero = c.genero ? (GENERO_LABEL[c.genero] ?? c.genero) : "";
 
@@ -210,6 +233,7 @@ function resolveVariable(
 
     // Sistema
     "sistema.protocolo": ctx.protocolo,
+    "sistema.data_geracao": formatDataExtenso(new Date()),
     "sistema.ip_cliente": ctx.ip,
     "sistema.user_agent": ctx.user_agent,
 
