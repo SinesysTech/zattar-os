@@ -236,10 +236,10 @@ async function generatePreSignPdf(
 ): Promise<GeneratedPdf> {
   const { cliente, template, formulario, segmento } = data;
 
-  // Extrair dados de parte contrária se disponível
-  const parteContrariaNome =
+  // Extrair dados completos de parte contrária se disponível
+  const parteContrariaDados =
     payload.parte_contraria_dados && payload.parte_contraria_dados.length > 0
-      ? payload.parte_contraria_dados[0].nome
+      ? payload.parte_contraria_dados[0]
       : undefined;
 
   // Preparar extras com dados completos do cliente se disponível
@@ -261,6 +261,13 @@ async function generatePreSignPdf(
       extras[`cliente.${key}`] = value;
     });
   }
+  // Incluir dados do formulário dinâmico (acao) com prefixo "acao."
+  if (payload.acao_dados) {
+    const acao = payload.acao_dados as Record<string, unknown>;
+    for (const [key, value] of Object.entries(acao)) {
+      extras[`acao.${key}`] = value;
+    }
+  }
 
   logger.debug("Gerando PDF pré-assinatura (sem imagens)", context);
   const pdfBuffer = await generatePdfFromTemplate(
@@ -272,8 +279,13 @@ async function generatePreSignPdf(
       protocolo,
       ip: payload.ip_address,
       user_agent: payload.user_agent,
-      parte_contraria: parteContrariaNome
-        ? { nome: parteContrariaNome }
+      parte_contraria: parteContrariaDados
+        ? {
+            nome: parteContrariaDados.nome,
+            cpf: parteContrariaDados.cpf,
+            cnpj: parteContrariaDados.cnpj,
+            telefone: parteContrariaDados.telefone,
+          }
         : undefined,
     },
     extras,
@@ -321,10 +333,10 @@ async function generateFinalPdf(
 ): Promise<GeneratedPdf> {
   const { cliente, template, formulario, segmento } = data;
 
-  // Extrair dados de parte contrária se disponível
-  const parteContrariaNome =
+  // Extrair dados completos de parte contrária se disponível
+  const parteContrariaDados2 =
     payload.parte_contraria_dados && payload.parte_contraria_dados.length > 0
-      ? payload.parte_contraria_dados[0].nome
+      ? payload.parte_contraria_dados[0]
       : undefined;
 
   // Preparar extras
@@ -344,6 +356,12 @@ async function generateFinalPdf(
       extras[`cliente.${key}`] = value;
     });
   }
+  if (payload.acao_dados) {
+    const acao = payload.acao_dados as Record<string, unknown>;
+    for (const [key, value] of Object.entries(acao)) {
+      extras[`acao.${key}`] = value;
+    }
+  }
 
   logger.debug("Gerando PDF com assinatura e foto", context);
   const pdfBufferWithImages = await generatePdfFromTemplate(
@@ -355,8 +373,13 @@ async function generateFinalPdf(
       protocolo,
       ip: payload.ip_address,
       user_agent: payload.user_agent,
-      parte_contraria: parteContrariaNome
-        ? { nome: parteContrariaNome }
+      parte_contraria: parteContrariaDados2
+        ? {
+            nome: parteContrariaDados2.nome,
+            cpf: parteContrariaDados2.cpf,
+            cnpj: parteContrariaDados2.cnpj,
+            telefone: parteContrariaDados2.telefone,
+          }
         : undefined,
     },
     extras,

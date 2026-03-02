@@ -81,14 +81,28 @@ export async function generatePreview(
     ativo: true,
   };
 
-  // Extrair dados de parte contrária se disponível (only in FinalizePayload)
-  const isFinalizePayload = "parte_contraria_dados" in payload;
-  const parteContrariaNome =
-    isFinalizePayload &&
+  // Extrair dados completos de parte contrária se disponível
+  const parteContrariaDados =
+    "parte_contraria_dados" in payload &&
     payload.parte_contraria_dados &&
     payload.parte_contraria_dados.length > 0
-      ? payload.parte_contraria_dados[0].nome
+      ? payload.parte_contraria_dados[0]
       : undefined;
+
+  // Montar extras (incluir cliente_dados se disponível para resolver telefone etc.)
+  const extras: Record<string, unknown> = {
+    contrato_id: payload.contrato_id,
+  };
+  if ("cliente_dados" in payload && payload.cliente_dados) {
+    extras.cliente_dados = payload.cliente_dados;
+  }
+  // Incluir dados do formulário dinâmico (acao) com prefixo "acao."
+  if ("acao_dados" in payload && payload.acao_dados) {
+    const acao = payload.acao_dados as Record<string, unknown>;
+    for (const [key, value] of Object.entries(acao)) {
+      extras[`acao.${key}`] = value;
+    }
+  }
 
   logger.debug("Gerando PDF de preview", context);
   const pdfBuffer = await generatePdfFromTemplate(
@@ -98,11 +112,16 @@ export async function generatePreview(
       segmento: dummySegmento,
       formulario: dummyFormulario,
       protocolo: "PREVIEW",
-      parte_contraria: parteContrariaNome
-        ? { nome: parteContrariaNome }
+      parte_contraria: parteContrariaDados
+        ? {
+            nome: parteContrariaDados.nome,
+            cpf: parteContrariaDados.cpf,
+            cnpj: parteContrariaDados.cnpj,
+            telefone: parteContrariaDados.telefone,
+          }
         : undefined,
     },
-    { contrato_id: payload.contrato_id },
+    extras,
     { fotoBase64: payload.foto_base64 || undefined }
   );
 

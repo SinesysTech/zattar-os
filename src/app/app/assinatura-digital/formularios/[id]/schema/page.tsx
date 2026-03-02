@@ -145,7 +145,7 @@ export default function FormularioSchemaPage({ params }: PageProps) {
           <Skeleton className="h-4 w-96" />
         </div>
         
-        <div className="flex-1 min-h-0 grid grid-cols-[250px_1fr_350px] gap-4">
+        <div className="flex-1 min-h-0 grid grid-cols-[280px_1fr_320px] gap-4">
           <Skeleton className="h-full w-full" />
           <Skeleton className="h-full w-full" />
           <Skeleton className="h-full w-full" />

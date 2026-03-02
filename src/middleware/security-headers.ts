@@ -177,8 +177,8 @@ export function buildCSPDirectives(nonce?: string): string {
  */
 export function buildPermissionsPolicy(): string {
   const policies: Record<string, string> = {
-    // Desabilitados - não utilizados pela aplicação
-    geolocation: "()",
+    // Geolocalização permitida para assinatura digital
+    geolocation: "(self)",
     camera: "(self)", // Dyte precisa de acesso via getUserMedia
     microphone: "(self)", // Dyte precisa de acesso via getUserMedia
     payment: "()",

@@ -191,7 +191,10 @@ export interface PreviewPayload {
     nome: string;
     cpf?: string | null;
     cnpj?: string | null;
+    telefone?: string | null;
   }>;
+  /** Dados do formulário dinâmico (campos acao.*) para resolução de variáveis no PDF */
+  acao_dados?: Record<string, unknown>;
 }
 
 /**
@@ -223,13 +226,16 @@ export interface FinalizePayload {
     telefone?: string | null;
     endereco?: string;
   };
-  /** Partes contrárias para contratos (nome, CPF/CNPJ) */
+  /** Partes contrárias para contratos (nome, CPF/CNPJ, telefone) */
   parte_contraria_dados?: Array<{
     id: number;
     nome: string;
     cpf?: string | null;
     cnpj?: string | null;
+    telefone?: string | null;
   }>;
+  /** Dados do formulário dinâmico (campos acao.*) para resolução de variáveis no PDF */
+  acao_dados?: Record<string, unknown>;
 
   assinatura_base64: string;
   foto_base64?: string | null;

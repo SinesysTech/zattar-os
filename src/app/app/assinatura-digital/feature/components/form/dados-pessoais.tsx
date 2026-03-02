@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Info } from 'lucide-react';
@@ -90,12 +90,13 @@ export default function DadosPessoais() {
 
   // Validação manual via safeParse para contornar dessincronização do
   // formState.isValid com inputs mascarados (IMaskInput).
-  // form.watch() subscreve a todas as mudanças de campo e safeParse valida
-  // diretamente contra o schema Zod, independente do estado interno do RHF.
+  // form.watch() subscreve a todas as mudanças de campo e re-renderiza o
+  // componente a cada alteração. safeParse valida diretamente contra o
+  // schema Zod, independente do estado interno do RHF.
+  // NOTA: Não usar useMemo aqui — form.watch() retorna a mesma referência
+  // de objeto, então useMemo nunca recomputaria após form.reset().
   const watchedValues = form.watch();
-  const isFormValid = useMemo(() => {
-    return dadosPessoaisSchema.safeParse(watchedValues).success;
-  }, [watchedValues]);
+  const isFormValid = dadosPessoaisSchema.safeParse(watchedValues).success;
 
 
 

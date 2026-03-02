@@ -31,6 +31,16 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectGroup,
+  SelectLabel,
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
 import type { TemplateCampo, TipoVariavel } from '../../types';
@@ -82,6 +92,16 @@ const FIELD_TYPE_LABEL: Partial<Record<TemplateCampo['tipo'] | 'telefone' | 'end
   texto_composto: 'Texto Composto',
 };
 
+// Agrupar variáveis por categoria
+const VARIABLES_BY_CATEGORY = AVAILABLE_VARIABLES.reduce(
+  (acc, item) => {
+    if (!acc[item.category]) acc[item.category] = [];
+    acc[item.category].push(item);
+    return acc;
+  },
+  {} as Record<string, typeof AVAILABLE_VARIABLES>,
+);
+
 interface PropertiesPopoverProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -111,62 +131,57 @@ export default function PropertiesPopover({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-80 overflow-auto p-4 pt-8">
-        <SheetHeader className="p-0">
+      <SheetContent side="right" className="w-80 overflow-y-auto p-5">
+        <SheetHeader className="p-0 pb-1">
           <div className="flex items-center justify-between">
-            <SheetTitle className="text-sm font-semibold">Propriedades do Campo</SheetTitle>
+            <SheetTitle className="text-base font-semibold">Propriedades do Campo</SheetTitle>
             {selectedFieldTypeLabel && (
               <Badge variant="outline" className="text-xs">
                 {selectedFieldTypeLabel}
               </Badge>
             )}
           </div>
-          <SheetDescription>Editar propriedades do campo selecionado</SheetDescription>
+          <SheetDescription className="text-xs">
+            Editar propriedades do campo selecionado
+          </SheetDescription>
         </SheetHeader>
 
-        <div className="space-y-4 pt-4">
+        <Separator className="my-3" />
+
+        <div className="space-y-5">
           {/* Informacoes Gerais */}
           <Collapsible defaultOpen>
-            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium hover:bg-muted/50">
+            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm font-medium text-foreground hover:bg-muted/50">
               <div className="flex items-center gap-2">
-                <Info className="h-4 w-4" aria-hidden="true" />
+                <Info className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
                 <span>Informações gerais</span>
               </div>
-              <ChevronsUpDown className="h-4 w-4" aria-hidden="true" />
+              <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
             </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-3 px-2 py-2">
+            <CollapsibleContent className="space-y-3 px-2 pt-2">
               {/* Variavel selector (ocultar para texto_composto) */}
               {selectedField.tipo !== 'texto_composto' && (
-                <div className="space-y-2">
-                  <Label htmlFor="field-variavel" className="text-xs font-medium">Variável</Label>
-                  <Popover>
+                <div className="space-y-1.5">
+                  <Label htmlFor="field-variavel" className="text-xs text-muted-foreground">Variável</Label>
+                  <Popover modal>
                     <PopoverTrigger asChild>
                       <Button
                         id="field-variavel"
                         variant="outline"
                         role="combobox"
-                        className="h-8 w-full justify-between text-sm font-normal"
+                        className="h-8 w-full justify-between text-xs font-normal"
                         aria-label="Selecionar variável vinculada ao campo"
                       >
                         <span className="truncate">{selectedVariableLabel}</span>
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        <ChevronsUpDown className="ml-2 h-3.5 w-3.5 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-75 p-0">
+                    <PopoverContent className="w-72 p-0" align="start" side="bottom" sideOffset={4}>
                       <Command>
-                        <CommandInput placeholder="Buscar variável..." />
-                        <CommandList>
+                        <CommandInput placeholder="Buscar variável..." className="h-8 text-xs" />
+                        <CommandList className="max-h-64">
                           <CommandEmpty>Nenhuma variável encontrada.</CommandEmpty>
-                          {Object.entries(
-                            AVAILABLE_VARIABLES.reduce(
-                              (acc, item) => {
-                                if (!acc[item.category]) acc[item.category] = [];
-                                acc[item.category].push(item);
-                                return acc;
-                              },
-                              {} as Record<string, typeof AVAILABLE_VARIABLES>,
-                            ),
-                          ).map(([category, items]) => (
+                          {Object.entries(VARIABLES_BY_CATEGORY).map(([category, items]) => (
                             <CommandGroup key={category} heading={category}>
                               {items.map((item) => (
                                 <CommandItem
@@ -175,13 +190,14 @@ export default function PropertiesPopover({
                                   onSelect={() => {
                                     onUpdateField({
                                       variavel: item.value,
-                                      nome: item.label
+                                      nome: item.label,
                                     });
                                   }}
+                                  className="text-xs"
                                 >
                                   <Check
                                     className={cn(
-                                      'mr-2 h-4 w-4',
+                                      'mr-2 h-3.5 w-3.5',
                                       selectedField.variavel === item.value
                                         ? 'opacity-100'
                                         : 'opacity-0',
@@ -196,13 +212,13 @@ export default function PropertiesPopover({
                       </Command>
                     </PopoverContent>
                   </Popover>
-                  <p className="text-[11px] text-muted-foreground">
-                    O nome do campo será automaticamente definido como o nome da variável
+                  <p className="text-[11px] leading-tight text-muted-foreground">
+                    O nome será definido automaticamente pela variável
                   </p>
                 </div>
               )}
-              <div className="space-y-2">
-                <Label htmlFor="field-ordem" className="text-xs font-medium">Ordem de Exibição</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="field-ordem" className="text-xs text-muted-foreground">Ordem de Exibição</Label>
                 <Input
                   id="field-ordem"
                   type="number"
@@ -211,10 +227,10 @@ export default function PropertiesPopover({
                   onChange={(event) =>
                     onUpdateField({ ordem: parseInt(event.target.value, 10) || 1 })
                   }
-                  className="h-8 text-sm"
+                  className="h-8 text-xs"
                   placeholder="1, 2, 3..."
                 />
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-[11px] leading-tight text-muted-foreground">
                   Define a ordem em que o campo aparece no PDF
                 </p>
               </div>
@@ -223,17 +239,17 @@ export default function PropertiesPopover({
 
           {/* Posicionamento */}
           <Collapsible defaultOpen>
-            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium hover:bg-muted/50">
+            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm font-medium text-foreground hover:bg-muted/50">
               <div className="flex items-center gap-2">
-                <Move className="h-4 w-4" aria-hidden="true" />
+                <Move className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
                 <span>Posicionamento</span>
               </div>
-              <ChevronsUpDown className="h-4 w-4" aria-hidden="true" />
+              <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-3 px-2 pt-2">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label htmlFor="field-pos-x" className="text-xs font-medium">Posição X</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1.5">
+                  <Label htmlFor="field-pos-x" className="text-xs text-muted-foreground">Posição X</Label>
                   <Input
                     id="field-pos-x"
                     type="number"
@@ -246,11 +262,11 @@ export default function PropertiesPopover({
                         },
                       })
                     }
-                    className="h-8 text-sm"
+                    className="h-8 text-xs"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="field-pos-y" className="text-xs font-medium">Posição Y</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="field-pos-y" className="text-xs text-muted-foreground">Posição Y</Label>
                   <Input
                     id="field-pos-y"
                     type="number"
@@ -263,13 +279,13 @@ export default function PropertiesPopover({
                         },
                       })
                     }
-                    className="h-8 text-sm"
+                    className="h-8 text-xs"
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label htmlFor="field-width" className="text-xs font-medium">Largura</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1.5">
+                  <Label htmlFor="field-width" className="text-xs text-muted-foreground">Largura</Label>
                   <Input
                     id="field-width"
                     type="number"
@@ -282,11 +298,11 @@ export default function PropertiesPopover({
                         },
                       })
                     }
-                    className="h-8 text-sm"
+                    className="h-8 text-xs"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="field-height" className="text-xs font-medium">Altura</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="field-height" className="text-xs text-muted-foreground">Altura</Label>
                   <Input
                     id="field-height"
                     type="number"
@@ -299,7 +315,7 @@ export default function PropertiesPopover({
                         },
                       })
                     }
-                    className="h-8 text-sm"
+                    className="h-8 text-xs"
                   />
                 </div>
               </div>
@@ -309,16 +325,16 @@ export default function PropertiesPopover({
           {/* Estilo (para campos de texto e texto_composto) */}
           {(selectedField.tipo === 'texto' || selectedField.tipo === 'texto_composto') && (
             <Collapsible>
-              <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium hover:bg-muted/50">
+              <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm font-medium text-foreground hover:bg-muted/50">
                 <div className="flex items-center gap-2">
-                  <Palette className="h-4 w-4" aria-hidden="true" />
+                  <Palette className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
                   <span>Estilo</span>
                 </div>
-                <ChevronsUpDown className="h-4 w-4" aria-hidden="true" />
+                <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
               </CollapsibleTrigger>
-              <CollapsibleContent className="px-2 pt-2">
-                <div className="space-y-2">
-                  <Label htmlFor="field-font-size" className="text-xs font-medium">Tamanho da fonte</Label>
+              <CollapsibleContent className="space-y-3 px-2 pt-2">
+                <div className="space-y-1.5">
+                  <Label htmlFor="field-font-size" className="text-xs text-muted-foreground">Tamanho da fonte</Label>
                   <Input
                     id="field-font-size"
                     type="number"
@@ -331,50 +347,57 @@ export default function PropertiesPopover({
                         },
                       })
                     }
-                    className="h-8 text-sm"
+                    className="h-8 text-xs"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="font-family-select" className="text-xs font-medium">
+                <div className="space-y-1.5">
+                  <Label htmlFor="font-family-select" className="text-xs text-muted-foreground">
                     Família da fonte
                   </Label>
-                  <select
-                    id="font-family-select"
+                  <Select
                     value={selectedField.estilo?.fonte ?? 'Helvetica'}
-                    onChange={(event) =>
+                    onValueChange={(value) =>
                       onUpdateField({
                         estilo: {
                           ...(selectedField.estilo ?? {}),
-                          fonte: event.target.value,
+                          fonte: value,
                         },
                       })
                     }
-                    className="w-full h-8 text-sm rounded-md border border-input bg-background px-3 py-1"
-                    aria-label="Selecionar família da fonte"
                   >
-                    <option value="Helvetica">Helvetica</option>
-                    <option value="Open Sans">Open Sans</option>
-                    <option value="Times-Roman">Times New Roman</option>
-                    <option value="Courier">Courier</option>
-                  </select>
+                    <SelectTrigger id="font-family-select" className="h-8 text-xs">
+                      <SelectValue placeholder="Selecionar fonte" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel className="text-xs">Fontes disponíveis</SelectLabel>
+                        <SelectItem value="Helvetica" className="text-xs">Helvetica</SelectItem>
+                        <SelectItem value="Open Sans" className="text-xs">Open Sans</SelectItem>
+                        <SelectItem value="Times-Roman" className="text-xs">Times New Roman</SelectItem>
+                        <SelectItem value="Courier" className="text-xs">Courier</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </div>
               </CollapsibleContent>
             </Collapsible>
           )}
+
+          <Separator />
 
           {/* Botao Editar Texto Composto */}
           {selectedField.tipo === 'texto_composto' && onEditRichText && (
             <Button
               variant="outline"
               size="sm"
-              className="w-full gap-2"
+              className="w-full gap-2 text-xs"
               onClick={() => {
                 onEditRichText(selectedField.id);
                 onOpenChange(false);
               }}
             >
-              <Edit className="h-4 w-4" />
+              <Edit className="h-3.5 w-3.5" />
               Editar Texto Composto
             </Button>
           )}
@@ -383,10 +406,10 @@ export default function PropertiesPopover({
           <Button
             variant="destructive"
             size="sm"
-            className="w-full gap-2"
+            className="w-full gap-2 text-xs"
             onClick={() => onDeleteField(selectedField.id)}
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-3.5 w-3.5" />
             Deletar campo
           </Button>
         </div>

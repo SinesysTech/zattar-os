@@ -266,9 +266,9 @@ export default function FieldPropertiesPanel({
     return (
       <div className="h-full flex items-center justify-center border rounded-lg bg-card">
         <div className="text-center space-y-2 px-6">
-          <Info className="size-10 text-muted-foreground/40 mx-auto" />
-          <p className="text-sm font-medium text-muted-foreground">Nenhum campo selecionado</p>
-          <p className="text-xs text-muted-foreground/70">
+          <Info className="size-8 text-muted-foreground/40 mx-auto" />
+          <p className="text-xs font-medium text-muted-foreground">Nenhum campo selecionado</p>
+          <p className="text-[11px] text-muted-foreground/70">
             Selecione um campo no canvas para editar suas propriedades
           </p>
         </div>
@@ -283,26 +283,26 @@ export default function FieldPropertiesPanel({
   const availableFields = allFieldIds.filter(id => id !== field.id);
 
   return (
-    <div className="h-full flex flex-col border rounded-lg bg-card">
-      <div className="shrink-0 px-4 pt-4 pb-3">
-        <h3 className="text-sm font-semibold">Propriedades do Campo</h3>
-        <p className="text-xs text-muted-foreground mt-0.5 truncate">{field.label}</p>
+    <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
+      <div className="shrink-0 px-3 pt-3 pb-2 border-b">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Propriedades do Campo</h3>
+        <p className="text-xs text-foreground mt-0.5 truncate font-medium">{field.label}</p>
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleApply)} className="flex-1 flex flex-col overflow-hidden">
           <ScrollArea className="flex-1">
-            <div className="px-4 space-y-3">
+            <div className="px-3 pt-2 space-y-3 [&_[data-slot=form-item-label]]:text-xs [&_[data-slot=form-item-label]]:text-muted-foreground [&_input]:text-xs [&_input]:h-8 [&_textarea]:text-xs [&_[data-slot=select-trigger]]:text-xs [&_[data-slot=select-trigger]]:h-8">
             {/* Seção Básico */}
             <Collapsible
               open={expandedSections.has('basico')}
               onOpenChange={() => toggleSection('basico')}
             >
-              <CollapsibleTrigger className="flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors">
-                <span className="text-sm font-semibold flex-1 text-left">Básico</span>
+              <CollapsibleTrigger className="flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors">
+                <span className="text-xs font-semibold flex-1 text-left">Básico</span>
                 <ChevronDown
                   className={cn(
-                    "w-4 h-4 transition-transform",
+                    "size-3.5 transition-transform text-muted-foreground",
                     expandedSections.has('basico') && "transform rotate-180"
                   )}
                 />
@@ -503,11 +503,11 @@ export default function FieldPropertiesPanel({
               open={expandedSections.has('validacao')}
               onOpenChange={() => toggleSection('validacao')}
             >
-              <CollapsibleTrigger className="flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors">
-                <span className="text-sm font-semibold flex-1 text-left">Validação</span>
+              <CollapsibleTrigger className="flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors">
+                <span className="text-xs font-semibold flex-1 text-left">Validação</span>
                 <ChevronDown
                   className={cn(
-                    "w-4 h-4 transition-transform",
+                    "size-3.5 transition-transform text-muted-foreground",
                     expandedSections.has('validacao') && "transform rotate-180"
                   )}
                 />
@@ -652,7 +652,7 @@ export default function FieldPropertiesPanel({
                     <span className="text-sm font-semibold flex-1 text-left">Condicional</span>
                     <ChevronDown
                       className={cn(
-                        "w-4 h-4 transition-transform",
+                        "size-3.5 transition-transform text-muted-foreground",
                         expandedSections.has('condicional') && "transform rotate-180"
                       )}
                     />
@@ -761,7 +761,7 @@ export default function FieldPropertiesPanel({
                     </span>
                     <ChevronDown
                       className={cn(
-                        "w-4 h-4 transition-transform",
+                        "size-3.5 transition-transform text-muted-foreground",
                         expandedSections.has('opcoes') && "transform rotate-180"
                       )}
                     />
@@ -854,14 +854,14 @@ export default function FieldPropertiesPanel({
                     <span className="text-sm font-semibold flex-1 text-left">Busca de Entidade</span>
                     <ChevronDown
                       className={cn(
-                        "w-4 h-4 transition-transform",
+                        "size-3.5 transition-transform text-muted-foreground",
                         expandedSections.has('entitySearch') && "transform rotate-180"
                       )}
                     />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="pt-2 space-y-3">
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium">Buscar por</Label>
+                      <Label className="text-xs text-muted-foreground">Buscar por</Label>
                       <div className="space-y-2">
                         {(['cpf', 'cnpj', 'nome'] as const).map((searchType) => {
                           const isRelevant = 
@@ -882,7 +882,7 @@ export default function FieldPropertiesPanel({
                                   }
                                 }}
                               />
-                              <Label className="text-sm font-normal capitalize">
+                              <Label className="text-xs font-normal capitalize">
                                 {searchType === 'cpf' ? 'CPF' : searchType === 'cnpj' ? 'CNPJ' : 'Nome'}
                               </Label>
                             </div>
@@ -893,7 +893,7 @@ export default function FieldPropertiesPanel({
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label className="text-sm font-medium">Mapeamento Auto-fill</Label>
+                        <Label className="text-xs text-muted-foreground">Mapeamento Auto-fill</Label>
                         <Button
                           type="button"
                           variant="outline"
@@ -975,13 +975,13 @@ export default function FieldPropertiesPanel({
           </div>
           </ScrollArea>
 
-          <div className="shrink-0 border-t px-4 py-3 flex gap-2">
+          <div className="shrink-0 border-t px-3 py-2.5 flex gap-2">
             <Button
               type="submit"
               size="sm"
-              className="flex-1"
+              className="flex-1 text-xs"
             >
-              <Save className="size-4" />
+              <Save className="size-3.5" />
               Aplicar
             </Button>
             <Button
@@ -989,8 +989,9 @@ export default function FieldPropertiesPanel({
               variant="destructive"
               size="sm"
               onClick={onDelete}
+              className="text-xs"
             >
-              <Trash2 className="size-4" />
+              <Trash2 className="size-3.5" />
               Deletar
             </Button>
           </div>

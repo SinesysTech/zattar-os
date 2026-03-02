@@ -82,6 +82,7 @@ function parseParteContraria(dados: Record<string, unknown>): ParteContrariaPayl
   ]);
 
   const tipoPessoaRaw = pickString(dados, [
+    'pc_tipo_pessoa',
     'parte_contraria_tipo_pessoa',
     'tipo_pessoa_parte_contraria',
     'tipo_pessoa',
@@ -90,7 +91,9 @@ function parseParteContraria(dados: Record<string, unknown>): ParteContrariaPayl
   const tipo_pessoa: 'pf' | 'pj' = tipoPessoaRaw?.toLowerCase() === 'pf' ? 'pf' : 'pj';
 
   // Busca por nome usando chaves explícitas
+  // Inclui prefixo pc_ (usado pelo formulário dinâmico com campos pc_nome, pc_cpf, etc.)
   let nome = pickString(dados, [
+    'pc_nome',
     'parte_contraria_nome',
     'nome_parte_contraria',
     'parte_contraria_razao_social',
@@ -130,10 +133,10 @@ function parseParteContraria(dados: Record<string, unknown>): ParteContrariaPayl
   }
 
   const cpf = normalizeDigits(
-    pickString(dados, ['parte_contraria_cpf', 'cpf_parte_contraria', 'cpf_empresa', 'cpfEmpresa', 'cpfParteContraria'])
+    pickString(dados, ['pc_cpf', 'parte_contraria_cpf', 'cpf_parte_contraria', 'cpf_empresa', 'cpfEmpresa', 'cpfParteContraria'])
   );
   const cnpj = normalizeDigits(
-    pickString(dados, ['parte_contraria_cnpj', 'cnpj_parte_contraria', 'cnpj_empresa', 'cnpj', 'cnpjEmpresa', 'cnpjParteContraria'])
+    pickString(dados, ['pc_cnpj', 'parte_contraria_cnpj', 'cnpj_parte_contraria', 'cnpj_empresa', 'cnpj', 'cnpjEmpresa', 'cnpjParteContraria'])
   );
 
   if (!nome && !cpf && !cnpj && !id) {
@@ -152,8 +155,8 @@ function parseParteContraria(dados: Record<string, unknown>): ParteContrariaPayl
     nome,
     cpf,
     cnpj,
-    email: pickString(dados, ['parte_contraria_email', 'email_parte_contraria', 'emailEmpresa', 'emailParteContraria']),
-    telefone: pickString(dados, ['parte_contraria_telefone', 'telefone_parte_contraria', 'telefoneEmpresa', 'telefoneParteContraria']),
+    email: pickString(dados, ['pc_email', 'parte_contraria_email', 'email_parte_contraria', 'emailEmpresa', 'emailParteContraria']),
+    telefone: pickString(dados, ['pc_telefone', 'parte_contraria_telefone', 'telefone_parte_contraria', 'telefoneEmpresa', 'telefoneParteContraria']),
     observacoes: pickString(dados, ['parte_contraria_observacoes', 'observacoes_parte_contraria']),
   };
 
@@ -170,7 +173,7 @@ function parseParteContraria(dados: Record<string, unknown>): ParteContrariaPayl
 async function upsertParteContraria(
   supabase: ReturnType<typeof createServiceClient>,
   parte: ParteContrariaPayload
-): Promise<{ id: number; nome: string; cpf?: string | null; cnpj?: string | null } | null> {
+): Promise<{ id: number; nome: string; cpf?: string | null; cnpj?: string | null; ddd_celular?: string | null; numero_celular?: string | null } | null> {
   const telefone = splitTelefone(parte.telefone);
 
   const baseUpdate: Record<string, unknown> = {
@@ -200,7 +203,7 @@ async function upsertParteContraria(
       .from('partes_contrarias')
       .update(baseUpdate)
       .eq('id', parte.id)
-      .select('id, nome, cpf, cnpj')
+      .select('id, nome, cpf, cnpj, ddd_celular, numero_celular')
       .single();
 
     if (!error && data) {
@@ -211,7 +214,7 @@ async function upsertParteContraria(
   if (parte.cpf) {
     const { data: existingPf } = await supabase
       .from('partes_contrarias')
-      .select('id, nome, cpf, cnpj')
+      .select('id, nome, cpf, cnpj, ddd_celular, numero_celular')
       .eq('cpf', parte.cpf)
       .maybeSingle();
 
@@ -220,7 +223,7 @@ async function upsertParteContraria(
         .from('partes_contrarias')
         .update(baseUpdate)
         .eq('id', existingPf.id)
-        .select('id, nome, cpf, cnpj')
+        .select('id, nome, cpf, cnpj, ddd_celular, numero_celular')
         .single();
       return updated ?? existingPf;
     }
@@ -229,7 +232,7 @@ async function upsertParteContraria(
   if (parte.cnpj) {
     const { data: existingPj } = await supabase
       .from('partes_contrarias')
-      .select('id, nome, cpf, cnpj')
+      .select('id, nome, cpf, cnpj, ddd_celular, numero_celular')
       .eq('cnpj', parte.cnpj)
       .maybeSingle();
 
@@ -238,7 +241,7 @@ async function upsertParteContraria(
         .from('partes_contrarias')
         .update(baseUpdate)
         .eq('id', existingPj.id)
-        .select('id, nome, cpf, cnpj')
+        .select('id, nome, cpf, cnpj, ddd_celular, numero_celular')
         .single();
       return updated ?? existingPj;
     }
@@ -247,7 +250,7 @@ async function upsertParteContraria(
   const { data: inserted, error: insertError } = await supabase
     .from('partes_contrarias')
     .insert(baseUpdate)
-    .select('id, nome, cpf, cnpj')
+    .select('id, nome, cpf, cnpj, ddd_celular, numero_celular')
     .single();
 
   if (insertError) {
@@ -303,7 +306,7 @@ export async function POST(request: NextRequest) {
 
     const { data: cliente, error: clienteError } = await supabase
       .from('clientes')
-      .select('id, nome, cpf, cnpj, emails')
+      .select('id, nome, cpf, cnpj, emails, ddd_celular, numero_celular, ddd_residencial, numero_residencial')
       .eq('id', payload.clienteId)
       .single();
 
@@ -456,6 +459,12 @@ export async function POST(request: NextRequest) {
           email: Array.isArray(cliente.emails) && cliente.emails.length > 0
             ? cliente.emails[0]
             : null,
+          celular: cliente.ddd_celular && cliente.numero_celular
+            ? `${cliente.ddd_celular}${cliente.numero_celular}`
+            : null,
+          telefone: cliente.ddd_residencial && cliente.numero_residencial
+            ? `${cliente.ddd_residencial}${cliente.numero_residencial}`
+            : null,
         },
         parte_contraria_dados: parteContraria
           ? [
@@ -464,6 +473,9 @@ export async function POST(request: NextRequest) {
                 nome: parteContraria.nome,
                 cpf: parteContraria.cpf ?? null,
                 cnpj: parteContraria.cnpj ?? null,
+                telefone: parteContraria.ddd_celular && parteContraria.numero_celular
+                  ? `(${parteContraria.ddd_celular}) ${parteContraria.numero_celular}`
+                  : null,
               },
             ]
           : [],

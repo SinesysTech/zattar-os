@@ -32,6 +32,7 @@ export interface ParteContraria {
   nome: string;
   cpf?: string | null;
   cnpj?: string | null;
+  telefone?: string | null;
 }
 
 // =============================================================================
@@ -72,6 +73,14 @@ export interface PreviewPayload {
   template_id: string;
   foto_base64?: string | null;
   request_id?: string | null;
+  parte_contraria_dados?: Array<{
+    id: number;
+    nome: string;
+    cpf?: string | null;
+    cnpj?: string | null;
+    telefone?: string | null;
+  }>;
+  acao_dados?: Record<string, unknown>;
 }
 
 export interface PreviewResult {
@@ -107,7 +116,9 @@ export interface FinalizePayload {
     nome: string;
     cpf?: string | null;
     cnpj?: string | null;
+    telefone?: string | null;
   }>;
+  acao_dados?: Record<string, unknown>;
 
   assinatura_base64: string;
   foto_base64?: string | null;
@@ -225,6 +236,7 @@ export interface AssinaturaDigitalRecord {
     nome: string;
     cpf?: string | null;
     cnpj?: string | null;
+    telefone?: string | null;
   }>;
 }
 
