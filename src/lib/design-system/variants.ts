@@ -803,10 +803,12 @@ export const CAPTURA_STATUS_LABELS: Record<string, string> = {
  * Obtém o label amigável para um tipo de parte.
  */
 export function getParteTipoLabel(tipoParte: string): string {
+  if (!tipoParte) return '';
   const normalized = tipoParte.toUpperCase().replace(/\s+/g, '_');
   return PARTE_TIPO_LABELS[normalized] ?? tipoParte
     .toLowerCase()
     .split('_')
+    .filter(Boolean)
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
