@@ -306,6 +306,7 @@ export {
   actionListDocumentos,
   actionDeleteDocumento,
   actionGetPresignedPdfUrl,
+  actionGetAssinatura,
 } from "./actions/documentos-actions";
 
 // Actions de Templates

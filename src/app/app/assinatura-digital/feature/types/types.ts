@@ -552,3 +552,53 @@ export interface UpsertAssinaturaDigitalDocumentoAncoraInput {
   w_norm: number;
   h_norm: number;
 }
+
+// =============================================================================
+// TIPOS PARA PÁGINA DE VERIFICAÇÃO
+// =============================================================================
+
+export interface SignatarioVerificacaoData {
+  id: number;
+  tipo: string;
+  nome?: string;
+  cpf?: string;
+  email?: string;
+  telefone?: string;
+  status: string;
+  concluidoEm?: string | null;
+  token?: string;
+  publicLink?: string;
+  assinaturaUrl?: string | null;
+  selfieUrl?: string | null;
+  rubricaUrl?: string | null;
+  ipAddress?: string | null;
+  userAgent?: string | null;
+  geolocation?: {
+    latitude?: number | null;
+    longitude?: number | null;
+    accuracy?: number | null;
+    timestamp?: string | null;
+  } | null;
+  dispositivoFingerprint?: Record<string, unknown> | null;
+  termosAceiteVersao?: string | null;
+  termosAceiteData?: string | null;
+}
+
+export interface DocumentoVerificacaoData {
+  tipo: "documento" | "formulario";
+  id: number;
+  uuid: string;
+  titulo: string;
+  status: string;
+  pdfUrl: string;
+  pdfOriginalUrl?: string | null;
+  pdfFinalUrl?: string | null;
+  hashOriginal?: string | null;
+  hashFinal?: string | null;
+  createdAt: string;
+  protocolo?: string | null;
+  clienteNome?: string | null;
+  clienteCpf?: string | null;
+  selfieHabilitada?: boolean;
+  signatarios: SignatarioVerificacaoData[];
+}

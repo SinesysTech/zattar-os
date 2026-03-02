@@ -1102,3 +1102,71 @@ export async function removeSignerFromDocument(
   if (delError)
     throw new Error(`Erro ao remover assinante: ${delError.message}`);
 }
+
+// =============================================================================
+// BUSCA DE ASSINATURA DE FORMULÁRIO (para página de verificação)
+// =============================================================================
+
+/**
+ * Busca uma assinatura de formulário por ID com dados do cliente.
+ *
+ * Usado pela página de verificação para exibir dados completos
+ * de assinaturas originadas do fluxo de formulários.
+ */
+export async function getAssinaturaById(id: number) {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from("assinatura_digital_assinaturas")
+    .select(
+      `
+      *,
+      clientes(id, nome, cpf, cnpj, emails, ddd_celular, numero_celular)
+    `
+    )
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") return null;
+    throw new Error(`Erro ao buscar assinatura: ${error.message}`);
+  }
+
+  return data as {
+    id: number;
+    cliente_id: number;
+    contrato_id: number | null;
+    template_uuid: string;
+    segmento_id: number;
+    formulario_id: number;
+    sessao_uuid: string;
+    protocolo: string;
+    assinatura_url: string;
+    foto_url: string | null;
+    pdf_url: string;
+    ip_address: string | null;
+    user_agent: string | null;
+    latitude: number | null;
+    longitude: number | null;
+    geolocation_accuracy: number | null;
+    geolocation_timestamp: string | null;
+    data_assinatura: string;
+    status: string;
+    hash_original_sha256: string | null;
+    hash_final_sha256: string | null;
+    termos_aceite_versao: string | null;
+    termos_aceite_data: string | null;
+    dispositivo_fingerprint_raw: Record<string, unknown> | null;
+    created_at: string;
+    updated_at: string;
+    clientes: {
+      id: number;
+      nome: string;
+      cpf: string | null;
+      cnpj: string | null;
+      emails: string | null;
+      ddd_celular: string | null;
+      numero_celular: string | null;
+    } | null;
+  };
+}

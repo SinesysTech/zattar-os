@@ -4,24 +4,19 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import type { Table as TanstackTable, SortingState, RowSelectionState, VisibilityState } from "@tanstack/react-table";
 import {
-  Copy,
   CheckCircle2,
   Clock,
   FileText,
   Plus,
   XCircle,
   Loader2,
-  ExternalLink,
   Download,
   Trash2,
 } from "lucide-react";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   DataTable,
   DataShell,
@@ -34,32 +29,14 @@ import { useDebounce } from "@/hooks/use-debounce";
 
 import {
   actionListDocumentos,
-  actionGetDocumento,
   actionGetPresignedPdfUrl,
   actionDeleteDocumento,
 } from "../../feature";
-import type { AssinaturaDigitalDocumentoStatus } from "../../feature/domain";
 import { createColumns, type DocumentoListItem } from "./components/columns";
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-
-type DocumentoCompleto = DocumentoListItem & {
-  assinantes: Array<{
-    id: number;
-    assinante_tipo: string;
-    dados_snapshot: Record<string, unknown>;
-    token: string;
-    status: "pendente" | "concluido";
-    concluido_em: string | null;
-  }>;
-  ancoras: Array<{
-    id: number;
-    tipo: "assinatura" | "rubrica";
-    pagina: number;
-  }>;
-};
 
 interface DocumentosTableWrapperProps {
   initialData?: DocumentoListItem[];
@@ -68,27 +45,6 @@ interface DocumentosTableWrapperProps {
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
-
-const STATUS_LABELS: Record<AssinaturaDigitalDocumentoStatus, string> = {
-  rascunho: "Rascunho",
-  pronto: "Pronto para Assinatura",
-  concluido: "Concluído",
-  cancelado: "Cancelado",
-};
-
-const STATUS_COLORS: Record<AssinaturaDigitalDocumentoStatus, string> = {
-  rascunho: "bg-gray-600/10 text-gray-600",
-  pronto: "bg-blue-600/10 text-blue-600",
-  concluido: "bg-green-600/10 text-green-600",
-  cancelado: "bg-red-600/10 text-red-600",
-};
-
-const STATUS_ICONS: Record<AssinaturaDigitalDocumentoStatus, React.ReactNode> = {
-  rascunho: <FileText className="h-4 w-4" />,
-  pronto: <Clock className="h-4 w-4" />,
-  concluido: <CheckCircle2 className="h-4 w-4" />,
-  cancelado: <XCircle className="h-4 w-4" />,
-};
 
 const STATUS_FILTER_OPTIONS: readonly FilterOption[] = [
   { value: "rascunho", label: "Rascunho" },
@@ -134,10 +90,6 @@ export function DocumentosTableWrapper({
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   // -- State: Dialogs
-  const [documentoSelecionado, setDocumentoSelecionado] =
-    React.useState<DocumentoCompleto | null>(null);
-  const [isLoadingDetalhes, setIsLoadingDetalhes] = React.useState(false);
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [documentoParaDeletar, setDocumentoParaDeletar] =
     React.useState<DocumentoListItem | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
@@ -234,16 +186,6 @@ export function DocumentosTableWrapper({
   }), [documentos]);
 
   // -- Handlers: Actions
-  const handleCopyLink = React.useCallback(async (token: string) => {
-    const link = `${window.location.origin}/assinatura/${token}`;
-    try {
-      await navigator.clipboard.writeText(link);
-      toast.success("Link copiado para a área de transferência");
-    } catch {
-      toast.error("Erro ao copiar link");
-    }
-  }, []);
-
   const handleDownloadPdf = React.useCallback(async (url: string, titulo: string) => {
     try {
       const result = await actionGetPresignedPdfUrl({ url });
@@ -269,69 +211,12 @@ export function DocumentosTableWrapper({
     }
   }, []);
 
-  const handleVerDetalhes = React.useCallback(async (uuid: string) => {
-    // Itens de formulário usam "ass-{id}" como UUID sintético e não existem
-    // em assinatura_digital_documentos — exibir dados da listagem diretamente.
-    const isFormulario = uuid.startsWith("ass-");
-
-    if (isFormulario) {
-      const docFromList = documentos.find((d) => d.documento_uuid === uuid);
-      if (docFromList) {
-        setDocumentoSelecionado({
-          ...docFromList,
-          assinantes: [],
-          ancoras: [],
-        } as DocumentoCompleto);
-        setIsDialogOpen(true);
-      } else {
-        toast.error("Documento não encontrado na listagem");
-      }
-      return;
-    }
-
-    setIsLoadingDetalhes(true);
-    setIsDialogOpen(true);
-    try {
-      const resultado = await actionGetDocumento({ uuid });
-      if (resultado.success && resultado.data && "documento" in resultado.data) {
-        const docData = resultado.data as unknown as {
-          documento: {
-            id: number;
-            documento_uuid: string;
-            titulo: string | null;
-            status: AssinaturaDigitalDocumentoStatus;
-            selfie_habilitada: boolean;
-            pdf_original_url: string;
-            pdf_final_url: string | null;
-            created_at: string;
-            updated_at: string;
-          };
-          assinantes: DocumentoCompleto["assinantes"];
-          ancoras: DocumentoCompleto["ancoras"];
-        };
-        setDocumentoSelecionado({
-          ...docData.documento,
-          assinantes: docData.assinantes,
-          ancoras: docData.ancoras,
-          // Campos opcionais de DocumentoListItem que podem não vir da API
-          hash_original_sha256: null,
-          hash_final_sha256: null,
-          created_by: null,
-          contrato_id: null,
-          _assinantes_count: docData.assinantes.length,
-          _assinantes_concluidos: docData.assinantes.filter(a => a.status === 'concluido').length,
-        } as DocumentoCompleto);
-      } else {
-        toast.error("Erro ao carregar detalhes do documento");
-        setIsDialogOpen(false);
-      }
-    } catch {
-      toast.error("Erro ao carregar detalhes do documento");
-      setIsDialogOpen(false);
-    } finally {
-      setIsLoadingDetalhes(false);
-    }
-  }, [documentos]);
+  const handleVerDetalhes = React.useCallback(
+    (uuid: string) => {
+      router.push(`/app/assinatura-digital/documentos/${uuid}`);
+    },
+    [router]
+  );
 
   const handleEditarDocumento = React.useCallback(
     (uuid: string) => {
@@ -624,237 +509,6 @@ export function DocumentosTableWrapper({
           hidePagination
         />
       </DataShell>
-
-      {/* Dialog de Detalhes */}
-      <DialogFormShell
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        title="Detalhes do Documento"
-        maxWidth="3xl"
-        footer={null}
-      >
-        {isLoadingDetalhes ? (
-          <div className="flex items-center justify-center p-12">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          </div>
-        ) : documentoSelecionado ? (
-          <div className="space-y-6">
-            <div className="space-y-3">
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">
-                  Título
-                </h3>
-                <p className="text-base font-medium">
-                  {documentoSelecionado.titulo ||
-                    `Documento #${documentoSelecionado.id}`}
-                </p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">
-                  Status
-                </h3>
-                <Badge
-                  className={STATUS_COLORS[documentoSelecionado.status]}
-                  variant="secondary"
-                >
-                  <span className="flex items-center gap-1.5">
-                    {STATUS_ICONS[documentoSelecionado.status]}
-                    {STATUS_LABELS[documentoSelecionado.status]}
-                  </span>
-                </Badge>
-              </div>
-
-              {/* Informações específicas de formulário */}
-              {documentoSelecionado._origem === "formulario" ? (
-                <>
-                  {documentoSelecionado._cliente_nome && (
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        Cliente
-                      </h3>
-                      <p className="text-base">{documentoSelecionado._cliente_nome}</p>
-                    </div>
-                  )}
-                  {documentoSelecionado._protocolo && (
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">
-                        Protocolo
-                      </h3>
-                      <p className="text-xs font-mono bg-muted p-2 rounded">
-                        {documentoSelecionado._protocolo}
-                      </p>
-                    </div>
-                  )}
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      Origem
-                    </h3>
-                    <Badge variant="outline" className="border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">
-                      Formulário
-                    </Badge>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      Selfie Habilitada
-                    </h3>
-                    <p className="text-base">
-                      {documentoSelecionado.selfie_habilitada ? "Sim" : "Não"}
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      UUID do Documento
-                    </h3>
-                    <p className="text-xs font-mono bg-muted p-2 rounded">
-                      {documentoSelecionado.documento_uuid}
-                    </p>
-                  </div>
-                </>
-              )}
-
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">
-                  Criado em
-                </h3>
-                <p className="text-base">
-                  {format(new Date(documentoSelecionado.created_at), "dd/MM/yyyy HH:mm", { locale: ptBR })}
-                </p>
-              </div>
-            </div>
-
-            {/* Seção de assinantes — só para documentos do editor */}
-            {documentoSelecionado._origem !== "formulario" && documentoSelecionado.assinantes.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold">
-                  Assinantes ({documentoSelecionado.assinantes.length})
-                </h3>
-                <div className="space-y-3">
-                  {documentoSelecionado.assinantes.map((assinante) => (
-                    <Card key={assinante.id}>
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1 space-y-2">
-                            <div className="flex items-center gap-2">
-                              <Badge variant="outline">
-                                {assinante.assinante_tipo}
-                              </Badge>
-                              <Badge
-                                className={
-                                  assinante.status === "concluido"
-                                    ? "bg-green-600/10 text-green-600"
-                                    : "bg-orange-600/10 text-orange-600"
-                                }
-                                variant="secondary"
-                              >
-                                {assinante.status === "concluido"
-                                  ? "Concluído"
-                                  : "Pendente"}
-                              </Badge>
-                            </div>
-                            <div className="text-sm space-y-1">
-                              {(assinante.dados_snapshot.nome_completo as
-                                | string
-                                | undefined) && (
-                                <p>
-                                  <span className="font-medium">Nome:</span>{" "}
-                                  {String(assinante.dados_snapshot.nome_completo)}
-                                </p>
-                              )}
-                              {(assinante.dados_snapshot.email as
-                                | string
-                                | undefined) && (
-                                <p>
-                                  <span className="font-medium">Email:</span>{" "}
-                                  {String(assinante.dados_snapshot.email)}
-                                </p>
-                              )}
-                              {(assinante.dados_snapshot.cpf as
-                                | string
-                                | undefined) && (
-                                <p>
-                                  <span className="font-medium">CPF:</span>{" "}
-                                  {String(assinante.dados_snapshot.cpf)}
-                                </p>
-                              )}
-                              {assinante.concluido_em && (
-                                <p className="text-muted-foreground">
-                                  <span className="font-medium">
-                                    Concluído em:
-                                  </span>{" "}
-                                  {format(
-                                    new Date(assinante.concluido_em),
-                                    "dd/MM/yyyy HH:mm",
-                                    { locale: ptBR }
-                                  )}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleCopyLink(assinante.token)}
-                            >
-                              <Copy className="h-4 w-4 mr-1" />
-                              Copiar Link
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() =>
-                                window.open(
-                                  `/assinatura/${assinante.token}`,
-                                  "_blank"
-                                )
-                              }
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="flex gap-3 pt-4 border-t">
-              {documentoSelecionado.pdf_original_url && (
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    handleDownloadPdf(
-                      documentoSelecionado.pdf_original_url,
-                      `${documentoSelecionado.titulo || "documento"}_original`
-                    )
-                  }
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  {documentoSelecionado._origem === "formulario" ? "Download PDF Assinado" : "Download PDF Original"}
-                </Button>
-              )}
-              {documentoSelecionado.pdf_final_url && (
-                <Button
-                  onClick={() =>
-                    handleDownloadPdf(
-                      documentoSelecionado.pdf_final_url!,
-                      `${documentoSelecionado.titulo || "documento"}_assinado`
-                    )
-                  }
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Download PDF Assinado
-                </Button>
-              )}
-            </div>
-          </div>
-        ) : null}
-      </DialogFormShell>
 
       {/* Dialog de Confirmação de Exclusão */}
       <DialogFormShell

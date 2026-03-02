@@ -13,6 +13,7 @@ export {
   actionSetDocumentoAnchors,
   actionListDocumentos,
   actionGetPresignedPdfUrl,
+  actionGetAssinatura,
 } from "./documentos-actions";
 
 // Templates
