@@ -200,9 +200,9 @@ describe("Security Headers Module", () => {
   });
 
   describe("buildPermissionsPolicy", () => {
-    it("should disable geolocation", () => {
+    it("should allow geolocation for self (required by assinatura digital)", () => {
       const policy = buildPermissionsPolicy();
-      expect(policy).toContain("geolocation=()");
+      expect(policy).toContain("geolocation=(self)");
     });
 
     it("should allow camera for self (required by Dyte)", () => {

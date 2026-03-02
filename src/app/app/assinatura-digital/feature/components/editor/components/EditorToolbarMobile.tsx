@@ -82,7 +82,7 @@ export default function EditorToolbarMobile({
   hasPreviewPdf = false,
 }: EditorToolbarMobileProps) {
   return (
-    <div className="shrink-0 border-b bg-background px-3 py-1.5 lg:hidden">
+    <div className="shrink-0 border-b bg-card px-3 py-1.5 lg:hidden">
       <ToolbarButtonsMobile
         editorMode={editorMode}
         onModeChange={onModeChange}

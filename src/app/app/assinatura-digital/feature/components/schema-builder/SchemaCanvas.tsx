@@ -70,7 +70,7 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group flex items-center gap-3 rounded-lg border bg-card px-3 py-2.5 transition-all",
+        "group flex items-center gap-2 rounded-lg border bg-card px-2.5 py-2 transition-all",
         isSelected ? "border-primary ring-1 ring-primary/20" : "border-transparent hover:border-border",
         isDragging && "opacity-50"
       )}
@@ -84,10 +84,10 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
         <GripVertical className="size-4" />
       </div>
 
-      {React.createElement(getFieldIcon(field.type), { className: "size-4 text-muted-foreground shrink-0" })}
+      {React.createElement(getFieldIcon(field.type), { className: "size-3.5 text-muted-foreground shrink-0" })}
 
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-medium truncate">{field.label}</div>
+        <div className="text-xs font-medium truncate">{field.label}</div>
         {(field.validation?.required || field.conditional || (field.options && field.options.length > 0)) && (
           <div className="flex gap-1 mt-1 flex-wrap">
             {field.validation?.required && (
@@ -187,11 +187,11 @@ function DroppableSectionCard({
       )}
       onClick={() => onSectionSelect(section.id)}
     >
-      <div className="flex items-start justify-between gap-3 px-4 pt-4 pb-3">
+      <div className="flex items-start justify-between gap-2 px-3 pt-3 pb-2">
         <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-semibold">{section.title}</h4>
+          <h4 className="text-xs font-semibold">{section.title}</h4>
           {section.description && (
-            <p className="text-xs text-muted-foreground mt-0.5">{section.description}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">{section.description}</p>
           )}
         </div>
         <div className="flex items-center gap-0.5 shrink-0">
@@ -228,11 +228,11 @@ function DroppableSectionCard({
         </div>
       </div>
 
-      <div className="px-4 pb-4 space-y-1">
+      <div className="px-3 pb-3 space-y-1">
         {fields.length === 0 ? (
-          <div className="border border-dashed rounded-lg p-6 text-center">
-            <AlertCircle className="size-6 text-muted-foreground/50 mx-auto mb-1.5" />
-            <p className="text-xs text-muted-foreground">Arraste campos da paleta para adicionar</p>
+          <div className="border border-dashed rounded-lg p-4 text-center">
+            <AlertCircle className="size-5 text-muted-foreground/50 mx-auto mb-1" />
+            <p className="text-[11px] text-muted-foreground">Arraste campos da paleta para adicionar</p>
           </div>
         ) : (
           <SortableContext items={fields.map(f => f.id)} strategy={verticalListSortingStrategy}>
@@ -269,11 +269,11 @@ export default function SchemaCanvas({
   return (
     <div className="space-y-3">
       {schema.sections.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-16 gap-3">
-          <AlertCircle className="size-10 text-muted-foreground/40" />
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-12 gap-3">
+          <AlertCircle className="size-8 text-muted-foreground/40" />
           <div className="text-center space-y-1">
-            <p className="text-sm font-medium text-muted-foreground">Nenhuma seção criada</p>
-            <p className="text-xs text-muted-foreground/70">
+            <p className="text-xs font-medium text-muted-foreground">Nenhuma seção criada</p>
+            <p className="text-[11px] text-muted-foreground/70">
               Clique abaixo para começar a construir o formulário
             </p>
           </div>

@@ -508,10 +508,10 @@ export function FormSchemaBuilder({
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="shrink-0 flex items-center justify-between pb-4">
+      <div className="shrink-0 flex items-center justify-between rounded-lg border bg-card px-4 py-2.5">
         <div className="flex items-center gap-2">
-          <h2 className="text-lg font-semibold">{formularioNome}</h2>
-          {isDirty && <Badge variant="outline">Não salvo</Badge>}
+          <h2 className="text-sm font-semibold">{formularioNome}</h2>
+          {isDirty && <Badge variant="outline" className="text-[10px]">Não salvo</Badge>}
         </div>
 
         <TooltipProvider delayDuration={0}>
@@ -579,7 +579,7 @@ export function FormSchemaBuilder({
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-h-0 pt-4">
+      <div className="flex-1 min-h-0 pt-3">
         {mode === 'edit' ? (
           <DndContext
             sensors={sensors}
@@ -587,7 +587,7 @@ export function FormSchemaBuilder({
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >
-            <div className="h-full grid grid-cols-[250px_1fr_350px] gap-6">
+            <div className="h-full grid grid-cols-[280px_1fr_320px] gap-4">
               {/* Paleta */}
               <FieldPalette />
 

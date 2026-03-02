@@ -32,7 +32,12 @@ interface PdfDataContext {
   protocolo: string;
   ip?: string | null;
   user_agent?: string | null;
-  parte_contraria?: { nome: string };
+  parte_contraria?: {
+    nome: string;
+    cpf?: string | null;
+    cnpj?: string | null;
+    telefone?: string | null;
+  };
 }
 
 interface TemplateWithCampos extends TemplateBasico {
@@ -132,16 +137,63 @@ const GENERO_LABEL: Record<string, string> = {
 
 function formatPhone(ddd?: string | null, numero?: string | null): string {
   if (!ddd || !numero) return "";
-  return `(${ddd}) ${numero}`;
+  return `(${ddd}) ${formatNumeroTelefone(numero)}`;
 }
 
 function formatFullPhone(phone?: string | null): string {
   if (!phone) return "";
   const digits = phone.replace(/\D/g, "");
   if (digits.length >= 10) {
-    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${formatNumeroTelefone(digits.slice(2))}`;
   }
   return phone;
+}
+
+/** Formata número de telefone com hífen: 99269-2951 ou 3269-2951 */
+function formatNumeroTelefone(numero: string): string {
+  const digits = numero.replace(/\D/g, "");
+  if (digits.length === 9) return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+  if (digits.length === 8) return `${digits.slice(0, 4)}-${digits.slice(4)}`;
+  return numero;
+}
+
+/** Formata DDD com parênteses: (31) */
+function formatDDD(ddd?: string | null): string {
+  if (!ddd) return "";
+  return `(${ddd})`;
+}
+
+/** Formata CPF: 115.368.166-80 */
+function formatCPF(cpf?: string | null): string {
+  if (!cpf) return "";
+  const digits = cpf.replace(/\D/g, "");
+  if (digits.length === 11) {
+    return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  }
+  return cpf;
+}
+
+/** Formata CEP: 30140-110 */
+function formatCEP(cep?: string | null): string {
+  if (!cep) return "";
+  const digits = cep.replace(/\D/g, "");
+  if (digits.length === 8) {
+    return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+  }
+  return cep;
+}
+
+/** Formata RG: mg16701636 → MG-16.701.636 */
+function formatRG(rg?: string | null): string {
+  if (!rg) return "";
+  // Separar prefixo de letras (UF) dos dígitos
+  const match = rg.match(/^([a-zA-Z]*)(\d+)$/);
+  if (!match) return rg;
+  const prefix = match[1].toUpperCase();
+  const digits = match[2];
+  // Adicionar pontos a cada 3 dígitos da direita
+  const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return prefix ? `${prefix}-${formatted}` : formatted;
 }
 
 function formatDataNascimentoBR(value?: string | null): string {
@@ -180,14 +232,18 @@ function resolveVariable(
   const estadoCivil = c.estado_civil ? (ESTADO_CIVIL_LABEL[c.estado_civil] ?? c.estado_civil) : "";
   const genero = c.genero ? (GENERO_LABEL[c.genero] ?? c.genero) : "";
 
+  const cpfFormatado = formatCPF(c.cpf);
+  const rgFormatado = formatRG(c.rg);
+  const cepFormatado = formatCEP(end?.cep);
+
   const map: Record<string, unknown> = {
     // Cliente - identificação
     "cliente.nome_completo": c.nome,
     "cliente.nome": c.nome,
-    "cliente.cpf": c.cpf,
+    "cliente.cpf": cpfFormatado,
     "cliente.cnpj": c.cnpj,
     "cliente.tipo_pessoa": c.tipo_pessoa,
-    "cliente.rg": c.rg,
+    "cliente.rg": rgFormatado,
 
     // Cliente - dados pessoais
     "cliente.data_nascimento": formatDataNascimentoBR(c.data_nascimento),
@@ -199,13 +255,17 @@ function resolveVariable(
     "cliente.email": email,
     "cliente.celular": celular,
     "cliente.telefone": telefone || celular,
+    "cliente.ddd_celular": formatDDD(c.ddd_celular),
+    "cliente.numero_celular": formatNumeroTelefone(c.numero_celular || ""),
+    "cliente.ddd_residencial": formatDDD(c.ddd_residencial),
+    "cliente.numero_residencial": formatNumeroTelefone(c.numero_residencial || ""),
 
     // Cliente - endereço (com prefixo endereco_)
     "cliente.endereco_logradouro": end?.logradouro,
     "cliente.endereco_numero": end?.numero,
     "cliente.endereco_complemento": end?.complemento,
     "cliente.endereco_bairro": end?.bairro,
-    "cliente.endereco_cep": end?.cep,
+    "cliente.endereco_cep": cepFormatado,
     "cliente.endereco_cidade": end?.municipio,
     "cliente.endereco_uf": end?.estado_sigla,
 
@@ -214,7 +274,7 @@ function resolveVariable(
     "cliente.numero": end?.numero,
     "cliente.complemento": end?.complemento,
     "cliente.bairro": end?.bairro,
-    "cliente.cep": end?.cep,
+    "cliente.cep": cepFormatado,
     "cliente.cidade": end?.municipio,
     "cliente.municipio": end?.municipio,
     "cliente.uf": end?.estado_sigla,
@@ -222,6 +282,12 @@ function resolveVariable(
 
     // Parte contrária
     "parte_contraria.nome": ctx.parte_contraria?.nome,
+    "parte_contraria.cpf": formatCPF(ctx.parte_contraria?.cpf),
+    "parte_contraria.cnpj": ctx.parte_contraria?.cnpj,
+    "parte_contraria.telefone": ctx.parte_contraria?.telefone,
+
+    // Ação (aliases para campos do formulário dinâmico)
+    "acao.nome_empresa_pessoa": ctx.parte_contraria?.nome,
 
     // Segmento
     "segmento.id": ctx.segmento.id,
@@ -245,12 +311,16 @@ function resolveVariable(
     // Aliases sem prefixo (para templates que usam {{celular}} ao invés de {{cliente.celular}})
     "nome_completo": c.nome,
     "nome": c.nome,
-    "cpf": c.cpf,
+    "cpf": cpfFormatado,
     "cnpj": c.cnpj,
-    "rg": c.rg,
+    "rg": rgFormatado,
     "email": email,
     "celular": celular,
     "telefone": telefone || celular,
+    "ddd_celular": formatDDD(c.ddd_celular),
+    "numero_celular": formatNumeroTelefone(c.numero_celular || ""),
+    "ddd_residencial": formatDDD(c.ddd_residencial),
+    "numero_residencial": formatNumeroTelefone(c.numero_residencial || ""),
     "data_nascimento": formatDataNascimentoBR(c.data_nascimento),
     "estado_civil": estadoCivil,
     "genero": genero,

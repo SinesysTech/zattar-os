@@ -432,6 +432,20 @@ export default function AssinaturaManuscritaStep() {
         basePayload.parte_contraria_dados = parteContrariaDados;
       }
 
+      // Incluir dados do formulário dinâmico (acao) para resolução de variáveis no PDF
+      if (dadosContrato) {
+        const RESERVED_KEYS = new Set(['contrato_id', 'cliente_dados', 'parte_contraria_dados']);
+        const acaoDados: Record<string, unknown> = {};
+        for (const [key, value] of Object.entries(dadosContrato)) {
+          if (!RESERVED_KEYS.has(key) && value !== undefined && value !== null) {
+            acaoDados[key] = value;
+          }
+        }
+        if (Object.keys(acaoDados).length > 0) {
+          basePayload.acao_dados = acaoDados;
+        }
+      }
+
       // Incluir device fingerprint se coletado
       if (deviceFingerprint) {
         basePayload.dispositivo_fingerprint_raw = deviceFingerprint;

@@ -18,7 +18,6 @@ export default function ContratosPendentesStep() {
     setDadosPessoais,
     setDadosContrato,
     setEtapaAtual,
-    clearContratosPendentes,
     proximaEtapa,
     getTotalSteps,
     etapaAnterior,
@@ -54,8 +53,20 @@ export default function ContratosPendentesStep() {
       endereco_uf: cliente.uf ?? '',
     });
 
-    // Popula dadosContrato com o contrato selecionado
-    setDadosContrato({ contrato_id: contrato.id });
+    // Popula dadosContrato com o contrato selecionado + parte contrária
+    const parteContraria = contrato.partes?.find(
+      (p) => p.tipo_entidade === 'parte_contraria'
+    );
+    setDadosContrato({
+      contrato_id: contrato.id,
+      ...(parteContraria?.nome_snapshot && {
+        parte_contraria_dados: [{
+          id: 0,
+          nome: parteContraria.nome_snapshot,
+          cpf: parteContraria.cpf_cnpj_snapshot || null,
+        }],
+      }),
+    });
 
     // Pular para a etapa de visualizacao do PDF
     const visualizacaoStep = stepConfigs?.find(
@@ -74,7 +85,10 @@ export default function ContratosPendentesStep() {
   };
 
   const handleNovoContrato = () => {
-    clearContratosPendentes();
+    // Não chamar clearContratosPendentes() aqui — isso dispara um rebuild de
+    // stepConfigs no FormularioContainer (remove o step pendentes), o que muda
+    // todos os índices. O proximaEtapa() usa o índice antigo e acaba pulando
+    // DadosPessoais, indo direto para DynamicFormStep.
     proximaEtapa();
   };
 

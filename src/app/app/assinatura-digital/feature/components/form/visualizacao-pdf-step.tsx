@@ -204,8 +204,22 @@ export default function VisualizacaoPdfStep() {
 
       // Extrair parte contrária do store (se disponível)
       const parteContrariaDados = Array.isArray(dadosContrato.parte_contraria_dados)
-        ? (dadosContrato.parte_contraria_dados as Array<{ id: number; nome: string; cpf?: string | null; cnpj?: string | null }>)
+        ? (dadosContrato.parte_contraria_dados as Array<{ id: number; nome: string; cpf?: string | null; cnpj?: string | null; telefone?: string | null }>)
         : undefined;
+
+      // Extrair cliente_dados do store (se disponível) para resolver telefone/celular no PDF
+      const clienteDados = dadosContrato.cliente_dados as
+        | { id: number; nome: string; cpf?: string | null; cnpj?: string | null; email?: string | null; celular?: string | null; telefone?: string | null }
+        | undefined;
+
+      // Extrair campos do formulário dinâmico (acao) de dadosContrato
+      const RESERVED_KEYS = new Set(['contrato_id', 'cliente_dados', 'parte_contraria_dados']);
+      const acaoDados: Record<string, unknown> = {};
+      for (const [key, value] of Object.entries(dadosContrato)) {
+        if (!RESERVED_KEYS.has(key) && value !== undefined && value !== null) {
+          acaoDados[key] = value;
+        }
+      }
 
       const payload = {
         template_id: templateId,
@@ -213,6 +227,8 @@ export default function VisualizacaoPdfStep() {
         contrato_id: contratoId,
         ...(fotoBase64 && { foto_base64: fotoBase64 }),
         ...(parteContrariaDados && parteContrariaDados.length > 0 && { parte_contraria_dados: parteContrariaDados }),
+        ...(clienteDados && { cliente_dados: clienteDados }),
+        ...(Object.keys(acaoDados).length > 0 && { acao_dados: acaoDados }),
       };
 
       console.log('[PDF-PREVIEW] Payload completo:', payload);

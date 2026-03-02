@@ -71,11 +71,11 @@ Controla quanta informação de referrer é enviada em requisições.
 
 ### Permissions-Policy
 
-Desabilita recursos do navegador não utilizados:
+Controla acesso a recursos do navegador:
 
-- `geolocation=()` - Geolocalização
-- `camera=()` - Câmera (Dyte gerencia via getUserMedia)
-- `microphone=()` - Microfone (Dyte gerencia via getUserMedia)
+- `geolocation=(self)` - Geolocalização (assinatura digital precisa de GPS)
+- `camera=(self)` - Câmera (Dyte gerencia via getUserMedia)
+- `microphone=(self)` - Microfone (Dyte gerencia via getUserMedia)
 - `payment=()` - Payment Request API
 - `usb=()` - WebUSB
 - `magnetometer=()` - Magnetômetro

@@ -229,7 +229,7 @@ describe("Security Headers Middleware Integration", () => {
       applySecurityHeaders(headers);
 
       const policy = headers.get("Permissions-Policy");
-      expect(policy).toContain("geolocation=()");
+      expect(policy).toContain("geolocation=(self)");
       expect(policy).toContain("camera=(self)");
       expect(policy).toContain("microphone=(self)");
       expect(policy).toContain("payment=()");
