@@ -18,8 +18,8 @@ async function fetchFormOptions() {
   const [clientesRes, usuariosRes] = await Promise.all([
     db
       .from("clientes")
-      .select("id, nome_completo")
-      .order("nome_completo"),
+      .select("id, nome")
+      .order("nome"),
     db
       .from("usuarios")
       .select("id, nome_completo")
@@ -29,7 +29,7 @@ async function fetchFormOptions() {
 
   const clientes = (clientesRes.data ?? []).map((c) => ({
     value: String(c.id),
-    label: c.nome_completo as string,
+    label: c.nome as string,
   }));
 
   const usuarios = (usuariosRes.data ?? []).map((u) => ({

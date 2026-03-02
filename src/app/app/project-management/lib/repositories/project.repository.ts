@@ -24,7 +24,7 @@ export async function listProjetos(
       .select(
         `*,
         responsavel:usuarios!pm_projetos_responsavel_id_fkey(nome_completo, avatar_url),
-        cliente:clientes!pm_projetos_cliente_id_fkey(nome_fantasia)`,
+        cliente:clientes!pm_projetos_cliente_id_fkey(nome)`,
         { count: "exact" }
       );
 
@@ -68,7 +68,7 @@ export async function listProjetos(
         ...row,
         responsavel_nome: row.responsavel?.nome_completo,
         responsavel_avatar: row.responsavel?.avatar_url,
-        cliente_nome: row.cliente?.nome_fantasia,
+        cliente_nome: row.cliente?.nome,
       };
       return converterParaProjeto(flat as Record<string, unknown>);
     });
@@ -96,7 +96,7 @@ export async function findProjetoById(id: string): Promise<Result<Projeto>> {
       .select(
         `*,
         responsavel:usuarios!pm_projetos_responsavel_id_fkey(nome_completo, avatar_url),
-        cliente:clientes!pm_projetos_cliente_id_fkey(nome_fantasia)`
+        cliente:clientes!pm_projetos_cliente_id_fkey(nome)`
       )
       .eq("id", id)
       .single();
@@ -112,7 +112,7 @@ export async function findProjetoById(id: string): Promise<Result<Projeto>> {
       ...data,
       responsavel_nome: data.responsavel?.nome_completo,
       responsavel_avatar: data.responsavel?.avatar_url,
-      cliente_nome: data.cliente?.nome_fantasia,
+      cliente_nome: data.cliente?.nome,
     };
 
     return ok(converterParaProjeto(flat as Record<string, unknown>));
