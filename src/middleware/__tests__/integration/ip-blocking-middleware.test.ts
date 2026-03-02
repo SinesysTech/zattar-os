@@ -2,7 +2,7 @@
  * Integration tests for middleware + IP blocking
  */
 
-import { middleware } from "../../../../middleware";
+import { proxy } from "../../../proxy";
 import {
   isIpBlocked,
   isIpWhitelisted,
@@ -11,7 +11,7 @@ import {
 } from "@/lib/security/ip-blocking-edge";
 import type { NextRequest } from "next/server";
 
-// Mock Supabase SSR client (middleware imports it)
+// Mock Supabase SSR client (proxy imports it)
 jest.mock("@supabase/ssr", () => ({
   createServerClient: jest.fn(() => ({
     auth: {
@@ -64,7 +64,7 @@ describe("Middleware IP blocking integration", () => {
     });
 
     const req = makeRequest("https://example.com/app/dashboard");
-    const res = await middleware(req);
+    const res = await proxy(req);
 
     expect(res.status).toBe(403);
     expect(res.headers.get("X-Blocked-Reason")).toBe("manual");
@@ -76,7 +76,7 @@ describe("Middleware IP blocking integration", () => {
     (recordSuspiciousActivity as jest.Mock).mockReturnValue({ blocked: false, count: 1 });
 
     const req = makeRequest("https://example.com/api/definitely-not-a-route");
-    const res = await middleware(req);
+    const res = await proxy(req);
 
     expect(res.status).toBe(200);
     expect(recordSuspiciousActivity).not.toHaveBeenCalled();
@@ -87,7 +87,7 @@ describe("Middleware IP blocking integration", () => {
     (isIpBlocked as jest.Mock).mockReturnValue(false);
 
     const req = makeRequest("https://example.com/api/mcp");
-    const res = await middleware(req);
+    const res = await proxy(req);
 
     expect(res.status).toBe(200);
     expect(recordSuspiciousActivity).not.toHaveBeenCalled();
