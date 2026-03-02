@@ -102,8 +102,10 @@ export function useUnsavedChanges({
   // Handle cancel button
   const handleCancel = useCallback(() => {
     if (hasUnsavedChanges) {
-      setPendingNavigation(
-        onCancel ? () => onCancel() : () => router.push('/app/assinatura-digital/templates')
+      setPendingNavigation(() =>
+        onCancel
+          ? () => onCancel()
+          : () => router.push('/app/assinatura-digital/templates')
       );
       setShowExitConfirmation(true);
     } else if (onCancel) {

@@ -9,8 +9,8 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { FilterPopover } from '@/features/partes';
 import { TIPOS_CAPTURA, STATUS_CAPTURA } from './captura-filters';
 import { useCapturasLog } from '../hooks/use-capturas-log';
-import { useAdvogados } from '@/features/advogados';
-import { useCredenciais } from '@/features/advogados';
+import { useAdvogadosMap } from '../hooks/use-advogados-map';
+import { useCredenciaisMap } from '../hooks/use-credenciais-map';
 import { deletarCapturaLog } from '@/features/captura/services/api-client';
 import type { ColumnDef, RowSelectionState, Table as TanstackTable } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/features/captura/types';
@@ -255,30 +255,13 @@ function criarColunas(
           return <span className="text-sm text-muted-foreground">-</span>;
         }
 
-        // Debug: verificar IDs que não estão no mapa
-        const idsNaoEncontrados: number[] = [];
-        
         // Mapear credencial_ids para { tribunal, grau }
         const tribunaisInfo = credencialIds
           .map((id) => {
-            // Validar que id é um número válido
-            if (typeof id !== 'number' || isNaN(id)) {
-              console.warn('[CapturaList] ID de credencial inválido:', id, 'tipo:', typeof id);
-              return null;
-            }
-
-            const info = credenciaisMap.get(id);
-            if (!info) {
-              idsNaoEncontrados.push(id);
-            }
-            return info;
+            if (typeof id !== 'number' || isNaN(id)) return null;
+            return credenciaisMap.get(id);
           })
           .filter((info): info is CredencialInfo => info !== undefined);
-
-        // Log de debug se houver IDs não encontrados
-        if (idsNaoEncontrados.length > 0) {
-          console.warn('[CapturaList] Credenciais não encontradas no mapa:', idsNaoEncontrados, 'Mapa tem', credenciaisMap.size, 'entradas');
-        }
 
         // Remover duplicatas por tribunal+grau
         const uniqueKey = new Set<string>();
@@ -546,63 +529,9 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [isDeletingBulk, setIsDeletingBulk] = React.useState(false);
 
-  // Buscar advogados para filtro e mapeamento
-  const { advogados } = useAdvogados({ limite: 1000 });
-
-  // Buscar credenciais para mapeamento
-  const { credenciais, isLoading: credenciaisLoading, error: credenciaisError } = useCredenciais({});
-
-  // Debug: verificar credenciais e possíveis erros
-  React.useEffect(() => {
-    console.log('[CapturaList] credenciais:', credenciais?.length, 'loading:', credenciaisLoading, 'error:', credenciaisError);
-    if (credenciais && credenciais.length > 0) {
-      console.log('[CapturaList] Primeiras 3 credenciais:', credenciais.slice(0, 3).map(c => ({ id: c.id, tribunal: c.tribunal, grau: c.grau })));
-    }
-  }, [credenciais, credenciaisLoading, credenciaisError]);
-
-  // Criar mapa de advogado_id -> nome
-  const advogadosMap = React.useMemo(() => {
-    const map = new Map<number, string>();
-    advogados?.forEach((advogado) => {
-      map.set(advogado.id, advogado.nome_completo);
-    });
-    return map;
-  }, [advogados]);
-
-  // Criar mapa de credencial_id -> { tribunal, grau }
-  const credenciaisMap = React.useMemo(() => {
-    const map = new Map<number, CredencialInfo>();
-    
-    if (!credenciais || credenciais.length === 0) {
-      console.warn('[CapturaList] Nenhuma credencial disponível para criar o mapa');
-      return map;
-    }
-
-    credenciais.forEach((credencial) => {
-      // Validar que a credencial tem id válido
-      if (!credencial.id) {
-        console.warn('[CapturaList] Credencial sem ID:', credencial);
-        return;
-      }
-
-      // Garantir que grau sempre tenha um valor válido (fallback para 'primeiro_grau' se undefined/null)
-      const grau = credencial.grau || 'primeiro_grau';
-      
-      // Validar que tribunal existe
-      if (!credencial.tribunal) {
-        console.warn('[CapturaList] Credencial sem tribunal:', credencial);
-        return;
-      }
-
-      map.set(credencial.id, {
-        tribunal: credencial.tribunal as CodigoTRT,
-        grau: grau,
-      });
-    });
-
-    console.log('[CapturaList] credenciaisMap criado com', map.size, 'entradas');
-    return map;
-  }, [credenciais]);
+  // Buscar advogados e credenciais via Route Handlers (fetch) para paralelismo real
+  const { advogadosMap, advogadoOptions } = useAdvogadosMap();
+  const { credenciaisMap } = useCredenciaisMap();
 
   // Parâmetros para buscar capturas
   const params = React.useMemo(
@@ -659,15 +588,6 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   const statusOptions = React.useMemo(
     () => STATUS_CAPTURA.map((s) => ({ value: s.value, label: s.label })),
     []
-  );
-
-  const advogadoOptions = React.useMemo(
-    () =>
-      (advogados ?? []).map((a) => ({
-        value: a.id.toString(),
-        label: a.nome_completo,
-      })),
-    [advogados]
   );
 
   const colunas = React.useMemo(

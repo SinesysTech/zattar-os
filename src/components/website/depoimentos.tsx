@@ -24,12 +24,12 @@ const depoimentos: Depoimento[] = [
   {
     id: "1",
     nome: "Maria Silva",
-    cargo: "Ex-funcionaria",
+    cargo: "Ex-funcionária",
     empresa: "Empresa de Tecnologia",
     foto: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&h=150&fit=crop",
     texto:
-      "Apos anos trabalhando sem registro, finalmente tive meus direitos reconhecidos gracas ao trabalho incansavel da equipe Zattar. Recebi todas as verbas que me eram devidas e recuperei minha dignidade.",
-    resultado: "Reconhecimento de vinculo + verbas rescisorias",
+      "Após anos trabalhando sem registro, finalmente tive meus direitos reconhecidos graças ao trabalho incansável da equipe Zattar. Recebi todas as verbas que me eram devidas e recuperei minha dignidade.",
+    resultado: "Reconhecimento de vínculo + verbas rescisórias",
     estrelas: 5,
   },
   {
@@ -38,8 +38,8 @@ const depoimentos: Depoimento[] = [
     cargo: "Motorista de Aplicativo",
     foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&h=150&fit=crop",
     texto:
-      "Eu nao acreditava que tinha direitos como motorista de app. A Zattar me mostrou que sim, e lutou por mim ate conseguirmos a vitoria. Profissionais serios e comprometidos.",
-    resultado: "Reconhecimento de vinculo empregaticio",
+      "Eu não acreditava que tinha direitos como motorista de app. A Zattar me mostrou que sim, e lutou por mim até conseguirmos a vitória. Profissionais sérios e comprometidos.",
+    resultado: "Reconhecimento de vínculo empregatício",
     estrelas: 5,
   },
   {
@@ -48,26 +48,26 @@ const depoimentos: Depoimento[] = [
     cargo: "Auxiliar Administrativa",
     foto: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&h=150&fit=crop",
     texto:
-      "Sofri assedio moral por meses e nao sabia como agir. O escritorio me acolheu, explicou cada passo e conseguimos uma indenizacao justa. Me senti amparada durante todo o processo.",
-    resultado: "Indenizacao por danos morais",
+      "Sofri assédio moral por meses e não sabia como agir. O escritório me acolheu, explicou cada passo e conseguimos uma indenização justa. Me senti amparada durante todo o processo.",
+    resultado: "Indenização por danos morais",
     estrelas: 5,
   },
   {
     id: "4",
     nome: "Roberto Mendes",
-    cargo: "Gerente de Operacoes",
-    empresa: "Industria Metalurgica",
+    cargo: "Gerente de Operações",
+    empresa: "Indústria Metalúrgica",
     foto: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&h=150&fit=crop",
     texto:
-      "Fui demitido apos 15 anos de empresa sem receber corretamente. A equipe analisou tudo minuciosamente e identificou diferencas que eu nem imaginava. Excelente trabalho tecnico.",
-    resultado: "Recuperacao de diferencas salariais e FGTS",
+      "Fui demitido após 15 anos de empresa sem receber corretamente. A equipe analisou tudo minuciosamente e identificou diferenças que eu nem imaginava. Excelente trabalho técnico.",
+    resultado: "Recuperação de diferenças salariais e FGTS",
     estrelas: 5,
   },
 ];
 
 // Metricas de confianca
 const metricas = [
-  { valor: "15+", label: "Anos de Experiencia" },
+  { valor: "15+", label: "Anos de Experiência" },
   { valor: "2.500+", label: "Casos Atendidos" },
   { valor: "95%", label: "Taxa de Sucesso" },
   { valor: "R$ 50M+", label: "Recuperados para Clientes" },
@@ -96,10 +96,10 @@ export default function Depoimentos() {
             Depoimentos
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight font-display mb-6">
-            Historias de Quem Confiou em Nos
+            Histórias de Quem Confiou em Nós
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Cada cliente representa uma luta por justica. Veja o que dizem aqueles que confiaram no
+            Cada cliente representa uma luta por justiça. Veja o que dizem aqueles que confiaram no
             nosso trabalho.
           </p>
         </div>
@@ -215,7 +215,7 @@ export default function Depoimentos() {
                 size="icon"
                 onClick={nextDepoimento}
                 className="rounded-full"
-                aria-label="Proximo depoimento"
+                aria-label="Próximo depoimento"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
@@ -226,7 +226,7 @@ export default function Depoimentos() {
         {/* CTA apos Social Proof */}
         <div className="mt-16 text-center">
           <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Voce tambem merece ter seus direitos respeitados. Fale conosco e descubra como podemos
+            Você também merece ter seus direitos respeitados. Fale conosco e descubra como podemos
             ajudar.
           </p>
           <Button size="lg" className="rounded-full text-base">

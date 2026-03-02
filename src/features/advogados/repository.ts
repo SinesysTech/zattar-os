@@ -522,6 +522,30 @@ export async function listarCredenciais(
   });
 }
 
+/**
+ * Listar credenciais com dados mínimos para mapeamento (sem JOIN).
+ * Retorna apenas id, tribunal e grau — ideal para lookup maps.
+ */
+export async function listarCredenciaisMapa(): Promise<
+  { id: number; tribunal: string; grau: string }[]
+> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('credenciais')
+    .select('id, tribunal, grau');
+
+  if (error) {
+    throw new Error(`Erro ao listar credenciais para mapa: ${error.message}`);
+  }
+
+  return (data || []).map((row) => ({
+    id: row.id,
+    tribunal: row.tribunal,
+    grau: grauFromDb(row.grau),
+  }));
+}
+
 // ============================================================================
 // Credenciais em Lote
 // ============================================================================
