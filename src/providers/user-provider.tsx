@@ -85,6 +85,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const supabase = useMemo(() => createClient(), []);
   const logoutInProgressRef = useRef(false);
   const hasFetchedRef = useRef(false);
+  const userRef = useRef<UserData | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Manter ref sincronizado com state
+  userRef.current = user;
 
   /**
    * Logout: limpa sessão, cookies e redireciona para login
@@ -125,7 +130,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   /**
    * Busca dados do usuário + permissões da API consolidada
    */
-  const fetchUserData = useCallback(async () => {
+  const fetchUserData = useCallback(async (signal?: AbortSignal) => {
     if (typeof window === 'undefined') return;
 
     try {
@@ -134,6 +139,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
         supabase.auth.getUser(),
         supabase.auth.getSession(),
       ]);
+
+      if (signal?.aborted) return;
 
       if (userResult.error || !userResult.data.user) {
         setUser(null);
@@ -148,7 +155,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
       // Buscar dados consolidados da API
       const response = await fetch('/api/auth/me', {
         credentials: 'include',
+        signal,
       });
+
+      if (signal?.aborted) return;
 
       if (response.status === 401) {
         setUser(null);
@@ -172,6 +182,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
       const data = await response.json();
 
+      if (signal?.aborted) return;
+
       if (data.success && data.data) {
         setUser({
           id: data.data.id,
@@ -186,9 +198,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
         setPermissoes(data.data.permissoes);
       }
     } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
       console.error('Erro ao carregar dados do usuário:', error);
     } finally {
-      setIsLoading(false);
+      if (!signal?.aborted) {
+        setIsLoading(false);
+      }
     }
   }, [supabase, logout]);
 
@@ -197,10 +212,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
     let mounted = true;
     let intervalId: NodeJS.Timeout | null = null;
 
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     const init = async () => {
       if (!mounted || hasFetchedRef.current) return;
       hasFetchedRef.current = true;
-      await fetchUserData();
+      await fetchUserData(controller.signal);
     };
 
     init();
@@ -229,9 +247,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
       if (session?.user) {
         setSessionToken(session.access_token);
         // Se é um novo login (não tínhamos user antes), buscar dados
-        if (!user) {
+        if (!userRef.current) {
           hasFetchedRef.current = false;
-          await fetchUserData();
+          await fetchUserData(controller.signal);
         }
       } else {
         setUser(null);
@@ -248,6 +266,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
     return () => {
       mounted = false;
+      controller.abort();
       if (intervalId) clearInterval(intervalId);
       subscription.unsubscribe();
     };
@@ -269,9 +288,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
   );
 
   const refetch = useCallback(async () => {
+    // Abortar fetch anterior se existir
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     hasFetchedRef.current = false;
     setIsLoading(true);
-    await fetchUserData();
+    await fetchUserData(controller.signal);
   }, [fetchUserData]);
 
   const value = useMemo<UserContextValue>(

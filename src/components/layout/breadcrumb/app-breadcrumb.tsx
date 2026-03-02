@@ -65,6 +65,7 @@ function formatRouteSegment(segment: string): string {
   // Remove hífens e capitaliza palavras
   return segment
     .split("-")
+    .filter(Boolean)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ")
 }

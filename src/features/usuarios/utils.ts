@@ -52,6 +52,7 @@ export function formatarNomeExibicao(nome: string | null | undefined): string {
   return nome
     .toLowerCase()
     .split(' ')
+    .filter(Boolean)
     .map((palavra) => palavra.charAt(0).toUpperCase() + palavra.slice(1))
     .join(' ');
 }

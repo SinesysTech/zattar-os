@@ -103,7 +103,7 @@ export interface PosicaoCampo {
 export interface EstiloCampo {
   tamanho_fonte?: number;
   fonte?: string;
-  alinhamento?: "left" | "center" | "right";
+  alinhamento?: "left" | "center" | "right" | "justify";
   cor?: string; // Hex color
   negrito?: boolean;
   italico?: boolean;

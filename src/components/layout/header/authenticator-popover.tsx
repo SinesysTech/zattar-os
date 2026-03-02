@@ -30,10 +30,11 @@ function AccountIcon({ account, size = "md" }: { account: TwoFAuthAccount; size?
   const initials = account.service
     ? account.service
         .split(" ")
+        .filter(Boolean)
         .map((word) => word[0])
         .join("")
         .slice(0, 2)
-        .toUpperCase()
+        .toUpperCase() || "2F"
     : "2F";
 
   // Verificar se o ícone é uma URL válida ou base64

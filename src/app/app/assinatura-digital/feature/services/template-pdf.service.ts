@@ -25,6 +25,334 @@ async function loadPdfLib(): Promise<{
   };
 }
 
+// ---------------------------------------------------------------------------
+// Rich text rendering – TipTap JSON → PDF segments
+// ---------------------------------------------------------------------------
+
+/** Um pedaço atômico de texto com formatação inline */
+interface RichSegment {
+  text: string;
+  bold: boolean;
+  italic: boolean;
+}
+
+/** Uma linha visual (após word-wrap) com seus segmentos */
+interface RichLine {
+  segments: RichSegment[];
+  align: "left" | "center" | "right" | "justify";
+}
+
+/** Conjunto de 4 variantes de fonte para rich text */
+interface FontSet {
+  regular: import("pdf-lib").PDFFont;
+  bold: import("pdf-lib").PDFFont;
+  italic: import("pdf-lib").PDFFont;
+  boldItalic: import("pdf-lib").PDFFont;
+}
+
+function pickFont(fonts: FontSet, seg: RichSegment): import("pdf-lib").PDFFont {
+  if (seg.bold && seg.italic) return fonts.boldItalic;
+  if (seg.bold) return fonts.bold;
+  if (seg.italic) return fonts.italic;
+  return fonts.regular;
+}
+
+function segmentWidth(fonts: FontSet, seg: RichSegment, size: number): number {
+  return pickFont(fonts, seg).widthOfTextAtSize(seg.text, size);
+}
+
+/**
+ * Percorre a árvore JSON do TipTap e produz parágrafos com segmentos ricos.
+ * Cada parágrafo carrega o alinhamento definido no editor.
+ * As variáveis {{key}} são resolvidas inline.
+ */
+function tiptapJsonToRichParagraphs(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  json: Record<string, any>,
+  resolver: (variable: string) => string
+): { segments: RichSegment[]; align: "left" | "center" | "right" | "justify" }[] {
+  const paragraphs: { segments: RichSegment[]; align: "left" | "center" | "right" | "justify" }[] = [];
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function walkBlock(node: Record<string, any>) {
+    if (node.type === "doc" && Array.isArray(node.content)) {
+      for (const child of node.content) walkBlock(child);
+      return;
+    }
+
+    // Blocos que contêm inline content (paragraph, heading, listItem, blockquote child)
+    if (
+      node.type === "paragraph" ||
+      node.type === "heading"
+    ) {
+      const align = (node.attrs?.textAlign as "left" | "center" | "right" | "justify") || "left";
+      const segments: RichSegment[] = [];
+
+      if (Array.isArray(node.content)) {
+        for (const inline of node.content) {
+          walkInline(inline, segments, resolver);
+        }
+      }
+
+      paragraphs.push({ segments, align });
+      return;
+    }
+
+    // Blocos container (bulletList, orderedList, blockquote, listItem)
+    if (Array.isArray(node.content)) {
+      for (const child of node.content) walkBlock(child);
+    }
+  }
+
+  function walkInline(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    node: Record<string, any>,
+    segments: RichSegment[],
+    resolver: (variable: string) => string
+  ) {
+    if (node.type === "text") {
+      const marks: { type: string }[] = node.marks || [];
+      const bold = marks.some((m) => m.type === "bold");
+      const italic = marks.some((m) => m.type === "italic");
+      segments.push({ text: node.text || "", bold, italic });
+      return;
+    }
+
+    if (node.type === "variable" && node.attrs?.key) {
+      const resolved = resolver(node.attrs.key);
+      // Herda formatação do contexto? Variáveis herdam marks do nó TipTap se existirem
+      const marks: { type: string }[] = node.marks || [];
+      const bold = marks.some((m) => m.type === "bold");
+      const italic = marks.some((m) => m.type === "italic");
+      segments.push({ text: resolved, bold, italic });
+      return;
+    }
+
+    if (node.type === "hardBreak") {
+      segments.push({ text: "\n", bold: false, italic: false });
+      return;
+    }
+
+    // Outros inlines com conteúdo
+    if (Array.isArray(node.content)) {
+      for (const child of node.content) walkInline(child, segments, resolver);
+    }
+  }
+
+  walkBlock(json);
+  return paragraphs;
+}
+
+/**
+ * Quebra uma lista de RichSegments em linhas visuais respeitando maxWidth.
+ * Cada "palavra" mantém a formatação do segmento de origem.
+ */
+function wrapRichSegments(
+  segments: RichSegment[],
+  fonts: FontSet,
+  fontSize: number,
+  maxWidth: number,
+  align: "left" | "center" | "right" | "justify"
+): RichLine[] {
+  // Tokenizar: cada token é um segmento com uma única palavra
+  interface Token { text: string; bold: boolean; italic: boolean; isSpace: boolean }
+  const tokens: Token[] = [];
+
+  for (const seg of segments) {
+    if (seg.text === "\n") {
+      // Hard break: forçar nova linha
+      tokens.push({ text: "\n", bold: seg.bold, italic: seg.italic, isSpace: false });
+      continue;
+    }
+    // Dividir em palavras preservando espaços
+    const parts = seg.text.split(/(\s+)/);
+    for (const part of parts) {
+      if (!part) continue;
+      const isSpace = /^\s+$/.test(part);
+      tokens.push({ text: part, bold: seg.bold, italic: seg.italic, isSpace });
+    }
+  }
+
+  const lines: RichLine[] = [];
+  let currentLineSegments: RichSegment[] = [];
+  let currentLineWidth = 0;
+
+  function flushLine() {
+    // Remover espaço trailing
+    while (
+      currentLineSegments.length > 0 &&
+      /^\s+$/.test(currentLineSegments[currentLineSegments.length - 1].text)
+    ) {
+      currentLineSegments.pop();
+    }
+    if (currentLineSegments.length > 0) {
+      lines.push({ segments: [...currentLineSegments], align });
+    }
+    currentLineSegments = [];
+    currentLineWidth = 0;
+  }
+
+  for (const token of tokens) {
+    if (token.text === "\n") {
+      flushLine();
+      continue;
+    }
+
+    const seg: RichSegment = { text: token.text, bold: token.bold, italic: token.italic };
+    const w = segmentWidth(fonts, seg, fontSize);
+
+    if (token.isSpace) {
+      // Espaço sempre cabe na linha atual (será cortado no flush se trailing)
+      currentLineSegments.push(seg);
+      currentLineWidth += w;
+      continue;
+    }
+
+    // Palavra: verifica se cabe
+    if (currentLineWidth + w <= maxWidth || currentLineSegments.length === 0) {
+      currentLineSegments.push(seg);
+      currentLineWidth += w;
+    } else {
+      flushLine();
+      currentLineSegments.push(seg);
+      currentLineWidth = w;
+    }
+  }
+
+  flushLine();
+  return lines;
+}
+
+/**
+ * Renderiza linhas ricas no PDF com suporte a alinhamento e formatação inline.
+ */
+function drawRichLines(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  page: any,
+  fonts: FontSet,
+  lines: RichLine[],
+  x: number,
+  y: number,
+  maxWidth: number,
+  fontSize: number,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  color: any
+) {
+  let currentY = y;
+  const lineHeight = fontSize + 2;
+
+  for (const line of lines) {
+    // Calcular largura total da linha
+    let totalWidth = 0;
+    for (const seg of line.segments) {
+      totalWidth += segmentWidth(fonts, seg, fontSize);
+    }
+
+    // Determinar offset X baseado no alinhamento
+    let startX = x;
+    if (line.align === "center") {
+      startX = x + (maxWidth - totalWidth) / 2;
+    } else if (line.align === "right") {
+      startX = x + maxWidth - totalWidth;
+    }
+
+    if (line.align === "justify" && line !== lines[lines.length - 1]) {
+      // Justify: distribuir espaço extra entre palavras
+      drawJustifiedLine(page, fonts, line.segments, x, currentY, maxWidth, fontSize, color);
+    } else {
+      // Normal draw (left/center/right ou última linha do justify)
+      let curX = startX;
+      for (const seg of line.segments) {
+        if (!seg.text) continue;
+        const font = pickFont(fonts, seg);
+        page.drawText(seg.text, { x: curX, y: currentY, size: fontSize, font, color });
+        curX += font.widthOfTextAtSize(seg.text, fontSize);
+      }
+    }
+
+    currentY -= lineHeight;
+  }
+}
+
+/**
+ * Desenha uma linha justificada distribuindo espaço extra entre os espaços.
+ */
+function drawJustifiedLine(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  page: any,
+  fonts: FontSet,
+  segments: RichSegment[],
+  x: number,
+  y: number,
+  maxWidth: number,
+  fontSize: number,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  color: any
+) {
+  // Separar em "words" e "spaces"
+  let totalTextWidth = 0;
+  let spaceCount = 0;
+
+  for (const seg of segments) {
+    const w = segmentWidth(fonts, seg, fontSize);
+    if (/^\s+$/.test(seg.text)) {
+      spaceCount++;
+    } else {
+      totalTextWidth += w;
+    }
+  }
+
+  const extraSpace = spaceCount > 0 ? (maxWidth - totalTextWidth) / spaceCount : 0;
+
+  let curX = x;
+  for (const seg of segments) {
+    if (/^\s+$/.test(seg.text)) {
+      curX += extraSpace;
+      continue;
+    }
+    if (!seg.text) continue;
+    const font = pickFont(fonts, seg);
+    page.drawText(seg.text, { x: curX, y, size: fontSize, font, color });
+    curX += font.widthOfTextAtSize(seg.text, fontSize);
+  }
+}
+
+/**
+ * Renderiza texto composto rico no PDF a partir do JSON do TipTap.
+ * Suporta bold, italic, alinhamento (left/center/right/justify) por parágrafo.
+ */
+function embedRichText(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  page: any,
+  fonts: FontSet,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  json: Record<string, any>,
+  resolver: (variable: string) => string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  fontSize: number,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  color: any
+) {
+  const paragraphs = tiptapJsonToRichParagraphs(json, resolver);
+  const lineHeight = fontSize + 2;
+  let currentY = y;
+
+  for (let i = 0; i < paragraphs.length; i++) {
+    const para = paragraphs[i];
+    if (para.segments.length === 0) {
+      // Parágrafo vazio = quebra de linha
+      currentY -= lineHeight;
+      continue;
+    }
+
+    const lines = wrapRichSegments(para.segments, fonts, fontSize, maxWidth, para.align);
+    drawRichLines(page, fonts, lines, x, currentY, maxWidth, fontSize, color);
+    currentY -= lines.length * lineHeight;
+  }
+}
+
 interface PdfDataContext {
   cliente: ClienteBasico;
   segmento: SegmentoBasico;
@@ -497,6 +825,19 @@ export async function generatePdfFromTemplate(
   const helveticaBold = await pdfDoc.embedFont(
     pdfLib.StandardFonts.HelveticaBold
   );
+  const helveticaOblique = await pdfDoc.embedFont(
+    pdfLib.StandardFonts.HelveticaOblique
+  );
+  const helveticaBoldOblique = await pdfDoc.embedFont(
+    pdfLib.StandardFonts.HelveticaBoldOblique
+  );
+
+  const fonts: FontSet = {
+    regular: helvetica,
+    bold: helveticaBold,
+    italic: helveticaOblique,
+    boldItalic: helveticaBoldOblique,
+  };
 
   for (const campo of tpl.campos_parsed) {
     const pageIndex = Math.max((campo.posicao?.pagina ?? 1) - 1, 0);
@@ -535,6 +876,28 @@ export async function generatePdfFromTemplate(
 
     const resolve = (v: string) =>
       resolveVariable(v as TipoVariavel, ctx, extras);
+
+    // Se o campo é texto_composto e tem JSON do TipTap, usar renderização rica
+    if (
+      campo.tipo === "texto_composto" &&
+      campo.conteudo_composto?.json &&
+      typeof campo.conteudo_composto.json === "object"
+    ) {
+      embedRichText(
+        page,
+        fonts,
+        campo.conteudo_composto.json,
+        resolve,
+        x,
+        y + h - style.fontSize,
+        w,
+        style.fontSize,
+        style.color
+      );
+      continue;
+    }
+
+    // Fallback: texto plano (campos simples ou texto_composto sem JSON)
     let value = "";
     if (campo.tipo === "texto_composto" && campo.conteudo_composto?.template) {
       value = renderRich(campo.conteudo_composto.template, resolve);
