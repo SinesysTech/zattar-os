@@ -81,7 +81,7 @@ export const Footer: React.FC = () => {
                 alt="Zattar Advogados"
                 width={240}
                 height={64}
-                className="h-16 w-auto max-w-[240px] object-contain dark:hidden"
+                className="h-16 w-auto max-w-60ct-contain dark:hidden"
                 priority={false}
                 draggable={false}
               />
@@ -90,7 +90,7 @@ export const Footer: React.FC = () => {
                 alt="Zattar Advogados"
                 width={240}
                 height={64}
-                className="h-16 w-auto max-w-[240px] object-contain hidden dark:block"
+                className="h-16 w-auto max-w-60 object-contain hidden dark:block"
                 priority={false}
                 draggable={false}
               />
@@ -149,7 +149,7 @@ export const Footer: React.FC = () => {
         {/* Seção Inferior: Copyright e Links Legais */}
         <div className="mt-16 flex flex-col items-center justify-between border-t border-border/50 pt-8 md:flex-row">
           <p className="text-sm text-muted-foreground">
-            © 2025 Zattar Advogados. Feito com dedicacao pela Sinesys.
+            © 2025 Zattar Advogados. Feito com dedicação pela Sinesys.
           </p>
           <div className="mt-4 flex space-x-6 md:mt-0">
             <Link

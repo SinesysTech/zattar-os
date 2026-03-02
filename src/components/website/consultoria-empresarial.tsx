@@ -216,8 +216,8 @@ export default function PreventiveConsultancySection() {
           <p className="text-muted-foreground mx-auto mb-6 max-w-2xl">
             Vamos construir juntos um ambiente de trabalho mais seguro, justo e produtivo.
           </p>
-          <Button asChild size="lg" className="min-h-[48px] rounded-full px-8">
-            <Link href="/contato">Agende uma Consulta Estrategica</Link>
+          <Button asChild size="lg" className="min-h-12 rounded-full px-8">
+            <Link href="/contato">Agende uma Consulta Estratégica</Link>
           </Button>
         </div>
       </div>

@@ -18,7 +18,7 @@ type NavItem = {
 };
 
 const navigationItems: NavItem[] = [
-  { id: "inicio", label: "Inicio", side: "left" },
+  { id: "inicio", label: "Início", side: "left" },
   { id: "direitos-essenciais", label: "Direitos Essenciais", side: "left" },
   { id: "meu-processo", label: "Meu Processo", side: "right", isExternal: true, href: getMeuProcessoUrl() },
   { id: "quem-somos", label: "Quem Somos", side: "right" },
@@ -191,7 +191,7 @@ const Header = () => {
                 >
                   <Menu className="h-6 w-6" />
                 </SheetTrigger>
-                <SheetContent side="left" className="w-[280px] sm:w-[340px]">
+                <SheetContent side="left" className="w-70 sm:w-85">
                   <SheetHeader>
                     <SheetTitle className="text-left">Navegação</SheetTitle>
                   </SheetHeader>
