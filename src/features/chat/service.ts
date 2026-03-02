@@ -735,16 +735,18 @@ export class ChatService {
 // =============================================================================
 
 /**
- * Cria uma instância do ChatService com repositories configurados
- * Use esta função em Server Components/Actions onde você pode usar await
+ * Cria uma instância do ChatService com repositories configurados.
+ * Usa um ÚNICO cliente Supabase compartilhado entre todos os repositories
+ * para garantir contexto de autenticação consistente (mesmo JWT/auth.uid()).
  */
 export async function createChatService(): Promise<ChatService> {
-  const [roomsRepo, messagesRepo, callsRepo, membersRepo] = await Promise.all([
-    createRoomsRepository(),
-    createMessagesRepository(),
-    createCallsRepository(),
-    createMembersRepository(),
-  ]);
+  const { createClient } = await import("@/lib/supabase/server");
+  const supabase = await createClient();
+
+  const roomsRepo = new RoomsRepository(supabase);
+  const messagesRepo = new MessagesRepository(supabase);
+  const callsRepo = new CallsRepository(supabase);
+  const membersRepo = new MembersRepository(supabase);
 
   return new ChatService(roomsRepo, messagesRepo, callsRepo, membersRepo);
 }
