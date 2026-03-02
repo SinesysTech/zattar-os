@@ -22,6 +22,10 @@ export default async function ProjectsPage() {
     ordem: "desc",
   });
 
+  if (!result.success) {
+    console.error("[ProjectsPage] Erro ao listar projetos:", result.error);
+  }
+
   const projetos = result.success ? result.data.data : [];
 
   return <ProjectListView projetos={projetos} />;
