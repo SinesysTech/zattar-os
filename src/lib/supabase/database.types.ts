@@ -451,6 +451,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "assinatura_digital_assinaturas_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "processos_cliente_por_cpf"
+            referencedColumns: ["cliente_id"]
+          },
+          {
             foreignKeyName: "assinatura_digital_assinaturas_contrato_id_fkey"
             columns: ["contrato_id"]
             isOneToOne: false
