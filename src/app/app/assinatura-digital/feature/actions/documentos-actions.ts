@@ -277,3 +277,25 @@ export const actionGetPresignedPdfUrl = authenticatedAction(
     return { presignedUrl };
   }
 );
+
+// =============================================================================
+// ACTIONS - PÁGINA DE VERIFICAÇÃO
+// =============================================================================
+
+/**
+ * Busca uma assinatura de formulário por ID.
+ *
+ * Usado pela página de verificação de documentos de formulário (prefixo ass-).
+ */
+export const actionGetAssinatura = authenticatedAction(
+  z.object({ id: z.number().int().positive() }),
+  async (input) => {
+    const assinatura = await documentosService.getAssinaturaById(input.id);
+
+    if (!assinatura) {
+      throw new Error("Assinatura não encontrada");
+    }
+
+    return assinatura;
+  }
+);

@@ -325,6 +325,8 @@ export const usuarioRepository = {
       dadosAtualizacao.cargo_id = params.cargoId;
     if (params.authUserId !== undefined)
       dadosAtualizacao.auth_user_id = params.authUserId || null;
+    if (params.isSuperAdmin !== undefined)
+      dadosAtualizacao.is_super_admin = params.isSuperAdmin;
     if (params.ativo !== undefined) dadosAtualizacao.ativo = params.ativo;
 
     const { data, error } = await supabase
