@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Calendar as CalendarIcon, Trash2 } from "lucide-react";
 import { format, isBefore } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
@@ -82,11 +82,6 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
   // Get initial form state based on event prop
   const initialState = useMemo(() => getInitialFormState(), [getInitialFormState]);
 
-  // Key for remount when event changes (used in parent component)
-  const _dialogKey = useMemo(() => {
-    return event?.id || "new";
-  }, [event?.id]);
-
   const [title, setTitle] = useState(initialState.title);
   const [description, setDescription] = useState(initialState.description);
   const [startDate, setStartDate] = useState<Date>(initialState.startDate);
@@ -99,6 +94,21 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
   const [error, setError] = useState<string | null>(null);
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
+
+  // Sync form state when event prop changes (fixes stale state on event switch)
+  useEffect(() => {
+    const state = getInitialFormState();
+    setTitle(state.title);
+    setDescription(state.description);
+    setStartDate(state.startDate);
+    setEndDate(state.endDate);
+    setStartTime(state.startTime);
+    setEndTime(state.endTime);
+    setAllDay(state.allDay);
+    setLocation(state.location);
+    setColor(state.color);
+    setError(null);
+  }, [getInitialFormState]);
 
   // Memoize time options so they're only calculated once
   const timeOptions = useMemo(() => {
@@ -193,8 +203,8 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
     {
       value: "amber",
       label: "\u00c2mbar",
-      bgClass: "bg-orange-400 data-[state=checked]:bg-orange-400",
-      borderClass: "border-orange-400 data-[state=checked]:border-orange-400"
+      bgClass: "bg-amber-400 data-[state=checked]:bg-amber-400",
+      borderClass: "border-amber-400 data-[state=checked]:border-amber-400"
     },
     {
       value: "violet",

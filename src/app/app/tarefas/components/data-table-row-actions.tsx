@@ -85,7 +85,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           <span className="sr-only">Abrir menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
+      <DropdownMenuContent align="end" className="w-40">
         <DropdownMenuItem onClick={handleEdit}>Detalhes</DropdownMenuItem>
         {!task.source && (
           <DropdownMenuItem onClick={handleToggleStarred}>

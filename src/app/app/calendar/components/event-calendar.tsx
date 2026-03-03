@@ -164,8 +164,6 @@ export function EventCalendar({
 
   const handleEventCreate = (startTime: Date) => {
     if (readOnly) return;
-    console.log("Creating new event at:", startTime); // Debug log
-
     // Snap to 15-minute intervals
     const minutes = startTime.getMinutes();
     const remainder = minutes % 15;
@@ -268,7 +266,7 @@ export function EventCalendar({
     } else if (view === "day") {
       return (
         <>
-          <span className="min-[480px]:hidden" aria-hidden="true">
+          <span className="xs:hidden" aria-hidden="true">
             {fmt(currentDate, "d 'de' MMM, yyyy")}
           </span>
           <span className="max-[479px]:hidden md:hidden" aria-hidden="true">
@@ -308,7 +306,7 @@ export function EventCalendar({
               variant="outline"
               className="max-[479px]:aspect-square max-[479px]:p-0!"
               onClick={handleToday}>
-              <CalendarCheck className="min-[480px]:hidden" size={16} aria-hidden="true" />
+              <CalendarCheck className="xs:hidden" size={16} aria-hidden="true" />
               <span className="max-[479px]:sr-only">Hoje</span>
             </Button>
             <div className="flex items-center sm:gap-2">
@@ -326,7 +324,7 @@ export function EventCalendar({
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="gap-1.5 max-[479px]:h-8">
                   <span>
-                    <span className="min-[480px]:hidden" aria-hidden="true">
+                    <span className="xs:hidden" aria-hidden="true">
                       {{ month: "M", week: "S", day: "D", agenda: "A" }[view]}
                     </span>
                     <span className="max-[479px]:sr-only">

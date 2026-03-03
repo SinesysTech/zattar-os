@@ -19,7 +19,8 @@ import type {
   AddCommentInput,
   DeleteCommentInput,
   AddFileInput,
-  RemoveFileInput
+  RemoveFileInput,
+  MaterializeVirtualTaskInput
 } from "./domain";
 import {
   createTaskSchema,
@@ -32,7 +33,8 @@ import {
   addCommentSchema,
   deleteCommentSchema,
   addFileSchema,
-  removeFileSchema
+  removeFileSchema,
+  materializeVirtualTaskSchema
 } from "./domain";
 import * as repo from "./repository";
 import { listarTodosEventos } from "@/lib/event-aggregation/service";
@@ -145,6 +147,29 @@ export async function removerAnexo(usuarioId: number, input: unknown): Promise<R
 }
 
 // =============================================================================
+// MATERIALIZAÇÃO DE TAREFAS VIRTUAIS
+// =============================================================================
+
+/**
+ * Materializa uma tarefa virtual (evento do sistema) em um registro real
+ * na tabela todo_items, vinculado via source/sourceEntityId.
+ * Se já existir um registro materializado, retorna o existente.
+ */
+export async function materializarTarefaVirtual(usuarioId: number, input: unknown): Promise<Result<Task>> {
+  const val = validate<MaterializeVirtualTaskInput>(materializeVirtualTaskSchema, input);
+  if (!val.success) return err(val.error);
+
+  // Verificar se já foi materializado anteriormente
+  const existing = await repo.findTaskBySource(usuarioId, val.data.source, val.data.sourceEntityId);
+  if (existing.success && existing.data) {
+    return ok(existing.data);
+  }
+
+  // Criar registro real vinculado ao evento
+  return repo.createTaskWithSource(usuarioId, val.data);
+}
+
+// =============================================================================
 // AGREGAÇÃO VIRTUAL: Tarefas manuais + Eventos do sistema
 // =============================================================================
 
@@ -232,8 +257,34 @@ export async function listarTarefasComEventos(
     virtualTasks = virtualTasks.filter((t) => t.title.toLowerCase().includes(search));
   }
 
-  // 5. Merge: tarefas manuais primeiro, depois eventos
-  return ok([...manualTasks, ...virtualTasks]);
+  // 5. Dedup: se um evento já foi materializado em todo_items, usar a versão
+  //    materializada (que tem subtarefas/comentários/anexos) e descartar a virtual.
+  const materializedKeys = new Set(
+    manualTasks
+      .filter(t => t.source && t.sourceEntityId)
+      .map(t => `${t.source}:${t.sourceEntityId}`)
+  );
+
+  // Enriquecer tarefas materializadas com dados de display do evento virtual
+  for (const vt of virtualTasks) {
+    const key = `${vt.source}:${vt.sourceEntityId}`;
+    if (materializedKeys.has(key)) {
+      const mt = manualTasks.find(t => `${t.source}:${t.sourceEntityId}` === key);
+      if (mt) {
+        mt.url = vt.url;
+        mt.prazoVencido = vt.prazoVencido;
+        mt.responsavelNome = vt.responsavelNome;
+        mt.date = vt.date;
+      }
+    }
+  }
+
+  const filteredVirtualTasks = virtualTasks.filter(
+    vt => !materializedKeys.has(`${vt.source}:${vt.sourceEntityId}`)
+  );
+
+  // 6. Merge: tarefas manuais primeiro, depois eventos não-materializados
+  return ok([...manualTasks, ...filteredVirtualTasks]);
 }
 
 

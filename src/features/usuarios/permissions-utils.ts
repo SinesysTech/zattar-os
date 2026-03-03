@@ -11,7 +11,8 @@ const MODULOS_PERMISSOES: Record<string, { titulo: string; ordem: number }> = {
   financeiro: { titulo: 'Financeiro', ordem: 4 },
   captura_integracoes: { titulo: 'Captura e Integrações', ordem: 5 },
   ia_assistentes: { titulo: 'IA e Assistentes', ordem: 6 },
-  outros: { titulo: 'Outros', ordem: 7 },
+  gestao_projetos: { titulo: 'Gestão de Projetos', ordem: 7 },
+  outros: { titulo: 'Outros', ordem: 8 },
 };
 
 const RECURSO_MODULO: Record<string, keyof typeof MODULOS_PERMISSOES> = {
@@ -55,6 +56,8 @@ const RECURSO_MODULO: Record<string, keyof typeof MODULOS_PERMISSOES> = {
 
   assistentes: 'ia_assistentes',
   pangea: 'ia_assistentes',
+
+  projetos: 'gestao_projetos',
 };
 
 export interface GrupoPermissaoModulo {
@@ -191,6 +194,7 @@ export function formatarNomeRecurso(recurso: string): string {
     pendentes: 'Pendentes',
     plano_contas: 'Plano de Contas',
     processo_partes: 'Processo Partes',
+    projetos: 'Projetos',
     representantes: 'Representantes',
     salarios: 'Salários',
     terceiros: 'Terceiros',

@@ -179,6 +179,21 @@ export const removeFileSchema = z.object({
 });
 export type RemoveFileInput = z.infer<typeof removeFileSchema>;
 
+/**
+ * Materialização de tarefa virtual: cria um registro real em todo_items
+ * vinculado ao evento de origem (source + sourceEntityId).
+ */
+export const materializeVirtualTaskSchema = z.object({
+  title: z.string().min(1),
+  status: taskStatusSchema,
+  label: taskLabelSchema,
+  priority: taskPrioritySchema,
+  dueDate: z.string().optional().nullable(),
+  source: z.string().min(1),
+  sourceEntityId: z.string().min(1),
+});
+export type MaterializeVirtualTaskInput = z.infer<typeof materializeVirtualTaskSchema>;
+
 // =============================================================================
 // QUADROS (KANBAN BOARDS)
 // =============================================================================

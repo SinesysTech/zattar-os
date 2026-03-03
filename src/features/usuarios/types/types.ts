@@ -41,7 +41,8 @@ export type Recurso =
   | 'orcamentos'
   | 'conciliacao_bancaria'
   | 'documentos'
-  | 'pangea';
+  | 'pangea'
+  | 'projetos';
 
 /**
  * Operações disponíveis no sistema
@@ -436,6 +437,18 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
   pangea: [
     'listar',
     'visualizar',
+    'exportar',
+  ],
+
+  // Projetos - Gestão de Projetos (8 permissões)
+  projetos: [
+    'listar',
+    'visualizar',
+    'criar',
+    'editar',
+    'deletar',
+    'atribuir_responsavel',
+    'desatribuir_responsavel',
     'exportar',
   ],
 };

@@ -13,6 +13,7 @@ import {
   FolderOpen,
   Handshake,
   LayoutDashboard,
+  Mail,
   MessageSquare,
   Microscope,
   PenTool,
@@ -126,6 +127,11 @@ const navServicos = [
     title: "Chat",
     url: "/app/chat",
     icon: MessageSquare,
+  },
+  {
+    title: "E-mail",
+    url: "/app/mail",
+    icon: Mail,
   },
   {
     title: "Assistentes",

@@ -12,6 +12,7 @@ import {
     Trash2,
     Plus,
     MoreVertical,
+    Upload,
 } from "lucide-react";
 
 import {
@@ -34,7 +35,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import type { TarefaDisplayItem } from "../domain";
+import type { Task, TarefaDisplayItem } from "../domain";
 import { useTarefaStore } from "../store";
 import { labels, priorities, statuses } from "../data/data";
 import * as actions from "../actions/tarefas-actions";
@@ -54,6 +55,7 @@ export function TaskDetailSheet() {
     const [newSubtask, setNewSubtask] = React.useState("");
     const [newComment, setNewComment] = React.useState("");
     const [isPending, startTransition] = React.useTransition();
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     const tarefa = React.useMemo(
         () => tarefas.find((t) => t.id === selectedTarefaId),
@@ -63,6 +65,46 @@ export function TaskDetailSheet() {
     if (!tarefa && isTarefaSheetOpen) {
         return null;
     }
+
+    // Preserva campos de display (url, prazoVencido etc.) ao converter Task → TarefaDisplayItem
+    const preserveDisplayData = (task: Task, display: TarefaDisplayItem): TarefaDisplayItem => ({
+        ...task,
+        url: display.url,
+        prazoVencido: display.prazoVencido,
+        responsavelNome: display.responsavelNome,
+        date: display.date,
+        isVirtual: false,
+    });
+
+    // Materializa tarefa virtual em registro real no banco (se necessário)
+    const ensureMaterialized = async (): Promise<TarefaDisplayItem | null> => {
+        if (!tarefa) return null;
+        if (!tarefa.isVirtual) return tarefa;
+
+        const result = await actions.actionMaterializarTarefaVirtual({
+            title: tarefa.title,
+            status: tarefa.status,
+            label: tarefa.label,
+            priority: tarefa.priority,
+            dueDate: tarefa.dueDate ?? null,
+            source: tarefa.source!,
+            sourceEntityId: tarefa.sourceEntityId!,
+        });
+
+        if (!result.success) {
+            toast.error("Erro ao preparar tarefa para edição");
+            return null;
+        }
+
+        const displayItem = preserveDisplayData(result.data as Task, tarefa);
+
+        // Substituir tarefa virtual pela materializada no store
+        removeTarefa(tarefa.id);
+        upsertTarefa(displayItem);
+        setSelectedTarefaId(displayItem.id);
+
+        return displayItem;
+    };
 
     const handleClose = () => {
         setTarefaSheetOpen(false);
@@ -101,12 +143,15 @@ export function TaskDetailSheet() {
         if (!tarefa || !newSubtask.trim()) return;
 
         startTransition(async () => {
+            const current = await ensureMaterialized();
+            if (!current) return;
+
             const result = await actions.actionCriarSubtarefa({
-                taskId: tarefa.id,
+                taskId: current.id,
                 title: newSubtask,
             });
             if (result.success) {
-                upsertTarefa(result.data as TarefaDisplayItem);
+                upsertTarefa(preserveDisplayData(result.data as Task, current));
                 setNewSubtask("");
             }
         });
@@ -144,12 +189,15 @@ export function TaskDetailSheet() {
         if (!tarefa || !newComment.trim()) return;
 
         startTransition(async () => {
+            const current = await ensureMaterialized();
+            if (!current) return;
+
             const result = await actions.actionAdicionarComentario({
-                taskId: tarefa.id,
+                taskId: current.id,
                 body: newComment,
             });
             if (result.success) {
-                upsertTarefa(result.data as TarefaDisplayItem);
+                upsertTarefa(preserveDisplayData(result.data as Task, current));
                 setNewComment("");
             }
         });
@@ -164,6 +212,49 @@ export function TaskDetailSheet() {
             });
             if (result.success) {
                 upsertTarefa(result.data as TarefaDisplayItem);
+            }
+        });
+    };
+
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || !tarefa) return;
+
+        // Reset input para permitir selecionar o mesmo arquivo novamente
+        e.target.value = "";
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            startTransition(async () => {
+                const current = await ensureMaterialized();
+                if (!current) return;
+
+                const result = await actions.actionAdicionarAnexo({
+                    taskId: current.id,
+                    name: file.name,
+                    url: reader.result as string,
+                    type: file.type || undefined,
+                    size: file.size,
+                });
+                if (result.success) {
+                    upsertTarefa(preserveDisplayData(result.data as Task, current));
+                    toast.success("Anexo adicionado");
+                }
+            });
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleRemoveFile = (fileId: string) => {
+        if (!tarefa) return;
+        startTransition(async () => {
+            const result = await actions.actionRemoverAnexo({
+                taskId: tarefa.id,
+                fileId,
+            });
+            if (result.success) {
+                upsertTarefa(result.data as TarefaDisplayItem);
+                toast.success("Anexo removido");
             }
         });
     };
@@ -305,9 +396,8 @@ export function TaskDetailSheet() {
                                                 value={newSubtask}
                                                 onChange={(e) => setNewSubtask(e.target.value)}
                                                 className="h-10 text-sm"
-                                                disabled={tarefa.isVirtual}
                                             />
-                                            <Button type="submit" size="icon" className="h-10 w-10 shrink-0" disabled={!newSubtask.trim() || isPending || tarefa.isVirtual}>
+                                            <Button type="submit" size="icon" className="h-10 w-10 shrink-0" disabled={!newSubtask.trim() || isPending}>
                                                 <Plus className="h-4 w-4" />
                                             </Button>
                                         </form>
@@ -318,30 +408,60 @@ export function TaskDetailSheet() {
 
                                 {/* Attachments Section */}
                                 <div className="space-y-4">
-                                    <div className="flex items-center gap-2">
-                                        <Paperclip className="h-4 w-4 text-muted-foreground" />
-                                        <h3 className="text-sm font-semibold">Anexos</h3>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <Paperclip className="h-4 w-4 text-muted-foreground" />
+                                            <h3 className="text-sm font-semibold">Anexos</h3>
+                                        </div>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-8 gap-1.5 text-xs"
+                                            disabled={isPending}
+                                            onClick={() => fileInputRef.current?.click()}
+                                        >
+                                            <Upload className="h-3.5 w-3.5" />
+                                            Adicionar
+                                        </Button>
+                                        <input
+                                            ref={fileInputRef}
+                                            type="file"
+                                            className="hidden"
+                                            onChange={handleFileUpload}
+                                        />
                                     </div>
 
                                     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                                         {tarefa.files?.map((file) => (
-                                            <a
+                                            <div
                                                 key={file.id}
-                                                href={file.url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 rounded-lg border p-3 hover:bg-accent/50 transition-colors"
+                                                className="group flex items-center gap-3 rounded-lg border p-3 hover:bg-accent/50 transition-colors"
                                             >
-                                                <div className="rounded bg-primary/10 p-2">
-                                                    <Paperclip className="h-4 w-4 text-primary" />
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-xs font-medium truncate">{file.name}</p>
-                                                    <p className="text-[10px] text-muted-foreground">
-                                                        {file.size ? `${(file.size / 1024).toFixed(1)} KB` : "Arquivo"}
-                                                    </p>
-                                                </div>
-                                            </a>
+                                                <a
+                                                    href={file.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center gap-3 flex-1 min-w-0"
+                                                >
+                                                    <div className="rounded bg-primary/10 p-2 shrink-0">
+                                                        <Paperclip className="h-4 w-4 text-primary" />
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-xs font-medium truncate">{file.name}</p>
+                                                        <p className="text-[10px] text-muted-foreground">
+                                                            {file.size ? `${(file.size / 1024).toFixed(1)} KB` : "Arquivo"}
+                                                        </p>
+                                                    </div>
+                                                </a>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                                                    onClick={() => handleRemoveFile(file.id)}
+                                                >
+                                                    <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                                                </Button>
+                                            </div>
                                         ))}
                                         {!tarefa.files?.length && (
                                             <p className="text-xs text-muted-foreground col-span-2 italic">Nenhum anexo.</p>
@@ -365,10 +485,9 @@ export function TaskDetailSheet() {
                                                 value={newComment}
                                                 onChange={(e) => setNewComment(e.target.value)}
                                                 className="min-h-20 text-sm resize-none"
-                                                disabled={tarefa.isVirtual}
                                             />
                                             <div className="flex justify-end">
-                                                <Button type="submit" size="sm" disabled={!newComment.trim() || isPending || tarefa.isVirtual}>
+                                                <Button type="submit" size="sm" disabled={!newComment.trim() || isPending}>
                                                     Comentar
                                                 </Button>
                                             </div>

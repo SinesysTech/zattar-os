@@ -22,7 +22,8 @@ import type {
   AddCommentInput,
   DeleteCommentInput,
   AddFileInput,
-  RemoveFileInput
+  RemoveFileInput,
+  MaterializeVirtualTaskInput
 } from "./domain";
 
 const TABLE_ITEMS = "todo_items";
@@ -488,6 +489,57 @@ export async function deleteTask(usuarioId: number, id: string): Promise<Result<
     return ok(undefined);
   } catch (error) {
     return err(appError("DATABASE_ERROR", "Erro ao remover tarefa", undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+// =============================================================================
+// MATERIALIZAÇÃO DE TAREFAS VIRTUAIS
+// =============================================================================
+
+export async function findTaskBySource(usuarioId: number, source: string, sourceEntityId: string): Promise<Result<Task | null>> {
+  try {
+    const db = createDbClient();
+    const { data: item, error } = await db
+      .from(TABLE_ITEMS)
+      .select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id, label")
+      .eq("usuario_id", usuarioId)
+      .eq("source", source)
+      .eq("source_entity_id", sourceEntityId)
+      .maybeSingle();
+
+    if (error) return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    if (!item) return ok(null);
+
+    return getTaskById(usuarioId, (item as TodoItemRow).id);
+  } catch (error) {
+    return err(appError("DATABASE_ERROR", "Erro ao buscar tarefa por source", undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+export async function createTaskWithSource(usuarioId: number, input: MaterializeVirtualTaskInput): Promise<Result<Task>> {
+  try {
+    const db = createDbClient();
+
+    let status = input.status === 'todo' ? 'pending' : (input.status === 'in progress' ? 'in-progress' : (input.status === 'done' ? 'completed' : input.status));
+    if (!status) status = 'pending';
+
+    const { data: item, error: insertError } = await db.from(TABLE_ITEMS).insert({
+      usuario_id: usuarioId,
+      title: input.title,
+      status: status,
+      priority: input.priority,
+      due_date: input.dueDate ?? null,
+      starred: false,
+      label: input.label,
+      source: input.source,
+      source_entity_id: input.sourceEntityId,
+    }).select("id, usuario_id, title, description, status, priority, due_date, reminder_at, starred, position, created_at, updated_at, source, source_entity_id, label").single();
+
+    if (insertError) return err(appError("DATABASE_ERROR", insertError.message, { code: insertError.code }));
+
+    return getTaskById(usuarioId, (item as TodoItemRow).id) as Promise<Result<Task>>;
+  } catch (error) {
+    return err(appError("DATABASE_ERROR", "Erro ao materializar tarefa virtual", undefined, error instanceof Error ? error : undefined));
   }
 }
 

@@ -26,16 +26,13 @@ import {
   Eye,
   List,
   LoaderCircle,
-  PlusIcon,
   SearchIcon
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import {
-  addHoursToDate,
   AgendaDaysToShow,
   EventCalendar,
-  EventDialog,
   type CalendarEvent,
   type CalendarView
 } from "./";
@@ -117,9 +114,7 @@ export default function EventCalendarApp({
 }) {
   const router = useRouter();
 
-  // Separate server events from locally created events
   const [serverEvents, setServerEvents] = useState<UnifiedCalendarEvent[]>(initialEvents);
-  const [localEvents, setLocalEvents] = useState<CalendarEvent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -127,24 +122,15 @@ export default function EventCalendarApp({
   const [searchQuery, setSearchQuery] = useState("");
   const [sourceFilter, setSourceFilter] = useState<string[]>([]);
 
-  // State for the page-level creation dialog
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [newEvent, setNewEvent] = useState<CalendarEvent | null>(null);
-
   // Filter server events by source, then adapt to CalendarEvent
   const filteredServerEvents = useMemo(() => {
     if (sourceFilter.length === 0) return serverEvents;
     return serverEvents.filter((e) => sourceFilter.includes(e.source));
   }, [serverEvents, sourceFilter]);
 
-  const adaptedServerEvents = useMemo<CalendarEvent[]>(
+  const events = useMemo<CalendarEvent[]>(
     () => filteredServerEvents.map(adaptUnifiedEvent),
     [filteredServerEvents]
-  );
-
-  const events = useMemo(
-    () => [...adaptedServerEvents, ...localEvents],
-    [adaptedServerEvents, localEvents]
   );
 
   const eventUrlById = useMemo(() => {
@@ -174,7 +160,7 @@ export default function EventCalendarApp({
     let cancelled = false;
 
     const fetchData = async () => {
-      setTimeout(() => setIsLoading(true), 0);
+      setIsLoading(true);
       try {
         const result = await actionListarEventosCalendar({
           startAt: rangeStart.toISOString(),
@@ -254,37 +240,11 @@ export default function EventCalendarApp({
     if (url) router.push(url);
   };
 
-  const handleCreateClick = () => {
-    const now = new Date();
-    now.setMinutes(0, 0, 0);
-    setNewEvent({
-      id: "",
-      title: "",
-      start: now,
-      end: addHoursToDate(now, 1),
-      allDay: false
-    });
-    setIsCreateOpen(true);
-  };
-
-  const handleCreateSave = (event: CalendarEvent) => {
-    setLocalEvents((prev) => [
-      ...prev,
-      { ...event, id: Math.random().toString(36).substring(2, 11) }
-    ]);
-    setIsCreateOpen(false);
-    setNewEvent(null);
-  };
-
   return (
     <div className="flex min-h-[calc(100vh-var(--header-height)-2rem)] flex-col gap-4">
-      {/* Row 1: Title + New event button */}
+      {/* Row 1: Title */}
       <div className="flex items-center justify-between">
         <h1 className="font-heading text-2xl font-bold tracking-tight">Agenda</h1>
-        <Button size="sm" onClick={handleCreateClick}>
-          <PlusIcon className="opacity-60 sm:-ms-1" size={16} aria-hidden="true" />
-          <span className="max-sm:sr-only">Novo evento</span>
-        </Button>
       </div>
 
       {/* Row 2: Search (left) + Navigation controls + View selector (right) */}
@@ -321,7 +281,7 @@ export default function EventCalendarApp({
             aria-label="Anterior">
             <ChevronLeftIcon size={16} aria-hidden="true" />
           </Button>
-          <span className="min-w-[120px] text-center text-sm font-medium sm:min-w-[160px]">
+          <span className="min-w-30 text-center text-sm font-medium sm:min-w-40">
             {isLoading ? (
               <LoaderCircle className="mx-auto h-4 w-4 animate-spin" />
             ) : (
@@ -353,40 +313,11 @@ export default function EventCalendarApp({
         events={filteredEvents}
         readOnly={readOnly}
         onEventSelect={handleEventSelect}
-        onEventAdd={
-          readOnly ? undefined : (event) => setLocalEvents((prev) => [...prev, event])
-        }
-        onEventUpdate={
-          readOnly
-            ? undefined
-            : (updatedEvent) =>
-              setLocalEvents((prev) =>
-                prev.map((ev) => (ev.id === updatedEvent.id ? updatedEvent : ev))
-              )
-        }
-        onEventDelete={
-          readOnly
-            ? undefined
-            : (eventId) =>
-              setLocalEvents((prev) => prev.filter((ev) => ev.id !== eventId))
-        }
         currentDate={currentDate}
         onCurrentDateChange={setCurrentDate}
         view={view}
         onViewChange={setView}
         hideToolbar
-      />
-
-      {/* Page-level creation dialog */}
-      <EventDialog
-        event={newEvent}
-        isOpen={isCreateOpen}
-        onClose={() => {
-          setIsCreateOpen(false);
-          setNewEvent(null);
-        }}
-        onSave={handleCreateSave}
-        onDelete={() => { }}
       />
     </div>
   );

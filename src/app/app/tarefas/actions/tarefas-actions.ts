@@ -38,7 +38,8 @@ import {
   addCommentSchema,
   deleteCommentSchema,
   addFileSchema,
-  removeFileSchema
+  removeFileSchema,
+  materializeVirtualTaskSchema
 } from '../domain';
 
 // =============================================================================
@@ -199,6 +200,22 @@ export const actionMarcarComoTodo = authenticatedAction(
       throw new Error(result.error.message);
     }
     revalidatePath("/app/tarefas");
+    return result.data;
+  }
+);
+
+// =============================================================================
+// MATERIALIZAÇÃO DE TAREFAS VIRTUAIS
+// =============================================================================
+
+export const actionMaterializarTarefaVirtual = authenticatedAction(
+  materializeVirtualTaskSchema,
+  async (data, { user }) => {
+    const result = await service.materializarTarefaVirtual(user.id, data);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/app/tarefas');
     return result.data;
   }
 );
