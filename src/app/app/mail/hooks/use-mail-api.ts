@@ -16,6 +16,7 @@ export function useMailFolders() {
       }
       if (!res.ok) throw new Error("Erro ao carregar pastas");
       const data = await res.json();
+      setServiceUnavailable(false);
       setFolders(data.folders);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro ao carregar pastas");
@@ -58,6 +59,7 @@ export function useMailMessages() {
         }
         if (!res.ok) throw new Error("Erro ao carregar mensagens");
         const data = await res.json();
+        setServiceUnavailable(false);
         setMessages(data.data);
         setTotalMessages(data.total);
         setHasMore(data.hasMore);
