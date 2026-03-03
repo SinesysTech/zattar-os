@@ -2,10 +2,11 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { MailWarning, Search, Settings } from "lucide-react";
+import { MailWarning, Search, Settings, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useMailStore } from "../use-mail";
 import { useMailFolders, useMailMessages, useMailActions } from "../hooks/use-mail-api";
+import { FOLDER_LABELS } from "../lib/constants";
 
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
@@ -36,7 +37,8 @@ export function Mail({
 }) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const isMobile = useIsMobile();
-  const { selectedMail, messages, selectedFolder, setSearchQuery, serviceUnavailable } = useMailStore();
+  const { selectedMail, messages, selectedFolder, searchQuery, setSearchQuery, serviceUnavailable } =
+    useMailStore();
   const [tab, setTab] = React.useState("all");
   const [searchInput, setSearchInput] = React.useState("");
 
@@ -67,8 +69,13 @@ export function Mail({
     [searchInput, searchMessages, refreshMessages, setSearchQuery]
   );
 
-  // Folder name for display
-  const folderDisplay = selectedFolder === "INBOX" ? "Inbox" : selectedFolder;
+  const handleClearSearch = React.useCallback(async () => {
+    setSearchInput("");
+    setSearchQuery("");
+    await refreshMessages();
+  }, [setSearchQuery, refreshMessages]);
+
+  const folderDisplay = FOLDER_LABELS[selectedFolder] ?? selectedFolder;
 
   if (serviceUnavailable) {
     return (
@@ -92,6 +99,13 @@ export function Mail({
 
   return (
     <TooltipProvider delayDuration={0}>
+      {/* Skip link for keyboard accessibility */}
+      <a
+        href="#mail-list"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">
+        Ir para lista de e-mails
+      </a>
+
       <ResizablePanelGroup
         direction="horizontal"
         id={cookieID}
@@ -116,7 +130,9 @@ export function Mail({
               document.cookie = `${collapsedCookieID}=${JSON.stringify(false)}`;
             }
           }}
-          className={cn(isCollapsed && "max-w-12.5 transition-all duration-1000 ease-in-out")}>
+          className={cn(
+            isCollapsed && "max-w-12.5 transition-all duration-300 ease-in-out"
+          )}>
           <NavDesktop isCollapsed={isCollapsed} />
         </ResizablePanel>
         <ResizableHandle hidden={isMobile} withHandle />
@@ -147,24 +163,38 @@ export function Mail({
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                   />
+                  {searchQuery && (
+                    <InputGroupAddon>
+                      <button
+                        type="button"
+                        onClick={handleClearSearch}
+                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label="Limpar busca">
+                        <X className="h-4 w-4" />
+                      </button>
+                    </InputGroupAddon>
+                  )}
                 </InputGroup>
               </form>
             </div>
             <Separator />
-            <div className="min-h-0 flex-1 overflow-hidden">
+            <div id="mail-list" className="min-h-0 flex-1 overflow-hidden">
               <MailList items={filteredMessages} />
             </div>
           </Tabs>
         </ResizablePanel>
         <ResizableHandle hidden={isMobile} withHandle />
-        <ResizablePanel id="right-panel" hidden={isMobile} defaultSize={defaultLayout[2]} minSize={30}>
-          {isMobile ? (
-            <MailDisplayMobile mail={currentMail} />
-          ) : (
-            <MailDisplay mail={currentMail} />
-          )}
+        <ResizablePanel
+          id="right-panel"
+          hidden={isMobile}
+          defaultSize={defaultLayout[2]}
+          minSize={30}>
+          <MailDisplay mail={currentMail} />
         </ResizablePanel>
       </ResizablePanelGroup>
+
+      {/* Mobile display — rendered outside panels, uses portal via Drawer */}
+      {isMobile && <MailDisplayMobile mail={currentMail} />}
     </TooltipProvider>
   );
 }
