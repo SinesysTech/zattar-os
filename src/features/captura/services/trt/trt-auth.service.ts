@@ -100,37 +100,84 @@ async function processOTP(
   });
   await delay(2000);
 
+  // Seletores possíveis para campo OTP no Keycloak (varia por versão)
+  const OTP_SELECTORS = [
+    '#otp',
+    '#totp',
+    'input[name="otp"]',
+    'input[name="totp"]',
+    'input[name="otp-code"]',
+    '#kc-otp-login-form input[type="text"]',
+  ];
+
   // Aguardar campo OTP aparecer e ficar visível (OTP sempre será necessário)
   let otpFieldVisible = false;
+  let matchedSelector: string | null = null;
   let retries = 0;
   const MAX_OTP_CHECK_RETRIES = 10; // Aguardar até 20 segundos (10 tentativas x 2s)
 
   while (!otpFieldVisible && retries < MAX_OTP_CHECK_RETRIES) {
-    const otpFieldInfo = await page.evaluate(() => {
-      const field = document.querySelector('#otp') || document.querySelector('input[name="otp"]');
-      if (!field) return { exists: false, visible: false };
+    const otpFieldInfo = await page.evaluate((selectors) => {
+      for (const sel of selectors) {
+        const field = document.querySelector(sel);
+        if (!field) continue;
 
-      const rect = field.getBoundingClientRect();
-      const isVisible = !!(rect.width && rect.height && (field as HTMLElement).offsetParent !== null);
+        const rect = field.getBoundingClientRect();
+        const isVisible = !!(rect.width && rect.height && (field as HTMLElement).offsetParent !== null);
 
-      return { exists: true, visible: isVisible };
-    });
+        if (isVisible) {
+          return { exists: true, visible: true, selector: sel };
+        }
+      }
+      // Nenhum seletor encontrou campo visível — capturar info de debug
+      const allInputs = Array.from(document.querySelectorAll('input')).map(el => ({
+        id: el.id,
+        name: el.name,
+        type: el.type,
+        visible: !!(el.getBoundingClientRect().width && el.getBoundingClientRect().height),
+      }));
+      return { exists: false, visible: false, selector: null, debugInputs: allInputs };
+    }, OTP_SELECTORS);
 
-    if (otpFieldInfo.exists && otpFieldInfo.visible) {
+    if (otpFieldInfo.exists && otpFieldInfo.visible && otpFieldInfo.selector) {
       otpFieldVisible = true;
+      matchedSelector = otpFieldInfo.selector;
       break;
     }
 
     retries++;
     if (retries < MAX_OTP_CHECK_RETRIES) {
+      // Log debug na última tentativa para ajudar diagnóstico
+      if (retries === MAX_OTP_CHECK_RETRIES - 1 && 'debugInputs' in otpFieldInfo) {
+        log('warn', '⚠️ Inputs encontrados na página (debug):', {
+          inputs: otpFieldInfo.debugInputs as unknown as Record<string, unknown>,
+          url: await page.url(),
+        });
+      }
       log('info', `⏳ Campo OTP ainda não visível, aguardando... (${retries}/${MAX_OTP_CHECK_RETRIES})`);
       await delay(2000);
     }
   }
 
-  if (!otpFieldVisible) {
+  if (!otpFieldVisible || !matchedSelector) {
+    // Capturar HTML parcial da página para debug antes de lançar erro
+    const debugInfo = await page.evaluate(() => {
+      const body = document.body;
+      const title = document.title;
+      const forms = Array.from(document.querySelectorAll('form')).map(f => ({
+        id: f.id,
+        action: f.action,
+        inputs: Array.from(f.querySelectorAll('input')).map(i => ({ id: i.id, name: i.name, type: i.type })),
+      }));
+      // Pegar texto visível (primeiros 500 chars) para entender que página está carregada
+      const visibleText = body?.innerText?.substring(0, 500) || '';
+      return { title, forms, visibleText };
+    });
+    log('error', '❌ Campo OTP não encontrado. Debug da página:', debugInfo as unknown as Record<string, unknown>);
     throw new Error('Campo OTP não apareceu após aguardar. Verifique se o login foi concluído corretamente.');
   }
+
+  log('success', `✅ Campo OTP encontrado com seletor: ${matchedSelector}`);
 
   log('info', '📱 Campo OTP detectado, obtendo código...');
 
@@ -146,7 +193,7 @@ async function processOTP(
 
   await delay(1000);
 
-  const otpField = page.locator('#otp').first();
+  const otpField = page.locator(matchedSelector).first();
   await otpField.focus();
   await otpField.fill(currentOtp);
 
