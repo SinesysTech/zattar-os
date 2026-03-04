@@ -2,14 +2,13 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Check, ChevronDown, Mail as MailIcon, MailWarning, Plus, Search, Settings, X } from "lucide-react";
+import { MailWarning, Search, Settings, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useMailStore } from "../use-mail";
 import { useMailFolders, useMailMessages, useMailActions } from "../hooks/use-mail-api";
 import { FOLDER_LABELS } from "../lib/constants";
 
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -38,9 +37,8 @@ export function Mail({
 }) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const isMobile = useIsMobile();
-  const { selectedMail, messages, selectedFolder, searchQuery, setSearchQuery, serviceUnavailable, accounts, selectedAccountId, setSelectedAccountId } =
+  const { selectedMail, messages, selectedFolder, searchQuery, setSearchQuery, serviceUnavailable } =
     useMailStore();
-  const currentAccount = accounts.find((a) => a.id === selectedAccountId) ?? accounts[0] ?? null;
   const [tab, setTab] = React.useState("all");
   const [searchInput, setSearchInput] = React.useState("");
 
@@ -146,52 +144,7 @@ export function Mail({
             <div className="flex h-13 shrink-0 items-center gap-2 px-4">
               {isMobile && <NavMobile />}
 
-              {/* Account switcher / folder display */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-semibold hover:bg-muted transition-colors">
-                    {folderDisplay}
-                    <ChevronDown className="text-muted-foreground h-3.5 w-3.5" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-72 p-0" align="start">
-                  {accounts.length > 0 && (
-                    <div className="border-b p-1">
-                      {accounts.map((acc) => (
-                        <button
-                          key={acc.id}
-                          className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left transition-colors hover:bg-muted"
-                          onClick={() => setSelectedAccountId(acc.id)}>
-                          <div className="bg-primary/10 text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
-                            <MailIcon className="h-4 w-4" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-medium">{acc.nome_conta || acc.email}</p>
-                            <p className="text-muted-foreground truncate text-xs">{acc.email}</p>
-                          </div>
-                          {acc.id === selectedAccountId && (
-                            <Check className="text-primary h-4 w-4 shrink-0" />
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  <div className="p-1">
-                    <Button variant="ghost" size="sm" className="w-full justify-start gap-2" asChild>
-                      <Link href="/app/mail/configurar">
-                        <Settings className="h-4 w-4" />
-                        Configurar conta
-                      </Link>
-                    </Button>
-                    <Button variant="ghost" size="sm" className="text-muted-foreground w-full justify-start gap-2" asChild>
-                      <Link href="/app/mail/configurar">
-                        <Plus className="h-4 w-4" />
-                        Adicionar conta
-                      </Link>
-                    </Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <span className="text-sm font-semibold">{folderDisplay}</span>
 
               <TabsList className="ml-auto h-7">
                 <TabsTrigger value="all" className="text-xs px-2 h-5">
