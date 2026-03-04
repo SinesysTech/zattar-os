@@ -139,7 +139,7 @@ export function Mail({
         <ResizablePanel id="middle-panel" defaultSize={defaultLayout[1]} minSize={20}>
           <Tabs
             defaultValue="all"
-            className="flex h-full flex-col bg-muted/30"
+            className="flex h-full flex-col gap-0 bg-muted/30"
             onValueChange={(value) => setTab(value)}>
             <div className="flex h-13 shrink-0 items-center gap-2 px-4">
               {isMobile && <NavMobile />}
