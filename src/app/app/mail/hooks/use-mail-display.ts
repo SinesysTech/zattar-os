@@ -1,18 +1,20 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import { useMailActions } from "./use-mail-api";
 import { useMailStore } from "../use-mail";
 import type { MailMessagePreview } from "@/lib/mail/types";
+import type { MailEditorRef } from "../components/mail-editor";
 import { toast } from "sonner";
 
 export function useMailDisplay(mail: MailMessagePreview | null) {
-  const [replyText, setReplyText] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   const { deleteMessage, moveMessage, markUnread, starMessage, reply } =
     useMailActions();
   const { setSelectedMail } = useMailStore();
+  const editorRef = useRef<MailEditorRef | null>(null);
 
   const senderName = useMemo(
     () => (mail ? mail.from.name || mail.from.address : ""),
@@ -57,11 +59,17 @@ export function useMailDisplay(mail: MailMessagePreview | null) {
   const handleReply = useCallback(
     async (e: React.FormEvent, replyAll: boolean = false) => {
       e.preventDefault();
-      if (!mail || !replyText.trim()) return;
+      if (!mail) return;
+
+      const editor = editorRef.current;
+      if (!editor || editor.isEmpty()) return;
+
+      const text = editor.getText();
+
       setIsSending(true);
       try {
-        await reply(mail.uid, mail.folder, replyText, replyAll);
-        setReplyText("");
+        await reply(mail.uid, mail.folder, text, replyAll);
+        editor.reset();
         toast.success(replyAll ? "Resposta enviada a todos" : "Resposta enviada");
       } catch {
         toast.error("Erro ao enviar resposta");
@@ -69,8 +77,12 @@ export function useMailDisplay(mail: MailMessagePreview | null) {
         setIsSending(false);
       }
     },
-    [mail, replyText, reply]
+    [mail, reply]
   );
+
+  const toggleExpanded = useCallback(() => {
+    setIsExpanded((prev) => !prev);
+  }, []);
 
   const actions = useMemo(() => {
     if (!mail) return null;
@@ -91,8 +103,7 @@ export function useMailDisplay(mail: MailMessagePreview | null) {
   }, [mail, handleAction, moveMessage, deleteMessage, markUnread, starMessage]);
 
   return {
-    replyText,
-    setReplyText,
+    editorRef,
     isSending,
     actionLoading,
     senderName,
@@ -100,5 +111,7 @@ export function useMailDisplay(mail: MailMessagePreview | null) {
     handleReply,
     handleAction,
     actions,
+    isExpanded,
+    toggleExpanded,
   };
 }
