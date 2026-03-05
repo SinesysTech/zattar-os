@@ -50,7 +50,7 @@ function formatFileSize(bytes: number | null): string {
 export function FilesView({
   projeto,
   anexos,
-  usuarioAtualId,
+  _usuarioAtualId,
 }: FilesViewProps) {
   const [isPending, startTransition] = React.useTransition();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -74,7 +74,7 @@ export function FilesView({
 
     startTransition(async () => {
       let successCount = 0;
-      let errorCount = 0;
+      let _errorCount = 0;
       for (const file of fileList) {
         const formData = new FormData();
         formData.append("file", file);
@@ -83,7 +83,7 @@ export function FilesView({
         if (result.success) {
           successCount++;
         } else {
-          errorCount++;
+          _errorCount++;
           toast.error(
             result.error?.message ?? `Erro ao enviar ${file.name}.`
           );
