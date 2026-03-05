@@ -53,7 +53,7 @@ async function main() {
 
     // 2. Credenciais fixas para teste (válidas para todos os TRTs)
     const cpf = '07529294610';
-    const senha = '12345678A@';
+    const senha = '12345678aA@';
 
     console.log('🔐 Usando credenciais de teste\n');
 
