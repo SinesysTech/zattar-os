@@ -62,11 +62,6 @@ import { commentPlugin } from '@/components/editor/plate/comment-kit';
 
 import { AIChatEditor } from './ai-chat-editor';
 
-function getAbortFakeStream(chat: unknown): unknown {
-  if (typeof chat !== 'object' || chat === null) return undefined;
-  return (chat as { _abortFakeStream?: unknown })._abortFakeStream;
-}
-
 export function AIMenu() {
   const { api, editor } = useEditorPlugin(AIChatPlugin);
   const mode = usePluginOption(AIChatPlugin, 'mode');
@@ -151,13 +146,6 @@ export function AIMenu() {
 
   useHotkeys('esc', () => {
     api.aiChat.stop();
-
-    // remove when you implement the route /api/ai/command
-    const abort = getAbortFakeStream(chat);
-    if (typeof abort === 'function') {
-      abort();
-      return;
-    }
   });
 
   const isLoading = status === 'streaming' || status === 'submitted';
@@ -670,13 +658,6 @@ export function AILoadingBar() {
 
   useHotkeys('esc', () => {
     api.aiChat.stop();
-
-    // remove when you implement the route /api/ai/command
-    const abort = getAbortFakeStream(chat);
-    if (typeof abort === 'function') {
-      abort();
-      return;
-    }
   });
 
   if (

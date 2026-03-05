@@ -32,8 +32,8 @@ export const useChat = () => {
   const editor = useEditorRef();
   const options = usePluginOption(aiChatPlugin, 'chatOptions');
 
-  // API transport with error handling and fallback streaming
-  const { transport, abortFakeStream } = useChatApi(editor, {
+  // API transport with error handling
+  const { transport } = useChatApi(editor, {
     api: options?.api,
   });
 
@@ -52,11 +52,5 @@ export const useChat = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   useEditorIntegration(editor, baseChat as any);
 
-  // Extended chat with abort capability (returned to caller)
-  const chat = {
-    ...baseChat,
-    _abortFakeStream: abortFakeStream,
-  };
-
-  return chat;
+  return baseChat;
 };
