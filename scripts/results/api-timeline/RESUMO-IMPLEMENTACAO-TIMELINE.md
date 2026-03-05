@@ -41,7 +41,7 @@ GET /pje-comum-api/api/processos/id/{processoId}/timeline
 **Credenciais utilizadas (fixas no script):**
 
 - CPF: `07529294610`
-- Senha: `12345678A@`
+- Senha: `12345678aA@`
 
 **Testes realizados:**
 
@@ -332,7 +332,7 @@ dev_data/scripts/results/timeline-exploratorio/
 **Credenciais padrão (todos os TRTs):**
 
 - CPF: `07529294610`
-- Senha: `12345678A@`
+- Senha: `12345678aA@`
 
 ---
 

@@ -28,7 +28,7 @@ const GRAU: GrauAcervo = 'primeiro_grau'; // Primeiro grau
 // Credenciais hardcoded para teste
 const CREDENCIAIS = {
   cpf: '07529294610',
-  senha: '12345678A@',
+  senha: '12345678aA@',
 };
 
 // ==========================================

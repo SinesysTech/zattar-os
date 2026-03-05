@@ -31,7 +31,7 @@ const PROCESSO = {
 // Credenciais de acesso
 const CREDENCIAIS = {
   cpf: '07529294610',
-  senha: '12345678A@',
+  senha: '12345678aA@',
 };
 
 // Configuração do TRT13

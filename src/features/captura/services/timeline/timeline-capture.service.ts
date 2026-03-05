@@ -160,7 +160,7 @@ export async function capturarTimeline(
     // TODO: Implementar getCredenciais quando necessário
     // Por enquanto, usar credenciais padrão
     const cpf = '07529294610';
-    const senha = '12345678A@';
+    const senha = '12345678aA@';
 
     console.log('🔑 [capturarTimeline] Autenticando...');
 
