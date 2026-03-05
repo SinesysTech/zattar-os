@@ -18,10 +18,6 @@ export type InputCepAddress = {
   uf: string;
 };
 
-/**
- * Alias for InputCepAddress for backward compatibility.
- */
-export type AddressData = InputCepAddress;
 
 export interface InputCEPProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange' | 'onBlur'> {

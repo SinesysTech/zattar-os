@@ -9,8 +9,7 @@ import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
-import { TableToolbar } from '@/components/ui/table-toolbar';
-import { DataShell, DataTable } from '@/components/shared/data-shell';
+import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { TablePagination } from '@/components/shared/table-pagination';
 import { Button } from '@/components/ui/button';
 import {
@@ -187,14 +186,14 @@ export function TiposExpedientesList({ initialData }: TiposExpedientesListProps)
         <div className="flex flex-col h-full space-y-4">
             <DataShell
                 header={
-                    <TableToolbar
-                        variant="integrated"
+                    <DataTableToolbar
                         searchValue={globalFilter}
-                        onSearchChange={setGlobalFilter}
-                        selectedFilters={[]}
-                        onFiltersChange={() => {}}
-                        onNewClick={handleNew}
-                        newButtonTooltip="Novo Tipo"
+                        onSearchValueChange={setGlobalFilter}
+                        searchPlaceholder="Buscar tipos..."
+                        actionButton={{
+                            label: 'Novo Tipo',
+                            onClick: handleNew,
+                        }}
                     />
                 }
                 footer={

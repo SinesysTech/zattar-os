@@ -42,29 +42,46 @@ export class CallsRepository {
   async saveChamada(input: Partial<Chamada>): Promise<Result<Chamada, Error>> {
     try {
       const snakeInput = fromCamelToSnake(input);
-      const { data, error } = await this.supabase
-        .from("chamadas")
-        .insert(snakeInput)
-        .select()
-        .single();
+      console.log("[DEBUG saveChamada] payload:", JSON.stringify(snakeInput));
 
-      if (error) {
-        const errorDetails = {
-          message: error.message,
-          code: error.code,
-          details: error.details,
-          hint: error.hint,
-        };
-        console.error(
-          "Erro saveChamada:",
-          JSON.stringify(errorDetails, null, 2)
-        );
+      // Teste 1: INSERT sem RETURNING (testa só a INSERT policy)
+      const { error: insertOnlyError } = await this.supabase
+        .from("chamadas")
+        .insert(snakeInput);
+
+      if (insertOnlyError) {
+        console.error("[DEBUG saveChamada] INSERT puro falhou:", JSON.stringify({
+          message: insertOnlyError.message,
+          code: insertOnlyError.code,
+          details: insertOnlyError.details,
+          hint: insertOnlyError.hint,
+        }, null, 2));
         return err(
           new Error(
-            `Erro ao criar chamada: ${error.message || "Erro desconhecido"}`
+            `Erro ao criar chamada: ${insertOnlyError.message || "Erro desconhecido"}`
           )
         );
       }
+
+      console.log("[DEBUG saveChamada] INSERT puro OK! Buscando row...");
+
+      // Se INSERT puro funcionar, buscar a row pelo meeting_id
+      const { data, error: selectError } = await this.supabase
+        .from("chamadas")
+        .select()
+        .eq("meeting_id", snakeInput.meeting_id)
+        .single();
+
+      if (selectError) {
+        console.error("[DEBUG saveChamada] SELECT após INSERT falhou:", JSON.stringify({
+          message: selectError.message,
+          code: selectError.code,
+          details: selectError.details,
+          hint: selectError.hint,
+        }, null, 2));
+        return err(new Error(`Chamada criada mas erro ao recuperar: ${selectError.message}`));
+      }
+
       return ok(converterParaChamada(data));
     } catch {
       return err(new Error("Erro inesperado ao criar chamada."));

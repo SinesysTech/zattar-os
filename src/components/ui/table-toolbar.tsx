@@ -87,11 +87,11 @@ function FilterButton({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="p-1 w-auto min-w-[140px]"
+        className="p-1 w-auto min-w-35"
         align="start"
         sideOffset={4}
       >
-        <div className="max-h-[300px] overflow-auto">
+        <div className="max-h-75 overflow-auto">
           {group.options.map((option) => {
             const isSelected = selectedFilters.includes(option.value)
             return (
@@ -365,7 +365,7 @@ export function TableToolbar({
                   <div className="p-2 border-b">
                     <div className="text-sm font-semibold px-2 py-1.5 whitespace-nowrap">Filtros</div>
                   </div>
-                  <div className="max-h-[400px] overflow-auto">
+                  <div className="max-h-100 overflow-auto">
                     {filterGroups!.map((group) => {
                       const groupSelectedCount = group.options.filter(opt =>
                         selectedFilters.includes(opt.value)
@@ -402,7 +402,7 @@ export function TableToolbar({
                     <div className="p-2 border-b">
                       <div className="text-sm font-semibold px-2 py-1.5 whitespace-nowrap">{activeGroup}</div>
                     </div>
-                    <div className="max-h-[400px] overflow-auto p-1">
+                    <div className="max-h-100 overflow-auto p-1">
                       {filterGroups!.find(g => g.label === activeGroup)?.options.map((option) => {
                         const isSelected = selectedFilters.includes(option.value)
                         return (

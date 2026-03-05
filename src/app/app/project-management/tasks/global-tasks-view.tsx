@@ -9,7 +9,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { getInitials } from "@/lib/utils";
+import { generateAvatarFallback } from "@/lib/utils";
 import {
   DataShell,
   DataTable,
@@ -94,7 +94,7 @@ const columns: ColumnDef<Tarefa>[] = [
               alt={nome}
             />
             <AvatarFallback className="text-[10px]">
-              {getInitials(nome)}
+              {generateAvatarFallback(nome)}
             </AvatarFallback>
           </Avatar>
           <span className="text-sm">{nome}</span>

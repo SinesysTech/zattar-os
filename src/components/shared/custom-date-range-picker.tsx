@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-breakpoint";
 
 const dateFilterPresets = [
   { name: "Tudo", value: "all" },

@@ -16,7 +16,7 @@ import {
   ThemeRadiusSelector,
   ResetThemeButton
 } from "@/components/layout/header/theme-customizer/index";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-breakpoint";
 
 export function ThemeCustomizerPanel() {
   const isMobile = useIsMobile();

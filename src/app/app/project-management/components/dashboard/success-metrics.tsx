@@ -1,5 +1,5 @@
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
-import { cn, getInitials } from "@/lib/utils";
+import { cn, generateAvatarFallback } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -65,7 +65,7 @@ export function SuccessMetrics({ membros, resumo }: SuccessMetricsProps) {
                         alt={membro.nome}
                       />
                       <AvatarFallback>
-                        {getInitials(membro.nome)}
+                        {generateAvatarFallback(membro.nome)}
                       </AvatarFallback>
                     </Avatar>
                   </TooltipTrigger>

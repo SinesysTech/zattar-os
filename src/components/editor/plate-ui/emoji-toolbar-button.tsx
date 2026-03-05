@@ -273,7 +273,7 @@ function EmojiPickerContent({
           return (
             <div
               key={categoryId}
-              ref={section.root as React.LegacyRef<HTMLDivElement>}
+              ref={section.root as React.Ref<HTMLDivElement>}
               style={{ width: getRowWidth }}
               data-id={categoryId}
             >
