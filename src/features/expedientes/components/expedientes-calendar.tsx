@@ -18,10 +18,10 @@ import {
 import { ptBR } from 'date-fns/locale';
 
 import { Button } from '@/components/ui/button';
-import { DataShell, DataTable } from '@/components/shared/data-shell';
-import { TableToolbar } from '@/components/ui/table-toolbar';
+import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
+import { ResponsiveFilterPanel } from '@/components/ui/responsive-filter-panel';
 import { AppBadge } from '@/components/ui/app-badge';
-import { Separator } from '@/components/ui/separator';
+
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { FilterPopover, type FilterOption } from '@/features/partes/components/shared';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -253,60 +253,58 @@ export function ExpedientesCalendar() {
                                 }}
                             />
                         )}
-                        <TableToolbar
-                            variant="integrated"
+                        <DataTableToolbar
                             searchValue={globalFilter}
-                            onSearchChange={setGlobalFilter}
-                            selectedFilters={selectedFilters}
-                            onFiltersChange={setSelectedFilters}
-                            filterGroups={filterGroups}
-                            filterButtonsMode="panel"
-                            filterPanelTitle="Filtros de Expedientes"
-                            filterPanelDescription="Filtre expedientes por tribunal, grau, responsável, tipo e outras características"
-                            extraButtons={
-                            <div className="flex items-center gap-2">
-                                <FilterPopover
-                                    label="Status"
-                                    options={STATUS_OPTIONS}
-                                    value={statusFilter}
-                                    onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
-                                    defaultValue="todos"
-                                />
+                            onSearchValueChange={setGlobalFilter}
+                            searchPlaceholder="Buscar expedientes..."
+                            filtersSlot={
+                                <>
+                                    <FilterPopover
+                                        label="Status"
+                                        options={STATUS_OPTIONS}
+                                        value={statusFilter}
+                                        onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
+                                        defaultValue="todos"
+                                    />
+                                    <ResponsiveFilterPanel
+                                        filterGroups={filterGroups}
+                                        selectedFilters={selectedFilters}
+                                        onFiltersChange={setSelectedFilters}
+                                        title="Filtros de Expedientes"
+                                        description="Filtre expedientes por tribunal, grau, responsável, tipo e outras características"
+                                    />
+                                </>
+                            }
+                            actionSlot={
+                                <div className="flex items-center gap-2">
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => fetchData()}
+                                            >
+                                                <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>Atualizar</TooltipContent>
+                                    </Tooltip>
 
-                                <Separator orientation="vertical" className="h-6 mx-1" />
-
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-10 w-10"
-                                            onClick={() => fetchData()}
-                                        >
-                                            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>Atualizar</TooltipContent>
-                                </Tooltip>
-
-                                <Separator orientation="vertical" className="h-6 mx-1" />
-
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-10 w-10"
-                                            onClick={() => setIsSettingsOpen(true)}
-                                        >
-                                            <Settings className="h-4 w-4" />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>Configurações - Tipos de Expedientes</TooltipContent>
-                                </Tooltip>
-                            </div>
-                        }
-                    />
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => setIsSettingsOpen(true)}
+                                            >
+                                                <Settings className="h-4 w-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>Configurações - Tipos de Expedientes</TooltipContent>
+                                    </Tooltip>
+                                </div>
+                            }
+                        />
                     </>
                 }
             >

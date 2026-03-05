@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { MailWarning, Search, Settings, X } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-breakpoint";
 import { useMailStore } from "../use-mail";
 import { useMailFolders, useMailMessages, useMailActions } from "../hooks/use-mail-api";
 import { FOLDER_LABELS } from "../lib/constants";

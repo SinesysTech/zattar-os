@@ -9,7 +9,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { cn, getInitials } from "@/lib/utils";
+import { cn, generateAvatarFallback } from "@/lib/utils";
 import { PriorityIndicator } from "../shared/priority-indicator";
 import type { Tarefa } from "../../lib/domain";
 
@@ -108,7 +108,7 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
                       alt={tarefa.responsavelNome}
                     />
                     <AvatarFallback className="text-[10px]">
-                      {getInitials(tarefa.responsavelNome)}
+                      {generateAvatarFallback(tarefa.responsavelNome)}
                     </AvatarFallback>
                   </Avatar>
                   <span className="text-muted-foreground text-xs truncate">

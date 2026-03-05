@@ -9,14 +9,6 @@ import { useChatApi } from './hooks/use-chat-api';
 import { useChatStreaming } from './hooks/use-chat-streaming';
 import { useEditorIntegration } from './hooks/use-editor-integration';
 
-// Re-export types for backward compatibility with API routes
-export type {
-  Chat,
-  ChatMessage,
-  MessageDataPart,
-  TComment,
-  ToolName,
-} from './types';
 
 /**
  * Main chat hook for the editor.

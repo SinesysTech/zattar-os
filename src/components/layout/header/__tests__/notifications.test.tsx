@@ -2,11 +2,11 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Notifications from "../notifications";
 import { useNotificacoes, useNotificacoesRealtime } from "../../../../features/notificacoes/hooks/use-notificacoes";
-import { useIsMobile } from "../../../../hooks/use-mobile";
+import { useIsMobile } from "../../../../hooks/use-breakpoint";
 
 // Mock hooks
 jest.mock("../../../../features/notificacoes/hooks/use-notificacoes");
-jest.mock("../../../../hooks/use-mobile");
+jest.mock("../../../../hooks/use-breakpoint");
 
 // Mock UI components that might cause issues in JSDOM or are not the focus
 jest.mock("@/components/ui/dropdown-menu", () => ({

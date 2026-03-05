@@ -10,7 +10,7 @@ import {
 } from '../../validations/dados-pessoais.schema';
 import InputCPF from '../inputs/input-cpf';
 import { InputTelefone } from '@/components/ui/input-telefone';
-import { InputCEP, type AddressData } from '@/features/enderecos';
+import { InputCEP, type InputCepAddress } from '@/features/enderecos';
 import InputData from '../inputs/input-data';
 import { useFormularioStore } from '../../store';
 import { toast } from 'sonner';
@@ -147,7 +147,7 @@ export default function DadosPessoais() {
   }, [dadosCPF, form]);
 
   // Handler para busca automA¡tica de CEP
-  const handleAddressFound = (address: AddressData) => {
+  const handleAddressFound = (address: InputCepAddress) => {
     form.setValue('logradouro', address.logradouro, { shouldValidate: true });
     form.setValue('bairro', address.bairro, { shouldValidate: true });
     form.setValue('cidade', address.localidade, { shouldValidate: true });

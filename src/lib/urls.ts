@@ -44,5 +44,3 @@ export function getWebsiteUrl(path?: string): string {
   return appendPath(websiteBase, path);
 }
 
-// Alias legado
-export const getPortalUrl = getMeuProcessoUrl;

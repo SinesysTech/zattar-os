@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useIsMobile } from '../use-mobile';
+import { useIsMobile } from '../use-breakpoint';
 
 describe('useIsMobile', () => {
   let mockMatchMedia: jest.Mock;

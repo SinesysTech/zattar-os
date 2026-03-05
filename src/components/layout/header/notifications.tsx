@@ -2,7 +2,7 @@
 
 import { BellIcon, ClockIcon, CheckCheckIcon } from "lucide-react";
 import Link from "next/link";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-breakpoint";
 import { useNotificacoes, useNotificacoesRealtime, TIPO_NOTIFICACAO_LABELS } from "@/features/notificacoes";
 import { useUser, useAuthSession } from "@/providers/user-provider";
 import {

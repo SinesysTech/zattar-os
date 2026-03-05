@@ -33,7 +33,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { InputCEP, type AddressData } from '@/features/enderecos';
+import { InputCEP, type InputCepAddress } from '@/features/enderecos';
 import { InputCPF, InputData, InputCPFCNPJ, ClientSearchInput, ParteContrariaSearchInput } from '../inputs';
 import { InputTelefone } from '@/components/ui/input-telefone';
 import { Info } from 'lucide-react';
@@ -212,7 +212,7 @@ export default function DynamicFormRenderer({
   /**
    * Handle address found from CEP lookup
    */
-  const handleAddressFound = (address: AddressData) => {
+  const handleAddressFound = (address: InputCepAddress) => {
     // Auto-fill related fields based on naming conventions
     const fieldMappings = {
       logradouro: address.logradouro,

@@ -14,7 +14,7 @@ import {
   DataTable,
   DataTableToolbar,
 } from "@/components/shared/data-shell";
-import { getInitials } from "@/lib/utils";
+import { generateAvatarFallback } from "@/lib/utils";
 import { TaskStatusBadge } from "../shared/project-status-badge";
 import { PriorityIndicator } from "../shared/priority-indicator";
 import type { Tarefa } from "../../lib/domain";
@@ -63,7 +63,7 @@ const columns: ColumnDef<Tarefa>[] = [
               alt={nome}
             />
             <AvatarFallback className="text-[10px]">
-              {getInitials(nome)}
+              {generateAvatarFallback(nome)}
             </AvatarFallback>
           </Avatar>
           <span className="text-sm">{nome}</span>

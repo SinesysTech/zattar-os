@@ -127,12 +127,6 @@ export function generateMeta(opts: {
   };
 }
 
-/**
- * Alias para generateAvatarFallback — extrai iniciais de um nome.
- */
-export function getInitials(name?: string | null): string {
-  return generateAvatarFallback(name);
-}
 
 /**
  * Gera as iniciais de um nome para fallback de avatar.
