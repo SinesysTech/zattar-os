@@ -13,6 +13,9 @@ export { executarCaptura, type ExecutarCapturaParams } from './service';
 // Repository (acesso a dados)
 export { buscarCredencial, buscarConfigTribunal, salvarLogCaptura } from './repository';
 
+// Credential Service (acesso a credenciais no banco)
+export { getCredentialByTribunalAndGrau } from './credentials/credential.service';
+
 // Drivers
 export { getDriver } from './drivers/factory';
 export type { JudicialDriver, SessaoAutenticada } from './drivers/judicial-driver.interface';

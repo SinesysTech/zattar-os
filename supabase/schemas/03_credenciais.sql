@@ -5,9 +5,10 @@
 alter table public.credenciais add column if not exists senha text;
 
 -- 2. Atualizar senha para registros existentes (se senha_encrypted existir)
--- Nota: Se você já tem dados criptografados, precisará atualizar manualmente
+-- Nota: Senhas devem ser gerenciadas via interface administrativa, não hardcoded
+-- Este fallback só se aplica durante migração de schema
 update public.credenciais
-set senha = '12345678aA@'
+set senha = ''
 where senha is null;
 
 -- 3. Tornar senha NOT NULL

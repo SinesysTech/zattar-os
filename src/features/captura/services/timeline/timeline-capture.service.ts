@@ -13,6 +13,7 @@ import { autenticarPJE, type AuthResult } from '../trt/trt-auth.service';
 import { getTribunalConfig } from '../trt/config';
 import type { CodigoTRT, GrauTRT } from '../trt/types';
 import type { ConfigTRT } from '../../types/trt-types';
+import { getCredentialByTribunalAndGrau } from '../../credentials/credential.service';
 import { obterTimeline, obterDocumento, baixarDocumento } from '@/features/captura/pje-trt/timeline';
 import { uploadDocumentoTimeline } from '../storage/upload-documento-timeline.service';
 import { salvarTimeline } from './timeline-persistence.service';
@@ -156,17 +157,25 @@ export async function capturarTimeline(
       );
     }
 
-    // 2. Obter credenciais do advogado
-    // TODO: Implementar getCredenciais quando necessário
-    // Por enquanto, usar credenciais padrão
-    const cpf = '07529294610';
-    const senha = '12345678aA@';
+    // 2. Obter credenciais do advogado no banco de dados
+    const credencial = await getCredentialByTribunalAndGrau({
+      advogadoId,
+      tribunal: trtCodigo,
+      grau,
+    });
+
+    if (!credencial) {
+      throw new Error(
+        `Credencial não encontrada para advogado_id=${advogadoId}, tribunal=${trtCodigo}, grau=${grau}. ` +
+        `Verifique se existe registro ativo na tabela credenciais.`
+      );
+    }
 
     console.log('🔑 [capturarTimeline] Autenticando...');
 
     // 3. Autenticar no PJE
     authResult = await autenticarPJE({
-      credential: { cpf, senha },
+      credential: credencial,
       config,
       headless: true,
     });
