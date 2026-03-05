@@ -38,7 +38,6 @@ export default async function ProjectFilesPage({ params }: Props) {
     <FilesView
       projeto={projeto}
       anexos={anexos}
-      usuarioAtualId={user.id}
     />
   );
 }

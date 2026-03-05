@@ -32,7 +32,6 @@ import {
 interface FilesViewProps {
   projeto: Projeto;
   anexos: Anexo[];
-  usuarioAtualId: number;
 }
 
 function formatFileSize(bytes: number | null): string {
@@ -50,7 +49,6 @@ function formatFileSize(bytes: number | null): string {
 export function FilesView({
   projeto,
   anexos,
-  _usuarioAtualId,
 }: FilesViewProps) {
   const [isPending, startTransition] = React.useTransition();
   const fileInputRef = React.useRef<HTMLInputElement>(null);

@@ -10,6 +10,8 @@ import {
   Forward,
   Loader2,
   MailOpen,
+  Maximize2,
+  Minimize2,
   MoreVertical,
   Reply,
   ReplyAll,
@@ -41,12 +43,12 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { MailMessagePreview } from "@/lib/mail/types";
 import { useMailActions } from "../hooks/use-mail-api";
 import { useMailStore } from "../use-mail";
 import { useMailDisplay } from "../hooks/use-mail-display";
+import { MailEditor, type MailEditorRef } from "./mail-editor";
 import { toast } from "sonner";
 
 interface MailDisplayProps {
@@ -201,14 +203,15 @@ function ForwardDialog({
 }) {
   const [open, setOpen] = useState(false);
   const [to, setTo] = useState("");
-  const [text, setText] = useState("");
   const [isSending, setIsSending] = useState(false);
   const { forwardMessage } = useMailActions();
+  const fwdEditorRef = useRef<MailEditorRef | null>(null);
 
   const handleForward = async () => {
     if (!to.trim()) return;
     setIsSending(true);
     try {
+      const text = fwdEditorRef.current?.getText() || "";
       await forwardMessage(
         mail.uid,
         mail.folder,
@@ -218,7 +221,7 @@ function ForwardDialog({
       toast.success("E-mail encaminhado");
       setOpen(false);
       setTo("");
-      setText("");
+      fwdEditorRef.current?.reset();
     } catch {
       toast.error("Erro ao encaminhar");
     } finally {
@@ -229,7 +232,7 @@ function ForwardDialog({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent className="w-80" align="end">
+      <PopoverContent className="w-96" align="end">
         <div className="grid gap-3">
           <div className="text-sm font-medium">Encaminhar e-mail</div>
           <div className="grid gap-2">
@@ -245,15 +248,12 @@ function ForwardDialog({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="forward-text" className="text-xs">
+            <Label className="text-xs">
               Mensagem adicional
             </Label>
-            <Textarea
-              id="forward-text"
+            <MailEditor
+              editorRef={fwdEditorRef}
               placeholder="Opcional..."
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              rows={3}
             />
           </div>
           <Button
@@ -278,21 +278,22 @@ function ForwardDialog({
 export function MailDisplay({ mail }: MailDisplayProps) {
   const today = new Date();
   const {
-    replyText,
-    setReplyText,
+    editorRef,
     isSending,
     actionLoading,
     senderName,
     senderInitials,
     handleReply,
     actions,
+    isMailExpanded,
+    toggleMailExpanded,
   } = useMailDisplay(mail);
 
-  const replyRef = useRef<HTMLTextAreaElement>(null);
+  const replyAreaRef = useRef<HTMLDivElement>(null);
 
   const scrollToReply = () => {
-    replyRef.current?.focus();
-    replyRef.current?.scrollIntoView({ behavior: "smooth" });
+    editorRef.current?.focus();
+    replyAreaRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -461,6 +462,26 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                 variant="ghost"
                 size="icon"
                 disabled={!mail}
+                onClick={toggleMailExpanded}>
+                {isMailExpanded ? <Minimize2 /> : <Maximize2 />}
+                <span className="sr-only">
+                  {isMailExpanded ? "Minimizar" : "Expandir"}
+                </span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              {isMailExpanded ? "Minimizar" : "Tela cheia"}
+            </TooltipContent>
+          </Tooltip>
+
+          <Separator orientation="vertical" className="mx-1 h-6" />
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                disabled={!mail}
                 onClick={scrollToReply}>
                 <Reply />
                 <span className="sr-only">Responder</span>
@@ -558,31 +579,26 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
           <Separator />
 
-          <div className="shrink-0 p-4">
+          <div ref={replyAreaRef} className="shrink-0 p-4">
             <form onSubmit={(e) => handleReply(e)}>
-              <div className="grid gap-4">
-                <Textarea
-                  ref={replyRef}
-                  className="p-4"
+              <div className="grid gap-3">
+                <MailEditor
+                  editorRef={editorRef}
                   placeholder={`Responder ${senderName}...`}
-                  value={replyText}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                    setReplyText(e.target.value)
-                  }
                 />
                 <div className="flex items-center gap-2 justify-end">
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
-                    disabled={isSending || !replyText.trim()}
+                    disabled={isSending}
                     onClick={(e) => handleReply(e, true)}>
                     {isSending ? "Enviando..." : "Responder a todos"}
                   </Button>
                   <Button
                     type="submit"
                     size="sm"
-                    disabled={isSending || !replyText.trim()}>
+                    disabled={isSending}>
                     {isSending ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

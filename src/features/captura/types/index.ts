@@ -45,6 +45,7 @@ export type {
   AudienciasParams,
   BaseCapturaParams,
   CapturaApiResponse,
+  StatusAudiencia,
   CapturaPartesParams,
   CapturaPartesResult,
   CredenciaisApiResponse,

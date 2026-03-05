@@ -41,6 +41,9 @@ type MailStore = {
   setSearchQuery: (query: string) => void;
   serviceUnavailable: boolean;
   setServiceUnavailable: (unavailable: boolean) => void;
+  isMailExpanded: boolean;
+  setIsMailExpanded: (expanded: boolean) => void;
+  toggleMailExpanded: () => void;
 };
 
 export const useMailStore = create<MailStore>((set) => ({
@@ -86,4 +89,7 @@ export const useMailStore = create<MailStore>((set) => ({
   setSearchQuery: (query) => set({ searchQuery: query }),
   serviceUnavailable: false,
   setServiceUnavailable: (unavailable) => set({ serviceUnavailable: unavailable }),
+  isMailExpanded: false,
+  setIsMailExpanded: (expanded) => set({ isMailExpanded: expanded }),
+  toggleMailExpanded: () => set((state) => ({ isMailExpanded: !state.isMailExpanded })),
 }));
