@@ -1,7 +1,5 @@
 'use client';
 
-import { useCallback } from 'react';
-
 import { DefaultChatTransport } from 'ai';
 import type { PlateEditor } from 'platejs/react';
 
@@ -16,11 +14,6 @@ export type UseChatApiOptions = {
  * Handles error responses (401, 500) with toast notifications.
  */
 export function useChatApi(editor: PlateEditor, options: UseChatApiOptions = {}) {
-  // Keep for backwards compatibility, but no longer used
-  const abortFakeStream = useCallback(() => {
-    // No-op: fake streaming removed
-  }, []);
-
   const transport = new DefaultChatTransport({
     api: options.api || '/api/ai/command',
     fetch: (async (input, init) => {
@@ -133,5 +126,5 @@ export function useChatApi(editor: PlateEditor, options: UseChatApiOptions = {})
     }) as typeof fetch,
   });
 
-  return { transport, abortFakeStream };
+  return { transport };
 }
