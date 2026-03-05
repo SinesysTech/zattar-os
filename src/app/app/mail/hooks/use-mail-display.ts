@@ -10,10 +10,9 @@ import { toast } from "sonner";
 export function useMailDisplay(mail: MailMessagePreview | null) {
   const [isSending, setIsSending] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
   const { deleteMessage, moveMessage, markUnread, starMessage, reply } =
     useMailActions();
-  const { setSelectedMail } = useMailStore();
+  const { setSelectedMail, isMailExpanded, toggleMailExpanded } = useMailStore();
   const editorRef = useRef<MailEditorRef | null>(null);
 
   const senderName = useMemo(
@@ -80,10 +79,6 @@ export function useMailDisplay(mail: MailMessagePreview | null) {
     [mail, reply]
   );
 
-  const toggleExpanded = useCallback(() => {
-    setIsExpanded((prev) => !prev);
-  }, []);
-
   const actions = useMemo(() => {
     if (!mail) return null;
     return {
@@ -111,7 +106,7 @@ export function useMailDisplay(mail: MailMessagePreview | null) {
     handleReply,
     handleAction,
     actions,
-    isExpanded,
-    toggleExpanded,
+    isMailExpanded,
+    toggleMailExpanded,
   };
 }

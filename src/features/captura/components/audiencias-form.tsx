@@ -7,14 +7,10 @@ import { capturarAudiencias } from '@/features/captura/services/api-client';
 import { STATUS_AUDIENCIA_OPTIONS } from '@/features/captura/constants';
 import { Label } from '@/components/ui/label';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import type { CapturaFormHandle } from '@/features/captura/types';
+import { Checkbox } from '@/components/ui/checkbox';
+import type { StatusAudiencia, CapturaFormHandle } from '@/features/captura/types';
+
+const ORDEM_STATUS: StatusAudiencia[] = ['C', 'M', 'F'];
 
 interface AudienciasFormProps {
   onSuccess?: () => void;
@@ -27,7 +23,7 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
     const [credenciaisSelecionadas, setCredenciaisSelecionadas] = useState<number[]>([]);
     const [dataInicio, setDataInicio] = useState('');
     const [dataFim, setDataFim] = useState('');
-    const [status, setStatus] = useState<'M' | 'C' | 'F'>('M');
+    const [statusAudiencias, setStatusAudiencias] = useState<StatusAudiencia[]>(['M']);
     const [isLoading, setIsLoading] = useState(false);
     const [result, setResult] = useState<{
       success: boolean | null;
@@ -40,6 +36,25 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
     useEffect(() => {
       onLoadingChange?.(isLoading);
     }, [isLoading, onLoadingChange]);
+
+    const toggleStatus = (valor: StatusAudiencia) => {
+      setStatusAudiencias((prev) => {
+        const jaSelecionado = prev.includes(valor);
+
+        // Impedir desmarcar o último
+        if (jaSelecionado && prev.length === 1) {
+          return prev;
+        }
+
+        const atualizado = jaSelecionado
+          ? prev.filter((s) => s !== valor)
+          : [...prev, valor];
+
+        return atualizado.sort(
+          (a, b) => ORDEM_STATUS.indexOf(a) - ORDEM_STATUS.indexOf(b)
+        );
+      });
+    };
 
     const handleCaptura = useCallback(async () => {
       if (!validarCamposCaptura(advogadoId, credenciaisSelecionadas)) {
@@ -64,11 +79,11 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
           credencial_ids: number[];
           dataInicio?: string;
           dataFim?: string;
-          status?: 'M' | 'C' | 'F';
+          statusAudiencias: StatusAudiencia[];
         } = {
           advogado_id: advogadoId,
           credencial_ids: credenciaisSelecionadas,
-          status,
+          statusAudiencias,
         };
 
         if (dataInicio) params.dataInicio = dataInicio;
@@ -95,7 +110,7 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
       } finally {
         setIsLoading(false);
       }
-    }, [advogadoId, credenciaisSelecionadas, dataInicio, dataFim, status, onSuccess]);
+    }, [advogadoId, credenciaisSelecionadas, dataInicio, dataFim, statusAudiencias, onSuccess]);
 
     // Expor método submit para o componente pai
     useImperativeHandle(ref, () => ({
@@ -113,21 +128,24 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="status">Status da Audiência</Label>
-              <Select value={status} onValueChange={(value) => setStatus(value as 'M' | 'C' | 'F')}>
-                <SelectTrigger id="status">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {STATUS_AUDIENCIA_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label htmlFor="statusAudiencia">Status da Audiência</Label>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                {STATUS_AUDIENCIA_OPTIONS.map((opcao) => (
+                  <label
+                    key={opcao.value}
+                    className="flex items-center gap-3 rounded-md border px-3 py-2 text-sm"
+                  >
+                    <Checkbox
+                      id={`status-${opcao.value}`}
+                      checked={statusAudiencias.includes(opcao.value)}
+                      onCheckedChange={() => toggleStatus(opcao.value)}
+                    />
+                    <span className="flex-1">{opcao.label}</span>
+                  </label>
+                ))}
+              </div>
               <p className="text-sm text-muted-foreground">
-                Selecione o status das audiências que deseja capturar
+                Os status selecionados são executados sequencialmente na mesma sessão.
               </p>
             </div>
             <div className="space-y-2">

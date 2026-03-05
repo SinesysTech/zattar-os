@@ -36,13 +36,13 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import type { MailMessagePreview } from "@/lib/mail/types";
 import { useMailDisplay } from "../hooks/use-mail-display";
+import { MailEditor } from "./mail-editor";
 
 interface MailDisplayProps {
   mail: MailMessagePreview | null;
@@ -135,8 +135,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
   const [open, setOpen] = React.useState(false);
   const { selectedMail, setSelectedMail } = useMailStore();
   const {
-    replyText,
-    setReplyText,
+    editorRef,
     isSending,
     actionLoading,
     senderName,
@@ -145,7 +144,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
     actions,
   } = useMailDisplay(mail);
 
-  const replyRef = useRef<HTMLTextAreaElement>(null);
+  const replyAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (selectedMail) {
@@ -166,8 +165,8 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
   };
 
   const scrollToReply = () => {
-    replyRef.current?.focus();
-    replyRef.current?.scrollIntoView({ behavior: "smooth" });
+    editorRef.current?.focus();
+    replyAreaRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -333,31 +332,26 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
 
               <Separator className="mt-auto" />
 
-              <div className="p-4">
+              <div ref={replyAreaRef} className="p-4">
                 <form onSubmit={(e) => handleReply(e)}>
-                  <div className="grid gap-4">
-                    <Textarea
-                      ref={replyRef}
-                      className="p-4"
+                  <div className="grid gap-3">
+                    <MailEditor
+                      editorRef={editorRef}
                       placeholder={`Responder ${senderName}...`}
-                      value={replyText}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                        setReplyText(e.target.value)
-                      }
                     />
                     <div className="flex items-center gap-2 justify-end">
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        disabled={isSending || !replyText.trim()}
+                        disabled={isSending}
                         onClick={(e) => handleReply(e, true)}>
                         Responder a todos
                       </Button>
                       <Button
                         type="submit"
                         size="sm"
-                        disabled={isSending || !replyText.trim()}>
+                        disabled={isSending}>
                         {isSending ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

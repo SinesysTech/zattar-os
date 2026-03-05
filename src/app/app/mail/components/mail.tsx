@@ -37,7 +37,7 @@ export function Mail({
 }) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const isMobile = useIsMobile();
-  const { selectedMail, messages, selectedFolder, searchQuery, setSearchQuery, serviceUnavailable } =
+  const { selectedMail, messages, selectedFolder, searchQuery, setSearchQuery, serviceUnavailable, isMailExpanded } =
     useMailStore();
   const [tab, setTab] = React.useState("all");
   const [searchInput, setSearchInput] = React.useState("");
@@ -115,7 +115,7 @@ export function Mail({
         className="h-full items-stretch">
         <ResizablePanel
           id="left-panel"
-          hidden={isMobile}
+          hidden={isMobile || isMailExpanded}
           collapsedSize={4}
           collapsible={true}
           defaultSize={defaultLayout[0]}
@@ -136,8 +136,8 @@ export function Mail({
           )}>
           <NavDesktop isCollapsed={isCollapsed} />
         </ResizablePanel>
-        <ResizableHandle hidden={isMobile} withHandle />
-        <ResizablePanel id="middle-panel" defaultSize={defaultLayout[1]} minSize={20}>
+        <ResizableHandle hidden={isMobile || isMailExpanded} withHandle />
+        <ResizablePanel id="middle-panel" hidden={isMailExpanded} defaultSize={defaultLayout[1]} minSize={20}>
           <Tabs
             defaultValue="all"
             className="flex h-full flex-col gap-0 bg-card"
@@ -188,7 +188,7 @@ export function Mail({
             </div>
           </Tabs>
         </ResizablePanel>
-        <ResizableHandle hidden={isMobile} withHandle />
+        <ResizableHandle hidden={isMobile || isMailExpanded} withHandle />
         <ResizablePanel
           id="right-panel"
           hidden={isMobile}
