@@ -10,7 +10,7 @@ import fs from 'fs';
 // Carregar variáveis de ambiente do .env.local
 config({ path: path.resolve(process.cwd(), '.env.local') });
 
-import { autenticarPJE } from '@/features/captura/server';
+import { autenticarPJE, getCredentialByTribunalAndGrau } from '@/features/captura/server';
 import type { ConfigTRT } from '@/features/captura';
 import type { GrauAcervo } from '@/features/acervo/types';
 import type { Page } from 'playwright';
@@ -28,11 +28,7 @@ const PROCESSO = {
   grau: 'primeiro_grau' as GrauAcervo,
 };
 
-// Credenciais de acesso
-const CREDENCIAIS = {
-  cpf: '07529294610',
-  senha: '12345678aA@',
-};
+// Credenciais serão buscadas do banco de dados
 
 // Configuração do TRT13
 const CONFIG_TRT13: ConfigTRT = {
@@ -92,8 +88,19 @@ async function main() {
     console.log(`[1/2] Autenticando no PJE TRT13...`);
     console.log(`  URL: ${CONFIG_TRT13.loginUrl}`);
 
+    // Buscar credenciais do banco
+    const credencial = await getCredentialByTribunalAndGrau({
+      advogadoId: 1,
+      tribunal: PROCESSO.trt as any,
+      grau: PROCESSO.grau,
+    });
+
+    if (!credencial) {
+      throw new Error(`Credencial não encontrada para advogado_id=1, tribunal=${PROCESSO.trt}`);
+    }
+
     const authResult = await autenticarPJE({
-      credential: CREDENCIAIS,
+      credential: credencial,
       config: CONFIG_TRT13,
     });
 

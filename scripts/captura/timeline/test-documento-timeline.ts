@@ -5,7 +5,7 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config();
 
-import { autenticarPJE, getTribunalConfig, fetchPJEAPI } from '@/features/captura/server';
+import { autenticarPJE, getTribunalConfig, fetchPJEAPI, getCredentialByTribunalAndGrau } from '@/features/captura/server';
 
 /**
  * Configurações fixas para teste
@@ -34,14 +34,24 @@ async function main() {
 
     console.log(`✅ Configuração obtida: ${config.loginUrl}\n`);
 
-    // 2. Credenciais fixas
-    const cpf = '07529294610';
-    const senha = '12345678aA@';
+    // 2. Buscar credenciais do banco
+    const ADVOGADO_ID = 1;
+    const credencial = await getCredentialByTribunalAndGrau({
+      advogadoId: ADVOGADO_ID,
+      tribunal: TRT_CODIGO,
+      grau: GRAU,
+    });
+
+    if (!credencial) {
+      throw new Error(`Credencial não encontrada para advogado_id=${ADVOGADO_ID}, tribunal=${TRT_CODIGO}, grau=${GRAU}`);
+    }
+
+    console.log('🔐 Credenciais obtidas do banco\n');
 
     // 3. Autenticar no PJE
     console.log('🔑 Autenticando no PJE...\n');
     authResult = await autenticarPJE({
-      credential: { cpf, senha },
+      credential: credencial,
       config,
       headless: true,
     });

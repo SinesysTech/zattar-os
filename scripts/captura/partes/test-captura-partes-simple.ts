@@ -9,7 +9,7 @@ import path from 'path';
 // Carregar variáveis de ambiente do .env.local
 config({ path: path.resolve(process.cwd(), '.env.local') });
 
-import { autenticarPJE, capturarPartesProcesso, type ProcessoParaCaptura } from '@/features/captura/server';
+import { autenticarPJE, capturarPartesProcesso, getCredentialByTribunalAndGrau, type ProcessoParaCaptura } from '@/features/captura/server';
 import type { ConfigTRT } from '@/features/captura';
 import type { GrauAcervo } from '@/features/acervo/types';
 
@@ -32,11 +32,7 @@ const ADVOGADO = {
   cpf: '07529294610',
 };
 
-// Credenciais de acesso
-const CREDENCIAIS = {
-  cpf: '07529294610',
-  senha: '12345678aA@',
-};
+// Credenciais serão buscadas do banco de dados
 
 // Configuração do TRT1 (obtida do banco via MCP)
 const CONFIG_TRT13: ConfigTRT = {
@@ -65,11 +61,20 @@ async function main() {
     console.log(`[1/2] Autenticando no PJE TRT1...`);
     console.log(`  URL: ${CONFIG_TRT13.loginUrl}`);
 
+    // Buscar credenciais do banco
+    const credencial = await getCredentialByTribunalAndGrau({
+      advogadoId: ADVOGADO.id,
+      tribunal: PROCESSO.trt as any,
+      grau: PROCESSO.grau,
+    });
+
+    if (!credencial) {
+      throw new Error(`Credencial não encontrada para advogado_id=${ADVOGADO.id}, tribunal=${PROCESSO.trt}`);
+    }
+
     const authResult = await autenticarPJE({
-      credential: CREDENCIAIS,
+      credential: credencial,
       config: CONFIG_TRT13,
-      // twofauthConfig não precisa ser passado - usa variáveis de ambiente do .env.local
-      // TWOFAUTH_ACCOUNT_ID=3 (ID da conta no 2FAuth)
     });
 
     page = authResult.page;

@@ -9,7 +9,7 @@
  * npx tsx scripts/test-captura-partes.ts
  */
 
-import { getTribunalConfig, autenticarPJE, capturarPartesProcesso, type ProcessoParaCaptura } from '@/features/captura/server';
+import { getTribunalConfig, autenticarPJE, capturarPartesProcesso, getCredentialByTribunalAndGrau, type ProcessoParaCaptura } from '@/features/captura/server';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import type { GrauAcervo } from '@/features/acervo/types';
 import type { CodigoTRT } from '@/features/captura';
@@ -25,11 +25,7 @@ const PROCESSO_NUMERO = '0010344-62.2024.5.03.0030'; // Número CNJ (opcional, p
 const TRT = '03'; // TRT3
 const GRAU: GrauAcervo = 'primeiro_grau'; // Primeiro grau
 
-// Credenciais hardcoded para teste
-const CREDENCIAIS = {
-  cpf: '07529294610',
-  senha: '12345678aA@',
-};
+// Credenciais serão buscadas do banco de dados
 
 // ==========================================
 // FUNÇÃO PRINCIPAL
@@ -45,11 +41,12 @@ async function main() {
 
   try {
     // 1. Buscar advogado pelo CPF (apenas para pegar o ID)
-    console.log(`[1/4] Buscando advogado com CPF ${CREDENCIAIS.cpf}...`);
+    const ADVOGADO_ID = 1;
+    console.log(`[1/4] Buscando advogado ID ${ADVOGADO_ID}...`);
     const { data: advogadoData, error: advogadoError } = await supabase
       .from('advogados')
       .select('id, nome_completo, cpf')
-      .eq('cpf', CREDENCIAIS.cpf)
+      .eq('id', ADVOGADO_ID)
       .single();
 
     if (advogadoError || !advogadoData) {
@@ -83,11 +80,22 @@ async function main() {
     const config = await getTribunalConfig(codigoTRT, GRAU);
     console.log(`✓ Configuração obtida: ${config.nome}`);
 
+    // Buscar credenciais do banco
+    const credencial = await getCredentialByTribunalAndGrau({
+      advogadoId: ADVOGADO_ID,
+      tribunal: codigoTRT,
+      grau: GRAU,
+    });
+
+    if (!credencial) {
+      throw new Error(`Credencial não encontrada para advogado_id=${ADVOGADO_ID}, tribunal=${codigoTRT}, grau=${GRAU}`);
+    }
+
     const authResult = await autenticarPJE({
-      credential: CREDENCIAIS,
+      credential: credencial,
       config,
       twofauthConfig: {
-        accountId: CREDENCIAIS.cpf,
+        accountId: credencial.cpf,
       },
     });
 
