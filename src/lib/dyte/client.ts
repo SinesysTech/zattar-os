@@ -70,6 +70,43 @@ export async function ensureTranscriptionPreset(presetName: string = 'group_call
 }
 
 /**
+ * Lists available presets and returns the first matching preset name.
+ * Falls back to listing all presets if none of the preferred names exist.
+ */
+export async function getAvailablePresetName(preferred: string[] = ['group_call_host', 'group_call_participant']): Promise<string> {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': await getAuthHeader(),
+  };
+
+  // Try each preferred name
+  for (const name of preferred) {
+    const response = await fetch(`${DYTE_API_BASE}/presets/${name}`, {
+      method: 'GET',
+      headers,
+    });
+    if (response.ok) return name;
+  }
+
+  // Fallback: list all presets and return the first one
+  const listResponse = await fetch(`${DYTE_API_BASE}/presets`, {
+    method: 'GET',
+    headers,
+  });
+
+  if (listResponse.ok) {
+    const result = await listResponse.json();
+    const presets = result.data;
+    if (Array.isArray(presets) && presets.length > 0) {
+      return presets[0].name as string;
+    }
+  }
+
+  // Last resort: return default name (Dyte creates one by default)
+  return 'group_call_host';
+}
+
+/**
  * Create a new meeting in Dyte.
  */
 export async function createMeeting(title: string) {
@@ -107,8 +144,9 @@ export async function createMeeting(title: string) {
 export async function addParticipant(meetingId: string, name: string, preset_name: string = 'group_call_participant') {
   let finalPresetName = preset_name;
 
+  // Aplicar preset de transcrição para TODOS os participantes (host e participant)
   const transcriptionEnabled = await isDyteTranscriptionEnabled();
-  if (transcriptionEnabled && preset_name === 'group_call_participant') {
+  if (transcriptionEnabled) {
     finalPresetName = 'group_call_with_transcription';
   }
 
@@ -127,10 +165,25 @@ export async function addParticipant(meetingId: string, name: string, preset_nam
     body: JSON.stringify(participantData),
   });
 
-  // Fallback: if transcription preset fails, retry with default preset
+  // Fallback: if preset fails, try with the original preset, then discover available presets
   if (!response.ok && finalPresetName !== preset_name) {
     console.warn(`Dyte preset '${finalPresetName}' failed (${response.status}), falling back to '${preset_name}'`);
     participantData.preset_name = preset_name;
+    response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/participants`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': await getAuthHeader(),
+      },
+      body: JSON.stringify(participantData),
+    });
+  }
+
+  // Last fallback: discover an available preset from the org
+  if (!response.ok) {
+    console.warn(`Dyte preset '${participantData.preset_name}' also failed (${response.status}), discovering available presets...`);
+    const discoveredPreset = await getAvailablePresetName();
+    participantData.preset_name = discoveredPreset;
     response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/participants`, {
       method: 'POST',
       headers: {

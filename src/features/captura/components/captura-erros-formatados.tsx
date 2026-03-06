@@ -1,7 +1,7 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { XCircle, AlertTriangle, Clock, Wifi } from 'lucide-react';
 
 interface ErroCaptura {
@@ -103,15 +103,6 @@ function IconeErro({ tipo }: { tipo: ErroCaptura['tipo'] }) {
     case 'auth': return <AlertTriangle className="h-3.5 w-3.5 text-red-500 shrink-0" />;
     case 'network': return <Wifi className="h-3.5 w-3.5 text-yellow-500 shrink-0" />;
     default: return <XCircle className="h-3.5 w-3.5 text-red-500 shrink-0" />;
-  }
-}
-
-function labelTipoErro(tipo: ErroCaptura['tipo']): string {
-  switch (tipo) {
-    case 'timeout': return 'Timeout';
-    case 'auth': return 'Autenticacao';
-    case 'network': return 'Rede';
-    default: return 'Erro';
   }
 }
 
