@@ -283,83 +283,85 @@ export function BlockedIpsContent() {
               Nenhum IP bloqueado no momento
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>IP</TableHead>
-                  <TableHead>Motivo</TableHead>
-                  <TableHead>Contagem</TableHead>
-                  <TableHead>Bloqueado em</TableHead>
-                  <TableHead>Expira em</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.blocked.map((item) => (
-                  <TableRow key={item.ip}>
-                    <TableCell className="font-mono">{item.ip}</TableCell>
-                    <TableCell>{getReasonBadge(item.reason.type)}</TableCell>
-                    <TableCell>{item.reason.count}</TableCell>
-                    <TableCell>
-                      {formatDistanceToNow(new Date(item.blockedAt), {
-                        addSuffix: true,
-                        locale: ptBR,
-                      })}
-                    </TableCell>
-                    <TableCell>
-                      {item.permanent ? (
-                        <Badge variant="destructive">Permanente</Badge>
-                      ) : item.expiresAt ? (
-                        formatDistanceToNow(new Date(item.expiresAt), {
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>IP</TableHead>
+                    <TableHead>Motivo</TableHead>
+                    <TableHead>Contagem</TableHead>
+                    <TableHead>Bloqueado em</TableHead>
+                    <TableHead>Expira em</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.blocked.map((item) => (
+                    <TableRow key={item.ip}>
+                      <TableCell className="font-mono">{item.ip}</TableCell>
+                      <TableCell>{getReasonBadge(item.reason.type)}</TableCell>
+                      <TableCell>{item.reason.count}</TableCell>
+                      <TableCell>
+                        {formatDistanceToNow(new Date(item.blockedAt), {
                           addSuffix: true,
                           locale: ptBR,
-                        })
-                      ) : (
-                        "-"
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={actionLoading === item.ip}
-                          onClick={() =>
-                            setConfirmDialog({
-                              open: true,
-                              action: "unblock",
-                              ip: item.ip,
-                            })
-                          }
-                        >
-                          {actionLoading === item.ip ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <CheckCircle className="h-4 w-4" />
-                          )}
-                          <span className="ml-1 sr-only sm:not-sr-only">Desbloquear</span>
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          disabled={actionLoading === item.ip}
-                          onClick={() =>
-                            setConfirmDialog({
-                              open: true,
-                              action: "whitelist",
-                              ip: item.ip,
-                            })
-                          }
-                        >
-                          <ShieldCheck className="h-4 w-4" />
-                          <span className="ml-1 sr-only sm:not-sr-only">Whitelist</span>
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                        })}
+                      </TableCell>
+                      <TableCell>
+                        {item.permanent ? (
+                          <Badge variant="destructive">Permanente</Badge>
+                        ) : item.expiresAt ? (
+                          formatDistanceToNow(new Date(item.expiresAt), {
+                            addSuffix: true,
+                            locale: ptBR,
+                          })
+                        ) : (
+                          "-"
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={actionLoading === item.ip}
+                            onClick={() =>
+                              setConfirmDialog({
+                                open: true,
+                                action: "unblock",
+                                ip: item.ip,
+                              })
+                            }
+                          >
+                            {actionLoading === item.ip ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <CheckCircle className="h-4 w-4" />
+                            )}
+                            <span className="ml-1 sr-only sm:not-sr-only">Desbloquear</span>
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            disabled={actionLoading === item.ip}
+                            onClick={() =>
+                              setConfirmDialog({
+                                open: true,
+                                action: "whitelist",
+                                ip: item.ip,
+                              })
+                            }
+                          >
+                            <ShieldCheck className="h-4 w-4" />
+                            <span className="ml-1 sr-only sm:not-sr-only">Whitelist</span>
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -379,42 +381,44 @@ export function BlockedIpsContent() {
               Nenhum IP na whitelist
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>IP</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.whitelist.map((ip) => (
-                  <TableRow key={ip}>
-                    <TableCell className="font-mono">{ip}</TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        disabled={actionLoading === ip}
-                        onClick={() =>
-                          setConfirmDialog({
-                            open: true,
-                            action: "remove_whitelist",
-                            ip,
-                          })
-                        }
-                      >
-                        {actionLoading === ip ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <XCircle className="h-4 w-4" />
-                        )}
-                        <span className="ml-1 sr-only sm:not-sr-only">Remover</span>
-                      </Button>
-                    </TableCell>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>IP</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {data.whitelist.map((ip) => (
+                    <TableRow key={ip}>
+                      <TableCell className="font-mono">{ip}</TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          disabled={actionLoading === ip}
+                          onClick={() =>
+                            setConfirmDialog({
+                              open: true,
+                              action: "remove_whitelist",
+                              ip,
+                            })
+                          }
+                        >
+                          {actionLoading === ip ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <XCircle className="h-4 w-4" />
+                          )}
+                          <span className="ml-1 sr-only sm:not-sr-only">Remover</span>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>

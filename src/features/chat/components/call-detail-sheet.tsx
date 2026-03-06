@@ -84,7 +84,7 @@ export function CallDetailSheet({ isOpen, onOpenChange, chamadaId }: CallDetailS
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="w-100 sm:w-150 sm:max-w-[90vw]">
+      <SheetContent className="w-[calc(100vw-2rem)] sm:w-100 md:w-150 md:max-w-[90vw]">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             {Icon && <Icon className="h-5 w-5" />}

@@ -326,7 +326,7 @@ export function NotificacoesList() {
             filtersSlot={
               <>
                 <Select value={tipoFiltro} onValueChange={handleTipoChange}>
-                  <SelectTrigger className="w-[200px]">
+                  <SelectTrigger className="w-full sm:w-50">
                     <SelectValue placeholder="Tipo" />
                   </SelectTrigger>
                   <SelectContent>
@@ -340,7 +340,7 @@ export function NotificacoesList() {
                 </Select>
 
                 <Select value={lidaFiltro} onValueChange={handleLidaChange}>
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-full sm:w-45">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>

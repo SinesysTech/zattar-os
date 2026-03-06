@@ -138,6 +138,7 @@ export function useMailActions() {
     setCurrentPage,
     setIsLoadingMore,
     setFullMessage,
+    clearSelectedUids,
   } = useMailStore();
 
   const refreshMessages = useCallback(async () => {
@@ -295,6 +296,19 @@ export function useMailActions() {
     [selectedAccountId]
   );
 
+  const sendNewEmail = useCallback(
+    async (to: string[], subject: string, text: string, cc?: string[], bcc?: string[]) => {
+      const url = withAccountId("/api/mail/messages/send", selectedAccountId);
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to, subject, text, cc, bcc }),
+      });
+      if (!res.ok) throw new Error("Erro ao enviar e-mail");
+    },
+    [selectedAccountId]
+  );
+
   const searchMessages = useCallback(
     async (query: string, folder?: string) => {
       const targetFolder = folder ?? selectedFolder;
@@ -312,6 +326,69 @@ export function useMailActions() {
     [selectedFolder, selectedAccountId, setMessages, setTotalMessages, setHasMore]
   );
 
+  const bulkDelete = useCallback(
+    async (uids: number[], folder: string) => {
+      await Promise.all(uids.map((uid) => {
+        const url = withAccountId(
+          `/api/mail/messages/${uid}?folder=${encodeURIComponent(folder)}`,
+          selectedAccountId
+        );
+        return fetch(url, { method: "DELETE" });
+      }));
+      clearSelectedUids();
+      await refreshMessages();
+    },
+    [selectedAccountId, clearSelectedUids, refreshMessages]
+  );
+
+  const bulkMove = useCallback(
+    async (uids: number[], fromFolder: string, toFolder: string) => {
+      await Promise.all(uids.map((uid) => {
+        const url = withAccountId(`/api/mail/messages/${uid}/move`, selectedAccountId);
+        return fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fromFolder, toFolder }),
+        });
+      }));
+      clearSelectedUids();
+      await refreshMessages();
+    },
+    [selectedAccountId, clearSelectedUids, refreshMessages]
+  );
+
+  const bulkMarkRead = useCallback(
+    async (uids: number[], folder: string) => {
+      await Promise.all(uids.map((uid) => {
+        const url = withAccountId(`/api/mail/messages/${uid}/flags`, selectedAccountId);
+        return fetch(url, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ folder, add: ["\\Seen"] }),
+        });
+      }));
+      clearSelectedUids();
+      await refreshMessages();
+    },
+    [selectedAccountId, clearSelectedUids, refreshMessages]
+  );
+
+  const bulkMarkUnread = useCallback(
+    async (uids: number[], folder: string) => {
+      await Promise.all(uids.map((uid) => {
+        const url = withAccountId(`/api/mail/messages/${uid}/flags`, selectedAccountId);
+        return fetch(url, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ folder, remove: ["\\Seen"] }),
+        });
+      }));
+      clearSelectedUids();
+      await refreshMessages();
+    },
+    [selectedAccountId, clearSelectedUids, refreshMessages]
+  );
+
   return {
     deleteMessage,
     moveMessage,
@@ -320,9 +397,14 @@ export function useMailActions() {
     starMessage,
     reply,
     forwardMessage,
+    sendNewEmail,
     searchMessages,
     refreshMessages,
     loadMoreMessages,
     fetchMessage,
+    bulkDelete,
+    bulkMove,
+    bulkMarkRead,
+    bulkMarkUnread,
   };
 }

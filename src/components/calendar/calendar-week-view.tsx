@@ -38,17 +38,17 @@ export function CalendarWeekView({singleDayEvents, multiDayEvents}: IProps) {
             transition={transition}
         >
             <motion.div
-                className="flex flex-col items-center justify-center border-b p-4 text-sm sm:hidden"
+                className="flex flex-col items-center justify-center border-b p-4 text-sm md:hidden"
                 initial={{opacity: 0, y: -20}}
                 animate={{opacity: 1, y: 0}}
                 transition={transition}
             >
-                <p>Weekly view is not recommended on smaller devices.</p>
-                <p>Please switch to a desktop device or use the daily view instead.</p>
+                <p>A visualização semanal não é recomendada em telas menores.</p>
+                <p>Use a visualização diária ou um dispositivo com tela maior.</p>
             </motion.div>
 
             <motion.div
-                className="flex-col sm:flex"
+                className="hidden flex-col md:flex"
                 variants={staggerContainer}
             >
                 <div>
@@ -96,7 +96,7 @@ export function CalendarWeekView({singleDayEvents, multiDayEvents}: IProps) {
 
                 </div>
 
-                <ScrollArea className="h-[736px]" type="always">
+                <ScrollArea className="h-184" type="always">
                     <div className="flex">
                         {/* Hours column */}
                         <motion.div className="relative w-18" variants={staggerContainer}>

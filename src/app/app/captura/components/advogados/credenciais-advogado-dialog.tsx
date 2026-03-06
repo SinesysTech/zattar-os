@@ -326,7 +326,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChangeAction}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-150">
           <DialogHeader>
             <DialogTitle>Credenciais de {advogado.nome_completo}</DialogTitle>
             <DialogDescription>
@@ -356,7 +356,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                     <p className="text-sm">Clique em &quot;Adicionar&quot; para cadastrar a primeira.</p>
                   </div>
                 ) : (
-                  <ScrollArea className="h-[300px] pr-4">
+                  <ScrollArea className="h-75 pr-4">
                     <div className="space-y-3">
                       {credenciais.map((credencial) => (
                         <div
@@ -437,7 +437,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       </AlertDescription>
                     </Alert>
 
-                    <ScrollArea className="h-[200px] border rounded-md p-3">
+                    <ScrollArea className="h-50 border rounded-md p-3">
                       <table className="w-full text-sm">
                         <thead>
                           <tr className="border-b">
@@ -603,7 +603,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                           </Button>
                         </div>
                       </div>
-                      <ScrollArea className="h-[140px] border rounded-md p-3">
+                      <ScrollArea className="h-35 border rounded-md p-3">
                         <div className="grid grid-cols-4 gap-2">
                           {TRIBUNAIS_ATIVOS.map((trt) => (
                             <div key={trt} className="flex items-center space-x-2">

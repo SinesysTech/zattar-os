@@ -232,7 +232,7 @@ function ForwardDialog({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent className="w-96" align="end">
+      <PopoverContent className="w-[calc(100vw-2rem)] sm:w-96" align="end">
         <div className="grid gap-3">
           <div className="text-sm font-medium">Encaminhar e-mail</div>
           <div className="grid gap-2">
@@ -405,7 +405,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                 </Button>
               </TooltipTrigger>
             </PopoverTrigger>
-            <PopoverContent className="flex w-133.75 p-0">
+            <PopoverContent className="flex w-[calc(100vw-2rem)] sm:w-133.75 p-0">
               <div className="flex flex-col gap-2 border-r px-2 py-4">
                 <div className="px-4 text-sm font-medium">Adiar até</div>
                 <div className="grid min-w-62.5 gap-1">

@@ -39,18 +39,18 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
       {/* Sidebar - Hidden on mobile if chat selected */}
       <div
         className={cn(
-          "h-full w-full lg:w-96 shrink-0 transition-all duration-300",
-          selectedChat ? "hidden lg:block" : "block"
+          "h-full w-full md:w-80 lg:w-96 shrink-0 transition-all duration-300",
+          selectedChat ? "hidden md:block" : "block"
         )}
       >
         <ChatSidebarWrapper salas={salas} currentUserId={currentUserId} />
       </div>
 
       {/* Window - Hidden on mobile if no chat selected */}
-      <div 
+      <div
         className={cn(
           "h-full flex-1 min-w-0 bg-background transition-all duration-300",
-          !selectedChat ? "hidden lg:flex" : "flex"
+          !selectedChat ? "hidden md:flex" : "flex"
         )}
       >
         {selectedChat ? (

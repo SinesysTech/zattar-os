@@ -355,7 +355,7 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
   ];
 
   return (
-    <div className="rounded-md border bg-card overflow-hidden">
+    <div className="rounded-md border bg-card overflow-x-auto">
       <table className="w-full">
         <thead>
           <tr className="border-b bg-muted/50">

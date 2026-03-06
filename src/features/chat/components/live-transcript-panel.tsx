@@ -25,7 +25,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
   if (!isVisible) return null;
 
   return (
-    <div className="absolute right-4 top-20 bottom-24 w-80 bg-black/80 backdrop-blur-md border border-gray-700 rounded-lg shadow-2xl flex flex-col z-50 transition-all duration-300 animate-in slide-in-from-right-10">
+    <div className="absolute right-2 top-16 bottom-20 w-[calc(100%-1rem)] sm:right-4 sm:top-20 sm:bottom-24 sm:w-80 bg-black/80 backdrop-blur-md border border-gray-700 rounded-lg shadow-2xl flex flex-col z-50 transition-all duration-300 animate-in slide-in-from-right-10">
       <div className="flex items-center justify-between p-3 border-b border-gray-700">
         <div className="flex items-center gap-2 text-white">
           <MessageSquareText className="w-4 h-4" />
@@ -51,7 +51,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
             transcripts.map((segment) => (
               <div key={segment.id} className="flex flex-col gap-1">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-blue-400 truncate max-w-[150px]">
+                  <span className="text-xs font-bold text-blue-400 truncate max-w-37.5">
                     {segment.participantName}
                   </span>
                   <span className="text-[10px] text-gray-500">

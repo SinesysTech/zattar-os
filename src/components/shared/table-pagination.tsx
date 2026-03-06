@@ -63,18 +63,18 @@ export function TablePagination({
   return (
     <div
       className={cn(
-        'flex items-center justify-between',
+        'flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between',
         variant === 'standalone' && 'px-2',
         className
       )}
     >
-      <div className="flex-1 text-sm text-muted-foreground">
+      <div className="text-sm text-muted-foreground">
         Mostrando {safePageIndex * safePageSize + 1} a{' '}
         {Math.min((safePageIndex + 1) * safePageSize, safeTotal)} de {safeTotal} resultados
       </div>
-      <div className="flex items-center gap-6 lg:gap-8">
+      <div className="flex flex-wrap items-center gap-4 lg:gap-6">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-medium">Itens por página</p>
+          <p className="text-sm font-medium whitespace-nowrap">Itens por página</p>
           <Select
             value={safePageSize.toString()}
             onValueChange={handlePageSizeChange}

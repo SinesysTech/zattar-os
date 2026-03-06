@@ -112,7 +112,7 @@ export function ContratoResumoCard({
           </div>
 
           {/* Estatísticas */}
-          <div className="bg-muted grid grid-cols-3 divide-x rounded-md border text-center *:py-3">
+          <div className="bg-muted grid grid-cols-3 divide-x rounded-md border text-center *:py-3 text-sm sm:text-base">
             <div>
               <h5 className="text-lg font-semibold">{stats.totalPartes}</h5>
               <div className="text-muted-foreground text-sm">Partes</div>

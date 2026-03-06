@@ -279,7 +279,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
       {/* Tabs com conteúdo organizado */}
       <Tabs defaultValue="visao-geral" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="flex w-full overflow-x-auto">
           <TabsTrigger value="visao-geral">Visão Geral</TabsTrigger>
           <TabsTrigger value="dados">Dados Cadastrais</TabsTrigger>
           <TabsTrigger value="atividades">Atividades</TabsTrigger>

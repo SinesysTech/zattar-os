@@ -8,6 +8,7 @@ import { useMailMessages, useMailActions } from "../hooks/use-mail-api";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -16,7 +17,7 @@ interface MailListProps {
 }
 
 export function MailList({ items }: MailListProps) {
-  const { selectedMail, setSelectedMail, isLoading, isLoadingMore, hasMore, error, setError } =
+  const { selectedMail, setSelectedMail, isLoading, isLoadingMore, hasMore, error, setError, selectedUids, toggleSelectedUid } =
     useMailStore();
   const { refetchMessages } = useMailMessages();
   const { loadMoreMessages } = useMailActions();
@@ -119,53 +120,65 @@ export function MailList({ items }: MailListProps) {
         aria-label="Lista de e-mails"
         className="flex flex-col gap-2 p-4">
         {items.map((item, index) => (
-          <button
+          <div
             key={item.uid}
-            role="option"
-            aria-selected={selectedMail?.uid === item.uid}
-            aria-label={`${!item.read ? "Não lido: " : ""}${item.from.name || item.from.address} — ${item.subject}`}
-            data-mail-index={index}
-            tabIndex={selectedMail?.uid === item.uid ? 0 : -1}
             className={cn(
-              "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-colors duration-200",
+              "group flex gap-2 rounded-lg border p-3 text-sm transition-colors duration-200",
               selectedMail?.uid === item.uid
                 ? "bg-accent"
                 : "hover:bg-muted/50"
-            )}
-            onClick={() => setSelectedMail(item)}
-            onKeyDown={(e) => handleKeyDown(e, index)}>
-            <div className="flex w-full flex-col gap-1">
-              <div className="flex items-center">
-                <div className="flex items-center gap-2">
-                  <div className="font-semibold">
-                    {item.from.name || item.from.address}
+            )}>
+            <div
+              className="flex shrink-0 items-start pt-0.5"
+              onClick={(e) => e.stopPropagation()}>
+              <Checkbox
+                checked={selectedUids.has(item.uid)}
+                onCheckedChange={() => toggleSelectedUid(item.uid)}
+                aria-label={`Selecionar e-mail de ${item.from.name || item.from.address}`}
+              />
+            </div>
+            <button
+              role="option"
+              aria-selected={selectedMail?.uid === item.uid}
+              aria-label={`${!item.read ? "Não lido: " : ""}${item.from.name || item.from.address} — ${item.subject}`}
+              data-mail-index={index}
+              tabIndex={selectedMail?.uid === item.uid ? 0 : -1}
+              className="flex min-w-0 flex-1 flex-col items-start gap-2 text-left"
+              onClick={() => setSelectedMail(item)}
+              onKeyDown={(e) => handleKeyDown(e, index)}>
+              <div className="flex w-full flex-col gap-1">
+                <div className="flex items-center">
+                  <div className="flex items-center gap-2">
+                    <div className="font-semibold">
+                      {item.from.name || item.from.address}
+                    </div>
+                    {!item.read && (
+                      <span
+                        className="flex h-2 w-2 rounded-full bg-primary"
+                        aria-hidden="true"
+                      />
+                    )}
                   </div>
-                  {!item.read && (
-                    <span
-                      className="flex h-2 w-2 rounded-full bg-primary"
-                      aria-hidden="true"
-                    />
-                  )}
+                  <div
+                    className={cn(
+                      "ml-auto text-xs",
+                      selectedMail?.uid === item.uid
+                        ? "text-foreground"
+                        : "text-muted-foreground"
+                    )}>
+                    {formatDistanceToNow(new Date(item.date), {
+                      addSuffix: true,
+                      locale: ptBR,
+                    })}
+                  </div>
                 </div>
-                <div
-                  className={cn(
-                    "ml-auto text-xs",
-                    selectedMail?.uid === item.uid
-                      ? "text-foreground"
-                      : "text-muted-foreground"
-                  )}>
-                  {formatDistanceToNow(new Date(item.date), {
-                    addSuffix: true,
-                    locale: ptBR,
-                  })}
-                </div>
+                <div className="text-xs font-medium">{item.subject}</div>
               </div>
-              <div className="text-xs font-medium">{item.subject}</div>
-            </div>
-            <div className="text-muted-foreground line-clamp-2 text-xs">
-              {item.preview || item.subject}
-            </div>
-          </button>
+              <div className="text-muted-foreground line-clamp-2 text-xs">
+                {item.preview || item.subject}
+              </div>
+            </button>
+          </div>
         ))}
 
         {/* Infinite scroll sentinel */}
