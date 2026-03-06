@@ -119,7 +119,7 @@ function KanbanColumnContent({
   return (
     <KanbanColumn
       value={estagioId}
-      className="bg-muted/60 min-w-70 max-w-70 shrink-0"
+      className="bg-muted/60 min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 shrink-0"
     >
       {/* Header da coluna */}
       <div
@@ -176,7 +176,7 @@ function KanbanBoardSkeleton() {
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
-          className="flex flex-col gap-2 min-w-70 max-w-70 bg-muted/60 rounded-lg p-2.5"
+          className="flex flex-col gap-2 min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 bg-muted/60 rounded-lg p-2.5"
         >
           <div className="flex items-center justify-between mb-1">
             <Skeleton className="h-5 w-32" />
@@ -369,7 +369,7 @@ function KanbanBoardContent({
             : '#6B7280';
 
           return (
-            <div className="min-w-70 max-w-70 opacity-95 shadow-lg rotate-1">
+            <div className="min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 opacity-95 shadow-lg rotate-1">
               <ContratoCard contrato={contrato} stageCor={cor} />
             </div>
           );

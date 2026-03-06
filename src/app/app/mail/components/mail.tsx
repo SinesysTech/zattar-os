@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { MailWarning, Search, Settings, X } from "lucide-react";
+import { Archive, ArchiveX, MailOpen, MailWarning, Pencil, Search, Settings, Trash2, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-breakpoint";
 import { useMailStore } from "../use-mail";
 import { useMailFolders, useMailMessages, useMailActions } from "../hooks/use-mail-api";
@@ -12,9 +12,11 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import { Button } from "@/components/ui/button";
+import { ComposeMailDialog } from "./compose-mail-dialog";
 import { MailDisplay } from "./mail-display";
 import { MailList } from "./mail-list";
 import { NavDesktop } from "./nav-desktop";
@@ -37,14 +39,15 @@ export function Mail({
 }) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const isMobile = useIsMobile();
-  const { selectedMail, messages, selectedFolder, searchQuery, setSearchQuery, serviceUnavailable, isMailExpanded } =
+  const { selectedMail, messages, selectedFolder, searchQuery, setSearchQuery, serviceUnavailable, isMailExpanded, selectedUids, selectAllUids, clearSelectedUids } =
     useMailStore();
   const [tab, setTab] = React.useState("all");
   const [searchInput, setSearchInput] = React.useState("");
+  const [bulkLoading, setBulkLoading] = React.useState(false);
 
   useMailFolders();
   useMailMessages();
-  const { searchMessages, refreshMessages } = useMailActions();
+  const { searchMessages, refreshMessages, bulkDelete, bulkMove, bulkMarkRead, bulkMarkUnread } = useMailActions();
 
   const filteredMessages = React.useMemo(() => {
     if (tab === "all") return messages;
@@ -76,6 +79,30 @@ export function Mail({
   }, [setSearchQuery, refreshMessages]);
 
   const folderDisplay = FOLDER_LABELS[selectedFolder] ?? selectedFolder;
+  const hasSelection = selectedUids.size > 0;
+  const allSelected = filteredMessages.length > 0 && selectedUids.size === filteredMessages.length;
+
+  const handleSelectAll = React.useCallback(() => {
+    if (allSelected) {
+      clearSelectedUids();
+    } else {
+      selectAllUids(filteredMessages.map((m) => m.uid));
+    }
+  }, [allSelected, filteredMessages, selectAllUids, clearSelectedUids]);
+
+  const runBulkAction = React.useCallback(
+    async (action: (uids: number[], folder: string) => Promise<void>) => {
+      const uids = Array.from(selectedUids);
+      if (uids.length === 0) return;
+      setBulkLoading(true);
+      try {
+        await action(uids, selectedFolder);
+      } finally {
+        setBulkLoading(false);
+      }
+    },
+    [selectedUids, selectedFolder]
+  );
 
   if (serviceUnavailable) {
     return (
@@ -143,18 +170,122 @@ export function Mail({
             className="flex h-full flex-col gap-0 bg-card"
             onValueChange={(value) => setTab(value)}>
             <div className="flex h-13 shrink-0 items-center gap-2 px-4">
-              {isMobile && <NavMobile />}
+              {hasSelection ? (
+                <>
+                  <Checkbox
+                    checked={allSelected}
+                    onCheckedChange={handleSelectAll}
+                    aria-label="Selecionar todos"
+                  />
+                  <span className="text-muted-foreground text-xs">
+                    {selectedUids.size} selecionado{selectedUids.size > 1 ? "s" : ""}
+                  </span>
 
-              <span className="text-sm font-semibold">{folderDisplay}</span>
+                  <div className="ml-auto flex items-center gap-1">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7"
+                          disabled={bulkLoading}
+                          onClick={() => runBulkAction((uids, folder) => bulkMove(uids, folder, "Archive"))}>
+                          <Archive className="h-4 w-4" />
+                          <span className="sr-only">Arquivar</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Arquivar</TooltipContent>
+                    </Tooltip>
 
-              <TabsList className="ml-auto h-7">
-                <TabsTrigger value="all" className="text-xs px-2 h-5">
-                  Todos
-                </TabsTrigger>
-                <TabsTrigger value="unread" className="text-xs px-2 h-5">
-                  Não lidos
-                </TabsTrigger>
-              </TabsList>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7"
+                          disabled={bulkLoading}
+                          onClick={() => runBulkAction((uids, folder) => bulkMove(uids, folder, "Junk"))}>
+                          <ArchiveX className="h-4 w-4" />
+                          <span className="sr-only">Lixo eletrônico</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Lixo eletrônico</TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7"
+                          disabled={bulkLoading}
+                          onClick={() => runBulkAction(bulkDelete)}>
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">Excluir</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Excluir</TooltipContent>
+                    </Tooltip>
+
+                    <Separator orientation="vertical" className="mx-1 h-4" />
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7"
+                          disabled={bulkLoading}
+                          onClick={() => runBulkAction(bulkMarkRead)}>
+                          <MailOpen className="h-4 w-4" />
+                          <span className="sr-only">Marcar como lido</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Marcar como lido</TooltipContent>
+                    </Tooltip>
+
+                    <Separator orientation="vertical" className="mx-1 h-4" />
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7"
+                          onClick={clearSelectedUids}>
+                          <X className="h-4 w-4" />
+                          <span className="sr-only">Cancelar seleção</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Cancelar seleção</TooltipContent>
+                    </Tooltip>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {isMobile && <NavMobile />}
+
+                  <span className="text-sm font-semibold">{folderDisplay}</span>
+
+                  {isMobile && (
+                    <ComposeMailDialog>
+                      <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0">
+                        <Pencil className="h-4 w-4" />
+                        <span className="sr-only">Novo E-mail</span>
+                      </Button>
+                    </ComposeMailDialog>
+                  )}
+
+                  <TabsList className="ml-auto h-7">
+                    <TabsTrigger value="all" className="text-xs px-2 h-5">
+                      Todos
+                    </TabsTrigger>
+                    <TabsTrigger value="unread" className="text-xs px-2 h-5">
+                      Não lidos
+                    </TabsTrigger>
+                  </TabsList>
+                </>
+              )}
             </div>
             <Separator />
             <div className="p-4">

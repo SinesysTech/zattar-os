@@ -8,7 +8,7 @@ export const revalidate = 0;
 function ContasReceberLoading() {
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Skeleton className="h-20 w-full" />
         <Skeleton className="h-20 w-full" />
         <Skeleton className="h-20 w-full" />

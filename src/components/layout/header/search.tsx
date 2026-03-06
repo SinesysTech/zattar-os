@@ -135,8 +135,8 @@ export default function Search() {
 
   if (!mounted) {
     return (
-      <div className="lg:flex-1">
-        <div className="relative hidden max-w-sm flex-1 lg:block">
+      <div className="md:flex-1">
+        <div className="relative hidden max-w-sm flex-1 md:block">
           <SearchIcon className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <Input
             className="h-9 w-full cursor-pointer rounded-md border pr-4 pl-10 text-sm shadow-xs"
@@ -149,7 +149,7 @@ export default function Search() {
             <span>k</span>
           </div>
         </div>
-        <div className="block lg:hidden">
+        <div className="block md:hidden">
           <Button size="icon" variant="ghost">
             <SearchIcon />
           </Button>
@@ -159,8 +159,8 @@ export default function Search() {
   }
 
   return (
-    <div className="lg:flex-1">
-      <div className="relative hidden max-w-md flex-1 lg:block">
+    <div className="md:flex-1">
+      <div className="relative hidden max-w-md flex-1 md:block">
         <SearchIcon className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
         <Input
           className="h-9 w-full cursor-pointer rounded-md border pr-4 pl-10 text-sm shadow-xs"
@@ -174,7 +174,7 @@ export default function Search() {
           <span>k</span>
         </div>
       </div>
-      <div className="block lg:hidden">
+      <div className="block md:hidden">
         <Button size="icon" variant="ghost" onClick={() => setOpen(true)}>
           <SearchIcon />
         </Button>

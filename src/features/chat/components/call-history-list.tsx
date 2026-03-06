@@ -219,7 +219,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
               <AvatarImage src={user.avatar} />
               <AvatarFallback>{user.nomeCompleto.charAt(0)}</AvatarFallback>
             </Avatar>
-            <span className="truncate max-w-[150px]" title={user.nomeCompleto}>
+            <span className="truncate max-w-37.5" title={user.nomeCompleto}>
               {user.nomeExibicao || user.nomeCompleto.split(' ')[0]}
             </span>
           </div>
@@ -360,7 +360,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
                     value={tipoFilter || 'all'}
                     onValueChange={handleTipoChange}
                   >
-                    <SelectTrigger className="w-[150px]">
+                    <SelectTrigger className="w-full sm:w-37.5">
                       <SelectValue placeholder="Tipo" />
                     </SelectTrigger>
                     <SelectContent>
@@ -374,7 +374,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
                     value={statusFilter || 'all'}
                     onValueChange={handleStatusChange}
                   >
-                    <SelectTrigger className="w-[170px]">
+                    <SelectTrigger className="w-full sm:w-42.5">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>

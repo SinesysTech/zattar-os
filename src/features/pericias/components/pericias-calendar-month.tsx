@@ -165,14 +165,16 @@ export function PericiasCalendarMonth({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="border rounded-lg overflow-hidden bg-white dark:bg-card">
+      <div className="border rounded-lg overflow-hidden bg-white dark:bg-card overflow-x-auto">
+        <div className="min-w-150">
         <div className="grid grid-cols-7 bg-muted/50 border-b">
-          {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia) => (
+          {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia, i) => (
             <div
               key={dia}
               className="p-2 text-center text-sm font-medium text-muted-foreground"
             >
-              {dia}
+              <span className="hidden sm:inline">{dia}</span>
+              <span className="sm:hidden">{['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'][i]}</span>
             </div>
           ))}
         </div>
@@ -187,7 +189,7 @@ export function PericiasCalendarMonth({
               <div
                 key={idx}
                 className={`
-                  min-h-[120px] border-r border-b p-2 transition-colors relative
+                  min-h-20 sm:min-h-30 border-r border-b p-1 sm:p-2 transition-colors relative
                   ${!dia ? 'bg-muted/10' : ''}
                   ${isTodayDate ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}
                   ${hasPs && dia ? 'hover:bg-muted/50' : ''}
@@ -240,6 +242,7 @@ export function PericiasCalendarMonth({
               </div>
             );
           })}
+        </div>
         </div>
       </div>
 

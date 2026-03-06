@@ -190,12 +190,12 @@ export function DataTableToolbar<TData>({
       )}
 
       {/* Linha 2: Filtros à esquerda, Colunas + Ações à direita */}
-      <div className="flex items-center gap-4 pb-4">
+      <div className="flex flex-col gap-2 pb-4 sm:flex-row sm:items-center sm:gap-4">
         {/* Lado esquerdo: SearchBox + Filtros */}
-        <div className="flex items-center gap-2 flex-1">
+        <div className="flex flex-wrap items-center gap-2 flex-1">
           {/* SearchBox - só renderiza quando há table ou onSearchValueChange */}
           {(table || onSearchValueChange) && (
-            <div className="relative w-80">
+            <div className="relative w-full sm:w-80">
               <Search
                 className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                 aria-hidden="true"
@@ -227,7 +227,7 @@ export function DataTableToolbar<TData>({
         </div>
 
         {/* Lado direito: Ações */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Slot para ações adicionais (ex: ChatwootSyncButton) */}
           {actionSlot}
 

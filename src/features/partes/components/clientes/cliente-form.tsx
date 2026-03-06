@@ -525,7 +525,7 @@ export function ClienteFormDialog({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="rg">RG</Label>
               <Input
@@ -546,7 +546,7 @@ export function ClienteFormDialog({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="genero">Gênero</Label>
               {mounted ? (
@@ -593,7 +593,7 @@ export function ClienteFormDialog({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="nacionalidade">Nacionalidade</Label>
               <Input
@@ -634,7 +634,7 @@ export function ClienteFormDialog({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="inscricao_estadual">Inscrição Estadual</Label>
               <Input
@@ -794,7 +794,7 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="grid gap-2">
           <Label htmlFor="numero">Número</Label>
           <Input
@@ -825,7 +825,7 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="grid gap-2">
           <Label htmlFor="municipio">Cidade</Label>
           <Input

@@ -73,7 +73,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight font-heading">
             Folha {MESES_LABELS[folha.mesReferencia]}/{folha.anoReferencia}
@@ -82,7 +82,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
             Gerada em {new Date(folha.dataGeracao).toLocaleString('pt-BR')}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {cores && (
              <Badge
              className={`${cores.bg} ${cores.text} border ${cores.border}`}
@@ -139,6 +139,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
           <CardTitle>Itens da Folha</CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -174,6 +175,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
 

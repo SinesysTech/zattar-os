@@ -44,6 +44,10 @@ type MailStore = {
   isMailExpanded: boolean;
   setIsMailExpanded: (expanded: boolean) => void;
   toggleMailExpanded: () => void;
+  selectedUids: Set<number>;
+  toggleSelectedUid: (uid: number) => void;
+  selectAllUids: (uids: number[]) => void;
+  clearSelectedUids: () => void;
 };
 
 export const useMailStore = create<MailStore>((set) => ({
@@ -59,6 +63,7 @@ export const useMailStore = create<MailStore>((set) => ({
       folders: [],
       currentPage: 1,
       selectedFolder: "INBOX",
+      selectedUids: new Set<number>(),
     }),
   selectedMail: null,
   setSelectedMail: (mail) => set({ selectedMail: mail }),
@@ -66,7 +71,7 @@ export const useMailStore = create<MailStore>((set) => ({
   setFullMessage: (msg) => set({ fullMessage: msg }),
   selectedFolder: "INBOX",
   setSelectedFolder: (folder) =>
-    set({ selectedFolder: folder, selectedMail: null, fullMessage: null, currentPage: 1 }),
+    set({ selectedFolder: folder, selectedMail: null, fullMessage: null, currentPage: 1, selectedUids: new Set<number>() }),
   messages: [],
   setMessages: (messages) => set({ messages }),
   appendMessages: (newMessages) =>
@@ -92,4 +97,14 @@ export const useMailStore = create<MailStore>((set) => ({
   isMailExpanded: false,
   setIsMailExpanded: (expanded) => set({ isMailExpanded: expanded }),
   toggleMailExpanded: () => set((state) => ({ isMailExpanded: !state.isMailExpanded })),
+  selectedUids: new Set<number>(),
+  toggleSelectedUid: (uid) =>
+    set((state) => {
+      const next = new Set(state.selectedUids);
+      if (next.has(uid)) next.delete(uid);
+      else next.add(uid);
+      return { selectedUids: next };
+    }),
+  selectAllUids: (uids) => set({ selectedUids: new Set(uids) }),
+  clearSelectedUids: () => set({ selectedUids: new Set<number>() }),
 }));

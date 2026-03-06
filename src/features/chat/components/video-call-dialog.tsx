@@ -248,7 +248,7 @@ export function VideoCallDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-7xl h-[90vh] p-0 overflow-hidden bg-black border-none text-white relative">
+      <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl h-[calc(100dvh-4rem)] sm:h-[90vh] p-0 overflow-hidden bg-black border-none text-white relative">
         <VisuallyHidden>
           <DialogTitle>Video Call: {salaNome}</DialogTitle>
         </VisuallyHidden>

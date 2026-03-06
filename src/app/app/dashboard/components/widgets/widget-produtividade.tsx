@@ -58,7 +58,7 @@ export function WidgetProdutividade({
     <WidgetWrapper title="Produtividade" icon={BarChart3}>
       <div className="space-y-4">
         {/* Métricas principais */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
           <div className="space-y-1">
             <p className="text-2xl font-bold">{data.baixasHoje}</p>
             <p className="text-xs text-muted-foreground">Hoje</p>

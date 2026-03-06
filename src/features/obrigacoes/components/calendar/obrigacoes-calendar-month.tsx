@@ -133,26 +133,30 @@ export function ObrigacoesCalendarMonth({
   return (
     <div className="flex flex-col h-full">
         {/* Calendar Grid */}
-        <div className="border rounded-lg overflow-hidden bg-white dark:bg-card">
+        <div className="border rounded-lg overflow-hidden bg-white dark:bg-card overflow-x-auto">
+          <div className="min-w-150">
             {/* Weekday Headers */}
             <div className="grid grid-cols-7 bg-muted/50 border-b">
-                {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia) => (
-                    <div key={dia} className="p-2 text-center text-sm font-medium text-muted-foreground">{dia}</div>
+                {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia, i) => (
+                    <div key={dia} className="p-2 text-center text-sm font-medium text-muted-foreground">
+                      <span className="hidden sm:inline">{dia}</span>
+                      <span className="sm:hidden">{['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'][i]}</span>
+                    </div>
                 ))}
             </div>
-            
+
             {/* Days */}
             <div className="grid grid-cols-7 auto-rows-fr">
                 {diasMes.map((dia, idx) => {
                      const itens = getItensDia(dia);
                      const hasItens = itens.length > 0;
                      const isTodayDate = dia && isToday(dia);
-                     
+
                      return (
-                        <div 
-                            key={idx} 
+                        <div
+                            key={idx}
                             className={`
-                                min-h-30 border-r border-b p-2 transition-colors relative
+                                min-h-20 sm:min-h-30 border-r border-b p-1 sm:p-2 transition-colors relative
                                 ${!dia ? 'bg-muted/10' : ''}
                                 ${isTodayDate ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}
                                 ${hasItens && dia ? 'hover:bg-muted/50' : ''}
@@ -197,6 +201,7 @@ export function ObrigacoesCalendarMonth({
                      );
                 })}
             </div>
+          </div>
         </div>
 
         <ObrigacaoDetalhesDialog

@@ -666,11 +666,15 @@ export function DataTable<TData, TValue>({
   );
 
   if (hideTableBorder) {
-    return tableInner;
+    return (
+      <div className="overflow-x-auto">
+        {tableInner}
+      </div>
+    );
   }
 
   return (
-    <div className="rounded-md border bg-card">
+    <div className="rounded-md border bg-card overflow-x-auto">
       {tableInner}
     </div>
   );

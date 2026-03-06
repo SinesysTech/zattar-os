@@ -2,7 +2,9 @@
 
 import { useState, useCallback } from "react";
 
+import { Pencil } from "lucide-react";
 import { Nav } from "./nav";
+import { ComposeMailDialog } from "./compose-mail-dialog";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -41,6 +43,17 @@ export function NavMobile() {
 
         <div className="flex h-13 items-center justify-center px-4">
           <span className="text-sm font-semibold">E-mail</span>
+        </div>
+
+        <Separator />
+
+        <div className="px-2 py-2">
+          <ComposeMailDialog>
+            <Button variant="default" className="w-full gap-2">
+              <Pencil className="h-4 w-4" />
+              Novo E-mail
+            </Button>
+          </ComposeMailDialog>
         </div>
 
         <Separator />

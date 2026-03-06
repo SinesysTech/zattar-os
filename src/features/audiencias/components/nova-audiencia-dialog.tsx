@@ -580,8 +580,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                     <Label className="text-base font-semibold">Endereço da Audiência Presencial</Label>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="col-span-2 space-y-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="sm:col-span-2 space-y-2">
                       <Label htmlFor="logradouro">Logradouro</Label>
                       <Input
                         id="logradouro"
@@ -601,7 +601,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="complemento">Complemento</Label>
                       <Input
@@ -621,8 +621,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="col-span-2 space-y-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="sm:col-span-2 space-y-2">
                       <Label htmlFor="cidade">Cidade</Label>
                       <Input
                         id="cidade"
