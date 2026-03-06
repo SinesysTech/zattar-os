@@ -199,6 +199,20 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
         <span className="text-xs text-muted-foreground max-w-full truncate">{orgaoJulgador}</span>
         <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />
       </div>
+      <div className="flex flex-col gap-1">
+        <ParteBadge
+          polo="ATIVO"
+          className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+        >
+          {processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '-'}
+        </ParteBadge>
+        <ParteBadge
+          polo="PASSIVO"
+          className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+        >
+          {processo.nomeParteReOrigem || processo.nomeParteRe || '-'}
+        </ParteBadge>
+      </div>
     </div>
   );
 }
@@ -323,37 +337,6 @@ function criarColunas(
       meta: {
         align: 'left' as const,
         headerLabel: 'Processo',
-      },
-    },
-    {
-      id: 'partes',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Partes" />,
-      cell: ({ row }) => {
-        // FONTE DA VERDADE: Usar nomes do 1º grau para evitar inversão por recursos
-        // Em recursos, quem recorre vira polo ativo, mas não muda quem é autor/réu
-        const parteAutora = row.original.nomeParteAutoraOrigem || row.original.nomeParteAutora || '-';
-        const parteRe = row.original.nomeParteReOrigem || row.original.nomeParteRe || '-';
-        return (
-          <div className="flex flex-col items-start justify-center gap-1.5 py-2 min-w-0">
-            <ParteBadge
-              polo="ATIVO"
-              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
-            >
-              {parteAutora}
-            </ParteBadge>
-            <ParteBadge
-              polo="PASSIVO"
-              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
-            >
-              {parteRe}
-            </ParteBadge>
-          </div>
-        );
-      },
-      enableSorting: false,
-      meta: {
-        align: 'left' as const,
-        headerLabel: 'Partes',
       },
     },
     {
