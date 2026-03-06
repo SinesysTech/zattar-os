@@ -306,11 +306,44 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
     const result = await acceptCall();
 
     if (result && callWindow && !callWindow.closed) {
-      // Enviar token para a janela de chamada via postMessage
-      callWindow.postMessage(
-        { type: "call_auth_token", authToken: result.authToken },
-        window.location.origin
-      );
+      // Enviar token via postMessage com retry (handshake).
+      // A janela filha pode não ter carregado ainda, então repetimos
+      // o envio até receber confirmação ou a janela fechar.
+      let delivered = false;
+
+      const handleAck = (event: MessageEvent) => {
+        if (event.origin !== window.location.origin) return;
+        if (event.data?.type === "call_auth_token_ack") {
+          delivered = true;
+        }
+      };
+      window.addEventListener("message", handleAck);
+
+      const sendToken = () => {
+        if (!callWindow.closed) {
+          callWindow.postMessage(
+            { type: "call_auth_token", authToken: result.authToken },
+            window.location.origin
+          );
+        }
+      };
+
+      // Enviar imediatamente + retry a cada 500ms por até 15s
+      sendToken();
+      const retryInterval = setInterval(() => {
+        if (delivered || callWindow.closed) {
+          clearInterval(retryInterval);
+          window.removeEventListener("message", handleAck);
+          return;
+        }
+        sendToken();
+      }, 500);
+
+      // Cleanup após 15s
+      setTimeout(() => {
+        clearInterval(retryInterval);
+        window.removeEventListener("message", handleAck);
+      }, 15_000);
     } else if (callWindow && !callWindow.closed) {
       // Falhou - fechar a janela
       callWindow.close();

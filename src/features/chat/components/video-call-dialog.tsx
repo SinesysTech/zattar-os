@@ -249,6 +249,7 @@ export function VideoCallDialog({
     }
 
     setInitialized(false);
+    roomJoinedRef.current = false;
     setError(null);
     setShowTranscript(false);
   }, [meeting, chamadaId, isInitiator, onCallEnd, isRecording, recordingId, stopRecording]);

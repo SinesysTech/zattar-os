@@ -132,6 +132,8 @@ export {
   validarCamposCaptura,
 } from "./components/captura-form-base";
 export { TipoCapturaSelect } from "./components/tipo-captura-select";
+export { CapturaErrosFormatados } from "./components/captura-erros-formatados";
+export { CapturaRawLogs } from "./components/captura-raw-logs";
 export { AdvogadoCombobox } from "./components/advogado-combobox";
 export { CredenciaisCombobox } from "./components/credenciais-combobox";
 

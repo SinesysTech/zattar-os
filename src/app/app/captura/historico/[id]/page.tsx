@@ -1,9 +1,7 @@
 import { notFound } from 'next/navigation';
 
-import { CapturaResult, type CapturaResultData } from '@/features/captura';
+import { CapturaResult, type CapturaResultData, CapturaErrosFormatados, CapturaRawLogs } from '@/features/captura';
 import { buscarCapturaLog, buscarLogsBrutoPorCapturaId } from '@/features/captura/server';
-import { CapturaErrosFormatados } from '@/features/captura/components/captura-erros-formatados';
-import { CapturaRawLogs } from '@/features/captura/components/captura-raw-logs';
 import { PageShell } from '@/components/shared/page-shell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

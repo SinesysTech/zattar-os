@@ -47,7 +47,7 @@ export function Mail({
 
   useMailFolders();
   useMailMessages();
-  const { searchMessages, refreshMessages, bulkDelete, bulkMove, bulkMarkRead, bulkMarkUnread } = useMailActions();
+  const { searchMessages, refreshMessages, bulkDelete, bulkMove, bulkMarkRead } = useMailActions();
 
   const filteredMessages = React.useMemo(() => {
     if (tab === "all") return messages;

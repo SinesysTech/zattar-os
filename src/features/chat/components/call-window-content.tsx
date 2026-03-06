@@ -60,6 +60,13 @@ export function CallWindowContent({
       if (event.origin !== window.location.origin) return;
       if (event.data?.type === "call_auth_token" && event.data.authToken) {
         setAuthToken(event.data.authToken);
+        // Enviar ACK para a janela pai parar o retry
+        if (event.source && typeof (event.source as Window).postMessage === "function") {
+          (event.source as Window).postMessage(
+            { type: "call_auth_token_ack" },
+            window.location.origin
+          );
+        }
       }
     };
     window.addEventListener("message", handleMessage);
