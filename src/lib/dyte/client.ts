@@ -9,11 +9,41 @@ import { getDyteConfig, isDyteTranscriptionEnabled, getDyteTranscriptionLanguage
 
 const DYTE_API_BASE = 'https://api.dyte.io/v2';
 
+interface DytePreset {
+  id: string;
+  name: string;
+}
+
 // Helper for Basic Auth header (async — reads config from DB)
 async function getAuthHeader() {
   const config = await getDyteConfig();
   const token = Buffer.from(`${config.org_id}:${config.api_key}`).toString('base64');
   return `Basic ${token}`;
+}
+
+async function listPresets(): Promise<DytePreset[]> {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': await getAuthHeader(),
+  };
+
+  const response = await fetch(`${DYTE_API_BASE}/presets`, {
+    method: 'GET',
+    headers,
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to list Dyte presets: ${response.status} ${errorText}`);
+  }
+
+  const result = await response.json();
+  return Array.isArray(result.data) ? result.data as DytePreset[] : [];
+}
+
+async function findPresetByName(presetName: string): Promise<DytePreset | null> {
+  const presets = await listPresets();
+  return presets.find((preset) => preset.name === presetName) || null;
 }
 
 /**
@@ -22,6 +52,13 @@ async function getAuthHeader() {
  */
 export async function ensureTranscriptionPreset(presetName: string = 'group_call_with_transcription') {
   const config = await getDyteConfig();
+  const preset = await findPresetByName(presetName);
+
+  if (!preset) {
+    console.warn(`Dyte preset '${presetName}' was not found; skipping transcription enablement for this preset.`);
+    return presetName;
+  }
+
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': await getAuthHeader(),
@@ -34,18 +71,7 @@ export async function ensureTranscriptionPreset(presetName: string = 'group_call
     },
   };
 
-  // Check if preset exists
-  const checkResponse = await fetch(`${DYTE_API_BASE}/presets/${presetName}`, {
-    method: 'GET',
-    headers,
-  });
-
-  if (!checkResponse.ok) {
-    console.warn(`Dyte preset '${presetName}' was not found; skipping transcription enablement for this preset.`);
-    return presetName;
-  }
-
-  const updateResponse = await fetch(`${DYTE_API_BASE}/presets/${presetName}`, {
+  const updateResponse = await fetch(`${DYTE_API_BASE}/presets/${preset.id}`, {
     method: 'PATCH',
     headers,
     body: JSON.stringify(transcriptionConfig),
@@ -63,32 +89,40 @@ export async function ensureTranscriptionPreset(presetName: string = 'group_call
  * Falls back to listing all presets if none of the preferred names exist.
  */
 export async function getAvailablePresetName(preferred: string[] = ['group_call_host', 'group_call_participant']): Promise<string> {
-  const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': await getAuthHeader(),
-  };
+  const presets = await listPresets();
 
-  // Try each preferred name
-  for (const name of preferred) {
-    const response = await fetch(`${DYTE_API_BASE}/presets/${name}`, {
-      method: 'GET',
-      headers,
+  for (const preferredName of preferred) {
+    const exactMatch = presets.find((preset) => preset.name === preferredName);
+    if (exactMatch) return exactMatch.name;
+
+    const normalizedPreferred = preferredName.toLowerCase();
+    const semanticMatch = presets.find((preset) => {
+      const presetName = preset.name.toLowerCase();
+
+      if (normalizedPreferred.includes('host')) {
+        return presetName.includes('group_call') && presetName.includes('host');
+      }
+
+      if (normalizedPreferred.includes('participant')) {
+        return presetName.includes('group_call') && presetName.includes('participant');
+      }
+
+      return false;
     });
-    if (response.ok) return name;
+
+    if (semanticMatch) return semanticMatch.name;
   }
 
-  // Fallback: list all presets and return the first one
-  const listResponse = await fetch(`${DYTE_API_BASE}/presets`, {
-    method: 'GET',
-    headers,
-  });
+  const genericGroupCallPreset = presets.find((preset) =>
+    preset.name.toLowerCase().includes('group_call')
+  );
 
-  if (listResponse.ok) {
-    const result = await listResponse.json();
-    const presets = result.data;
-    if (Array.isArray(presets) && presets.length > 0) {
-      return presets[0].name as string;
-    }
+  if (genericGroupCallPreset) {
+    return genericGroupCallPreset.name;
+  }
+
+  if (presets.length > 0) {
+    return presets[0].name;
   }
 
   // Last resort: return default name (Dyte creates one by default)
@@ -136,14 +170,20 @@ export async function createMeeting(title: string) {
  * Add a participant to a meeting and get their auth token.
  */
 export async function addParticipant(meetingId: string, name: string, preset_name: string = 'group_call_participant') {
+  const resolvedPresetName = await getAvailablePresetName([preset_name]);
+
+  if (resolvedPresetName !== preset_name) {
+    console.warn(`Dyte preset '${preset_name}' not available; using '${resolvedPresetName}' instead.`);
+  }
+
   const participantData = {
     name,
-    preset_name,
+    preset_name: resolvedPresetName,
     client_specific_id: `${name.replace(/\s+/g, '_').toLowerCase()}_${Date.now()}`,
   };
 
   if (await isDyteTranscriptionEnabled()) {
-    await ensureTranscriptionPreset(preset_name);
+    await ensureTranscriptionPreset(resolvedPresetName);
   }
 
   const response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/participants`, {
@@ -157,7 +197,7 @@ export async function addParticipant(meetingId: string, name: string, preset_nam
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to add participant to Dyte meeting with preset '${preset_name}': ${response.status} ${errorText}`);
+    throw new Error(`Failed to add participant to Dyte meeting with preset '${resolvedPresetName}': ${response.status} ${errorText}`);
   }
 
   const result = await response.json();

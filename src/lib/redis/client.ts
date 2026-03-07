@@ -8,6 +8,20 @@ let redisClient: Redis | null = null;
 let lastErrorLog = 0;
 const ERROR_LOG_INTERVAL_MS = 30_000; // Log erros no máximo a cada 30s
 
+function getRedisConnectionOptions(redisUrl: string, redisPassword?: string) {
+  try {
+    const parsedUrl = new URL(redisUrl);
+    const hasPasswordInUrl = parsedUrl.password.length > 0;
+    const hasUsernameInUrl = parsedUrl.username.length > 0;
+
+    return {
+      password: hasPasswordInUrl || hasUsernameInUrl ? undefined : redisPassword,
+    };
+  } catch {
+    return { password: redisPassword };
+  }
+}
+
 export function getRedisClient(): Redis | null {
   const enableRedisCache = process.env.ENABLE_REDIS_CACHE === 'true';
   const redisUrl = process.env.REDIS_URL;
@@ -19,8 +33,10 @@ export function getRedisClient(): Redis | null {
 
   if (!redisClient) {
     try {
+      const connectionOptions = getRedisConnectionOptions(redisUrl, redisPassword);
+
       redisClient = new Redis(redisUrl, {
-        password: redisPassword,
+        ...connectionOptions,
         maxRetriesPerRequest: 1,
         connectTimeout: 5000,
         commandTimeout: 3000,
