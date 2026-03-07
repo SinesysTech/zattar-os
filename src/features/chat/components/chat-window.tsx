@@ -220,6 +220,11 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
       `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=no,toolbar=no,menubar=no,location=no,status=no`
     );
 
+    // Limpar o storage do tab pai imediatamente para evitar que popups futuros
+    // recebam token stale por cópia de sessionStorage.
+    sessionStorage.removeItem("call_auth_token");
+    sessionStorage.removeItem("call_selected_devices");
+
     callWindowRef.current = callWindow;
   }, []);
 
@@ -294,6 +299,10 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
       salaNome,
       isInitiator: "false",
     });
+
+    // Garantir que não exista token stale no tab principal antes de abrir o popup.
+    sessionStorage.removeItem("call_auth_token");
+    sessionStorage.removeItem("call_selected_devices");
 
     const callWindow = window.open(
       `/app/chat/call?${searchParams.toString()}`,

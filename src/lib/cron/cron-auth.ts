@@ -17,8 +17,12 @@ function parseBearerToken(authorizationHeader: string | null): string | null {
   return match?.[1]?.trim() || null;
 }
 
-export function getExpectedCronSecret(): string | null {
-  return process.env.CRON_SECRET || process.env.VERCEL_CRON_SECRET || null;
+export function getExpectedCronSecrets(): string[] {
+  const secrets = [process.env.CRON_SECRET, process.env.VERCEL_CRON_SECRET]
+    .filter((secret): secret is string => typeof secret === 'string' && secret.trim().length > 0)
+    .map((secret) => secret.trim());
+
+  return [...new Set(secrets)];
 }
 
 /**
@@ -34,8 +38,8 @@ export function requireCronAuth(
 ): NextResponse | null {
   const logPrefix = options?.logPrefix ?? "[Cron]";
 
-  const expectedToken = getExpectedCronSecret();
-  if (!expectedToken) {
+  const expectedTokens = getExpectedCronSecrets();
+  if (expectedTokens.length === 0) {
     console.warn(`${logPrefix} CRON_SECRET não configurado`);
     return NextResponse.json(
       { error: "Cron secret not configured" },
@@ -54,13 +58,17 @@ export function requireCronAuth(
   if (
     !providedToken &&
     authHeader &&
-    expectedToken &&
-    safeEqual(authHeader.trim(), expectedToken)
+    expectedTokens.some((expectedToken) => safeEqual(authHeader.trim(), expectedToken))
   ) {
     providedToken = authHeader.trim();
   }
 
-  if (!providedToken || !safeEqual(providedToken, expectedToken)) {
+  const matchedExpectedToken = providedToken
+    ? expectedTokens.find((expectedToken) => safeEqual(providedToken, expectedToken)) || null
+    : null;
+
+  if (!providedToken || !matchedExpectedToken) {
+    const firstExpectedToken = expectedTokens[0];
     console.warn(`${logPrefix} Tentativa de acesso não autorizado`, {
       hasAuthorizationHeader: !!authHeader,
       // Debug info: (Do NOT log full secrets in production if possible, but for debugging this issue we need hints)
@@ -71,16 +79,16 @@ export function requireCronAuth(
       hasXCronSecretHeader: !!tokenFromHeader,
       tokenFromHeaderLength: tokenFromHeader?.length,
       providedTokenLength: providedToken?.length,
-      expectedTokenLength: expectedToken.length,
-      expectedTokenEqualsProvided: safeEqual(
-        providedToken || "",
-        expectedToken || ""
-      ),
+      expectedTokenLength: firstExpectedToken?.length,
+      expectedTokenEqualsProvided: !!matchedExpectedToken,
+      expectedTokenCandidates: expectedTokens.length,
       // Loging first few chars to check for obvious mismatches (safe to remove later)
       providedTokenPrefix: providedToken
         ? providedToken.substring(0, 5) + "..."
         : "null",
-      expectedTokenPrefix: expectedToken.substring(0, 5) + "...",
+      expectedTokenPrefix: firstExpectedToken
+        ? firstExpectedToken.substring(0, 5) + "..."
+        : "null",
     });
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

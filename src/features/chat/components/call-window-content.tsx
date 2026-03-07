@@ -40,19 +40,23 @@ export function CallWindowContent({
 
   // Read authToken from sessionStorage (initiator flow) or postMessage (acceptor flow)
   useEffect(() => {
-    // Tentar ler do sessionStorage primeiro (fluxo do iniciador)
-    const token = sessionStorage.getItem("call_auth_token");
-    const devicesJson = sessionStorage.getItem("call_selected_devices");
+    // Ler sessionStorage somente no fluxo do iniciador.
+    // Para quem aceita a chamada, o token chega via postMessage e o sessionStorage
+    // do popup pode conter cópia stale do tab pai.
+    if (isInitiator) {
+      const token = sessionStorage.getItem("call_auth_token");
+      const devicesJson = sessionStorage.getItem("call_selected_devices");
 
-    if (token) {
-      setAuthToken(token);
-      sessionStorage.removeItem("call_auth_token");
-    }
-    if (devicesJson) {
-      try {
-        setSelectedDevices(JSON.parse(devicesJson));
-      } catch { /* ignore */ }
-      sessionStorage.removeItem("call_selected_devices");
+      if (token) {
+        setAuthToken(token);
+        sessionStorage.removeItem("call_auth_token");
+      }
+      if (devicesJson) {
+        try {
+          setSelectedDevices(JSON.parse(devicesJson));
+        } catch { /* ignore */ }
+        sessionStorage.removeItem("call_selected_devices");
+      }
     }
 
     // Escutar postMessage para receber token (fluxo de quem aceita a chamada)
@@ -75,7 +79,7 @@ export function CallWindowContent({
     document.title = `${tipo === "video" ? "Video" : "Audio"} - ${salaNome}`;
 
     return () => window.removeEventListener("message", handleMessage);
-  }, [tipo, salaNome]);
+  }, [tipo, salaNome, isInitiator]);
 
   const isVideo = tipo === "video";
 
