@@ -55,6 +55,15 @@ export async function actionIniciarChamada(
       'group_call_host' // Iniciador é host
     );
 
+    console.log('[Dyte] actionIniciarChamada', {
+      salaId,
+      tipo,
+      chamadaId: chamadaResult.value.id,
+      meetingId,
+      userId: user.id,
+      authTokenPrefix: `${authToken.slice(0, 12)}...`,
+    });
+
     revalidatePath(`/app/chat/${salaId}`);
     
     return {
@@ -113,6 +122,14 @@ export async function actionResponderChamada(
       user.nomeCompleto || 'Usuário',
       'group_call_participant'
     );
+
+    console.log('[Dyte] actionResponderChamada', {
+      chamadaId,
+      meetingId,
+      aceitou,
+      userId: user.id,
+      authTokenPrefix: `${authToken.slice(0, 12)}...`,
+    });
 
     return {
       success: true,

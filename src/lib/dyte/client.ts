@@ -163,6 +163,14 @@ export async function createMeeting(title: string) {
   }
 
   const result = await response.json();
+  console.log('[Dyte] Meeting criado', {
+    title,
+    meetingId: result.data.id,
+    transcriptionEnabled: !!config.enable_transcription,
+    transcriptionLanguage: config.enable_transcription
+      ? getDyteTranscriptionLanguage(config)
+      : null,
+  });
   return result.data.id as string;
 }
 
@@ -201,6 +209,15 @@ export async function addParticipant(meetingId: string, name: string, preset_nam
   }
 
   const result = await response.json();
+  console.log('[Dyte] Participante criado', {
+    meetingId,
+    participantId: result.data.id,
+    participantName: name,
+    requestedPreset: preset_name,
+    resolvedPreset: resolvedPresetName,
+    clientSpecificId: participantData.client_specific_id,
+    tokenPrefix: typeof result.data.token === 'string' ? `${result.data.token.slice(0, 12)}...` : null,
+  });
   return result.data.token as string;
 }
 
