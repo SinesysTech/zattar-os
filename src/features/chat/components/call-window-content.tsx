@@ -38,6 +38,19 @@ export function CallWindowContent({
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [selectedDevices, setSelectedDevices] = useState<SelectedDevices | undefined>(undefined);
 
+  const logDyteDebug = useCallback((message: string, extra?: Record<string, unknown>) => {
+    console.log('[Dyte UI]', {
+      message,
+      chamadaId,
+      tipo,
+      isInitiator,
+      salaNome,
+      meetingId: meeting?.meta?.meetingId || meetingId || null,
+      roomJoined: Boolean((meeting?.self as { roomJoined?: boolean } | undefined)?.roomJoined),
+      ...extra,
+    });
+  }, [chamadaId, tipo, isInitiator, salaNome, meeting, meetingId]);
+
   // Read authToken from sessionStorage (initiator flow) or postMessage (acceptor flow)
   useEffect(() => {
     // Ler sessionStorage somente no fluxo do iniciador.
@@ -50,6 +63,12 @@ export function CallWindowContent({
       if (token) {
         setAuthToken(token);
         sessionStorage.removeItem("call_auth_token");
+        console.log('[Dyte UI]', {
+          message: 'authToken carregado do sessionStorage',
+          chamadaId,
+          isInitiator,
+          tokenPrefix: `${token.slice(0, 12)}...`,
+        });
       }
       if (devicesJson) {
         try {
@@ -64,6 +83,12 @@ export function CallWindowContent({
       if (event.origin !== window.location.origin) return;
       if (event.data?.type === "call_auth_token" && event.data.authToken) {
         setAuthToken(event.data.authToken);
+        console.log('[Dyte UI]', {
+          message: 'authToken recebido via postMessage',
+          chamadaId,
+          isInitiator,
+          tokenPrefix: `${event.data.authToken.slice(0, 12)}...`,
+        });
         // Enviar ACK para a janela pai parar o retry
         if (event.source && typeof (event.source as Window).postMessage === "function") {
           (event.source as Window).postMessage(
@@ -146,9 +171,14 @@ export function CallWindowContent({
       if (chamadaId && !joinedRef.current) {
         await actionEntrarNaChamada(chamadaId);
         joinedRef.current = true;
+        logDyteDebug('entrada da chamada registrada no backend');
       }
 
       setLoadingStage("initializing");
+      logDyteDebug('inicializando SDK', {
+        authTokenPrefix: `${authToken.slice(0, 12)}...`,
+        selectedDevices,
+      });
 
       await initMeeting({
         authToken,
@@ -161,6 +191,7 @@ export function CallWindowContent({
 
       setLoadingStage("joining");
       setInitialized(true);
+      logDyteDebug('SDK inicializado');
     } catch (e: unknown) {
       const errorMessage = e instanceof Error ? e.message : "Erro ao iniciar chamada.";
       setError(errorMessage);
@@ -207,14 +238,73 @@ export function CallWindowContent({
   useEffect(() => {
     if (meeting && initialized && !roomJoinedRef.current) {
       roomJoinedRef.current = true;
+      logDyteDebug('executando joinRoom');
       meeting.joinRoom().catch((err: unknown) => {
         roomJoinedRef.current = false;
         setInitialized(false);
         handleCallError(err);
         setError(err instanceof Error ? err.message : "Erro ao entrar na sala.");
+        logDyteDebug('joinRoom falhou', {
+          error: err instanceof Error ? err.message : String(err),
+        });
       });
     }
-  }, [meeting, initialized]);
+  }, [meeting, initialized, logDyteDebug]);
+
+  useEffect(() => {
+    if (!meeting) return;
+
+    const self = meeting.self as {
+      roomJoined?: boolean;
+      on?: (event: string, cb: (...args: unknown[]) => void) => void;
+      removeListener?: (event: string, cb: (...args: unknown[]) => void) => void;
+    };
+
+    const onRoomJoined = () => {
+      logDyteDebug('roomJoined emitido', {
+        joinedParticipants: meeting.participants.joined.size,
+      });
+    };
+
+    const onRoomLeft = () => {
+      logDyteDebug('roomLeft emitido');
+    };
+
+    const onParticipantJoined = (participant: unknown) => {
+      const parsedParticipant = participant as { id?: string; name?: string };
+      logDyteDebug('participantJoined emitido', {
+        participantId: parsedParticipant.id || null,
+        participantName: parsedParticipant.name || null,
+        joinedParticipants: meeting.participants.joined.size,
+      });
+    };
+
+    const onParticipantLeft = (participant: unknown) => {
+      const parsedParticipant = participant as { id?: string; name?: string };
+      logDyteDebug('participantLeft emitido', {
+        participantId: parsedParticipant.id || null,
+        participantName: parsedParticipant.name || null,
+        joinedParticipants: meeting.participants.joined.size,
+      });
+    };
+
+    self.on?.('roomJoined', onRoomJoined);
+    self.on?.('roomLeft', onRoomLeft);
+    meeting.participants.joined.on('participantJoined', onParticipantJoined);
+    meeting.participants.joined.on('participantLeft', onParticipantLeft);
+
+    logDyteDebug('listeners Dyte registrados', {
+      initialJoinedParticipants: meeting.participants.joined.size,
+      selfRoomJoined: Boolean(self.roomJoined),
+    });
+
+    return () => {
+      self.removeListener?.('roomJoined', onRoomJoined);
+      self.removeListener?.('roomLeft', onRoomLeft);
+      meeting.participants.joined.removeListener('participantJoined', onParticipantJoined);
+      meeting.participants.joined.removeListener('participantLeft', onParticipantLeft);
+    };
+  }, [meeting, logDyteDebug]);
 
   const handleExit = useCallback(async () => {
     if (isRecording) {
