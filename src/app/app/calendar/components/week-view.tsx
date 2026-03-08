@@ -213,7 +213,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
                 style={{ top: `${currentTimePosition}%` }}>
                 <div className="relative flex items-center">
                   <div className="bg-primary absolute -left-1 h-2 w-2 rounded-full"></div>
-                  <div className="bg-primary h-[2px] w-full"></div>
+                  <div className="bg-primary h-0.5 w-full"></div>
                 </div>
               </div>
             )}
