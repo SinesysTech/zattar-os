@@ -321,10 +321,10 @@ export function AudienciaDetailSheet({
             </InfoRow>
             <Separator className="my-2" />
             <div className="text-sm space-y-1.5">
-              <ParteBadge polo="ATIVO" className="block" truncate maxWidth="100%">
+              <ParteBadge polo="ATIVO" className="flex" truncate maxWidth="100%">
                 {audiencia.poloAtivoOrigem || audiencia.poloAtivoNome || '-'}
               </ParteBadge>
-              <ParteBadge polo="PASSIVO" className="block" truncate maxWidth="100%">
+              <ParteBadge polo="PASSIVO" className="flex" truncate maxWidth="100%">
                 {audiencia.poloPassivoOrigem || audiencia.poloPassivoNome || '-'}
               </ParteBadge>
             </div>

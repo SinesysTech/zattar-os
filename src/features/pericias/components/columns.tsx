@@ -128,7 +128,7 @@ function ResponsavelCell({
                 {getInitials(nomeExibicao)}
               </AvatarFallback>
             </Avatar>
-            <span className="truncate max-w-[120px]">{nomeExibicao}</span>
+            <span className="truncate max-w-30">{nomeExibicao}</span>
           </>
         ) : (
           <span className="text-muted-foreground">Sem responsável</span>
@@ -277,13 +277,13 @@ export const columns: ColumnDef<Pericia>[] = [
           <div className="flex flex-col gap-1">
             <ParteBadge
               polo="ATIVO"
-              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+              className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
             >
               {nomeParteAutora}
             </ParteBadge>
             <ParteBadge
               polo="PASSIVO"
-              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+              className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
             >
               {nomeParteRe}
             </ParteBadge>

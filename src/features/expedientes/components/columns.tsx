@@ -607,13 +607,13 @@ export const columns: ColumnDef<Expediente>[] = [
           <div className="flex flex-col gap-1">
             <ParteBadge
               polo="ATIVO"
-              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+              className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
             >
               {e.nomeParteAutoraOrigem || e.nomeParteAutora || '-'}
             </ParteBadge>
             <ParteBadge
               polo="PASSIVO"
-              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+              className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
             >
               {e.nomeParteReOrigem || e.nomeParteRe || '-'}
             </ParteBadge>

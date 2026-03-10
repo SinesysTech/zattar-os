@@ -106,13 +106,13 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
           <div className="flex flex-col gap-1">
             <ParteBadge
               polo="ATIVO"
-              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+              className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
             >
               {processo.nome_parte_autora || '-'}
             </ParteBadge>
             <ParteBadge
               polo="PASSIVO"
-              className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+              className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
             >
               {processo.nome_parte_re || '-'}
             </ParteBadge>
