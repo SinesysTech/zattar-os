@@ -11,6 +11,12 @@
 #   - SSL/TLS automatico    -> gerenciado pelo Cloudron
 #   - Backups automaticos   -> incluindo /app/data
 #
+# IMPORTANTE sobre o Cloudron:
+#   - /app/code é READ-ONLY em runtime (nao pode criar arquivos/symlinks)
+#   - /app/data é o unico diretório writable (persistente)
+#   - /tmp e /run sao writable mas efemeros
+#   - O Cloudron gerencia restart do container (nao precisa de supervisor)
+#
 # Uso:
 #   cloudron build -f Dockerfile.cloudron \
 #     --build-arg NEXT_PUBLIC_SUPABASE_URL=https://... \
@@ -64,20 +70,12 @@ RUN npm run build:ci
 # ============================================================================
 # STAGE 3: Cloudron Runner
 # ============================================================================
-# cloudron/base inclui: Ubuntu, supervisor, nginx, cron, logrotate, e utilidades
-# Ref: https://docs.cloudron.io/packaging/cheat-sheet/
+# cloudron/base:4.2.0 inclui: Ubuntu, Node.js 18.18, supervisor, nginx, cron
+# O filesystem é read-only exceto /app/data, /tmp, /run
+# Node.js 18.18+ é compatível com Next.js 16 standalone output
 # ============================================================================
 FROM cloudron/base:4.2.0
 
-# Instalar Node.js 22 LTS
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
-    apt-get install -y nodejs && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Criar estrutura de diretorios do Cloudron
-# /app/code  -> codigo da aplicacao (substituido em cada update)
-# /app/data  -> dados persistentes (sobrevive a updates e backups)
 RUN mkdir -p /app/code /app/data
 
 WORKDIR /app/code
@@ -87,13 +85,11 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Copiar scripts e configuracoes do Cloudron
+# Copiar script de inicializacao
 COPY cloudron/start.sh /app/code/start.sh
 RUN chmod +x /app/code/start.sh
 
-COPY cloudron/supervisor/ /etc/supervisor/conf.d/
-
-# Garantir permissoes corretas
+# Garantir permissoes corretas para o usuario cloudron
 RUN chown -R cloudron:cloudron /app/code
 
 CMD [ "/app/code/start.sh" ]

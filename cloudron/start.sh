@@ -48,13 +48,10 @@ export HOSTNAME="${HOSTNAME:-0.0.0.0}"
 # --------------------------------------------------------------------------
 # STORAGE PERSISTENTE (/app/data)
 # --------------------------------------------------------------------------
-# O Cloudron garante que /app/data persiste entre updates e é incluído
-# nos backups automáticos.
-# NOTA: /app/code é read-only no Cloudron, entao nao podemos criar symlinks.
+# /app/data é o unico diretório writable (persiste entre updates e backups)
+# /app/code, /var/log, etc. são READ-ONLY no Cloudron
 # --------------------------------------------------------------------------
-mkdir -p /app/data/cache
-mkdir -p /app/data/uploads
-mkdir -p /app/data/logs
+mkdir -p /app/data/cache /app/data/uploads /app/data/logs
 
 # --------------------------------------------------------------------------
 # INFORMAÇÕES DO AMBIENTE
@@ -62,7 +59,13 @@ mkdir -p /app/data/logs
 echo "=> App URL: ${CLOUDRON_APP_ORIGIN:-http://localhost:3000}"
 echo "=> Node.js: $(node --version)"
 echo "=> Memory limit: ${CLOUDRON_MEMORY_LIMIT:-unknown}MB"
-echo "=> Iniciando supervisor..."
 
-# Iniciar via supervisor (gerencia restart automático e logs)
-exec /usr/bin/supervisord --configuration /etc/supervisor/supervisord.conf --nodaemon
+# --------------------------------------------------------------------------
+# INICIAR NODE.JS DIRETAMENTE
+# --------------------------------------------------------------------------
+# Sem supervisor — o Cloudron ja gerencia restart do container automaticamente.
+# O filesystem é read-only, entao supervisor nao consegue escrever logs.
+# Usando exec para que node seja PID 1 e receba sinais corretamente.
+# --------------------------------------------------------------------------
+echo "=> Iniciando server.js..."
+exec node /app/code/server.js
