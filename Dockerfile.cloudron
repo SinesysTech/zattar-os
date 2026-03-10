@@ -1,23 +1,20 @@
-# syntax=docker/dockerfile:1
 # ============================================================================
 # Dockerfile.cloudron - Deploy no Cloudron
 # ============================================================================
 # Multi-stage build otimizado para a plataforma Cloudron.
+# NOTA: Sem BuildKit (--mount=type=cache) pois o build service nao suporta.
 #
 # Cloudron fornece automaticamente:
 #   - Redis (addon)         -> CLOUDRON_REDIS_URL, CLOUDRON_REDIS_PASSWORD
 #   - Email/SMTP (addon)    -> CLOUDRON_MAIL_SMTP_*, CLOUDRON_MAIL_FROM
 #   - Storage persistente   -> /app/data (sobrevive a updates)
-#   - SSL/TLS automático    -> gerenciado pelo Cloudron
-#   - Backups automáticos   -> incluindo /app/data
+#   - SSL/TLS automatico    -> gerenciado pelo Cloudron
+#   - Backups automaticos   -> incluindo /app/data
 #
 # Uso:
-#   docker build -t registry/zattar-os:1.0.0 -f Dockerfile.cloudron \
+#   cloudron build -f Dockerfile.cloudron \
 #     --build-arg NEXT_PUBLIC_SUPABASE_URL=https://... \
-#     --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=... .
-#
-#   docker push registry/zattar-os:1.0.0
-#   cloudron install --image registry/zattar-os:1.0.0
+#     --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=...
 # ============================================================================
 
 # ============================================================================
@@ -33,9 +30,7 @@ RUN apk add --no-cache libc6-compat
 
 COPY package.json package-lock.json* ./
 
-RUN --mount=type=cache,target=/root/.npm \
-    --mount=type=cache,target=/root/.cache \
-    npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
+RUN npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
 
 # ============================================================================
 # STAGE 2: Builder
@@ -63,9 +58,8 @@ COPY . .
 RUN mkdir -p public/pdfjs && \
     cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdfjs/pdf.worker.min.mjs
 
-# Build com cache persistente
-RUN --mount=type=cache,target=/app/.next/cache,uid=1001,gid=1001 \
-    npm run build:ci
+# Build da aplicacao
+RUN npm run build:ci
 
 # ============================================================================
 # STAGE 3: Cloudron Runner
@@ -81,25 +75,25 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Criar estrutura de diretórios do Cloudron
-# /app/code  -> código da aplicação (substituído em cada update)
+# Criar estrutura de diretorios do Cloudron
+# /app/code  -> codigo da aplicacao (substituido em cada update)
 # /app/data  -> dados persistentes (sobrevive a updates e backups)
 RUN mkdir -p /app/code /app/data
 
 WORKDIR /app/code
 
-# Copiar standalone build do Next.js (apenas o necessário para produção)
+# Copiar standalone build do Next.js (apenas o necessario para producao)
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Copiar scripts e configurações do Cloudron
+# Copiar scripts e configuracoes do Cloudron
 COPY cloudron/start.sh /app/code/start.sh
 RUN chmod +x /app/code/start.sh
 
 COPY cloudron/supervisor/ /etc/supervisor/conf.d/
 
-# Garantir permissões corretas
+# Garantir permissoes corretas
 RUN chown -R cloudron:cloudron /app/code
 
 CMD [ "/app/code/start.sh" ]

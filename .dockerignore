@@ -103,6 +103,7 @@ public/swe-worker*
 
 # Docker e infraestrutura
 Dockerfile*
+!Dockerfile.cloudron
 docker-compose*.yml
 docker/
 .dockerignore

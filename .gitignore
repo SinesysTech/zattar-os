@@ -72,3 +72,5 @@ scripts/results/bundle-analysis/*.html
 
 # Diagnósticos de banco (podem conter dados sensíveis)
 DIAGNOSTICO_DISK_IO*.md
+
+dados-cloudron.md
