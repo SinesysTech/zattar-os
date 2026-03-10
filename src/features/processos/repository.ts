@@ -978,8 +978,14 @@ export async function saveProcesso(
     const resultado = converterParaProcesso(data as Record<string, unknown>);
 
     // Refresh da materialized view para refletir a inserção
-    try { await db.rpc("refresh_acervo_unificado", { use_concurrent: true }); }
-    catch (e) { console.warn("[createProcesso] Falha no refresh da view materializada:", e); }
+    const rpcInsertResult = await db.rpc("refresh_acervo_unificado", { use_concurrent: true });
+    if (rpcInsertResult.error) {
+      console.warn("[createProcesso] Falha no refresh concorrente da view:", rpcInsertResult.error.message);
+      const retryInsertResult = await db.rpc("refresh_acervo_unificado", { use_concurrent: false });
+      if (retryInsertResult.error) {
+        console.error("[createProcesso] Falha no retry do refresh da view:", retryInsertResult.error.message);
+      }
+    }
 
     await invalidateAcervoCache();
     return ok(resultado);
@@ -1108,8 +1114,15 @@ export async function updateProcesso(
     const resultado = converterParaProcesso(data as Record<string, unknown>);
 
     // Refresh da materialized view para refletir a atualização
-    try { await db.rpc("refresh_acervo_unificado", { use_concurrent: true }); }
-    catch (e) { console.warn("[updateProcesso] Falha no refresh da view materializada:", e); }
+    const rpcResult = await db.rpc("refresh_acervo_unificado", { use_concurrent: true });
+    if (rpcResult.error) {
+      console.warn("[updateProcesso] Falha no refresh concorrente da view:", rpcResult.error.message);
+      // Retry sem CONCURRENTLY (mais confiável, mas bloqueia leituras momentaneamente)
+      const retryResult = await db.rpc("refresh_acervo_unificado", { use_concurrent: false });
+      if (retryResult.error) {
+        console.error("[updateProcesso] Falha no retry do refresh da view:", retryResult.error.message);
+      }
+    }
 
     await deleteCached(`${CACHE_PREFIXES.acervo}:unificado:${id}`);
     await invalidateAcervoCache();
