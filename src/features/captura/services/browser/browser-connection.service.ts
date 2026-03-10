@@ -1,17 +1,17 @@
 /**
- * Serviço de Conexão com Browser (Firefox)
- * 
- * Este serviço gerencia a conexão com Firefox para scraping do PJE-TRT.
+ * Serviço de Conexão com Browser (Chromium)
+ *
+ * Este serviço gerencia a conexão com Chromium para scraping do PJE-TRT.
  * Suporta dois modos:
- * 
- * 1. **Firefox Remoto**: Quando BROWSER_WS_ENDPOINT está configurado
- *    - Conecta via WebSocket ao Firefox Browser Server (Playwright)
+ *
+ * 1. **Chromium Remoto**: Quando BROWSER_WS_ENDPOINT está configurado
+ *    - Conecta via WebSocket ao Chromium Browser Server (Playwright)
  *    - Recomendado para produção (ver repositório: sinesys-browser-server)
- * 
- * 2. **Firefox Local**: Fallback quando não há endpoint remoto
- *    - Lança Firefox localmente via Playwright
+ *
+ * 2. **Chromium Local**: Fallback quando não há endpoint remoto
+ *    - Lança Chromium localmente via Playwright
  *    - Útil para desenvolvimento
- * 
+ *
  * @example
  * ```typescript
  * const { browser, page } = await getBrowserConnection();
@@ -22,15 +22,15 @@
 
 import 'server-only';
 
-import { Browser, BrowserContext, Page, firefox } from 'playwright';
+import { Browser, BrowserContext, Page, chromium } from 'playwright';
 
 // ============================================================================
 // TIPOS
 // ============================================================================
 
 export interface BrowserConnectionOptions {
-  /** Tipo de browser (sempre Firefox para PJE-TRT) */
-  browserType?: 'firefox';
+  /** Tipo de browser (Chromium para produção, Firefox legado para dev) */
+  browserType?: 'chromium' | 'firefox';
   /** Executar em modo headless. Default: true */
   headless?: boolean;
   /** Viewport personalizado */
@@ -72,33 +72,31 @@ function getBrowserServiceToken(): string | undefined {
 // ============================================================================
 
 /**
- * Conecta ao browser remoto (Firefox via Playwright Browser Server)
+ * Conecta ao browser remoto (Chromium via Playwright Browser Server)
  */
 async function connectToRemoteBrowser(
   wsEndpoint: string,
   options: BrowserConnectionOptions
 ): Promise<BrowserConnectionResult> {
   const token = getBrowserServiceToken();
-  
+
   // Adicionar token à URL se disponível (formato: ws://host:port/token)
   let finalEndpoint = wsEndpoint;
   if (token && !wsEndpoint.includes(token)) {
-    // Se a URL não termina com /, adiciona
-    finalEndpoint = wsEndpoint.endsWith('/') 
+    finalEndpoint = wsEndpoint.endsWith('/')
       ? `${wsEndpoint}${token}`
       : `${wsEndpoint}/${token}`;
   }
 
-  console.log('🦊 [Browser] Conectando ao Firefox remoto...', {
+  console.log('[Browser] Conectando ao Chromium remoto...', {
     endpoint: wsEndpoint.replace(/\/[^\/]+$/, '/***'),
   });
 
-  // Conecta ao Firefox Browser Server (Playwright)
-  const browser = await firefox.connect(finalEndpoint, {
+  const browser = await chromium.connect(finalEndpoint, {
     timeout: options.timeout || 60000,
   });
 
-  console.log('✅ [Browser] Conectado ao Firefox remoto');
+  console.log('[Browser] Conectado ao Chromium remoto');
 
   const browserContext = await browser.newContext({
     viewport: options.viewport || { width: 1920, height: 1080 },
@@ -116,18 +114,18 @@ async function connectToRemoteBrowser(
 }
 
 /**
- * Lança Firefox local com Playwright
+ * Lança Chromium local com Playwright
  */
 async function launchLocalBrowser(
   options: BrowserConnectionOptions
 ): Promise<BrowserConnectionResult> {
   const headless = options.headless ?? true;
 
-  console.log('🦊 [Browser] Lançando Firefox local...', { headless });
+  console.log('[Browser] Lançando Chromium local...', { headless });
 
-  const browser = await firefox.launch({ headless });
+  const browser = await chromium.launch({ headless });
 
-  console.log('✅ [Browser] Firefox lançado localmente');
+  console.log('[Browser] Chromium lançado localmente');
 
   const browserContext = await browser.newContext({
     viewport: options.viewport || { width: 1920, height: 1080 },
@@ -191,18 +189,14 @@ export async function getBrowserConnection(
 }
 
 /**
- * Obtém conexão com Firefox (usado no PJE-TRT)
- * 
- * Sempre usa Firefox, seja remoto (via Playwright Browser Server)
- * ou local (via Playwright).
+ * Obtém conexão com Chromium (usado no PJE-TRT)
+ *
+ * @deprecated Use getBrowserConnection() diretamente
  */
 export async function getFirefoxConnection(
   options: Omit<BrowserConnectionOptions, 'browserType'> = {}
 ): Promise<BrowserConnectionResult> {
-  return await getBrowserConnection({
-    ...options,
-    browserType: 'firefox',
-  });
+  return await getBrowserConnection(options);
 }
 
 /**
@@ -267,9 +261,9 @@ export async function checkBrowserServiceHealth(): Promise<{
 // ============================================================================
 
 /**
- * Retorna o user agent padrão do Firefox
+ * Retorna o user agent padrão do Chrome
  */
 function getDefaultUserAgent(): string {
-  return 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0';
+  return 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
 }
 

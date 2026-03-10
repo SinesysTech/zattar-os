@@ -240,7 +240,7 @@ function ProcessoResponsavelCell({
 }: {
   processo: ProcessoUnificado;
   usuarios?: Usuario[];
-  onSuccess?: () => void;
+  onSuccess?: (updatedProcesso?: ProcessoUnificado) => void;
 }) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [localProcesso, setLocalProcesso] = React.useState(processo);
@@ -254,11 +254,12 @@ function ProcessoResponsavelCell({
   const nomeExibicao = responsavel?.nomeExibicao || '-';
 
   const handleSuccess = React.useCallback((updatedProcesso?: ProcessoUnificado) => {
-    if (updatedProcesso && updatedProcesso.id === localProcesso.id) {
-      setLocalProcesso(updatedProcesso);
+    if (updatedProcesso) {
+      // Update otimista: mesclar o responsavelId atualizado no processo local
+      setLocalProcesso((prev) => ({ ...prev, responsavelId: updatedProcesso.responsavelId }));
     }
-    onSuccess?.();
-  }, [onSuccess, localProcesso.id]);
+    onSuccess?.(updatedProcesso);
+  }, [onSuccess]);
 
   return (
     <>
@@ -775,7 +776,8 @@ export function ProcessosTableWrapper({
 
   const handleRefetchWithUpdate = React.useCallback((updatedProcesso?: ProcessoUnificado) => {
     if (updatedProcesso) {
-      updateProcessoLocal(updatedProcesso.id, updatedProcesso);
+      // Update otimista: atualizar o responsavelId imediatamente na lista local
+      updateProcessoLocal(updatedProcesso.id, { responsavelId: updatedProcesso.responsavelId });
     }
     if (refetchRef.current) {
       refetchRef.current();

@@ -375,6 +375,8 @@ export async function actionAtualizarProcesso(
     }
 
     // 4. Chamar servico do core
+    // NOTA: Não passar client - o service usa createDbClient() (service_role)
+    // que tem permissão de UPDATE. O createClient() (authenticated) só tem SELECT via RLS.
     const result = await atualizarProcesso(
       id,
       validation.data as UpdateProcessoInput
@@ -602,6 +604,8 @@ export async function actionAtribuirResponsavelEmLote(
     let atualizados = 0;
     let falhas = 0;
 
+    // NOTA: Não passar client - o service usa createDbClient() (service_role)
+    // que tem permissão de UPDATE. O createClient() (authenticated) só tem SELECT via RLS.
     const results = await Promise.allSettled(
       processoIds.map((id) =>
         atualizarProcesso(id, { responsavelId } as UpdateProcessoInput)
