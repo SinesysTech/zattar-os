@@ -203,13 +203,13 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
       <div className="flex flex-col gap-1">
         <ParteBadge
           polo="ATIVO"
-          className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+          className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
         >
           {processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '-'}
         </ParteBadge>
         <ParteBadge
           polo="PASSIVO"
-          className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+          className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
         >
           {processo.nomeParteReOrigem || processo.nomeParteRe || '-'}
         </ParteBadge>

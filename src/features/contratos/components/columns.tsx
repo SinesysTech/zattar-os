@@ -161,13 +161,13 @@ export function getContratosColumns(
 
             <div className="flex flex-col gap-0.5">
               <div className="flex items-center gap-1 text-xs leading-relaxed">
-                <ParteBadge polo="ATIVO" className="text-xs px-1.5 py-0.5">
+                <ParteBadge polo="ATIVO" className="text-xs">
                   {autoraNome?.toUpperCase() || '-'}
                   {autoraNome && partesAutoras.length > 1 && ` e outros (${partesAutoras.length})`}
                 </ParteBadge>
               </div>
               <div className="flex items-center gap-1 text-xs leading-relaxed">
-                <ParteBadge polo="PASSIVO" className="text-xs px-1.5 py-0.5">
+                <ParteBadge polo="PASSIVO" className="text-xs">
                   {reNome?.toUpperCase() || '-'}
                   {reNome && partesRe.length > 1 && ` e outros (${partesRe.length})`}
                 </ParteBadge>

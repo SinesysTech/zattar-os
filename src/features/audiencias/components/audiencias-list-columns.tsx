@@ -626,13 +626,13 @@ export function getAudienciasColumns(
             <div className="flex flex-col gap-1">
               <ParteBadge
                 polo="ATIVO"
-                className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+                className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
               >
                 {a.poloAtivoOrigem || a.poloAtivoNome || '-'}
               </ParteBadge>
               <ParteBadge
                 polo="PASSIVO"
-                className="block whitespace-normal wrap-break-word text-left font-normal text-sm"
+                className="flex whitespace-normal wrap-break-word text-left font-normal text-sm"
               >
                 {a.poloPassivoOrigem || a.poloPassivoNome || '-'}
               </ParteBadge>
