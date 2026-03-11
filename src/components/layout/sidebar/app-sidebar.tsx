@@ -46,12 +46,6 @@ const navPrincipal = [
     title: "Partes",
     url: "/app/partes",
     icon: Users,
-    items: [
-      { title: "Clientes", url: "/app/partes/clientes" },
-      { title: "Partes Contrárias", url: "/app/partes/partes-contrarias" },
-      { title: "Terceiros", url: "/app/partes/terceiros" },
-      { title: "Representantes", url: "/app/partes/representantes" },
-    ],
   },
   {
     title: "Contratos",

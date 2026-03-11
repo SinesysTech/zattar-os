@@ -29,7 +29,7 @@ import type { ProcessoRelacionado } from '../../types';
 
 // Imports da nova estrutura de features
 import { useRepresentantes } from '../../hooks';
-import { ProcessosRelacionadosCell, CopyButton, ContatoCell, FilterPopover } from '../shared';
+import { ProcessosRelacionadosCell, CopyButton, ContatoCell, FilterPopover, PartesSectionFilter } from '../shared';
 import { RepresentanteFormDialog } from './representante-form';
 import { formatarCpf, formatarNome } from '../../utils';
 import type { Representante, InscricaoOAB } from '../../types';
@@ -357,16 +357,19 @@ export function RepresentantesTableWrapper() {
                 onClick: () => setCreateOpen(true),
               }}
               filtersSlot={
-                <FilterPopover
-                  label="UF OAB"
-                  value={ufOab}
-                  onValueChange={(val) => {
-                    setUfOab(val);
-                    setPageIndex(0);
-                  }}
-                  options={UFS_BRASIL.map((uf) => ({ value: uf, label: uf }))}
-                  defaultValue="all"
-                />
+                <>
+                  <PartesSectionFilter currentSection="representantes" />
+                  <FilterPopover
+                    label="UF OAB"
+                    value={ufOab}
+                    onValueChange={(val) => {
+                      setUfOab(val);
+                      setPageIndex(0);
+                    }}
+                    options={UFS_BRASIL.map((uf) => ({ value: uf, label: uf }))}
+                    defaultValue="all"
+                  />
+                </>
               }
             />
           ) : (
