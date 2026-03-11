@@ -25,7 +25,7 @@ import type { Terceiro, ProcessoRelacionado } from '../../types';
 
 // Imports da nova estrutura de features
 import { useTerceiros } from '../../hooks';
-import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell, FilterPopover } from '../shared';
+import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell, FilterPopover, PartesSectionFilter } from '../shared';
 import { TerceiroFormDialog } from './terceiro-form';
 import { ChatwootSyncButton } from '@/features/chatwoot/components';
 import {
@@ -326,6 +326,7 @@ export function TerceirosTableWrapper() {
               }
               filtersSlot={
                 <>
+                  <PartesSectionFilter currentSection="terceiros" />
                   <FilterPopover
                     label="Situação"
                     value={situacao}

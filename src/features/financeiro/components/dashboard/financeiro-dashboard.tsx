@@ -1,195 +1,117 @@
 'use client';
 
-import * as React from 'react';
 import dynamic from 'next/dynamic';
-import { Wallet, AlertTriangle, ArrowDown, ArrowUp, Clock, Banknote } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
-  MetricCard,
-  useSaldoContas,
+  useDashboardFinanceiro,
+  useFluxoCaixa,
+  useDespesasPorCategoria,
   useContasPagarReceber,
-  useAlertasFinanceiros
+  useAlertasFinanceiros,
+  useOrcamentoAtual,
 } from '@/app/app/dashboard';
-import { ResumoCards as OrcamentosWidget } from '../orcamentos/resumo-cards';
-import { ChartSkeleton } from '../shared/chart-skeleton';
-
-/**
- * WidgetFluxoCaixa lazy-loaded para otimização de bundle (~200KB Recharts)
- */
-const WidgetFluxoCaixa = dynamic(
-  () => import('@/app/app/dashboard').then(m => ({ default: m.WidgetFluxoCaixa })),
-  {
-    ssr: false,
-    loading: () => <ChartSkeleton title="Fluxo de Caixa (6 meses)" />
-  }
-);
-
-/**
- * WidgetDespesasCategoria lazy-loaded para otimização de bundle
- */
-const WidgetDespesasCategoria = dynamic(
-  () => import('@/app/app/dashboard').then(m => ({ default: m.WidgetDespesasCategoria })),
-  {
-    ssr: false,
-    loading: () => <ChartSkeleton title="Despesas por Categoria" />
-  }
-);
 import { useResumoObrigacoes } from '../../hooks/use-obrigacoes';
-import { useOrcamentos } from '../../hooks/use-orcamentos';
-import type { ResumoObrigacoesFinanceiro } from '../../actions/obrigacoes';
+import { ChartSkeleton } from '../shared/chart-skeleton';
+import { DashboardSkeleton } from './dashboard-skeleton';
+import { KpiStrip } from './widgets/kpi-strip';
+import { DespesasCategoriaChart } from './widgets/despesas-categoria-chart';
+import { ObrigacoesWidget } from './widgets/obrigacoes-widget';
+import { AlertasWidget } from './widgets/alertas-widget';
+import { ContasResumoWidget } from './widgets/contas-resumo-widget';
+import { OrcamentoRealizadoWidget } from './widgets/orcamento-realizado-widget';
 
 // ============================================================================
-// ObrigacoesResumoWidget - Widget para exibir resumo de obrigações financeiras
+// Lazy-loaded chart widgets (~200KB Recharts bundle)
 // ============================================================================
 
-const formatarValor = (valor: number): string => {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    notation: valor >= 1000000 ? 'compact' : 'standard',
-  }).format(valor);
-};
+const EvolucaoMensalChart = dynamic(
+  () => import('./widgets/evolucao-mensal-chart').then(m => ({ default: m.EvolucaoMensalChart })),
+  { ssr: false, loading: () => <ChartSkeleton title="Evolução Mensal (12 meses)" /> }
+);
 
-function ObrigacoesResumoWidget({
-  resumo,
-  isLoading
-}: {
-  resumo: ResumoObrigacoesFinanceiro;
-  isLoading: boolean;
-}) {
-  if (isLoading) {
-    return (
-      <div className="grid gap-4 md:grid-cols-3">
-        {[1, 2, 3].map((i) => (
-          <Card key={i}>
-            <CardHeader className="pb-2">
-              <Skeleton className="h-4 w-24" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-7 w-32" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  }
+const FluxoCaixaChart = dynamic(
+  () => import('./widgets/fluxo-caixa-chart').then(m => ({ default: m.FluxoCaixaChart })),
+  { ssr: false, loading: () => <ChartSkeleton title="Fluxo de Caixa" /> }
+);
 
-  return (
-    <div className="grid gap-4 md:grid-cols-3">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Vencidas
-          </CardTitle>
-          <AlertTriangle className="h-4 w-4 text-red-600" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{formatarValor(resumo.valorTotalVencido)}</div>
-          <p className="text-xs text-muted-foreground">{resumo.totalVencidas} parcelas</p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Pendentes
-          </CardTitle>
-          <Clock className="h-4 w-4 text-orange-600" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{formatarValor(resumo.valorTotalPendente)}</div>
-          <p className="text-xs text-muted-foreground">{resumo.totalPendentes} parcelas</p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Repasses Pendentes
-          </CardTitle>
-          <Banknote className="h-4 w-4 text-blue-600" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{formatarValor(resumo.valorRepassesPendentes)}</div>
-          <p className="text-xs text-muted-foreground">{resumo.totalRepassesPendentes} repasses</p>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+// ============================================================================
+// FinanceiroDashboard
+// ============================================================================
 
 export function FinanceiroDashboard() {
-  const { saldoAtual, error: errorSaldo } = useSaldoContas();
-  const { contasPagar, contasReceber, error: errorContas } = useContasPagarReceber();
-  const { alertas, error: errorAlertas } = useAlertasFinanceiros();
-
+  // Data hooks
+  const { data: dashData, isLoading: isLoadingDash } = useDashboardFinanceiro();
+  const { data: fluxoData, isLoading: isLoadingFluxo } = useFluxoCaixa(12);
+  const { despesasPorCategoria, isLoading: isLoadingCategorias } = useDespesasPorCategoria();
+  const { contasPagar, contasReceber, isLoading: isLoadingContas } = useContasPagarReceber();
+  const { alertas, isLoading: isLoadingAlertas } = useAlertasFinanceiros();
+  const { orcamentoAtual, isOrcamentoLoading } = useOrcamentoAtual();
   const { resumo: resumoObrigacoes, isLoading: isLoadingObrigacoes } = useResumoObrigacoes();
-  const { orcamentos, isLoading: isLoadingOrcamentos } = useOrcamentos({ autoFetch: true, filters: { limite: 1000 } });
 
-  const totaisOrcamentos = React.useMemo(() => {
-    const t = {
-      rascunho: 0,
-      aprovado: 0,
-      emExecucao: 0,
-      encerrado: 0,
-    };
-    if (orcamentos) {
-      orcamentos.forEach((o) => {
-        if (o.status === 'rascunho') t.rascunho++;
-        if (o.status === 'aprovado') t.aprovado++;
-        if (o.status === 'em_execucao') t.emExecucao++;
-        if (o.status === 'encerrado') t.encerrado++;
-      });
-    }
-    return t;
-  }, [orcamentos]);
+  // Full-page skeleton while primary data loads
+  if (isLoadingDash && !dashData) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <MetricCard
-          title="Saldo Total"
-          value={errorSaldo ? 'Erro' : saldoAtual}
-          icon={Wallet}
-        />
-        <MetricCard
-          title="Contas a Pagar (Vencidas)"
-          value={errorContas ? 'Erro' : (contasPagar?.valor || 0)}
-          trend={`${contasPagar?.quantidade || 0} contas`}
-          trendDirection="down"
-          icon={ArrowUp}
-        />
-        <MetricCard
-          title="Contas a Receber (Pendentes)"
-          value={errorContas ? 'Erro' : (contasReceber?.valor || 0)}
-          trend="Previsão"
-          trendDirection="neutral"
-          icon={ArrowDown}
-        />
-        <MetricCard
-          title="Alertas"
-          value={errorAlertas ? 'Erro' : (alertas?.length || 0)}
-          icon={AlertTriangle}
-          trendDirection="neutral"
-        />
-      </div>
+      {/* ================================================================
+          Tier 1 — KPI Strip (visão instantânea)
+          6 métricas críticas com tendência % vs mês anterior
+          ================================================================ */}
+      <KpiStrip
+        data={dashData!}
+        isLoading={isLoadingDash}
+      />
 
+      {/* ================================================================
+          Tier 2 — Análise de Tendências
+          Evolução 12 meses (2/3) + Despesas por Categoria (1/3)
+          ================================================================ */}
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <WidgetFluxoCaixa />
+          <EvolucaoMensalChart data={dashData?.evolucaoMensal || []} />
         </div>
-        <WidgetDespesasCategoria />
+        <DespesasCategoriaChart
+          data={despesasPorCategoria || []}
+          isLoading={isLoadingCategorias}
+        />
       </div>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium">Obrigações e Prazos</h3>
-        <ObrigacoesResumoWidget resumo={resumoObrigacoes} isLoading={isLoadingObrigacoes} />
+      {/* ================================================================
+          Tier 3 — Projeção e Planejamento
+          Fluxo de Caixa (2/3) + Orçamento vs Realizado (1/3)
+          ================================================================ */}
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <FluxoCaixaChart
+            data={fluxoData || []}
+            isLoading={isLoadingFluxo}
+          />
+        </div>
+        <OrcamentoRealizadoWidget
+          data={orcamentoAtual}
+          isLoading={isOrcamentoLoading}
+        />
       </div>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium">Orçamentos</h3>
-        <OrcamentosWidget totais={totaisOrcamentos} isLoading={isLoadingOrcamentos} />
+      {/* ================================================================
+          Tier 4 — Operacional
+          Obrigações + Alertas + Contas Pagar/Receber
+          ================================================================ */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <ObrigacoesWidget
+          resumo={resumoObrigacoes}
+          isLoading={isLoadingObrigacoes}
+        />
+        <AlertasWidget
+          alertas={alertas || []}
+          isLoading={isLoadingAlertas}
+        />
+        <ContasResumoWidget
+          contasPagar={contasPagar}
+          contasReceber={contasReceber}
+          isLoading={isLoadingContas}
+        />
       </div>
     </div>
   );

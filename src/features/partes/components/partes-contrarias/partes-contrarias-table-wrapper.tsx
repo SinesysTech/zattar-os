@@ -24,7 +24,7 @@ import type { ParteContraria, ProcessoRelacionado } from '../../types';
 
 // Imports da nova estrutura de features
 import { usePartesContrarias } from '../../hooks';
-import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell, FilterPopover } from '../shared';
+import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell, FilterPopover, PartesSectionFilter } from '../shared';
 import { ParteContrariaFormDialog } from './parte-contraria-form';
 import { ChatwootSyncButton } from '@/features/chatwoot/components';
 import {
@@ -329,6 +329,7 @@ export function PartesContrariasTableWrapper() {
               }
               filtersSlot={
                 <>
+                  <PartesSectionFilter currentSection="partes-contrarias" />
                   <FilterPopover
                     label="Situação"
                     options={[

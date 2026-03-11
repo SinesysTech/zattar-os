@@ -22,7 +22,7 @@ import { ClienteFormDialog } from './cliente-form';
 import { getClientesColumns, ClienteComProcessos } from './columns';
 import { actionDesativarCliente, actionListarClientes } from '../../actions';
 import { ChatwootSyncButton } from '@/features/chatwoot/components';
-import { FilterPopover } from '../shared';
+import { FilterPopover, PartesSectionFilter } from '../shared';
 
 // =============================================================================
 // TIPOS
@@ -186,6 +186,7 @@ export function ClientesTableWrapper({
               }
               filtersSlot={
                 <>
+                  <PartesSectionFilter currentSection="clientes" />
                   <FilterPopover
                     label="Situação"
                     options={[
