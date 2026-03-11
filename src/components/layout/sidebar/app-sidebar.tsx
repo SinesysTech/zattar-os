@@ -177,7 +177,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         }
         return true
       })
-      .map((item) => item)
+
   }, [canSeePangea, canSeeProjetos])
 
   const todosItens = React.useMemo(() => {
