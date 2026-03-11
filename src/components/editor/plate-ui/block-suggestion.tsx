@@ -331,6 +331,7 @@ export const useResolveSuggestion = (
         ...editor.api.nodes({
           at: [],
           mode: 'all',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           match: (n: any) =>
             (n[KEYS.suggestion] && n[getSuggestionKey(id)]) ||
             api.suggestion.nodeId(n as TElement) === id,

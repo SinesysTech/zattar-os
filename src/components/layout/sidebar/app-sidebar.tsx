@@ -133,23 +133,13 @@ const navServicos = [
   },
   {
     title: "Assinatura Digital",
-    url: "/app/assinatura-digital",
+    url: "/app/assinatura-digital/documentos/lista",
     icon: PenTool,
-    items: [
-      { title: "Documentos", url: "/app/assinatura-digital/documentos/lista" },
-      { title: "Templates", url: "/app/assinatura-digital/templates" },
-      { title: "Formulários", url: "/app/assinatura-digital/formularios" },
-    ],
   },
   {
     title: "Projetos",
     url: "/app/project-management",
     icon: FolderKanban,
-    items: [
-      { title: "Dashboard", url: "/app/project-management" },
-      { title: "Projetos", url: "/app/project-management/projects" },
-      { title: "Tarefas", url: "/app/project-management/tasks" },
-    ],
   },
 ]
 

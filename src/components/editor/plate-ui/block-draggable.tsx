@@ -264,6 +264,7 @@ const DragHandle = React.memo(function DragHandle({
                 : editor.api.blocks({ mode: 'highest' });
 
             // If current block is not in selection, use it as the starting point
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if (!selectionNodes.some(([node]: any) => node.id === element.id)) {
               selectionNodes = [[element, editor.api.findPath(element)!]];
             }
@@ -302,6 +303,7 @@ const DragHandle = React.memo(function DragHandle({
                 : editor.api.blocks({ mode: 'highest' });
 
             // If current block is not in selection, use it as the starting point
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if (!selectedBlocks.some(([node]: any) => node.id === element.id)) {
               selectedBlocks = [[element, editor.api.findPath(element)!]];
             }

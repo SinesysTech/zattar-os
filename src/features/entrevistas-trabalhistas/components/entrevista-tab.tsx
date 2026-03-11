@@ -1,9 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { ClipboardList, Plus, Play } from 'lucide-react';
+import { ClipboardList, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import type { EntrevistaTrabalhista, EntrevistaAnexo, TipoLitigio, PerfilReclamante } from '../domain';
 import { STATUS_ENTREVISTA_LABELS, MODULO_LABELS, type ModuloEntrevista } from '../domain';
 import { useEntrevista } from '../hooks/use-entrevista';
@@ -81,7 +81,7 @@ export function EntrevistaTab({ contratoId, entrevista: initialEntrevista, anexo
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Badge variant="outline">{STATUS_ENTREVISTA_LABELS[entrevista.status]}</Badge>
+            <SemanticBadge category="status" value={entrevista.status} variantOverride="outline">{STATUS_ENTREVISTA_LABELS[entrevista.status]}</SemanticBadge>
             <span className="text-sm text-muted-foreground">
               Módulo atual: {MODULO_LABELS[entrevista.moduloAtual as ModuloEntrevista] ?? entrevista.moduloAtual}
             </span>

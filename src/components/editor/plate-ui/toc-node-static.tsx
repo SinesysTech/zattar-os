@@ -74,11 +74,13 @@ const getHeadingList = (editor?: SlateEditor) => {
 
   const values = editor.api.nodes({
     at: [],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     match: (n: any) => isHeading(n),
   });
 
   if (!values) return [];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (Array.from(values) as any[]).forEach(([node, path]) => {
     const { type } = node;
     const title = NodeApi.string(node);

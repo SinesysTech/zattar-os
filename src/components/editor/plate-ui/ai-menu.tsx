@@ -155,6 +155,7 @@ export function AIMenu() {
       let anchorNode = editor.api.node({
         at: [],
         reverse: true,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         match: (n: any) => !!n[KEYS.suggestion] && !!n[getTransientSuggestionKey()],
       });
 
@@ -643,6 +644,7 @@ export function AILoadingBar() {
     if (type === 'accept') {
       editor.tf.unsetNodes([getTransientCommentKey()], {
         at: [],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         match: (n: any) => TextApi.isText(n) && !!n[KEYS.comment],
       });
     }

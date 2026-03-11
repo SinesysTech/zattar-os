@@ -188,6 +188,7 @@ const BlockCommentContent = ({
             editor.tf.unsetNodes(getDraftCommentKey(), {
               at: [],
               mode: 'lowest',
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               match: (n: any) => n[getDraftCommentKey()],
             });
           }

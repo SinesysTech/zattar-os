@@ -12,11 +12,21 @@ import {
   Loader2,
   Download,
   Trash2,
+  Settings,
 } from "lucide-react";
 import { toast } from "sonner";
 
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   DataTable,
   DataShell,
@@ -332,7 +342,7 @@ export function DocumentosTableWrapper({
       {/* Row 1: Título + Botão "Novo Documento" */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight font-heading">
-          Documentos
+          Assinatura Digital
         </h1>
         <Button
           size="sm"
@@ -432,32 +442,59 @@ export function DocumentosTableWrapper({
                 </div>
               }
               actionSlot={
-                selectedCount > 0 ? (
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground whitespace-nowrap">
-                      {selectedCount} selecionado(s)
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9"
-                      onClick={handleBulkDownload}
-                    >
-                      <Download className="h-4 w-4 mr-1" />
-                      Download
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 text-destructive hover:text-destructive"
-                      onClick={handleBulkDelete}
-                      disabled={isDeleting}
-                    >
-                      <Trash2 className="h-4 w-4 mr-1" />
-                      Deletar
-                    </Button>
-                  </div>
-                ) : undefined
+                <div className="flex items-center gap-2">
+                  {selectedCount > 0 && (
+                    <>
+                      <span className="text-sm text-muted-foreground whitespace-nowrap">
+                        {selectedCount} selecionado(s)
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9"
+                        onClick={handleBulkDownload}
+                      >
+                        <Download className="h-4 w-4 mr-1" />
+                        Download
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9 text-destructive hover:text-destructive"
+                        onClick={handleBulkDelete}
+                        disabled={isDeleting}
+                      >
+                        <Trash2 className="h-4 w-4 mr-1" />
+                        Deletar
+                      </Button>
+                    </>
+                  )}
+                  <DropdownMenu>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-9 w-9 bg-card"
+                            aria-label="Configurações de assinatura digital"
+                          >
+                            <Settings className="h-4 w-4" aria-hidden="true" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                      </TooltipTrigger>
+                      <TooltipContent>Configurações</TooltipContent>
+                    </Tooltip>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem asChild>
+                        <Link href="/app/assinatura-digital/templates">Templates</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/app/assinatura-digital/formularios">Formulários</Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               }
             />
           ) : (
