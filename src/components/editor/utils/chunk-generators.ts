@@ -15,6 +15,7 @@ export const createCommentChunks = (editor: PlateEditor) => {
       selectionFallback: true,
       sort: true,
     })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .map(([block]: any) => block);
 
   const isSelectingSome = editor.getOption(

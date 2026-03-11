@@ -103,3 +103,6 @@ export { uploadAnexoAction, deleteAnexoAction } from './actions/anexo-actions';
 
 // Hooks (Client Components)
 export { useEntrevista } from './hooks/use-entrevista';
+
+// Components (Client)
+export { EntrevistaTab } from './components/entrevista-tab';

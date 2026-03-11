@@ -38,6 +38,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
       editor
         .getApi(BlockSelectionPlugin)
         .blockSelection.getNodes()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .forEach(([node, path]: any) => {
           if (node[KEYS.listType]) {
             editor.tf.unsetNodes([KEYS.listType, 'indent'], {

@@ -509,6 +509,7 @@ export function CommentCreateForm({
     if (commentsNodeEntry.length === 0) return;
 
     const documentContent = commentsNodeEntry
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map(([node]: any) => node.text)
       .join('');
 
@@ -539,6 +540,7 @@ export function CommentCreateForm({
 
     const id = newDiscussion.id;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     commentsNodeEntry.forEach(([, path]: any) => {
       editor.tf.setNodes(
         {

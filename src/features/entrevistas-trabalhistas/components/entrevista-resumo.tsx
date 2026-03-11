@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Badge } from '@/components/ui/badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Button } from '@/components/ui/button';
 import { Pencil, FileText, CheckCircle2, XCircle } from 'lucide-react';
 import type { EntrevistaTrabalhista, EntrevistaAnexo } from '../domain';
@@ -405,18 +405,18 @@ export function EntrevistaResumo({
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <Badge variant="secondary">
+            <SemanticBadge category="status" value={entrevista.tipoLitigio} variantOverride="secondary">
               {TIPO_LITIGIO_LABELS[entrevista.tipoLitigio]}
-            </Badge>
+            </SemanticBadge>
             {entrevista.perfilReclamante && (
-              <Badge variant="outline">
+              <SemanticBadge category="status" value={entrevista.perfilReclamante} variantOverride="outline">
                 {PERFIL_RECLAMANTE_LABELS[entrevista.perfilReclamante as PerfilReclamante] ?? entrevista.perfilReclamante}
-              </Badge>
+              </SemanticBadge>
             )}
             {entrevista.testemunhasMapeadas && (
-              <Badge variant="outline" className="text-green-600">
+              <SemanticBadge category="status" value="testemunhas_mapeadas" variantOverride="success">
                 Testemunhas mapeadas
-              </Badge>
+              </SemanticBadge>
             )}
           </div>
         </div>

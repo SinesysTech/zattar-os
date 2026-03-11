@@ -33,7 +33,7 @@ export default async function ContratoDetalhesPage({ params }: PageProps) {
     notFound();
   }
 
-  const { contrato, cliente, responsavel, segmento, stats } = result.data;
+  const { contrato, cliente, responsavel, segmento } = result.data;
 
   // Fetch lançamentos financeiros e entrevista em paralelo
   const [lancamentos, entrevistaResult] = await Promise.all([
@@ -52,7 +52,6 @@ export default async function ContratoDetalhesPage({ params }: PageProps) {
       cliente={cliente}
       responsavel={responsavel}
       segmento={segmento}
-      stats={stats}
       lancamentos={lancamentos}
       entrevista={entrevistaData?.entrevista ?? null}
       entrevistaAnexos={entrevistaData?.anexos ?? []}

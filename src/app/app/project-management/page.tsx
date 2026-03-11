@@ -75,7 +75,7 @@ export default async function ProjectManagementDashboard() {
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList className="z-10">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-          <TabsTrigger value="reports">Relatórios</TabsTrigger>
+          <TabsTrigger value="reports">Projetos</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">

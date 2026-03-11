@@ -187,6 +187,7 @@ export const setBlockType = (
 
     const entries = editor.api.blocks({ mode: 'lowest' });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     entries.forEach((entry: any) => {
       setEntry(entry);
     });
