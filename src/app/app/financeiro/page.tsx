@@ -1,16 +1,18 @@
 import { Suspense } from 'react';
 import { PageShell } from '@/components/shared/page-shell';
-import { GestaoDashboardsTabs } from '@/features/financeiro';
+import { FinanceiroDashboard } from '@/features/financeiro';
 import { Skeleton } from '@/components/ui/skeleton';
+import { FinanceiroNavigationSelect } from './components/financeiro-navigation-select';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default function FinanceiroPage() {
   return (
-    <PageShell title="Dashboards">
+    <PageShell title="Financeiro" className="space-y-6">
+      <FinanceiroNavigationSelect />
       <Suspense fallback={<Skeleton className="h-10 w-full" />}>
-        <GestaoDashboardsTabs />
+        <FinanceiroDashboard />
       </Suspense>
     </PageShell>
   );

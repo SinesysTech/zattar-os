@@ -11,7 +11,7 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Database, Shield, Blocks, Bot, Palette, Sparkles } from 'lucide-react';
+import { Database, Shield, Blocks, Bot, Palette, Sparkles, Users } from 'lucide-react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -92,7 +92,15 @@ export function ConfiguracoesTabsContent({
 
   return (
     <div className="flex flex-col min-h-0 space-y-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Configurações</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-2xl font-semibold tracking-tight">Configurações</h1>
+        <Button variant="outline" asChild>
+          <Link href="/app/usuarios">
+            <Users className="mr-2 h-4 w-4" />
+            Usuários
+          </Link>
+        </Button>
+      </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="grid w-full grid-cols-5 lg:w-250">

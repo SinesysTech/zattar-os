@@ -68,6 +68,8 @@ const navPrincipal = [
       { title: "Contas a Pagar", url: "/app/financeiro/contas-pagar" },
       { title: "Contas a Receber", url: "/app/financeiro/contas-receber" },
       { title: "Plano de Contas", url: "/app/financeiro/plano-contas" },
+      { title: "Salários", url: "/app/rh/salarios" },
+      { title: "Folhas de Pagamento", url: "/app/rh/folhas-pagamento" },
     ],
   },
   {

@@ -103,16 +103,6 @@ export { ResumoCards } from './orcamentos/resumo-cards';
 export { FinanceiroDashboard } from './dashboard/financeiro-dashboard';
 
 // ============================================================================
-// Tabs Content (navegação unificada)
-// ============================================================================
-export { FinanceiroTabsContent } from './financeiro-tabs-content';
-
-// ============================================================================
-// Gestão Dashboards Tabs
-// ============================================================================
-export { GestaoDashboardsTabs } from './gestao-dashboards-tabs';
-
-// ============================================================================
 // Provider de UsuarioId
 // ============================================================================
 export { UsuarioIdProvider, useUsuarioId } from './usuario-id-provider';

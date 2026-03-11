@@ -142,7 +142,7 @@ export function AdvogadoDialog({ open, onOpenChange, advogado, mode, onSave }: P
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[550px]">
+      <DialogContent className="sm:max-w-137.5">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>
