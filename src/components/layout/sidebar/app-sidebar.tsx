@@ -20,7 +20,6 @@ import {
   Scale,
   ScrollText,
   Search,
-  UserCog,
   Users,
 } from "lucide-react"
 
@@ -149,25 +148,6 @@ const navGestao = [
     title: "Financeiro",
     url: "/app/financeiro",
     icon: Briefcase,
-    items: [
-      { title: "Dashboard", url: "/app/financeiro" },
-      { title: "Orçamentos", url: "/app/financeiro/orcamentos" },
-      { title: "Contas a Pagar", url: "/app/financeiro/contas-pagar" },
-      { title: "Contas a Receber", url: "/app/financeiro/contas-receber" },
-      { title: "Plano de Contas", url: "/app/financeiro/plano-contas" },
-      { title: "Conciliação", url: "/app/financeiro/conciliacao-bancaria" },
-      { title: "DRE", url: "/app/financeiro/dre" },
-    ],
-  },
-  {
-    title: "Recursos Humanos",
-    url: "/app/rh",
-    icon: UserCog,
-    items: [
-      { title: "Equipe", url: "/app/usuarios" },
-      { title: "Salários", url: "/app/rh/salarios" },
-      { title: "Folhas de Pagamento", url: "/app/rh/folhas-pagamento" },
-    ],
   },
   {
     title: "Captura",
