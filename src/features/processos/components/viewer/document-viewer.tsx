@@ -22,12 +22,25 @@ import { FileText, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import { actionGerarUrlDownload } from '@/features/documentos';
+import { cn } from '@/lib/utils';
 import { ViewerToolbar } from './viewer-toolbar';
 import { ViewerPaginationPill } from './viewer-pagination-pill';
+import { DocumentAnnotationOverlay } from './document-annotation-overlay';
+
+interface ViewerAnnotation {
+  id: string;
+  content: string;
+  createdAt: string;
+}
 
 interface DocumentViewerProps {
   item: TimelineItemEnriquecido | null;
   onOpenDetails: () => void;
+  annotationsOpen: boolean;
+  annotations: ViewerAnnotation[];
+  onAddAnnotation: (content: string) => void;
+  onDeleteAnnotation: (annotationId: string) => void;
+  onToggleAnnotations: () => void;
 }
 
 const DEFAULT_TOTAL_PAGES = 1;
@@ -41,7 +54,15 @@ function formatarDataHora(data: string): string {
   }
 }
 
-export function DocumentViewer({ item, onOpenDetails }: DocumentViewerProps) {
+export function DocumentViewer({
+  item,
+  onOpenDetails,
+  annotationsOpen,
+  annotations,
+  onAddAnnotation,
+  onDeleteAnnotation,
+  onToggleAnnotations,
+}: DocumentViewerProps) {
   const [presignedUrl, setPresignedUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -119,23 +140,35 @@ export function DocumentViewer({ item, onOpenDetails }: DocumentViewerProps) {
   const date = item?.data ? formatarDataHora(item.data) : undefined;
 
   return (
-    <div className="flex flex-col h-full bg-muted/30 relative">
-      {/* Barra superior — só aparece quando há item selecionado (conforme protótipo 1.html) */}
-      {item && (
-        <ViewerToolbar
-          title={title}
-          date={date}
-          isDocumento={isDocumento}
-          hasBackblaze={hasBackblaze}
-          isLoading={isLoading}
-          onOpenExternal={handleOpenExternal}
-          onDownload={handleDownload}
-          onOpenDetails={onOpenDetails}
-        />
-      )}
-
-      {/* Área de conteúdo */}
+    <div className="flex flex-col h-full bg-muted relative">
+      {/* Área de conteúdo — viewer limpo conforme protótipo 1.html */}
       <div className="flex-1 relative overflow-hidden">
+        {/* Ações flutuantes (overlay no canto superior direito) */}
+        {item && (
+          <ViewerToolbar
+            title={title}
+            date={date}
+            isDocumento={isDocumento}
+            hasBackblaze={hasBackblaze}
+            isLoading={isLoading}
+            annotationCount={annotations.length}
+            annotationsOpen={annotationsOpen}
+            onOpenExternal={handleOpenExternal}
+            onDownload={handleDownload}
+            onOpenDetails={onOpenDetails}
+            onToggleAnnotations={onToggleAnnotations}
+          />
+        )}
+
+        <DocumentAnnotationOverlay
+          open={annotationsOpen}
+          itemTitle={title}
+          itemDate={date}
+          annotations={annotations}
+          onAddAnnotation={onAddAnnotation}
+          onDeleteAnnotation={onDeleteAnnotation}
+        />
+
         {isLoading ? (
           // Estado de carregamento
           <div className="flex items-center justify-center h-full">
@@ -162,7 +195,10 @@ export function DocumentViewer({ item, onOpenDetails }: DocumentViewerProps) {
         ) : presignedUrl ? (
           // Exibição do PDF via iframe
           <div
-            className="w-full h-full overflow-auto flex justify-center pt-8 pb-24 px-4"
+            className={cn(
+              'w-full h-full overflow-auto flex justify-center px-4 pb-24 pt-8 transition-[padding] duration-200',
+              annotationsOpen && 'xl:pr-[23rem]'
+            )}
             style={{
               transform: `scale(${zoomLevel / 100})`,
               transformOrigin: 'top center',

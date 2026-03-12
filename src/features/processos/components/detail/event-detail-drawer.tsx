@@ -134,7 +134,7 @@ export function EventDetailDrawer({
               disabled={isDownloading}
             >
               <Download className="size-4" />
-              {isDownloading ? 'Baixando...' : 'Baixar Documento'}
+              {isDownloading ? 'Baixando...' : 'Baixar Pacote Completo'}
             </Button>
           </div>
         )}

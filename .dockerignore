@@ -92,10 +92,11 @@ analyze/
 *.heapprofile
 *.cpuprofile
 
-# Variáveis de ambiente (serão configuradas no CapRover)
+# Variáveis de ambiente (serão configuradas no CapRover/Cloudron)
 .env*
 !.env.example
 !.env.build.example
+!.env.production
 
 # Service worker (gerado no build)
 public/sw*

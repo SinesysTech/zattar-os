@@ -88,6 +88,7 @@ export function TimelineSidebar({
                 key={item.id}
                 item={item}
                 isSelected={item.id === selectedItemId}
+                isFirst={index === 0}
                 isLast={index === itensOrdenados.length - 1}
                 onSelect={onSelectItem}
               />

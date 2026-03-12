@@ -10,9 +10,8 @@
 
 import React from 'react';
 import { Lock, Layers, RefreshCw, ArrowLeft } from 'lucide-react';
-import type { ProcessoUnificado, Processo } from '@/features/processos/domain';
+import type { ProcessoUnificado } from '@/features/processos/domain';
 import type { GrauProcesso } from '@/features/partes';
-import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -23,13 +22,6 @@ import { GRAU_LABELS } from '@/lib/design-system';
 import { actionListarUsuarios } from '@/features/usuarios';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
-
-/**
- * Type guard para verificar se é ProcessoUnificado
- */
-function isProcessoUnificado(processo: Processo | ProcessoUnificado): processo is ProcessoUnificado {
-  return 'instances' in processo && 'grauAtual' in processo;
-}
 
 /**
  * Informações de instância para exibição
@@ -49,10 +41,6 @@ interface ProcessoHeaderProps {
   onAtualizarTimeline?: () => void;
   isCapturing?: boolean;
   onVoltar?: () => void;
-}
-
-function getOrgaoJulgador(processo: ProcessoUnificado): string {
-  return processo.descricaoOrgaoJulgador || '-';
 }
 
 function formatarGrau(grau: string): string {
@@ -150,7 +138,14 @@ function ProcessoResponsavelCell({
   );
 }
 
-export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAtualizarTimeline, isCapturing, onVoltar }: ProcessoHeaderProps) {
+export function ProcessoHeader({
+  processo,
+  instancias,
+  duplicatasRemovidas,
+  onAtualizarTimeline,
+  isCapturing,
+  onVoltar,
+}: ProcessoHeaderProps) {
   const [usuarios, setUsuarios] = React.useState<Usuario[]>([]);
 
   React.useEffect(() => {
@@ -175,50 +170,82 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
   const trt = processo.trtOrigem || processo.trt;
   const classeJudicial = processo.classeJudicial || '';
   const numeroProcesso = processo.numeroProcesso;
-  const orgaoJulgador = getOrgaoJulgador(processo);
+  const orgaoJulgador = processo.descricaoOrgaoJulgador || '-';
   const segredoJustica = processo.segredoJustica;
   const dataProximaAudiencia = processo.dataProximaAudiencia;
-  const isUnificado = isProcessoUnificado(processo);
-
+  const isUnificado = !!processo.grausAtivos?.length;
   const parteAutora = processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '-';
   const parteRe = processo.nomeParteReOrigem || processo.nomeParteRe || '-';
+  const tituloPartes = parteRe && parteRe !== '-' ? `${parteAutora} vs ${parteRe}` : parteAutora;
 
   return (
-    <div className="space-y-3">
-      {/* Linha 1: Voltar + Número do Processo + Ações */}
-      <div className="flex items-center gap-3">
-        {onVoltar && (
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={onVoltar}
-            title="Voltar para Processos"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        )}
+    <div className="space-y-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0 space-y-1.5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            Workspace do Processo
+          </p>
 
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          <h1 className="text-2xl font-bold tracking-tight font-heading truncate">
-            {classeJudicial && `${classeJudicial} `}
-            {numeroProcesso}
-          </h1>
-          <CopyButton text={numeroProcesso} label="Copiar número do processo" />
-          {segredoJustica && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Lock className="h-4 w-4 text-destructive shrink-0" />
-                </TooltipTrigger>
-                <TooltipContent>Segredo de Justiça</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-          <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />
+          <div className="flex items-center gap-3">
+            {onVoltar && (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={onVoltar}
+                title="Voltar para Processos"
+                className="mt-0.5 shrink-0"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            )}
+
+            <div className="min-w-0 space-y-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground min-w-0 sm:text-[2rem]">
+                  <span className="block truncate">{tituloPartes}</span>
+                </h1>
+                {segredoJustica && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Lock className="h-4 w-4 text-destructive shrink-0" />
+                      </TooltipTrigger>
+                      <TooltipContent>Segredo de Justiça</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap text-sm text-muted-foreground">
+                {classeJudicial && <span>{classeJudicial}</span>}
+                {classeJudicial && <span>•</span>}
+                <span className="font-medium text-foreground">{numeroProcesso}</span>
+                <CopyButton text={numeroProcesso} label="Copiar número do processo" />
+                <span>•</span>
+                <span>{orgaoJulgador}</span>
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap text-sm">
+                <SemanticBadge category="tribunal" value={trt} className="text-xs">
+                  {trt}
+                </SemanticBadge>
+
+                {isUnificado && processo.grausAtivos ? (
+                  <GrauBadgesSimple grausAtivos={processo.grausAtivos} />
+                ) : (
+                  processo.grauAtual && (
+                    <SemanticBadge category="grau" value={processo.grauAtual} className="text-xs">
+                      {formatarGrau(processo.grauAtual)}
+                    </SemanticBadge>
+                  )
+                )}
+                <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Ações */}
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           {onAtualizarTimeline && (
             <TooltipProvider>
               <Tooltip>
@@ -239,76 +266,63 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
         </div>
       </div>
 
-      {/* Linha 2: Badges + Órgão + Responsável — tudo compacto numa linha */}
-      <div className="flex items-center gap-2 flex-wrap text-sm">
-        {/* Tribunal */}
-        <SemanticBadge category="tribunal" value={trt} className="text-xs">
-          {trt}
-        </SemanticBadge>
+      <div className="grid gap-3 lg:grid-cols-[minmax(0,1.5fr)_minmax(280px,0.9fr)]">
+        <div className="grid gap-3 md:grid-cols-2">
+          <div className="rounded-xl border bg-muted/25 px-4 py-3">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Polo Ativo
+            </p>
+            <p className="text-sm leading-6 text-foreground">{parteAutora}</p>
+          </div>
 
-        {/* Graus */}
-        {isUnificado && processo.grausAtivos ? (
-          <GrauBadgesSimple grausAtivos={processo.grausAtivos} />
-        ) : (
-          processo.grauAtual && (
-            <SemanticBadge category="grau" value={processo.grauAtual} className="text-xs">
-              {formatarGrau(processo.grauAtual)}
-            </SemanticBadge>
-          )
-        )}
-
-        <Separator orientation="vertical" className="h-4" />
-
-        {/* Órgão Julgador */}
-        <span className="text-muted-foreground truncate max-w-xs">{orgaoJulgador}</span>
-
-        <Separator orientation="vertical" className="h-4" />
-
-        {/* Responsável inline */}
-        <ProcessoResponsavelCell processo={processo} usuarios={usuarios} onSuccess={() => { }} />
-      </div>
-
-      {/* Linha 3: Partes — layout clean com indicadores de polo */}
-      <div className="flex items-start gap-4 text-sm">
-        <div className="flex items-start gap-1.5 min-w-0 flex-1">
-          <SemanticBadge category="polo" value="ativo" className="text-xs shrink-0 mt-0.5">
-            Autor
-          </SemanticBadge>
-          <span className="text-foreground wrap-break-word">{parteAutora}</span>
+          <div className="rounded-xl border bg-muted/25 px-4 py-3">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Polo Passivo
+            </p>
+            <p className="text-sm leading-6 text-foreground">{parteRe}</p>
+          </div>
         </div>
-        <div className="flex items-start gap-1.5 min-w-0 flex-1">
-          <SemanticBadge category="polo" value="passivo" className="text-xs shrink-0 mt-0.5">
-            Réu
-          </SemanticBadge>
-          <span className="text-foreground wrap-break-word">{parteRe}</span>
-        </div>
-      </div>
 
-      {/* Instâncias (modo unificado) — compacto */}
-      {instancias && instancias.length > 1 && (
-        <div className="flex items-center gap-2 flex-wrap text-sm">
-          <Layers className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-          <span className="text-muted-foreground text-xs font-medium">
-            {instancias.length} instâncias
-          </span>
-          {duplicatasRemovidas !== undefined && duplicatasRemovidas > 0 && (
-            <span className="text-muted-foreground text-xs">
-              ({duplicatasRemovidas} duplicatas removidas)
-            </span>
-          )}
-          <Separator orientation="vertical" className="h-4" />
-          {instancias.map((inst) => (
-            <div key={inst.id} className="flex items-center gap-1.5">
-              <SemanticBadge category="grau" value={inst.grau} className="text-xs">
-                {formatarGrauComOrdinal(inst.grau)}
-              </SemanticBadge>
-              <span className="text-xs text-muted-foreground">
-                {inst.totalMovimentosProprios ?? inst.totalItensOriginal} mov.
-              </span>
+        <div className="rounded-xl border bg-muted/25 px-4 py-3 space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Responsável
+              </p>
+              <div className="mt-2">
+                <ProcessoResponsavelCell processo={processo} usuarios={usuarios} onSuccess={() => { }} />
+              </div>
             </div>
-          ))}
+
+            {instancias && instancias.length > 1 && (
+              <div className="inline-flex items-center gap-1 rounded-full border bg-background px-2.5 py-1 text-xs text-muted-foreground">
+                <Layers className="h-3.5 w-3.5" />
+                {instancias.length} instâncias
+              </div>
+            )}
+          </div>
+
+          {instancias && instancias.length > 1 && (
+            <div className="flex items-center gap-2 flex-wrap border-t pt-3 text-sm">
+              {duplicatasRemovidas !== undefined && duplicatasRemovidas > 0 && (
+                <span className="text-xs text-muted-foreground">
+                  {duplicatasRemovidas} duplicatas removidas
+                </span>
+              )}
+              {instancias.map((inst) => (
+                <div key={inst.id} className="flex items-center gap-1.5 rounded-full bg-background px-2.5 py-1">
+                  <SemanticBadge category="grau" value={inst.grau} className="text-[10px]">
+                    {formatarGrauComOrdinal(inst.grau)}
+                  </SemanticBadge>
+                  <span className="text-xs text-muted-foreground">
+                    {inst.totalMovimentosProprios ?? inst.totalItensOriginal} mov.
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -6379,6 +6379,56 @@ export type Database = {
           },
         ]
       }
+      processo_workspace_anotacoes: {
+        Row: {
+          anchor: Json
+          conteudo: string
+          created_at: string
+          id: number
+          item_data: string | null
+          item_titulo: string | null
+          numero_processo: string
+          processo_id: number
+          timeline_item_id: number
+          updated_at: string
+          usuario_id: number
+        }
+        Insert: {
+          anchor?: Json
+          conteudo: string
+          created_at?: string
+          id?: never
+          item_data?: string | null
+          item_titulo?: string | null
+          numero_processo: string
+          processo_id: number
+          timeline_item_id: number
+          updated_at?: string
+          usuario_id: number
+        }
+        Update: {
+          anchor?: Json
+          conteudo?: string
+          created_at?: string
+          id?: never
+          item_data?: string | null
+          item_titulo?: string | null
+          numero_processo?: string
+          processo_id?: number
+          timeline_item_id?: number
+          updated_at?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "processo_workspace_anotacoes_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reminders: {
         Row: {
           categoria: string
