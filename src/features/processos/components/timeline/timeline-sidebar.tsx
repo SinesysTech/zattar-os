@@ -133,7 +133,7 @@ export function TimelineSidebar({
             {/* Marcador de início do processo */}
             <div className="opacity-60 grid grid-cols-[48px_1fr] px-2 py-3">
               <div className="flex flex-col items-center gap-1">
-                <div className="w-[1px] h-2 bg-border" aria-hidden="true" />
+                <div className="w-px h-2 bg-border" aria-hidden="true" />
                 <div
                   className="size-3 rounded-full bg-muted border border-border"
                   aria-hidden="true"

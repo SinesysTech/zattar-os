@@ -2,7 +2,7 @@
  * Componente de Visualização de Processo (Client Component)
  *
  * Layout integrado: header flat + tabs de detalhes + split-panel timeline/documento.
- * Sem Cards desnecessários — usa separadores e espaçamento do design system.
+ * Inclui drawer de detalhes de evento e modal de busca CMD+K.
  */
 
 'use client';
@@ -17,11 +17,17 @@ import {
 } from '../hooks/use-processo-timeline';
 import { ProcessoHeader } from './processo-header';
 import { ProcessoDetailsTabs } from './processo-details-tabs';
-import { TimelineSidebar } from './timeline-sidebar';
-import { DocumentViewerPanel } from './document-viewer-panel';
 import { TimelineLoading } from './timeline-loading';
 import { TimelineError } from './timeline-error';
 import { TimelineEmpty } from './timeline-empty';
+
+// Novos componentes redesenhados
+import { TimelineSidebar } from './timeline/timeline-sidebar';
+import { DocumentViewer } from './viewer/document-viewer';
+import { EventDetailDrawer } from './detail/event-detail-drawer';
+import { TimelineSearchModal } from './search/timeline-search-modal';
+import type { TimelineItemUnificado } from './timeline/types';
+
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
@@ -30,12 +36,6 @@ import {
   ResizableHandle,
 } from '@/components/ui/resizable';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
-import type { GrauProcesso } from '@/features/partes';
-
-type TimelineItemWithGrau = TimelineItemEnriquecido & {
-  grauOrigem?: GrauProcesso;
-};
 
 interface ProcessoVisualizacaoProps {
   id: number;
@@ -53,8 +53,15 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
     forceRecapture,
   } = useProcessoTimeline(id);
 
+  // Estado do item selecionado na timeline
   const [selectedItem, setSelectedItem] =
-    useState<TimelineItemWithGrau | null>(null);
+    useState<TimelineItemUnificado | null>(null);
+
+  // Estado do drawer de detalhes
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  // Estado do modal de busca
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Auto-selecionar primeiro documento quando timeline carrega
   useEffect(() => {
@@ -63,18 +70,42 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
         (item) => item.documento && item.backblaze
       );
       if (firstDoc) {
-        setSelectedItem(firstDoc as TimelineItemWithGrau);
+        setSelectedItem(firstDoc as TimelineItemUnificado);
       }
     }
   }, [timeline, selectedItem]);
 
-  const handleSelectItem = useCallback((item: TimelineItemWithGrau) => {
+  const handleSelectItem = useCallback((item: TimelineItemUnificado) => {
     setSelectedItem(item);
   }, []);
 
   const handleVoltar = useCallback(() => {
     router.push('/processos');
   }, [router]);
+
+  const handleOpenDetails = useCallback(() => {
+    if (selectedItem) {
+      setIsDrawerOpen(true);
+    }
+  }, [selectedItem]);
+
+  // Dados do processo para o context card da sidebar
+  const processoContext = useMemo(() => {
+    if (!processo) return undefined;
+    const autores = processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '';
+    const reus = processo.nomeParteReOrigem || processo.nomeParteRe || '';
+    return {
+      numeroProcesso: processo.numeroProcesso,
+      partes: reus ? `${autores} vs. ${reus}` : autores,
+      orgao: processo.descricaoOrgaoJulgador || '',
+    };
+  }, [processo]);
+
+  // Items tipados para os novos componentes
+  const timelineItems = useMemo(
+    () => (timeline?.timeline as TimelineItemUnificado[]) ?? [],
+    [timeline]
+  );
 
   // CopilotKit context
   const copilotContext = useMemo(
@@ -174,7 +205,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
         onVoltar={handleVoltar}
       />
 
-      {/* Tabs: Expedientes, Audiências, Perícias (integrado ao header, sem Card) */}
+      {/* Tabs: Expedientes, Audiências, Perícias */}
       <ProcessoDetailsTabs
         processoId={processo.id}
         numeroProcesso={processo.numeroProcesso}
@@ -205,14 +236,19 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
             <ResizablePanelGroup direction="horizontal">
               <ResizablePanel defaultSize={30} minSize={20} maxSize={45}>
                 <TimelineSidebar
-                  items={timeline.timeline as TimelineItemWithGrau[]}
+                  items={timelineItems}
                   selectedItemId={selectedItem?.id ?? null}
                   onSelectItem={handleSelectItem}
+                  onOpenSearch={() => setIsSearchOpen(true)}
+                  processo={processoContext}
                 />
               </ResizablePanel>
               <ResizableHandle withHandle />
               <ResizablePanel defaultSize={70} minSize={40}>
-                <DocumentViewerPanel item={selectedItem} onRecapture={forceRecapture} isCapturing={isCapturing} />
+                <DocumentViewer
+                  item={selectedItem}
+                  onOpenDetails={handleOpenDetails}
+                />
               </ResizablePanel>
             </ResizablePanelGroup>
           </div>
@@ -231,19 +267,39 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
               <TabsContent value="timeline">
                 <div className="h-[60vh] overflow-hidden rounded-lg border">
                   <TimelineSidebar
-                    items={timeline.timeline as TimelineItemWithGrau[]}
+                    items={timelineItems}
                     selectedItemId={selectedItem?.id ?? null}
                     onSelectItem={handleSelectItem}
+                    onOpenSearch={() => setIsSearchOpen(true)}
+                    processo={processoContext}
                   />
                 </div>
               </TabsContent>
               <TabsContent value="documento">
                 <div className="h-[60vh] overflow-hidden rounded-lg border">
-                  <DocumentViewerPanel item={selectedItem} onRecapture={forceRecapture} isCapturing={isCapturing} />
+                  <DocumentViewer
+                    item={selectedItem}
+                    onOpenDetails={handleOpenDetails}
+                  />
                 </div>
               </TabsContent>
             </Tabs>
           </div>
+
+          {/* Drawer de detalhes do evento (Sheet lateral direita) */}
+          <EventDetailDrawer
+            item={selectedItem}
+            open={isDrawerOpen}
+            onOpenChange={setIsDrawerOpen}
+          />
+
+          {/* Modal de busca CMD+K */}
+          <TimelineSearchModal
+            items={timelineItems}
+            open={isSearchOpen}
+            onOpenChange={setIsSearchOpen}
+            onSelectItem={handleSelectItem}
+          />
         </>
       )}
 

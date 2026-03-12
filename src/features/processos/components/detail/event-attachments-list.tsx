@@ -2,37 +2,7 @@
 
 import { FileText, Download, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-/**
- * Tipos para o item da timeline unificado
- */
-interface TimelineItemEnriquecido {
-  id: number;
-  titulo: string;
-  data: string;
-  documento: boolean;
-  documentoSigiloso?: boolean;
-  nomeResponsavel?: string;
-  nomeSignatario?: string;
-  backblaze?: {
-    url: string;
-    key: string;
-    bucket: string;
-    fileName: string;
-    uploadedAt: string;
-  };
-  googleDrive?: {
-    fileId: string;
-    webViewLink: string;
-    directLink: string;
-  };
-}
-
-interface TimelineItemUnificado extends TimelineItemEnriquecido {
-  grauOrigem?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
-  trtOrigem?: string;
-  instanciaId?: number;
-}
+import type { TimelineItemUnificado } from '../timeline/types';
 
 interface EventAttachmentsListProps {
   item: TimelineItemUnificado;
@@ -90,7 +60,7 @@ export function EventAttachmentsList({
                 }
               }}
               className={cn(
-                'group flex items-center justify-between h-[40px] px-3',
+                'group flex items-center justify-between h-10 px-3',
                 'rounded-lg border hover:border-primary/30 hover:bg-primary/5',
                 'transition-all cursor-pointer bg-card',
                 isLoading && 'opacity-50 cursor-not-allowed'
@@ -114,7 +84,7 @@ export function EventAttachmentsList({
           {/* Arquivo do Google Drive */}
           {temGoogleDrive && item.googleDrive && (
             <a
-              href={item.googleDrive.webViewLink}
+              href={item.googleDrive.linkVisualizacao}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Visualizar no Google Drive"
@@ -123,7 +93,7 @@ export function EventAttachmentsList({
                 onOpen(item.googleDrive!.fileId);
               }}
               className={cn(
-                'group flex items-center justify-between h-[40px] px-3',
+                'group flex items-center justify-between h-10 px-3',
                 'rounded-lg border hover:border-primary/30 hover:bg-primary/5',
                 'transition-all cursor-pointer bg-card no-underline'
               )}

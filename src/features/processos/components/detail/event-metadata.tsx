@@ -3,37 +3,7 @@
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-
-/**
- * Tipos para o item da timeline unificado
- */
-interface TimelineItemEnriquecido {
-  id: number;
-  titulo: string;
-  data: string;
-  documento: boolean;
-  documentoSigiloso?: boolean;
-  nomeResponsavel?: string;
-  nomeSignatario?: string;
-  backblaze?: {
-    url: string;
-    key: string;
-    bucket: string;
-    fileName: string;
-    uploadedAt: string;
-  };
-  googleDrive?: {
-    fileId: string;
-    webViewLink: string;
-    directLink: string;
-  };
-}
-
-interface TimelineItemUnificado extends TimelineItemEnriquecido {
-  grauOrigem?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
-  trtOrigem?: string;
-  instanciaId?: number;
-}
+import type { TimelineItemUnificado } from '../timeline/types';
 
 interface EventMetadataProps {
   item: TimelineItemUnificado;
@@ -113,7 +83,7 @@ export function EventMetadata({ item }: EventMetadataProps) {
         {/* Arquivo — exibido apenas quando disponível */}
         {item.backblaze?.fileName && (
           <MetadataRow label="Arquivo">
-            <span className="truncate max-w-[200px] block">
+            <span className="truncate max-w-50 block">
               {item.backblaze.fileName}
             </span>
           </MetadataRow>

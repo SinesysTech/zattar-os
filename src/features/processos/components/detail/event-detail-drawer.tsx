@@ -16,37 +16,7 @@ import { actionGerarUrlDownload } from '@/features/documentos';
 import { EventMetadata } from './event-metadata';
 import { EventSignatureInfo } from './event-signature-info';
 import { EventAttachmentsList } from './event-attachments-list';
-
-/**
- * Tipos para o item da timeline unificado
- */
-interface TimelineItemEnriquecido {
-  id: number;
-  titulo: string;
-  data: string;
-  documento: boolean;
-  documentoSigiloso?: boolean;
-  nomeResponsavel?: string;
-  nomeSignatario?: string;
-  backblaze?: {
-    url: string;
-    key: string;
-    bucket: string;
-    fileName: string;
-    uploadedAt: string;
-  };
-  googleDrive?: {
-    fileId: string;
-    webViewLink: string;
-    directLink: string;
-  };
-}
-
-interface TimelineItemUnificado extends TimelineItemEnriquecido {
-  grauOrigem?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
-  trtOrigem?: string;
-  instanciaId?: number;
-}
+import type { TimelineItemUnificado } from '../timeline/types';
 
 interface EventDetailDrawerProps {
   item: TimelineItemUnificado | null;
@@ -122,7 +92,7 @@ export function EventDetailDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-[400px] sm:w-[400px] p-0 flex flex-col"
+        className="w-100 sm:w-100 p-0 flex flex-col"
       >
         {/* Cabeçalho */}
         <SheetHeader className="px-6 py-5 border-b shrink-0">
