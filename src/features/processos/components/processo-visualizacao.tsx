@@ -9,7 +9,7 @@
 
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, Maximize2, Minimize2, Search, StickyNote } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { useCopilotReadable } from '@copilotkit/react-core';
 import {
   useProcessoTimeline,
@@ -31,6 +31,7 @@ import type { TimelineItemUnificado } from './timeline/types';
 
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -124,7 +125,6 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
 
   const {
     currentAnnotations,
-    totalAnnotations,
     addAnnotation,
     deleteAnnotation,
   } = useProcessoWorkspaceAnnotations({
@@ -173,8 +173,66 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Loading inicial
   if (isLoading) {
     return (
-      <div className="w-full space-y-6">
-        <TimelineLoading message="Carregando dados do processo..." />
+      <div className="flex w-full min-h-[calc(100vh-7rem)] flex-col gap-4 pb-8">
+        <section className="rounded-2xl border bg-card shadow-sm">
+          <div className="px-5 py-5 sm:px-6 space-y-4">
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-36" />
+              <Skeleton className="h-10 w-3/4" />
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-4 w-52" />
+                <Skeleton className="h-4 w-56" />
+              </div>
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-6 w-28" />
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t bg-muted/20 px-5 py-4 sm:px-6">
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <Skeleton className="h-7 w-28" />
+                <Skeleton className="h-7 w-24" />
+                <Skeleton className="h-7 w-20" />
+              </div>
+              <div className="rounded-xl border bg-background/70 p-3 space-y-3">
+                {[...Array(3)].map((_, index) => (
+                  <div key={index} className="rounded-lg border p-3 space-y-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-6 w-28" />
+                    </div>
+                    <div className="flex gap-2">
+                      <Skeleton className="h-3 w-28" />
+                      <Skeleton className="h-3 w-28" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t px-5 py-5 sm:px-6">
+            <div className="rounded-xl border bg-card px-4 py-3 mb-5">
+              <div className="flex items-center justify-between gap-3">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-36" />
+                  <Skeleton className="h-3 w-72" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-9 w-24" />
+                  <Skeleton className="h-9 w-28" />
+                  <Skeleton className="h-9 w-32" />
+                </div>
+              </div>
+            </div>
+
+            <TimelineLoading message="Carregando dados do processo..." embedded />
+          </div>
+        </section>
       </div>
     );
   }
@@ -211,7 +269,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
     !isCapturing && timeline && timeline.timeline.length > 0;
 
   return (
-    <div className="flex w-full min-h-[calc(100vh-7rem)] flex-col gap-4 pb-4">
+    <div className="flex w-full min-h-[calc(100vh-7rem)] flex-col gap-4 pb-8">
       <section className="overflow-hidden rounded-2xl border bg-card shadow-sm">
         {!isReadingFocused && (
           <div className="px-5 py-5 sm:px-6">
@@ -244,122 +302,113 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
           </div>
         )}
 
-        {hasTimeline && (
+        {(hasTimeline || isCapturing) && (
           <>
-            <div className="border-t bg-background/80 px-5 py-3 sm:px-6">
-              <div className="flex items-center justify-between gap-3 rounded-xl border bg-card px-4 py-3">
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Workspace de leitura</p>
-                  {!isReadingFocused && (
-                    <p className="text-xs text-muted-foreground">
-                      Use a timeline para navegar, o viewer para ler e a sobreposição lateral para anotar sem sair do documento.
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsSearchOpen(true)}>
-                    <Search className="size-4" />
-                    Buscar
-                  </Button>
-                  <Button variant={isAnnotationsOpen ? 'secondary' : 'outline'} size="sm" className="gap-2" onClick={handleToggleAnnotations}>
-                    <StickyNote className="size-4" />
-                    Anotações
-                    {totalAnnotations > 0 && (
-                      <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-semibold text-primary-foreground">
-                        {totalAnnotations}
-                      </span>
-                    )}
-                  </Button>
-                  <Button variant="outline" size="sm" className="gap-2" onClick={handleToggleReadingFocus}>
-                    {isReadingFocused ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
-                    {isReadingFocused ? 'Sair da leitura focada' : 'Leitura focada'}
-                  </Button>
-                </div>
-              </div>
-            </div>
-
             <div
-              className={`hidden border-t overflow-hidden bg-card md:flex ${
+              className={`hidden overflow-hidden border-t bg-card md:flex ${
                 isReadingFocused
-                  ? 'h-[calc(100vh-8rem)] min-h-184'
-                  : 'h-[calc(100vh-18rem)] min-h-160'
+                  ? 'h-[calc(100vh-8rem)] max-h-[calc(100vh-8rem)]'
+                  : 'h-[calc(100vh-11rem)] max-h-[calc(100vh-11rem)]'
               }`}
             >
-              <ResizablePanelGroup direction="horizontal">
-                <ResizablePanel defaultSize={30} minSize={20} maxSize={45}>
-                  <TimelineSidebar
-                    items={timelineItems}
-                    selectedItemId={selectedItem?.id ?? null}
-                    onSelectItem={handleSelectItem}
-                    processo={processoContext}
+              {isCapturing ? (
+                <div className="w-full px-5 py-5 sm:px-6">
+                  <TimelineLoading
+                    message={
+                      timeline === null
+                        ? 'Capturando timeline de todas as instâncias do processo (1º grau, 2º grau, TST)... Isso pode levar alguns minutos.'
+                        : 'Atualizando timeline do processo... Isso pode levar alguns minutos.'
+                    }
+                    isCapturing
+                    embedded
                   />
-                </ResizablePanel>
-                <ResizableHandle withHandle />
-                <ResizablePanel defaultSize={70} minSize={40}>
-                  <DocumentViewer
-                    item={selectedItem}
-                    onOpenDetails={handleOpenDetails}
-                    annotationsOpen={isAnnotationsOpen}
-                    annotations={currentAnnotations}
-                    onAddAnnotation={addAnnotation}
-                    onDeleteAnnotation={deleteAnnotation}
-                    onToggleAnnotations={handleToggleAnnotations}
-                  />
-                </ResizablePanel>
-              </ResizablePanelGroup>
+                </div>
+              ) : (
+                <ResizablePanelGroup direction="horizontal" className="min-h-0 overflow-hidden">
+                  <ResizablePanel defaultSize={24} minSize={18} maxSize={38} className="min-h-0 overflow-hidden">
+                    <div className="h-full min-h-0 overflow-hidden border-r bg-background">
+                      <TimelineSidebar
+                        items={timelineItems}
+                        selectedItemId={selectedItem?.id ?? null}
+                        onSelectItem={handleSelectItem}
+                        processo={processoContext}
+                      />
+                    </div>
+                  </ResizablePanel>
+                  <ResizableHandle withHandle />
+                  <ResizablePanel defaultSize={76} minSize={50} className="min-h-0 overflow-hidden">
+                    <div className="h-full min-h-0 overflow-hidden bg-background">
+                      <DocumentViewer
+                        item={selectedItem}
+                        onOpenDetails={handleOpenDetails}
+                        annotationsOpen={isAnnotationsOpen}
+                        annotations={currentAnnotations}
+                        onAddAnnotation={addAnnotation}
+                        onDeleteAnnotation={deleteAnnotation}
+                        onToggleAnnotations={handleToggleAnnotations}
+                        onOpenSearch={() => setIsSearchOpen(true)}
+                        onToggleReadingFocus={handleToggleReadingFocus}
+                        isReadingFocused={isReadingFocused}
+                      />
+                    </div>
+                  </ResizablePanel>
+                </ResizablePanelGroup>
+              )}
             </div>
 
             <div className="border-t px-4 py-4 md:hidden">
-              <Tabs defaultValue="timeline">
-                <TabsList className="w-full">
-                  <TabsTrigger value="timeline" className="flex-1">
-                    Timeline
-                  </TabsTrigger>
-                  <TabsTrigger value="documento" className="flex-1">
-                    Documento
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value="timeline">
-                  <div className="h-[70vh] overflow-hidden rounded-2xl border bg-card shadow-sm">
-                    <TimelineSidebar
-                      items={timelineItems}
-                      selectedItemId={selectedItem?.id ?? null}
-                      onSelectItem={handleSelectItem}
-                      processo={processoContext}
-                    />
-                  </div>
-                </TabsContent>
-                <TabsContent value="documento">
-                  <div className="h-[70vh] overflow-hidden rounded-2xl border bg-card shadow-sm">
-                    <DocumentViewer
-                      item={selectedItem}
-                      onOpenDetails={handleOpenDetails}
-                      annotationsOpen={isAnnotationsOpen}
-                      annotations={currentAnnotations}
-                      onAddAnnotation={addAnnotation}
-                      onDeleteAnnotation={deleteAnnotation}
-                      onToggleAnnotations={handleToggleAnnotations}
-                    />
-                  </div>
-                </TabsContent>
-              </Tabs>
+              {isCapturing ? (
+                <TimelineLoading
+                  message={
+                    timeline === null
+                      ? 'Capturando timeline de todas as instâncias do processo (1º grau, 2º grau, TST)... Isso pode levar alguns minutos.'
+                      : 'Atualizando timeline do processo... Isso pode levar alguns minutos.'
+                  }
+                  isCapturing
+                  embedded
+                />
+              ) : (
+                <Tabs defaultValue="timeline">
+                  <TabsList className="w-full">
+                    <TabsTrigger value="timeline" className="flex-1">
+                      Timeline
+                    </TabsTrigger>
+                    <TabsTrigger value="documento" className="flex-1">
+                      Documento
+                    </TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="timeline">
+                    <div className="h-[70vh] overflow-hidden rounded-2xl border bg-card shadow-sm">
+                      <TimelineSidebar
+                        items={timelineItems}
+                        selectedItemId={selectedItem?.id ?? null}
+                        onSelectItem={handleSelectItem}
+                        processo={processoContext}
+                      />
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="documento">
+                    <div className="h-[70vh] overflow-hidden rounded-2xl border bg-card shadow-sm">
+                      <DocumentViewer
+                        item={selectedItem}
+                        onOpenDetails={handleOpenDetails}
+                        annotationsOpen={isAnnotationsOpen}
+                        annotations={currentAnnotations}
+                        onAddAnnotation={addAnnotation}
+                        onDeleteAnnotation={deleteAnnotation}
+                        onToggleAnnotations={handleToggleAnnotations}
+                        onOpenSearch={() => setIsSearchOpen(true)}
+                        onToggleReadingFocus={handleToggleReadingFocus}
+                        isReadingFocused={isReadingFocused}
+                      />
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              )}
             </div>
           </>
         )}
       </section>
-
-      {/* Estado: Capturando timeline */}
-      {isCapturing && (
-        <TimelineLoading
-          message={
-            timeline === null
-              ? 'Capturando timeline de todas as instâncias do processo (1º grau, 2º grau, TST)... Isso pode levar alguns minutos.'
-              : 'Capturando timeline do processo... Isso pode levar alguns minutos.'
-          }
-          isCapturing
-        />
-      )}
 
       {/* Estado: Timeline vazia */}
       {!isCapturing && timeline && timeline.timeline.length === 0 && (

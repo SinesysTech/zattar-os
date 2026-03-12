@@ -63,7 +63,7 @@ export function TimelineSidebar({
   }, [items]);
 
   return (
-    <div className={cn('flex flex-col h-full bg-card', className)}>
+    <div className={cn('flex h-full flex-col overflow-hidden bg-background', className)}>
       {/* Card de contexto do processo (fixo no topo) */}
       {processo && (
         <TimelineContextCard
@@ -74,7 +74,7 @@ export function TimelineSidebar({
       )}
 
       {/* Lista de itens com scroll — sem header de busca, CMD+K é o mecanismo de busca */}
-      <div className="flex-1 overflow-y-auto py-2 min-h-0">
+      <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-6 pt-2">
         {itensOrdenados.length === 0 ? (
           <div className="px-4 py-6 text-center">
             <p className="text-xs text-muted-foreground italic">
@@ -95,16 +95,17 @@ export function TimelineSidebar({
             ))}
 
             {/* Marcador de início do processo */}
-            <div className="opacity-60 grid grid-cols-[48px_1fr] px-2 py-3">
+            <div className="grid grid-cols-[48px_1fr] px-2 pb-3 pt-4 opacity-70">
               <div className="flex flex-col items-center gap-1">
-                <div className="w-px h-2 bg-border" aria-hidden="true" />
+                <div className="h-2 w-px bg-border" aria-hidden="true" />
                 <div
-                  className="size-3 rounded-full bg-muted border border-border"
+                  className="size-3 rounded-full border border-border bg-muted"
                   aria-hidden="true"
                 />
+                <div className="h-3 w-px bg-transparent" aria-hidden="true" />
               </div>
-              <div className="flex items-center">
-                <p className="text-xs font-medium text-muted-foreground italic">
+              <div className="flex items-center border-b border-dashed border-border/70 pb-3">
+                <p className="text-xs font-medium italic text-muted-foreground">
                   Início do processo
                 </p>
               </div>

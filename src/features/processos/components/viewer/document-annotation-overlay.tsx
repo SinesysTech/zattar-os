@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Plus, Trash2, StickyNote, MessageSquareQuote } from 'lucide-react';
+import { Plus, Trash2, StickyNote } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -55,42 +55,40 @@ export function DocumentAnnotationOverlay({
   }
 
   return (
-    <aside className="pointer-events-auto absolute inset-y-4 right-4 z-20 hidden w-80 rounded-2xl border bg-background/92 shadow-xl backdrop-blur xl:flex xl:flex-col">
-      <div className="border-b px-4 py-3">
+    <aside className="pointer-events-auto absolute inset-y-3 right-3 z-20 hidden w-72 rounded-2xl border bg-background/96 shadow-xl backdrop-blur xl:flex xl:flex-col">
+      <div className="border-b px-3 py-2.5">
         <div className="flex items-center gap-2">
-          <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <StickyNote className="size-4" />
+          <div className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <StickyNote className="size-3.5" />
           </div>
           <div>
             <p className="text-sm font-semibold text-foreground">Anotações</p>
-            <p className="text-xs text-muted-foreground">Camada de leitura sobre o documento</p>
+            <p className="text-[11px] text-muted-foreground">Painel flutuante da leitura</p>
           </div>
         </div>
       </div>
 
-      <div className="border-b px-4 py-3">
-        <div className="rounded-xl border bg-muted/35 p-3">
-          <div className="mb-2 flex items-center gap-2 text-xs font-medium text-muted-foreground">
-            <MessageSquareQuote className="size-3.5" />
-            Evento selecionado
-          </div>
-          <p className="text-sm font-medium leading-5 text-foreground">{itemTitle || 'Nenhum evento selecionado'}</p>
-          {itemDate && <p className="mt-1 text-xs text-muted-foreground">{itemDate}</p>}
+      <div className="border-b px-3 py-2.5 space-y-2">
+        <div className="rounded-xl border bg-muted/25 px-3 py-2">
+          <p className="truncate text-xs font-medium text-foreground">
+            {itemTitle || 'Nenhum evento selecionado'}
+          </p>
+          {itemDate && <p className="mt-0.5 text-[11px] text-muted-foreground">{itemDate}</p>}
         </div>
 
-        <div className="mt-3 space-y-2">
+        <div className="space-y-2">
           <Textarea
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
-            placeholder="Registrar observação jurídica, risco, próxima ação..."
-            className="min-h-28 resize-none bg-background"
+            placeholder="Registrar nota..."
+            className="min-h-22 resize-none bg-background"
           />
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-[11px] leading-4 text-muted-foreground">{helperText}</p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="line-clamp-2 text-[10px] leading-4 text-muted-foreground">{helperText}</p>
             <Button
               type="button"
               size="sm"
-              className="gap-2"
+              className="h-8 gap-1.5 px-3"
               onClick={() => {
                 const trimmedDraft = draft.trim();
                 if (!trimmedDraft) return;
@@ -99,20 +97,20 @@ export function DocumentAnnotationOverlay({
               }}
               disabled={!draft.trim()}
             >
-              <Plus className="size-4" />
-              Adicionar
+              <Plus className="size-3.5" />
+              Nota
             </Button>
           </div>
         </div>
       </div>
 
-      <ScrollArea className="min-h-0 flex-1 px-4 py-3">
-        <div className="space-y-3 pr-2">
+      <ScrollArea className="min-h-0 flex-1 px-3 py-2.5">
+        <div className="space-y-2 pr-1">
           {annotations.length === 0 ? (
-            <div className="rounded-xl border border-dashed bg-muted/25 px-4 py-6 text-center">
+            <div className="rounded-xl border border-dashed bg-muted/25 px-4 py-5 text-center">
               <p className="text-sm font-medium text-foreground">Nenhuma anotação ainda</p>
-              <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                Use esta coluna para manter contexto de leitura sem sair do documento.
+              <p className="mt-1 text-[11px] leading-4 text-muted-foreground">
+                Use este painel sem sair do documento.
               </p>
             </div>
           ) : (
@@ -120,16 +118,16 @@ export function DocumentAnnotationOverlay({
               <article
                 key={annotation.id}
                 className={cn(
-                  'rounded-xl border px-4 py-3 shadow-sm',
+                  'rounded-xl border px-3 py-2.5 shadow-sm',
                   index === 0 ? 'bg-primary/5 border-primary/20' : 'bg-background'
                 )}
               >
-                <div className="mb-2 flex items-start justify-between gap-3">
+                <div className="mb-1.5 flex items-start justify-between gap-2">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                       Nota {index + 1}
                     </p>
-                    <p className="mt-1 text-[11px] text-muted-foreground">{formatarCriacao(annotation.createdAt)}</p>
+                    <p className="mt-0.5 text-[10px] text-muted-foreground">{formatarCriacao(annotation.createdAt)}</p>
                   </div>
                   <Button
                     type="button"
@@ -139,10 +137,10 @@ export function DocumentAnnotationOverlay({
                     onClick={() => onDeleteAnnotation(annotation.id)}
                     aria-label="Remover anotação"
                   >
-                    <Trash2 className="size-4" />
+                    <Trash2 className="size-3.5" />
                   </Button>
                 </div>
-                <p className="text-sm leading-6 text-foreground">{annotation.content}</p>
+                <p className="text-sm leading-5 text-foreground">{annotation.content}</p>
               </article>
             ))
           )}

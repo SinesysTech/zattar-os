@@ -15,7 +15,7 @@
  * <DocumentViewer item={timelineItem} onOpenDetails={() => setDrawerOpen(true)} />
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { FileText, Loader2 } from 'lucide-react';
@@ -26,6 +26,7 @@ import { cn } from '@/lib/utils';
 import { ViewerToolbar } from './viewer-toolbar';
 import { ViewerPaginationPill } from './viewer-pagination-pill';
 import { DocumentAnnotationOverlay } from './document-annotation-overlay';
+import { PdfViewerCanvas } from './pdf-viewer-canvas';
 
 interface ViewerAnnotation {
   id: string;
@@ -41,6 +42,9 @@ interface DocumentViewerProps {
   onAddAnnotation: (content: string) => void;
   onDeleteAnnotation: (annotationId: string) => void;
   onToggleAnnotations: () => void;
+  onOpenSearch: () => void;
+  onToggleReadingFocus: () => void;
+  isReadingFocused: boolean;
 }
 
 const DEFAULT_TOTAL_PAGES = 1;
@@ -62,19 +66,25 @@ export function DocumentViewer({
   onAddAnnotation,
   onDeleteAnnotation,
   onToggleAnnotations,
+  onOpenSearch,
+  onToggleReadingFocus,
+  isReadingFocused,
 }: DocumentViewerProps) {
   const [presignedUrl, setPresignedUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages] = useState(DEFAULT_TOTAL_PAGES);
+  const [totalPages, setTotalPages] = useState(DEFAULT_TOTAL_PAGES);
   const [zoomLevel, setZoomLevel] = useState(DEFAULT_ZOOM);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const [viewportWidth, setViewportWidth] = useState(0);
 
   // Gera presigned URL quando o item muda
   useEffect(() => {
     if (!item?.backblaze?.key) {
       setPresignedUrl(null);
       setError(null);
+      setTotalPages(DEFAULT_TOTAL_PAGES);
       return;
     }
 
@@ -83,6 +93,7 @@ export function DocumentViewer({
     setError(null);
     setPresignedUrl(null);
     setCurrentPage(1);
+    setTotalPages(DEFAULT_TOTAL_PAGES);
 
     actionGerarUrlDownload(item.backblaze.key)
       .then((result) => {
@@ -106,6 +117,19 @@ export function DocumentViewer({
       cancelled = true;
     };
   }, [item?.backblaze?.key]);
+
+  useEffect(() => {
+    if (!viewportRef.current) return;
+
+    const observer = new ResizeObserver((entries) => {
+      const nextWidth = entries[0]?.contentRect.width ?? 0;
+      setViewportWidth(nextWidth);
+    });
+
+    observer.observe(viewportRef.current);
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleOpenExternal = () => {
     if (presignedUrl) {
@@ -138,11 +162,16 @@ export function DocumentViewer({
   const hasBackblaze = !!item?.backblaze;
   const title = item?.titulo ?? '';
   const date = item?.data ? formatarDataHora(item.data) : undefined;
+  const computedPageWidth = useMemo(() => {
+    if (!viewportWidth) return 860;
+    const gutter = annotationsOpen ? 64 : 32;
+    return Math.max(480, Math.min(920, Math.floor(viewportWidth - gutter)));
+  }, [annotationsOpen, viewportWidth]);
 
   return (
-    <div className="flex flex-col h-full bg-muted relative">
+    <div className="relative flex h-full flex-col bg-background">
       {/* Área de conteúdo — viewer limpo conforme protótipo 1.html */}
-      <div className="flex-1 relative overflow-hidden">
+      <div className="relative flex-1 overflow-hidden" ref={viewportRef}>
         {/* Ações flutuantes (overlay no canto superior direito) */}
         {item && (
           <ViewerToolbar
@@ -153,10 +182,13 @@ export function DocumentViewer({
             isLoading={isLoading}
             annotationCount={annotations.length}
             annotationsOpen={annotationsOpen}
+            isReadingFocused={isReadingFocused}
+            onOpenSearch={onOpenSearch}
             onOpenExternal={handleOpenExternal}
             onDownload={handleDownload}
             onOpenDetails={onOpenDetails}
             onToggleAnnotations={onToggleAnnotations}
+            onToggleReadingFocus={onToggleReadingFocus}
           />
         )}
 
@@ -193,22 +225,23 @@ export function DocumentViewer({
             </p>
           </div>
         ) : presignedUrl ? (
-          // Exibição do PDF via iframe
+          // Exibição do PDF com renderer controlado
           <div
             className={cn(
-              'w-full h-full overflow-auto flex justify-center px-4 pb-24 pt-8 transition-[padding] duration-200',
-              annotationsOpen && 'xl:pr-[23rem]'
+              'h-full w-full overflow-auto px-3 pb-18 pt-3 transition-[padding] duration-200 sm:px-4 sm:pt-4',
+              annotationsOpen && 'xl:pr-6'
             )}
-            style={{
-              transform: `scale(${zoomLevel / 100})`,
-              transformOrigin: 'top center',
-            }}
           >
-            <iframe
-              src={`${presignedUrl}#toolbar=0&navpanes=0&scrollbar=0&page=${currentPage}`}
-              className="w-full max-w-4xl min-h-full rounded shadow-sm border bg-card"
-              title={item.titulo}
-            />
+            <div className="mx-auto flex min-h-full w-full max-w-232 justify-center rounded-2xl bg-background">
+              <PdfViewerCanvas
+                pdfUrl={presignedUrl}
+                currentPage={currentPage}
+                zoomLevel={zoomLevel}
+                pageWidth={computedPageWidth}
+                onPageChange={setCurrentPage}
+                onLoadSuccess={setTotalPages}
+              />
+            </div>
           </div>
         ) : (
           // Item selecionado mas sem presigned URL (ex: sem backblaze)
