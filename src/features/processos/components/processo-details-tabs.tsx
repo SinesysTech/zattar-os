@@ -214,24 +214,68 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
 }
 
 function ExpedientesTable({ expedientes }: { expedientes: Expediente[] }) {
-        const vencido = exp.dataPrazoLegalParte && !exp.baixadoEm && exp.prazoVencido;
+  const sorted = useMemo(
     () =>
       [...expedientes].sort((a, b) => {
-        const dateA = a.dataCriacaoExpediente ? new Date(a.dataCriacaoExpediente).getTime() : 0;
-        const dateB = b.dataCriacaoExpediente ? new Date(b.dataCriacaoExpediente).getTime() : 0;
+        const dateA = a.dataCriacaoExpediente
+          ? new Date(a.dataCriacaoExpediente).getTime()
+          : 0;
+        const dateB = b.dataCriacaoExpediente
+          ? new Date(b.dataCriacaoExpediente).getTime()
+          : 0;
         return dateB - dateA;
       }),
+    [expedientes]
+  );
+
+  if (sorted.length === 0) {
+    return (
+      <p className="text-sm text-muted-foreground py-6 text-center">
+        Nenhum expediente encontrado para este processo.
+      </p>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      {sorted.map((exp) => {
+        const origemLabel =
+          ORIGEM_EXPEDIENTE_LABELS[exp.origem as OrigemExpediente] ||
+          exp.origem?.replace('_', ' ') ||
+          '--';
+        const vencido =
+          !!exp.dataPrazoLegalParte && !exp.baixadoEm && exp.prazoVencido;
+
+        return (
+          <div
+            key={exp.id}
+            className={`rounded-lg border p-3 transition-colors hover:bg-muted/50 ${vencido ? 'border-destructive/30 bg-destructive/5' : ''}`}
+          >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <SemanticBadge category="status" value={origemLabel} variantOverride="secondary" toneOverride="soft" className="text-xs">
+                  <SemanticBadge
+                    category="status"
+                    value={origemLabel}
+                    variantOverride="secondary"
+                    toneOverride="soft"
+                    className="text-xs"
+                  >
                     {origemLabel}
                   </SemanticBadge>
                   {exp.siglaOrgaoJulgador && (
-                    <span className="text-xs text-muted-foreground">{exp.siglaOrgaoJulgador}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {exp.siglaOrgaoJulgador}
+                    </span>
                   )}
                   {exp.baixadoEm && (
-                    <SemanticBadge category="status" value="baixado" variantOverride="success" toneOverride="soft" className="text-xs">
+                    <SemanticBadge
+                      category="status"
+                      value="baixado"
+                      variantOverride="success"
+                      toneOverride="soft"
+                      className="text-xs"
+                    >
                       Baixado
                     </SemanticBadge>
                   )}
@@ -239,16 +283,23 @@ function ExpedientesTable({ expedientes }: { expedientes: Expediente[] }) {
 
                 <div className="flex items-center gap-2 flex-wrap text-xs text-muted-foreground">
                   <span>Criado em {formatarData(exp.dataCriacaoExpediente)}</span>
-                  {exp.dataCienciaParte && <span>Ciência em {formatarData(exp.dataCienciaParte)}</span>}
+                  {exp.dataCienciaParte && (
+                    <span>Ciência em {formatarData(exp.dataCienciaParte)}</span>
+                  )}
                 </div>
 
                 {exp.arquivoNome && (
-                  <p className="truncate text-xs text-muted-foreground">{exp.arquivoNome}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {exp.arquivoNome}
+                  </p>
                 )}
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
-                <PrazoBadge data={exp.dataPrazoLegalParte} baixadoEm={exp.baixadoEm} />
+                <PrazoBadge
+                  data={exp.dataPrazoLegalParte}
+                  baixadoEm={exp.baixadoEm}
+                />
                 {exp.arquivoUrl && (
                   <TooltipProvider>
                     <Tooltip>
