@@ -114,7 +114,7 @@ export function TimelineSearchModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[480px] p-0 gap-0 overflow-hidden">
+      <DialogContent className="max-w-120 p-0 gap-0 overflow-hidden">
         {/* Campo de busca */}
         <div
           className="flex items-center px-4 border-b h-16"
@@ -152,7 +152,7 @@ export function TimelineSearchModal({
         {/* Lista de resultados */}
         <div
           ref={resultsRef}
-          className="max-h-[320px] overflow-y-auto p-2 space-y-1"
+          className="max-h-[70vh] overflow-y-auto p-2 space-y-1"
           role="listbox"
           aria-label="Resultados da busca"
         >

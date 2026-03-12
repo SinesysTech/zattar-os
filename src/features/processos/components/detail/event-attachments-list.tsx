@@ -35,7 +35,7 @@ export function EventAttachmentsList({
 
   return (
     <div className="px-6 py-6">
-      <h3 className="text-sm font-semibold mb-4 tracking-tight">Arquivos</h3>
+      <h3 className="text-sm font-semibold mb-4 tracking-tight">Arquivos Anexos</h3>
 
       {!temArquivo ? (
         /* Estado vazio */
@@ -67,16 +67,16 @@ export function EventAttachmentsList({
               )}
             >
               {/* Lado esquerdo: ícone + nome do arquivo */}
-              <div className="flex items-center gap-2 min-w-0">
-                <FileText className="size-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+              <div className="flex items-center gap-3 min-w-0">
+                <FileText className="size-4.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
                 <span className="text-[13px] font-medium truncate">
                   {item.backblaze.fileName}
                 </span>
               </div>
 
               {/* Lado direito: ícone de download (visível ao hover) */}
-              <div className="hidden group-hover:flex items-center shrink-0 ml-2">
-                <Download className="size-4 text-primary" />
+              <div className="shrink-0 pl-3">
+                <Download className="size-4.5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </div>
           )}
@@ -99,16 +99,16 @@ export function EventAttachmentsList({
               )}
             >
               {/* Lado esquerdo: ícone + label */}
-              <div className="flex items-center gap-2 min-w-0">
-                <FileText className="size-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+              <div className="flex items-center gap-3 min-w-0">
+                <FileText className="size-4.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
                 <span className="text-[13px] font-medium truncate text-foreground">
                   Visualizar no Drive
                 </span>
               </div>
 
               {/* Lado direito: ícone externo (visível ao hover) */}
-              <div className="hidden group-hover:flex items-center shrink-0 ml-2">
-                <ExternalLink className="size-4 text-primary" />
+              <div className="shrink-0 pl-3">
+                <ExternalLink className="size-4.5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </a>
           )}

@@ -11,10 +11,8 @@ import {
   ExternalLink,
   Video,
   Clock,
-  User,
   AlertTriangle,
   CheckCircle2,
-  FileDown,
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
@@ -149,163 +147,125 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b text-left">
-            <th className="pb-2 pr-4 font-medium text-muted-foreground text-xs">Data</th>
-            <th className="pb-2 pr-4 font-medium text-muted-foreground text-xs">Tipo</th>
-            <th className="pb-2 pr-4 font-medium text-muted-foreground text-xs">Sala</th>
-            <th className="pb-2 pr-4 font-medium text-muted-foreground text-xs">Status</th>
-            <th className="pb-2 font-medium text-muted-foreground text-xs">Modalidade</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sorted.map((aud) => (
-            <tr key={aud.id} className="border-b last:border-0 hover:bg-muted/50 transition-colors">
-              <td className="py-2.5 pr-4 whitespace-nowrap text-xs">
-                {formatarDataHora(aud.dataInicio)}
-              </td>
-              <td className="py-2.5 pr-4 text-xs">
-                {aud.tipoDescricao || '--'}
-              </td>
-              <td className="py-2.5 pr-4 whitespace-nowrap text-xs">
-                {aud.salaAudienciaNome || '--'}
-              </td>
-              <td className="py-2.5 pr-4">
-                <StatusAudienciaBadge status={aud.status} />
-              </td>
-              <td className="py-2.5">
-                <div className="flex items-center gap-1.5">
-                  {aud.modalidade && (
-                    <span className="text-xs text-muted-foreground">
-                      {MODALIDADE_AUDIENCIA_LABELS[aud.modalidade]}
-                    </span>
-                  )}
-                  {aud.urlAudienciaVirtual && (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            size="icon-sm"
-                            variant="ghost"
-                            onClick={() => window.open(aud.urlAudienciaVirtual!, '_blank')}
-                          >
-                            <Video className="h-3.5 w-3.5" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Abrir sala virtual</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
-                  {aud.urlAtaAudiencia && (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            size="icon-sm"
-                            variant="ghost"
-                            onClick={() => window.open(aud.urlAtaAudiencia!, '_blank')}
-                          >
-                            <ExternalLink className="h-3.5 w-3.5" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Ver ata da audiência</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="space-y-2">
+      {sorted.map((aud) => (
+        <div
+          key={aud.id}
+          className="rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/40"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 space-y-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="text-sm font-medium text-foreground">
+                  {aud.tipoDescricao || 'Audiência'}
+                </p>
+                <span className="text-xs text-muted-foreground">
+                  {formatarDataHora(aud.dataInicio)}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap text-xs text-muted-foreground">
+                {aud.salaAudienciaNome && <span>Sala {aud.salaAudienciaNome}</span>}
+                {aud.modalidade && (
+                  <span>{MODALIDADE_AUDIENCIA_LABELS[aud.modalidade]}</span>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 shrink-0">
+              <StatusAudienciaBadge status={aud.status} />
+              {aud.urlAudienciaVirtual && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="icon-sm"
+                        variant="ghost"
+                        onClick={() => window.open(aud.urlAudienciaVirtual!, '_blank')}
+                      >
+                        <Video className="h-3.5 w-3.5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Abrir sala virtual</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              {aud.urlAtaAudiencia && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="icon-sm"
+                        variant="ghost"
+                        onClick={() => window.open(aud.urlAtaAudiencia!, '_blank')}
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Ver ata da audiência</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
 
 function ExpedientesTable({ expedientes }: { expedientes: Expediente[] }) {
-  const sorted = useMemo(
+        const vencido = exp.dataPrazoLegalParte && !exp.baixadoEm && exp.prazoVencido;
     () =>
       [...expedientes].sort((a, b) => {
         const dateA = a.dataCriacaoExpediente ? new Date(a.dataCriacaoExpediente).getTime() : 0;
         const dateB = b.dataCriacaoExpediente ? new Date(b.dataCriacaoExpediente).getTime() : 0;
         return dateB - dateA;
       }),
-    [expedientes]
-  );
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <SemanticBadge category="status" value={origemLabel} variantOverride="secondary" toneOverride="soft" className="text-xs">
+                    {origemLabel}
+                  </SemanticBadge>
+                  {exp.siglaOrgaoJulgador && (
+                    <span className="text-xs text-muted-foreground">{exp.siglaOrgaoJulgador}</span>
+                  )}
+                  {exp.baixadoEm && (
+                    <SemanticBadge category="status" value="baixado" variantOverride="success" toneOverride="soft" className="text-xs">
+                      Baixado
+                    </SemanticBadge>
+                  )}
+                </div>
 
-  if (sorted.length === 0) {
-    return (
-      <p className="text-sm text-muted-foreground py-6 text-center">
-        Nenhum expediente encontrado para este processo.
-      </p>
-    );
-  }
+                <div className="flex items-center gap-2 flex-wrap text-xs text-muted-foreground">
+                  <span>Criado em {formatarData(exp.dataCriacaoExpediente)}</span>
+                  {exp.dataCienciaParte && <span>Ciência em {formatarData(exp.dataCienciaParte)}</span>}
+                </div>
 
-  return (
-    <div className="space-y-2">
-      {sorted.map((exp) => {
-        const origemLabel = ORIGEM_EXPEDIENTE_LABELS[exp.origem as OrigemExpediente] || exp.origem?.replace('_', ' ') || '--';
-        const vencido = exp.dataPrazoLegalParte && !exp.baixadoEm && exp.prazoVencido;
-
-        return (
-          <div
-            key={exp.id}
-            className={`rounded-lg border p-3 transition-colors hover:bg-muted/50 ${vencido ? 'border-destructive/30 bg-destructive/5' : ''}`}
-          >
-            {/* Linha 1: Origem + Data + Prazo */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <SemanticBadge category="status" value={origemLabel} variantOverride="secondary" toneOverride="soft" className="text-xs">
-                {origemLabel}
-              </SemanticBadge>
-              <span className="text-xs text-muted-foreground">
-                Criado em {formatarData(exp.dataCriacaoExpediente)}
-              </span>
-              {exp.dataCienciaParte && (
-                <>
-                  <span className="text-muted-foreground">·</span>
-                  <span className="text-xs text-muted-foreground">
-                    Ciência em {formatarData(exp.dataCienciaParte)}
-                  </span>
-                </>
-              )}
-              <div className="ml-auto">
-                <PrazoBadge data={exp.dataPrazoLegalParte} baixadoEm={exp.baixadoEm} />
+                {exp.arquivoNome && (
+                  <p className="truncate text-xs text-muted-foreground">{exp.arquivoNome}</p>
+                )}
               </div>
-            </div>
 
-            {/* Linha 2: Descrição da intimação / arquivos */}
-            {exp.descricaoArquivos && (
-              <p className="mt-1.5 text-sm text-foreground leading-relaxed">
-                <FileDown className="inline h-3.5 w-3.5 mr-1 text-muted-foreground align-text-bottom" />
-                {exp.descricaoArquivos}
-              </p>
-            )}
-
-            {/* Linha 3: Metadados adicionais */}
-            <div className="mt-1.5 flex items-center gap-3 flex-wrap text-xs text-muted-foreground">
-              {exp.siglaOrgaoJulgador && (
-                <span>{exp.siglaOrgaoJulgador}</span>
-              )}
-              {exp.observacoes && (
-                <span className="italic">
-                  {exp.observacoes.length > 80 ? `${exp.observacoes.slice(0, 80)}...` : exp.observacoes}
-                </span>
-              )}
-              {exp.baixadoEm && (
-                <span className="flex items-center gap-1">
-                  <User className="h-3 w-3" />
-                  Baixado em {formatarData(exp.baixadoEm)}
-                  {exp.protocoloId && ` · Protocolo: ${exp.protocoloId}`}
-                </span>
-              )}
-              {exp.arquivoNome && (
-                <span className="flex items-center gap-1">
-                  <FileText className="h-3 w-3" />
-                  {exp.arquivoNome}
-                </span>
-              )}
+              <div className="flex items-center gap-2 shrink-0">
+                <PrazoBadge data={exp.dataPrazoLegalParte} baixadoEm={exp.baixadoEm} />
+                {exp.arquivoUrl && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="icon-sm"
+                          variant="ghost"
+                          onClick={() => window.open(exp.arquivoUrl!, '_blank')}
+                        >
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Abrir documento do expediente</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
             </div>
           </div>
         );
@@ -421,7 +381,7 @@ export function ProcessoDetailsTabs({
   }
 
   return (
-    <div className="border-t pt-3">
+    <div className="space-y-3">
       <Tabs defaultValue="expedientes">
         <TabsList variant="line" className="w-full justify-start">
           <TabsTrigger value="expedientes" className="gap-1.5 text-sm">
@@ -460,14 +420,20 @@ export function ProcessoDetailsTabs({
           </div>
         ) : (
           <>
-            <TabsContent value="expedientes" className="pt-3 mt-0">
-              <ExpedientesTable expedientes={expedientes} />
+            <TabsContent value="expedientes" className="mt-0 rounded-xl border bg-background/70 p-3">
+              <div className="max-h-96 overflow-y-auto pr-1">
+                <ExpedientesTable expedientes={expedientes} />
+              </div>
             </TabsContent>
-            <TabsContent value="audiencias" className="pt-3 mt-0">
-              <AudienciasTable audiencias={audiencias} />
+            <TabsContent value="audiencias" className="mt-0 rounded-xl border bg-background/70 p-3">
+              <div className="max-h-96 overflow-y-auto pr-1">
+                <AudienciasTable audiencias={audiencias} />
+              </div>
             </TabsContent>
-            <TabsContent value="pericias" className="pt-3 mt-0">
-              <PericiasTable pericias={pericias} />
+            <TabsContent value="pericias" className="mt-0 rounded-xl border bg-background/70 p-3">
+              <div className="max-h-96 overflow-y-auto pr-1">
+                <PericiasTable pericias={pericias} />
+              </div>
             </TabsContent>
           </>
         )}

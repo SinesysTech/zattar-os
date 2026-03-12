@@ -22,6 +22,8 @@ interface TimelineSidebarItemProps {
   item: TimelineItemUnificado;
   /** Indica se este item está atualmente selecionado */
   isSelected: boolean;
+  /** Indica se é o primeiro item da lista (omite a linha de conexão superior) */
+  isFirst: boolean;
   /** Indica se é o último item da lista (omite a linha de conexão inferior) */
   isLast: boolean;
   /** Callback chamado ao clicar no item */
@@ -53,6 +55,7 @@ function formatarDataCurta(data: string): string {
 export function TimelineSidebarItem({
   item,
   isSelected,
+  isFirst,
   isLast,
   onSelect,
 }: TimelineSidebarItemProps) {
@@ -91,9 +94,9 @@ export function TimelineSidebarItem({
 
         {/* Coluna esquerda: linha superior + ícone + linha inferior */}
         <div className="flex flex-col items-center gap-1">
-          {/* Linha conectora superior (transparente no primeiro item) */}
+          {/* Linha conectora superior (transparente no primeiro item — topo da cadeia temporal) */}
           <div
-            className={cn('w-px h-2', isSelected ? 'bg-transparent' : 'bg-border')}
+            className={cn('w-px h-2', isFirst ? 'bg-transparent' : 'bg-border')}
             aria-hidden="true"
           />
 
@@ -140,7 +143,7 @@ export function TimelineSidebarItem({
               'text-sm font-medium leading-tight line-clamp-2',
               isSelected
                 ? 'text-primary'
-                : 'text-foreground group-hover:text-foreground'
+                : 'text-foreground/70 group-hover:text-foreground'
             )}
           >
             {item.titulo}
