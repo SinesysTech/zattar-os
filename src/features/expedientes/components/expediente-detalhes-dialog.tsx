@@ -101,7 +101,7 @@ const PrazoEditor: React.FC<PrazoEditorProps> = ({ exp, onUpdated, onSuccess }) 
           <FormDatePicker
             value={dt ? dt.toISOString() : undefined}
             onChange={(val) => setDt(val ? new Date(val) : undefined)}
-            className="w-[140px]"
+            className="w-35"
           />
           <Button size="sm" onClick={salvar} disabled={saving || !dt}>{saving ? '...' : 'OK'}</Button>
           <Button size="sm" variant="ghost" onClick={() => setOpenEdit(false)} disabled={saving}>X</Button>
@@ -180,7 +180,7 @@ function ExpedienteListItem({
         </TabsContent>
 
         <TabsContent value="historico" className="mt-0">
-          <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-[300px]" />
+          <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-75" />
         </TabsContent>
       </Tabs>
     </div>
@@ -283,7 +283,7 @@ function ExpedienteSingleDetails({
         </TabsContent>
 
         <TabsContent value="historico" className="mt-0">
-          <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-[500px]" />
+          <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-125" />
         </TabsContent>
       </Tabs>
     </div>

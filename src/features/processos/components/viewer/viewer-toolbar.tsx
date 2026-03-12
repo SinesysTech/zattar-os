@@ -8,7 +8,15 @@
  * mantendo a área de visualização limpa (conforme protótipo 1.html).
  */
 
-import { Info, ExternalLink, Download, StickyNote } from 'lucide-react';
+import {
+  Info,
+  ExternalLink,
+  Download,
+  StickyNote,
+  Search,
+  Maximize2,
+  Minimize2,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -25,10 +33,13 @@ interface ViewerToolbarProps {
   isLoading: boolean;
   annotationCount: number;
   annotationsOpen: boolean;
+  isReadingFocused: boolean;
+  onOpenSearch: () => void;
   onOpenExternal: () => void;
   onDownload: () => void;
   onOpenDetails: () => void;
   onToggleAnnotations: () => void;
+  onToggleReadingFocus: () => void;
 }
 
 export function ViewerToolbar({
@@ -39,15 +50,35 @@ export function ViewerToolbar({
   isLoading,
   annotationCount,
   annotationsOpen,
+  isReadingFocused,
+  onOpenSearch,
   onOpenExternal,
   onDownload,
   onOpenDetails,
   onToggleAnnotations,
+  onToggleReadingFocus,
 }: ViewerToolbarProps) {
   const actionsDisabled = isLoading || !hasBackblaze;
 
   return (
-    <div className="absolute top-3 right-3 z-10 flex items-center gap-1 rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-1 py-0.5">
+    <div className="absolute top-3 left-3 z-10 flex items-center gap-1 rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-1 py-0.5">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8 rounded-full"
+              onClick={onOpenSearch}
+              aria-label="Buscar na timeline"
+            >
+              <Search className="size-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Buscar na timeline</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -85,6 +116,25 @@ export function ViewerToolbar({
           </TooltipTrigger>
           <TooltipContent>
             {annotationsOpen ? 'Ocultar anotações' : 'Exibir anotações'}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8 rounded-full"
+              onClick={onToggleReadingFocus}
+              aria-label="Alternar leitura focada"
+            >
+              {isReadingFocused ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            {isReadingFocused ? 'Sair da leitura focada' : 'Leitura focada'}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
