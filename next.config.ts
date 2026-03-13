@@ -41,6 +41,41 @@ const revision =
     encoding: "utf-8",
   }).stdout?.trim() ?? crypto.randomUUID();
 
+function parseAllowedOrigins(value?: string): string[] {
+  if (!value) {
+    return [];
+  }
+
+  return value
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean)
+    .filter((origin) => /^https?:\/\//.test(origin));
+}
+
+function getServerActionAllowedOrigins(): string[] {
+  const defaults = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://zattaradvogados.com",
+    "https://zattaradvogados.com.br",
+    "https://app.sinesys.com.br",
+  ];
+
+  const configuredOrigins = [
+    ...parseAllowedOrigins(process.env.SERVER_ACTIONS_ALLOWED_ORIGINS),
+    ...parseAllowedOrigins(process.env.ALLOWED_ORIGINS),
+    ...parseAllowedOrigins(process.env.CLOUDRON_APP_ORIGIN),
+    ...parseAllowedOrigins(process.env.NEXT_PUBLIC_APP_URL),
+    ...parseAllowedOrigins(process.env.NEXT_PUBLIC_WEBSITE_URL),
+    ...parseAllowedOrigins(process.env.APP_URL),
+  ];
+
+  return Array.from(new Set([...defaults, ...configuredOrigins]));
+}
+
+const serverActionAllowedOrigins = getServerActionAllowedOrigins();
+
 const nextConfig: NextConfig = {
   // Expose build ID to client for version mismatch detection
   env: {
@@ -129,6 +164,7 @@ const nextConfig: NextConfig = {
     // Aumenta limite de tamanho do body para Server Actions (upload de imagens)
     serverActions: {
       bodySizeLimit: "50mb",
+      allowedOrigins: serverActionAllowedOrigins,
     },
     optimizePackageImports: [
       // Bibliotecas
