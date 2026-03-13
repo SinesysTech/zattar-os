@@ -30,9 +30,9 @@ export class AuditLogService {
       .from('logs_alteracao')
       .select(`
         *,
-        usuario:usuario_que_executou_id(nome_exibicao, email_corporativo),
-        responsavel_anterior:responsavel_anterior_id(nome_exibicao),
-        responsavel_novo:responsavel_novo_id(nome_exibicao)
+        usuario:usuarios!usuario_que_executou_id(nome_exibicao, email_corporativo),
+        responsavel_anterior:usuarios!responsavel_anterior_id(nome_exibicao),
+        responsavel_novo:usuarios!responsavel_novo_id(nome_exibicao)
       `)
       .eq('tipo_entidade', entityType)
       .eq('entidade_id', entityId)

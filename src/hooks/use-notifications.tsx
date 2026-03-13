@@ -78,7 +78,7 @@ export function NotificationProvider({
       const { data, error } = await supabase
         .from('salas_chat')
         .select('id, nome')
-        .eq('id', roomId)
+        .eq('id', Number(roomId))
         .single();
 
       if (error) throw error;
