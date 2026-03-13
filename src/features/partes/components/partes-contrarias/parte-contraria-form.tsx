@@ -416,7 +416,7 @@ export function ParteContrariaFormDialog({
   // Renderizar Step 1 - Tipo de Pessoa
   const renderStep1 = () => (
     <div className="grid gap-6 py-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <button
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pf' }))}
@@ -530,7 +530,7 @@ export function ParteContrariaFormDialog({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="grid gap-2">
               <Label htmlFor="rg">RG</Label>
               <Input
@@ -552,7 +552,7 @@ export function ParteContrariaFormDialog({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="grid gap-2">
               <Label htmlFor="genero">Gênero</Label>
               {mounted ? (
@@ -601,7 +601,7 @@ export function ParteContrariaFormDialog({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="grid gap-2">
               <Label htmlFor="nacionalidade">Nacionalidade</Label>
               <Input
@@ -642,7 +642,7 @@ export function ParteContrariaFormDialog({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="grid gap-2">
               <Label htmlFor="inscricao_estadual">Inscrição Estadual</Label>
               <Input
@@ -803,7 +803,7 @@ export function ParteContrariaFormDialog({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="grid gap-2">
           <Label htmlFor="numero">Número</Label>
           <Input
@@ -834,7 +834,7 @@ export function ParteContrariaFormDialog({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="grid gap-2">
           <Label htmlFor="municipio">Cidade</Label>
           <Input
@@ -944,6 +944,7 @@ export function ParteContrariaFormDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={isEditMode ? 'Editar Parte Contrária' : stepInfo.title}
+      description={stepInfo.description}
       multiStep={{
         current: isEditMode ? currentStep - 1 : currentStep,
         total: isEditMode ? TOTAL_STEPS - 1 : TOTAL_STEPS,
@@ -988,6 +989,20 @@ export function ParteContrariaFormDialog({
           {/* Hidden fields para todos os dados do form */}
           <input type="hidden" name="tipo_pessoa" value={formData.tipo_pessoa || ''} />
           <input type="hidden" name="ativo" value={formData.ativo ? 'true' : 'false'} />
+          {/* Campos de identificação (Step 2) */}
+          <input type="hidden" name="nome" value={formData.nome} />
+          <input type="hidden" name="nome_social_fantasia" value={formData.nome_social_fantasia} />
+          <input type="hidden" name="cpf" value={formData.cpf} />
+          <input type="hidden" name="cnpj" value={formData.cnpj} />
+          <input type="hidden" name="rg" value={formData.rg} />
+          <input type="hidden" name="data_nascimento" value={formData.data_nascimento} />
+          <input type="hidden" name="data_abertura" value={formData.data_abertura} />
+          <input type="hidden" name="genero" value={formData.genero} />
+          <input type="hidden" name="estado_civil" value={formData.estado_civil} />
+          <input type="hidden" name="nacionalidade" value={formData.nacionalidade} />
+          <input type="hidden" name="nome_genitora" value={formData.nome_genitora} />
+          <input type="hidden" name="inscricao_estadual" value={formData.inscricao_estadual} />
+          {/* Campos de contato (Step 3) */}
           <input type="hidden" name="emails" value={JSON.stringify(formData.emails)} />
           <input type="hidden" name="ddd_celular" value={formData.ddd_celular} />
           <input type="hidden" name="numero_celular" value={formData.numero_celular} />
@@ -995,7 +1010,7 @@ export function ParteContrariaFormDialog({
           <input type="hidden" name="numero_residencial" value={formData.numero_residencial} />
           <input type="hidden" name="ddd_comercial" value={formData.ddd_comercial} />
           <input type="hidden" name="numero_comercial" value={formData.numero_comercial} />
-          {/* Endereço (controlado via state) */}
+          {/* Endereço (Step 4) */}
           <input type="hidden" name="cep" value={formData.cep} />
           <input type="hidden" name="logradouro" value={formData.logradouro} />
           <input type="hidden" name="numero" value={formData.numero} />
@@ -1003,6 +1018,8 @@ export function ParteContrariaFormDialog({
           <input type="hidden" name="bairro" value={formData.bairro} />
           <input type="hidden" name="municipio" value={formData.municipio} />
           <input type="hidden" name="estado_sigla" value={formData.estado_sigla} />
+          {/* Observações (Step 5) */}
+          <input type="hidden" name="observacoes" value={formData.observacoes} />
 
           <div>
             {renderCurrentStep()}

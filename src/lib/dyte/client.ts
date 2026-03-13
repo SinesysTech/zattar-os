@@ -122,10 +122,12 @@ export async function getAvailablePresetName(preferred: string[] = ['group_call_
   }
 
   if (presets.length > 0) {
+    console.warn(`[Dyte] Nenhum preset 'group_call' encontrado. Usando primeiro preset disponível: '${presets[0].name}'`);
     return presets[0].name;
   }
 
-  // Last resort: return default name (Dyte creates one by default)
+  // Nenhum preset encontrado — log crítico para debugging
+  console.error('[Dyte] NENHUM preset encontrado na organização! A chamada provavelmente falhará. Crie presets no painel Dyte.');
   return 'group_call_host';
 }
 
@@ -180,8 +182,14 @@ export async function createMeeting(title: string) {
 export async function addParticipant(meetingId: string, name: string, preset_name: string = 'group_call_participant') {
   const resolvedPresetName = await getAvailablePresetName([preset_name]);
 
+  console.log('[Dyte] Preset resolvido', {
+    requested: preset_name,
+    resolved: resolvedPresetName,
+    match: resolvedPresetName === preset_name,
+  });
+
   if (resolvedPresetName !== preset_name) {
-    console.warn(`Dyte preset '${preset_name}' not available; using '${resolvedPresetName}' instead.`);
+    console.warn(`[Dyte] Preset '${preset_name}' não disponível; usando '${resolvedPresetName}' como alternativa.`);
   }
 
   const participantData = {

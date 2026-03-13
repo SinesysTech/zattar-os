@@ -196,7 +196,7 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
     isInitiator: boolean;
     devices?: SelectedDevices;
   }) => {
-    // Store sensitive data in sessionStorage (not URL)
+    // sessionStorage como tentativa imediata (cópia de browsing context auxiliar)
     sessionStorage.setItem("call_auth_token", params.authToken);
     if (params.devices) {
       sessionStorage.setItem("call_selected_devices", JSON.stringify(params.devices));
@@ -226,6 +226,50 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
     sessionStorage.removeItem("call_selected_devices");
 
     callWindowRef.current = callWindow;
+
+    // TAMBÉM enviar via postMessage com retry+ACK (fallback confiável).
+    // O popup já escuta postMessage para AMBOS os fluxos (iniciador e receptor).
+    // Se o sessionStorage funcionou, o segundo setAuthToken será um no-op no React.
+    if (callWindow) {
+      let delivered = false;
+
+      const handleAck = (event: MessageEvent) => {
+        if (event.origin !== window.location.origin) return;
+        if (event.data?.type === "call_auth_token_ack") {
+          delivered = true;
+        }
+      };
+      window.addEventListener("message", handleAck);
+
+      const sendToken = () => {
+        if (!callWindow.closed && !delivered) {
+          callWindow.postMessage(
+            {
+              type: "call_auth_token",
+              authToken: params.authToken,
+              devices: params.devices || undefined,
+            },
+            window.location.origin
+          );
+        }
+      };
+
+      // Enviar imediatamente + retry a cada 500ms por até 15s
+      sendToken();
+      const retryInterval = setInterval(() => {
+        if (delivered || callWindow.closed) {
+          clearInterval(retryInterval);
+          window.removeEventListener("message", handleAck);
+          return;
+        }
+        sendToken();
+      }, 500);
+
+      setTimeout(() => {
+        clearInterval(retryInterval);
+        window.removeEventListener("message", handleAck);
+      }, 15_000);
+    }
   }, []);
 
   // Listen for call_ended messages from the call window
@@ -331,7 +375,11 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
       const sendToken = () => {
         if (!callWindow.closed) {
           callWindow.postMessage(
-            { type: "call_auth_token", authToken: result.authToken },
+            {
+              type: "call_auth_token",
+              authToken: result.authToken,
+              devices: undefined,
+            },
             window.location.origin
           );
         }
