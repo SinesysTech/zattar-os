@@ -44,6 +44,8 @@ interface TipoExpedienteInfo {
 interface ProcessoDetailsTabsProps {
   processoId: number;
   numeroProcesso: string;
+  /** Mapa de usuários pré-carregado (evita fetch duplicado se fornecido) */
+  usuariosMap?: Map<number, UsuarioInfo>;
 }
 
 function formatarData(data: string | null | undefined): string {
@@ -383,45 +385,38 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b text-left">
-            <th className="pb-2 pr-4 font-medium text-muted-foreground text-xs">Situação</th>
-            <th className="pb-2 pr-4 font-medium text-muted-foreground text-xs">Especialidade</th>
-            <th className="pb-2 pr-4 font-medium text-muted-foreground text-xs">Perito</th>
-            <th className="pb-2 pr-4 font-medium text-muted-foreground text-xs">Prazo Entrega</th>
-            <th className="pb-2 font-medium text-muted-foreground text-xs">Laudo</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sorted.map((per) => (
-            <tr key={per.id} className="border-b last:border-0 hover:bg-muted/50 transition-colors">
-              <td className="py-2.5 pr-4">
+    <div className="space-y-2">
+      {sorted.map((per) => (
+        <div
+          key={per.id}
+          className="rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/40"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 space-y-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="text-sm font-medium text-foreground">
+                  {per.especialidade?.descricao || 'Perícia'}
+                </p>
                 <SituacaoPericiaBadge codigo={per.situacaoCodigo} />
-              </td>
-              <td className="py-2.5 pr-4 text-xs">
-                {per.especialidade?.descricao || '--'}
-              </td>
-              <td className="py-2.5 pr-4 text-xs">
-                {per.perito?.nome || '--'}
-              </td>
-              <td className="py-2.5 pr-4 whitespace-nowrap text-xs">
-                {formatarData(per.prazoEntrega)}
-              </td>
-              <td className="py-2.5">
-                {per.laudoJuntado ? (
-                  <SemanticBadge category="status" value="juntado" variantOverride="success" toneOverride="soft" className="text-xs">
-                    Juntado
-                  </SemanticBadge>
-                ) : (
-                  <span className="text-muted-foreground text-xs">Pendente</span>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap text-xs text-muted-foreground">
+                {per.perito?.nome && <span>Perito: {per.perito.nome}</span>}
+                <span>Prazo: {formatarData(per.prazoEntrega)}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 shrink-0">
+              {per.laudoJuntado ? (
+                <SemanticBadge category="status" value="juntado" variantOverride="success" toneOverride="soft" className="text-xs">
+                  Laudo Juntado
+                </SemanticBadge>
+              ) : (
+                <span className="text-muted-foreground text-xs">Laudo Pendente</span>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -431,26 +426,37 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
 export function ProcessoDetailsTabs({
   processoId,
   numeroProcesso,
+  usuariosMap: usuariosMapExterno,
 }: ProcessoDetailsTabsProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(true);
   const [audiencias, setAudiencias] = useState<Audiencia[]>([]);
   const [expedientes, setExpedientes] = useState<Expediente[]>([]);
   const [pericias, setPericias] = useState<Pericia[]>([]);
-  const [usuariosMap, setUsuariosMap] = useState<Map<number, UsuarioInfo>>(new Map());
+  const [usuariosMapLocal, setUsuariosMapLocal] = useState<Map<number, UsuarioInfo>>(new Map());
   const [tiposMap, setTiposMap] = useState<Map<number, TipoExpedienteInfo>>(new Map());
+
+  // Usa mapa externo se fornecido, senão o local
+  const usuariosMap = usuariosMapExterno && usuariosMapExterno.size > 0 ? usuariosMapExterno : usuariosMapLocal;
 
   useEffect(() => {
     let cancelled = false;
+    const temUsuariosExternos = usuariosMapExterno && usuariosMapExterno.size > 0;
 
     async function fetchData() {
       setIsLoading(true);
       try {
-        const [result, usuariosResult, tiposResult] = await Promise.all([
+        const promises: [
+          ReturnType<typeof actionObterDetalhesComplementaresProcesso>,
+          ReturnType<typeof actionListarUsuarios> | Promise<null>,
+          ReturnType<typeof actionListarTiposExpedientes>,
+        ] = [
           actionObterDetalhesComplementaresProcesso(processoId, numeroProcesso),
-          actionListarUsuarios({ ativo: true, limite: 200 }),
+          temUsuariosExternos ? Promise.resolve(null) : actionListarUsuarios({ ativo: true, limite: 200 }),
           actionListarTiposExpedientes({ limite: 200 }),
-        ]);
+        ];
+
+        const [result, usuariosResult, tiposResult] = await Promise.all(promises);
         if (cancelled) return;
 
         if (result.success && result.data) {
@@ -459,7 +465,7 @@ export function ProcessoDetailsTabs({
           setPericias(result.data.pericias as Pericia[]);
         }
 
-        if (usuariosResult.success && usuariosResult.data?.usuarios) {
+        if (!temUsuariosExternos && usuariosResult && 'success' in usuariosResult && usuariosResult.success && usuariosResult.data?.usuarios) {
           const usuarios = usuariosResult.data.usuarios as Array<{
             id: number;
             nomeExibicao?: string;
@@ -467,7 +473,7 @@ export function ProcessoDetailsTabs({
             nome?: string;
             avatarUrl?: string | null;
           }>;
-          setUsuariosMap(
+          setUsuariosMapLocal(
             new Map(
               usuarios.map((usuario) => [
                 usuario.id,
@@ -502,7 +508,7 @@ export function ProcessoDetailsTabs({
 
     fetchData();
     return () => { cancelled = true; };
-  }, [processoId, numeroProcesso]);
+  }, [processoId, numeroProcesso, usuariosMapExterno]);
 
   const totalAudiencias = audiencias.length;
   const totalExpedientes = expedientes.length;

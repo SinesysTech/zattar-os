@@ -41,6 +41,8 @@ interface ProcessoHeaderProps {
   onAtualizarTimeline?: () => void;
   isCapturing?: boolean;
   onVoltar?: () => void;
+  /** Lista de usuários pré-carregada (evita fetch duplicado se fornecida) */
+  usuarios?: Usuario[];
 }
 
 function formatarGrau(grau: string): string {
@@ -147,27 +149,32 @@ export function ProcessoHeader({
   onAtualizarTimeline,
   isCapturing,
   onVoltar,
+  usuarios: usuariosExternos,
 }: ProcessoHeaderProps) {
-  const [usuarios, setUsuarios] = React.useState<Usuario[]>([]);
+  const [usuariosLocais, setUsuariosLocais] = React.useState<Usuario[]>([]);
 
+  // Fetch apenas se não recebeu usuarios via prop
   React.useEffect(() => {
+    if (usuariosExternos && usuariosExternos.length > 0) return;
     const fetchUsuarios = async () => {
       try {
-        const result = await actionListarUsuarios({ ativo: true, limite: 100 });
+        const result = await actionListarUsuarios({ ativo: true, limite: 200 });
         if (result.success && result.data?.usuarios) {
           const usuariosList = (result.data.usuarios as Array<{ id: number; nomeExibicao?: string; nome_exibicao?: string; nome?: string; avatarUrl?: string | null }>).map((u) => ({
             id: u.id,
             nomeExibicao: u.nomeExibicao || u.nome_exibicao || u.nome || `Usuário ${u.id}`,
             avatarUrl: u.avatarUrl ?? null,
           }));
-          setUsuarios(usuariosList);
+          setUsuariosLocais(usuariosList);
         }
       } catch (error) {
         console.error('Erro ao carregar usuários:', error);
       }
     };
     fetchUsuarios();
-  }, []);
+  }, [usuariosExternos]);
+
+  const usuarios = usuariosExternos && usuariosExternos.length > 0 ? usuariosExternos : usuariosLocais;
 
   const trt = processo.trtOrigem || processo.trt;
   const classeJudicial = processo.classeJudicial || '';

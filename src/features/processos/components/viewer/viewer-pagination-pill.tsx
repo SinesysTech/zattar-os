@@ -139,20 +139,6 @@ export function ViewerPaginationPill({
         {/* Divisor vertical */}
         <div className="w-px h-4 bg-border mx-2 shrink-0" aria-hidden="true" />
 
-        {/* Botão zoom in */}
-        <button
-          type="button"
-          onClick={handleZoomIn}
-          disabled={!canZoomIn}
-          aria-label={`Aumentar zoom (atual: ${zoomLevel}%)`}
-          className={cn(
-            'flex items-center justify-center p-1.5 rounded-full transition-opacity',
-            !canZoomIn ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted cursor-pointer'
-          )}
-        >
-          <ZoomIn className="h-4 w-4" />
-        </button>
-
         {/* Botão zoom out */}
         <button
           type="button"
@@ -165,6 +151,25 @@ export function ViewerPaginationPill({
           )}
         >
           <ZoomOut className="h-4 w-4" />
+        </button>
+
+        {/* Indicador de zoom */}
+        <span className="text-xs font-mono text-muted-foreground select-none min-w-8 text-center tabular-nums">
+          {zoomLevel}%
+        </span>
+
+        {/* Botão zoom in */}
+        <button
+          type="button"
+          onClick={handleZoomIn}
+          disabled={!canZoomIn}
+          aria-label={`Aumentar zoom (atual: ${zoomLevel}%)`}
+          className={cn(
+            'flex items-center justify-center p-1.5 rounded-full transition-opacity',
+            !canZoomIn ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted cursor-pointer'
+          )}
+        >
+          <ZoomIn className="h-4 w-4" />
         </button>
       </div>
     </div>
