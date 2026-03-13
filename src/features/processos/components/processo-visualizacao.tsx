@@ -16,6 +16,7 @@ import {
   type TimelineUnificadaMetadata,
 } from '../hooks/use-processo-timeline';
 import { useProcessoWorkspaceAnnotations } from '../hooks/use-processo-workspace-annotations';
+import { actionListarUsuarios } from '@/features/usuarios';
 import { ProcessoHeader } from './processo-header';
 import { ProcessoDetailsTabs } from './processo-details-tabs';
 import { TimelineLoading } from './timeline-loading';
@@ -71,6 +72,47 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Estado da camada de anotações do workspace
   const [isAnnotationsOpen, setIsAnnotationsOpen] = useState(true);
 
+  // Aba mobile controlada (auto-switch para "documento" ao selecionar item)
+  const [mobileTab, setMobileTab] = useState<string>('timeline');
+
+  // Fetch centralizado de usuários (evita chamadas duplicadas em Header e DetailsTabs)
+  const [usuarios, setUsuarios] = useState<
+    Array<{ id: number; nomeExibicao: string; avatarUrl?: string | null }>
+  >([]);
+  const [usuariosMap, setUsuariosMap] = useState<
+    Map<number, { id: number; nomeExibicao: string; avatarUrl?: string | null }>
+  >(new Map());
+
+  useEffect(() => {
+    let cancelled = false;
+    actionListarUsuarios({ ativo: true, limite: 200 })
+      .then((result) => {
+        if (cancelled) return;
+        if (result.success && result.data?.usuarios) {
+          const lista = (
+            result.data.usuarios as Array<{
+              id: number;
+              nomeExibicao?: string;
+              nome_exibicao?: string;
+              nome?: string;
+              avatarUrl?: string | null;
+            }>
+          ).map((u) => ({
+            id: u.id,
+            nomeExibicao:
+              u.nomeExibicao || u.nome_exibicao || u.nome || `Usuário ${u.id}`,
+            avatarUrl: u.avatarUrl ?? null,
+          }));
+          setUsuarios(lista);
+          setUsuariosMap(new Map(lista.map((u) => [u.id, u])));
+        }
+      })
+      .catch((err) => console.error('Erro ao carregar usuários:', err));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   // Auto-selecionar primeiro documento quando timeline carrega
   useEffect(() => {
     if (timeline?.timeline && timeline.timeline.length > 0 && !selectedItem) {
@@ -85,6 +127,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
 
   const handleSelectItem = useCallback((item: TimelineItemUnificado) => {
     setSelectedItem(item);
+    setMobileTab('documento');
   }, []);
 
   const handleVoltar = useCallback(() => {
@@ -104,18 +147,6 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   const handleToggleAnnotations = useCallback(() => {
     setIsAnnotationsOpen((currentState) => !currentState);
   }, []);
-
-  // Dados do processo para o context card da sidebar
-  const processoContext = useMemo(() => {
-    if (!processo) return undefined;
-    const autores = processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '';
-    const reus = processo.nomeParteReOrigem || processo.nomeParteRe || '';
-    return {
-      numeroProcesso: processo.numeroProcesso,
-      partes: reus ? `${autores} vs. ${reus}` : autores,
-      orgao: processo.descricaoOrgaoJulgador || '',
-    };
-  }, [processo]);
 
   // Items tipados para os novos componentes
   const timelineItems = useMemo(
@@ -270,9 +301,9 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
 
   return (
     <div className="flex w-full min-h-[calc(100vh-7rem)] flex-col gap-4 pb-8">
-      <section className="overflow-hidden rounded-2xl border bg-card shadow-sm">
+      <section className="overflow-hidden rounded-2xl border bg-card shadow-sm flex flex-col h-[calc(100vh-9rem)]">
         {!isReadingFocused && (
-          <div className="px-5 py-5 sm:px-6">
+          <div className="px-5 py-5 sm:px-6 shrink-0">
             <ProcessoHeader
               processo={processo}
               instancias={
@@ -289,28 +320,24 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
               onAtualizarTimeline={forceRecapture}
               isCapturing={isCapturing}
               onVoltar={handleVoltar}
+              usuarios={usuarios}
             />
           </div>
         )}
 
         {!isReadingFocused && (
-          <div className="border-t bg-muted/20 px-5 py-4 sm:px-6">
+          <div className="border-t bg-muted/20 px-5 py-4 sm:px-6 shrink-0 overflow-y-auto max-h-[40vh]">
             <ProcessoDetailsTabs
               processoId={processo.id}
               numeroProcesso={processo.numeroProcesso}
+              usuariosMap={usuariosMap}
             />
           </div>
         )}
 
         {(hasTimeline || isCapturing) && (
           <>
-            <div
-              className={`hidden overflow-hidden border-t bg-card md:flex ${
-                isReadingFocused
-                  ? 'h-[calc(100vh-8rem)] max-h-[calc(100vh-8rem)]'
-                  : 'h-[calc(100vh-11rem)] max-h-[calc(100vh-11rem)]'
-              }`}
-            >
+            <div className="hidden overflow-hidden border-t bg-card md:flex flex-1 min-h-0">
               {isCapturing ? (
                 <div className="w-full px-5 py-5 sm:px-6">
                   <TimelineLoading
@@ -331,7 +358,6 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
                         items={timelineItems}
                         selectedItemId={selectedItem?.id ?? null}
                         onSelectItem={handleSelectItem}
-                        processo={processoContext}
                       />
                     </div>
                   </ResizablePanel>
@@ -356,7 +382,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
               )}
             </div>
 
-            <div className="border-t px-4 py-4 md:hidden">
+            <div className="border-t px-4 py-4 md:hidden flex-1 min-h-0 overflow-auto">
               {isCapturing ? (
                 <TimelineLoading
                   message={
@@ -368,7 +394,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
                   embedded
                 />
               ) : (
-                <Tabs defaultValue="timeline">
+                <Tabs value={mobileTab} onValueChange={setMobileTab}>
                   <TabsList className="w-full">
                     <TabsTrigger value="timeline" className="flex-1">
                       Timeline
@@ -383,7 +409,6 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
                         items={timelineItems}
                         selectedItemId={selectedItem?.id ?? null}
                         onSelectItem={handleSelectItem}
-                        processo={processoContext}
                       />
                     </div>
                   </TabsContent>

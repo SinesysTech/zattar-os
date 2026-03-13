@@ -18,7 +18,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { FileText, Loader2 } from 'lucide-react';
+import { FileText, Loader2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import { actionGerarUrlDownload } from '@/features/documentos';
@@ -207,10 +207,34 @@ export function DocumentViewer({
             <Loader2 className="h-6 w-6 animate-spin text-primary" aria-label="Carregando documento" />
           </div>
         ) : error ? (
-          // Estado de erro
+          // Estado de erro com retry
           <div className="flex flex-col items-center justify-center h-full gap-3 p-8 text-center">
             <FileText className="h-12 w-12 text-destructive" aria-hidden="true" />
             <p className="text-sm text-destructive">{error}</p>
+            <button
+              type="button"
+              onClick={() => {
+                if (!item?.backblaze?.key) return;
+                setIsLoading(true);
+                setError(null);
+                actionGerarUrlDownload(item.backblaze.key)
+                  .then((result) => {
+                    if (result.success && result.data) {
+                      setPresignedUrl(result.data.url);
+                    } else {
+                      setError('Erro ao gerar acesso ao documento. Tente novamente.');
+                    }
+                  })
+                  .catch(() => {
+                    setError('Erro ao gerar acesso ao documento. Tente novamente.');
+                  })
+                  .finally(() => setIsLoading(false));
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-accent cursor-pointer"
+            >
+              <RefreshCw className="h-3 w-3" />
+              Tentar novamente
+            </button>
           </div>
         ) : !item ? (
           // Estado vazio — nenhum item selecionado
@@ -218,7 +242,6 @@ export function DocumentViewer({
             <FileText
               className="h-12 w-12 text-muted-foreground/30"
               aria-hidden="true"
-              style={{ width: 48, height: 48 }}
             />
             <p className="text-sm text-muted-foreground">
               Selecione um documento na timeline
@@ -229,7 +252,7 @@ export function DocumentViewer({
           <div
             className={cn(
               'h-full w-full overflow-auto px-3 pb-18 pt-3 transition-[padding] duration-200 sm:px-4 sm:pt-4',
-              annotationsOpen && 'xl:pr-6'
+              annotationsOpen && 'lg:pr-6'
             )}
           >
             <div className="mx-auto flex min-h-full w-full max-w-232 justify-center rounded-2xl bg-background">
@@ -249,7 +272,6 @@ export function DocumentViewer({
             <FileText
               className="h-12 w-12 text-muted-foreground/30"
               aria-hidden="true"
-              style={{ width: 48, height: 48 }}
             />
             <p className="text-sm text-muted-foreground">
               Documento não disponível para visualização

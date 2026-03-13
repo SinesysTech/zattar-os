@@ -81,11 +81,13 @@ export function EventDetailDrawer({
   }
 
   /**
-   * Abre arquivo externo (ex: Google Drive) em nova aba.
+   * Callback para abertura de arquivo externo (Google Drive).
+   * A navegação é tratada pelo `<a href>` do componente de anexos,
+   * mas o callback permite tracking ou ações futuras.
    */
-  function handleOpen(key: string) {
-    // Para Google Drive, key é o fileId — a abertura é tratada diretamente no link do componente
-    void key;
+  function handleOpen(_fileId: string) {
+    // A abertura real é via <a href> no EventAttachmentsList.
+    // Este callback existe para extensibilidade (ex: analytics, logging).
   }
 
   return (

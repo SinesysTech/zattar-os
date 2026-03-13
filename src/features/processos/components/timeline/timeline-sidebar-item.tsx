@@ -124,7 +124,7 @@ export function TimelineSidebarItem({
 
         {/* Coluna direita: badge + data + título */}
         <div className="flex flex-col justify-center pb-1">
-          {/* Linha 1: badge de tipo + data */}
+          {/* Linha 1: badge de tipo + grau + data */}
           <div className="flex items-center gap-2 mb-1">
             <TimelineTypeBadge
               label={meta.badgeLabel}
@@ -132,6 +132,15 @@ export function TimelineSidebarItem({
               textClass={meta.badgeTextClass}
               borderClass={meta.badgeBorderClass}
             />
+            {item.grauOrigem && (
+              <span className="rounded border bg-muted/40 px-1 py-px text-[9px] font-medium uppercase tracking-wider text-muted-foreground shrink-0">
+                {item.grauOrigem === 'primeiro_grau'
+                  ? '1º'
+                  : item.grauOrigem === 'segundo_grau'
+                    ? '2º'
+                    : 'TST'}
+              </span>
+            )}
             <span className="text-xs text-muted-foreground font-mono shrink-0">
               {dataFormatada}
             </span>
