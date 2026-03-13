@@ -78,16 +78,23 @@ export function CallWindowContent({
       }
     }
 
-    // Escutar postMessage para receber token (fluxo de quem aceita a chamada)
+    // Escutar postMessage para receber token (funciona para AMBOS: iniciador e receptor).
+    // Para o iniciador, sessionStorage é a primeira tentativa, mas postMessage é o fallback confiável.
+    // Para o receptor, postMessage é o único mecanismo.
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
       if (event.data?.type === "call_auth_token" && event.data.authToken) {
         setAuthToken(event.data.authToken);
+        // Aceitar devices do postMessage (enviado pelo iniciador via openCallWindow)
+        if (event.data.devices) {
+          setSelectedDevices(event.data.devices);
+        }
         console.log('[Dyte UI]', {
           message: 'authToken recebido via postMessage',
           chamadaId,
           isInitiator,
           tokenPrefix: `${event.data.authToken.slice(0, 12)}...`,
+          hasDevices: !!event.data.devices,
         });
         // Enviar ACK para a janela pai parar o retry
         if (event.source && typeof (event.source as Window).postMessage === "function") {
@@ -232,23 +239,50 @@ export function CallWindowContent({
     }
   }, [authToken, initialized, startCall]);
 
-  // Join the Dyte room after SDK initialization
-  // initMeeting() only configures the client; joinRoom() actually connects to the meeting.
+  // Join the Dyte room after SDK initialization.
+  // initMeeting() only configures the client; joinRoom() actually connects to WebRTC.
+  // CRITICAL: joinRoom() pode "engatar" silenciosamente sem resolver nem rejeitar
+  // (ex: WebSocket bloqueado, preset inválido, problema de rede). Por isso adicionamos
+  // timeout de 20s e handler de sucesso explícito.
   const roomJoinedRef = useRef(false);
   useEffect(() => {
-    if (meeting && initialized && !roomJoinedRef.current) {
-      roomJoinedRef.current = true;
-      logDyteDebug('executando joinRoom');
-      meeting.joinRoom().catch((err: unknown) => {
+    if (!meeting || !initialized || roomJoinedRef.current) return;
+
+    roomJoinedRef.current = true;
+    logDyteDebug('executando joinRoom');
+
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    const joinPromise = meeting.joinRoom();
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(
+        () => reject(new Error('Timeout: não foi possível entrar na sala em 20 segundos. Verifique sua conexão.')),
+        20_000
+      );
+    });
+
+    Promise.race([joinPromise, timeoutPromise])
+      .then(() => {
+        clearTimeout(timeoutId);
+        logDyteDebug('joinRoom completou com sucesso', {
+          joinedParticipants: meeting.participants.joined.size,
+          activeParticipants: meeting.participants.active.size,
+        });
+      })
+      .catch((err: unknown) => {
+        clearTimeout(timeoutId);
         roomJoinedRef.current = false;
         setInitialized(false);
         handleCallError(err);
         setError(err instanceof Error ? err.message : "Erro ao entrar na sala.");
-        logDyteDebug('joinRoom falhou', {
+        logDyteDebug('joinRoom falhou ou timeout', {
           error: err instanceof Error ? err.message : String(err),
         });
       });
-    }
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [meeting, initialized, logDyteDebug]);
 
   useEffect(() => {
