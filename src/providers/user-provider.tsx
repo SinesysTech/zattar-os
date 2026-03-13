@@ -282,7 +282,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         hasFetchedRef.current = false;
         clearAuthState();
 
-        if (event === 'SIGNED_OUT' || event === 'USER_DELETED' || event === 'INITIAL_SESSION') {
+        if (event === 'SIGNED_OUT' || event === 'INITIAL_SESSION') {
           await invalidateSession();
         }
       }
