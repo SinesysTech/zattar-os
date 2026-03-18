@@ -37,6 +37,16 @@ function sanitizeError(error: unknown): string {
 }
 
 function normalizeItemComunicacao(raw: ComunicacaoItemRaw): ComunicacaoItem {
+  const destinatarios = raw.destinatarios || [];
+  const partesAutoras: string[] = [];
+  const partesReus: string[] = [];
+
+  for (const dest of destinatarios) {
+    if (!dest.nome) continue;
+    if (dest.polo === 'A') partesAutoras.push(dest.nome);
+    else if (dest.polo === 'P') partesReus.push(dest.nome);
+  }
+
   return {
     id: raw.id,
     hash: raw.hash,
@@ -60,8 +70,10 @@ function normalizeItemComunicacao(raw: ComunicacaoItemRaw): ComunicacaoItem {
     ativo: raw.ativo,
     status: raw.status || 'P',
     motivoCancelamento: raw.motivo_cancelamento,
-    destinatarios: raw.destinatarios || [],
+    destinatarios,
     destinatarioAdvogados: raw.destinatarioadvogados || [],
+    partesAutoras: partesAutoras.length > 0 ? partesAutoras : undefined,
+    partesReus: partesReus.length > 0 ? partesReus : undefined,
   };
 }
 

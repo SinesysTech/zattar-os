@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { ComunicaCNJSearchForm } from './search-form';
 import { ComunicaCNJResultsTable } from './results-table';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -27,8 +27,9 @@ export function ComunicaCNJConsulta() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<SearchResult | null>(null);
+  const lastFiltersRef = useRef<Record<string, unknown>>({});
 
-  const handleSearch = async (filters: Record<string, unknown>) => {
+  const executeSearch = useCallback(async (filters: Record<string, unknown>) => {
     setIsLoading(true);
     setError(null);
 
@@ -46,7 +47,17 @@ export function ComunicaCNJConsulta() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  const handleSearch = useCallback(async (filters: Record<string, unknown>) => {
+    lastFiltersRef.current = filters;
+    await executeSearch({ ...filters, pagina: 1 });
+  }, [executeSearch]);
+
+  const handlePageChange = useCallback(async (pageIndex: number) => {
+    const pagina = pageIndex + 1; // DataTable usa 0-based, API usa 1-based
+    await executeSearch({ ...lastFiltersRef.current, pagina });
+  }, [executeSearch]);
 
   return (
     <div className="space-y-4">
@@ -65,10 +76,7 @@ export function ComunicaCNJConsulta() {
       {result && (
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">
-            {result.comunicacoes.length} comunicações encontradas
-            {result.paginacao.total > result.paginacao.itensPorPagina && (
-              <span> (página {result.paginacao.pagina} de {result.paginacao.totalPaginas})</span>
-            )}
+            {result.paginacao.total} comunicações encontradas
           </span>
           {result.rateLimit && (
             <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -84,6 +92,14 @@ export function ComunicaCNJConsulta() {
         <ComunicaCNJResultsTable
           comunicacoes={result.comunicacoes}
           isLoading={isLoading}
+          pagination={result.paginacao.totalPaginas > 1 ? {
+            pageIndex: result.paginacao.pagina - 1,
+            pageSize: result.paginacao.itensPorPagina,
+            total: result.paginacao.total,
+            totalPages: result.paginacao.totalPaginas,
+            onPageChange: handlePageChange,
+            onPageSizeChange: () => {},
+          } : undefined}
         />
       )}
 

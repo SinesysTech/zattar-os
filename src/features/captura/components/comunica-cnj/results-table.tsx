@@ -10,6 +10,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
+import { ParteBadge } from '@/components/ui/parte-badge';
 import { ComunicacaoDetalhesDialog } from './detalhes-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
 import {
@@ -24,7 +25,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ComunicacaoItem } from '../../comunica-cnj/domain';
-import { DataShell, DataTableToolbar, DataTable, DataTableColumnHeader } from '@/components/shared/data-shell';
+import { DataShell, DataTableToolbar, DataTable, DataTableColumnHeader, DataPagination } from '@/components/shared/data-shell';
 import type { ColumnDef } from '@tanstack/react-table';
 
 /**
@@ -166,6 +167,14 @@ function ResultActionButtons({ comunicacao, onViewDetails, onViewPdf }: ResultAc
 interface ComunicaCNJResultsTableProps {
   comunicacoes: ComunicacaoItem[];
   isLoading: boolean;
+  pagination?: {
+    pageIndex: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
+    onPageChange: (pageIndex: number) => void;
+    onPageSizeChange: (pageSize: number) => void;
+  };
 }
 
 /**
@@ -175,6 +184,7 @@ interface ComunicaCNJResultsTableProps {
 export function ComunicaCNJResultsTable({
   comunicacoes,
   isLoading,
+  pagination,
 }: ComunicaCNJResultsTableProps) {
   const [selectedComunicacao, setSelectedComunicacao] = useState<ComunicacaoItem | null>(null);
   const [pdfViewerOpen, setPdfViewerOpen] = useState(false);
@@ -205,18 +215,6 @@ export function ComunicaCNJResultsTable({
       enableSorting: true,
     },
     {
-      accessorKey: 'siglaTribunal',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Tribunal" />
-      ),
-      cell: ({ row }) => (
-        <TribunalBadge codigo={row.getValue('siglaTribunal')} className="text-xs" />
-      ),
-      size: 80,
-      meta: { align: 'left' },
-      enableSorting: true,
-    },
-    {
       accessorKey: 'numeroProcesso',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Processo" />
@@ -224,17 +222,34 @@ export function ComunicaCNJResultsTable({
       cell: ({ row }) => {
         const c = row.original;
         return (
-          <div className="flex flex-col gap-0.5 font-mono text-xs">
-            <span className="font-medium">
+          <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)]">
+            {/* Tribunal */}
+            <TribunalBadge codigo={c.siglaTribunal} className="text-xs" />
+
+            {/* Número do processo */}
+            <span className="text-xs font-mono font-medium text-foreground" title={c.numeroProcessoComMascara}>
               {c.numeroProcessoComMascara}
             </span>
-            <span className="text-muted-foreground text-[10px] truncate max-w-45" title={c.nomeClasse || undefined}>
-              {c.nomeClasse}
-            </span>
+
+            {/* Partes */}
+            <div className="flex flex-col gap-0.5">
+              <ParteBadge
+                polo="ATIVO"
+                className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
+              >
+                {c.partesAutoras?.join(', ') || '-'}
+              </ParteBadge>
+              <ParteBadge
+                polo="PASSIVO"
+                className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
+              >
+                {c.partesReus?.join(', ') || '-'}
+              </ParteBadge>
+            </div>
           </div>
         );
       },
-      size: 200,
+      size: 300,
       meta: { align: 'left' },
       enableSorting: true,
     },
@@ -277,62 +292,6 @@ export function ComunicaCNJResultsTable({
       meta: { align: 'left' },
     },
     {
-      id: 'partesAutoras',
-      accessorFn: (row) => row.partesAutoras?.join(', ') || '',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Autor(es)" />
-      ),
-      cell: ({ row }) => {
-        const partes = row.original.partesAutoras;
-        if (!partes || partes.length === 0) {
-          return <span className="text-xs text-muted-foreground">-</span>;
-        }
-        const text = partes.join(', ');
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="text-xs line-clamp-2 cursor-help">{text}</span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="max-w-xs">{text}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        );
-      },
-      size: 200,
-      meta: { align: 'left' },
-    },
-    {
-      id: 'partesReus',
-      accessorFn: (row) => row.partesReus?.join(', ') || '',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Réu(s)" />
-      ),
-      cell: ({ row }) => {
-        const partes = row.original.partesReus;
-        if (!partes || partes.length === 0) {
-          return <span className="text-xs text-muted-foreground">-</span>;
-        }
-        const text = partes.join(', ');
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="text-xs line-clamp-2 cursor-help">{text}</span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p className="max-w-xs">{text}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        );
-      },
-      size: 200,
-      meta: { align: 'left' },
-    },
-    {
       id: 'actions',
       header: 'Ações',
       cell: ({ row }) => (
@@ -355,6 +314,16 @@ export function ComunicaCNJResultsTable({
             onExport={() => {/* handled by toolbar default with table ref */}}
           />
         }
+        footer={pagination && (
+          <DataPagination
+            pageIndex={pagination.pageIndex}
+            pageSize={pagination.pageSize}
+            total={pagination.total}
+            totalPages={pagination.totalPages}
+            onPageChange={pagination.onPageChange}
+            onPageSizeChange={pagination.onPageSizeChange}
+          />
+        )}
         className="h-full"
       >
         <DataTable
@@ -362,6 +331,7 @@ export function ComunicaCNJResultsTable({
           columns={columns}
           isLoading={isLoading}
           emptyMessage="Nenhuma comunicação encontrada"
+          pagination={pagination}
         />
       </DataShell>
 
