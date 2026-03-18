@@ -16,6 +16,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
+import { ParteBadge } from '@/components/ui/parte-badge';
 import { ComunicacaoDetalhesDialog } from './detalhes-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
 import {
@@ -267,36 +268,43 @@ export function ComunicaCNJCapturadas() {
       enableSorting: true,
     },
     {
-      accessorKey: 'siglaTribunal',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Tribunal" />
-      ),
-      cell: ({ row }) => (
-        <TribunalBadge codigo={row.getValue('siglaTribunal')} className="text-xs" />
-      ),
-      size: 80,
-      meta: { align: 'left' },
-      enableSorting: true,
-    },
-    {
       accessorKey: 'numeroProcesso',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Processo" />
       ),
       cell: ({ row }) => {
         const c = row.original;
+        const partesAutoras = c.destinatarios?.filter((d) => d.polo === 'A').map((d) => d.nome) || [];
+        const partesReus = c.destinatarios?.filter((d) => d.polo === 'P').map((d) => d.nome) || [];
         return (
-          <div className="flex flex-col gap-0.5 font-mono text-xs">
-            <span className="font-medium">
+          <div className="flex flex-col gap-1.5 items-start py-2 max-w-[min(92vw,20rem)]">
+            {/* Tribunal */}
+            <TribunalBadge codigo={c.siglaTribunal} className="text-xs" />
+
+            {/* Número do processo */}
+            <span className="text-xs font-mono font-medium text-foreground" title={c.numeroProcessoMascara || c.numeroProcesso}>
               {c.numeroProcessoMascara || c.numeroProcesso}
             </span>
-            <span className="text-muted-foreground text-[10px] truncate max-w-45" title={c.nomeClasse || undefined}>
-              {c.nomeClasse}
-            </span>
+
+            {/* Partes */}
+            <div className="flex flex-col gap-0.5">
+              <ParteBadge
+                polo="ATIVO"
+                className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
+              >
+                {partesAutoras.join(', ') || '-'}
+              </ParteBadge>
+              <ParteBadge
+                polo="PASSIVO"
+                className="flex whitespace-normal wrap-break-word text-left font-normal text-xs"
+              >
+                {partesReus.join(', ') || '-'}
+              </ParteBadge>
+            </div>
           </div>
         );
       },
-      size: 200,
+      size: 300,
       meta: { align: 'left' },
       enableSorting: true,
     },
