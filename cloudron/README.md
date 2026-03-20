@@ -1,13 +1,31 @@
 # Deploy no Cloudron
 
-Guia para deploy do Zattar OS na plataforma [Cloudron](https://www.cloudron.io/).
+Guia completo para build e deploy do Zattar OS na plataforma [Cloudron](https://www.cloudron.io/).
+
+## Arquivos do Projeto
+
+```
+projeto/
+  CloudronManifest.json         -> Manifesto do app (addons, portas, metadata)
+  Dockerfile.cloudron           -> Dockerfile multi-stage (deps -> build -> runtime)
+  .env.production               -> Variaveis NEXT_PUBLIC_* (lidas pelo Next.js no build)
+  .env.local                    -> Variaveis de runtime (secrets, API keys)
+  scripts/
+    cloudron-deploy.sh          -> Deploy via Build Service remoto do Cloudron
+    cloudron-deploy-local.sh    -> Deploy via Docker build local + push para registry
+  cloudron/
+    start.sh                    -> Script de inicializacao (mapeia env vars, inicia Node)
+    supervisor/
+      node.conf                 -> Config do supervisor (legado, nao utilizado)
+    README.md                   -> Este arquivo
+```
 
 ## Pre-requisitos
 
 - Servidor com Cloudron instalado (v7.0+)
 - [Cloudron CLI](https://docs.cloudron.io/packaging/cli/) instalado: `npm install -g cloudron`
-- Docker instalado localmente (para build da imagem)
-- Acesso a um Docker Registry (Docker Hub, Cloudron Registry, ou privado)
+- Acesso ao Docker Registry do Cloudron (`registry.sinesys.online`)
+- Docker instalado localmente (apenas para deploy local)
 
 ## Addons Utilizados
 
@@ -19,216 +37,243 @@ Guia para deploy do Zattar OS na plataforma [Cloudron](https://www.cloudron.io/)
 
 > O `start.sh` mapeia automaticamente as variaveis do Cloudron para o formato que o app espera.
 
-## Build e Deploy
+---
 
-### 1. Login no Cloudron CLI
+## Scripts de Deploy
 
-```bash
-cloudron login https://my.seudominio.com
-```
+### 1. Deploy Remoto — `cloudron-deploy.sh`
 
-### 2. Login no Docker Registry
+Usa o **Build Service do Cloudron** para buildar a imagem remotamente. O build roda no servidor, sem necessidade de Docker local.
 
-```bash
-# Docker Hub
-docker login
-
-# Ou registry privado do Cloudron
-docker login registry.seudominio.com
-```
-
-### 3. Build da Imagem
+**Fluxo:** Build remoto -> Update -> Env Set
 
 ```bash
-# Build com variaveis NEXT_PUBLIC_* (obrigatorias no build time)
-docker build -t seuusuario/zattar-os:1.0.0 \
-  -f Dockerfile.cloudron \
-  --build-arg NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co \
-  --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=eyJ... \
-  .
+# Deploy completo (build + update + env set)
+./scripts/cloudron-deploy.sh
+
+# Pular o build (apenas update + env set)
+./scripts/cloudron-deploy.sh --skip-build
+
+# Apenas setar variaveis de ambiente
+./scripts/cloudron-deploy.sh --env-only
+
+# Build sem cache
+./scripts/cloudron-deploy.sh --no-cache
 ```
 
-### 4. Push para o Registry
+**Etapas executadas:**
+
+| Step | Comando | Descricao |
+|---|---|---|
+| 1/3 | `cloudron build build -f Dockerfile.cloudron` | Build remoto via Build Service |
+| 2/3 | `cloudron update` | Atualiza o app com a nova imagem |
+| 3/3 | `cloudron env set ...` | Seta variaveis de runtime do `.env.local` |
+
+**Configuracao do Build Service (uma vez):**
 
 ```bash
-docker push seuusuario/zattar-os:1.0.0
+cloudron build --set-build-service 'https://builder.sinesys.online' --build-service-token <TOKEN>
 ```
 
-### 5. Instalar no Cloudron
+---
+
+### 2. Deploy Local — `cloudron-deploy-local.sh`
+
+Faz o **Docker build localmente** e envia a imagem para o registry do Cloudron. Alternativa quando o Build Service remoto nao tem memoria suficiente.
+
+**Fluxo:** Docker build local -> Docker push -> Update -> Env Set
 
 ```bash
-cloudron install --image seuusuario/zattar-os:1.0.0
+# Deploy completo (build + push + update + env set)
+./scripts/cloudron-deploy-local.sh
+
+# Pular o build (apenas update + env set)
+./scripts/cloudron-deploy-local.sh --skip-build
+
+# Apenas setar variaveis de ambiente
+./scripts/cloudron-deploy-local.sh --env-only
+
+# Build sem cache Docker
+./scripts/cloudron-deploy-local.sh --no-cache
 ```
 
-O CLI vai pedir o subdominio (ex: `app.seudominio.com`).
+**Etapas executadas:**
 
-### 6. Configurar Variaveis de Ambiente
+| Step | Comando | Descricao |
+|---|---|---|
+| 1/4 | `docker build --platform linux/amd64 -f Dockerfile.cloudron -t <IMAGE> .` | Build local (amd64) |
+| 2/4 | `docker push <IMAGE>` | Push para `registry.sinesys.online` |
+| 3/4 | `cloudron update --image <IMAGE>` | Atualiza o app com a nova imagem |
+| 4/4 | `cloudron env set ...` | Seta variaveis de runtime do `.env.local` |
 
-Apos a instalacao, configure as variaveis via Dashboard do Cloudron ou CLI:
+**Tag da imagem:** `registry.sinesys.online/zattar-os:<YYYYMMDD-HHMMSS>-<git-sha>`
+
+**Requisitos de memoria Docker:** Minimo 10 GB RAM para o Docker Desktop (recomendado 12 GB+). Ajuste em Docker Desktop > Settings > Resources > Memory.
+
+**Login no registry (uma vez):**
 
 ```bash
-cloudron env set \
-  SUPABASE_SECRET_KEY=sua_secret_key \
-  SERVICE_API_KEY=sua_api_key \
-  CRON_SECRET=seu_cron_secret \
-  OPENAI_API_KEY=sk-... \
-  AI_GATEWAY_API_KEY=sua_chave \
-  B2_ENDPOINT=https://s3.us-east-005.backblazeb2.com \
-  B2_REGION=us-east-005 \
-  B2_BUCKET=seu-bucket \
-  B2_KEY_ID=seu_key_id \
-  B2_APPLICATION_KEY=sua_key
+docker login registry.sinesys.online
 ```
 
-> **Nota:** `REDIS_URL`, `REDIS_PASSWORD` e variaveis de email **NAO** precisam ser definidas
-> manualmente — sao fornecidas automaticamente pelos addons do Cloudron.
+---
 
-## Atualizar a Aplicacao
+## Dockerfile.cloudron — Multi-Stage Build
 
-```bash
-# Build nova versao
-docker build -t seuusuario/zattar-os:1.1.0 -f Dockerfile.cloudron \
-  --build-arg NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co \
-  --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=eyJ... \
-  .
+O build usa 3 stages para otimizar o tamanho da imagem:
 
-# Push
-docker push seuusuario/zattar-os:1.1.0
+### Stage 1: `deps` (node:22-alpine)
+- Instala dependencias com `npm ci --legacy-peer-deps --ignore-scripts`
+- Pula downloads de Playwright e telemetria
 
-# Update no Cloudron
-cloudron update --image seuusuario/zattar-os:1.1.0
+### Stage 2: `builder` (node:22-alpine)
+- Copia `node_modules` do stage anterior
+- Copia o codigo fonte (incluindo `.env.production`)
+- Copia o worker do PDF.js para `public/pdfjs/`
+- Executa `npm run build:ci` (Next.js build com 6 GB de heap, sem PWA)
+
+### Stage 3: `runner` (cloudron/base:4.2.0)
+- Atualiza Node.js 18 -> 22 (cloudron/base vem com Node 18)
+- Copia apenas o output standalone do Next.js (build otimizado)
+- Cria symlink `.next/cache` -> `/app/data/cache/next` (cache persistente)
+- Copia `cloudron/start.sh` como entrypoint
+
+**Comando de build:**
+```
+npm run build:ci
+  = cross-env NODE_OPTIONS=--max-old-space-size=6144 DISABLE_PWA=true NEXT_TELEMETRY_DISABLED=1 next build --webpack
 ```
 
-## Usando o Build Service do Cloudron
+---
 
-Se preferir buildar remotamente (sem Docker local):
+## Variaveis de Ambiente
 
-```bash
-# Configurar build service uma vez
-cloudron build --set-build-service
+### Build Time (`.env.production`)
 
-# Build remoto + install
-cloudron build --image seuusuario/zattar-os:1.0.0
-cloudron install --image seuusuario/zattar-os:1.0.0
-```
+Lidas automaticamente pelo Next.js durante o build. Sao inlined no JavaScript client-side.
 
-## Usando Registry Privado do Cloudron
+| Variavel | Descricao |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` | Chave publica do Supabase (protegida por RLS) |
 
-Para usar o registry privado integrado ao Cloudron (em vez do Docker Hub):
+### Runtime (`.env.local` -> `cloudron env set`)
 
-1. Instale o app **Docker Registry** no Cloudron via App Store
-2. Configure credenciais em `/app/data/docker.json`:
+Setadas via `cloudron env set` pelos scripts de deploy. Sao secrets e **nao** devem ser commitadas.
+
+Os scripts filtram automaticamente:
+- **Variaveis de addon** (`REDIS_URL`, `REDIS_PASSWORD`): fornecidas pelo Cloudron
+- **Variaveis de build** (`NEXT_PUBLIC_*`): ja inlined no build
+- **Variaveis irrelevantes** (`PUPPETEER_SKIP_DOWNLOAD`, `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD`)
+
+### Automaticas (Cloudron Addons)
+
+Mapeadas pelo `start.sh` no startup:
+
+| Addon Cloudron | Variavel App |
+|---|---|
+| `CLOUDRON_REDIS_URL` | `REDIS_URL` |
+| `CLOUDRON_REDIS_PASSWORD` | `REDIS_PASSWORD` |
+| `CLOUDRON_MAIL_SMTP_SERVER` | `SYSTEM_SMTP_HOST` |
+| `CLOUDRON_MAIL_SMTP_PORT` | `SYSTEM_SMTP_PORT` |
+| `CLOUDRON_MAIL_SMTP_USERNAME` | `SYSTEM_SMTP_USER` |
+| `CLOUDRON_MAIL_SMTP_PASSWORD` | `SYSTEM_SMTP_PASS` |
+| `CLOUDRON_MAIL_FROM` | `SYSTEM_MAIL_FROM` |
+| `CLOUDRON_MAIL_FROM_DISPLAY_NAME` | `SYSTEM_MAIL_DISPLAY_NAME` |
+
+---
+
+## CloudronManifest.json
 
 ```json
 {
-  "registry.seudominio.com": {
-    "username": "seu_usuario",
-    "password": "sua_senha"
+  "id": "io.zattar.os",
+  "title": "Zattar OS",
+  "version": "1.0.0",
+  "healthCheckPath": "/api/health",
+  "httpPort": 3000,
+  "memoryLimit": 2048,
+  "optionalSso": true,
+  "addons": {
+    "localstorage": {},
+    "redis": {},
+    "sendmail": { "supportsDisplayName": true }
   }
 }
 ```
 
-3. Use o registry nas tags:
+---
 
-```bash
-docker build -t registry.seudominio.com/zattar-os:1.0.0 -f Dockerfile.cloudron .
-docker push registry.seudominio.com/zattar-os:1.0.0
-cloudron install --image registry.seudominio.com/zattar-os:1.0.0
-```
+## start.sh — Script de Inicializacao
+
+O `start.sh` executa no container Cloudron a cada startup:
+
+1. **Mapeia variaveis de addon** (Redis, Email) para o formato da aplicacao
+2. **Configura runtime** (`NODE_ENV=production`, `HOSTNAME=0.0.0.0`, `PORT=3000`)
+3. **Cria diretorios** em `/app/data/` (cache, uploads, logs)
+4. **Calcula heap do Node.js** baseado no `CLOUDRON_MEMORY_LIMIT` (container - 256 MB de overhead)
+5. **Inicia o servidor** com `exec node /app/code/server.js` (PID 1, sem supervisor)
+
+> O Cloudron gerencia restart do container automaticamente. Supervisor nao eh necessario.
+
+---
 
 ## Storage Persistente (/app/data)
 
-O diretorio `/app/data` persiste entre updates e esta incluido nos backups automaticos:
+O diretorio `/app/data` eh o unico writable e persiste entre updates e backups:
 
 ```
 /app/data/
-  cache/       -> Cache do Next.js (symlinked de .next/cache)
-  uploads/     -> Uploads temporarios
-  logs/        -> Logs da aplicacao
+  cache/next/    -> Cache do Next.js (symlinked de .next/cache)
+  uploads/       -> Uploads temporarios
+  logs/          -> Logs da aplicacao
 ```
 
-## Email no Cloudron
+> `/app/code` eh READ-ONLY em runtime.
 
-O Cloudron tem um servidor de email integrado completo:
+---
 
-- **Envio (sendmail addon):** O app usa o SMTP relay do Cloudron automaticamente
-- **Caixas de email:** Configure em Cloudron Dashboard > Email > Mailboxes
-- **DNS:** O Cloudron configura MX, SPF, DKIM e DMARC automaticamente
-- **Webmail:** Instale Roundcube ou SOGo da App Store para acesso web
-
-### Criar Email para o Escritorio
-
-1. Acesse o Dashboard do Cloudron
-2. Va em **Email** > **Mailboxes**
-3. Crie caixas como `contato@seudominio.com`, `juridico@seudominio.com`
-4. Configure alias e redirecionamentos conforme necessario
-
-> As credenciais de email per-usuario do app (tabela `credenciais_email`) podem
-> apontar para o servidor de email do proprio Cloudron.
-
-## Browser Service
-
-O servico de browser (Firefox para scraping PJE) roda como container separado.
-No Cloudron, configure como app customizado ou use um servico externo:
+## Login no Cloudron CLI
 
 ```bash
-# Variavel para conectar ao browser service
-cloudron env set \
-  BROWSER_WS_ENDPOINT=ws://browser-service:3000 \
-  BROWSER_SERVICE_URL=http://browser-service:3000 \
-  BROWSER_SERVICE_TOKEN=seu_token
+cloudron login https://my.sinesys.online
 ```
 
-## Dashboard do Cloudron
+---
 
-O Cloudron oferece uma dashboard completa com:
+## Comandos Uteis
 
-- **Monitoring:** CPU, memoria, disco, rede por app
-- **Logs:** Logs centralizados de todas as apps
-- **Backups:** Backup automatico (local, S3, Backblaze B2)
-- **Email:** Servidor de email completo com webmail
-- **Users:** Gerenciamento de usuarios com LDAP/SSO
-- **DNS:** Gerenciamento automatico de DNS
-- **SSL:** Certificados Let's Encrypt automaticos
-- **Updates:** Atualizacao de apps com um clique
-
-## Troubleshooting
-
-### App nao inicia
 ```bash
-cloudron logs -f                    # Ver logs em tempo real
-cloudron exec -- cat /tmp/supervisord.log  # Logs do supervisor
-```
+# Ver logs em tempo real
+cloudron logs -f
 
-### Verificar Redis
-```bash
+# Verificar variaveis de ambiente
+cloudron exec -- env | grep -E 'CLOUDRON_|REDIS_|MAIL_'
+
+# Restart da app
+cloudron restart
+
+# Verificar Redis
 cloudron exec -- node -e "
   const Redis = require('ioredis');
   const r = new Redis(process.env.CLOUDRON_REDIS_URL, { password: process.env.CLOUDRON_REDIS_PASSWORD });
   r.ping().then(p => { console.log('Redis:', p); process.exit(0); });
 "
+
+# Ver status da app
+cloudron status
 ```
 
-### Verificar variaveis de ambiente
-```bash
-cloudron exec -- env | grep -E 'CLOUDRON_|REDIS_|MAIL_'
-```
+---
 
-### Restart da app
-```bash
-cloudron restart
-```
-
-## Estrutura de Arquivos
+## Fluxo Completo (Resumo)
 
 ```
-projeto/
-  CloudronManifest.json    -> Manifesto do app (addons, portas, metadata)
-  Dockerfile.cloudron      -> Dockerfile multi-stage para Cloudron
-  icon.png                 -> Icone do app (512x512)
-  cloudron/
-    start.sh               -> Script de inicializacao (mapeia env vars)
-    supervisor/
-      node.conf            -> Config do supervisor para processo Node.js
-    README.md              -> Este arquivo
+1. Editar codigo
+2. Garantir .env.production com NEXT_PUBLIC_* corretas
+3. Garantir .env.local com todas as variaveis de runtime
+4. Escolher metodo de deploy:
+   a) Remoto:  ./scripts/cloudron-deploy.sh
+   b) Local:   ./scripts/cloudron-deploy-local.sh
+5. Acompanhar: cloudron logs -f
 ```
