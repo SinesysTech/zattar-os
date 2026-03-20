@@ -3,9 +3,8 @@
 import * as React from "react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Download, ArrowLeft, FileText, Eye, Share2 } from "lucide-react";
+import { Download, ArrowLeft, FileText, Eye, Share2, CheckCircle, BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCSPNonce } from "@/hooks/use-csp-nonce";
 
 export interface SuccessStepProps {
   documento: {
@@ -22,7 +21,6 @@ export function SuccessStep({
   onReturnToDashboard,
 }: SuccessStepProps) {
   const [isDownloading, setIsDownloading] = useState(false);
-  const nonce = useCSPNonce();
 
   const handleDownload = async () => {
     setIsDownloading(true);
@@ -32,16 +30,27 @@ export function SuccessStep({
         throw new Error("URL do PDF não disponível");
       }
 
-      // Abrir PDF em nova aba
-      window.open(documento.pdf_final_url, "_blank");
+      // Download efetivo via fetch + blob
+      const response = await fetch(documento.pdf_final_url);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${documento.titulo || "documento-assinado"}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
 
       onDownload?.();
-      toast.success("Documento aberto em nova aba");
+      toast.success("Download iniciado");
     } catch (error) {
       console.error("Erro ao baixar documento:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Erro ao baixar documento"
-      );
+      // Fallback: abrir em nova aba
+      if (documento.pdf_final_url) {
+        window.open(documento.pdf_final_url, "_blank");
+      }
+      toast.error("Erro no download. Abrindo em nova aba.");
     } finally {
       setIsDownloading(false);
     }
@@ -60,74 +69,58 @@ export function SuccessStep({
           title: documento.titulo || "Documento Assinado",
           url: documento.pdf_final_url,
         });
-      } catch (error) {
-        // Usuário cancelou ou erro
-        console.warn("Erro ao compartilhar:", error);
+      } catch {
+        // Usuário cancelou
       }
-    } else {
-      // Fallback: copiar link
-      if (documento.pdf_final_url) {
-        await navigator.clipboard.writeText(documento.pdf_final_url);
-        toast.success("Link copiado para a área de transferência");
-      }
+    } else if (documento.pdf_final_url) {
+      await navigator.clipboard.writeText(documento.pdf_final_url);
+      toast.success("Link copiado para a área de transferência");
     }
   };
 
   const fileName = documento.titulo || "Documento Assinado";
 
   return (
-    <div className="max-w- mx-auto space-y-8 animate-in fade-in zoom-in duration-500">
+    <div className="max-w-md mx-auto flex flex-col h-full justify-center gap-5 sm:gap-6 animate-in fade-in duration-500 px-1">
       {/* Seção de Sucesso */}
-      <div className="text-center space-y-4">
-        {/* Ícone Animado */}
-        <div className="relative flex items-center justify-center mx-auto">
-          <div className="absolute inset-0 w-20 h-20 bg-green-500/20 rounded-full animate-ping opacity-75 mx-auto" />
-          <div className="relative flex items-center justify-center w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full text-green-600 dark:text-green-400">
-            <span
-              className="material-symbols-outlined text-5xl font-semibold"
-              aria-hidden="true"
-            >
-              check
-            </span>
+      <div className="text-center space-y-3">
+        {/* Ícone Animado - ping para após 2 iterações */}
+        <div className="relative flex items-center justify-center mx-auto w-16 h-16 sm:w-20 sm:h-20">
+          <div className="absolute inset-0 bg-green-500/20 rounded-full animate-ping repeat-2" />
+          <div className="relative flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-green-100 dark:bg-green-900/30 rounded-full text-green-600 dark:text-green-400">
+            <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10" aria-hidden="true" />
           </div>
         </div>
 
-        {/* Título */}
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
           Assinatura Confirmada!
         </h1>
 
-        {/* Descrição */}
-        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-          Seu documento foi assinado com sucesso e está seguro. Uma cópia foi
-          enviada para seu e-mail.
+        <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto">
+          Documento assinado com sucesso e protegido. Uma cópia foi enviada para
+          seu e-mail.
         </p>
       </div>
 
       {/* Card do Documento */}
-      <div className="bg-card rounded-xl border border-border shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+      <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
         {/* Thumbnail PDF */}
-        <div className="relative h-32 bg-linear-to-br from-muted to-muted/80 flex items-center justify-center">
+        <div className="relative h-24 sm:h-32 bg-linear-to-br from-muted to-muted/80 flex items-center justify-center">
           <div className="absolute inset-0 bg-linear-to-t from-black/10 to-transparent" />
-          <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-red-500/10 rounded-lg text-red-500">
-            <FileText className="w-8 h-8" aria-hidden="true" />
+          <div className="relative z-10 flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-red-500/10 rounded-lg text-red-500">
+            <FileText className="w-6 h-6 sm:w-8 sm:h-8" aria-hidden="true" />
           </div>
           {/* Badge de Status */}
-          <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 text-xs font-medium rounded-full">
-            <span
-              className="material-symbols-outlined text-sm"
-              aria-hidden="true"
-            >
-              verified
-            </span>
+          <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 text-xs font-medium rounded-full">
+            <BadgeCheck className="h-3.5 w-3.5" aria-hidden="true" />
             Assinado
           </div>
         </div>
 
         {/* Informações do Documento */}
-        <div className="p-4 space-y-3">
+        <div className="p-3 sm:p-4 space-y-2">
           <div>
-            <h3 className="font-medium text-foreground truncate">
+            <h3 className="font-medium text-sm text-foreground truncate">
               {fileName}
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -139,7 +132,7 @@ export function SuccessStep({
           <div className="flex items-center gap-2 text-xs">
             <button
               onClick={handleView}
-              className="flex items-center gap-1 text-primary hover:text-primary/80 transition-colors"
+              className="flex items-center gap-1 text-primary hover:text-primary/80 transition-colors cursor-pointer"
             >
               <Eye className="w-3.5 h-3.5" aria-hidden="true" />
               Visualizar
@@ -147,35 +140,28 @@ export function SuccessStep({
             <span className="text-border">|</span>
             <button
               onClick={handleShare}
-              className="flex items-center gap-1 text-primary hover:text-primary/80 transition-colors"
+              className="flex items-center gap-1 text-primary hover:text-primary/80 transition-colors cursor-pointer"
             >
               <Share2 className="w-3.5 h-3.5" aria-hidden="true" />
               Compartilhar
             </button>
           </div>
         </div>
-
-        {/* Barra de Progresso Animada */}
-        <div className="h-1 bg-muted">
-          <div
-            className="h-full bg-green-500 animate-[loading_1s_ease-out_forwards] w-full"
-          />
-        </div>
       </div>
 
       {/* Botões de Ação */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         <Button
           type="button"
           onClick={handleDownload}
           disabled={isDownloading || !documento.pdf_final_url}
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] transition-all group"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] transition-all min-h-11"
         >
           <Download
-            className="w-4 h-4 mr-2 group-hover:-translate-y-0.5 transition-transform"
+            className="w-4 h-4 mr-2"
             aria-hidden="true"
           />
-          {isDownloading ? "Abrindo..." : "Baixar PDF Assinado"}
+          {isDownloading ? "Baixando..." : "Baixar PDF Assinado"}
         </Button>
 
         {onReturnToDashboard && (
@@ -183,7 +169,7 @@ export function SuccessStep({
             type="button"
             variant="outline"
             onClick={onReturnToDashboard}
-            className="w-full border-border text-foreground hover:bg-muted"
+            className="w-full border-border text-foreground hover:bg-muted min-h-11"
           >
             <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" />
             Voltar ao Início
@@ -191,26 +177,12 @@ export function SuccessStep({
         )}
       </div>
 
-      {/* Footer */}
-      <footer className="text-xs text-muted-foreground text-center py-6 border-t border-border">
-        <p>
-          Este documento foi assinado eletronicamente em conformidade com a MP
-          2.200-2/2001.
-        </p>
-        <p className="mt-2">&copy; {new Date().getFullYear()} Zattar Advogados. Todos os direitos reservados.</p>
-      </footer>
-
-      {/* CSS para animação loading */}
-      <style nonce={nonce} dangerouslySetInnerHTML={{__html: `
-        @keyframes loading {
-          from {
-            width: 0%;
-          }
-          to {
-            width: 100%;
-          }
-        }
-      `}} />
+      {/* Footer Legal */}
+      <p className="text-xs text-muted-foreground text-center pb-2">
+        Assinado eletronicamente conforme MP 2.200-2/2001.
+        <br />
+        &copy; {new Date().getFullYear()} Zattar Advogados.
+      </p>
     </div>
   );
 }

@@ -16,10 +16,12 @@ export interface CanvasAssinaturaRef {
 interface CanvasAssinaturaProps {
   /** Hide the internal clear button when the parent provides its own */
   hideClearButton?: boolean;
+  /** Callback fired when a stroke ends (useful for updating empty state) */
+  onStrokeEnd?: () => void;
 }
 
 const CanvasAssinatura = forwardRef<CanvasAssinaturaRef, CanvasAssinaturaProps>(
-  ({ hideClearButton = false }, ref) => {
+  ({ hideClearButton = false, onStrokeEnd }, ref) => {
   const signatureRef = useRef<SignatureCanvas>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [canvasWidth, setCanvasWidth] = useState(600);
@@ -37,7 +39,7 @@ const CanvasAssinatura = forwardRef<CanvasAssinaturaRef, CanvasAssinaturaProps>(
 
       const width = containerRef.current.offsetWidth;
       const computedWidth = Math.min(width, 600);
-      const computedHeight = window.innerWidth < 768 ? 200 : 250;
+      const computedHeight = window.innerWidth < 768 ? 150 : 200;
 
       setCanvasWidth(computedWidth);
       setCanvasHeight(computedHeight);
@@ -58,7 +60,6 @@ const CanvasAssinatura = forwardRef<CanvasAssinaturaRef, CanvasAssinaturaProps>(
 
   const updatePointMetrics = () => {
     const data = signatureRef.current?.toData?.() ?? [];
-    // toData() returns Point[][] (array of strokes, each stroke is array of points)
     const totalPoints = data.reduce((acc: number, stroke: Array<{ x: number; y: number }>) => {
       return acc + stroke.length;
     }, 0);
@@ -78,6 +79,7 @@ const CanvasAssinatura = forwardRef<CanvasAssinaturaRef, CanvasAssinaturaProps>(
       setDrawingStartTime(null);
     }
     updatePointMetrics();
+    onStrokeEnd?.();
   };
 
   const getBoundingBox = (imageData: ImageData) => {
@@ -164,8 +166,8 @@ const CanvasAssinatura = forwardRef<CanvasAssinaturaRef, CanvasAssinaturaProps>(
   }));
 
   return (
-    <div ref={containerRef} className="space-y-4 w-full max-w-150 mx-auto">
-      <div className="border border-input rounded-md bg-white overflow-hidden">
+    <div ref={containerRef} className="space-y-3 w-full max-w-150 mx-auto">
+      <div className="border border-input rounded-md bg-white overflow-hidden shadow-sm dark:shadow-none dark:border-border">
         <SignatureCanvas
           ref={signatureRef}
           canvasProps={{

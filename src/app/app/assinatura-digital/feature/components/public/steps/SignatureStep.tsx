@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useCallback } from "react";
 import { toast } from "sonner";
-import { Loader2, Check, X, RotateCcw } from "lucide-react";
+import { Loader2, Check, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -24,21 +24,18 @@ export interface SignatureStepProps {
   token: string;
   rubricaNecessaria: boolean;
   selfieBase64?: string;
+  currentStep?: number;
+  totalSteps?: number;
   onPrevious: () => void;
-  /**
-   * Callback chamado ao finalizar a assinatura.
-   * Recebe os dados da assinatura diretamente para evitar condições de corrida.
-   */
   onSuccess: (data: SignatureData) => Promise<void>;
-  /** @deprecated Use onSuccess para capturar os dados da assinatura */
   onCapture?: (data: SignatureData) => void;
   onTermosChange?: (value: boolean) => void;
 }
 
 export function SignatureStep({
-  token: _token,
   rubricaNecessaria,
-  selfieBase64: _selfieBase64,
+  currentStep = 4,
+  totalSteps = 4,
   onPrevious,
   onSuccess,
   onCapture,
@@ -52,17 +49,14 @@ export function SignatureStep({
   const assinaturaRef = useRef<CanvasAssinaturaRef>(null);
   const rubricaRef = useRef<CanvasAssinaturaRef>(null);
 
-  // Verifica se os canvas estão vazios periodicamente
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setAssinaturaVazia(assinaturaRef.current?.isEmpty() ?? true);
-      if (rubricaNecessaria) {
-        setRubricaVazia(rubricaRef.current?.isEmpty() ?? true);
-      }
-    }, 500);
+  // Atualiza estado de vazio via callbacks do canvas (onEnd)
+  const handleAssinaturaEnd = useCallback(() => {
+    setAssinaturaVazia(assinaturaRef.current?.isEmpty() ?? true);
+  }, []);
 
-    return () => clearInterval(interval);
-  }, [rubricaNecessaria]);
+  const handleRubricaEnd = useCallback(() => {
+    setRubricaVazia(rubricaRef.current?.isEmpty() ?? true);
+  }, []);
 
   const handleClearAssinatura = () => {
     assinaturaRef.current?.clear();
@@ -75,19 +69,16 @@ export function SignatureStep({
   };
 
   const handleFinalize = async () => {
-    // Validar assinatura
     if (assinaturaRef.current?.isEmpty()) {
       toast.error("Por favor, desenhe sua assinatura para continuar.");
       return;
     }
 
-    // Validar rubrica se necessária
     if (rubricaNecessaria && rubricaRef.current?.isEmpty()) {
       toast.error("Por favor, desenhe sua rubrica para continuar.");
       return;
     }
 
-    // Validar aceite dos termos
     if (!termosAceite) {
       toast.error("Por favor, aceite os termos para continuar.");
       return;
@@ -96,7 +87,6 @@ export function SignatureStep({
     setIsSubmitting(true);
 
     try {
-      // Coletar dados da assinatura
       const assinaturaBase64 = assinaturaRef.current?.getSignatureBase64() || "";
       const assinaturaMetrics = assinaturaRef.current?.getMetrics();
       const rubricaBase64 = rubricaNecessaria
@@ -111,7 +101,6 @@ export function SignatureStep({
         return;
       }
 
-      // Construir objeto de dados da assinatura
       const signatureData: SignatureData = {
         assinatura: assinaturaBase64,
         metrics: assinaturaMetrics,
@@ -119,12 +108,10 @@ export function SignatureStep({
         rubricaMetrics: rubricaMetrics || undefined,
       };
 
-      // Chamar onCapture para compatibilidade (deprecated)
       if (onCapture) {
         onCapture(signatureData);
       }
 
-      // Passar dados diretamente para evitar condição de corrida com o state
       await onSuccess(signatureData);
     } catch (error) {
       console.error("Erro ao finalizar assinatura:", error);
@@ -143,18 +130,21 @@ export function SignatureStep({
 
   return (
     <PublicStepLayout
-      currentStep={4}
-      totalSteps={4}
+      currentStep={currentStep}
+      totalSteps={totalSteps}
       title="Assinar Documento"
-      description="Por favor, desenhe sua assinatura abaixo para confirmar o conteúdo do documento."
+      description="Desenhe sua assinatura abaixo para confirmar o documento."
       onPrevious={onPrevious}
       isPreviousDisabled={isSubmitting}
+      onNext={handleFinalize}
+      isNextDisabled={!canFinalize || isSubmitting}
+      nextLabel={isSubmitting ? "Finalizando..." : "Finalizar Assinatura"}
     >
-      <div className="space-y-6">
+      <div className="flex flex-col gap-3 sm:gap-4 h-full">
         {/* Canvas de Assinatura Principal */}
-        <div className="space-y-3">
+        <div className="space-y-1.5 flex-1 min-h-0">
           <div className="flex items-center justify-between">
-            <Label className="text-sm font-medium text-foreground">
+            <Label className="text-xs sm:text-sm font-medium text-foreground">
               Sua Assinatura
             </Label>
             <Button
@@ -162,25 +152,29 @@ export function SignatureStep({
               variant="ghost"
               size="sm"
               onClick={handleClearAssinatura}
-              className="text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground h-7 px-2 text-xs"
             >
-              <RotateCcw className="h-4 w-4 mr-1" aria-hidden="true" />
+              <RotateCcw className="h-3 w-3 mr-1" aria-hidden="true" />
               Limpar
             </Button>
           </div>
-          <div className="bg-muted dark:bg-muted/50 border-2 border-dashed border-border rounded-lg p-2 overflow-hidden">
-            <CanvasAssinatura ref={assinaturaRef} hideClearButton />
+          <div className="bg-muted dark:bg-muted/50 border-2 border-dashed border-border rounded-lg p-1.5 overflow-hidden">
+            <CanvasAssinatura
+              ref={assinaturaRef}
+              hideClearButton
+              onStrokeEnd={handleAssinaturaEnd}
+            />
           </div>
           <p className="text-xs text-muted-foreground text-center">
-            Use o mouse ou toque para desenhar sua assinatura acima
+            Use o mouse ou toque para desenhar
           </p>
         </div>
 
         {/* Canvas de Rubrica (condicional) */}
         {rubricaNecessaria && (
-          <div className="space-y-3">
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium text-foreground">
+              <Label className="text-xs sm:text-sm font-medium text-foreground">
                 Rubrica / Iniciais
               </Label>
               <Button
@@ -188,24 +182,25 @@ export function SignatureStep({
                 variant="ghost"
                 size="sm"
                 onClick={handleClearRubrica}
-                className="text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground h-7 px-2 text-xs"
               >
-                <RotateCcw className="h-4 w-4 mr-1" aria-hidden="true" />
+                <RotateCcw className="h-3 w-3 mr-1" aria-hidden="true" />
                 Limpar
               </Button>
             </div>
-            <div className="bg-muted dark:bg-muted/50 border-2 border-dashed border-border rounded-lg p-2 overflow-hidden">
-              <CanvasAssinatura ref={rubricaRef} hideClearButton />
+            <div className="bg-muted dark:bg-muted/50 border-2 border-dashed border-border rounded-lg p-1.5 overflow-hidden">
+              <CanvasAssinatura
+                ref={rubricaRef}
+                hideClearButton
+                onStrokeEnd={handleRubricaEnd}
+              />
             </div>
-            <p className="text-xs text-muted-foreground text-center">
-              Desenhe suas iniciais ou rubrica para validação adicional
-            </p>
           </div>
         )}
 
-        {/* Checkbox de Termos */}
-        <div className="bg-muted dark:bg-muted/30 rounded-lg border border-border p-4">
-          <div className="flex items-start gap-3">
+        {/* Checkbox de Termos - Compact */}
+        <div className="bg-muted dark:bg-muted/30 rounded-lg border border-border p-3">
+          <div className="flex items-start gap-2.5">
             <Checkbox
               id="termos-aceite"
               checked={termosAceite}
@@ -214,63 +209,27 @@ export function SignatureStep({
                 setTermosAceite(value);
                 onTermosChange?.(value);
               }}
-              className="mt-1"
+              className="mt-0.5"
             />
             <div className="flex-1 min-w-0">
               <Label
                 htmlFor="termos-aceite"
-                className="text-sm font-medium text-foreground cursor-pointer"
+                className="text-xs sm:text-sm font-medium text-foreground cursor-pointer"
               >
                 Consentimento para Assinatura Eletrônica
               </Label>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Concordo com os Termos de Serviço e consinto com o uso de
-                assinaturas eletrônicas para esta transação, em conformidade com
-                a MP 2.200-2/2001 - ICP-Brasil.
+                assinaturas eletrônicas, conforme MP 2.200-2/2001.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Botões de Ação */}
-        <div className="flex flex-col sm:flex-row gap-3 pt-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onPrevious}
-            disabled={isSubmitting}
-            className="flex-1 sm:flex-none border-border text-foreground"
-          >
-            <X className="h-4 w-4 mr-2" aria-hidden="true" />
-            Cancelar
-          </Button>
-          <Button
-            type="button"
-            onClick={handleFinalize}
-            disabled={!canFinalize || isSubmitting}
-            className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] transition-all"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" aria-hidden="true" />
-                Finalizando...
-              </>
-            ) : (
-              <>
-                <Check className="h-4 w-4 mr-2" aria-hidden="true" />
-                Finalizar Assinatura
-              </>
-            )}
-          </Button>
-        </div>
-
         {/* Informação Legal */}
-        <div className="text-center">
-          <p className="text-xs text-muted-foreground">
-            Esta assinatura eletrônica tem validade jurídica conforme MP
-            2.200-2/2001
-          </p>
-        </div>
+        <p className="text-xs text-muted-foreground text-center">
+          Assinatura com validade jurídica conforme MP 2.200-2/2001
+        </p>
       </div>
     </PublicStepLayout>
   );

@@ -47,11 +47,11 @@ export function PublicStepLayout({
   const progressPercentage = Math.min(100, Math.max(0, (safeCurrent / safeTotal) * 100));
 
   return (
-    <Card className="w-full rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-border bg-card">
-      <CardHeader className="space-y-4 pb-4">
+    <Card className="w-full h-full flex flex-col rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-border bg-card overflow-hidden">
+      <CardHeader className="shrink-0 space-y-2 sm:space-y-3 px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
         {/* Progress Bar */}
         {!hideProgress && (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>
                 Passo {safeCurrent} de {safeTotal}
@@ -59,7 +59,7 @@ export function PublicStepLayout({
               <span>{Math.round(progressPercentage)}%</span>
             </div>
             <div
-              className="h-2 w-full bg-muted rounded-full overflow-hidden"
+              className="h-1.5 sm:h-2 w-full bg-muted rounded-full overflow-hidden"
               role="progressbar"
               aria-valuenow={safeCurrent}
               aria-valuemin={0}
@@ -75,29 +75,32 @@ export function PublicStepLayout({
         )}
 
         {/* Title and Description */}
-        <div className="space-y-1.5">
-          <h2 className="font-display text-2xl font-bold tracking-tight text-foreground">
+        <div className="space-y-1">
+          <h2 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground">
             {title}
           </h2>
           {description && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
               {description}
             </p>
           )}
         </div>
       </CardHeader>
 
-      <CardContent className="pb-6">{children}</CardContent>
+      <CardContent className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-6 pb-2 sm:pb-4">
+        {children}
+      </CardContent>
 
-      <CardFooter className="flex justify-between gap-4 pt-4 border-t border-border">
+      <CardFooter className="shrink-0 flex justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4 border-t border-border">
         {/* Previous Button */}
         {onPrevious ? (
           <Button
             type="button"
             variant="outline"
+            size="sm"
             onClick={onPrevious}
             disabled={isPreviousDisabled || isLoading}
-            className="flex items-center gap-2 rounded-lg border-border text-foreground hover:bg-muted"
+            className="flex items-center gap-1.5 rounded-lg border-border text-foreground hover:bg-muted min-h-11 px-4"
           >
             <ChevronLeft className="h-4 w-4" aria-hidden="true" />
             {previousLabel}
@@ -110,9 +113,10 @@ export function PublicStepLayout({
         {onNext && (
           <Button
             type="button"
+            size="sm"
             onClick={onNext}
             disabled={isNextDisabled || isLoading}
-            className="flex items-center gap-2 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20"
+            className="flex items-center gap-1.5 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 min-h-11 px-4"
           >
             {isLoading ? (
               <>

@@ -3,18 +3,16 @@
 import * as React from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { FileSignature, User, Camera, PenLine } from "lucide-react";
 import { PublicStepLayout } from "../layout/PublicStepLayout";
 import { PublicDocumentCard } from "../shared/PublicDocumentCard";
-import {
-  PublicStepIndicator,
-  type PublicStepIndicatorStep,
-} from "../layout/PublicStepIndicator";
 
 export interface WelcomeStepProps {
   documento: {
     titulo?: string | null;
     pdf_original_url: string;
   };
+  selfieHabilitada?: boolean;
   onNext: () => void;
 }
 
@@ -27,7 +25,6 @@ function extractFileName(url: string, fallbackTitle?: string | null): string {
   try {
     const pathname = new URL(url, "http://localhost").pathname;
     const filename = pathname.split("/").pop() || "Documento.pdf";
-    // Remove UUID prefix se existir (ex: "uuid_filename.pdf" -> "filename.pdf")
     const withoutUuid = filename.replace(/^[a-f0-9-]{36}_/i, "");
     return decodeURIComponent(withoutUuid);
   } catch {
@@ -35,32 +32,40 @@ function extractFileName(url: string, fallbackTitle?: string | null): string {
   }
 }
 
-const steps: PublicStepIndicatorStep[] = [
-  {
-    label: "Confirmar dados",
-    description: "Verifique suas informações pessoais.",
-    icon: "person",
-    status: "current" as const,
-  },
-  {
-    label: "Verificação por foto",
-    description: "Tire uma selfie rápida para segurança.",
-    icon: "photo_camera",
-    status: "pending" as const,
-  },
-  {
-    label: "Assinar documento",
-    description: "Aplique sua assinatura digital.",
-    icon: "ink_pen",
-    status: "pending" as const,
-  },
-];
+interface StepItem {
+  label: string;
+  description: string;
+  icon: React.ReactNode;
+}
 
-export function WelcomeStep({ documento, onNext }: WelcomeStepProps) {
+export function WelcomeStep({ documento, selfieHabilitada = false, onNext }: WelcomeStepProps) {
   const fileName = extractFileName(documento.pdf_original_url, documento.titulo);
   const formattedDate = format(new Date(), "dd 'de' MMMM 'de' yyyy", {
     locale: ptBR,
   });
+
+  // Steps dinâmicos baseados na configuração
+  const steps: StepItem[] = [
+    {
+      label: "Confirmar dados",
+      description: "Verifique suas informações pessoais.",
+      icon: <User className="h-4 w-4" />,
+    },
+    ...(selfieHabilitada
+      ? [
+          {
+            label: "Verificação por foto",
+            description: "Tire uma selfie rápida para segurança.",
+            icon: <Camera className="h-4 w-4" />,
+          },
+        ]
+      : []),
+    {
+      label: "Assinar documento",
+      description: "Aplique sua assinatura digital.",
+      icon: <PenLine className="h-4 w-4" />,
+    },
+  ];
 
   return (
     <PublicStepLayout
@@ -68,20 +73,11 @@ export function WelcomeStep({ documento, onNext }: WelcomeStepProps) {
       currentStep={0}
       totalSteps={3}
       title="Revisar e Assinar"
-      description="Por favor, revise os detalhes do documento abaixo antes de prosseguir com o processo de assinatura digital."
+      description="Revise os detalhes do documento abaixo antes de prosseguir com a assinatura digital."
       nextLabel="Iniciar Assinatura"
       onNext={onNext}
     >
-      <div className="space-y-6">
-        {/* Hero Section */}
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary mb-4">
-            <span className="material-symbols-outlined !text-2xl" aria-hidden="true">
-              contract_edit
-            </span>
-          </div>
-        </div>
-
+      <div className="space-y-4 sm:space-y-6">
         {/* Document Card */}
         <PublicDocumentCard
           fileName={fileName}
@@ -90,12 +86,32 @@ export function WelcomeStep({ documento, onNext }: WelcomeStepProps) {
         />
 
         {/* Steps List */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-medium text-foreground">
+        <div className="space-y-2 sm:space-y-3">
+          <h3 className="text-xs sm:text-sm font-medium text-foreground">
             O que você precisará fazer:
           </h3>
-          <div className="bg-muted dark:bg-muted/50 rounded-lg p-4 border border-border">
-            <PublicStepIndicator steps={steps} />
+          <div className="bg-muted dark:bg-muted/50 rounded-lg p-3 sm:p-4 border border-border">
+            <div className="space-y-3" role="list" aria-label="Etapas do processo">
+              {steps.map((step, index) => (
+                <div
+                  key={index}
+                  className="flex items-start gap-3"
+                  role="listitem"
+                >
+                  <div className="shrink-0 h-6 w-6 sm:h-7 sm:w-7 rounded-full border-2 border-border bg-card flex items-center justify-center text-muted-foreground">
+                    {step.icon}
+                  </div>
+                  <div className="flex-1 min-w-0 pt-0.5">
+                    <h4 className="text-xs sm:text-sm font-medium text-foreground">
+                      {step.label}
+                    </h4>
+                    <p className="text-xs text-muted-foreground mt-0.5 hidden sm:block">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

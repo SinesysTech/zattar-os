@@ -9,8 +9,8 @@ export function AssinaturaPublicaClient() {
 
   if (!token) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-slate-900">
-        <p className="text-red-600 dark:text-red-400 font-medium">Token inválido ou não fornecido.</p>
+      <div className="flex items-center justify-center h-dvh bg-muted dark:bg-background">
+        <p className="text-destructive font-medium">Token inválido ou não fornecido.</p>
       </div>
     );
   }
