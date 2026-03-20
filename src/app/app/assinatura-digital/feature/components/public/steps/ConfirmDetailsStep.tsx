@@ -1,11 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
+import { User, CreditCard, Mail, Phone } from "lucide-react";
 import { PublicStepLayout } from "../layout/PublicStepLayout";
 import InputCPF from "../../inputs/input-cpf";
 import { InputTelefone } from "@/components/ui/input-telefone";
@@ -19,38 +20,33 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { formatCPF, formatTelefone } from "../../../utils/formatters";
-import { updatePublicSignerIdentificationSchema } from "../../../domain";
 
 /**
- * Schema de validação do formulário derivado do schema de domínio.
- * - Todos os campos são obrigatórios (não opcionais como no domínio)
- * - Valores são transformados para remover máscaras antes da validação
- * - Mensagens de erro customizadas em português
+ * Schema de validação do formulário com mensagens em PT-BR.
+ * Independente do schema de domínio para evitar herdar mensagens em inglês do Zod.
  */
 const confirmDetailsSchema = z.object({
-  nome_completo: updatePublicSignerIdentificationSchema.shape.nome_completo
-    .unwrap()
-    .min(3, "Nome deve ter no mínimo 3 caracteres"),
+  nome_completo: z
+    .string()
+    .min(3, "Nome deve ter no mínimo 3 caracteres")
+    .max(200, "Nome deve ter no máximo 200 caracteres"),
   cpf: z
     .string()
     .min(1, "CPF é obrigatório")
     .transform((val) => val.replace(/\D/g, ""))
     .pipe(
-      updatePublicSignerIdentificationSchema.shape.cpf
-        .unwrap()
-        .refine((val) => val.length === 11, "CPF deve conter 11 dígitos")
+      z.string().refine((val) => val.length === 11, "CPF deve conter 11 dígitos")
     ),
-  email: updatePublicSignerIdentificationSchema.shape.email
-    .unwrap()
-    .refine((val) => val.length > 0, "E-mail é obrigatório"),
+  email: z
+    .string()
+    .min(1, "E-mail é obrigatório")
+    .email("E-mail inválido"),
   telefone: z
     .string()
     .min(1, "Telefone é obrigatório")
     .transform((val) => val.replace(/\D/g, ""))
     .pipe(
-      updatePublicSignerIdentificationSchema.shape.telefone
-        .unwrap()
-        .refine((val) => val.length >= 10, "Telefone deve ter no mínimo 10 dígitos")
+      z.string().refine((val) => val.length >= 10, "Telefone deve ter no mínimo 10 dígitos")
     ),
 });
 
@@ -73,6 +69,8 @@ export interface ConfirmDetailsStepProps {
     email?: string;
     telefone?: string;
   };
+  currentStep?: number;
+  totalSteps?: number;
   onPrevious: () => void;
   onNext: () => void;
 }
@@ -80,6 +78,8 @@ export interface ConfirmDetailsStepProps {
 export function ConfirmDetailsStep({
   token,
   dadosSnapshot,
+  currentStep = 1,
+  totalSteps = 3,
   onPrevious,
   onNext,
 }: ConfirmDetailsStepProps) {
@@ -87,35 +87,20 @@ export function ConfirmDetailsStep({
 
   const form = useForm<ConfirmDetailsFormInput>({
     resolver: zodResolver(confirmDetailsSchema),
-    mode: "onChange",
+    mode: "onBlur",
     defaultValues: {
-      nome_completo: "",
-      cpf: "",
-      email: "",
-      telefone: "",
+      nome_completo: dadosSnapshot.nome_completo || "",
+      cpf: dadosSnapshot.cpf ? formatCPF(dadosSnapshot.cpf) : "",
+      email: dadosSnapshot.email || "",
+      telefone: dadosSnapshot.telefone
+        ? formatTelefone(dadosSnapshot.telefone)
+        : "",
     },
   });
-
-  // Prefill de dados do snapshot
-  useEffect(() => {
-    if (dadosSnapshot) {
-      form.reset({
-        nome_completo: dadosSnapshot.nome_completo || "",
-        cpf: dadosSnapshot.cpf ? formatCPF(dadosSnapshot.cpf) : "",
-        email: dadosSnapshot.email || "",
-        telefone: dadosSnapshot.telefone
-          ? formatTelefone(dadosSnapshot.telefone)
-          : "",
-      });
-      // Trigger validation to update form state
-      form.trigger();
-    }
-  }, [dadosSnapshot, form]);
 
   const onSubmit = async (data: ConfirmDetailsFormData) => {
     setIsSubmitting(true);
     try {
-      // Schema já transformou CPF e telefone para dígitos puros
       const response = await fetch(
         `/api/assinatura-digital/public/${token}/identificacao`,
         {
@@ -149,13 +134,13 @@ export function ConfirmDetailsStep({
 
   return (
     <PublicStepLayout
-      currentStep={1}
-      totalSteps={3}
+      currentStep={currentStep}
+      totalSteps={totalSteps}
       title="Confirme Seus Dados"
-      description="Por favor, revise suas informações abaixo. Você pode editar qualquer campo se necessário antes de prosseguir para a assinatura."
+      description="Revise suas informações abaixo. Edite qualquer campo se necessário antes de prosseguir."
       onPrevious={onPrevious}
       onNext={form.handleSubmit(onSubmit)}
-      isNextDisabled={!form.formState.isValid || isSubmitting}
+      isNextDisabled={isSubmitting}
       isLoading={isSubmitting}
       nextLabel="Continuar"
       previousLabel="Voltar"
@@ -163,7 +148,7 @@ export function ConfirmDetailsStep({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-1 gap-6"
+          className="grid grid-cols-1 gap-3 sm:gap-4"
         >
           {/* Campo Nome Completo */}
           <FormField
@@ -171,19 +156,18 @@ export function ConfirmDetailsStep({
             name="nome_completo"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nome Completo</FormLabel>
+                <FormLabel className="text-xs sm:text-sm">Nome Completo</FormLabel>
                 <div className="relative">
-                  <span
-                    className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-[20px]"
+                  <User
+                    className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
                     aria-hidden="true"
-                  >
-                    person
-                  </span>
+                  />
                   <FormControl>
                     <Input
                       {...field}
                       placeholder="Digite seu nome completo"
                       className="pl-10"
+                      autoComplete="name"
                       disabled={isSubmitting}
                     />
                   </FormControl>
@@ -199,14 +183,12 @@ export function ConfirmDetailsStep({
             name="cpf"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>CPF</FormLabel>
+                <FormLabel className="text-xs sm:text-sm">CPF</FormLabel>
                 <div className="relative">
-                  <span
-                    className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-[20px] z-10"
+                  <CreditCard
+                    className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10"
                     aria-hidden="true"
-                  >
-                    badge
-                  </span>
+                  />
                   <FormControl>
                     <InputCPF
                       {...field}
@@ -221,63 +203,64 @@ export function ConfirmDetailsStep({
             )}
           />
 
-          {/* Campo Email */}
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>E-mail</FormLabel>
-                <div className="relative">
-                  <span
-                    className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-[20px]"
-                    aria-hidden="true"
-                  >
-                    mail
-                  </span>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="email"
-                      placeholder="nome@exemplo.com"
-                      className="pl-10"
-                      disabled={isSubmitting}
+          {/* Campos Email e Telefone lado a lado em desktop */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            {/* Campo Email */}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs sm:text-sm">E-mail</FormLabel>
+                  <div className="relative">
+                    <Mail
+                      className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                      aria-hidden="true"
                     />
-                  </FormControl>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="nome@exemplo.com"
+                        className="pl-10"
+                        autoComplete="email"
+                        disabled={isSubmitting}
+                      />
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Campo Telefone */}
-          <FormField
-            control={form.control}
-            name="telefone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Telefone</FormLabel>
-                <div className="relative">
-                  <span
-                    className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-[20px] z-10"
-                    aria-hidden="true"
-                  >
-                    call
-                  </span>
-                  <FormControl>
-                    <InputTelefone
-                      {...field}
-                      mode="cell"
-                      placeholder="(00) 00000-0000"
-                      className="pl-10"
-                      disabled={isSubmitting}
+            {/* Campo Telefone */}
+            <FormField
+              control={form.control}
+              name="telefone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs sm:text-sm">Telefone</FormLabel>
+                  <div className="relative">
+                    <Phone
+                      className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10"
+                      aria-hidden="true"
                     />
-                  </FormControl>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                    <FormControl>
+                      <InputTelefone
+                        {...field}
+                        mode="cell"
+                        placeholder="(00) 00000-0000"
+                        className="pl-10"
+                        autoComplete="tel"
+                        disabled={isSubmitting}
+                      />
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           {/* Hidden submit button for form submission */}
           <button

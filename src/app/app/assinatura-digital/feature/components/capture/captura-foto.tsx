@@ -122,7 +122,6 @@ const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto
       {capturedPhoto && (
         <div className="space-y-4">
           <div className="relative aspect-square w-full overflow-hidden rounded-md border border-input">
-            { }
             <img src={capturedPhoto} alt="Foto capturada" className="w-full h-full object-cover" />
           </div>
           <Button variant="outline" onClick={handleRetakePhoto} className="w-full">

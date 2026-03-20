@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface PublicDocumentCardProps {
@@ -19,45 +20,40 @@ export function PublicDocumentCard({
   return (
     <div
       className={cn(
-        "bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-lg p-4 flex gap-4 items-center",
+        "bg-muted dark:bg-muted/50 border border-border rounded-lg p-3 sm:p-4 flex gap-3 sm:gap-4 items-center",
         className
       )}
     >
       {/* PDF Icon */}
-      <div className="h-12 w-12 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0 border border-slate-200 dark:border-slate-700">
-        <span
-          className="material-symbols-outlined text-red-500 text-2xl"
-          aria-hidden="true"
-        >
-          picture_as_pdf
-        </span>
+      <div className="h-10 w-10 sm:h-12 sm:w-12 bg-card rounded-lg flex items-center justify-center shrink-0 border border-border">
+        <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-red-500" aria-hidden="true" />
       </div>
 
       {/* Document Info */}
       <div className="flex-1 min-w-0">
         <p
-          className="text-sm font-medium text-slate-900 dark:text-white truncate"
+          className="text-xs sm:text-sm font-medium text-foreground truncate"
           title={fileName}
         >
           {fileName}
         </p>
         {(sender || date) && (
-          <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-1">
+          <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-0.5">
             {sender && (
-              <span className="text-xs text-slate-500 dark:text-slate-400">
+              <span className="text-xs text-muted-foreground">
                 De: {sender}
               </span>
             )}
             {sender && date && (
               <span
-                className="text-xs text-slate-300 dark:text-slate-600"
+                className="text-xs text-muted-foreground/50"
                 aria-hidden="true"
               >
-                •
+                &bull;
               </span>
             )}
             {date && (
-              <span className="text-xs text-slate-500 dark:text-slate-400">
+              <span className="text-xs text-muted-foreground">
                 {date}
               </span>
             )}
