@@ -570,14 +570,14 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                 <AvatarFallback>{participantInitials}</AvatarFallback>
               </Avatar>
               <div className="min-w-0 grid flex-1 gap-1">
-                <div className="whitespace-normal wrap-break-word font-semibold">{participantName}</div>
-                <div className="text-xs whitespace-normal wrap-break-word">{mail.subject}</div>
-                <div className="text-xs whitespace-normal wrap-break-word">
+                <div className="whitespace-normal break-words font-semibold">{participantName}</div>
+                <div className="text-xs whitespace-normal break-words">{mail.subject}</div>
+                <div className="text-xs whitespace-normal break-words">
                   <span className="font-medium">{participantLabel}:</span> {participantLine}
                 </div>
               </div>
             </div>
-            <div className="text-muted-foreground text-xs whitespace-normal wrap-break-word sm:ml-auto sm:pl-4 sm:text-right">
+            <div className="text-muted-foreground text-xs whitespace-normal break-words sm:ml-auto sm:pl-4 sm:text-right">
               {format(new Date(mail.date), "PPpp", { locale: ptBR })}
             </div>
           </div>

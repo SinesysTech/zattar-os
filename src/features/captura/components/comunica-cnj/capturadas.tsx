@@ -231,6 +231,17 @@ export function ComunicaCNJCapturadas() {
 
   const totalItems = processedComunicacoes.length;
   const totalPages = Math.ceil(totalItems / pageSize);
+  const linkedItems = processedComunicacoes.filter((item) => item.expedienteId !== null).length;
+  const unlinkedItems = totalItems - linkedItems;
+  const activeFilterLabel = [
+    tribunalFilter !== 'all' ? tribunalFilter : null,
+    vinculacaoFilter === 'vinculadas'
+      ? 'Com expediente'
+      : vinculacaoFilter === 'nao_vinculadas'
+        ? 'Sem expediente'
+        : null,
+    searchTerm ? `Busca: ${searchTerm}` : null,
+  ].filter(Boolean).join(' • ');
 
   // Handlers for actions
   const handleViewDetails = useCallback((c: ComunicacaoCNJ) => {
@@ -381,6 +392,42 @@ export function ComunicaCNJCapturadas() {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
+      <div className="grid gap-3 md:grid-cols-3">
+        <div className="rounded-2xl border border-border/60 bg-card px-4 py-3 shadow-sm">
+          <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            Capturadas
+          </div>
+          <div className="mt-1 text-xl font-semibold text-foreground">
+            {totalItems.toLocaleString('pt-BR')}
+          </div>
+          <div className="mt-1 text-xs text-muted-foreground">
+            Total no recorte atual da tabela
+          </div>
+        </div>
+        <div className="rounded-2xl border border-border/60 bg-card px-4 py-3 shadow-sm">
+          <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            Vinculadas
+          </div>
+          <div className="mt-1 text-xl font-semibold text-foreground">{linkedItems.toLocaleString('pt-BR')}</div>
+          <div className="mt-1 text-xs text-muted-foreground">
+            Comunicações já relacionadas a expediente
+          </div>
+        </div>
+        <div className="rounded-2xl border border-border/60 bg-card px-4 py-3 shadow-sm">
+          <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            Pendentes de vínculo
+          </div>
+          <div className="mt-1 text-xl font-semibold text-foreground">{unlinkedItems.toLocaleString('pt-BR')}</div>
+          <div className="mt-1 text-xs text-muted-foreground">
+            Itens sem expediente associado
+          </div>
+        </div>
+      </div>
+      {activeFilterLabel ? (
+        <div className="rounded-xl border border-border/60 bg-muted/20 px-4 py-3 text-sm text-muted-foreground">
+          Filtros ativos: <span className="font-medium text-foreground">{activeFilterLabel}</span>
+        </div>
+      ) : null}
       <DataShell
         header={
           <DataTableToolbar
