@@ -1,10 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { FileText, ArrowRight } from 'lucide-react';
-import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
+import { ArrowRight } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { ProcessoResumo } from '../../domain';
 
 interface WidgetProcessosResumoProps {
@@ -13,119 +20,107 @@ interface WidgetProcessosResumoProps {
   error?: string;
 }
 
-export function WidgetProcessosResumo({
-  data,
-  loading,
-  error,
-}: WidgetProcessosResumoProps) {
+export function WidgetProcessosResumo({ data, loading, error }: WidgetProcessosResumoProps) {
   if (loading) {
     return (
-      <WidgetWrapper title="Processos" icon={FileText} loading={true}>
-        <div />
-      </WidgetWrapper>
+      <Card>
+        <CardHeader><Skeleton className="h-5 w-24" /></CardHeader>
+        <CardContent className="space-y-3">
+          <Skeleton className="h-20 w-full" />
+        </CardContent>
+      </Card>
     );
   }
 
   if (error) {
     return (
-      <WidgetWrapper title="Processos" icon={FileText} error={error}>
-        <div />
-      </WidgetWrapper>
+      <Card>
+        <CardHeader><CardTitle>Processos</CardTitle></CardHeader>
+        <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
+      </Card>
     );
   }
 
   if (data.total === 0) {
     return (
-      <WidgetWrapper title="Processos" icon={FileText}>
-        <WidgetEmpty
-          icon={FileText}
-          title="Nenhum processo atribuído"
-          description="Você ainda não possui processos atribuídos"
-        />
-      </WidgetWrapper>
+      <Card>
+        <CardHeader>
+          <CardTitle>Processos</CardTitle>
+          <CardDescription>Distribuição e análise</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground py-8 text-center">Nenhum processo atribuído</p>
+        </CardContent>
+      </Card>
     );
   }
 
-  const ativosPercent = data.total > 0 ? Math.round((data.ativos / data.total) * 100) : 0;
-  const arquivadosPercent = data.total > 0 ? Math.round((data.arquivados / data.total) * 100) : 0;
+  const ativosPercent = Math.round((data.ativos / data.total) * 100);
 
   return (
-    <WidgetWrapper title="Processos" icon={FileText}>
-      <div className="space-y-4">
-        {/* Resumo principal */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <p className="text-2xl font-bold">{data.total}</p>
+    <Card>
+      <CardHeader>
+        <CardTitle>Processos</CardTitle>
+        <CardDescription>Distribuição e análise</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-5">
+        {/* Main numbers */}
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <div className="font-display text-2xl">{data.total}</div>
             <p className="text-xs text-muted-foreground">Total</p>
           </div>
-          <div className="space-y-1">
-            <p className="text-2xl font-bold text-foreground">{data.ativos}</p>
+          <div>
+            <div className="font-display text-2xl">{data.ativos}</div>
             <p className="text-xs text-muted-foreground">Ativos</p>
+          </div>
+          <div>
+            <div className="font-display text-2xl">{data.arquivados}</div>
+            <p className="text-xs text-muted-foreground">Arquivados</p>
           </div>
         </div>
 
-        {/* Distribuição */}
+        {/* Distribution bar */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Ativos</span>
-            <span className="font-medium">{ativosPercent}%</span>
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>Ativos {ativosPercent}%</span>
+            <span>Arquivados {100 - ativosPercent}%</span>
           </div>
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary transition-all"
-              style={{ width: `${ativosPercent}%` }}
-            />
-          </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Arquivados</span>
-            <span className="font-medium">{arquivadosPercent}%</span>
-          </div>
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full bg-muted-foreground transition-all"
-              style={{ width: `${arquivadosPercent}%` }}
-            />
+          <div className="h-2 bg-muted rounded-full overflow-hidden flex">
+            <div className="h-full bg-primary transition-all" style={{ width: `${ativosPercent}%` }} />
           </div>
         </div>
 
         {/* Por Grau */}
         {data.porGrau.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">Por Grau</p>
-            <div className="flex flex-wrap gap-2">
-              {data.porGrau.map((item) => (
-                <Badge key={item.grau} variant="outline">
-                  {item.grau}: {item.count}
-                </Badge>
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-2">
+            {data.porGrau.map((item) => (
+              <Badge key={item.grau} variant="outline">
+                {item.grau}: {item.count}
+              </Badge>
+            ))}
           </div>
         )}
 
         {/* Top TRTs */}
         {data.porTRT.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-muted-foreground">Top TRTs</p>
-            <div className="space-y-1">
-              {data.porTRT.slice(0, 3).map((item) => (
-                <div key={item.trt} className="flex items-center justify-between text-xs">
-                  <span>TRT {item.trt}</span>
-                  <span className="font-medium">{item.count}</span>
-                </div>
-              ))}
-            </div>
+          <div className="space-y-1.5">
+            {data.porTRT.slice(0, 3).map((item) => (
+              <div key={item.trt} className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">TRT {item.trt}</span>
+                <span className="font-medium tabular-nums">{item.count}</span>
+              </div>
+            ))}
           </div>
         )}
 
-        {/* Link para página de processos */}
-        <Link href="/processos">
-          <Button variant="ghost" size="sm" className="w-full mt-4">
+        <Link href="/app/processos" className="block">
+          <Button variant="ghost" size="sm" className="w-full text-muted-foreground hover:text-foreground">
             Ver todos os processos
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </Link>
-      </div>
-    </WidgetWrapper>
+      </CardContent>
+    </Card>
   );
 }
-

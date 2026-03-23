@@ -29,6 +29,7 @@ export {
   upsertClienteByCPF,
   upsertClienteByCNPJ,
   softDeleteCliente,
+  softDeleteClientesEmMassa,
   findAllClientesComEndereco,
   findAllClientesComEnderecoEProcessos,
   findClienteByIdComEndereco,
@@ -52,6 +53,7 @@ export {
   upsertParteContrariaByCNPJ,
   searchPartesContrariaComEndereco,
   softDeleteParteContraria,
+  softDeletePartesContrariasEmMassa,
   countPartesContrarias,
   countPartesContrariasAteData,
   countPartesContrariasEntreDatas,
@@ -69,6 +71,7 @@ export {
   upsertTerceiroByCPF,
   upsertTerceiroByCNPJ,
   softDeleteTerceiro,
+  softDeleteTerceirosEmMassa,
 } from './terceiros-repository';
 
 // Representantes - exported with Repo suffix to avoid conflicts with service layer
@@ -84,6 +87,7 @@ export {
   criarRepresentante as criarRepresentanteRepo,
   atualizarRepresentante as atualizarRepresentanteRepo,
   deletarRepresentante as deletarRepresentanteRepo,
+  deletarRepresentantesEmMassa as deletarRepresentantesEmMassaRepo,
   upsertRepresentantePorCPF as upsertRepresentantePorCPFRepo,
 } from './representantes-repository';
 

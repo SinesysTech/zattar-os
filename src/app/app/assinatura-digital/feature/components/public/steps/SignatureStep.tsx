@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState, useRef, useCallback } from "react";
 import { toast } from "sonner";
-import { Loader2, Check, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";

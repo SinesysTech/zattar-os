@@ -121,6 +121,30 @@ export const actionAtualizarTerceiroSafe = authenticatedAction(
 );
 
 // =============================================================================
+// AÇÕES EM MASSA
+// =============================================================================
+
+/**
+ * Desativa múltiplos terceiros em massa (soft delete)
+ */
+export async function actionDesativarTerceirosEmMassa(ids: number[]) {
+  try {
+    const result = await service.desativarTerceirosEmMassa(ids);
+    if (!result.success) {
+      return { success: false, message: result.error.message };
+    }
+    revalidatePath('/app/partes/terceiros');
+    revalidatePath('/app/partes');
+    return {
+      success: true,
+      message: `${result.data} terceiro${result.data > 1 ? 's' : ''} desativado${result.data > 1 ? 's' : ''} com sucesso`,
+    };
+  } catch (error) {
+    return { success: false, message: String(error) };
+  }
+}
+
+// =============================================================================
 // LEGACY EXPORTS (mantidos para retrocompatibilidade durante migracao)
 // Serao removidos apos atualizacao de todos os consumidores
 // =============================================================================

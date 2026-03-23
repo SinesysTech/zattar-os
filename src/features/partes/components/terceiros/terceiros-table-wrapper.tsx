@@ -9,7 +9,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import type { Table as TanstackTable, SortingState, ColumnDef } from '@tanstack/react-table';
+import type { Table as TanstackTable, SortingState, ColumnDef, RowSelectionState } from '@tanstack/react-table';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
@@ -27,6 +27,7 @@ import type { Terceiro, ProcessoRelacionado } from '../../types';
 import { useTerceiros } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell, FilterPopover, PartesSectionFilter } from '../shared';
 import { TerceiroFormDialog } from './terceiro-form';
+import { TerceirosBulkActionsBar, DesativarTerceirosMassaDialog } from './terceiros-bulk-actions';
 import { ChatwootSyncButton } from '@/features/chatwoot/components';
 import {
   formatarCpf,
@@ -117,14 +118,22 @@ export function TerceirosTableWrapper() {
 
   // Table state
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
   // Estados para diálogos
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [terceiroParaEditar, setTerceiroParaEditar] = React.useState<TerceiroComProcessos | null>(null);
+  const [desativarMassaOpen, setDesativarMassaOpen] = React.useState(false);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
+
+  const selectedIds = React.useMemo(
+    () => Object.keys(rowSelection).filter((key) => rowSelection[key]).map(Number),
+    [rowSelection]
+  );
+  const selectedCount = selectedIds.length;
 
   const params = React.useMemo(() => {
     const filtros: TerceirosFilters = {};
@@ -286,6 +295,11 @@ export function TerceirosTableWrapper() {
     [handleEdit]
   );
 
+  const handleBulkSuccess = React.useCallback(() => {
+    setRowSelection({});
+    refetch();
+  }, [refetch]);
+
   const handleCreateSuccess = React.useCallback(() => {
     setCreateOpen(false);
     refetch();
@@ -319,10 +333,19 @@ export function TerceirosTableWrapper() {
                 onClick: () => setCreateOpen(true),
               }}
               actionSlot={
-                <ChatwootSyncButton
-                  tipoEntidade="terceiro"
-                  apenasAtivos={situacao === 'A'}
-                />
+                <>
+                  {selectedCount > 0 && (
+                    <TerceirosBulkActionsBar
+                      selectedCount={selectedCount}
+                      onClearSelection={() => setRowSelection({})}
+                      onDesativar={() => setDesativarMassaOpen(true)}
+                    />
+                  )}
+                  <ChatwootSyncButton
+                    tipoEntidade="terceiro"
+                    apenasAtivos={situacao === 'A'}
+                  />
+                </>
               }
               filtersSlot={
                 <>
@@ -419,6 +442,11 @@ export function TerceirosTableWrapper() {
             onPageChange: setPagina,
             onPageSizeChange: setLimite,
           }}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId: (row) => String(row.id),
+          }}
           sorting={sorting}
           onSortingChange={setSorting}
           isLoading={isLoading}
@@ -448,6 +476,13 @@ export function TerceirosTableWrapper() {
           mode="edit"
         />
       )}
+
+      <DesativarTerceirosMassaDialog
+        open={desativarMassaOpen}
+        onOpenChange={setDesativarMassaOpen}
+        selectedIds={selectedIds}
+        onSuccess={handleBulkSuccess}
+      />
     </>
   );
 }

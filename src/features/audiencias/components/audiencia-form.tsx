@@ -449,7 +449,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
                 <FormLabel className="text-sm">Observações</FormLabel>
                 <FormControl>
                   <Textarea
-                    className="min-h-[80px] resize-none"
+                    className="min-h-20 resize-none"
                     placeholder="Observações adicionais..."
                     value={field.value ?? ''}
                     onChange={field.onChange}

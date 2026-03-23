@@ -29,6 +29,7 @@ export {
   actionContarClientes,
   actionContarClientesComEstatisticas,
   actionContarClientesPorEstado,
+  actionDesativarClientesEmMassa,
 } from './clientes-actions';
 
 // =============================================================================
@@ -40,6 +41,7 @@ export {
   actionCriarParteContrariaSafe,
   actionAtualizarParteContrariaSafe,
   actionContarPartesContrariasComEstatisticas,
+  actionDesativarPartesContrariasEmMassa,
 } from './partes-contrarias-actions';
 
 // =============================================================================
@@ -50,6 +52,7 @@ export {
   actionBuscarTerceiroSafe,
   actionCriarTerceiroSafe,
   actionAtualizarTerceiroSafe,
+  actionDesativarTerceirosEmMassa,
 } from './terceiros-actions';
 
 // =============================================================================
@@ -69,6 +72,7 @@ export {
   actionUpsertRepresentantePorCPF,
   actionBuscarRepresentantePorNome,
   actionBuscarRepresentantesPorOAB,
+  actionDeletarRepresentantesEmMassa,
 } from './representantes-actions';
 
 // =============================================================================

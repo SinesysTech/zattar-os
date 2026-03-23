@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import type { Table as TanstackTable, SortingState, ColumnDef } from '@tanstack/react-table';
+import type { Table as TanstackTable, SortingState, ColumnDef, RowSelectionState } from '@tanstack/react-table';
 import { Eye, Pencil } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Button } from '@/components/ui/button';
@@ -26,6 +26,7 @@ import type { ParteContraria, ProcessoRelacionado } from '../../types';
 import { usePartesContrarias } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell, FilterPopover, PartesSectionFilter } from '../shared';
 import { ParteContrariaFormDialog } from './parte-contraria-form';
+import { PartesContrariasBulkActionsBar, DesativarPartesContrariasMassaDialog } from './partes-contrarias-bulk-actions';
 import { ChatwootSyncButton } from '@/features/chatwoot/components';
 import {
   formatarCpf,
@@ -127,11 +128,13 @@ export function PartesContrariasTableWrapper() {
   // Table state
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [table, setTable] = React.useState<TanstackTable<ParteContrariaComProcessos> | null>(null);
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
   // Dialog state
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [parteParaEditar, setParteParaEditar] = React.useState<ParteContrariaComProcessos | null>(null);
+  const [desativarMassaOpen, setDesativarMassaOpen] = React.useState(false);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -153,6 +156,13 @@ export function PartesContrariasTableWrapper() {
 
   const { partesContrarias, paginacao, isLoading, error, refetch } = usePartesContrarias(params);
 
+  // Bulk selection helpers
+  const selectedIds = React.useMemo(
+    () => Object.keys(rowSelection).filter((key) => rowSelection[key]).map(Number),
+    [rowSelection]
+  );
+  const selectedCount = selectedIds.length;
+
   // Handlers
   const handleEdit = React.useCallback((parte: ParteContrariaComProcessos) => {
     setParteParaEditar(parte);
@@ -167,6 +177,11 @@ export function PartesContrariasTableWrapper() {
   const handleEditSuccess = React.useCallback(() => {
     setEditOpen(false);
     setParteParaEditar(null);
+    refetch();
+  }, [refetch]);
+
+  const handleBulkSuccess = React.useCallback(() => {
+    setRowSelection({});
     refetch();
   }, [refetch]);
 
@@ -322,10 +337,19 @@ export function PartesContrariasTableWrapper() {
                 onClick: () => setCreateOpen(true),
               }}
               actionSlot={
-                <ChatwootSyncButton
-                  tipoEntidade="parte_contraria"
-                  apenasAtivos={situacao === 'A'}
-                />
+                <>
+                  {selectedCount > 0 && (
+                    <PartesContrariasBulkActionsBar
+                      selectedCount={selectedCount}
+                      onClearSelection={() => setRowSelection({})}
+                      onDesativar={() => setDesativarMassaOpen(true)}
+                    />
+                  )}
+                  <ChatwootSyncButton
+                    tipoEntidade="parte_contraria"
+                    apenasAtivos={situacao === 'A'}
+                  />
+                </>
               }
               filtersSlot={
                 <>
@@ -393,6 +417,11 @@ export function PartesContrariasTableWrapper() {
           }}
           sorting={sorting}
           onSortingChange={setSorting}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId: (row) => String(row.id),
+          }}
           isLoading={isLoading}
           error={error}
           emptyMessage="Nenhuma parte contrária encontrada."
@@ -420,6 +449,13 @@ export function PartesContrariasTableWrapper() {
           mode="edit"
         />
       )}
+
+      <DesativarPartesContrariasMassaDialog
+        open={desativarMassaOpen}
+        onOpenChange={setDesativarMassaOpen}
+        selectedIds={selectedIds}
+        onSuccess={handleBulkSuccess}
+      />
     </>
   );
 }

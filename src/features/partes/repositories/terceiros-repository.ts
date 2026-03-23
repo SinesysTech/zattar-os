@@ -572,3 +572,28 @@ export async function softDeleteTerceiro(id: number): Promise<Result<void>> {
     );
   }
 }
+
+/**
+ * Soft delete de múltiplos terceiros (marca como inativos)
+ */
+export async function softDeleteTerceirosEmMassa(ids: number[]): Promise<Result<number>> {
+  try {
+    if (ids.length === 0) return ok(0);
+    const db = createDbClient();
+    const { data, error } = await db
+      .from(TABLE_TERCEIROS)
+      .update({ ativo: false, updated_at: new Date().toISOString() })
+      .in('id', ids)
+      .select('id');
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(data?.length ?? 0);
+  } catch (error) {
+    return err(
+      appError('DATABASE_ERROR', 'Erro ao desativar terceiros em massa', undefined, error instanceof Error ? error : undefined)
+    );
+  }
+}

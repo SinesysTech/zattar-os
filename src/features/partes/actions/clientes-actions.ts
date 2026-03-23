@@ -161,6 +161,30 @@ export const actionDesativarClienteSafe = authenticatedAction(
 );
 
 // =============================================================================
+// AÇÕES EM MASSA
+// =============================================================================
+
+/**
+ * Desativa múltiplos clientes em massa (soft delete)
+ */
+export async function actionDesativarClientesEmMassa(ids: number[]) {
+  try {
+    const result = await service.desativarClientesEmMassa(ids);
+    if (!result.success) {
+      return { success: false, message: result.error.message };
+    }
+    revalidatePath('/app/partes/clientes');
+    revalidatePath('/app/partes');
+    return {
+      success: true,
+      message: `${result.data} cliente${result.data > 1 ? 's' : ''} desativado${result.data > 1 ? 's' : ''} com sucesso`,
+    };
+  } catch (error) {
+    return { success: false, message: String(error) };
+  }
+}
+
+// =============================================================================
 // LEGACY EXPORTS (mantidos para retrocompatibilidade durante migracao)
 // Serao removidos apos atualizacao de todos os consumidores
 // =============================================================================

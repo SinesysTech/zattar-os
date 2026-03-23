@@ -3,7 +3,7 @@
 import * as React from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { FileSignature, User, Camera, PenLine } from "lucide-react";
+import { User, Camera, PenLine } from "lucide-react";
 import { PublicStepLayout } from "../layout/PublicStepLayout";
 import { PublicDocumentCard } from "../shared/PublicDocumentCard";
 

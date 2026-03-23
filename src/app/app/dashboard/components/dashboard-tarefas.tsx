@@ -1,62 +1,67 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useRouter } from "next/navigation";
-import { CheckSquare, PlusCircle } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import * as React from 'react';
+import { useRouter } from 'next/navigation';
+import { CheckSquare, PlusCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardAction,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DialogFormShell } from "@/components/shared";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DialogFormShell } from '@/components/shared';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-
-import type { Task, TaskLabel, TaskPriority, TaskStatus } from "@/app/app/tarefas/domain";
-import { actionCriarTarefa, actionMarcarComoDone, actionMarcarComoTodo } from "@/app/app/tarefas/actions/tarefas-actions";
+} from '@/components/ui/select';
+import type { Task, TaskLabel, TaskPriority, TaskStatus } from '@/app/app/tarefas/domain';
+import {
+  actionCriarTarefa,
+  actionMarcarComoDone,
+  actionMarcarComoTodo,
+} from '@/app/app/tarefas/actions/tarefas-actions';
 
 const STATUS_LABEL: Record<TaskStatus, string> = {
-  backlog: "Backlog",
-  todo: "A fazer",
-  "in progress": "Em andamento",
-  done: "Concluída",
-  canceled: "Cancelada",
+  backlog: 'Backlog',
+  todo: 'A fazer',
+  'in progress': 'Em andamento',
+  done: 'Concluída',
+  canceled: 'Cancelada',
 };
 
 const PRIORITY_LABEL: Record<TaskPriority, string> = {
-  low: "Baixa",
-  medium: "Média",
-  high: "Alta",
+  low: 'Baixa',
+  medium: 'Média',
+  high: 'Alta',
 };
 
 const LABEL_LABEL: Record<TaskLabel, string> = {
-  bug: "Bug",
-  feature: "Funcionalidade",
-  documentation: "Documentação",
-  audiencia: "Audiência",
-  expediente: "Expediente",
-  obrigacao: "Obrigação",
-  pericia: "Perícia",
+  bug: 'Bug',
+  feature: 'Funcionalidade',
+  documentation: 'Documentação',
+  audiencia: 'Audiência',
+  expediente: 'Expediente',
+  obrigacao: 'Obrigação',
+  pericia: 'Perícia',
 };
 
-export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
+interface TarefasWidgetProps {
+  initialTasks: Task[];
+}
+
+export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
   const router = useRouter();
   const [tasks, setTasks] = React.useState<Task[]>(initialTasks);
-
   const [open, setOpen] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [isPending, startTransition] = React.useTransition();
@@ -67,23 +72,16 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
     label: TaskLabel;
     priority: TaskPriority;
   }>({
-    title: "",
-    status: "todo",
-    label: "feature",
-    priority: "medium",
+    title: '',
+    status: 'todo',
+    label: 'feature',
+    priority: 'medium',
   });
 
-  const handleOpenChange = (next: boolean) => {
-    setOpen(next);
-    if (!next) setErrorMessage(null);
-  };
-
   const handleToggleDone = (task: Task) => {
-    const willBeDone = task.status !== "done";
-
-    // Otimismo: atualiza UI na hora
+    const willBeDone = task.status !== 'done';
     setTasks((prev) =>
-      prev.map((t) => (t.id === task.id ? { ...t, status: willBeDone ? "done" : "todo" } : t))
+      prev.map((t) => (t.id === task.id ? { ...t, status: willBeDone ? 'done' : 'todo' } : t))
     );
 
     startTransition(async () => {
@@ -92,12 +90,10 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
         : await actionMarcarComoTodo({ id: task.id });
 
       if (!result.success) {
-        // rollback simples
         setTasks((prev) => prev.map((t) => (t.id === task.id ? task : t)));
-        setErrorMessage(result.message || result.error || "Não foi possível atualizar a tarefa.");
+        setErrorMessage(result.message || result.error || 'Não foi possível atualizar a tarefa.');
         return;
       }
-
       router.refresh();
     });
   };
@@ -115,12 +111,12 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
       });
 
       if (!result.success) {
-        setErrorMessage(result.message || result.error || "Não foi possível criar a tarefa.");
+        setErrorMessage(result.message || result.error || 'Não foi possível criar a tarefa.');
         return;
       }
 
       setOpen(false);
-      setForm({ title: "", status: "todo", label: "feature", priority: "medium" });
+      setForm({ title: '', status: 'todo', label: 'feature', priority: 'medium' });
       router.refresh();
     });
   };
@@ -148,28 +144,25 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
         {tasks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <CheckSquare className="size-12 text-muted-foreground/30" />
-            <p className="mt-4 text-sm text-muted-foreground">
-              Nenhuma tarefa por aqui!
-            </p>
+            <p className="mt-4 text-sm text-muted-foreground">Nenhuma tarefa por aqui!</p>
             <p className="text-sm text-muted-foreground">
-              Clique no <span className="font-medium text-primary">+</span> para
-              criar uma.
+              Clique no <span className="font-medium text-primary">+</span> para criar uma.
             </p>
           </div>
         ) : (
           tasks.map((task) => {
-            const done = task.status === "done";
+            const done = task.status === 'done';
             return (
               <div
                 key={task.id}
                 className={cn(
-                  "flex items-start gap-3 rounded-md border bg-background p-3 transition-colors",
-                  done && "bg-muted/50"
+                  'flex items-start gap-3 rounded-md border bg-background p-3 transition-colors',
+                  done && 'bg-muted/50'
                 )}
               >
                 <Checkbox checked={done} onCheckedChange={() => handleToggleDone(task)} className="mt-1" />
                 <div className="min-w-0 flex-1 space-y-2">
-                  <p className={cn("text-sm font-medium leading-none", done && "text-muted-foreground line-through")}>
+                  <p className={cn('text-sm font-medium leading-none', done && 'text-muted-foreground line-through')}>
                     {task.title}
                   </p>
                   <div className="flex flex-wrap items-center gap-2">
@@ -186,11 +179,14 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
 
       <DialogFormShell
         open={open}
-        onOpenChange={handleOpenChange}
+        onOpenChange={(next) => {
+          setOpen(next);
+          if (!next) setErrorMessage(null);
+        }}
         title="Nova tarefa"
         footer={
           <Button type="submit" form="dashboard-nova-tarefa-form" disabled={isPending}>
-            {isPending ? "Salvando..." : "Salvar"}
+            {isPending ? 'Salvando...' : 'Salvar'}
           </Button>
         }
       >
@@ -207,13 +203,10 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
                 required
               />
             </div>
-
             <div>
               <Label>Status</Label>
               <Select value={form.status} onValueChange={(value) => setForm((s) => ({ ...s, status: value as TaskStatus }))}>
-                <SelectTrigger className="mt-2 bg-background">
-                  <SelectValue placeholder="Selecione" />
-                </SelectTrigger>
+                <SelectTrigger className="mt-2 bg-background"><SelectValue placeholder="Selecione" /></SelectTrigger>
                 <SelectContent className="bg-background">
                   <SelectItem value="backlog">Backlog</SelectItem>
                   <SelectItem value="todo">A fazer</SelectItem>
@@ -223,13 +216,10 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
                 </SelectContent>
               </Select>
             </div>
-
             <div>
               <Label>Prioridade</Label>
               <Select value={form.priority} onValueChange={(value) => setForm((s) => ({ ...s, priority: value as TaskPriority }))}>
-                <SelectTrigger className="mt-2 bg-background">
-                  <SelectValue placeholder="Selecione" />
-                </SelectTrigger>
+                <SelectTrigger className="mt-2 bg-background"><SelectValue placeholder="Selecione" /></SelectTrigger>
                 <SelectContent className="bg-background">
                   <SelectItem value="low">Baixa</SelectItem>
                   <SelectItem value="medium">Média</SelectItem>
@@ -237,13 +227,10 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
                 </SelectContent>
               </Select>
             </div>
-
             <div className="md:col-span-2">
               <Label>Etiqueta</Label>
               <Select value={form.label} onValueChange={(value) => setForm((s) => ({ ...s, label: value as TaskLabel }))}>
-                <SelectTrigger className="mt-2 bg-background">
-                  <SelectValue placeholder="Selecione" />
-                </SelectTrigger>
+                <SelectTrigger className="mt-2 bg-background"><SelectValue placeholder="Selecione" /></SelectTrigger>
                 <SelectContent className="bg-background">
                   <SelectItem value="bug">Bug</SelectItem>
                   <SelectItem value="feature">Funcionalidade</SelectItem>
@@ -256,11 +243,8 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
               </Select>
             </div>
           </div>
-
           {errorMessage && (
-            <p className="mt-4 text-sm text-destructive" role="alert">
-              {errorMessage}
-            </p>
+            <p className="mt-4 text-sm text-destructive" role="alert">{errorMessage}</p>
           )}
         </form>
       </DialogFormShell>

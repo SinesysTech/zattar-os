@@ -183,7 +183,7 @@ export function ExpedientesMonthWrapper({
           <div className="bg-card border rounded-md overflow-hidden flex-1 min-h-0">
             <div className="flex h-full">
               {/* Calendário compacto — largura fixa */}
-              <div className="w-[480px] shrink-0 border-r p-6 overflow-auto">
+              <div className="w-120 shrink-0 border-r p-6 overflow-auto">
                 <ExpedientesCalendarCompact
                   selectedDate={selectedDate}
                   onDateSelect={setSelectedDate}

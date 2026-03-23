@@ -30,6 +30,10 @@ import {
 } from './actions/processo-partes-actions';
 
 import {
+  actionDesativarClientesEmMassa as _actionDesativarClientesEmMassa,
+} from './actions/clientes-actions';
+
+import {
   actionCriarCliente as _actionCriarCliente,
   actionAtualizarClienteForm as _actionAtualizarClienteForm,
   actionDesativarCliente as _actionDesativarCliente,
@@ -81,6 +85,10 @@ export async function actionAtualizarClienteForm(
 
 export async function actionDesativarCliente(id: number) {
   return _actionDesativarCliente(id);
+}
+
+export async function actionDesativarClientesEmMassa(ids: number[]) {
+  return _actionDesativarClientesEmMassa(ids);
 }
 
 export async function actionCriarParteContraria(
