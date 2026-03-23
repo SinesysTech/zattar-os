@@ -31,7 +31,8 @@
       "WebFetch(domain:blog.cloudron.io)",
       "WebFetch(domain:cloudron.io)",
       "WebSearch",
-      "WebFetch(domain:zattaradvogados.com)"
+      "WebFetch(domain:zattaradvogados.com)",
+      "WebFetch(domain:shadcnuikit.com)"
     ]
   },
   "enableAllProjectMcpServers": true,

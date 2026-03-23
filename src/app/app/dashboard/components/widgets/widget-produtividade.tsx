@@ -1,8 +1,16 @@
 'use client';
 
-import { TrendingUp, TrendingDown, Minus, BarChart3 } from 'lucide-react';
-import { WidgetWrapper } from './widget-wrapper';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
+import { Skeleton } from '@/components/ui/skeleton';
+
 import type { ProdutividadeResumo } from '../../domain';
 
 interface WidgetProdutividadeProps {
@@ -11,94 +19,80 @@ interface WidgetProdutividadeProps {
   error?: string;
 }
 
-function getTrendIcon(direction: 'up' | 'down' | 'neutral') {
-  switch (direction) {
-    case 'up':
-      return <TrendingUp className="h-3 w-3" />;
-    case 'down':
-      return <TrendingDown className="h-3 w-3" />;
-    default:
-      return <Minus className="h-3 w-3" />;
-  }
-}
-
-
-export function WidgetProdutividade({
-  data,
-  loading,
-  error,
-}: WidgetProdutividadeProps) {
+export function WidgetProdutividade({ data, loading, error }: WidgetProdutividadeProps) {
   if (loading) {
     return (
-      <WidgetWrapper title="Produtividade" icon={BarChart3} loading={true}>
-        <div />
-      </WidgetWrapper>
+      <Card>
+        <CardHeader><Skeleton className="h-5 w-28" /></CardHeader>
+        <CardContent className="space-y-3">
+          <Skeleton className="h-20 w-full" />
+        </CardContent>
+      </Card>
     );
   }
 
   if (error) {
     return (
-      <WidgetWrapper title="Produtividade" icon={BarChart3} error={error}>
-        <div />
-      </WidgetWrapper>
+      <Card>
+        <CardHeader><CardTitle>Produtividade</CardTitle></CardHeader>
+        <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
+      </Card>
     );
   }
 
   const trendDirection: 'up' | 'down' | 'neutral' =
-    data.comparativoSemanaAnterior > 0
-      ? 'up'
-      : data.comparativoSemanaAnterior < 0
-        ? 'down'
-        : 'neutral';
+    data.comparativoSemanaAnterior > 0 ? 'up'
+    : data.comparativoSemanaAnterior < 0 ? 'down'
+    : 'neutral';
+
+  const TrendIcon = trendDirection === 'up' ? TrendingUp : trendDirection === 'down' ? TrendingDown : Minus;
 
   const porDia = data.porDia || [];
   const maxBaixas = Math.max(...porDia.map((d) => d.baixas), 1);
 
   return (
-    <WidgetWrapper title="Produtividade" icon={BarChart3}>
-      <div className="space-y-4">
-        {/* Métricas principais */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-4">
-          <div className="space-y-1">
-            <p className="text-2xl font-bold">{data.baixasHoje}</p>
+    <Card>
+      <CardHeader>
+        <CardTitle>Produtividade</CardTitle>
+        <CardDescription>Baixas e atividades recentes</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-5">
+        {/* Main numbers */}
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <div className="font-display text-2xl">{data.baixasHoje}</div>
             <p className="text-xs text-muted-foreground">Hoje</p>
           </div>
-          <div className="space-y-1">
-            <p className="text-2xl font-bold">{data.baixasSemana}</p>
-            <p className="text-xs text-muted-foreground">Esta Semana</p>
+          <div>
+            <div className="font-display text-2xl">{data.baixasSemana}</div>
+            <p className="text-xs text-muted-foreground">Semana</p>
           </div>
-          <div className="space-y-1">
-            <p className="text-2xl font-bold">{data.baixasMes}</p>
-            <p className="text-xs text-muted-foreground">Este Mês</p>
+          <div>
+            <div className="font-display text-2xl">{data.baixasMes}</div>
+            <p className="text-xs text-muted-foreground">Mês</p>
           </div>
         </div>
 
-        {/* Comparativo */}
-        <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-          <div className="flex items-center gap-2">
-            {getTrendIcon(trendDirection)}
-            <span className="text-sm font-medium">Comparativo Semana Anterior</span>
-          </div>
+        {/* Trend comparison */}
+        <div className="flex items-center justify-between rounded-lg bg-muted/50 p-3">
+          <span className="text-sm text-muted-foreground">vs. semana anterior</span>
           <Badge
             variant={trendDirection === 'up' ? 'success' : trendDirection === 'down' ? 'destructive' : 'outline'}
-            className="text-xs"
+            className="text-xs gap-1"
           >
-            {data.comparativoSemanaAnterior > 0 ? '+' : ''}
-            {data.comparativoSemanaAnterior}%
+            <TrendIcon className="h-3 w-3" />
+            {data.comparativoSemanaAnterior > 0 ? '+' : ''}{data.comparativoSemanaAnterior}%
           </Badge>
         </div>
 
-        {/* Média diária */}
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Média Diária (Mês)</span>
-            <span className="font-medium">{data.mediaDiaria.toFixed(1)}</span>
-          </div>
+        {/* Average */}
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted-foreground">Média diária (mês)</span>
+          <span className="font-medium tabular-nums">{data.mediaDiaria.toFixed(1)}</span>
         </div>
 
-        {/* Gráfico de barras simples - últimos 7 dias */}
-        <div className="space-y-2">
-          <p className="text-xs font-medium text-muted-foreground">Últimos 7 Dias</p>
+        {/* Last 7 days bar chart */}
+        {porDia.length > 0 && (
           <div className="space-y-1.5">
             {porDia.map((dia) => {
               const percent = (dia.baixas / maxBaixas) * 100;
@@ -107,26 +101,20 @@ export function WidgetProdutividade({
               const dayNumber = date.getDate();
 
               return (
-                <div key={dia.data} className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">
-                      {dayName}, {dayNumber}
-                    </span>
-                    <span className="font-medium">{dia.baixas}</span>
+                <div key={dia.data} className="flex items-center gap-3 text-xs">
+                  <span className="w-16 text-muted-foreground shrink-0">
+                    {dayName}, {dayNumber}
+                  </span>
+                  <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                    <div className="h-full bg-primary transition-all rounded-full" style={{ width: `${percent}%` }} />
                   </div>
-                  <div className="h-2 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary transition-all"
-                      style={{ width: `${percent}%` }}
-                    />
-                  </div>
+                  <span className="w-6 text-right font-medium tabular-nums">{dia.baixas}</span>
                 </div>
               );
             })}
           </div>
-        </div>
-      </div>
-    </WidgetWrapper>
+        )}
+      </CardContent>
+    </Card>
   );
 }
-

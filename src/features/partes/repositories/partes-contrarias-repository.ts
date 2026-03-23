@@ -867,3 +867,28 @@ export async function softDeleteParteContraria(id: number): Promise<Result<void>
     );
   }
 }
+
+/**
+ * Soft delete de múltiplas partes contrárias (marca como inativas)
+ */
+export async function softDeletePartesContrariasEmMassa(ids: number[]): Promise<Result<number>> {
+  try {
+    if (ids.length === 0) return ok(0);
+    const db = createDbClient();
+    const { data, error } = await db
+      .from(TABLE_PARTES_CONTRARIAS)
+      .update({ ativo: false, updated_at: new Date().toISOString() })
+      .in('id', ids)
+      .select('id');
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(data?.length ?? 0);
+  } catch (error) {
+    return err(
+      appError('DATABASE_ERROR', 'Erro ao desativar partes contrárias em massa', undefined, error instanceof Error ? error : undefined)
+    );
+  }
+}

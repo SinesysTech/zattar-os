@@ -40,7 +40,7 @@ export function Mail({
 }) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
   const isMobile = useIsMobile();
-  const { selectedMail, messages, selectedFolder, searchQuery, setSearchQuery, serviceUnavailable, isMailExpanded, isComposing, setIsComposing, selectedUids, selectAllUids, clearSelectedUids } =
+  const { selectedMail, messages, selectedFolder, searchQuery, setSearchQuery, serviceUnavailable, isMailExpanded, isComposing, setIsComposing: _setIsComposing, selectedUids, selectAllUids, clearSelectedUids } =
     useMailStore();
   const [tab, setTab] = React.useState("all");
   const [searchInput, setSearchInput] = React.useState("");

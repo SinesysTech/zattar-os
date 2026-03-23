@@ -681,6 +681,31 @@ export async function softDeleteCliente(id: number): Promise<Result<void>> {
 }
 
 /**
+ * Soft delete de múltiplos clientes (marca como inativos)
+ */
+export async function softDeleteClientesEmMassa(ids: number[]): Promise<Result<number>> {
+  try {
+    if (ids.length === 0) return ok(0);
+    const db = createDbClient();
+    const { data, error } = await db
+      .from(TABLE_CLIENTES)
+      .update({ ativo: false, updated_at: new Date().toISOString() })
+      .in('id', ids)
+      .select('id');
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(data?.length ?? 0);
+  } catch (error) {
+    return err(
+      appError('DATABASE_ERROR', 'Erro ao desativar clientes em massa', undefined, error instanceof Error ? error : undefined)
+    );
+  }
+}
+
+/**
  * Conta o total de clientes no banco
  */
 export async function countClientes(): Promise<Result<number>> {

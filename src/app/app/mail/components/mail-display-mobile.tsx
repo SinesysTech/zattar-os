@@ -17,17 +17,6 @@ import { useMailStore } from "../use-mail";
 import { useMailActions } from "../hooks/use-mail-api";
 
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -96,6 +85,17 @@ function MailBodyMobile({ mail }: { mail: MailMessagePreview }) {
       </html>
     `);
     doc.close();
+
+    // Make links open in a new browser tab
+    doc.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const href = link.getAttribute("href");
+        if (href) {
+          window.open(href, "_blank", "noopener,noreferrer");
+        }
+      });
+    });
 
     const resizeObserver = new ResizeObserver(() => {
       if (iframeRef.current && doc.body) {
@@ -205,67 +205,31 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                 )}
               </Button>
 
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={!mail || actionLoading === "junk"}
-                    aria-label="Lixo eletrônico">
-                    {actionLoading === "junk" ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <ArchiveX className="h-4 w-4" />
-                    )}
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Mover para lixo eletrônico?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      O e-mail será movido para a pasta de lixo eletrônico.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => handleMobileAction(actions?.junk)}>
-                      Mover
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <Button
+                variant="ghost"
+                size="icon"
+                disabled={!mail || actionLoading === "junk"}
+                aria-label="Lixo eletrônico"
+                onClick={() => handleMobileAction(actions?.junk)}>
+                {actionLoading === "junk" ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <ArchiveX className="h-4 w-4" />
+                )}
+              </Button>
 
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={!mail || actionLoading === "delete"}
-                    aria-label="Excluir">
-                    {actionLoading === "delete" ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="h-4 w-4" />
-                    )}
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Excluir e-mail?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      O e-mail será movido para a lixeira.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => handleMobileAction(actions?.delete)}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                      Excluir
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <Button
+                variant="ghost"
+                size="icon"
+                disabled={!mail || actionLoading === "delete"}
+                aria-label="Excluir"
+                onClick={() => handleMobileAction(actions?.delete)}>
+                {actionLoading === "delete" ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4" />
+                )}
+              </Button>
             </div>
 
             <div className="ml-auto flex items-center gap-2">
@@ -323,14 +287,14 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                     <AvatarFallback>{participantInitials}</AvatarFallback>
                   </Avatar>
                   <div className="min-w-0 grid flex-1 gap-1">
-                    <div className="whitespace-normal break-words font-semibold">{participantName}</div>
-                    <div className="text-xs whitespace-normal break-words">{mail.subject}</div>
-                    <div className="text-xs whitespace-normal break-words">
+                    <div className="whitespace-normal wrap-break-word font-semibold">{participantName}</div>
+                    <div className="text-xs whitespace-normal wrap-break-word">{mail.subject}</div>
+                    <div className="text-xs whitespace-normal wrap-break-word">
                       <span className="font-medium">{participantLabel}:</span> {participantLine}
                     </div>
                   </div>
                 </div>
-                <div className="text-muted-foreground text-xs whitespace-normal break-words sm:ml-auto sm:pl-4 sm:text-right">
+                <div className="text-muted-foreground text-xs whitespace-normal wrap-break-word sm:ml-auto sm:pl-4 sm:text-right">
                   {format(new Date(mail.date), "PPpp", { locale: ptBR })}
                 </div>
               </div>

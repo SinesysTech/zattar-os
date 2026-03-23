@@ -119,6 +119,30 @@ export const actionAtualizarParteContrariaSafe = authenticatedAction(
 );
 
 // =============================================================================
+// AÇÕES EM MASSA
+// =============================================================================
+
+/**
+ * Desativa múltiplas partes contrárias em massa (soft delete)
+ */
+export async function actionDesativarPartesContrariasEmMassa(ids: number[]) {
+  try {
+    const result = await service.desativarPartesContrariasEmMassa(ids);
+    if (!result.success) {
+      return { success: false, message: result.error.message };
+    }
+    revalidatePath('/app/partes/partes-contrarias');
+    revalidatePath('/app/partes');
+    return {
+      success: true,
+      message: `${result.data} parte${result.data > 1 ? 's' : ''} contrária${result.data > 1 ? 's' : ''} desativada${result.data > 1 ? 's' : ''} com sucesso`,
+    };
+  } catch (error) {
+    return { success: false, message: String(error) };
+  }
+}
+
+// =============================================================================
 // LEGACY EXPORTS (mantidos para retrocompatibilidade durante migracao)
 // Serao removidos apos atualizacao de todos os consumidores
 // =============================================================================

@@ -114,7 +114,7 @@ export function StatCard({
             )}
           </div>
           {Icon && (
-            <div className={cn('rounded-lg p-2 sm:p-3 flex-shrink-0', styles.icon)}>
+            <div className={cn('rounded-lg p-2 sm:p-3 shrink-0', styles.icon)}>
               <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
           )}

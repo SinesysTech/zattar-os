@@ -5,12 +5,7 @@
  */
 
 export {
-  MiniLineChart,
-  MiniAreaChart,
-  MiniBarChart,
-  MiniPieChart,
   MiniDonutChart,
-  Sparkline,
   ProgressBarChart,
   CHART_COLORS,
   CHART_PALETTE,

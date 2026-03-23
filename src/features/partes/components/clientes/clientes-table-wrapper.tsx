@@ -9,7 +9,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import type { Table as TanstackTable, SortingState } from '@tanstack/react-table';
+import type { Table as TanstackTable, SortingState, RowSelectionState } from '@tanstack/react-table';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
   DataShell,
@@ -23,6 +23,7 @@ import { getClientesColumns, ClienteComProcessos } from './columns';
 import { actionDesativarCliente, actionListarClientes } from '../../actions';
 import { ChatwootSyncButton } from '@/features/chatwoot/components';
 import { FilterPopover, PartesSectionFilter } from '../shared';
+import { ClientesBulkActionsBar, DesativarClientesMassaDialog } from './clientes-bulk-actions';
 
 // =============================================================================
 // TIPOS
@@ -69,13 +70,25 @@ export function ClientesTableWrapper({
 
   // Table state
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
   // Dialog state
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [clienteParaEditar, setClienteParaEditar] = React.useState<ClienteComProcessos | null>(null);
+  const [desativarMassaOpen, setDesativarMassaOpen] = React.useState(false);
 
   const buscaDebounced = useDebounce(globalFilter, 500);
+
+  // Bulk selection helpers
+  const selectedIds = React.useMemo(
+    () =>
+      Object.keys(rowSelection)
+        .filter((key) => rowSelection[key])
+        .map(Number),
+    [rowSelection]
+  );
+  const selectedCount = selectedIds.length;
 
   // Data fetching
   const refetch = React.useCallback(async () => {
@@ -155,6 +168,12 @@ export function ClientesTableWrapper({
     router.refresh();
   }, [refetch, router]);
 
+  const handleBulkSuccess = React.useCallback(() => {
+    setRowSelection({});
+    refetch();
+    router.refresh();
+  }, [refetch, router]);
+
   const columns = React.useMemo(
     () => getClientesColumns(handleEdit, handleDelete),
     [handleEdit, handleDelete]
@@ -179,10 +198,19 @@ export function ClientesTableWrapper({
                 onClick: () => setCreateOpen(true),
               }}
               actionSlot={
-                <ChatwootSyncButton
-                  tipoEntidade="cliente"
-                  apenasAtivos={situacao === 'ativo'}
-                />
+                <>
+                  {selectedCount > 0 && (
+                    <ClientesBulkActionsBar
+                      selectedCount={selectedCount}
+                      onClearSelection={() => setRowSelection({})}
+                      onDesativar={() => setDesativarMassaOpen(true)}
+                    />
+                  )}
+                  <ChatwootSyncButton
+                    tipoEntidade="cliente"
+                    apenasAtivos={situacao === 'ativo'}
+                  />
+                </>
               }
               filtersSlot={
                 <>
@@ -249,6 +277,11 @@ export function ClientesTableWrapper({
           }}
           sorting={sorting}
           onSortingChange={setSorting}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId: (row) => String(row.id),
+          }}
           isLoading={isLoading}
           error={error}
           emptyMessage="Nenhum cliente encontrado."
@@ -275,6 +308,14 @@ export function ClientesTableWrapper({
           mode="edit"
         />
       )}
+
+      {/* Bulk action dialog */}
+      <DesativarClientesMassaDialog
+        open={desativarMassaOpen}
+        onOpenChange={setDesativarMassaOpen}
+        selectedIds={selectedIds}
+        onSuccess={handleBulkSuccess}
+      />
     </>
   );
 }

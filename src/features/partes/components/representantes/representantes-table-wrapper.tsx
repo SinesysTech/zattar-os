@@ -12,7 +12,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import type { Table as TanstackTable, ColumnDef, SortingState } from '@tanstack/react-table';
+import type { Table as TanstackTable, ColumnDef, SortingState, RowSelectionState } from '@tanstack/react-table';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
   DataShell,
@@ -31,6 +31,7 @@ import type { ProcessoRelacionado } from '../../types';
 import { useRepresentantes } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton, ContatoCell, FilterPopover, PartesSectionFilter } from '../shared';
 import { RepresentanteFormDialog } from './representante-form';
+import { RepresentantesBulkActionsBar, ExcluirRepresentantesMassaDialog } from './representantes-bulk-actions';
 import { formatarCpf, formatarNome } from '../../utils';
 import type { Representante, InscricaoOAB } from '../../types';
 
@@ -195,6 +196,9 @@ export function RepresentantesTableWrapper() {
 
   // Table state
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+
+  const [excluirMassaOpen, setExcluirMassaOpen] = React.useState(false);
 
   // Dialog state
   const [createOpen, setCreateOpen] = React.useState(false);
@@ -215,6 +219,17 @@ export function RepresentantesTableWrapper() {
   }, [pageIndex, pageSize, buscaDebounced, ufOab]);
 
   const { representantes, paginacao, isLoading, error, refetch } = useRepresentantes(params);
+
+  const selectedIds = React.useMemo(
+    () => Object.keys(rowSelection).filter((key) => rowSelection[key]).map(Number),
+    [rowSelection]
+  );
+  const selectedCount = selectedIds.length;
+
+  const handleBulkSuccess = React.useCallback(() => {
+    setRowSelection({});
+    refetch();
+  }, [refetch]);
 
   const handleEdit = React.useCallback((representante: RepresentanteComProcessos) => {
     setRepresentanteParaEditar(representante);
@@ -356,6 +371,15 @@ export function RepresentantesTableWrapper() {
                 label: 'Novo Representante',
                 onClick: () => setCreateOpen(true),
               }}
+              actionSlot={
+                selectedCount > 0 ? (
+                  <RepresentantesBulkActionsBar
+                    selectedCount={selectedCount}
+                    onClearSelection={() => setRowSelection({})}
+                    onExcluir={() => setExcluirMassaOpen(true)}
+                  />
+                ) : undefined
+              }
               filtersSlot={
                 <>
                   <PartesSectionFilter currentSection="representantes" />
@@ -406,6 +430,11 @@ export function RepresentantesTableWrapper() {
           }}
           sorting={sorting}
           onSortingChange={setSorting}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId: (row) => String(row.id),
+          }}
           isLoading={isLoading}
           error={error}
           emptyMessage="Nenhum representante encontrado."
@@ -433,6 +462,13 @@ export function RepresentantesTableWrapper() {
           mode="edit"
         />
       )}
+
+      <ExcluirRepresentantesMassaDialog
+        open={excluirMassaOpen}
+        onOpenChange={setExcluirMassaOpen}
+        selectedIds={selectedIds}
+        onSuccess={handleBulkSuccess}
+      />
     </>
   );
 }

@@ -46,7 +46,7 @@ export const useUsuarios = (
   const stableParams = useDeepCompareMemo(
     () => ({
       busca: params.busca || "",
-      ativo: params.ativo,
+      ativo: params.ativo ?? true,
       oab: params.oab || "",
       ufOab: params.ufOab || "",
       cargoId: params.cargoId,

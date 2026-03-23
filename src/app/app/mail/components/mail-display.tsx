@@ -19,17 +19,6 @@ import {
 } from "lucide-react";
 
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -129,6 +118,17 @@ function MailBody({ mail }: { mail: MailMessagePreview }) {
       updateHeight();
       const doc = iframe.contentDocument;
       if (!doc) return;
+
+      // Make links open in a new browser tab
+      doc.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const href = link.getAttribute("href");
+          if (href) {
+            window.open(href, "_blank", "noopener,noreferrer");
+          }
+        });
+      });
 
       // Listen for image loads that affect layout height
       doc.querySelectorAll("img").forEach((img) => {
@@ -329,79 +329,41 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <TooltipContent>Arquivar</TooltipContent>
           </Tooltip>
 
-          {/* Junk — with confirmation */}
-          <AlertDialog>
-            <Tooltip>
-              <AlertDialogTrigger asChild>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={!mail || actionLoading === "junk"}>
-                    {actionLoading === "junk" ? (
-                      <Loader2 className="animate-spin" />
-                    ) : (
-                      <ArchiveX />
-                    )}
-                    <span className="sr-only">Lixo eletrônico</span>
-                  </Button>
-                </TooltipTrigger>
-              </AlertDialogTrigger>
-              <TooltipContent>Lixo eletrônico</TooltipContent>
-            </Tooltip>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Mover para lixo eletrônico?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  O e-mail será movido para a pasta de lixo eletrônico.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction onClick={() => actions?.junk()}>
-                  Mover
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                disabled={!mail || actionLoading === "junk"}
+                onClick={() => actions?.junk()}>
+                {actionLoading === "junk" ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <ArchiveX />
+                )}
+                <span className="sr-only">Lixo eletrônico</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Lixo eletrônico</TooltipContent>
+          </Tooltip>
 
-          {/* Delete — with confirmation */}
-          <AlertDialog>
-            <Tooltip>
-              <AlertDialogTrigger asChild>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={!mail || actionLoading === "delete"}>
-                    {actionLoading === "delete" ? (
-                      <Loader2 className="animate-spin" />
-                    ) : (
-                      <Trash2 />
-                    )}
-                    <span className="sr-only">Excluir</span>
-                  </Button>
-                </TooltipTrigger>
-              </AlertDialogTrigger>
-              <TooltipContent>Excluir</TooltipContent>
-            </Tooltip>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Excluir e-mail?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  O e-mail será movido para a lixeira.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => actions?.delete()}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                  Excluir
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                disabled={!mail || actionLoading === "delete"}
+                onClick={() => actions?.delete()}>
+                {actionLoading === "delete" ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <Trash2 />
+                )}
+                <span className="sr-only">Excluir</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Excluir</TooltipContent>
+          </Tooltip>
         </div>
 
         <Separator orientation="vertical" className="mx-1 h-6" />
@@ -570,14 +532,14 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                 <AvatarFallback>{participantInitials}</AvatarFallback>
               </Avatar>
               <div className="min-w-0 grid flex-1 gap-1">
-                <div className="whitespace-normal break-words font-semibold">{participantName}</div>
-                <div className="text-xs whitespace-normal break-words">{mail.subject}</div>
-                <div className="text-xs whitespace-normal break-words">
+                <div className="whitespace-normal wrap-break-word font-semibold">{participantName}</div>
+                <div className="text-xs whitespace-normal wrap-break-word">{mail.subject}</div>
+                <div className="text-xs whitespace-normal wrap-break-word">
                   <span className="font-medium">{participantLabel}:</span> {participantLine}
                 </div>
               </div>
             </div>
-            <div className="text-muted-foreground text-xs whitespace-normal break-words sm:ml-auto sm:pl-4 sm:text-right">
+            <div className="text-muted-foreground text-xs whitespace-normal wrap-break-word sm:ml-auto sm:pl-4 sm:text-right">
               {format(new Date(mail.date), "PPpp", { locale: ptBR })}
             </div>
           </div>

@@ -354,6 +354,23 @@ export async function deletarRepresentante(id: number): Promise<{ sucesso: boole
   return { sucesso: true };
 }
 
+/**
+ * Exclui múltiplos representantes permanentemente (hard delete)
+ */
+export async function deletarRepresentantesEmMassa(ids: number[]): Promise<{ sucesso: boolean; total: number; erro?: string }> {
+  if (ids.length === 0) return { sucesso: true, total: 0 };
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('representantes')
+    .delete()
+    .in('id', ids)
+    .select('id');
+
+  if (error) return { sucesso: false, total: 0, erro: error.message };
+  return { sucesso: true, total: data?.length ?? 0 };
+}
+
 export async function upsertRepresentantePorCPF(
   params: UpsertRepresentantePorCPFParams
 ): Promise<{ sucesso: boolean; representante?: Representante; criado: boolean; erro?: string }> {

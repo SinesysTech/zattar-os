@@ -1,11 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { Calendar, Clock, ExternalLink, ArrowRight } from 'lucide-react';
-import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
-import { AppBadge as Badge } from '@/components/ui/app-badge';
+import { Calendar, Clock, Video, MapPin, ArrowRight } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { formatDate } from '@/lib/formatters';
+import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 import type { AudienciaProxima } from '../../domain';
 
 interface WidgetAudienciasProximasProps {
@@ -14,129 +20,136 @@ interface WidgetAudienciasProximasProps {
   error?: string;
 }
 
-function formatAudienciaDate(dateStr: string): string {
+function getDateLabel(dateStr: string): { label: string; sublabel: string; urgency: 'today' | 'tomorrow' | 'upcoming' } {
   const date = new Date(dateStr);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
-
   const dateOnly = new Date(date);
   dateOnly.setHours(0, 0, 0, 0);
 
   if (dateOnly.getTime() === today.getTime()) {
-    return 'Hoje';
+    return { label: 'Hoje', sublabel: date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }), urgency: 'today' };
   }
   if (dateOnly.getTime() === tomorrow.getTime()) {
-    return 'Amanhã';
+    return { label: 'Amanhã', sublabel: date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }), urgency: 'tomorrow' };
   }
-  return formatDate(dateStr);
+  const weekday = date.toLocaleDateString('pt-BR', { weekday: 'short' });
+  return {
+    label: weekday.charAt(0).toUpperCase() + weekday.slice(1),
+    sublabel: date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }),
+    urgency: 'upcoming',
+  };
 }
 
-export function WidgetAudienciasProximas({
-  data,
-  loading,
-  error,
-}: WidgetAudienciasProximasProps) {
+const urgencyStyles = {
+  today: { badge: 'bg-red-600 text-white', border: 'border-l-red-500', bg: 'bg-red-50/50 dark:bg-red-950/20' },
+  tomorrow: { badge: 'bg-amber-500 text-white', border: 'border-l-amber-500', bg: 'bg-amber-50/50 dark:bg-amber-950/20' },
+  upcoming: { badge: 'bg-blue-600 text-white', border: 'border-l-blue-500', bg: '' },
+};
+
+export function WidgetAudienciasProximas({ data, loading, error }: WidgetAudienciasProximasProps) {
   if (loading) {
     return (
-      <WidgetWrapper title="Próximas Audiências" icon={Calendar} loading={true}>
-        <div />
-      </WidgetWrapper>
+      <Card>
+        <CardHeader><Skeleton className="h-5 w-40" /></CardHeader>
+        <CardContent className="space-y-3">
+          {[1, 2, 3].map((i) => <Skeleton key={i} className="h-20 rounded-lg" />)}
+        </CardContent>
+      </Card>
     );
   }
 
   if (error) {
     return (
-      <WidgetWrapper title="Próximas Audiências" icon={Calendar} error={error}>
-        <div />
-      </WidgetWrapper>
-    );
-  }
-
-  if (data.length === 0) {
-    return (
-      <WidgetWrapper title="Próximas Audiências" icon={Calendar}>
-        <WidgetEmpty
-          icon={Calendar}
-          title="Nenhuma audiência agendada"
-          description="Não há audiências próximas no momento"
-        />
-      </WidgetWrapper>
+      <Card>
+        <CardHeader><CardTitle>Próximas Audiências</CardTitle></CardHeader>
+        <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
+      </Card>
     );
   }
 
   return (
-    <WidgetWrapper title="Próximas Audiências" icon={Calendar}>
-      <div className="space-y-3">
-        {data.slice(0, 5).map((audiencia) => {
-          const isToday = formatAudienciaDate(audiencia.data_audiencia) === 'Hoje';
-          const isTomorrow = formatAudienciaDate(audiencia.data_audiencia) === 'Amanhã';
+    <Card>
+      <CardHeader>
+        <CardTitle>Próximas Audiências</CardTitle>
+        <CardDescription>
+          {data.length > 0
+            ? `${data.length} agendada${data.length > 1 ? 's' : ''}`
+            : 'Nenhuma audiência agendada'}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {data.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <Calendar className="h-10 w-10 text-muted-foreground/30 mb-3" />
+            <p className="text-sm text-muted-foreground">Não há audiências próximas</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {data.slice(0, 5).map((aud) => {
+              const { label, sublabel, urgency } = getDateLabel(aud.data_audiencia);
+              const styles = urgencyStyles[urgency];
 
-          return (
-            <div
-              key={audiencia.id}
-              className={`p-3 rounded-lg border ${
-                isToday ? 'bg-primary/5 border-primary/20' : 'bg-card'
-              }`}
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex-1 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium">{audiencia.numero_processo}</p>
-                    {isToday && (
-                      <Badge variant="destructive" className="text-xs">
-                        Hoje
-                      </Badge>
-                    )}
-                    {isTomorrow && (
-                      <Badge variant="outline" className="text-xs">
-                        Amanhã
-                      </Badge>
+              return (
+                <div
+                  key={aud.id}
+                  className={cn(
+                    'flex gap-3 rounded-lg border border-l-[3px] p-3 transition-colors hover:bg-muted/50',
+                    styles.border,
+                    styles.bg,
+                  )}
+                >
+                  <div className={cn('flex flex-col items-center justify-center rounded-lg px-2.5 py-1.5 text-center min-w-13', styles.badge)}>
+                    <span className="text-[10px] font-bold uppercase leading-tight">{label}</span>
+                    <span className="text-[10px] opacity-80 leading-tight">{sublabel}</span>
+                  </div>
+
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <p className="text-sm font-medium truncate">{aud.numero_processo}</p>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                      {aud.hora_audiencia && (
+                        <span className="inline-flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {aud.hora_audiencia.substring(0, 5)}
+                        </span>
+                      )}
+                      {aud.tipo_audiencia && <span>{aud.tipo_audiencia}</span>}
+                      {aud.url_audiencia_virtual ? (
+                        <a
+                          href={aud.url_audiencia_virtual}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                          <Video className="h-3 w-3" />
+                          Virtual
+                        </a>
+                      ) : aud.sala ? (
+                        <span className="inline-flex items-center gap-1">
+                          <MapPin className="h-3 w-3" />
+                          Sala {aud.sala}
+                        </span>
+                      ) : null}
+                    </div>
+                    {aud.responsavel_nome && (
+                      <p className="text-xs text-muted-foreground">{aud.responsavel_nome}</p>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Calendar className="h-3 w-3" />
-                    <span>{formatAudienciaDate(audiencia.data_audiencia)}</span>
-                    {audiencia.hora_audiencia && (
-                      <>
-                        <Clock className="h-3 w-3 ml-2" />
-                        <span>{audiencia.hora_audiencia.substring(0, 5)}</span>
-                      </>
-                    )}
-                  </div>
-                  {audiencia.tipo_audiencia && (
-                    <p className="text-xs text-muted-foreground">{audiencia.tipo_audiencia}</p>
-                  )}
-                  {audiencia.sala && (
-                    <p className="text-xs text-muted-foreground">Sala: {audiencia.sala}</p>
-                  )}
                 </div>
-                {audiencia.url_audiencia_virtual && (
-                  <a
-                    href={audiencia.url_audiencia_virtual}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir link da audiência virtual em nova aba"
-                    title="Abrir audiência virtual"
-                    className="text-primary hover:text-primary/80"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                )}
-              </div>
-            </div>
-          );
-        })}
+              );
+            })}
 
-        <Link href="/audiencias">
-          <Button variant="ghost" size="sm" className="w-full mt-2">
-            Ver todas as audiências
-            <ArrowRight className="h-4 w-4 ml-2" />
-          </Button>
-        </Link>
-      </div>
-    </WidgetWrapper>
+            <Link href="/app/audiencias" className="block">
+              <Button variant="ghost" size="sm" className="w-full mt-1 text-muted-foreground hover:text-foreground">
+                Ver todas as audiências
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </Link>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
-

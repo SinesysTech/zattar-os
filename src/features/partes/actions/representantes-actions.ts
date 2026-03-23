@@ -101,6 +101,26 @@ export async function actionDeletarRepresentante(id: number): Promise<ActionResp
   }
 }
 
+/**
+ * Exclui múltiplos representantes em massa (hard delete permanente)
+ */
+export async function actionDeletarRepresentantesEmMassa(ids: number[]) {
+  try {
+    const result = await service.deletarRepresentantesEmMassa(ids);
+    if (!result.success) {
+      return { success: false, message: result.error.message };
+    }
+    revalidatePath('/app/partes/representantes');
+    revalidatePath('/app/partes');
+    return {
+      success: true,
+      message: `${result.data} representante${result.data > 1 ? 's' : ''} excluído${result.data > 1 ? 's' : ''} com sucesso`,
+    };
+  } catch (error) {
+    return { success: false, message: String(error) };
+  }
+}
+
 export async function actionUpsertRepresentantePorCPF(
   params: UpsertRepresentantePorCPFParams
 ): Promise<ActionResponse<unknown>> {

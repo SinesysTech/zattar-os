@@ -46,6 +46,9 @@ import {
   upsertClienteByCPF,
   upsertClienteByCNPJ,
   softDeleteCliente,
+  softDeleteClientesEmMassa,
+  softDeletePartesContrariasEmMassa,
+  softDeleteTerceirosEmMassa,
   countClientes,
   countClientesAteData,
   countClientesEntreDatas,
@@ -81,6 +84,7 @@ import {
   criarRepresentante as criarRepresentanteRepo,
   atualizarRepresentante as atualizarRepresentanteRepo,
   deletarRepresentante as deletarRepresentanteRepo,
+  deletarRepresentantesEmMassa as deletarRepresentantesEmMassaRepo,
   upsertRepresentantePorCPF as upsertRepresentantePorCPFRepo,
 } from './repositories/representantes-repository';
 import type {
@@ -388,6 +392,17 @@ export async function desativarCliente(id: number): Promise<Result<void>> {
   return softDeleteCliente(id);
 }
 
+/**
+ * Desativa múltiplos clientes (soft delete em massa)
+ */
+export async function desativarClientesEmMassa(ids: number[]): Promise<Result<number>> {
+  if (!ids.length) return err(appError('VALIDATION_ERROR', 'Nenhum ID informado'));
+  const uniqueIds = [...new Set(ids.filter((id) => id > 0))];
+  if (!uniqueIds.length) return err(appError('VALIDATION_ERROR', 'IDs invalidos'));
+
+  return softDeleteClientesEmMassa(uniqueIds);
+}
+
 // =============================================================================
 // SERVICOS - PARTE CONTRARIA
 // =============================================================================
@@ -535,6 +550,17 @@ export async function atualizarParteContraria(
   return updateParteContrariaRepo(id, dadosValidados, parteExistente);
 }
 
+/**
+ * Desativa múltiplas partes contrárias (soft delete em massa)
+ */
+export async function desativarPartesContrariasEmMassa(ids: number[]): Promise<Result<number>> {
+  if (!ids.length) return err(appError('VALIDATION_ERROR', 'Nenhum ID informado'));
+  const uniqueIds = [...new Set(ids.filter((id) => id > 0))];
+  if (!uniqueIds.length) return err(appError('VALIDATION_ERROR', 'IDs invalidos'));
+
+  return softDeletePartesContrariasEmMassa(uniqueIds);
+}
+
 // =============================================================================
 // SERVICOS - TERCEIRO
 // =============================================================================
@@ -667,6 +693,17 @@ export async function atualizarTerceiro(
   }
 
   return updateTerceiroRepo(id, dadosValidados, terceiroExistente);
+}
+
+/**
+ * Desativa múltiplos terceiros (soft delete em massa)
+ */
+export async function desativarTerceirosEmMassa(ids: number[]): Promise<Result<number>> {
+  if (!ids.length) return err(appError('VALIDATION_ERROR', 'Nenhum ID informado'));
+  const uniqueIds = [...new Set(ids.filter((id) => id > 0))];
+  if (!uniqueIds.length) return err(appError('VALIDATION_ERROR', 'IDs invalidos'));
+
+  return softDeleteTerceirosEmMassa(uniqueIds);
 }
 
 // =============================================================================
@@ -828,6 +865,23 @@ export async function deletarRepresentante(id: number): Promise<Result<void>> {
     const result = await deletarRepresentanteRepo(id);
     if (!result.sucesso) return err(appError('DATABASE_ERROR', result.erro || 'Erro desconhecido'));
     return ok(undefined);
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+/**
+ * Exclui múltiplos representantes permanentemente (hard delete em massa)
+ */
+export async function deletarRepresentantesEmMassa(ids: number[]): Promise<Result<number>> {
+  if (!ids.length) return err(appError('VALIDATION_ERROR', 'Nenhum ID informado'));
+  const uniqueIds = [...new Set(ids.filter((id) => id > 0))];
+  if (!uniqueIds.length) return err(appError('VALIDATION_ERROR', 'IDs invalidos'));
+
+  try {
+    const result = await deletarRepresentantesEmMassaRepo(uniqueIds);
+    if (!result.sucesso) return err(appError('DATABASE_ERROR', result.erro || 'Erro desconhecido'));
+    return ok(result.total);
   } catch (e) {
     return err(appError('DATABASE_ERROR', String(e)));
   }

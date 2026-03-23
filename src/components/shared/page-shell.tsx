@@ -59,7 +59,7 @@ export function PageShell({
           <div className="space-y-1.5">
             {badge && <div className="mb-2">{badge}</div>}
             {title && (
-              <h1 className="text-2xl font-bold tracking-tight font-heading text-foreground sm:text-3xl">
+              <h1 className="text-2xl font-bold tracking-tight font-heading">
                 {title}
               </h1>
             )}
