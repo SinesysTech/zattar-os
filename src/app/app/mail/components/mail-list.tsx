@@ -150,7 +150,7 @@ export function MailList({ items }: MailListProps) {
               <div className="flex w-full flex-wrap items-start gap-x-3 gap-y-1">
                 <div className="min-w-0 flex-1">
                   <div className="flex min-w-0 flex-wrap items-center gap-2">
-                    <div className="text-foreground whitespace-normal wrap-break-word font-semibold leading-5">
+                    <div className="text-foreground whitespace-normal break-words font-semibold leading-5">
                       {getMailPrimaryName(item)}
                     </div>
                     {!item.read && (
@@ -179,7 +179,7 @@ export function MailList({ items }: MailListProps) {
                   {item.subject}
                 </div>
                 {getMailListPreview(item) ? (
-                  <div className="text-muted-foreground whitespace-normal wrap-break-word">
+                  <div className="text-muted-foreground whitespace-normal break-words">
                     {getMailListPreview(item)}
                   </div>
                 ) : null}
