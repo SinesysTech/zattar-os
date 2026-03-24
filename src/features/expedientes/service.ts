@@ -127,11 +127,12 @@ export async function realizarBaixa(id: number, input: z.infer<typeof baixaExped
   if (!expediente) return err(appError('NOT_FOUND', 'Expediente não encontrado.'));
   if (expediente.baixadoEm) return err(appError('BAD_REQUEST', 'Expediente já está baixado.'));
 
-  const { protocoloId, justificativaBaixa, dataBaixa } = validation.data;
+  const { protocoloId, justificativaBaixa, dataBaixa, resultadoDecisao } = validation.data;
   const baixaResult = await repository.baixarExpediente(id, {
     protocoloId: protocoloId,
     justificativaBaixa: justificativaBaixa,
     baixadoEm: dataBaixa,
+    resultadoDecisao: resultadoDecisao,
   });
 
   if (baixaResult.success) {

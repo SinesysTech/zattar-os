@@ -1,27 +1,5 @@
-"use client";
-
-import Header from "@/components/website/header";
-import Hero from "@/components/website/hero";
-import DireitosEssenciais from "@/components/website/direitos-essenciais";
-import EtapasProcessuais from "@/components/website/etapas-processuais";
-import Depoimentos from "@/components/website/depoimentos";
-import QuemSomos from "@/components/website/quem-somos";
-import ConsultoriaEmpresarial from "@/components/website/consultoria-empresarial";
-import Footer from "@/components/website/ui/footer";
-import ChatwootWidget from "@/components/website/chatwoot-widget";
+import { HomePage } from "@/features/website";
 
 export default function Home() {
-  return (
-    <main className="min-h-screen">
-      <Header />
-      <Hero />
-      <DireitosEssenciais />
-      <EtapasProcessuais />
-      <Depoimentos />
-      <QuemSomos />
-      <ConsultoriaEmpresarial />
-      <Footer />
-      <ChatwootWidget />
-    </main>
-  );
+  return <HomePage />;
 }

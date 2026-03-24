@@ -24,8 +24,8 @@ function DashboardHeader() {
   return (
     <header
       className={cn(
-        "flex h-14 shrink-0 items-center justify-between gap-4 px-4 transition-all duration-200",
-        "bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-white/20 dark:border-slate-700/50 shadow-sm"
+        "flex h-16 mt-4 mx-4 shrink-0 flex-1 items-center justify-between gap-4 px-6 transition-all duration-200 rounded-xl z-40 sticky top-4",
+        "bg-surface-container-highest/60 backdrop-blur-xl border border-white/10 shadow-2xl font-headline font-medium"
       )}
     >
       <div className="flex items-center gap-3">
@@ -58,7 +58,7 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
       >
         <SidebarProvider>
           <AppSidebar />
-          <SidebarInset className="h-svh min-h-svh overflow-hidden flex flex-col bg-muted/30">
+          <SidebarInset className="h-svh min-h-svh overflow-hidden flex flex-col bg-background">
             <DashboardHeader />
             <div
               id="portal-content"

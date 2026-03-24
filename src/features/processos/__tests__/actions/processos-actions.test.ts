@@ -89,5 +89,39 @@ describe('Processos Actions', () => {
         mockSupabase
       );
     });
+
+    it('actionAtualizarProcesso deve retornar processo unificado quando disponível após o update', async () => {
+      (authenticateRequest as jest.Mock).mockResolvedValue(mockUser);
+      (service.atualizarProcesso as jest.Mock).mockResolvedValue({
+        success: true,
+        data: { id: 1, responsavelId: 7, updatedAt: '2026-03-24T12:00:00.000Z' },
+      });
+      (service.buscarProcesso as jest.Mock).mockResolvedValue({
+        success: true,
+        data: {
+          id: 1,
+          responsavelId: 7,
+          updatedAt: '2026-03-24T12:00:01.000Z',
+          numeroProcesso: '0001234-56.2023.5.15.0001',
+          instances: [],
+        },
+      });
+
+      const formData = new FormData();
+      formData.append('responsavelId', '7');
+
+      const result = await actionAtualizarProcesso(1, null, formData);
+
+      expect(service.atualizarProcesso).toHaveBeenCalledWith(1, { responsavelId: 7 });
+      expect(service.buscarProcesso).toHaveBeenCalledWith(1, mockSupabase);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toMatchObject({
+          id: 1,
+          responsavelId: 7,
+          numeroProcesso: '0001234-56.2023.5.15.0001',
+        });
+      }
+    });
   });
 });

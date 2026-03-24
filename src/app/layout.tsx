@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
-import { Inter, Montserrat, Geist_Mono } from "next/font/google";
+import { Inter, Montserrat, Geist_Mono, Manrope } from "next/font/google";
 import { CSPNonceMeta } from "@/lib/csp/csp-nonce-meta";
 import RootLayoutClient from "./layout-client";
 import "./globals.css";
@@ -23,6 +23,13 @@ const montserrat = Montserrat({
 const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",
+  display: "swap",
+});
+
+// Fonte Headline (Magistrate)
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
   display: "swap",
 });
 
@@ -67,7 +74,7 @@ export default async function RootLayout({
         <CSPNonceMeta nonce={nonce} />
       </head>
       <body
-        className={`${inter.variable} ${montserrat.variable} ${geistMono.variable} antialiased font-sans bg-background text-foreground`}
+        className={`${inter.variable} ${montserrat.variable} ${manrope.variable} ${geistMono.variable} antialiased font-sans bg-background text-foreground`}
       >
         <RootLayoutClient nonce={nonce}>{children}</RootLayoutClient>
       </body>

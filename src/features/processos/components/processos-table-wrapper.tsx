@@ -772,19 +772,7 @@ export function ProcessosTableWrapper({
     );
   }, []);
 
-  // Função wrapper para refetch que também atualiza localmente se necessário
-  // Nota: refetch será definido depois, então precisamos usar uma referência
-  const refetchRef = React.useRef<() => Promise<void>>();
-
-  const handleRefetchWithUpdate = React.useCallback((updatedProcesso?: ProcessoUnificado) => {
-    if (updatedProcesso) {
-      // Update otimista: atualizar o responsavelId imediatamente na lista local
-      updateProcessoLocal(updatedProcesso.id, { responsavelId: updatedProcesso.responsavelId });
-    }
-    if (refetchRef.current) {
-      refetchRef.current();
-    }
-  }, [updateProcessoLocal]);
+  const refetchTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Função para recarregar dados (movido para antes do useMemo de colunas)
   const refetch = React.useCallback(async () => {
@@ -842,10 +830,36 @@ export function ProcessosTableWrapper({
     }
   }, [pageIndex, pageSize, buscaDebounced, trtFilter, origemFilter, router, pathname]);
 
-  // Atualizar ref do refetch
-  React.useEffect(() => {
-    refetchRef.current = refetch;
+  const scheduleBackgroundRefetch = React.useCallback((delayMs = 1500) => {
+    if (refetchTimeoutRef.current) {
+      clearTimeout(refetchTimeoutRef.current);
+    }
+
+    refetchTimeoutRef.current = setTimeout(() => {
+      refetchTimeoutRef.current = null;
+      void refetch();
+    }, delayMs);
   }, [refetch]);
+
+  const handleRefetchWithUpdate = React.useCallback((updatedProcesso?: ProcessoUnificado) => {
+    if (updatedProcesso) {
+      updateProcessoLocal(updatedProcesso.id, {
+        responsavelId: updatedProcesso.responsavelId,
+        updatedAt: updatedProcesso.updatedAt,
+      });
+    }
+
+    // Evita reler a view materializada cedo demais e sobrescrever o update otimista.
+    scheduleBackgroundRefetch();
+  }, [scheduleBackgroundRefetch, updateProcessoLocal]);
+
+  React.useEffect(() => {
+    return () => {
+      if (refetchTimeoutRef.current) {
+        clearTimeout(refetchTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Função para abrir dialog de tags
   const handleOpenTagsDialog = React.useCallback((processo: ProcessoUnificado) => {

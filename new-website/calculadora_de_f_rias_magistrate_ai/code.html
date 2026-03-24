@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#cc97ff",
+            "surface-variant": "#262626",
+            "tertiary-fixed-dim": "#fa7c8b",
+            "on-surface": "#ffffff",
+            "on-primary-fixed-variant": "#430076",
+            "surface-container-high": "#1f1f1f",
+            "inverse-surface": "#f9f9f9",
+            "on-tertiary": "#680921",
+            "surface-bright": "#2c2c2c",
+            "tertiary-container": "#fe7e8e",
+            "on-primary-fixed": "#000000",
+            "inverse-on-surface": "#555555",
+            "outline-variant": "#484848",
+            "on-surface-variant": "#ababab",
+            "secondary": "#e197fc",
+            "on-primary-container": "#360061",
+            "tertiary-dim": "#f47786",
+            "surface": "#0e0e0e",
+            "secondary-container": "#6a2785",
+            "on-secondary": "#530b6f",
+            "on-error": "#490013",
+            "secondary-fixed": "#f1c1ff",
+            "secondary-dim": "#d28aed",
+            "error-container": "#a70138",
+            "background": "#0e0e0e",
+            "on-tertiary-fixed": "#39000d",
+            "on-tertiary-fixed-variant": "#711227",
+            "primary-fixed": "#c284ff",
+            "on-background": "#ffffff",
+            "surface-dim": "#0e0e0e",
+            "on-error-container": "#ffb2b9",
+            "on-secondary-fixed-variant": "#753290",
+            "tertiary-fixed": "#ff909c",
+            "surface-container": "#191919",
+            "on-secondary-fixed": "#550e71",
+            "primary-container": "#c284ff",
+            "on-tertiary-container": "#570018",
+            "surface-tint": "#cc97ff",
+            "surface-container-lowest": "#000000",
+            "secondary-fixed-dim": "#ebaeff",
+            "surface-container-highest": "#262626",
+            "on-primary": "#47007c",
+            "error-dim": "#d73357",
+            "primary-fixed-dim": "#b971ff",
+            "inverse-primary": "#842cd3",
+            "outline": "#757575",
+            "tertiary": "#ff95a0",
+            "surface-container-low": "#131313",
+            "error": "#ff6e84",
+            "on-secondary-container": "#f1bfff",
+            "primary-dim": "#9c48ea"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      background: #cc97ff;
+      cursor: pointer;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(204, 151, 255, 0.5);
+    }
+    .glass-panel {
+      background: rgba(31, 31, 31, 0.6);
+      backdrop-filter: blur(20px);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30">
+<!-- Side Navigation Bar -->
+<aside class="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 py-8 h-screen w-64 border-r border-white/5 bg-[#0e0e0e] z-50">
+<div class="px-8 mb-12">
+<h1 class="text-xl font-bold text-purple-500 font-headline tracking-tight">Magistrate AI</h1>
+<p class="text-xs text-on-surface-variant font-medium mt-1">Legal Tech Elite</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-zinc-500 hover:bg-white/5 hover:text-purple-300 transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">edit_document</span>
+<span class="font-medium text-sm">Generator</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-zinc-500 hover:bg-white/5 hover:text-purple-300 transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">schedule</span>
+<span class="font-medium text-sm">Overtime</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-zinc-500 hover:bg-white/5 hover:text-purple-300 transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-medium text-sm">13th Salary</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-purple-500/10 text-purple-400 border-r-4 border-purple-500 transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">event_available</span>
+<span class="font-medium text-sm">Vacation</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-zinc-500 hover:bg-white/5 hover:text-purple-300 transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-primary text-on-primary-fixed font-bold py-3 rounded-xl hover:bg-primary-container transition-all active:scale-95">
+        New Analysis
+      </button>
+</div>
+</aside>
+<!-- Top App Bar (Mobile) -->
+<header class="fixed top-4 left-4 right-4 h-16 max-w-7xl mx-auto rounded-xl border border-white/5 bg-[#0e0e0e]/60 backdrop-blur-xl flex justify-between items-center px-8 z-50 md:hidden">
+<span class="text-2xl font-black tracking-tighter text-purple-500 uppercase font-headline">Magistrate AI</span>
+<span class="material-symbols-outlined text-purple-400">account_circle</span>
+</header>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 min-h-screen pt-24 lg:pt-12 px-6 lg:px-12 pb-24">
+<!-- Hero Editorial Header -->
+<section class="max-w-5xl mx-auto mb-16">
+<span class="text-primary font-bold text-xs tracking-widest uppercase mb-4 block">Calculators • Labor Law</span>
+<div class="flex flex-col md:flex-row md:items-end gap-6">
+<h2 class="text-5xl lg:text-7xl font-extrabold font-headline tracking-tighter leading-none max-w-2xl">
+          Vacation <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-dim">Calculator.</span>
+</h2>
+<p class="text-on-surface-variant text-lg font-body max-w-sm ml-auto text-right border-r-4 border-primary/20 pr-6 hidden md:block">
+          Precision legal logic for calculating constitutional vacation pay and 1/3 bonuses.
+        </p>
+</div>
+</section>
+<!-- Interactive Calculator Bento Grid -->
+<div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Input Panel -->
+<section class="lg:col-span-7 bg-surface-container rounded-xl p-8 border border-white/5 space-y-10">
+<!-- Base Salary Input -->
+<div class="space-y-4">
+<label class="block text-on-surface-variant text-sm font-semibold uppercase tracking-wider">Base Salary (Salário Bruto)</label>
+<div class="relative group">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-primary font-bold">R$</span>
+<input class="w-full bg-surface-container-high border-none rounded-lg py-5 pl-12 pr-4 text-2xl font-bold focus:ring-2 focus:ring-primary/50 placeholder:text-zinc-700 transition-all" placeholder="0,00" type="number"/>
+</div>
+</div>
+<!-- Vacation Days Slider -->
+<div class="space-y-6">
+<div class="flex justify-between items-end">
+<label class="block text-on-surface-variant text-sm font-semibold uppercase tracking-wider">Vacation Days (Dias de Férias)</label>
+<span class="text-4xl font-black text-primary font-headline">30</span>
+</div>
+<input class="w-full h-1.5 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary" max="30" min="1" type="range" value="30"/>
+<div class="flex justify-between text-[10px] text-zinc-600 font-bold uppercase tracking-widest">
+<span>01 Day</span>
+<span>15 Days</span>
+<span>30 Days</span>
+</div>
+</div>
+<!-- Toggle Group -->
+<div class="pt-6 border-t border-white/5 space-y-6">
+<div class="flex items-center justify-between p-4 bg-surface-container-high rounded-xl hover:bg-surface-variant transition-colors group">
+<div class="space-y-1">
+<span class="block font-bold text-on-surface">Cash Allowance</span>
+<span class="block text-xs text-on-surface-variant">Abono Pecuniário (Vender 1/3 das férias)</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-14 h-7 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-high rounded-xl hover:bg-surface-variant transition-colors group">
+<div class="space-y-1">
+<span class="block font-bold text-on-surface">1st Installment 13th</span>
+<span class="block text-xs text-on-surface-variant">Adiantamento da 1ª Parcela do 13º Salário</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-14 h-7 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary-fixed py-5 rounded-xl font-bold text-lg uppercase tracking-widest shadow-[0_10px_30px_-10px_rgba(204,151,255,0.4)] hover:shadow-primary/40 active:scale-[0.98] transition-all">
+          Generate Calculation
+        </button>
+</section>
+<!-- Results Display -->
+<section class="lg:col-span-5 space-y-6 sticky top-12">
+<div class="glass-panel rounded-2xl p-8 border border-primary/20 shadow-2xl overflow-hidden relative">
+<!-- Decorative Glow -->
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 blur-[80px] rounded-full"></div>
+<span class="text-primary font-bold text-xs uppercase tracking-tighter mb-8 block">Results Breakdown</span>
+<div class="space-y-6 mb-10">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Vacation Amount</span>
+<span class="font-mono text-on-surface">R$ 4.500,00</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">1/3 Constitutional Bonus</span>
+<span class="font-mono text-on-surface">R$ 1.500,00</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Cash Allowance (1/3)</span>
+<span class="font-mono text-tertiary-fixed-dim">--</span>
+</div>
+<div class="flex justify-between items-center text-sm pt-4 border-t border-white/10">
+<span class="text-on-surface-variant">Gross Total</span>
+<span class="font-mono font-bold text-primary">R$ 6.000,00</span>
+</div>
+</div>
+<div class="bg-surface-container-highest rounded-xl p-6 text-center">
+<span class="text-xs text-on-surface-variant uppercase font-bold tracking-[0.2em] mb-2 block">Net Total Estimated</span>
+<div class="text-5xl font-black font-headline tracking-tighter text-white">
+              R$ 5.482,<span class="text-primary-dim">40</span>
+</div>
+<p class="text-[10px] text-zinc-500 mt-4 italic">*Estimates based on current INSS and IRRF tax brackets for 2024.</p>
+</div>
+</div>
+<!-- Tech/Legal Assurance Card -->
+<div class="bg-surface-container rounded-xl p-6 border border-white/5 flex gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+</div>
+<div>
+<h4 class="font-bold text-sm text-on-surface">Verified Logic</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed mt-1">
+              Calculations are compliant with Art. 129-153 of the Brazilian CLT (Consolidação das Leis do Trabalho).
+            </p>
+</div>
+</div>
+</section>
+</div>
+<!-- Decorative Content -->
+<section class="max-w-5xl mx-auto mt-24">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="group cursor-pointer">
+<div class="h-48 rounded-2xl mb-4 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500">
+<img class="w-full h-full object-cover" data-alt="close-up of a high-end fountain pen resting on a legal document with dramatic neon purple side lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQGS-7aTVXAQkR1YbpEeLCQdCWz7tRlPaRzBw264ESincCm1Qz5wpsuO7nL1N6aNVJd-HohaPVPAAlQ5ODvlR64p0MeDyy-Yf4RE6DNeQf_3y8EjtEMzEHGEIO1hTKkiGtmz7oBoyUmVfzbCcfRdE6ipBYwVeG-SMfv8sOQQ3RWezJNeEEUx92hBIfTnK78PngqqXU2TtTt26h8sieL9OphWAUgxQEDcRn1C1A-zCepCo9jZxXhTDjtertBL-n59sfEdPwObIeNDP2"/>
+</div>
+<h5 class="font-bold font-headline mb-2">Legal Accuracy</h5>
+<p class="text-xs text-on-surface-variant leading-relaxed">Magistrate AI cross-references every calculation with the latest federal labor gazette updates.</p>
+</div>
+<div class="group cursor-pointer">
+<div class="h-48 rounded-2xl mb-4 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500">
+<img class="w-full h-full object-cover" data-alt="futuristic data visualization dashboard with glowing purple lines and abstract geometric shapes on a black background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxKIW0JU98Hg3zCDHJPWfbqgfJj58fwgeSU8HRpkklvavqja0rYbJpyDq2dla5i9NZ6RJcTlSZji5kclJ6yEbpw_XjR-cvxs18JPRwu4j_K6gycuuKVE3h2Yo4P97ok3915FET9kjll40LPlPcYf2mHGdyO2LsVtfiC5NtiK_IVT709RKWjnSqCPbZigAaCU6nIzCWaWDHn8_gdC56RxH6rfYImGf62sCgyEAAMt6z6GZv6mhCDvAYElJnld6MDC78IppcxmVQ-aYA"/>
+</div>
+<h5 class="font-bold font-headline mb-2">Smart Deduction</h5>
+<p class="text-xs text-on-surface-variant leading-relaxed">Advanced algorithms handle complex deductions for IRRF and INSS based on progressive table values.</p>
+</div>
+<div class="group cursor-pointer">
+<div class="h-48 rounded-2xl mb-4 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500">
+<img class="w-full h-full object-cover" data-alt="overhead view of a modern professional workspace with minimalist tech gadgets and sleek dark surfaces" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBx5Du1ojduJVF3C_ybrpgS2JZorh1VB76BxVl_gaUTbYRfQNusha3XYx6mJETMxvg7ffRfU-tX8I5xe4mqQ92hGqfhsrcAYZ_tRXXyBQQogO5_t0fnsyRdoQgdHIZ5bXO-R341O9UOhk7rf66Jcuoez7fQuaxgSr3emjGiERyqaVmIQ-Bb5O0OZMuZZZa0T8enqVTr53yy5k4GYGzvBoMvIeCOWMIHlFksnX1KfoyAO32ahoOg648V6fDK0lfa9VHmCX-EjvN5FOuQ"/>
+</div>
+<h5 class="font-bold font-headline mb-2">Export Ready</h5>
+<p class="text-xs text-on-surface-variant leading-relaxed">Instantly generate a certified PDF of your calculation for payroll submission or legal dispute.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Navigation Shell (Bottom Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-[#0e0e0e] border-t border-white/5 px-6 h-20 flex justify-between items-center z-50">
+<button class="flex flex-col items-center gap-1 text-zinc-500">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] uppercase font-bold tracking-widest">Dash</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined">event_available</span>
+<span class="text-[10px] uppercase font-bold tracking-widest">Calc</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-zinc-500">
+<span class="material-symbols-outlined">description</span>
+<span class="text-[10px] uppercase font-bold tracking-widest">Docs</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-zinc-500">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] uppercase font-bold tracking-widest">Profile</span>
+</button>
+</nav>
+<!-- Footer -->
+<footer class="lg:ml-64 bg-[#0e0e0e] border-t border-white/5 py-12 px-12">
+<div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<p class="font-['Inter'] text-xs uppercase tracking-widest text-zinc-600">© 2024 Magistrate AI. All Rights Reserved.</p>
+<div class="flex gap-8">
+<a class="font-['Inter'] text-xs uppercase tracking-widest text-zinc-600 hover:text-purple-300 transition-colors" href="#">Terms of Service</a>
+<a class="font-['Inter'] text-xs uppercase tracking-widest text-zinc-600 hover:text-purple-300 transition-colors" href="#">Privacy Policy</a>
+<a class="font-['Inter'] text-xs uppercase tracking-widest text-zinc-600 hover:text-purple-300 transition-colors" href="#">Legal Disclaimer</a>
+</div>
+</div>
+</footer>
+</body></html>

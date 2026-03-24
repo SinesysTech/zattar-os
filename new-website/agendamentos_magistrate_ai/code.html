@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-dim": "#d28aed",
+                        "error-container": "#a70138",
+                        "on-error": "#490013",
+                        "secondary-fixed": "#f1c1ff",
+                        "on-primary-container": "#360061",
+                        "tertiary-dim": "#f47786",
+                        "secondary": "#e197fc",
+                        "secondary-container": "#6a2785",
+                        "on-secondary": "#530b6f",
+                        "surface": "#0e0e0e",
+                        "on-primary-fixed": "#000000",
+                        "inverse-on-surface": "#555555",
+                        "on-surface-variant": "#ababab",
+                        "outline-variant": "#484848",
+                        "surface-bright": "#2c2c2c",
+                        "on-tertiary": "#680921",
+                        "tertiary-container": "#fe7e8e",
+                        "on-surface": "#ffffff",
+                        "on-primary-fixed-variant": "#430076",
+                        "surface-container-high": "#1f1f1f",
+                        "inverse-surface": "#f9f9f9",
+                        "surface-variant": "#262626",
+                        "tertiary-fixed-dim": "#fa7c8b",
+                        "primary": "#cc97ff",
+                        "on-secondary-container": "#f1bfff",
+                        "primary-dim": "#9c48ea",
+                        "surface-container-low": "#131313",
+                        "error": "#ff6e84",
+                        "primary-fixed-dim": "#b971ff",
+                        "inverse-primary": "#842cd3",
+                        "outline": "#757575",
+                        "error-dim": "#d73357",
+                        "tertiary": "#ff95a0",
+                        "secondary-fixed-dim": "#ebaeff",
+                        "surface-container-lowest": "#000000",
+                        "on-primary": "#47007c",
+                        "surface-container-highest": "#262626",
+                        "on-tertiary-container": "#570018",
+                        "surface-tint": "#cc97ff",
+                        "on-secondary-fixed": "#550e71",
+                        "tertiary-fixed": "#ff909c",
+                        "surface-container": "#191919",
+                        "primary-container": "#c284ff",
+                        "primary-fixed": "#c284ff",
+                        "on-background": "#ffffff",
+                        "on-secondary-fixed-variant": "#753290",
+                        "surface-dim": "#0e0e0e",
+                        "on-error-container": "#ffb2b9",
+                        "on-tertiary-fixed": "#39000d",
+                        "on-tertiary-fixed-variant": "#711227",
+                        "background": "#0e0e0e"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(31, 31, 31, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .sidebar-active {
+            color: #cc97ff;
+            font-weight: 700;
+            border-right: 2px solid #cc97ff;
+            background: rgba(204, 151, 255, 0.05);
+        }
+        body {
+            background-color: #0e0e0e;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-white/5 bg-[#0e0e0e] flex flex-col py-8 px-4 z-50">
+<div class="mb-12 px-4">
+<h1 class="text-2xl font-black tracking-tighter text-primary uppercase font-headline">Neon Magistrate</h1>
+<p class="text-xs text-on-surface-variant font-label tracking-widest mt-1">Tech-Legal Elite</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label">Contracts</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span class="font-label">Lawsuits</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 sidebar-active transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-label">Appointments</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-label">Payments</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label">Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-white/5 pt-6 space-y-2">
+<button class="w-full bg-primary text-on-primary-fixed font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 mb-6 hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                New Case
+            </button>
+<a class="flex items-center gap-4 px-4 py-2 text-zinc-500 hover:text-zinc-200 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label">Support</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-2 text-zinc-500 hover:text-zinc-200 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label">Logout</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-4 right-4 left-72 rounded-xl border border-white/10 bg-[#191919]/60 backdrop-blur-xl h-16 px-6 z-40 flex justify-between items-center shadow-2xl">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md focus-within:ring-1 focus-within:ring-primary/50 rounded-lg">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" data-icon="search">search</span>
+<input class="bg-surface-container-high border-none rounded-lg pl-10 pr-4 py-2 w-full text-sm text-on-surface focus:ring-0" placeholder="Procurar agendamentos..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-zinc-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-zinc-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+</button>
+<button class="text-zinc-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-primary/30">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="close-up portrait of a professional man in a dark suit with soft office lighting background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBs3CV839_0biL_Q2QL3GlS503IPWeIcVV09Mu_jUQLljs2JPAuE-oHsqQkBp4gL5iLJSzrN8zcbjn8P5zK6NCV0TWVcxYCLIRQm28L6G6w1TeDjoGpxc7iXxJExokUYC6ztAJwekfN8ItcIdyMDyhuMCS2QWCLKBnQ4FbfMSw5qJJKw6LQCQ52RNni9op6nQE4oemBuLYEjas94MLbyOhENnyPvt6vvSbumym37pk9s_dI9TzanrKfo5CQ5rum8AIqoUNPypU_zoMU"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-28 px-12 pb-12">
+<div class="max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+<div>
+<span class="text-primary font-label text-sm font-bold uppercase tracking-widest mb-2 block">Agenda Magistrada</span>
+<h2 class="text-5xl font-black font-headline tracking-tighter">Agendamentos</h2>
+</div>
+<button class="bg-primary text-on-primary-fixed font-bold py-4 px-8 rounded-xl flex items-center gap-3 hover:bg-primary-container transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(204,151,255,0.3)]">
+<span class="material-symbols-outlined" data-icon="calendar_add_on">calendar_add_on</span>
+                    Agendar Nova Consulta
+                </button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Calendar View Area (Editorial Style) -->
+<div class="lg:col-span-8 space-y-8">
+<section>
+<h3 class="text-xl font-headline font-bold mb-6 flex items-center gap-2">
+<span class="w-2 h-8 bg-primary rounded-full"></span>
+                            Próximas Consultas
+                        </h3>
+<div class="grid grid-cols-1 gap-4">
+<!-- Meeting Card 1 -->
+<div class="group surface-container p-6 rounded-xl border border-white/5 hover:border-primary/30 transition-all duration-300 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<span class="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full uppercase tracking-tighter">Hoje</span>
+</div>
+<div class="flex items-start gap-6">
+<div class="flex flex-col items-center justify-center bg-surface-container-high rounded-xl p-4 min-w-[80px] border border-white/5">
+<span class="text-2xl font-black font-headline text-primary">24</span>
+<span class="text-xs uppercase font-label text-on-surface-variant">MAI</span>
+</div>
+<div class="flex-1">
+<h4 class="text-xl font-bold font-headline mb-1 group-hover:text-primary transition-colors">Revisão de Fusão Estratégica</h4>
+<p class="text-on-surface-variant text-sm mb-4">Especialista: <span class="text-on-surface font-medium">Dra. Beatriz Fontana</span></p>
+<div class="flex flex-wrap items-center gap-4">
+<div class="flex items-center gap-2 text-sm text-zinc-400">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                                                14:30 - 15:30 (GMT-3)
+                                            </div>
+<a class="flex items-center gap-2 text-sm text-primary font-bold hover:underline" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="video_chat">video_chat</span>
+                                                Entrar na Chamada
+                                            </a>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<button class="p-2 hover:bg-white/5 rounded-lg text-zinc-500 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Meeting Card 2 -->
+<div class="group surface-container p-6 rounded-xl border border-white/5 hover:border-primary/30 transition-all duration-300">
+<div class="flex items-start gap-6">
+<div class="flex flex-col items-center justify-center bg-surface-container-high rounded-xl p-4 min-w-[80px] border border-white/5">
+<span class="text-2xl font-black font-headline text-on-surface">28</span>
+<span class="text-xs uppercase font-label text-on-surface-variant">MAI</span>
+</div>
+<div class="flex-1">
+<h4 class="text-xl font-bold font-headline mb-1 group-hover:text-primary transition-colors">Consultoria de Propriedade Intelectual</h4>
+<p class="text-on-surface-variant text-sm mb-4">Especialista: <span class="text-on-surface font-medium">Dr. Ricardo Menezes</span></p>
+<div class="flex flex-wrap items-center gap-4">
+<div class="flex items-center gap-2 text-sm text-zinc-400">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                                                10:00 - 11:30 (GMT-3)
+                                            </div>
+<span class="flex items-center gap-2 text-sm text-zinc-500">
+<span class="material-symbols-outlined text-sm" data-icon="link_off">link_off</span>
+                                                Link disponível em 3 dias
+                                            </span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<button class="p-2 hover:bg-white/5 rounded-lg text-zinc-500 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section>
+<h3 class="text-xl font-headline font-bold mb-6 flex items-center gap-2">
+<span class="w-2 h-8 bg-zinc-700 rounded-full"></span>
+                            Histórico de Consultas
+                        </h3>
+<div class="space-y-3">
+<!-- Past Item 1 -->
+<div class="flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-colors border-b border-white/5">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-zinc-600" data-icon="check_circle">check_circle</span>
+<div>
+<p class="font-bold text-sm">Auditoria Trabalhista Preventiva</p>
+<p class="text-xs text-zinc-500">12 de Maio • Dr. Carlos Eduardo</p>
+</div>
+</div>
+<button class="text-xs font-bold text-primary hover:text-primary-container">Ver Resumo</button>
+</div>
+<!-- Past Item 2 -->
+<div class="flex items-center justify-between p-4 rounded-xl hover:bg-white/5 transition-colors border-b border-white/5">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-zinc-600" data-icon="check_circle">check_circle</span>
+<div>
+<p class="font-bold text-sm">Análise de Termos de Uso (SaaS)</p>
+<p class="text-xs text-zinc-500">05 de Maio • Dra. Beatriz Fontana</p>
+</div>
+</div>
+<button class="text-xs font-bold text-primary hover:text-primary-container">Ver Resumo</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Sidebar Content (Stats & Calendar Widget) -->
+<div class="lg:col-span-4 space-y-8">
+<!-- Quick Stats Bento -->
+<div class="surface-container p-6 rounded-2xl border border-white/5">
+<h4 class="text-sm font-label uppercase tracking-widest text-on-surface-variant mb-6">Visão Geral</h4>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-high p-4 rounded-xl">
+<p class="text-primary text-2xl font-black font-headline">12</p>
+<p class="text-[10px] text-zinc-500 uppercase font-bold tracking-tight">Realizadas</p>
+</div>
+<div class="bg-surface-container-high p-4 rounded-xl">
+<p class="text-on-surface text-2xl font-black font-headline">02</p>
+<p class="text-[10px] text-zinc-500 uppercase font-bold tracking-tight">Pendentes</p>
+</div>
+</div>
+</div>
+<!-- Mini Calendar Widget -->
+<div class="surface-container p-6 rounded-2xl border border-white/5">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-bold font-headline">Maio 2024</h4>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary" data-icon="chevron_left">chevron_left</span>
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-2 text-center text-[10px] font-bold text-zinc-500 mb-4">
+<span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+</div>
+<div class="grid grid-cols-7 gap-2 text-center text-xs">
+<span class="py-2 text-zinc-700">28</span>
+<span class="py-2 text-zinc-700">29</span>
+<span class="py-2 text-zinc-700">30</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">1</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">2</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">3</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">4</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">5</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">6</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">7</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">8</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">9</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">10</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">11</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">12</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">13</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">14</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer font-bold border border-primary/20 bg-primary/5 text-primary">24</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">25</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">26</span>
+<span class="py-2 hover:bg-white/5 rounded-lg cursor-pointer">27</span>
+</div>
+</div>
+<!-- Specialist Highlight -->
+<div class="relative rounded-2xl overflow-hidden aspect-[4/5] group">
+<img alt="Especialista Destaque" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100" data-alt="high-end editorial portrait of a professional female lawyer in a modern glass office, cinematic dark lighting with purple accent lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwCJ8fjhNp-je0E7eklCEF8-j1RtvYYGKrPZ1SA0W5dmDqeI-E48v7z13_WiYg4XDl1EWqPaMeSAkwU-CGxuq8qBqsVERjjuxUJI99CB-ZrF9xO8acuvWRZzUZkZ2aRHPSitluLD8n3unkjSuetORagbAtqXTk-0WeynOQGBG8Vkswh1YXnaByjU7CpkhCZqxc_mzdYOpR181xBdTrN_Wa7cXmREHKLFrYfzkkaASoov7T6XiPI_EDRzXNJB1GOzecK1p6ilYR70-N"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<span class="bg-primary text-on-primary-fixed text-[10px] font-bold px-2 py-1 rounded mb-2 inline-block uppercase">Destaque</span>
+<h5 class="text-xl font-black font-headline leading-none">Dra. Beatriz Fontana</h5>
+<p class="text-xs text-zinc-400 mt-2">Especialista em Direito Digital &amp; Tech M&amp;A</p>
+<button class="mt-4 text-xs font-bold border-b border-primary text-primary pb-1 hover:text-on-surface hover:border-on-surface transition-all">Ver Perfil</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation for Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#191919] border-t border-white/5 flex items-center justify-around z-50 px-4">
+<a class="flex flex-col items-center gap-1 text-zinc-500" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+</a>
+<button class="bg-primary text-on-primary-fixed p-3 rounded-full -mt-12 shadow-2xl border-4 border-surface">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+<a class="flex flex-col items-center gap-1 text-zinc-500" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-zinc-500" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</a>
+</nav>
+</body></html>

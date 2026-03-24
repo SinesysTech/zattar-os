@@ -1,7 +1,7 @@
 import { FilterConfig, buildFilterOptions, parseFilterValues } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup, ComboboxOption } from '@/components/ui/table-toolbar';
 import type { ExpedientesFilters } from '../domain';
-import { CodigoTribunal, GRAU_TRIBUNAL_LABELS, ORIGEM_EXPEDIENTE_LABELS, GrauTribunal } from '../domain';
+import { CodigoTribunal, GRAU_TRIBUNAL_LABELS, ORIGEM_EXPEDIENTE_LABELS, GrauTribunal, ResultadoDecisao, RESULTADO_DECISAO_LABELS } from '../domain';
 
 // =============================================================================
 // CONFIGURAÇÕES DE FILTROS
@@ -90,6 +90,16 @@ export const EXPEDIENTES_FILTER_CONFIGS: FilterConfig[] = [
     label: 'Prioridade Processual',
     type: 'boolean',
     searchText: 'prioridade urgente',
+  },
+  {
+    id: 'resultado_decisao',
+    label: 'Resultado da Decisão',
+    type: 'multiselect',
+    options: Object.entries(RESULTADO_DECISAO_LABELS).map(([value, label]) => ({
+      value,
+      label,
+    })),
+    searchText: 'resultado decisao desfavoravel parcialmente favoravel',
   },
 ];
 
@@ -190,6 +200,10 @@ export function buildExpedientesFilterGroups(
         configMap.get('prioridade_processual')!,
       ]),
     },
+    {
+      label: 'Decisão',
+      options: buildOptionsWithoutPrefix([configMap.get('resultado_decisao')!]),
+    },
   ];
 }
 
@@ -272,6 +286,11 @@ export function parseExpedientesFilters(selectedIds: string[]): ExpedientesFilte
   // if (parsed.prioridade_processual === true) {
   //   filters.prioridadeProcessual = true;
   // }
+
+  // Resultado da Decisão
+  if (parsed.resultado_decisao && Array.isArray(parsed.resultado_decisao)) {
+    filters.resultadoDecisao = parsed.resultado_decisao[0] as ResultadoDecisao;
+  }
 
   return filters;
 }
