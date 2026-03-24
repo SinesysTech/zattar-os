@@ -56,6 +56,18 @@ export const GRAU_TRIBUNAL_LABELS: Record<GrauTribunal, string> = {
   [GrauTribunal.TRIBUNAL_SUPERIOR]: "Tribunal Superior",
 };
 
+export enum ResultadoDecisao {
+  DESFAVORAVEL = "desfavoravel",
+  PARCIALMENTE_FAVORAVEL = "parcialmente_favoravel",
+  FAVORAVEL = "favoravel",
+}
+
+export const RESULTADO_DECISAO_LABELS: Record<ResultadoDecisao, string> = {
+  [ResultadoDecisao.DESFAVORAVEL]: "Desfavorável",
+  [ResultadoDecisao.PARCIALMENTE_FAVORAVEL]: "Parcialmente Favorável",
+  [ResultadoDecisao.FAVORAVEL]: "Favorável",
+};
+
 // =============================================================================
 // INTERFACES (DOMAIN)
 // =============================================================================
@@ -100,6 +112,7 @@ export interface Expediente {
   arquivoKey: string | null;
   observacoes: string | null;
   origem: OrigemExpediente;
+  resultadoDecisao: ResultadoDecisao | null;
   createdAt: string;
   updatedAt: string;
 
@@ -163,6 +176,7 @@ export const baixaExpedienteSchema = z
     expedienteId: z.number().min(1),
     protocoloId: z.string().trim().min(1).optional(),
     justificativaBaixa: z.string().optional(),
+    resultadoDecisao: z.nativeEnum(ResultadoDecisao).nullable().optional(),
     dataBaixa: z
       .string()
       .optional()
@@ -229,6 +243,7 @@ export type ListarExpedientesParams = {
   processoId?: number;
   semPrazo?: boolean;
   origem?: OrigemExpediente;
+  resultadoDecisao?: ResultadoDecisao;
   prioridadeProcessual?: boolean;
 };
 

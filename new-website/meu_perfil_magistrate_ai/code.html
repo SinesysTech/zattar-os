@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-dim": "#d28aed",
+                        "error-container": "#a70138",
+                        "on-error": "#490013",
+                        "secondary-fixed": "#f1c1ff",
+                        "on-primary-container": "#360061",
+                        "tertiary-dim": "#f47786",
+                        "secondary": "#e197fc",
+                        "secondary-container": "#6a2785",
+                        "on-secondary": "#530b6f",
+                        "surface": "#0e0e0e",
+                        "on-primary-fixed": "#000000",
+                        "inverse-on-surface": "#555555",
+                        "on-surface-variant": "#ababab",
+                        "outline-variant": "#484848",
+                        "surface-bright": "#2c2c2c",
+                        "on-tertiary": "#680921",
+                        "tertiary-container": "#fe7e8e",
+                        "on-surface": "#ffffff",
+                        "on-primary-fixed-variant": "#430076",
+                        "surface-container-high": "#1f1f1f",
+                        "inverse-surface": "#f9f9f9",
+                        "surface-variant": "#262626",
+                        "tertiary-fixed-dim": "#fa7c8b",
+                        "primary": "#cc97ff",
+                        "on-secondary-container": "#f1bfff",
+                        "primary-dim": "#9c48ea",
+                        "surface-container-low": "#131313",
+                        "error": "#ff6e84",
+                        "primary-fixed-dim": "#b971ff",
+                        "inverse-primary": "#842cd3",
+                        "outline": "#757575",
+                        "error-dim": "#d73357",
+                        "tertiary": "#ff95a0",
+                        "secondary-fixed-dim": "#ebaeff",
+                        "surface-container-lowest": "#000000",
+                        "on-primary": "#47007c",
+                        "surface-container-highest": "#262626",
+                        "on-tertiary-container": "#570018",
+                        "surface-tint": "#cc97ff",
+                        "on-secondary-fixed": "#550e71",
+                        "tertiary-fixed": "#ff909c",
+                        "surface-container": "#191919",
+                        "primary-container": "#c284ff",
+                        "primary-fixed": "#c284ff",
+                        "on-background": "#ffffff",
+                        "on-secondary-fixed-variant": "#753290",
+                        "surface-dim": "#0e0e0e",
+                        "on-error-container": "#ffb2b9",
+                        "on-tertiary-fixed": "#39000d",
+                        "on-tertiary-fixed-variant": "#711227",
+                        "background": "#0e0e0e"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0e0e0e;
+            color: #ffffff;
+        }
+        .glass-panel {
+            background: rgba(31, 31, 31, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(72, 72, 72, 0.2);
+        }
+        .neon-glow {
+            text-shadow: 0 0 10px rgba(204, 151, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-primary selection:text-on-primary-fixed">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-white/5 bg-[#0e0e0e] flex flex-col py-8 px-4 shadow-[20px_0_40px_rgba(0,0,0,0.4)] z-50 font-['Manrope'] tracking-tight antialiased">
+<div class="mb-10 px-2">
+<span class="text-2xl font-black tracking-tighter text-purple-500 uppercase">Neon Magistrate</span>
+<p class="text-xs text-on-surface-variant mt-1 opacity-70">Tech-Legal Elite</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span>Contracts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span>Lawsuits</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span>Appointments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Payments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-purple-400 font-bold border-r-2 border-purple-500 bg-purple-500/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-white/5 space-y-1">
+<button class="w-full mb-4 py-3 px-4 rounded-lg bg-primary text-on-primary-fixed font-bold text-sm hover:bg-primary-container transition-colors active:scale-95">
+                New Case
+            </button>
+<a class="flex items-center gap-3 px-4 py-2 text-zinc-500 hover:text-zinc-200 text-sm transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-zinc-500 hover:text-zinc-200 text-sm transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-4 right-4 left-72 rounded-xl border border-white/10 bg-[#191919]/60 backdrop-blur-xl flex justify-between items-center h-16 px-6 z-40 shadow-2xl font-['Manrope'] font-medium">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xl" data-icon="search">search</span>
+<input class="w-full bg-surface-container-high border-none rounded-lg py-2 pl-11 pr-4 text-sm focus:ring-1 focus:ring-purple-500/50 transition-all placeholder:text-zinc-600" placeholder="Buscar no Magistrado..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-zinc-400">
+<button class="hover:text-purple-300 transition-colors material-symbols-outlined" data-icon="notifications">notifications</button>
+<button class="hover:text-purple-300 transition-colors material-symbols-outlined" data-icon="chat_bubble">chat_bubble</button>
+<button class="hover:text-purple-300 transition-colors material-symbols-outlined" data-icon="settings">settings</button>
+</div>
+<div class="h-8 w-[1px] bg-white/10"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-xs font-bold text-white leading-none">Dr. Ricardo Silva</p>
+<p class="text-[10px] text-primary">Status: VIP Elite</p>
+</div>
+<img alt="User Profile" class="h-10 w-10 rounded-full border-2 border-primary/20" data-alt="professional portrait of a confident male lawyer in a dark suit against a minimalist tech background with purple accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdcWvOAc9dM0BnDcoLqVMoei1XDdIOUw3ykPT2hRqOwGOyqLMx2DxNStu0uA3S6sJWMejE573fL1v1RpEiouifR0QIWl0FVct6RGAY90_PZCRC2PDncIbHs8IxVjjhyjDgAKga5Pw2OL872_zY40-P_m9PYbqSXcfsIx-2ss3L5mOZgb_at_c5lp_a-9vr5MfwUklHTpbBzC9LUbXm95_Kr58FXdjkqh6uyXgIBSqmhMLYDFvVD8qlBIkU5dajjd2Zxf66YuJ7BUZU"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-28 px-10 pb-20 max-w-[1400px]">
+<!-- Header Section -->
+<section class="mb-12">
+<span class="text-primary font-bold tracking-widest text-xs uppercase mb-2 block">Central do Usuário</span>
+<div class="flex justify-between items-end">
+<div>
+<h1 class="font-headline text-5xl font-extrabold tracking-tighter text-white mb-4">Meu Perfil</h1>
+<p class="text-on-surface-variant body-lg max-w-2xl">Gerencie sua identidade digital e documentos jurídicos com criptografia de ponta a ponta.</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2 bg-surface-container-highest px-4 py-2 rounded-full border border-primary/20">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-primary text-xs font-bold uppercase tracking-wider">Status: Verificado</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column: Personal Data Form -->
+<div class="col-span-12 lg:col-span-7 space-y-8">
+<div class="glass-panel p-8 rounded-xl">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary" data-icon="person_edit">person_edit</span>
+<h2 class="font-headline text-2xl font-bold">Dados Pessoais</h2>
+</div>
+<form class="space-y-6">
+<div class="grid grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest ml-1">Nome Completo</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-4 text-white focus:ring-1 focus:ring-primary/50 transition-all font-medium" type="text" value="Ricardo Santos Silva"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest ml-1">CPF / Identificação</label>
+<input class="w-full bg-surface-container border-none rounded-lg p-4 text-zinc-500 cursor-not-allowed font-medium" disabled="" type="text" value="XXX.XXX.XXX-XX"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest ml-1">Email Profissional</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-4 text-white focus:ring-1 focus:ring-primary/50 transition-all font-medium" type="email" value="ricardo.silva@magistrate.ai"/>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest ml-1">Telefone</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg p-4 text-white focus:ring-1 focus:ring-primary/50 transition-all font-medium" type="tel" value="+55 11 99999-9999"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest ml-1">Cargo / Especialidade</label>
+<select class="w-full bg-surface-container-high border-none rounded-lg p-4 text-white focus:ring-1 focus:ring-primary/50 transition-all font-medium appearance-none">
+<option>Advogado Sênior</option>
+<option>Consultor Jurídico</option>
+<option>Paralegal</option>
+</select>
+</div>
+</div>
+<div class="pt-4 flex justify-end gap-4">
+<button class="px-8 py-3 rounded-lg border border-outline-variant text-on-surface hover:bg-white/5 transition-colors font-bold" type="button">Descartar</button>
+<button class="px-8 py-3 rounded-lg bg-primary text-on-primary-fixed font-bold hover:bg-primary-container transition-all shadow-[0_10px_20px_rgba(204,151,255,0.2)]" type="submit">Atualizar Cadastro</button>
+</div>
+</form>
+</div>
+<!-- Security Settings Block -->
+<div class="bg-surface-container border border-white/5 p-8 rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-6">
+<div class="h-14 w-14 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="enhanced_encryption">enhanced_encryption</span>
+</div>
+<div>
+<h3 class="font-bold text-lg">Autenticação de Dois Fatores</h3>
+<p class="text-sm text-on-surface-variant">Proteja sua conta com uma camada adicional de segurança.</p>
+</div>
+</div>
+<button class="bg-surface-container-highest px-6 py-2 rounded-lg text-secondary font-bold hover:bg-secondary-container/30 transition-all">Configurar</button>
+</div>
+</div>
+<!-- Right Column: Digital Vault & Document Upload -->
+<div class="col-span-12 lg:col-span-5 space-y-8">
+<!-- Digital Vault -->
+<div class="bg-gradient-to-br from-surface-container to-surface-container-high p-8 rounded-xl border border-white/5 relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-16 translate-x-16 blur-3xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary" data-icon="lock">lock</span>
+<h2 class="font-headline text-2xl font-bold">Cofre Digital</h2>
+</div>
+<p class="text-sm text-on-surface-variant mb-8 leading-relaxed">
+                        Seus documentos são criptografados com padrão militar (AES-256). Somente você e seus consultores autorizados possuem as chaves de acesso.
+                    </p>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest/50 rounded-lg border border-white/5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-zinc-500" data-icon="badge">badge</span>
+<span class="text-sm font-medium">Documento de Identidade</span>
+</div>
+<span class="text-[10px] font-bold text-green-400 bg-green-400/10 px-2 py-1 rounded">VALIDADO</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest/50 rounded-lg border border-white/5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-zinc-500" data-icon="home_pin">home_pin</span>
+<span class="text-sm font-medium">Comprovante de Residência</span>
+</div>
+<span class="text-[10px] font-bold text-amber-400 bg-amber-400/10 px-2 py-1 rounded">PENDENTE</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest/50 rounded-lg border border-white/5 opacity-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-zinc-500" data-icon="assignment_ind">assignment_ind</span>
+<span class="text-sm font-medium">Registro Profissional (OAB)</span>
+</div>
+<button class="text-[10px] font-bold text-primary hover:underline">UPLOAD</button>
+</div>
+</div>
+</div>
+<!-- Upload Section -->
+<div class="glass-panel p-8 rounded-xl border-dashed border-2 border-primary/30 flex flex-col items-center justify-center text-center py-12">
+<div class="h-20 w-20 rounded-full bg-primary/5 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="cloud_upload">cloud_upload</span>
+</div>
+<h3 class="font-headline text-xl font-bold mb-2">Upload Seguro de Documentos</h3>
+<p class="text-sm text-on-surface-variant mb-8 max-w-[280px]">Arraste seus arquivos PDF, JPG ou PNG para o cofre seguro.</p>
+<button class="bg-primary text-on-primary-fixed px-10 py-3 rounded-lg font-bold hover:scale-105 transition-transform active:scale-95">Selecionar Arquivos</button>
+<p class="text-[10px] text-zinc-600 mt-6 uppercase tracking-widest">Limite de 50MB por arquivo • Criptografia Ativa</p>
+</div>
+<!-- Trust Ticker (Partner Logos) -->
+<div class="pt-8 opacity-40">
+<p class="text-[10px] text-center font-bold uppercase tracking-[0.3em] mb-6">Certificações de Segurança</p>
+<div class="flex justify-between items-center px-4 grayscale contrast-125">
+<img alt="ISO 27001 Logo" class="h-8" data-alt="minimalist white ISO 27001 certification logo icon representing international security standards" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5cjP44WAgPqDRTVvJrQ6Wf8VTlJfywwRs0g-D7ZSt3LxDlRCtSBG_WiodazjEZCLdP2CJ1sJQfbifWAQm_T9hFTjJojl2bp1TZuKNoAUBhmGnPVdzCrqtzwwrobh3uLdMxvkpVQ_vMs-oqnpGX8UHL-GQPmuJM8ygsf06JxOJDplLT27dPJVD7I8LLcDW6dK_6TdDfmNGOp6_hjsdUalldZeV8UZxQOYy3SMLxDIOMQo8PHHvsmDRCzYfEOcpyfTrfbHx89FmhI3I"/>
+<img alt="GDPR Compliance" class="h-6" data-alt="official GDPR compliance badge in minimalist white line art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8lp9OKOio6B8PHg-FQYI18U5o4hr3MMi1Ty-LieBCxacSOXZh3MleIqTpJ0DR7yrcVEACF2XPi6MEJjw7WTTg1f86jKsabqyPIA9DvtXP5SaH94MPlCqAG5ltFFRlIr_zNyxLftezfkqTCl2kGNOBze3OaBEgSr9vyI66KGr-I5mzC4W1r_70pPsWGs528lNVrRWpTrVaXJzOmhTcWRfVdFP7FYodHQ01NAFunPznAXw-p8dLMCoEYhIFN1z_XF3uJiplIDQZNOVd"/>
+<img alt="AES 256" class="h-8" data-alt="security shield icon with AES-256 text representing high level encryption" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQSuY_Kmb69zk2K0_q37_rwQM8A98Jq9kxsjL2OaRzieFPCa0JMAdpHPitDgRcsKVl_ZCBXLKtZTgkvJzOip2ZJ90pfv6pcS4wpFvaLuB0n2TIymFljG5nycze0zUl8y-oPJVchp3KoM4jLzBy_0T8TSUZtMVTXZSmP2xEyrCQEj1fLzyL9T1V7prvByH4eckDYPS4C02mi8nqLVb30q002ebGplBFA6S3TW6TimFCO2xMBwE958jTVPnLewaQ8TtxRFNKVDcw87n5"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Legal Kicker -->
+<footer class="mt-20 border-t border-white/5 pt-10 flex flex-col md:flex-row justify-between items-start gap-8">
+<div class="max-w-md">
+<span class="text-primary font-bold text-lg neon-glow">Magistrate AI</span>
+<p class="text-sm text-on-surface-variant mt-2 leading-relaxed">
+                    Sua privacidade é nosso compromisso institucional. Todos os dados processados nesta tela seguem rigorosamente a Lei Geral de Proteção de Dados (LGPD).
+                </p>
+</div>
+<div class="flex gap-12">
+<div class="space-y-3">
+<p class="text-xs font-bold text-white uppercase tracking-widest">Suporte</p>
+<ul class="text-sm text-zinc-500 space-y-2">
+<li><a class="hover:text-primary transition-colors" href="#">Centro de Ajuda</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Chat com Jurídico</a></li>
+</ul>
+</div>
+<div class="space-y-3">
+<p class="text-xs font-bold text-white uppercase tracking-widest">Legal</p>
+<ul class="text-sm text-zinc-500 space-y-2">
+<li><a class="hover:text-primary transition-colors" href="#">Termos de Uso</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacidade</a></li>
+</ul>
+</div>
+</div>
+</footer>
+</main>
+</body></html>

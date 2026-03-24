@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Magistrate Portal - Acompanhamento de Processos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-dim": "#d28aed",
+                        "error-container": "#a70138",
+                        "on-error": "#490013",
+                        "secondary-fixed": "#f1c1ff",
+                        "on-primary-container": "#360061",
+                        "tertiary-dim": "#f47786",
+                        "secondary": "#e197fc",
+                        "secondary-container": "#6a2785",
+                        "on-secondary": "#530b6f",
+                        "surface": "#0e0e0e",
+                        "on-primary-fixed": "#000000",
+                        "inverse-on-surface": "#555555",
+                        "on-surface-variant": "#ababab",
+                        "outline-variant": "#484848",
+                        "surface-bright": "#2c2c2c",
+                        "on-tertiary": "#680921",
+                        "tertiary-container": "#fe7e8e",
+                        "on-surface": "#ffffff",
+                        "on-primary-fixed-variant": "#430076",
+                        "surface-container-high": "#1f1f1f",
+                        "inverse-surface": "#f9f9f9",
+                        "surface-variant": "#262626",
+                        "tertiary-fixed-dim": "#fa7c8b",
+                        "primary": "#cc97ff",
+                        "on-secondary-container": "#f1bfff",
+                        "primary-dim": "#9c48ea",
+                        "surface-container-low": "#131313",
+                        "error": "#ff6e84",
+                        "primary-fixed-dim": "#b971ff",
+                        "inverse-primary": "#842cd3",
+                        "outline": "#757575",
+                        "error-dim": "#d73357",
+                        "tertiary": "#ff95a0",
+                        "secondary-fixed-dim": "#ebaeff",
+                        "surface-container-lowest": "#000000",
+                        "on-primary": "#47007c",
+                        "surface-container-highest": "#262626",
+                        "on-tertiary-container": "#570018",
+                        "surface-tint": "#cc97ff",
+                        "on-secondary-fixed": "#550e71",
+                        "tertiary-fixed": "#ff909c",
+                        "surface-container": "#191919",
+                        "primary-container": "#c284ff",
+                        "primary-fixed": "#c284ff",
+                        "on-background": "#ffffff",
+                        "on-secondary-fixed-variant": "#753290",
+                        "surface-dim": "#0e0e0e",
+                        "on-error-container": "#ffb2b9",
+                        "on-tertiary-fixed": "#39000d",
+                        "on-tertiary-fixed-variant": "#711227",
+                        "background": "#0e0e0e"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #0e0e0e; color: #ffffff; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { background: rgba(31, 31, 31, 0.6); backdrop-filter: blur(20px); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="font-body selection:bg-primary/30">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-white/5 bg-[#0e0e0e] dark:bg-[#0e0e0e] font-['Manrope'] tracking-tight antialiased flex flex-col h-full py-8 px-4 shadow-[20px_0_40px_rgba(0,0,0,0.4)] z-50">
+<div class="mb-10 px-2">
+<h1 class="text-2xl font-black tracking-tighter text-purple-500 uppercase">Neon Magistrate</h1>
+<p class="text-xs text-on-surface-variant/60 font-medium">Tech-Legal Elite</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Contracts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-purple-400 font-bold border-r-2 border-purple-500 bg-purple-500/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span>Lawsuits</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span>Appointments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span>Payments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-white/5 space-y-2">
+<button class="w-full bg-primary text-on-primary-fixed font-bold py-3 rounded-md flex items-center justify-center gap-2 hover:bg-primary-container transition-colors mb-6">
+<span class="material-symbols-outlined">add</span>
+<span>New Case</span>
+</button>
+<a class="flex items-center gap-3 px-4 py-2 text-zinc-500 hover:text-zinc-200 transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-zinc-500 hover:text-zinc-200 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-4 right-4 left-72 rounded-xl border border-white/10 bg-[#191919]/60 backdrop-blur-xl flex justify-between items-center h-16 px-6 z-40 font-['Manrope'] font-medium shadow-2xl">
+<div class="flex items-center flex-1">
+<div class="relative w-full max-w-md focus-within:ring-1 focus-within:ring-purple-500/50 rounded-lg">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">search</span>
+<input class="bg-surface-container-high border-none rounded-lg pl-10 pr-4 py-2 w-full text-sm text-on-surface placeholder:text-zinc-500 focus:ring-0" placeholder="Pesquisar processos, números ou partes..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="text-zinc-400 hover:text-purple-300 transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="text-zinc-400 hover:text-purple-300 transition-colors">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+<button class="text-zinc-400 hover:text-purple-300 transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-white/10"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-xs font-bold text-on-surface">Dr. Ricardo Silva</p>
+<p class="text-[10px] text-on-surface-variant">Sócio Senior</p>
+</div>
+<img class="w-10 h-10 rounded-full object-cover border border-primary/20" data-alt="close-up portrait of a professional lawyer with a confident expression in a sharp dark suit against a minimalist background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnqd8PsVdPYarqhpbhfRbOQEHUGLvaKAaT-4FYZBK4SbT8kIZP7COOtFdtiiqoaSy22NdnZ8byJ2sjOyDQ93jwSlNwzOUDS03n2AjRhEfgFotolhYCyysgpb-fXNZGIZBq3uxijF-WBw7JzQeF-5RFTUeRFN38sdN1T2WcurxteSGTNTX0yD6ss-RFaag1FA-Z4LoH5bKMsJuq1Nk8AOyEQh11q55Nv_VPOOU3wfAfwxuszJKzZsZhrs9hvYihK1mSkDzH3CP864CV"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pl-72 pt-28 pr-8 pb-12 min-h-screen">
+<!-- Header Section -->
+<div class="mb-10 flex justify-between items-end">
+<div class="max-w-2xl">
+<span class="text-xs font-black tracking-widest text-primary uppercase mb-2 block">Central de Litigância</span>
+<h2 class="text-5xl font-headline font-extrabold tracking-tighter text-on-surface mb-4 leading-none">Acompanhamento de Processos</h2>
+<p class="text-on-surface-variant text-lg leading-relaxed">Gestão inteligente e previsão de ativos jurídicos baseada em análise algorítmica.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2.5 rounded-lg bg-surface-container-high border border-outline-variant/20 text-on-surface hover:bg-surface-variant transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                    Filtrar
+                </button>
+<button class="px-6 py-2.5 rounded-lg bg-primary text-on-primary-fixed font-bold hover:bg-primary-container transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(204,151,255,0.2)]">
+<span class="material-symbols-outlined text-sm">file_download</span>
+                    Relatório
+                </button>
+</div>
+</div>
+<!-- Metric Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<div class="bg-surface-container p-6 rounded-xl border-l-4 border-primary">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-wider mb-2">Total sob Gestão</p>
+<h3 class="text-2xl font-black text-on-surface">R$ 14.2M</h3>
+<p class="text-primary text-xs mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span> +8.4% este mês
+                </p>
+</div>
+<div class="bg-surface-container p-6 rounded-xl border-l-4 border-secondary">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-wider mb-2">Previsão de Êxito</p>
+<h3 class="text-2xl font-black text-on-surface">R$ 8.7M</h3>
+<div class="w-full bg-surface-container-high h-1 rounded-full mt-4">
+<div class="bg-secondary h-full rounded-full w-[65%] shadow-[0_0_10px_rgba(225,151,252,0.4)]"></div>
+</div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-wider mb-2">Processos Ativos</p>
+<h3 class="text-2xl font-black text-on-surface">142</h3>
+<p class="text-on-surface-variant/40 text-xs mt-2">12 novas movimentações hoje</p>
+</div>
+<div class="bg-surface-container p-6 rounded-xl">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-wider mb-2">Taxa de Vitória</p>
+<h3 class="text-2xl font-black text-on-surface">74.2%</h3>
+<p class="text-tertiary text-xs mt-2 flex items-center gap-1">
+                    Histórico de 24 meses
+                </p>
+</div>
+</div>
+<!-- Main Cases List - Editorial Style -->
+<div class="space-y-8">
+<!-- Case Card 1 -->
+<div class="group relative bg-surface-container hover:bg-surface-container-high transition-all duration-300 rounded-2xl p-8 overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-primary/10 transition-all"></div>
+<div class="grid grid-cols-12 gap-8 relative z-10">
+<!-- Left: Identity -->
+<div class="col-span-12 lg:col-span-4">
+<div class="flex items-center gap-2 mb-4">
+<span class="px-3 py-1 rounded-full bg-primary-container/20 text-primary text-[10px] font-black uppercase tracking-widest">Cível / Indenização</span>
+<span class="text-on-surface-variant/40 text-[10px] font-medium uppercase">Protocolado: 12 Out 2023</span>
+</div>
+<h4 class="text-2xl font-headline font-bold text-on-surface mb-2 tracking-tight">Magistrate vs. Global Tech Corp</h4>
+<p class="text-on-surface-variant font-mono text-sm tracking-tighter mb-6">Nº 1002458-12.2023.8.26.0100</p>
+<div class="flex items-center gap-8 border-t border-white/5 pt-6">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-1">Valor da Causa</p>
+<p class="text-lg font-black text-on-surface">R$ 2.450.000</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-1">Expectativa AI</p>
+<p class="text-lg font-black text-secondary">R$ 1.890.000</p>
+</div>
+</div>
+</div>
+<!-- Center: Timeline -->
+<div class="col-span-12 lg:col-span-5 border-x border-white/5 px-8">
+<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-6 tracking-widest">Status da Timeline</p>
+<div class="relative flex justify-between">
+<div class="absolute top-[13px] left-0 w-full h-[2px] bg-white/5"></div>
+<div class="absolute top-[13px] left-0 w-[60%] h-[2px] bg-primary shadow-[0_0_10px_rgba(204,151,255,0.5)]"></div>
+<!-- Node 1 -->
+<div class="relative flex flex-col items-center gap-3">
+<div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-primary text-xs" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-[9px] font-black text-primary uppercase">Inicial</span>
+</div>
+<!-- Node 2 -->
+<div class="relative flex flex-col items-center gap-3">
+<div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-primary text-xs" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-[9px] font-black text-primary uppercase">Citação</span>
+</div>
+<!-- Node 3 -->
+<div class="relative flex flex-col items-center gap-3">
+<div class="w-7 h-7 rounded-full bg-primary border-4 border-surface-container flex items-center justify-center z-10">
+<div class="w-1.5 h-1.5 rounded-full bg-on-primary"></div>
+</div>
+<span class="text-[9px] font-black text-on-surface uppercase">Instrução</span>
+</div>
+<!-- Node 4 -->
+<div class="relative flex flex-col items-center gap-3 opacity-30">
+<div class="w-7 h-7 rounded-full bg-surface-container-high border-2 border-white/10 flex items-center justify-center z-10"></div>
+<span class="text-[9px] font-black text-on-surface-variant uppercase">Sentença</span>
+</div>
+</div>
+<div class="mt-8 bg-surface-container-high/50 p-4 rounded-xl">
+<p class="text-[10px] text-primary font-black uppercase mb-1">Última Movimentação</p>
+<p class="text-sm text-on-surface leading-tight font-medium">Deferida a perícia técnica nos servidores da ré. Prazo de 15 dias para assistentes.</p>
+<p class="text-[10px] text-on-surface-variant mt-2 italic">Há 2 horas • Vara 04 Cível SP</p>
+</div>
+</div>
+<!-- Right: Next Steps & CTA -->
+<div class="col-span-12 lg:col-span-3 flex flex-col justify-between">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-3 tracking-widest">Próximo Passo</p>
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-secondary-container/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-sm">event</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Indicação de Perito</p>
+<p class="text-xs text-on-surface-variant">Deadline: 28 Out 2023</p>
+</div>
+</div>
+</div>
+<div class="pt-6">
+<button class="w-full py-3 rounded-lg border border-outline-variant/30 text-sm font-bold hover:bg-white/5 transition-colors">
+                                Visualizar Detalhes
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Case Card 2 -->
+<div class="group relative bg-surface-container hover:bg-surface-container-high transition-all duration-300 rounded-2xl p-8 overflow-hidden">
+<div class="grid grid-cols-12 gap-8 relative z-10">
+<!-- Left: Identity -->
+<div class="col-span-12 lg:col-span-4">
+<div class="flex items-center gap-2 mb-4">
+<span class="px-3 py-1 rounded-full bg-tertiary-container/20 text-tertiary text-[10px] font-black uppercase tracking-widest">Trabalhista / Coletiva</span>
+<span class="text-on-surface-variant/40 text-[10px] font-medium uppercase">Protocolado: 05 Jan 2024</span>
+</div>
+<h4 class="text-2xl font-headline font-bold text-on-surface mb-2 tracking-tight">Sindicato Unificado vs. Logistics AI</h4>
+<p class="text-on-surface-variant font-mono text-sm tracking-tighter mb-6">Nº 5001223-44.2024.5.02.0001</p>
+<div class="flex items-center gap-8 border-t border-white/5 pt-6">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-1">Valor da Causa</p>
+<p class="text-lg font-black text-on-surface">R$ 520.000</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-1">Expectativa AI</p>
+<p class="text-lg font-black text-secondary">R$ 440.000</p>
+</div>
+</div>
+</div>
+<!-- Center: Timeline -->
+<div class="col-span-12 lg:col-span-5 border-x border-white/5 px-8">
+<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-6 tracking-widest">Status da Timeline</p>
+<div class="relative flex justify-between">
+<div class="absolute top-[13px] left-0 w-full h-[2px] bg-white/5"></div>
+<div class="absolute top-[13px] left-0 w-[20%] h-[2px] bg-primary shadow-[0_0_10px_rgba(204,151,255,0.5)]"></div>
+<div class="relative flex flex-col items-center gap-3">
+<div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-primary text-xs" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-[9px] font-black text-primary uppercase">Inicial</span>
+</div>
+<div class="relative flex flex-col items-center gap-3">
+<div class="w-7 h-7 rounded-full bg-primary border-4 border-surface-container flex items-center justify-center z-10">
+<div class="w-1.5 h-1.5 rounded-full bg-on-primary"></div>
+</div>
+<span class="text-[9px] font-black text-on-surface uppercase">Citação</span>
+</div>
+<div class="relative flex flex-col items-center gap-3 opacity-30">
+<div class="w-7 h-7 rounded-full bg-surface-container-high border-2 border-white/10 flex items-center justify-center z-10"></div>
+<span class="text-[9px] font-black text-on-surface-variant uppercase">Instrução</span>
+</div>
+<div class="relative flex flex-col items-center gap-3 opacity-30">
+<div class="w-7 h-7 rounded-full bg-surface-container-high border-2 border-white/10 flex items-center justify-center z-10"></div>
+<span class="text-[9px] font-black text-on-surface-variant uppercase">Sentença</span>
+</div>
+</div>
+<div class="mt-8 bg-surface-container-high/50 p-4 rounded-xl">
+<p class="text-[10px] text-primary font-black uppercase mb-1">Última Movimentação</p>
+<p class="text-sm text-on-surface leading-tight font-medium">Mandado de citação expedido e enviado via oficial de justiça.</p>
+<p class="text-[10px] text-on-surface-variant mt-2 italic">Ontem às 16:45 • TRT-2 Região</p>
+</div>
+</div>
+<!-- Right: Next Steps & CTA -->
+<div class="col-span-12 lg:col-span-3 flex flex-col justify-between">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-3 tracking-widest">Próximo Passo</p>
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-variant flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">schedule</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Aguardar Contestação</p>
+<p class="text-xs text-on-surface-variant">Prazo legal em curso</p>
+</div>
+</div>
+</div>
+<div class="pt-6">
+<button class="w-full py-3 rounded-lg border border-outline-variant/30 text-sm font-bold hover:bg-white/5 transition-colors">
+                                Visualizar Detalhes
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Case Card 3 (Compressed Grid Example) -->
+<div class="group relative bg-surface-container hover:bg-surface-container-high transition-all duration-300 rounded-2xl p-8 overflow-hidden">
+<div class="grid grid-cols-12 gap-8 relative z-10">
+<!-- Left: Identity -->
+<div class="col-span-12 lg:col-span-4">
+<div class="flex items-center gap-2 mb-4">
+<span class="px-3 py-1 rounded-full bg-secondary-container/20 text-secondary text-[10px] font-black uppercase tracking-widest">Tributário / Federal</span>
+<span class="text-on-surface-variant/40 text-[10px] font-medium uppercase">Protocolado: 19 Ago 2022</span>
+</div>
+<h4 class="text-2xl font-headline font-bold text-on-surface mb-2 tracking-tight">Magistrate Partners vs. União</h4>
+<p class="text-on-surface-variant font-mono text-sm tracking-tighter mb-6">Nº 0048922-88.2022.4.03.6100</p>
+<div class="flex items-center gap-8 border-t border-white/5 pt-6">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-1">Valor da Causa</p>
+<p class="text-lg font-black text-on-surface">R$ 11.200.000</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-1">Expectativa AI</p>
+<p class="text-lg font-black text-primary">R$ 6.370.000</p>
+</div>
+</div>
+</div>
+<!-- Center: Timeline -->
+<div class="col-span-12 lg:col-span-5 border-x border-white/5 px-8">
+<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-6 tracking-widest">Status da Timeline</p>
+<div class="relative flex justify-between">
+<div class="absolute top-[13px] left-0 w-full h-[2px] bg-white/5"></div>
+<div class="absolute top-[13px] left-0 w-[90%] h-[2px] bg-primary shadow-[0_0_10px_rgba(204,151,255,0.5)]"></div>
+<div class="relative flex flex-col items-center gap-3">
+<div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-primary text-xs" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-[9px] font-black text-primary uppercase">Inicial</span>
+</div>
+<div class="relative flex flex-col items-center gap-3">
+<div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-primary text-xs" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-[9px] font-black text-primary uppercase">Citação</span>
+</div>
+<div class="relative flex flex-col items-center gap-3">
+<div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-primary text-xs" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="text-[9px] font-black text-primary uppercase">Instrução</span>
+</div>
+<div class="relative flex flex-col items-center gap-3">
+<div class="w-7 h-7 rounded-full bg-primary border-4 border-surface-container flex items-center justify-center z-10">
+<div class="w-1.5 h-1.5 rounded-full bg-on-primary"></div>
+</div>
+<span class="text-[9px] font-black text-on-surface uppercase">Sentença</span>
+</div>
+</div>
+<div class="mt-8 bg-surface-container-high/50 p-4 rounded-xl">
+<p class="text-[10px] text-primary font-black uppercase mb-1">Última Movimentação</p>
+<p class="text-sm text-on-surface leading-tight font-medium">Sentença de mérito proferida: Procedência parcial dos pedidos.</p>
+<p class="text-[10px] text-on-surface-variant mt-2 italic">Há 3 dias • Justiça Federal 3ª Região</p>
+</div>
+</div>
+<!-- Right: Next Steps & CTA -->
+<div class="col-span-12 lg:col-span-3 flex flex-col justify-between">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold mb-3 tracking-widest">Próximo Passo</p>
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-error-container/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-error text-sm">warning</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Interposição de Recurso</p>
+<p class="text-xs text-on-surface-variant">Urgente: 5 dias restantes</p>
+</div>
+</div>
+</div>
+<div class="pt-6">
+<button class="w-full py-3 rounded-lg border border-outline-variant/30 text-sm font-bold hover:bg-white/5 transition-colors">
+                                Visualizar Detalhes
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination / Footer of Content -->
+<div class="mt-12 flex justify-between items-center border-t border-white/5 pt-8">
+<p class="text-sm text-on-surface-variant">Exibindo <span class="text-on-surface font-bold">1-10</span> de <span class="text-on-surface font-bold">142</span> processos ativos</p>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center font-bold">1</button>
+<button class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-colors">2</button>
+<button class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-colors">3</button>
+<button class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (Suppressed as per rules on Details/Tracking screens, but included if this is considered a "Main Dashboard" view for the specific Lawsuits context. Given the task, the SideNav CTA serves this purpose). -->
+</body></html>

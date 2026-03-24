@@ -93,6 +93,7 @@
   /* --- 8. Tipografia & Layout --- */
   --font-sans: var(--font-inter);
   --font-heading: var(--font-montserrat); /* Títulos */
+  --font-headline: var(--font-manrope); /* Magistrate AI Headline */
   --font-mono: var(--font-geist-mono);
 
   --radius-lg: var(--radius);
@@ -102,6 +103,53 @@
   /* Breakpoints Customizados (Opcional, mas útil para mobile-first preciso) */
   --breakpoint-xs: 480px;
   /* sm, md, lg, xl, 2xl já são padrão do Tailwind */
+
+  /* --- 9. Magistrate AI Tokens (MD3) --- */
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-surface-variant: var(--surface-variant);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+  
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-primary-fixed: var(--primary-fixed);
+  --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-on-primary-fixed: var(--on-primary-fixed);
+  --color-on-primary-fixed-variant: var(--on-primary-fixed-variant);
+  
+  --color-on-secondary: var(--on-secondary);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-secondary-fixed: var(--secondary-fixed);
+  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
+  --color-on-secondary-fixed: var(--on-secondary-fixed);
+  --color-on-secondary-fixed-variant: var(--on-secondary-fixed-variant);
+
+  --color-tertiary: var(--tertiary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+  --color-tertiary-fixed: var(--tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
+  --color-on-tertiary-fixed: var(--on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--on-tertiary-fixed-variant);
+
+  --color-error-container: var(--error-container);
+  --color-on-error-container: var(--on-error-container);
+  --color-on-error: var(--on-error);
 }
 
 /* --- FUNDAÇÃO DE VARIÁVEIS (OKLCH) --- */
@@ -110,41 +158,41 @@
   --radius: 0.5rem; /* 8px -> Visual Tech/Sharp */
 
   /* ZATTAR LIGHT MODE */
-  /* Fundo Off-White para evitar fadiga visual */
-  --background: oklch(0.98 0.005 270);
-  /* Texto Charcoal (quase preto) para alto contraste */
-  --foreground: oklch(0.24 0 0);
+  /* ZATTAR DARK MODE (Forced as Root) */
+  /* Fundo Absolute Darkness */
+  --background: #0e0e0e;
+  /* Texto Branco para alto contraste */
+  --foreground: #ffffff;
 
-  /* Cards Brancos Puros */
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.24 0 0);
+  /* Cards & Popovers */
+  --card: #191919; /* surface-container */
+  --card-foreground: #ffffff;
 
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.24 0 0);
+  --popover: #1f1f1f; /* surface-container-high */
+  --popover-foreground: #ffffff;
 
-  /* Primary: Zattar Purple */
-  --primary: oklch(0.45 0.25 285);
-  --primary-foreground: oklch(1 0 0);
+  /* Primary: Neon Purple */
+  --primary: #cc97ff;
+  --primary-foreground: #000000;
 
-  /* Secondary: Cinza muito suave para fundos de apoio */
-  --secondary: oklch(0.93 0 0);
-  --secondary-foreground: oklch(0.24 0 0);
+  /* Secondary & Muted */
+  --secondary: #262626; /* surface-variant */
+  --secondary-foreground: #ffffff;
 
-  /* Muted: Fundo de controle (tabs, inputs agrupados) */
-  --muted: oklch(0.92 0.005 270);
-  --muted-foreground: oklch(0.55 0.02 270); /* Mid Gray */
+  --muted: #131313; /* surface-container-low */
+  --muted-foreground: #ababab; /* on-surface-variant */
 
   /* Accent: Hover states */
-  --accent: oklch(0.93 0 0);
-  --accent-foreground: oklch(0.24 0 0);
+  --accent: #262626;
+  --accent-foreground: #ffffff;
 
   /* Destructive: Error Red */
-  --destructive: oklch(0.6 0.2 25);
-  --destructive-foreground: oklch(1 0 0);
+  --destructive: #a70138; /* error-container */
+  --destructive-foreground: #ffb2b9; /* on-error-container */
 
-  /* Bordas Sutis */
-  --border: oklch(0.88 0 0);
-  --input: oklch(0.88 0 0);
+  /* The "Ghost Border" Rule */
+  --border: #48484833; /* outline-variant at 20% */
+  --input: #48484833;
   --ring: transparent; /* Foco removido globalmente */
 
   /* SIDEBAR FIXA (Sempre Escura - "Charcoal") */
@@ -186,6 +234,48 @@
   --chat-bubble-received: oklch(1 0 0);      /* Received message - white */
   --chat-bubble-sent: var(--primary);        /* Sent message - primary purple */
   --chat-sidebar-active: oklch(0.92 0.01 270); /* Selected conversation - visible contrast */
+
+  /* MAGISTRATE AI DEFAULT (LIGHT/DARK FALLBACK) */
+  --surface: #0e0e0e;
+  --surface-dim: #0e0e0e;
+  --surface-bright: #2c2c2c;
+  --surface-container-lowest: #000000;
+  --surface-container-low: #131313;
+  --surface-container: #191919;
+  --surface-container-high: #1f1f1f;
+  --surface-container-highest: #262626;
+  --surface-variant: #262626;
+  --on-surface: #ffffff;
+  --on-surface-variant: #ababab;
+  --inverse-surface: #f9f9f9;
+  --inverse-on-surface: #555555;
+  --outline: #757575;
+  --outline-variant: #484848;
+  --on-primary: #47007c;
+  --primary-container: #c284ff;
+  --on-primary-container: #360061;
+  --primary-fixed: #c284ff;
+  --primary-fixed-dim: #b971ff;
+  --on-primary-fixed: #000000;
+  --on-primary-fixed-variant: #430076;
+  --on-secondary: #530b6f;
+  --secondary-container: #6a2785;
+  --on-secondary-container: #f1bfff;
+  --secondary-fixed: #f1c1ff;
+  --secondary-fixed-dim: #ebaeff;
+  --on-secondary-fixed: #550e71;
+  --on-secondary-fixed-variant: #753290;
+  --tertiary: #ff95a0;
+  --on-tertiary: #680921;
+  --tertiary-container: #fe7e8e;
+  --on-tertiary-container: #570018;
+  --tertiary-fixed: #ff909c;
+  --tertiary-fixed-dim: #fa7c8b;
+  --on-tertiary-fixed: #39000d;
+  --on-tertiary-fixed-variant: #711227;
+  --error-container: #a70138;
+  --on-error-container: #ffb2b9;
+  --on-error: #490013;
 }
 
 .dark {
@@ -259,6 +349,49 @@
   --chat-bubble-received: oklch(0.28 0 0);   /* Received message - darker card */
   --chat-bubble-sent: var(--primary);        /* Sent message - primary purple */
   --chat-sidebar-active: oklch(0.26 0 0);    /* Selected conversation - visible contrast */
+
+  /* MAGISTRATE AI DARK THEME OVERRIDES */
+  /* Replicando igual o LIGHT/DARK FALLBACK no dark. A personalização ocorrerá perfeitamente. */
+  --surface: #0e0e0e;
+  --surface-dim: #0e0e0e;
+  --surface-bright: #2c2c2c;
+  --surface-container-lowest: #000000;
+  --surface-container-low: #131313;
+  --surface-container: #191919;
+  --surface-container-high: #1f1f1f;
+  --surface-container-highest: #262626;
+  --surface-variant: #262626;
+  --on-surface: #ffffff;
+  --on-surface-variant: #ababab;
+  --inverse-surface: #f9f9f9;
+  --inverse-on-surface: #555555;
+  --outline: #757575;
+  --outline-variant: #484848;
+  --on-primary: #47007c;
+  --primary-container: #c284ff;
+  --on-primary-container: #360061;
+  --primary-fixed: #c284ff;
+  --primary-fixed-dim: #b971ff;
+  --on-primary-fixed: #000000;
+  --on-primary-fixed-variant: #430076;
+  --on-secondary: #530b6f;
+  --secondary-container: #6a2785;
+  --on-secondary-container: #f1bfff;
+  --secondary-fixed: #f1c1ff;
+  --secondary-fixed-dim: #ebaeff;
+  --on-secondary-fixed: #550e71;
+  --on-secondary-fixed-variant: #753290;
+  --tertiary: #ff95a0;
+  --on-tertiary: #680921;
+  --tertiary-container: #fe7e8e;
+  --on-tertiary-container: #570018;
+  --tertiary-fixed: #ff909c;
+  --tertiary-fixed-dim: #fa7c8b;
+  --on-tertiary-fixed: #39000d;
+  --on-tertiary-fixed-variant: #711227;
+  --error-container: #a70138;
+  --on-error-container: #ffb2b9;
+  --on-error: #490013;
 }
 
 /* --- ESTILOS BASE --- */
@@ -886,4 +1019,95 @@ body[data-theme-content-layout="centered"] .content-container {
   outline: none !important;
   --tw-ring-shadow: 0 0 #0000 !important;
   --tw-ring-offset-shadow: 0 0 #0000 !important;
+}
+
+/* =============================================================================
+ * MAGISTRATE AI: GLOBAL DESIGN SYSTEM COMPONENTS
+ * =============================================================================
+ * Estilos baseados no Design System "The Neon Magistrate"
+ */
+@layer components {
+  /* Typography */
+  .display-lg {
+    @apply font-headline text-5xl md:text-7xl font-extrabold tracking-[-0.02em];
+  }
+  .headline-lg {
+    @apply font-headline text-3xl md:text-4xl font-bold tracking-[-0.01em];
+  }
+  .label-md {
+    @apply font-sans text-xs uppercase tracking-widest text-primary font-bold;
+  }
+  .body-editorial {
+    @apply font-sans text-lg md:text-xl text-on-surface-variant leading-relaxed;
+  }
+
+  /* Specific Textures & Layers */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, var(--primary) 0%, var(--primary-dim) 100%);
+  }
+
+  /* Glassmorphism */
+  .glass-panel {
+    @apply bg-surface-variant/60 backdrop-blur-[20px];
+  }
+
+  .glass-glow {
+    @apply relative overflow-hidden;
+  }
+  .glass-glow::after {
+    content: '';
+    @apply absolute inset-0 bg-primary/5 pointer-events-none;
+  }
+
+  /* Shadows & Depth */
+  .shadow-ambient {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .border-ghost {
+    @apply border border-outline-variant/20;
+  }
+
+  /* Component: Buttons */
+  .btn-primary {
+    @apply bg-primary text-on-primary-fixed rounded-md font-bold px-6 py-3 transition-colors hover:bg-primary-container;
+  }
+  .btn-secondary {
+    @apply border border-outline-variant/20 text-on-surface rounded-md font-bold px-6 py-3 transition-colors hover:bg-surface-container-high;
+  }
+  .btn-tertiary {
+    @apply text-on-surface font-bold px-4 py-2 relative transition-all;
+  }
+  .btn-tertiary::after {
+    content: '';
+    @apply absolute bottom-0 left-4 right-4 h-0.5 bg-primary origin-left scale-x-0 transition-transform duration-300;
+  }
+  .btn-tertiary:hover::after {
+    @apply scale-x-100;
+  }
+
+  /* Component: Chips */
+  .chip-legal {
+    @apply bg-surface-container-highest text-primary rounded-full px-4 py-1.5 text-sm font-bold border-none;
+  }
+
+  /* Component: Cards */
+  .card-editorial {
+    @apply bg-surface-container rounded-xl p-5 md:p-8 border-none; 
+  }
+
+  /* Component: Inputs */
+  .input-magistrate {
+    @apply bg-surface-container-high rounded-sm text-on-surface border-none px-4 py-3 transition-all outline-none ring-0
+           focus:border focus:border-primary/50 focus:shadow-[0_0_4px_theme(colors.primary.DEFAULT)];
+  }
+  .input-error {
+    @apply text-destructive;
+  }
+
+  /* Component: Trust Ticker */
+  .trust-ticker-container {
+    @apply flex items-center justify-center gap-6 opacity-40 grayscale transition-all duration-500 hover:grayscale-0;
+  }
 }

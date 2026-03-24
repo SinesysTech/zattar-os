@@ -10,7 +10,8 @@ import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Loader2 } from 'lucide-react';
 import { actionBaixarExpediente, type ActionResult } from '../actions';
-import { Expediente } from '../domain';
+import { Expediente, ResultadoDecisao, RESULTADO_DECISAO_LABELS } from '../domain';
+import { useTiposExpedientes } from '@/features/tipos-expedientes/hooks/use-tipos-expedientes';
 
 interface ExpedientesBaixarDialogProps {
   open: boolean;
@@ -37,6 +38,20 @@ export function ExpedientesBaixarDialog({
     initialState
   );
 
+  const { tiposExpedientes } = useTiposExpedientes({ limite: 1000 }); // Busca os tipos (idealmente já cacheados)
+
+  const currentTipo = React.useMemo(() => {
+    return tiposExpedientes.find(t => t.id === expediente?.tipoExpedienteId);
+  }, [tiposExpedientes, expediente?.tipoExpedienteId]);
+
+  const requiresDecisao = React.useMemo(() => {
+    if (!currentTipo?.tipoExpediente) return false;
+    const isTarget = ['recurso ordinário', 'recurso de revista', 'agravo de instrumento em recurso de revista'].includes(
+      currentTipo.tipoExpediente.toLowerCase().trim()
+    );
+    return isTarget;
+  }, [currentTipo]);
+
   React.useEffect(() => {
     if (!open) {
       setModo('protocolo');
@@ -58,6 +73,7 @@ export function ExpedientesBaixarDialog({
   const generalError = !formState.success ? (formState.error || formState.message) : null;
   const protocoloIdError = !formState.success ? formState.errors?.protocoloId?.[0] : undefined;
   const justificativaBaixaError = !formState.success ? formState.errors?.justificativaBaixa?.[0] : undefined;
+  const resultadoDecisaoError = !formState.success ? formState.errors?.resultadoDecisao?.[0] : undefined;
 
   const footerButtons = (
     <Button
@@ -167,6 +183,48 @@ export function ExpedientesBaixarDialog({
             <p className="text-xs text-muted-foreground">
               Informe o motivo pelo qual o expediente está sendo baixado sem protocolo de peça.
             </p>
+          </div>
+        )}
+
+        {/* Informações da Decisão */}
+        {requiresDecisao && (
+          <div className="space-y-3 pt-2">
+            <Label>Resultado da Decisão *</Label>
+            <div className="flex flex-col gap-3">
+              <label className="flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors">
+                <input
+                  type="radio"
+                  name="resultadoDecisao"
+                  value={ResultadoDecisao.FAVORAVEL}
+                  required
+                  className="h-4 w-4"
+                />
+                <span className="text-sm font-medium">{RESULTADO_DECISAO_LABELS[ResultadoDecisao.FAVORAVEL]}</span>
+              </label>
+              <label className="flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors">
+                <input
+                  type="radio"
+                  name="resultadoDecisao"
+                  value={ResultadoDecisao.PARCIALMENTE_FAVORAVEL}
+                  required
+                  className="h-4 w-4"
+                />
+                <span className="text-sm font-medium">{RESULTADO_DECISAO_LABELS[ResultadoDecisao.PARCIALMENTE_FAVORAVEL]}</span>
+              </label>
+              <label className="flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors">
+                <input
+                  type="radio"
+                  name="resultadoDecisao"
+                  value={ResultadoDecisao.DESFAVORAVEL}
+                  required
+                  className="h-4 w-4"
+                />
+                <span className="text-sm font-medium">{RESULTADO_DECISAO_LABELS[ResultadoDecisao.DESFAVORAVEL]}</span>
+              </label>
+            </div>
+            {resultadoDecisaoError && (
+              <p className="text-sm font-medium text-destructive">{resultadoDecisaoError}</p>
+            )}
           </div>
         )}
 

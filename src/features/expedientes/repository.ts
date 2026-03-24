@@ -11,6 +11,7 @@ import {
   CodigoTribunal,
   GrauTribunal,
   OrigemExpediente,
+  ResultadoDecisao,
 } from "./domain";
 
 // =============================================================================
@@ -61,6 +62,7 @@ type ExpedienteRow = {
   arquivo_key: string | null;
   observacoes: string | null;
   origem: OrigemExpediente;
+  resultado_decisao: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -123,6 +125,7 @@ function converterParaExpediente(data: ExpedienteRow | ExpedienteRowComOrigem): 
     arquivoKey: data.arquivo_key,
     observacoes: data.observacoes,
     origem: data.origem,
+    resultadoDecisao: data.resultado_decisao as ResultadoDecisao | null,
     createdAt: data.created_at,
     updatedAt: data.updated_at,
   };
@@ -283,9 +286,9 @@ export async function findAllExpedientes(
       query = query.lte("data_autuacao", params.dataAutuacaoFim);
     if (params.dataArquivamentoInicio)
       query = query.gte("data_arquivamento", params.dataArquivamentoInicio);
-    if (params.dataArquivamentoFim)
-      query = query.lte("data_arquivamento", params.dataArquivamentoFim);
+    if (params.dataArquivamentoFim) query = query.lte("data_arquivamento", params.dataArquivamentoFim);
     if (params.origem) query = query.eq("origem", params.origem);
+    if (params.resultadoDecisao) query = query.eq("resultado_decisao", params.resultadoDecisao);
     if (params.prioridadeProcessual !== undefined)
       query = query.eq("prioridade_processual", params.prioridadeProcessual);
 
@@ -472,6 +475,7 @@ export async function baixarExpediente(
     protocoloId?: string;
     justificativaBaixa?: string;
     baixadoEm?: string;
+    resultadoDecisao?: ResultadoDecisao | null;
   }
 ): Promise<Result<Expediente>> {
   try {
@@ -480,6 +484,7 @@ export async function baixarExpediente(
       baixado_em: dados.baixadoEm || new Date().toISOString(),
       protocolo_id: dados.protocoloId,
       justificativa_baixa: dados.justificativaBaixa,
+      resultado_decisao: dados.resultadoDecisao,
     };
     const { data, error } = await db
       .from(TABLE_EXPEDIENTES)
@@ -518,6 +523,7 @@ export async function reverterBaixaExpediente(
       baixado_em: null,
       protocolo_id: null,
       justificativa_baixa: null,
+      resultado_decisao: null,
     };
     const { data, error } = await db
       .from(TABLE_EXPEDIENTES)

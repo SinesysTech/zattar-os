@@ -376,6 +376,8 @@ export async function actionBaixarExpediente(
         : undefined,
       justificativaBaixa:
         (formData.get("justificativaBaixa") as string | null) || undefined,
+      resultadoDecisao:
+        (formData.get("resultadoDecisao") as any) || undefined,
       dataBaixa: (formData.get("dataBaixa") as string | null) || undefined,
     };
 

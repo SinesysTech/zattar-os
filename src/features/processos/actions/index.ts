@@ -390,12 +390,25 @@ export async function actionAtualizarProcesso(
       };
     }
 
+    let responseData: unknown = result.data;
+
+    // Tentar devolver o payload unificado para manter a UI consistente com a listagem.
+    try {
+      const client = await createClient();
+      const processoAtualizado = await buscarProcesso(id, client);
+      if (processoAtualizado.success && processoAtualizado.data) {
+        responseData = processoAtualizado.data;
+      }
+    } catch (error) {
+      console.warn("Erro ao buscar processo unificado apos update:", error);
+    }
+
     // 5. Revalidar cache
     revalidatePath("/app/processos");
 
     return {
       success: true,
-      data: result.data,
+      data: responseData,
       message: "Processo atualizado com sucesso",
     };
   } catch (error) {
