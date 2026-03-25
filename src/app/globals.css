@@ -160,138 +160,144 @@
   --color-surface-tint: var(--surface-tint);
 }
 
-/* --- FUNDAÇÃO DE VARIÁVEIS (OKLCH) --- */
+/* --- FUNDAÇÃO DE VARIÁVEIS --- */
+/* :root = LIGHT MODE (default para área logada) */
+/* .dark = DARK MODE (website público + toggle) */
 :root {
   /* Configuração Global */
   --radius: 0.5rem; /* 8px -> Visual Tech/Sharp */
 
-  /* ZATTAR LIGHT MODE */
-  /* ZATTAR DARK MODE (Forced as Root) */
-  /* Fundo Absolute Darkness */
-  --background: #0e0e0e;
-  /* Texto Branco para alto contraste */
-  --foreground: #ffffff;
+  /* === ZATTAR LIGHT MODE === */
+  --background: #fafafa;
+  --foreground: #1a1a1a;
 
   /* Cards & Popovers */
-  --card: #191919; /* surface-container */
-  --card-foreground: #ffffff;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
 
-  --popover: #1f1f1f; /* surface-container-high */
-  --popover-foreground: #ffffff;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
 
-  /* Primary: Neon Purple */
-  --primary: #cc97ff;
-  --primary-foreground: #000000;
+  /* Primary: Deep Purple (contraste em fundo claro) */
+  --primary: #842cd3;
+  --primary-foreground: #ffffff;
 
   /* Secondary & Muted */
-  --secondary: #262626; /* surface-variant */
-  --secondary-foreground: #ffffff;
+  --secondary: #f3eeff;
+  --secondary-foreground: #1a1a1a;
 
-  --muted: #131313; /* surface-container-low */
-  --muted-foreground: #ababab; /* on-surface-variant */
+  --muted: #f5f5f5;
+  --muted-foreground: #6b6b6b;
 
   /* Accent: Hover states */
-  --accent: #262626;
-  --accent-foreground: #ffffff;
+  --accent: #f3eeff;
+  --accent-foreground: #1a1a1a;
 
-  /* Destructive: Error Red */
-  --destructive: #a70138; /* error-container */
-  --destructive-foreground: #ffb2b9; /* on-error-container */
+  /* Destructive */
+  --destructive: #d73357;
+  --destructive-foreground: #ffffff;
 
-  /* The "Ghost Border" Rule */
-  --border: #48484833; /* outline-variant at 20% */
-  --input: #48484833;
-  --ring: transparent; /* Foco removido globalmente */
+  /* Borders */
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: transparent;
 
-  /* SIDEBAR FIXA (Sempre Escura - "Charcoal") */
-  /* Mesmo no light mode, a sidebar mantém a identidade premium escura */
+  /* SIDEBAR (Premium escura em ambos os temas) */
   --sidebar: oklch(0.24 0 0);
   --sidebar-foreground: oklch(0.98 0 0);
   --sidebar-primary: oklch(0.45 0.25 285);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.32 0 0); /* Hover na sidebar */
+  --sidebar-accent: oklch(0.32 0 0);
   --sidebar-accent-foreground: oklch(1 0 0);
   --sidebar-border: oklch(1 0 0 / 0.1);
   --sidebar-ring: oklch(0.45 0.25 285);
 
   /* CORES DA MARCA & GRÁFICOS */
-  --brand: oklch(0.45 0.25 285);
-  --highlight: oklch(0.68 0.22 45); /* Action Orange */
+  --brand: #842cd3;
+  --highlight: oklch(0.6 0.22 45);
 
-  --chart-1: oklch(0.45 0.25 285); /* Roxo */
-  --chart-2: oklch(0.68 0.22 45); /* Laranja */
-  --chart-3: oklch(0.24 0 0); /* Charcoal */
-  --chart-4: oklch(0.65 0.18 150); /* Verde Complementar */
-  --chart-5: oklch(0.6 0 0); /* Cinza Médio */
+  --chart-1: #842cd3;
+  --chart-2: oklch(0.6 0.22 45);
+  --chart-3: #e5e5e5;
+  --chart-4: oklch(0.55 0.18 150);
+  --chart-5: #aaaaaa;
 
-  /* SEMANTIC STATUS COLORS */
-  --success: oklch(0.65 0.18 145);           /* Green */
-  --success-foreground: oklch(0.98 0 0);
-  --warning: oklch(0.75 0.18 85);            /* Amber */
-  --warning-foreground: oklch(0.2 0 0);
-  --info: oklch(0.6 0.18 250);               /* Blue */
-  --info-foreground: oklch(0.98 0 0);
+  /* SEMANTIC STATUS COLORS (Light) */
+  --success: #16a34a;
+  --success-foreground: #ffffff;
+  --warning: #d97706;
+  --warning-foreground: #ffffff;
+  --info: #2563eb;
+  --info-foreground: #ffffff;
 
-  /* SURFACE TOKENS (Layering) */
-  --surface-1: oklch(0.98 0.005 270);        /* Subtle background */
-  --surface-2: oklch(0.96 0.01 270);         /* Cards on surface-1 */
-  --surface-3: oklch(0.94 0.01 270);         /* Hover states */
+  /* SURFACE TOKENS (Light Layering) */
+  --surface-1: #fafafa;
+  --surface-2: #f5f5f5;
+  --surface-3: #eeeeee;
 
-  /* CHAT-SPECIFIC TOKENS */
-  --chat-thread-bg: oklch(0.94 0.008 270);   /* Chat thread background - slightly darker */
-  --chat-bubble-received: oklch(1 0 0);      /* Received message - white */
-  --chat-bubble-sent: var(--primary);        /* Sent message - primary purple */
-  --chat-sidebar-active: oklch(0.92 0.01 270); /* Selected conversation - visible contrast */
+  /* CHAT-SPECIFIC TOKENS (Light) */
+  --chat-thread-bg: #f5f5f5;
+  --chat-bubble-received: #ffffff;
+  --chat-bubble-sent: var(--primary);
+  --chat-sidebar-active: #f3eeff;
 
-  /* MAGISTRATE AI DEFAULT (LIGHT/DARK FALLBACK) */
-  --surface: #0e0e0e;
-  --surface-dim: #0e0e0e;
-  --surface-bright: #2c2c2c;
-  --surface-container-lowest: #000000;
-  --surface-container-low: #131313;
-  --surface-container: #191919;
-  --surface-container-high: #1f1f1f;
-  --surface-container-highest: #262626;
-  --surface-variant: #262626;
-  --on-surface: #ffffff;
-  --on-surface-variant: #ababab;
-  --inverse-surface: #f9f9f9;
-  --inverse-on-surface: #555555;
-  --outline: #757575;
-  --outline-variant: #484848;
-  --on-primary: #47007c;
-  --primary-container: #c284ff;
-  --on-primary-container: #360061;
-  --primary-fixed: #c284ff;
-  --primary-fixed-dim: #b971ff;
-  --on-primary-fixed: #000000;
-  --on-primary-fixed-variant: #430076;
-  --on-secondary: #530b6f;
-  --secondary-container: #6a2785;
-  --on-secondary-container: #f1bfff;
+  /* MD3 SURFACE HIERARCHY (Light) */
+  --surface: #fafafa;
+  --surface-dim: #dedede;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f7f7f7;
+  --surface-container: #f0f0f0;
+  --surface-container-high: #eaeaea;
+  --surface-container-highest: #e2e2e2;
+  --surface-variant: #e8e8e8;
+  --on-surface: #1a1a1a;
+  --on-surface-variant: #5c5c5c;
+  --inverse-surface: #1a1a1a;
+  --inverse-on-surface: #f5f5f5;
+  --outline: #8c8c8c;
+  --outline-variant: #c5c5c5;
+
+  /* Primary Extended (Light) */
+  --on-primary: #ffffff;
+  --primary-container: #e8d5ff;
+  --on-primary-container: #2d0054;
+  --primary-fixed: #e8d5ff;
+  --primary-fixed-dim: #cc97ff;
+  --on-primary-fixed: #2d0054;
+  --on-primary-fixed-variant: #6a1bb9;
+
+  /* Secondary Extended (Light) */
+  --on-secondary: #ffffff;
+  --secondary-container: #e8d5ff;
+  --on-secondary-container: #2d0054;
   --secondary-fixed: #f1c1ff;
   --secondary-fixed-dim: #ebaeff;
   --on-secondary-fixed: #550e71;
   --on-secondary-fixed-variant: #753290;
-  --tertiary: #ff95a0;
-  --on-tertiary: #680921;
-  --tertiary-container: #fe7e8e;
-  --on-tertiary-container: #570018;
-  --tertiary-fixed: #ff909c;
-  --tertiary-fixed-dim: #fa7c8b;
+
+  /* Tertiary (Light) */
+  --tertiary: #c0001e;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #ffdadb;
+  --on-tertiary-container: #4a0008;
+  --tertiary-fixed: #ffdadb;
+  --tertiary-fixed-dim: #ffb2b9;
   --on-tertiary-fixed: #39000d;
   --on-tertiary-fixed-variant: #711227;
-  --error-container: #a70138;
-  --on-error-container: #ffb2b9;
-  --on-error: #490013;
 
-  /* Dim Variants (Magistrate AI Design System) */
-  --primary-dim: #9c48ea;
-  --secondary-dim: #d28aed;
-  --tertiary-dim: #f47786;
+  /* Error (Light) */
+  --error-container: #ffdadb;
+  --on-error-container: #4a0008;
+  --on-error: #ffffff;
+
+  /* Dim Variants (Light) */
+  --primary-dim: #6a1bb9;
+  --secondary-dim: #8e44ad;
+  --tertiary-dim: #e6283b;
   --error-dim: #d73357;
-  --inverse-primary: #842cd3;
-  --surface-tint: #cc97ff;
+  --inverse-primary: #cc97ff;
+  --surface-tint: #842cd3;
 }
 
 .dark {
@@ -419,207 +425,64 @@
 }
 
 /* =============================================================================
- * MAGISTRATE AI: LIGHT THEME (Portal Default)
+ * LIGHT MODE: Glass & Effect Overrides
  * =============================================================================
- * Scoped via [data-theme="light"] para não impactar o restante do app.
- * Usado pelo PortalShell como default. Toggle disponível para dark.
+ * :root (sem .dark) = light mode. Estas regras adaptam os efeitos visuais.
+ * Seletor :root:not(.dark) garante que NÃO se aplica quando dark mode ativo.
  */
-[data-theme="light"] {
-  /* Shadcn Base */
-  --background: #fafafa;
-  --foreground: #1a1a1a;
-
-  --card: #ffffff;
-  --card-foreground: #1a1a1a;
-
-  --popover: #ffffff;
-  --popover-foreground: #1a1a1a;
-
-  /* Primary: Deep Purple (contraste em fundo claro) */
-  --primary: #842cd3;
-  --primary-foreground: #ffffff;
-
-  --secondary: #f3eeff;
-  --secondary-foreground: #1a1a1a;
-
-  --muted: #f5f5f5;
-  --muted-foreground: #6b6b6b;
-
-  --accent: #f3eeff;
-  --accent-foreground: #1a1a1a;
-
-  --destructive: #d73357;
-  --destructive-foreground: #ffffff;
-
-  --border: #e5e5e5;
-  --input: #e5e5e5;
-  --ring: transparent;
-
-  /* Sidebar Light */
-  --sidebar: #ffffff;
-  --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #842cd3;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f3eeff;
-  --sidebar-accent-foreground: #1a1a1a;
-  --sidebar-border: #e5e5e5;
-  --sidebar-ring: #842cd3;
-
-  /* Brand */
-  --brand: #842cd3;
-  --highlight: oklch(0.6 0.22 45);
-
-  /* Charts */
-  --chart-1: #842cd3;
-  --chart-2: oklch(0.6 0.22 45);
-  --chart-3: #e5e5e5;
-  --chart-4: oklch(0.55 0.18 150);
-  --chart-5: #aaaaaa;
-
-  /* Semantic Status */
-  --success: #16a34a;
-  --success-foreground: #ffffff;
-  --warning: #d97706;
-  --warning-foreground: #ffffff;
-  --info: #2563eb;
-  --info-foreground: #ffffff;
-
-  /* Surface Tokens (Light Layering) */
-  --surface-1: #fafafa;
-  --surface-2: #f5f5f5;
-  --surface-3: #eeeeee;
-
-  /* MD3 Surface Hierarchy (Light) */
-  --surface: #fafafa;
-  --surface-dim: #dedede;
-  --surface-bright: #ffffff;
-  --surface-container-lowest: #ffffff;
-  --surface-container-low: #f7f7f7;
-  --surface-container: #f0f0f0;
-  --surface-container-high: #eaeaea;
-  --surface-container-highest: #e2e2e2;
-  --surface-variant: #e8e8e8;
-  --on-surface: #1a1a1a;
-  --on-surface-variant: #5c5c5c;
-  --inverse-surface: #1a1a1a;
-  --inverse-on-surface: #f5f5f5;
-  --outline: #8c8c8c;
-  --outline-variant: #c5c5c5;
-
-  /* Primary Extended (Light) */
-  --on-primary: #ffffff;
-  --primary-container: #e8d5ff;
-  --on-primary-container: #2d0054;
-  --primary-fixed: #e8d5ff;
-  --primary-fixed-dim: #cc97ff;
-  --on-primary-fixed: #2d0054;
-  --on-primary-fixed-variant: #6a1bb9;
-
-  /* Secondary Extended (Light) */
-  --on-secondary: #ffffff;
-  --secondary-container: #e8d5ff;
-  --on-secondary-container: #2d0054;
-  --secondary-fixed: #f1c1ff;
-  --secondary-fixed-dim: #ebaeff;
-  --on-secondary-fixed: #550e71;
-  --on-secondary-fixed-variant: #753290;
-
-  /* Tertiary (Light) */
-  --tertiary: #c0001e;
-  --on-tertiary: #ffffff;
-  --tertiary-container: #ffdadb;
-  --on-tertiary-container: #4a0008;
-  --tertiary-fixed: #ffdadb;
-  --tertiary-fixed-dim: #ffb2b9;
-  --on-tertiary-fixed: #39000d;
-  --on-tertiary-fixed-variant: #711227;
-
-  /* Error (Light) */
-  --error-container: #ffdadb;
-  --on-error-container: #4a0008;
-  --on-error: #ffffff;
-
-  /* Dim Variants (Light) */
-  --primary-dim: #6a1bb9;
-  --secondary-dim: #8e44ad;
-  --tertiary-dim: #e6283b;
-  --error-dim: #d73357;
-  --inverse-primary: #cc97ff;
-  --surface-tint: #842cd3;
-
-  /* Chat Tokens (Light) */
-  --chat-thread-bg: #f5f5f5;
-  --chat-bubble-received: #ffffff;
-  --chat-bubble-sent: #842cd3;
-  --chat-sidebar-active: #f3eeff;
-}
-
-/* Light theme glass overrides */
-[data-theme="light"] .glass-card {
+:root:not(.dark) .glass-card {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-[data-theme="light"] .glass-panel {
+:root:not(.dark) .glass-panel {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(20px);
 }
 
-[data-theme="light"] .glass-glow::after {
+:root:not(.dark) .glass-glow::after {
   background: rgba(132, 44, 211, 0.03);
 }
 
-[data-theme="light"] .text-gradient {
+:root:not(.dark) .text-gradient {
   background-image: linear-gradient(135deg, #842cd3 0%, #6a1bb9 100%);
 }
 
-[data-theme="light"] .neon-glow,
-[data-theme="light"] .neon-text-glow {
+:root:not(.dark) .neon-glow,
+:root:not(.dark) .neon-text-glow {
   text-shadow: none;
 }
 
-[data-theme="light"] .gradient-border::before {
+:root:not(.dark) .gradient-border::before {
   background: linear-gradient(135deg, rgba(132, 44, 211, 0.3), rgba(200, 200, 200, 0.1));
 }
 
-[data-theme="light"] .purple-glow-hover:hover {
+:root:not(.dark) .purple-glow-hover:hover {
   box-shadow: 0 0 30px rgba(132, 44, 211, 0.1);
 }
 
-[data-theme="light"] .shadow-ambient {
+:root:not(.dark) .shadow-ambient {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
-[data-theme="light"] .sidebar-active {
-  color: #842cd3;
-  border-right-color: #842cd3;
-  background: rgba(132, 44, 211, 0.05);
-}
-
-/* Light theme: invert white-opacity patterns to black-opacity for visibility */
-[data-theme="light"] [class*="border-white/"] {
+/* Light mode: invert white-opacity patterns for visibility on light bg */
+:root:not(.dark) [class*="border-white/"] {
   border-color: rgba(0, 0, 0, 0.08);
 }
-[data-theme="light"] [class*="hover:border-white/"]:hover {
+:root:not(.dark) [class*="hover\\:border-white/"]:hover {
   border-color: rgba(0, 0, 0, 0.12);
 }
-[data-theme="light"] [class*="bg-white/5"],
-[data-theme="light"] [class*="hover:bg-white/5"]:hover {
+:root:not(.dark) [class*="bg-white/5"],
+:root:not(.dark) [class*="hover\\:bg-white/5"]:hover {
   background-color: rgba(0, 0, 0, 0.03);
 }
-[data-theme="light"] [class*="bg-white/10"] {
+:root:not(.dark) [class*="bg-white/10"] {
   background-color: rgba(0, 0, 0, 0.05);
 }
-[data-theme="light"] [class*="bg-white/20"] {
+:root:not(.dark) [class*="bg-white/20"] {
   background-color: rgba(0, 0, 0, 0.08);
-}
-[data-theme="light"] [class*="bg-black/20"] {
-  background-color: rgba(0, 0, 0, 0.04);
-}
-[data-theme="light"] [class*="bg-black/40"] {
-  background-color: rgba(0, 0, 0, 0.06);
 }
 
 /* --- ESTILOS BASE --- */
