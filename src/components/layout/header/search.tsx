@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { CommandIcon, SearchIcon, LayoutDashboard, Users, FileText, Scale, Calendar, FolderOpen, Bell, Handshake, Wallet, Database, PenTool, FileEdit, MessageSquare, Bot } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { LayoutDashboard, Users, FileText, Scale, Calendar, FolderOpen, Bell, Handshake, Wallet, Database, PenTool, FileEdit, MessageSquare, Bot, SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMounted } from "@/hooks/use-mounted";
 
 import {
   CommandDialog,
@@ -15,7 +13,6 @@ import {
   CommandList,
   CommandSeparator
 } from "@/components/ui/command";
-import { Button } from "@/components/ui/button";
 
 // Nav Principal - Funcionalidades core do escritório
 const navPrincipal = [
@@ -118,9 +115,12 @@ const navServicos = [
   },
 ]
 
-export default function Search() {
+/**
+ * CommandMenu — Paleta de comandos acessível apenas via Cmd+K / Ctrl+K.
+ * Nenhum trigger visual é renderizado; o atalho de teclado é o único ponto de acesso.
+ */
+export default function CommandMenu() {
   const [open, setOpen] = useState(false);
-  const mounted = useMounted();
   const router = useRouter();
 
   useEffect(() => {
@@ -139,97 +139,51 @@ export default function Search() {
     router.push(url);
   };
 
-  if (!mounted) {
-    return (
-      <div className="md:flex-1">
-        <div className="relative hidden max-w-sm flex-1 md:block">
-          <SearchIcon className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-          <Input
-            className="h-9 w-full cursor-pointer rounded-md border pr-4 pl-10 text-sm shadow-xs"
-            placeholder="Busca rápida..."
-            type="search"
-            readOnly
-          />
-          <div className="absolute top-1/2 right-2 hidden -translate-y-1/2 items-center gap-0.5 rounded-sm bg-zinc-200 p-1 font-mono text-xs font-medium sm:flex dark:bg-neutral-700">
-            <CommandIcon className="size-3" />
-            <span>k</span>
-          </div>
-        </div>
-        <div className="block md:hidden">
-          <Button size="icon" variant="ghost">
-            <SearchIcon />
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="md:flex-1">
-      <div className="relative hidden max-w-md flex-1 md:block">
-        <SearchIcon className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-        <Input
-          className="h-9 w-full cursor-pointer rounded-md border pr-4 pl-10 text-sm shadow-xs"
-          placeholder="Busca rápida..."
-          type="search"
-          onFocus={() => setOpen(true)}
-          readOnly
-        />
-        <div className="absolute top-1/2 right-2 hidden -translate-y-1/2 items-center gap-0.5 rounded-sm bg-zinc-200 p-1 font-mono text-xs font-medium sm:flex dark:bg-neutral-700">
-          <CommandIcon className="size-3" />
-          <span>k</span>
-        </div>
-      </div>
-      <div className="block md:hidden">
-        <Button size="icon" variant="ghost" onClick={() => setOpen(true)}>
-          <SearchIcon />
-        </Button>
-      </div>
-      <CommandDialog
-        open={open}
-        onOpenChange={setOpen}
-        title="Busca rápida"
-        description="Pesquise por comandos ou navegue pelo sistema"
-      >
-        <CommandInput placeholder="Digite um comando ou pesquise..." />
-        <CommandList>
-          <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
+    <CommandDialog
+      open={open}
+      onOpenChange={setOpen}
+      title="Busca rápida"
+      description="Pesquise por comandos ou navegue pelo sistema"
+    >
+      <CommandInput placeholder="Digite um comando ou pesquise..." />
+      <CommandList>
+        <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 
-          <CommandGroup heading="Principal">
-            {navPrincipal.map((item) => (
-              <React.Fragment key={item.url}>
-                <CommandItem onSelect={() => onSelect(item.url)}>
-                  {item.icon && <item.icon className="mr-2 h-4 w-4" />}
-                  <span>{item.title}</span>
+        <CommandGroup heading="Principal">
+          {navPrincipal.map((item) => (
+            <React.Fragment key={item.url}>
+              <CommandItem onSelect={() => onSelect(item.url)}>
+                {item.icon && <item.icon className="mr-2 h-4 w-4" />}
+                <span>{item.title}</span>
+              </CommandItem>
+              {item.items?.map((subItem) => (
+                <CommandItem key={subItem.url} onSelect={() => onSelect(subItem.url)} className="pl-8">
+                  <span>{subItem.title}</span>
                 </CommandItem>
-                {item.items?.map((subItem) => (
-                  <CommandItem key={subItem.url} onSelect={() => onSelect(subItem.url)} className="pl-8">
-                    <span>{subItem.title}</span>
-                  </CommandItem>
-                ))}
-              </React.Fragment>
-            ))}
-          </CommandGroup>
+              ))}
+            </React.Fragment>
+          ))}
+        </CommandGroup>
 
-          <CommandSeparator />
+        <CommandSeparator />
 
-          <CommandGroup heading="Serviços">
-            {navServicos.map((item) => (
-              <React.Fragment key={item.url}>
-                <CommandItem onSelect={() => onSelect(item.url)}>
-                  {item.icon && <item.icon className="mr-2 h-4 w-4" />}
-                  <span>{item.title}</span>
+        <CommandGroup heading="Serviços">
+          {navServicos.map((item) => (
+            <React.Fragment key={item.url}>
+              <CommandItem onSelect={() => onSelect(item.url)}>
+                {item.icon && <item.icon className="mr-2 h-4 w-4" />}
+                <span>{item.title}</span>
+              </CommandItem>
+              {item.items?.map((subItem) => (
+                <CommandItem key={subItem.url} onSelect={() => onSelect(subItem.url)} className="pl-8">
+                  <span>{subItem.title}</span>
                 </CommandItem>
-                {item.items?.map((subItem) => (
-                  <CommandItem key={subItem.url} onSelect={() => onSelect(subItem.url)} className="pl-8">
-                    <span>{subItem.title}</span>
-                  </CommandItem>
-                ))}
-              </React.Fragment>
-            ))}
-          </CommandGroup>
-        </CommandList>
-      </CommandDialog>
-    </div>
+              ))}
+            </React.Fragment>
+          ))}
+        </CommandGroup>
+      </CommandList>
+    </CommandDialog>
   );
 }

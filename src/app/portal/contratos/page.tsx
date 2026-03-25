@@ -1,5 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import { PortalShell } from "@/features/portal/components/layout/portal-shell";
 import { EditorialHeader } from "@/features/website/components/sections/editorial-header";
+import { FilterChips } from "@/features/website";
 import {
   FileText,
   PlusCircle,
@@ -179,7 +183,16 @@ const deadlineLabelColorMap: Record<DeadlineItem["urgency"], string> = {
 // Page (Server Component)
 // ---------------------------------------------------------------------------
 
+const CONTRACT_FILTER_OPTIONS = [
+  "Todos (6)",
+  "Assinados (3)",
+  "Pendentes (2)",
+  "Em Revisão (1)",
+];
+
 export default function GestaoContratosPage() {
+  const [activeFilter, setActiveFilter] = useState("Todos (6)");
+
   return (
     <PortalShell>
       {/* Editorial Header */}
@@ -187,6 +200,7 @@ export default function GestaoContratosPage() {
         <EditorialHeader
           kicker="CONTRATOS"
           title="Gestão de Contratos."
+          description="Gerencie seus acordos legais com controle total e segurança."
           actions={
             <Link
               href="/portal/contratos/gerador"
@@ -196,6 +210,12 @@ export default function GestaoContratosPage() {
               Novo Contrato
             </Link>
           }
+        />
+        <FilterChips
+          options={CONTRACT_FILTER_OPTIONS}
+          activeOption={activeFilter}
+          onSelect={setActiveFilter}
+          className="mt-6"
         />
       </div>
 
@@ -215,12 +235,20 @@ export default function GestaoContratosPage() {
                 <FileText className="w-5 h-5 text-primary" aria-hidden="true" />
               </div>
               <div>
-                <p className="text-xs font-black text-on-surface-variant uppercase tracking-widest font-mono">
-                  {featuredContract.ref}
-                </p>
-                <h3 className="text-2xl font-extrabold font-headline tracking-tighter text-white leading-tight mt-0.5">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <p className="text-xs font-black text-on-surface-variant uppercase tracking-widest font-mono">
+                    {featuredContract.ref}
+                  </p>
+                  <span className="bg-primary/20 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    Prioritário
+                  </span>
+                </div>
+                <h3 className="text-2xl font-extrabold font-headline tracking-tighter text-white leading-tight">
                   {featuredContract.title}
                 </h3>
+                <span className="text-on-surface-variant text-xs">
+                  Atualizado há 2 horas
+                </span>
               </div>
             </div>
             <StatusBadge status={featuredContract.status} />

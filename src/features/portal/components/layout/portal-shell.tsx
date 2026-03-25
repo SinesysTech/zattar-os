@@ -20,6 +20,22 @@ export function PortalShell({ children }: PortalShellProps) {
             {children}
           </div>
         </main>
+        <footer className="lg:pl-72 border-t border-white/5 px-6 lg:pr-8 py-8">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+            <p>&copy; {new Date().getFullYear()} Zattar Advogados. Todos os direitos reservados.</p>
+            <div className="flex items-center gap-6">
+              <a href="/termos" className="hover:text-primary transition-colors">
+                Termos de Uso
+              </a>
+              <a href="/privacidade" className="hover:text-primary transition-colors">
+                Política de Privacidade
+              </a>
+              <a href="/lgpd" className="hover:text-primary transition-colors">
+                LGPD
+              </a>
+            </div>
+          </div>
+        </footer>
       </div>
     </PortalCopilotProvider>
   );

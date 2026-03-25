@@ -6,18 +6,25 @@ interface EditorialHeaderProps {
   title: string;
   description?: string;
   actions?: ReactNode;
+  gradient?: boolean;
+  titleClassName?: string;
   className?: string;
 }
 
 /**
  * Portal page editorial header — kicker + display title + optional description + action buttons.
  * Used at the top of every portal page (Dashboard, Financeiro, Agendamentos, etc.).
+ *
+ * `gradient` applies the signature text-gradient effect on the title.
+ * `titleClassName` allows additional styling overrides on the h2.
  */
 export function EditorialHeader({
   kicker,
   title,
   description,
   actions,
+  gradient,
+  titleClassName,
   className,
 }: EditorialHeaderProps) {
   return (
@@ -31,7 +38,13 @@ export function EditorialHeader({
         <span className="text-xs font-bold tracking-[0.2em] text-primary uppercase block mb-2">
           {kicker}
         </span>
-        <h2 className="text-5xl font-extrabold font-headline tracking-tighter leading-tight">
+        <h2
+          className={cn(
+            "text-5xl font-extrabold font-headline tracking-tighter leading-tight",
+            gradient && "text-gradient",
+            titleClassName
+          )}
+        >
           {title}
         </h2>
         {description && (

@@ -32,6 +32,8 @@ export default function AuthLayout({
           aria-hidden="true"
         />
 
+        <span className="absolute top-8 right-8 font-mono text-[80px] font-black opacity-[0.03] text-primary select-none pointer-events-none" aria-hidden="true">ZT</span>
+
         <div className="relative z-10 flex items-center justify-center">
           <div className="relative h-32 w-136 xl:h-36 xl:w-160">
             <Image
@@ -42,6 +44,14 @@ export default function AuthLayout({
               className="object-contain object-center"
             />
           </div>
+        </div>
+
+        <div className="absolute bottom-8 left-8 right-8 flex items-center justify-between text-[10px] font-mono text-on-surface-variant/20 uppercase tracking-wider" aria-hidden="true">
+          <span className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/50 animate-pulse" />
+            Conexão Segura
+          </span>
+          <span>Zattar OS v4.2</span>
         </div>
       </div>
 

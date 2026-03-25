@@ -1,7 +1,12 @@
 "use client";
 
 import { PortalShell } from "@/features/portal/components/layout/portal-shell";
-import { EditorialHeader, StatCard, ActivityItem } from "@/features/website";
+import {
+  EditorialHeader,
+  StatCard,
+  ActivityItem,
+  FilterChips,
+} from "@/features/website";
 import {
   Scale,
   Calendar,
@@ -71,6 +76,8 @@ const RECENT_ACTIVITIES = [
   },
 ];
 
+const ACTIVITY_FILTER_OPTIONS = ["Todos", "Processos", "Documentos"];
+
 // ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
@@ -85,11 +92,28 @@ export default function DashboardPortalPage() {
         <EditorialHeader
           kicker="PAINEL DO CLIENTE"
           title="Dashboard."
+          gradient
+          description="Controle total dos seus processos, audiências e pagamentos."
           actions={
-            <button className="px-6 py-3 bg-linear-to-r from-primary to-purple-600 text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(204,151,255,0.4)] transition-all flex items-center gap-2 active:scale-95 text-sm">
-              <Plus className="w-4 h-4" />
-              Novo Caso
-            </button>
+            <>
+              {/* Time-period toggle */}
+              <div className="flex items-center gap-1 bg-black/30 p-1 rounded-xl border border-white/5">
+                <button className="px-4 py-1.5 text-xs font-bold bg-surface-container-highest text-on-surface-variant rounded-lg hover:text-on-surface transition-colors">
+                  Hoje
+                </button>
+                <button className="px-4 py-1.5 text-xs font-bold bg-surface-container-highest text-on-surface-variant rounded-lg hover:text-on-surface transition-colors">
+                  Semana
+                </button>
+                <button className="px-4 py-1.5 text-xs font-bold bg-primary text-on-primary-fixed rounded-lg shadow-sm">
+                  Mês
+                </button>
+              </div>
+
+              <button className="px-6 py-3 bg-linear-to-r from-primary to-purple-600 text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(204,151,255,0.4)] transition-all flex items-center gap-2 active:scale-95 text-sm">
+                <Plus className="w-4 h-4" />
+                Novo Caso
+              </button>
+            </>
           }
         />
       </div>
@@ -106,7 +130,7 @@ export default function DashboardPortalPage() {
             icon={<Scale className="w-5 h-5" />}
             change={2}
             changeLabel="este mês"
-            className="h-full border border-white/5 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] transition-shadow duration-300"
+            className="glass-card h-full border border-white/5 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] transition-shadow duration-300"
           />
         </div>
 
@@ -116,7 +140,7 @@ export default function DashboardPortalPage() {
             label="Próxima Audiência"
             value="15 Abr"
             icon={<Calendar className="w-5 h-5" />}
-            className="h-full border border-white/5 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] transition-shadow duration-300"
+            className="glass-card h-full border border-white/5 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] transition-shadow duration-300"
           />
         </div>
 
@@ -128,7 +152,7 @@ export default function DashboardPortalPage() {
             icon={<Wallet className="w-5 h-5" />}
             change={12.5}
             changeLabel="vs. mês anterior"
-            className="h-full border border-white/5 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] transition-shadow duration-300"
+            className="glass-card h-full border border-white/5 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] transition-shadow duration-300"
           />
         </div>
 
@@ -138,7 +162,7 @@ export default function DashboardPortalPage() {
             label="Contratos Ativos"
             value="8"
             icon={<FileText className="w-5 h-5" />}
-            className="h-full border border-white/5 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] transition-shadow duration-300"
+            className="glass-card h-full border border-white/5 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] transition-shadow duration-300"
           />
         </div>
       </div>
@@ -227,7 +251,7 @@ export default function DashboardPortalPage() {
 
         {/* Right — Atividades Recentes feed */}
         <div className="col-span-12 lg:col-span-4 bg-surface-container rounded-xl border border-white/5 p-6 shadow-lg flex flex-col">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <h3 className="text-base font-bold font-headline tracking-tight text-white">
               Atividades Recentes
             </h3>
@@ -235,6 +259,15 @@ export default function DashboardPortalPage() {
               Ver todas
               <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
             </button>
+          </div>
+
+          {/* Activity filter chips */}
+          <div className="mb-4">
+            <FilterChips
+              options={ACTIVITY_FILTER_OPTIONS}
+              activeOption="Todos"
+              onSelect={() => {}}
+            />
           </div>
 
           <div className="flex-1 space-y-1 -mx-2">

@@ -113,6 +113,14 @@ export function CpfHeroForm() {
           )}
         </button>
       </form>
+
+      <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
+        <span className="flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          Criptografia AES-256
+        </span>
+        <span>Portal v2.0</span>
+      </div>
     </div>
   )
 }

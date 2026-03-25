@@ -77,13 +77,15 @@ function SectionCard({
   title,
   icon: Icon,
   children,
+  className = "",
 }: {
   title: string;
   icon: React.ElementType;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="bg-surface-container rounded-xl p-6 border border-white/5">
+    <div className={`bg-surface-container rounded-xl p-6 border border-white/5 ${className}`.trim()}>
       <div className="flex items-center gap-3 mb-6">
         <Icon className="w-5 h-5 text-primary" />
         <h2 className="font-headline text-xl font-bold text-white">{title}</h2>
@@ -110,13 +112,15 @@ function DocumentRow({
         <span className="text-sm font-medium text-on-surface">{name}</span>
       </div>
       <div className="flex items-center gap-4 shrink-0">
-        <span
-          className={`text-xs font-bold ${
-            isVerified ? "text-emerald-400" : "text-amber-500"
-          }`}
-        >
-          {status}
-        </span>
+        {isVerified ? (
+          <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+            Verificado
+          </span>
+        ) : (
+          <span className="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+            Pendente
+          </span>
+        )}
         <span className="text-xs text-on-surface-variant hidden sm:block">
           {date}
         </span>
@@ -138,13 +142,21 @@ export default function PerfilPage() {
           kicker="MEU PERFIL"
           title="Perfil."
           actions={
-            <button
-              type="button"
-              className="flex items-center gap-2 bg-primary text-black font-bold text-sm px-5 py-2.5 rounded-lg hover:bg-primary/90 active:scale-95 transition-all"
-            >
-              <CheckCircle className="w-4 h-4" />
-              Salvar Alterações
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                className="border border-white/10 text-on-surface-variant hover:border-white/20 px-4 py-2 rounded-lg text-sm font-semibold transition-all"
+              >
+                Descartar
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 bg-primary text-black font-bold text-sm px-5 py-2.5 rounded-lg hover:bg-primary/90 active:scale-95 transition-all"
+              >
+                <CheckCircle className="w-4 h-4" />
+                Salvar Alterações
+              </button>
+            </div>
           }
         />
       </div>
@@ -155,7 +167,7 @@ export default function PerfilPage() {
         {/* Left Column — Dados Pessoais */}
         {/* ----------------------------------------------------------------- */}
         <div className="lg:col-span-7 space-y-6">
-          <SectionCard title="Dados Pessoais" icon={User}>
+          <SectionCard title="Dados Pessoais" icon={User} className="glass-card">
             {/* Profile header */}
             <div className="flex items-center gap-4 mb-8">
               <div className="w-20 h-20 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0">
@@ -291,7 +303,7 @@ export default function PerfilPage() {
         {/* Right Column — Cofre Digital */}
         {/* ----------------------------------------------------------------- */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-surface-container rounded-xl p-6 border border-white/5">
+          <div className="bg-linear-to-br from-surface-container to-surface-container-high rounded-xl p-6 border border-white/5">
             <div className="flex items-center gap-3 mb-1">
               <Lock className="w-5 h-5 text-primary" />
               <h2 className="font-headline text-xl font-bold text-white">

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { PortalShell } from "@/features/portal/components/layout/portal-shell";
-import { EditorialHeader } from "@/features/website";
+import { EditorialHeader, PhaseStepper } from "@/features/website";
+import type { PhaseStep } from "@/features/website";
 import {
   Scale,
   Calendar,
@@ -13,6 +14,7 @@ import {
   Clock,
   FileDown,
   ArrowLeft,
+  Zap,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -115,6 +117,17 @@ const STATS = [
   { label: "Documentos", value: "12" },
   { label: "Movimentações", value: "6" },
 ];
+
+// Phase steps for this process (Em Andamento — at Instrução phase)
+const PHASE_STEPS: PhaseStep[] = [
+  { label: "Inicial", status: "completed" },
+  { label: "Citação", status: "completed" },
+  { label: "Instrução", status: "current" },
+  { label: "Sentença", status: "pending" },
+];
+
+// Latest movement from timeline (the most recent "done" or "current" step)
+const LATEST_MOVEMENT = TIMELINE.find((s) => s.status === "current") ?? TIMELINE[TIMELINE.length - 1];
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -337,6 +350,48 @@ export default function ProcessDetailPage({
               label="Valor esperado"
               value={PROCESS.value}
             />
+          </div>
+        </div>
+      </div>
+
+      {/* Phase stepper — horizontal overview of process phases */}
+      <div
+        className="bg-surface-container rounded-xl border border-white/5 p-6 animate-in fade-in slide-in-from-bottom-4"
+        style={{ animationDelay: "60ms", animationDuration: "400ms", animationFillMode: "both" }}
+      >
+        <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">
+          Fase do Processo
+        </p>
+        <PhaseStepper steps={PHASE_STEPS} />
+      </div>
+
+      {/* Última Movimentação highlight card */}
+      <div
+        className="glass-card rounded-xl border border-primary/20 p-6 relative overflow-hidden animate-in fade-in slide-in-from-bottom-4"
+        style={{ animationDelay: "100ms", animationDuration: "400ms", animationFillMode: "both" }}
+      >
+        {/* Ambient glow */}
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/8 blur-[60px] rounded-full pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center shrink-0 border border-primary/25">
+            <Zap className="w-5 h-5 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">
+              Última Movimentação
+            </p>
+            <p className="font-semibold text-on-surface text-sm leading-snug">
+              {LATEST_MOVEMENT.title}
+            </p>
+          </div>
+          <div className="shrink-0 text-right">
+            <p className="font-mono text-xs text-on-surface-variant/70">
+              {LATEST_MOVEMENT.date}
+            </p>
+            <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold">
+              {statusLabel(LATEST_MOVEMENT.status)}
+            </span>
           </div>
         </div>
       </div>

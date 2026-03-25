@@ -5,6 +5,7 @@ import { PortalShell } from "@/features/portal/components/layout/portal-shell";
 import { EditorialHeader } from "@/features/website";
 import { GlassCard } from "@/features/website";
 import { ShieldCheck, FileDown, Share } from "lucide-react";
+import { TrustTicker } from "@/features/website";
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
 
@@ -88,7 +89,7 @@ export default function DecimoTerceiroCalculatorPage() {
 
   return (
     <PortalShell>
-      <EditorialHeader kicker="CALCULADORA" title="13º Salário." />
+      <EditorialHeader kicker="CALCULADORA" title="13º Salário." gradient />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* ── Input Panel ─────────────────────────────────────────────────── */}
@@ -248,6 +249,8 @@ export default function DecimoTerceiroCalculatorPage() {
           </div>
         </section>
       </div>
+
+      <TrustTicker items={["CLT", "TST", "TRT", "MPT", "OIT"]} heading="Base Legal" />
     </PortalShell>
   );
 }

@@ -44,6 +44,7 @@ interface ServiceBlockProps {
   title: string;
   description: string;
   href: string;
+  ctaLabel: string;
 }
 
 function ServiceBlock({
@@ -55,6 +56,7 @@ function ServiceBlock({
   title,
   description,
   href,
+  ctaLabel,
 }: ServiceBlockProps) {
   const imageCol =
     layout === "image-left"
@@ -72,7 +74,7 @@ function ServiceBlock({
         <img
           src={imageSrc}
           alt={imageAlt}
-          className="w-full aspect-video object-cover rounded-2xl grayscale hover:grayscale-0 transition-all duration-700"
+          className="w-full aspect-video object-cover rounded-2xl grayscale hover:grayscale-0 hover:scale-105 transition-all duration-700"
         />
         {/* Floating overlay card — bottom corner opposite to text side */}
         <div
@@ -99,7 +101,7 @@ function ServiceBlock({
           href={href}
           className="group/link text-primary font-bold flex items-center gap-2 w-fit hover:text-primary-dim transition-colors duration-200"
         >
-          Saiba mais
+          {ctaLabel}
           <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-200" />
         </Link>
       </div>
@@ -145,6 +147,7 @@ export function Services() {
             title="Demissão sem justa causa"
             description="Proteção completa dos seus direitos em rescisões contratuais inesperadas ou abusivas. Analisamos cada cláusula para garantir que você receba tudo que é devido por lei."
             href="/expertise"
+            ctaLabel="Consultar caso"
           />
 
           {/* Block 2 — Text Left, Image Right */}
@@ -162,6 +165,7 @@ export function Services() {
             title="FGTS e Verbas Rescisórias"
             description="Recuperação integral de depósitos de FGTS, horas extras e verbas rescisórias pendentes. Nossa equipe audita cada período trabalhado para identificar o valor exato do seu direito."
             href="/expertise"
+            ctaLabel="Verificar depósitos"
           />
 
           {/* Block 3 — Image Left, Text Right */}
@@ -179,6 +183,7 @@ export function Services() {
             title="Acidentes de Trabalho"
             description="Indenizações justas e suporte completo para doenças ocupacionais e acidentes laborais. Acompanhamos todo o processo, do laudo pericial à homologação judicial."
             href="/expertise"
+            ctaLabel="Relatar ocorrência"
           />
         </div>
       </div>

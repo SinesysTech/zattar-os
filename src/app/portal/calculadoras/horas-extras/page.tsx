@@ -5,6 +5,7 @@ import { PortalShell } from "@/features/portal/components/layout/portal-shell";
 import { EditorialHeader } from "@/features/website";
 import { GlassCard } from "@/features/website";
 import { Calculator, ShieldCheck, FileDown, Share } from "lucide-react";
+import { TrustTicker } from "@/features/website";
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
 
@@ -147,11 +148,11 @@ export default function HorasExtrasCalculatorPage() {
 
   return (
     <PortalShell>
-      <EditorialHeader kicker="CALCULADORA" title="Horas Extras." />
+      <EditorialHeader kicker="CALCULADORA" title="Horas Extras." gradient />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* ── Input Panel ─────────────────────────────────────────────────── */}
-        <section className="lg:col-span-5">
+        <section className="lg:col-span-7">
           <GlassCard className="space-y-6 relative overflow-hidden">
             {/* Decorative glow */}
             <div className="absolute top-0 left-0 w-40 h-40 bg-primary/5 blur-[60px] rounded-full pointer-events-none" />
@@ -230,7 +231,7 @@ export default function HorasExtrasCalculatorPage() {
         </section>
 
         {/* ── Results Panel ────────────────────────────────────────────────── */}
-        <section className="lg:col-span-7 lg:sticky lg:top-28 space-y-4">
+        <section className="lg:col-span-5 lg:sticky lg:top-28 space-y-4">
           <GlassCard className="relative overflow-hidden">
             {/* Decorative glow */}
             <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
@@ -323,6 +324,8 @@ export default function HorasExtrasCalculatorPage() {
           </div>
         </section>
       </div>
+
+      <TrustTicker items={["CLT", "TST", "TRT", "MPT", "OIT"]} heading="Base Legal" />
     </PortalShell>
   );
 }
