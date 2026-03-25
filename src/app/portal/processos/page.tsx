@@ -4,6 +4,9 @@ import { useState } from "react";
 import { PortalShell } from "@/features/portal/components/layout/portal-shell";
 import { EditorialHeader } from "@/features/website/components/sections/editorial-header";
 import { FilterChips } from "@/features/website/components/shared/filter-chips";
+import { StatCard } from "@/features/website";
+import { PhaseStepper } from "@/features/website";
+import type { PhaseStep } from "@/features/website";
 import {
   Scale,
   Eye,
@@ -11,6 +14,9 @@ import {
   MoreVertical,
   Search,
   Filter,
+  TrendingUp,
+  Target,
+  Award,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -95,6 +101,41 @@ const PROCESSES: ProcessItem[] = [
 ];
 
 const FILTER_OPTIONS = ["Todos", "Em Andamento", "Concluídos", "Arquivados"];
+
+// Phase steps for "Em Andamento" processes
+const STEPS_IN_PROGRESS: PhaseStep[] = [
+  { label: "Inicial", status: "completed" },
+  { label: "Citação", status: "completed" },
+  { label: "Instrução", status: "current" },
+  { label: "Sentença", status: "pending" },
+];
+
+// Phase steps for "Concluído" processes — all completed
+const STEPS_CONCLUDED: PhaseStep[] = [
+  { label: "Inicial", status: "completed" },
+  { label: "Citação", status: "completed" },
+  { label: "Instrução", status: "completed" },
+  { label: "Sentença", status: "completed" },
+];
+
+// Phase steps for "Arquivado" processes
+const STEPS_ARCHIVED: PhaseStep[] = [
+  { label: "Inicial", status: "completed" },
+  { label: "Citação", status: "completed" },
+  { label: "Instrução", status: "completed" },
+  { label: "Sentença", status: "pending" },
+];
+
+function getPhaseSteps(status: ProcessStatus): PhaseStep[] {
+  switch (status) {
+    case "Em Andamento":
+      return STEPS_IN_PROGRESS;
+    case "Concluído":
+      return STEPS_CONCLUDED;
+    case "Arquivado":
+      return STEPS_ARCHIVED;
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -254,6 +295,11 @@ function ProcessCard({ process, index }: ProcessCardProps) {
           </div>
         </div>
       </div>
+
+      {/* Phase stepper — at the bottom of the card */}
+      <div className="mt-5 pt-5 border-t border-white/5">
+        <PhaseStepper steps={getPhaseSteps(process.status)} />
+      </div>
     </div>
   );
 }
@@ -284,6 +330,7 @@ export default function ProcessosPage() {
       <EditorialHeader
         kicker="PROCESSOS"
         title="Meus Processos."
+        description="Gestão inteligente e acompanhamento dos seus processos jurídicos."
         actions={
           <>
             <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-container border border-white/10 text-sm font-semibold hover:bg-surface-container-highest hover:border-white/20 transition-all">
@@ -304,6 +351,36 @@ export default function ProcessosPage() {
           </>
         }
       />
+
+      {/* Metric grid — 4 stat cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          label="Total sob Gestão"
+          value="R$ 450.000"
+          icon={<TrendingUp className="w-5 h-5" />}
+          change={12.5}
+          className="border border-white/5 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] transition-shadow duration-300"
+        />
+        <StatCard
+          label="Previsão de Êxito"
+          value="R$ 280.000"
+          icon={<Target className="w-5 h-5" />}
+          change={8.3}
+          className="border border-white/5 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] transition-shadow duration-300"
+        />
+        <StatCard
+          label="Processos Ativos"
+          value="5"
+          icon={<Scale className="w-5 h-5" />}
+          className="border border-white/5 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] transition-shadow duration-300"
+        />
+        <StatCard
+          label="Taxa de Vitória"
+          value="92%"
+          icon={<Award className="w-5 h-5" />}
+          className="border border-white/5 hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] transition-shadow duration-300"
+        />
+      </div>
 
       {/* Filter chips */}
       <FilterChips

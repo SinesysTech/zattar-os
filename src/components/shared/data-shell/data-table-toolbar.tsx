@@ -2,10 +2,9 @@
 
 import * as React from 'react';
 import type { Table } from '@tanstack/react-table';
-import { Columns, Download, Plus, Search, Settings2 } from 'lucide-react';
+import { Columns, Download, Plus, Settings2 } from 'lucide-react';
 import Papa from 'papaparse';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Tooltip,
   TooltipContent,
@@ -23,6 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { usePageSearch } from '@/contexts/page-search-context';
 
 export interface DataTableToolbarProps<TData> {
   table?: Table<TData>;
@@ -151,6 +151,23 @@ export function DataTableToolbar<TData>({
     [onExport, table]
   );
 
+  // Registra handler de busca no PageSearchContext (search bar do header)
+  const pageSearch = usePageSearch()
+
+  React.useEffect(() => {
+    const handler = (value: string) => {
+      if (onSearchValueChange) {
+        onSearchValueChange(value)
+        return
+      }
+      table?.setGlobalFilter(value)
+    }
+
+    pageSearch.register(handler, searchPlaceholder)
+    return () => pageSearch.unregister()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [table, onSearchValueChange, searchPlaceholder])
+
   const visibleColumns = React.useMemo(
     () =>
       table
@@ -191,38 +208,8 @@ export function DataTableToolbar<TData>({
 
       {/* Linha 2: Filtros à esquerda, Colunas + Ações à direita */}
       <div className="flex flex-col gap-2 pb-4 sm:flex-row sm:items-center sm:gap-4">
-        {/* Lado esquerdo: SearchBox + Filtros */}
+        {/* Lado esquerdo: Filtros (busca agora está no header via PageSearchContext) */}
         <div className="flex flex-wrap items-center gap-2 flex-1">
-          {/* SearchBox - só renderiza quando há table ou onSearchValueChange */}
-          {(table || onSearchValueChange) && (
-            <div className="relative w-full sm:w-80">
-              <Search
-                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <Input
-                type="search"
-                placeholder={searchPlaceholder}
-                aria-label="Buscar na tabela"
-                value={
-                  searchValue !== undefined
-                    ? searchValue
-                    : (table?.getState().globalFilter as string) ?? ''
-                }
-                onChange={(event) => {
-                  const value = event.target.value;
-                  if (onSearchValueChange) {
-                    onSearchValueChange(value);
-                    return;
-                  }
-                  table?.setGlobalFilter(value);
-                }}
-                className="h-9 w-full pl-9 bg-card"
-              />
-            </div>
-          )}
-
-          {/* Filtros (dropdowns) */}
           {filtersSlot}
         </div>
 

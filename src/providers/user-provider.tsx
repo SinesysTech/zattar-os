@@ -66,8 +66,6 @@ const UserContext = createContext<UserContextValue | undefined>(undefined);
 
 const PUBLIC_ROUTES = [
   '/app/login',
-  '/app/sign-up',
-  '/app/sign-up-success',
   '/app/confirm',
   '/app/forgot-password',
   '/app/update-password',

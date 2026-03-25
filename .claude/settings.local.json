@@ -41,7 +41,8 @@
       "mcp__copilotkit-mcp__search-docs",
       "mcp__copilotkit-mcp__search-code",
       "WebFetch(domain:docs.copilotkit.ai)",
-      "WebFetch(domain:www.copilotkit.ai)"
+      "WebFetch(domain:www.copilotkit.ai)",
+      "WebFetch(domain:cdn.21st.dev)"
     ]
   },
   "enableAllProjectMcpServers": true,

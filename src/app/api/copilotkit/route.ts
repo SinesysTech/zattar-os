@@ -1,26 +1,25 @@
 /**
- * CopilotKit Runtime Endpoint
+ * CopilotKit v2 Runtime Endpoint
  *
- * Configura o CopilotRuntime com:
- * - Google Gemini 2.5 Flash como LLM
- * - Todas as ferramentas MCP do sistema como backend actions
- * - Filtro contextual por URL da página (tools relevantes por módulo)
+ * Usa BuiltInAgent com:
+ * - Google Gemini 2.5 Flash como LLM (via AI SDK)
+ * - Todas as ferramentas MCP como server tools (defineTool + Zod nativo)
+ * - maxSteps: 5 para permitir chains de tool calls
  *
- * As ferramentas MCP são executadas no mesmo processo via bridge direta
- * (sem overhead de rede) — veja src/lib/copilotkit/mcp-bridge.ts
+ * As ferramentas MCP são executadas no mesmo processo via bridge direta.
  */
 
 import {
   CopilotRuntime,
-  GoogleGenerativeAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
 } from "@copilotkit/runtime";
-
+import { BuiltInAgent } from "@copilotkit/runtime/v2";
 import { NextRequest, NextResponse } from "next/server";
 import {
   ensureMcpToolsRegistered,
-  getMcpToolsAsCopilotActions,
+  getMcpToolsAsDefinitions,
 } from "@/lib/copilotkit/mcp-bridge";
+import { SYSTEM_PROMPT } from "@/lib/copilotkit/system-prompt";
 
 const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
@@ -36,22 +35,23 @@ export const POST = async (req: NextRequest) => {
     // Garantir que ferramentas MCP estão registradas (idempotente)
     await ensureMcpToolsRegistered();
 
-    const serviceAdapter = new GoogleGenerativeAIAdapter({
-      model: "gemini-2.5-flash",
+    // Converter MCP tools para ToolDefinition[] do v2
+    const tools = getMcpToolsAsDefinitions();
+
+    const agent = new BuiltInAgent({
+      model: "google/gemini-2.5-flash",
       apiKey,
+      tools,
+      prompt: SYSTEM_PROMPT,
+      maxSteps: 5,
     });
 
     const runtime = new CopilotRuntime({
-      actions: ({ url }) => {
-        // Converter ferramentas MCP para ações CopilotKit (síncrono)
-        // Filtra por URL para expor apenas tools relevantes ao módulo atual
-        return getMcpToolsAsCopilotActions(url);
-      },
+      agents: { default: agent },
     });
 
     const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
       runtime,
-      serviceAdapter,
       endpoint: "/api/copilotkit",
     });
 

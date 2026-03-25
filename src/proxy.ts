@@ -228,8 +228,6 @@ export async function proxy(request: NextRequest) {
   // Rotas públicas do dashboard (login, signup, etc)
   const publicDashboardRoutes = [
     "/app/login",
-    "/app/sign-up",
-    "/app/sign-up-success",
     "/app/forgot-password",
     "/app/update-password",
     "/app/confirm",

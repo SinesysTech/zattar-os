@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { PortalShell } from "@/features/portal/components/layout/portal-shell";
 import { EditorialHeader } from "@/features/website/components/sections/editorial-header";
+import { FilterChips } from "@/features/website";
 import {
   PlusCircle,
   Wallet,
@@ -98,7 +100,26 @@ const STATUS_STYLES: Record<InvoiceStatus, string> = {
 // Page
 // ---------------------------------------------------------------------------
 
+const INVOICE_FILTER_OPTIONS = ["Todos", "Pagos", "Pendentes", "Vencidos"];
+
+const INVOICE_FILTER_MAP: Record<string, InvoiceStatus | null> = {
+  Todos: null,
+  Pagos: "Pago",
+  Pendentes: "Pendente",
+  Vencidos: "Atrasado",
+};
+
 export default function FinanceiroPage() {
+  const [activeFilter, setActiveFilter] = useState("Todos");
+  const [chartPeriod, setChartPeriod] = useState<"Mensal" | "Trimestral">(
+    "Mensal"
+  );
+
+  const filterStatus = INVOICE_FILTER_MAP[activeFilter];
+  const filteredInvoices = filterStatus
+    ? INVOICES.filter((inv) => inv.status === filterStatus)
+    : INVOICES;
+
   return (
     <PortalShell>
       {/* ------------------------------------------------------------------ */}
@@ -107,6 +128,7 @@ export default function FinanceiroPage() {
       <EditorialHeader
         kicker="FINANCEIRO"
         title="Painel de Gestão."
+        description="Controle total sobre o fluxo financeiro dos seus processos."
         actions={
           <button className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-on-primary text-sm font-bold rounded-xl hover:brightness-110 hover:shadow-[0_0_20px_rgba(204,151,255,0.35)] transition-all active:scale-95">
             <PlusCircle className="w-4 h-4" />
@@ -156,9 +178,12 @@ export default function FinanceiroPage() {
             <p className="text-xs text-on-surface-variant uppercase tracking-widest font-bold mb-1">
               15 Abr 2026
             </p>
-            <h3 className="text-3xl font-black font-headline tracking-tighter text-white font-mono tabular-nums">
+            <h3 className="text-3xl font-black font-headline tracking-tighter text-white font-mono tabular-nums mb-4">
               R$ 3.500,00
             </h3>
+            <button className="bg-primary text-on-primary-fixed px-4 py-2 rounded-lg text-sm font-semibold hover:brightness-110 transition-all active:scale-95">
+              Pagar Agora
+            </button>
           </div>
         </div>
 
@@ -189,9 +214,27 @@ export default function FinanceiroPage() {
       <div className="grid grid-cols-12 gap-6 animate-in fade-in duration-700">
         {/* Fluxo de Despesas — Bar Chart */}
         <div className="col-span-12 lg:col-span-8 bg-surface-container rounded-xl p-8 border border-white/5">
-          <h4 className="text-xl font-bold font-headline text-white mb-8">
-            Fluxo de Despesas
-          </h4>
+          <div className="flex items-center justify-between mb-8">
+            <h4 className="text-xl font-bold font-headline text-white">
+              Fluxo de Despesas
+            </h4>
+            <div className="flex items-center gap-1 bg-surface-container-highest rounded-lg p-1">
+              {(["Mensal", "Trimestral"] as const).map((period) => (
+                <button
+                  key={period}
+                  onClick={() => setChartPeriod(period)}
+                  className={[
+                    "px-3 py-1 rounded-md text-xs font-bold transition-all",
+                    chartPeriod === period
+                      ? "bg-primary text-on-primary-fixed"
+                      : "text-on-surface-variant hover:text-on-surface",
+                  ].join(" ")}
+                >
+                  {period}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Chart area */}
           <div className="relative h-48 w-full flex items-end gap-1.5">
@@ -296,10 +339,15 @@ export default function FinanceiroPage() {
       {/* Invoices Table                                                       */}
       {/* ------------------------------------------------------------------ */}
       <div className="bg-surface-container rounded-xl border border-white/5 overflow-hidden animate-in fade-in duration-700">
-        <div className="px-8 py-6 border-b border-white/5">
+        <div className="px-8 py-6 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <h4 className="text-xl font-bold font-headline text-white">
             Faturas
           </h4>
+          <FilterChips
+            options={INVOICE_FILTER_OPTIONS}
+            activeOption={activeFilter}
+            onSelect={setActiveFilter}
+          />
         </div>
 
         <div className="overflow-x-auto">
@@ -324,7 +372,7 @@ export default function FinanceiroPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {INVOICES.map((invoice) => (
+              {filteredInvoices.map((invoice) => (
                 <tr
                   key={invoice.id}
                   className="hover:bg-white/5 transition-colors"

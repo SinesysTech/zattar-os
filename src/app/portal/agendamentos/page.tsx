@@ -14,6 +14,7 @@ import {
   ChevronRight,
   User,
   CheckCircle2,
+  Link as LinkIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -99,6 +100,30 @@ const PAST: PastConsultation[] = [
   },
 ];
 
+// Today reference (matches system date: 2026-03-25)
+const TODAY_YEAR = 2026;
+const TODAY_MONTH = 2; // March (0-based)
+const TODAY_DAY = 25;
+
+function isAppointmentToday(appt: Appointment) {
+  return (
+    appt.day === TODAY_DAY &&
+    appt.monthIndex === TODAY_MONTH &&
+    appt.year === TODAY_YEAR
+  );
+}
+
+// Future video appointments whose link is not yet active
+// (more than 1 day away → show "link available in N days" message)
+function videoLinkDaysUntilAvailable(appt: Appointment): number | null {
+  if (appt.type !== "Videoconferência") return null;
+  const apptDate = new Date(appt.year, appt.monthIndex, appt.day);
+  const today = new Date(TODAY_YEAR, TODAY_MONTH, TODAY_DAY);
+  const diffMs = apptDate.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  return diffDays > 1 ? diffDays : null;
+}
+
 // ---------------------------------------------------------------------------
 // Calendar helpers
 // ---------------------------------------------------------------------------
@@ -176,8 +201,18 @@ function TypeBadge({ type }: { type: AppointmentType }) {
 }
 
 function AppointmentCard({ appt }: { appt: Appointment }) {
+  const today = isAppointmentToday(appt);
+  const linkDays = videoLinkDaysUntilAvailable(appt);
+
   return (
-    <div className="group bg-surface-container rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300 flex flex-col sm:flex-row items-start gap-6">
+    <div className="group relative bg-surface-container rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300 flex flex-col sm:flex-row items-start gap-6">
+      {/* "Hoje" badge — top-right corner */}
+      {today && (
+        <span className="absolute top-4 right-4 bg-primary/20 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+          Hoje
+        </span>
+      )}
+
       {/* Date box */}
       <div className="shrink-0 bg-primary/10 rounded-xl p-4 text-center w-18">
         <span className="text-2xl font-black font-headline text-primary block leading-none">
@@ -202,12 +237,18 @@ function AppointmentCard({ appt }: { appt: Appointment }) {
             {appt.time}
           </span>
           <TypeBadge type={appt.type} />
+          {linkDays !== null && (
+            <span className="text-on-surface-variant text-xs flex items-center gap-1">
+              <LinkIcon className="w-3 h-3" />
+              Link disponível em {linkDays} dias
+            </span>
+          )}
         </div>
       </div>
 
       {/* Actions */}
       <div className="flex items-center gap-2 shrink-0">
-        {appt.type === "Videoconferência" && (
+        {appt.type === "Videoconferência" && linkDays === null && (
           <button
             aria-label="Entrar na videochamada"
             className="p-2 rounded-lg hover:bg-info/10 text-on-surface-variant hover:text-info transition-colors"
@@ -246,19 +287,19 @@ function PastConsultationItem({ item }: { item: PastConsultation }) {
           </p>
         </div>
       </div>
-      <span className="ml-8 sm:ml-0 text-xs font-bold text-on-surface-variant/40 bg-white/5 px-3 py-1.5 rounded-lg self-start sm:self-auto shrink-0">
-        Concluída
-      </span>
+      <div className="ml-8 sm:ml-0 flex flex-col items-start sm:items-end gap-1.5 shrink-0">
+        <span className="text-xs font-bold text-on-surface-variant/40 bg-white/5 px-3 py-1.5 rounded-lg">
+          Concluída
+        </span>
+        <button className="text-primary text-xs font-semibold hover:underline cursor-pointer">
+          Ver Resumo
+        </button>
+      </div>
     </div>
   );
 }
 
 function MiniCalendar() {
-  // Today is 2026-03-24 per system context
-  const TODAY_YEAR = 2026;
-  const TODAY_MONTH = 2; // March (0-based)
-  const TODAY_DAY = 24;
-
   const [viewYear, setViewYear] = useState(TODAY_YEAR);
   const [viewMonth, setViewMonth] = useState(TODAY_MONTH);
 

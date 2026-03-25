@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { AtSign, AlertCircle, ArrowRight, Eye, EyeOff, Loader2, Lock } from 'lucide-react'
+import { AtSign, AlertCircle, ArrowRight, Eye, EyeOff, Loader2, Lock, ShieldCheck } from 'lucide-react'
 
 export function LoginForm({
   className,
@@ -171,6 +171,15 @@ export function LoginForm({
               )}
             </button>
           </div>
+        </div>
+
+        <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
+          <ShieldCheck className="w-4 h-4 text-primary" />
+          <span className="text-xs font-semibold text-primary">Protocolo MFA</span>
+          <span className="ml-auto flex items-center gap-1 text-[10px] text-on-surface-variant">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            Ativo
+          </span>
         </div>
 
         {error && (

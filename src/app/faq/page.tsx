@@ -1,4 +1,4 @@
-import { WebsiteShell } from "@/features/website";
+import { WebsiteShell, TrustTicker } from "@/features/website";
 import { Search, ArrowUpRight, Gavel, ArrowRight, Headset } from "lucide-react";
 
 export default function FAQPage() {
@@ -187,6 +187,10 @@ export default function FAQPage() {
         <div className="absolute inset-0 bg-linear-to-t from-background to-transparent pointer-events-none opacity-50"></div>
       </section>
 
+        <TrustTicker
+          items={["PARTNER_A", "LEGAL_CLOUD", "TRUST_PROTOCOL"]}
+          heading="Parceiros de Confiança"
+        />
       </div>
     </WebsiteShell>
   );

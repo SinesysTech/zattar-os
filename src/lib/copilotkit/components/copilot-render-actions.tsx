@@ -12,7 +12,8 @@
  * - Frontend `mostrar_processos` → retorna UI visual (para exibição)
  */
 
-import { useCopilotAction } from '@copilotkit/react-core';
+import { useFrontendTool } from '@copilotkit/react-core/v2';
+import { z } from 'zod';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -303,27 +304,38 @@ function TarefasList({ tarefas, total }: { tarefas: TarefaRender[]; total: numbe
 
 // ─── Hook: Registrar todas as Render Actions ────────────────────────
 
+/**
+ * Helper: parseia o result string do v2 para objeto
+ */
+function parseResult(result: string | undefined): Record<string, unknown> | null {
+  if (!result) return null;
+  try {
+    return JSON.parse(result);
+  } catch {
+    return null;
+  }
+}
+
 export function useCopilotRenderActions() {
   // ── mostrar_processos ──
-  useCopilotAction({
+  useFrontendTool({
     name: 'mostrar_processos',
     description: 'Mostra uma tabela visual resumida dos processos. Use quando o usuário pedir para VER ou MOSTRAR processos.',
-    parameters: [
-      { name: 'busca', type: 'string', description: 'Filtro de busca por número ou partes', required: false },
-      { name: 'trt', type: 'string', description: 'Filtrar por TRT (ex: TRT15)', required: false },
-      { name: 'limite', type: 'number', description: 'Limite de resultados (padrão 5)', required: false },
-    ],
+    parameters: z.object({
+      busca: z.string().optional().describe('Filtro de busca por número ou partes'),
+      trt: z.string().optional().describe('Filtrar por TRT (ex: TRT15)'),
+      limite: z.number().optional().describe('Limite de resultados (padrão 5)'),
+    }),
     render: ({ status, result }) => {
       if (status === 'inProgress') return <LoadingCard />;
-      if (status === 'complete' && result?.processos) {
-        return <ProcessosMiniTable processos={result.processos} total={result.total} />;
-      }
-      if (status === 'complete' && result?.error) {
-        return <ErrorCard message={result.error} />;
+      if (status === 'complete') {
+        const data = parseResult(result);
+        if (data?.processos) return <ProcessosMiniTable processos={data.processos as ProcessoRender[]} total={data.total as number} />;
+        if (data?.error) return <ErrorCard message={data.error as string} />;
       }
       return <></>;
     },
-    handler: async ({ busca, trt, limite }: { busca?: string; trt?: string; limite?: number }) => {
+    handler: async ({ busca, trt, limite }) => {
       try {
         const { actionListarProcessos } = await import('@/features/processos/actions');
         const result = await actionListarProcessos({
@@ -344,24 +356,23 @@ export function useCopilotRenderActions() {
   });
 
   // ── mostrar_audiencias ──
-  useCopilotAction({
+  useFrontendTool({
     name: 'mostrar_audiencias',
     description: 'Mostra cards visuais das próximas audiências. Use quando o usuário pedir para VER ou MOSTRAR audiências.',
-    parameters: [
-      { name: 'status', type: 'string', description: 'Filtrar por status (marcada, realizada, cancelada, adiada)', required: false },
-      { name: 'limite', type: 'number', description: 'Limite de resultados (padrão 5)', required: false },
-    ],
+    parameters: z.object({
+      status: z.string().optional().describe('Filtrar por status (marcada, realizada, cancelada, adiada)'),
+      limite: z.number().optional().describe('Limite de resultados (padrão 5)'),
+    }),
     render: ({ status, result }) => {
       if (status === 'inProgress') return <LoadingCard />;
-      if (status === 'complete' && result?.audiencias) {
-        return <AudienciaCards audiencias={result.audiencias} total={result.total} />;
-      }
-      if (status === 'complete' && result?.error) {
-        return <ErrorCard message={result.error} />;
+      if (status === 'complete') {
+        const data = parseResult(result);
+        if (data?.audiencias) return <AudienciaCards audiencias={data.audiencias as AudienciaRender[]} total={data.total as number} />;
+        if (data?.error) return <ErrorCard message={data.error as string} />;
       }
       return <></>;
     },
-    handler: async ({ status: statusFilter, limite }: { status?: string; limite?: number }) => {
+    handler: async ({ status: statusFilter, limite }) => {
       try {
         const { actionListarAudiencias } = await import('@/features/audiencias/actions');
         const result = await actionListarAudiencias({
@@ -383,23 +394,22 @@ export function useCopilotRenderActions() {
   });
 
   // ── mostrar_resumo_dre ──
-  useCopilotAction({
+  useFrontendTool({
     name: 'mostrar_resumo_dre',
     description: 'Mostra um card visual com o resumo do DRE (Demonstração de Resultado do Exercício). Use quando o usuário pedir para VER o DRE ou resultado financeiro.',
-    parameters: [
-      { name: 'periodo', type: 'string', description: 'Tipo de período: mensal, trimestral, semestral, anual (padrão: mensal)', required: false },
-    ],
+    parameters: z.object({
+      periodo: z.string().optional().describe('Tipo de período: mensal, trimestral, semestral, anual (padrão: mensal)'),
+    }),
     render: ({ status, result }) => {
       if (status === 'inProgress') return <LoadingCard />;
-      if (status === 'complete' && result?.dre) {
-        return <DRESummaryCard dre={result.dre} periodo={result.periodoLabel} />;
-      }
-      if (status === 'complete' && result?.error) {
-        return <ErrorCard message={result.error} />;
+      if (status === 'complete') {
+        const data = parseResult(result);
+        if (data?.dre) return <DRESummaryCard dre={data.dre as DRERender} periodo={data.periodoLabel as string} />;
+        if (data?.error) return <ErrorCard message={data.error as string} />;
       }
       return <></>;
     },
-    handler: async ({ periodo }: { periodo?: string }) => {
+    handler: async ({ periodo }) => {
       try {
         const { gerarPeriodoAtual } = await import('@/features/financeiro');
         const { actionGerarDRE } = await import('@/features/financeiro/actions/dre');
@@ -421,24 +431,23 @@ export function useCopilotRenderActions() {
   });
 
   // ── mostrar_tarefas ──
-  useCopilotAction({
+  useFrontendTool({
     name: 'mostrar_tarefas',
     description: 'Mostra uma lista visual das tarefas do usuário. Use quando o usuário pedir para VER ou MOSTRAR tarefas.',
-    parameters: [
-      { name: 'status', type: 'string', description: 'Filtrar por status: backlog, todo, in progress, done, canceled', required: false },
-      { name: 'limite', type: 'number', description: 'Limite de resultados (padrão 8)', required: false },
-    ],
+    parameters: z.object({
+      status: z.string().optional().describe('Filtrar por status: backlog, todo, in progress, done, canceled'),
+      limite: z.number().optional().describe('Limite de resultados (padrão 8)'),
+    }),
     render: ({ status, result }) => {
       if (status === 'inProgress') return <LoadingCard />;
-      if (status === 'complete' && result?.tarefas) {
-        return <TarefasList tarefas={result.tarefas} total={result.total} />;
-      }
-      if (status === 'complete' && result?.error) {
-        return <ErrorCard message={result.error} />;
+      if (status === 'complete') {
+        const data = parseResult(result);
+        if (data?.tarefas) return <TarefasList tarefas={data.tarefas as TarefaRender[]} total={data.total as number} />;
+        if (data?.error) return <ErrorCard message={data.error as string} />;
       }
       return <></>;
     },
-    handler: async ({ status: statusFilter, limite }: { status?: string; limite?: number }) => {
+    handler: async ({ status: statusFilter, limite }) => {
       try {
         const { actionListarTarefas } = await import('@/app/app/tarefas/actions/tarefas-actions');
         const result = await actionListarTarefas({

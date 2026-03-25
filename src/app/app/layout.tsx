@@ -6,8 +6,6 @@ import { UserProvider } from "@/providers/user-provider"
 
 const AUTH_ROUTES = [
   "/app/login",
-  "/app/sign-up",
-  "/app/sign-up-success",
   "/app/forgot-password",
   "/app/update-password",
   "/app/confirm",

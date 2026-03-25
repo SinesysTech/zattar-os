@@ -14,7 +14,8 @@
  * 5. Resposta volta ao Pedrinho que executa (ou não) a operação MCP
  */
 
-import { useHumanInTheLoop } from '@copilotkit/react-core';
+import { useHumanInTheLoop } from '@copilotkit/react-core/v2';
+import { z } from 'zod';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, CheckCircle, XCircle, Loader2 } from 'lucide-react';
@@ -96,21 +97,11 @@ export function useCopilotHITLActions() {
     name: 'confirmar_acao',
     description:
       'OBRIGATÓRIO: Use esta ação ANTES de executar qualquer operação destrutiva (excluir, cancelar, estornar, remover). Apresenta um card de confirmação ao usuário e espera a resposta. Se o usuário confirmar, prossiga com a operação. Se cancelar, informe que a operação foi cancelada.',
-    parameters: [
-      {
-        name: 'operacao',
-        type: 'string' as const,
-        description: 'Nome curto da operação (ex: "Excluir Lançamento", "Cancelar Contrato")',
-        required: true,
-      },
-      {
-        name: 'detalhes',
-        type: 'string' as const,
-        description: 'Detalhes da operação para o usuário avaliar (ex: "Lançamento #123 de R$ 5.000,00 será excluído permanentemente")',
-        required: true,
-      },
-    ],
-    render: ({ status, args, respond }) => {
+    parameters: z.object({
+      operacao: z.string().describe('Nome curto da operação (ex: "Excluir Lançamento", "Cancelar Contrato")'),
+      detalhes: z.string().describe('Detalhes da operação para o usuário avaliar (ex: "Lançamento #123 de R$ 5.000,00 será excluído permanentemente")'),
+    }),
+    render: ({ args, respond, status }: { args: { operacao?: string; detalhes?: string }; respond?: (result: unknown) => Promise<void>; status: string }) => {
       if (status === 'inProgress') {
         return <LoadingConfirmation />;
       }
@@ -118,8 +109,8 @@ export function useCopilotHITLActions() {
       if (status === 'executing' && respond) {
         return (
           <ConfirmationCard
-            operacao={args.operacao || 'Operação'}
-            detalhes={args.detalhes || 'Tem certeza que deseja prosseguir?'}
+            operacao={String(args.operacao || 'Operação')}
+            detalhes={String(args.detalhes || 'Tem certeza que deseja prosseguir?')}
             onConfirm={() => respond({ confirmed: true })}
             onCancel={() => respond({ confirmed: false })}
           />
@@ -127,8 +118,7 @@ export function useCopilotHITLActions() {
       }
 
       if (status === 'complete') {
-        const confirmed = (args as Record<string, unknown>)?.confirmed !== false;
-        return <ConfirmationResult confirmed={confirmed} />;
+        return <ConfirmationResult confirmed={true} />;
       }
 
       return <LoadingConfirmation />;

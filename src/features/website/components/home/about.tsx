@@ -27,7 +27,7 @@ export function About() {
               </span>
             </h2>
             <p className="text-xl text-on-surface-variant mb-8 leading-relaxed">
-              Esqueça a burocracia lenta e o atendimento distante. No Magistrate AI, utilizamos automação inteligente para acelerar o protocolo de petições e análise de provas, mantendo você informado em tempo real.
+              Esqueça a burocracia lenta e o atendimento distante. Na Zattar Advogados, utilizamos automação inteligente para acelerar o protocolo de petições e análise de provas, mantendo você informado em tempo real.
             </p>
 
             <ul className="space-y-6 mb-12">
@@ -47,9 +47,17 @@ export function About() {
               </li>
             </ul>
 
-            <button className="bg-on-surface text-surface-container-lowest px-8 py-4 rounded-md font-bold hover:bg-primary hover:text-on-primary transition-all">
-              Conheça nossa Metodologia
-            </button>
+            <div className="flex flex-wrap gap-4">
+              <a
+                href="/contato"
+                className="bg-primary text-on-primary-fixed px-8 py-4 rounded-md font-bold hover:bg-primary-container transition-all"
+              >
+                Fale com um Especialista
+              </a>
+              <button className="bg-on-surface text-surface-container-lowest px-8 py-4 rounded-md font-bold hover:bg-primary hover:text-on-primary transition-all">
+                Conheça nossa Metodologia
+              </button>
+            </div>
           </div>
         </div>
       </div>

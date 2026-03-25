@@ -23,3 +23,6 @@ export { ArticleCard } from "./components/cards/article-card";
 export { FilterChips } from "./components/shared/filter-chips";
 export { ActivityItem } from "./components/shared/activity-item";
 export { TimelineEntry } from "./components/shared/timeline-entry";
+export { TrustTicker } from "./components/shared/trust-ticker";
+export { PhaseStepper } from "./components/shared/phase-stepper";
+export type { PhaseStep } from "./components/shared/phase-stepper";
