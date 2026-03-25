@@ -150,6 +150,14 @@
   --color-error-container: var(--error-container);
   --color-on-error-container: var(--on-error-container);
   --color-on-error: var(--on-error);
+
+  /* --- 10. Magistrate AI: Dim & Tint Tokens --- */
+  --color-primary-dim: var(--primary-dim);
+  --color-secondary-dim: var(--secondary-dim);
+  --color-tertiary-dim: var(--tertiary-dim);
+  --color-error-dim: var(--error-dim);
+  --color-inverse-primary: var(--inverse-primary);
+  --color-surface-tint: var(--surface-tint);
 }
 
 /* --- FUNDAÇÃO DE VARIÁVEIS (OKLCH) --- */
@@ -276,6 +284,14 @@
   --error-container: #a70138;
   --on-error-container: #ffb2b9;
   --on-error: #490013;
+
+  /* Dim Variants (Magistrate AI Design System) */
+  --primary-dim: #9c48ea;
+  --secondary-dim: #d28aed;
+  --tertiary-dim: #f47786;
+  --error-dim: #d73357;
+  --inverse-primary: #842cd3;
+  --surface-tint: #cc97ff;
 }
 
 .dark {
@@ -392,6 +408,14 @@
   --error-container: #a70138;
   --on-error-container: #ffb2b9;
   --on-error: #490013;
+
+  /* Dim Variants (Dark) */
+  --primary-dim: #9c48ea;
+  --secondary-dim: #d28aed;
+  --tertiary-dim: #f47786;
+  --error-dim: #d73357;
+  --inverse-primary: #842cd3;
+  --surface-tint: #cc97ff;
 }
 
 /* --- ESTILOS BASE --- */
@@ -1109,5 +1133,64 @@ body[data-theme-content-layout="centered"] .content-container {
   /* Component: Trust Ticker */
   .trust-ticker-container {
     @apply flex items-center justify-center gap-6 opacity-40 grayscale transition-all duration-500 hover:grayscale-0;
+  }
+
+  /* =============================================================================
+   * MAGISTRATE AI: Glass & Effect Utilities
+   * =============================================================================
+   */
+
+  /* Glass Card — primary glass surface (semi-transparent + blur) */
+  .glass-card {
+    background: rgba(31, 31, 31, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(72, 72, 72, 0.2);
+  }
+
+  /* Neon Glow — purple text shadow for headlines */
+  .neon-glow,
+  .neon-text-glow {
+    text-shadow: 0 0 10px rgba(204, 151, 255, 0.4);
+  }
+
+  /* Gradient Border — premium card with animated purple border */
+  .gradient-border {
+    @apply relative overflow-hidden;
+    background: rgba(25, 25, 25, 0.6);
+    border-radius: 0.75rem;
+  }
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: -1px; right: -1px; bottom: -1px;
+    border-radius: 0.75rem;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(0, 0, 0, 0.1));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Purple Glow Hover — subtle purple shadow on hover */
+  .purple-glow-hover {
+    @apply transition-shadow duration-300;
+  }
+  .purple-glow-hover:hover {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
+  }
+
+  /* Nav Sticky — smooth scroll transition for floating navbar */
+  .nav-sticky {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Sidebar Active State */
+  .sidebar-active {
+    @apply rounded-lg text-purple-400 font-bold;
+    border-right: 2px solid #a855f7;
+    background: rgba(168, 85, 247, 0.05);
   }
 }

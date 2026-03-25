@@ -1,20 +1,19 @@
-import { Header } from "@/features/website/components/layout/header";
-import { Footer } from "@/features/website/components/layout/footer";
+import { WebsiteShell } from "@/features/website";
 import Link from "next/link";
-import { 
-  Clock, 
-  Banknote, 
-  Umbrella, 
-  Gavel, 
-  Frown, 
-  SlidersHorizontal, 
-  ArrowRight 
+import {
+  Clock,
+  Banknote,
+  Umbrella,
+  Gavel,
+  Frown,
+  SlidersHorizontal,
+  ArrowRight
 } from "lucide-react";
 
 export default function ServicosPage() {
   return (
-    <main className="min-h-screen bg-background text-on-surface font-body selection:bg-primary/30 overflow-x-hidden pt-28">
-      <Header />
+    <WebsiteShell>
+      <div className="pt-28">
 
       {/* Hero Section */}
       <section className="mb-24 relative overflow-hidden mt-6 px-6 max-w-7xl mx-auto">
@@ -25,7 +24,7 @@ export default function ServicosPage() {
               Justiça Tecnológica
             </span>
             <h1 className="text-5xl md:text-7xl font-headline font-extrabold tracking-tighter mb-8 leading-none">
-              Serviços para o <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-dim">Trabalhador</span>
+              Serviços para o <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-primary-dim">Trabalhador</span>
             </h1>
             <p className="text-xl text-on-surface-variant font-body leading-relaxed max-w-xl">
               A tecnologia a serviço dos seus direitos. Utilizamos inteligência artificial para auditar contratos e garantir que cada centavo do seu esforço seja respeitado pela lei.
@@ -59,7 +58,7 @@ export default function ServicosPage() {
               <Clock className="text-primary w-10 h-10 mb-5" />
               <h3 className="text-2xl font-headline font-bold text-white">Horas Extras</h3>
             </div>
-            <div className="space-y-6 flex-grow">
+            <div className="space-y-6 grow">
               <div>
                 <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Salário Bruto</label>
                 <input className="w-full bg-surface-container-high border border-white/5 focus:border-primary/50 rounded-xl p-4 text-on-surface outline-none transition-colors" placeholder="R$ 0,00" type="text" disabled />
@@ -80,7 +79,7 @@ export default function ServicosPage() {
               <Banknote className="text-primary w-10 h-10 mb-5" />
               <h3 className="text-2xl font-headline font-bold text-white">13º Salário</h3>
             </div>
-            <div className="space-y-6 flex-grow">
+            <div className="space-y-6 grow">
               <div className="flex gap-2 mb-4">
                 <div className="h-1 flex-1 bg-primary rounded-full shadow-[0_0_8px_rgba(204,151,255,0.5)]"></div>
                 <div className="h-1 flex-1 bg-surface-container-highest rounded-full"></div>
@@ -109,7 +108,7 @@ export default function ServicosPage() {
               <Umbrella className="text-primary w-10 h-10 mb-5" />
               <h3 className="text-2xl font-headline font-bold text-white">Cálculo de Férias</h3>
             </div>
-            <div className="space-y-6 flex-grow">
+            <div className="space-y-6 grow">
               <div className="bg-surface-container-high p-5 rounded-2xl border border-white/5">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-sm font-medium text-white">Dias de Gozo</span>
@@ -184,7 +183,7 @@ export default function ServicosPage() {
 
       {/* Call to Action */}
       <section className="mb-32 px-6 max-w-7xl mx-auto">
-        <div className="bg-gradient-to-br from-primary/10 to-surface-container/80 rounded-[2.5rem] p-12 md:p-24 text-center border border-primary/20 relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+        <div className="bg-linear-to-br from-primary/10 to-surface-container/80 rounded-[2.5rem] p-12 md:p-24 text-center border border-primary/20 relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(204,151,255,0.05)_0%,transparent_70%)] pointer-events-none"></div>
           <div className="relative z-10 max-w-3xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-headline font-extrabold mb-8 text-white">Dúvidas sobre seus cálculos?</h2>
@@ -201,7 +200,7 @@ export default function ServicosPage() {
         </div>
       </section>
 
-      <Footer />
-    </main>
+      </div>
+    </WebsiteShell>
   );
 }

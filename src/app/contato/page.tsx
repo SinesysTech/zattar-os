@@ -1,12 +1,10 @@
-import { Header } from "@/features/website/components/layout/header";
-import { Footer } from "@/features/website/components/layout/footer";
+import { WebsiteShell } from "@/features/website";
 import { MapPin, Mail, Smartphone, Send, Share2, Globe, Network, Radar } from "lucide-react";
 import Image from "next/image";
 
 export default function ContatoPage() {
   return (
-    <main className="min-h-screen bg-background dark selection:bg-primary/30">
-      <Header />
+    <WebsiteShell>
       
       <div className="pt-32 pb-24 overflow-hidden">
         {/* Hero Section */}
@@ -18,7 +16,7 @@ export default function ContatoPage() {
               </span>
               <h1 className="text-5xl md:text-7xl font-extrabold font-headline leading-tight tracking-tighter mb-6 shadow-[0_0_15px_rgba(204,151,255,0.4)] hover:shadow-none transition-shadow">
                 Conecte-se com o <br/>
-                <span className="bg-gradient-to-r from-primary to-primary-dim bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-primary to-primary-dim bg-clip-text text-transparent">
                   futuro da advocacia.
                 </span>
               </h1>
@@ -44,20 +42,20 @@ export default function ContatoPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase tracking-wider text-on-surface-variant ml-1">Nome</label>
-                    <input className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-zinc-600 outline-none" placeholder="Seu nome completo" type="text" />
+                    <input className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline outline-none" placeholder="Seu nome completo" type="text" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-bold uppercase tracking-wider text-on-surface-variant ml-1">E-mail</label>
-                    <input className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-zinc-600 outline-none" placeholder="seu@email.com" type="email" />
+                    <input className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline outline-none" placeholder="seu@email.com" type="email" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-bold uppercase tracking-wider text-on-surface-variant ml-1">Assunto</label>
-                  <input className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-zinc-600 outline-none" placeholder="Como podemos ajudar?" type="text" />
+                  <input className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline outline-none" placeholder="Como podemos ajudar?" type="text" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-bold uppercase tracking-wider text-on-surface-variant ml-1">Mensagem</label>
-                  <textarea className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-zinc-600 outline-none resize-none" placeholder="Descreva seu desafio jurídico..." rows={4}></textarea>
+                  <textarea className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline outline-none resize-none" placeholder="Descreva seu desafio jurídico..." rows={4}></textarea>
                 </div>
                 <button type="button" className="w-full py-5 bg-primary text-on-primary-fixed font-bold rounded-xl text-lg hover:bg-primary-container transition-all shadow-lg shadow-primary/10 active:scale-[0.98]">
                   Enviar Solicitação
@@ -175,7 +173,6 @@ export default function ContatoPage() {
         </section>
       </div>
 
-      <Footer />
-    </main>
+    </WebsiteShell>
   );
 }

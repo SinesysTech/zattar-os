@@ -12,7 +12,7 @@ export default function CalculadorasPortalIndex() {
           Ferramentas Jurídicas
         </span>
         <h2 className="text-4xl md:text-6xl font-black font-headline tracking-tighter text-white mb-6">
-          Calculadoras <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-dim">Trabalhistas.</span>
+          Calculadoras <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-primary-dim">Trabalhistas.</span>
         </h2>
         <p className="text-on-surface-variant text-lg max-w-2xl">
           Selecione a ferramenta de cálculo desejada abaixo. Todas as calculadoras estão atualizadas com as mais recentes diretrizes da CLT.
@@ -25,7 +25,7 @@ export default function CalculadorasPortalIndex() {
             <Calendar className="w-7 h-7" />
           </div>
           <h3 className="text-2xl font-bold font-headline text-white mb-3">Férias</h3>
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-on-surface-variant">
             Cálculo preciso de férias constitucionais com e sem abono pecuniário, incluindo o terço (1/3) obrigatório.
           </p>
         </Link>
@@ -35,7 +35,7 @@ export default function CalculadorasPortalIndex() {
             <DollarSign className="w-7 h-7" />
           </div>
           <h3 className="text-2xl font-bold font-headline text-white mb-3">13º Salário</h3>
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-on-surface-variant">
             Cálculo de gratificação natalina com adiantamento de 1ª parcela e deduções de INSS e IRPF.
           </p>
         </Link>
@@ -45,7 +45,7 @@ export default function CalculadorasPortalIndex() {
             <Clock className="w-7 h-7" />
           </div>
           <h3 className="text-2xl font-bold font-headline text-white mb-3">Horas Extras</h3>
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-on-surface-variant">
             Cálculo de horas extraordinárias com acréscimo de 50% ou 100%, incluindo reflexos no DSR.
           </p>
         </Link>

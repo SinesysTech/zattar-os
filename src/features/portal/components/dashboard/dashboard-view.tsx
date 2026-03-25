@@ -18,14 +18,14 @@ export function DashboardView() {
         </div>
         <div className="flex items-center gap-4 bg-surface-container-high p-1 rounded-full border border-white/5">
           <button className="px-6 py-2 rounded-full bg-primary text-on-primary-fixed text-xs font-bold">Hoje</button>
-          <button className="px-6 py-2 rounded-full text-zinc-500 text-xs font-bold hover:text-zinc-200">Semana</button>
-          <button className="px-6 py-2 rounded-full text-zinc-500 text-xs font-bold hover:text-zinc-200">Mês</button>
+          <button className="px-6 py-2 rounded-full text-on-surface-variant text-xs font-bold hover:text-on-surface">Semana</button>
+          <button className="px-6 py-2 rounded-full text-on-surface-variant text-xs font-bold hover:text-on-surface">Mês</button>
         </div>
       </section>
 
       {/* Quick Action Tiles */}
       <section>
-        <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] mb-4">Ações Rápidas</h3>
+        <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-[0.2em] mb-4">Ações Rápidas</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
           <QuickAction icon={Calendar} label="Próximo Compromisso" />
           <QuickAction icon={PenTool} label="Assinar Contrato" badge />
@@ -48,11 +48,11 @@ export function DashboardView() {
             <div className="flex gap-2">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-primary" />
-                <span className="text-[10px] font-bold text-zinc-500 uppercase">Movimentações</span>
+                <span className="text-[10px] font-bold text-on-surface-variant uppercase">Movimentações</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-white/10" />
-                <span className="text-[10px] font-bold text-zinc-500 uppercase">Prazos</span>
+                <span className="text-[10px] font-bold text-on-surface-variant uppercase">Prazos</span>
               </div>
             </div>
           </div>
@@ -67,9 +67,9 @@ export function DashboardView() {
               <div key={month} className="flex-1 flex flex-col items-center gap-3 group z-10">
                 <div className="w-full flex items-end gap-1 h-48">
                   <div className={`flex-1 bg-white/5 rounded-t-lg transition-colors group-hover:bg-white/10 h-[${40 + i * 10}%]`} style={{height: `${40 + i * 5}%`}} />
-                  <div className={`flex-1 bg-gradient-to-t from-primary-dim to-primary rounded-t-lg shadow-[0_0_20px_rgba(168,85,247,0.3)]`} style={{height: `${i === 2 ? 95 : 60 - i * 5}%`}} />
+                  <div className={`flex-1 bg-linear-to-t from-primary-dim to-primary rounded-t-lg shadow-[0_0_20px_rgba(168,85,247,0.3)]`} style={{height: `${i === 2 ? 95 : 60 - i * 5}%`}} />
                 </div>
-                <span className={`text-[10px] ${i === 2 ? "text-primary" : "text-zinc-500"} font-bold uppercase tracking-widest`}>
+                <span className={`text-[10px] ${i === 2 ? "text-primary" : "text-on-surface-variant"} font-bold uppercase tracking-widest`}>
                   {month}
                 </span>
               </div>
@@ -84,16 +84,16 @@ export function DashboardView() {
 
         {/* Featured Case */}
         <div className="space-y-6">
-          <div className="bg-gradient-to-br from-primary/10 to-transparent backdrop-blur-xl rounded-2xl border border-white/5 p-6 shadow-xl">
+          <div className="bg-linear-to-br from-primary/10 to-transparent backdrop-blur-xl rounded-2xl border border-white/5 p-6 shadow-xl">
             <div className="flex justify-between items-start mb-6">
               <span className="px-2 py-1 bg-primary text-on-primary-fixed text-[10px] font-black rounded">PRIORITÁRIO</span>
-              <span className="text-[10px] font-bold text-zinc-500">PROCESSO #4829</span>
+              <span className="text-[10px] font-bold text-on-surface-variant">PROCESSO #4829</span>
             </div>
             <h4 className="text-lg font-bold font-headline mb-2 leading-tight text-on-surface">Revisão de Propriedade Intelectual vs. Nexos Systems</h4>
             <div className="space-y-4 mt-6">
               <div>
                 <div className="flex justify-between text-[10px] font-bold mb-1">
-                  <span className="text-zinc-500 uppercase">Fase Atual: Sentença</span>
+                  <span className="text-on-surface-variant uppercase">Fase Atual: Sentença</span>
                   <span className="text-primary">85%</span>
                 </div>
                 <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
@@ -108,7 +108,7 @@ export function DashboardView() {
           </div>
 
           <div className="bg-surface-container-high/60 backdrop-blur-xl rounded-2xl border border-white/5 p-6 shadow-xl">
-            <h4 className="text-sm font-bold font-headline mb-4 uppercase tracking-widest text-zinc-500">Próxima Consulta</h4>
+            <h4 className="text-sm font-bold font-headline mb-4 uppercase tracking-widest text-on-surface-variant">Próxima Consulta</h4>
             <div className="flex gap-4 items-center">
               <div className="w-12 h-12 bg-primary/20 rounded-xl flex flex-col items-center justify-center border border-primary/30 shrink-0">
                 <span className="text-[10px] font-bold text-primary">OUT</span>
@@ -119,7 +119,7 @@ export function DashboardView() {
                 <p className="text-[10px] text-on-surface-variant uppercase">09:30 • Tribunal Regional</p>
               </div>
             </div>
-            <button className="w-full mt-6 py-3 border border-dashed border-white/20 hover:border-primary/50 rounded-xl text-xs font-bold text-zinc-400 hover:text-primary transition-all">
+            <button className="w-full mt-6 py-3 border border-dashed border-white/20 hover:border-primary/50 rounded-xl text-xs font-bold text-on-surface-variant hover:text-primary transition-all">
               Reagendar Consulta
             </button>
           </div>
@@ -145,7 +145,7 @@ function QuickAction({ icon: Icon, label, badge, className = "" }: { icon: React
 function Stat({ label, value, valueClass = "text-on-surface" }: { label: string, value: string, valueClass?: string }) {
   return (
     <div className="text-center">
-      <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-tighter">{label}</p>
+      <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">{label}</p>
       <p className={`text-xl font-black ${valueClass}`}>{value}</p>
     </div>
   );

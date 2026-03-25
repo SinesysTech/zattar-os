@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   PresetSelector,
-  SidebarModeSelector,
   ThemeScaleSelector,
   ColorModeSelector,
   ContentLayoutSelector,
@@ -37,7 +36,6 @@ export function ThemeCustomizerPanel() {
           <ThemeRadiusSelector />
           <ColorModeSelector />
           <ContentLayoutSelector />
-          <SidebarModeSelector />
         </div>
         <ResetThemeButton />
       </DropdownMenuContent>
