@@ -164,7 +164,7 @@ export default function GeradorContratosPage() {
                   </div>
                 </div>
 
-                <div className="space-y-5 pt-4 flex-1 font-serif text-zinc-800">
+                <div className="space-y-5 pt-4 flex-1 font-serif text-surface-container">
                   <div className="space-y-1">
                     <h5 className="text-[11px] font-bold uppercase tracking-widest text-black mb-2">Cláusula Primeira: Do Objeto</h5>
                     <p className="text-[11px] leading-relaxed text-outline text-justify">

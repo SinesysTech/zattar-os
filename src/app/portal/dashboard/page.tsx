@@ -65,7 +65,7 @@ const RECENT_ACTIVITIES = [
   },
   {
     icon: <UserCheck className="w-4 h-4" />,
-    iconBg: "bg-zinc-700 text-on-surface",
+    iconBg: "bg-surface-container-high text-on-surface",
     title: "Dados bancários verificados com sucesso pela administração",
     timestamp: "5 dias atrás",
   },
@@ -231,7 +231,7 @@ export default function DashboardPortalPage() {
             <h3 className="text-base font-bold font-headline tracking-tight text-white">
               Atividades Recentes
             </h3>
-            <button className="text-primary text-xs font-bold flex items-center gap-1 hover:text-purple-300 transition-colors group">
+            <button className="text-primary text-xs font-bold flex items-center gap-1 hover:text-primary-dim transition-colors group">
               Ver todas
               <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
             </button>
@@ -259,7 +259,7 @@ export default function DashboardPortalPage() {
         <div className="col-span-12 lg:col-span-8 bg-surface-container rounded-xl border border-primary/20 p-8 shadow-lg relative overflow-hidden">
           {/* Ambient glow */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[80px] rounded-full pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-40 h-40 bg-purple-700/10 blur-[60px] rounded-full pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary-dim/10 blur-[60px] rounded-full pointer-events-none" />
 
           <div className="relative z-10 flex flex-col sm:flex-row gap-8">
             <div className="flex-1">
