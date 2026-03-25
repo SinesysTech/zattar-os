@@ -1,11 +1,9 @@
-import { Header } from "@/features/website/components/layout/header";
-import { Footer } from "@/features/website/components/layout/footer";
+import { WebsiteShell } from "@/features/website";
 import { Shield, Users, Search, ArrowRight, Atom, Scale } from "lucide-react";
 
 export default function ExpertisePage() {
   return (
-    <main className="min-h-screen bg-background dark selection:bg-primary/30 text-on-surface font-body overflow-x-hidden">
-      <Header />
+    <WebsiteShell>
 
       <div className="pt-32 pb-24">
         {/* Hero Section */}
@@ -16,7 +14,7 @@ export default function ExpertisePage() {
             </span>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold font-headline tracking-tighter leading-[0.9] mb-8">
               Expertise Jurídica de{" "}
-              <span className="bg-gradient-to-br from-[#cc97ff] to-[#9c48ea] bg-clip-text text-transparent">
+              <span className="bg-linear-to-br from-[#cc97ff] to-[#9c48ea] bg-clip-text text-transparent">
                 Vanguarda.
               </span>
             </h1>
@@ -115,7 +113,7 @@ export default function ExpertisePage() {
                   </div>
                 </div>
                 <div className="relative hidden sm:block h-full min-h-[200px]">
-                  <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent z-10"></div>
+                  <div className="absolute inset-0 bg-linear-to-t from-surface-container-low to-transparent z-10"></div>
                   <img
                     className="w-full h-full object-cover opacity-50 grayscale rounded-xl mix-blend-screen"
                     alt="Abstract architectural lines"
@@ -139,7 +137,7 @@ export default function ExpertisePage() {
               
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
                     <Atom className="text-primary w-6 h-6" />
                   </div>
                   <div>
@@ -149,7 +147,7 @@ export default function ExpertisePage() {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
                     <Scale className="text-primary w-6 h-6" />
                   </div>
                   <div>
@@ -184,7 +182,7 @@ export default function ExpertisePage() {
         {/* CTA Section */}
         <section className="max-w-7xl mx-auto px-8 mb-40">
           <div className="bg-surface-container rounded-3xl p-12 md:p-20 text-center relative overflow-hidden border border-white/5 shadow-2xl">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-linear-to-r from-transparent via-primary to-transparent"></div>
             <div className="relative z-10 w-full flex flex-col items-center">
               <h2 className="text-4xl md:text-6xl font-bold font-headline mb-8 leading-tight">Pronto para elevar seu<br/>padrão jurídico?</h2>
               <p className="text-on-surface-variant text-xl mb-12 max-w-2xl mx-auto">
@@ -203,7 +201,6 @@ export default function ExpertisePage() {
         </section>
       </div>
 
-      <Footer />
-    </main>
+    </WebsiteShell>
   );
 }

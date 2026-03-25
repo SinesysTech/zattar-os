@@ -1,277 +1,369 @@
 "use client";
 
 import { PortalShell } from "@/features/portal/components/layout/portal-shell";
-import { PlusCircle, AccountBalanceWallet, TrendingUp, EventUpcoming, FilterList, CalendarMonth, Download, Payment, ArrowOutward, WorkspacePremium } from "lucide-react";
+import { EditorialHeader } from "@/features/website/components/sections/editorial-header";
+import {
+  PlusCircle,
+  Wallet,
+  TrendingUp,
+  CalendarClock,
+  Award,
+  Eye,
+  Download,
+} from "lucide-react";
+
+// ---------------------------------------------------------------------------
+// Data
+// ---------------------------------------------------------------------------
+
+interface ChartMonth {
+  label: string;
+  height: string;
+  value: string;
+  active?: boolean;
+}
+
+const CHART_MONTHS: ChartMonth[] = [
+  { label: "Abr", height: "40%", value: "R$ 58.000" },
+  { label: "Mai", height: "55%", value: "R$ 71.500" },
+  { label: "Jun", height: "35%", value: "R$ 49.000" },
+  { label: "Jul", height: "65%", value: "R$ 82.000" },
+  { label: "Ago", height: "50%", value: "R$ 65.000" },
+  { label: "Set", height: "70%", value: "R$ 89.000" },
+  { label: "Out", height: "45%", value: "R$ 60.000" },
+  { label: "Nov", height: "60%", value: "R$ 76.000" },
+  { label: "Dez", height: "75%", value: "R$ 95.000" },
+  { label: "Jan", height: "55%", value: "R$ 71.000" },
+  { label: "Fev", height: "80%", value: "R$ 104.000" },
+  { label: "Mar", height: "100%", value: "R$ 142.500", active: true },
+];
+
+type InvoiceStatus = "Pago" | "Atrasado" | "Pendente";
+
+const INVOICES: {
+  id: number;
+  description: string;
+  date: string;
+  value: string;
+  status: InvoiceStatus;
+}[] = [
+  {
+    id: 1,
+    description: "Honorários Advocatícios - Mar/2026",
+    date: "15/03/2026",
+    value: "R$ 3.500,00",
+    status: "Pago",
+  },
+  {
+    id: 2,
+    description: "Custas Processuais #2024-001",
+    date: "10/03/2026",
+    value: "R$ 890,00",
+    status: "Pago",
+  },
+  {
+    id: 3,
+    description: "Honorários Periciais",
+    date: "05/03/2026",
+    value: "R$ 2.200,00",
+    status: "Atrasado",
+  },
+  {
+    id: 4,
+    description: "Taxa Judiciária",
+    date: "28/02/2026",
+    value: "R$ 450,00",
+    status: "Pago",
+  },
+  {
+    id: 5,
+    description: "Honorários Advocatícios - Abr/2026",
+    date: "15/04/2026",
+    value: "R$ 3.500,00",
+    status: "Pendente",
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Status badge config
+// ---------------------------------------------------------------------------
+
+const STATUS_STYLES: Record<InvoiceStatus, string> = {
+  Pago: "bg-emerald-500/10 text-emerald-400",
+  Atrasado: "bg-red-500/10 text-red-400",
+  Pendente: "bg-amber-500/10 text-amber-500",
+};
+
+// ---------------------------------------------------------------------------
+// Page
+// ---------------------------------------------------------------------------
 
 export default function FinanceiroPage() {
   return (
     <PortalShell>
-      {/* Editorial Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="max-w-2xl">
-          <span className="text-xs font-bold tracking-[0.2em] text-primary uppercase block mb-2 font-headline">Painel de Gestão</span>
-          <h2 className="text-5xl font-extrabold font-headline tracking-tighter leading-tight text-white mb-4">Financeiro.</h2>
-          <p className="text-zinc-400 text-lg max-w-lg leading-relaxed">
-            Controle total sobre o fluxo de capital da sua operação jurídica. Visualize ativos, passivos e projeções em tempo real.
-          </p>
-        </div>
-        <div className="flex gap-4">
-          <button className="px-6 py-3 bg-gradient-to-r from-primary to-purple-600 text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(204,151,255,0.4)] transition-all flex items-center gap-2 active:scale-95 text-sm">
-            <PlusCircle className="w-5 h-5" />
+      {/* ------------------------------------------------------------------ */}
+      {/* Editorial Header                                                     */}
+      {/* ------------------------------------------------------------------ */}
+      <EditorialHeader
+        kicker="FINANCEIRO"
+        title="Painel de Gestão."
+        actions={
+          <button className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-on-primary text-sm font-bold rounded-xl hover:brightness-110 hover:shadow-[0_0_20px_rgba(204,151,255,0.35)] transition-all active:scale-95">
+            <PlusCircle className="w-4 h-4" />
             Nova Fatura
           </button>
+        }
+      />
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Stats Row                                                            */}
+      {/* ------------------------------------------------------------------ */}
+      <div className="grid grid-cols-12 gap-6 animate-in fade-in duration-500">
+        {/* Saldo Total */}
+        <div className="col-span-12 lg:col-span-4 bg-surface-container rounded-xl p-8 border border-white/5 relative overflow-hidden flex flex-col justify-between">
+          <div className="flex justify-between items-start mb-8">
+            <span className="text-on-surface-variant text-sm font-medium">
+              Saldo Total
+            </span>
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Wallet className="w-5 h-5 text-primary" />
+            </div>
+          </div>
+          <div>
+            <h3 className="text-3xl font-black font-headline tracking-tighter text-white font-mono tabular-nums">
+              R$ 142.500,00
+            </h3>
+            <p className="text-emerald-400 text-xs flex items-center gap-1 mt-2 font-semibold">
+              <TrendingUp className="w-3 h-3" />
+              +12.5% em relação ao mês anterior
+            </p>
+          </div>
+          {/* Ambient glow */}
+          <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-primary/10 rounded-full blur-[60px] pointer-events-none" />
+        </div>
+
+        {/* Próximo Vencimento */}
+        <div className="col-span-12 lg:col-span-4 bg-surface-container rounded-xl p-8 border border-white/5 flex flex-col justify-between">
+          <div className="flex justify-between items-start mb-8">
+            <span className="text-on-surface-variant text-sm font-medium">
+              Próximo Vencimento
+            </span>
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <CalendarClock className="w-5 h-5 text-primary" />
+            </div>
+          </div>
+          <div>
+            <p className="text-xs text-on-surface-variant uppercase tracking-widest font-bold mb-1">
+              15 Abr 2026
+            </p>
+            <h3 className="text-3xl font-black font-headline tracking-tighter text-white font-mono tabular-nums">
+              R$ 3.500,00
+            </h3>
+          </div>
+        </div>
+
+        {/* Desempenho Anual */}
+        <div className="col-span-12 lg:col-span-4 bg-surface-container rounded-xl p-8 border border-white/5 flex flex-col justify-between">
+          <div className="flex justify-between items-start mb-8">
+            <span className="text-on-surface-variant text-sm font-medium">
+              Desempenho Anual
+            </span>
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <TrendingUp className="w-5 h-5 text-primary" />
+            </div>
+          </div>
+          <div>
+            <h3 className="text-3xl font-black font-headline tracking-tighter text-emerald-400 font-mono tabular-nums">
+              +23.8%
+            </h3>
+            <p className="text-on-surface-variant text-xs mt-2 font-semibold">
+              crescimento vs. ano anterior
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Bento Grid Layout */}
-      <div className="grid grid-cols-12 gap-6 mb-12">
-        {/* Summary Card: Main Balance */}
-        <div className="col-span-12 lg:col-span-4 bg-[#191919]/60 backdrop-blur-xl rounded-2xl p-8 flex flex-col justify-between relative overflow-hidden border border-white/5 shadow-lg animate-in fade-in slide-in-from-bottom-6 duration-700">
-          <div className="z-10">
-            <div className="flex justify-between items-start mb-8">
-              <span className="text-zinc-400 text-sm font-medium">Saldo Total Disponível</span>
-              <div className="p-3 bg-purple-500/10 rounded-xl border border-purple-500/20">
-                <AccountBalanceWallet className="w-5 h-5 text-primary" />
-              </div>
+      {/* ------------------------------------------------------------------ */}
+      {/* Charts Row                                                           */}
+      {/* ------------------------------------------------------------------ */}
+      <div className="grid grid-cols-12 gap-6 animate-in fade-in duration-700">
+        {/* Fluxo de Despesas — Bar Chart */}
+        <div className="col-span-12 lg:col-span-8 bg-surface-container rounded-xl p-8 border border-white/5">
+          <h4 className="text-xl font-bold font-headline text-white mb-8">
+            Fluxo de Despesas
+          </h4>
+
+          {/* Chart area */}
+          <div className="relative h-48 w-full flex items-end gap-1.5">
+            {/* Grid lines */}
+            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+              <div className="border-t border-white/5 w-full" />
+              <div className="border-t border-white/5 w-full" />
+              <div className="border-t border-white/5 w-full" />
+              <div className="border-t border-white/5 w-full" />
+              <div className="border-t border-white/5 w-full" />
             </div>
-            <div className="space-y-2">
-              <h3 className="text-4xl font-black font-headline tracking-tighter text-white">R$ 142.500,00</h3>
-              <p className="text-primary text-sm font-bold flex items-center gap-1">
-                <TrendingUp className="w-4 h-4" />
-                +12.5% em relação ao mês anterior
+
+            {/* Bars */}
+            {CHART_MONTHS.map((month, i) => (
+              <div
+                key={i}
+                className="group relative flex-1 flex flex-col items-center gap-2"
+              >
+                {/* Tooltip */}
+                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                  <div className="bg-surface-container-highest text-white text-[10px] font-mono font-bold px-2 py-1 rounded-md whitespace-nowrap border border-white/10">
+                    {month.value}
+                  </div>
+                </div>
+
+                <div
+                  className={
+                    month.active
+                      ? "w-full rounded-t-md bg-linear-to-t from-primary-dim to-primary shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all"
+                      : "w-full rounded-t-md bg-white/[0.06] hover:bg-white/10 transition-all"
+                  }
+                  style={{ height: month.height }}
+                />
+                <span
+                  className={`text-[9px] uppercase font-bold tracking-wider ${
+                    month.active ? "text-primary" : "text-on-surface-variant"
+                  }`}
+                >
+                  {month.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Plano Contratado */}
+        <div className="col-span-12 lg:col-span-4 bg-surface-container rounded-xl p-8 border border-white/5 flex flex-col">
+          <h4 className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-8">
+            Plano Contratado
+          </h4>
+
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-14 h-14 bg-primary/10 border border-primary/20 rounded-2xl flex items-center justify-center shrink-0">
+              <Award className="w-7 h-7 text-primary" />
+            </div>
+            <div>
+              <p className="font-bold text-xl text-white font-headline">
+                Premium
+              </p>
+              <p className="text-xs text-on-surface-variant mt-0.5">
+                Faturamento mensal
               </p>
             </div>
           </div>
-          {/* Visual Element */}
-          <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-primary/10 rounded-full blur-[60px] pointer-events-none"></div>
-        </div>
 
-        {/* Summary Card: Pending */}
-        <div className="col-span-12 md:col-span-6 lg:col-span-4 bg-[#191919]/60 backdrop-blur-xl rounded-2xl p-8 border border-white/5 shadow-lg animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
-          <div className="flex justify-between items-start mb-8">
-            <span className="text-zinc-400 text-sm font-medium">Próximo Vencimento</span>
-            <div className="p-3 bg-red-500/10 rounded-xl border border-red-500/20">
-              <EventUpcoming className="w-5 h-5 text-red-400" />
+          {/* Usage */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs text-on-surface-variant font-medium">
+                Uso do plano
+              </span>
+              <span className="text-xs font-bold text-white font-mono">
+                75%
+              </span>
+            </div>
+            <div className="h-2 bg-surface-container-highest rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary rounded-full transition-all"
+                style={{ width: "75%" }}
+              />
             </div>
           </div>
-          <div className="space-y-5">
-            <div>
-              <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold">Vencimento em 02 dias</p>
-              <h3 className="text-3xl font-bold font-headline mt-1 text-white">R$ 12.430,00</h3>
-            </div>
-            <button className="w-full py-3 border border-white/10 text-white font-bold rounded-xl hover:bg-white/5 transition-all text-sm uppercase tracking-wider relative overflow-hidden group">
-              <span className="relative z-10">Pagar Agora</span>
-              <div className="absolute inset-0 bg-white/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-            </button>
-          </div>
-        </div>
 
-        {/* Summary Card: Yearly Progress */}
-        <div className="col-span-12 md:col-span-6 lg:col-span-4 bg-[#191919]/60 backdrop-blur-xl rounded-2xl p-8 border border-white/5 shadow-lg animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-          <div className="flex justify-between items-start mb-6">
-            <span className="text-zinc-400 text-sm font-medium">Desempenho Anual</span>
-            <span className="text-xs font-mono font-bold text-zinc-500 bg-white/5 px-2 py-1 rounded">FY 2024</span>
+          <div className="pt-6 border-t border-white/5 mt-auto space-y-3">
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-on-surface-variant">Renovação</span>
+              <span className="font-bold text-white font-mono">
+                15/04/2026
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-on-surface-variant">Valor mensal</span>
+              <span className="font-bold text-white font-mono tabular-nums">
+                R$ 3.500,00
+              </span>
+            </div>
           </div>
-          <div className="flex items-end gap-2 h-24 mb-6">
-            <div className="flex-1 bg-white/5 hover:bg-white/10 transition-colors rounded-t-md h-[40%]"></div>
-            <div className="flex-1 bg-white/5 hover:bg-white/10 transition-colors rounded-t-md h-[60%]"></div>
-            <div className="flex-1 bg-white/5 hover:bg-white/10 transition-colors rounded-t-md h-[30%]"></div>
-            <div className="flex-1 bg-white/5 hover:bg-white/10 transition-colors rounded-t-md h-[80%]"></div>
-            <div className="flex-1 bg-primary/60 hover:bg-primary transition-colors rounded-t-md h-[100%] border-t-2 border-primary shadow-[0_0_15px_rgba(204,151,255,0.3)]"></div>
-            <div className="flex-1 bg-white/5 hover:bg-white/10 transition-colors rounded-t-md h-[50%]"></div>
-          </div>
-          <p className="text-xs text-zinc-400 font-medium text-center">Faturamento Mensal (Média: R$ 85k)</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-12 gap-6 mb-12">
-        {/* Charts Section: Detailed Spending */}
-        <div className="col-span-12 lg:col-span-8 bg-[#191919]/60 backdrop-blur-xl rounded-2xl p-8 border border-white/5 shadow-lg animate-in fade-in slide-in-from-bottom-8 duration-700">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
-            <div>
-              <h4 className="text-xl font-bold font-headline text-white mb-1">Fluxo de Despesas Anuais</h4>
-              <p className="text-sm text-zinc-400">Comparativo entre faturamento e custos operacionais</p>
-            </div>
-            <div className="flex bg-black/40 p-1 rounded-xl border border-white/5">
-              <button className="px-5 py-2 text-xs font-bold bg-[#1f1f1f] rounded-lg text-primary shadow-sm">Mensal</button>
-              <button className="px-5 py-2 text-xs font-bold text-zinc-500 hover:text-zinc-300 transition-colors">Trimestral</button>
-            </div>
-          </div>
-          <div className="relative h-64 w-full flex items-end justify-between gap-4 border-b border-white/5 pb-2">
-            {/* Fake Chart Grid Lines */}
-            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
-              <div className="border-t border-zinc-700 w-full border-dashed"></div>
-              <div className="border-t border-zinc-700 w-full border-dashed"></div>
-              <div className="border-t border-zinc-700 w-full border-dashed"></div>
-              <div className="border-t border-zinc-700 w-full border-dashed"></div>
-            </div>
-            {/* Bars */}
-            <div className="group relative flex-1 flex flex-col items-center gap-3">
-              <div className="w-full bg-white/5 h-32 rounded-lg group-hover:bg-primary/20 transition-all border border-white/0 group-hover:border-primary/30"></div>
-              <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Jan</span>
-            </div>
-            <div className="group relative flex-1 flex flex-col items-center gap-3">
-              <div className="w-full bg-white/5 h-40 rounded-lg group-hover:bg-primary/20 transition-all border border-white/0 group-hover:border-primary/30"></div>
-              <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Fev</span>
-            </div>
-            <div className="group relative flex-1 flex flex-col items-center gap-3">
-              <div className="w-full bg-white/5 h-28 rounded-lg group-hover:bg-primary/20 transition-all border border-white/0 group-hover:border-primary/30"></div>
-              <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Mar</span>
-            </div>
-            <div className="group relative flex-1 flex flex-col items-center gap-3">
-              <div className="w-full bg-white/5 h-52 rounded-lg group-hover:bg-primary/20 transition-all border border-white/0 group-hover:border-primary/30"></div>
-              <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Abr</span>
-            </div>
-            <div className="group relative flex-1 flex flex-col items-center gap-3">
-              <div className="w-full bg-gradient-to-t from-purple-600 to-primary h-60 rounded-lg shadow-[0_0_20px_rgba(204,151,255,0.4)] border border-primary/50 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20"></div>
-              </div>
-              <span className="text-[10px] text-primary uppercase font-bold tracking-wider">Mai</span>
-            </div>
-            <div className="group relative flex-1 flex flex-col items-center gap-3">
-              <div className="w-full bg-white/5 h-44 rounded-lg group-hover:bg-primary/20 transition-all border border-white/0 group-hover:border-primary/30"></div>
-              <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Jun</span>
-            </div>
-            <div className="group relative flex-1 flex flex-col items-center gap-3">
-              <div className="w-full bg-white/5 h-36 rounded-lg group-hover:bg-primary/20 transition-all border border-white/0 group-hover:border-primary/30"></div>
-              <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Jul</span>
-            </div>
-            <div className="group relative flex-1 flex flex-col items-center gap-3">
-              <div className="w-full bg-white/5 h-48 rounded-lg group-hover:bg-primary/20 transition-all border border-white/0 group-hover:border-primary/30"></div>
-              <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Ago</span>
-            </div>
-          </div>
+      {/* ------------------------------------------------------------------ */}
+      {/* Invoices Table                                                       */}
+      {/* ------------------------------------------------------------------ */}
+      <div className="bg-surface-container rounded-xl border border-white/5 overflow-hidden animate-in fade-in duration-700">
+        <div className="px-8 py-6 border-b border-white/5">
+          <h4 className="text-xl font-bold font-headline text-white">
+            Faturas
+          </h4>
         </div>
 
-        {/* Active Subscription / Method */}
-        <div className="col-span-12 lg:col-span-4 bg-[#191919]/60 backdrop-blur-xl rounded-2xl p-8 border border-white/5 flex flex-col shadow-lg animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
-          <h4 className="text-sm font-bold uppercase tracking-widest text-zinc-400 mb-8">Plano Contratado</h4>
-          <div className="flex-1">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-purple-600/20 border border-primary/30 rounded-2xl flex items-center justify-center shadow-inner">
-                <WorkspacePremium className="w-7 h-7 text-primary" />
-              </div>
-              <div>
-                <p className="font-bold text-xl text-white">Full Service Corporate</p>
-                <p className="text-xs text-zinc-400 mt-1">Ciclo de faturamento mensal</p>
-              </div>
-            </div>
-            <div className="space-y-5 pt-6 border-t border-white/5">
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-zinc-500 font-medium">Método de Pagamento</span>
-                <span className="flex items-center gap-2 font-bold text-white bg-white/5 px-3 py-1.5 rounded-lg border border-white/5">
-                  <Payment className="w-4 h-4 text-zinc-400" />
-                  •••• 8842
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-zinc-500 font-medium">Ativo desde</span>
-                <span className="font-bold text-white">Outubro, 2023</span>
-              </div>
-            </div>
-          </div>
-          <button className="mt-8 py-3 w-full rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-sm text-white font-bold flex items-center justify-center gap-2 group">
-            Gerenciar Assinatura
-            <ArrowOutward className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
-          </button>
-        </div>
-      </div>
-
-      {/* Invoices / Transactions List */}
-      <div className="bg-[#191919]/60 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/5 shadow-lg animate-in fade-in slide-in-from-bottom-10 duration-700 delay-200">
-        <div className="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <h4 className="text-xl md:text-2xl font-bold font-headline tracking-tight text-white">Histórico de Pagamentos</h4>
-          <div className="flex flex-wrap items-center gap-3">
-            <button className="px-4 py-2.5 bg-black/40 hover:bg-white/5 border border-white/5 rounded-xl text-sm font-bold transition-colors flex items-center gap-2 text-zinc-300">
-              <FilterList className="w-4 h-4 text-primary" />
-              Filtrar por Status
-            </button>
-            <button className="px-4 py-2.5 bg-black/40 hover:bg-white/5 border border-white/5 rounded-xl text-sm font-bold transition-colors flex items-center gap-2 text-zinc-300">
-              <CalendarMonth className="w-4 h-4 text-primary" />
-              Últimos 6 Meses
-            </button>
-          </div>
-        </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[800px]">
+          <table className="w-full text-left min-w-[640px]">
             <thead>
-              <tr className="bg-black/20 border-b border-white/5">
-                <th className="px-8 py-5 text-xs font-black text-zinc-500 uppercase tracking-widest">Identificador</th>
-                <th className="px-8 py-5 text-xs font-black text-zinc-500 uppercase tracking-widest">Emissão</th>
-                <th className="px-8 py-5 text-xs font-black text-zinc-500 uppercase tracking-widest">Valor</th>
-                <th className="px-8 py-5 text-xs font-black text-zinc-500 uppercase tracking-widest">Status</th>
-                <th className="px-8 py-5 text-xs font-black text-zinc-500 uppercase tracking-widest text-right">Ações</th>
+              <tr className="bg-surface-container-low">
+                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                  Descrição
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                  Data
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                  Valor
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                  Status
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-right">
+                  Ações
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              <tr className="hover:bg-white/5 transition-colors group">
-                <td className="px-8 py-6 font-mono font-bold text-white text-sm">INV-2024-0512</td>
-                <td className="px-8 py-6 text-zinc-400 font-medium text-sm">12 Mai 2024</td>
-                <td className="px-8 py-6 font-black text-white">R$ 4.250,00</td>
-                <td className="px-8 py-6">
-                  <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black uppercase rounded-full tracking-widest inline-flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    Pago
-                  </span>
-                </td>
-                <td className="px-8 py-6 text-right">
-                  <button className="text-zinc-400 hover:text-white transition-colors inline-flex items-center gap-2 font-bold text-xs uppercase tracking-wider bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg border border-white/5">
-                    <Download className="w-4 h-4" />
-                    Baixar Fatura
-                  </button>
-                </td>
-              </tr>
-              <tr className="hover:bg-white/5 transition-colors group">
-                <td className="px-8 py-6 font-mono font-bold text-white text-sm">INV-2024-0412</td>
-                <td className="px-8 py-6 text-zinc-400 font-medium text-sm">12 Abr 2024</td>
-                <td className="px-8 py-6 font-black text-white">R$ 4.250,00</td>
-                <td className="px-8 py-6">
-                  <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black uppercase rounded-full tracking-widest inline-flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    Pago
-                  </span>
-                </td>
-                <td className="px-8 py-6 text-right">
-                  <button className="text-zinc-400 hover:text-white transition-colors inline-flex items-center gap-2 font-bold text-xs uppercase tracking-wider bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg border border-white/5">
-                    <Download className="w-4 h-4" />
-                    Baixar Fatura
-                  </button>
-                </td>
-              </tr>
-              <tr className="hover:bg-white/5 transition-colors group">
-                <td className="px-8 py-6 font-mono font-bold text-white text-sm">INV-2024-0312</td>
-                <td className="px-8 py-6 text-zinc-400 font-medium text-sm">12 Mar 2024</td>
-                <td className="px-8 py-6 font-black text-white">R$ 3.890,00</td>
-                <td className="px-8 py-6">
-                  <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black uppercase rounded-full tracking-widest inline-flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    Pago
-                  </span>
-                </td>
-                <td className="px-8 py-6 text-right">
-                  <button className="text-zinc-400 hover:text-white transition-colors inline-flex items-center gap-2 font-bold text-xs uppercase tracking-wider bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg border border-white/5">
-                    <Download className="w-4 h-4" />
-                    Baixar Fatura
-                  </button>
-                </td>
-              </tr>
-              <tr className="hover:bg-white/5 transition-colors group bg-red-500/5">
-                <td className="px-8 py-6 font-mono font-bold text-red-100 text-sm">INV-2024-0212</td>
-                <td className="px-8 py-6 text-red-200/60 font-medium text-sm">12 Fev 2024</td>
-                <td className="px-8 py-6 font-black text-white">R$ 3.890,00</td>
-                <td className="px-8 py-6">
-                  <span className="px-3 py-1.5 bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] font-black uppercase rounded-full tracking-widest inline-flex items-center gap-1.5 shadow-[0_0_10px_rgba(248,113,113,0.2)]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
-                    Atrasado
-                  </span>
-                </td>
-                <td className="px-8 py-6 text-right">
-                  <button className="text-white hover:bg-red-500/30 bg-red-500/20 border border-red-500/40 transition-colors inline-flex items-center gap-2 font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg shadow-[0_0_15px_rgba(248,113,113,0.3)]">
-                    <Payment className="w-4 h-4" />
-                    Pagar Agora
-                  </button>
-                </td>
-              </tr>
+              {INVOICES.map((invoice) => (
+                <tr
+                  key={invoice.id}
+                  className="hover:bg-white/5 transition-colors"
+                >
+                  <td className="px-6 py-5 text-sm font-medium text-white">
+                    {invoice.description}
+                  </td>
+                  <td className="px-6 py-5 text-sm text-on-surface-variant font-mono tabular-nums">
+                    {invoice.date}
+                  </td>
+                  <td className="px-6 py-5 text-sm font-bold text-white font-mono tabular-nums">
+                    {invoice.value}
+                  </td>
+                  <td className="px-6 py-5">
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${STATUS_STYLES[invoice.status]}`}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                      {invoice.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-5 text-right">
+                    <div className="inline-flex items-center gap-2">
+                      <button
+                        className="p-2 text-on-surface-variant hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                        aria-label="Visualizar fatura"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button
+                        className="p-2 text-on-surface-variant hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                        aria-label="Baixar fatura"
+                      >
+                        <Download className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

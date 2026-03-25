@@ -22,7 +22,7 @@ export function About() {
             </span>
             <h2 className="text-5xl md:text-7xl font-headline font-extrabold mt-6 mb-8 tracking-tighter leading-tight">
               O Direito do Trabalho <br />
-              <span className="bg-gradient-to-br from-primary to-primary-dim bg-clip-text text-transparent">
+              <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
                 reimaginado.
               </span>
             </h2>
@@ -32,14 +32,14 @@ export function About() {
 
             <ul className="space-y-6 mb-12">
               <li className="flex items-start gap-4">
-                <CheckCircle className="text-primary w-6 h-6 mt-1 flex-shrink-0" />
+                <CheckCircle className="text-primary w-6 h-6 mt-1 shrink-0" />
                 <div>
                   <h4 className="font-bold text-lg text-on-surface">Transparência Digital</h4>
                   <p className="text-on-surface-variant">Acompanhe seu caso através do nosso dashboard exclusivo.</p>
                 </div>
               </li>
               <li className="flex items-start gap-4">
-                <CheckCircle className="text-primary w-6 h-6 mt-1 flex-shrink-0" />
+                <CheckCircle className="text-primary w-6 h-6 mt-1 shrink-0" />
                 <div>
                   <h4 className="font-bold text-lg text-on-surface">Inteligência Preditiva</h4>
                   <p className="text-on-surface-variant">Análise estatística de decisões para aumentar as chances de êxito.</p>

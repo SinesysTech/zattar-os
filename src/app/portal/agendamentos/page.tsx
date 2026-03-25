@@ -1,230 +1,472 @@
 "use client";
 
+import { useState } from "react";
 import { PortalShell } from "@/features/portal/components/layout/portal-shell";
-import { PlusCircle, CalendarPlus, Clock as Schedule, Video, MoreVertical as MoreVert, Edit, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { EditorialHeader } from "@/features/website";
+import {
+  CalendarPlus,
+  Video,
+  Clock,
+  MapPin,
+  Edit,
+  MoreVertical,
+  ChevronLeft,
+  ChevronRight,
+  User,
+  CheckCircle2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+// ---------------------------------------------------------------------------
+// Mock data
+// ---------------------------------------------------------------------------
+
+type AppointmentType = "Presencial" | "Videoconferência";
+
+interface Appointment {
+  id: number;
+  title: string;
+  specialist: string;
+  day: number;
+  month: string;
+  monthIndex: number; // 0-based month for calendar matching
+  year: number;
+  time: string;
+  type: AppointmentType;
+}
+
+interface PastConsultation {
+  id: number;
+  title: string;
+  specialist: string;
+  dateLabel: string;
+}
+
+const UPCOMING: Appointment[] = [
+  {
+    id: 1,
+    title: "Audiência Trabalhista",
+    specialist: "Dra. Carolina Zattar",
+    day: 28,
+    month: "MAR",
+    monthIndex: 2,
+    year: 2026,
+    time: "14:00",
+    type: "Presencial",
+  },
+  {
+    id: 2,
+    title: "Revisão de Contrato",
+    specialist: "Dr. Felipe Andrade",
+    day: 2,
+    month: "ABR",
+    monthIndex: 3,
+    year: 2026,
+    time: "10:30",
+    type: "Videoconferência",
+  },
+  {
+    id: 3,
+    title: "Consulta Inicial",
+    specialist: "Dra. Marina Costa",
+    day: 8,
+    month: "ABR",
+    monthIndex: 3,
+    year: 2026,
+    time: "16:00",
+    type: "Presencial",
+  },
+];
+
+const PAST: PastConsultation[] = [
+  {
+    id: 1,
+    title: "Depoimento Preparatório",
+    specialist: "Dr. Felipe Andrade",
+    dateLabel: "15 de Mar • 2026",
+  },
+  {
+    id: 2,
+    title: "Análise Documental",
+    specialist: "Dra. Carolina Zattar",
+    dateLabel: "08 de Mar • 2026",
+  },
+  {
+    id: 3,
+    title: "Orientação Trabalhista",
+    specialist: "Dra. Marina Costa",
+    dateLabel: "01 de Mar • 2026",
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Calendar helpers
+// ---------------------------------------------------------------------------
+
+const MONTH_NAMES = [
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
+];
+
+function buildCalendarGrid(year: number, month: number) {
+  // month is 0-based
+  const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInPrev = new Date(year, month, 0).getDate();
+
+  const cells: { day: number; current: boolean }[] = [];
+
+  // Leading padding from previous month
+  for (let i = firstDay - 1; i >= 0; i--) {
+    cells.push({ day: daysInPrev - i, current: false });
+  }
+  // Current month days
+  for (let d = 1; d <= daysInMonth; d++) {
+    cells.push({ day: d, current: true });
+  }
+  // Trailing padding to complete last row
+  const remainder = cells.length % 7;
+  if (remainder !== 0) {
+    for (let d = 1; d <= 7 - remainder; d++) {
+      cells.push({ day: d, current: false });
+    }
+  }
+
+  return cells;
+}
+
+// Days in the visible month that have upcoming appointments
+function appointmentDaysInMonth(year: number, month: number): Set<number> {
+  return new Set(
+    UPCOMING.filter((a) => a.monthIndex === month && a.year === year).map(
+      (a) => a.day
+    )
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Sub-components
+// ---------------------------------------------------------------------------
+
+function TypeBadge({ type }: { type: AppointmentType }) {
+  if (type === "Presencial") {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+        <MapPin className="w-3 h-3" />
+        Presencial
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-info/10 text-info border border-info/20">
+      <Video className="w-3 h-3" />
+      Videoconferência
+    </span>
+  );
+}
+
+function AppointmentCard({ appt }: { appt: Appointment }) {
+  return (
+    <div className="group bg-surface-container rounded-xl p-6 border border-white/5 hover:border-primary/30 transition-all duration-300 flex flex-col sm:flex-row items-start gap-6">
+      {/* Date box */}
+      <div className="shrink-0 bg-primary/10 rounded-xl p-4 text-center w-18">
+        <span className="text-2xl font-black font-headline text-primary block leading-none">
+          {appt.day}
+        </span>
+        <span className="text-xs uppercase tracking-widest text-primary/70 mt-1 block">
+          {appt.month}
+        </span>
+      </div>
+
+      {/* Details */}
+      <div className="flex-1 min-w-0">
+        <h4 className="text-lg font-bold font-headline tracking-tight text-on-surface group-hover:text-primary transition-colors mb-1">
+          {appt.title}
+        </h4>
+        <p className="text-sm text-on-surface-variant mb-3">
+          {appt.specialist}
+        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="inline-flex items-center gap-1.5 text-sm text-on-surface-variant">
+            <Clock className="w-3.5 h-3.5" />
+            {appt.time}
+          </span>
+          <TypeBadge type={appt.type} />
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-2 shrink-0">
+        {appt.type === "Videoconferência" && (
+          <button
+            aria-label="Entrar na videochamada"
+            className="p-2 rounded-lg hover:bg-info/10 text-on-surface-variant hover:text-info transition-colors"
+          >
+            <Video className="w-4 h-4" />
+          </button>
+        )}
+        <button
+          aria-label="Editar agendamento"
+          className="p-2 rounded-lg hover:bg-primary/10 text-on-surface-variant hover:text-primary transition-colors"
+        >
+          <Edit className="w-4 h-4" />
+        </button>
+        <button
+          aria-label="Mais opções"
+          className="p-2 rounded-lg hover:bg-white/5 text-on-surface-variant hover:text-on-surface transition-colors"
+        >
+          <MoreVertical className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function PastConsultationItem({ item }: { item: PastConsultation }) {
+  return (
+    <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-5 py-4 rounded-xl border border-white/5 bg-surface-container hover:border-white/10 transition-all duration-200">
+      <div className="flex items-start gap-4">
+        <CheckCircle2 className="w-4 h-4 text-emerald-500/50 mt-0.5 shrink-0 group-hover:text-emerald-400 transition-colors" />
+        <div>
+          <p className="text-sm font-semibold text-on-surface-variant group-hover:text-on-surface transition-colors">
+            {item.title}
+          </p>
+          <p className="text-xs text-on-surface-variant/60 mt-0.5">
+            {item.dateLabel} &bull; {item.specialist}
+          </p>
+        </div>
+      </div>
+      <span className="ml-8 sm:ml-0 text-xs font-bold text-on-surface-variant/40 bg-white/5 px-3 py-1.5 rounded-lg self-start sm:self-auto shrink-0">
+        Concluída
+      </span>
+    </div>
+  );
+}
+
+function MiniCalendar() {
+  // Today is 2026-03-24 per system context
+  const TODAY_YEAR = 2026;
+  const TODAY_MONTH = 2; // March (0-based)
+  const TODAY_DAY = 24;
+
+  const [viewYear, setViewYear] = useState(TODAY_YEAR);
+  const [viewMonth, setViewMonth] = useState(TODAY_MONTH);
+
+  const cells = buildCalendarGrid(viewYear, viewMonth);
+  const eventDays = appointmentDaysInMonth(viewYear, viewMonth);
+
+  const isToday = (day: number, current: boolean) =>
+    current &&
+    day === TODAY_DAY &&
+    viewMonth === TODAY_MONTH &&
+    viewYear === TODAY_YEAR;
+
+  function prev() {
+    if (viewMonth === 0) {
+      setViewMonth(11);
+      setViewYear((y) => y - 1);
+    } else {
+      setViewMonth((m) => m - 1);
+    }
+  }
+
+  function next() {
+    if (viewMonth === 11) {
+      setViewMonth(0);
+      setViewYear((y) => y + 1);
+    } else {
+      setViewMonth((m) => m + 1);
+    }
+  }
+
+  return (
+    <div className="bg-surface-container rounded-xl p-6 border border-white/5">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5">
+        <span className="text-sm font-bold font-headline text-on-surface">
+          {MONTH_NAMES[viewMonth]} {viewYear}
+        </span>
+        <div className="flex gap-1">
+          <button
+            onClick={prev}
+            aria-label="Mês anterior"
+            className="w-7 h-7 rounded-lg hover:bg-white/5 flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={next}
+            aria-label="Próximo mês"
+            className="w-7 h-7 rounded-lg hover:bg-white/5 flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Weekday labels */}
+      <div className="grid grid-cols-7 text-center mb-2">
+        {["D", "S", "T", "Q", "Q", "S", "S"].map((d, i) => (
+          <span
+            key={i}
+            className="text-[10px] font-black tracking-widest text-on-surface-variant/40 py-1"
+          >
+            {d}
+          </span>
+        ))}
+      </div>
+
+      {/* Day cells */}
+      <div className="grid grid-cols-7 text-center gap-y-0.5">
+        {cells.map((cell, i) => {
+          const today = isToday(cell.day, cell.current);
+          const hasEvent = cell.current && eventDays.has(cell.day);
+
+          return (
+            <button
+              key={i}
+              disabled={!cell.current}
+              aria-label={
+                cell.current
+                  ? `${cell.day} de ${MONTH_NAMES[viewMonth]}`
+                  : undefined
+              }
+              className={[
+                "relative flex flex-col items-center justify-center w-full aspect-square rounded-full text-xs font-medium transition-colors",
+                !cell.current
+                  ? "text-on-surface-variant/20 cursor-default"
+                  : today
+                  ? "bg-primary text-on-primary-fixed font-bold"
+                  : hasEvent
+                  ? "text-on-surface ring-2 ring-primary/30 hover:bg-primary/10"
+                  : "text-on-surface-variant hover:bg-white/5 cursor-pointer",
+              ].join(" ")}
+            >
+              {cell.day}
+              {hasEvent && !today && (
+                <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary/60" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function SpecialistCard() {
+  return (
+    <div className="glass-card rounded-xl p-6 border border-white/5">
+      <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/50 mb-5">
+        Seu Especialista
+      </p>
+      <div className="flex items-center gap-4 mb-5">
+        {/* Avatar placeholder */}
+        <div className="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0 border border-white/10">
+          <User className="w-7 h-7 text-on-surface-variant/50" />
+        </div>
+        <div>
+          <p className="font-bold text-on-surface font-headline leading-tight">
+            Dra. Carolina Zattar
+          </p>
+          <p className="text-xs text-on-surface-variant mt-0.5">
+            Direito Trabalhista
+          </p>
+        </div>
+      </div>
+
+      <div className="h-px bg-white/5 mb-4" />
+
+      <div className="flex flex-col gap-2.5 mb-5">
+        {[
+          { label: "Consultas realizadas", value: "12" },
+          { label: "Próxima consulta", value: "28 Mar" },
+        ].map(({ label, value }) => (
+          <div key={label} className="flex items-center justify-between">
+            <span className="text-xs text-on-surface-variant">{label}</span>
+            <span className="text-xs font-bold text-on-surface">{value}</span>
+          </div>
+        ))}
+      </div>
+
+      <button className="w-full text-xs font-bold text-primary hover:text-on-surface transition-colors flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-primary/10 border border-primary/20">
+        Ver perfil completo
+        <ChevronRight className="w-3.5 h-3.5" />
+      </button>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Page
+// ---------------------------------------------------------------------------
 
 export default function AgendamentosPage() {
   return (
     <PortalShell>
-      <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between md:items-end mb-12 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div>
-            <span className="text-primary font-label text-sm font-bold uppercase tracking-widest mb-2 block">Agenda Magistrada</span>
-            <h2 className="text-5xl font-black font-headline tracking-tighter text-white">Agendamentos</h2>
-          </div>
-          <button className="bg-gradient-to-r from-primary to-purple-600 text-white font-bold py-4 px-8 rounded-xl flex items-center gap-3 hover:shadow-[0_0_20px_rgba(204,151,255,0.4)] transition-all hover:scale-[1.02] active:scale-95">
-            <CalendarPlus className="w-5 h-5" />
-            Agendar Nova Consulta
-          </button>
+      {/* Header */}
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <EditorialHeader
+          kicker="AGENDAMENTOS"
+          title="Consultas."
+          actions={
+            <Button className="gap-2">
+              <CalendarPlus className="w-4 h-4" />
+              Agendar Consulta
+            </Button>
+          }
+        />
+      </div>
+
+      {/* Main grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* ---------------------------------------------------------------- */}
+        {/* Left column                                                       */}
+        {/* ---------------------------------------------------------------- */}
+        <div className="lg:col-span-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-75">
+          {/* Upcoming */}
+          <section>
+            <h3 className="text-sm font-black uppercase tracking-widest text-on-surface-variant/50 mb-4 flex items-center gap-3">
+              <span className="w-2 h-5 bg-primary rounded-full" />
+              Próximas Consultas
+            </h3>
+            <div className="space-y-3">
+              {UPCOMING.map((appt) => (
+                <AppointmentCard key={appt.id} appt={appt} />
+              ))}
+            </div>
+          </section>
+
+          {/* History */}
+          <section>
+            <h3 className="text-sm font-black uppercase tracking-widest text-on-surface-variant/50 mb-4 flex items-center gap-3">
+              <span className="w-2 h-5 bg-on-surface-variant/20 rounded-full" />
+              Histórico de Consultas
+            </h3>
+            <div className="space-y-2">
+              {PAST.map((item) => (
+                <PastConsultationItem key={item.id} item={item} />
+              ))}
+            </div>
+          </section>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Calendar View Area (Editorial Style) */}
-          <div className="lg:col-span-8 space-y-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
-            <section>
-              <h3 className="text-xl font-headline font-bold mb-6 flex items-center gap-3 text-white">
-                <span className="w-2 h-8 bg-primary rounded-full shadow-[0_0_10px_rgba(204,151,255,0.5)]"></span>
-                Próximas Consultas
-              </h3>
-              <div className="grid grid-cols-1 gap-5">
-                {/* Meeting Card 1 */}
-                <div className="group bg-[#191919]/60 backdrop-blur-xl p-6 md:p-8 rounded-2xl border border-white/5 hover:border-primary/30 transition-all duration-300 relative overflow-hidden shadow-lg hover:shadow-primary/5">
-                  <div className="absolute top-0 right-0 p-5">
-                    <span className="bg-primary/20 text-primary text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest border border-primary/30">Hoje</span>
-                  </div>
-                  <div className="flex flex-col sm:flex-row items-start gap-6">
-                    <div className="flex flex-col items-center justify-center bg-black/40 rounded-xl p-4 min-w-[90px] border border-white/5 group-hover:bg-primary/5 transition-colors">
-                      <span className="text-3xl font-black font-headline text-primary">24</span>
-                      <span className="text-xs uppercase font-bold text-zinc-500 tracking-widest mt-1">MAI</span>
-                    </div>
-                    <div className="flex-1 w-full">
-                      <h4 className="text-2xl font-bold font-headline mb-2 text-white group-hover:text-primary transition-colors tracking-tight">Revisão de Fusão Estratégica</h4>
-                      <p className="text-zinc-400 text-sm mb-5">Especialista: <span className="text-white font-medium">Dra. Beatriz Fontana</span></p>
-                      <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-4 sm:gap-6 bg-white/5 p-4 rounded-xl border border-white/5">
-                        <div className="flex items-center gap-2 text-sm text-zinc-400 font-medium">
-                          <Schedule className="w-4 h-4 text-zinc-500" />
-                          14:30 - 15:30 (GMT-3)
-                        </div>
-                        <div className="hidden sm:block w-px h-4 bg-white/10"></div>
-                        <a className="flex items-center gap-2 text-sm text-primary font-bold hover:text-white transition-colors" href="#">
-                          <Video className="w-5 h-5" />
-                          Entrar na Chamada
-                        </a>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-2 absolute sm:relative top-6 right-6 sm:top-0 sm:right-0">
-                      <button className="p-2 hover:bg-white/10 rounded-lg text-zinc-500 hover:text-white transition-colors border border-transparent hover:border-white/10">
-                        <MoreVert className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Meeting Card 2 */}
-                <div className="group bg-[#191919]/60 backdrop-blur-xl p-6 md:p-8 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-300 shadow-lg">
-                  <div className="flex flex-col sm:flex-row items-start gap-6">
-                    <div className="flex flex-col items-center justify-center bg-black/40 rounded-xl p-4 min-w-[90px] border border-white/5">
-                      <span className="text-3xl font-black font-headline text-white">28</span>
-                      <span className="text-xs uppercase font-bold text-zinc-500 tracking-widest mt-1">MAI</span>
-                    </div>
-                    <div className="flex-1 w-full">
-                      <h4 className="text-xl md:text-2xl font-bold font-headline mb-2 text-zinc-300 group-hover:text-white transition-colors tracking-tight">Consultoria de Propriedade Intelectual</h4>
-                      <p className="text-zinc-500 text-sm mb-5">Especialista: <span className="text-zinc-300 font-medium">Dr. Ricardo Menezes</span></p>
-                      <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-4 sm:gap-6">
-                        <div className="flex items-center gap-2 text-sm text-zinc-500">
-                          <Schedule className="w-4 h-4" />
-                          10:00 - 11:30 (GMT-3)
-                        </div>
-                        <div className="hidden sm:block w-px h-4 bg-white/10"></div>
-                        <span className="flex items-center gap-2 text-sm text-zinc-600 font-medium">
-                          <CalendarPlus className="w-4 h-4" />
-                          Link disponível em 3 dias
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-2 absolute sm:relative top-6 right-6 sm:top-0 sm:right-0">
-                      <button className="flex items-center justify-center p-2 rounded-lg bg-[#1a1a1a] hover:bg-purple-500/20 text-purple-400 hover:text-purple-300 transition-colors" title="Entrar na Chamada">
-                        <Video className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section className="pt-4">
-              <h3 className="text-xl font-headline font-bold mb-6 flex items-center gap-3 text-white">
-                <span className="w-2 h-8 bg-zinc-700 rounded-full"></span>
-                Histórico de Consultas
-              </h3>
-              <div className="space-y-4">
-                {/* Past Item 1 */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl hover:bg-white/5 transition-colors border border-white/5 bg-black/20 group">
-                  <div className="flex items-start gap-4 mb-4 sm:mb-0">
-                    <CheckCircle className="w-5 h-5 text-zinc-600 mt-0.5 group-hover:text-emerald-500 transition-colors" />
-                    <div>
-                      <p className="font-bold text-sm text-zinc-300 group-hover:text-white transition-colors">Auditoria Trabalhista Preventiva</p>
-                      <p className="text-xs text-zinc-500 mt-1">12 de Maio • Dr. Carlos Eduardo</p>
-                    </div>
-                  </div>
-                  <button className="text-xs font-bold text-zinc-400 group-hover:text-primary transition-colors hover:underline px-4 py-2 sm:p-0 bg-white/5 sm:bg-transparent rounded-lg sm:rounded-none mx-9 sm:mx-0">Ver Resumo</button>
-                </div>
-
-                {/* Past Item 2 */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl hover:bg-white/5 transition-colors border border-white/5 bg-black/20 group">
-                  <div className="flex items-start gap-4 mb-4 sm:mb-0">
-                    <CheckCircle className="w-5 h-5 text-zinc-600 mt-0.5 group-hover:text-emerald-500 transition-colors" />
-                    <div>
-                      <p className="font-bold text-sm text-zinc-300 group-hover:text-white transition-colors">Análise de Termos de Uso (SaaS)</p>
-                      <p className="text-xs text-zinc-500 mt-1">05 de Maio • Dra. Beatriz Fontana</p>
-                    </div>
-                  </div>
-                  <button className="text-xs font-bold text-zinc-400 group-hover:text-primary transition-colors hover:underline px-4 py-2 sm:p-0 bg-white/5 sm:bg-transparent rounded-lg sm:rounded-none mx-9 sm:mx-0">Ver Resumo</button>
-                </div>
-              </div>
-            </section>
-          </div>
-
-          {/* Sidebar Content (Stats & Calendar Widget) */}
-          <div className="lg:col-span-4 space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
-            {/* Quick Stats Bento */}
-            <div className="bg-[#191919]/60 backdrop-blur-xl p-8 rounded-2xl border border-white/5 shadow-lg">
-              <h4 className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-6 font-label">Visão Geral</h4>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-black/40 p-5 rounded-xl border border-white/5">
-                  <p className="text-primary text-3xl font-black font-headline mb-1">12</p>
-                  <p className="text-[10px] text-zinc-400 uppercase font-black tracking-widest">Realizadas</p>
-                </div>
-                <div className="bg-black/40 p-5 rounded-xl border border-white/5">
-                  <p className="text-white text-3xl font-black font-headline mb-1">02</p>
-                  <p className="text-[10px] text-zinc-400 uppercase font-black tracking-widest">Pendentes</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Mini Calendar Widget */}
-            <div className="bg-[#191919]/60 backdrop-blur-xl p-8 rounded-2xl border border-white/5 shadow-lg">
-              <div className="flex justify-between items-center mb-6">
-                <h4 className="font-bold font-headline text-white">Maio 2024</h4>
-                <div className="flex gap-2">
-                  <button className="w-8 h-8 rounded-lg hover:bg-white/5 flex items-center justify-center text-zinc-400 hover:text-white transition-colors">
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                  <button className="w-8 h-8 rounded-lg hover:bg-white/5 flex items-center justify-center text-zinc-400 hover:text-white transition-colors">
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-              <div className="grid grid-cols-7 gap-2 text-center text-[10px] font-black text-zinc-600 mb-4 tracking-widest">
-                <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
-              </div>
-              <div className="grid grid-cols-7 gap-2 text-center text-xs font-medium">
-                <span className="py-2 text-zinc-700">28</span>
-                <span className="py-2 text-zinc-700">29</span>
-                <span className="py-2 text-zinc-700">30</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">1</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">2</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">3</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">4</span>
-                
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">5</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">6</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">7</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">8</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">9</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">10</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">11</span>
-                
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">12</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">13</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">14</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">15</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">16</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">17</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">18</span>
-                
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">19</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">20</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">21</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">22</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">23</span>
-                <span className="py-2 font-black border border-primary/50 bg-primary/20 text-primary rounded-lg shadow-[0_0_10px_rgba(204,151,255,0.3)] cursor-pointer">24</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">25</span>
-                
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">26</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">27</span>
-                <span className="py-2 hover:bg-white/10 relative rounded-lg cursor-pointer text-white font-bold transition-colors">
-                  <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full"></span>
-                  28
-                </span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">29</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">30</span>
-                <span className="py-2 hover:bg-white/10 rounded-lg cursor-pointer text-zinc-400 transition-colors">31</span>
-                <span className="py-2 text-zinc-700">1</span>
-              </div>
-            </div>
-
-            {/* Specialist Highlight */}
-            <div className="relative rounded-2xl overflow-hidden aspect-[4/5] group border border-white/10 shadow-lg">
-              <img 
-                alt="Dra. Beatriz Fontana" 
-                className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwCJ8fjhNp-je0E7eklCEF8-j1RtvYYGKrPZ1SA0W5dmDqeI-E48v7z13_WiYg4XDl1EWqPaMeSAkwU-CGxuq8qBqsVERjjuxUJI99CB-ZrF9xO8acuvWRZzUZkZ2aRHPSitluLD8n3unkjSuetORagbAtqXTk-0WeynOQGBG8Vkswh1YXnaByjU7CpkhCZqxc_mzdYOpR181xBdTrN_Wa7cXmREHKLFrYfzkkaASoov7T6XiPI_EDRzXNJB1GOzecK1p6ilYR70-N"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 p-8 w-full">
-                <span className="bg-primary text-black text-[10px] font-black px-3 py-1.5 rounded-full mb-3 inline-block uppercase tracking-widest shadow-[0_0_10px_rgba(204,151,255,0.4)]">Destaque</span>
-                <h5 className="text-2xl font-black font-headline leading-none text-white mb-2">Dra. Beatriz Fontana</h5>
-                <p className="text-sm text-zinc-400 mb-4 font-medium">Especialista em Direito Digital &amp; Tech M&amp;A</p>
-                <div className="h-px w-full bg-white/10 mb-4"></div>
-                <button className="text-xs font-bold text-white hover:text-primary transition-colors uppercase tracking-widest flex items-center gap-2 group-hover:gap-3">
-                  Ver Perfil
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
+        {/* ---------------------------------------------------------------- */}
+        {/* Right column                                                      */}
+        {/* ---------------------------------------------------------------- */}
+        <div className="lg:col-span-4 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150">
+          <MiniCalendar />
+          <SpecialistCard />
         </div>
       </div>
     </PortalShell>

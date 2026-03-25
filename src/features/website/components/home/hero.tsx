@@ -16,7 +16,7 @@ export function Hero() {
           </span>
           <h1 className="text-6xl md:text-8xl font-extrabold font-headline leading-[0.95] tracking-tighter mb-8">
             Justiça para <br />
-            <span className="bg-gradient-to-br from-primary to-primary-dim bg-clip-text text-transparent">
+            <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
               quem trabalha.
             </span>
           </h1>

@@ -1,28 +1,26 @@
-import { Header } from "@/features/website/components/layout/header";
-import { Footer } from "@/features/website/components/layout/footer";
-import { 
-  ArrowRight, 
-  FileSearch, 
-  Terminal, 
-  LineChart, 
-  ChevronRight, 
-  Zap, 
-  ShieldCheck, 
-  Cpu, 
-  Lock, 
-  Network, 
-  Sparkles 
+import { WebsiteShell } from "@/features/website";
+import {
+  ArrowRight,
+  FileSearch,
+  Terminal,
+  LineChart,
+  ChevronRight,
+  Zap,
+  ShieldCheck,
+  Cpu,
+  Lock,
+  Network,
+  Sparkles
 } from "lucide-react";
 
 export default function SolucoesPage() {
   return (
-    <main className="min-h-screen bg-surface text-on-surface font-body selection:bg-primary/30 selection:text-primary overflow-x-hidden">
-      <Header />
+    <WebsiteShell>
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden mt-6">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-background"></div>
+          <div className="absolute inset-0 bg-linear-to-b from-primary/5 via-background to-background"></div>
           <div className="absolute top-1/4 -right-20 w-96 h-96 bg-primary/20 rounded-full blur-[120px]"></div>
           <div className="absolute bottom-1/4 -left-20 w-96 h-96 bg-primary-dim/10 rounded-full blur-[100px]"></div>
         </div>
@@ -33,7 +31,7 @@ export default function SolucoesPage() {
             </span>
             <h1 className="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter leading-[1.1] text-white mb-8">
               Soluções Jurídicas Digitais. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-dim drop-shadow-[0_0_15px_rgba(204,151,255,0.4)]">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-primary-dim drop-shadow-[0_0_15px_rgba(204,151,255,0.4)]">
                 Inteligência que protege seu direito.
               </span>
             </h1>
@@ -57,7 +55,7 @@ export default function SolucoesPage() {
                 className="w-full h-full object-cover mix-blend-luminosity opacity-40 hover:opacity-60 transition-opacity duration-700" 
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvwVrtowJCM1qIqsAVHKMd5BIRCsEY-DAoIGyG0nog8sXrKVPlSnvUwgbS7QKgeI8mC88W0nwnVU_I8r5hgW5aETK3EK0PKddCZUbULimRniA-mdQG_g7t5UPNiYM2q7ZETmtHsQLw0tonkarUxC7E_TOQM-8HyHT_R8_gEF9N8LCH1kJEbgL44cPnqEFcc2tdCorF7uiXU5qbr8-YoX-iM8vTj7X672OlSiFWFMWPxHxsD_c3j6Tp10BXnE9ZylGvZ2hpVX3Ijbsn"
               />
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-tr from-primary/20 to-transparent"></div>
             </div>
           </div>
         </div>
@@ -132,8 +130,8 @@ export default function SolucoesPage() {
             {/* Solution 4: Long Row */}
             <div className="md:col-span-2 group">
               <div className="h-full bg-surface-container rounded-3xl p-8 border border-white/5 hover:border-primary/30 hover:shadow-[0_0_30px_rgba(204,151,255,0.1)] transition-all duration-500 flex items-center gap-12">
-                <div className="hidden md:block w-48 h-48 flex-shrink-0">
-                  <div className="w-full h-full rounded-2xl bg-gradient-to-br from-primary-dim to-surface-container-highest p-[2px]">
+                <div className="hidden md:block w-48 h-48 shrink-0">
+                  <div className="w-full h-full rounded-2xl bg-linear-to-br from-primary-dim to-surface-container-highest p-0.5">
                     <div className="w-full h-full bg-surface-container rounded-2xl flex items-center justify-center">
                       <ShieldCheck className="w-20 h-20 text-primary opacity-80" />
                     </div>
@@ -167,7 +165,7 @@ export default function SolucoesPage() {
               </h2>
               <div className="space-y-8">
                 <div className="flex gap-6">
-                  <div className="flex-shrink-0 w-14 h-14 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-primary shadow-inner shadow-primary/10">
+                  <div className="shrink-0 w-14 h-14 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-primary shadow-inner shadow-primary/10">
                     <Cpu className="w-6 h-6" />
                   </div>
                   <div>
@@ -177,7 +175,7 @@ export default function SolucoesPage() {
                 </div>
                 
                 <div className="flex gap-6">
-                  <div className="flex-shrink-0 w-14 h-14 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-primary shadow-inner shadow-primary/10">
+                  <div className="shrink-0 w-14 h-14 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-primary shadow-inner shadow-primary/10">
                     <Lock className="w-6 h-6" />
                   </div>
                   <div>
@@ -187,7 +185,7 @@ export default function SolucoesPage() {
                 </div>
                 
                 <div className="flex gap-6">
-                  <div className="flex-shrink-0 w-14 h-14 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-primary shadow-inner shadow-primary/10">
+                  <div className="shrink-0 w-14 h-14 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-primary shadow-inner shadow-primary/10">
                     <Network className="w-6 h-6" />
                   </div>
                   <div>
@@ -220,8 +218,8 @@ export default function SolucoesPage() {
       {/* CTA Section */}
       <section className="py-32 relative z-10 border-t border-white/5">
         <div className="max-w-5xl mx-auto px-8">
-          <div className="bg-gradient-to-br from-primary/10 via-surface-container-high to-surface-container rounded-[2rem] p-12 md:p-20 text-center border border-primary/20 relative overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.6)]">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+          <div className="bg-linear-to-br from-primary/10 via-surface-container-high to-surface-container rounded-4xl p-12 md:p-20 text-center border border-primary/20 relative overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.6)]">
+            <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-primary to-transparent"></div>
             <div className="relative z-10 w-full flex flex-col items-center">
               <h2 className="font-headline text-4xl md:text-6xl font-extrabold text-white mb-8 tracking-tight leading-tight">
                 Pronto para a nova era jurídica?
@@ -242,7 +240,6 @@ export default function SolucoesPage() {
         </div>
       </section>
 
-      <Footer />
-    </main>
+    </WebsiteShell>
   );
 }

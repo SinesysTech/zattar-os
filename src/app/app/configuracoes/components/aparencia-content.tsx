@@ -15,7 +15,6 @@ import {
   ThemeScaleSelector,
   ThemeRadiusSelector,
   ContentLayoutSelector,
-  SidebarModeSelector,
   ResetThemeButton,
 } from '@/components/layout/header/theme-customizer';
 
@@ -93,20 +92,6 @@ export function AparenciaContent() {
           </CardContent>
         </Card>
 
-        {/* Card: Modo da Barra Lateral (apenas desktop) */}
-        <Card className="hidden lg:block">
-          <CardHeader>
-            <CardTitle>Modo da Barra Lateral</CardTitle>
-            <CardDescription>Barra lateral expandida ou apenas ícones</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <SidebarModeSelector 
-              label="Modo da barra lateral"
-              defaultLabel="Padrão"
-              iconLabel="Ícone"
-            />
-          </CardContent>
-        </Card>
       </div>
 
       {/* Card: Botão de Reset */}

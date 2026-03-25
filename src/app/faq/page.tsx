@@ -1,11 +1,10 @@
-import { Header } from "@/features/website/components/layout/header";
-import { Footer } from "@/features/website/components/layout/footer";
+import { WebsiteShell } from "@/features/website";
 import { Search, ArrowUpRight, Gavel, ArrowRight, Headset } from "lucide-react";
 
 export default function FAQPage() {
   return (
-    <main className="min-h-screen bg-background dark selection:bg-primary/30 text-on-surface font-body overflow-x-hidden pt-28">
-      <Header />
+    <WebsiteShell>
+      <div className="pt-28">
 
       {/* Header / Search Area */}
       <header className="pt-16 pb-12 px-8 max-w-6xl mx-auto mt-6">
@@ -14,7 +13,7 @@ export default function FAQPage() {
             Central de Ajuda
           </span>
           <h2 className="text-5xl md:text-7xl font-headline font-extrabold tracking-tighter text-white">
-            Como podemos <span className="text-transparent bg-clip-text bg-gradient-to-br from-primary to-primary-dim">ajudar hoje?</span>
+            Como podemos <span className="text-transparent bg-clip-text bg-linear-to-br from-primary to-primary-dim">ajudar hoje?</span>
           </h2>
           <p className="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
             Encontre respostas rápidas para suas dúvidas jurídicas ou navegue pelas categorias para entender seus direitos com clareza.
@@ -124,7 +123,7 @@ export default function FAQPage() {
         {/* Sidebar/Featured Column */}
         <div className="md:col-span-4 space-y-8">
           {/* Tech Feature Card */}
-          <div className="bg-gradient-to-br from-primary/20 to-transparent p-8 rounded-3xl border border-primary/20 overflow-hidden relative shadow-lg">
+          <div className="bg-linear-to-br from-primary/20 to-transparent p-8 rounded-3xl border border-primary/20 overflow-hidden relative shadow-lg">
             <div className="relative z-10">
               <h4 className="text-xl font-headline font-bold text-white mb-4">Análise em Tempo Real</h4>
               <p className="text-on-surface-variant text-sm mb-6 leading-relaxed">
@@ -185,10 +184,10 @@ export default function FAQPage() {
             </button>
           </div>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent pointer-events-none opacity-50"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-background to-transparent pointer-events-none opacity-50"></div>
       </section>
 
-      <Footer />
-    </main>
+      </div>
+    </WebsiteShell>
   );
 }

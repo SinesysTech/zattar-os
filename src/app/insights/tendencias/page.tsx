@@ -1,12 +1,11 @@
-import { Header } from "@/features/website/components/layout/header";
-import { Footer } from "@/features/website/components/layout/footer";
+import { WebsiteShell } from "@/features/website";
 import Link from "next/link";
 import { Search, ArrowRight } from "lucide-react";
 
 export default function InsightsTendenciasPage() {
   return (
-    <main className="min-h-screen bg-surface text-on-surface font-body selection:bg-primary/30 overflow-x-hidden pt-28">
-      <Header />
+    <WebsiteShell>
+      <div className="pt-28">
 
       <div className="pt-16 pb-24 px-6 md:px-12 max-w-7xl mx-auto mt-6">
         {/* Hero Featured Section */}
@@ -18,18 +17,18 @@ export default function InsightsTendenciasPage() {
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkY_PQMsB6J3Thp9DKMB-sB1YnekGjAyLokayJ0RMPTGllsxihfQguYGzGGFBr3a6C361MVtXzWZZnZ8FxCrUrTjk190U_UrxEbnRMhyk4lD1pYCd2kGQHg6BqBhqnhsQ9nK-r5OTtaxjpUxE6Py_hvgSiMeaJVYdcLFZ-eg0mL40vdgSGagQboSA1nEPkBKZWBn3AgprfPHqDTniX6QT_ohz_a_hmgUi1DPPGln8Sunl4TtwMqvbh8bEEUuKd7wkK07C7DTl6cK_T"
             />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/60 to-transparent flex flex-col justify-end p-8 md:p-16">
+          <div className="absolute inset-0 bg-linear-to-t from-surface via-surface/60 to-transparent flex flex-col justify-end p-8 md:p-16">
             <span className="text-primary font-label text-sm uppercase tracking-[0.2em] mb-4 flex items-center gap-2 drop-shadow-md">
               <span className="w-8 h-px bg-primary shadow-[0_0_10px_rgba(204,151,255,0.8)]"></span> Artigo em Destaque
             </span>
             <div className="max-w-3xl">
               <h1 className="text-4xl md:text-6xl font-headline font-extrabold tracking-tighter mb-6 leading-tight text-white drop-shadow-lg">
                 A Ascensão da IA Generativa na <br className="hidden md:block"/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-dim drop-shadow-[0_0_15px_rgba(204,151,255,0.4)]">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-primary-dim drop-shadow-[0_0_15px_rgba(204,151,255,0.4)]">
                   Análise Jurisprudencial
                 </span>
               </h1>
-              <p className="text-zinc-300 text-lg md:text-xl mb-8 font-light max-w-2xl leading-relaxed drop-shadow-md">
+              <p className="text-on-surface text-lg md:text-xl mb-8 font-light max-w-2xl leading-relaxed drop-shadow-md">
                 Como algoritmos de processamento de linguagem natural estão transformando décadas de precedentes em insights estratégicos instantâneos para grandes firmas.
               </p>
               <button className="group/btn flex items-center gap-4 text-primary font-bold hover:gap-6 transition-all duration-300">
@@ -166,13 +165,13 @@ export default function InsightsTendenciasPage() {
         </div>
 
         {/* Newsletter Section */}
-        <section className="mt-32 bg-gradient-to-br from-surface-container-high to-surface-container p-12 md:p-16 rounded-[2.5rem] border border-white/5 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden shadow-2xl">
+        <section className="mt-32 bg-linear-to-br from-surface-container-high to-surface-container p-12 md:p-16 rounded-[2.5rem] border border-white/5 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden shadow-2xl">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-dim/10 rounded-full blur-[80px] pointer-events-none"></div>
           
           <div className="max-w-xl relative z-10">
             <h2 className="text-3xl md:text-5xl font-headline font-extrabold mb-6 tracking-tight text-white leading-tight">
-              Assine nossa <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-dim">Curadoria Jurídica</span>
+              Assine nossa <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-primary-dim">Curadoria Jurídica</span>
             </h2>
             <p className="text-on-surface-variant text-lg leading-relaxed">
               Receba quinzenalmente as análises mais profundas sobre tecnologia, leis trabalhistas materiais e o futuro da jurisprudência digital diretamente no seu e-mail.
@@ -193,7 +192,7 @@ export default function InsightsTendenciasPage() {
         </section>
       </div>
 
-      <Footer />
-    </main>
+            </div>
+    </WebsiteShell>
   );
 }
