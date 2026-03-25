@@ -17,6 +17,7 @@ import { useVisualizacaoActions } from '../actions/visualizacao.actions';
 import { useCopilotRouteContext } from '../hooks/use-copilot-route-context';
 import { useCopilotDomainContext } from '../hooks/use-copilot-domain-context';
 import { useCopilotRenderActions } from './copilot-render-actions';
+import { useCopilotHITLActions } from './copilot-hitl-actions';
 
 interface CopilotGlobalActionsProps {
   /** Função para toggle da sidebar (opcional) */
@@ -40,6 +41,9 @@ export function CopilotGlobalActions({ onToggleSidebar }: CopilotGlobalActionsPr
 
   // Registra ações com Generative UI (render inline no chat)
   useCopilotRenderActions();
+
+  // Registra ações com confirmação obrigatória (Human-in-the-Loop)
+  useCopilotHITLActions();
 
   // Componente não renderiza nada visualmente
   return null;
