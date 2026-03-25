@@ -8,4 +8,5 @@
  */
 
 export { CopilotGlobalActions } from './copilot-global-actions';
-export { CopilotProviderWrapper } from './copilot-provider-wrapper';
+export { useCopilotRenderActions } from './copilot-render-actions';
+export { useCopilotHITLActions } from './copilot-hitl-actions';
