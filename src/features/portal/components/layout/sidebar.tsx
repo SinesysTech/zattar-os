@@ -12,10 +12,17 @@ import {
   Plus,
   HelpCircle,
   LogOut,
-  Calculator
+  Calculator,
+  Sun,
+  Moon
 } from "lucide-react";
 
-export function PortalSidebar() {
+interface PortalSidebarProps {
+  onToggleTheme?: () => void;
+  currentTheme?: "light" | "dark";
+}
+
+export function PortalSidebar({ onToggleTheme, currentTheme = "light" }: PortalSidebarProps) {
   const pathname = usePathname();
 
   const navItems = [
@@ -29,7 +36,7 @@ export function PortalSidebar() {
   ];
 
   return (
-    <aside className="hidden lg:flex h-screen w-64 fixed left-0 top-0 border-r border-white/5 bg-surface-container-lowest flex-col py-8 px-4 z-50 shadow-[20px_0_40px_rgba(0,0,0,0.6)] font-headline tracking-tight antialiased">
+    <aside className="hidden lg:flex h-screen w-64 fixed left-0 top-0 border-r border-border bg-card flex-col py-8 px-4 z-50 shadow-[20px_0_40px_rgba(0,0,0,0.1)] font-headline tracking-tight antialiased">
       <div className="mb-10 px-2">
         <h1 className="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-linear-to-r from-primary to-primary-dim uppercase">
           Zattar Portal
@@ -51,7 +58,7 @@ export function PortalSidebar() {
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                 isActive
                   ? "text-primary font-bold border-r-2 border-primary bg-primary/10"
-                  : "text-on-surface-variant hover:text-on-surface hover:bg-white/5 font-medium"
+                  : "text-on-surface-variant hover:text-on-surface hover:bg-accent font-medium"
               }`}
             >
               <Icon className={`w-5 h-5 ${isActive ? "text-primary" : ""}`} />
@@ -62,10 +69,21 @@ export function PortalSidebar() {
       </nav>
 
       <div className="mt-auto pt-8 space-y-1">
-        <button className="w-full bg-primary hover:bg-primary-container text-on-primary-fixed font-bold py-3 rounded-lg mb-6 flex items-center justify-center gap-2 active:scale-95 transition-all shadow-[0_4px_20px_rgba(168,85,247,0.3)] cursor-pointer">
+        <button className="w-full bg-primary hover:bg-primary-container text-primary-foreground font-bold py-3 rounded-lg mb-4 flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer">
           <Plus className="w-5 h-5" />
           <span>Novo Pedido</span>
         </button>
+
+        {onToggleTheme && (
+          <button
+            onClick={onToggleTheme}
+            className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-accent transition-all duration-200 font-medium w-full cursor-pointer"
+            aria-label={currentTheme === "light" ? "Ativar modo escuro" : "Ativar modo claro"}
+          >
+            {currentTheme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+            <span>{currentTheme === "light" ? "Modo Escuro" : "Modo Claro"}</span>
+          </button>
+        )}
 
         <Link
           href="/portal/suporte"
