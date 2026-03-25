@@ -127,7 +127,7 @@ function dotColorClass(status: TimelineStatus): string {
     case "current":
       return "bg-primary";
     case "pending":
-      return "bg-zinc-600 border-2 border-zinc-500";
+      return "bg-outline border-2 border-outline-variant";
   }
 }
 
@@ -149,7 +149,7 @@ function statusTextClass(status: TimelineStatus): string {
     case "current":
       return "text-primary";
     case "pending":
-      return "text-zinc-500";
+      return "text-on-surface-variant";
   }
 }
 

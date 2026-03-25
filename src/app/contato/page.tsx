@@ -132,9 +132,9 @@ export default function ContatoPage() {
 
           {/* Map Section */}
           <div className="mt-12 w-full h-[500px] relative rounded-3xl overflow-hidden group">
-            <div className="absolute inset-0 bg-zinc-900/40 z-10 pointer-events-none transition-opacity duration-500 group-hover:opacity-20"></div>
+            <div className="absolute inset-0 bg-surface/40 z-10 pointer-events-none transition-opacity duration-500 group-hover:opacity-20"></div>
             {/* Visual placeholder for the map with tech aesthetic */}
-            <div className="w-full h-full bg-zinc-950 flex items-center justify-center overflow-hidden relative">
+            <div className="w-full h-full bg-surface-container-lowest flex items-center justify-center overflow-hidden relative">
               <img 
                 alt="Dark stylized aerial view of a futuristic city grid with purple light trails" 
                 className="w-full h-full object-cover grayscale brightness-50 opacity-60" 

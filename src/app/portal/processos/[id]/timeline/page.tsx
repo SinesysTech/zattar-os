@@ -116,7 +116,7 @@ function dotBg(status: EntryStatus): string {
     case "current":
       return "bg-primary ring-primary/20";
     case "pending":
-      return "bg-zinc-700 border-2 border-zinc-600 ring-transparent";
+      return "bg-outline-variant border-2 border-outline ring-transparent";
   }
 }
 
@@ -127,7 +127,7 @@ function statusBadgeClass(status: EntryStatus): string {
     case "current":
       return "bg-primary/10 text-primary border-primary/20";
     case "pending":
-      return "bg-zinc-800 text-zinc-500 border-zinc-700";
+      return "bg-surface-container-high text-on-surface-variant border-outline-variant";
   }
 }
 
