@@ -308,7 +308,7 @@ export default function DashboardPortalPage() {
                 Ação Trabalhista vs. Nexos Systems Corp.
               </h4>
               <p className="text-sm text-on-surface-variant italic border-l-2 border-primary/50 pl-3 py-1 mb-6">
-                "Aguardando publicação do acórdão no TST — previsão para os próximos 3 dias úteis."
+                &quot;Aguardando publicação do acórdão no TST - previsão para os próximos 3 dias úteis.&quot;
               </p>
 
               <div className="space-y-2">
