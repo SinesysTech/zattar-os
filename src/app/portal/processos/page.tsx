@@ -2,10 +2,7 @@
 
 import { useState } from "react";
 import { PortalShell } from "@/features/portal";
-import { EditorialHeader } from "@/features/website/components/sections/editorial-header";
-import { FilterChips } from "@/features/website/components/shared/filter-chips";
-import { StatCard } from "@/features/website";
-import { PhaseStepper } from "@/features/website";
+import { EditorialHeader, FilterChips, PhaseStepper, StatCard } from "@/features/website";
 import type { PhaseStep } from "@/features/website";
 import {
   Scale,

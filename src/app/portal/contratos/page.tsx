@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { PortalShell } from "@/features/portal";
-import { EditorialHeader } from "@/features/website/components/sections/editorial-header";
-import { FilterChips } from "@/features/website";
+import { EditorialHeader, FilterChips } from "@/features/website";
 import {
   FileText,
   PlusCircle,
