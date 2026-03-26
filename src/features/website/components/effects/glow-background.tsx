@@ -14,8 +14,8 @@ export function GlowBackground({ variant = "hero", className }: GlowBackgroundPr
   if (variant === "hero") {
     return (
       <div className={cn("absolute inset-0 z-0 pointer-events-none", className)}>
-        <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-primary-dim/10 rounded-full blur-[100px]" />
+        <div className="absolute top-[-10%] right-[-10%] w-150 h-150 bg-primary/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-100 h-100 bg-primary-dim/10 rounded-full blur-[100px]" />
       </div>
     );
   }

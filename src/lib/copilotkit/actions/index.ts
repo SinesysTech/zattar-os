@@ -1,19 +1,14 @@
 /**
  * CopilotKit Actions - Index
  *
- * Re-exporta todos os hooks de ações e tipos
- *
- * @example
- * import { useNavegacaoActions, useProcessosActions } from '@/lib/copilotkit/actions';
+ * Re-exporta hooks de ações frontend (operam no DOM/router).
+ * Ações de dados (processos, audiências, expedientes, workflow) foram
+ * removidas — agora são servidas via MCP tools backend no BuiltInAgent v2.
  */
 
 // Tipos
 export * from './types';
 
-// Hooks de ações
+// Hooks de ações frontend (navegação + visualização)
 export { useNavegacaoActions } from './navegacao.actions';
-export { useProcessosActions } from './processos.actions';
-export { useAudienciasActions } from './audiencias.actions';
-export { useExpedientesActions } from './expedientes.actions';
-export { useWorkflowActions } from './workflow.actions';
 export { useVisualizacaoActions } from './visualizacao.actions';

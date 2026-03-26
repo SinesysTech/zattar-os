@@ -12,7 +12,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { useCopilotReadable } from '@copilotkit/react-core';
+import { useAgentContext } from '@copilotkit/react-core/v2';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
@@ -703,7 +703,7 @@ export function ProcessosTableWrapper({
   }, [searchParams]);
 
   // ── Copilot: expor contexto de processos ──
-  useCopilotReadable({
+  useAgentContext({
     description: 'Dados da tela de processos: total, filtros ativos e página atual',
     value: {
       total_processos: total,

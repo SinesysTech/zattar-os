@@ -8,7 +8,7 @@
  */
 
 import * as React from 'react';
-import { useCopilotReadable } from '@copilotkit/react-core';
+import { useAgentContext } from '@copilotkit/react-core/v2';
 import { format, startOfMonth, endOfMonth, startOfYear, endOfYear, startOfQuarter, endOfQuarter, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
@@ -626,7 +626,7 @@ export default function DREClient() {
   const { isExporting, exportarPDF, exportarCSV } = useExportarDRE();
 
   // ── Copilot: expor contexto do DRE ──
-  useCopilotReadable({
+  useAgentContext({
     description: 'Dados do DRE na tela: período selecionado e resumo financeiro',
     value: {
       periodo_selecionado: {

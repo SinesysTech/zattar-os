@@ -18,7 +18,7 @@
 
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { useCopilotReadable } from '@copilotkit/react-core';
+import { useAgentContext } from '@copilotkit/react-core/v2';
 import { Settings } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -109,7 +109,7 @@ export function AudienciasContent({
   const weekNav = useWeekNavigator();
 
   // ── Copilot: expor contexto de audiências ──
-  useCopilotReadable({
+  useAgentContext({
     description: 'Contexto da tela de audiências: visualização atual e semana selecionada',
     value: {
       visualizacao_atual: visualizacao,

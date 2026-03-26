@@ -10,7 +10,7 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { AlertCircle } from 'lucide-react';
-import { useCopilotReadable } from '@copilotkit/react-core';
+import { useAgentContext } from '@copilotkit/react-core/v2';
 import {
   useProcessoTimeline,
   type TimelineUnificadaMetadata,
@@ -195,10 +195,10 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
     [isLoading, processo, timeline]
   );
 
-  useCopilotReadable({
+  useAgentContext({
     description:
       'Contexto completo do processo jurídico aberto na tela. Contém metadados (partes, juízo, status) e a timeline cronológica de movimentações e documentos.',
-    value: copilotContext,
+    value: JSON.parse(JSON.stringify(copilotContext)),
   });
 
   // Loading inicial

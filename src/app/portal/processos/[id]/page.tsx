@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { PortalShell } from "@/features/portal/components/layout/portal-shell";
+import { PortalShell } from "@/features/portal";
 import { EditorialHeader, PhaseStepper } from "@/features/website";
 import type { PhaseStep } from "@/features/website";
 import {
@@ -225,7 +225,7 @@ function VerticalTimeline({ steps }: { steps: TimelineStep[] }) {
                 aria-hidden="true"
               />
               {!isLast && (
-                <div className="w-px flex-1 bg-white/5 min-h-[2.5rem] mt-1" />
+                <div className="w-px flex-1 bg-white/5 min-h-10 mt-1" />
               )}
             </div>
 

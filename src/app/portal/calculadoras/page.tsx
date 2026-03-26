@@ -1,6 +1,6 @@
 "use client";
 
-import { PortalShell } from "@/features/portal/components/layout/portal-shell";
+import { PortalShell } from "@/features/portal";
 import Link from "next/link";
 import { Calculator, Calendar, Clock, DollarSign } from "lucide-react";
 

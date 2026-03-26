@@ -16,7 +16,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCopilotReadable } from '@copilotkit/react-core';
+import { useAgentContext } from '@copilotkit/react-core/v2';
 import { Settings, List, Kanban } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
@@ -184,7 +184,7 @@ export function ContratosTableWrapper({
   const buscaDebounced = useDebounce(busca, 500);
 
   // ── Copilot: expor contexto de contratos ──
-  useCopilotReadable({
+  useAgentContext({
     description: 'Dados da tela de contratos: total, filtros ativos e página atual',
     value: {
       total_contratos: total,

@@ -8,10 +8,10 @@
  * 2. Sugestões de ação contextuais (chips clicáveis no chat)
  *
  * Faz o Pedrinho se comportar como agente especializado em cada módulo
- * sem precisar de CoAgents/LangGraph — funciona 100% no v1.54.
+ * usando hooks v2 nativos.
  */
 
-import { useCopilotAdditionalInstructions, useCopilotChatSuggestions } from '@copilotkit/react-core';
+import { useAgentContext, useConfigureSuggestions } from '@copilotkit/react-core/v2';
 import { usePathname } from 'next/navigation';
 
 // ─── Instruções de Domínio ──────────────────────────────────────────
@@ -192,21 +192,19 @@ export function useCopilotDomainContext() {
   const pathname = usePathname();
   const moduleKey = getModuleKey(pathname || '');
 
-  // Instruções de especialista para o módulo atual
+  // Instruções de especialista via useAgentContext (v2)
+  // O agent recebe como contexto e o system prompt instrui a seguir
   const instructions = DOMAIN_INSTRUCTIONS[moduleKey] || '';
 
-  useCopilotAdditionalInstructions(
-    {
-      instructions,
-      available: instructions ? 'enabled' : 'disabled',
-    },
-    [instructions]
-  );
+  useAgentContext({
+    description: 'Instruções de especialista para o módulo atual — siga estas diretrizes ao responder',
+    value: instructions || 'Nenhuma instrução adicional para este módulo.',
+  });
 
-  // Sugestões contextuais para o módulo atual
+  // Sugestões contextuais para o módulo atual (v2)
   const suggestions = DOMAIN_SUGGESTIONS[moduleKey] || DEFAULT_SUGGESTIONS;
 
-  useCopilotChatSuggestions(
+  useConfigureSuggestions(
     {
       suggestions: suggestions.map((s) => ({
         title: s.title,

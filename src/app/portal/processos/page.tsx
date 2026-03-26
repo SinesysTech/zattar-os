@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PortalShell } from "@/features/portal/components/layout/portal-shell";
+import { PortalShell } from "@/features/portal";
 import { EditorialHeader } from "@/features/website/components/sections/editorial-header";
 import { FilterChips } from "@/features/website/components/shared/filter-chips";
 import { StatCard } from "@/features/website";
