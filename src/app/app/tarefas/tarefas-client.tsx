@@ -8,7 +8,7 @@
 "use client";
 
 import * as React from "react";
-import { useCopilotReadable } from "@copilotkit/react-core";
+import { useAgentContext } from "@copilotkit/react-core/v2";
 import type { TarefaDisplayItem, Quadro } from "./domain";
 import { useTarefaStore } from "./store";
 import { DataTable } from "./components/data-table";
@@ -43,7 +43,7 @@ export function TarefasClient({ data, quadros }: TarefasClientProps) {
         return { total: data.length, todo, em_progresso: emProgresso, concluidas, canceladas, backlog, atrasadas, quadros: quadros.length };
     }, [data, quadros]);
 
-    useCopilotReadable({
+    useAgentContext({
         description: 'Resumo das tarefas do usuário: totais por status e contagem de atrasadas',
         value: tarefasResumo,
     });

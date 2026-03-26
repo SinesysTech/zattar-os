@@ -29,7 +29,7 @@ export function PortalHeader() {
           </button>
         </div>
 
-        <div className="h-8 w-[1px] bg-border mx-2"></div>
+        <div className="h-8 w-px bg-border mx-2"></div>
 
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">

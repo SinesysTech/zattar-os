@@ -7,7 +7,7 @@
  * podendo dar respostas mais contextualizadas e sugerir ações relevantes.
  */
 
-import { useCopilotReadable } from '@copilotkit/react-core';
+import { useAgentContext } from '@copilotkit/react-core/v2';
 import { usePathname } from 'next/navigation';
 
 /**
@@ -68,7 +68,7 @@ export function useCopilotRouteContext() {
 
   const routeInfo = getModuleFromPath(pathname || '/app/dashboard');
 
-  useCopilotReadable({
+  useAgentContext({
     description: 'Contexto de navegação: módulo e página atual do usuário no sistema',
     value: {
       modulo_atual: routeInfo.label,

@@ -13,7 +13,7 @@ import {
   ArrowUpRight,
   type LucideIcon,
 } from 'lucide-react';
-import { useCopilotReadable } from '@copilotkit/react-core';
+import { useAgentContext } from '@copilotkit/react-core/v2';
 import Link from 'next/link';
 import {
   Card,
@@ -501,9 +501,9 @@ export function DashboardUnificada({
     };
   }, [data, isAdmin, currentUserName, initialTarefas, initialLembretes, isLoading]);
 
-  useCopilotReadable({
+  useAgentContext({
     description: 'Resumo do dashboard: métricas do escritório, tarefas e lembretes',
-    value: dashboardContext,
+    value: JSON.parse(JSON.stringify(dashboardContext)),
   });
 
   if (isLoading) return <DashboardSkeleton />;

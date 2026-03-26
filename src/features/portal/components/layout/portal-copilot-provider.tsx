@@ -8,14 +8,12 @@
  * System prompt do portal vai via BuiltInAgent no backend.
  */
 
-import { CopilotKit } from '@copilotkit/react-core';
-import { CopilotPopup } from '@copilotkit/react-core/v2';
-import { useCopilotChatSuggestions } from '@copilotkit/react-core';
+import { CopilotKitProvider, CopilotPopup, useConfigureSuggestions } from '@copilotkit/react-core/v2';
 import '@copilotkit/react-core/v2/styles.css';
 import type { ReactNode } from 'react';
 
 function PortalSuggestions() {
-  useCopilotChatSuggestions({
+  useConfigureSuggestions({
     suggestions: [
       { title: 'Meus processos', message: 'Quais são meus processos em andamento?' },
       { title: 'Próximas audiências', message: 'Tenho audiências marcadas?' },
@@ -27,7 +25,7 @@ function PortalSuggestions() {
 
 export function PortalCopilotProvider({ children }: { children: ReactNode }) {
   return (
-    <CopilotKit
+    <CopilotKitProvider
       runtimeUrl="/api/copilotkit"
       publicApiKey={process.env.NEXT_PUBLIC_COPILOTKIT_API_KEY}
     >
@@ -41,6 +39,6 @@ export function PortalCopilotProvider({ children }: { children: ReactNode }) {
         className="portal-copilot-popup"
       />
       {children}
-    </CopilotKit>
+    </CopilotKitProvider>
   );
 }

@@ -1,4 +1,4 @@
-import { PortalShell } from "@/features/portal/components/layout/portal-shell";
+import { PortalShell } from "@/features/portal";
 import { EditorialHeader } from "@/features/website";
 import {
   Calendar,

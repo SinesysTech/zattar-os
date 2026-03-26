@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { PortalShell } from "@/features/portal/components/layout/portal-shell";
-import { EditorialHeader } from "@/features/website/components/sections/editorial-header";
+import { PortalShell } from "@/features/portal";
+import { EditorialHeader } from "@/features/website";
 import { FilterChips } from "@/features/website";
 import {
   PlusCircle,
@@ -152,7 +152,7 @@ export default function FinanceiroPage() {
             </div>
           </div>
           <div>
-            <h3 className="text-3xl font-black font-headline tracking-tighter text-white font-mono tabular-nums">
+            <h3 className="text-3xl font-black font-headline tracking-tighter text-white tabular-nums">
               R$ 142.500,00
             </h3>
             <p className="text-emerald-400 text-xs flex items-center gap-1 mt-2 font-semibold">
@@ -178,7 +178,7 @@ export default function FinanceiroPage() {
             <p className="text-xs text-on-surface-variant uppercase tracking-widest font-bold mb-1">
               15 Abr 2026
             </p>
-            <h3 className="text-3xl font-black font-headline tracking-tighter text-white font-mono tabular-nums mb-4">
+            <h3 className="text-3xl font-black font-headline tracking-tighter text-white tabular-nums mb-4">
               R$ 3.500,00
             </h3>
             <button className="bg-primary text-on-primary-fixed px-4 py-2 rounded-lg text-sm font-semibold hover:brightness-110 transition-all active:scale-95">
@@ -198,7 +198,7 @@ export default function FinanceiroPage() {
             </div>
           </div>
           <div>
-            <h3 className="text-3xl font-black font-headline tracking-tighter text-emerald-400 font-mono tabular-nums">
+            <h3 className="text-3xl font-black font-headline tracking-tighter text-emerald-400 tabular-nums">
               +23.8%
             </h3>
             <p className="text-on-surface-variant text-xs mt-2 font-semibold">
@@ -264,7 +264,7 @@ export default function FinanceiroPage() {
                   className={
                     month.active
                       ? "w-full rounded-t-md bg-linear-to-t from-primary-dim to-primary shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all"
-                      : "w-full rounded-t-md bg-white/[0.06] hover:bg-white/10 transition-all"
+                      : "w-full rounded-t-md bg-white/6 hover:bg-white/10 transition-all"
                   }
                   style={{ height: month.height }}
                 />
@@ -351,7 +351,7 @@ export default function FinanceiroPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left min-w-[640px]">
+          <table className="w-full text-left min-w-160">
             <thead>
               <tr className="bg-surface-container-low">
                 <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">

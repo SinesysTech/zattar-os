@@ -1,12 +1,14 @@
 'use client';
 
 /**
- * CopilotKit Actions - Navegação
+ * CopilotKit Actions - Navegação (v2)
  *
- * Ações para navegação entre páginas do sistema
+ * Ações para navegação entre páginas do sistema.
+ * Usa useFrontendTool com Zod schemas.
  */
 
-import { useCopilotAction } from '@copilotkit/react-core';
+import { useFrontendTool } from '@copilotkit/react-core/v2';
+import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 
 import type { ModuloSistema } from './types';
@@ -34,26 +36,15 @@ export function useNavegacaoActions() {
   };
 
   // Ação: Navegar para página
-  useCopilotAction({
+  useFrontendTool({
     name: 'navegarPara',
     description:
       'Navega para uma página específica do sistema Sinesys. Use para ir a módulos como processos, audiências, expedientes, dashboard, etc.',
-    parameters: [
-      {
-        name: 'pagina',
-        type: 'string',
-        description:
-          'Módulo/página de destino: dashboard, processos, audiencias, expedientes, acordos-condenacoes, contratos, assistentes, clientes, usuarios, captura, financeiro, rh',
-        required: true,
-      },
-      {
-        name: 'id',
-        type: 'number',
-        description: 'ID do registro específico para ver detalhes (opcional)',
-        required: false,
-      },
-    ],
-    handler: async ({ pagina, id }: { pagina: string; id?: number }) => {
+    parameters: z.object({
+      pagina: z.string().describe('Módulo/página de destino: dashboard, processos, audiencias, expedientes, acordos-condenacoes, contratos, assistentes, clientes, usuarios, captura, financeiro, rh'),
+      id: z.number().optional().describe('ID do registro específico para ver detalhes (opcional)'),
+    }),
+    handler: async ({ pagina, id }) => {
       const modulo = pagina.toLowerCase() as ModuloSistema;
       const rotaBase = rotasModulos[modulo];
 
@@ -61,9 +52,7 @@ export function useNavegacaoActions() {
         return `Página "${pagina}" não encontrada. Páginas disponíveis: ${Object.keys(rotasModulos).join(', ')}`;
       }
 
-      // Se tem ID, navega para detalhes
       if (id) {
-        // Ajusta rota para detalhes baseado no módulo
         const rotaDetalhes = modulo === 'audiencias' || modulo === 'expedientes'
           ? `/${modulo.replace('-', '/')}/${id}`
           : `/${modulo}/${id}`;
@@ -77,31 +66,14 @@ export function useNavegacaoActions() {
   });
 
   // Ação: Mudar visualização de período
-  useCopilotAction({
+  useFrontendTool({
     name: 'mudarVisualizacaoPeriodo',
-    description:
-      'Altera a visualização de audiências, expedientes ou acordos entre semana, mês, ano ou lista',
-    parameters: [
-      {
-        name: 'modulo',
-        type: 'string',
-        description: 'Módulo: audiencias, expedientes ou acordos-condenacoes',
-        required: true,
-      },
-      {
-        name: 'visualizacao',
-        type: 'string',
-        description: 'Tipo de visualização: semana, mes, ano ou lista',
-        required: true,
-      },
-    ],
-    handler: async ({
-      modulo,
-      visualizacao,
-    }: {
-      modulo: string;
-      visualizacao: string;
-    }) => {
+    description: 'Altera a visualização de audiências, expedientes ou acordos entre semana, mês, ano ou lista',
+    parameters: z.object({
+      modulo: z.string().describe('Módulo: audiencias, expedientes ou acordos-condenacoes'),
+      visualizacao: z.string().describe('Tipo de visualização: semana, mes, ano ou lista'),
+    }),
+    handler: async ({ modulo, visualizacao }) => {
       const modulosPermitidos = ['audiencias', 'expedientes', 'acordos-condenacoes'];
       const visualizacoesPermitidas = ['semana', 'mes', 'ano', 'lista'];
 
@@ -119,10 +91,10 @@ export function useNavegacaoActions() {
   });
 
   // Ação: Voltar para página anterior
-  useCopilotAction({
+  useFrontendTool({
     name: 'voltarPagina',
     description: 'Volta para a página anterior no histórico de navegação',
-    parameters: [],
+    parameters: z.object({}),
     handler: async () => {
       router.back();
       return 'Voltando para página anterior';
@@ -130,10 +102,10 @@ export function useNavegacaoActions() {
   });
 
   // Ação: Ir para o Dashboard
-  useCopilotAction({
+  useFrontendTool({
     name: 'irParaDashboard',
     description: 'Navega diretamente para o dashboard principal',
-    parameters: [],
+    parameters: z.object({}),
     handler: async () => {
       router.push('/dashboard');
       return 'Navegando para o dashboard';
