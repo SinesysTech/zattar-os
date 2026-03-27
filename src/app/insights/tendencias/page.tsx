@@ -10,7 +10,7 @@ export default function InsightsTendenciasPage() {
       <div className="pt-16 pb-24 px-6 md:px-12 max-w-7xl mx-auto mt-6">
         {/* Hero Featured Section */}
         <section className="relative mb-24 rounded-[2.5rem] overflow-hidden group shadow-2xl">
-          <div className="aspect-[16/7] md:aspect-[21/9] w-full bg-surface-container overflow-hidden">
+          <div className="aspect-16/7 md:aspect-21/9 w-full bg-surface-container overflow-hidden">
             <img 
               alt="Tribunal futurista com interfaces holográficas" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-60 mix-blend-luminosity hover:mix-blend-normal" 
@@ -60,7 +60,7 @@ export default function InsightsTendenciasPage() {
           <div className="relative w-full md:w-80 group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors w-5 h-5" />
             <input 
-              className="w-full bg-surface-container-high border border-white/5 focus:border-primary/50 flex-grow rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-outline focus:ring-1 focus:ring-primary/50 transition-all outline-none shadow-inner" 
+              className="w-full bg-surface-container-high border border-white/5 focus:border-primary/50 grow rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-outline focus:ring-1 focus:ring-primary/50 transition-all outline-none shadow-inner" 
               placeholder="Pesquisar insights..." 
               type="text"
             />
@@ -70,7 +70,7 @@ export default function InsightsTendenciasPage() {
         {/* Bento Grid Articles */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Big Card 1 */}
-          <article className="md:col-span-8 group bg-surface-container rounded-[2rem] overflow-hidden border border-white/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgba(204,151,255,0.1)] flex flex-col md:flex-row h-full">
+          <article className="md:col-span-8 group bg-surface-container rounded-4xl overflow-hidden border border-white/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgba(204,151,255,0.1)] flex flex-col md:flex-row h-full">
             <div className="md:w-1/2 overflow-hidden bg-surface-container-highest">
               <img 
                 alt="Direito Digital" 
@@ -98,7 +98,7 @@ export default function InsightsTendenciasPage() {
           </article>
 
           {/* Small Card 1 */}
-          <article className="md:col-span-4 group bg-surface-container rounded-[2rem] p-8 border border-white/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgba(204,151,255,0.1)] flex flex-col justify-between">
+          <article className="md:col-span-4 group bg-surface-container rounded-4xl p-8 border border-white/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgba(204,151,255,0.1)] flex flex-col justify-between">
             <div>
               <span className="bg-primary/10 border border-primary/20 text-primary px-4 py-1.5 rounded-full text-xs font-bold mb-6 inline-block uppercase tracking-wider">IA Jurídica</span>
               <h3 className="text-xl font-headline font-bold text-white mb-4 group-hover:text-primary transition-colors leading-tight">
@@ -117,7 +117,7 @@ export default function InsightsTendenciasPage() {
           </article>
 
           {/* Small Card 2 */}
-          <article className="md:col-span-4 group bg-surface-container rounded-[2rem] p-8 border border-white/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgba(204,151,255,0.1)] flex flex-col justify-between">
+          <article className="md:col-span-4 group bg-surface-container rounded-4xl p-8 border border-white/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgba(204,151,255,0.1)] flex flex-col justify-between">
             <div>
               <span className="bg-primary/10 border border-primary/20 text-primary px-4 py-1.5 rounded-full text-xs font-bold mb-6 inline-block uppercase tracking-wider">Trabalhista</span>
               <h3 className="text-xl font-headline font-bold text-white mb-4 group-hover:text-primary transition-colors leading-tight">
@@ -136,7 +136,7 @@ export default function InsightsTendenciasPage() {
           </article>
 
           {/* Big Card 2 */}
-          <article className="md:col-span-8 group bg-surface-container rounded-[2rem] overflow-hidden border border-white/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgba(204,151,255,0.1)] flex flex-col md:flex-row h-full">
+          <article className="md:col-span-8 group bg-surface-container rounded-4xl overflow-hidden border border-white/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgba(204,151,255,0.1)] flex flex-col md:flex-row h-full">
             <div className="md:w-1/2 p-8 lg:p-10 flex flex-col justify-between order-2 md:order-1">
               <div>
                 <span className="bg-primary/10 border border-primary/20 text-primary px-4 py-1.5 rounded-full text-xs font-bold mb-6 inline-block uppercase tracking-wider">Case Study</span>
