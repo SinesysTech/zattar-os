@@ -1075,63 +1075,63 @@
 }
 
 /* =============================================================================
- * COPILOTKIT SIDEBAR - Floating Card Style
+ * COPILOTKIT POPUP - Floating Card Style
  * =============================================================================
- * Refatoração: transforma a sidebar de painel full-height em card flutuante.
- * Overrides das classes internas do @copilotkit/react-ui.
+ * Card flutuante expansível no canto inferior direito.
+ * Usa CopilotPopup (v2 standalone) em vez de CopilotSidebar.
  *
- * Estrutura DOM do CopilotSidebar:
- *   div.copilotKitSidebarContentWrapper
- *     {children}  ← conteúdo do app
- *     div.copilotKitSidebar
- *       div.copilotKitWindow  ← janela de chat
- *         div.copilotKitHeader
- *         div.copilotKitChat
- *
- * @see https://github.com/CopilotKit/CopilotKit/issues/273
+ * Estrutura DOM do CopilotPopup:
+ *   div.copilotKitPopup
+ *     button (toggle button)
+ *     div.copilotKitWindow  ← janela de chat
+ *       div.copilotKitHeader
+ *       div.copilotKitChat
  */
 
-/* --- Layout Fix: neutraliza wrapper que quebra flexbox --- */
-.copilot-sidebar-wrapper {
-  display: contents !important;
+/* --- Toggle Button: pill icon com dois dots --- */
+.copilot-toggle-btn {
+  width: 3.5rem !important;
+  height: 3.5rem !important;
+  border-radius: 1rem !important;
+  background: hsl(var(--background) / 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid hsl(var(--border) / 0.5) !important;
+  box-shadow:
+    0 1px 2px hsl(var(--foreground) / 0.04),
+    0 4px 16px hsl(var(--foreground) / 0.06) !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
 }
 
-.copilot-sidebar-wrapper > div:first-child {
-  display: contents !important;
+.copilot-toggle-btn:hover {
+  box-shadow:
+    0 2px 4px hsl(var(--foreground) / 0.06),
+    0 8px 24px hsl(var(--foreground) / 0.1) !important;
+  transform: scale(1.05) !important;
 }
 
-/* --- Floating Card: overlay (não empurra conteúdo) --- */
-@media (min-width: 640px) {
-  .copilotKitSidebarContentWrapper.sidebarExpanded {
-    margin-right: 0 !important;
-  }
-}
-
-/* --- Window: tall floating card com canvas dots --- */
-.copilotKitSidebar .copilotKitWindow {
+/* --- Window: card flutuante compacto --- */
+:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitWindow {
   border-radius: 1.25rem !important;
   border: 1px solid hsl(var(--border) / 0.5) !important;
   overflow: hidden !important;
+  box-shadow:
+    0 0 0 1px hsl(var(--border) / 0.15),
+    0 1px 2px hsl(var(--foreground) / 0.04),
+    0 4px 16px hsl(var(--foreground) / 0.06),
+    0 12px 48px hsl(var(--foreground) / 0.1) !important;
 }
 
 @media (min-width: 640px) {
-  .copilotKitSidebar .copilotKitWindow {
-    min-height: auto !important;
-    max-height: calc(100vh - 2rem) !important;
-    height: calc(100vh - 2rem) !important;
-    bottom: 1rem !important;
-    right: 1rem !important;
+  :is(.copilotKitPopup, .copilotKitSidebar) .copilotKitWindow {
     width: 26rem !important;
-    box-shadow:
-      0 0 0 1px hsl(var(--border) / 0.15),
-      0 1px 2px hsl(var(--foreground) / 0.04),
-      0 4px 16px hsl(var(--foreground) / 0.06),
-      0 12px 48px hsl(var(--foreground) / 0.1) !important;
+    max-height: min(38rem, calc(100vh - 6rem)) !important;
   }
 }
 
 /* --- Header: polished com border-radius e estilo refinado --- */
-.copilotKitSidebar .copilotKitHeader {
+:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitHeader {
   border-top-left-radius: 1.25rem !important;
   border-top-right-radius: 1.25rem !important;
   background-color: hsl(var(--background)) !important;
@@ -1140,7 +1140,7 @@
 }
 
 /* --- Chat area: canvas dots background --- */
-.copilotKitSidebar .copilotKitChat {
+:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitChat {
   --dot-color: oklch(0 0 0 / 0.07);
   --dot-size: 1px;
   --dot-gap: 18px;
@@ -1151,19 +1151,19 @@
   background-position: center center !important;
 }
 
-:is(.dark) .copilotKitSidebar .copilotKitChat {
+:is(.dark) :is(.copilotKitPopup, .copilotKitSidebar) .copilotKitChat {
   --dot-color: oklch(1 0 0 / 0.04);
 }
 
 /* --- Messages area: sem double scroll --- */
-.copilotKitSidebar .copilotKitMessages {
+:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitMessages {
   background: transparent !important;
   scrollbar-width: thin !important;
   scrollbar-color: hsl(var(--border)) transparent !important;
 }
 
 /* --- Input: bottom rounded e estilo limpo --- */
-.copilotKitSidebar .copilotKitInput {
+:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitInput {
   background-color: hsl(var(--background)) !important;
   border-top: 1px solid hsl(var(--border) / 0.5) !important;
   border-bottom-left-radius: 1.25rem !important;
@@ -1171,13 +1171,13 @@
 }
 
 /* --- Message bubbles: integração com design tokens --- */
-.copilotKitSidebar .copilotKitAssistantMessage {
+:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitAssistantMessage {
   background-color: hsl(var(--muted)) !important;
   color: hsl(var(--foreground)) !important;
   border-radius: 0.875rem !important;
 }
 
-.copilotKitSidebar .copilotKitUserMessage {
+:is(.copilotKitPopup, .copilotKitSidebar) .copilotKitUserMessage {
   background-color: hsl(var(--primary)) !important;
   color: hsl(var(--primary-foreground)) !important;
   border-radius: 0.875rem !important;
