@@ -87,7 +87,7 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
       {/* Registra ações globais + contexto de rota como readable state */}
       <CopilotGlobalActions />
 
-      {/* Conteúdo do app — fora do CopilotSidebar (v2 é standalone) */}
+      {/* Conteúdo do app — fora do CopilotPopup (v2 é standalone) */}
       <PageSearchProvider>
         <div className="fixed inset-0 flex flex-col bg-background canvas-dots">
           <DashboardHeader />
