@@ -32,7 +32,7 @@ export default function ContatoPage() {
         <section className="max-w-7xl mx-auto px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Contact Form Card */}
-            <div className="lg:col-span-2 bg-surface-container rounded-3xl p-10 bg-surface-variant/60 backdrop-blur-[20px] border border-white/5 shadow-2xl">
+            <div className="lg:col-span-2 rounded-3xl p-10 bg-surface-variant/60 backdrop-blur-[20px] border border-white/5 shadow-2xl">
               <h3 className="text-2xl font-bold font-headline mb-8 flex items-center gap-3">
                 <Send className="text-primary w-6 h-6" />
                 Enviar Mensagem
@@ -65,7 +65,7 @@ export default function ContatoPage() {
             {/* Info Stack */}
             <div className="space-y-8">
               {/* Contact Info Card */}
-              <div className="bg-surface-container rounded-3xl p-8 space-y-8 bg-surface-variant/60 backdrop-blur-[20px] border border-white/5">
+              <div className="bg-surface-container rounded-3xl p-8 space-y-8 backdrop-blur-[20px] border border-white/5">
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-widest text-primary mb-6">Informações</h4>
                   <div className="space-y-6">
@@ -116,7 +116,7 @@ export default function ContatoPage() {
               </div>
 
               {/* Tech Status Badge */}
-              <div className="bg-surface-container rounded-3xl p-6 bg-surface-variant/60 backdrop-blur-[20px] border border-white/5 flex items-center justify-between">
+              <div className="rounded-3xl p-6 bg-surface-variant/60 backdrop-blur-[20px] border border-white/5 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <div className="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
@@ -130,7 +130,7 @@ export default function ContatoPage() {
           </div>
 
           {/* Map Section */}
-          <div className="mt-12 w-full h-[500px] relative rounded-3xl overflow-hidden group">
+          <div className="mt-12 w-full h-125 relative rounded-3xl overflow-hidden group">
             <div className="absolute inset-0 bg-surface/40 z-10 pointer-events-none transition-opacity duration-500 group-hover:opacity-20"></div>
             {/* Visual placeholder for the map with tech aesthetic */}
             <div className="w-full h-full bg-surface-container-lowest flex items-center justify-center overflow-hidden relative">

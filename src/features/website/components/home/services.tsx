@@ -1,43 +1,48 @@
 /**
- * Services section — v2 asymmetrical image+text blocks.
- * Three service blocks alternating image-left / text-left layout.
- *
- * Usage:
- *   import { Services } from "@/features/website/components/home/services";
- *   <Services />
+ * Services section — v2 asymmetrical image+text blocks with large overlay cards.
+ * Three service blocks alternating image-left / text-left layout with
+ * large overlay cards containing icon, title and description.
  */
 
 import Link from "next/link";
 import {
   ArrowRight,
-  TrendingUp,
-  ShieldCheck,
-  Clock,
+  Gavel,
+  Wallet,
+  HeartPulse,
 } from "lucide-react";
 
 interface OverlayCardProps {
   icon: React.ReactNode;
-  label: string;
+  title: string;
+  description: string;
+  /** Position relative to the image */
+  position: "bottom-right" | "bottom-left";
 }
 
-function OverlayCard({ icon, label }: OverlayCardProps) {
+function OverlayCard({ icon, title, description, position }: OverlayCardProps) {
+  const positionClasses =
+    position === "bottom-right"
+      ? "-bottom-6 -right-6"
+      : "-bottom-6 -left-6";
+
   return (
-    <div className="glass-card rounded-xl p-4 flex items-center gap-3 border border-white/5">
-      <span className="text-primary">{icon}</span>
-      <span className="font-sans text-sm font-bold text-white whitespace-nowrap">
-        {label}
-      </span>
+    <div
+      className={`absolute ${positionClasses} p-6 lg:p-10 bg-surface-container rounded-2xl border border-white/10 hidden md:block max-w-xs lg:max-w-sm`}
+    >
+      <span className="text-primary mb-3 lg:mb-4 block">{icon}</span>
+      <h3 className="text-xl lg:text-2xl font-bold mb-2">{title}</h3>
+      <p className="text-on-surface-variant text-sm">{description}</p>
     </div>
   );
 }
 
 interface ServiceBlockProps {
-  /** "image-left" places the image in columns 1–7, text in 8–12. */
+  /** "image-left" places the image in columns 1-7, text in 8-12. */
   layout: "image-left" | "text-left";
   imageSrc: string;
   imageAlt: string;
   overlayCard: React.ReactNode;
-  kicker: string;
   title: string;
   description: string;
   href: string;
@@ -49,57 +54,46 @@ function ServiceBlock({
   imageSrc,
   imageAlt,
   overlayCard,
-  kicker,
   title,
   description,
   href,
   ctaLabel,
 }: ServiceBlockProps) {
-  const imageCol =
-    layout === "image-left"
-      ? "md:col-span-7 md:order-1"
-      : "md:col-span-7 md:order-2";
-  const textCol =
-    layout === "image-left"
-      ? "md:col-span-5 md:order-2"
-      : "md:col-span-5 md:order-1";
+  const isImageLeft = layout === "image-left";
 
   return (
-    <div className="grid md:grid-cols-12 gap-12 items-center">
+    <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-center group">
       {/* Image column */}
-      <div className={`relative ${imageCol}`}>
-        <img
-          src={imageSrc}
-          alt={imageAlt}
-          className="w-full aspect-video object-cover rounded-2xl grayscale hover:grayscale-0 hover:scale-105 transition-all duration-700"
-        />
-        {/* Floating overlay card — bottom corner opposite to text side */}
-        <div
-          className={`absolute bottom-5 ${
-            layout === "image-left" ? "right-5" : "left-5"
-          }`}
-        >
-          {overlayCard}
+      <div
+        className={`md:col-span-7 relative ${isImageLeft ? "md:order-1" : "md:order-2"}`}
+      >
+        <div className="aspect-video rounded-2xl md:rounded-3xl overflow-hidden bg-surface-container border border-white/5">
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000 grayscale"
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent" />
         </div>
+        {overlayCard}
       </div>
 
       {/* Text column */}
-      <div className={`flex flex-col gap-6 ${textCol}`}>
-        <span className="text-primary font-label text-sm font-bold uppercase tracking-widest">
-          {kicker}
-        </span>
-        <h3 className="font-headline text-3xl md:text-4xl font-bold tracking-tight text-white leading-tight">
+      <div
+        className={`md:col-span-5 ${isImageLeft ? "md:order-2 md:pl-8 lg:pl-12" : "md:order-1 md:pr-8 lg:pr-12"}`}
+      >
+        <h4 className="text-2xl sm:text-3xl md:text-4xl font-headline font-extrabold mb-4 md:mb-6 tracking-tight">
           {title}
-        </h3>
-        <p className="font-sans text-on-surface-variant text-lg leading-relaxed">
+        </h4>
+        <p className="text-on-surface-variant text-base md:text-lg leading-relaxed mb-6 md:mb-8">
           {description}
         </p>
         <Link
           href={href}
-          className="group/link text-primary font-bold flex items-center gap-2 w-fit hover:text-primary-dim transition-colors duration-200"
+          className="inline-flex items-center gap-2 text-primary font-bold text-base md:text-lg hover:gap-4 transition-all"
         >
           {ctaLabel}
-          <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-200" />
+          <ArrowRight className="w-5 h-5" />
         </Link>
       </div>
     </div>
@@ -108,77 +102,77 @@ function ServiceBlock({
 
 export function Services() {
   return (
-    <section id="solucoes" className="bg-surface py-32">
-      <div className="container mx-auto px-8">
+    <section id="solucoes" className="py-16 sm:py-20 md:py-32 bg-black overflow-hidden">
+      <div className="container mx-auto px-5 sm:px-6 md:px-8">
         {/* Section header */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
-          <div className="max-w-2xl">
-            <span className="text-primary font-label text-sm font-bold uppercase tracking-widest">
-              Especialidades
+        <div className="max-w-4xl mb-12 sm:mb-16 md:mb-24">
+          <span className="text-primary font-label text-sm font-bold uppercase tracking-widest">
+            Especialidades
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-headline font-bold mt-3 md:mt-4 tracking-tighter leading-tight">
+            Soluções jurídicas de{" "}
+            <br className="hidden sm:block" />
+            <span className="text-on-surface-variant">
+              alta precisão digital.
             </span>
-            <h2 className="font-headline text-4xl md:text-6xl font-bold mt-4 tracking-tight text-white">
-              Soluções jurídicas de{" "}
-              <span className="text-on-surface-variant">alta precisão.</span>
-            </h2>
-          </div>
-          <p className="font-sans text-on-surface-variant text-lg max-w-sm">
-            Focamos na resolução estratégica de conflitos trabalhistas
-            utilizando análise de dados e inteligência jurídica.
-          </p>
+          </h2>
         </div>
 
         {/* Service blocks */}
-        <div className="flex flex-col gap-28">
-          {/* Block 1 — Image Left, Text Right */}
+        <div className="space-y-16 sm:space-y-20 md:space-y-32">
+          {/* Block 1 — Image Left (Demissão sem justa causa) */}
           <ServiceBlock
             layout="image-left"
-            imageSrc="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&h=450&fit=crop"
-            imageAlt="Equipe jurídica em reunião de estratégia legal"
+            imageSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuBMczbgwNePWlBWRgiSkyzGfaZrHyEXJ8Awz6YtA-kWrk8BRe36xM7pS6Z5kpK9Vdky2Z3dq33pyyU9e_jYUfyzFofEKCSIwrpi_-XyTZBn8wrBhIvVwCHJCcTNNtCZRdh8Y3iEPT3AtSNtYnvw72X_FJo0Sa-a8eYyFNEnPB3jFnOuCP0J9OK_QmK6qNm_Digzo9I6AcLWyAU6ISTvr7Z5B-qUoEdGJI08pai8hAjxZuyNrPDT9_tyWNv9JY5YZVqpp8iPGQoiwkwh"
+            imageAlt="Interface de dados de alta tecnologia com símbolos jurídicos e linhas brilhantes roxas"
             overlayCard={
               <OverlayCard
-                icon={<Clock className="w-4 h-4" />}
-                label="Análise em 24h"
+                icon={<Gavel className="w-10 h-10 lg:w-12 lg:h-12" />}
+                title="Demissão sem justa causa"
+                description="Proteção imediata e estratégica em rescisões abusivas com suporte digital."
+                position="bottom-right"
               />
             }
-            kicker="Direito Trabalhista"
-            title="Demissão sem justa causa"
-            description="Proteção completa dos seus direitos em rescisões contratuais inesperadas ou abusivas. Analisamos cada cláusula para garantir que você receba tudo que é devido por lei."
+            title="Defesa Assertiva."
+            description="Utilizamos análise preditiva para identificar irregularidades em rescisões complexas, garantindo que nenhum direito seja negligenciado."
             href="/expertise"
             ctaLabel="Consultar caso"
           />
 
-          {/* Block 2 — Text Left, Image Right */}
+          {/* Block 2 — Text Left (FGTS e Verbas) */}
           <ServiceBlock
             layout="text-left"
-            imageSrc="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=450&fit=crop"
-            imageAlt="Documentos financeiros e análise de verbas rescisórias"
+            imageSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuA1t80OFnMZ9glumnSw0NK5KQxfF8c7eNY-xJuoeAv5yu7QuRTE3alXiXpGWrhrBPMqYYM4v7jx6S4eVQw9AJzMcxnrq5dj6_rqiWkHhKTTlJvA_gRCxwC9oyLztE_cTMfw7qV2Wtozu9DifRqt4MNMGMFBzv7Xsu_bCq5xYJ6Ha4bYqu09PmoQ6OOGFp_N7i-coFHgVdhS2JanujkK6A1DKoQXo-pHTzr1KgS3dvTBZfHxihyqzUIYehZO9-4yAw6JVKYpqIzYbEda"
+            imageAlt="Dados financeiros e símbolos de moeda digital em tela escura com destaques roxos"
             overlayCard={
               <OverlayCard
-                icon={<TrendingUp className="w-4 h-4" />}
-                label="R$ 15M+ recuperados"
+                icon={<Wallet className="w-10 h-10 lg:w-12 lg:h-12" />}
+                title="FGTS e Verbas"
+                description="Recuperação integral de horas extras e depósitos pendentes com auditoria digital."
+                position="bottom-left"
               />
             }
-            kicker="Verbas Trabalhistas"
-            title="FGTS e Verbas Rescisórias"
-            description="Recuperação integral de depósitos de FGTS, horas extras e verbas rescisórias pendentes. Nossa equipe audita cada período trabalhado para identificar o valor exato do seu direito."
+            title="Recuperação de Ativos."
+            description="Auditoria automatizada de FGTS e verbas rescisórias para identificar cada centavo devido pela contratante."
             href="/expertise"
             ctaLabel="Verificar depósitos"
           />
 
-          {/* Block 3 — Image Left, Text Right */}
+          {/* Block 3 — Image Left (Acidentes de Trabalho) */}
           <ServiceBlock
             layout="image-left"
-            imageSrc="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=450&fit=crop"
-            imageAlt="Ambiente médico e segurança do trabalho"
+            imageSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuBndeP_TrZYWaqkXabXlacL39lZl9vdBV32heYFlkVewN30Ke7tc2YX_ruVmw8X7Pz86jo4tzOK8Xa-XQxi9by6CF1yboQDULko5E2Ho5dlyrfbUmvRrHbRsTyXeti2XNEEQWqLm1iFptn3LD_bapazzTRB47A10tEGxPtZ4G-WFctjdx4g75_wMJZLghwxXUNRtP8QHGyl1OTq_9shD5GkRfraKK5spA6duR1n9jzL1mB_6Ekunam3DTOfuSrc5hRt07HYe_jtH-w8"
+            imageAlt="Visualização futurista de dados médicos e anatomia humana em display digital escuro"
             overlayCard={
               <OverlayCard
-                icon={<ShieldCheck className="w-4 h-4" />}
-                label="98% de êxito"
+                icon={<HeartPulse className="w-10 h-10 lg:w-12 lg:h-12" />}
+                title="Acidentes de Trabalho"
+                description="Suporte jurídico-técnico completo para indenizações por doenças e acidentes laborais."
+                position="bottom-right"
               />
             }
-            kicker="Saúde e Segurança"
-            title="Acidentes de Trabalho"
-            description="Indenizações justas e suporte completo para doenças ocupacionais e acidentes laborais. Acompanhamos todo o processo, do laudo pericial à homologação judicial."
+            title="Justiça Reparadora."
+            description="Combinamos perícia especializada e tecnologia para construir casos sólidos de reparação em saúde do trabalhador."
             href="/expertise"
             ctaLabel="Relatar ocorrência"
           />

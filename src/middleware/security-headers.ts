@@ -46,6 +46,8 @@ const TRUSTED_DOMAINS = {
   chatwoot: ["https://chatwoot-web.platform.sinesys.app"],
   // CopilotKit
   copilotkit: ["https://api.cloud.copilotkit.ai", "https://cdn.copilotkit.ai"],
+  // Cloudflare Stream - Video hosting (usado no hero da landing page)
+  cloudflareStream: ["https://customer-lvnfk43x7eec1csc.cloudflarestream.com"],
 } as const;
 
 /**
@@ -129,7 +131,7 @@ export function buildCSPDirectives(nonce?: string): string {
 
     "img-src": `'self' data: blob: ${TRUSTED_DOMAINS.images.join(" ")} ${
       TRUSTED_DOMAINS.supabase[0]
-    } ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.chatwoot[0]}`,
+    } ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.chatwoot[0]} ${TRUSTED_DOMAINS.cloudflareStream[0]}`,
 
     "connect-src": `'self' ${TRUSTED_DOMAINS.supabase.join(
       " "
@@ -139,11 +141,11 @@ export function buildCSPDirectives(nonce?: string): string {
 
     "frame-src": `'self' ${TRUSTED_DOMAINS.dyte.slice(1).join(" ")} ${
       TRUSTED_DOMAINS.chatwoot[0]
-    }`,
+    } ${TRUSTED_DOMAINS.cloudflareStream[0]}`,
 
     "media-src": `'self' blob: ${
       TRUSTED_DOMAINS.supabase[0]
-    } ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.dyte.join(" ")}`,
+    } ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.dyte.join(" ")} ${TRUSTED_DOMAINS.cloudflareStream[0]}`,
 
     "worker-src": "'self' blob:",
 

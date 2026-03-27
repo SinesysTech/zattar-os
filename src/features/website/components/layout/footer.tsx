@@ -6,15 +6,15 @@ export function Footer() {
   return (
     <footer className="bg-surface-container-lowest border-t border-white/5 relative overflow-hidden">
       {/* Decorative gradient blur */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-linear-to-r from-transparent via-primary/30 to-transparent"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent"></div>
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-24 bg-primary/5 blur-[100px] rounded-full pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto px-8 py-20 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 md:gap-12 lg:gap-8">
 
           {/* Brand & Social Column */}
           <div className="lg:col-span-4 pr-0 lg:pr-8">
-            <Link href="/" className="relative block w-56 md:w-64 h-12 md:h-14 mb-8 border-none outline-none">
+            <Link href="/" className="relative block w-48 sm:w-56 md:w-64 h-10 sm:h-12 md:h-14 mb-6 md:mb-8 border-none outline-none">
               <Image
                 src="/logos/logomarca-light.svg"
                 alt="Logo Zattar Advogados"
@@ -28,10 +28,10 @@ export function Footer() {
                 className="object-contain object-left hidden dark:block"
               />
             </Link>
-            <p className="text-on-surface-variant font-sans text-sm antialiased leading-relaxed mb-8 max-w-sm">
+            <p className="text-on-surface-variant font-sans text-sm antialiased leading-relaxed mb-6 md:mb-8 max-w-sm">
               Redefinindo os padrões da advocacia no Brasil através de inovação tecnológica, inteligência estratégica e precisão jurídica.
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-3 sm:gap-4">
               <a
                 href="https://www.instagram.com/zattar.advogados/"
                 target="_blank"
@@ -63,12 +63,12 @@ export function Footer() {
           </div>
 
           {/* Links Grid */}
-          <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+          <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12">
 
             {/* Site Institucional */}
             <div>
-              <h5 className="text-on-surface font-bold font-headline mb-6 tracking-wide">Site Institucional</h5>
-              <ul className="space-y-4">
+              <h5 className="text-on-surface font-bold font-headline mb-4 md:mb-6 tracking-wide text-sm md:text-base">Site Institucional</h5>
+              <ul className="space-y-3 md:space-y-4">
                 <li>
                   <Link href="/solucoes" className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit">
                     Soluções
@@ -99,8 +99,8 @@ export function Footer() {
 
             {/* Portal do Cliente */}
             <div>
-              <h5 className="text-on-surface font-bold font-headline mb-6 tracking-wide">Portal do Cliente</h5>
-              <ul className="space-y-4">
+              <h5 className="text-on-surface font-bold font-headline mb-4 md:mb-6 tracking-wide text-sm md:text-base">Portal do Cliente</h5>
+              <ul className="space-y-3 md:space-y-4">
                 <li>
                   <Link href="/portal" className="text-on-surface-variant hover:text-primary transition-colors duration-200 font-sans text-sm block w-fit">
                     Acesso ao Portal
@@ -130,9 +130,9 @@ export function Footer() {
             </div>
 
             {/* Contato Físico */}
-            <div>
-              <h5 className="text-on-surface font-bold font-headline mb-6 tracking-wide">Sede</h5>
-              <ul className="space-y-5 text-on-surface-variant font-sans text-sm">
+            <div className="col-span-2 sm:col-span-2 lg:col-span-1">
+              <h5 className="text-on-surface font-bold font-headline mb-4 md:mb-6 tracking-wide text-sm md:text-base">Sede</h5>
+              <ul className="space-y-4 md:space-y-5 text-on-surface-variant font-sans text-sm">
                 <li className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                   <span className="leading-relaxed">
@@ -143,7 +143,7 @@ export function Footer() {
                 </li>
                 <li className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-primary shrink-0" />
-                  <a href="mailto:contato@zattaradvogados.com" className="hover:text-primary transition-colors">
+                  <a href="mailto:contato@zattaradvogados.com" className="hover:text-primary transition-colors break-all">
                     contato@zattaradvogados.com
                   </a>
                 </li>
@@ -162,11 +162,11 @@ export function Footer() {
 
       {/* Bottom Bar: Copyright & Legals */}
       <div className="border-t border-white/5 bg-black/20">
-        <div className="max-w-7xl mx-auto px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-outline font-sans text-xs md:text-sm">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 py-4 md:py-6 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
+          <p className="text-outline font-sans text-xs md:text-sm text-center md:text-left">
             © {new Date().getFullYear()} Zattar Advogados. Feito com dedicação pela Sinesys.
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 md:gap-6">
             <Link
               href="/politica-de-privacidade"
               className="text-outline hover:text-on-surface-variant transition-colors duration-200 font-sans text-xs md:text-sm"

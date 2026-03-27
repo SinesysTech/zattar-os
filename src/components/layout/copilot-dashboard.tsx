@@ -10,9 +10,11 @@ import { Separator } from "@/components/ui/separator"
 import { GooeySearchBar } from "@/components/ui/animated-search-bar"
 import { AppDock } from "@/components/layout/dock/app-dock"
 import "@copilotkit/react-core/v2/styles.css"
-import { CopilotKitProvider, CopilotSidebar, useCopilotChatConfiguration } from "@copilotkit/react-core/v2"
+import { CopilotKitProvider, CopilotPopup, useCopilotChatConfiguration } from "@copilotkit/react-core/v2"
+import { X } from "lucide-react"
 import { CopilotGlobalActions } from "@/lib/copilotkit/components/copilot-global-actions"
 import { PageSearchProvider, usePageSearch } from "@/contexts/page-search-context"
+import { useUser } from "@/providers/user-provider"
 
 function HeaderSearchBar() {
   const { value, setValue, placeholder } = usePageSearch()
@@ -75,6 +77,8 @@ function DashboardHeader() {
 }
 
 export default function CopilotDashboard({ children }: { children: React.ReactNode }) {
+  const { id: userId } = useUser()
+
   return (
     <CopilotKitProvider
       runtimeUrl="/api/copilotkit"
@@ -97,13 +101,26 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
         </div>
       </PageSearchProvider>
 
-      {/* Chat sidebar — componente standalone v2, sem children */}
-      <CopilotSidebar
+      {/* Chat popup — card flutuante expansível, sem sidebar lateral */}
+      <CopilotPopup
         defaultOpen={false}
-        toggleButton={{ className: "hidden" }}
+        threadId={`user-${userId}`}
         labels={{
           modalHeaderTitle: "Pedrinho",
           welcomeMessageText: "Olá! Como posso ajudar você hoje?",
+          chatDisclaimerText: "",
+        }}
+        toggleButton={{
+          className: "copilot-toggle-btn",
+          openIcon: () => (
+            <span className="flex items-center justify-center px-3.5 py-2 bg-foreground rounded-full transition-transform duration-200 group-hover:scale-105">
+              <span className="flex gap-2">
+                <span className="size-2 rounded-full bg-background" />
+                <span className="size-2 rounded-full bg-background" />
+              </span>
+            </span>
+          ),
+          closeIcon: () => <X className="size-5 text-foreground" />,
         }}
       />
     </CopilotKitProvider>

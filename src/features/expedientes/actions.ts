@@ -7,6 +7,7 @@ import {
   createExpedienteSchema,
   updateExpedienteSchema,
   ListarExpedientesParams,
+  ResultadoDecisao,
 } from "./domain";
 import {
   criarExpediente,
@@ -380,7 +381,7 @@ export async function actionBaixarExpediente(
         (formData.get("justificativaBaixa") as string | null) || undefined,
       resultadoDecisao:
         typeof resultadoDecisao === "string" && resultadoDecisao.length > 0
-          ? resultadoDecisao
+          ? (resultadoDecisao as ResultadoDecisao)
           : undefined,
       dataBaixa: (formData.get("dataBaixa") as string | null) || undefined,
     };
