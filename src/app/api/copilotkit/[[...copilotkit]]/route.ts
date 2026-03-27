@@ -20,6 +20,7 @@ import {
   getMcpToolsAsDefinitions,
 } from "@/lib/copilotkit/mcp-bridge";
 import { SYSTEM_PROMPT } from "@/lib/copilotkit/system-prompt";
+import { SupabaseAgentRunner } from "@/lib/copilotkit/supabase-agent-runner";
 
 const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
@@ -48,6 +49,7 @@ export const POST = async (req: NextRequest) => {
 
     const runtime = new CopilotRuntime({
       agents: { default: agent },
+      runner: new SupabaseAgentRunner(),
     });
 
     const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({

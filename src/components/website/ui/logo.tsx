@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 export const Logo = () => (
-  <div className="relative w-[260px] md:w-[480px] h-16 md:h-24">
+  <div className="relative w-[320px] md:w-[600px] h-20 md:h-28 -my-2 md:-my-2">
     <Image
       src="/logos/logomarca-light.svg"
       alt="Logo Zattar Advogados"
