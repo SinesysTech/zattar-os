@@ -463,9 +463,9 @@ Used for hero sections and feature areas:
 
 ```html
 <!-- Primary glow orb -->
-<div class="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px]"></div>
+<div class="absolute top-[-10%] right-[-10%] w-150 h-150 bg-primary/10 rounded-full blur-[120px]"></div>
 <!-- Secondary glow orb -->
-<div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-primary-dim/10 rounded-full blur-[100px]"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-100 h-100 bg-primary-dim/10 rounded-full blur-[100px]"></div>
 ```
 
 ### Purple Hover Glow
@@ -869,7 +869,7 @@ All animations must respect the user's motion preference:
 #### Gradient Button
 
 ```html
-<button class="bg-gradient-to-r from-primary to-primary-dim text-on-primary-fixed font-bold py-4 px-6 rounded-lg hover:shadow-[0_0_30px_rgba(204,151,255,0.3)] active:scale-95 transition-all">
+<button class="bg-linear-to-r from-primary to-primary-dim text-on-primary-fixed font-bold py-4 px-6 rounded-lg hover:shadow-[0_0_30px_rgba(204,151,255,0.3)] active:scale-95 transition-all">
   Label
 </button>
 ```
@@ -928,7 +928,7 @@ All animations must respect the user's motion preference:
 #### Gradient Card (Featured)
 
 ```html
-<div class="bg-gradient-to-br from-primary/10 to-transparent rounded-2xl p-8 border border-white/5">
+<div class="bg-linear-to-br from-primary/10 to-transparent rounded-2xl p-8 border border-white/5">
   Content
 </div>
 ```
@@ -957,7 +957,7 @@ All animations must respect the user's motion preference:
 ```html
 <div class="group relative overflow-hidden rounded-xl bg-surface-container border border-white/5">
   <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-40" src="..." />
-  <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/60 to-transparent"></div>
+  <div class="absolute inset-0 bg-linear-to-t from-surface via-surface/60 to-transparent"></div>
   <div class="absolute bottom-0 left-0 p-8 w-full">
     <span class="bg-primary/20 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Category</span>
     <h2 class="font-headline text-3xl font-extrabold text-white mb-4 group-hover:text-primary transition-colors">Title</h2>
@@ -1022,7 +1022,7 @@ All animations must respect the user's motion preference:
 <label class="relative inline-flex items-center cursor-pointer">
   <input type="checkbox" class="sr-only peer" />
   <div class="w-14 h-7 bg-zinc-800 peer-focus:outline-none rounded-full peer-checked:bg-primary
-    after:content-[''] after:absolute after:top-0.5 after:left-[4px]
+    after:content-[''] after:absolute after:top-0.5 after:left-1
     after:bg-white after:border-gray-300 after:rounded-full after:w-6 after:h-6
     after:transition-all peer-checked:after:translate-x-full">
   </div>
@@ -1052,7 +1052,7 @@ All animations must respect the user's motion preference:
 
 ```html
 <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/5 transition-all">
-  <div class="h-8 w-8 rounded-lg bg-secondary-container flex items-center justify-center flex-shrink-0">
+  <div class="h-8 w-8 rounded-lg bg-secondary-container flex items-center justify-center shrink-0
     <span class="material-symbols-outlined text-sm text-white">icon</span>
   </div>
   <div class="flex-1">
@@ -1081,7 +1081,7 @@ All animations must respect the user's motion preference:
 
 ```html
 <div class="fixed bottom-8 right-8 glass-card border border-primary/30 py-4 px-6 rounded-xl flex items-center gap-4 shadow-2xl z-50">
-  <div class="h-8 w-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+  <div class="h-8 w-8 bg-primary rounded-full flex items-center justify-center shrink-0">
     <span class="material-symbols-outlined text-on-primary-fixed text-sm">check</span>
   </div>
   <div>
@@ -1097,7 +1097,7 @@ All animations must respect the user's motion preference:
 <div class="h-64 flex items-end justify-between gap-4 px-4">
   <div class="flex-1 group cursor-pointer">
     <div class="bg-white/5 rounded-t-lg h-[60%] relative overflow-hidden group-hover:bg-primary/20 transition-colors">
-      <div class="absolute bottom-0 left-0 right-0 h-full bg-gradient-to-t from-primary-dim to-primary shadow-[0_0_20px_rgba(168,85,247,0.3)]"></div>
+      <div class="absolute bottom-0 left-0 right-0 h-full bg-linear-to-t from-primary-dim to-primary shadow-[0_0_20px_rgba(168,85,247,0.3)]"></div>
     </div>
     <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-tighter text-center mt-2">Jan</p>
   </div>
@@ -1111,8 +1111,8 @@ All animations must respect the user's motion preference:
 <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
   <!-- Background Glows -->
   <div class="absolute inset-0 z-0">
-    <div class="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px]"></div>
-    <div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[100px]"></div>
+    <div class="absolute top-[-10%] right-[-10%] w-150 h-150 bg-primary/10 rounded-full blur-[120px]"></div>
+    <div class="absolute bottom-[-10%] left-[-10%] w-100 h-100 bg-secondary/10 rounded-full blur-[100px]"></div>
   </div>
   <!-- Content -->
   <div class="container mx-auto px-8 z-10 grid md:grid-cols-12 gap-12 items-center">
@@ -1138,7 +1138,7 @@ All animations must respect the user's motion preference:
     </div>
     <div class="md:col-span-5 relative hidden md:block">
       <div class="rounded-2xl overflow-hidden shadow-2xl border border-white/5">
-        <img class="w-full aspect-[4/5] object-cover grayscale hover:grayscale-0 transition-all duration-700" src="..." />
+        <img class="w-full aspect-4/5 object-cover grayscale hover:grayscale-0 transition-all duration-700" src="..." />
       </div>
     </div>
   </div>

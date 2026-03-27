@@ -44,7 +44,7 @@ export default function ExpertisePage() {
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[800px]">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-200">
             {/* Direito Digital */}
             <div className="md:col-span-8 bg-surface-container rounded-3xl overflow-hidden group relative flex flex-col justify-end p-10 border border-white/5">
               <div className="absolute inset-0 z-0">
@@ -112,7 +112,7 @@ export default function ExpertisePage() {
                     <div className="w-10 h-10 rounded-full border-2 border-surface-container bg-surface-variant flex items-center justify-center text-[10px] font-bold text-white shadow-md">IPO</div>
                   </div>
                 </div>
-                <div className="relative hidden sm:block h-full min-h-[200px]">
+                <div className="relative hidden sm:block h-full min-h-50">
                   <div className="absolute inset-0 bg-linear-to-t from-surface-container-low to-transparent z-10"></div>
                   <img
                     className="w-full h-full object-cover opacity-50 grayscale rounded-xl mix-blend-screen"
@@ -160,18 +160,18 @@ export default function ExpertisePage() {
             
             <div className="order-1 md:order-2 grid grid-cols-2 gap-4">
               <div className="space-y-4 pt-12">
-                <div className="aspect-[3/4] rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
+                <div className="aspect-3/4 rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
                   <img className="w-full h-full object-cover" alt="Legal professional" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWcwkwJmqdS_rPSE2A0WMqzAbKmpcOTMD4nfP64bCqlpof3dZJLv9XrZLMg8N5S4ZNnBkCN-UPh50_kwtuj0Oys2A_AfSnyA0dkfHN-KTdThqV3BV8Xs6h6AvysO9XAuaV_HnZohXRmowNgKOLe4H2q3bNdv4QH8M8HGVNSBC77GkSxUYNCKp4r05vZCO2zfy43aedEJ47vkLc4CtWp8I3kEgUi5N2QH7Qh2tjP8X9In1CyiprPMoJwiyvrkTHfzRsTMag9vkQ50zV"/>
                 </div>
-                <div className="aspect-[3/4] rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
+                <div className="aspect-3/4 rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
                   <img className="w-full h-full object-cover" alt="Tech engineer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByW5p4PYfBRRGLGZqyxWW3snJArVlfj2ztoVgPMAa1kexumNLBu5KKMg5D58IXUD7qaqgcfJbNnx5axrli-TdK5GJJRQgKiouLCtK4Qr9X7XuGapazk2waZ1VlS2DDQMSVCkf8n11qpwom9w5WHzeXjw4zQHuFf1zE7LbufPAb2OUXawbmTea7SE9YMoyE6tuhAT80Mwt2dGu-r73oqs_kfyeL1T48Y_jI-LNVdCgOtpvBr5M8NtRxKWqPY1rVZtncUirRXlDEDiXp"/>
                 </div>
               </div>
               <div className="space-y-4">
-                <div className="aspect-[3/4] rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
+                <div className="aspect-3/4 rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
                   <img className="w-full h-full object-cover" alt="Legal tech professional" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb9FRuVZGVb8vpw8vU8gf0_5NGAGKuQGkFRrlk7CXzvzjAHs2Ak_-1UmoR5yKpw9bLLeK60xyZiJcQ97mUB1DNNjS0Vt9iM9w8dNbefGhRd6xcrkFl5uxF844MBKoRGjstUFzJtCjO6kFR-rPjSGZjHJQLSL5-DCxDal7KyVx9EqNTrNPT-ciQK1U7nV9e_7esWcCoYhsNgk5SsWOPCNlKqjr-EGX4K4102s_6XLlbl4Hv7qiDPo8-a0Wl3b1cjTCWr-bOpS9LOtIa"/>
                 </div>
-                <div className="aspect-[3/4] rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
+                <div className="aspect-3/4 rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
                   <img className="w-full h-full object-cover" alt="Expert counsel" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApheuuQPIRJ-ZtoCpiT_7cjQKzN7xsB9NifPEKUVtTrNED50QxDlLz6jd_qBrl_PqH7O9PluehgfGksuwekLHPATnX4GFOiuJUqAS7u7Jten34xHgmrZMveysWguJIZMztUSy7qB3Y4j_KGeX_BtiYfDqGPkn5ZGs86nRFOujXQQ4PF4SQghl6SXxKAVm8HBPPHlWtOl88Q0UeGdTnrFBjQkZGbMnpX69ZQpa-Mjo03RaYx2RHORb6tgLu1tVURaJmOFo1BGr-pMK3"/>
                 </div>
               </div>

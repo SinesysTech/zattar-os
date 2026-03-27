@@ -27,7 +27,7 @@ export default function SolucoesPage() {
         <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 relative z-10 w-full">
           <div className="lg:col-span-7 flex flex-col justify-center">
             <span className="text-primary font-bold tracking-[0.2em] uppercase text-sm mb-6 flex items-center gap-2">
-              <span className="w-8 h-[1px] bg-primary"></span> Infraestrutura Jurídica Next-Gen
+              <span className="w-8 h-px bg-primary"></span> Infraestrutura Jurídica Next-Gen
             </span>
             <h1 className="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter leading-[1.1] text-white mb-8">
               Soluções Jurídicas Digitais. <br />

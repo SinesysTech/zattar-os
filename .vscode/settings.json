@@ -13,20 +13,23 @@
       "enabled": false
     }
   },
-  // Configuração para extensão Lua ignorar arquivos de licença e documentação
+  // Configuracao para extensao Lua ignorar arquivos de licenca e documentacao
   "Lua.workspace.ignoreDir": ["LICENSE", "TRADEMARK", "NOTICE"],
   "Lua.diagnostics.globals": [],
-  // Associação de arquivos sem extensão como texto plano
+  // TypeScript: usar workspace tsdk
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.validate.enabled": true,
+  "js/ts.preferences.includePackageJsonAutoImports": "off",
+  // Associacao de arquivos
   "files.associations": {
+    "**/supabase/**/*.sql": "postgres",
     "LICENSE": "plaintext",
     "TRADEMARK": "plaintext",
     "NOTICE": "plaintext",
     "AGENTS": "markdown"
   },
-  // TypeScript: usar tsconfig.test.json para arquivos de teste
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  // Excluir arquivos de configuração problemáticos do TypeScript e arquivos temporários
+  // Esconder arquivos problemáticos do explorer e watcher
   "files.exclude": {
     "**/node_modules/@copilotkit/**/tsconfig.json": true,
     "**/AppData/Local/Temp/**": true
@@ -35,37 +38,15 @@
     "**/node_modules/@copilotkit/**/tsconfig.json": true,
     "**/AppData/Local/Temp/**": true
   },
-  // Ignorar erros de TypeScript em arquivos de configuração dentro de node_modules
-  "typescript.validate.enable": true,
-  "typescript.preferences.includePackageJsonAutoImports": "off",
-  // Excluir arquivos temporários da validação do TypeScript
-  "typescript.tsserver.exclude": [
-    "**/AppData/Local/Temp/**"
-  ],
-  // Desabilitar validação MSSQL para migrations do Supabase (são PostgreSQL)
-  "files.exclude": {
-    "**/node_modules/@copilotkit/**/tsconfig.json": true,
-    "**/AppData/Local/Temp/**": true
-  },
-  // Associar migrations Supabase como PostgreSQL, não MSSQL
+  // Desabilitar validacao MSSQL para migrations do Supabase (sao PostgreSQL)
   "[sql]": {
     "files.associations": {
       "**/supabase/migrations/**/*.sql": "postgres"
     }
   },
-  // Excluir pasta supabase da análise MSSQL
   "mssql.excludeFolders": [
     "**/supabase/**",
     "**/node_modules/**"
   ],
-  // Desabilitar validação MSSQL globalmente para arquivos .sql
-  "mssql.enableSqlDiagnostics": false,
-  // Associar arquivos SQL no diretório supabase como PostgreSQL
-  "files.associations": {
-    "**/supabase/**/*.sql": "postgres",
-    "LICENSE": "plaintext",
-    "TRADEMARK": "plaintext",
-    "NOTICE": "plaintext",
-    "AGENTS": "markdown"
-  }
+  "mssql.enableSqlDiagnostics": false
 }
