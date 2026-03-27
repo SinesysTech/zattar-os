@@ -111,7 +111,7 @@ import { Typography } from '@/components/ui/typography';
 <div className="p-6">       // 24px
 
 // INCORRETO - Valores arbitrarios
-<div className="gap-[13px]">
+<div className="gap-3.25
 <div className="p-7">
 <div style={{ padding: '17px' }}>
 ```

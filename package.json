@@ -8,7 +8,7 @@
   },
   "scripts": {
     "prepare": "husky",
-    "postinstall": "node scripts/setup/setup-pdfjs.js",
+    "postinstall": "node scripts/setup/setup-pdfjs.js && node scripts/setup/clean-node-modules-tsconfigs.js",
     "dev": "next dev --turbo",
     "dev:webpack": "next dev",
     "dev:verbose": "next dev --turbo",

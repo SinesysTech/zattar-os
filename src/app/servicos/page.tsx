@@ -142,7 +142,7 @@ export default function ServicosPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Rescisão Indireta */}
           <div className="group bg-surface-container-low p-8 rounded-3xl border border-white/5 hover:bg-surface-container hover:border-primary/20 transition-all duration-500 shadow-lg relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-colors"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
             <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform shadow-inner shadow-primary/10 relative z-10">
               <Gavel className="text-primary w-8 h-8" />
             </div>
@@ -155,7 +155,7 @@ export default function ServicosPage() {
 
           {/* Danos Morais */}
           <div className="group bg-surface-container-low p-8 rounded-3xl border border-white/5 hover:bg-surface-container hover:border-primary/20 transition-all duration-500 shadow-lg relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-colors"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
             <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform shadow-inner shadow-primary/10 relative z-10">
               <Frown className="text-primary w-8 h-8" />
             </div>
@@ -168,7 +168,7 @@ export default function ServicosPage() {
 
           {/* Equiparação Salarial */}
           <div className="group bg-surface-container-low p-8 rounded-3xl border border-white/5 hover:bg-surface-container hover:border-primary/20 transition-all duration-500 shadow-lg relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[40px] group-hover:bg-primary/10 transition-colors"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
             <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform shadow-inner shadow-primary/10 relative z-10">
               <SlidersHorizontal className="text-primary w-8 h-8" />
             </div>
