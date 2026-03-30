@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { AtSign, AlertCircle, ArrowRight, Eye, EyeOff, Loader2, Lock, ShieldCheck } from 'lucide-react'
+import { AtSign, AlertCircle, ArrowRight, Eye, EyeOff, Loader2, Lock, Scale, ShieldCheck } from 'lucide-react'
 
 export function LoginForm({
   className,
@@ -84,14 +84,14 @@ export function LoginForm({
     <div className={cn('flex flex-col', className)} {...props}>
       <div className="mb-10 flex flex-col items-center gap-4 lg:hidden">
         <div className="relative h-16 w-80">
-            <Image
-              src="/logos/logomarca-dark.svg"
-              alt="Zattar Advogados"
-              fill
-              priority
-              className="object-contain object-center"
-            />
-          </div>
+          <Image
+            src="/logos/logomarca-dark.svg"
+            alt="Zattar Advogados"
+            fill
+            priority
+            className="object-contain object-center"
+          />
+        </div>
         <span className="inline-flex rounded-full border border-outline-variant/30 bg-surface-container-highest/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
           Ambiente interno
         </span>
@@ -132,12 +132,6 @@ export function LoginForm({
         </div>
 
         <div className="space-y-2">
-          <label
-            htmlFor="email"
-            className="sr-only"
-          >
-            E-mail corporativo
-          </label>
           <label
             htmlFor="password"
             className="block text-[10px] uppercase tracking-widest text-primary font-bold"
@@ -219,6 +213,17 @@ export function LoginForm({
           <span className="w-1 h-1 rounded-full bg-outline-variant" />
           <span className="w-1 h-1 rounded-full bg-outline-variant" />
           <span className="w-1 h-1 rounded-full bg-outline-variant" />
+        </div>
+        <div className="flex items-center gap-4 pt-2">
+          <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
+            <ShieldCheck className="w-3 h-3" /> ISO-9001
+          </span>
+          <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
+            <Lock className="w-3 h-3" /> SOC2
+          </span>
+          <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
+            <Scale className="w-3 h-3" /> LGPD
+          </span>
         </div>
       </div>
     </div>

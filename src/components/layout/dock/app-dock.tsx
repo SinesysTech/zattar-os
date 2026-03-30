@@ -10,19 +10,50 @@ import { usePermissoes } from '@/providers/user-provider'
 // Icons sourced from icons8.com — white outline 96px PNGs
 // Liquid Glass effect applied via mac-os-dock.tsx container
 
-function DockIcon({ src, alt }: { src: string; alt: string }) {
+function DockIcon({ src, alt, color }: { src: string; alt: string; color?: string }) {
   return (
-    <div className="w-full h-full p-[22%]">
-      <Image
-        src={src}
-        alt={alt}
-        width={96}
-        height={96}
-        className="w-full h-full object-contain drop-shadow-[0_1px_2px_rgba(255,255,255,0.3)]"
-        draggable={false}
-      />
+    <div className="w-full h-full relative">
+      {color && (
+        <div className="absolute inset-0" style={{ background: color }} />
+      )}
+      <div className="relative w-full h-full p-[22%]">
+        <Image
+          src={src}
+          alt={alt}
+          width={96}
+          height={96}
+          className="w-full h-full object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]"
+          draggable={false}
+        />
+      </div>
     </div>
   )
+}
+
+// ─── Icon color map (gradient backgrounds per dock item) ────────────────
+
+const iconColors: Record<string, string> = {
+  dashboard:      'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+  audiencias:     'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+  contratos:      'linear-gradient(135deg, #10b981, #059669)',
+  expedientes:    'linear-gradient(135deg, #f59e0b, #d97706)',
+  obrigacoes:     'linear-gradient(135deg, #ef4444, #dc2626)',
+  partes:         'linear-gradient(135deg, #14b8a6, #0d9488)',
+  pericias:       'linear-gradient(135deg, #f97316, #ea580c)',
+  processos:      'linear-gradient(135deg, #6366f1, #4f46e5)',
+  agenda:         'linear-gradient(135deg, #0ea5e9, #0284c7)',
+  assinatura:     'linear-gradient(135deg, #22c55e, #16a34a)',
+  assistentes:    'linear-gradient(135deg, #a855f7, #9333ea)',
+  chat:           'linear-gradient(135deg, #ec4899, #db2777)',
+  diario:         'linear-gradient(135deg, #64748b, #475569)',
+  documentos:     'linear-gradient(135deg, #06b6d4, #0891b2)',
+  email:          'linear-gradient(135deg, #f43f5e, #e11d48)',
+  jurisprudencia: 'linear-gradient(135deg, #eab308, #ca8a04)',
+  notas:          'linear-gradient(135deg, #fbbf24, #f59e0b)',
+  pecas:          'linear-gradient(135deg, #e879f9, #c026d3)',
+  projetos:       'linear-gradient(135deg, #84cc16, #65a30d)',
+  captura:        'linear-gradient(135deg, #fb923c, #f97316)',
+  financeiro:     'linear-gradient(135deg, #34d399, #10b981)',
 }
 
 // ─── Navigation data (mirrors app-sidebar.tsx) ──────────────────────────
@@ -103,6 +134,7 @@ export function AppDock() {
           <DockIcon
             src={`/icons/dock/${item.id}.png`}
             alt={item.title}
+            color={iconColors[item.id]}
           />
         ),
       })),

@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
-import { AtSign, AlertCircle, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react'
+import { AtSign, AlertCircle, ArrowRight, CheckCircle2, Loader2, Lock, Scale, ShieldCheck } from 'lucide-react'
 
 export function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
@@ -147,6 +147,17 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
               <span className="w-1 h-1 rounded-full bg-outline-variant" />
               <span className="w-1 h-1 rounded-full bg-outline-variant" />
               <span className="w-1 h-1 rounded-full bg-outline-variant" />
+            </div>
+            <div className="flex items-center gap-4 pt-2">
+              <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
+                <ShieldCheck className="w-3 h-3" /> ISO-9001
+              </span>
+              <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
+                <Lock className="w-3 h-3" /> SOC2
+              </span>
+              <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
+                <Scale className="w-3 h-3" /> LGPD
+              </span>
             </div>
           </div>
         </>
