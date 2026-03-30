@@ -29,7 +29,7 @@ import {
 import { SYSTEM_PROMPT } from "@/lib/copilotkit/system-prompt";
 import { SupabaseAgentRunner } from "@/lib/copilotkit/supabase-agent-runner";
 
-const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? process.env.GOOGLE_API_KEY;
 
 // Lazy-init: cria o handler Hono multi-route uma única vez
 let cachedHandler: ReturnType<typeof handle> | null = null;

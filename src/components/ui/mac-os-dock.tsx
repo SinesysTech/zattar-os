@@ -202,14 +202,14 @@ function MacOSDock({
       className={cn('backdrop-blur-2xl', className)}
       style={{
         width: `${contentWidth + padding * 2}px`,
-        background: 'rgba(30, 30, 30, 0.78)',
+        background: 'rgba(255, 255, 255, 0.45)',
         borderRadius: `${Math.max(16, baseIconSize * 0.35)}px`,
-        border: '1px solid rgba(255, 255, 255, 0.12)',
+        border: '1px solid rgba(255, 255, 255, 0.55)',
         boxShadow: [
-          '0 8px 32px rgba(0, 0, 0, 0.5)',
-          '0 2px 8px rgba(0, 0, 0, 0.3)',
-          'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-          'inset 0 -1px 0 rgba(0, 0, 0, 0.15)',
+          '0 8px 32px rgba(0, 0, 0, 0.08)',
+          '0 2px 8px rgba(0, 0, 0, 0.05)',
+          'inset 0 1px 0 rgba(255, 255, 255, 0.7)',
+          'inset 0 -1px 0 rgba(0, 0, 0, 0.04)',
         ].join(', '),
         padding: `${padding}px`,
       }}
@@ -240,8 +240,8 @@ function MacOSDock({
           )}
 
         {items.map((item, index) => {
-          const scale = currentScales[index]
-          const position = currentPositions[index] || 0
+          const scale = currentScales[index] ?? 1
+          const position = currentPositions[index] ?? 0
           const scaledSize = baseIconSize * scale
 
           return (
@@ -263,51 +263,42 @@ function MacOSDock({
               <div
                 className="w-full h-full rounded-[22%] overflow-hidden relative"
                 style={{
-                  background: `linear-gradient(
-                    135deg,
-                    rgba(255, 255, 255, 0.14) 0%,
-                    rgba(255, 255, 255, 0.05) 40%,
-                    rgba(255, 255, 255, 0.10) 100%
-                  )`,
-                  backdropFilter: 'blur(24px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                  border: '0.5px solid rgba(255, 255, 255, 0.20)',
+                  border: '0.5px solid rgba(255, 255, 255, 0.30)',
                   boxShadow: [
-                    'inset 0 1px 1px rgba(255, 255, 255, 0.18)',
-                    'inset 0 -1px 1px rgba(0, 0, 0, 0.06)',
-                    `0 ${scale > 1.2 ? 6 : 3}px ${scale > 1.2 ? 16 : 8}px rgba(0, 0, 0, ${0.18 + (scale - 1) * 0.15})`,
+                    'inset 0 1px 1px rgba(255, 255, 255, 0.25)',
+                    `0 ${scale > 1.2 ? 4 : 2}px ${scale > 1.2 ? 12 : 6}px rgba(0, 0, 0, ${0.10 + (scale - 1) * 0.1})`,
                   ].join(', '),
                 }}
               >
-                {/* Specular highlight — top light refraction */}
+                {/* Icon content (colored background + white icon) */}
+                <div className="relative w-full h-full">
+                  {item.icon}
+                </div>
+                {/* Specular highlight — glass refraction overlay */}
                 <div
                   className="absolute inset-0 pointer-events-none rounded-[22%]"
                   style={{
                     background: `linear-gradient(
                       170deg,
-                      rgba(255, 255, 255, 0.22) 0%,
-                      rgba(255, 255, 255, 0.06) 35%,
+                      rgba(255, 255, 255, 0.30) 0%,
+                      rgba(255, 255, 255, 0.08) 35%,
                       transparent 55%
                     )`,
                   }}
                 />
-                {/* Icon content */}
-                <div className="relative w-full h-full">
-                  {item.icon}
-                </div>
               </div>
 
               {/* Active route indicator dot */}
               {activeItems.includes(item.id) && (
                 <div
-                  className="absolute rounded-full bg-white/80"
+                  className="absolute rounded-full bg-black/40"
                   style={{
                     bottom: `${Math.max(-4, -baseIconSize * 0.07)}px`,
                     left: '50%',
                     transform: 'translateX(-50%)',
                     width: `${Math.max(4, baseIconSize * 0.07)}px`,
                     height: `${Math.max(4, baseIconSize * 0.07)}px`,
-                    boxShadow: '0 0 6px rgba(255, 255, 255, 0.4)',
+                    boxShadow: '0 0 3px rgba(0, 0, 0, 0.15)',
                   }}
                 />
               )}
