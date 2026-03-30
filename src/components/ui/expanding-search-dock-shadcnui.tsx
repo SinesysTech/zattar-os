@@ -1,18 +1,39 @@
+"use client"
+
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ExpandingSearchDockProps = {
   onSearch?: (query: string) => void;
   placeholder?: string;
+  /** Valor controlado externamente */
+  value?: string;
+  /** Callback chamado a cada alteração no input */
+  onChange?: (value: string) => void;
 };
 
 export function ExpandingSearchDock({
   onSearch,
   placeholder = "Search...",
+  value: controlledValue,
+  onChange,
 }: ExpandingSearchDockProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [query, setQuery] = useState("");
+  const [internalQuery, setInternalQuery] = useState("");
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const isControlled = controlledValue !== undefined;
+  const query = isControlled ? controlledValue : internalQuery;
+
+  const setQuery = (v: string) => {
+    if (isControlled) {
+      onChange?.(v);
+    } else {
+      setInternalQuery(v);
+      onChange?.(v);
+    }
+  };
 
   const handleExpand = () => {
     setIsExpanded(true);
@@ -30,8 +51,30 @@ export function ExpandingSearchDock({
     }
   };
 
+  // Fecha ao clicar fora
+  useEffect(() => {
+    if (!isExpanded) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        handleCollapse();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isExpanded]);
+
+  // Fecha com Escape
+  useEffect(() => {
+    if (!isExpanded) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleCollapse();
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isExpanded]);
+
   return (
-    <div className="relative">
+    <div ref={wrapperRef} className="relative">
       <AnimatePresence mode="wait">
         {!isExpanded ? (
           <motion.button

@@ -6,7 +6,7 @@ import Notifications from "@/components/layout/header/notifications"
 import { AuthenticatorPopover } from "@/components/layout/header/authenticator-popover"
 import { HeaderUserMenu } from "@/components/layout/header/header-user-menu"
 import { Separator } from "@/components/ui/separator"
-import { GooeySearchBar } from "@/components/ui/animated-search-bar"
+import { ExpandingSearchDock } from "@/components/ui/expanding-search-dock-shadcnui"
 import { AppDock } from "@/components/layout/dock/app-dock"
 import "@copilotkit/react-core/v2/styles.css"
 import { CopilotKitProvider, CopilotPopup } from "@copilotkit/react-core/v2"
@@ -19,7 +19,7 @@ function HeaderSearchBar() {
   const { value, setValue, placeholder } = usePageSearch()
 
   return (
-    <GooeySearchBar
+    <ExpandingSearchDock
       value={value}
       onChange={setValue}
       placeholder={placeholder}
