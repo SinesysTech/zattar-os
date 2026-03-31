@@ -28,3 +28,8 @@ export {
   type UseRemindersProps,
   type UseRemindersReturn,
 } from './use-reminders';
+
+export {
+  useWidgetLayout,
+  type WidgetLayoutState,
+} from './use-widget-layout';

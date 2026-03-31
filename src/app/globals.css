@@ -486,6 +486,35 @@
 }
 
 /* =============================================================================
+ * WIDGET DESIGN SYSTEM — Tokens
+ * =============================================================================
+ * Tokens centralizados para o sistema de widgets da dashboard.
+ * Usados por primitivas (GlassPanel, WidgetContainer, etc.)
+ */
+:root {
+  --widget-radius: 1rem;
+  --widget-padding: 1.25rem;
+  --widget-gap: 1rem;
+  --widget-border-opacity: 0.06;
+  --widget-label-size: 10px;
+  --widget-number-weight: 700;
+  --widget-transition: 200ms;
+  --widget-hover-scale: 1.01;
+
+  /* Gauge meter */
+  --gauge-good: var(--success);
+  --gauge-warning: var(--warning);
+  --gauge-danger: var(--destructive);
+  --gauge-neutral: var(--primary);
+
+  /* Insight banner */
+  --insight-alert-bg: var(--destructive);
+  --insight-success-bg: var(--success);
+  --insight-info-bg: var(--primary);
+  --insight-warning-bg: var(--warning);
+}
+
+/* =============================================================================
  * DASHBOARD: Glass Effect Cards
  * =============================================================================
  * Glass KPI  — cards de métricas, mais opacos para legibilidade

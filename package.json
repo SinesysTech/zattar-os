@@ -384,6 +384,7 @@
     "playwright": "^1.56.1",
     "playwright-core": "^1.56.1",
     "serwist": "9.5.5",
+    "shadcn": "4.1.1",
     "supabase": "^2.72.8",
     "tailwindcss": "^4.1.18",
     "ts-jest": "^29.4.6",

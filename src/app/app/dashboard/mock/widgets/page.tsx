@@ -25,7 +25,7 @@ export default function WidgetGalleryPage() {
           Widget Gallery
         </h1>
         <p className="text-sm text-muted-foreground/60 mt-1">
-          Biblioteca de widgets organizados por modulo. Dados fictícios para visualização de layout.
+          Biblioteca de widgets organizados por módulo. Dados fictícios para visualização de layout.
         </p>
       </div>
 
