@@ -42,18 +42,24 @@ jest.mock('../../../../../lib/auth/api-auth', () => ({
   })),
 }));
 
-jest.mock('../../../../../lib/mcp/rate-limit', () => ({
-  checkRateLimit: jest.fn(async () => ({
-    allowed: true,
-    remaining: 9,
-    resetAt: new Date('2030-01-01T00:00:00.000Z'),
-    limit: 10,
-  })),
+const mockCheckEndpointRateLimit = jest.fn(async () => ({
+  allowed: true,
+  remaining: 9,
+  resetAt: new Date('2030-01-01T00:00:00.000Z'),
+  limit: 10,
+}));
+
+jest.mock('@/lib/mcp/rate-limit', () => ({
+  get checkEndpointRateLimit() { return mockCheckEndpointRateLimit; },
   getRateLimitHeaders: jest.fn(() => ({
     'X-RateLimit-Limit': '10',
     'X-RateLimit-Remaining': '9',
     'X-RateLimit-Reset': '2030-01-01T00:00:00.000Z',
   })),
+}));
+
+jest.mock('@/lib/utils/get-client-ip', () => ({
+  getClientIp: jest.fn(() => '127.0.0.1'),
 }));
 
 describe('/api/plate/ai route', () => {
@@ -95,9 +101,7 @@ describe('/api/plate/ai route', () => {
   });
 
   test('returns 429 when rate limited', async () => {
-    const { checkRateLimit } = await import('../../../../../lib/mcp/rate-limit');
-    const checkRateLimitMock = checkRateLimit as unknown as jest.MockedFunction<typeof checkRateLimit>;
-    checkRateLimitMock.mockResolvedValueOnce({
+    mockCheckEndpointRateLimit.mockResolvedValueOnce({
       allowed: false,
       remaining: 0,
       resetAt: new Date('2030-01-01T00:00:00.000Z'),

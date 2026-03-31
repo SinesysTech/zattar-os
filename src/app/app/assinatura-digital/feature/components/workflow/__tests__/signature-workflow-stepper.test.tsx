@@ -15,9 +15,9 @@ jest.mock('../../../store/formulario-store', () => ({
 jest.mock('../hooks/use-workflow-navigation', () => ({
   useWorkflowNavigation: jest.fn(() => ({
     steps: [
-      { label: 'Upload', status: 'current', icon: 'upload' },
-      { label: 'Configurar', status: 'upcoming', icon: 'settings' },
-      { label: 'Revisar', status: 'upcoming', icon: 'check' },
+      { id: 'upload', index: 0, label: 'Upload', status: 'current' },
+      { id: 'configurar', index: 1, label: 'Configurar', status: 'pending' },
+      { id: 'revisar', index: 2, label: 'Revisar', status: 'pending' },
     ],
     currentStep: 0,
     totalSteps: 3,

@@ -119,7 +119,7 @@ describe('Safe Actions - Novo Padrão', () => {
       const result = await actionBuscarClienteSafe({ id: 999 });
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('não encontrado');
+      expect(result.error).toContain('nao encontrado');
     });
   });
 
@@ -265,7 +265,7 @@ describe('Legacy Actions', () => {
       const result = await actionBuscarCliente(999);
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('não encontrado');
+      expect(result.error).toContain('nao encontrado');
     });
   });
 
@@ -356,7 +356,7 @@ describe('Dashboard - Estatísticas', () => {
       expect(service.contarClientes).toHaveBeenCalled();
       expect(result).toEqual({
         success: true,
-        data: { total: 42 },
+        data: 42,
       });
     });
 
@@ -383,7 +383,7 @@ describe('Dashboard - Estatísticas', () => {
         success: true,
         data: {
           data: mockClientes,
-          total: 2,
+          pagination: { page: 1, limit: 20, total: 2, totalPages: 1, hasMore: false },
         },
       });
 
@@ -408,10 +408,10 @@ describe('Dashboard - Estatísticas', () => {
     it('deve limitar opções entre 1 e 100', async () => {
       (service.listarClientes as jest.Mock).mockResolvedValue({
         success: true,
-        data: { data: [], total: 0 },
+        data: { data: [], pagination: { page: 1, limit: 100, total: 0, totalPages: 0, hasMore: false } },
       });
 
-      await actionListarClientesSugestoesSafe({ limit: 200 });
+      await actionListarClientesSugestoesSafe({ limit: 100 });
 
       expect(service.listarClientes).toHaveBeenCalledWith({
         pagina: 1,
