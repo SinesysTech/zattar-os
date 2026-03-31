@@ -14,7 +14,7 @@ export default function ExpertisePage() {
             </span>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold font-headline tracking-tighter leading-[0.9] mb-8">
               Expertise Jurídica de{" "}
-              <span className="bg-linear-to-br from-[#cc97ff] to-[#9c48ea] bg-clip-text text-transparent">
+              <span className="bg-linear-to-br from-primary-fixed-dim to-primary bg-clip-text text-transparent">
                 Vanguarda.
               </span>
             </h1>

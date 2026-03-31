@@ -147,7 +147,7 @@ export default function FeriasCalculatorPage() {
                 onChange={(e) => setDiasFerias(Number(e.target.value))}
                 className="w-full h-2 rounded-lg appearance-none cursor-pointer"
                 style={{
-                  background: `linear-gradient(to right, #cc97ff ${sliderProgress}%, rgba(255,255,255,0.1) ${sliderProgress}%)`,
+                  background: `linear-gradient(to right, oklch(0.80 0.18 281) ${sliderProgress}%, rgba(255,255,255,0.1) ${sliderProgress}%)`,
                 }}
               />
               <div className="flex justify-between text-[10px] text-on-surface-variant/50 font-bold uppercase tracking-widest">

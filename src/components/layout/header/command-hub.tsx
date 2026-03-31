@@ -204,14 +204,14 @@ function HubPanel({
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 z-[99] bg-black/20 backdrop-blur-[2px] animate-in fade-in duration-150" />
+      <div className="fixed inset-0 z-99 bg-black/20 backdrop-blur-[2px] animate-in fade-in duration-150" />
 
       {/* Panel */}
       <div
         ref={panelRef}
         onKeyDown={handleKeyDown}
         className="
-          fixed top-3 left-1/2 -translate-x-1/2 z-[100] w-[440px] max-h-[calc(100vh-80px)]
+          fixed top-3 left-1/2 -translate-x-1/2 z-100 w-110 max-h-[calc(100vh-80px)]
           overflow-hidden rounded-2xl
           bg-popover/95 backdrop-blur-2xl
           border border-border/50
