@@ -54,7 +54,7 @@ const navPrincipal: NavItemDef[] = [
 ]
 
 const navServicos: NavItemDef[] = [
-  { id: 'agenda',         title: 'Agenda',             url: '/app/calendar'                            },
+  { id: 'agenda',         title: 'Agenda',             url: '/app/agenda'                              },
   { id: 'assinatura',     title: 'Assinatura Digital', url: '/app/assinatura-digital/documentos/lista' },
   { id: 'assistentes',    title: 'Assistentes',        url: '/app/assistentes'                         },
   { id: 'chat',           title: 'Chat',               url: '/app/chat'                                },

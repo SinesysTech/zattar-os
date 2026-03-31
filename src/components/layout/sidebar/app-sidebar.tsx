@@ -83,7 +83,7 @@ const navPrincipal = [
 const navServicos = [
   {
     title: "Agenda",
-    url: "/app/calendar",
+    url: "/app/agenda",
     icon: CalendarCheck,
   },
   {

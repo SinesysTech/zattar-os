@@ -26,6 +26,7 @@ ENV_FILE="${PROJECT_DIR}/.env.local"
 ENV_PRODUCTION="${PROJECT_DIR}/.env.production"
 REGISTRY="registry.sinesys.online"
 IMAGE_NAME="zattar-os"
+CLOUDRON_APP="zattaradvogados.com"
 
 # Variaveis providas automaticamente pelos addons do Cloudron (nao setar)
 # Redis: mapeadas pelo start.sh de CLOUDRON_REDIS_* -> REDIS_*
@@ -216,9 +217,9 @@ if [ "$SKIP_UPDATE" = false ]; then
     echo ""
 
     if [ "$SKIP_BUILD" = false ]; then
-        cloudron update --image "$FULL_IMAGE"
+        cloudron update --app "$CLOUDRON_APP" --image "$FULL_IMAGE"
     else
-        cloudron update
+        cloudron update --app "$CLOUDRON_APP"
     fi
 
     success "Update concluido!"
@@ -233,7 +234,7 @@ header "STEP 4/4: Cloudron Env Set"
 echo "   Setando ${RUNTIME_COUNT} variaveis de runtime..."
 echo ""
 
-cloudron env set "${RUNTIME_ENVS[@]}"
+cloudron env set --app "$CLOUDRON_APP" "${RUNTIME_ENVS[@]}"
 
 success "Variaveis de ambiente configuradas!"
 
@@ -255,5 +256,5 @@ echo "   Build time (via .env.production):"
 echo "     - NEXT_PUBLIC_SUPABASE_URL"
 echo "     - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY"
 echo ""
-echo "   cloudron logs -f"
+echo "   cloudron logs -f --app ${CLOUDRON_APP}"
 echo ""
