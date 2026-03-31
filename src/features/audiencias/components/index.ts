@@ -16,6 +16,15 @@ export { AudienciasCalendarCompact } from './audiencias-calendar-compact';
 export { AudienciasDayList } from './audiencias-day-list';
 export { AudienciasMonthDayCell } from './audiencias-month-day-cell';
 
+// Mission View components
+export { AudienciasMissionView } from './audiencias-mission-view';
+export { MissionCard } from './mission-card';
+export { HearingCountdown } from './hearing-countdown';
+export { PrepScore, PrepScoreBadge, calcPrepItems, calcPrepScore } from './prep-score';
+export { PostHearingFlow } from './post-hearing-flow';
+export { ConflictAlert } from './conflict-alert';
+export { LoadHeatmap } from './load-heatmap';
+
 // Cards and badges
 export { AudienciaCard } from './audiencia-card';
 export { AudienciaStatusBadge } from './audiencia-status-badge';

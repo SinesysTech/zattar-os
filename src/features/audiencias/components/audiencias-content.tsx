@@ -19,14 +19,16 @@
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAgentContext } from '@copilotkit/react-core/v2';
-import { Settings } from 'lucide-react';
+import { Settings, CalendarDays, CalendarRange, Calendar, List } from 'lucide-react';
 
+import { Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 import {
   ViewModePopover,
+  type ViewModeOption,
   useWeekNavigator,
   type ViewType,
 } from '@/components/shared';
@@ -37,6 +39,8 @@ import { AudienciasListWrapper } from './audiencias-list-wrapper';
 import { AudienciasTableWrapper } from './audiencias-table-wrapper';
 import { AudienciasMonthWrapper } from './audiencias-month-wrapper';
 import { AudienciasYearWrapper } from './audiencias-year-wrapper';
+import { AudienciasMissionView } from './audiencias-mission-view';
+import { AudienciaDetailSheet } from './audiencia-detail-sheet';
 import { TiposAudienciasList } from './tipos-audiencias-list';
 
 // =============================================================================
@@ -101,6 +105,12 @@ export function AudienciasContent({
   // Dialog State (compartilhado)
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
 
+  // Mission View State
+  const [missionDate, setMissionDate] = React.useState(new Date());
+  const [missionAudiencias, setMissionAudiencias] = React.useState<import('../domain').Audiencia[]>([]);
+  const [selectedMissionAudiencia, setSelectedMissionAudiencia] = React.useState<import('../domain').Audiencia | null>(null);
+  const [isMissionDetailOpen, setIsMissionDetailOpen] = React.useState(false);
+
   // Dados Auxiliares pré-carregados no servidor (passados como props)
   const usuarios = initialUsuarios;
   const tiposAudiencia = initialTiposAudiencia;
@@ -120,6 +130,53 @@ export function AudienciasContent({
     },
   });
 
+  // Responsavel names map for Mission View
+  const responsavelNomesMap = React.useMemo(() => {
+    const map = new Map<number, string>();
+    usuarios.forEach((u) => {
+      map.set(u.id, u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}`);
+    });
+    return map;
+  }, [usuarios]);
+
+  // Fetch audiencias for Mission View when view is 'quadro'
+  React.useEffect(() => {
+    if (visualizacao !== 'quadro') return;
+
+    const fetchMissionData = async () => {
+      try {
+        const { actionListarAudiencias } = await import('../actions');
+        // Fetch current month for overview + specific day data
+        const startOfMonth = new Date(missionDate.getFullYear(), missionDate.getMonth(), 1);
+        const endOfMonth = new Date(missionDate.getFullYear(), missionDate.getMonth() + 1, 0, 23, 59, 59);
+
+        const result = await actionListarAudiencias({
+          pagina: 1,
+          limite: 200,
+          dataInicioInicio: startOfMonth.toISOString(),
+          dataInicioFim: endOfMonth.toISOString(),
+        });
+
+        if (result.success) {
+          setMissionAudiencias(result.data.data as import('../domain').Audiencia[]);
+        }
+      } catch (err) {
+        console.error('Erro ao carregar audiências para Mission View:', err);
+      }
+    };
+
+    fetchMissionData();
+  }, [visualizacao, missionDate]);
+
+  // Custom view options with Mission View
+  const audienciasViewOptions: ViewModeOption[] = React.useMemo(() => [
+    { value: 'semana' as ViewType, label: 'Semana', icon: CalendarDays },
+    { value: 'mes' as ViewType, label: 'Mês', icon: CalendarRange },
+    { value: 'ano' as ViewType, label: 'Ano', icon: Calendar },
+    { value: 'lista' as ViewType, label: 'Lista', icon: List },
+    { value: 'quadro' as ViewType, label: 'Missão', icon: Sparkles },
+  ], []);
+
   // Handle visualization change - navigate to the correct URL
   const handleVisualizacaoChange = React.useCallback((value: string) => {
     const viewValue = value as ViewType;
@@ -138,6 +195,7 @@ export function AudienciasContent({
     <ViewModePopover
       value={visualizacao}
       onValueChange={handleVisualizacaoChange}
+      options={audienciasViewOptions}
     />
   );
 
@@ -213,11 +271,17 @@ export function AudienciasContent({
         );
 
       case 'quadro':
-        // TODO: Implement AudienciasQuadroWrapper
         return (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-muted-foreground">Visualização em quadro em desenvolvimento</p>
-          </div>
+          <AudienciasMissionView
+            audiencias={missionAudiencias}
+            currentDate={missionDate}
+            onDateChange={setMissionDate}
+            onViewDetail={(a) => {
+              setSelectedMissionAudiencia(a);
+              setIsMissionDetailOpen(true);
+            }}
+            responsavelNomes={responsavelNomesMap}
+          />
         );
 
       default:
@@ -231,6 +295,15 @@ export function AudienciasContent({
       <div className="flex-1 min-h-0">
         {renderContent()}
       </div>
+
+      {/* Detail Sheet para Mission View */}
+      {selectedMissionAudiencia && (
+        <AudienciaDetailSheet
+          open={isMissionDetailOpen}
+          onOpenChange={setIsMissionDetailOpen}
+          audiencia={selectedMissionAudiencia}
+        />
+      )}
 
       {/* Dialog de Configurações (compartilhado entre todas as views) */}
       <DialogFormShell

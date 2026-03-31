@@ -228,7 +228,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
         <div className="mb-2 p-2 bg-muted rounded-md flex items-center justify-between">
           <div className="flex items-center gap-2 overflow-hidden">
             <FileIcon className="h-5 w-5 text-sky-700 dark:text-sky-400 shrink-0" />
-            <span className="text-sm truncate max-w-[200px]">{uploadedFile.fileName}</span>
+            <span className="text-sm truncate max-w-50">{uploadedFile.fileName}</span>
           </div>
           <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleRemoveFile}>
             <X className="h-4 w-4" />
@@ -281,7 +281,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
               aria-label="Anexar arquivo à mensagem"
             />
 
-            <div className="absolute end-4 flex items-center">
+            <div className="absolute inset-e-4 flex items-center">
               <div className="block lg:hidden">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

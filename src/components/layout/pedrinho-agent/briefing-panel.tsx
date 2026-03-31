@@ -70,9 +70,9 @@ export function BriefingPanel({ onClose, onMinimize, threadId }: BriefingPanelPr
         <div className="flex items-center gap-3">
           {/* Pedrinho avatar */}
           <div className="size-7 rounded-xl bg-linear-to-br from-primary/25 to-primary/8 border border-primary/12 flex items-center justify-center">
-            <span className="flex gap-[3px]">
-              <span className="size-[5px] rounded-full bg-primary/70" />
-              <span className="size-[5px] rounded-full bg-primary/70" />
+            <span className="flex gap-0.75">
+              <span className="size-1.25 rounded-full bg-primary/70" />
+              <span className="size-1.25rounded-full bg-primary/70" />
             </span>
           </div>
           <div>

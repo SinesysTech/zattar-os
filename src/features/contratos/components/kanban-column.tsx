@@ -31,7 +31,7 @@ export function KanbanColumn({ stage, contratos, onCardClick }: KanbanColumnProp
   const total = contratos.reduce((sum, c) => sum + c.valor, 0);
 
   return (
-    <div className="flex-1 min-w-[260px] flex flex-col gap-2">
+    <div className="flex-1 min-w-65 flex flex-col gap-2">
       {/* Column header */}
       <div
         className="flex items-center justify-between px-1 pb-2 border-b-2"
