@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import Link from "next/link";
 import { PortalShell } from "@/features/portal";
 import { EditorialHeader, PhaseStepper } from "@/features/website";
@@ -267,9 +268,9 @@ function VerticalTimeline({ steps }: { steps: TimelineStep[] }) {
 export default function ProcessDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  void params; // id used for routing; displaying static mock data
+  const { id } = use(params);
 
   return (
     <PortalShell>
@@ -289,7 +290,7 @@ export default function ProcessDetailPage({
         title="Detalhes do Processo."
         actions={
           <Link
-            href={`/portal/processos/${params.id}/timeline`}
+            href={`/portal/processos/${id}/timeline`}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-container border border-white/10 text-sm font-semibold hover:bg-surface-container-highest hover:border-white/20 transition-all"
           >
             <Clock className="w-4 h-4 text-primary" />
@@ -412,7 +413,7 @@ export default function ProcessDetailPage({
               Andamento Processual
             </h3>
             <Link
-              href={`/portal/processos/${params.id}/timeline`}
+              href={`/portal/processos/${id}/timeline`}
               className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary/80 transition-colors"
             >
               Ver tudo

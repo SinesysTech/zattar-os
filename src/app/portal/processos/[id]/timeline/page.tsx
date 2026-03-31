@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import Link from "next/link";
 import { PortalShell } from "@/features/portal";
 import { EditorialHeader } from "@/features/website";
@@ -261,9 +262,9 @@ function TimelineEventCard({
 export default function ProcessTimelinePage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  void params;
+  const { id } = use(params);
 
   const doneCount = EVENTS.filter((e) => e.status === "done").length;
   const totalCount = EVENTS.length;
@@ -281,7 +282,7 @@ export default function ProcessTimelinePage({
         </Link>
         <ChevronRight className="w-3.5 h-3.5 opacity-40" aria-hidden="true" />
         <Link
-          href={`/portal/processos/${params.id}`}
+          href={`/portal/processos/${id}`}
           className="font-semibold hover:text-on-surface transition-colors"
         >
           Detalhes
@@ -296,7 +297,7 @@ export default function ProcessTimelinePage({
         title="Movimentações."
         actions={
           <Link
-            href={`/portal/processos/${params.id}`}
+            href={`/portal/processos/${id}`}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-container border border-white/10 text-sm font-semibold hover:bg-surface-container-highest hover:border-white/20 transition-all group"
             aria-label="Voltar para detalhes do processo"
           >
