@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { PulseOrb } from './pulse-orb'
 import { CommandBar } from './command-bar'
 import { BriefingPanel } from './briefing-panel'
@@ -9,36 +9,34 @@ export type PedrinhoMode = 'orb' | 'command' | 'briefing'
 
 interface PedrinhoAgentProps {
   userId: string
+  mode: PedrinhoMode
+  onModeChange: (mode: PedrinhoMode) => void
 }
 
-export function PedrinhoAgent({ userId }: PedrinhoAgentProps) {
-  const [mode, setMode] = useState<PedrinhoMode>('orb')
-
+export function PedrinhoAgent({ userId, mode, onModeChange }: PedrinhoAgentProps) {
   // Keyboard shortcuts: Cmd+J = Command Bar, Cmd+Shift+J = Briefing Panel
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
         e.preventDefault()
         if (e.shiftKey) {
-          // Cmd+Shift+J → toggle Briefing Panel
-          setMode((prev) => (prev === 'briefing' ? 'orb' : 'briefing'))
+          onModeChange(mode === 'briefing' ? 'orb' : 'briefing')
         } else {
-          // Cmd+J → toggle Command Bar
-          setMode((prev) => (prev === 'command' ? 'orb' : 'command'))
+          onModeChange(mode === 'command' ? 'orb' : 'command')
         }
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
+  }, [mode, onModeChange])
 
-  const handleCloseToOrb = useCallback(() => setMode('orb'), [])
-  const handleOpenCommand = useCallback(() => setMode('command'), [])
-  const handleOpenBriefing = useCallback(() => setMode('briefing'), [])
+  const handleCloseToOrb = useCallback(() => onModeChange('orb'), [onModeChange])
+  const handleOpenCommand = useCallback(() => onModeChange('command'), [onModeChange])
+  const handleOpenBriefing = useCallback(() => onModeChange('briefing'), [onModeChange])
 
   return (
     <>
-      {/* Orb — always rendered, hidden when other modes are active */}
+      {/* Orb — visible when in orb mode */}
       {mode === 'orb' && (
         <PulseOrb
           onOpenCommandBar={handleOpenCommand}
@@ -56,7 +54,7 @@ export function PedrinhoAgent({ userId }: PedrinhoAgentProps) {
         />
       )}
 
-      {/* Briefing Panel */}
+      {/* Briefing Panel — slides from right, pushes main content */}
       {mode === 'briefing' && (
         <BriefingPanel
           onClose={handleCloseToOrb}

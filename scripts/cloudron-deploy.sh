@@ -2,13 +2,17 @@
 set -e
 
 # =============================================================================
-# Cloudron Deploy - Build (remoto), Update e Env Set
+# Cloudron Deploy - Build (remoto via Build Service), Update e Env Set
 # =============================================================================
 # Uso:
 #   ./scripts/cloudron-deploy.sh                  # Build + Update + Env Set
 #   ./scripts/cloudron-deploy.sh --skip-build     # Update + Env Set
 #   ./scripts/cloudron-deploy.sh --env-only       # Apenas Env Set
 #   ./scripts/cloudron-deploy.sh --no-cache       # Build sem cache
+#   ./scripts/cloudron-deploy.sh --dry-run        # Simula sem executar
+#
+# NOTA: O build remoto usa o Build Service do Cloudron (builder.allhands.com.br).
+# Se o build remoto falhar por falta de memoria, use cloudron-deploy-local.sh.
 #
 # Variaveis NEXT_PUBLIC_* sao lidas do .env.production pelo Next.js no build.
 # Variaveis de runtime sao lidas do .env.local e setadas via cloudron env set.
@@ -44,6 +48,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 CYAN='\033[0;36m'
 BOLD='\033[1m'
+DIM='\033[2m'
 NC='\033[0m'
 
 # -----------------------------------------------------------------------------
@@ -53,6 +58,7 @@ SKIP_BUILD=false
 SKIP_UPDATE=false
 ENV_ONLY=false
 NO_CACHE=""
+DRY_RUN=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -60,6 +66,7 @@ while [[ $# -gt 0 ]]; do
         --skip-update)  SKIP_UPDATE=true; shift ;;
         --env-only)     ENV_ONLY=true; SKIP_BUILD=true; SKIP_UPDATE=true; shift ;;
         --no-cache)     NO_CACHE="--no-cache"; shift ;;
+        --dry-run)      DRY_RUN=true; shift ;;
         --help|-h)
             echo "Uso: $0 [opcoes]"
             echo ""
@@ -68,7 +75,11 @@ while [[ $# -gt 0 ]]; do
             echo "  --skip-update    Pula o update (faz build + env set)"
             echo "  --env-only       Apenas seta as variaveis de ambiente"
             echo "  --no-cache       Build sem cache"
+            echo "  --dry-run        Simula sem executar"
             echo "  --help           Mostra esta ajuda"
+            echo ""
+            echo "NOTA: Se o build remoto falhar por memoria, use:"
+            echo "  ./scripts/cloudron-deploy-local.sh"
             exit 0
             ;;
         *)
@@ -87,9 +98,26 @@ header() {
     echo -e "${CYAN}$(printf '%.0s-' {1..60})${NC}"
 }
 
-success() { echo -e "${GREEN}   $1${NC}"; }
-warn()    { echo -e "${YELLOW}   $1${NC}"; }
-error()   { echo -e "${RED}   $1${NC}"; }
+success() { echo -e "${GREEN}   ✓ $1${NC}"; }
+warn()    { echo -e "${YELLOW}   ⚠ $1${NC}"; }
+error()   { echo -e "${RED}   ✗ $1${NC}"; }
+info()    { echo -e "${DIM}   $1${NC}"; }
+
+run() {
+    if [ "$DRY_RUN" = true ]; then
+        # Mascarar valores de env vars no output do dry-run
+        local cmd_display="$*"
+        if [[ "$cmd_display" == *"env set"* ]]; then
+            local keys
+            keys=$(echo "$cmd_display" | grep -oE '[A-Z_]+=' | tr '\n' ' ')
+            echo -e "${YELLOW}   [dry-run] cloudron env set --app ${CLOUDRON_APP} ${keys}(${RUNTIME_COUNT} vars)${NC}"
+        else
+            echo -e "${YELLOW}   [dry-run] ${cmd_display}${NC}"
+        fi
+        return 0
+    fi
+    "$@"
+}
 
 is_skipped() {
     local var="$1"
@@ -113,33 +141,80 @@ parse_env_file() {
     done < "$file"
 }
 
+wait_for_health() {
+    local app="$1"
+    local max_attempts=12
+    local attempt=0
+
+    echo ""
+    info "Aguardando health check (ate ${max_attempts}x10s)..."
+
+    while [ $attempt -lt $max_attempts ]; do
+        attempt=$((attempt + 1))
+        local state
+        state=$(cloudron status --app "$app" 2>/dev/null | grep "Run state:" | awk '{print $NF}')
+
+        if [ "$state" = "running" ]; then
+            success "App running e healthy! (tentativa ${attempt}/${max_attempts})"
+            return 0
+        fi
+
+        info "  [${attempt}/${max_attempts}] Estado: ${state:-desconhecido}..."
+        sleep 10
+    done
+
+    error "Health check nao passou em $((max_attempts * 10))s!"
+    warn "Verifique: cloudron logs -f --app ${app}"
+    return 1
+}
+
 # =============================================================================
 # INICIO
 # =============================================================================
+GIT_SHA="$(git -C "$PROJECT_DIR" rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
+
 echo ""
-echo -e "${BOLD}Zattar OS - Cloudron Deploy${NC}"
+echo -e "${BOLD}Zattar OS - Cloudron Deploy (Build Remoto)${NC}"
 echo "============================================================"
-echo -e "  Build:     $([ "$SKIP_BUILD" = true ] && echo -e "${YELLOW}skip${NC}" || echo -e "${GREEN}cloudron build${NC}")"
+echo -e "  Git:       ${DIM}${GIT_SHA}${NC}"
+echo -e "  Build:     $([ "$SKIP_BUILD" = true ] && echo -e "${YELLOW}skip${NC}" || echo -e "${GREEN}cloudron build (remoto)${NC}")"
 echo -e "  Update:    $([ "$SKIP_UPDATE" = true ] && echo -e "${YELLOW}skip${NC}" || echo -e "${GREEN}cloudron update${NC}")"
 echo -e "  Env set:   ${GREEN}cloudron env set${NC}"
+[ "$DRY_RUN" = true ] && echo -e "  Modo:      ${YELLOW}DRY RUN (sem execucao real)${NC}"
 echo "============================================================"
 
-# Verificar pre-requisitos
+# =============================================================================
+# PRE-REQUISITOS
+# =============================================================================
+header "Verificando pre-requisitos"
+
+PREREQ_OK=true
+
 if [ ! -f "$ENV_FILE" ]; then
     error "Arquivo .env.local nao encontrado!"
-    exit 1
+    PREREQ_OK=false
+else
+    success ".env.local encontrado"
 fi
 
 if ! command -v cloudron &> /dev/null; then
     error "Cloudron CLI nao encontrado! Instale com: npm install -g cloudron"
-    exit 1
+    PREREQ_OK=false
+else
+    success "Cloudron CLI $(cloudron --version 2>/dev/null)"
 fi
 
-# Verificar .env.production (necessario para build)
 if [ "$SKIP_BUILD" = false ] && [ ! -f "$ENV_PRODUCTION" ]; then
     error ".env.production nao encontrado!"
-    error "Este arquivo contem NEXT_PUBLIC_* e eh lido pelo Next.js no build."
     error "Crie com: grep '^NEXT_PUBLIC_' .env.local > .env.production"
+    PREREQ_OK=false
+else
+    [ "$SKIP_BUILD" = false ] && success ".env.production encontrado"
+fi
+
+if [ "$PREREQ_OK" = false ]; then
+    echo ""
+    error "Pre-requisitos nao atendidos. Abortando."
     exit 1
 fi
 
@@ -155,19 +230,24 @@ while IFS='=' read -r key value; do
     RUNTIME_COUNT=$((RUNTIME_COUNT + 1))
 done < <(parse_env_file "$ENV_FILE")
 
-success "${RUNTIME_COUNT} variaveis de runtime carregadas do .env.local"
+success "${RUNTIME_COUNT} variaveis de runtime carregadas"
 
 # =============================================================================
-# STEP 1: Cloudron Build
+# STEP 1: Cloudron Build (remoto)
 # =============================================================================
 if [ "$SKIP_BUILD" = false ]; then
-    header "STEP 1/3: Cloudron Build"
-    echo ""
+    header "STEP 1/3: Cloudron Build (remoto)"
+    BUILD_START=$(date +%s)
 
     cd "$PROJECT_DIR"
-    cloudron build build -f "$DOCKERFILE" ${NO_CACHE}
+    run cloudron build build -f "$DOCKERFILE" ${NO_CACHE}
 
-    success "Build concluido!"
+    BUILD_END=$(date +%s)
+    BUILD_DURATION=$(( BUILD_END - BUILD_START ))
+
+    if [ "$DRY_RUN" = false ]; then
+        success "Build remoto concluido em ${BUILD_DURATION}s"
+    fi
 else
     header "STEP 1/3: Build (pulado)"
 fi
@@ -177,11 +257,15 @@ fi
 # =============================================================================
 if [ "$SKIP_UPDATE" = false ]; then
     header "STEP 2/3: Cloudron Update"
-    echo ""
 
-    cloudron update --app "$CLOUDRON_APP"
+    run cloudron update --app "$CLOUDRON_APP"
 
     success "Update concluido!"
+
+    # Esperar health check
+    if [ "$DRY_RUN" = false ]; then
+        wait_for_health "$CLOUDRON_APP"
+    fi
 else
     header "STEP 2/3: Update (pulado)"
 fi
@@ -190,10 +274,9 @@ fi
 # STEP 3: Cloudron Env Set
 # =============================================================================
 header "STEP 3/3: Cloudron Env Set"
-echo "   Setando ${RUNTIME_COUNT} variaveis de runtime..."
-echo ""
+info "Setando ${RUNTIME_COUNT} variaveis de runtime..."
 
-cloudron env set --app "$CLOUDRON_APP" "${RUNTIME_ENVS[@]}"
+run cloudron env set --app "$CLOUDRON_APP" "${RUNTIME_ENVS[@]}"
 
 success "Variaveis de ambiente configuradas!"
 
@@ -213,5 +296,7 @@ echo "   Build time (via .env.production):"
 echo "     - NEXT_PUBLIC_SUPABASE_URL"
 echo "     - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY"
 echo ""
-echo "   cloudron logs -f"
+echo "   Comandos uteis:"
+echo "     cloudron logs -f --app ${CLOUDRON_APP}"
+echo "     cloudron status --app ${CLOUDRON_APP}"
 echo ""

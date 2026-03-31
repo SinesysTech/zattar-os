@@ -1,18 +1,22 @@
 # ============================================================================
 # Dockerfile.cloudron - Deploy no Cloudron
 # ============================================================================
-# NOTA: Sem BuildKit pois o build service nao suporta.
-#
 # Cloudron runtime:
 #   - /app/code READ-ONLY | /app/data writable (persistente) | /tmp writable
 #   - Cloudron gerencia restart (sem supervisor)
 #   - Node.js 18 no cloudron/base é insuficiente (Supabase requer 20+)
+#
+# Build: docker build --platform linux/amd64 -f Dockerfile.cloudron -t img .
 # ============================================================================
+
+# --------------- versao pinada para reprodutibilidade -----------------------
+ARG NODE_VERSION=22
+ARG CLOUDRON_BASE=4.2.0
 
 # ============================================================================
 # STAGE 1: Dependencies (Alpine para build rapido)
 # ============================================================================
-FROM node:22-alpine AS deps
+FROM node:${NODE_VERSION}-alpine AS deps
 WORKDIR /app
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -23,7 +27,7 @@ RUN npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
 # ============================================================================
 # STAGE 2: Builder
 # ============================================================================
-FROM node:22-alpine AS builder
+FROM node:${NODE_VERSION}-alpine AS builder
 WORKDIR /app
 # NEXT_PUBLIC_* sao lidas automaticamente do .env.production pelo Next.js durante o build.
 # Nao precisa de ARG/ENV — basta o arquivo estar no contexto de build.
@@ -32,7 +36,6 @@ ENV NEXT_BUILD_LINT_DISABLED=1
 ENV SKIP_TYPE_CHECK=true
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 COPY --from=deps /app/node_modules ./node_modules
-RUN mkdir -p .next/cache
 COPY . .
 RUN mkdir -p public/pdfjs && \
     cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdfjs/pdf.worker.min.mjs
@@ -41,24 +44,35 @@ RUN npm run build:ci
 # ============================================================================
 # STAGE 3: Cloudron Runner
 # ============================================================================
-FROM cloudron/base:4.2.0
+FROM cloudron/base:${CLOUDRON_BASE}
+
+ARG NODE_VERSION=22
+
+# OCI labels para rastreabilidade no registry
+LABEL org.opencontainers.image.title="Zattar OS"
+LABEL org.opencontainers.image.description="Sistema de gestao juridica"
+LABEL org.opencontainers.image.vendor="Zattar Advogados"
+LABEL org.opencontainers.image.source="https://github.com/sinesystec/zattar-os"
 
 # Atualizar Node.js 18 -> 22
 # cloudron/base tem node 18 em /usr/local/node-18.18.0/bin/ que aparece primeiro no PATH.
 # Estrategia: instalar via n e depois sobrescrever o binario antigo no path prioritario.
-RUN npm install -g n && n 22 \
+RUN npm install -g n && n ${NODE_VERSION} \
     && cp /usr/local/bin/node /usr/local/node-18.18.0/bin/node \
     && cp /usr/local/bin/npm /usr/local/node-18.18.0/bin/npm \
     && cp /usr/local/bin/npx /usr/local/node-18.18.0/bin/npx \
-    && node --version
+    && node --version \
+    && npm cache clean --force \
+    && rm -rf /tmp/*
 
 RUN mkdir -p /app/code /app/data
 WORKDIR /app/code
 
+# Copiar artefatos do build — ordem: menos mutavel -> mais mutavel
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/cache-handler.js ./cache-handler.js
+COPY --from=builder /app/.next/standalone ./
 
 # Symlink cache para diretorio writable (/app/data e persistente no Cloudron)
 # /app/code e READ-ONLY em runtime, mas symlinks criados no build funcionam
@@ -70,6 +84,11 @@ RUN mkdir -p /app/data/cache/next /app/data/logs /app/data/tmp \
 
 COPY cloudron/start.sh /app/code/start.sh
 RUN chmod +x /app/code/start.sh
+
+# Healthcheck para monitoramento (Cloudron usa /api/health via manifest,
+# mas HEALTHCHECK instruction ajuda no docker inspect e build local)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -sf http://localhost:3000/api/health || exit 1
 
 EXPOSE 3000
 

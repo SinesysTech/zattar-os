@@ -69,7 +69,7 @@ export function PulseOrb({
       {/* Proactive Nudge Tooltip */}
       {showNudge && nudgeMessage && !showMenu && (
         <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <div className="flex items-start gap-2.5 max-w-[280px] rounded-2xl border border-border/20 bg-card/95 backdrop-blur-xl px-3.5 py-2.5 shadow-[0_4px_16px_rgba(0,0,0,0.1),0_8px_32px_rgba(0,0,0,0.08)] dark:border-border/8 dark:bg-background/80 dark:shadow-[0_8px_32px_rgba(0,0,0,0.25)]">
+          <div className="flex items-start gap-2.5 max-w-70 rounded-2xl border border-border/20 bg-card/95 backdrop-blur-xl px-3.5 py-2.5 shadow-[0_4px_16px_rgba(0,0,0,0.1),0_8px_32px_rgba(0,0,0,0.08)] dark:border-border/8 dark:bg-background/80 dark:shadow-[0_8px_32px_rgba(0,0,0,0.25)]">
             <div className="flex-1 min-w-0">
               <p className="text-[10px] uppercase tracking-[0.15em] text-primary/50 font-semibold mb-1">
                 Pedrinho
@@ -94,7 +94,7 @@ export function PulseOrb({
           ref={menuRef}
           className="animate-in fade-in zoom-in-95 slide-in-from-bottom-1 duration-150"
         >
-          <div className="flex flex-col gap-0.5 min-w-[160px] rounded-xl border border-border/20 bg-card/95 backdrop-blur-xl p-1 shadow-[0_4px_16px_rgba(0,0,0,0.1),0_12px_40px_rgba(0,0,0,0.08)] dark:border-border/10 dark:bg-background/90 dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+          <div className="flex flex-col gap-0.5 min-w-40 rounded-xl border border-border/20 bg-card/95 backdrop-blur-xl p-1 shadow-[0_4px_16px_rgba(0,0,0,0.1),0_12px_40px_rgba(0,0,0,0.08)] dark:border-border/10 dark:bg-background/90 dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
             <button
               onClick={() => handleMenuAction('command')}
               className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[11px] font-medium text-foreground/70 hover:bg-primary/6 hover:text-foreground/90 transition-colors cursor-pointer"
@@ -142,8 +142,8 @@ export function PulseOrb({
         {/* Two-dot signature */}
         <span className="relative flex items-center justify-center size-full">
           <span className="flex gap-1.5">
-            <span className="size-[7px] rounded-full bg-primary transition-colors duration-200" />
-            <span className="size-[7px] rounded-full bg-primary transition-colors duration-200" />
+            <span className="size-1.75 rounded-full bg-primary transition-colors duration-200" />
+            <span className="size-1.75 rounded-full bg-primary transition-colors duration-200" />
           </span>
         </span>
 
