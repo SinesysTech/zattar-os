@@ -31,11 +31,20 @@ CREATE INDEX IF NOT EXISTS idx_copilotkit_runs_created_at
 -- RLS: apenas service role pode acessar (backend-only)
 ALTER TABLE public.copilotkit_runs ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "service_role_full_access" ON public.copilotkit_runs
-  FOR ALL
-  TO service_role
-  USING (true)
-  WITH CHECK (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'copilotkit_runs' AND policyname = 'service_role_full_access'
+  ) THEN
+    CREATE POLICY "service_role_full_access" ON public.copilotkit_runs
+      FOR ALL
+      TO service_role
+      USING (true)
+      WITH CHECK (true);
+  END IF;
+END
+$$;
 
 -- Comentários
 COMMENT ON TABLE public.copilotkit_runs IS 'Persistência de threads/runs do CopilotKit BuiltInAgent v2';

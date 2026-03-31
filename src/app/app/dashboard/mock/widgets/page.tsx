@@ -18,7 +18,7 @@ import { PessoalWidgets } from './section-pessoal';
 
 export default function WidgetGalleryPage() {
   return (
-    <div className="max-w-[1400px] mx-auto space-y-12 pb-12">
+    <div className="max-w-350 mx-auto space-y-12 pb-12">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-heading font-bold tracking-tight">
