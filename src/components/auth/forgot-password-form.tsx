@@ -2,12 +2,15 @@
 
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
-import { AtSign, AlertCircle, ArrowRight, CheckCircle2, Loader2, Lock, Scale, ShieldCheck } from 'lucide-react'
+import { AtSign, AlertCircle, ArrowRight, ArrowLeft, CheckCircle2, Loader2 } from 'lucide-react'
 
-export function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export function ForgotPasswordForm({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -34,84 +37,84 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
 
   return (
     <div className={cn('flex flex-col', className)} {...props}>
-      <div className="mb-10 flex flex-col items-center gap-4 lg:hidden">
-        <div className="relative h-16 w-80">
+      {/* Logo */}
+      <div className="flex flex-col items-center gap-4 mb-10">
+        <div className="relative h-12 w-12">
           <Image
-            src="/logos/logomarca-dark.svg"
+            src="/logos/logo-small-dark.svg"
             alt="Zattar Advogados"
             fill
             priority
-            className="object-contain object-center"
+            className="object-contain"
           />
         </div>
-        <span className="inline-flex rounded-full border border-outline-variant/30 bg-surface-container-highest/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
-          Ambiente interno
+        <span className="text-[10px] font-medium uppercase tracking-[3px] text-on-surface-variant/25">
+          Zattar Advogados
         </span>
       </div>
 
       {success ? (
         <div className="flex flex-col gap-6">
-          <div className="text-center lg:text-left">
-            <h2 className="font-headline text-2xl font-bold text-on-surface mb-2">
-              Verifique seu Email
-            </h2>
-            <p className="text-sm text-on-surface-variant">
-              Instruções de redefinição de senha enviadas.
+          <div className="text-center">
+            <h1 className="font-headline text-3xl font-extrabold tracking-tight text-on-surface">
+              Pronto.
+            </h1>
+            <p className="mt-2 text-sm text-on-surface-variant/60 leading-relaxed">
+              Se o email estiver cadastrado, você receberá<br />
+              um link para redefinir sua senha.
             </p>
           </div>
 
-          <div className="flex items-start gap-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
+          <div className="flex items-start gap-2.5 rounded-xl border border-emerald-500/15 bg-emerald-500/5 p-4">
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
-            <p className="text-sm leading-relaxed text-on-surface-variant">
-              Se o email estiver cadastrado, você receberá um link para redefinir sua senha em instantes.
+            <p className="text-sm leading-relaxed text-on-surface-variant/60">
+              Verifique sua caixa de entrada e a pasta de spam.
             </p>
           </div>
 
-          <Link
-            href="/app/login"
-            className="text-[10px] text-outline uppercase tracking-widest hover:text-primary transition-colors text-center lg:text-left"
-          >
-            Voltar para o login
-          </Link>
+          <div className="text-center">
+            <Link
+              href="/app/login"
+              className="inline-flex items-center gap-1.5 text-xs text-on-surface-variant/30 transition-colors hover:text-primary"
+            >
+              <ArrowLeft className="h-3 w-3" />
+              Voltar para o login
+            </Link>
+          </div>
         </div>
       ) : (
         <>
-          <div className="text-center lg:text-left mb-10">
-            <h2 className="font-headline text-2xl font-bold text-on-surface mb-2">
-              Redefinir Senha
-            </h2>
-            <p className="text-sm text-on-surface-variant">
-              Digite seu email corporativo e enviaremos um link para redefinir sua senha.
+          {/* Heading */}
+          <div className="mb-9 text-center">
+            <h1 className="font-headline text-3xl font-extrabold tracking-tight text-on-surface">
+              Sem problemas.
+            </h1>
+            <p className="mt-2 text-sm text-on-surface-variant/60 leading-relaxed">
+              Digite seu email e enviamos<br />
+              um link para redefinir.
             </p>
           </div>
 
-          <form onSubmit={handleForgotPassword} className="space-y-6">
-            <div className="space-y-2">
-              <label
-                htmlFor="email"
-                className="block text-[10px] uppercase tracking-widest text-primary font-bold"
-              >
-                E-mail corporativo
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                  <AtSign className="h-4 w-4 text-outline" />
-                </div>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="voce@zattar.com.br"
-                  className="w-full bg-surface-container-high border-none rounded-lg py-4 pl-12 pr-4 text-on-surface placeholder:text-outline/40 focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all font-mono text-sm"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  autoComplete="email"
-                />
+          {/* Form */}
+          <form onSubmit={handleForgotPassword} className="space-y-3">
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
+                <AtSign className="h-4 w-4 text-on-surface-variant/25" />
               </div>
+              <input
+                id="email"
+                type="email"
+                placeholder="voce@zattar.com.br"
+                className="w-full rounded-xl border border-outline-variant/10 bg-on-surface/4 py-4 pl-12 pr-4 font-mono text-sm text-on-surface placeholder:text-on-surface-variant/25 focus:border-primary/30 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+              />
             </div>
 
             {error && (
-              <div className="flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/5 p-3">
+              <div className="flex items-start gap-2.5 rounded-xl border border-destructive/20 bg-destructive/5 p-3">
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
                 <p className="text-sm leading-relaxed text-destructive">{error}</p>
               </div>
@@ -120,7 +123,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-primary hover:bg-primary-container text-on-primary-fixed font-headline font-extrabold py-4 px-6 rounded-lg transition-all duration-300 active:scale-[0.98] shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+              className="mt-1 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-brrom-primary to-primary-dim py-4 px-6 font-headline text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isLoading ? (
                 <>
@@ -129,36 +132,22 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                 </>
               ) : (
                 <>
-                  Enviar link de redefinição
-                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  Enviar link
+                  <ArrowRight className="h-4 w-4" />
                 </>
               )}
             </button>
           </form>
 
-          <div className="flex flex-col items-center gap-4 pt-8">
+          {/* Footer */}
+          <div className="mt-8 text-center">
             <Link
               href="/app/login"
-              className="text-[10px] text-outline uppercase tracking-widest hover:text-primary transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs text-on-surface-variant/30 transition-colors hover:text-primary"
             >
+              <ArrowLeft className="h-3 w-3" />
               Voltar para o login
             </Link>
-            <div className="flex gap-4">
-              <span className="w-1 h-1 rounded-full bg-outline-variant" />
-              <span className="w-1 h-1 rounded-full bg-outline-variant" />
-              <span className="w-1 h-1 rounded-full bg-outline-variant" />
-            </div>
-            <div className="flex items-center gap-4 pt-2">
-              <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
-                <ShieldCheck className="w-3 h-3" /> ISO-9001
-              </span>
-              <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
-                <Lock className="w-3 h-3" /> SOC2
-              </span>
-              <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
-                <Scale className="w-3 h-3" /> LGPD
-              </span>
-            </div>
           </div>
         </>
       )}

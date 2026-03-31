@@ -37,6 +37,7 @@ export {
   actionAtualizarSystemPrompt,
   actionDeletarSystemPrompt,
   actionToggleAtivoPrompt,
+  actionPersonalizarPromptBuiltIn,
 } from "./actions/system-prompts-actions";
 
 // Components (safe for client)

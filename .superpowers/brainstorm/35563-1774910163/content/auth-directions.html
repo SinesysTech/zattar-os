@@ -1,0 +1,126 @@
+<h2>Redesign Auth — 3 Direções</h2>
+<p class="subtitle">Login interno para equipe Zattar. Qual direção tem mais a cara de vocês?</p>
+
+<div class="cards">
+
+  <!-- OPTION A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #0a0a0a; padding: 20px; min-height: 360px; position: relative; overflow: hidden;">
+      <!-- Animated gradient background -->
+      <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 50%, rgba(168, 85, 247, 0.15) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);"></div>
+
+      <!-- Centered glass card -->
+      <div style="position: relative; z-index: 1; max-width: 320px; margin: 0 auto;">
+        <!-- Logo small -->
+        <div style="text-align: center; margin-bottom: 24px; opacity: 0.4; font-family: monospace; font-size: 10px; letter-spacing: 4px; color: #a855f7;">ZATTAR ADVOGADOS</div>
+
+        <!-- Big greeting -->
+        <div style="text-align: center; margin-bottom: 32px;">
+          <h1 style="font-size: 36px; font-weight: 800; color: white; margin: 0; letter-spacing: -1px;">Bom dia.</h1>
+          <p style="color: rgba(255,255,255,0.4); font-size: 13px; margin-top: 8px;">Acesse sua estação de trabalho</p>
+        </div>
+
+        <!-- Form -->
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px;">
+          <div style="margin-bottom: 16px;">
+            <div style="background: rgba(255,255,255,0.06); border-radius: 10px; padding: 14px 16px; color: rgba(255,255,255,0.3); font-size: 13px; font-family: monospace;">voce@zattar.com.br</div>
+          </div>
+          <div style="margin-bottom: 20px;">
+            <div style="background: rgba(255,255,255,0.06); border-radius: 10px; padding: 14px 16px; color: rgba(255,255,255,0.3); font-size: 13px;">••••••••••••</div>
+          </div>
+          <div style="background: #a855f7; border-radius: 10px; padding: 14px; text-align: center; color: white; font-weight: 700; font-size: 14px;">Entrar</div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+          <span style="color: rgba(255,255,255,0.2); font-size: 11px;">Esqueci minha senha</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — "Boas-vindas"</h3>
+      <p>Tela centrada, atmosférica. Greeting dinâmico ("Bom dia", "Boa tarde"). Fundo com gradiente roxo sutil. Sem split-view, sem decoração forçada. A confiança vem da simplicidade.</p>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #0a0a0a; padding: 20px; min-height: 360px; position: relative; overflow: hidden; display: flex;">
+      <!-- Left: Typography -->
+      <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding-right: 20px; border-right: 1px solid rgba(255,255,255,0.05);">
+        <div style="font-size: 9px; letter-spacing: 4px; text-transform: uppercase; color: #a855f7; font-weight: 700; margin-bottom: 16px;">Zattar Advogados</div>
+        <div style="font-size: 32px; font-weight: 800; color: white; line-height: 1.1; letter-spacing: -1.5px;">
+          Justiça<br/>para quem<br/><span style="background: linear-gradient(135deg, #a855f7, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">trabalha.</span>
+        </div>
+        <div style="margin-top: 24px; color: rgba(255,255,255,0.25); font-size: 11px; line-height: 1.6; max-width: 200px;">
+          Plataforma interna de gestão jurídica e inteligência processual.
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding-left: 20px;">
+        <div style="margin-bottom: 24px;">
+          <div style="font-size: 18px; font-weight: 700; color: white;">Entrar</div>
+          <div style="color: rgba(255,255,255,0.35); font-size: 12px; margin-top: 4px;">com suas credenciais</div>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: #a855f7; font-weight: 600; margin-bottom: 6px;">Email</div>
+          <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; color: rgba(255,255,255,0.3); font-size: 12px; font-family: monospace;">voce@zattar.com.br</div>
+        </div>
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: #a855f7; font-weight: 600; margin-bottom: 6px;">Senha</div>
+          <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; color: rgba(255,255,255,0.3); font-size: 12px;">••••••••</div>
+        </div>
+        <div style="background: #a855f7; border-radius: 8px; padding: 12px; text-align: center; color: white; font-weight: 700; font-size: 13px;">Entrar →</div>
+        <div style="text-align: center; margin-top: 12px;">
+          <span style="color: rgba(255,255,255,0.2); font-size: 10px;">Esqueci minha senha</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — "Editorial"</h3>
+      <p>Split-view mas com propósito: o lado esquerdo é o manifesto da marca (a mesma frase do hero do site), com texto gradiente. Lado direito é o form limpo. Tipografia grande e expressiva faz o trabalho — sem decorações artificiais.</p>
+    </div>
+  </div>
+
+  <!-- OPTION C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #0a0a0a; padding: 20px; min-height: 360px; position: relative; overflow: hidden;">
+      <!-- Subtle grain/texture -->
+      <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 100%, rgba(168, 85, 247, 0.06) 0%, transparent 70%);"></div>
+
+      <div style="position: relative; z-index: 1; max-width: 300px; margin: 0 auto; padding-top: 20px;">
+        <!-- Clock / Time -->
+        <div style="text-align: center; margin-bottom: 8px;">
+          <div style="font-size: 48px; font-weight: 200; color: white; letter-spacing: -2px; font-variant-numeric: tabular-nums;">09:42</div>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 2px;">segunda-feira, 30 de março</div>
+        </div>
+
+        <!-- Avatar -->
+        <div style="text-align: center; margin: 24px 0 16px;">
+          <div style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #7c3aed); margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: white;">Z</div>
+        </div>
+
+        <!-- Form minimal -->
+        <div style="margin-bottom: 12px;">
+          <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; color: rgba(255,255,255,0.3); font-size: 13px; font-family: monospace; text-align: center;">voce@zattar.com.br</div>
+        </div>
+        <div style="margin-bottom: 16px;">
+          <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; color: rgba(255,255,255,0.3); font-size: 13px; text-align: center;">••••••••••••</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px; text-align: center; color: white; font-weight: 600; font-size: 14px;">Desbloquear</div>
+
+        <div style="text-align: center; margin-top: 16px;">
+          <span style="color: rgba(255,255,255,0.2); font-size: 11px;">Esqueci minha senha</span>
+        </div>
+
+        <!-- Bottom bar -->
+        <div style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; background: white; border-radius: 3px; opacity: 0.2;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — "OS Lock Screen"</h3>
+      <p>Já que é "Zattar OS", abraça a metáfora. Relógio, avatar, campos centrados — parece uma tela de desbloqueio de sistema operacional. Familiar, eficiente, com personalidade. O botão é "Desbloquear" ao invés de "Entrar".</p>
+    </div>
+  </div>
+
+</div>

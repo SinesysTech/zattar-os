@@ -202,14 +202,14 @@ function MacOSDock({
       className={cn('backdrop-blur-2xl', className)}
       style={{
         width: `${contentWidth + padding * 2}px`,
-        background: 'rgba(255, 255, 255, 0.45)',
+        background: 'rgba(10, 10, 10, 0.55)',
         borderRadius: `${Math.max(16, baseIconSize * 0.35)}px`,
-        border: '1px solid rgba(255, 255, 255, 0.55)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
         boxShadow: [
-          '0 8px 32px rgba(0, 0, 0, 0.08)',
-          '0 2px 8px rgba(0, 0, 0, 0.05)',
-          'inset 0 1px 0 rgba(255, 255, 255, 0.7)',
-          'inset 0 -1px 0 rgba(0, 0, 0, 0.04)',
+          '0 8px 32px rgba(0, 0, 0, 0.35)',
+          '0 2px 8px rgba(0, 0, 0, 0.2)',
+          'inset 0 1px 0 rgba(255, 255, 255, 0.06)',
+          'inset 0 -1px 0 rgba(0, 0, 0, 0.15)',
         ].join(', '),
         padding: `${padding}px`,
       }}
@@ -225,9 +225,9 @@ function MacOSDock({
           currentPositions[hoveredIndex] !== undefined && (
             <div
               className="absolute pointer-events-none whitespace-nowrap z-50
-                         px-3 py-1.5 rounded-lg text-xs font-medium text-white
-                         bg-[rgba(20,20,20,0.92)] backdrop-blur-sm
-                         border border-white/10 shadow-lg
+                         px-3 py-1.5 rounded-lg text-xs font-medium text-white/90
+                         bg-[rgba(8,8,8,0.88)] backdrop-blur-md
+                         border border-white/6 shadow-lg
                          transition-[left,opacity] duration-100 ease-out"
               style={{
                 left: `${currentPositions[hoveredIndex]}px`,
@@ -263,10 +263,10 @@ function MacOSDock({
               <div
                 className="w-full h-full rounded-[22%] overflow-hidden relative"
                 style={{
-                  border: '0.5px solid rgba(255, 255, 255, 0.30)',
+                  border: '0.5px solid rgba(255, 255, 255, 0.10)',
                   boxShadow: [
-                    'inset 0 1px 1px rgba(255, 255, 255, 0.25)',
-                    `0 ${scale > 1.2 ? 4 : 2}px ${scale > 1.2 ? 12 : 6}px rgba(0, 0, 0, ${0.10 + (scale - 1) * 0.1})`,
+                    'inset 0 1px 1px rgba(255, 255, 255, 0.08)',
+                    `0 ${scale > 1.2 ? 4 : 2}px ${scale > 1.2 ? 12 : 6}px rgba(0, 0, 0, ${0.25 + (scale - 1) * 0.15})`,
                   ].join(', '),
                 }}
               >
@@ -274,14 +274,14 @@ function MacOSDock({
                 <div className="relative w-full h-full">
                   {item.icon}
                 </div>
-                {/* Specular highlight — glass refraction overlay */}
+                {/* Specular highlight — subtle glass refraction */}
                 <div
                   className="absolute inset-0 pointer-events-none rounded-[22%]"
                   style={{
                     background: `linear-gradient(
                       170deg,
-                      rgba(255, 255, 255, 0.30) 0%,
-                      rgba(255, 255, 255, 0.08) 35%,
+                      rgba(255, 255, 255, 0.12) 0%,
+                      rgba(255, 255, 255, 0.04) 35%,
                       transparent 55%
                     )`,
                   }}
@@ -291,14 +291,14 @@ function MacOSDock({
               {/* Active route indicator dot */}
               {activeItems.includes(item.id) && (
                 <div
-                  className="absolute rounded-full bg-black/40"
+                  className="absolute rounded-full bg-white/70"
                   style={{
                     bottom: `${Math.max(-4, -baseIconSize * 0.07)}px`,
                     left: '50%',
                     transform: 'translateX(-50%)',
                     width: `${Math.max(4, baseIconSize * 0.07)}px`,
                     height: `${Math.max(4, baseIconSize * 0.07)}px`,
-                    boxShadow: '0 0 3px rgba(0, 0, 0, 0.15)',
+                    boxShadow: '0 0 4px rgba(255, 255, 255, 0.3)',
                   }}
                 />
               )}

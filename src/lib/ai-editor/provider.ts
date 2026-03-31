@@ -6,7 +6,7 @@
  */
 
 import type { EditorIAConfig } from "@/features/integracoes/domain";
-import { createGateway } from "ai";
+import { createGateway } from "@ai-sdk/gateway";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";

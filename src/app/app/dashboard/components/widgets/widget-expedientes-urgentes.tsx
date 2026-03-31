@@ -31,7 +31,7 @@ function getUrgency(dias: number) {
 export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedientesUrgentesProps) {
   if (loading) {
     return (
-      <Card>
+      <Card className="glass-widget bg-transparent transition-all duration-200">
         <CardHeader><Skeleton className="h-5 w-44" /></CardHeader>
         <CardContent className="space-y-3">
           {[1, 2, 3].map((i) => <Skeleton key={i} className="h-20 rounded-lg" />)}
@@ -42,7 +42,7 @@ export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedi
 
   if (error) {
     return (
-      <Card>
+      <Card className="glass-widget bg-transparent transition-all duration-200">
         <CardHeader><CardTitle>Expedientes Urgentes</CardTitle></CardHeader>
         <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
       </Card>
@@ -50,7 +50,7 @@ export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedi
   }
 
   return (
-    <Card>
+    <Card className="glass-widget bg-transparent transition-all duration-200">
       <CardHeader>
         <CardTitle>Expedientes Urgentes</CardTitle>
         <CardDescription>

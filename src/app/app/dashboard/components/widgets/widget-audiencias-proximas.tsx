@@ -52,7 +52,7 @@ const urgencyStyles = {
 export function WidgetAudienciasProximas({ data, loading, error }: WidgetAudienciasProximasProps) {
   if (loading) {
     return (
-      <Card>
+      <Card className="glass-widget bg-transparent transition-all duration-200">
         <CardHeader><Skeleton className="h-5 w-40" /></CardHeader>
         <CardContent className="space-y-3">
           {[1, 2, 3].map((i) => <Skeleton key={i} className="h-20 rounded-lg" />)}
@@ -63,7 +63,7 @@ export function WidgetAudienciasProximas({ data, loading, error }: WidgetAudienc
 
   if (error) {
     return (
-      <Card>
+      <Card className="glass-widget bg-transparent transition-all duration-200">
         <CardHeader><CardTitle>Próximas Audiências</CardTitle></CardHeader>
         <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
       </Card>
@@ -71,7 +71,7 @@ export function WidgetAudienciasProximas({ data, loading, error }: WidgetAudienc
   }
 
   return (
-    <Card>
+    <Card className="glass-widget bg-transparent transition-all duration-200">
       <CardHeader>
         <CardTitle>Próximas Audiências</CardTitle>
         <CardDescription>

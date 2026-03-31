@@ -6,7 +6,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { AtSign, AlertCircle, ArrowRight, Eye, EyeOff, Loader2, Lock, Scale, ShieldCheck } from 'lucide-react'
+import { AtSign, AlertCircle, ArrowRight, Eye, EyeOff, Loader2, Lock } from 'lucide-react'
+
+function getGreeting(): string {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'Bom dia.'
+  if (hour < 18) return 'Boa tarde.'
+  return 'Boa noite.'
+}
 
 export function LoginForm({
   className,
@@ -32,14 +39,12 @@ export function LoginForm({
       })
 
       if (error) {
-        console.error('Erro de autenticação:', error)
         if (
           error.message?.includes('Database error querying schema') ||
           error.message?.includes('email_change')
         ) {
           console.error(
-            'Erro conhecido do Supabase Auth relacionado a email_change. ' +
-              'Este é um bug interno do Supabase. Verifique os logs do Supabase para mais detalhes.'
+            'Erro conhecido do Supabase Auth relacionado a email_change.'
           )
         }
         throw error
@@ -51,7 +56,6 @@ export function LoginForm({
 
       router.push('/app/dashboard')
     } catch (error: unknown) {
-      console.error('Erro no login:', error)
       if (error instanceof Error) {
         if (error.message.includes('Invalid login credentials')) {
           setError('Email ou senha incorretos')
@@ -59,15 +63,14 @@ export function LoginForm({
           setError('Por favor, confirme seu email antes de fazer login')
         } else if (
           error.message.includes('500') ||
-          error.message.includes('Database error querying schema') ||
           error.message.includes('Database error')
         ) {
           setError(
-            'Erro no servidor de autenticação. Por favor, tente novamente mais tarde.'
+            'Erro no servidor de autenticação. Tente novamente mais tarde.'
           )
         } else if (error.message.includes('email_change')) {
           setError(
-            'Erro interno de autenticação. Por favor, entre em contato com o suporte.'
+            'Erro interno de autenticação. Entre em contato com o suporte.'
           )
         } else {
           setError(error.message)
@@ -82,102 +85,80 @@ export function LoginForm({
 
   return (
     <div className={cn('flex flex-col', className)} {...props}>
-      <div className="mb-10 flex flex-col items-center gap-4 lg:hidden">
-        <div className="relative h-16 w-80">
+      {/* Logo */}
+      <div className="flex flex-col items-center gap-4 mb-10">
+        <div className="relative h-12 w-12">
           <Image
-            src="/logos/logomarca-dark.svg"
+            src="/logos/logo-small-dark.svg"
             alt="Zattar Advogados"
             fill
             priority
-            className="object-contain object-center"
+            className="object-contain"
           />
         </div>
-        <span className="inline-flex rounded-full border border-outline-variant/30 bg-surface-container-highest/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">
-          Ambiente interno
+        <span className="text-[10px] font-medium uppercase tracking-[3px] text-on-surface-variant/25">
+          Zattar Advogados
         </span>
       </div>
 
-      <div className="text-center lg:text-left mb-10">
-        <h2 className="font-headline text-2xl font-bold text-on-surface mb-2">
-          Entrar no Zattar OS
-        </h2>
-        <p className="text-sm text-on-surface-variant">
-          Acesse a plataforma interna com suas credenciais corporativas.
+      {/* Greeting */}
+      <div className="mb-9 text-center">
+        <h1 className="font-headline text-3xl font-extrabold tracking-tight text-on-surface">
+          {getGreeting()}
+        </h1>
+        <p className="mt-2 text-sm text-on-surface-variant/60">
+          Acesse sua estação de trabalho
         </p>
       </div>
 
-      <form onSubmit={handleLogin} className="space-y-6">
-        <div className="space-y-2">
-          <label
-            htmlFor="email"
-            className="block text-[10px] uppercase tracking-widest text-primary font-bold"
-          >
-            E-mail corporativo
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-              <AtSign className="h-4 w-4 text-outline" />
-            </div>
-            <input
-              id="email"
-              type="email"
-              placeholder="voce@zattar.com.br"
-              className="w-full bg-surface-container-high border-none rounded-lg py-4 pl-12 pr-4 text-on-surface placeholder:text-outline/40 focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all font-mono text-sm"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-            />
+      {/* Form */}
+      <form onSubmit={handleLogin} className="space-y-3">
+        <div className="relative">
+          <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
+            <AtSign className="h-4 w-4 text-on-surface-variant/25" />
           </div>
+          <input
+            id="email"
+            type="email"
+            placeholder="voce@zattar.com.br"
+            className="w-full rounded-xl border border-outline-variant/10 bg-on-surface/4 py-4 pl-12 pr-4 font-mono text-sm text-on-surface placeholder:text-on-surface-variant/25 focus:border-primary/30 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+          />
         </div>
 
-        <div className="space-y-2">
-          <label
-            htmlFor="password"
-            className="block text-[10px] uppercase tracking-widest text-primary font-bold"
-          >
-            Senha
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-              <Lock className="h-4 w-4 text-outline" />
-            </div>
-            <input
-              id="password"
-              type={showPassword ? 'text' : 'password'}
-              placeholder="••••••••••••"
-              className="w-full bg-surface-container-high border-none rounded-lg py-4 pl-12 pr-12 text-on-surface placeholder:text-outline/40 focus:ring-1 focus:ring-primary/50 focus:outline-none transition-all font-mono text-sm"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-outline transition-colors hover:text-on-surface"
-              aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-            >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-            </button>
+        <div className="relative">
+          <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
+            <Lock className="h-4 w-4 text-on-surface-variant/25" />
           </div>
-        </div>
-
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
-          <ShieldCheck className="w-4 h-4 text-primary" />
-          <span className="text-xs font-semibold text-primary">Protocolo MFA</span>
-          <span className="ml-auto flex items-center gap-1 text-[10px] text-on-surface-variant">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            Ativo
-          </span>
+          <input
+            id="password"
+            type={showPassword ? 'text' : 'password'}
+            placeholder="••••••••••••"
+            className="w-full rounded-xl border border-outline-variant/10 bg-on-surface/4 py-4 pl-12 pr-12 text-sm text-on-surface placeholder:text-on-surface-variant/25 focus:border-primary/30 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-on-surface-variant/20 transition-colors hover:text-on-surface-variant/50"
+            aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+          >
+            {showPassword ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+          </button>
         </div>
 
         {error && (
-          <div className="flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/5 p-3">
+          <div className="flex items-start gap-2.5 rounded-xl border border-destructive/20 bg-destructive/5 p-3">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
             <p className="text-sm leading-relaxed text-destructive">{error}</p>
           </div>
@@ -186,7 +167,7 @@ export function LoginForm({
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-primary hover:bg-primary-container text-on-primary-fixed font-headline font-extrabold py-4 px-6 rounded-lg transition-all duration-300 active:scale-[0.98] shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+          className="mt-1 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-brrom-primary to-primary-dim py-4 px-6 font-headline text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isLoading ? (
             <>
@@ -196,35 +177,20 @@ export function LoginForm({
           ) : (
             <>
               Entrar
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="h-4 w-4" />
             </>
           )}
         </button>
       </form>
 
-      <div className="flex flex-col items-center gap-4 pt-8">
+      {/* Footer */}
+      <div className="mt-8 text-center">
         <Link
           href="/app/forgot-password"
-          className="text-[10px] text-outline uppercase tracking-widest hover:text-primary transition-colors"
+          className="text-xs text-on-surface-variant/30 transition-colors hover:text-primary"
         >
           Esqueci minha senha
         </Link>
-        <div className="flex gap-4">
-          <span className="w-1 h-1 rounded-full bg-outline-variant" />
-          <span className="w-1 h-1 rounded-full bg-outline-variant" />
-          <span className="w-1 h-1 rounded-full bg-outline-variant" />
-        </div>
-        <div className="flex items-center gap-4 pt-2">
-          <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
-            <ShieldCheck className="w-3 h-3" /> ISO-9001
-          </span>
-          <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
-            <Lock className="w-3 h-3" /> SOC2
-          </span>
-          <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
-            <Scale className="w-3 h-3" /> LGPD
-          </span>
-        </div>
       </div>
     </div>
   )

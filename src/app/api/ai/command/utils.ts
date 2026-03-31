@@ -47,8 +47,10 @@ export const list = (items: string[] | undefined) =>
 
 export type StructuredPromptSections = {
   backgroundData?: string;
+  context?: string;
   examples?: string[] | string;
   history?: string;
+  instruction?: string;
   outputFormatting?: string;
   prefilledResponse?: string;
   question?: string;
@@ -89,8 +91,10 @@ export type StructuredPromptSections = {
  */
 export const buildStructuredPrompt = ({
   backgroundData,
+  context: contextField,
   examples,
   history,
+  instruction,
   outputFormatting,
   prefilledResponse,
   question,
@@ -100,6 +104,9 @@ export const buildStructuredPrompt = ({
   thinking,
   tone,
 }: StructuredPromptSections) => {
+  const bg = contextField ?? backgroundData;
+  const instr = instruction ?? question;
+
   const formattedExamples = Array.isArray(examples)
     ? examples.map((example) => tag('example', example)).join('\n')
     : examples;
@@ -108,11 +115,11 @@ export const buildStructuredPrompt = ({
     taskContext,
     tone,
 
-    backgroundData &&
+    bg &&
       dedent`
         Here is the background data you should reference when answering the user:
         <backgroundData>
-              ${backgroundData}
+              ${bg}
         </backgroundData>
       `,
     rules &&
@@ -133,10 +140,10 @@ export const buildStructuredPrompt = ({
               ${tag('history', history)}
       `,
 
-    question &&
+    instr &&
       dedent`
         Here is the user's question:
-              ${tag('question', question)}
+              ${tag('question', instr)}
       `,
   ]);
 
@@ -246,3 +253,51 @@ export const isMultiBlocks = (editor: SlateEditor) => {
 /** Get markdown with selection markers */
 export const getMarkdownWithSelection = (editor: SlateEditor) =>
   removeEscapeSelection(editor, getMarkdown(editor, { type: 'block' }));
+
+/** Extract the text content of the last user message */
+export function getLastUserInstruction(messages: ChatMessage[]): string {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    if (messages[i].role === 'user') {
+      return getTextFromMessage(messages[i]).trim();
+    }
+  }
+  return '';
+}
+
+/** Check if the current selection is inside a table */
+export function isSelectionInTable(editor: SlateEditor): boolean {
+  if (!editor.selection) return false;
+
+  const tableEntry = editor.api.above({
+    at: editor.selection,
+    match: { type: 'table' },
+  });
+
+  return !!tableEntry;
+}
+
+/** Check if the selection is within a single table cell */
+export function isSingleCellSelection(editor: SlateEditor): boolean {
+  if (!editor.selection) return true;
+
+  const [start, end] = RangeApi.edges(editor.selection);
+
+  // Check if anchor and focus are in the same cell
+  const startCell = editor.api.above({
+    at: start,
+    match: (n: { type?: string }) => {
+      return n.type === 'td' || n.type === 'th';
+    },
+  });
+
+  const endCell = editor.api.above({
+    at: end,
+    match: (n: { type?: string }) => {
+      return n.type === 'td' || n.type === 'th';
+    },
+  });
+
+  if (!startCell || !endCell) return true;
+
+  return startCell[0] === endCell[0];
+}

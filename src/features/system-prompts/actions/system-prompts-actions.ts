@@ -15,7 +15,9 @@ import * as service from "../service";
 import {
   criarSystemPromptSchema,
   atualizarSystemPromptSchema,
+  BUILT_IN_SLUGS,
 } from "../domain";
+import { DEFAULT_PROMPTS } from "../defaults";
 
 // =============================================================================
 // QUERIES
@@ -124,6 +126,41 @@ export const actionToggleAtivoPrompt = authenticatedAction(
   }),
   async ({ id, ativo }) => {
     const result = await service.toggleAtivo(id, ativo);
+    revalidatePath("/app/configuracoes");
+    return result;
+  }
+);
+
+/**
+ * Personalizar prompt built-in: copia o default para o banco para edição
+ */
+export const actionPersonalizarPromptBuiltIn = authenticatedAction(
+  z.object({ slug: z.string() }),
+  async ({ slug }) => {
+    if (!BUILT_IN_SLUGS.has(slug)) {
+      throw new Error("Este slug não é um prompt built-in do sistema.");
+    }
+
+    const defaultPrompt = DEFAULT_PROMPTS[slug];
+    if (!defaultPrompt) {
+      throw new Error(`Nenhum default encontrado para o slug: ${slug}`);
+    }
+
+    // Verificar se já existe no banco (evitar duplicata)
+    const existing = await service.buscarPorSlug(slug);
+    if (existing) {
+      return existing;
+    }
+
+    const result = await service.criar({
+      slug,
+      nome: defaultPrompt.nome,
+      descricao: defaultPrompt.descricao,
+      categoria: defaultPrompt.categoria,
+      conteudo: defaultPrompt.conteudo,
+      ativo: true,
+    });
+
     revalidatePath("/app/configuracoes");
     return result;
   }

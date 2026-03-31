@@ -22,7 +22,7 @@ interface WidgetProdutividadeProps {
 export function WidgetProdutividade({ data, loading, error }: WidgetProdutividadeProps) {
   if (loading) {
     return (
-      <Card>
+      <Card className="glass-widget bg-transparent transition-all duration-200">
         <CardHeader><Skeleton className="h-5 w-28" /></CardHeader>
         <CardContent className="space-y-3">
           <Skeleton className="h-20 w-full" />
@@ -33,7 +33,7 @@ export function WidgetProdutividade({ data, loading, error }: WidgetProdutividad
 
   if (error) {
     return (
-      <Card>
+      <Card className="glass-widget bg-transparent transition-all duration-200">
         <CardHeader><CardTitle>Produtividade</CardTitle></CardHeader>
         <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
       </Card>
@@ -51,7 +51,7 @@ export function WidgetProdutividade({ data, loading, error }: WidgetProdutividad
   const maxBaixas = Math.max(...porDia.map((d) => d.baixas), 1);
 
   return (
-    <Card>
+    <Card className="glass-widget bg-transparent transition-all duration-200">
       <CardHeader>
         <CardTitle>Produtividade</CardTitle>
         <CardDescription>Baixas e atividades recentes</CardDescription>
