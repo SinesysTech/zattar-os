@@ -147,6 +147,23 @@ export {
   ContratosTableWrapper,
   ContratoForm,
   ContratoDeleteDialog,
+  // Pipeline UI
+  ContratoCard,
+  ContratoListRow,
+  PipelineFunnel,
+  FinancialStrip,
+  KanbanColumn,
+} from './components';
+
+export type {
+  ContratoCardData,
+  ContratoCardProps,
+  ContratoListRowProps,
+  PipelineStageData,
+  PipelineFunnelProps,
+  ContratosStatsData,
+  FinancialStripProps,
+  KanbanColumnProps,
 } from './components';
 
 // =============================================================================

@@ -12,8 +12,6 @@ import {
   ChevronRight,
   LayoutGrid,
   List,
-  Filter,
-  ArrowUpRight,
   Clock,
   AlertCircle,
   Building2,
@@ -23,7 +21,6 @@ import {
   X,
   Copy,
   ExternalLink,
-  Calendar,
   FileText,
 } from 'lucide-react';
 
@@ -129,7 +126,7 @@ const TABS: { id: TabId; label: string; count: number }[] = [
 
 function TabPills({ active, onChange }: { active: TabId; onChange: (id: TabId) => void }) {
   return (
-    <div className="flex gap-1 p-1 rounded-xl bg-border/[0.06] overflow-x-auto">
+    <div className="flex gap-1 p-1 rounded-xl bg-border/6 overflow-x-auto">
       {TABS.map((tab) => (
         <button
           key={tab.id}
@@ -157,7 +154,6 @@ function TabPills({ active, onChange }: { active: TabId; onChange: (id: TabId) =
 
 function EntityCard({ parte, onSelect }: { parte: Parte; onSelect: (p: Parte) => void }) {
   const config = TIPO_ENTIDADE_CONFIG[parte.tipoEntidade];
-  const Icon = config.icon;
 
   return (
     <GlassPanel className="p-4 hover:scale-[1.01] cursor-pointer group">
@@ -197,7 +193,7 @@ function EntityCard({ parte, onSelect }: { parte: Parte; onSelect: (p: Parte) =>
         {/* Contact info */}
         <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-[10px] text-muted-foreground/50">
           {parte.email && (
-            <span className="flex items-center gap-1 truncate max-w-[180px]">
+            <span className="flex items-center gap-1 truncate max-w-45">
               <Mail className="size-2.5 shrink-0" />
               {parte.email}
             </span>
@@ -233,7 +229,7 @@ function EntityCard({ parte, onSelect }: { parte: Parte; onSelect: (p: Parte) =>
         {parte.tags && parte.tags.length > 0 && (
           <div className="flex gap-1 mt-2">
             {parte.tags.map((tag) => (
-              <span key={tag} className="text-[9px] px-1.5 py-0.5 rounded bg-primary/[0.05] text-primary/50">
+              <span key={tag} className="text-[9px] px-1.5 py-0.5 rounded bg-primary/5 text-primary/50">
                 {tag}
               </span>
             ))}
@@ -248,7 +244,6 @@ function EntityCard({ parte, onSelect }: { parte: Parte; onSelect: (p: Parte) =>
 
 function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void }) {
   const config = TIPO_ENTIDADE_CONFIG[parte.tipoEntidade];
-  const Icon = config.icon;
 
   const mockProcessos = [
     { numero: '0001234-56.2024.5.01.0001', status: 'Ativo', tipo: 'Trabalhista', fase: 'Instrução' },
@@ -299,7 +294,7 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
       </div>
 
       {/* Stats */}
-      <div className="flex gap-4 p-3 rounded-xl bg-white/[0.03] border border-border/10 mb-5">
+      <div className="flex gap-4 p-3 rounded-xl bg-white/3 border border-border/10 mb-5">
         <div className="flex-1 text-center">
           <p className="font-display text-xl font-bold">{parte.processosAtivos}</p>
           <p className="text-[9px] text-muted-foreground/40">Ativos</p>
@@ -343,7 +338,7 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
           Atividade Recente
         </h3>
         <div className="relative">
-          <div className="absolute left-[5px] top-2 bottom-2 w-px bg-border/15" />
+          <div className="absolute left-1.25 top-2 bottom-2 w-px bg-border/15" />
           {mockTimeline.map((ev, i) => (
             <div key={i} className="flex items-start gap-3 py-1.5 relative">
               <div className="size-2.5 rounded-full bg-primary/30 mt-1 relative z-10" />
@@ -370,7 +365,7 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
   );
 }
 
-function InfoRow({ icon: Icon, label, value, copyable }: { icon: typeof Mail; label: string; value: string; copyable?: boolean }) {
+function InfoRow({ icon: Icon, label, value }: { icon: typeof Mail; label: string; value: string; copyable?: boolean }) {
   return (
     <div className="flex items-start gap-2">
       <Icon className="size-3 text-muted-foreground/30 mt-0.5 shrink-0" />
@@ -414,7 +409,7 @@ export default function PartesMockPage() {
   const novosEsteMes = STATS.clientes.novosMes + STATS.partesContrarias.novosMes + STATS.terceiros.novosMes + STATS.representantes.novosMes;
 
   return (
-    <div className="max-w-[1400px] mx-auto space-y-5">
+    <div className="max-w-350 mx-auto space-y-5">
       {/* ── Header ──────────────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
@@ -454,7 +449,7 @@ export default function PartesMockPage() {
       </GlassPanel>
 
       {/* ── Insight Banner ──────────────────────────────────────── */}
-      <div className="rounded-lg border border-primary/10 bg-primary/[0.04] px-3.5 py-2 text-[11px] font-medium text-primary/70 flex items-center gap-2">
+      <div className="rounded-lg border border-primary/10 bg-primary/4 px-3.5 py-2 text-[11px] font-medium text-primary/70 flex items-center gap-2">
         <AlertCircle className="size-3.5 shrink-0" />
         <span>5 clientes sem processos ativos há 90+ dias &middot; 2 partes contrárias com dados incompletos</span>
         <ChevronRight className="size-3 ml-auto shrink-0" />
@@ -476,7 +471,7 @@ export default function PartesMockPage() {
             />
           </div>
           {/* View toggle */}
-          <div className="flex p-0.5 rounded-lg bg-border/[0.06]">
+          <div className="flex p-0.5 rounded-lg bg-border/6">
             <button
               onClick={() => setViewMode('cards')}
               className={`p-1.5 rounded-md transition-all cursor-pointer ${viewMode === 'cards' ? 'bg-primary/12 text-primary' : 'text-muted-foreground/30 hover:text-muted-foreground/50'}`}
@@ -543,7 +538,7 @@ function EntityListRow({ parte, onSelect, selected }: { parte: Parte; onSelect: 
       onClick={() => onSelect(parte)}
       className={`
         flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all duration-150
-        ${selected ? 'bg-primary/[0.06] border border-primary/15' : 'hover:bg-white/4 border border-transparent'}
+        ${selected ? 'bg-primary/6 border border-primary/15' : 'hover:bg-white/4 border border-transparent'}
       `}
     >
       {/* Avatar */}

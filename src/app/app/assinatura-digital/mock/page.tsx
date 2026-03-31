@@ -299,7 +299,7 @@ function DocumentCard({ doc, onSelect }: { doc: Documento; onSelect: (d: Documen
               </span>
               {doc.selfieHabilitada && <Camera className="size-3 text-muted-foreground/25" />}
               {doc.origem === 'formulario' && (
-                <span className="text-[8px] px-1 py-0.5 rounded bg-info/[0.06] text-info/40">formulário</span>
+                <span className="text-[8px] px-1 py-0.5 rounded bg-info/6 text-info/40">formulário</span>
               )}
             </div>
           </div>
@@ -349,14 +349,14 @@ function SignerPill({ assinante: a }: { assinante: Assinante }) {
     <span
       className={`inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full border transition-colors ${
         isDone
-          ? 'bg-success/[0.06] border-success/15 text-success/60'
+          ? 'bg-success/6 border-success/15 text-success/60'
           : isLate
-          ? 'bg-warning/[0.06] border-warning/15 text-warning/60'
-          : 'bg-border/[0.06] border-border/15 text-muted-foreground/40'
+          ? 'bg-warning/6 border-warning/15 text-warning/60'
+          : 'bg-border/6 border-border/15 text-muted-foreground/40'
       }`}
     >
       {isDone ? <CheckCircle2 className="size-2.5" /> : <Clock className="size-2.5" />}
-      <span className="truncate max-w-[80px]">{a.nome.split(' ')[0]}</span>
+      <span className="truncate max-w-20">{a.nome.split(' ')[0]}</span>
       {isLate && <span className="text-[7px] text-warning/50">{a.diasPendente}d</span>}
     </span>
   );
@@ -403,7 +403,7 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
 
       {/* Progress */}
       {doc.assinantes.length > 0 && (
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border/10 mb-4">
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/3 border border-border/10 mb-4">
           <ProgressRing
             percent={progress.percent}
             size={48}
@@ -430,7 +430,7 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
             const isLate = !isDone && (a.diasPendente ?? 0) > 7;
 
             return (
-              <div key={i} className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white/[0.03] transition-colors">
+              <div key={i} className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white/3 transition-colors">
                 <div className={`size-2 rounded-full shrink-0 ${isDone ? 'bg-success/60' : isLate ? 'bg-warning/60 animate-pulse' : 'bg-muted-foreground/20'}`} />
                 <div className="flex-1 min-w-0">
                   <p className="text-[11px] font-medium">{a.nome}</p>
@@ -519,7 +519,7 @@ function DocumentListRow({ doc, onSelect, selected }: { doc: Documento; onSelect
     <div
       onClick={() => onSelect(doc)}
       className={`flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all
-        ${selected ? 'bg-primary/[0.06] border border-primary/15' : `hover:bg-white/4 border border-transparent ${hasPendingLong ? 'ring-1 ring-warning/10' : ''}`}`}
+        ${selected ? 'bg-primary/6 border border-primary/15' : `hover:bg-white/4 border border-transparent ${hasPendingLong ? 'ring-1 ring-warning/10' : ''}`}`}
     >
       <div className={`size-8 rounded-lg ${cfg.bg} flex items-center justify-center shrink-0`}>
         <cfg.icon className={`size-3.5 ${cfg.color}`} />
@@ -541,7 +541,7 @@ function DocumentListRow({ doc, onSelect, selected }: { doc: Documento; onSelect
         {cfg.label}
       </span>
 
-      <div className="flex items-center gap-1 shrink-0 hidden md:flex">
+      <div className="items-center gap-1 shrink-0 hidden md:flex">
         {doc.selfieHabilitada && <Camera className="size-3 text-muted-foreground/20" />}
         {doc.origem === 'formulario' && <FileText className="size-3 text-info/30" />}
       </div>
@@ -584,7 +584,7 @@ export default function AssinaturaDigitalMockPage() {
   };
 
   return (
-    <div className="max-w-[1400px] mx-auto space-y-5">
+    <div className="max-w-350 mx-auto space-y-5">
       {/* ── Header ──────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
