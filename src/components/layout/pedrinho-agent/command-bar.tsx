@@ -73,7 +73,7 @@ export function CommandBar({ onClose, onExpandToBriefing }: CommandBarProps) {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-50 bg-black/30 backdrop-blur-[6px] animate-in fade-in duration-200"
+        className="fixed inset-0 z-50 bg-black/15 dark:bg-black/30 backdrop-blur-[6px] animate-in fade-in duration-200"
         onClick={onClose}
       />
 
@@ -82,10 +82,12 @@ export function CommandBar({ onClose, onExpandToBriefing }: CommandBarProps) {
         <div
           className={cn(
             'pointer-events-auto w-full max-w-[560px]',
-            'bg-background/60 backdrop-blur-2xl',
-            'border border-border/10',
+            // Light mode: solid card | Dark mode: glass
+            'bg-card/98 border border-border/20',
+            'shadow-[0_8px_32px_rgba(0,0,0,0.08),0_24px_60px_rgba(0,0,0,0.12)]',
+            'dark:bg-background/60 dark:backdrop-blur-2xl dark:border-border/10',
+            'dark:shadow-[0_25px_60px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.03)]',
             'rounded-2xl',
-            'shadow-[0_25px_60px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.03)]',
             'animate-in fade-in zoom-in-95 duration-200',
             'flex flex-col overflow-hidden',
             hasResponse && 'max-h-[60vh]'
@@ -138,22 +140,23 @@ export function CommandBar({ onClose, onExpandToBriefing }: CommandBarProps) {
           </div>
 
           {/* Quick Action Chips (show when no response yet) */}
-          {!hasResponse && suggestions.length > 0 && (
+          {!hasResponse && (
             <>
-              <div className="h-px bg-border/6 mx-4" />
+              <div className="h-px bg-border/8 dark:bg-border/6 mx-4" />
               <div className="flex flex-wrap gap-1.5 px-4 py-3">
-                {suggestions.slice(0, 5).map((suggestion) => (
+                {(suggestions.length > 0 ? suggestions.slice(0, 5) : FALLBACK_CHIPS).map((chip) => (
                   <button
-                    key={suggestion.title}
-                    onClick={() => handleSend(suggestion.message)}
+                    key={chip.title}
+                    onClick={() => handleSend(chip.message)}
                     className={cn(
                       'text-[10px] font-medium px-2.5 py-1 rounded-lg',
-                      'bg-primary/6 border border-primary/10 text-primary/50',
-                      'hover:bg-primary/12 hover:text-primary/70 hover:border-primary/20',
+                      'bg-primary/6 border border-primary/10 text-primary/60',
+                      'dark:text-primary/50',
+                      'hover:bg-primary/12 hover:text-primary/80 hover:border-primary/20',
                       'transition-all duration-150 cursor-pointer'
                     )}
                   >
-                    {suggestion.title}
+                    {chip.title}
                   </button>
                 ))}
               </div>
@@ -267,6 +270,15 @@ function CommandBarMessage({ message }: { message: any }) {
 
   return null
 }
+
+// ─── Constants ──────────────────────────────────────────────────────
+
+const FALLBACK_CHIPS = [
+  { title: 'Resumo do dia', message: 'Me dá um resumo do dia: processos, audiências e tarefas pendentes' },
+  { title: 'Audiências de hoje', message: 'Quais audiências tenho hoje?' },
+  { title: 'Prazos urgentes', message: 'Quais expedientes estão vencendo ou vencidos?' },
+  { title: 'Tarefas pendentes', message: 'Me mostra minhas tarefas pendentes' },
+]
 
 // ─── Helpers ────────────────────────────────────────────────────────
 

@@ -14,12 +14,18 @@ interface PedrinhoAgentProps {
 export function PedrinhoAgent({ userId }: PedrinhoAgentProps) {
   const [mode, setMode] = useState<PedrinhoMode>('orb')
 
-  // Keyboard shortcut: Cmd+J to toggle command bar
+  // Keyboard shortcuts: Cmd+J = Command Bar, Cmd+Shift+J = Briefing Panel
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
         e.preventDefault()
-        setMode((prev) => (prev === 'command' ? 'orb' : 'command'))
+        if (e.shiftKey) {
+          // Cmd+Shift+J → toggle Briefing Panel
+          setMode((prev) => (prev === 'briefing' ? 'orb' : 'briefing'))
+        } else {
+          // Cmd+J → toggle Command Bar
+          setMode((prev) => (prev === 'command' ? 'orb' : 'command'))
+        }
       }
     }
     window.addEventListener('keydown', handleKeyDown)
