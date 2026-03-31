@@ -10,6 +10,7 @@
 
 'use client';
 
+import React from 'react';
 import { type LucideIcon } from 'lucide-react';
 
 // ─── Glass Panel (container principal) ──────────────────────────────────
@@ -380,6 +381,11 @@ export function ListItem({
 
 // ─── Section Title (título de seção na galeria) ─────────────────────────
 
+/**
+ * GallerySection — grid que suporta tamanhos variados.
+ * Filhos podem usar classes: col-span-2, row-span-2, col-span-full, etc.
+ * O grid usa auto-rows de ~min-content para permitir alturas variadas.
+ */
 export function GallerySection({
   title,
   description,
@@ -391,14 +397,343 @@ export function GallerySection({
 }) {
   return (
     <section>
-      <div className="mb-4">
+      <div className="mb-5">
         <h2 className="font-heading text-lg font-semibold tracking-tight">{title}</h2>
         {description && <p className="text-sm text-muted-foreground/50 mt-0.5">{description}</p>}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto">
         {children}
       </div>
     </section>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PRIMITIVAS AVANÇADAS — O que nunca vi em dashboard nenhum
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── Animated Number (conta de 0 até o valor ao montar) ─────────────────
+
+export function AnimatedNumber({
+  value,
+  prefix = '',
+  suffix = '',
+  duration = 1200,
+  className = '',
+}: {
+  value: number;
+  prefix?: string;
+  suffix?: string;
+  duration?: number;
+  className?: string;
+}) {
+  const [display, setDisplay] = React.useState(0);
+  const ref = React.useRef<HTMLSpanElement>(null);
+
+  React.useEffect(() => {
+    let start: number | null = null;
+    const from = 0;
+    const to = value;
+
+    function step(ts: number) {
+      if (!start) start = ts;
+      const progress = Math.min((ts - start) / duration, 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.round(from + (to - from) * eased));
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }, [value, duration]);
+
+  return (
+    <span ref={ref} className={`tabular-nums ${className}`}>
+      {prefix}{display.toLocaleString('pt-BR')}{suffix}
+    </span>
+  );
+}
+
+// ─── Calendar Heatmap (7x5 grid, estilo GitHub contributions) ───────────
+
+export function CalendarHeatmap({
+  data,
+  colorScale = 'primary',
+}: {
+  data: number[]; // 35 values (5 weeks x 7 days)
+  colorScale?: 'primary' | 'success' | 'warning' | 'destructive';
+}) {
+  const max = Math.max(...data, 1);
+  const days = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'];
+
+  const colorMap: Record<string, string[]> = {
+    primary: [
+      'bg-border/10',
+      'bg-primary/15',
+      'bg-primary/30',
+      'bg-primary/50',
+      'bg-primary/80',
+    ],
+    success: [
+      'bg-border/10',
+      'bg-success/15',
+      'bg-success/30',
+      'bg-success/50',
+      'bg-success/80',
+    ],
+    warning: [
+      'bg-border/10',
+      'bg-warning/15',
+      'bg-warning/30',
+      'bg-warning/50',
+      'bg-warning/80',
+    ],
+    destructive: [
+      'bg-border/10',
+      'bg-destructive/15',
+      'bg-destructive/30',
+      'bg-destructive/50',
+      'bg-destructive/80',
+    ],
+  };
+
+  const colors = colorMap[colorScale] || colorMap.primary;
+
+  function getColor(v: number) {
+    if (v === 0) return colors[0];
+    const bucket = Math.ceil((v / max) * 4);
+    return colors[Math.min(bucket, 4)];
+  }
+
+  return (
+    <div className="flex gap-1">
+      {/* Day labels */}
+      <div className="flex flex-col gap-0.5 mr-0.5">
+        {days.map((d, i) => (
+          <div key={i} className="size-3.5 flex items-center justify-center text-[7px] text-muted-foreground/30">
+            {d}
+          </div>
+        ))}
+      </div>
+      {/* Weeks */}
+      {Array.from({ length: 5 }).map((_, week) => (
+        <div key={week} className="flex flex-col gap-0.5">
+          {Array.from({ length: 7 }).map((_, day) => {
+            const idx = week * 7 + day;
+            const val = data[idx] ?? 0;
+            return (
+              <div
+                key={day}
+                className={`size-3.5 rounded-[3px] transition-colors duration-200 ${getColor(val)}`}
+                title={`${val} item${val !== 1 ? 's' : ''}`}
+              />
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Gauge Meter (semicircular, estilo velocímetro premium) ─────────────
+
+export function GaugeMeter({
+  value,
+  max = 100,
+  label,
+  status = 'neutral',
+  size = 100,
+}: {
+  value: number;
+  max?: number;
+  label?: string;
+  status?: 'good' | 'warning' | 'danger' | 'neutral';
+  size?: number;
+}) {
+  const percent = Math.min(value / max, 1);
+  const sw = size * 0.1;
+  const radius = (size - sw) / 2;
+  // Semicircle: half circumference
+  const halfCirc = Math.PI * radius;
+  const offset = halfCirc - percent * halfCirc;
+
+  const statusColors: Record<string, string> = {
+    good: 'hsl(var(--success))',
+    warning: 'hsl(var(--warning))',
+    danger: 'hsl(var(--destructive))',
+    neutral: 'hsl(var(--primary))',
+  };
+  const color = statusColors[status];
+
+  return (
+    <div className="flex flex-col items-center" style={{ width: size }}>
+      <svg width={size} height={size / 2 + sw} className="overflow-visible">
+        <defs>
+          <linearGradient id={`gauge-grad-${status}`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+            <stop offset="100%" stopColor={color} stopOpacity="1" />
+          </linearGradient>
+        </defs>
+        {/* Track */}
+        <path
+          d={`M ${sw / 2},${size / 2} A ${radius},${radius} 0 0,1 ${size - sw / 2},${size / 2}`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={sw}
+          strokeLinecap="round"
+          className="text-border/10"
+        />
+        {/* Value */}
+        <path
+          d={`M ${sw / 2},${size / 2} A ${radius},${radius} 0 0,1 ${size - sw / 2},${size / 2}`}
+          fill="none"
+          stroke={`url(#gauge-grad-${status})`}
+          strokeWidth={sw}
+          strokeLinecap="round"
+          strokeDasharray={halfCirc}
+          strokeDashoffset={offset}
+          className="transition-all duration-1000"
+        />
+      </svg>
+      <div className="flex flex-col items-center -mt-5">
+        <span className="font-display text-xl font-bold">{value}</span>
+        {label && <span className="text-[9px] text-muted-foreground/40">{label}</span>}
+      </div>
+    </div>
+  );
+}
+
+// ─── Insight Banner (inteligência contextual — "X precisa de atenção") ──
+
+export function InsightBanner({
+  type = 'info',
+  children,
+}: {
+  type?: 'alert' | 'success' | 'info' | 'warning';
+  children: React.ReactNode;
+}) {
+  const styles: Record<string, string> = {
+    alert: 'bg-destructive/[0.06] border-destructive/15 text-destructive/80',
+    success: 'bg-success/[0.06] border-success/15 text-success/80',
+    info: 'bg-primary/[0.06] border-primary/15 text-primary/80',
+    warning: 'bg-warning/[0.06] border-warning/15 text-warning/80',
+  };
+
+  return (
+    <div className={`rounded-lg border px-3 py-2 text-[11px] font-medium ${styles[type]}`}>
+      {children}
+    </div>
+  );
+}
+
+// ─── Tab Toggle (alternância simples entre visualizações) ───────────────
+
+export function TabToggle({
+  tabs,
+  active,
+  onChange,
+}: {
+  tabs: { id: string; label: string }[];
+  active: string;
+  onChange: (id: string) => void;
+}) {
+  return (
+    <div className="flex gap-0.5 p-0.5 rounded-lg bg-border/10">
+      {tabs.map((tab) => (
+        <button
+          key={tab.id}
+          onClick={() => onChange(tab.id)}
+          className={`
+            px-2.5 py-1 rounded-md text-[10px] font-medium transition-all duration-200 cursor-pointer
+            ${active === tab.id
+              ? 'bg-primary/15 text-primary shadow-sm'
+              : 'text-muted-foreground/50 hover:text-muted-foreground/70'
+            }
+          `}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ─── Treemap (visualização de proporção como retângulos aninhados) ──────
+
+export function Treemap({
+  segments,
+  height = 80,
+}: {
+  segments: { value: number; label: string; color: string }[];
+  height?: number;
+}) {
+  const total = segments.reduce((acc, s) => acc + s.value, 0);
+  if (total === 0) return null;
+
+  return (
+    <div className="flex gap-0.5 rounded-lg overflow-hidden" style={{ height }}>
+      {segments.map((seg, i) => (
+        <div
+          key={i}
+          className="relative group cursor-pointer transition-all duration-200 hover:opacity-90"
+          style={{
+            width: `${(seg.value / total) * 100}%`,
+            backgroundColor: seg.color,
+            minWidth: 2,
+          }}
+        >
+          {/* Label — only visible if segment wide enough */}
+          {(seg.value / total) > 0.12 && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-1">
+              <span className="text-[9px] font-bold text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
+                {seg.value}
+              </span>
+              <span className="text-[7px] text-white/60 truncate max-w-full drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
+                {seg.label}
+              </span>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Comparison Card (side-by-side com destaque de diferença) ───────────
+
+export function ComparisonStat({
+  label,
+  current,
+  previous,
+  format = 'number',
+}: {
+  label: string;
+  current: number;
+  previous: number;
+  format?: 'number' | 'currency' | 'percent';
+}) {
+  const diff = current - previous;
+  const pctChange = previous !== 0 ? ((diff / previous) * 100) : 0;
+  const isPositive = diff >= 0;
+
+  const fmt = (v: number) => {
+    if (format === 'currency') return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    if (format === 'percent') return `${v.toFixed(1)}%`;
+    return v.toLocaleString('pt-BR');
+  };
+
+  return (
+    <div className="flex flex-col gap-1">
+      <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">{label}</p>
+      <div className="flex items-baseline gap-2">
+        <span className="font-display text-lg font-bold">{fmt(current)}</span>
+        <span className={`text-[10px] font-medium ${isPositive ? 'text-success/70' : 'text-destructive/70'}`}>
+          {isPositive ? '+' : ''}{pctChange.toFixed(1)}%
+        </span>
+      </div>
+      <p className="text-[9px] text-muted-foreground/30">
+        anterior: {fmt(previous)}
+      </p>
+    </div>
   );
 }
 

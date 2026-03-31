@@ -10,7 +10,8 @@
 
 'use client';
 
-import { BarChart3, PieChart, Scale, TrendingUp, LayoutGrid, Activity } from 'lucide-react';
+import { useState } from 'react';
+import { BarChart3, PieChart, Scale, TrendingUp, LayoutGrid, Activity, HeartPulse, Flame, Layers } from 'lucide-react';
 import {
   GallerySection,
   WidgetContainer,
@@ -23,6 +24,12 @@ import {
   ListItem,
   MiniArea,
   fmtNum,
+  GaugeMeter,
+  InsightBanner,
+  ComparisonStat,
+  CalendarHeatmap,
+  TabToggle,
+  Treemap,
 } from './primitives';
 
 // ─── Mock Data ──────────────────────────────────────────────────────────────
@@ -71,7 +78,7 @@ const TRT_MAX = TRT_DATA[0].value;
 
 // ─── Widget 1: Distribuição por Status ──────────────────────────────────────
 
-function WidgetStatusDistribuicao() {
+export function WidgetStatusDistribuicao() {
   const total = STATUS_SEGMENTS.reduce((s, seg) => s + seg.value, 0);
 
   return (
@@ -80,6 +87,7 @@ function WidgetStatusDistribuicao() {
       icon={PieChart}
       subtitle="Total de processos ativos"
       depth={1}
+      className="md:col-span-2"
     >
       <div className="flex items-center gap-5">
         <MiniDonut
@@ -114,7 +122,7 @@ function WidgetStatusDistribuicao() {
 
 // ─── Widget 2: Casos por Tribunal (TRT) ─────────────────────────────────────
 
-function WidgetCasosTribunal() {
+export function WidgetCasosTribunal() {
   return (
     <WidgetContainer
       title="Casos por Tribunal"
@@ -151,7 +159,7 @@ function WidgetCasosTribunal() {
 
 // ─── Widget 3: Tendência de Novos Processos ──────────────────────────────────
 
-function WidgetTendenciaNovos() {
+export function WidgetTendenciaNovos() {
   const current = MONTHLY_TREND[MONTHLY_TREND.length - 1];
   const prev    = MONTHLY_TREND[MONTHLY_TREND.length - 2];
   const delta   = current - prev;
@@ -192,7 +200,7 @@ function WidgetTendenciaNovos() {
 
 // ─── Widget 4: Análise de Aging ──────────────────────────────────────────────
 
-function WidgetAging() {
+export function WidgetAging() {
   const total = AGING_SEGMENTS.reduce((s, seg) => s + seg.value, 0);
 
   return (
@@ -236,7 +244,7 @@ function WidgetAging() {
 
 // ─── Widget 5: Processos por Segmento ───────────────────────────────────────
 
-function WidgetSegmento() {
+export function WidgetSegmento() {
   const total = SEGMENTO_SEGMENTS.reduce((s, seg) => s + seg.value, 0);
   const dominant = SEGMENTO_SEGMENTS[0];
 
@@ -283,7 +291,7 @@ function WidgetSegmento() {
 
 // ─── Widget 6: KPI Pulse ─────────────────────────────────────────────────────
 
-function WidgetKpiPulse() {
+export function WidgetKpiPulse() {
   return (
     <WidgetContainer
       title="Painel KPI"
@@ -329,7 +337,7 @@ function WidgetKpiPulse() {
           />
           <div>
             <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
-              Taxa de Resolucao
+              Taxa de Resolução
             </p>
             <p className="text-[10px] text-muted-foreground/40 mt-0.5">
               encerrados / (enc. + novos)
@@ -338,7 +346,7 @@ function WidgetKpiPulse() {
         </div>
         <div className="flex-1 flex flex-col items-end gap-1">
           <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
-            Tendencia 8m
+            Tendência 8m
           </p>
           <Sparkline
             data={MONTHLY_TREND}
@@ -352,7 +360,7 @@ function WidgetKpiPulse() {
       <div className="flex flex-col gap-1 mt-3 pt-3 border-t border-border/10">
         {[
           { label: 'Prazo vencendo esta semana', count: 4, level: 'alto' as const },
-          { label: 'Audiencias no mes',           count: 9, level: 'medio' as const },
+          { label: 'Audiências no mês',           count: 9, level: 'medio' as const },
           { label: 'Aguardando documentos',       count: 6, level: 'baixo' as const },
         ].map((item) => (
           <ListItem key={item.label}>
@@ -368,13 +376,198 @@ function WidgetKpiPulse() {
   );
 }
 
+// ─── Widget 7: Saúde Processual (Hero) ──────────────────────────────────────
+
+const SAUDE_SCORE = (() => {
+  const pctAtivos      = (ATIVOS_COUNT / TOTAL_PROCESSOS) * 100; // positive
+  const pctVencidos    = (4 / TOTAL_PROCESSOS) * 100;            // negative (4 vencendo esta semana)
+  const taxaResolucao  = TAXA_RESOLUCAO;                          // positive
+  // composite: 40% ativos weight, 30% resolucao, 30% penalty vencidos
+  const raw = (pctAtivos * 0.4) + (taxaResolucao * 0.3) - (pctVencidos * 0.3 * 3);
+  return Math.max(0, Math.min(100, Math.round(raw)));
+})();
+
+const SAUDE_STATUS: 'good' | 'warning' | 'danger' =
+  SAUDE_SCORE > 70 ? 'good' : SAUDE_SCORE >= 40 ? 'warning' : 'danger';
+
+export function WidgetSaudeProcessual() {
+  return (
+    <WidgetContainer
+      title="Saúde do Portfólio"
+      icon={HeartPulse}
+      subtitle="Score composto — ativos, resolução e vencimentos"
+      depth={2}
+      className="md:col-span-2"
+    >
+      <div className="flex flex-col gap-4">
+        {/* Gauge + comparisons */}
+        <div className="flex items-center gap-6 flex-wrap">
+          <div className="flex flex-col items-center gap-1">
+            <GaugeMeter
+              value={SAUDE_SCORE}
+              max={100}
+              label="score geral"
+              status={SAUDE_STATUS}
+              size={120}
+            />
+          </div>
+          <div className="flex flex-1 gap-6 flex-wrap min-w-0">
+            <ComparisonStat
+              label="Ativos"
+              current={89}
+              previous={82}
+              format="number"
+            />
+            <ComparisonStat
+              label="Encerrados no mês"
+              current={13}
+              previous={9}
+              format="number"
+            />
+            <div className="flex flex-col gap-1">
+              <p className="text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+                Tempo médio
+              </p>
+              <div className="flex items-baseline gap-2">
+                <span className="font-display text-lg font-bold">8,2 meses</span>
+                <span className="text-[10px] font-medium text-success/70">-9,9%</span>
+              </div>
+              <p className="text-[9px] text-muted-foreground/30">anterior: 9,1 meses</p>
+            </div>
+          </div>
+        </div>
+        {/* Insight */}
+        <InsightBanner type="warning">
+          3 processos sem movimentação há 60+ dias — considere ação
+        </InsightBanner>
+      </div>
+    </WidgetContainer>
+  );
+}
+
+// ─── Widget 8: Heatmap de Atividade ─────────────────────────────────────────
+
+const HEATMAP_DATA: number[] = [
+  // semana 1: 03/fev – 09/fev
+  1, 3, 2, 4, 3, 0, 0,
+  // semana 2: 10/fev – 16/fev
+  2, 5, 3, 6, 4, 1, 0,
+  // semana 3: 17/fev – 23/fev
+  0, 2, 4, 3, 2, 0, 1,
+  // semana 4: 24/fev – 02/mar
+  3, 4, 5, 2, 6, 0, 0,
+  // semana 5: 03/mar – 09/mar
+  1, 3, 4, 6, 5, 2, 0,
+];
+
+export function WidgetHeatmapAtividade() {
+  return (
+    <WidgetContainer
+      title="Movimentações Processuais"
+      icon={Flame}
+      subtitle="Frequência diária — últimas 5 semanas"
+      depth={1}
+    >
+      <div className="flex flex-col gap-3">
+        <CalendarHeatmap data={HEATMAP_DATA} colorScale="primary" />
+        {/* Legend */}
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] text-muted-foreground/30">0</span>
+          <div className="flex gap-0.5">
+            {['bg-border/10', 'bg-primary/15', 'bg-primary/30', 'bg-primary/50', 'bg-primary/80'].map(
+              (cls, i) => (
+                <div key={i} className={`size-3 rounded-[3px] ${cls}`} />
+              )
+            )}
+          </div>
+          <span className="text-[9px] text-muted-foreground/30">5+</span>
+          <span className="text-[9px] text-muted-foreground/20 ml-1">
+            baixo → alto
+          </span>
+        </div>
+        {/* Stats abaixo */}
+        <div className="flex gap-4 pt-2 border-t border-border/10">
+          <Stat label="Média diária" value="2,8 mov/dia" small />
+          <Stat label="Pico" value="6 em 12/mar" small />
+        </div>
+      </div>
+    </WidgetContainer>
+  );
+}
+
+// ─── Widget 9: Processos com Tabs ────────────────────────────────────────────
+
+const TREEMAP_STATUS = [
+  { value: 89, label: 'Ativos',     color: 'hsl(var(--primary))' },
+  { value: 7,  label: 'Suspensos',  color: 'hsl(var(--warning))' },
+  { value: 31, label: 'Arquivados', color: 'hsl(var(--muted-foreground) / 0.4)' },
+  { value: 12, label: 'Em Recurso', color: 'hsl(220 70% 60%)' },
+];
+
+const TREEMAP_SEGMENTO = [
+  { value: 68, label: 'Trabalhista',    color: 'hsl(var(--primary))' },
+  { value: 31, label: 'Cível',          color: 'hsl(var(--warning))' },
+  { value: 15, label: 'Previdenciário', color: 'hsl(142 60% 45%)' },
+  { value: 8,  label: 'Empresarial',    color: 'hsl(220 70% 60%)' },
+  { value: 5,  label: 'Criminal',       color: 'hsl(var(--destructive))' },
+];
+
+const TAB_OPTIONS = [
+  { id: 'status',   label: 'Status' },
+  { id: 'segmento', label: 'Segmento' },
+];
+
+export function WidgetProcessosComTabs() {
+  const [activeTab, setActiveTab] = useState<string>('status');
+
+  const treemapData = activeTab === 'status' ? TREEMAP_STATUS : TREEMAP_SEGMENTO;
+  const total = treemapData.reduce((s, seg) => s + seg.value, 0);
+
+  return (
+    <WidgetContainer
+      title="Proporção de Processos"
+      icon={Layers}
+      subtitle="Visualização interativa por agrupamento"
+      depth={1}
+      action={
+        <TabToggle
+          tabs={TAB_OPTIONS}
+          active={activeTab}
+          onChange={setActiveTab}
+        />
+      }
+    >
+      <div className="flex flex-col gap-3">
+        <Treemap segments={treemapData} height={84} />
+        {/* Legend row */}
+        <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1">
+          {treemapData.map((seg) => (
+            <div key={seg.label} className="flex items-center gap-1">
+              <span
+                className="size-1.5 rounded-full shrink-0"
+                style={{ backgroundColor: seg.color }}
+              />
+              <span className="text-[9px] text-muted-foreground/50">
+                {seg.label}{' '}
+                <span className="text-muted-foreground/30">
+                  ({Math.round((seg.value / total) * 100)}%)
+                </span>
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </WidgetContainer>
+  );
+}
+
 // ─── Export principal ────────────────────────────────────────────────────────
 
 export function ProcessosWidgets() {
   return (
     <GallerySection
       title="Processos"
-      description="Visualizacoes do modulo de causas juridicas — distribuicao, tendencias e indicadores operacionais."
+      description="Visualizações do módulo de causas jurídicas — distribuição, tendências e indicadores operacionais."
     >
       <WidgetStatusDistribuicao />
       <WidgetCasosTribunal />
@@ -382,6 +575,9 @@ export function ProcessosWidgets() {
       <WidgetAging />
       <WidgetSegmento />
       <WidgetKpiPulse />
+      <WidgetSaudeProcessual />
+      <WidgetHeatmapAtividade />
+      <WidgetProcessosComTabs />
     </GallerySection>
   );
 }
