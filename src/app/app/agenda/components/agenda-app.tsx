@@ -198,7 +198,7 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
       descricao: event.description || null,
       dataInicio: event.start.toISOString(),
       dataFim: event.end.toISOString(),
-      diaInteiro: event.allDay,
+      diaInteiro: event.allDay ?? false,
       local: event.location || null,
       cor: event.color || "sky",
       responsavelId: event.responsavelId || null,
@@ -221,21 +221,22 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
     setDialogOpen(false);
   }, [refetchEvents]);
 
-  const handleDeleteEvent = useCallback(async (event: CalendarEvent) => {
-    if (!event.id.startsWith("agenda:")) return;
-    const entityId = Number(event.id.split(":")[1]);
+  const handleDeleteEvent = useCallback(async (eventId: string) => {
+    if (!eventId.startsWith("agenda:")) return;
+    const entityId = Number(eventId.split(":")[1]);
     const result = await actionDeletarAgendaEvento({ id: entityId });
     if (result.success) {
-      toast.success(`Evento "${event.title}" excluído`);
+      toast.success("Evento excluído");
       await refetchEvents();
     }
     setDialogOpen(false);
   }, [refetchEvents]);
 
-  const handleNavigateToSource = useCallback((event: CalendarEvent) => {
-    const url = eventUrlMap.get(event.id);
+  const handleNavigateToSource = useCallback(() => {
+    if (!selectedCalEvent) return;
+    const url = eventUrlMap.get(selectedCalEvent.id);
     if (url) window.location.href = url;
-  }, [eventUrlMap]);
+  }, [eventUrlMap, selectedCalEvent]);
 
   // ── Render ────────────────────────────────────────────────────────
   const showCommandHeader = view === "briefing" || view === "day";
