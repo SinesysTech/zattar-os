@@ -12,13 +12,15 @@ import { Button } from '@/components/ui/button';
 // Se o arquivo ainda não existir no momento do build, o dashboard renderiza
 // um estado vazio sem quebrar a aplicação.
 let WIDGET_REGISTRY: WidgetDefinition[] = [];
+let DEFAULT_LAYOUT: string[] = [];
 try {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const mod = require('../registry/widget-registry') as {
     WIDGET_REGISTRY?: WidgetDefinition[];
-    default?: WidgetDefinition[];
+    DEFAULT_LAYOUT?: string[];
   };
-  WIDGET_REGISTRY = mod.WIDGET_REGISTRY ?? mod.default ?? [];
+  WIDGET_REGISTRY = mod.WIDGET_REGISTRY ?? [];
+  DEFAULT_LAYOUT = mod.DEFAULT_LAYOUT ?? [];
 } catch {
   // Registry ainda nao existe — dashboard exibe estado vazio
 }
@@ -74,20 +76,28 @@ export function WidgetDashboard({ currentUserId, currentUserName }: WidgetDashbo
     [temPermissao]
   );
 
-  // Determinar quais widgets renderizar:
-  // - Sem customizacao: exibir os marcados como defaultEnabled
-  // - Com customizacao: exibir apenas os que o usuario selecionou
+  // Determinar quais widgets renderizar e em qual ORDEM.
+  // - Sem customização: usar DEFAULT_LAYOUT (ordenado para grid perfeito)
+  // - Com customização: usar enabledWidgets na ordem salva
+  // Em ambos os casos, filtrar por availableWidgets (permissão).
   const visibleWidgets = useMemo<WidgetDefinition[]>(() => {
-    if (!hasCustomized) {
-      return availableWidgets.filter((w) => w.defaultEnabled);
-    }
-    return availableWidgets.filter((w) => enabledWidgets.includes(w.id));
+    const availableIds = new Set(availableWidgets.map((w) => w.id));
+    const widgetMap = new Map(availableWidgets.map((w) => [w.id, w]));
+
+    const orderedIds = hasCustomized ? enabledWidgets : DEFAULT_LAYOUT;
+
+    return orderedIds
+      .filter((id) => availableIds.has(id))
+      .map((id) => widgetMap.get(id)!)
+      .filter(Boolean);
   }, [availableWidgets, enabledWidgets, hasCustomized]);
 
-  // IDs efetivos para o picker (considera defaults quando nao personalizado)
+  // IDs efetivos para o picker (considera defaults quando não personalizado)
   const effectiveEnabledIds = useMemo<string[]>(() => {
     if (!hasCustomized) {
-      return availableWidgets.filter((w) => w.defaultEnabled).map((w) => w.id);
+      return DEFAULT_LAYOUT.filter((id) =>
+        availableWidgets.some((w) => w.id === id)
+      );
     }
     return enabledWidgets;
   }, [availableWidgets, enabledWidgets, hasCustomized]);
@@ -121,12 +131,12 @@ export function WidgetDashboard({ currentUserId, currentUserName }: WidgetDashbo
           availableWidgets={availableWidgets}
           enabledWidgets={effectiveEnabledIds}
           onToggle={(id) => {
-            // Na primeira interacao, inicializar a partir dos defaults para
-            // nao partir de uma lista vazia ao desativar o primeiro widget.
+            // Na primeira interação, inicializar a partir do DEFAULT_LAYOUT
+            // para não partir de uma lista vazia ao desativar o primeiro widget.
             if (!hasCustomized) {
-              const defaultIds = availableWidgets
-                .filter((w) => w.defaultEnabled)
-                .map((w) => w.id);
+              const defaultIds = DEFAULT_LAYOUT.filter((wId) =>
+                availableWidgets.some((w) => w.id === wId)
+              );
               const next = defaultIds.includes(id)
                 ? defaultIds.filter((d) => d !== id)
                 : [...defaultIds, id];
