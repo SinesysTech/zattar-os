@@ -1,51 +1,67 @@
 /**
- * ViewToggle — Alternador entre visualização em cartões e lista
+ * ViewToggle — Alternador genérico entre modos de visualização
  * ============================================================================
- * Dois botões compactos: grade (cards) e lista. Estilo glass pill.
+ * Suporta 2 modos (cards/list) ou N modos via prop `options`.
  *
- * USO:
+ * USO SIMPLES (2 modos):
  *   <ViewToggle mode={viewMode} onChange={setViewMode} />
+ *
+ * USO AVANÇADO (N modos):
+ *   <ViewToggle
+ *     mode={viewMode}
+ *     onChange={setViewMode}
+ *     options={[
+ *       { id: 'pipeline', icon: GitBranch, label: 'Pipeline' },
+ *       { id: 'kanban', icon: Kanban, label: 'Kanban' },
+ *       { id: 'lista', icon: List, label: 'Lista' },
+ *     ]}
+ *   />
  * ============================================================================
  */
 
 'use client';
 
-import { LayoutGrid, List } from 'lucide-react';
+import { LayoutGrid, List, type LucideIcon } from 'lucide-react';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-interface ViewToggleProps {
-  mode: 'cards' | 'list';
-  onChange: (mode: 'cards' | 'list') => void;
+export interface ViewToggleOption {
+  id: string;
+  icon: LucideIcon;
+  label: string;
 }
+
+interface ViewToggleProps {
+  mode: string;
+  onChange: (mode: string) => void;
+  options?: ViewToggleOption[];
+}
+
+// Default options (backwards compatible)
+const DEFAULT_OPTIONS: ViewToggleOption[] = [
+  { id: 'cards', icon: LayoutGrid, label: 'Visualização em cartões' },
+  { id: 'list', icon: List, label: 'Visualização em lista' },
+];
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export function ViewToggle({ mode, onChange }: ViewToggleProps) {
+export function ViewToggle({ mode, onChange, options = DEFAULT_OPTIONS }: ViewToggleProps) {
   return (
     <div className="flex p-0.5 rounded-lg bg-border/6">
-      <button
-        onClick={() => onChange('cards')}
-        aria-label="Visualização em cartões"
-        className={`p-1.5 rounded-md transition-all cursor-pointer ${
-          mode === 'cards'
-            ? 'bg-primary/12 text-primary'
-            : 'text-muted-foreground/30 hover:text-muted-foreground/50'
-        }`}
-      >
-        <LayoutGrid className="size-3.5" />
-      </button>
-      <button
-        onClick={() => onChange('list')}
-        aria-label="Visualização em lista"
-        className={`p-1.5 rounded-md transition-all cursor-pointer ${
-          mode === 'list'
-            ? 'bg-primary/12 text-primary'
-            : 'text-muted-foreground/30 hover:text-muted-foreground/50'
-        }`}
-      >
-        <List className="size-3.5" />
-      </button>
+      {options.map((opt) => (
+        <button
+          key={opt.id}
+          onClick={() => onChange(opt.id)}
+          aria-label={opt.label}
+          className={`p-1.5 rounded-md transition-all cursor-pointer ${
+            mode === opt.id
+              ? 'bg-primary/12 text-primary'
+              : 'text-muted-foreground/30 hover:text-muted-foreground/50'
+          }`}
+        >
+          <opt.icon className="size-3.5" />
+        </button>
+      ))}
     </div>
   );
 }

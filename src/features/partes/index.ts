@@ -61,7 +61,10 @@ export {
   usePartesContrarias,
   useTerceiros,
   useRepresentantes,
+  usePartes,
 } from "./hooks";
+
+export type { TipoEntidade, UsePartesParams, UsePartesResult } from "./hooks";
 
 // ============================================================================
 // Utils

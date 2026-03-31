@@ -40,6 +40,10 @@ import {
   contarContratosEntreDatas,
   excluirContrato,
 } from "../service";
+import {
+  countContratosNovosMes,
+  countContratosTrendMensal,
+} from "../repository";
 
 import { createDbClient } from "@/lib/supabase";
 import { createServiceClient } from "@/lib/supabase/service-client";
@@ -1148,6 +1152,90 @@ export async function actionContarContratosComEstatisticas(
     return {
       success: false,
       error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+// =============================================================================
+// SERVER ACTION - STATS AGREGADOS PARA DASHBOARD
+// =============================================================================
+
+export interface ContratosStatsData {
+  total: number;
+  porStatus: Record<string, { count: number }>;
+  novosMes: number;
+  trendMensal: number[];
+  taxaConversao: number;
+}
+
+/**
+ * Retorna estatísticas agregadas dos contratos para o dashboard.
+ *
+ * Combina em paralelo:
+ * - Contagem por status
+ * - Novos contratos no mês corrente
+ * - Trend mensal dos últimos 6 meses
+ * - Total geral
+ *
+ * taxaConversao = (contratado + distribuido) / (total - desistencia) * 100
+ * Retorna 0 quando não há dados suficientes para calcular.
+ */
+export async function actionContratosStats(): Promise<
+  ActionResult<ContratosStatsData>
+> {
+  try {
+    const [porStatusResult, novosMesResult, trendResult, totalResult] =
+      await Promise.all([
+        contarContratosPorStatus(),
+        countContratosNovosMes(),
+        countContratosTrendMensal(6),
+        contarContratos(),
+      ]);
+
+    // Contagem por status — nunca falha catastroficamente
+    const porStatusRaw: Record<StatusContrato, number> = porStatusResult.success
+      ? porStatusResult.data
+      : { em_contratacao: 0, contratado: 0, distribuido: 0, desistencia: 0 };
+
+    const novosMes = novosMesResult.success ? novosMesResult.data : 0;
+
+    const trendMensal: number[] = trendResult.success
+      ? trendResult.data.map((item) => item.count)
+      : Array(6).fill(0);
+
+    const total = totalResult.success ? totalResult.data : 0;
+
+    // Montar porStatus no formato esperado pelo UI
+    const porStatus: Record<string, { count: number }> = {};
+    for (const [status, count] of Object.entries(porStatusRaw)) {
+      porStatus[status] = { count };
+    }
+
+    // Taxa de conversão: contratos ativos (contratado + distribuido) / base sem desistência
+    const contratados =
+      (porStatusRaw.contratado ?? 0) + (porStatusRaw.distribuido ?? 0);
+    const base = total - (porStatusRaw.desistencia ?? 0);
+    const taxaConversao =
+      base > 0 ? Math.round((contratados / base) * 100 * 10) / 10 : 0;
+
+    return {
+      success: true,
+      data: {
+        total,
+        porStatus,
+        novosMes,
+        trendMensal,
+        taxaConversao,
+      },
+      message: "Estatísticas carregadas com sucesso",
+    };
+  } catch (error) {
+    console.error("Erro ao buscar estatísticas de contratos:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar estatísticas de contratos",
     };
   }
 }

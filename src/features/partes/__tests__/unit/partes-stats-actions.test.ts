@@ -101,19 +101,26 @@ describe('actionContarPartesPorTipo', () => {
     it('deve passar datas de início e fim do mês corrente para EntreDatas', async () => {
       configurarTodosSucesso();
 
-      const antes = new Date();
+      const agora = new Date();
       await actionContarPartesPorTipo();
-      const depois = new Date();
 
       const chamada = (service.contarClientesEntreDatas as jest.Mock).mock.calls[0];
       const inicio = chamada[0] as Date;
       const fim = chamada[1] as Date;
 
+      // Início deve ser o dia 1 do mês corrente
       expect(inicio.getDate()).toBe(1);
-      expect(inicio.getMonth()).toBe(antes.getMonth());
-      expect(fim.getMonth()).toBe(antes.getMonth());
-      expect(fim.getTime()).toBeGreaterThanOrEqual(antes.getTime());
-      expect(fim.getTime()).toBeLessThanOrEqual(depois.getTime() + 1000);
+      expect(inicio.getMonth()).toBe(agora.getMonth());
+      expect(inicio.getFullYear()).toBe(agora.getFullYear());
+
+      // Fim deve ser o último dia do mês corrente (23:59:59.999)
+      expect(fim.getMonth()).toBe(agora.getMonth());
+      expect(fim.getFullYear()).toBe(agora.getFullYear());
+      // O fim deve ser >= o início
+      expect(fim.getTime()).toBeGreaterThan(inicio.getTime());
+      // E a data de fim deve ser o último dia do mês
+      const ultimoDia = new Date(agora.getFullYear(), agora.getMonth() + 1, 0).getDate();
+      expect(fim.getDate()).toBe(ultimoDia);
     });
 
     it('deve retornar zeros quando todos os totais são 0', async () => {
