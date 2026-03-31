@@ -81,7 +81,7 @@ export function CommandBar({ onClose, onExpandToBriefing }: CommandBarProps) {
       <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] px-4 pointer-events-none">
         <div
           className={cn(
-            'pointer-events-auto w-full max-w-[560px]',
+            'pointer-events-auto w-full max-w-140',
             // Light mode: solid card | Dark mode: glass
             'bg-card/98 border border-border/20',
             'shadow-[0_8px_32px_rgba(0,0,0,0.08),0_24px_60px_rgba(0,0,0,0.12)]',

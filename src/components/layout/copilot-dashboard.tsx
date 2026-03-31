@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
 import CommandMenu from "@/components/layout/header/search"
 import Notifications from "@/components/layout/header/notifications"
@@ -11,9 +12,10 @@ import { AppDock } from "@/components/layout/dock/app-dock"
 import "@copilotkit/react-core/v2/styles.css"
 import { CopilotKitProvider } from "@copilotkit/react-core/v2"
 import { CopilotGlobalActions } from "@/lib/copilotkit/components/copilot-global-actions"
-import { PedrinhoAgent } from "@/components/layout/pedrinho-agent"
+import { PedrinhoAgent, type PedrinhoMode } from "@/components/layout/pedrinho-agent"
 import { PageSearchProvider, usePageSearch } from "@/contexts/page-search-context"
 import { useUser } from "@/providers/user-provider"
+import { cn } from "@/lib/utils"
 
 function HeaderSearchBar() {
   const { value, setValue, placeholder } = usePageSearch()
@@ -69,8 +71,14 @@ function DashboardHeader() {
   )
 }
 
+/** Largura do Briefing Panel */
+const PANEL_WIDTH = 380
+
 export default function CopilotDashboard({ children }: { children: React.ReactNode }) {
   const { id: userId } = useUser()
+  const [pedrinhoMode, setPedrinhoMode] = useState<PedrinhoMode>('orb')
+
+  const isBriefingOpen = pedrinhoMode === 'briefing'
 
   return (
     <CopilotKitProvider
@@ -80,9 +88,15 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
       {/* Registra ações globais + contexto de rota como readable state */}
       <CopilotGlobalActions />
 
-      {/* Conteúdo do app — fora do CopilotPopup (v2 é standalone) */}
+      {/* Conteúdo do app — empurra para a esquerda quando Briefing está aberto */}
       <PageSearchProvider>
-        <div className="fixed inset-0 flex flex-col bg-background canvas-dots">
+        <div
+          className={cn(
+            "fixed top-0 left-0 bottom-0 flex flex-col bg-background canvas-dots",
+            "transition-[right] duration-300 ease-out"
+          )}
+          style={{ right: isBriefingOpen ? PANEL_WIDTH : 0 }}
+        >
           <DashboardHeader />
           <div
             id="portal-content"
@@ -95,7 +109,11 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
       </PageSearchProvider>
 
       {/* Pedrinho Ambient Agent — 3 modos: Orb, Command Bar, Briefing Panel */}
-      <PedrinhoAgent userId={String(userId ?? '')} />
+      <PedrinhoAgent
+        userId={String(userId ?? '')}
+        mode={pedrinhoMode}
+        onModeChange={setPedrinhoMode}
+      />
     </CopilotKitProvider>
   )
 }
