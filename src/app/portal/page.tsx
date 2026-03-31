@@ -13,7 +13,7 @@ export default function PortalLoginPage() {
             className="absolute inset-0"
             style={{
               backgroundImage:
-                'radial-gradient(rgba(204, 151, 255, 0.03) 1px, transparent 1px)',
+                'radial-gradient(oklch(0.80 0.18 281 / 0.03) 1px, transparent 1px)',
               backgroundSize: '40px 40px',
             }}
           />

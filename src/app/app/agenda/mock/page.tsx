@@ -966,7 +966,7 @@ function NowLine() {
   return (
     <div className="flex items-center gap-3 py-0.5 -my-0.5 z-10 relative">
       <span className="w-11 text-right text-[10px] tabular-nums text-primary font-semibold shrink-0">{t}</span>
-      <div className="size-2 rounded-full bg-primary shadow-[0_0_6px_rgba(132,44,211,0.35)] animate-pulse shrink-0" />
+      <div className="size-2 rounded-full bg-primary shadow-[0_0_6px_oklch(0.48_0.26_281/0.35)] animate-pulse shrink-0" />
       <div className="flex-1 h-px bg-primary/25" />
     </div>
   );
