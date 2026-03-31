@@ -679,6 +679,61 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
   },
 ];
 
+// ─── DEFAULT LAYOUT — Admin com todas as permissões ─────────────────────────
+// Ordem define o posicionamento no grid de 3 colunas.
+// Regra: full(3) | md+sm(2+1) | sm+sm+sm(1+1+1)
+// Widgets removidos pelo perfil (sem permissão) são simplesmente omitidos
+// e o grid se recompõe automaticamente.
+//
+// Layout visual (admin):
+// ┌─────────────── full ───────────────┐  Row 1: Briefing pessoal
+// ├──────── md ────────┤┌─── sm ──┐    │  Row 2: Meu Dia + Foco
+// ├─────────────── full ───────────────┤  Row 3: Saúde Financeira
+// ├──────── md ────────┤┌─── sm ──┐    │  Row 4: Audiências + Preparação
+// ├──────── md ────────┤┌─── sm ──┐    │  Row 5: Expedientes + Funil
+// ├──────── md ────────┤┌─── sm ──┐    │  Row 6: Processos + Heatmap
+// ├──────── md ────────┤┌─── sm ──┐    │  Row 7: Contratos + Obrigações
+// ├─── sm ──┤┌─── sm ──┤┌─── sm ──┐    │  Row 8: Fluxo, Despesas, Inadimplência
+// ├─── sm ──┤┌─── sm ──┤┌─── sm ──┐    │  Row 9: Tarefas, Produtividade, Chat
+
+export const DEFAULT_LAYOUT: string[] = [
+  // Row 1: Hero pessoal (full — 3 cols)
+  'pessoal-score-pessoal',
+
+  // Row 2: Dia + Foco (md + sm)
+  'pessoal-meu-dia',
+  'pessoal-foco-hoje',
+
+  // Row 3: Hero financeiro (full — 3 cols)
+  'financeiro-saude-financeira',
+
+  // Row 4: Audiências + Preparação (md + sm)
+  'audiencias-proximas',
+  'audiencias-preparacao',
+
+  // Row 5: Expedientes + Funil (md + sm)
+  'expedientes-urgency-list',
+  'expedientes-aging-funnel',
+
+  // Row 6: Processos + Heatmap (md + sm)
+  'processos-saude-processual',
+  'processos-heatmap-atividade',
+
+  // Row 7: Contratos + Obrigações (md + sm)
+  'contratos-saude-contratual',
+  'contratos-obrigacoes-treemap',
+
+  // Row 8: Financeiro detalhado (sm + sm + sm)
+  'financeiro-fluxo-tabs',
+  'financeiro-despesas-treemap',
+  'financeiro-inadimplencia',
+
+  // Row 9: Pessoal complementar (sm + sm + sm)
+  'pessoal-tarefas-status',
+  'pessoal-produtividade-semanal',
+  'pessoal-lembretes',
+];
+
 // ─── Helper: label em português para cada módulo ─────────────────────────────
 
 export function getModuleLabel(module: string): string {
