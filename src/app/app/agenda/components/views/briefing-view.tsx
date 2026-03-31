@@ -8,7 +8,7 @@
 
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import {
   Clock,
   Sun,
@@ -278,20 +278,35 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
   const SrcIcon = SOURCE_ICONS[event.source] ?? Calendar;
   const ModalIcon = event.meta.modalidade === "virtual" || event.meta.modalidade === "hibrida" ? Video : Building2;
   const prep = event.meta.prepStatus;
+  const isAudiencia = event.source === "audiencias";
+  const isPast = event.end < new Date();
+  const isOngoing = event.start <= new Date() && event.end >= new Date();
+
+  // Countdown for audiencias < 2h away
+  const isNearby = isAudiencia && !isPast && !isOngoing &&
+    (event.start.getTime() - Date.now()) < 2 * 60 * 60 * 1000;
 
   return (
     <div className="flex items-stretch gap-3 py-1 group">
       <div className="w-11 shrink-0 flex flex-col items-end pt-2.5">
-        <span className="text-[11px] tabular-nums font-medium text-foreground/60">{fmtTime(event.start)}</span>
+        <span className={cn(
+          "text-[11px] tabular-nums font-medium",
+          isPast ? "text-muted-foreground/30" : "text-foreground/60",
+        )}>{fmtTime(event.start)}</span>
         <span className="text-[9px] tabular-nums text-muted-foreground/25">{fmtTime(event.end)}</span>
       </div>
       <div className="flex flex-col items-center pt-3 shrink-0">
-        <div className={cn("size-2 rounded-full", c.dot)} />
+        <div className={cn(
+          "size-2 rounded-full",
+          isOngoing ? "bg-success animate-pulse" : isPast ? "bg-muted-foreground/20" : c.dot,
+        )} />
         <div className="flex-1 w-px bg-border/8 mt-1" />
       </div>
       <button onClick={onClick} className={cn(
         "flex-1 rounded-xl border-l-[3px] p-3 transition-all duration-200 min-w-0 text-left",
         "border border-border/12 hover:border-border/20 hover:shadow-sm cursor-pointer",
+        isAudiencia && isOngoing && "ring-1 ring-success/20 border-success/15",
+        isPast && "opacity-50",
         c.bg,
       )} style={{ borderLeftColor: `var(--color-${event.color === "emerald" ? "green" : event.color}-500, currentColor)` }}>
         <div className="flex items-start gap-2">
@@ -301,6 +316,9 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <h3 className="text-[13px] font-medium text-foreground truncate">{event.title}</h3>
+              {isOngoing && isAudiencia && (
+                <span className="text-[8px] font-semibold text-success px-1.5 py-px rounded-full bg-success/10 shrink-0">Agora</span>
+              )}
               {prep && (
                 <span className={cn(
                   "flex items-center gap-0.5 px-1.5 py-px rounded-full text-[8px] font-semibold shrink-0",
@@ -309,6 +327,10 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
                   {prep === "preparado" ? <CheckCircle2 className="size-2" /> : prep === "parcial" ? <Circle className="size-2" /> : <AlertTriangle className="size-2" />}
                   {prep === "preparado" ? "Preparado" : prep === "parcial" ? "Parcial" : "Pendente"}
                 </span>
+              )}
+              {/* Countdown for nearby audiencias */}
+              {isNearby && (
+                <NearbyCountdown target={event.start} />
               )}
             </div>
             {event.meta.processo && <span className="text-[9px] font-mono text-muted-foreground/30 tabular-nums">{event.meta.processo}</span>}
@@ -328,8 +350,74 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
               {event.meta.modalidade === "presencial" ? "Presencial" : "Virtual"}
             </span>
           )}
+          {/* Deep link to audiencias page */}
+          {isAudiencia && event.url && (
+            <a
+              href={event.url}
+              onClick={(e) => e.stopPropagation()}
+              className="text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40 hover:bg-primary/10 transition-colors"
+            >
+              Ver detalhes →
+            </a>
+          )}
+          {/* Virtual room link */}
+          {isAudiencia && event.meta.urlAudienciaVirtual && (event.meta.modalidade === "virtual" || event.meta.modalidade === "hibrida") && (
+            <a
+              href={event.meta.urlAudienciaVirtual}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="text-[8px] font-semibold px-1.5 py-px rounded bg-info/8 text-info/50 hover:bg-info/15 transition-colors"
+            >
+              Entrar na sala
+            </a>
+          )}
         </div>
+        {/* Post-hearing nudge */}
+        {isAudiencia && isPast && !prep && (
+          <div className="mt-2 ml-8 flex items-center gap-1.5 px-2 py-1 rounded-md bg-warning/5 border border-warning/10">
+            <Clock className="size-2.5 text-warning/40" />
+            <span className="text-[9px] text-warning/50">Registrar resultado da audiência</span>
+          </div>
+        )}
       </button>
     </div>
+  );
+}
+
+// ─── Nearby Countdown (inline, updates every minute) ──────────────────
+
+function NearbyCountdown({ target }: { target: Date }) {
+  const [label, setLabel] = React.useState("");
+
+  React.useEffect(() => {
+    function update() {
+      const diff = target.getTime() - Date.now();
+      if (diff <= 0) { setLabel(""); return; }
+      const mins = Math.floor(diff / 60000);
+      if (mins < 60) setLabel(`em ${mins}min`);
+      else {
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        setLabel(`em ${h}h${m > 0 ? ` ${m}min` : ""}`);
+      }
+    }
+    update();
+    const interval = setInterval(update, 60_000);
+    return () => clearInterval(interval);
+  }, [target]);
+
+  if (!label) return null;
+
+  const diff = target.getTime() - Date.now();
+  const isUrgent = diff < 30 * 60 * 1000; // < 30min
+
+  return (
+    <span className={cn(
+      "text-[8px] font-semibold px-1.5 py-px rounded-full tabular-nums shrink-0",
+      isUrgent ? "bg-destructive/10 text-destructive" : "bg-warning/8 text-warning/60",
+    )}>
+      {label}
+    </span>
   );
 }
