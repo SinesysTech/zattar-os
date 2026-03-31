@@ -87,9 +87,14 @@ describe('fmtNum', () => {
 // fmtData
 // =============================================================================
 
+// Nota: fmtData usa new Date(iso) e toLocaleDateString('pt-BR').
+// ISO strings com T00:00:00Z ficam em UTC e são exibidas no fuso local,
+// podendo mostrar o dia anterior em fusos negativos (ex.: UTC-3).
+// Para evitar esse problema, usamos horário meio-dia (T12:00:00Z) nos testes.
+
 describe('fmtData', () => {
-  it('ISO date válida → formata como "DD mon."', () => {
-    const resultado = fmtData('2024-01-15T00:00:00Z');
+  it('ISO date válida → formata contendo dia e mês abreviado em pt-BR', () => {
+    const resultado = fmtData('2024-01-15T12:00:00Z');
     // Esperado algo como "15 de jan." ou "15 jan." dependendo do locale
     expect(resultado).toContain('15');
     expect(resultado.toLowerCase()).toMatch(/jan/);
@@ -102,30 +107,36 @@ describe('fmtData', () => {
   });
 
   it('data em junho → inclui "jun"', () => {
-    const resultado = fmtData('2024-06-01T00:00:00Z');
-    expect(resultado).toContain('1');
+    const resultado = fmtData('2024-06-15T12:00:00Z');
+    expect(resultado).toContain('15');
     expect(resultado.toLowerCase()).toMatch(/jun/);
   });
 
   it('dia com dois dígitos → inclui zeros à esquerda', () => {
-    const resultado = fmtData('2024-03-05T00:00:00Z');
+    // Usa meio-dia UTC para evitar deslocamento de fuso
+    const resultado = fmtData('2024-03-05T12:00:00Z');
     // day: '2-digit' → "05"
     expect(resultado).toContain('05');
   });
 
-  it('retorna string (não vazia)', () => {
-    const resultado = fmtData('2024-07-04T00:00:00Z');
+  it('retorna string não vazia', () => {
+    const resultado = fmtData('2024-07-04T12:00:00Z');
     expect(typeof resultado).toBe('string');
     expect(resultado.length).toBeGreaterThan(0);
   });
 
   it('diferentes anos retornam a mesma formatação (sem ano no output)', () => {
-    const resultado2023 = fmtData('2023-03-10T00:00:00Z');
-    const resultado2024 = fmtData('2024-03-10T00:00:00Z');
+    const resultado2023 = fmtData('2023-03-10T12:00:00Z');
+    const resultado2024 = fmtData('2024-03-10T12:00:00Z');
     // Ambos devem ter "10" e "mar" — o ano não aparece
     expect(resultado2023).toContain('10');
     expect(resultado2024).toContain('10');
     expect(resultado2023.toLowerCase()).toMatch(/mar/);
     expect(resultado2024.toLowerCase()).toMatch(/mar/);
+  });
+
+  it('formato não inclui o ano', () => {
+    const resultado = fmtData('2024-06-15T12:00:00Z');
+    expect(resultado).not.toContain('2024');
   });
 });

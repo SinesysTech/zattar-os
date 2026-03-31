@@ -859,6 +859,112 @@ export async function updateContrato(
 }
 
 /**
+ * Conta contratos criados no mês corrente (a partir do primeiro dia do mês atual)
+ */
+export async function countContratosNovosMes(): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+
+    const agora = new Date();
+    const primeiroDiaMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
+    primeiroDiaMes.setHours(0, 0, 0, 0);
+
+    const { count, error } = await db
+      .from(TABLE_CONTRATOS)
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", primeiroDiaMes.toISOString());
+
+    if (error) {
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao contar contratos novos do mês",
+        undefined,
+        error instanceof Error ? error : undefined,
+      ),
+    );
+  }
+}
+
+/**
+ * Retorna array de { mes: string (YYYY-MM), count: number } para os últimos N meses.
+ * Os meses são ordenados do mais antigo para o mais recente.
+ */
+export async function countContratosTrendMensal(
+  months: number,
+): Promise<Result<Array<{ mes: string; count: number }>>> {
+  try {
+    const db = createDbClient();
+
+    const agora = new Date();
+    // Primeiro dia do mês atual
+    const primeiroDiaMesAtual = new Date(
+      agora.getFullYear(),
+      agora.getMonth(),
+      1,
+    );
+    primeiroDiaMesAtual.setHours(0, 0, 0, 0);
+
+    // Data de início: primeiro dia do mês N meses atrás
+    const dataInicio = new Date(primeiroDiaMesAtual);
+    dataInicio.setMonth(dataInicio.getMonth() - (months - 1));
+
+    const { data, error } = await db
+      .from(TABLE_CONTRATOS)
+      .select("created_at")
+      .gte("created_at", dataInicio.toISOString());
+
+    if (error) {
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
+    }
+
+    // Inicializar mapa para todos os meses no range
+    const contadores = new Map<string, number>();
+    for (let i = 0; i < months; i++) {
+      const d = new Date(primeiroDiaMesAtual);
+      d.setMonth(d.getMonth() - (months - 1 - i));
+      const chave = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      contadores.set(chave, 0);
+    }
+
+    // Agrupar registros por YYYY-MM
+    for (const row of data || []) {
+      const d = new Date(row.created_at as string);
+      if (isNaN(d.getTime())) continue;
+      const chave = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      if (contadores.has(chave)) {
+        contadores.set(chave, (contadores.get(chave) ?? 0) + 1);
+      }
+    }
+
+    const resultado = Array.from(contadores.entries()).map(([mes, count]) => ({
+      mes,
+      count,
+    }));
+
+    return ok(resultado);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao calcular trend mensal de contratos",
+        undefined,
+        error instanceof Error ? error : undefined,
+      ),
+    );
+  }
+}
+
+/**
  * Remove permanentemente um contrato
  */
 export async function deleteContrato(id: number): Promise<Result<void>> {

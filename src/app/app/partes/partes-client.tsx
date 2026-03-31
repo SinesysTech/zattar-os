@@ -31,7 +31,7 @@ import {
   Clock,
   Building2,
 } from 'lucide-react';
-import { usePartes, type TipoEntidade } from '@/features/partes/hooks/use-partes';
+import { usePartes, type TipoEntidade } from '@/features/partes';
 import { EntityCard, getInitials, timeAgo, type EntityCardData } from '@/components/dashboard/entity-card';
 import { EntityListRow } from '@/components/dashboard/entity-list-row';
 import { PulseStrip, type PulseItem } from '@/components/dashboard/pulse-strip';
@@ -164,7 +164,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       </div>
 
       {/* Métricas */}
-      <div className="flex gap-4 p-3 rounded-xl bg-white/[0.03] border border-border/10 mb-5">
+      <div className="flex gap-4 p-3 rounded-xl bg-white/3 border border-border/10 mb-5">
         <div className="flex-1 text-center">
           <p className="font-display text-xl font-bold">{data.metricas.ativos}</p>
           <p className="text-[9px] text-muted-foreground/40">Ativos</p>
@@ -187,7 +187,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       {data.tags && data.tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-5">
           {data.tags.map((tag) => (
-            <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-primary/[0.06] text-primary/60 border border-primary/10">
+            <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-primary/6 text-primary/60 border border-primary/10">
               {tag}
             </span>
           ))}
@@ -196,7 +196,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
 
       {/* Nome social */}
       {data.nomeSocial && (
-        <div className="mb-4 p-2.5 rounded-lg bg-white/[0.025] border border-border/10">
+        <div className="mb-4 p-2.5 rounded-lg bg-white/2.5 border border-border/10">
           <p className="text-[9px] text-muted-foreground/35 uppercase tracking-wider mb-0.5">Nome fantasia / Social</p>
           <p className="text-xs text-muted-foreground/70">{data.nomeSocial}</p>
         </div>
@@ -327,7 +327,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
   const skeletonCount = 6;
 
   return (
-    <div className="max-w-[1400px] mx-auto space-y-5">
+    <div className="max-w-350 mx-auto space-y-5">
       {/* ── Header ──────────────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
@@ -350,7 +350,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
       <PulseStrip items={pulseItems} />
 
       {/* ── Insight Banner ──────────────────────────────────────── */}
-      <div className="rounded-lg border border-primary/10 bg-primary/[0.04] px-3.5 py-2 text-[11px] font-medium text-primary/70 flex items-center gap-2 cursor-pointer hover:bg-primary/[0.06] transition-colors">
+      <div className="rounded-lg border border-primary/10 bg-primary/4 px-3.5 py-2 text-[11px] font-medium text-primary/70 flex items-center gap-2 cursor-pointer hover:bg-primary/6 transition-colors">
         <AlertCircle className="size-3.5 shrink-0" />
         <span>Verifique clientes sem processos ativos e cadastros com dados incompletos</span>
         <ChevronRight className="size-3 ml-auto shrink-0" />
@@ -365,13 +365,13 @@ export function PartesClient({ initialStats }: PartesClientProps) {
             onChange={setSearch}
             placeholder="Buscar por nome, CPF, CNPJ..."
           />
-          <ViewToggle mode={viewMode} onChange={setViewMode} />
+          <ViewToggle mode={viewMode} onChange={(m) => setViewMode(m as 'cards' | 'list')} />
         </div>
       </div>
 
       {/* ── Error State ─────────────────────────────────────────── */}
       {error && (
-        <div className="rounded-lg border border-destructive/20 bg-destructive/[0.04] px-4 py-3 text-xs text-destructive/80 flex items-center gap-2">
+        <div className="rounded-lg border border-destructive/20 bg-destructive/4 px-4 py-3 text-xs text-destructive/80 flex items-center gap-2">
           <AlertCircle className="size-3.5 shrink-0" />
           {error}
         </div>
