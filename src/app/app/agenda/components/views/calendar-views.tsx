@@ -77,15 +77,22 @@ export function CalendarViewWrapper({
     [events, onEventClick],
   );
 
+  const handleEventAdd = useCallback(
+    (calEvent: CalendarEvent) => {
+      if (onCreateEvent) onCreateEvent(calEvent.start);
+    },
+    [onCreateEvent],
+  );
+
   return (
     <EventCalendar
       events={calendarEvents}
       currentDate={currentDate}
-      onDateChange={onDateChange}
+      onCurrentDateChange={onDateChange}
       view={legacyView}
       onViewChange={() => {}}
-      onEventClick={handleEventClick}
-      onCreateEvent={onCreateEvent}
+      onEventSelect={handleEventClick}
+      onEventAdd={onCreateEvent ? handleEventAdd : undefined}
       hideToolbar
     />
   );

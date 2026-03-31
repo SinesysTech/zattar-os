@@ -185,7 +185,7 @@ function TimelineEventCard({
           aria-hidden="true"
         />
         {!isLast && (
-          <div className="w-px flex-1 bg-white/5 mt-2 min-h-[3rem]" />
+          <div className="w-px flex-1 bg-white/5 mt-2 min-h-12" />
         )}
       </div>
 
