@@ -23,6 +23,7 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 DOCKERFILE="Dockerfile.cloudron"
 ENV_FILE="${PROJECT_DIR}/.env.local"
 ENV_PRODUCTION="${PROJECT_DIR}/.env.production"
+CLOUDRON_APP="zattaradvogados.com"
 
 # Variaveis providas automaticamente pelos addons do Cloudron (nao setar)
 # Redis: mapeadas pelo start.sh de CLOUDRON_REDIS_* -> REDIS_*
@@ -178,7 +179,7 @@ if [ "$SKIP_UPDATE" = false ]; then
     header "STEP 2/3: Cloudron Update"
     echo ""
 
-    cloudron update
+    cloudron update --app "$CLOUDRON_APP"
 
     success "Update concluido!"
 else
@@ -192,7 +193,7 @@ header "STEP 3/3: Cloudron Env Set"
 echo "   Setando ${RUNTIME_COUNT} variaveis de runtime..."
 echo ""
 
-cloudron env set "${RUNTIME_ENVS[@]}"
+cloudron env set --app "$CLOUDRON_APP" "${RUNTIME_ENVS[@]}"
 
 success "Variaveis de ambiente configuradas!"
 

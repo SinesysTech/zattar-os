@@ -33,7 +33,7 @@ interface TabPillsProps {
 
 export function TabPills({ tabs, active, onChange }: TabPillsProps) {
   return (
-    <div className="flex gap-1 p-1 rounded-xl bg-border/[0.06] overflow-x-auto">
+    <div className="flex gap-1 p-1 rounded-xl bg-border/6 overflow-x-auto">
       {tabs.map((tab) => (
         <button
           key={tab.id}
