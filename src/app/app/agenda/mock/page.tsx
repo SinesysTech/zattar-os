@@ -41,11 +41,9 @@ import {
   COLOR_MAP,
   today,
   addDays,
-  isSameDay,
   isToday,
   isPast,
   startOfWeek,
-  startOfMonth,
   getMonthGrid,
   getWeekDays,
   weekdayShort,
@@ -170,7 +168,7 @@ function Toolbar({
             className={cn(
               "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs border transition-colors cursor-pointer",
               activeFilters > 0
-                ? "border-primary/20 bg-primary/[0.06] text-primary"
+                ? "border-primary/20 bg-primary/6 text-primary"
                 : "border-border/15 text-muted-foreground/50 hover:text-muted-foreground/70",
             )}
           >
@@ -377,7 +375,7 @@ function MonthView({ events, currentDate, onEventClick }: { events: MockCalendar
               key={i}
               className={cn(
                 "border-r border-b border-border/10 min-h-20 sm:min-h-24 p-1 transition-colors",
-                !isCurrentMonth && "bg-muted/[0.02]",
+                !isCurrentMonth && "bg-muted/2",
               )}
             >
               {/* Day number */}
@@ -456,7 +454,7 @@ function WeekView({ events, currentDate, onEventClick }: { events: MockCalendarE
       })()}
 
       {/* Time grid */}
-      <div className="grid grid-cols-8 max-h-[520px] overflow-y-auto relative">
+      <div className="grid grid-cols-8 max-h-130 overflow-y-auto relative">
         {/* Time labels + Day columns */}
         {HOURS.map((hour) => (
           <div key={hour} className="contents">
@@ -538,7 +536,7 @@ function DayView({ events, currentDate, onEventClick }: { events: MockCalendarEv
       )}
 
       {/* Time grid */}
-      <div className="relative max-h-[520px] overflow-y-auto">
+      <div className="relative max-h-130rflow-y-auto">
         {HOURS.map((hour) => {
           const hourEvents = timed.filter((e) => e.start.getHours() === hour);
           const isNowHour = isViewToday && now.getHours() === hour;
@@ -692,8 +690,8 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
   return (
     <div className="space-y-4">
       {/* Briefing */}
-      <div className="relative overflow-hidden rounded-2xl border border-primary/8 bg-primary/[0.02] px-4 py-3.5 sm:px-5">
-        <div className="absolute top-0 right-0 w-24 h-24 bg-primary/[0.03] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+      <div className="relative overflow-hidden rounded-2xl border border-primary/8 bg-primary/2 px-4 py-3.5 sm:px-5">
+        <div className="absolute top-0 right-0 w-24 h-24 bg-primary/3 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
         <div className="relative flex items-start gap-3">
           <div className="size-1.5 rounded-full bg-primary animate-pulse mt-2 shrink-0" />
           <p className="text-[13px] text-foreground/70 leading-relaxed">
@@ -884,7 +882,7 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
               <span className="text-[9px] text-muted-foreground/30 truncate max-w-40">{event.location}</span>
             </div>
           )}
-          {event.trt && <span className="text-[8px] font-semibold px-1.5 py-px rounded bg-primary/[0.05] text-primary/40">{event.trt}</span>}
+          {event.trt && <span className="text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40">{event.trt}</span>}
           {event.modalidade && (
             <span className={cn("text-[8px] font-semibold px-1.5 py-px rounded", event.modalidade === "presencial" ? "bg-warning/8 text-warning/50" : "bg-info/8 text-info/50")}>
               {event.modalidade === "presencial" ? "Presencial" : "Virtual"}
@@ -926,7 +924,7 @@ function FocusSlot({ inicio, fim, label }: { inicio: string; fim: string; label?
     <div className="flex items-center gap-3 py-1">
       <span className="w-11 text-right text-[10px] tabular-nums text-muted-foreground/20 shrink-0">{inicio}</span>
       <div className="size-1.5 rounded-full border border-dashed border-success/25 shrink-0" />
-      <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-success/10 bg-success/[0.015]">
+      <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-success/10 bg-success/1.5">
         <Brain className="size-2.5 text-success/30" />
         <span className="text-[9px] text-success/40 font-medium">{label ?? "Foco"}</span>
         <span className="text-[9px] tabular-nums text-muted-foreground/15 ml-auto">{inicio}–{fim}</span>
@@ -940,7 +938,7 @@ function TravelSlot({ minutes }: { minutes: number }) {
     <div className="flex items-center gap-3 py-0.5">
       <span className="w-11 shrink-0" />
       <MapPin className="size-1.5 text-warning/30 shrink-0" />
-      <div className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-warning/[0.03] border border-warning/8">
+      <div className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-warning/3 border border-warning/8">
         <MapPin className="size-2 text-warning/35" />
         <span className="text-[8px] text-warning/50 font-medium">~{minutes}min deslocamento</span>
       </div>
@@ -953,7 +951,7 @@ function BreakSlot({ inicio, fim, label, icon: Icon }: { inicio: string; fim: st
     <div className="flex items-center gap-3 py-1">
       <span className="w-11 text-right text-[10px] tabular-nums text-muted-foreground/15 shrink-0">{inicio}</span>
       <div className="size-1.5 rounded-full border border-dashed border-muted-foreground/10 shrink-0" />
-      <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-muted-foreground/8 bg-muted/[0.01]">
+      <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-muted-foreground/8 bg-muted/1">
         <Icon className="size-2.5 text-muted-foreground/20" />
         <span className="text-[9px] text-muted-foreground/20 font-medium">{label}</span>
         <span className="text-[9px] tabular-nums text-muted-foreground/10 ml-auto">{inicio}–{fim}</span>
@@ -1159,7 +1157,7 @@ export default function AgendaMockPage() {
   const [selectedEvent, setSelectedEvent] = useState<MockCalendarEvent | null>(null);
 
   // Generate events
-  const allEvents = useMemo(() => generateMockEvents(currentDate), []);
+  const allEvents = useMemo(() => generateMockEvents(currentDate), [currentDate]);
 
   // Filter events
   const filteredEvents = useMemo(() => {

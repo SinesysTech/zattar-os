@@ -41,7 +41,7 @@ async function getOrCreateHandler() {
   const tools = getMcpToolsAsDefinitions();
 
   const agent = new BuiltInAgent({
-    model: "google/gemini-2.5-flash",
+    model: "google/gemini-3.1-pro-preview-customtools",
     apiKey,
     tools,
     prompt: SYSTEM_PROMPT,

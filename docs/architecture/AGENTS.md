@@ -1,6 +1,7 @@
 
 # AGENTS.md
-This file provides guidance to Verdent when working with code in this repository.
+This file provides extended guidance to AI coding agents working with code in this repository.
+For the concise cross-tool version, see the root `AGENTS.md`.
 
 ## Table of Contents
 1. [Commonly Used Commands](#commands)
@@ -11,7 +12,7 @@ This file provides guidance to Verdent when working with code in this repository
 ## Commands
 
 ### Development
-```powershell
+```bash
 # Start development server (Turbopack)
 npm run dev
 
@@ -24,7 +25,7 @@ npm run type-check:skip-lib
 ```
 
 ### Build
-```powershell
+```bash
 # Standard build (local)
 npm run build
 
@@ -32,7 +33,7 @@ npm run build
 npm run build:ci
 
 # Build with bundle analyzer
-$env:ANALYZE="true"; npm run build
+ANALYZE=true npm run build
 
 # Architecture validation (runs before build)
 npm run check:architecture
@@ -41,7 +42,7 @@ npm run validate:arch:strict
 ```
 
 ### Testing
-```powershell
+```bash
 # Run all tests
 npm test
 
@@ -72,7 +73,7 @@ npm run test:portal-cliente
 ```
 
 ### Linting & Validation
-```powershell
+```bash
 # ESLint
 npm run lint
 
@@ -85,7 +86,7 @@ npm run validate:exports:verbose
 ```
 
 ### AI & MCP
-```powershell
+```bash
 # MCP server management
 npm run mcp:check             # Verify registered tools
 npm run mcp:dev               # Development MCP server
@@ -101,7 +102,7 @@ npm run ai:index-dry-run      # Dry run indexing
 ```
 
 ### Database & Scripts
-```powershell
+```bash
 # Populate tables
 npm run populate:tabelas-audiencias
 
@@ -166,7 +167,7 @@ src/
 │       ├── mcp/              # MCP endpoint (SSE)
 │       └── plate/ai/         # Plate AI editor endpoint
 │
-├── features/                 # 🔥 FEATURE-SLICED DESIGN (30 modules)
+├── features/                 # 🔥 FEATURE-SLICED DESIGN (42 modules)
 │   ├── processos/            # ✅ Fully migrated
 │   ├── partes/               # ✅ Fully migrated
 │   ├── contratos/            # ✅ Fully migrated
@@ -213,8 +214,7 @@ src/features/{modulo}/
 ├── repository.ts         # 🔥 Data access (Supabase queries)
 ├── types.ts              # TypeScript types
 ├── utils.ts              # Formatters, validators
-├── RULES.md              # 🤖 Business rules for AI context [inferred]
-└── index.ts              # Barrel exports
+├── RULES.md              # 🤖 Business rules for AI context└── index.ts              # Barrel exports
 ```
 
 **Key files**:
@@ -222,23 +222,14 @@ src/features/{modulo}/
 - `service.ts`: Orchestrates business logic, calls repository, handles validation
 - `repository.ts`: Supabase queries (CRUD, filters)
 - `actions/*.ts`: Server Actions (use `authenticatedAction` wrapper)
-- `RULES.md`: AI context for business rules (9/30 features have this) [inferred]
-
+- `RULES.md`: AI context for business rules
 ### Feature Migration Status
 
 | Status | Count | Features |
 |--------|-------|----------|
-| ✅ **Fully Migrated** | 17/30 | acervo, advogados, ai, assistentes, captura, cargos, contratos, enderecos, expedientes, notificacoes, obrigacoes, pangea, pericias, processos, rh, tipos-expedientes, usuarios |
-| ⚠️ **Partially Migrated** | 7/30 | assinatura-digital, audiencias, chat, documentos, partes, perfil, portal-cliente |
-| ❌ **Not Migrated** | 6/30 | busca (actions-only), calendar (UI-only), financeiro (special pattern), profiles (config), repasses (stub), tasks (empty) |
-
-**Architecture Completeness** [inferred]:
-- domain.ts: 23/30 (77%)
-- service.ts: 23/30 (77%)
-- repository.ts: 19/30 (63%) ← **Lowest coverage**
-- actions/: 25/30 (83%)
-- components/: 28/30 (93%)
-- RULES.md: 9/30 (30%) ← **Needs expansion**
+| ✅ **Complete** | 18/42 | acervo, advogados, ai, captura, config-atribuicao, contratos, dify, enderecos, integracoes, notificacoes, obrigacoes, pecas-juridicas, pericias, processos, rh, system-prompts, tipos-expedientes, usuarios |
+| ⚠️ **Partial** | 13/42 | assistentes-tipos, audiencias, calendar, cargos, chat, chatwoot, documentos, expedientes, financeiro, partes, perfil, profiles, tags |
+| 🧩 **Initial** | 11/42 | admin, agenda-eventos, audit, busca, calculadoras, entrevistas-trabalhistas, portal, repasses, tasks, twofauth, website |
 
 ### Major Subsystems
 
@@ -266,8 +257,7 @@ src/features/{modulo}/
 5. **Financeiro** (Financial)
    - Dashboard, accounts payable/receivable
    - Bank reconciliation (conciliação bancária - OFX/CSV import)
-   - **Special subdomain pattern**: Uses `@/features/financeiro/{subdomain}/` structure [inferred]
-
+   - **Special subdomain pattern**: Uses `@/features/financeiro/{subdomain}/` structure
 6. **Documentos** (Documents)
    - Collaborative real-time editor (Plate + Yjs)
    - AI-powered editing via `/api/plate/ai` (Vercel AI SDK)
@@ -275,8 +265,7 @@ src/features/{modulo}/
 
 7. **Captura** (Automated Data Capture)
    - PJE/TRT integration via Playwright
-   - Multi-driver system (PJE, TRT, Comunica CNJ) [inferred]
-   - Automated extraction of process data, hearings, parties
+   - Multi-driver system (PJE, TRT, Comunica CNJ)   - Automated extraction of process data, hearings, parties
 
 8. **Assinatura Digital** (Digital Signature)
    - Legal compliance: MP 2.200-2/2001
@@ -323,8 +312,7 @@ AI Agent → POST /api/mcp { tool: "criar_processo", args: {...} }
 ```
 UI (Plate) → POST /api/plate/ai { prompt: "..." }
   → authenticateRequest (JWT or API key)
-  → rateLimitCheck (Redis; fail-open if unavailable) [inferred]
-  → openai.chat.completions.create({ stream: true })
+  → rateLimitCheck (Redis; fail-open if unavailable)  → openai.chat.completions.create({ stream: true })
   → StreamingTextResponse
 ```
 
@@ -400,8 +388,7 @@ UI (Plate) → POST /api/plate/ai { prompt: "..." }
    - Grid: `grid-cols-1 md:grid-cols-2`
    - Inputs: `w-full`
 
-8. **Data Table action button pattern** [inferred]
-   ```typescript
+8. **Data Table action button pattern**   ```typescript
    // ✅ Correct
    <DataShell
      header={
@@ -467,7 +454,7 @@ UI (Plate) → POST /api/plate/ai { prompt: "..." }
     - Constants: `UPPER_SNAKE_CASE` (`STATUS_LABELS`)
     - SQL: `snake_case` (table and column names)
 
-18. **Node.js version**: `>=24.9.0` [inferred from package.json]
+18. **Node.js version**: `>=22.0.0`, npm `>=10`
 
 ### From .cursor/rules/ (Supabase & Design)
 
@@ -583,7 +570,7 @@ Key principles [inferred from file names]:
 #### Adding a New Feature Module
 
 1. **Create structure**:
-   ```powershell
+   ```bash
    mkdir src/features/nova-feature
    mkdir src/features/nova-feature/components
    mkdir src/features/nova-feature/hooks
@@ -775,8 +762,7 @@ Key principles [inferred from file names]:
 #### Working with Playwright Automation (Captura)
 
 - Entry point: `src/features/captura/`
-- Drivers: PJE, TRT, Comunica CNJ [inferred]
-- Scripts: `scripts/captura/`
+- Drivers: PJE, TRT, Comunica CNJ- Scripts: `scripts/captura/`
 - Test: `npm run test:api-acervo-geral`, `npm run test:api-audiencias`, etc.
 
 **Adding a new tribunal**:
@@ -817,7 +803,7 @@ const resultados = await buscaSemantica("query string", {
 ```
 
 **Reindexing**:
-```powershell
+```bash
 npm run ai:reindex
 ```
 
@@ -912,6 +898,6 @@ function MyComponent() {
 
 ---
 
-**Last updated**: 2026-01-05
+**Last updated**: 2026-03-31
 **Maintained by**: Sinesys Team
-**For AI agents**: This file is the authoritative guide for code changes. Always consult before major refactoring.
+**For AI agents**: This is the extended reference. For the concise cross-tool version, see the root `AGENTS.md`.
