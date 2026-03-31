@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 
-import { AIChatPlugin, aiCommentToRange } from '@platejs/ai/react';
+import { withAIBatch } from '@platejs/ai';
+import { AIChatPlugin, aiCommentToRange, applyTableCellSuggestion } from '@platejs/ai/react';
 import { getCommentKey, getTransientCommentKey } from '@platejs/comment';
 import { deserializeMd } from '@platejs/markdown';
 import { BlockSelectionPlugin } from '@platejs/selection/react';
@@ -10,6 +11,8 @@ import { DefaultChatTransport } from 'ai';
 import { useChat as useVercelChat } from '@ai-sdk/react';
 import { type TNode, KEYS, nanoid, NodeApi, TextApi } from 'platejs';
 import { useEditorPlugin } from 'platejs/react';
+
+import type { TTableCellUpdate } from './types/chat-editor-types';
 
 import { discussionPlugin, type TDiscussion } from './plate/discussion-kit';
 
@@ -119,6 +122,25 @@ export function useChat() {
         if (toolName === 'generate' || toolName === 'edit' || toolName === 'comment') {
           editor.setOption(AIChatPlugin, 'toolName', toolName as unknown as never);
         }
+      }
+
+      if (eventObj.type === 'data-table' && eventObj.data) {
+        const tableData = eventObj.data as TTableCellUpdate;
+
+        if (tableData.status === 'finished') {
+          const chatSelection = editor.getOption(AIChatPlugin, 'chatSelection') as unknown;
+          if (chatSelection) {
+            editor.tf.setSelection(chatSelection as Parameters<typeof editor.tf.setSelection>[0]);
+          }
+          return;
+        }
+
+        const cellUpdate = tableData.cellUpdate;
+        if (!cellUpdate) return;
+
+        withAIBatch(editor, () => {
+          applyTableCellSuggestion(editor, cellUpdate);
+        });
       }
 
       if (eventObj.type === 'data-comment' && eventObj.data) {

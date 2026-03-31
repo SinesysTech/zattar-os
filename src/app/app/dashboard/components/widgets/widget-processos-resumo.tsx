@@ -23,7 +23,7 @@ interface WidgetProcessosResumoProps {
 export function WidgetProcessosResumo({ data, loading, error }: WidgetProcessosResumoProps) {
   if (loading) {
     return (
-      <Card>
+      <Card className="glass-widget bg-transparent transition-all duration-200">
         <CardHeader><Skeleton className="h-5 w-24" /></CardHeader>
         <CardContent className="space-y-3">
           <Skeleton className="h-20 w-full" />
@@ -34,7 +34,7 @@ export function WidgetProcessosResumo({ data, loading, error }: WidgetProcessosR
 
   if (error) {
     return (
-      <Card>
+      <Card className="glass-widget bg-transparent transition-all duration-200">
         <CardHeader><CardTitle>Processos</CardTitle></CardHeader>
         <CardContent><p className="text-sm text-destructive">{error}</p></CardContent>
       </Card>
@@ -43,7 +43,7 @@ export function WidgetProcessosResumo({ data, loading, error }: WidgetProcessosR
 
   if (data.total === 0) {
     return (
-      <Card>
+      <Card className="glass-widget bg-transparent transition-all duration-200">
         <CardHeader>
           <CardTitle>Processos</CardTitle>
           <CardDescription>Distribuição e análise</CardDescription>
@@ -58,7 +58,7 @@ export function WidgetProcessosResumo({ data, loading, error }: WidgetProcessosR
   const ativosPercent = Math.round((data.ativos / data.total) * 100);
 
   return (
-    <Card>
+    <Card className="glass-widget bg-transparent transition-all duration-200">
       <CardHeader>
         <CardTitle>Processos</CardTitle>
         <CardDescription>Distribuição e análise</CardDescription>

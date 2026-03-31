@@ -70,7 +70,7 @@ export function ObrigacoesRecentesCard() {
 
   if (isLoading) {
     return (
-      <Card className="col-span-full">
+      <Card className="col-span-full glass-widget bg-transparent transition-all duration-200">
         <CardHeader>
           <Skeleton className="h-6 w-48" />
         </CardHeader>
@@ -87,7 +87,7 @@ export function ObrigacoesRecentesCard() {
 
   if (error) {
     return (
-      <Card className="col-span-full">
+      <Card className="col-span-full glass-widget bg-transparent transition-all duration-200">
         <CardHeader>
           <CardTitle>Obrigações Recentes</CardTitle>
         </CardHeader>
@@ -100,7 +100,7 @@ export function ObrigacoesRecentesCard() {
 
   if (obrigacoesOrdenadas.length === 0) {
     return (
-      <Card className="col-span-full">
+      <Card className="col-span-full glass-widget bg-transparent transition-all duration-200">
         <CardHeader>
           <CardTitle>Obrigações Recentes</CardTitle>
         </CardHeader>
@@ -112,7 +112,7 @@ export function ObrigacoesRecentesCard() {
   }
 
   return (
-    <Card className="col-span-full">
+    <Card className="col-span-full glass-widget bg-transparent transition-all duration-200">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>Obrigações Recentes</CardTitle>
         <Button variant="ghost" size="sm" asChild>

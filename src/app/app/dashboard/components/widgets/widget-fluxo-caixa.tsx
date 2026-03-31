@@ -18,7 +18,7 @@ export function WidgetFluxoCaixa() {
 
   if (isLoading) {
     return (
-      <Card className="h-full">
+      <Card className="h-full glass-widget bg-transparent transition-all duration-200">
         <CardHeader>
           <Skeleton className="h-5 w-48" />
         </CardHeader>
@@ -31,7 +31,7 @@ export function WidgetFluxoCaixa() {
 
   if (error) {
     return (
-      <Card className="h-full">
+      <Card className="h-full glass-widget bg-transparent transition-all duration-200">
         <CardHeader>
           <CardTitle className="text-sm">Fluxo de Caixa</CardTitle>
         </CardHeader>
@@ -43,7 +43,7 @@ export function WidgetFluxoCaixa() {
   }
 
   return (
-    <Card className="h-full flex flex-col">
+    <Card className="h-full flex flex-col glass-widget bg-transparent transition-all duration-200">
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0 pb-2">
         <CardTitle className="flex items-center gap-2 text-sm font-medium">
           <TrendingUp className="h-4 w-4 text-muted-foreground" />

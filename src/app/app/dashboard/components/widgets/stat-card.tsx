@@ -90,7 +90,7 @@ export function StatCard({
   const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
 
   const content = (
-    <Card className={cn('transition-all hover:shadow-md', href && 'cursor-pointer', className)}>
+    <Card className={cn('transition-all hover:shadow-md glass-kpi bg-transparent', href && 'cursor-pointer', className)}>
       <CardContent className="pt-4 sm:pt-6">
         <div className="flex items-start justify-between gap-2">
           <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">

@@ -36,7 +36,7 @@ export function LembretesWidget({ lembretes: initialReminders = [] }: LembretesW
   };
 
   return (
-    <Card>
+    <Card className="glass-widget bg-transparent transition-all duration-200">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Bell className="size-5" />

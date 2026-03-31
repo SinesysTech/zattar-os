@@ -12,9 +12,18 @@ export type TComment = {
   status: 'finished' | 'streaming';
 };
 
+export type TTableCellUpdate = {
+  cellUpdate: {
+    content: string;
+    id: string;
+  } | null;
+  status: 'finished' | 'streaming';
+};
+
 export type MessageDataPart = {
   toolName: ToolName;
   comment?: TComment;
+  table?: TTableCellUpdate;
 };
 
 export type Chat = UseChatHelpers<ChatMessage>;

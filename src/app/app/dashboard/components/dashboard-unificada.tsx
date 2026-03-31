@@ -91,7 +91,10 @@ interface KpiProps {
 
 function Kpi({ label, value, description, trend, icon: Icon, href }: KpiProps) {
   const inner = (
-    <Card className={cn(href && 'transition-colors hover:bg-muted/50 cursor-pointer')}>
+    <Card className={cn(
+      'glass-kpi bg-transparent transition-all duration-200',
+      href && 'hover:bg-transparent cursor-pointer',
+    )}>
       <CardHeader>
         <CardDescription>{label}</CardDescription>
         <div className="flex flex-col gap-2">
@@ -109,8 +112,8 @@ function Kpi({ label, value, description, trend, icon: Icon, href }: KpiProps) {
           )}
         </div>
         <CardAction>
-          <div className="bg-muted flex size-12 items-center justify-center rounded-full border">
-            <Icon className="size-5" />
+          <div className="flex size-12 items-center justify-center rounded-full border border-border/30 bg-white/5 backdrop-blur-sm">
+            <Icon className="size-5 text-foreground/70" />
           </div>
         </CardAction>
       </CardHeader>
@@ -133,7 +136,7 @@ function ProgressKpi({ progresso }: { progresso: ProgressoDiario }) {
         : `${progresso.concluidos} de ${progresso.total} concluídos`;
 
   return (
-    <Card>
+    <Card className="glass-kpi bg-transparent transition-all duration-200">
       <CardHeader>
         <CardDescription>Progresso do Dia</CardDescription>
         <div className="flex flex-col gap-2">
@@ -160,7 +163,7 @@ function DashboardSkeleton() {
       <Skeleton className="h-8 w-56" />
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
-          <Card key={i}>
+          <Card key={i} className="glass-kpi bg-transparent">
             <CardHeader>
               <Skeleton className="h-4 w-28" />
               <div className="flex flex-col gap-2">

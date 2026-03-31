@@ -8,8 +8,11 @@ import {
   addSelection,
   buildStructuredPrompt,
   formatTextFromMessages,
+  getLastUserInstruction,
   getMarkdownWithSelection,
   isMultiBlocks,
+  isSelectionInTable,
+  isSingleCellSelection,
 } from '../../ai/command/utils';
 import { getPromptContent } from '@/features/system-prompts/get-prompt';
 
@@ -20,8 +23,12 @@ import { getPromptContent } from '@/features/system-prompts/get-prompt';
  * Os examples e rules permanecem hardcoded pois são acoplados à API do editor.
  */
 
-export async function getChooseToolPrompt({ messages }: { messages: ChatMessage[] }) {
+export async function getChooseToolPrompt({ isSelecting, messages }: { isSelecting: boolean; messages: ChatMessage[] }) {
   const task = await getPromptContent('plate_choose_tool');
+
+  const editRule = isSelecting ? dedent`
+    - Retorne "edit" apenas para pedidos que requerem reescrever o texto selecionado como substituição in-place (ex.: corrigir gramática, melhorar redação, encurtar/expandir, traduzir, simplificar).
+    - Pedidos como resumir/explicar/extrair/tópicos/tabela/perguntas devem ser "generate" mesmo com texto selecionado.` : '';
 
   return buildStructuredPrompt({
     examples: [
@@ -29,27 +36,31 @@ export async function getChooseToolPrompt({ messages }: { messages: ChatMessage[
       'User: "Redija uma cláusula de confidencialidade" → Good: "generate" | Bad: "edit"',
       'User: "Escreva um parágrafo sobre prescrição trabalhista" → Good: "generate" | Bad: "comment"',
       'User: "Crie uma petição inicial" → Good: "generate" | Bad: "edit"',
+      'User: "Resuma este texto" → Good: "generate" | Bad: "edit"',
 
-      // EDIT
-      'User: "Corrija a gramática." → Good: "edit" | Bad: "generate"',
-      'User: "Melhore a redação jurídica." → Good: "edit" | Bad: "generate"',
-      'User: "Torne mais conciso." → Good: "edit" | Bad: "generate"',
-      'User: "Traduza este parágrafo para o inglês" → Good: "edit" | Bad: "generate"',
-      'User: "Formalize o tom do texto" → Good: "edit" | Bad: "generate"',
+      // EDIT (only when selecting)
+      ...(isSelecting ? [
+        'User: "Corrija a gramática." → Good: "edit" | Bad: "generate"',
+        'User: "Melhore a redação jurídica." → Good: "edit" | Bad: "generate"',
+        'User: "Torne mais conciso." → Good: "edit" | Bad: "generate"',
+        'User: "Traduza este parágrafo para o inglês" → Good: "edit" | Bad: "generate"',
+        'User: "Formalize o tom do texto" → Good: "edit" | Bad: "generate"',
+      ] : []),
 
       // COMMENT
       'User: "Revise este texto e dê feedback" → Good: "comment" | Bad: "edit"',
       'User: "Adicione comentários sobre a segurança jurídica deste contrato" → Good: "comment" | Bad: "generate"',
       'User: "Analise este documento" → Good: "comment" | Bad: "edit"',
     ],
+    instruction: getLastUserInstruction(messages),
     history: formatTextFromMessages(messages),
     rules: dedent`
       - Default é "generate". Qualquer pergunta aberta, pedido de ideia ou criação → "generate".
-      - Retorne "edit" apenas se o usuário fornecer texto original (ou seleção) E pedir para alterar, reformular, traduzir ou encurtar.
       - Retorne "comment" apenas se o usuário pedir explicitamente comentários, feedback, anotações ou revisão. Não infira "comment" implicitamente.
       - Retorne apenas um valor enum sem explicação.
-    `,
-    task,
+      - CRÍTICO: Exemplos servem apenas como referência de formato. NUNCA reproduza conteúdo dos exemplos.
+    `.trim() + editRule,
+    task: task || `Você é um classificador estrito. Classifique a última solicitação do usuário como ${isSelecting ? '"generate", "edit" ou "comment"' : '"generate" ou "comment"'}.`,
   });
 }
 
@@ -138,136 +149,229 @@ export async function getCommentPrompt(
 
 export async function getGeneratePrompt(
   editor: SlateEditor,
-  { messages }: { messages: ChatMessage[] }
+  { isSelecting, messages }: { isSelecting: boolean; messages: ChatMessage[] }
 ) {
+  const task = await getPromptContent('plate_generate');
+
+  // Geração freeform: criação livre sem contexto do editor
+  if (!isSelecting) {
+    return buildStructuredPrompt({
+      examples: [
+        'User: Redija uma cláusula de confidencialidade.\nOutput:\n**CLÁUSULA DÉCIMA - DA CONFIDENCIALIDADE**\n\n10.1. As partes obrigam-se a manter em sigilo todas as informações confidenciais...',
+        'User: Redija uma introdução para petição de horas extras.\nOutput:\n**EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A)...**',
+        'User: Liste três dicas para redigir contratos claros.\nOutput:\n1. Use linguagem objetiva e direta.\n2. Defina claramente os termos técnicos.\n3. Inclua cláusulas de resolução de conflitos.',
+      ],
+      instruction: getLastUserInstruction(messages),
+      history: formatTextFromMessages(messages),
+      rules: dedent`
+        - Produza apenas o resultado final. Não adicione preâmbulos como "Aqui está..." a menos que explicitamente solicitado.
+        - CRÍTICO: ao escrever Markdown ou MDX, NÃO envolva a saída em code fences.
+        - CRÍTICO: Exemplos servem apenas como referência de formato. NUNCA reproduza conteúdo dos exemplos.
+        - CONTEXTO JURÍDICO: Use linguagem formal e juridicamente precisa. Cite artigos de lei quando relevante.
+      `,
+      task: task || dedent`
+        Você é um assistente avançado de geração de conteúdo jurídico.
+        Gere conteúdo baseado nas instruções do usuário.
+        Produza diretamente o resultado final sem pedir informações adicionais.
+      `,
+    });
+  }
+
+  // Geração com contexto: usa texto selecionado como base
   if (!isMultiBlocks(editor)) {
     addSelection(editor);
   }
 
   const selectingMarkdown = getMarkdownWithSelection(editor);
 
-  const task = await getPromptContent('plate_generate');
-
   return buildStructuredPrompt({
-    backgroundData: selectingMarkdown,
+    context: selectingMarkdown,
     examples: [
-      // 1) Gerar cláusula contratual
-      'User: Gere uma cláusula de confidencialidade.\nBackground data:\nContrato de Prestação de Serviços entre empresa de TI e cliente.\nOutput:\n**CLÁUSULA DÉCIMA - DA CONFIDENCIALIDADE**\n\n10.1. As partes obrigam-se a manter em sigilo todas as informações confidenciais a que tiverem acesso em razão deste contrato, comprometendo-se a não divulgar, reproduzir ou utilizar tais informações para fins diversos dos estabelecidos neste instrumento.\n\n10.2. A obrigação de confidencialidade permanecerá válida pelo prazo de 5 (cinco) anos após o término deste contrato.',
-
-      // 2) Gerar petição
-      'User: Redija uma introdução para petição de horas extras.\nBackground data:\nReclamante trabalhista pleiteando horas extras não pagas.\nOutput:\n**EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) DA ___ VARA DO TRABALHO DE [CIDADE/UF]**\n\n[Nome do Reclamante], brasileiro(a), [estado civil], [profissão], portador(a) do RG nº [número] e inscrito(a) no CPF sob o nº [número], residente e domiciliado(a) na [endereço completo], vem, respeitosamente, à presença de Vossa Excelência, por meio de seu(sua) advogado(a) que esta subscreve, propor a presente\n\n**RECLAMAÇÃO TRABALHISTA**\n\nem face de [Nome da Reclamada], pessoa jurídica de direito privado, inscrita no CNPJ sob o nº [número], com sede na [endereço completo], pelos fatos e fundamentos a seguir expostos.',
-
-      // 3) Resumir documento jurídico
-      'User: Resuma os principais pontos deste contrato.\nBackground data:\nContrato de locação comercial com prazo de 5 anos, valor mensal de R$ 10.000, multa rescisória de 3 aluguéis.\nOutput:\n**Principais Pontos do Contrato:**\n\n- **Objeto:** Locação comercial\n- **Prazo:** 5 (cinco) anos\n- **Valor Mensal:** R$ 10.000,00 (dez mil reais)\n- **Multa Rescisória:** Equivalente a 3 (três) aluguéis vigentes\n- **Reajuste:** Anual, pelo índice IGPM/FGV',
-
-      // 4) Explicar conceito jurídico selecionado
-      'User: Explique o significado da frase selecionada.\nBackground data:\nA rescisão indireta ocorre quando o empregador comete <Selection>falta grave</Selection> que impossibilite a continuidade da relação de emprego.\nOutput:\n"Falta grave" no contexto trabalhista refere-se ao descumprimento contratual pelo empregador de tal magnitude que torna insustentável a manutenção do vínculo empregatício. Está prevista no artigo 483 da CLT e inclui situações como: exigência de serviços superiores às forças do empregado, tratamento com rigor excessivo, não cumprimento das obrigações contratuais, entre outras.',
+      'User: Resuma os principais pontos deste contrato.\nContext:\nContrato de locação comercial com prazo de 5 anos, valor mensal de R$ 10.000.\nOutput:\n**Principais Pontos:**\n- **Prazo:** 5 anos\n- **Valor:** R$ 10.000/mês',
+      'User: Explique o significado da frase selecionada.\nContext:\nA rescisão indireta ocorre quando o empregador comete <Selection>falta grave</Selection>.\nOutput:\n"Falta grave" refere-se ao descumprimento contratual pelo empregador, prevista no artigo 483 da CLT.',
     ],
+    instruction: getLastUserInstruction(messages),
     history: formatTextFromMessages(messages),
     rules: dedent`
       - <Selection> é o texto destacado pelo usuário.
-      - backgroundData representa o contexto Markdown atual do usuário.
-      - Você só pode usar backgroundData e <Selection> como entrada; nunca peça mais dados.
       - CRÍTICO: NÃO remova ou altere tags MDX customizadas como <u>, <callout>, <kbd>, <toc>, <sub>, <sup>, <mark>, <del>, <date>, <span>, <column>, <column_group>, <file>, <audio>, <video> a menos que explicitamente solicitado.
       - CRÍTICO: ao escrever Markdown ou MDX, NÃO envolva a saída em code fences.
       - Preserve indentação e quebras de linha ao editar dentro de colunas ou layouts estruturados.
+      - Tags <Selection> são marcadores de entrada. NÃO devem aparecer na saída.
+      - CRÍTICO: Exemplos servem apenas como referência de formato. NUNCA reproduza conteúdo dos exemplos.
       - CONTEXTO JURÍDICO: Use linguagem formal e juridicamente precisa. Cite artigos de lei quando relevante. Priorize clareza e segurança jurídica.
     `,
-    task,
+    task: task || dedent`
+      Você é um assistente avançado de geração de conteúdo jurídico.
+      Gere conteúdo baseado nas instruções do usuário, usando <context> como fonte.
+      Se a instrução pede criação ou transformação (resumir, traduzir, reescrever, criar tabela), produza diretamente o resultado final.
+    `,
   });
 }
+
+export type EditType = 'table' | 'multi-block' | 'selection';
 
 export async function getEditPrompt(
   editor: SlateEditor,
   { isSelecting, messages }: { isSelecting: boolean; messages: ChatMessage[] }
-) {
+): Promise<[string, EditType]> {
   if (!isSelecting)
     throw new Error('Edit tool is only available when selecting');
 
   const task = await getPromptContent('plate_edit');
 
+  // Edição de tabela multi-célula
+  if (isSelectionInTable(editor) && !isSingleCellSelection(editor)) {
+    return [buildEditTableMultiCellPrompt(editor, messages), 'table'];
+  }
+
+  // Edição multi-bloco
   if (isMultiBlocks(editor)) {
     const selectingMarkdown = getMarkdownWithSelection(editor);
 
-    return buildStructuredPrompt({
-      backgroundData: selectingMarkdown,
+    const prompt = buildStructuredPrompt({
+      context: selectingMarkdown,
       examples: [
-        // 1) Corrigir gramática
-        'User: Corrija a gramática.\nbackgroundData: # Contrato de Prestação\nEste contrato estabelece as condição de prestação de serviço.\nOutput:\n# Contrato de Prestação\nEste contrato estabelece as condições de prestação de serviços.',
-
-        // 2) Formalizar o tom
-        'User: Formalize o tom para uso em contrato.\nbackgroundData: ## Introdução\nA gente vai explicar como funciona o serviço aqui.\nOutput:\n## Introdução\nO presente instrumento tem por objeto estabelecer os termos e condições da prestação de serviços.',
-
-        // 3) Tornar mais conciso
-        'User: Torne mais conciso sem perder o significado.\nbackgroundData: O objetivo deste documento é apresentar uma explicação detalhada e abrangente de todos os passos necessários para completar o processo de instalação do software.\nOutput:\nEste documento apresenta os passos necessários para instalação do software.',
+        'User: Corrija a gramática.\nContext: # Contrato de Prestação\nEste contrato estabelece as condição de prestação de serviço.\nOutput:\n# Contrato de Prestação\nEste contrato estabelece as condições de prestação de serviços.',
+        'User: Formalize o tom para uso em contrato.\nContext: ## Introdução\nA gente vai explicar como funciona o serviço aqui.\nOutput:\n## Introdução\nO presente instrumento tem por objeto estabelecer os termos e condições da prestação de serviços.',
+        'User: Torne mais conciso sem perder o significado.\nContext: O objetivo deste documento é apresentar uma explicação detalhada e abrangente de todos os passos necessários para completar o processo de instalação do software.\nOutput:\nEste documento apresenta os passos necessários para instalação do software.',
       ],
+      instruction: getLastUserInstruction(messages),
       history: formatTextFromMessages(messages),
       outputFormatting: 'markdown',
       rules: dedent`
-        - Não escreva tags <backgroundData> na sua resposta.
-        - <backgroundData> representa os blocos completos de texto que o usuário selecionou e deseja modificar.
-        - Sua resposta deve ser uma substituição direta para todo o <backgroundData>.
-        - Mantenha a estrutura e formatação geral dos dados de background, a menos que instruído de outra forma.
-        - CRÍTICO: Forneça apenas o conteúdo para substituir <backgroundData>. Não adicione blocos adicionais ou mude a estrutura de blocos a menos que especificamente solicitado.
+        - Produza APENAS o conteúdo de substituição. Não inclua tags de markup na saída.
+        - Certifique-se de que a substituição seja gramaticalmente correta e leia naturalmente.
+        - Preserve quebras de linha no conteúdo original a menos que explicitamente instruído a removê-las.
+        - Preserve a contagem de blocos, quebras de linha e toda sintaxe Markdown existente; apenas modifique o conteúdo textual dentro de cada bloco.
+        - Não altere níveis de heading, marcadores de lista, URLs de links, ou adicione/remova linhas em branco a menos que explicitamente instruído.
+        - CRÍTICO: Exemplos servem apenas como referência de formato. NUNCA reproduza conteúdo dos exemplos.
         - CONTEXTO JURÍDICO: Mantenha a terminologia legal adequada e a estrutura formal de documentos jurídicos brasileiros.
       `,
       task: dedent`
-        ${task}
+        ${task || ''}
 
-        O seguinte <backgroundData> é conteúdo Markdown fornecido pelo usuário que precisa de melhorias.
-        Modifique-o de acordo com a instrução do usuário.
-        A menos que explicitamente indicado, sua saída deve ser uma substituição perfeita do conteúdo original.
+        O seguinte <context> é conteúdo Markdown fornecido pelo usuário que precisa de melhorias.
+        Sua saída deve ser uma substituição perfeita do conteúdo original.
       `,
     });
+    return [prompt, 'multi-block'];
   }
 
+  // Edição de seleção dentro de um bloco
   addSelection(editor);
 
   const selectingMarkdown = getMarkdownWithSelection(editor);
   const endIndex = selectingMarkdown.indexOf('<Selection>');
-  const prefilledResponse = selectingMarkdown.slice(0, endIndex);
+  const prefilledResponse = endIndex === -1 ? '' : selectingMarkdown.slice(0, endIndex);
 
-  return buildStructuredPrompt({
-    backgroundData: selectingMarkdown,
+  const prompt = buildStructuredPrompt({
+    context: selectingMarkdown,
     examples: [
-      // 1) Melhorar escolha de palavras
-      'User: Melhore a escolha de palavras.\nbackgroundData: Este é um <Selection>bom</Selection> contrato.\nOutput: excelente',
-
-      // 2) Corrigir gramática
-      'User: Corrija a gramática.\nbackgroundData: O empregado <Selection>recebe</Selection> suas férias anualmente.\nOutput: receberá',
-
-      // 3) Formalizar tom
-      'User: Formalize o tom.\nbackgroundData: <Selection>Me dá</Selection> o documento.\nOutput: Solicito a apresentação do',
-
-      // 4) Usar termo jurídico correto
-      'User: Use o termo jurídico correto.\nbackgroundData: O <Selection>trabalhador</Selection> terá direito a férias.\nOutput: empregado',
-
-      // 5) Simplificar linguagem
-      'User: Simplifique a linguagem.\nbackgroundData: Os resultados foram <Selection>extremamente satisfatórios</Selection>.\nOutput: muito satisfatórios',
-
-      // 6) Traduzir para inglês
-      'User: Traduza para inglês.\nbackgroundData: <Selection>Contrato de Trabalho</Selection>\nOutput: Employment Agreement',
+      'User: Melhore a escolha de palavras.\nContext: Este é um <Selection>bom</Selection> contrato.\nOutput: excelente',
+      'User: Corrija a gramática.\nContext: O empregado <Selection>recebe</Selection> suas férias anualmente.\nOutput: receberá',
+      'User: Formalize o tom.\nContext: <Selection>Me dá</Selection> o documento.\nOutput: Solicito a apresentação do',
+      'User: Use o termo jurídico correto.\nContext: O <Selection>trabalhador</Selection> terá direito a férias.\nOutput: empregado',
+      'User: Traduza para inglês.\nContext: <Selection>Contrato de Trabalho</Selection>\nOutput: Employment Agreement',
     ],
+    instruction: getLastUserInstruction(messages),
     history: formatTextFromMessages(messages),
     outputFormatting: 'markdown',
     prefilledResponse,
     rules: dedent`
-      - <Selection> contém o segmento de texto selecionado pelo usuário e permitido para modificação.
+      - Produza APENAS o conteúdo de substituição. Não inclua tags de markup na saída.
       - Sua resposta será diretamente concatenada com o prefilledResponse, então certifique-se de que o resultado seja suave e coerente.
-      - Você só pode editar o conteúdo dentro de <Selection> e não deve referenciar ou reter qualquer contexto externo.
-      - A saída deve ser texto que possa substituir diretamente <Selection>.
-      - Não inclua as tags <Selection> ou qualquer texto circundante na saída.
-      - Certifique-se de que a substituição seja gramaticalmente correta e leia naturalmente.
-      - Se a entrada for inválida ou não puder ser melhorada, retorne-a inalterada.
+      - Você pode usar o texto circundante em <context> para garantir que a substituição se encaixe naturalmente.
+      - CRÍTICO: Exemplos servem apenas como referência de formato. NUNCA reproduza conteúdo dos exemplos.
       - CONTEXTO JURÍDICO: Priorize precisão terminológica e adequação ao padrão formal de documentos jurídicos brasileiros.
     `,
     task: dedent`
-      ${task}
+      ${task || ''}
 
-      Os dados de background a seguir são texto fornecido pelo usuário que contém uma ou mais tags <Selection> marcando as partes editáveis.
-      Você deve modificar apenas o texto dentro de <Selection>.
-      Sua saída deve ser uma substituição direta para o texto selecionado, sem incluir quaisquer tags ou conteúdo circundante.
-      Certifique-se de que a substituição seja gramaticalmente correta e se encaixe naturalmente quando substituída de volta no texto original.
+      O <context> a seguir contém tags <Selection> marcando a parte editável.
+      Produza apenas a substituição para o texto selecionado.
+    `,
+  });
+  return [prompt, 'selection'];
+}
+
+/** Prompt para edição de múltiplas células de tabela */
+export function buildEditTableMultiCellPrompt(
+  editor: SlateEditor,
+  messages: ChatMessage[]
+): string {
+  const tableCellMarkdown = getMarkdown(editor, {
+    type: 'tableCellWithId',
+  });
+
+  return buildStructuredPrompt({
+    context: tableCellMarkdown,
+    examples: [
+      dedent`
+        <instruction>
+        Corrija a gramática
+        </instruction>
+
+        <context>
+        | Nome | Idade | Cidade |
+        | --- | --- | --- |
+        | João | 28 | <CellRef id="c1" /> |
+
+        <Cell id="c1">
+        São paulo
+        </Cell>
+        </context>
+
+        <output>
+        [
+          { "id": "c1", "content": "São Paulo" }
+        ]
+        </output>
+      `,
+      dedent`
+        <instruction>
+        Traduza para inglês
+        </instruction>
+
+        <context>
+        | Nome | Cargo |
+        | --- | --- |
+        | Alice | <CellRef id="c1" /> |
+        | Bob | <CellRef id="c2" /> |
+
+        <Cell id="c1">
+        Engenheiro
+        </Cell>
+
+        <Cell id="c2">
+        Designer
+        </Cell>
+        </context>
+
+        <output>
+        [
+          { "id": "c1", "content": "Engineer" },
+          { "id": "c2", "content": "Designer" }
+        ]
+        </output>
+      `,
+    ],
+    instruction: getLastUserInstruction(messages),
+    history: formatTextFromMessages(messages),
+    rules: dedent`
+      - A tabela contém placeholders <CellRef id="..." /> marcando células selecionadas.
+      - O conteúdo real de cada célula está nos blocos <Cell id="...">conteúdo</Cell> após a tabela.
+      - Você deve APENAS modificar o conteúdo dos blocos <Cell>.
+      - Produza um array JSON onde cada objeto tem "id" (id da célula) e "content" (novo conteúdo).
+      - O campo "content" pode conter múltiplos parágrafos separados por \\n\\n.
+      - NÃO produza <Cell>, <CellRef>, ou markdown de tabela — apenas o array JSON.
+      - CRÍTICO: Exemplos servem apenas como referência de formato. NUNCA reproduza conteúdo dos exemplos.
+    `,
+    task: dedent`
+      Você é um assistente de edição de células de tabela.
+      O <context> contém uma tabela markdown com placeholders <CellRef /> e blocos <Cell> correspondentes.
+      Sua tarefa é modificar o conteúdo das células selecionadas de acordo com a instrução do usuário.
+      Produza APENAS um array JSON válido com os conteúdos das células modificados.
     `,
   });
 }

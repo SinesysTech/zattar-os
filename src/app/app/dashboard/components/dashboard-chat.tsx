@@ -174,7 +174,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
   }
 
   return (
-    <Card className="row-span-2 flex flex-col">
+    <Card className="row-span-2 flex flex-col glass-widget bg-transparent transition-all duration-200">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <MessageSquare className="size-5" />

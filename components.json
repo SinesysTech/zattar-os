@@ -1,5 +1,5 @@
 {
-  "$schema": "https://ui.shadcn.com/schema.json",
+  "$schema": "https://raw.githubusercontent.com/shadcn-ui/ui/main/apps/www/public/schema.json",
   "style": "new-york",
   "rsc": true,
   "tsx": true,
@@ -26,6 +26,7 @@
     "@ss-components": "https://shadcnstudio.com/r/components/{name}.json",
     "@ss-blocks": "https://shadcnstudio.com/r/blocks/{name}.json",
     "@ss-themes": "https://shadcnstudio.com/r/themes/{name}.json",
-    "@reui": "https://reui.io/r/{name}.json"
+    "@reui": "https://reui.io/r/{name}.json",
+    "@plate": "https://platejs.org/r/{name}.json"
   }
 }

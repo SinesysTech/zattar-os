@@ -122,7 +122,7 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
   };
 
   return (
-    <Card className="h-full">
+    <Card className="h-full glass-widget bg-transparent transition-all duration-200">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CheckSquare className="size-5" />

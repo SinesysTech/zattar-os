@@ -15,7 +15,7 @@ export type UseChatApiOptions = {
  */
 export function useChatApi(editor: PlateEditor, options: UseChatApiOptions = {}) {
   const transport = new DefaultChatTransport({
-    api: options.api || '/api/ai/command',
+    api: options.api || '/api/plate/ai',
     fetch: (async (input, init) => {
       const bodyOptions = editor.getOptions(aiChatPlugin).chatOptions?.body;
 

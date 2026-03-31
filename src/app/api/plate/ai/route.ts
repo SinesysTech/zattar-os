@@ -64,10 +64,10 @@ import type { NextRequest } from 'next/server';
 import {
   type LanguageModel,
   type UIMessageStreamWriter,
+  Output,
   createUIMessageStream,
   createUIMessageStreamResponse,
-  generateObject,
-  streamObject,
+  generateText,
   streamText,
   tool,
 } from 'ai';
@@ -86,8 +86,10 @@ import { getClientIp } from '@/lib/utils/get-client-ip';
 import { recordSuspiciousActivity } from '@/lib/security/ip-blocking';
 import { getEditorIAConfig } from '@/lib/ai-editor/config';
 import { createAIEditorProvider } from '@/lib/ai-editor/provider';
+import { markdownJoinerTransform } from '@/lib/ai-editor/markdown-joiner-transform';
 
 import {
+  buildEditTableMultiCellPrompt,
   getChooseToolPrompt,
   getCommentPrompt,
   getEditPrompt,
@@ -172,13 +174,14 @@ export async function POST(req: NextRequest) {
         let toolName = toolNameParam;
 
         if (!toolName) {
-          const { object: AIToolName } = await generateObject({
-            enum: isSelecting
-              ? ['generate', 'edit', 'comment']
-              : ['generate', 'comment'],
+          const enumOptions = isSelecting
+            ? ['generate', 'edit', 'comment']
+            : ['generate', 'comment'];
+
+          const { output: AIToolName } = await generateText({
             model: aiProvider(model || TOOL_CHOICE_MODEL),
-            output: 'enum',
-            prompt: await getChooseToolPrompt({ messages: messagesRaw }),
+            output: Output.choice({ options: enumOptions }),
+            prompt: await getChooseToolPrompt({ isSelecting, messages: messagesRaw }),
           });
 
           writer.write({
@@ -190,11 +193,16 @@ export async function POST(req: NextRequest) {
         }
 
         const stream = streamText({
+          experimental_transform: markdownJoinerTransform(),
           model: aiProvider(model || DEFAULT_MODEL),
-          // Not used
           prompt: '',
           tools: {
             comment: getCommentTool(editor, {
+              messagesRaw,
+              model: aiProvider(model || COMMENT_MODEL),
+              writer,
+            }),
+            table: getTableTool(editor, {
               messagesRaw,
               model: aiProvider(model || COMMENT_MODEL),
               writer,
@@ -209,14 +217,25 @@ export async function POST(req: NextRequest) {
             }
 
             if (toolName === 'edit') {
-              const editPrompt = await getEditPrompt(editor, {
+              const [editPrompt, editType] = await getEditPrompt(editor, {
                 isSelecting,
                 messages: messagesRaw,
               });
 
+              // Edição de tabela usa a table tool
+              if (editType === 'table') {
+                return {
+                  ...step,
+                  toolChoice: { toolName: 'table', type: 'tool' },
+                };
+              }
+
               return {
                 ...step,
                 activeTools: [],
+                model: editType === 'selection'
+                  ? aiProvider(model || TOOL_CHOICE_MODEL)
+                  : aiProvider(model || DEFAULT_MODEL),
                 messages: [
                   {
                     content: editPrompt,
@@ -228,6 +247,7 @@ export async function POST(req: NextRequest) {
 
             if (toolName === 'generate') {
               const generatePrompt = await getGeneratePrompt(editor, {
+                isSelecting,
                 messages: messagesRaw,
               });
 
@@ -276,6 +296,22 @@ export async function POST(req: NextRequest) {
   }
 }
 
+const commentSchema = z.object({
+  blockId: z
+    .string()
+    .describe(
+      'O id do bloco inicial. Se o comentário abranger múltiplos blocos, use o id do primeiro bloco.'
+    ),
+  comment: z
+    .string()
+    .describe('Um breve comentário ou explicação jurídica para este fragmento.'),
+  content: z
+    .string()
+    .describe(
+      String.raw`O fragmento original do documento a ser comentado. Pode ser o bloco inteiro, uma pequena parte dentro de um bloco, ou abranger múltiplos blocos. Se abranger múltiplos blocos, separe-os com dois \n\n.`
+    ),
+});
+
 const getCommentTool = (
   editor: SlateEditor,
   {
@@ -291,43 +327,34 @@ const getCommentTool = (
   tool({
     description: 'Comentar sobre o conteúdo jurídico',
     inputSchema: z.object({}),
+    strict: true,
     execute: async () => {
-      const { elementStream } = streamObject({
+      const { partialOutputStream } = streamText({
         model,
-        output: 'array',
+        output: Output.array({ element: commentSchema }),
         prompt: await getCommentPrompt(editor, {
           messages: messagesRaw,
         }),
-        schema: z
-          .object({
-            blockId: z
-              .string()
-              .describe(
-                'O id do bloco inicial. Se o comentário abranger múltiplos blocos, use o id do primeiro bloco.'
-              ),
-            comment: z
-              .string()
-              .describe('Um breve comentário ou explicação jurídica para este fragmento.'),
-            content: z
-              .string()
-              .describe(
-                String.raw`O fragmento original do documento a ser comentado. Pode ser o bloco inteiro, uma pequena parte dentro de um bloco, ou abranger múltiplos blocos. Se abranger múltiplos blocos, separe-os com dois \n\n.`
-              ),
-          })
-          .describe('Um comentário jurídico'),
       });
 
-      for await (const comment of elementStream) {
-        const commentDataId = nanoid();
+      let lastLength = 0;
 
-        writer.write({
-          id: commentDataId,
-          data: {
-            comment,
-            status: 'streaming',
-          },
-          type: 'data-comment',
-        });
+      for await (const partialArray of partialOutputStream) {
+        for (let i = lastLength; i < partialArray.length; i++) {
+          const comment = partialArray[i];
+          const commentDataId = nanoid();
+
+          writer.write({
+            id: commentDataId,
+            data: {
+              comment,
+              status: 'streaming',
+            },
+            type: 'data-comment',
+          });
+        }
+
+        lastLength = partialArray.length;
       }
 
       writer.write({
@@ -337,6 +364,68 @@ const getCommentTool = (
           status: 'finished',
         },
         type: 'data-comment',
+      });
+    },
+  });
+
+const cellUpdateSchema = z.object({
+  content: z
+    .string()
+    .describe(
+      String.raw`O novo conteúdo da célula. Pode conter múltiplos parágrafos separados por \n\n.`
+    ),
+  id: z.string().describe('O id da célula de tabela a ser atualizada.'),
+});
+
+const getTableTool = (
+  editor: SlateEditor,
+  {
+    messagesRaw,
+    model,
+    writer,
+  }: {
+    messagesRaw: ChatMessage[];
+    model: LanguageModel;
+    writer: UIMessageStreamWriter<ChatMessage>;
+  }
+) =>
+  tool({
+    description: 'Editar células de tabela',
+    inputSchema: z.object({}),
+    strict: true,
+    execute: async () => {
+      const { partialOutputStream } = streamText({
+        model,
+        output: Output.array({ element: cellUpdateSchema }),
+        prompt: buildEditTableMultiCellPrompt(editor, messagesRaw),
+      });
+
+      let lastLength = 0;
+
+      for await (const partialArray of partialOutputStream) {
+        for (let i = lastLength; i < partialArray.length; i++) {
+          const cellUpdate = partialArray[i];
+
+          writer.write({
+            id: nanoid(),
+            data: {
+              cellUpdate,
+              status: 'streaming',
+            },
+            type: 'data-table',
+          });
+        }
+
+        lastLength = partialArray.length;
+      }
+
+      writer.write({
+        id: nanoid(),
+        data: {
+          cellUpdate: null,
+          status: 'finished',
+        },
+        type: 'data-table',
       });
     },
   });

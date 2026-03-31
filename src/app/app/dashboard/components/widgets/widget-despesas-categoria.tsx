@@ -46,7 +46,7 @@ export function WidgetDespesasCategoria() {
 
   if (isLoading) {
     return (
-      <Card className="h-full">
+      <Card className="h-full glass-widget bg-transparent transition-all duration-200">
         <CardHeader>
           <Skeleton className="h-5 w-52" />
         </CardHeader>
@@ -59,7 +59,7 @@ export function WidgetDespesasCategoria() {
 
   if (error) {
     return (
-      <Card className="h-full">
+      <Card className="h-full glass-widget bg-transparent transition-all duration-200">
         <CardHeader>
           <CardTitle className="text-sm">Despesas por Categoria</CardTitle>
         </CardHeader>
@@ -71,7 +71,7 @@ export function WidgetDespesasCategoria() {
   }
 
   return (
-    <Card className="h-full flex flex-col">
+    <Card className="h-full flex flex-col glass-widget bg-transparent transition-all duration-200">
       <CardHeader className="flex flex-col gap-2 pb-2 sm:flex-row sm:items-center sm:justify-between">
         <CardTitle className="flex min-w-0 flex-1 items-center gap-2 text-sm font-medium">
           <PieIcon className="h-4 w-4 text-muted-foreground" />

@@ -84,7 +84,7 @@ export function WidgetWrapper({
   }
 
   return (
-    <Card className={cn('group relative', className)}>
+    <Card className={cn('group relative glass-widget bg-transparent transition-all duration-200', className)}>
       <CardHeader className={cn('pb-2', headerClassName)}>
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
