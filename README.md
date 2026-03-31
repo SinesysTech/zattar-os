@@ -4,15 +4,15 @@ Sistema de gestão jurídica com foco em automação e IA.
 
 **Stack**: Next.js 16 (App Router), React 19, TypeScript 5, Supabase (PostgreSQL + RLS), Redis (opcional), Tailwind CSS 4, shadcn/ui.
 
-## Status de Desenvolvimento (2026-02-26)
+## Status de Desenvolvimento (2026-03-31)
 
-`src/features` possui **37 módulos** atualmente.
+`src/features` possui **42 modulos** atualmente.
 
-Classificação estrutural (critério: `domain.ts`, `service.ts`, `repository.ts`, `index.ts`, `actions/`, `components/`):
+Classificacao estrutural (criterio: `domain.ts`, `service.ts`, `repository.ts`, `index.ts`, `actions/`, `components/`):
 
 - ✅ **Completos (18)**: `acervo`, `advogados`, `ai`, `captura`, `config-atribuicao`, `contratos`, `dify`, `enderecos`, `integracoes`, `notificacoes`, `obrigacoes`, `pecas-juridicas`, `pericias`, `processos`, `rh`, `system-prompts`, `tipos-expedientes`, `usuarios`
 - ⚠️ **Parciais (13)**: `assistentes-tipos`, `audiencias`, `calendar`, `cargos`, `chat`, `chatwoot`, `documentos`, `expedientes`, `financeiro`, `partes`, `perfil`, `profiles`, `tags`
-- 🧩 **Iniciais (6)**: `admin`, `audit`, `busca`, `repasses`, `tasks`, `twofauth`
+- 🧩 **Iniciais (11)**: `admin`, `agenda-eventos`, `audit`, `busca`, `calculadoras`, `entrevistas-trabalhistas`, `portal`, `repasses`, `tasks`, `twofauth`, `website`
 
 Consulte [STATUS de arquitetura](./docs/architecture/STATUS.md) e [AGENTS](./docs/architecture/AGENTS.md) para detalhes completos.
 
@@ -181,8 +181,17 @@ Também existe `docker-compose.yml` para subir o app via env vars.
 
 ## Docs
 
-- [Documentação geral](./docs/README.md)
-- [Índice da documentação](./docs/INDEX.md)
+- [Documentacao geral](./docs/README.md)
+- [Indice da documentacao](./docs/INDEX.md)
 - [Status da arquitetura](./docs/architecture/STATUS.md)
-- [Guia para agentes](./docs/architecture/AGENTS.md)
-- [Módulos](./docs/modules/README.md)
+- [Modulos](./docs/modules/README.md)
+
+### Instrucoes para agentes de IA
+
+| Arquivo | Ferramenta | Descricao |
+|---------|------------|-----------|
+| [`AGENTS.md`](./AGENTS.md) | Todas (padrao aberto) | Referencia concisa cross-tool |
+| [`CLAUDE.md`](./CLAUDE.md) | Claude Code | Instrucoes para Claude Code |
+| [`GEMINI.md`](./GEMINI.md) | Gemini CLI | Instrucoes para Gemini CLI |
+| [`.github/copilot-instructions.md`](./.github/copilot-instructions.md) | GitHub Copilot | Instrucoes para Copilot |
+| [`docs/architecture/AGENTS.md`](./docs/architecture/AGENTS.md) | Todas | Referencia estendida com data flows e troubleshooting |

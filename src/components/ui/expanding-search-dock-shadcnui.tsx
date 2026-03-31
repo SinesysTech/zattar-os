@@ -26,14 +26,14 @@ export function ExpandingSearchDock({
   const isControlled = controlledValue !== undefined;
   const query = isControlled ? controlledValue : internalQuery;
 
-  const setQuery = (v: string) => {
+  const setQuery = useCallback((v: string) => {
     if (isControlled) {
       onChange?.(v);
     } else {
       setInternalQuery(v);
       onChange?.(v);
     }
-  };
+  }, [isControlled, onChange]);
 
   const handleExpand = () => {
     setIsExpanded(true);

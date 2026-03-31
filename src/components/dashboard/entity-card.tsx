@@ -112,7 +112,7 @@ export function EntityCard({ data, onClick }: EntityCardProps) {
         {/* Contato */}
         <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-[10px] text-muted-foreground/50">
           {data.email && (
-            <span className="flex items-center gap-1 truncate max-w-[180px]">
+            <span className="flex items-center gap-1 truncate max-w-45">
               <Mail className="size-2.5 shrink-0" />
               {data.email}
             </span>
@@ -150,7 +150,7 @@ export function EntityCard({ data, onClick }: EntityCardProps) {
             {data.tags.map((tag) => (
               <span
                 key={tag}
-                className="text-[9px] px-1.5 py-0.5 rounded bg-primary/[0.05] text-primary/50"
+                className="text-[9px] px-1.5 py-0.5 rounded bg-primary/5 text-primary/50"
               >
                 {tag}
               </span>
