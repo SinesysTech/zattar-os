@@ -1,11 +1,22 @@
 'use client'
 
 /**
- * LoginForm V2 — "Átrio de Vidro" (Light Mode)
+ * LoginForm V2 — Refined
  *
- * Light-mode auth form matching the internal app's visual identity.
- * Glass card container with proper contrast, Liquid Focus inputs,
- * and Framer Motion micro-animations.
+ * Typography matches internal app exactly:
+ *   - Headings: font-heading (Montserrat), text-2xl font-bold tracking-tight
+ *   - Labels: text-sm font-medium text-foreground (above inputs)
+ *   - Inputs: h-11 (44px), rounded-lg, border-input, bg-white/60
+ *   - Body/Helper: text-sm text-muted-foreground
+ *   - Button: h-11 font-semibold, matches input height
+ *
+ * UX aligned with Linear/Vercel/Stripe best practices:
+ *   - Labels above inputs (not placeholder-only)
+ *   - 20-24px gap between fields
+ *   - 28px gap from fields to button
+ *   - NO mono font on email
+ *   - Liquid focus glow on inputs
+ *   - Morphing button states (default → loading → success)
  */
 
 import { cn } from '@/lib/utils'
@@ -26,7 +37,7 @@ import {
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-// ─── Time Greeting ───────────────────────────────────────────────────────────
+// ─── Greeting ────────────────────────────────────────────────────────────────
 
 function getGreeting(): string {
   const hour = new Date().getHours()
@@ -35,95 +46,105 @@ function getGreeting(): string {
   return 'Boa noite.'
 }
 
-// ─── Animation Variants ──────────────────────────────────────────────────────
+// ─── Animation ───────────────────────────────────────────────────────────────
 
-const fadeSlideUp = {
-  initial: { opacity: 0, y: 8 },
+const fadeUp = {
+  initial: { opacity: 0, y: 6 },
   animate: { opacity: 1, y: 0 },
 }
 
-const transition = (delay = 0) => ({
-  duration: 0.5,
-  delay,
-  ease: [0.22, 1, 0.36, 1] as const,
-})
+const ease = [0.22, 1, 0.36, 1] as const
 
-// ─── AuthInput — Liquid Focus (Light Mode) ───────────────────────────────────
+// ─── AuthInput (Internal App Typography) ─────────────────────────────────────
 
 function AuthInput({
+  label,
   icon: Icon,
   rightElement,
   className,
+  id,
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement> & {
+  label: string
   icon: React.ComponentType<{ className?: string }>
   rightElement?: React.ReactNode
 }) {
   const [focused, setFocused] = useState(false)
 
   return (
-    <div className="relative group">
-      {/* Liquid glow halo */}
-      <div
-        className={cn(
-          'absolute -inset-0.75 rounded-xl transition-all duration-500 pointer-events-none',
-          focused ? 'opacity-100' : 'opacity-0'
-        )}
-        style={{
-          background:
-            'linear-gradient(135deg, oklch(0.48 0.26 281 / 0.10), oklch(0.48 0.26 281 / 0.03))',
-          filter: 'blur(6px)',
-        }}
-        aria-hidden="true"
-      />
+    <div className="space-y-1.5">
+      {/* Label — matches internal app: text-sm font-medium */}
+      <label
+        htmlFor={id}
+        className="text-sm font-medium leading-none text-foreground select-none"
+      >
+        {label}
+      </label>
 
-      <div className="relative">
-        <div className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center">
-          <Icon
-            className={cn(
-              'h-4 w-4 transition-colors duration-300',
-              focused
-                ? 'text-primary'
-                : 'text-muted-foreground/40'
-            )}
-          />
-        </div>
-
-        <input
+      <div className="relative group">
+        {/* Liquid glow */}
+        <div
           className={cn(
-            'relative w-full rounded-xl border py-3.5 pl-11 text-sm text-foreground',
-            'bg-white/60 backdrop-blur-sm',
-            'placeholder:text-muted-foreground/40',
-            'transition-all duration-300',
-            'focus:outline-none',
-            focused
-              ? 'border-primary/30 shadow-[0_0_0_3px_oklch(0.48_0.26_281/0.06)] bg-white/80'
-              : 'border-border/40 hover:border-border/60',
-            rightElement ? 'pr-11' : 'pr-3.5',
-            className
+            'absolute -inset-0.5 rounded-lg transition-all duration-500 pointer-events-none',
+            focused ? 'opacity-100' : 'opacity-0'
           )}
-          onFocus={(e) => {
-            setFocused(true)
-            props.onFocus?.(e)
+          style={{
+            background:
+              'linear-gradient(135deg, oklch(0.48 0.26 281 / 0.08), oklch(0.48 0.26 281 / 0.02))',
+            filter: 'blur(6px)',
           }}
-          onBlur={(e) => {
-            setFocused(false)
-            props.onBlur?.(e)
-          }}
-          {...props}
+          aria-hidden="true"
         />
 
-        {rightElement && (
-          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 z-10">
-            {rightElement}
+        <div className="relative">
+          {/* Icon */}
+          <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
+            <Icon
+              className={cn(
+                'h-4 w-4 transition-colors duration-300',
+                focused ? 'text-primary' : 'text-muted-foreground/40'
+              )}
+            />
           </div>
-        )}
+
+          {/* Input — matches internal: h-11, rounded-lg, border-input, text-sm */}
+          <input
+            id={id}
+            className={cn(
+              'relative w-full h-11 rounded-lg border px-3 pl-10 text-sm text-foreground',
+              'bg-white/60 backdrop-blur-sm',
+              'placeholder:text-muted-foreground/40',
+              'shadow-xs transition-[color,box-shadow,border-color] duration-200',
+              'focus:outline-none',
+              focused
+                ? 'border-primary/30 ring-[3px] ring-primary/8'
+                : 'border-input hover:border-input/80',
+              rightElement ? 'pr-10' : 'pr-3',
+              className
+            )}
+            onFocus={(e) => {
+              setFocused(true)
+              props.onFocus?.(e)
+            }}
+            onBlur={(e) => {
+              setFocused(false)
+              props.onBlur?.(e)
+            }}
+            {...props}
+          />
+
+          {rightElement && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 z-10">
+              {rightElement}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
 }
 
-// ─── Submit Button — Morphing States ─────────────────────────────────────────
+// ─── Submit Button ───────────────────────────────────────────────────────────
 
 function SubmitButton({
   isLoading,
@@ -141,13 +162,14 @@ function SubmitButton({
       type="submit"
       disabled={isLoading || success}
       className={cn(
-        'relative flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl py-3.5 px-6',
-        'font-headline text-sm font-bold text-white',
+        'relative flex w-full cursor-pointer items-center justify-center gap-2',
+        'h-11 rounded-lg px-6',
+        'text-sm font-semibold text-white',
         'transition-all duration-500',
         'disabled:cursor-not-allowed',
         success
           ? 'bg-emerald-500 shadow-lg shadow-emerald-500/25'
-          : 'bg-linear-to-br from-primary to-primary-dim shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30'
+          : 'bg-primary shadow-lg shadow-primary/25 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30'
       )}
       whileTap={!isLoading && !success ? { scale: 0.98 } : undefined}
     >
@@ -192,7 +214,7 @@ function SubmitButton({
   )
 }
 
-// ─── Error Alert (Light Mode) ────────────────────────────────────────────────
+// ─── Error Alert ─────────────────────────────────────────────────────────────
 
 function ErrorAlert({ message }: { message: string }) {
   return (
@@ -200,12 +222,12 @@ function ErrorAlert({ message }: { message: string }) {
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: 'auto' }}
       exit={{ opacity: 0, height: 0 }}
-      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.3, ease }}
       className="overflow-hidden"
     >
-      <div className="flex items-start gap-2.5 rounded-xl border border-destructive/15 bg-destructive/5 p-3">
+      <div className="flex items-start gap-2 rounded-lg border border-destructive/15 bg-destructive/5 p-3">
         <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
-        <p className="text-sm leading-relaxed text-destructive">{message}</p>
+        <p className="text-sm text-destructive">{message}</p>
       </div>
     </motion.div>
   )
@@ -288,8 +310,8 @@ export function LoginFormV2({
   return (
     <div className={cn('flex flex-col', className)} {...props}>
       {/* Logo */}
-      <div className="flex flex-col items-center gap-3 mb-8">
-        <div className="relative h-11 w-11">
+      <div className="flex flex-col items-center gap-2.5 mb-8">
+        <div className="relative h-10 w-10">
           <Image
             src="/logos/logo-small.svg"
             alt="Zattar Advogados"
@@ -298,18 +320,18 @@ export function LoginFormV2({
             className="object-contain"
           />
         </div>
-        <span className="text-[10px] font-medium uppercase tracking-[3px] text-muted-foreground/40">
+        <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground/50">
           Zattar Advogados
         </span>
       </div>
 
-      {/* Greeting */}
+      {/* Greeting — font-heading matches PageShell h1 */}
       <motion.div
         className="mb-8 text-center"
-        {...fadeSlideUp}
-        transition={transition(0)}
+        {...fadeUp}
+        transition={{ duration: 0.5, ease }}
       >
-        <h1 className="font-headline text-2xl font-extrabold tracking-tight text-foreground">
+        <h1 className="text-2xl font-bold tracking-tight font-heading text-foreground">
           {getGreeting()}
         </h1>
         <p className="mt-1.5 text-sm text-muted-foreground">
@@ -317,19 +339,19 @@ export function LoginFormV2({
         </p>
       </motion.div>
 
-      {/* Form */}
+      {/* Form — 24px gap between fields, 28px to button */}
       <motion.form
         onSubmit={handleLogin}
-        className="space-y-3"
-        {...fadeSlideUp}
-        transition={transition(0.1)}
+        className="flex flex-col gap-5"
+        {...fadeUp}
+        transition={{ duration: 0.5, delay: 0.08, ease }}
       >
         <AuthInput
+          label="Email"
           icon={AtSign}
           id="email"
           type="email"
           placeholder="voce@zattar.com.br"
-          className="font-mono"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -337,10 +359,11 @@ export function LoginFormV2({
         />
 
         <AuthInput
+          label="Senha"
           icon={Lock}
           id="password"
           type={showPassword ? 'text' : 'password'}
-          placeholder="••••••••••••"
+          placeholder="Digite sua senha"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -367,7 +390,7 @@ export function LoginFormV2({
           {error && <ErrorAlert message={error} />}
         </AnimatePresence>
 
-        <div className="pt-1">
+        <div className="pt-2">
           <SubmitButton
             isLoading={isLoading}
             success={success}
@@ -379,10 +402,10 @@ export function LoginFormV2({
 
       {/* Footer */}
       <motion.div
-        className="mt-8 text-center"
+        className="mt-6 text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={transition(0.3)}
+        transition={{ duration: 0.5, delay: 0.25, ease }}
       >
         <Link
           href="/app/forgot-password"

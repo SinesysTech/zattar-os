@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * UpdatePasswordForm V2 — "Átrio de Vidro" (Light Mode)
+ * UpdatePasswordForm V2 — Refined (Light Mode, Internal Typography)
  */
 
 import { cn } from '@/lib/utils'
@@ -24,15 +24,18 @@ import {
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-// ─── Shared AuthInput (Light Mode) ───────────────────────────────────────────
+// ─── AuthInput ───────────────────────────────────────────────────────────────
 
 function AuthInput({
+  label,
   icon: Icon,
   rightElement,
   error: hasError,
   className,
+  id,
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement> & {
+  label: string
   icon: React.ComponentType<{ className?: string }>
   rightElement?: React.ReactNode
   error?: boolean
@@ -40,81 +43,91 @@ function AuthInput({
   const [focused, setFocused] = useState(false)
 
   return (
-    <div className="relative group">
-      <div
-        className={cn(
-          'absolute -inset-0.75 rounded-xl transition-all duration-500 pointer-events-none',
-          focused && !hasError ? 'opacity-100' : 'opacity-0'
-        )}
-        style={{
-          background:
-            'linear-gradient(135deg, oklch(0.48 0.26 281 / 0.10), oklch(0.48 0.26 281 / 0.03))',
-          filter: 'blur(6px)',
-        }}
-        aria-hidden="true"
-      />
-      <div className="relative">
-        <div className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center">
-          <Icon
-            className={cn(
-              'h-4 w-4 transition-colors duration-300',
-              hasError
-                ? 'text-destructive/50'
-                : focused
-                  ? 'text-primary'
-                  : 'text-muted-foreground/40'
-            )}
-          />
-        </div>
-        <input
+    <div className="space-y-1.5">
+      <label
+        htmlFor={id}
+        className="text-sm font-medium leading-none text-foreground select-none"
+      >
+        {label}
+      </label>
+      <div className="relative group">
+        <div
           className={cn(
-            'relative w-full rounded-xl border py-3.5 pl-11 text-sm text-foreground',
-            'bg-white/60 backdrop-blur-sm',
-            'placeholder:text-muted-foreground/40',
-            'transition-all duration-300 focus:outline-none',
-            hasError
-              ? 'border-destructive/30 shadow-[0_0_0_3px_oklch(0.55_0.22_25/0.06)]'
-              : focused
-                ? 'border-primary/30 shadow-[0_0_0_3px_oklch(0.48_0.26_281/0.06)] bg-white/80'
-                : 'border-border/40 hover:border-border/60',
-            rightElement ? 'pr-11' : 'pr-3.5',
-            className
+            'absolute -inset-0.5 rounded-lg transition-all duration-500 pointer-events-none',
+            focused && !hasError ? 'opacity-100' : 'opacity-0'
           )}
-          onFocus={(e) => {
-            setFocused(true)
-            props.onFocus?.(e)
+          style={{
+            background:
+              'linear-gradient(135deg, oklch(0.48 0.26 281 / 0.08), oklch(0.48 0.26 281 / 0.02))',
+            filter: 'blur(6px)',
           }}
-          onBlur={(e) => {
-            setFocused(false)
-            props.onBlur?.(e)
-          }}
-          {...props}
+          aria-hidden="true"
         />
-        {rightElement && (
-          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 z-10">
-            {rightElement}
+        <div className="relative">
+          <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
+            <Icon
+              className={cn(
+                'h-4 w-4 transition-colors duration-300',
+                hasError
+                  ? 'text-destructive/50'
+                  : focused
+                    ? 'text-primary'
+                    : 'text-muted-foreground/40'
+              )}
+            />
           </div>
-        )}
+          <input
+            id={id}
+            className={cn(
+              'relative w-full h-11 rounded-lg border px-3 pl-10 text-sm text-foreground',
+              'bg-white/60 backdrop-blur-sm',
+              'placeholder:text-muted-foreground/40',
+              'shadow-xs transition-[color,box-shadow,border-color] duration-200',
+              'focus:outline-none',
+              hasError
+                ? 'border-destructive/30 ring-[3px] ring-destructive/8'
+                : focused
+                  ? 'border-primary/30 ring-[3px] ring-primary/8'
+                  : 'border-input hover:border-input/80',
+              rightElement ? 'pr-10' : 'pr-3',
+              className
+            )}
+            onFocus={(e) => {
+              setFocused(true)
+              props.onFocus?.(e)
+            }}
+            onBlur={(e) => {
+              setFocused(false)
+              props.onBlur?.(e)
+            }}
+            {...props}
+          />
+          {rightElement && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 z-10">
+              {rightElement}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
 }
 
-// ─── Password Strength — Continuous Bar + Criteria ───────────────────────────
+// ─── Password Strength ───────────────────────────────────────────────────────
 
 function PasswordStrengthV2({ password }: { password: string }) {
   const criteria = [
     { label: '8+ caracteres', met: password.length >= 8 },
-    { label: 'Letra maiúscula', met: /[A-Z]/.test(password) },
-    { label: 'Letra minúscula', met: /[a-z]/.test(password) },
+    { label: 'Maiúscula', met: /[A-Z]/.test(password) },
+    { label: 'Minúscula', met: /[a-z]/.test(password) },
     { label: 'Número', met: /[0-9]/.test(password) },
   ]
   const passed = criteria.filter((c) => c.met).length
-  const percentage = (passed / 4) * 100
+  const pct = (passed / 4) * 100
 
   if (!password) return null
 
-  const gradientColor =
+  const color =
     passed <= 1
       ? 'oklch(0.55 0.22 25)'
       : passed <= 2
@@ -127,18 +140,17 @@ function PasswordStrengthV2({ password }: { password: string }) {
       animate={{ opacity: 1, height: 'auto' }}
       exit={{ opacity: 0, height: 0 }}
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-      className="space-y-2.5 px-1 pt-1"
+      className="space-y-2.5 pt-1"
     >
       <div className="h-1 w-full rounded-full bg-border/20 overflow-hidden">
         <motion.div
           className="h-full rounded-full"
           initial={{ width: 0 }}
-          animate={{ width: `${percentage}%` }}
+          animate={{ width: `${pct}%` }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          style={{ backgroundColor: gradientColor }}
+          style={{ backgroundColor: color }}
         />
       </div>
-
       <div className="grid grid-cols-2 gap-x-4 gap-y-1">
         {criteria.map((c) => (
           <div key={c.label} className="flex items-center gap-1.5">
@@ -155,7 +167,9 @@ function PasswordStrengthV2({ password }: { password: string }) {
             <span
               className={cn(
                 'text-[10px] transition-colors duration-300',
-                c.met ? 'text-muted-foreground/70' : 'text-muted-foreground/30'
+                c.met
+                  ? 'text-muted-foreground/70'
+                  : 'text-muted-foreground/30'
               )}
             >
               {c.label}
@@ -167,20 +181,17 @@ function PasswordStrengthV2({ password }: { password: string }) {
   )
 }
 
-// ─── Animation Variants ──────────────────────────────────────────────────────
+// ─── Animation ───────────────────────────────────────────────────────────────
 
 const pageVariants = {
-  enter: { opacity: 0, x: 20 },
+  enter: { opacity: 0, x: 16 },
   center: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -20 },
+  exit: { opacity: 0, x: -16 },
 }
 
-const pageTransition = {
-  duration: 0.35,
-  ease: [0.22, 1, 0.36, 1] as const,
-}
+const ease = [0.22, 1, 0.36, 1] as const
 
-// ─── Form Component ──────────────────────────────────────────────────────────
+// ─── Component ───────────────────────────────────────────────────────────────
 
 export function UpdatePasswordFormV2({
   className,
@@ -206,7 +217,6 @@ export function UpdatePasswordFormV2({
       setError('As senhas não coincidem.')
       return
     }
-
     if (password.length < 8) {
       setError('A senha deve ter no mínimo 8 caracteres.')
       return
@@ -234,7 +244,7 @@ export function UpdatePasswordFormV2({
     }
   }
 
-  const PasswordToggle = ({
+  const Toggle = ({
     show,
     onToggle,
   }: {
@@ -254,8 +264,8 @@ export function UpdatePasswordFormV2({
   return (
     <div className={cn('flex flex-col', className)} {...props}>
       {/* Logo */}
-      <div className="flex flex-col items-center gap-3 mb-8">
-        <div className="relative h-11 w-11">
+      <div className="flex flex-col items-center gap-2.5 mb-8">
+        <div className="relative h-10 w-10">
           <Image
             src="/logos/logo-small.svg"
             alt="Zattar Advogados"
@@ -264,7 +274,7 @@ export function UpdatePasswordFormV2({
             className="object-contain"
           />
         </div>
-        <span className="text-[10px] font-medium uppercase tracking-[3px] text-muted-foreground/40">
+        <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground/50">
           Zattar Advogados
         </span>
       </div>
@@ -277,11 +287,11 @@ export function UpdatePasswordFormV2({
             initial="enter"
             animate="center"
             exit="exit"
-            transition={pageTransition}
+            transition={{ duration: 0.35, ease }}
             className="flex flex-col gap-6"
           >
             <div className="text-center">
-              <h1 className="font-headline text-2xl font-extrabold tracking-tight text-foreground">
+              <h1 className="text-2xl font-bold tracking-tight font-heading text-foreground">
                 Tudo certo.
               </h1>
               <p className="mt-1.5 text-sm text-muted-foreground">
@@ -289,21 +299,20 @@ export function UpdatePasswordFormV2({
               </p>
             </div>
 
-            <div className="flex items-start gap-3 rounded-xl border border-emerald-500/15 bg-emerald-50/60 p-4">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10">
+            <div className="flex items-start gap-3 rounded-lg border border-emerald-500/15 bg-emerald-50/60 p-3.5">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-emerald-500/10">
                 <CheckCircle2 className="h-4 w-4 text-emerald-600" />
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground/80">
                   Senha atualizada
                 </p>
-                <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   Você será redirecionado em instantes.
                 </p>
               </div>
             </div>
 
-            {/* Animated redirect progress bar */}
             <div className="h-0.5 w-full rounded-full bg-border/15 overflow-hidden">
               <motion.div
                 className="h-full rounded-full bg-emerald-500/50"
@@ -330,10 +339,10 @@ export function UpdatePasswordFormV2({
             initial="enter"
             animate="center"
             exit="exit"
-            transition={pageTransition}
+            transition={{ duration: 0.35, ease }}
           >
             <div className="mb-8 text-center">
-              <h1 className="font-headline text-2xl font-extrabold tracking-tight text-foreground">
+              <h1 className="text-2xl font-bold tracking-tight font-heading text-foreground">
                 Senha nova.
               </h1>
               <p className="mt-1.5 text-sm text-muted-foreground">
@@ -341,19 +350,23 @@ export function UpdatePasswordFormV2({
               </p>
             </div>
 
-            <form onSubmit={handleUpdatePassword} className="space-y-3">
+            <form
+              onSubmit={handleUpdatePassword}
+              className="flex flex-col gap-5"
+            >
               <div>
                 <AuthInput
+                  label="Nova senha"
                   icon={Lock}
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Nova senha"
+                  placeholder="Mínimo 8 caracteres"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="new-password"
                   rightElement={
-                    <PasswordToggle
+                    <Toggle
                       show={showPassword}
                       onToggle={() => setShowPassword(!showPassword)}
                     />
@@ -367,17 +380,18 @@ export function UpdatePasswordFormV2({
               </div>
 
               <AuthInput
+                label="Confirmar senha"
                 icon={ShieldCheck}
                 id="confirm-password"
                 type={showConfirmPassword ? 'text' : 'password'}
-                placeholder="Confirmar senha"
+                placeholder="Repita a senha"
                 required
                 error={passwordsMismatch}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 autoComplete="new-password"
                 rightElement={
-                  <PasswordToggle
+                  <Toggle
                     show={showConfirmPassword}
                     onToggle={() =>
                       setShowConfirmPassword(!showConfirmPassword)
@@ -393,7 +407,7 @@ export function UpdatePasswordFormV2({
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="px-1 text-xs text-destructive"
+                    className="text-xs text-destructive"
                   >
                     As senhas não coincidem
                   </motion.p>
@@ -406,29 +420,27 @@ export function UpdatePasswordFormV2({
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.3, ease }}
                     className="overflow-hidden"
                   >
-                    <div className="flex items-start gap-2.5 rounded-xl border border-destructive/15 bg-destructive/5 p-3">
+                    <div className="flex items-start gap-2 rounded-lg border border-destructive/15 bg-destructive/5 p-3">
                       <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
-                      <p className="text-sm leading-relaxed text-destructive">
-                        {error}
-                      </p>
+                      <p className="text-sm text-destructive">{error}</p>
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <div className="pt-1">
+              <div className="pt-2">
                 <motion.button
                   type="submit"
                   disabled={isLoading}
                   className={cn(
-                    'flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl py-3.5 px-6',
-                    'bg-linear-to-br from-primary to-primary-dim',
-                    'font-headline text-sm font-bold text-white',
-                    'shadow-lg shadow-primary/25 transition-all duration-500',
-                    'hover:shadow-xl hover:shadow-primary/30',
+                    'flex w-full cursor-pointer items-center justify-center gap-2',
+                    'h-11 rounded-lg px-6',
+                    'bg-primary text-sm font-semibold text-white',
+                    'shadow-lg shadow-primary/25 transition-all duration-300',
+                    'hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30',
                     'disabled:cursor-not-allowed disabled:opacity-70'
                   )}
                   whileTap={!isLoading ? { scale: 0.98 } : undefined}
@@ -448,7 +460,7 @@ export function UpdatePasswordFormV2({
               </div>
             </form>
 
-            <div className="mt-8 text-center">
+            <div className="mt-6 text-center">
               <Link
                 href="/app/login"
                 className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/50 transition-colors duration-200 hover:text-primary"

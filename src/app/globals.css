@@ -1703,3 +1703,10 @@ body[data-theme-content-layout="centered"] .content-container {
   33% { transform: translate(20px, 30px) scale(0.96); }
   66% { transform: translate(-30px, -15px) scale(1.04); }
 }
+
+/* Aurora ribbon — horizontal light band that breathes */
+@keyframes aurora-shift {
+  0%   { transform: rotate(-4deg) scaleY(0.5) translateX(-5%); opacity: 0.8; }
+  50%  { transform: rotate(-2deg) scaleY(0.6) translateX(5%); opacity: 1; }
+  100% { transform: rotate(-4deg) scaleY(0.5) translateX(-5%); opacity: 0.8; }
+}

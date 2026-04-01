@@ -65,7 +65,9 @@ export function AudienciasSemanaView({
 }: AudienciasSemanaViewProps) {
   const weekStart = startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 });
   const weekEnd = endOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 });
-  const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
+  // Apenas dias úteis (seg-sex) — audiências não ocorrem no fim de semana
+  const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd })
+    .filter((d) => d.getDay() !== 0 && d.getDay() !== 6);
 
   const audienciasByDay = useMemo(() => {
     const map = new Map<string, Audiencia[]>();
@@ -100,7 +102,9 @@ export function AudienciasSemanaView({
   const handleToday = () => onDateChange(new Date());
 
   const isCurrentWeek = weekDays.some((d) => isToday(d));
-  const weekLabel = `${format(weekStart, "d 'de' MMM", { locale: ptBR })} — ${format(weekEnd, "d 'de' MMM", { locale: ptBR })}`;
+  // Label da semana: seg — sex (sem fim de semana)
+  const friday = weekDays[weekDays.length - 1];
+  const weekLabel = `${format(weekStart, "d 'de' MMM", { locale: ptBR })} — ${format(friday, "d 'de' MMM", { locale: ptBR })}`;
 
   return (
     <div className="space-y-4">
@@ -124,19 +128,18 @@ export function AudienciasSemanaView({
         <span className="text-sm font-medium capitalize ml-1">{weekLabel}</span>
       </div>
 
-      {/* Week Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 xl:grid-cols-7 gap-3">
+      {/* Week Grid — 5 colunas (seg-sex), mais espaço para dados */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
         {weekDays.map((day) => {
           const key = format(day, 'yyyy-MM-dd');
           const dayAudiencias = audienciasByDay.get(key) ?? [];
           const today = isToday(day);
-          const isWeekend = day.getDay() === 0 || day.getDay() === 6;
 
           return (
             <GlassPanel
               key={key}
               depth={today ? 2 : 1}
-              className={cn('p-3 min-h-32', isWeekend && 'opacity-60')}
+              className="p-3 min-h-36"
             >
               {/* Day header */}
               <div className="flex items-center justify-between mb-2">
@@ -189,7 +192,7 @@ function WeekDayCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: ()
   const now = new Date();
   let isPast = false;
   let isOngoing = false;
-  let isFinalizada = audiencia.status === StatusAudiencia.Finalizada;
+  const isFinalizada = audiencia.status === StatusAudiencia.Finalizada;
   try {
     isPast = parseISO(audiencia.dataFim) < now;
     isOngoing = parseISO(audiencia.dataInicio) <= now && parseISO(audiencia.dataFim) >= now;
@@ -203,47 +206,63 @@ function WeekDayCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: ()
     <button
       onClick={onClick}
       className={cn(
-        'w-full text-left p-2 rounded-lg border transition-all duration-200 cursor-pointer',
+        'w-full text-left p-2.5 rounded-lg border transition-all duration-200 cursor-pointer',
         'border-border/10 hover:border-border/20 hover:shadow-sm hover:scale-[1.01]',
         (isPast || isFinalizada) && 'opacity-50',
         isOngoing && 'ring-1 ring-success/20 border-success/15',
       )}
     >
-      {/* Time + Status */}
+      {/* Time range + Status indicators */}
       <div className="flex items-center justify-between gap-1">
         <span className="text-[10px] tabular-nums font-medium text-foreground/60">
-          {fmtTime(audiencia.dataInicio)}
+          {fmtTime(audiencia.dataInicio)} – {fmtTime(audiencia.dataFim)}
         </span>
         <div className="flex items-center gap-1">
           {isOngoing && <span className="size-1.5 rounded-full bg-success animate-pulse" />}
-          {isVirtual && <Video className="size-2 text-info/40" />}
-          {!isVirtual && audiencia.modalidade === 'presencial' && <Building2 className="size-2 text-warning/40" />}
+          {isFinalizada && <span className="text-[7px] font-semibold text-success/60 px-1 py-px rounded-full bg-success/8">OK</span>}
+          {/* Prep badge */}
+          <span className={cn(
+            'text-[7px] font-bold tabular-nums px-1 py-px rounded-full',
+            prepStatus === 'good' ? 'bg-success/10 text-success' : prepStatus === 'warning' ? 'bg-warning/10 text-warning' : 'bg-destructive/10 text-destructive',
+          )}>
+            {prepScore}%
+          </span>
         </div>
       </div>
 
       {/* Type */}
-      <p className="text-[10px] font-medium text-foreground truncate mt-0.5">
+      <p className="text-[10px] font-medium text-foreground truncate mt-1">
         {audiencia.tipoDescricao || 'Audiência'}
       </p>
 
-      {/* Parties */}
-      {audiencia.poloAtivoNome && (
-        <p className="text-[8px] text-muted-foreground/40 truncate mt-0.5">
-          {audiencia.poloAtivoNome}
+      {/* Process number */}
+      {audiencia.numeroProcesso && (
+        <p className="text-[8px] font-mono text-muted-foreground/40 tabular-nums truncate mt-0.5">
+          {audiencia.numeroProcesso}
         </p>
       )}
 
-      {/* Bottom: TRT + Prep */}
-      <div className="flex items-center justify-between mt-1">
+      {/* Parties */}
+      {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
+        <p className="text-[8px] text-muted-foreground/40 truncate mt-0.5">
+          {audiencia.poloAtivoNome || '—'} <span className="text-muted-foreground/30">vs</span> {audiencia.poloPassivoNome || '—'}
+        </p>
+      )}
+
+      {/* Bottom: TRT + Modalidade */}
+      <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
         {audiencia.trt && (
           <span className="text-[7px] font-semibold px-1 py-px rounded bg-primary/5 text-primary/40">{audiencia.trt}</span>
         )}
-        <span className={cn(
-          'text-[7px] font-bold tabular-nums',
-          prepStatus === 'good' ? 'text-success' : prepStatus === 'warning' ? 'text-warning' : 'text-destructive',
-        )}>
-          {prepScore}%
-        </span>
+        <div className="flex items-center gap-0.5">
+          {isVirtual ? <Video className="size-2 text-info/40" /> : audiencia.modalidade === 'presencial' ? <Building2 className="size-2 text-warning/40" /> : null}
+          <span className="text-[7px] text-muted-foreground/40">
+            {audiencia.modalidade === 'virtual' ? 'Virtual' : audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : ''}
+          </span>
+        </div>
+        {audiencia.urlAudienciaVirtual && isVirtual && (
+          <span className="text-[7px] font-semibold px-1 py-px rounded bg-info/8 text-info/50">Sala</span>
+        )}
       </div>
     </button>
   );
