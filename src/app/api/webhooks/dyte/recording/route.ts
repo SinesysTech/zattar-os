@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Buscar chamada pelo meetingId
-      const { createCallsRepository } = await import('@/features/chat/repositories');
+      const { createCallsRepository } = await import('@/features/chat/repository');
       const callsRepo = await createCallsRepository();
       const chamadaResult = await callsRepo.findChamadaByMeetingId(meetingId);
       

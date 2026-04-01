@@ -27,15 +27,11 @@ import type { TipoEntidadeChatwoot } from './domain';
 import {
   findAllClientesComEndereco,
   findClienteByIdComEndereco,
-} from '@/features/partes/repositories/clientes-repository';
-import {
   findAllPartesContrariasComEnderecoEProcessos,
   findParteContrariaById,
-} from '@/features/partes/repositories/partes-contrarias-repository';
-import {
   findAllTerceirosComEnderecoEProcessos,
   findTerceiroById,
-} from '@/features/partes/repositories/terceiros-repository';
+} from '@/features/partes/repository';
 
 // =============================================================================
 // Tipos

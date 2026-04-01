@@ -18,7 +18,7 @@ import type {
 import {
   upsertRepresentantePorCPFRepo as upsertRepresentantePorCPF,
   buscarRepresentantePorCPFRepo as buscarRepresentantePorCPF,
-} from "@/features/partes/repositories";
+} from "@/features/partes/repository";
 import getLogger from "@/lib/logger";
 import { normalizarDocumento } from "../utils";
 import { extrairCamposRepresentantePJE } from "../utils";

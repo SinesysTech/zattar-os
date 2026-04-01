@@ -8,7 +8,7 @@ import 'server-only';
  */
 
 export * from './service';
-export * from './repositories';
+export * from './repository';
 
 /**
  * Partes Feature Module - Server-only entrypoint

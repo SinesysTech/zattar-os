@@ -11,7 +11,6 @@ export type {
   ClienteDetalhado,
   ResponsavelDetalhado,
   SegmentoDetalhado,
-  ContratosStatsData,
 } from "./contratos-actions";
 export {
   actionCriarContrato,

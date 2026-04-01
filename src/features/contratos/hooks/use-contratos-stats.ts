@@ -14,7 +14,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { actionContratosStats } from '../actions/contratos-actions';
-import type { ContratosStatsData } from '../actions/contratos-actions';
+import type { ContratosStatsData } from '../domain';
 
 // =============================================================================
 // TYPES

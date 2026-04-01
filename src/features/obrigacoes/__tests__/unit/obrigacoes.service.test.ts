@@ -2,7 +2,7 @@ import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as service from '../../service';
 import * as repository from '../../repository';
 import * as utils from '../../utils';
-import * as partesRepository from '@/features/partes/repositories';
+import * as partesRepository from '@/features/partes';
 import * as processosService from '@/features/processos/service';
 import * as partesDomain from '@/features/partes/domain';
 import {
@@ -13,7 +13,7 @@ import {
 
 jest.mock('../../repository');
 jest.mock('../../utils');
-jest.mock('@/features/partes/repositories');
+jest.mock('@/features/partes');
 jest.mock('@/features/processos/service');
 jest.mock('@/features/partes/domain');
 

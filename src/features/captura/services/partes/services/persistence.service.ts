@@ -38,7 +38,7 @@ import {
   buscarEntidadePorIdPessoaPJE,
   upsertTerceiroByCPF,
   upsertTerceiroByCNPJ,
-} from "@/features/partes/repositories";
+} from "@/features/partes/repository";
 import { withRetry } from "@/lib/utils/retry";
 import { CAPTURA_CONFIG } from "../config";
 import { PersistenceError } from "../errors";

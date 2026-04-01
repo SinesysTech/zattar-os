@@ -4,27 +4,23 @@
  * Server Actions para o módulo de Tags
  *
  * CRUD de tags e gerenciamento de vínculos com processos.
+ * Thin wrappers: apenas revalidação de cache + delegação ao service.
  */
 
 import { revalidatePath } from "next/cache";
+import type { CreateTagInput, UpdateTagInput } from "./domain";
 import {
-  type CreateTagInput,
-  type UpdateTagInput,
-  createTagSchema,
-  updateTagSchema,
-} from "./domain";
-import {
-  findAllTags,
-  findTagById,
-  createTag,
-  updateTag,
-  deleteTag,
-  findTagsByProcessoId,
-  findTagsByProcessoIds,
-  vincularTagAoProcesso,
-  desvincularTagDoProcesso,
-  atualizarTagsDoProcesso,
-} from "./repository";
+  listarTags,
+  buscarTag,
+  criarTag,
+  atualizarTag,
+  excluirTag,
+  listarTagsDoProcesso,
+  listarTagsDosProcessos,
+  vincularTag,
+  desvincularTag,
+  atualizarTagsProcesso,
+} from "./service";
 
 // =============================================================================
 // TIPOS DE RETORNO
@@ -40,24 +36,6 @@ export type ActionResult<T = unknown> =
     };
 
 // =============================================================================
-// HELPERS
-// =============================================================================
-
-function formatZodErrors(zodError: {
-  errors: Array<{ path: (string | number)[]; message: string }>;
-}): Record<string, string[]> {
-  const errors: Record<string, string[]> = {};
-  for (const err of zodError.errors) {
-    const key = err.path.join(".");
-    if (!errors[key]) {
-      errors[key] = [];
-    }
-    errors[key].push(err.message);
-  }
-  return errors;
-}
-
-// =============================================================================
 // SERVER ACTIONS - TAGS CRUD
 // =============================================================================
 
@@ -65,120 +43,53 @@ function formatZodErrors(zodError: {
  * Lista todas as tags disponíveis
  */
 export async function actionListarTags(): Promise<ActionResult> {
-  try {
-    const result = await findAllTags();
+  const result = await listarTags();
 
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    return {
-      success: true,
-      data: result.data,
-      message: "Tags carregadas com sucesso",
-    };
-  } catch (error) {
-    console.error("Erro ao listar tags:", error);
+  if (!result.success) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Erro interno do servidor",
-      message: "Erro ao carregar tags. Tente novamente.",
+      error: result.error.message,
+      message: result.error.message,
     };
   }
+
+  return { success: true, data: result.data, message: "Tags carregadas com sucesso" };
 }
 
 /**
  * Busca uma tag por ID
  */
 export async function actionBuscarTag(id: number): Promise<ActionResult> {
-  try {
-    if (!id || id <= 0) {
-      return {
-        success: false,
-        error: "ID inválido",
-        message: "ID da tag é obrigatório",
-      };
-    }
+  const result = await buscarTag(id);
 
-    const result = await findTagById(id);
-
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    if (!result.data) {
-      return {
-        success: false,
-        error: "Tag não encontrada",
-        message: "Tag não encontrada",
-      };
-    }
-
-    return {
-      success: true,
-      data: result.data,
-      message: "Tag carregada com sucesso",
-    };
-  } catch (error) {
-    console.error("Erro ao buscar tag:", error);
+  if (!result.success) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Erro interno do servidor",
-      message: "Erro ao carregar tag. Tente novamente.",
+      error: result.error.message,
+      message: result.error.message,
     };
   }
+
+  return { success: true, data: result.data, message: "Tag carregada com sucesso" };
 }
 
 /**
  * Cria uma nova tag
  */
 export async function actionCriarTag(input: CreateTagInput): Promise<ActionResult> {
-  try {
-    // Validar com Zod
-    const validation = createTagSchema.safeParse(input);
+  const result = await criarTag(input);
 
-    if (!validation.success) {
-      return {
-        success: false,
-        error: "Erro de validação",
-        errors: formatZodErrors(validation.error),
-        message: validation.error.errors[0]?.message || "Dados inválidos",
-      };
-    }
-
-    const result = await createTag(validation.data);
-
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    revalidatePath("/app/processos");
-
-    return {
-      success: true,
-      data: result.data,
-      message: "Tag criada com sucesso",
-    };
-  } catch (error) {
-    console.error("Erro ao criar tag:", error);
+  if (!result.success) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Erro interno do servidor",
-      message: "Erro ao criar tag. Tente novamente.",
+      error: result.error.message,
+      message: result.error.message,
     };
   }
+
+  revalidatePath("/app/processos");
+
+  return { success: true, data: result.data, message: "Tag criada com sucesso" };
 }
 
 /**
@@ -188,92 +99,38 @@ export async function actionAtualizarTag(
   id: number,
   input: UpdateTagInput
 ): Promise<ActionResult> {
-  try {
-    if (!id || id <= 0) {
-      return {
-        success: false,
-        error: "ID inválido",
-        message: "ID da tag é obrigatório",
-      };
-    }
+  const result = await atualizarTag(id, input);
 
-    // Validar com Zod
-    const validation = updateTagSchema.safeParse(input);
-
-    if (!validation.success) {
-      return {
-        success: false,
-        error: "Erro de validação",
-        errors: formatZodErrors(validation.error),
-        message: validation.error.errors[0]?.message || "Dados inválidos",
-      };
-    }
-
-    const result = await updateTag(id, validation.data);
-
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    revalidatePath("/app/processos");
-
-    return {
-      success: true,
-      data: result.data,
-      message: "Tag atualizada com sucesso",
-    };
-  } catch (error) {
-    console.error("Erro ao atualizar tag:", error);
+  if (!result.success) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Erro interno do servidor",
-      message: "Erro ao atualizar tag. Tente novamente.",
+      error: result.error.message,
+      message: result.error.message,
     };
   }
+
+  revalidatePath("/app/processos");
+
+  return { success: true, data: result.data, message: "Tag atualizada com sucesso" };
 }
 
 /**
  * Exclui uma tag
  */
 export async function actionExcluirTag(id: number): Promise<ActionResult> {
-  try {
-    if (!id || id <= 0) {
-      return {
-        success: false,
-        error: "ID inválido",
-        message: "ID da tag é obrigatório",
-      };
-    }
+  const result = await excluirTag(id);
 
-    const result = await deleteTag(id);
-
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    revalidatePath("/app/processos");
-
-    return {
-      success: true,
-      data: null,
-      message: "Tag excluída com sucesso",
-    };
-  } catch (error) {
-    console.error("Erro ao excluir tag:", error);
+  if (!result.success) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Erro interno do servidor",
-      message: "Erro ao excluir tag. Tente novamente.",
+      error: result.error.message,
+      message: result.error.message,
     };
   }
+
+  revalidatePath("/app/processos");
+
+  return { success: true, data: null, message: "Tag excluída com sucesso" };
 }
 
 // =============================================================================
@@ -286,38 +143,21 @@ export async function actionExcluirTag(id: number): Promise<ActionResult> {
 export async function actionListarTagsDoProcesso(
   processoId: number
 ): Promise<ActionResult> {
-  try {
-    if (!processoId || processoId <= 0) {
-      return {
-        success: false,
-        error: "ID inválido",
-        message: "ID do processo é obrigatório",
-      };
-    }
+  const result = await listarTagsDoProcesso(processoId);
 
-    const result = await findTagsByProcessoId(processoId);
-
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    return {
-      success: true,
-      data: result.data,
-      message: "Tags do processo carregadas com sucesso",
-    };
-  } catch (error) {
-    console.error("Erro ao listar tags do processo:", error);
+  if (!result.success) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Erro interno do servidor",
-      message: "Erro ao carregar tags do processo. Tente novamente.",
+      error: result.error.message,
+      message: result.error.message,
     };
   }
+
+  return {
+    success: true,
+    data: result.data,
+    message: "Tags do processo carregadas com sucesso",
+  };
 }
 
 /**
@@ -326,44 +166,17 @@ export async function actionListarTagsDoProcesso(
 export async function actionListarTagsDosProcessos(
   processoIds: number[]
 ): Promise<ActionResult> {
-  try {
-    if (!processoIds || processoIds.length === 0) {
-      return {
-        success: true,
-        data: {},
-        message: "Nenhum processo informado",
-      };
-    }
+  const result = await listarTagsDosProcessos(processoIds);
 
-    const result = await findTagsByProcessoIds(processoIds);
-
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    // Converter Map para objeto para serialização
-    const tagsObj: Record<number, unknown[]> = {};
-    result.data.forEach((tags, processoId) => {
-      tagsObj[processoId] = tags;
-    });
-
-    return {
-      success: true,
-      data: tagsObj,
-      message: "Tags carregadas com sucesso",
-    };
-  } catch (error) {
-    console.error("Erro ao listar tags dos processos:", error);
+  if (!result.success) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Erro interno do servidor",
-      message: "Erro ao carregar tags dos processos. Tente novamente.",
+      error: result.error.message,
+      message: result.error.message,
     };
   }
+
+  return { success: true, data: result.data, message: "Tags carregadas com sucesso" };
 }
 
 /**
@@ -373,49 +186,20 @@ export async function actionVincularTag(
   processoId: number,
   tagId: number
 ): Promise<ActionResult> {
-  try {
-    if (!processoId || processoId <= 0) {
-      return {
-        success: false,
-        error: "ID do processo inválido",
-        message: "ID do processo é obrigatório",
-      };
-    }
+  const result = await vincularTag(processoId, tagId);
 
-    if (!tagId || tagId <= 0) {
-      return {
-        success: false,
-        error: "ID da tag inválido",
-        message: "ID da tag é obrigatório",
-      };
-    }
-
-    const result = await vincularTagAoProcesso(processoId, tagId);
-
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    revalidatePath("/app/processos");
-    revalidatePath(`/app/processos/${processoId}`);
-
-    return {
-      success: true,
-      data: result.data,
-      message: "Tag vinculada com sucesso",
-    };
-  } catch (error) {
-    console.error("Erro ao vincular tag:", error);
+  if (!result.success) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Erro interno do servidor",
-      message: "Erro ao vincular tag. Tente novamente.",
+      error: result.error.message,
+      message: result.error.message,
     };
   }
+
+  revalidatePath("/app/processos");
+  revalidatePath(`/app/processos/${processoId}`);
+
+  return { success: true, data: result.data, message: "Tag vinculada com sucesso" };
 }
 
 /**
@@ -425,49 +209,20 @@ export async function actionDesvincularTag(
   processoId: number,
   tagId: number
 ): Promise<ActionResult> {
-  try {
-    if (!processoId || processoId <= 0) {
-      return {
-        success: false,
-        error: "ID do processo inválido",
-        message: "ID do processo é obrigatório",
-      };
-    }
+  const result = await desvincularTag(processoId, tagId);
 
-    if (!tagId || tagId <= 0) {
-      return {
-        success: false,
-        error: "ID da tag inválido",
-        message: "ID da tag é obrigatório",
-      };
-    }
-
-    const result = await desvincularTagDoProcesso(processoId, tagId);
-
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    revalidatePath("/app/processos");
-    revalidatePath(`/app/processos/${processoId}`);
-
-    return {
-      success: true,
-      data: null,
-      message: "Tag desvinculada com sucesso",
-    };
-  } catch (error) {
-    console.error("Erro ao desvincular tag:", error);
+  if (!result.success) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Erro interno do servidor",
-      message: "Erro ao desvincular tag. Tente novamente.",
+      error: result.error.message,
+      message: result.error.message,
     };
   }
+
+  revalidatePath("/app/processos");
+  revalidatePath(`/app/processos/${processoId}`);
+
+  return { success: true, data: null, message: "Tag desvinculada com sucesso" };
 }
 
 /**
@@ -477,39 +232,18 @@ export async function actionAtualizarTagsDoProcesso(
   processoId: number,
   tagIds: number[]
 ): Promise<ActionResult> {
-  try {
-    if (!processoId || processoId <= 0) {
-      return {
-        success: false,
-        error: "ID do processo inválido",
-        message: "ID do processo é obrigatório",
-      };
-    }
+  const result = await atualizarTagsProcesso(processoId, tagIds);
 
-    const result = await atualizarTagsDoProcesso(processoId, tagIds);
-
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error.message,
-        message: result.error.message,
-      };
-    }
-
-    revalidatePath("/app/processos");
-    revalidatePath(`/app/processos/${processoId}`);
-
-    return {
-      success: true,
-      data: result.data,
-      message: "Tags atualizadas com sucesso",
-    };
-  } catch (error) {
-    console.error("Erro ao atualizar tags do processo:", error);
+  if (!result.success) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Erro interno do servidor",
-      message: "Erro ao atualizar tags. Tente novamente.",
+      error: result.error.message,
+      message: result.error.message,
     };
   }
+
+  revalidatePath("/app/processos");
+  revalidatePath(`/app/processos/${processoId}`);
+
+  return { success: true, data: result.data, message: "Tags atualizadas com sucesso" };
 }

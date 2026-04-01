@@ -2,20 +2,17 @@ import "server-only";
 
 import { endOfDay, startOfDay } from "date-fns";
 
-import type { Audiencia, ListarAudienciasParams } from "@/features/audiencias";
-import { listarAudiencias, StatusAudiencia } from "@/features/audiencias";
+import type { Audiencia } from "@/features/audiencias";
+import { StatusAudiencia } from "@/features/audiencias";
 
-import type { Expediente, ListarExpedientesParams } from "@/features/expedientes";
-import { listarExpedientes } from "@/features/expedientes";
+import type { Expediente } from "@/features/expedientes";
 
 import type { AcordoComParcelas } from "@/features/obrigacoes";
-import { listarAcordos } from "@/features/obrigacoes/service";
 
-import type { Pericia, ListarPericiasParams } from "@/features/pericias";
-import { listarPericias, SituacaoPericiaCodigo } from "@/features/pericias";
+import type { Pericia } from "@/features/pericias";
+import { SituacaoPericiaCodigo } from "@/features/pericias";
 
 import type { AgendaEvento } from "@/features/agenda-eventos";
-import * as agendaEventosRepo from "@/features/agenda-eventos/repository";
 
 import {
   buildUnifiedEventId,
@@ -23,6 +20,8 @@ import {
   type ListarEventosCalendarInput,
   type UnifiedCalendarEvent,
 } from "./domain";
+
+import * as repo from "./repository";
 
 type SourceFetch = () => Promise<UnifiedCalendarEvent[]>;
 
@@ -65,6 +64,10 @@ function normalizeDateRange(input: ListarEventosCalendarInput): { start: Date; e
     end: endOfDay(end),
   };
 }
+
+// =============================================================================
+// TRANSFORMADORES — Entidade -> UnifiedCalendarEvent
+// =============================================================================
 
 function deriveAudienciaPrepStatus(audiencia: Audiencia): "preparado" | "parcial" | "pendente" {
   const hasAta = audiencia.ataAudienciaId != null;
@@ -109,40 +112,6 @@ function audienciaToUnifiedEvent(audiencia: Audiencia): UnifiedCalendarEvent {
   };
 }
 
-async function fetchAudiencias(start: Date, end: Date): Promise<UnifiedCalendarEvent[]> {
-  const events: UnifiedCalendarEvent[] = [];
-
-  // Service sanitiza limite para <= 100
-  const limite = 100;
-  let pagina = 1;
-  let hasMore = true;
-
-  while (hasMore && pagina <= 10) {
-    const params: ListarAudienciasParams = {
-      pagina,
-      limite,
-      dataInicioInicio: start.toISOString(),
-      dataInicioFim: end.toISOString(),
-      ordenarPor: "dataInicio",
-      ordem: "asc",
-    };
-
-    const result = await listarAudiencias(params);
-    if (!result.success) {
-      // RLS/permissão/erro: não vazar, só ignorar a fonte
-      return [];
-    }
-
-    const pageData = result.data.data;
-    events.push(...pageData.map(audienciaToUnifiedEvent));
-
-    hasMore = result.data.pagination.hasMore;
-    pagina += 1;
-  }
-
-  return events;
-}
-
 function expedienteToUnifiedEvent(expediente: Expediente): UnifiedCalendarEvent | null {
   const dataPrincipal =
     expediente.dataPrazoLegalParte || expediente.dataCriacaoExpediente || expediente.createdAt;
@@ -183,42 +152,6 @@ function expedienteToUnifiedEvent(expediente: Expediente): UnifiedCalendarEvent 
       origem: expediente.origem,
     },
   };
-}
-
-async function fetchExpedientes(start: Date, end: Date): Promise<UnifiedCalendarEvent[]> {
-  const events: UnifiedCalendarEvent[] = [];
-
-  const limite = 100;
-  let pagina = 1;
-  let hasMore = true;
-
-  while (hasMore && pagina <= 10) {
-    const params: ListarExpedientesParams = {
-      pagina,
-      limite,
-      dataPrazoLegalInicio: start.toISOString(),
-      dataPrazoLegalFim: end.toISOString(),
-      ordenarPor: "data_prazo_legal_parte",
-      ordem: "asc",
-      // Filtrar apenas expedientes pendentes (não baixados) - mesmo comportamento da página de expedientes
-      baixado: false,
-    };
-
-    const result = await listarExpedientes(params);
-    if (!result.success) {
-      return [];
-    }
-
-    for (const exp of result.data.data) {
-      const mapped = expedienteToUnifiedEvent(exp);
-      if (mapped) events.push(mapped);
-    }
-
-    hasMore = result.data.pagination.hasMore;
-    pagina += 1;
-  }
-
-  return events;
 }
 
 function acordoParcelaToEvents(acordo: AcordoComParcelas): UnifiedCalendarEvent[] {
@@ -269,21 +202,6 @@ function acordoParcelaToEvents(acordo: AcordoComParcelas): UnifiedCalendarEvent[
   return events;
 }
 
-async function fetchObrigacoes(start: Date, end: Date): Promise<UnifiedCalendarEvent[]> {
-  const dataInicio = start.toISOString().slice(0, 10);
-  const dataFim = end.toISOString().slice(0, 10);
-
-  // Usar service diretamente (não Server Action)
-  const result = await listarAcordos({
-    dataInicio,
-    dataFim,
-    limite: 1000, // Limite alto para calendário
-  });
-
-  const acordos = (result.acordos ?? []) as AcordoComParcelas[];
-  return acordos.flatMap(acordoParcelaToEvents);
-}
-
 function periciaToUnifiedEvent(pericia: Pericia): UnifiedCalendarEvent | null {
   const prazo = pericia.prazoEntrega;
   if (!prazo) return null;
@@ -322,40 +240,6 @@ function periciaToUnifiedEvent(pericia: Pericia): UnifiedCalendarEvent | null {
   };
 }
 
-async function fetchPericias(start: Date, end: Date): Promise<UnifiedCalendarEvent[]> {
-  const events: UnifiedCalendarEvent[] = [];
-
-  const limite = 100;
-  let pagina = 1;
-  let hasMore = true;
-
-  while (hasMore && pagina <= 10) {
-    const params: ListarPericiasParams = {
-      pagina,
-      limite,
-      prazoEntregaInicio: start.toISOString(),
-      prazoEntregaFim: end.toISOString(),
-      ordenarPor: "prazo_entrega",
-      ordem: "asc",
-    };
-
-    const result = await listarPericias(params);
-    if (!result.success) {
-      return [];
-    }
-
-    for (const pericia of result.data.data) {
-      const mapped = periciaToUnifiedEvent(pericia);
-      if (mapped) events.push(mapped);
-    }
-
-    hasMore = result.data.pagination.hasMore;
-    pagina += 1;
-  }
-
-  return events;
-}
-
 function agendaEventoToUnifiedEvent(evento: AgendaEvento): UnifiedCalendarEvent {
   return {
     id: buildUnifiedEventId("agenda", evento.id),
@@ -375,11 +259,48 @@ function agendaEventoToUnifiedEvent(evento: AgendaEvento): UnifiedCalendarEvent 
   };
 }
 
-async function fetchAgendaEventos(start: Date, end: Date): Promise<UnifiedCalendarEvent[]> {
-  const result = await agendaEventosRepo.findByPeriodo(start.toISOString(), end.toISOString());
-  if (!result.success) return [];
-  return result.data.map(agendaEventoToUnifiedEvent);
+// =============================================================================
+// FETCHERS — Busca + Transformação por fonte
+// =============================================================================
+
+async function fetchAudiencias(start: Date, end: Date): Promise<UnifiedCalendarEvent[]> {
+  const audiencias = await repo.findAudiencias(start, end);
+  return audiencias.map(audienciaToUnifiedEvent);
 }
+
+async function fetchExpedientes(start: Date, end: Date): Promise<UnifiedCalendarEvent[]> {
+  const expedientes = await repo.findExpedientes(start, end);
+  const events: UnifiedCalendarEvent[] = [];
+  for (const exp of expedientes) {
+    const mapped = expedienteToUnifiedEvent(exp);
+    if (mapped) events.push(mapped);
+  }
+  return events;
+}
+
+async function fetchObrigacoes(start: Date, end: Date): Promise<UnifiedCalendarEvent[]> {
+  const acordos = await repo.findAcordosComParcelas(start, end);
+  return acordos.flatMap(acordoParcelaToEvents);
+}
+
+async function fetchPericias(start: Date, end: Date): Promise<UnifiedCalendarEvent[]> {
+  const pericias = await repo.findPericias(start, end);
+  const events: UnifiedCalendarEvent[] = [];
+  for (const pericia of pericias) {
+    const mapped = periciaToUnifiedEvent(pericia);
+    if (mapped) events.push(mapped);
+  }
+  return events;
+}
+
+async function fetchAgendaEventos(start: Date, end: Date): Promise<UnifiedCalendarEvent[]> {
+  const eventos = await repo.findAgendaEventos(start, end);
+  return eventos.map(agendaEventoToUnifiedEvent);
+}
+
+// =============================================================================
+// SERVIÇO PÚBLICO
+// =============================================================================
 
 export async function listarEventosPorPeriodo(
   input: ListarEventosCalendarInput

@@ -34,7 +34,7 @@ jest.mock('@/lib/dyte/config', () => ({
   isDyteTranscriptionEnabled: jest.fn().mockResolvedValue(false),
 }));
 
-jest.mock('../../repositories/calls-repository', () => ({
+jest.mock('../../repository', () => ({
   createCallsRepository: jest.fn(),
 }));
 
@@ -75,7 +75,7 @@ describe('Chamadas Actions - Unit Tests', () => {
 
     // Setup dynamic import mock for calls-repository
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { createCallsRepository } = require('../../repositories/calls-repository');
+    const { createCallsRepository } = require('../../repository');
     (createCallsRepository as jest.Mock).mockResolvedValue(mockCallsRepo);
 
     // Setup dynamic import mock for dyte config

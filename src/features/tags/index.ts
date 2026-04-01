@@ -7,6 +7,20 @@
 // Domain
 export * from "./domain";
 
+// Service
+export {
+  listarTags,
+  buscarTag,
+  criarTag,
+  atualizarTag,
+  excluirTag,
+  listarTagsDoProcesso,
+  listarTagsDosProcessos,
+  vincularTag,
+  desvincularTag,
+  atualizarTagsProcesso,
+} from "./service";
+
 // Actions
 export {
   actionListarTags,
@@ -20,3 +34,6 @@ export {
   actionDesvincularTag,
   actionAtualizarTagsDoProcesso,
 } from "./actions";
+
+// Components
+export * from "./components";

@@ -49,7 +49,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<MultimodalRes
       }
     }
 
-    const model = google('gemini-2.5-flash', { apiKey })
+    const model = google('gemini-2.5-flash')
 
     const result = await generateText({
       model,
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<MultimodalRes
           content: contentParts,
         },
       ],
-      maxTokens: 4096,
+      maxOutputTokens: 4096,
     })
 
     return NextResponse.json({ content: result.text })

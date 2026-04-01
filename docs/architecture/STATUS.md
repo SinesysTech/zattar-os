@@ -5,7 +5,7 @@
 
 ## 1. Resumo Executivo
 
-O projeto segue a arquitetura Feature-Sliced Design (FSD) + princípios DDD, com **37 módulos em `src/features`**. A base está funcional e evolutiva, com diferentes níveis de maturidade estrutural entre os módulos.
+O projeto segue a arquitetura Feature-Sliced Design (FSD) + princípios DDD, com **42 módulos em `src/features`**. A base está funcional e evolutiva, com diferentes níveis de maturidade estrutural entre os módulos.
 
 Este status foi atualizado com base na árvore atual do repositório (não em projeções históricas).
 
@@ -13,22 +13,22 @@ Este status foi atualizado com base na árvore atual do repositório (não em pr
 
 Critério de completude: presença simultânea de `domain.ts`, `service.ts`, `repository.ts`, `index.ts`, `actions/` e `components/`.
 
-| Status           | Total | Módulos                                                                                                                                                                                                                                         |
-| ---------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ✅ **Completos** | 18    | `acervo`, `advogados`, `ai`, `captura`, `config-atribuicao`, `contratos`, `dify`, `enderecos`, `integracoes`, `notificacoes`, `obrigacoes`, `pecas-juridicas`, `pericias`, `processos`, `rh`, `system-prompts`, `tipos-expedientes`, `usuarios` |
-| ⚠️ **Parciais**  | 13    | `assistentes-tipos`, `audiencias`, `calendar`, `cargos`, `chat`, `chatwoot`, `documentos`, `expedientes`, `financeiro`, `partes`, `perfil`, `profiles`, `tags`                                                                                  |
-| 🧩 **Iniciais**  | 6     | `admin`, `audit`, `busca`, `repasses`, `tasks`, `twofauth`                                                                                                                                                                                      |
+| Status           | Total | Módulos                                                                                                                                                                                                                                                       |
+| ---------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ✅ **Completos** | 23    | `acervo`, `advogados`, `ai`, `assistentes-tipos`, `audiencias`, `captura`, `chatwoot`, `config-atribuicao`, `contratos`, `dify`, `enderecos`, `entrevistas-trabalhistas`, `expedientes`, `integracoes`, `notificacoes`, `obrigacoes`, `pecas-juridicas`, `pericias`, `processos`, `rh`, `system-prompts`, `tipos-expedientes`, `usuarios` |
+| ⚠️ **Parciais**  | 8     | `calendar`, `cargos`, `chat`, `documentos`, `financeiro`, `partes`, `perfil`, `tags`                                                                                                                                                                        |
+| 🧩 **Iniciais**  | 11    | `admin`, `agenda-eventos`, `audit`, `busca`, `calculadoras`, `portal`, `profiles`, `repasses`, `tasks`, `twofauth`, `website`                                                                                                                               |
 
-## 3. Cobertura de Artefatos (37 módulos)
+## 3. Cobertura de Artefatos (42 módulos)
 
-- `index.ts`: 36 (97%)
-- `components/`: 31 (84%)
-- `domain.ts`: 29 (78%)
-- `actions/`: 28 (76%)
-- `service.ts`: 27 (73%)
-- `repository.ts`: 24 (65%)
-- `RULES.md`: 9 (24%)
-- `README.md` no módulo: 6 (16%)
+- `index.ts`: 41 (98%)
+- `components/`: 36 (86%)
+- `domain.ts`: 34 (81%)
+- `actions/`: 33 (79%)
+- `service.ts`: 32 (76%)
+- `repository.ts`: 29 (69%)
+- `RULES.md`: 9 (21%)
+- `README.md` no módulo: 6 (14%)
 
 ## 4. Estado da Documentação por Módulo
 

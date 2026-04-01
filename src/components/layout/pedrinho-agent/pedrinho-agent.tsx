@@ -10,9 +10,10 @@ interface PedrinhoAgentProps {
   userId: string
   mode: PedrinhoMode
   onModeChange: (mode: PedrinhoMode) => void
+  onWidthChange?: (width: number) => void
 }
 
-export function PedrinhoAgent({ userId, mode, onModeChange }: PedrinhoAgentProps) {
+export function PedrinhoAgent({ userId, mode, onModeChange, onWidthChange }: PedrinhoAgentProps) {
   // Keyboard shortcuts: Cmd+J = Command Bar, Cmd+Shift+J = Briefing Panel
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -32,8 +33,6 @@ export function PedrinhoAgent({ userId, mode, onModeChange }: PedrinhoAgentProps
   const handleCloseToOrb = useCallback(() => onModeChange('orb'), [onModeChange])
   const handleOpenBriefing = useCallback(() => onModeChange('briefing'), [onModeChange])
 
-  // O toggle do Pedrinho agora vive na DashboardHeader (PedrinhoHeaderToggle).
-  // Aqui renderizamos apenas CommandBar e BriefingPanel.
   return (
     <>
       {/* Command Bar */}
@@ -49,6 +48,7 @@ export function PedrinhoAgent({ userId, mode, onModeChange }: PedrinhoAgentProps
         <BriefingPanel
           onClose={handleCloseToOrb}
           onMinimize={handleCloseToOrb}
+          onWidthChange={onWidthChange}
           threadId={`user-${userId}`}
         />
       )}

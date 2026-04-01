@@ -88,7 +88,6 @@ export { fetchContratoCompleto } from './queries';
 // =============================================================================
 export type {
   ActionResult,
-  ContratosStatsData,
 } from './actions';
 export {
   actionCriarContrato,

@@ -67,6 +67,7 @@ public/swe-worker*
 scripts/results/build-performance/*.json
 scripts/results/build-performance/history/
 scripts/results/bundle-analysis/*.html
+scripts/results/tst-acervo-geral/
 !scripts/results/build-performance/.gitkeep
 !scripts/results/build-performance/history/.gitkeep
 !scripts/results/bundle-analysis/.gitkeep

@@ -25,13 +25,13 @@ import {
   ListarArquivosParams,
   ItemDocumento,
 } from "./domain";
-import * as documentosRepo from "./repositories/documentos-repository";
-import * as pastasRepo from "./repositories/pastas-repository";
-import * as templatesRepo from "./repositories/templates-repository";
-import * as compartilhamentoRepo from "./repositories/compartilhamento-repository";
-import * as versoesRepo from "./repositories/versoes-repository";
-import * as uploadsRepo from "./repositories/uploads-repository";
-import * as arquivosRepo from "./repositories/arquivos-repository";
+import * as documentosRepo from "./repository";
+import * as pastasRepo from "./repository";
+import * as templatesRepo from "./repository";
+import * as compartilhamentoRepo from "./repository";
+import * as versoesRepo from "./repository";
+import * as uploadsRepo from "./repository";
+import * as arquivosRepo from "./repository";
 import { usuarioRepository } from "../usuarios/repository";
 import * as domain from "./domain";
 import {

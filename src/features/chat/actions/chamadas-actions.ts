@@ -107,7 +107,7 @@ export async function actionResponderChamada(
     }
 
     // Se aceitou, preparar dados para entrar
-    const { createCallsRepository } = await import('../repositories/calls-repository');
+    const { createCallsRepository } = await import('../repository');
     const repo = await createCallsRepository();
     const chamadaResult = await repo.findChamadaById(chamadaId);
     
@@ -404,7 +404,7 @@ export async function actionIniciarGravacao(
     }
 
     // Verificar se o usuário é o iniciador da chamada
-    const { createCallsRepository } = await import('../repositories/calls-repository');
+    const { createCallsRepository } = await import('../repository');
     const repo = await createCallsRepository();
     const chamadaResult = await repo.findChamadaByMeetingId(meetingId);
     

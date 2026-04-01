@@ -430,7 +430,7 @@ export async function buscarProcessosPorClienteCPF(
   client?: DbClient
 ): Promise<Result<Processo[]>> {
   // Import dynamically to avoid circular dependency
-  const { findClienteByCPF } = await import("@/features/partes/repositories");
+  const { findClienteByCPF } = await import("@/features/partes");
   const { normalizarDocumento } = await import("@/features/partes/domain");
 
   if (!cpf || !cpf.trim()) {
@@ -482,7 +482,7 @@ export async function buscarProcessosPorClienteCNPJ(
   client?: DbClient
 ): Promise<Result<Processo[]>> {
   // Import dynamically to avoid circular dependency
-  const { findClienteByCNPJ } = await import("@/features/partes/repositories");
+  const { findClienteByCNPJ } = await import("@/features/partes");
   const { normalizarDocumento } = await import("@/features/partes/domain");
 
   if (!cnpj || !cnpj.trim()) {

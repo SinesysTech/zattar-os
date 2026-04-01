@@ -69,6 +69,14 @@ interface NomeLookup {
   nome: string;
 }
 
+const EMPTY_CONTRATOS_STATS: ContratosStatsData = {
+  total: 0,
+  porStatus: {},
+  novosMes: 0,
+  trendMensal: [],
+  taxaConversao: 0,
+};
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function calcDiasNoEstagio(contrato: Contrato): number {
@@ -193,12 +201,7 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
 
   const [contratos, setContratos] = useState<ContratoCardData[]>([]);
   const [stats, setStats] = useState<ContratosStatsData>(
-    initialStats ?? {
-      total: 0,
-      novosMes: 0,
-      taxaConversao: 0,
-      trendMensal: [],
-    },
+    initialStats ?? EMPTY_CONTRATOS_STATS,
   );
   const [segmentoTabs, setSegmentoTabs] = useState<TabPillOption[]>([
     { id: 'todos', label: 'Todos', count: 0 },
@@ -301,6 +304,9 @@ export function ContratosClient({ initialStats }: ContratosClientProps) {
 
       setStats({
         total: totalGeral,
+        porStatus: Object.fromEntries(
+          Object.entries(contagemPorStatus ?? {}).map(([status, count]) => [status, { count }]),
+        ),
         novosMes,
         taxaConversao,
         trendMensal: [], // v1: sem serie historica disponivel

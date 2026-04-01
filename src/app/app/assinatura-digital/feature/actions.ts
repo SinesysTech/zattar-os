@@ -21,7 +21,7 @@ import {
   findParteContrariaByCNPJ,
   findAllPartesContrarias,
   searchPartesContrariaComEndereco,
-} from '@/features/partes/repositories';
+} from '@/features/partes/repository';
 import { normalizarDocumento } from '@/features/partes/domain';
 import type { Cliente, ParteContraria, ParteContrariaComEndereco } from '@/features/partes/types';
 

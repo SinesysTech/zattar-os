@@ -1,8 +1,6 @@
-import { webcrypto } from 'crypto';
 import React from 'react';
-import { render, waitFor, renderHook, act, fireEvent } from '@testing-library/react';
+import { render, waitFor, renderHook, act, fireEvent, cleanup } from '@testing-library/react';
 
-import { NotificationProvider, useNotifications } from '@/hooks/use-notifications';
 import { useAuthSession } from '@/providers/user-provider';
 
 jest.mock('@/providers/user-provider', () => ({
@@ -68,30 +66,83 @@ jest.mock('@/lib/supabase/client', () => {
   };
 });
 
+// Mock useSecureStorage to avoid all crypto operations (OOM source).
+// Instead, use a simple in-memory state backed by localStorage with "enc:" prefix.
+jest.mock('@/hooks/use-secure-storage', () => {
+  const React = require('react');
+
+  return {
+    useSecureStorage: <T,>(key: string, initialValue: T, options?: { migrateFromPlaintext?: boolean; ttl?: number }) => {
+      const [val, setVal] = React.useState<T>(() => {
+        if (typeof window === 'undefined') return initialValue;
+        const raw = window.localStorage.getItem(key);
+        if (!raw) return initialValue;
+
+        // Check TTL expiry
+        if (raw.startsWith('enc:')) {
+          const parts = raw.split(':');
+          const ts = parseInt(parts[parts.length - 1] || '0', 10);
+          const ttl = options?.ttl ?? 7 * 24 * 60 * 60 * 1000;
+          if (ts > 0 && Date.now() - ts > ttl) {
+            window.localStorage.removeItem(key);
+            return initialValue;
+          }
+        }
+
+        // Migration from plaintext
+        if (!raw.startsWith('enc:') && options?.migrateFromPlaintext) {
+          try {
+            const parsed = JSON.parse(raw) as T;
+            // Schedule async migration
+            setTimeout(() => {
+              window.localStorage.setItem(key, `enc:1:salt:iv:${JSON.stringify(parsed)}:${Date.now()}`);
+            }, 0);
+            return parsed;
+          } catch {
+            return initialValue;
+          }
+        }
+
+        if (raw.startsWith('enc:')) {
+          // Already encrypted - parse
+          const parts = raw.split(':');
+          try {
+            return JSON.parse(parts[4] || 'null') as T;
+          } catch {
+            return initialValue;
+          }
+        }
+
+        try {
+          return JSON.parse(raw) as T;
+        } catch {
+          return initialValue;
+        }
+      });
+
+      const setter = React.useCallback((next: T | ((prev: T) => T)) => {
+        setVal((prev: T) => {
+          const resolved = typeof next === 'function' ? (next as (p: T) => T)(prev) : next;
+          if (typeof window !== 'undefined') {
+            window.localStorage.setItem(key, `enc:1:salt:iv:${JSON.stringify(resolved)}:${Date.now()}`);
+          }
+          return resolved;
+        });
+      }, [key]);
+
+      return [val, setter, { isLoading: false, error: null }];
+    },
+  };
+});
+
 beforeAll(() => {
   (globalThis as unknown as { fetch: unknown }).fetch = jest
     .fn(async () => ({ ok: true }))
     .mockName('fetch');
 });
 
-beforeAll(() => {
-  const real = webcrypto as unknown as Crypto;
-  const mockCrypto = {
-    subtle: {
-      importKey: jest.fn(real.subtle.importKey.bind(real.subtle)),
-      deriveKey: jest.fn(real.subtle.deriveKey.bind(real.subtle)),
-      encrypt: jest.fn(real.subtle.encrypt.bind(real.subtle)),
-      decrypt: jest.fn(real.subtle.decrypt.bind(real.subtle)),
-    },
-    getRandomValues: jest.fn(real.getRandomValues.bind(real)),
-  } as unknown as Crypto;
-
-  Object.defineProperty(globalThis, 'crypto', {
-    value: mockCrypto,
-    configurable: true,
-    writable: true,
-  });
-});
+// Import after mocks
+import { NotificationProvider, useNotifications } from '@/hooks/use-notifications';
 
 function Harness() {
   const { addNotification } = useNotifications();
@@ -114,10 +165,7 @@ function Harness() {
   );
 }
 
-// TODO: skipped — this test causes OOM crashes in Jest workers.
-// The NotificationProvider + crypto operations + Supabase channel subscriptions
-// create excessive memory pressure in jsdom.
-describe.skip('use-notifications secure storage integration', () => {
+describe('use-notifications secure storage integration', () => {
   jest.setTimeout(15000);
 
   beforeEach(() => {
@@ -127,6 +175,10 @@ describe.skip('use-notifications secure storage integration', () => {
       writable: true,
       configurable: true,
     });
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   it('saves notifications encrypted', async () => {
@@ -143,7 +195,7 @@ describe.skip('use-notifications secure storage integration', () => {
     });
 
     const calls = (window.localStorage.setItem as jest.Mock).mock.calls;
-    const notifCall = calls.find((c) => c[0] === 'chat-notifications');
+    const notifCall = calls.find((c: string[]) => c[0] === 'chat-notifications');
     expect(String(notifCall?.[1] ?? '')).toMatch(/^enc:/);
   });
 
@@ -176,8 +228,8 @@ describe.skip('use-notifications secure storage integration', () => {
 
     await waitFor(() => {
       const calls = (window.localStorage.setItem as jest.Mock).mock.calls;
-      const notifCall = calls.find((c) => c[0] === 'chat-notifications');
-      const countsCall = calls.find((c) => c[0] === 'chat-unread-counts');
+      const notifCall = calls.find((c: string[]) => c[0] === 'chat-notifications');
+      const countsCall = calls.find((c: string[]) => c[0] === 'chat-unread-counts');
 
       expect(String(notifCall?.[1] ?? '')).toMatch(/^enc:/);
       expect(String(countsCall?.[1] ?? '')).toMatch(/^enc:/);

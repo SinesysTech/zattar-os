@@ -24,3 +24,6 @@ export {
 	actionAtualizarAgendaEvento,
 	actionDeletarAgendaEvento,
 } from "./actions/agenda-eventos-actions";
+
+// Components (placeholder - add as needed)
+export {} from "./components";

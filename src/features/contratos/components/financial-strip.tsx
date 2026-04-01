@@ -22,14 +22,9 @@ import {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-export interface ContratosStatsData {
-  total: number;
-  novosMes: number;
-  taxaConversao: number;
-  trendMensal: number[];
-  emCarteira?: number;
-  ticketMedio?: number;
-}
+// ContratosStatsData vive em domain.ts (arquivo neutro, sem diretiva client/server)
+import type { ContratosStatsData } from '../domain';
+export type { ContratosStatsData };
 
 export interface FinancialStripProps {
   stats: ContratosStatsData;

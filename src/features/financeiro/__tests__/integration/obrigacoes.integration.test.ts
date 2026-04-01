@@ -1,5 +1,5 @@
 /**
- * Testes Unitários - Serviço de Integração de Obrigações
+ * Testes de Integração - Serviço de Integração de Obrigações
  *
  * Testa a lógica de sincronização entre acordos/parcelas e o sistema financeiro.
  * Verifica criação de lançamentos, verificação de consistência e reversão.
@@ -11,52 +11,35 @@ import { describe, it, expect, beforeEach, jest, afterEach } from '@jest/globals
 // MOCKS
 // =============================================================================
 
-// Mock do Supabase client
-const mockSupabaseSelect = jest.fn();
-const mockSupabaseInsert = jest.fn();
-const mockSupabaseUpdate = jest.fn();
-const mockSupabaseEq = jest.fn();
-const mockSupabaseIs = jest.fn();
-const mockSupabaseSingle = jest.fn();
-const mockSupabaseMaybeSingle = jest.fn();
-const mockSupabaseLimit = jest.fn();
-const mockSupabaseOrder = jest.fn();
-const mockSupabaseNot = jest.fn();
-
-const mockSupabaseFrom = jest.fn(() => ({
-  select: mockSupabaseSelect,
-  insert: mockSupabaseInsert,
-  update: mockSupabaseUpdate,
-}));
+const mockSupabaseClient = {
+  from: jest.fn(),
+};
 
 jest.mock('@/lib/supabase/service-client', () => ({
-  createServiceClient: () => ({
-    from: mockSupabaseFrom,
-  }),
+  createServiceClient: () => mockSupabaseClient,
+}));
+
+jest.mock('@/lib/date-utils', () => ({
+  todayDateString: () => '2025-02-01',
 }));
 
 // Mock do repository
 const mockBuscarParcelaPorId = jest.fn();
 const mockBuscarParcelasPorAcordo = jest.fn();
 const mockDetectarInconsistencias = jest.fn();
-const mockBuscarLancamentoPorParcela = jest.fn();
-const mockDetectarInconsistenciasAcordo = jest.fn();
 
 jest.mock(
   '../../repository/obrigacoes',
   () => ({
     ObrigacoesRepository: {
-      buscarParcelaPorId: mockBuscarParcelaPorId,
-      buscarParcelasPorAcordo: mockBuscarParcelasPorAcordo,
-      detectarInconsistencias: mockDetectarInconsistencias,
-      buscarLancamentoPorParcela: mockBuscarLancamentoPorParcela,
-      detectarInconsistenciasAcordo: mockDetectarInconsistenciasAcordo,
+      buscarParcelaPorId: (...args: unknown[]) => mockBuscarParcelaPorId(...args),
+      buscarParcelasPorAcordo: (...args: unknown[]) => mockBuscarParcelasPorAcordo(...args),
+      detectarInconsistencias: (...args: unknown[]) => mockDetectarInconsistencias(...args),
     },
   })
 );
 
-
-// Importar após mocks - import from services directly
+// Importar após mocks
 import {
   sincronizarParcelaParaFinanceiro,
   sincronizarAcordoCompleto,
@@ -68,94 +51,47 @@ import {
 // FIXTURES
 // =============================================================================
 
-interface MockParcela {
-  id: number;
-  acordo_condenacao_id: number;
-  numero_parcela: number;
-  valor_bruto_credito_principal: number;
-  honorarios_sucumbenciais: number | null;
-  honorarios_contratuais: number | null;
-  data_vencimento: string;
-  data_efetivacao: string | null;
-  status: string;
-  forma_pagamento: string | null;
-  created_by: string | null;
-  acordos_condenacoes?: {
-    id: number;
-    tipo: 'acordo' | 'condenacao';
-    direcao: 'recebimento' | 'pagamento';
-    valor_total: number;
-    numero_parcelas: number;
-    status: string;
-    processo_id: number;
-  };
-}
+import type { ParcelaComLancamento } from '@/features/obrigacoes';
 
-interface MockLancamento {
-  id: number;
-  tipo: 'receita' | 'despesa';
-  descricao: string;
-  valor: number;
-  status: string;
-  data_lancamento: string;
-}
-
-interface MockAcordo {
-  id: number;
-  tipo: 'acordo' | 'condenacao';
-  direcao: 'recebimento' | 'pagamento';
-  valor_total: number;
-  numero_parcelas: number;
-  status: string;
-  created_by: string | null;
-}
-
-function criarParcelaMock(overrides: Partial<MockParcela> = {}): MockParcela {
+function criarParcelaMock(overrides: Partial<ParcelaComLancamento> = {}): ParcelaComLancamento {
   return {
     id: 1,
-    acordo_condenacao_id: 100,
-    numero_parcela: 1,
-    valor_bruto_credito_principal: 5000,
-    honorarios_sucumbenciais: 500,
-    honorarios_contratuais: 300,
-    data_vencimento: '2025-02-01',
-    data_efetivacao: '2025-02-01',
+    acordoCondenacaoId: 100,
+    numeroParcela: 1,
+    valorBrutoCreditoPrincipal: 5000,
+    honorariosSucumbenciais: 500,
+    honorariosContratuais: 300,
+    valorRepasseCliente: 3500,
+    dataVencimento: '2025-02-01',
+    dataEfetivacao: '2025-02-01',
     status: 'recebida',
-    forma_pagamento: 'transferencia_direta',
-    created_by: 'user-123',
-    acordos_condenacoes: {
-      id: 100,
-      tipo: 'acordo',
-      direcao: 'recebimento',
-      valor_total: 10000,
-      numero_parcelas: 2,
-      status: 'pago_parcial',
-      processo_id: 999,
-    },
+    formaPagamento: 'transferencia_direta',
+    statusRepasse: 'nao_aplicavel',
+    editadoManualmente: false,
+    declaracaoPrestacaoContasUrl: null,
+    dataDeclaracaoAnexada: null,
+    comprovanteRepasseUrl: null,
+    dataRepasse: null,
+    usuarioRepasseId: null,
+    arquivoQuitacaoReclamante: null,
+    dataQuitacaoAnexada: null,
+    createdAt: '2025-01-01T00:00:00Z',
+    updatedAt: '2025-01-01T00:00:00Z',
+    dadosPagamento: null,
+    lancamentoId: null,
     ...overrides,
   };
 }
 
-function criarLancamentoMock(overrides: Partial<MockLancamento> = {}): MockLancamento {
-  return {
-    id: 500,
-    tipo: 'receita',
-    descricao: 'Parcela 1/2 - Acordo (Recebimento)',
-    valor: 5500,
-    status: 'confirmado',
-    data_lancamento: '2025-02-01',
-    ...overrides,
-  };
-}
-
-function criarAcordoMock(overrides: Partial<MockAcordo> = {}): MockAcordo {
+function criarAcordoDbMock(overrides: Record<string, unknown> = {}) {
   return {
     id: 100,
     tipo: 'acordo',
     direcao: 'recebimento',
     valor_total: 10000,
     numero_parcelas: 2,
-    status: 'pendente',
+    status: 'pago_parcial',
+    processo_id: 999,
     created_by: 'user-123',
     ...overrides,
   };
@@ -165,76 +101,55 @@ function criarAcordoMock(overrides: Partial<MockAcordo> = {}): MockAcordo {
 // HELPERS
 // =============================================================================
 
-function resetMocks() {
-  mockSupabaseSelect.mockReset();
-  mockSupabaseInsert.mockReset();
-  mockSupabaseUpdate.mockReset();
-  mockSupabaseEq.mockReset();
-  mockSupabaseIs.mockReset();
-  mockSupabaseNot.mockReset();
-  mockSupabaseSingle.mockReset();
-  mockSupabaseMaybeSingle.mockReset();
-  mockSupabaseFrom.mockClear();
-  mockSupabaseLimit.mockReset();
-  mockSupabaseOrder.mockReset();
+/**
+ * Creates a chainable Supabase query mock.
+ * Terminal methods (single, maybeSingle) return promises.
+ * Chain methods return the builder itself.
+ */
+function createChain(result: { data: unknown; error: unknown; count?: number | null }) {
+  const chain: Record<string, unknown> = {};
 
+  // Terminal methods - return a promise
+  chain.single = jest.fn().mockResolvedValue(result);
+  chain.maybeSingle = jest.fn().mockResolvedValue(result);
+
+  // Chain methods - return the chain
+  chain.select = jest.fn().mockReturnValue(chain);
+  chain.insert = jest.fn().mockReturnValue(chain);
+  chain.update = jest.fn().mockReturnValue(chain);
+  chain.delete = jest.fn().mockReturnValue(chain);
+  chain.eq = jest.fn().mockReturnValue(chain);
+  chain.is = jest.fn().mockReturnValue(chain);
+  chain.not = jest.fn().mockReturnValue(chain);
+  chain.in = jest.fn().mockReturnValue(chain);
+  chain.gt = jest.fn().mockReturnValue(chain);
+  chain.gte = jest.fn().mockReturnValue(chain);
+  chain.lt = jest.fn().mockReturnValue(chain);
+  chain.lte = jest.fn().mockReturnValue(chain);
+  chain.order = jest.fn().mockReturnValue(chain);
+  chain.limit = jest.fn().mockReturnValue(chain);
+
+  // Make the chain itself awaitable (for queries without terminal .single()/.maybeSingle())
+  // e.g., `await supabase.from('x').select('*').eq('y', z)` -> returns { data, error }
+  chain.then = (resolve: (v: unknown) => unknown, reject?: (e: unknown) => unknown) => {
+    return Promise.resolve(result).then(resolve, reject);
+  };
+
+  return chain;
+}
+
+function resetMocks() {
+  mockSupabaseClient.from.mockReset();
   mockBuscarParcelaPorId.mockReset();
   mockBuscarParcelasPorAcordo.mockReset();
   mockDetectarInconsistencias.mockReset();
-  mockBuscarLancamentoPorParcela.mockReset();
-  mockDetectarInconsistenciasAcordo.mockReset();
-
-  // Setup chain mocks default
-  mockSupabaseSelect.mockReturnValue({
-    eq: mockSupabaseEq,
-    is: mockSupabaseIs,
-    not: mockSupabaseNot,
-    single: mockSupabaseSingle,
-    maybeSingle: mockSupabaseMaybeSingle,
-    order: mockSupabaseOrder,
-    limit: mockSupabaseLimit,
-  });
-  mockSupabaseEq.mockReturnValue({
-    eq: mockSupabaseEq,
-    is: mockSupabaseIs,
-    not: mockSupabaseNot,
-    single: mockSupabaseSingle,
-    maybeSingle: mockSupabaseMaybeSingle,
-  });
-  mockSupabaseIs.mockReturnValue({
-    eq: mockSupabaseEq,
-    is: mockSupabaseIs,
-    single: mockSupabaseSingle,
-    maybeSingle: mockSupabaseMaybeSingle,
-  });
-  mockSupabaseNot.mockReturnValue({
-    eq: mockSupabaseEq,
-    single: mockSupabaseSingle,
-    maybeSingle: mockSupabaseMaybeSingle,
-  });
-  mockSupabaseOrder.mockReturnValue({
-    limit: mockSupabaseLimit,
-  });
-  mockSupabaseLimit.mockReturnValue({
-    single: mockSupabaseSingle,
-    maybeSingle: mockSupabaseMaybeSingle,
-  });
-  mockSupabaseInsert.mockReturnValue({
-    select: mockSupabaseSelect,
-  });
-  mockSupabaseUpdate.mockReturnValue({
-    eq: mockSupabaseEq,
-    select: mockSupabaseSelect,
-  });
 }
 
 // =============================================================================
 // TESTES: sincronizarParcelaParaFinanceiro
 // =============================================================================
 
-// TODO: These integration tests need to be updated to match the current implementation.
-// The tests were written for an older API version and have significant mismatches.
-describe.skip('sincronizarParcelaParaFinanceiro', () => {
+describe('sincronizarParcelaParaFinanceiro', () => {
   beforeEach(() => {
     resetMocks();
   });
@@ -256,9 +171,13 @@ describe.skip('sincronizarParcelaParaFinanceiro', () => {
   });
 
   describe('quando acordo não existe', () => {
-    it('deve retornar erro quando parcela não tem acordo vinculado', async () => {
-      const parcelaSemAcordo = criarParcelaMock({ acordos_condenacoes: undefined });
-      mockBuscarParcelaPorId.mockResolvedValue(parcelaSemAcordo);
+    it('deve retornar erro quando acordo não é encontrado no banco', async () => {
+      const parcela = criarParcelaMock();
+      mockBuscarParcelaPorId.mockResolvedValue(parcela);
+
+      mockSupabaseClient.from.mockImplementation(() => {
+        return createChain({ data: null, error: { code: 'PGRST116', message: 'Not found' } });
+      });
 
       const resultado = await sincronizarParcelaParaFinanceiro(1);
 
@@ -268,13 +187,18 @@ describe.skip('sincronizarParcelaParaFinanceiro', () => {
     });
   });
 
-  describe('quando parcela está pendente', () => {
-    it('deve ignorar parcela pendente sem forçar', async () => {
+  describe('quando parcela não está efetivada', () => {
+    it('deve ignorar parcela não efetivada sem forçar', async () => {
       const parcelaPendente = criarParcelaMock({
         status: 'pendente',
-        data_efetivacao: null,
+        dataEfetivacao: null,
       });
       mockBuscarParcelaPorId.mockResolvedValue(parcelaPendente);
+
+      // Mock acordo query
+      mockSupabaseClient.from.mockImplementation(() => {
+        return createChain({ data: criarAcordoDbMock(), error: null });
+      });
 
       const resultado = await sincronizarParcelaParaFinanceiro(1, false);
 
@@ -287,45 +211,62 @@ describe.skip('sincronizarParcelaParaFinanceiro', () => {
   describe('quando lançamento já existe', () => {
     it('deve ignorar se lançamento existe e não está forçando', async () => {
       const parcela = criarParcelaMock();
-      const lancamento = criarLancamentoMock();
-
       mockBuscarParcelaPorId.mockResolvedValue(parcela);
-      mockBuscarLancamentoPorParcela.mockResolvedValue(lancamento);
+
+      const lancamentoExistente = { id: 500, tipo: 'receita', valor: 5500 };
+
+      // The service calls from() multiple times for different tables.
+      // 1st: acordos_condenacoes -> acordo
+      // 2nd: lancamentos_financeiros -> existing lancamento
+      const calls: string[] = [];
+      mockSupabaseClient.from.mockImplementation((table: string) => {
+        calls.push(table);
+        if (table === 'acordos_condenacoes') {
+          return createChain({ data: criarAcordoDbMock(), error: null });
+        }
+        if (table === 'lancamentos_financeiros') {
+          return createChain({ data: lancamentoExistente, error: null });
+        }
+        return createChain({ data: null, error: null });
+      });
 
       const resultado = await sincronizarParcelaParaFinanceiro(1, false);
 
       expect(resultado.sucesso).toBe(true);
       expect(resultado.acao).toBe('ignorado');
-      expect(resultado.lancamentoId).toBe(lancamento.id);
+      expect(resultado.lancamentoId).toBe(500);
     });
   });
 
   describe('sincronização com sucesso', () => {
-    it('deve criar lançamento para parcela recebida', async () => {
+    it('deve criar lançamento para parcela efetivada', async () => {
       const parcela = criarParcelaMock();
-
       mockBuscarParcelaPorId.mockResolvedValue(parcela);
-      mockBuscarLancamentoPorParcela.mockResolvedValue(null);
 
-      // Mock conta contábil
-      mockSupabaseSingle.mockResolvedValueOnce({
-        data: { id: 10 },
-        error: null,
+      const tableCallCounts: Record<string, number> = {};
+      mockSupabaseClient.from.mockImplementation((table: string) => {
+        tableCallCounts[table] = (tableCallCounts[table] || 0) + 1;
+
+        if (table === 'acordos_condenacoes') {
+          return createChain({ data: criarAcordoDbMock(), error: null });
+        }
+        if (table === 'lancamentos_financeiros') {
+          if (tableCallCounts[table] === 1) {
+            // buscarLancamentoPorParcela -> null (no existing)
+            return createChain({ data: null, error: null });
+          }
+          // insert -> new id
+          return createChain({ data: { id: 500 }, error: null });
+        }
+        if (table === 'plano_contas') {
+          return createChain({ data: { id: 10 }, error: null });
+        }
+        if (table === 'usuarios') {
+          return createChain({ data: { id: 1 }, error: null });
+        }
+        return createChain({ data: null, error: null });
       });
 
-      // Mock usuário
-      mockSupabaseSingle.mockResolvedValueOnce({
-        data: { id: 1 },
-        error: null,
-      });
-
-      // Mock insert
-      mockSupabaseSingle.mockResolvedValueOnce({
-        data: { id: 500 },
-        error: null,
-      });
-
-      
       const resultado = await sincronizarParcelaParaFinanceiro(1);
 
       expect(resultado.sucesso).toBe(true);
@@ -335,107 +276,161 @@ describe.skip('sincronizarParcelaParaFinanceiro', () => {
 
     it('deve calcular valor total corretamente (principal + sucumbenciais)', async () => {
       const parcela = criarParcelaMock({
-        valor_bruto_credito_principal: 10000,
-        honorarios_sucumbenciais: 1500,
+        valorBrutoCreditoPrincipal: 10000,
+        honorariosSucumbenciais: 1500,
       });
-
       mockBuscarParcelaPorId.mockResolvedValue(parcela);
-      mockBuscarLancamentoPorParcela.mockResolvedValue(null);
 
-      // Capturar o insert para verificar valor
-      let insertedValue: number | undefined;
-      mockSupabaseInsert.mockImplementation((data) => {
-        insertedValue = data.valor;
-        return {
-          select: () => ({
-            single: () => Promise.resolve({ data: { id: 500 }, error: null }),
-          }),
-        };
+      let insertedData: Record<string, unknown> | null = null;
+
+      const tableCallCounts: Record<string, number> = {};
+      mockSupabaseClient.from.mockImplementation((table: string) => {
+        tableCallCounts[table] = (tableCallCounts[table] || 0) + 1;
+
+        if (table === 'acordos_condenacoes') {
+          return createChain({ data: criarAcordoDbMock(), error: null });
+        }
+        if (table === 'lancamentos_financeiros') {
+          if (tableCallCounts[table] === 1) {
+            return createChain({ data: null, error: null });
+          }
+          // Capture inserted data
+          const chain = createChain({ data: { id: 500 }, error: null });
+          (chain.insert as jest.Mock).mockImplementation((data: Record<string, unknown>) => {
+            insertedData = data;
+            return chain;
+          });
+          return chain;
+        }
+        if (table === 'plano_contas') {
+          return createChain({ data: { id: 10 }, error: null });
+        }
+        if (table === 'usuarios') {
+          return createChain({ data: { id: 1 }, error: null });
+        }
+        return createChain({ data: null, error: null });
       });
 
-      // Mock conta contábil
-      mockSupabaseSingle.mockResolvedValueOnce({
-        data: { id: 10 },
-        error: null,
-      });
-
-      // Mock usuário
-      mockSupabaseSingle.mockResolvedValueOnce({
-        data: { id: 1 },
-        error: null,
-      });
-
-      
       await sincronizarParcelaParaFinanceiro(1);
 
       // Valor esperado: 10000 + 1500 = 11500
-      expect(insertedValue).toBe(11500);
+      expect(insertedData).not.toBeNull();
+      expect((insertedData as Record<string, unknown>).valor).toBe(11500);
+    });
+  });
+
+  describe('quando conta contábil não encontrada', () => {
+    it('deve retornar erro se conta contábil padrão não existe', async () => {
+      const parcela = criarParcelaMock();
+      mockBuscarParcelaPorId.mockResolvedValue(parcela);
+
+      const tableCallCounts: Record<string, number> = {};
+      mockSupabaseClient.from.mockImplementation((table: string) => {
+        tableCallCounts[table] = (tableCallCounts[table] || 0) + 1;
+
+        if (table === 'acordos_condenacoes') {
+          return createChain({ data: criarAcordoDbMock(), error: null });
+        }
+        if (table === 'lancamentos_financeiros') {
+          return createChain({ data: null, error: null });
+        }
+        if (table === 'plano_contas') {
+          return createChain({ data: null, error: null });
+        }
+        return createChain({ data: null, error: null });
+      });
+
+      const resultado = await sincronizarParcelaParaFinanceiro(1);
+
+      expect(resultado.sucesso).toBe(false);
+      expect(resultado.acao).toBe('erro');
+      expect(resultado.mensagem).toContain('Conta contábil');
     });
   });
 
   describe('mapeamento de tipo de lançamento', () => {
     it('deve criar receita para acordo de recebimento', async () => {
-      const parcela = criarParcelaMock({
-        acordos_condenacoes: {
-          ...criarParcelaMock().acordos_condenacoes!,
-          direcao: 'recebimento',
-        },
-      });
-
+      const parcela = criarParcelaMock();
       mockBuscarParcelaPorId.mockResolvedValue(parcela);
-      mockBuscarLancamentoPorParcela.mockResolvedValue(null);
 
-      // Mock conta contábil para receita
-      mockSupabaseFrom.mockImplementation((tableName) => {
-        if (tableName === 'plano_contas') {
-          return {
-            select: () => ({
-              eq: jest.fn().mockReturnThis(),
-              order: () => ({
-                limit: () => ({
-                  single: () => Promise.resolve({
-                    data: { id: 10 },
-                    error: null,
-                  }),
-                }),
-              }),
-            }),
-          };
+      let insertedData: Record<string, unknown> | null = null;
+
+      const tableCallCounts: Record<string, number> = {};
+      mockSupabaseClient.from.mockImplementation((table: string) => {
+        tableCallCounts[table] = (tableCallCounts[table] || 0) + 1;
+
+        if (table === 'acordos_condenacoes') {
+          return createChain({ data: criarAcordoDbMock({ direcao: 'recebimento' }), error: null });
         }
-        return { select: mockSupabaseSelect };
+        if (table === 'lancamentos_financeiros') {
+          if (tableCallCounts[table] === 1) {
+            return createChain({ data: null, error: null });
+          }
+          const chain = createChain({ data: { id: 500 }, error: null });
+          (chain.insert as jest.Mock).mockImplementation((data: Record<string, unknown>) => {
+            insertedData = data;
+            return chain;
+          });
+          return chain;
+        }
+        if (table === 'plano_contas') {
+          return createChain({ data: { id: 10 }, error: null });
+        }
+        if (table === 'usuarios') {
+          return createChain({ data: { id: 1 }, error: null });
+        }
+        return createChain({ data: null, error: null });
       });
 
-      mockSupabaseSingle.mockResolvedValue({
-        data: { id: 500 },
-        error: null,
-      });
-
-      
       const resultado = await sincronizarParcelaParaFinanceiro(1);
+
       expect(resultado.sucesso).toBe(true);
+      expect(resultado.acao).toBe('criado');
+      expect(insertedData).not.toBeNull();
+      expect((insertedData as Record<string, unknown>).tipo).toBe('receita');
     });
 
     it('deve criar despesa para acordo de pagamento', async () => {
       const parcela = criarParcelaMock({
         status: 'paga',
-        acordos_condenacoes: {
-          ...criarParcelaMock().acordos_condenacoes!,
-          direcao: 'pagamento',
-        },
       });
-
       mockBuscarParcelaPorId.mockResolvedValue(parcela);
-      mockBuscarLancamentoPorParcela.mockResolvedValue(null);
 
-      mockSupabaseSingle.mockResolvedValue({
-        data: { id: 10 },
-        error: null,
+      let insertedData: Record<string, unknown> | null = null;
+
+      const tableCallCounts: Record<string, number> = {};
+      mockSupabaseClient.from.mockImplementation((table: string) => {
+        tableCallCounts[table] = (tableCallCounts[table] || 0) + 1;
+
+        if (table === 'acordos_condenacoes') {
+          return createChain({ data: criarAcordoDbMock({ direcao: 'pagamento' }), error: null });
+        }
+        if (table === 'lancamentos_financeiros') {
+          if (tableCallCounts[table] === 1) {
+            return createChain({ data: null, error: null });
+          }
+          const chain = createChain({ data: { id: 500 }, error: null });
+          (chain.insert as jest.Mock).mockImplementation((data: Record<string, unknown>) => {
+            insertedData = data;
+            return chain;
+          });
+          return chain;
+        }
+        if (table === 'plano_contas') {
+          return createChain({ data: { id: 10 }, error: null });
+        }
+        if (table === 'usuarios') {
+          return createChain({ data: { id: 1 }, error: null });
+        }
+        return createChain({ data: null, error: null });
       });
 
-      
       const resultado = await sincronizarParcelaParaFinanceiro(1);
-      // Verificar que não houve erro (a lógica seria testada em integração)
-      expect(resultado.parcelaId).toBe(1);
+
+      expect(resultado.sucesso).toBe(true);
+      expect(resultado.acao).toBe('criado');
+      expect(insertedData).not.toBeNull();
+      expect((insertedData as Record<string, unknown>).tipo).toBe('despesa');
     });
   });
 });
@@ -444,7 +439,7 @@ describe.skip('sincronizarParcelaParaFinanceiro', () => {
 // TESTES: sincronizarAcordoCompleto
 // =============================================================================
 
-describe.skip('sincronizarAcordoCompleto', () => {
+describe('sincronizarAcordoCompleto', () => {
   beforeEach(() => {
     resetMocks();
   });
@@ -455,9 +450,8 @@ describe.skip('sincronizarAcordoCompleto', () => {
 
   describe('quando acordo não existe', () => {
     it('deve retornar erro', async () => {
-      mockSupabaseSingle.mockResolvedValue({
-        data: null,
-        error: { code: 'PGRST116', message: 'Not found' },
+      mockSupabaseClient.from.mockImplementation(() => {
+        return createChain({ data: null, error: { code: 'PGRST116', message: 'Not found' } });
       });
 
       const resultado = await sincronizarAcordoCompleto(999);
@@ -469,9 +463,11 @@ describe.skip('sincronizarAcordoCompleto', () => {
 
   describe('quando acordo está cancelado', () => {
     it('deve retornar erro e não permitir sincronização', async () => {
-      mockSupabaseSingle.mockResolvedValue({
-        data: criarAcordoMock({ status: 'cancelado' }),
-        error: null,
+      mockSupabaseClient.from.mockImplementation(() => {
+        return createChain({
+          data: criarAcordoDbMock({ status: 'cancelado' }),
+          error: null,
+        });
       });
 
       const resultado = await sincronizarAcordoCompleto(100);
@@ -482,54 +478,64 @@ describe.skip('sincronizarAcordoCompleto', () => {
   });
 
   describe('quando acordo não tem parcelas', () => {
-    it('deve retornar warning', async () => {
-      mockSupabaseSingle.mockResolvedValue({
-        data: criarAcordoMock(),
-        error: null,
+    it('deve retornar sucesso com mensagem sobre parcelas', async () => {
+      mockSupabaseClient.from.mockImplementation(() => {
+        return createChain({
+          data: criarAcordoDbMock(),
+          error: null,
+        });
       });
       mockBuscarParcelasPorAcordo.mockResolvedValue([]);
 
       const resultado = await sincronizarAcordoCompleto(100);
 
       expect(resultado.sucesso).toBe(true);
-      // Verificar se há warning ou mensagem sobre falta de parcelas
-      const temWarningSobreParcelas = resultado.warnings?.some(w => 
-        w.includes('parcelas') || w.includes('parcela')
-      ) || resultado.mensagem?.includes('parcelas') || resultado.mensagem?.includes('parcela');
-      expect(temWarningSobreParcelas).toBe(true);
+      expect(resultado.mensagem).toContain('parcelas');
+      expect(resultado.totalProcessado).toBe(0);
     });
   });
 
   describe('sincronização com sucesso', () => {
     it('deve processar todas as parcelas', async () => {
       const parcelas = [
-        criarParcelaMock({ id: 1, numero_parcela: 1 }),
-        criarParcelaMock({ id: 2, numero_parcela: 2 }),
+        criarParcelaMock({ id: 1, numeroParcela: 1 }),
+        criarParcelaMock({ id: 2, numeroParcela: 2 }),
       ];
 
-      mockSupabaseSingle.mockResolvedValue({
-        data: criarAcordoMock(),
-        error: null,
-      });
       mockBuscarParcelasPorAcordo.mockResolvedValue(parcelas);
-      mockBuscarParcelaPorId.mockImplementation((id) =>
-        Promise.resolve(parcelas.find((p) => p.id === id))
+      mockBuscarParcelaPorId.mockImplementation((id: number) =>
+        Promise.resolve(parcelas.find((p) => p.id === id) || null)
       );
-      mockBuscarLancamentoPorParcela.mockResolvedValue(null);
 
-      // Mock para criação de lançamentos
-      mockSupabaseSingle
-        .mockResolvedValueOnce({ data: { id: 10 }, error: null }) // conta contábil 1
-        .mockResolvedValueOnce({ data: { id: 1 }, error: null }) // usuário 1
-        .mockResolvedValueOnce({ data: { id: 501 }, error: null }) // insert 1
-        .mockResolvedValueOnce({ data: { id: 10 }, error: null }) // conta contábil 2
-        .mockResolvedValueOnce({ data: { id: 1 }, error: null }) // usuário 2
-        .mockResolvedValueOnce({ data: { id: 502 }, error: null }); // insert 2
+      // Each sincronizarParcelaParaFinanceiro call accesses supabase.from() multiple times.
+      // Use separate terminal results for maybeSingle (buscar -> null) vs single (insert -> id).
+      let insertIdCounter = 500;
+      mockSupabaseClient.from.mockImplementation((table: string) => {
+        if (table === 'acordos_condenacoes') {
+          return createChain({ data: criarAcordoDbMock(), error: null });
+        }
+        if (table === 'plano_contas') {
+          return createChain({ data: { id: 10 }, error: null });
+        }
+        if (table === 'usuarios') {
+          return createChain({ data: { id: 1 }, error: null });
+        }
+        if (table === 'lancamentos_financeiros') {
+          // Build a chain where maybeSingle returns null (buscar) and single returns new id (insert)
+          const chain = createChain({ data: null, error: null });
+          (chain.maybeSingle as jest.Mock).mockResolvedValue({ data: null, error: null });
+          (chain.single as jest.Mock).mockImplementation(() =>
+            Promise.resolve({ data: { id: ++insertIdCounter }, error: null })
+          );
+          return chain;
+        }
+        return createChain({ data: null, error: null });
+      });
 
-      
       const resultado = await sincronizarAcordoCompleto(100);
 
-      expect(resultado.totalProcessados).toBe(2);
+      expect(resultado.totalProcessado).toBe(2);
+      expect(resultado.totalSucesso).toBe(2);
     });
   });
 });
@@ -538,8 +544,7 @@ describe.skip('sincronizarAcordoCompleto', () => {
 // TESTES: verificarConsistencia
 // =============================================================================
 
-// TODO: These integration tests need to be updated to match the current implementation.
-describe.skip('verificarConsistencia', () => {
+describe('verificarConsistencia', () => {
   beforeEach(() => {
     resetMocks();
   });
@@ -548,68 +553,99 @@ describe.skip('verificarConsistencia', () => {
     jest.clearAllMocks();
   });
 
-  describe('quando acordo não existe', () => {
-    it('deve lançar erro', async () => {
-      // Mock para a query de verificação de acordo
-      mockSupabaseSelect.mockReturnValue({
-        eq: mockSupabaseEq,
-        is: mockSupabaseIs,
-        single: mockSupabaseSingle,
-      });
-      mockSupabaseEq.mockResolvedValue({
-        data: null,
-        error: { code: 'PGRST116', message: 'Not found' },
-      });
-      mockDetectarInconsistenciasAcordo.mockResolvedValue([]);
-
-      await expect(verificarConsistencia(999)).rejects.toThrow();
-    });
-  });
-
   describe('quando não há inconsistências', () => {
-    it('deve retornar consistente=true', async () => {
-      mockSupabaseSingle.mockResolvedValue({
-        data: criarAcordoMock(),
-        error: null,
+    it('deve retornar inconsistente=false', async () => {
+      mockDetectarInconsistencias.mockResolvedValue([]);
+
+      mockSupabaseClient.from.mockImplementation(() => {
+        return createChain({ data: [], error: null });
       });
-      mockDetectarInconsistenciasAcordo.mockResolvedValue([]);
 
-      const resultado = await verificarConsistencia(100);
+      const resultado = await verificarConsistencia();
 
-      expect(resultado.consistente).toBe(true);
-      expect(resultado.totalInconsistencias).toBe(0);
+      expect(resultado.inconsistente).toBe(false);
+      expect(resultado.parcelasSemLancamento).toHaveLength(0);
+      expect(resultado.lancamentosSemParcela).toHaveLength(0);
     });
   });
 
-  describe('quando há inconsistências', () => {
-    it('deve retornar lista de inconsistências', async () => {
-      mockSupabaseSingle.mockResolvedValue({
-        data: criarAcordoMock(),
-        error: null,
+  describe('quando há parcelas sem lançamento', () => {
+    it('deve retornar inconsistente=true com parcelas listadas', async () => {
+      const parcelaSemLancamento = criarParcelaMock({
+        id: 1,
+        numeroParcela: 1,
+        valorBrutoCreditoPrincipal: 5000,
+        honorariosSucumbenciais: 500,
+        status: 'recebida',
       });
-      mockDetectarInconsistenciasAcordo.mockResolvedValue([
-        {
-          tipo: 'parcela_sem_lancamento',
-          descricao: 'Parcela 1 sem lançamento',
-          parcelaId: 1,
-          sugestao: 'Sincronizar parcela',
-        },
-        {
-          tipo: 'valor_divergente',
-          descricao: 'Valores divergem',
-          parcelaId: 2,
-          lancamentoId: 500,
-          valorParcela: 5500,
-          valorLancamento: 5000,
-          sugestao: 'Atualizar lançamento',
-        },
+
+      mockDetectarInconsistencias.mockResolvedValue([parcelaSemLancamento]);
+
+      mockSupabaseClient.from.mockImplementation(() => {
+        return createChain({ data: [], error: null });
+      });
+
+      const resultado = await verificarConsistencia();
+
+      expect(resultado.inconsistente).toBe(true);
+      expect(resultado.parcelasSemLancamento).toHaveLength(1);
+      expect(resultado.parcelasSemLancamento[0].parcelaId).toBe(1);
+      expect(resultado.parcelasSemLancamento[0].valor).toBe(5500); // 5000 + 500
+    });
+  });
+
+  describe('quando há lançamentos órfãos', () => {
+    it('deve retornar inconsistente=true com lançamentos listados', async () => {
+      mockDetectarInconsistencias.mockResolvedValue([]);
+
+      const lancamentoOrfao = {
+        id: 500,
+        descricao: 'Acordo - Parcela 1/2',
+        valor: 5500,
+        parcela_id: null,
+      };
+
+      mockSupabaseClient.from.mockImplementation(() => {
+        return createChain({ data: [lancamentoOrfao], error: null });
+      });
+
+      const resultado = await verificarConsistencia();
+
+      expect(resultado.inconsistente).toBe(true);
+      expect(resultado.lancamentosSemParcela).toHaveLength(1);
+      expect(resultado.lancamentosSemParcela[0].lancamentoId).toBe(500);
+    });
+  });
+
+  describe('quando verificando acordo específico', () => {
+    it('deve incluir estatísticas de parcelas', async () => {
+      mockDetectarInconsistencias.mockResolvedValue([]);
+      mockBuscarParcelasPorAcordo.mockResolvedValue([
+        criarParcelaMock({ id: 1 }),
+        criarParcelaMock({ id: 2 }),
       ]);
 
+      // Two from() calls for lancamentos_financeiros:
+      // 1st: orphan query (return empty)
+      // 2nd: count query (return count)
+      let lancamentoCallCount = 0;
+      mockSupabaseClient.from.mockImplementation((table: string) => {
+        if (table === 'lancamentos_financeiros') {
+          lancamentoCallCount++;
+          if (lancamentoCallCount === 1) {
+            return createChain({ data: [], error: null });
+          }
+          // Count query - the chain's select is called with { count: 'exact', head: true }
+          // The result should have { count: 1 }
+          return createChain({ data: null, error: null, count: 1 } as { data: unknown; error: unknown });
+        }
+        return createChain({ data: null, error: null });
+      });
+
       const resultado = await verificarConsistencia(100);
 
-      expect(resultado.consistente).toBe(false);
-      expect(resultado.totalInconsistencias).toBe(2);
-      expect(resultado.inconsistencias).toHaveLength(2);
+      expect(resultado.inconsistente).toBe(false);
+      expect(resultado.totalParcelas).toBe(2);
     });
   });
 });
@@ -618,8 +654,7 @@ describe.skip('verificarConsistencia', () => {
 // TESTES: reverterSincronizacao
 // =============================================================================
 
-// TODO: These integration tests need to be updated to match the current implementation.
-describe.skip('reverterSincronizacao', () => {
+describe('reverterSincronizacao', () => {
   beforeEach(() => {
     resetMocks();
   });
@@ -628,91 +663,59 @@ describe.skip('reverterSincronizacao', () => {
     jest.clearAllMocks();
   });
 
-  describe('quando parcela não existe', () => {
+  describe('quando lançamento não existe para parcela', () => {
     it('deve retornar erro', async () => {
-      mockBuscarParcelaPorId.mockResolvedValue(null);
-      // Mock para a query de busca de lançamento
-      mockSupabaseSelect.mockReturnValue({
-        eq: mockSupabaseEq,
-        maybeSingle: mockSupabaseMaybeSingle,
-      });
-      mockSupabaseEq.mockReturnValue({
-        eq: mockSupabaseEq,
-        maybeSingle: mockSupabaseMaybeSingle,
-      });
-      mockSupabaseMaybeSingle.mockResolvedValue({
-        data: null,
-        error: null,
+      mockSupabaseClient.from.mockImplementation(() => {
+        return createChain({ data: null, error: null });
       });
 
       const resultado = await reverterSincronizacao(999);
 
       expect(resultado.sucesso).toBe(false);
-      expect(resultado.mensagem).toContain('não encontrada');
+      expect(resultado.mensagem).toContain('não encontrad');
     });
   });
 
-  describe('quando não há lançamento vinculado', () => {
-    it('deve retornar sucesso sem ação', async () => {
-      mockBuscarParcelaPorId.mockResolvedValue(criarParcelaMock());
-      mockBuscarLancamentoPorParcela.mockResolvedValue(null);
+  describe('quando lançamento existe', () => {
+    it('deve deletar o lançamento com sucesso', async () => {
+      const lancamento = { id: 500, tipo: 'receita', valor: 5500 };
 
-      const resultado = await reverterSincronizacao(1);
-
-      expect(resultado.sucesso).toBe(true);
-      expect(resultado.mensagem).toContain('Nenhum lançamento');
-    });
-  });
-
-  describe('quando lançamento já está estornado', () => {
-    it('deve retornar sucesso informando que já está estornado', async () => {
-      mockBuscarParcelaPorId.mockResolvedValue(criarParcelaMock());
-      mockBuscarLancamentoPorParcela.mockResolvedValue(
-        criarLancamentoMock({ status: 'estornado' })
-      );
-
-      const resultado = await reverterSincronizacao(1);
-
-      expect(resultado.sucesso).toBe(true);
-      expect(resultado.mensagem).toContain('já está estornado');
-    });
-  });
-
-  describe('quando lançamento está confirmado', () => {
-    it('deve estornar o lançamento', async () => {
-      const lancamento = criarLancamentoMock({ status: 'confirmado' });
-
-      mockBuscarParcelaPorId.mockResolvedValue(criarParcelaMock());
-      mockBuscarLancamentoPorParcela.mockResolvedValue(lancamento);
-
-      mockSupabaseEq.mockReturnValue({
-        error: null,
+      let callCount = 0;
+      mockSupabaseClient.from.mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          // buscarLancamentoPorParcela -> found
+          return createChain({ data: lancamento, error: null });
+        }
+        // delete call -> success
+        return createChain({ data: null, error: null });
       });
 
-      
-      const resultado = await reverterSincronizacao(1, 'Correção de erro');
-
-      expect(resultado.sucesso).toBe(true);
-      expect(resultado.mensagem).toContain('estornado');
-    });
-  });
-
-  describe('quando lançamento está pendente', () => {
-    it('deve cancelar o lançamento', async () => {
-      const lancamento = criarLancamentoMock({ status: 'pendente' });
-
-      mockBuscarParcelaPorId.mockResolvedValue(criarParcelaMock());
-      mockBuscarLancamentoPorParcela.mockResolvedValue(lancamento);
-
-      mockSupabaseEq.mockReturnValue({
-        error: null,
-      });
-
-      
       const resultado = await reverterSincronizacao(1);
 
       expect(resultado.sucesso).toBe(true);
-      expect(resultado.mensagem).toContain('cancelado');
+      expect(resultado.mensagem).toContain('revertida');
+    });
+  });
+
+  describe('quando delete falha', () => {
+    it('deve retornar erro', async () => {
+      const lancamento = { id: 500, tipo: 'receita', valor: 5500 };
+
+      let callCount = 0;
+      mockSupabaseClient.from.mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          return createChain({ data: lancamento, error: null });
+        }
+        // delete fails
+        return createChain({ data: null, error: { message: 'Delete failed' } });
+      });
+
+      const resultado = await reverterSincronizacao(1);
+
+      expect(resultado.sucesso).toBe(false);
+      expect(resultado.mensagem).toContain('reverter');
     });
   });
 });

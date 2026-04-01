@@ -8,7 +8,6 @@ import { jest } from '@jest/globals';
 import * as fc from 'fast-check';
 import { render, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { ResponsiveEditor, ResponsiveEditorContainer } from '@/components/editor/plate-ui/responsive-editor';
 import { setViewport } from '@/testing/helpers/responsive-test-helpers';
 import * as React from 'react';
 
@@ -17,25 +16,46 @@ jest.mock('@lit-labs/react', () => ({}), { virtual: true });
 jest.mock('@lit/reactive-element', () => ({}), { virtual: true });
 jest.mock('lit', () => ({}), { virtual: true });
 
-// Mock Plate.js modules - usando função factory para evitar problemas de inicialização
+// Track breakpoint mock to change per-test
+let mockBreakpointMd = false;
+let mockBreakpointLg = false;
+
+jest.mock('@/hooks/use-breakpoint', () => ({
+  useBreakpoint: jest.fn((bp: string) => {
+    if (bp === 'md') return mockBreakpointMd;
+    if (bp === 'lg') return mockBreakpointLg;
+    return false;
+  }),
+}));
+
+// Mock Plate.js modules — PlateContent and PlateContainer render real DOM
 jest.mock('platejs', () => ({
-  getPluginType: jest.fn((type: string) => type),
-  KEYS: {
-    ARROW_DOWN: 'ArrowDown',
-    ARROW_UP: 'ArrowUp',
-    ENTER: 'Enter',
-    ESCAPE: 'Escape',
-    TAB: 'Tab',
-  },
+  getPluginType: jest.fn((_e: unknown, type: string) => type),
+  KEYS: { ai: 'ai', aiChat: 'aiChat' },
   PathApi: {
     parent: jest.fn((path: number[]) => path.slice(0, -1)),
-    next: jest.fn((path: number[]) => path.map((p, i) => i === path.length - 1 ? p + 1 : p)),
-    previous: jest.fn((path: number[]) => path.map((p, i) => i === path.length - 1 ? p - 1 : p)),
+    next: jest.fn((path: number[]) => path.map((p: number, i: number) => i === path.length - 1 ? p + 1 : p)),
+    previous: jest.fn((path: number[]) => path.map((p: number, i: number) => i === path.length - 1 ? p - 1 : p)),
   },
 }));
 
+// PlateContent renders a div that mirrors the className it receives; PlateContainer likewise
 jest.mock('platejs/react', () => ({
   usePluginOption: jest.fn(() => ({})),
+  PlateContent: React.forwardRef(function MockPlateContent(
+    { className, ...props }: React.HTMLAttributes<HTMLDivElement>,
+    ref: React.Ref<HTMLDivElement>,
+  ) {
+    return React.createElement('div', {
+      ref,
+      className,
+      'data-slate-editor': 'true',
+      contentEditable: 'true',
+      ...props,
+    });
+  }),
+  PlateContainer: ({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) =>
+    React.createElement('div', { className, ...props }, children),
 }));
 
 jest.mock('@platejs/ai', () => ({}), { virtual: true });
@@ -45,11 +65,18 @@ jest.mock('@platejs/comment', () => ({}), { virtual: true });
 jest.mock('@platejs/selection/react', () => ({}), { virtual: true });
 jest.mock('@platejs/suggestion', () => ({}), { virtual: true });
 
-// TODO: skipped — ResponsiveEditor imports from platejs/react and plate-ui components
-// that cannot be fully mocked in Jest jsdom. The component renders as undefined because
-// transitive ESM dependencies (platejs, @platejs/*) fail to resolve even with mocks.
-// Validate via E2E tests instead.
-describe.skip('Editor Responsive Property Tests', () => {
+// Import AFTER mocks are set up
+import { ResponsiveEditor, ResponsiveEditorContainer } from '@/components/editor/plate-ui/responsive-editor';
+
+/**
+ * Helper: set breakpoint mock values based on width
+ */
+function setBreakpointForWidth(width: number) {
+  mockBreakpointMd = width >= 768;
+  mockBreakpointLg = width >= 1024;
+}
+
+describe('Editor Responsive Property Tests', () => {
     afterEach(() => {
         cleanup();
     });
@@ -71,6 +98,7 @@ describe.skip('Editor Responsive Property Tests', () => {
                 (width) => {
                     // Configura viewport mobile
                     setViewport({ width, height: 800 });
+                    setBreakpointForWidth(width);
 
                     // Renderiza container do editor
                     const { container } = render(
@@ -110,6 +138,7 @@ describe.skip('Editor Responsive Property Tests', () => {
                 fc.integer({ min: 320, max: 767 }),
                 (width) => {
                     setViewport({ width, height: 800 });
+                    setBreakpointForWidth(width);
 
                     // Renderiza o editor
                     const { container } = render(<ResponsiveEditor variant="demo" />);
@@ -144,6 +173,7 @@ describe.skip('Editor Responsive Property Tests', () => {
                 fc.integer({ min: 320, max: 767 }),
                 (width) => {
                     setViewport({ width, height: 800 });
+                    setBreakpointForWidth(width);
 
                     const { container } = render(<ResponsiveEditor variant="demo" />);
 
@@ -172,6 +202,7 @@ describe.skip('Editor Responsive Property Tests', () => {
                 fc.integer({ min: 768, max: 1023 }), // Tablet viewport widths
                 (width) => {
                     setViewport({ width, height: 1024 });
+                    setBreakpointForWidth(width);
 
                     const { container } = render(<ResponsiveEditor variant="demo" />);
 
@@ -206,6 +237,7 @@ describe.skip('Editor Responsive Property Tests', () => {
                 fc.integer({ min: 320, max: 2560 }),
                 (width) => {
                     setViewport({ width, height: 800 });
+                    setBreakpointForWidth(width);
 
                     const { container } = render(<ResponsiveEditor variant="demo" />);
 
@@ -238,6 +270,7 @@ describe.skip('Editor Responsive Property Tests', () => {
                 fc.integer({ min: 320, max: 767 }),
                 (width) => {
                     setViewport({ width, height: 800 });
+                    setBreakpointForWidth(width);
 
                     const { container } = render(
                         <ResponsiveEditorContainer variant="default">
@@ -275,6 +308,7 @@ describe.skip('Editor Responsive Property Tests', () => {
                 }),
                 ({ width, height }) => {
                     setViewport({ width, height });
+                    setBreakpointForWidth(width);
 
                     const { container } = render(<ResponsiveEditor variant="demo" />);
 
@@ -305,6 +339,7 @@ describe.skip('Editor Responsive Property Tests', () => {
                 fc.integer({ min: 320, max: 2560 }),
                 (width) => {
                     setViewport({ width, height: 800 });
+                    setBreakpointForWidth(width);
 
                     const { container } = render(<ResponsiveEditor variant="demo" />);
 
