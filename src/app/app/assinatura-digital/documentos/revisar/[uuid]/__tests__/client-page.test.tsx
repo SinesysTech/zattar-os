@@ -3,7 +3,6 @@ import {
   screen,
   fireEvent,
   waitFor,
-  act,
 } from "@testing-library/react";
 import { RevisarDocumentoClient } from "../client-page";
 
@@ -19,7 +18,7 @@ const mockUsePresignedPdfUrl = jest.fn();
 jest.mock("../../../../feature", () => ({
   actionGetDocumento: (...args: unknown[]) => mockActionGetDocumento(...args),
   usePresignedPdfUrl: (...args: unknown[]) => mockUsePresignedPdfUrl(...args),
-  PdfPreviewDynamic: (props: Record<string, unknown>) => (
+  PdfPreviewDynamic: () => (
     <div data-testid="pdf-preview">PDF Preview Mock</div>
   ),
 }));
@@ -104,10 +103,13 @@ function setupSuccessfulLoad() {
   });
 }
 
+/**
+ * Renderiza o componente e aguarda o carregamento do documento.
+ * Não usa act() manual — React Testing Library 16 + React 19 já
+ * faz act() internamente no render(). O await é feito via waitFor.
+ */
 async function renderAndWaitForLoad(uuid = "test-uuid-123") {
-  await act(async () => {
-    render(<RevisarDocumentoClient uuid={uuid} />);
-  });
+  render(<RevisarDocumentoClient uuid={uuid} />);
 
   await waitFor(() => {
     expect(
@@ -131,53 +133,64 @@ describe("RevisarDocumentoClient", () => {
     });
   });
 
-  // ── 1. Renderização básica ─────────────────────────────────────────
+  // ── 1. Estado de carregamento ──────────────────────────────────────
 
-  describe("Renderização básica", () => {
+  describe("Estado de carregamento", () => {
+    it("deve renderizar loading spinner inicialmente", () => {
+      // Nunca resolve para manter loading
+      mockActionGetDocumento.mockReturnValue(new Promise(() => {}));
+
+      render(<RevisarDocumentoClient uuid="test-uuid-123" />);
+
+      expect(screen.getByTestId("document-flow-shell")).toBeInTheDocument();
+      const spinner = document.querySelector(".animate-spin");
+      expect(spinner).toBeInTheDocument();
+    });
+
+    it("deve renderizar FlowShell durante carregamento", () => {
+      mockActionGetDocumento.mockReturnValue(new Promise(() => {}));
+
+      render(<RevisarDocumentoClient uuid="test-uuid-123" />);
+
+      expect(screen.getByTestId("document-flow-shell")).toBeInTheDocument();
+    });
+  });
+
+  // ── 2. Renderização com documento carregado ────────────────────────
+
+  describe("Renderização com documento carregado", () => {
     beforeEach(() => {
       setupSuccessfulLoad();
     });
 
-    it("deve renderizar o FlowShell", async () => {
+    it("deve exibir o título do documento", async () => {
       await renderAndWaitForLoad();
-      expect(screen.getByTestId("document-flow-shell")).toBeInTheDocument();
-    });
 
-    it("deve mostrar o título do documento", async () => {
-      await renderAndWaitForLoad();
       expect(
         screen.getByText("Contrato de Prestação de Serviços")
       ).toBeInTheDocument();
     });
 
-    it("deve mostrar o badge de status", async () => {
+    it("deve exibir badge de status 'Pronto'", async () => {
       await renderAndWaitForLoad();
+
       expect(screen.getByText("Pronto")).toBeInTheDocument();
     });
 
-    it("deve mostrar a strip de estatísticas com contagem de assinantes", async () => {
+    it("deve renderizar stats row com contagens corretas", async () => {
       await renderAndWaitForLoad();
 
+      // 2 assinantes
       expect(screen.getByText("Assinantes")).toBeInTheDocument();
       expect(screen.getByText("2")).toBeInTheDocument();
-    });
 
-    it("deve mostrar a contagem de âncoras", async () => {
-      await renderAndWaitForLoad();
-
+      // 1 âncora
       expect(screen.getByText("Âncoras")).toBeInTheDocument();
-      expect(screen.getByText("1")).toBeInTheDocument();
-    });
 
-    it("deve mostrar a contagem de pendentes", async () => {
-      await renderAndWaitForLoad();
-
+      // 1 pendente
       expect(screen.getByText("Pendentes")).toBeInTheDocument();
-    });
 
-    it("deve mostrar a contagem de concluídos quando houver", async () => {
-      await renderAndWaitForLoad();
-
+      // 1 concluído
       expect(screen.getByText("Concluídos")).toBeInTheDocument();
     });
 
@@ -193,11 +206,8 @@ describe("RevisarDocumentoClient", () => {
         success: true,
         data: allPendentes,
       });
-      mockUsePresignedPdfUrl.mockReturnValue({ presignedUrl: null });
 
-      await act(async () => {
-        render(<RevisarDocumentoClient uuid="test-uuid-123" />);
-      });
+      render(<RevisarDocumentoClient uuid="test-uuid-123" />);
 
       await waitFor(() => {
         expect(screen.getByText("Assinantes")).toBeInTheDocument();
@@ -206,7 +216,7 @@ describe("RevisarDocumentoClient", () => {
       expect(screen.queryByText("Concluídos")).not.toBeInTheDocument();
     });
 
-    it("deve mostrar o banner de selfie quando habilitada", async () => {
+    it("deve exibir banner de selfie habilitada", async () => {
       await renderAndWaitForLoad();
 
       expect(
@@ -229,9 +239,7 @@ describe("RevisarDocumentoClient", () => {
         },
       });
 
-      await act(async () => {
-        render(<RevisarDocumentoClient uuid="test-uuid-123" />);
-      });
+      render(<RevisarDocumentoClient uuid="test-uuid-123" />);
 
       await waitFor(() => {
         expect(
@@ -244,9 +252,28 @@ describe("RevisarDocumentoClient", () => {
       ).not.toBeInTheDocument();
     });
 
-    it("deve renderizar o componente PdfPreviewDynamic", async () => {
+    it("deve renderizar cards dos assinantes com nomes corretos", async () => {
       await renderAndWaitForLoad();
+
+      expect(screen.getByText("João Silva")).toBeInTheDocument();
+      expect(screen.getByText("Maria Santos")).toBeInTheDocument();
+    });
+
+    it("deve renderizar PDF preview", async () => {
+      await renderAndWaitForLoad();
+
       expect(screen.getByTestId("pdf-preview")).toBeInTheDocument();
+    });
+
+    it("deve mostrar botões de ação (Voltar/Finalizar)", async () => {
+      await renderAndWaitForLoad();
+
+      expect(
+        screen.getByRole("button", { name: /voltar para edição/i })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /finalizar e enviar/i })
+      ).toBeInTheDocument();
     });
 
     it("deve exibir 'Documento sem título' quando titulo é null", async () => {
@@ -257,11 +284,8 @@ describe("RevisarDocumentoClient", () => {
           documento: { ...mockDocumento.documento, titulo: null },
         },
       });
-      mockUsePresignedPdfUrl.mockReturnValue({ presignedUrl: null });
 
-      await act(async () => {
-        render(<RevisarDocumentoClient uuid="test-uuid-123" />);
-      });
+      render(<RevisarDocumentoClient uuid="test-uuid-123" />);
 
       await waitFor(() => {
         expect(
@@ -271,42 +295,35 @@ describe("RevisarDocumentoClient", () => {
     });
   });
 
-  // ── 2. Links de assinatura ─────────────────────────────────────────
+  // ── 3. Assinantes ──────────────────────────────────────────────────
 
-  describe("Links de assinatura", () => {
+  describe("Assinantes", () => {
     beforeEach(() => {
       setupSuccessfulLoad();
     });
 
-    it("deve renderizar um card para cada assinante", async () => {
+    it("deve exibir nome do assinante do snapshot", async () => {
       await renderAndWaitForLoad();
 
       expect(screen.getByText("João Silva")).toBeInTheDocument();
       expect(screen.getByText("Maria Santos")).toBeInTheDocument();
     });
 
-    it("deve mostrar nome do assinante no card", async () => {
-      await renderAndWaitForLoad();
-
-      expect(screen.getByText("João Silva")).toBeInTheDocument();
-      expect(screen.getByText("Maria Santos")).toBeInTheDocument();
-    });
-
-    it("deve mostrar tipo do assinante", async () => {
+    it("deve exibir tipo do assinante", async () => {
       await renderAndWaitForLoad();
 
       expect(screen.getByText(/cliente/i)).toBeInTheDocument();
       expect(screen.getByText(/parte contrária/i)).toBeInTheDocument();
     });
 
-    it("deve mostrar indicação de assinado para assinante concluído", async () => {
+    it("assinante concluído deve mostrar indicação 'Assinado'", async () => {
       await renderAndWaitForLoad();
 
-      // Maria Santos tem status concluido, deve mostrar " · Assinado"
+      // Maria Santos tem status concluido — deve mostrar " · Assinado"
       expect(screen.getByText(/assinado/i)).toBeInTheDocument();
     });
 
-    it("deve exibir botões de copiar link e abrir link para cada assinante", async () => {
+    it("deve ter botões de copiar link e abrir link externo", async () => {
       await renderAndWaitForLoad();
 
       const copyButtons = screen.getAllByRole("button", {
@@ -325,19 +342,265 @@ describe("RevisarDocumentoClient", () => {
       expect(openLinks[0]).toHaveAttribute("href", "/assinar/token-abc");
       expect(openLinks[1]).toHaveAttribute("href", "/assinar/token-def");
     });
+  });
 
-    it("deve mostrar botão 'Copiar Todos'", async () => {
+  // ── 4. Navegação ───────────────────────────────────────────────────
+
+  describe("Navegação", () => {
+    beforeEach(() => {
+      setupSuccessfulLoad();
+    });
+
+    it("botão 'Voltar para Edição' deve navegar para rota de edição", async () => {
       await renderAndWaitForLoad();
 
+      const backBtn = screen.getByRole("button", {
+        name: /voltar para edição/i,
+      });
+
+      fireEvent.click(backBtn);
+
+      expect(mockPush).toHaveBeenCalledWith(
+        "/app/assinatura-digital/documentos/editar/test-uuid-123"
+      );
+    });
+  });
+
+  // ── 5. Finalização ────────────────────────────────────────────────
+
+  describe("Finalização", () => {
+    beforeEach(() => {
+      setupSuccessfulLoad();
+    });
+
+    it("botão 'Finalizar e Enviar' deve chamar actionFinalizeDocumento", async () => {
+      mockActionFinalizeDocumento.mockResolvedValue({ success: true });
+
+      await renderAndWaitForLoad();
+
+      const finalizeBtn = screen.getByRole("button", {
+        name: /finalizar e enviar/i,
+      });
+
+      fireEvent.click(finalizeBtn);
+
+      await waitFor(() => {
+        expect(mockActionFinalizeDocumento).toHaveBeenCalledWith({
+          uuid: "test-uuid-123",
+        });
+      });
+    });
+
+    it("deve exibir 'Finalizando...' durante processamento", async () => {
+      mockActionFinalizeDocumento.mockReturnValue(new Promise(() => {}));
+
+      await renderAndWaitForLoad();
+
+      const finalizeBtn = screen.getByRole("button", {
+        name: /finalizar e enviar/i,
+      });
+
+      fireEvent.click(finalizeBtn);
+
+      await waitFor(() => {
+        expect(screen.getByText("Finalizando...")).toBeInTheDocument();
+      });
+    });
+
+    it("deve desabilitar botão durante processamento", async () => {
+      mockActionFinalizeDocumento.mockReturnValue(new Promise(() => {}));
+
+      await renderAndWaitForLoad();
+
+      const finalizeBtn = screen.getByRole("button", {
+        name: /finalizar e enviar/i,
+      });
+
+      fireEvent.click(finalizeBtn);
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole("button", { name: /finalizando/i })
+        ).toBeDisabled();
+      });
+    });
+
+    it("sucesso deve navegar para lista", async () => {
+      mockActionFinalizeDocumento.mockResolvedValue({ success: true });
+
+      await renderAndWaitForLoad();
+
+      fireEvent.click(
+        screen.getByRole("button", { name: /finalizar e enviar/i })
+      );
+
+      await waitFor(() => {
+        expect(mockToastSuccess).toHaveBeenCalledWith(
+          "Documento pronto para assinatura! Os links foram gerados."
+        );
+        expect(mockPush).toHaveBeenCalledWith(
+          "/app/assinatura-digital/documentos/lista"
+        );
+      });
+    });
+
+    it("erro deve exibir toast de erro", async () => {
+      mockActionFinalizeDocumento.mockResolvedValue({
+        success: false,
+        error: "Documento inválido",
+      });
+
+      await renderAndWaitForLoad();
+
+      fireEvent.click(
+        screen.getByRole("button", { name: /finalizar e enviar/i })
+      );
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalledWith("Documento inválido");
+      });
+    });
+
+    it("exceção deve exibir toast com mensagem do erro", async () => {
+      mockActionFinalizeDocumento.mockRejectedValue(
+        new Error("Network error")
+      );
+
+      await renderAndWaitForLoad();
+
+      fireEvent.click(
+        screen.getByRole("button", { name: /finalizar e enviar/i })
+      );
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalledWith("Network error");
+      });
+    });
+  });
+
+  // ── 6. Erro ao carregar ───────────────────────────────────────────
+
+  describe("Erro ao carregar", () => {
+    it("deve redirecionar para lista quando documento não é encontrado", async () => {
+      mockActionGetDocumento.mockResolvedValue({
+        success: true,
+        data: { documento: null, assinantes: [], ancoras: [] },
+      });
+
+      render(<RevisarDocumentoClient uuid="test-uuid-123" />);
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalledWith(
+          "Documento não encontrado"
+        );
+        expect(mockPush).toHaveBeenCalledWith(
+          "/app/assinatura-digital/documentos/lista"
+        );
+      });
+    });
+
+    it("deve exibir toast de erro quando actionGetDocumento falha com mensagem", async () => {
+      mockActionGetDocumento.mockResolvedValue({
+        success: false,
+        error: "Não autorizado",
+      });
+
+      render(<RevisarDocumentoClient uuid="test-uuid-123" />);
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalledWith("Não autorizado");
+        expect(mockPush).toHaveBeenCalledWith(
+          "/app/assinatura-digital/documentos/lista"
+        );
+      });
+    });
+
+    it("deve exibir toast de erro padrão quando actionGetDocumento falha sem mensagem", async () => {
+      mockActionGetDocumento.mockResolvedValue({
+        success: false,
+        error: undefined,
+      });
+
+      render(<RevisarDocumentoClient uuid="test-uuid-123" />);
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalledWith(
+          "Erro ao carregar documento"
+        );
+      });
+    });
+
+    it("deve redirecionar quando actionGetDocumento lança exceção", async () => {
+      mockActionGetDocumento.mockRejectedValue(new Error("Server error"));
+
+      render(<RevisarDocumentoClient uuid="test-uuid-123" />);
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalledWith(
+          "Erro ao carregar documento"
+        );
+        expect(mockPush).toHaveBeenCalledWith(
+          "/app/assinatura-digital/documentos/lista"
+        );
+      });
+    });
+  });
+
+  // ── 7. Layout ─────────────────────────────────────────────────────
+
+  describe("Layout", () => {
+    beforeEach(() => {
+      setupSuccessfulLoad();
+    });
+
+    it("deve renderizar seção de links com header e botão 'Copiar Todos'", async () => {
+      await renderAndWaitForLoad();
+
+      expect(screen.getByText("Links de Assinatura")).toBeInTheDocument();
       expect(
         screen.getByRole("button", { name: /copiar todos/i })
       ).toBeInTheDocument();
     });
+
+    it("deve renderizar seção de preview com header", async () => {
+      await renderAndWaitForLoad();
+
+      expect(screen.getByText("Preview do Documento")).toBeInTheDocument();
+    });
+
+    it("deve exibir info de segurança (SHA-256, MP 2.200-2)", async () => {
+      await renderAndWaitForLoad();
+
+      expect(screen.getByText(/SHA-256/)).toBeInTheDocument();
+      expect(screen.getByText(/MP 2\.200-2/)).toBeInTheDocument();
+    });
+
+    it("deve exibir descrição sobre links únicos e seguros", async () => {
+      await renderAndWaitForLoad();
+
+      expect(
+        screen.getByText(/Compartilhe o link com cada assinante/)
+      ).toBeInTheDocument();
+    });
+
+    it("deve exibir subtítulo de confirmação", async () => {
+      await renderAndWaitForLoad();
+
+      expect(
+        screen.getByText("Confira as configurações antes de compartilhar")
+      ).toBeInTheDocument();
+    });
+
+    it("deve exibir controles de paginação do PDF", async () => {
+      await renderAndWaitForLoad();
+
+      expect(screen.getByText(/Página \d+ de \d+/)).toBeInTheDocument();
+    });
   });
 
-  // ── 3. Interações ──────────────────────────────────────────────────
+  // ── 8. Interações de cópia ─────────────────────────────────────────
 
-  describe("Interações", () => {
+  describe("Interações de cópia", () => {
     beforeEach(() => {
       setupSuccessfulLoad();
     });
@@ -349,9 +612,7 @@ describe("RevisarDocumentoClient", () => {
         name: /copiar link/i,
       });
 
-      await act(async () => {
-        fireEvent.click(copyButtons[0]);
-      });
+      fireEvent.click(copyButtons[0]);
 
       await waitFor(() => {
         expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
@@ -367,13 +628,9 @@ describe("RevisarDocumentoClient", () => {
     it("deve copiar todos os links ao clicar em 'Copiar Todos'", async () => {
       await renderAndWaitForLoad();
 
-      const copyAllBtn = screen.getByRole("button", {
-        name: /copiar todos/i,
-      });
-
-      await act(async () => {
-        fireEvent.click(copyAllBtn);
-      });
+      fireEvent.click(
+        screen.getByRole("button", { name: /copiar todos/i })
+      );
 
       await waitFor(() => {
         expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
@@ -395,122 +652,6 @@ describe("RevisarDocumentoClient", () => {
       );
     });
 
-    it("deve navegar para edição ao clicar em 'Voltar para Edição'", async () => {
-      await renderAndWaitForLoad();
-
-      const backBtn = screen.getByRole("button", {
-        name: /voltar para edição/i,
-      });
-
-      fireEvent.click(backBtn);
-
-      expect(mockPush).toHaveBeenCalledWith(
-        "/app/assinatura-digital/documentos/editar/test-uuid-123"
-      );
-    });
-
-    it("deve chamar actionFinalizeDocumento ao clicar em 'Finalizar e Enviar'", async () => {
-      mockActionFinalizeDocumento.mockResolvedValue({ success: true });
-
-      await renderAndWaitForLoad();
-
-      const finalizeBtn = screen.getByRole("button", {
-        name: /finalizar e enviar/i,
-      });
-
-      await act(async () => {
-        fireEvent.click(finalizeBtn);
-      });
-
-      await waitFor(() => {
-        expect(mockActionFinalizeDocumento).toHaveBeenCalledWith({
-          uuid: "test-uuid-123",
-        });
-      });
-    });
-
-    it("deve exibir estado de loading enquanto finaliza", async () => {
-      mockActionFinalizeDocumento.mockReturnValue(new Promise(() => {}));
-
-      await renderAndWaitForLoad();
-
-      const finalizeBtn = screen.getByRole("button", {
-        name: /finalizar e enviar/i,
-      });
-
-      await act(async () => {
-        fireEvent.click(finalizeBtn);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByText("Finalizando...")).toBeInTheDocument();
-      });
-    });
-
-    it("deve redirecionar para a lista após finalizar com sucesso", async () => {
-      mockActionFinalizeDocumento.mockResolvedValue({ success: true });
-
-      await renderAndWaitForLoad();
-
-      const finalizeBtn = screen.getByRole("button", {
-        name: /finalizar e enviar/i,
-      });
-
-      await act(async () => {
-        fireEvent.click(finalizeBtn);
-      });
-
-      await waitFor(() => {
-        expect(mockToastSuccess).toHaveBeenCalledWith(
-          "Documento pronto para assinatura! Os links foram gerados."
-        );
-        expect(mockPush).toHaveBeenCalledWith(
-          "/app/assinatura-digital/documentos/lista"
-        );
-      });
-    });
-
-    it("deve exibir toast de erro quando finalização retornar erro", async () => {
-      mockActionFinalizeDocumento.mockResolvedValue({
-        success: false,
-        error: "Documento inválido",
-      });
-
-      await renderAndWaitForLoad();
-
-      const finalizeBtn = screen.getByRole("button", {
-        name: /finalizar e enviar/i,
-      });
-
-      await act(async () => {
-        fireEvent.click(finalizeBtn);
-      });
-
-      await waitFor(() => {
-        expect(mockToastError).toHaveBeenCalledWith("Documento inválido");
-      });
-    });
-
-    it("deve exibir toast de erro quando finalização lançar exceção", async () => {
-      mockActionFinalizeDocumento.mockRejectedValue(
-        new Error("Network error")
-      );
-
-      await renderAndWaitForLoad();
-
-      const finalizeBtn = screen.getByRole("button", {
-        name: /finalizar e enviar/i,
-      });
-
-      await act(async () => {
-        fireEvent.click(finalizeBtn);
-      });
-
-      await waitFor(() => {
-        expect(mockToastError).toHaveBeenCalledWith("Network error");
-      });
-    });
-
     it("deve exibir toast de erro quando copiar link individual falhar", async () => {
       (navigator.clipboard.writeText as jest.Mock).mockRejectedValueOnce(
         new Error("Clipboard error")
@@ -522,9 +663,7 @@ describe("RevisarDocumentoClient", () => {
         name: /copiar link/i,
       });
 
-      await act(async () => {
-        fireEvent.click(copyButtons[0]);
-      });
+      fireEvent.click(copyButtons[0]);
 
       await waitFor(() => {
         expect(mockToastError).toHaveBeenCalledWith("Erro ao copiar link");
@@ -538,13 +677,9 @@ describe("RevisarDocumentoClient", () => {
 
       await renderAndWaitForLoad();
 
-      const copyAllBtn = screen.getByRole("button", {
-        name: /copiar todos/i,
-      });
-
-      await act(async () => {
-        fireEvent.click(copyAllBtn);
-      });
+      fireEvent.click(
+        screen.getByRole("button", { name: /copiar todos/i })
+      );
 
       await waitFor(() => {
         expect(mockToastError).toHaveBeenCalledWith("Erro ao copiar links");
@@ -552,98 +687,7 @@ describe("RevisarDocumentoClient", () => {
     });
   });
 
-  // ── 4. Loading e erros ─────────────────────────────────────────────
-
-  describe("Loading e erros", () => {
-    it("deve mostrar loading spinner enquanto carrega", async () => {
-      // Nunca resolve para manter loading
-      mockActionGetDocumento.mockReturnValue(new Promise(() => {}));
-      mockUsePresignedPdfUrl.mockReturnValue({ presignedUrl: null });
-
-      await act(async () => {
-        render(<RevisarDocumentoClient uuid="test-uuid-123" />);
-      });
-
-      expect(screen.getByTestId("document-flow-shell")).toBeInTheDocument();
-      // Loader2 e renderizado como SVG com animate-spin
-      const spinner = document.querySelector(".animate-spin");
-      expect(spinner).toBeInTheDocument();
-    });
-
-    it("deve redirecionar para lista quando documento não é encontrado", async () => {
-      mockActionGetDocumento.mockResolvedValue({
-        success: true,
-        data: { documento: null, assinantes: [], ancoras: [] },
-      });
-
-      await act(async () => {
-        render(<RevisarDocumentoClient uuid="test-uuid-123" />);
-      });
-
-      await waitFor(() => {
-        expect(mockToastError).toHaveBeenCalledWith(
-          "Documento não encontrado"
-        );
-        expect(mockPush).toHaveBeenCalledWith(
-          "/app/assinatura-digital/documentos/lista"
-        );
-      });
-    });
-
-    it("deve mostrar toast de erro quando actionGetDocumento falha com mensagem", async () => {
-      mockActionGetDocumento.mockResolvedValue({
-        success: false,
-        error: "Não autorizado",
-      });
-
-      await act(async () => {
-        render(<RevisarDocumentoClient uuid="test-uuid-123" />);
-      });
-
-      await waitFor(() => {
-        expect(mockToastError).toHaveBeenCalledWith("Não autorizado");
-        expect(mockPush).toHaveBeenCalledWith(
-          "/app/assinatura-digital/documentos/lista"
-        );
-      });
-    });
-
-    it("deve mostrar toast de erro padrão quando actionGetDocumento falha sem mensagem", async () => {
-      mockActionGetDocumento.mockResolvedValue({
-        success: false,
-        error: undefined,
-      });
-
-      await act(async () => {
-        render(<RevisarDocumentoClient uuid="test-uuid-123" />);
-      });
-
-      await waitFor(() => {
-        expect(mockToastError).toHaveBeenCalledWith(
-          "Erro ao carregar documento"
-        );
-      });
-    });
-
-    it("deve mostrar toast de erro e redirecionar quando actionGetDocumento lança exceção", async () => {
-      mockActionGetDocumento.mockRejectedValue(new Error("Server error"));
-
-      await act(async () => {
-        render(<RevisarDocumentoClient uuid="test-uuid-123" />);
-      });
-
-      await waitFor(() => {
-        expect(mockToastError).toHaveBeenCalledWith(
-          "Erro ao carregar documento"
-        );
-        expect(mockPush).toHaveBeenCalledWith(
-          "/app/assinatura-digital/documentos/lista"
-        );
-      });
-    });
-  });
-
-  // ── 5. Acessibilidade ─────────────────────────────────────────────
+  // ── 9. Acessibilidade ─────────────────────────────────────────────
 
   describe("Acessibilidade", () => {
     beforeEach(() => {

@@ -128,7 +128,7 @@ export function AudienciasSemanaView({
         <span className="text-sm font-medium capitalize ml-1">{weekLabel}</span>
       </div>
 
-      {/* Week Grid — 5 colunas (seg-sex), mais espaço para dados */}
+      {/* Week Grid — 5 colunas (seg-sex) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
         {weekDays.map((day) => {
           const key = format(day, 'yyyy-MM-dd');
@@ -139,28 +139,28 @@ export function AudienciasSemanaView({
             <GlassPanel
               key={key}
               depth={today ? 2 : 1}
-              className="p-3 min-h-36"
+              className="p-4 min-h-40"
             >
               {/* Day header */}
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-1.5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
                   <span className={cn(
-                    'text-[10px] font-semibold uppercase tracking-wider',
-                    today ? 'text-primary' : 'text-muted-foreground/50',
+                    'text-xs font-semibold uppercase tracking-wider',
+                    today ? 'text-primary' : 'text-muted-foreground/60',
                   )}>
                     {format(day, 'EEE', { locale: ptBR })}
                   </span>
                   <span className={cn(
-                    'text-sm font-bold tabular-nums',
+                    'text-base font-bold tabular-nums',
                     today
-                      ? 'bg-primary text-primary-foreground size-6 rounded-full flex items-center justify-center text-[11px]'
-                      : 'text-foreground/70',
+                      ? 'bg-primary text-primary-foreground size-7 rounded-full flex items-center justify-center text-xs'
+                      : 'text-foreground/80',
                   )}>
                     {format(day, 'd')}
                   </span>
                 </div>
                 {dayAudiencias.length > 0 && (
-                  <span className="text-[9px] tabular-nums text-muted-foreground/40">
+                  <span className="text-xs tabular-nums text-muted-foreground/50 font-medium">
                     {dayAudiencias.length}
                   </span>
                 )}
@@ -168,11 +168,11 @@ export function AudienciasSemanaView({
 
               {/* Audiencias */}
               {dayAudiencias.length === 0 ? (
-                <div className="flex-1 flex items-center justify-center py-4">
-                  <span className="text-[9px] text-muted-foreground/30">—</span>
+                <div className="flex-1 flex items-center justify-center py-6">
+                  <span className="text-xs text-muted-foreground/30">—</span>
                 </div>
               ) : (
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   {dayAudiencias.map((a) => (
                     <WeekDayCard key={a.id} audiencia={a} onClick={() => onViewDetail(a)} />
                   ))}
@@ -206,24 +206,24 @@ function WeekDayCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: ()
     <button
       onClick={onClick}
       className={cn(
-        'w-full text-left p-2.5 rounded-lg border transition-all duration-200 cursor-pointer',
-        'border-border/10 hover:border-border/20 hover:shadow-sm hover:scale-[1.01]',
-        (isPast || isFinalizada) && 'opacity-50',
-        isOngoing && 'ring-1 ring-success/20 border-success/15',
+        'w-full text-left p-3 rounded-xl border transition-all duration-200 cursor-pointer',
+        'bg-card/80 border-border/40 hover:border-border/60 hover:shadow-sm hover:scale-[1.01]',
+        (isPast || isFinalizada) && 'opacity-60',
+        isOngoing && 'ring-1 ring-success/30 border-success/25 bg-success/[0.03]',
       )}
     >
       {/* Time range + Status indicators */}
       <div className="flex items-center justify-between gap-1">
-        <span className="text-[10px] tabular-nums font-medium text-foreground/60">
+        <span className="text-xs tabular-nums font-semibold text-foreground/80">
           {fmtTime(audiencia.dataInicio)} – {fmtTime(audiencia.dataFim)}
         </span>
-        <div className="flex items-center gap-1">
-          {isOngoing && <span className="size-1.5 rounded-full bg-success animate-pulse" />}
-          {isFinalizada && <span className="text-[7px] font-semibold text-success/60 px-1 py-px rounded-full bg-success/8">OK</span>}
+        <div className="flex items-center gap-1.5">
+          {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
+          {isFinalizada && <span className="text-[10px] font-semibold text-success px-1.5 py-0.5 rounded-full bg-success/15">OK</span>}
           {/* Prep badge */}
           <span className={cn(
-            'text-[7px] font-bold tabular-nums px-1 py-px rounded-full',
-            prepStatus === 'good' ? 'bg-success/10 text-success' : prepStatus === 'warning' ? 'bg-warning/10 text-warning' : 'bg-destructive/10 text-destructive',
+            'text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
+            prepStatus === 'good' ? 'bg-success/15 text-success' : prepStatus === 'warning' ? 'bg-warning/15 text-warning' : 'bg-destructive/15 text-destructive',
           )}>
             {prepScore}%
           </span>
@@ -231,37 +231,37 @@ function WeekDayCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: ()
       </div>
 
       {/* Type */}
-      <p className="text-[10px] font-medium text-foreground truncate mt-1">
+      <p className="text-sm font-medium text-foreground truncate mt-1.5">
         {audiencia.tipoDescricao || 'Audiência'}
       </p>
 
       {/* Process number */}
       {audiencia.numeroProcesso && (
-        <p className="text-[8px] font-mono text-muted-foreground/40 tabular-nums truncate mt-0.5">
+        <p className="text-[11px] font-mono text-muted-foreground/60 tabular-nums truncate mt-0.5">
           {audiencia.numeroProcesso}
         </p>
       )}
 
       {/* Parties */}
       {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-        <p className="text-[8px] text-muted-foreground/40 truncate mt-0.5">
-          {audiencia.poloAtivoNome || '—'} <span className="text-muted-foreground/30">vs</span> {audiencia.poloPassivoNome || '—'}
+        <p className="text-[11px] text-muted-foreground/60 truncate mt-1">
+          {audiencia.poloAtivoNome || '—'} <span className="text-muted-foreground/40">vs</span> {audiencia.poloPassivoNome || '—'}
         </p>
       )}
 
       {/* Bottom: TRT + Modalidade */}
-      <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+      <div className="flex items-center gap-2 mt-2 flex-wrap">
         {audiencia.trt && (
-          <span className="text-[7px] font-semibold px-1 py-px rounded bg-primary/5 text-primary/40">{audiencia.trt}</span>
+          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70">{audiencia.trt}</span>
         )}
-        <div className="flex items-center gap-0.5">
-          {isVirtual ? <Video className="size-2 text-info/40" /> : audiencia.modalidade === 'presencial' ? <Building2 className="size-2 text-warning/40" /> : null}
-          <span className="text-[7px] text-muted-foreground/40">
+        <div className="flex items-center gap-1">
+          {isVirtual ? <Video className="size-3 text-info/60" /> : audiencia.modalidade === 'presencial' ? <Building2 className="size-3 text-warning/60" /> : null}
+          <span className="text-[10px] text-muted-foreground/60">
             {audiencia.modalidade === 'virtual' ? 'Virtual' : audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : ''}
           </span>
         </div>
         {audiencia.urlAudienciaVirtual && isVirtual && (
-          <span className="text-[7px] font-semibold px-1 py-px rounded bg-info/8 text-info/50">Sala</span>
+          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70">Sala</span>
         )}
       </div>
     </button>

@@ -22,6 +22,8 @@ const config = {
     '/src/.*\\.e2e\\.',
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
+  // Prevent worker crashes from Radix UI + fast-check property tests
+  workerIdleMemoryLimit: '512MB',
   // Use jsdom for hook and component tests
   testEnvironmentOptions: {
     customExportConditions: [''],
@@ -59,6 +61,7 @@ const config = {
         '<rootDir>/src/components/**/__tests__/**/*.test.ts',
         '<rootDir>/src/components/**/__tests__/**/*.test.tsx',
         '<rootDir>/src/features/**/__tests__/**/*.test.tsx',
+        '<rootDir>/src/hooks/**/__tests__/**/*.test.ts',
         '<rootDir>/src/hooks/**/__tests__/**/*.test.tsx',
         '<rootDir>/src/providers/**/__tests__/**/*.test.tsx',
       ],
@@ -69,12 +72,16 @@ const config = {
         '^next/headers$': '<rootDir>/src/__mocks__/next-headers.js',
         // Mock ESM-only packages that Jest cannot transform
         '^uuid$': '<rootDir>/src/__mocks__/uuid.js',
+        '^lodash-es$': 'lodash',
         // Mock CSS and static assets
         '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
         '\\.(png|jpg|jpeg|gif|svg|webp)$': '<rootDir>/src/__mocks__/fileMock.js',
       },
+      transformIgnorePatterns: [
+        '/node_modules/(?!(@lit-labs|@lit|lit|lodash-es)/)',
+      ],
       transform: {
-        '^.+\\.(ts|tsx)$': ['ts-jest', {
+        '^.+\\.(ts|tsx|js|jsx|mjs)$': ['ts-jest', {
           tsconfig: '<rootDir>/tsconfig.test.json',
           diagnostics: false,
         }],

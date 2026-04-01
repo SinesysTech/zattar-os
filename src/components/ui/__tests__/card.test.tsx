@@ -66,7 +66,7 @@ describe('Card - Property-Based Tests', () => {
                     expect(cardDescription?.classList.contains('text-muted-foreground')).toBe(true);
                 }
             ),
-            { numRuns: 100 }
+            { numRuns: 10 }
         );
     });
 
@@ -109,7 +109,7 @@ describe('Card - Property-Based Tests', () => {
                     expect(className).toMatch(/has-\[data-slot=card-action\]:grid-cols-\[1fr_auto\]/);
                 }
             ),
-            { numRuns: 100 }
+            { numRuns: 10 }
         );
     });
 
@@ -147,7 +147,7 @@ describe('Card - Property-Based Tests', () => {
                     expect(className).toMatch(/\[\.border-t\]:pt-6/);
                 }
             ),
-            { numRuns: 100 }
+            { numRuns: 10 }
         );
     });
 
@@ -187,7 +187,7 @@ describe('Card - Property-Based Tests', () => {
                     expect(card?.classList.contains('flex-col')).toBe(true);
                 }
             ),
-            { numRuns: 100 }
+            { numRuns: 10 }
         );
     });
 
@@ -229,7 +229,7 @@ describe('Card - Property-Based Tests', () => {
                     expect(card?.classList.contains('gap-6')).toBe(true);
                 }
             ),
-            { numRuns: 100 }
+            { numRuns: 10 }
         );
     });
 });
