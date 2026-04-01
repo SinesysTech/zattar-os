@@ -17,9 +17,62 @@ jest.mock('../../hooks/use-responsive-layout', () => ({
   })),
 }));
 
+jest.mock('../../hooks/use-network-quality', () => ({
+  useNetworkQuality: jest.fn(() => ({
+    quality: 'good',
+    score: 100,
+  })),
+}));
+
+jest.mock('@/hooks/use-local-storage', () => ({
+  useLocalStorage: jest.fn((key: string, defaultValue: unknown) => [defaultValue, jest.fn()]),
+}));
+
+jest.mock('../../hooks/use-video-effects', () => ({
+  useVideoEffects: jest.fn(() => ({
+    activeEffect: null,
+    applyEffect: jest.fn(),
+  })),
+}));
+
+jest.mock('../../hooks/use-call-keyboard-shortcuts', () => ({
+  useCallKeyboardShortcuts: jest.fn(() => ({
+    showHelp: false,
+    setShowHelp: jest.fn(),
+  })),
+}));
+
 // Mock child components to avoid deep rendering issues and Dyte internals
 jest.mock('../../components/custom-video-grid', () => ({
   CustomVideoGrid: () => <div data-testid="custom-video-grid">Video Grid</div>
+}));
+
+jest.mock('../../components/custom-audio-grid', () => ({
+  CustomAudioGrid: () => <div data-testid="custom-audio-grid">Audio Grid</div>
+}));
+
+jest.mock('../../components/layout-switcher', () => ({
+  LayoutSwitcher: () => <div data-testid="layout-switcher">Layout</div>
+}));
+
+jest.mock('../../components/meeting-error-boundary', () => ({
+  MeetingErrorBoundary: ({ children }: { children: React.ReactNode }) => <>{children}</>
+}));
+
+jest.mock('../../components/meeting-skeleton', () => ({
+  MeetingSkeleton: () => <div data-testid="meeting-skeleton">Loading</div>
+}));
+
+jest.mock('../../components/meeting-theme-provider', () => ({
+  MeetingThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
+}));
+
+jest.mock('../../components/live-transcript-panel', () => ({
+  LiveTranscriptPanel: () => <div data-testid="live-transcript">Transcript</div>
+}));
+
+jest.mock('../../components/keyboard-shortcuts-help', () => ({
+  KeyboardShortcutsHelp: () => null
 }));
 
 jest.mock('../../components/custom-call-controls', () => ({
@@ -69,11 +122,14 @@ describe('CustomMeetingUI', () => {
       toArray: jest.fn(() => []),
       values: jest.fn(() => [].values())
     };
-    // Mock useDyteSelector to return mockJoinedParticipants for participants.joined
-    // and 'mock-self-id' for self.id
-    (useDyteSelector as jest.Mock)
-      .mockReturnValueOnce(mockJoinedParticipants) // First call: participants.joined
-      .mockReturnValueOnce('mock-self-id'); // Second call: self.id
+    // Mock useDyteSelector - use the selector function against a fake meeting object
+    const fakeMeeting = {
+      participants: { joined: mockJoinedParticipants },
+      self: { id: 'mock-self-id' },
+    };
+    (useDyteSelector as jest.Mock).mockImplementation(
+      (selector: (m: typeof fakeMeeting) => unknown) => selector(fakeMeeting)
+    );
   });
 
   const defaultProps = {

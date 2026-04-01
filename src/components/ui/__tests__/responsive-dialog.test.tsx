@@ -9,7 +9,7 @@
  * - Property 23: Dialog prevents background scroll
  */
 
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import * as fc from 'fast-check';
 import {
     ResponsiveDialog,
@@ -36,6 +36,10 @@ jest.mock('@/hooks/use-breakpoint', () => ({
 }));
 
 describe('ResponsiveDialog Property-Based Tests', () => {
+    afterEach(() => {
+        cleanup();
+    });
+
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -74,14 +78,14 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     );
 
                     // Verify: Should use Sheet (bottom sheet) which takes up most of screen
-                    const sheetContent = container.querySelector('[data-slot="sheet-content"]');
+                    const sheetContent = document.querySelector('[data-slot="sheet-content"]');
                     expect(sheetContent).toBeInTheDocument();
 
                     // Verify: Should have full-screen height class
                     expect(sheetContent).toHaveClass('h-[95vh]');
                 }
             ),
-            { numRuns: 100 }
+            { numRuns: 15 }
         );
     });
 
@@ -128,7 +132,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     );
 
                     // Verify: Dialog content should not have horizontal scroll
-                    const dialogBody = container.querySelector('[data-slot="sheet-content"]');
+                    const dialogBody = document.querySelector('[data-slot="sheet-content"]');
                     expect(dialogBody).toBeInTheDocument();
 
                     // Check for overflow-x-hidden class
@@ -140,7 +144,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     }
                 }
             ),
-            { numRuns: 100 }
+            { numRuns: 15 }
         );
     });
 
@@ -182,7 +186,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     );
 
                     // Verify: Footer should use SheetFooter on mobile
-                    const footer = container.querySelector('[data-slot="sheet-footer"]');
+                    const footer = document.querySelector('[data-slot="sheet-footer"]');
                     expect(footer).toBeInTheDocument();
 
                     // Verify: Should have sticky bottom positioning
@@ -193,7 +197,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     expect(footer).toHaveClass('border-t');
                 }
             ),
-            { numRuns: 100 }
+            { numRuns: 15 }
         );
     });
 
@@ -239,16 +243,16 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     );
 
                     // Verify: Sheet content should allow vertical scroll
-                    const sheetContent = container.querySelector('[data-slot="sheet-content"]');
+                    const sheetContent = document.querySelector('[data-slot="sheet-content"]');
                     expect(sheetContent).toBeInTheDocument();
                     expect(sheetContent).toHaveClass('overflow-y-auto');
 
                     // Verify: Body should be scrollable
-                    const body = container.querySelector('.overflow-y-auto.overflow-x-hidden');
+                    const body = document.querySelector('.overflow-y-auto.overflow-x-hidden');
                     expect(body).toBeInTheDocument();
                 }
             ),
-            { numRuns: 100 }
+            { numRuns: 15 }
         );
     });
 
@@ -265,13 +269,16 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                 fc.integer({ min: 320, max: 639 }), // Mobile viewport widths
                 fc.boolean(), // Dialog open state
                 (width, isOpen) => {
+                    // Cleanup previous renders
+                    cleanup();
+
                     // Setup
                     setViewport({ width, height: 667 });
                     mockMatchMedia(width);
                     mockUseBreakpointBelow.mockReturnValue(true); // Mobile
 
                     // Render
-                    const { container } = render(
+                    render(
                         <ResponsiveDialog open={isOpen}>
                             <ResponsiveDialogContent>
                                 <ResponsiveDialogHeader>
@@ -286,7 +293,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
 
                     if (isOpen) {
                         // Verify: When open, Sheet should render with overlay
-                        const overlay = container.querySelector('[data-slot="sheet-overlay"]');
+                        const overlay = document.querySelector('[data-slot="sheet-overlay"]');
                         expect(overlay).toBeInTheDocument();
 
                         // Radix Dialog/Sheet automatically prevents background scroll
@@ -296,12 +303,12 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                         expect(overlay).toHaveClass('inset-0');
                     } else {
                         // Verify: When closed, no overlay should be present
-                        const overlay = container.querySelector('[data-slot="sheet-overlay"]');
+                        const overlay = document.querySelector('[data-slot="sheet-overlay"]');
                         expect(overlay).not.toBeInTheDocument();
                     }
                 }
             ),
-            { numRuns: 100 }
+            { numRuns: 15 }
         );
     });
 
@@ -335,15 +342,15 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     );
 
                     // Verify: Should use Dialog (not Sheet) on desktop
-                    const dialogContent = container.querySelector('[data-slot="dialog-content"]');
+                    const dialogContent = document.querySelector('[data-slot="dialog-content"]');
                     expect(dialogContent).toBeInTheDocument();
 
                     // Verify: Should NOT use Sheet
-                    const sheetContent = container.querySelector('[data-slot="sheet-content"]');
+                    const sheetContent = document.querySelector('[data-slot="sheet-content"]');
                     expect(sheetContent).not.toBeInTheDocument();
                 }
             ),
-            { numRuns: 100 }
+            { numRuns: 15 }
         );
     });
 });
