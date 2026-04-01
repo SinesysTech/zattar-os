@@ -33,7 +33,7 @@ import {
   MessagesRepository,
   CallsRepository,
   MembersRepository,
-} from './repositories';
+} from './repository';
 
 // =============================================================================
 // SERVICE CLASS

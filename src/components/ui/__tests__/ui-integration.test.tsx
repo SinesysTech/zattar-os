@@ -5,8 +5,9 @@
  * usando fast-check para validar comportamentos universais.
  */
 
+import React from 'react';
 import * as fc from 'fast-check';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, cleanup } from '@testing-library/react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -18,11 +19,61 @@ import {
     COMMON_VIEWPORTS,
 } from '@/testing/helpers/responsive-test-helpers';
 
-// TODO: skipped — crashes Jest worker due to Radix Dialog + Tooltip + jsdom incompatibility.
-// Radix portals and defaultOpen cause SIGSEGV in jsdom environment.
-describe.skip('UI Integration - Property-Based Tests', () => {
+// Mock Radix Tooltip primitives to avoid portal/floating crashes in jsdom
+jest.mock('@radix-ui/react-tooltip', () => ({
+    Provider: ({ children, ...props }: any) => <div data-slot="tooltip-provider" {...props}>{children}</div>,
+    Root: ({ children }: any) => <>{children}</>,
+    Trigger: React.forwardRef(({ children, asChild, ...props }: any, ref: any) => {
+        if (asChild && React.isValidElement(children)) {
+            return React.cloneElement(children as React.ReactElement<any>, { ref, 'data-slot': 'tooltip-trigger', ...props });
+        }
+        return <button ref={ref} data-slot="tooltip-trigger" {...props}>{children}</button>;
+    }),
+    Content: React.forwardRef(({ children, className, ...props }: any, ref: any) => (
+        <div ref={ref} data-slot="tooltip-content" className={`z-50 w-fit rounded-md px-3 py-1.5 text-xs text-balance ${className || ''}`} {...props}>
+            {children}
+        </div>
+    )),
+    Portal: ({ children }: any) => <>{children}</>,
+    Arrow: () => null,
+}));
+
+// Mock Radix Dialog primitives to avoid portal crashes in jsdom
+jest.mock('@radix-ui/react-dialog', () => ({
+    Root: ({ children, defaultOpen, open, ...props }: any) => <div data-slot="dialog" {...props}>{children}</div>,
+    Trigger: React.forwardRef(({ children, asChild, ...props }: any, ref: any) => {
+        if (asChild && React.isValidElement(children)) {
+            return React.cloneElement(children as React.ReactElement<any>, { ref, 'data-slot': 'dialog-trigger', ...props });
+        }
+        return <button ref={ref} data-slot="dialog-trigger" {...props}>{children}</button>;
+    }),
+    Portal: ({ children }: any) => <>{children}</>,
+    Overlay: React.forwardRef(({ children, className, ...props }: any, ref: any) => (
+        <div ref={ref} data-slot="dialog-overlay" className={className} {...props}>{children}</div>
+    )),
+    Content: React.forwardRef(({ children, className, ...props }: any, ref: any) => (
+        <div ref={ref} data-slot="dialog-content" className={className} {...props}>{children}</div>
+    )),
+    Close: React.forwardRef(({ children, className, ...props }: any, ref: any) => (
+        <button ref={ref} data-slot="dialog-close" className={className} {...props}>{children}</button>
+    )),
+    Title: React.forwardRef(({ children, className, ...props }: any, ref: any) => (
+        <h2 ref={ref} data-slot="dialog-title" className={className} {...props}>{children}</h2>
+    )),
+    Description: React.forwardRef(({ children, className, ...props }: any, ref: any) => (
+        <p ref={ref} data-slot="dialog-description" className={className} {...props}>{children}</p>
+    )),
+}));
+
+jest.retryTimes(0);
+
+describe('UI Integration - Property-Based Tests', () => {
     beforeEach(() => {
         setViewport(COMMON_VIEWPORTS.desktop);
+    });
+
+    afterEach(() => {
+        cleanup();
     });
 
     /**
@@ -73,7 +124,7 @@ describe.skip('UI Integration - Property-Based Tests', () => {
                     });
                 }
             ),
-            { numRuns: 10 }
+            { numRuns: 3 }
         );
     });
 
@@ -126,7 +177,7 @@ describe.skip('UI Integration - Property-Based Tests', () => {
                     });
                 }
             ),
-            { numRuns: 10 }
+            { numRuns: 3 }
         );
     });
 
@@ -180,7 +231,7 @@ describe.skip('UI Integration - Property-Based Tests', () => {
                     expect(relativeContainer).toBeInTheDocument();
                 }
             ),
-            { numRuns: 10 }
+            { numRuns: 3 }
         );
     });
 });

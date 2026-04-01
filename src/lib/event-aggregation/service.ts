@@ -16,8 +16,8 @@ import { buildEventId, calcularPrioridade } from "./domain";
 
 // --- Cross-module imports (mesmo padrão de kanban/service.ts) ---
 import type { Audiencia } from "@/features/audiencias";
-import { listarAudiencias, StatusAudiencia } from "@/features/audiencias";
-import { atualizarStatusAudiencia } from "@/features/audiencias/service";
+import { StatusAudiencia } from "@/features/audiencias";
+import { listarAudiencias, atualizarStatusAudiencia } from "@/features/audiencias/service";
 
 import type { Expediente } from "@/features/expedientes";
 import { listarExpedientes } from "@/features/expedientes";

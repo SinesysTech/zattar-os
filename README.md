@@ -4,15 +4,15 @@ Sistema de gestão jurídica com foco em automação e IA.
 
 **Stack**: Next.js 16 (App Router), React 19, TypeScript 5, Supabase (PostgreSQL + RLS), Redis (opcional), Tailwind CSS 4, shadcn/ui.
 
-## Status de Desenvolvimento (2026-03-31)
+## Status de Desenvolvimento (2026-04-01)
 
 `src/features` possui **42 modulos** atualmente.
 
 Classificacao estrutural (criterio: `domain.ts`, `service.ts`, `repository.ts`, `index.ts`, `actions/`, `components/`):
 
-- ✅ **Completos (18)**: `acervo`, `advogados`, `ai`, `captura`, `config-atribuicao`, `contratos`, `dify`, `enderecos`, `integracoes`, `notificacoes`, `obrigacoes`, `pecas-juridicas`, `pericias`, `processos`, `rh`, `system-prompts`, `tipos-expedientes`, `usuarios`
-- ⚠️ **Parciais (13)**: `assistentes-tipos`, `audiencias`, `calendar`, `cargos`, `chat`, `chatwoot`, `documentos`, `expedientes`, `financeiro`, `partes`, `perfil`, `profiles`, `tags`
-- 🧩 **Iniciais (11)**: `admin`, `agenda-eventos`, `audit`, `busca`, `calculadoras`, `entrevistas-trabalhistas`, `portal`, `repasses`, `tasks`, `twofauth`, `website`
+- ✅ **Completos (23)**: `acervo`, `advogados`, `ai`, `assistentes-tipos`, `audiencias`, `captura`, `chatwoot`, `config-atribuicao`, `contratos`, `dify`, `enderecos`, `entrevistas-trabalhistas`, `expedientes`, `integracoes`, `notificacoes`, `obrigacoes`, `pecas-juridicas`, `pericias`, `processos`, `rh`, `system-prompts`, `tipos-expedientes`, `usuarios`
+- ⚠️ **Parciais (8)**: `calendar`, `cargos`, `chat`, `documentos`, `financeiro`, `partes`, `perfil`, `tags`
+- 🧩 **Iniciais (11)**: `admin`, `agenda-eventos`, `audit`, `busca`, `calculadoras`, `portal`, `profiles`, `repasses`, `tasks`, `twofauth`, `website`
 
 Consulte [STATUS de arquitetura](./docs/architecture/STATUS.md) e [AGENTS](./docs/architecture/AGENTS.md) para detalhes completos.
 

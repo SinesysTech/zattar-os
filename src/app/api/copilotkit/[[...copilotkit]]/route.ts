@@ -1,41 +1,36 @@
 /**
- * CopilotKit v2 Runtime Endpoint (multi-route)
+ * CopilotKit Runtime Endpoint (Next.js App Router)
  *
  * Usa BuiltInAgent com:
- * - Google Gemini 2.5 Flash como LLM (via AI SDK)
+ * - Google Gemini como LLM (via AI SDK)
  * - Todas as ferramentas MCP como server tools (defineTool + Zod nativo)
  * - maxSteps: 5 para permitir chains de tool calls
  *
  * As ferramentas MCP são executadas no mesmo processo via bridge direta.
  *
- * NOTA: Usa createCopilotEndpoint (multi-route) em vez de
- * copilotRuntimeNextJSAppRouterEndpoint (single-route) porque o SDK v2
- * do client faz requests em múltiplos endpoints:
- *   - GET  /api/copilotkit/info
- *   - POST /api/copilotkit/agent/:id/connect
- *   - POST /api/copilotkit/agent/:id/run
- *   - POST /api/copilotkit/agent/:id/stop/:threadId
+ * Segue o padrão oficial da documentação CopilotKit v1.54:
+ * https://docs.copilotkit.ai/integrations/built-in-agent/quickstart
  */
 
-import { CopilotRuntime } from "@copilotkit/runtime";
+import {
+  CopilotRuntime,
+  copilotRuntimeNextJSAppRouterEndpoint,
+} from "@copilotkit/runtime";
 import { BuiltInAgent } from "@copilotkit/runtime/v2";
-import { createCopilotEndpoint } from "@copilotkitnext/runtime";
-import { handle } from "hono/vercel";
 import { NextRequest, NextResponse } from "next/server";
 import {
   ensureMcpToolsRegistered,
   getMcpToolsAsDefinitions,
 } from "@/lib/copilotkit/mcp-bridge";
 import { SYSTEM_PROMPT } from "@/lib/copilotkit/system-prompt";
-import { SupabaseAgentRunner } from "@/lib/copilotkit/supabase-agent-runner";
 
 const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? process.env.GOOGLE_API_KEY;
 
-// Lazy-init: cria o handler Hono multi-route uma única vez
-let cachedHandler: ReturnType<typeof handle> | null = null;
+// Lazy-init: cria o runtime uma única vez
+let cachedRuntime: CopilotRuntime | null = null;
 
-async function getOrCreateHandler() {
-  if (cachedHandler) return cachedHandler;
+async function getOrCreateRuntime() {
+  if (cachedRuntime) return cachedRuntime;
 
   await ensureMcpToolsRegistered();
   const tools = getMcpToolsAsDefinitions();
@@ -48,24 +43,14 @@ async function getOrCreateHandler() {
     maxSteps: 5,
   });
 
-  const runtime = new CopilotRuntime({
+  cachedRuntime = new CopilotRuntime({
     agents: { default: agent },
-    runner: new SupabaseAgentRunner(),
   });
 
-  // Multi-route Hono app: GET /info, POST /agent/:id/connect, etc.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- .instance retorna o CopilotRuntime interno (@copilotkitnext/runtime)
-  const internalRuntime = (runtime as any).instance;
-  const app = createCopilotEndpoint({
-    runtime: internalRuntime,
-    basePath: "/api/copilotkit",
-  });
-
-  cachedHandler = handle(app);
-  return cachedHandler;
+  return cachedRuntime;
 }
 
-async function handleRequest(req: NextRequest) {
+async function handleCopilotRequest(req: NextRequest) {
   if (!apiKey) {
     return NextResponse.json(
       { error: "Copilot is not configured (missing GOOGLE_GENERATIVE_AI_API_KEY)" },
@@ -74,8 +59,13 @@ async function handleRequest(req: NextRequest) {
   }
 
   try {
-    const handler = await getOrCreateHandler();
-    return await handler(req);
+    const runtime = await getOrCreateRuntime();
+    const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
+      runtime,
+      endpoint: "/api/copilotkit",
+    });
+
+    return handleRequest(req);
   } catch (error) {
     console.error("CopilotKit error:", error);
     return NextResponse.json(
@@ -85,5 +75,5 @@ async function handleRequest(req: NextRequest) {
   }
 }
 
-export const GET = handleRequest;
-export const POST = handleRequest;
+export const GET = handleCopilotRequest;
+export const POST = handleCopilotRequest;

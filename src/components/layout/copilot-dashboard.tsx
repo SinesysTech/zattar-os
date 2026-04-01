@@ -12,7 +12,9 @@ import { CopilotGlobalActions } from "@/lib/copilotkit/components/copilot-global
 import { PedrinhoAgent, type PedrinhoMode } from "@/components/layout/pedrinho-agent"
 import { PageSearchProvider } from "@/contexts/page-search-context"
 import { useUser } from "@/providers/user-provider"
+import { useBreakpointBelow } from "@/hooks/use-breakpoint"
 import { cn } from "@/lib/utils"
+import { DEFAULT_WIDTH } from "@/components/layout/pedrinho-agent/hooks/use-panel-resize"
 
 // ─── Pedrinho Header Toggle ─────────────────────────────────────────────
 
@@ -158,12 +160,11 @@ function DashboardHeader({
   )
 }
 
-/** Largura do Briefing Panel */
-const PANEL_WIDTH = 380
-
 export default function CopilotDashboard({ children }: { children: React.ReactNode }) {
   const { id: userId } = useUser()
   const [pedrinhoMode, setPedrinhoMode] = useState<PedrinhoMode>('orb')
+  const [panelWidth, setPanelWidth] = useState(DEFAULT_WIDTH)
+  const isMobile = useBreakpointBelow('md')
 
   const isBriefingOpen = pedrinhoMode === 'briefing'
 
@@ -182,7 +183,7 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
             "fixed top-0 left-0 bottom-0 flex flex-col bg-background canvas-dots",
             "transition-[right] duration-300 ease-out"
           )}
-          style={{ right: isBriefingOpen ? PANEL_WIDTH : 0 }}
+          style={{ right: isBriefingOpen && !isMobile ? panelWidth : 0 }}
         >
           <DashboardHeader
             onOpenCommand={() => setPedrinhoMode('command')}
@@ -203,6 +204,7 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
         userId={String(userId ?? '')}
         mode={pedrinhoMode}
         onModeChange={setPedrinhoMode}
+        onWidthChange={setPanelWidth}
       />
     </CopilotKitProvider>
   )

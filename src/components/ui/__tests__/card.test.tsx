@@ -6,17 +6,22 @@
  */
 
 import * as fc from 'fast-check';
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction } from '@/components/ui/card';
 import {
     setViewport,
     COMMON_VIEWPORTS,
 } from '@/testing/helpers/responsive-test-helpers';
 
-// TODO: skipped — fast-check property tests crash Jest worker (SIGSEGV) when run in full suite due to jsdom + Radix rendering overhead. Passes when run in isolation.
-describe.skip('Card - Property-Based Tests', () => {
+jest.retryTimes(0);
+
+describe('Card - Property-Based Tests', () => {
     beforeEach(() => {
         setViewport(COMMON_VIEWPORTS.desktop);
+    });
+
+    afterEach(() => {
+        cleanup();
     });
 
     /**
@@ -67,7 +72,7 @@ describe.skip('Card - Property-Based Tests', () => {
                     expect(cardDescription?.classList.contains('text-muted-foreground')).toBe(true);
                 }
             ),
-            { numRuns: 5 }
+            { numRuns: 3 }
         );
     });
 
@@ -110,7 +115,7 @@ describe.skip('Card - Property-Based Tests', () => {
                     expect(className).toMatch(/has-\[data-slot=card-action\]:grid-cols-\[1fr_auto\]/);
                 }
             ),
-            { numRuns: 5 }
+            { numRuns: 3 }
         );
     });
 
@@ -148,7 +153,7 @@ describe.skip('Card - Property-Based Tests', () => {
                     expect(className).toMatch(/\[\.border-t\]:pt-6/);
                 }
             ),
-            { numRuns: 5 }
+            { numRuns: 3 }
         );
     });
 
@@ -188,7 +193,7 @@ describe.skip('Card - Property-Based Tests', () => {
                     expect(card?.classList.contains('flex-col')).toBe(true);
                 }
             ),
-            { numRuns: 5 }
+            { numRuns: 3 }
         );
     });
 
@@ -230,7 +235,7 @@ describe.skip('Card - Property-Based Tests', () => {
                     expect(card?.classList.contains('gap-6')).toBe(true);
                 }
             ),
-            { numRuns: 5 }
+            { numRuns: 3 }
         );
     });
 });

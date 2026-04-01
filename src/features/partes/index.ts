@@ -196,6 +196,18 @@ export {
 // Actions, Services e Repositories devem ser importados de "@/features/partes/server".
 
 // ============================================================================
+// Repository (server-side functions exported for external modules)
+// ============================================================================
+export {
+  findClienteById,
+  findClienteByCPF,
+  findClienteByCNPJ,
+  findParteContrariaById,
+  findTerceiroById,
+  vincularParteProcesso,
+} from './repository';
+
+// ============================================================================
 // Errors
 // ============================================================================
 export {

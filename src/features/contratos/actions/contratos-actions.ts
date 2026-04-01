@@ -1160,13 +1160,11 @@ export async function actionContarContratosComEstatisticas(
 // SERVER ACTION - STATS AGREGADOS PARA DASHBOARD
 // =============================================================================
 
-export interface ContratosStatsData {
-  total: number;
-  porStatus: Record<string, { count: number }>;
-  novosMes: number;
-  trendMensal: number[];
-  taxaConversao: number;
-}
+// ContratosStatsData definido em domain.ts (single source of truth, sem diretiva client/server)
+// NOTA: NÃO re-exportar tipos de arquivos "use server" — o server actions loader
+// tenta criar referências runtime para exports, causando ReferenceError.
+// Importe ContratosStatsData diretamente de '../domain' ou do barrel '@/features/contratos'.
+import type { ContratosStatsData } from '../domain';
 
 /**
  * Retorna estatísticas agregadas dos contratos para o dashboard.

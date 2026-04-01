@@ -6,14 +6,43 @@
  * Segue padrão de responsive-table.test.tsx.
  */
 
+import * as React from "react";
 import * as fc from "fast-check";
 import { render, waitFor } from "@testing-library/react";
-import { FormShell, FormFieldConfig, FormFieldType } from "@/components/shared/form-shell";
 import {
   setViewport,
   COMMON_VIEWPORTS,
 } from "@/testing/helpers/responsive-test-helpers";
 import { useForm } from "react-hook-form";
+
+// Mock @radix-ui/react-slot so FormControl renders a plain div instead of Slot
+// This prevents the React.Children.only error when FormControl wraps multiple conditional children
+// We preserve createSlot/createSlottable as they're used by @radix-ui/react-primitive
+jest.mock('@radix-ui/react-slot', () => {
+  const actual = jest.requireActual('@radix-ui/react-slot');
+  return {
+    ...actual,
+    Slot: React.forwardRef(function MockSlot(
+      { children, ...props }: React.PropsWithChildren<Record<string, unknown>>,
+      ref: React.Ref<HTMLDivElement>,
+    ) {
+      return React.createElement('div', { ref, ...props }, children);
+    }),
+  };
+});
+
+// Mock ResizeObserver (used by Radix components)
+beforeAll(() => {
+  window.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  } as unknown as typeof ResizeObserver;
+
+  Element.prototype.scrollIntoView = jest.fn();
+});
+
+import { FormShell, FormFieldConfig, FormFieldType } from "@/components/shared/form-shell";
 
 // Gerador de opções para select
 const selectOptionArbitrary = fc.record({
@@ -21,9 +50,12 @@ const selectOptionArbitrary = fc.record({
   label: fc.stringMatching(/^[a-zA-Z][a-zA-Z0-9]{0,29}$/),
 });
 
+// Counter to ensure unique field names within a test run
+let fieldNameCounter = 0;
+
 // Gerador de configuração de campo
 const fieldConfigArbitrary: fc.Arbitrary<FormFieldConfig> = fc.record({
-  name: fc.string({ minLength: 3, maxLength: 30 }).map((s) => s.replace(/[^a-zA-Z0-9]/g, "a")),
+  name: fc.string({ minLength: 3, maxLength: 20 }).map((s) => `field${s.replace(/[^a-zA-Z0-9]/g, "a")}${fieldNameCounter++}`),
   type: fc.constantFrom<FormFieldType>("text", "select", "checkbox", "date"),
   label: fc.stringMatching(/^[a-zA-Z][a-zA-Z0-9 ]{2,49}$/).map(s => s.replace(/\s+/g, ' ').trim()).filter(s => s.length >= 3),
   placeholder: fc.option(fc.stringMatching(/^[a-zA-Z][a-zA-Z0-9 ]{4,49}$/).map(s => s.replace(/\s+/g, ' ').trim()).filter(s => s.length >= 5), { nil: undefined }),
@@ -59,9 +91,7 @@ const fieldConfigArbitrary: fc.Arbitrary<FormFieldConfig> = fc.record({
 //   return <>{children(form)}</>;
 // };
 
-// TODO: skipped — FormShell renders multiple conditional children inside FormControl (Radix Slot),
-// which causes React.Children.only to throw in jsdom. Works in browser but not in test environment.
-describe.skip("FormShell - Property-Based Tests", () => {
+describe("FormShell - Property-Based Tests", () => {
   beforeEach(() => {
     setViewport(COMMON_VIEWPORTS.desktop);
   });

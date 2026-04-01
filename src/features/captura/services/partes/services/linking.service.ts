@@ -10,7 +10,7 @@
 import type { PartePJE } from "@/features/captura/pje-trt/partes/types";
 import type { TipoParteClassificacao } from "../types";
 import type { ProcessoParaCaptura } from "../partes-capture.service";
-import { vincularParteProcesso } from "@/features/partes/repositories";
+import { vincularParteProcesso } from "@/features/partes";
 import { withRetry } from "@/lib/utils/retry";
 import { CAPTURA_CONFIG } from "../config";
 import { ValidationError, PersistenceError } from "../errors";

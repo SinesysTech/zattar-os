@@ -1,12 +1,6 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
 import { AudienciasContent } from '../audiencias-content';
-import { useAudiencias, useTiposAudiencias } from '@/features/audiencias';
-import { useUsuarios } from '@/features/usuarios';
-// Import enum diretamente do domain para evitar problemas de mock
-import { ModalidadeAudiencia, StatusAudiencia, GrauTribunal } from '@/features/audiencias/domain';
-import type { Audiencia } from '@/features/audiencias/domain';
 
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
@@ -16,7 +10,7 @@ jest.mock('next/navigation', () => ({
     back: jest.fn(),
     prefetch: jest.fn(),
   })),
-  usePathname: jest.fn(() => '/app/audiencias/lista'),
+  usePathname: jest.fn(() => '/audiencias/lista'),
   useSearchParams: jest.fn(() => new URLSearchParams()),
 }));
 
@@ -64,180 +58,136 @@ jest.mock('@/lib/supabase/client', () => ({
   })),
 }));
 
-// Mock apenas os hooks, não o módulo inteiro
-jest.mock('@/features/audiencias', () => ({
-  ...jest.requireActual('@/features/audiencias'),
-  useAudiencias: jest.fn(),
-  useTiposAudiencias: jest.fn(),
+// Mock shared ViewModePopover
+jest.mock('@/components/shared', () => ({
+  ViewModePopover: jest.fn(({ value }: { value: string }) => (
+    <div data-testid="view-mode-popover">{value}</div>
+  )),
+  useWeekNavigator: jest.fn(() => ({
+    weekStart: new Date('2025-03-10'),
+    weekEnd: new Date('2025-03-16'),
+    weekDays: [],
+    selectedDate: new Date('2025-03-12'),
+    setSelectedDate: jest.fn(),
+    goToPreviousWeek: jest.fn(),
+    goToNextWeek: jest.fn(),
+    goToToday: jest.fn(),
+    isCurrentWeek: false,
+  })),
 }));
 
-jest.mock('@/features/usuarios');
+// Mock child wrapper components that each view delegates to
+jest.mock('../audiencias-list-wrapper', () => ({
+  AudienciasListWrapper: jest.fn(({ viewModeSlot }: { viewModeSlot: React.ReactNode }) => (
+    <div data-testid="audiencias-list-wrapper">{viewModeSlot}</div>
+  )),
+}));
+jest.mock('../audiencias-table-wrapper', () => ({
+  AudienciasTableWrapper: jest.fn(({ viewModeSlot }: { viewModeSlot: React.ReactNode }) => (
+    <div data-testid="audiencias-table-wrapper">{viewModeSlot}</div>
+  )),
+}));
+jest.mock('../audiencias-month-wrapper', () => ({
+  AudienciasMonthWrapper: jest.fn(({ viewModeSlot }: { viewModeSlot: React.ReactNode }) => (
+    <div data-testid="audiencias-month-wrapper">{viewModeSlot}</div>
+  )),
+}));
+jest.mock('../audiencias-year-wrapper', () => ({
+  AudienciasYearWrapper: jest.fn(({ viewModeSlot }: { viewModeSlot: React.ReactNode }) => (
+    <div data-testid="audiencias-year-wrapper">{viewModeSlot}</div>
+  )),
+}));
+jest.mock('../audiencias-mission-view', () => ({
+  AudienciasMissionView: jest.fn(() => (
+    <div data-testid="audiencias-mission-view" />
+  )),
+}));
+jest.mock('../audiencia-detail-sheet', () => ({
+  AudienciaDetailSheet: jest.fn(() => null),
+}));
+jest.mock('../tipos-audiencias-list', () => ({
+  TiposAudienciasList: jest.fn(() => null),
+}));
 
-const mockAudiencias: Audiencia[] = [
-  {
-    id: 1,
-    idPje: null,
-    advogadoId: null,
-    processoId: 100,
-    orgaoJulgadorId: null,
-    trt: 'TRT1',
-    grau: GrauTribunal.PrimeiroGrau,
-    numeroProcesso: '0001234-56.2023.5.01.0001',
-    dataInicio: '2025-03-15T10:00:00.000Z',
-    dataFim: '2025-03-15T11:00:00.000Z',
-    horaInicio: '10:00:00',
-    horaFim: '11:00:00',
-    modalidade: ModalidadeAudiencia.Virtual,
-    presencaHibrida: null,
-    salaAudienciaNome: 'Sala Virtual 1',
-    salaAudienciaId: null,
-    status: StatusAudiencia.Marcada,
-    statusDescricao: null,
-    tipoAudienciaId: 1,
-    tipoDescricao: 'Inicial',
-    classeJudicialId: null,
-    designada: true,
-    emAndamento: false,
-    documentoAtivo: false,
-    poloAtivoNome: 'Cliente Teste',
-    poloPassivoNome: 'Reclamada Teste',
-    urlAudienciaVirtual: 'https://zoom.us/j/1234567890',
-    enderecoPresencial: null,
-    responsavelId: null,
-    observacoes: 'Observações de teste',
-    dadosAnteriores: null,
-    createdAt: '2025-03-10T09:00:00.000Z',
-    updatedAt: '2025-03-10T09:00:00.000Z',
-  },
-];
+// Mock DialogFormShell
+jest.mock('@/components/shared/dialog-shell', () => ({
+  DialogFormShell: jest.fn(({ children }: { children: React.ReactNode }) => (
+    <div data-testid="dialog-form-shell">{children}</div>
+  )),
+}));
 
-const mockTiposAudiencia = [{ id: 1, descricao: 'Inicial' }];
-const mockUsuarios = [{ id: 1, nome: 'João da Silva' }];
+// Mock lucide-react icons
+jest.mock('lucide-react', () => ({
+  Settings: () => <span data-testid="icon-settings" />,
+  CalendarDays: () => <span />,
+  CalendarRange: () => <span />,
+  Calendar: () => <span />,
+  List: () => <span />,
+  Sparkles: () => <span />,
+}));
 
-// TODO: skipped — AudienciasContent was refactored (tabs -> ViewModePopover, removed "Criar Audiência" button).
-// Tests need to be rewritten to match the current component API.
-describe.skip('AudienciasContent', () => {
+// Mock tooltip
+jest.mock('@/components/ui/tooltip', () => ({
+  Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  TooltipContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  TooltipTrigger: React.forwardRef(({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>, ref: React.Ref<HTMLDivElement>) => (
+    <div ref={ref} {...props}>{children}</div>
+  )),
+}));
+
+describe('AudienciasContent', () => {
+  const { usePathname } = require('next/navigation');
+
   beforeEach(() => {
-    (useAudiencias as jest.Mock).mockReturnValue({
-      audiencias: mockAudiencias,
-      paginacao: { currentPage: 1, pageSize: 10, totalCount: 1, totalPages: 1 },
-      isLoading: false,
-      error: null,
-      refetch: jest.fn(),
-    });
-    (useTiposAudiencias as jest.Mock).mockReturnValue({
-      tiposAudiencia: mockTiposAudiencia,
-      isLoading: false,
-      error: null,
-      refetch: jest.fn(),
-    });
-    (useUsuarios as jest.Mock).mockReturnValue({
-      usuarios: mockUsuarios,
-      isLoading: false,
-      error: null,
-      refetch: jest.fn(),
-    });
+    // Reset to default pathname before each test
+    (usePathname as jest.Mock).mockReturnValue('/audiencias/lista');
   });
 
-  it('renders correctly with initial view "lista"', async () => {
+  it('renders lista view when visualizacao="lista"', () => {
     render(<AudienciasContent visualizacao="lista" />);
 
-    expect(screen.getByText('Audiências')).toBeInTheDocument();
-    expect(screen.getByText('Criar Audiência')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Buscar...')).toBeInTheDocument();
-    expect(screen.getByText('Lista')).toBeInTheDocument();
-    await waitFor(() => {
-      expect(screen.getByText('0001234-56.2023.5.01.0001')).toBeInTheDocument();
-      expect(screen.getByText('Virtual')).toBeInTheDocument();
-    });
+    expect(screen.getByTestId('audiencias-list-wrapper')).toBeInTheDocument();
+    expect(screen.getByTestId('view-mode-popover')).toBeInTheDocument();
   });
 
-  it('switches between views', async () => {
-    render(<AudienciasContent visualizacao="lista" />);
-    const user = userEvent.setup();
+  it('renders semana view', () => {
+    (usePathname as jest.Mock).mockReturnValue('/audiencias/semana');
 
-    // Switch to Semana view
-    await user.click(screen.getByRole('tab', { name: /semana/i }));
-    expect(screen.getByRole('button', { name: /anterior/i })).toBeInTheDocument();
-    expect(screen.getByText(/Semana/i)).toBeInTheDocument();
-
-    // Switch to Mês view
-    await user.click(screen.getByRole('tab', { name: /mês/i }));
-    expect(screen.getByText(/Mês/i)).toBeInTheDocument();
-
-    // Switch to Ano view
-    await user.click(screen.getByRole('tab', { name: /ano/i }));
-    expect(screen.getByText(/Ano/i)).toBeInTheDocument();
-
-    // Switch back to Lista view
-    await user.click(screen.getByRole('tab', { name: /lista/i }));
-    await waitFor(() => {
-      expect(screen.getByText('0001234-56.2023.5.01.0001')).toBeInTheDocument();
-    });
-  });
-
-  it('filters audiencias by search input', async () => {
-    const refetchMock = jest.fn();
-    (useAudiencias as jest.Mock).mockReturnValue({
-      audiencias: mockAudiencias,
-      paginacao: { currentPage: 1, pageSize: 10, totalCount: 1, totalPages: 1 },
-      isLoading: false,
-      error: null,
-      refetch: refetchMock,
-    });
-
-    render(<AudienciasContent visualizacao="lista" />);
-    const user = userEvent.setup();
-
-    const searchInput = screen.getByPlaceholderText('Buscar...');
-    await user.type(searchInput, '0001234');
-
-    await waitFor(() => expect(refetchMock).toHaveBeenCalled());
-    // Further assertions would depend on how the mock hook reacts to input changes
-    // For now, just checking if refetch is called.
-  });
-
-  it('displays loading state', () => {
-    (useAudiencias as jest.Mock).mockReturnValue({
-      audiencias: [],
-      paginacao: null,
-      isLoading: true,
-      error: null,
-      refetch: jest.fn(),
-    });
-
-    render(<AudienciasContent visualizacao="lista" />);
-    expect(screen.getByText('Carregando audiências...')).toBeInTheDocument();
-  });
-
-  it('displays error state', () => {
-    (useAudiencias as jest.Mock).mockReturnValue({
-      audiencias: [],
-      paginacao: null,
-      isLoading: false,
-      error: 'Failed to load',
-      refetch: jest.fn(),
-    });
-
-    render(<AudienciasContent visualizacao="lista" />);
-    expect(screen.getByText(/Erro ao carregar audiências: Failed to load/i)).toBeInTheDocument();
-  });
-
-  it('handles date navigation in week view', async () => {
-    const refetchMock = jest.fn();
-    (useAudiencias as jest.Mock).mockReturnValue({
-      audiencias: [],
-      paginacao: null,
-      isLoading: false,
-      error: null,
-      refetch: refetchMock,
-    });
     render(<AudienciasContent visualizacao="semana" />);
-    const user = userEvent.setup();
 
-    const nextButton = screen.getByRole('button', { name: /próximo/i });
-    await user.click(nextButton);
-    // Expect the date to change, leading to refetch being called with updated params
-    await waitFor(() => expect(refetchMock).toHaveBeenCalled());
+    expect(screen.getByTestId('audiencias-table-wrapper')).toBeInTheDocument();
+  });
+
+  it('renders mes view', () => {
+    (usePathname as jest.Mock).mockReturnValue('/audiencias/mes');
+
+    render(<AudienciasContent visualizacao="mes" />);
+
+    expect(screen.getByTestId('audiencias-month-wrapper')).toBeInTheDocument();
+  });
+
+  it('renders ano view', () => {
+    (usePathname as jest.Mock).mockReturnValue('/audiencias/ano');
+
+    render(<AudienciasContent visualizacao="ano" />);
+
+    expect(screen.getByTestId('audiencias-year-wrapper')).toBeInTheDocument();
+  });
+
+  it('passes ViewModePopover as slot to wrapper', () => {
+    render(<AudienciasContent visualizacao="lista" />);
+
+    // ViewModePopover should be rendered inside the wrapper via viewModeSlot
+    const popover = screen.getByTestId('view-mode-popover');
+    expect(popover).toBeInTheDocument();
+    // The popover should show current value
+    expect(popover).toHaveTextContent('lista');
+  });
+
+  it('renders settings dialog structure', () => {
+    render(<AudienciasContent visualizacao="lista" />);
+
+    // DialogFormShell for settings is always rendered
+    expect(screen.getByTestId('dialog-form-shell')).toBeInTheDocument();
   });
 });

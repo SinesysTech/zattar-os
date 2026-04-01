@@ -347,6 +347,20 @@ export const PAPEL_CONTRATUAL_LABELS: Record<PapelContratual, string> = {
 };
 
 // =============================================================================
+// STATS (DASHBOARD)
+// =============================================================================
+
+export interface ContratosStatsData {
+  total: number;
+  porStatus: Record<string, { count: number }>;
+  novosMes: number;
+  taxaConversao: number;
+  trendMensal: number[];
+  emCarteira?: number;
+  ticketMedio?: number;
+}
+
+// =============================================================================
 // NOTA: Tipos auxiliares (API Response, Filtros, PaginationInfo, ClienteInfo)
 // foram movidos para ./types.ts para separação de concerns.
 // Importe-os de '@/features/contratos/types' ou '@/features/contratos'

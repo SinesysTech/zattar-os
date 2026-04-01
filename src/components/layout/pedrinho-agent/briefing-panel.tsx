@@ -1,24 +1,32 @@
 'use client'
 
 import { useCallback, useEffect, useRef } from 'react'
-import { Minus, Paperclip, X } from 'lucide-react'
 import { CopilotChat } from '@copilotkit/react-core/v2'
+import { useAgent } from '@copilotkit/react-core/v2'
 import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
+import { useBreakpointBelow } from '@/hooks/use-breakpoint'
+import { usePanelResize } from './hooks/use-panel-resize'
+import { BriefingHeader } from './components/briefing-header'
+import { BriefingInput } from './components/briefing-input'
+import type { MultimodalRequest } from './types'
 
 interface BriefingPanelProps {
   onClose: () => void
   onMinimize: () => void
+  onWidthChange?: (width: number) => void
   threadId?: string
 }
 
-/** Largura do painel — deve combinar com PANEL_WIDTH em copilot-dashboard.tsx */
-const PANEL_W = 380
-
-export function BriefingPanel({ onClose, onMinimize, threadId }: BriefingPanelProps) {
+export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: BriefingPanelProps) {
   const pathname = usePathname()
   const panelRef = useRef<HTMLDivElement>(null)
   const moduleLabel = getModuleLabel(pathname || '')
+  const isMobile = useBreakpointBelow('md')
+  const { agent } = useAgent()
+
+  const { width, isResizing, handleMouseDown } = usePanelResize(onWidthChange)
+  const panelWidth = isMobile ? '100vw' : width
 
   // Close on Escape
   useEffect(() => {
@@ -29,22 +37,80 @@ export function BriefingPanel({ onClose, onMinimize, threadId }: BriefingPanelPr
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [onClose])
 
-  // File attachment handler
-  const handleAddFile = useCallback(() => {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt'
-    input.multiple = true
-    input.onchange = () => {
-      // TODO: integrate with file upload when CopilotKit adds native support
-      // For now files can be processed via MCP tools
-      const files = input.files
-      if (files?.length) {
-        console.log('[Pedrinho] Files selected:', Array.from(files).map((f) => f.name))
+  // Notify parent of width on mount and changes
+  useEffect(() => {
+    if (!isMobile) onWidthChange?.(width)
+  }, [width, isMobile, onWidthChange])
+
+  // --- Message Handlers ---
+
+  const handleSendText = useCallback(
+    async (text: string) => {
+      if (!text.trim() || agent.isRunning) return
+      agent.addMessage({
+        id: crypto.randomUUID(),
+        role: 'user' as const,
+        content: text.trim(),
+      })
+      try {
+        await agent.runAgent()
+      } catch {
+        // Agent handles errors internally
       }
-    }
-    input.click()
-  }, [])
+    },
+    [agent]
+  )
+
+  const handleSendMultimodal = useCallback(
+    async (request: MultimodalRequest) => {
+      if (agent.isRunning) return
+
+      // Show user message in chat
+      const userContent = request.text || 'Enviou anexo(s)'
+      agent.addMessage({
+        id: crypto.randomUUID(),
+        role: 'user' as const,
+        content: userContent,
+      })
+
+      // Call multimodal API
+      try {
+        const response = await fetch('/api/pedrinho/multimodal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(request),
+        })
+
+        const data = await response.json()
+
+        if (data.error) {
+          agent.addMessage({
+            id: crypto.randomUUID(),
+            role: 'assistant' as const,
+            content: `Erro: ${data.error}`,
+          })
+          return
+        }
+
+        agent.addMessage({
+          id: crypto.randomUUID(),
+          role: 'assistant' as const,
+          content: data.content,
+        })
+      } catch {
+        agent.addMessage({
+          id: crypto.randomUUID(),
+          role: 'assistant' as const,
+          content: 'Erro ao processar os anexos. Tente novamente.',
+        })
+      }
+    },
+    [agent]
+  )
+
+  const handleStopAgent = useCallback(() => {
+    agent.abortRun()
+  }, [agent])
 
   return (
     <div
@@ -52,87 +118,70 @@ export function BriefingPanel({ onClose, onMinimize, threadId }: BriefingPanelPr
       className={cn(
         'fixed top-0 right-0 z-40 h-full',
         'flex flex-col',
-        // Light mode: solid card surface
-        'bg-card border-l border-border/15',
-        'shadow-[-8px_0_32px_rgba(0,0,0,0.04)]',
-        // Dark mode: glass surface
+        'bg-card border-l border-border/12',
+        'shadow-[-4px_0_24px_rgba(0,0,0,0.04)]',
         'dark:bg-card/95 dark:backdrop-blur-2xl dark:border-border/6',
-        'dark:shadow-[-12px_0_40px_rgba(0,0,0,0.2)]',
-        // Animation
+        'dark:shadow-[-8px_0_32px_rgba(0,0,0,0.2)]',
         'animate-in slide-in-from-right duration-300 ease-out',
-        // This class targets all CopilotChat overrides
-        'pedrinho-briefing-panel'
+        isResizing && 'transition-none [&_.copilotKitChat]:pointer-events-none'
       )}
-      style={{ width: PANEL_W }}
+      style={{ width: panelWidth }}
     >
-      {/* ─── Header ─────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/8 dark:border-border/6">
-        <div className="flex items-center gap-3">
-          {/* Pedrinho avatar */}
-          <div className="size-7 rounded-xl bg-linear-to-br from-primary/25 to-primary/8 border border-primary/12 flex items-center justify-center">
-            <span className="flex gap-0.75">
-              <span className="size-1.25 rounded-full bg-primary/70" />
-              <span className="size-1.25rounded-full bg-primary/70" />
-            </span>
-          </div>
-          <div>
-            <h2 className="text-[13px] font-heading font-semibold text-foreground/90 leading-tight">
-              Pedrinho
-            </h2>
-            <p className="text-[9px] text-muted-foreground/55 mt-0.5">
-              Contexto: {moduleLabel}
-            </p>
-          </div>
+      {/* Resize handle — left edge (hidden on mobile) */}
+      {!isMobile && (
+        <div
+          onMouseDown={handleMouseDown}
+          className={cn(
+            'absolute left-0 top-0 bottom-0 w-1.5 z-50',
+            'cursor-col-resize group/resize',
+            'hover:bg-primary/10 active:bg-primary/15',
+            'transition-colors duration-150'
+          )}
+          title="Arrastar para redimensionar"
+        >
+          <div
+            className={cn(
+              'absolute left-0 top-1/2 -translate-y-1/2',
+              'w-1 h-12 rounded-full',
+              'bg-border/0 group-hover/resize:bg-primary/30',
+              'transition-all duration-200'
+            )}
+          />
         </div>
+      )}
 
-        <div className="flex items-center gap-0.5">
-          <button
-            onClick={onMinimize}
-            className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-muted-foreground/60 hover:bg-muted/50 dark:hover:bg-white/4 transition-colors cursor-pointer"
-            title="Minimizar (Esc)"
-          >
-            <Minus className="size-3.5" />
-          </button>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-muted-foreground/50 hover:text-muted-foreground/60 hover:bg-muted/50 dark:hover:bg-white/4 transition-colors cursor-pointer"
-            title="Fechar"
-          >
-            <X className="size-3.5" />
-          </button>
-        </div>
-      </div>
+      {/* Header */}
+      <BriefingHeader moduleLabel={moduleLabel} onMinimize={onMinimize} onClose={onClose} />
 
-      {/* ─── CopilotChat ────────────────────────────────────────── */}
+      {/* Chat messages — CopilotChat with hidden input */}
       <div className="flex-1 min-h-0 pedrinho-chat-wrapper">
         <CopilotChat
           threadId={threadId}
           labels={{
             modalHeaderTitle: 'Pedrinho',
-            welcomeMessageText: 'Olá! Como posso ajudar você hoje?',
+            welcomeMessageText: 'Olá! Como posso ajudar? Envie textos, imagens, documentos ou grave áudios.',
             chatInputPlaceholder: 'Mensagem...',
             chatDisclaimerText: '',
           }}
           className="pedrinho-chat h-full"
-          input={{
-            onAddFile: handleAddFile,
-          }}
         />
       </div>
 
-      {/* ─── Attachment indicator (footer accent) ───────────────── */}
-      <div className="flex items-center gap-2 px-5 py-2 border-t border-border/6 dark:border-border/4">
-        <button
-          onClick={handleAddFile}
-          className="flex items-center gap-1.5 text-[9px] text-muted-foreground/50 hover:text-muted-foreground/50 transition-colors cursor-pointer"
-          title="Anexar arquivo"
-        >
-          <Paperclip className="size-3" />
-          <span>Anexar</span>
-        </button>
-        <div className="flex-1" />
-        <kbd className="text-[8px] text-muted-foreground/60 font-mono">Esc para fechar</kbd>
-      </div>
+      {/* Custom input with multimodal support */}
+      <BriefingInput
+        onSendText={handleSendText}
+        onSendMultimodal={handleSendMultimodal}
+        onStopAgent={handleStopAgent}
+        isAgentRunning={agent.isRunning}
+        threadId={threadId}
+      />
+
+      {/* Mobile close hint */}
+      {isMobile && (
+        <div className="flex justify-center py-1.5 border-t border-border/6">
+          <span className="text-[10px] text-muted-foreground/40">Deslize para direita para fechar</span>
+        </div>
+      )}
     </div>
   )
 }
@@ -142,17 +191,17 @@ export function BriefingPanel({ onClose, onMinimize, threadId }: BriefingPanelPr
 const MODULE_LABELS: Record<string, string> = {
   dashboard: 'Dashboard',
   processos: 'Processos',
-  audiencias: 'Audiencias',
+  audiencias: 'Audiências',
   expedientes: 'Expedientes',
   financeiro: 'Financeiro',
   tarefas: 'Tarefas',
   contratos: 'Contratos',
   partes: 'Partes & Clientes',
   documentos: 'Documentos',
-  chat: 'Comunicacao',
+  chat: 'Comunicação',
   rh: 'Recursos Humanos',
   agenda: 'Agenda',
-  pericias: 'Pericias',
+  pericias: 'Perícias',
 }
 
 function getModuleLabel(pathname: string): string {

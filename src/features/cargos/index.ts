@@ -24,6 +24,5 @@ export {
 // Hooks
 export { useCargos } from './hooks/use-cargos';
 
-// Components
-// export { CargosTable } from './components/cargos-table';
-// export { CargoForm } from './components/cargo-form';
+// Components (placeholder - add as needed)
+export {} from './components';

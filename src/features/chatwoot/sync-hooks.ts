@@ -14,7 +14,7 @@ import type { Cliente, CreateClienteInput, UpdateClienteInput } from '@/features
 import {
   saveCliente,
   updateCliente,
-} from '@/features/partes/repositories/clientes-repository';
+} from '@/features/partes/repository';
 import { sincronizarParteComChatwoot } from './service';
 import { isChatwootConfigured } from '@/lib/chatwoot';
 
@@ -171,7 +171,7 @@ export async function updateClienteComSync(
 export async function sincronizarClienteManual(
   clienteId: number
 ): Promise<Result<{ chatwoot_contact_id: number | null; criado: boolean }>> {
-  const { findClienteById } = await import('@/features/partes/repositories/clientes-repository');
+  const { findClienteById } = await import('@/features/partes/repository');
 
   const clienteResult = await findClienteById(clienteId);
 

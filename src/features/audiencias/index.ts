@@ -85,17 +85,9 @@ export type { ActionResult } from "./actions";
 // ============================================================================
 // Service
 // ============================================================================
-export {
-  criarAudiencia,
-  buscarAudiencia,
-  listarAudiencias,
-  atualizarAudiencia,
-  atualizarStatusAudiencia,
-} from "./service";
-
-// NOTE: Server-side services (responsavel.service, virtual.service, ai-agent.service)
-// are NOT exported here to prevent Redis/Node.js dependencies from being bundled
-// in client components. These services should only be used by server actions.
+// NOTE: Service functions are NOT exported here because service.ts imports
+// repository.ts which uses Redis cache-utils with 'server-only'.
+// Import directly: import { listarAudiencias } from '@/features/audiencias/service';
 
 // ============================================================================
 // Repository
