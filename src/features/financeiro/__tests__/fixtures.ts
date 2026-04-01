@@ -1,4 +1,5 @@
-import { Lancamento, TipoLancamento, StatusLancamento, OrigemLancamento } from '../types';
+import type { Lancamento } from '../types';
+import { TipoLancamento, StatusLancamento, OrigemLancamento } from '../domain/lancamentos';
 
 // Lançamento Fixtures
 export function criarLancamentoReceitaMock(overrides?: Partial<Lancamento>): Lancamento {

@@ -1,19 +1,16 @@
 "use client";
 
 /**
- * RevisarDocumentoClient - Página de revisão final do documento
+ * RevisarDocumentoClient — Etapa 3: Revisar e enviar para assinatura
  *
- * Fluxo:
- * 1. Mostra resumo do documento e assinantes
- * 2. Preview do PDF com âncoras (read-only)
- * 3. Links de assinatura para compartilhar
- * 4. Botão para finalizar e voltar à lista
+ * Layout flat alinhado ao design system do command center.
+ * Grid responsivo: resumo à esquerda, PDF preview à direita.
+ * Integrado com DocumentFlowShell (stepper no header).
  */
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
-  ArrowLeft,
   Check,
   Copy,
   FileText,
@@ -26,9 +23,11 @@ import {
   ChevronRight,
   Camera,
   Link as LinkIcon,
+  ArrowLeft,
+  Send,
+  Shield,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -39,9 +38,12 @@ import {
   PdfPreviewDynamic,
 } from "../../../feature";
 import { actionFinalizeDocumento } from "../../../feature/actions/documentos-actions";
+import { DocumentFlowShell } from "../../../feature/components/flow";
+import type { AssinaturaDigitalDocumentoAssinanteTipo } from "../../../feature/domain";
 
-// Tipos
-interface DocumentoCompleto {
+// ─── Types ─────────────────────────────────────────────────────────────
+
+interface DocumentoRevisar {
   id: number;
   documento_uuid: string;
   titulo: string | null;
@@ -50,7 +52,7 @@ interface DocumentoCompleto {
   pdf_original_url: string;
   assinantes: Array<{
     id: number;
-    assinante_tipo: string;
+    assinante_tipo: AssinaturaDigitalDocumentoAssinanteTipo;
     dados_snapshot: Record<string, unknown>;
     token: string;
     public_link: string;
@@ -68,17 +70,18 @@ interface DocumentoCompleto {
   }>;
 }
 
-// Cores para assinantes usando tokens do design system (chart-*)
-const SIGNER_COLORS = [
-  { bg: "bg-chart-1/20", border: "border-chart-1", text: "text-chart-1", solid: "bg-chart-1" },
-  { bg: "bg-chart-2/20", border: "border-chart-2", text: "text-chart-2", solid: "bg-chart-2" },
-  { bg: "bg-chart-3/20", border: "border-chart-3", text: "text-chart-3", solid: "bg-chart-3" },
-  { bg: "bg-chart-4/20", border: "border-chart-4", text: "text-chart-4", solid: "bg-chart-4" },
-  { bg: "bg-chart-5/20", border: "border-chart-5", text: "text-chart-5", solid: "bg-chart-5" },
+// ─── Constants ─────────────────────────────────────────────────────────
+
+const CHART_COLORS = [
+  { bg: "bg-chart-1/15", border: "border-chart-1/40", text: "text-chart-1", solid: "bg-chart-1" },
+  { bg: "bg-chart-2/15", border: "border-chart-2/40", text: "text-chart-2", solid: "bg-chart-2" },
+  { bg: "bg-chart-3/15", border: "border-chart-3/40", text: "text-chart-3", solid: "bg-chart-3" },
+  { bg: "bg-chart-4/15", border: "border-chart-4/40", text: "text-chart-4", solid: "bg-chart-4" },
+  { bg: "bg-chart-5/15", border: "border-chart-5/40", text: "text-chart-5", solid: "bg-chart-5" },
 ];
 
-function getSignerColor(index: number) {
-  return SIGNER_COLORS[index % SIGNER_COLORS.length];
+function getColor(index: number) {
+  return CHART_COLORS[index % CHART_COLORS.length];
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -88,40 +91,285 @@ const STATUS_LABELS: Record<string, string> = {
   cancelado: "Cancelado",
 };
 
-function getSignerName(assinante: DocumentoCompleto["assinantes"][0]): string {
+const TIPO_LABELS: Record<string, string> = {
+  cliente: "Cliente",
+  parte_contraria: "Parte Contrária",
+  representante: "Representante",
+  terceiro: "Terceiro",
+  usuario: "Usuário",
+  convidado: "Convidado",
+};
+
+function getSignerName(assinante: DocumentoRevisar["assinantes"][0]): string {
   const nome =
-    (assinante.dados_snapshot?.nome_completo as string | undefined) ||
-    (assinante.dados_snapshot?.nome as string | undefined);
-  if (nome) return nome;
-
-  const tipoLabels: Record<string, string> = {
-    cliente: "Cliente",
-    parte_contraria: "Parte Contrária",
-    representante: "Representante",
-    terceiro: "Terceiro",
-    usuario: "Usuário",
-    convidado: "Convidado",
-  };
-
-  return tipoLabels[assinante.assinante_tipo] || `Assinante ${assinante.id}`;
+    (assinante.dados_snapshot?.nome_completo as string) ||
+    (assinante.dados_snapshot?.nome as string);
+  return nome || TIPO_LABELS[assinante.assinante_tipo] || `Assinante ${assinante.id}`;
 }
+
+// ─── Section Header ────────────────────────────────────────────────────
+
+function SectionHeader({
+  icon: Icon,
+  title,
+  action,
+}: {
+  icon: React.ElementType;
+  title: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2.5">
+        <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
+          <Icon className="size-4 text-primary" />
+        </div>
+        <h2 className="text-sm font-heading font-semibold text-foreground">
+          {title}
+        </h2>
+      </div>
+      {action}
+    </div>
+  );
+}
+
+// ─── Stats Row ─────────────────────────────────────────────────────────
+
+function StatsRow({
+  documento,
+}: {
+  documento: DocumentoRevisar;
+}) {
+  const pendentes = documento.assinantes.filter((a) => a.status === "pendente").length;
+  const concluidos = documento.assinantes.filter((a) => a.status === "concluido").length;
+
+  const stats = [
+    { label: "Assinantes", value: documento.assinantes.length, icon: Users },
+    { label: "Âncoras", value: documento.ancoras.length, icon: Pen },
+    { label: "Pendentes", value: pendentes, icon: Send },
+    ...(concluidos > 0
+      ? [{ label: "Concluídos", value: concluidos, icon: Check }]
+      : []),
+  ];
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {stats.map((stat) => {
+        const Icon = stat.icon;
+        return (
+          <div
+            key={stat.label}
+            className="flex items-center gap-2.5 rounded-lg border bg-background p-3"
+          >
+            <Icon className="size-4 text-muted-foreground shrink-0" />
+            <div className="min-w-0">
+              <p className="text-lg font-semibold font-heading leading-none">
+                {stat.value}
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {stat.label}
+              </p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── Signer Link Card ──────────────────────────────────────────────────
+
+function SignerLinkCard({
+  assinante,
+  index,
+  onCopyLink,
+}: {
+  assinante: DocumentoRevisar["assinantes"][0];
+  index: number;
+  onCopyLink: (assinante: DocumentoRevisar["assinantes"][0]) => void;
+}) {
+  const color = getColor(index);
+  const isConcluido = assinante.status === "concluido";
+  const nome = getSignerName(assinante);
+
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-between rounded-xl border p-3.5 transition-colors",
+        isConcluido
+          ? "bg-chart-4/10 border-chart-4/30"
+          : `${color.bg} ${color.border}`
+      )}
+    >
+      <div className="flex items-center gap-3 min-w-0">
+        {/* Avatar */}
+        <div
+          className={cn(
+            "flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-medium text-primary-foreground",
+            isConcluido ? "bg-chart-4" : color.solid
+          )}
+        >
+          {isConcluido ? (
+            <Check className="size-5" />
+          ) : (
+            nome.charAt(0).toUpperCase()
+          )}
+        </div>
+
+        {/* Info */}
+        <div className="min-w-0">
+          <p className="text-sm font-medium truncate">{nome}</p>
+          <p className="text-xs text-muted-foreground capitalize">
+            {TIPO_LABELS[assinante.assinante_tipo]?.toLowerCase() ?? assinante.assinante_tipo}
+            {isConcluido && " · Assinado"}
+          </p>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-1 shrink-0">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-8"
+          onClick={() => onCopyLink(assinante)}
+        >
+          <Copy className="size-3.5" />
+          <span className="sr-only">Copiar link</span>
+        </Button>
+        <Button variant="ghost" size="icon" className="size-8" asChild>
+          <a
+            href={assinante.public_link}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <ExternalLink className="size-3.5" />
+            <span className="sr-only">Abrir link</span>
+          </a>
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// ─── PDF Preview Section ───────────────────────────────────────────────
+
+function PdfPreviewSection({
+  documento,
+  pdfUrl,
+}: {
+  documento: DocumentoRevisar;
+  pdfUrl: string | null | undefined;
+}) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [numPages, setNumPages] = useState(1);
+
+  const anchorsOnPage = documento.ancoras.filter(
+    (a) => a.pagina === currentPage
+  );
+
+  return (
+    <div className="rounded-xl border bg-background overflow-hidden">
+      {/* PDF com âncoras (read-only) */}
+      <div className="relative bg-muted/30">
+        <PdfPreviewDynamic
+          pdfUrl={pdfUrl ?? undefined}
+          mode="background"
+          initialPage={currentPage}
+          onPageChange={setCurrentPage}
+          onLoadSuccess={setNumPages}
+          showControls={false}
+          showPageIndicator={false}
+        />
+
+        {/* Âncoras sobrepostas */}
+        <div className="absolute inset-0 pointer-events-none">
+          {anchorsOnPage.map((anchor) => {
+            const signerIdx = documento.assinantes.findIndex(
+              (s) => s.id === anchor.documento_assinante_id
+            );
+            const color = getColor(signerIdx);
+            const assinante = documento.assinantes.find(
+              (s) => s.id === anchor.documento_assinante_id
+            );
+
+            return (
+              <div
+                key={anchor.id}
+                className={cn(
+                  "absolute border-2 rounded-sm",
+                  color.bg,
+                  color.border.replace("/40", "")
+                )}
+                style={{
+                  left: `${anchor.x_norm * 100}%`,
+                  top: `${anchor.y_norm * 100}%`,
+                  width: `${anchor.w_norm * 100}%`,
+                  height: `${anchor.h_norm * 100}%`,
+                }}
+              >
+                <div
+                  className={cn(
+                    "absolute -top-6 left-0 px-2 py-0.5 rounded text-xs font-medium text-primary-foreground flex items-center gap-1",
+                    color.solid
+                  )}
+                >
+                  {anchor.tipo === "assinatura" ? (
+                    <Pen className="size-3" />
+                  ) : (
+                    <Stamp className="size-3" />
+                  )}
+                  {assinante && getSignerName(assinante).split(" ")[0]}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Controles de página */}
+      <div className="flex items-center justify-center gap-3 p-3 border-t">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+          disabled={currentPage <= 1}
+        >
+          <ChevronLeft className="size-4" />
+        </Button>
+        <span className="text-sm min-w-25 text-center tabular-nums">
+          Página {currentPage} de {numPages}
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setCurrentPage((p) => Math.min(numPages, p + 1))}
+          disabled={currentPage >= numPages}
+        >
+          <ChevronRight className="size-4" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Component ────────────────────────────────────────────────────
 
 export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
   const router = useRouter();
 
-  // Estado
   const [isLoading, setIsLoading] = useState(true);
   const [isFinalizing, setIsFinalizing] = useState(false);
-  const [documento, setDocumento] = useState<DocumentoCompleto | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [numPages, setNumPages] = useState(1);
+  const [documento, setDocumento] = useState<DocumentoRevisar | null>(null);
 
-  // PDF URL via proxy route (avoids CORS with Backblaze)
-  const { presignedUrl: pdfPresignedUrl } = usePresignedPdfUrl(documento?.pdf_original_url, uuid);
+  const { presignedUrl: pdfPresignedUrl } = usePresignedPdfUrl(
+    documento?.pdf_original_url,
+    uuid
+  );
 
   // Carregar documento
   useEffect(() => {
-    async function carregarDocumento() {
+    async function carregar() {
       setIsLoading(true);
       try {
         const resultado = await actionGetDocumento({ uuid });
@@ -133,28 +381,22 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         }
 
         const docData = resultado.data as {
-          documento: Omit<DocumentoCompleto, "assinantes" | "ancoras">;
-          assinantes: DocumentoCompleto["assinantes"];
-          ancoras: DocumentoCompleto["ancoras"];
+          documento: Omit<DocumentoRevisar, "assinantes" | "ancoras">;
+          assinantes: DocumentoRevisar["assinantes"];
+          ancoras: DocumentoRevisar["ancoras"];
         };
+
         if (!docData?.documento) {
           toast.error("Documento não encontrado");
           router.push("/app/assinatura-digital/documentos/lista");
           return;
         }
 
-        const doc: DocumentoCompleto = {
-          id: docData.documento.id,
-          documento_uuid: docData.documento.documento_uuid,
-          titulo: docData.documento.titulo,
-          status: docData.documento.status,
-          selfie_habilitada: docData.documento.selfie_habilitada,
-          pdf_original_url: docData.documento.pdf_original_url,
+        setDocumento({
+          ...docData.documento,
           assinantes: docData.assinantes,
           ancoras: docData.ancoras,
-        };
-
-        setDocumento(doc);
+        });
       } catch (error) {
         toast.error("Erro ao carregar documento");
         console.error(error);
@@ -164,19 +406,22 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
       }
     }
 
-    carregarDocumento();
+    carregar();
   }, [uuid, router]);
 
   // Copiar link individual
-  const handleCopyLink = useCallback(async (assinante: DocumentoCompleto["assinantes"][0]) => {
-    try {
-      const fullUrl = `${window.location.origin}${assinante.public_link}`;
-      await navigator.clipboard.writeText(fullUrl);
-      toast.success(`Link copiado para ${getSignerName(assinante)}`);
-    } catch {
-      toast.error("Erro ao copiar link");
-    }
-  }, []);
+  const handleCopyLink = useCallback(
+    async (assinante: DocumentoRevisar["assinantes"][0]) => {
+      try {
+        const fullUrl = `${window.location.origin}${assinante.public_link}`;
+        await navigator.clipboard.writeText(fullUrl);
+        toast.success(`Link copiado para ${getSignerName(assinante)}`);
+      } catch {
+        toast.error("Erro ao copiar link");
+      }
+    },
+    []
+  );
 
   // Copiar todos os links
   const handleCopyAllLinks = useCallback(async () => {
@@ -198,314 +443,179 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
     }
   }, [documento]);
 
-  // Finalizar e voltar à lista
+  // Finalizar
   const handleFinalize = useCallback(async () => {
     if (!documento) return;
 
     setIsFinalizing(true);
     try {
-      const resultado = await actionFinalizeDocumento({ uuid: documento.documento_uuid });
+      const resultado = await actionFinalizeDocumento({
+        uuid: documento.documento_uuid,
+      });
 
       if (!resultado.success) {
         toast.error(resultado.error || "Erro ao finalizar documento");
         return;
       }
 
-      toast.success("Documento pronto para assinatura! Os links foram gerados.");
+      toast.success(
+        "Documento pronto para assinatura! Os links foram gerados."
+      );
       router.push("/app/assinatura-digital/documentos/lista");
     } catch (error) {
       console.error("Erro ao finalizar documento:", error);
-      toast.error(error instanceof Error ? error.message : "Erro ao finalizar documento");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Erro ao finalizar documento"
+      );
     } finally {
       setIsFinalizing(false);
     }
   }, [documento, router]);
 
-  // Loading state
+  // Loading
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-100">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
+      <DocumentFlowShell>
+        <div className="flex items-center justify-center min-h-100">
+          <Loader2 className="size-8 animate-spin text-muted-foreground" />
+        </div>
+      </DocumentFlowShell>
     );
   }
 
-  if (!documento) {
-    return null;
-  }
-
-  const anchorsOnPage = documento.ancoras.filter((a) => a.pagina === currentPage);
-  const assinantesPendentes = documento.assinantes.filter((a) => a.status === "pendente").length;
-  const assinantesConcluidos = documento.assinantes.filter((a) => a.status === "concluido").length;
+  if (!documento) return null;
 
   return (
-    <div className="max-w-6xl mx-auto w-full space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-lg font-semibold">
-            {documento.titulo || "Documento sem título"}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Confira as configurações antes de compartilhar os links
-          </p>
+    <DocumentFlowShell>
+      <div className="max-w-350 mx-auto w-full space-y-5">
+        {/* ── Header ─────────────────────────────────── */}
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-heading font-semibold tracking-tight">
+              {documento.titulo || "Documento sem título"}
+            </h1>
+            <p className="text-sm text-muted-foreground/50 mt-0.5">
+              Confira as configurações antes de compartilhar
+            </p>
+          </div>
+          <Badge
+            variant={
+              documento.status === "pronto" ? "default" : "secondary"
+            }
+          >
+            {STATUS_LABELS[documento.status] ?? documento.status}
+          </Badge>
         </div>
-        <Badge
-          variant={documento.status === "pronto" ? "default" : "secondary"}
-        >
-          {STATUS_LABELS[documento.status] ?? documento.status}
-        </Badge>
-      </div>
 
-      {/* Grid principal */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Coluna esquerda - Informações */}
-        <div className="space-y-6">
-          {/* Card de informações */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <FileText className="h-4 w-4" />
-                Informações do Documento
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">Título</p>
-                  <p className="font-medium">{documento.titulo || "Sem título"}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Status</p>
-                  <Badge variant="outline" className="mt-1">
-                    {STATUS_LABELS[documento.status] ?? documento.status}
-                  </Badge>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Selfie de Verificação</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Camera className="h-4 w-4" />
-                    <span>{documento.selfie_habilitada ? "Habilitada" : "Desabilitada"}</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Âncoras Definidas</p>
-                  <p className="font-medium">{documento.ancoras.length}</p>
-                </div>
-              </div>
+        {/* ── Stats ──────────────────────────────────── */}
+        <StatsRow documento={documento} />
 
-              <Separator />
+        {/* ── Settings Summary ───────────────────────── */}
+        {documento.selfie_habilitada && (
+          <div className="flex items-center gap-2 rounded-lg border border-chart-2/30 bg-chart-2/10 px-4 py-3">
+            <Camera className="size-4 text-chart-2 shrink-0" />
+            <p className="text-sm">
+              <span className="font-medium">Selfie de verificação</span>{" "}
+              <span className="text-muted-foreground">
+                habilitada para este documento
+              </span>
+            </p>
+          </div>
+        )}
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4" />
-                  <span className="text-sm font-medium">Assinantes</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary">{assinantesPendentes} pendentes</Badge>
-                  {assinantesConcluidos > 0 && (
-                    <Badge variant="default" className="bg-chart-4">
-                      {assinantesConcluidos} concluídos
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Card de links */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <LinkIcon className="h-4 w-4" />
-                  Links de Assinatura
-                </CardTitle>
-                <Button variant="outline" size="sm" onClick={handleCopyAllLinks}>
-                  <Copy className="h-4 w-4 mr-2" />
+        {/* ── Grid: Links + PDF Preview ──────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
+          {/* Coluna esquerda — Links de assinatura */}
+          <div className="space-y-4">
+            <SectionHeader
+              icon={LinkIcon}
+              title="Links de Assinatura"
+              action={
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 text-xs"
+                  onClick={handleCopyAllLinks}
+                >
+                  <Copy className="size-3 mr-1.5" />
                   Copiar Todos
                 </Button>
-              </div>
-              <CardDescription>
-                Compartilhe os links com cada assinante para que possam assinar o documento.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {documento.assinantes.map((assinante, idx) => {
-                const color = getSignerColor(idx);
-                const isConcluido = assinante.status === "concluido";
+              }
+            />
 
-                return (
-                  <div
-                    key={assinante.id}
-                    className={cn(
-                      "flex items-center justify-between p-3 rounded-lg border",
-                      isConcluido ? "bg-chart-4/10 border-chart-4/30" : color.bg,
-                      !isConcluido && color.border
-                    )}
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div
-                        className={cn(
-                          "w-10 h-10 rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium shrink-0",
-                          isConcluido ? "bg-chart-4" : color.solid
-                        )}
-                      >
-                        {isConcluido ? (
-                          <Check className="h-5 w-5" />
-                        ) : (
-                          getSignerName(assinante).charAt(0).toUpperCase()
-                        )}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-medium truncate">{getSignerName(assinante)}</p>
-                        <p className="text-xs text-muted-foreground capitalize">
-                          {assinante.assinante_tipo.replace("_", " ")}
-                          {isConcluido && " • Assinado"}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleCopyLink(assinante)}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        asChild
-                      >
-                        <a
-                          href={assinante.public_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
-            </CardContent>
-          </Card>
+            <p className="text-xs text-muted-foreground -mt-1">
+              Compartilhe o link com cada assinante. Cada link é único e
+              seguro.
+            </p>
+
+            <div className="space-y-2">
+              {documento.assinantes.map((assinante, idx) => (
+                <SignerLinkCard
+                  key={assinante.id}
+                  assinante={assinante}
+                  index={idx}
+                  onCopyLink={handleCopyLink}
+                />
+              ))}
+            </div>
+
+            {/* Segurança info */}
+            <div className="flex items-start gap-2.5 rounded-lg bg-muted/50 p-3 mt-2">
+              <Shield className="size-4 text-muted-foreground shrink-0 mt-0.5" />
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Cada assinatura coleta hash SHA-256, IP, geolocalização,
+                device fingerprint e aceite de termos conforme MP 2.200-2/2001.
+              </p>
+            </div>
+          </div>
+
+          {/* Coluna direita — PDF Preview */}
+          <div className="space-y-4">
+            <SectionHeader icon={FileText} title="Preview do Documento" />
+            <PdfPreviewSection
+              documento={documento}
+              pdfUrl={pdfPresignedUrl}
+            />
+          </div>
         </div>
 
-        {/* Coluna direita - Preview PDF */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Preview do Documento</CardTitle>
-            <CardDescription>
-              Visualização do PDF com as áreas de assinatura definidas.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="relative bg-muted/30 rounded-b-lg overflow-hidden">
-              {/* PDF com âncoras (read-only) */}
-              <div className="relative">
-                <PdfPreviewDynamic
-                  pdfUrl={pdfPresignedUrl ?? undefined}
-                  mode="background"
-                  initialPage={currentPage}
-                  onPageChange={setCurrentPage}
-                  onLoadSuccess={setNumPages}
-                  showControls={false}
-                  showPageIndicator={false}
-                />
-
-                {/* Âncoras sobrepostas (read-only) */}
-                <div className="absolute inset-0 pointer-events-none">
-                  {anchorsOnPage.map((anchor) => {
-                    const assinanteIdx = documento.assinantes.findIndex(
-                      (s) => s.id === anchor.documento_assinante_id
-                    );
-                    const color = getSignerColor(assinanteIdx);
-                    const assinante = documento.assinantes.find(
-                      (s) => s.id === anchor.documento_assinante_id
-                    );
-
-                    return (
-                      <div
-                        key={anchor.id}
-                        className={cn("absolute border-2", color.bg, color.border)}
-                        style={{
-                          left: `${anchor.x_norm * 100}%`,
-                          top: `${anchor.y_norm * 100}%`,
-                          width: `${anchor.w_norm * 100}%`,
-                          height: `${anchor.h_norm * 100}%`,
-                        }}
-                      >
-                        <div
-                          className={cn(
-                            "absolute -top-6 left-0 px-2 py-0.5 rounded text-xs font-medium text-primary-foreground flex items-center gap-1",
-                            color.solid
-                          )}
-                        >
-                          {anchor.tipo === "assinatura" ? (
-                            <Pen className="h-3 w-3" />
-                          ) : (
-                            <Stamp className="h-3 w-3" />
-                          )}
-                          {assinante && getSignerName(assinante).split(" ")[0]}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Controles de página */}
-              <div className="flex items-center justify-center gap-3 p-3 bg-background border-t">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage <= 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <span className="text-sm min-w-25 text-center">
-                  Página {currentPage} de {numPages}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((p) => Math.min(numPages, p + 1))}
-                  disabled={currentPage >= numPages}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* ── Actions Bar ────────────────────────────── */}
+        <Separator />
+        <div className="flex items-center justify-between pb-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground"
+            onClick={() =>
+              router.push(
+                `/app/assinatura-digital/documentos/editar/${uuid}`
+              )
+            }
+          >
+            <ArrowLeft className="size-4 mr-1.5" />
+            Voltar para Edição
+          </Button>
+          <Button
+            onClick={handleFinalize}
+            disabled={isFinalizing}
+            className="shadow-sm"
+          >
+            {isFinalizing ? (
+              <>
+                <Loader2 className="size-4 mr-1.5 animate-spin" />
+                Finalizando...
+              </>
+            ) : (
+              <>
+                <Send className="size-4 mr-1.5" />
+                Finalizar e Enviar
+              </>
+            )}
+          </Button>
+        </div>
       </div>
-
-      {/* Barra de acoes */}
-      <div className="flex items-center justify-between pt-2">
-        <Button
-          variant="outline"
-          onClick={() => router.push(`/app/assinatura-digital/documentos/editar/${uuid}`)}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Voltar para Edição
-        </Button>
-        <Button onClick={handleFinalize} disabled={isFinalizing}>
-          {isFinalizing ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Finalizando...
-            </>
-          ) : (
-            <>
-              <Check className="mr-2 h-4 w-4" />
-              Finalizar e Enviar
-            </>
-          )}
-        </Button>
-      </div>
-    </div>
+    </DocumentFlowShell>
   );
 }

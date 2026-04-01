@@ -164,7 +164,7 @@ describe('Clientes Repository', () => {
 
       await findClientesByNomeParcial('João');
 
-      expect(mockQueryBuilder.ilike).toHaveBeenCalledWith('nome_completo', '%João%');
+      expect(mockQueryBuilder.ilike).toHaveBeenCalledWith('nome', '%João%');
     });
 
     it('deve aplicar paginação', async () => {
@@ -182,7 +182,7 @@ describe('Clientes Repository', () => {
 
       await findClientesByNomeParcial('João');
 
-      expect(mockQueryBuilder.order).toHaveBeenCalledWith('nome_completo');
+      expect(mockQueryBuilder.order).toHaveBeenCalledWith('nome');
     });
   });
 
@@ -193,7 +193,7 @@ describe('Clientes Repository', () => {
 
       await findAllClientes({ nome: 'João' });
 
-      expect(mockQueryBuilder.ilike).toHaveBeenCalledWith('nome_completo', '%João%');
+      expect(mockQueryBuilder.ilike).toHaveBeenCalledWith('nome', '%João%');
     });
 
     it('deve aplicar filtro de CPF/CNPJ', async () => {
@@ -241,7 +241,7 @@ describe('Clientes Repository', () => {
         ordem: 'asc',
       });
 
-      expect(mockQueryBuilder.order).toHaveBeenCalledWith('nome_completo', {
+      expect(mockQueryBuilder.order).toHaveBeenCalledWith('nome', {
         ascending: true,
       });
     });

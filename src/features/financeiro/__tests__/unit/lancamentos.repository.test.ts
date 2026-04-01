@@ -12,6 +12,15 @@ import { createMockSupabaseClient, createMockQueryBuilder, mockPostgresError } f
 
 jest.mock('@/lib/supabase/service-client');
 
+/**
+ * Makes a mockQueryBuilder thenable so `await query` resolves to the given value.
+ */
+function makeThenable(builder: any, resolvedValue: { data: any; error: any }) {
+  builder.then = (resolve: any, reject?: any) => Promise.resolve(resolvedValue).then(resolve, reject);
+  builder.catch = (fn: any) => Promise.resolve(resolvedValue).catch(fn);
+  return builder;
+}
+
 describe('Lancamentos Repository', () => {
   let mockSupabaseClient: any;
   let mockQueryBuilder: any;
@@ -356,16 +365,23 @@ describe('Lancamentos Repository', () => {
   });
 
   describe('buscarResumoVencimentos', () => {
+    // Helper to create date strings relative to today
+    function daysFromNow(days: number): string {
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      return d.toISOString().split('T')[0];
+    }
+
     it('deve calcular resumo de vencimentos', async () => {
       const mockData = [
-        { categoria: 'vencidas', quantidade: 5, valorTotal: 15000 },
-        { categoria: 'hoje', quantidade: 2, valorTotal: 8000 },
-        { categoria: 'proximos7Dias', quantidade: 10, valorTotal: 25000 },
-        { categoria: 'proximos30Dias', quantidade: 15, valorTotal: 45000 },
+        { valor: 3000, data_vencimento: daysFromNow(-5) },  // vencidas
+        { valor: 2000, data_vencimento: daysFromNow(0) },   // hoje
+        { valor: 5000, data_vencimento: daysFromNow(3) },   // proximos7Dias
+        { valor: 9000, data_vencimento: daysFromNow(15) },  // proximos30Dias
       ];
 
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: mockData, error: null });
+      makeThenable(mockQueryBuilder, { data: mockData, error: null });
 
       const result = await LancamentosRepository.buscarResumoVencimentos();
 
@@ -380,7 +396,7 @@ describe('Lancamentos Repository', () => {
 
     it('deve filtrar por tipo (receita/despesa) se fornecido', async () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: [], error: null });
+      makeThenable(mockQueryBuilder, { data: [], error: null });
 
       await LancamentosRepository.buscarResumoVencimentos('receita');
 
@@ -389,11 +405,11 @@ describe('Lancamentos Repository', () => {
 
     it('deve retornar ResumoVencimentos com quantidade e valorTotal', async () => {
       const mockData = [
-        { categoria: 'vencidas', quantidade: 5, valorTotal: 15000 },
+        { valor: 15000, data_vencimento: daysFromNow(-2) }, // vencidas
       ];
 
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: mockData, error: null });
+      makeThenable(mockQueryBuilder, { data: mockData, error: null });
 
       const result = await LancamentosRepository.buscarResumoVencimentos();
 
@@ -404,20 +420,19 @@ describe('Lancamentos Repository', () => {
     });
 
     it('deve usar data atual como referência', async () => {
-      const _dataAtual = new Date().toISOString().split('T')[0];
-
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: [], error: null });
+      makeThenable(mockQueryBuilder, { data: [], error: null });
 
       await LancamentosRepository.buscarResumoVencimentos();
 
-      // Verificar que usou lt (menor que) para vencidas
-      expect(mockQueryBuilder.lt).toHaveBeenCalled();
+      // The function uses eq('status', 'pendente').not('data_vencimento', 'is', null)
+      expect(mockQueryBuilder.eq).toHaveBeenCalledWith('status', 'pendente');
+      expect(mockQueryBuilder.not).toHaveBeenCalled();
     });
 
     it('deve filtrar apenas lançamentos com status: pendente', async () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: [], error: null });
+      makeThenable(mockQueryBuilder, { data: [], error: null });
 
       await LancamentosRepository.buscarResumoVencimentos();
 

@@ -19,11 +19,14 @@ export { AudienciasMonthDayCell } from './audiencias-month-day-cell';
 // Mission View components
 export { AudienciasMissionView } from './audiencias-mission-view';
 export { MissionCard } from './mission-card';
+export { MissionKpiStrip } from './mission-kpi-strip';
 export { HearingCountdown } from './hearing-countdown';
 export { PrepScore, PrepScoreBadge, calcPrepItems, calcPrepScore } from './prep-score';
 export { PostHearingFlow } from './post-hearing-flow';
 export { ConflictAlert } from './conflict-alert';
 export { LoadHeatmap } from './load-heatmap';
+export { AudienciaListRow } from './audiencia-list-row';
+export { RhythmStrip } from './rhythm-strip';
 
 // Cards and badges
 export { AudienciaCard } from './audiencia-card';
@@ -46,3 +49,12 @@ export {
   buildAudienciasFilterGroups,
   parseAudienciasFilters,
 } from './audiencias-toolbar-filters';
+
+// Views (Glass Briefing sub-components)
+export {
+  AudienciasSemanaView,
+  AudienciasMesView,
+  AudienciasAnoView,
+  AudienciasListaView,
+  AudienciasMissaoContent,
+} from './views';

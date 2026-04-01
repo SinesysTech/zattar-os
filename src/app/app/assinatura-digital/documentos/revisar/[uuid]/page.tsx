@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { RevisarDocumentoClient } from "./client-page";
 
 export const metadata = {
@@ -17,14 +16,12 @@ export default async function RevisarDocumentoPage({ params }: PageProps) {
   return (
     <Suspense
       fallback={
-        <div className="space-y-6">
-          <Skeleton className="h-12 w-full" />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="space-y-6">
-              <Skeleton className="h-[200px] w-full" />
-              <Skeleton className="h-[300px] w-full" />
-            </div>
-            <Skeleton className="h-[600px] w-full" />
+        <div className="flex items-center justify-center min-h-100">
+          <div className="flex flex-col items-center gap-2">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <p className="text-sm text-muted-foreground">
+              Carregando revisão...
+            </p>
           </div>
         </div>
       }

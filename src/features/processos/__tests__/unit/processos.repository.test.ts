@@ -19,6 +19,20 @@ import { createMockSupabaseClient, createMockQueryBuilder, mockPostgresError } f
 import { StatusProcesso } from '../../domain';
 
 jest.mock('@/lib/supabase');
+jest.mock('@/lib/redis/cache-utils', () => ({
+  withCache: jest.fn((_key: string, fn: () => Promise<unknown>) => fn()),
+  generateCacheKey: jest.fn().mockReturnValue('test-cache-key'),
+  CACHE_PREFIXES: { acervo: 'acervo' },
+  getCached: jest.fn().mockResolvedValue(null),
+  setCached: jest.fn().mockResolvedValue(undefined),
+  deleteCached: jest.fn().mockResolvedValue(undefined),
+}));
+jest.mock('@/lib/redis/invalidation', () => ({
+  invalidateAcervoCache: jest.fn().mockResolvedValue(undefined),
+}));
+jest.mock('@/lib/supabase/query-logger', () => ({
+  logQuery: jest.fn((_name: string, fn: () => Promise<unknown>) => fn()),
+}));
 
 interface MockSupabaseClient {
   from: jest.Mock;
@@ -646,6 +660,9 @@ describe('Processos Repository', () => {
   });
 
   describe('updateProcesso', () => {
+    // updateProcesso now takes (id, input, processoExistente, client?) and uses .maybeSingle()
+    const existingProcesso = criarProcessoMock();
+
     it('deve atualizar apenas campos fornecidos (partial update)', async () => {
       const updates = {
         nomeParteAutora: 'Maria Silva',
@@ -658,9 +675,9 @@ describe('Processos Repository', () => {
       });
 
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.single.mockResolvedValue({ data: dbData, error: null });
+      mockQueryBuilder.maybeSingle.mockResolvedValue({ data: dbData, error: null });
 
-      const result = await updateProcesso(1, updates);
+      const result = await updateProcesso(1, updates, existingProcesso);
 
       expect(mockQueryBuilder.update).toHaveBeenCalled();
       expect(result.success).toBe(true);
@@ -674,12 +691,12 @@ describe('Processos Repository', () => {
       };
 
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.single.mockResolvedValue({
+      mockQueryBuilder.maybeSingle.mockResolvedValue({
         data: criarProcessoDbMock(),
         error: null,
       });
 
-      await updateProcesso(1, updates);
+      await updateProcesso(1, updates, existingProcesso);
 
       const updateCall = mockQueryBuilder.update.mock.calls[0][0];
       expect(updateCall).toHaveProperty('nome_parte_autora', 'Maria Silva');
@@ -692,9 +709,9 @@ describe('Processos Repository', () => {
       const dbData = criarProcessoDbMock({ nome_parte_autora: 'Maria Silva' });
 
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.single.mockResolvedValue({ data: dbData, error: null });
+      mockQueryBuilder.maybeSingle.mockResolvedValue({ data: dbData, error: null });
 
-      const result = await updateProcesso(1, updates);
+      const result = await updateProcesso(1, updates, existingProcesso);
 
       if (result.success) {
         expect(result.data).toHaveProperty('nomeParteAutora', 'Maria Silva');

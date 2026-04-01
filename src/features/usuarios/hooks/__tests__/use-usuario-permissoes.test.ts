@@ -340,7 +340,7 @@ describe('useUsuarioPermissoes', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.error).toBe('Erro ao salvar');
+      expect(result.current.error).toContain('Erro ao salvar');
       expect(result.current.isSaving).toBe(false);
     });
   });

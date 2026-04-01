@@ -28,15 +28,6 @@ describe('Acervo Service', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
-    // Setup Supabase mock for validation checks
-    const mockSupabase = {
-      from: jest.fn().mockReturnThis(),
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      single: jest.fn().mockResolvedValue({ data: { id: 1 }, error: null }),
-    };
-    (createServiceClient as jest.Mock).mockReturnValue(mockSupabase);
   });
 
   describe('obterAcervoPaginado', () => {
@@ -59,6 +50,30 @@ describe('Acervo Service', () => {
       const processoIds = [1];
       const responsavelId = 10;
       const usuarioExecutouId = 99;
+
+      // Setup chainable Supabase mock that handles:
+      // 1. .from('acervo').select('id').in('id', processoIds)
+      // 2. .from('usuarios').select('id').eq('id', responsavelId).eq('ativo', true).single()
+      // 3. .from('usuarios').select('id').eq('id', usuarioExecutouId).eq('ativo', true).single()
+      const mockSupabase = {
+        from: jest.fn().mockReturnValue({
+          select: jest.fn().mockReturnValue({
+            in: jest.fn().mockResolvedValue({
+              data: [{ id: 1 }],
+              error: null,
+            }),
+            eq: jest.fn().mockReturnValue({
+              eq: jest.fn().mockReturnValue({
+                single: jest.fn().mockResolvedValue({
+                  data: { id: 10 },
+                  error: null,
+                }),
+              }),
+            }),
+          }),
+        }),
+      };
+      (createServiceClient as jest.Mock).mockReturnValue(mockSupabase);
 
       (buscarAcervoPorId as jest.Mock).mockResolvedValue({ numero_processo: '123' });
       (atribuirResponsavelRepo as jest.Mock).mockResolvedValue(undefined);

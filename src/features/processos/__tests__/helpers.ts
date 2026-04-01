@@ -1,7 +1,7 @@
 export function createMockSupabaseClient() {
   return {
     from: jest.fn(),
-    rpc: jest.fn(),
+    rpc: jest.fn().mockResolvedValue({ data: null, error: null }),
   };
 }
 

@@ -28,12 +28,12 @@ jest.mock('@/lib/supabase/service-client', () => ({
   }),
 }));
 
-// Importar após mocks
+// Importar após mocks - diretamente do serviço para evitar barrel que puxa componentes React
 import {
   validarSincronizacaoParcela,
   validarSincronizacaoAcordo,
   formatarResultadoValidacao,
-} from '../../';
+} from '../../services/obrigacoes-validacao';
 
 // =============================================================================
 // FIXTURES

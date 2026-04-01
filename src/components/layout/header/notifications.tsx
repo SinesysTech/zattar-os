@@ -2,7 +2,7 @@
 
 import {
   AlertCircle,
-  BellIcon,
+  BellRing,
   Calendar,
   CheckCheckIcon,
   ClockIcon,
@@ -140,8 +140,8 @@ const Notifications = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" variant="ghost" className="relative">
-          <BellIcon className="size-4" />
+        <Button size="icon" variant="ghost" className="relative size-8 rounded-lg">
+          <BellRing className="size-4" />
           {unreadCount > 0 && (
             <span className="bg-destructive absolute inset-e-0 top-0 block size-2 shrink-0 rounded-full" />
           )}
@@ -200,7 +200,7 @@ const Notifications = () => {
             </div>
           ) : notificacoes.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-2 py-12">
-              <BellIcon className="size-8 text-muted-foreground/60" />
+              <BellRing className="size-8 text-muted-foreground/60" />
               <span className="text-sm text-muted-foreground">
                 Nenhuma notificação
               </span>
@@ -208,7 +208,7 @@ const Notifications = () => {
           ) : (
             notificacoes.map((item) => {
               const iconConfig = TIPO_ICON_MAP[item.tipo];
-              const IconComponent = iconConfig?.icon ?? BellIcon;
+              const IconComponent = iconConfig?.icon ?? BellRing;
               const iconClassName =
                 iconConfig?.className ?? "text-muted-foreground bg-muted";
 

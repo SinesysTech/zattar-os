@@ -138,7 +138,7 @@ export function DocumentosCommandCenter({
               >
                 {docs.map((doc) => (
                   <DocumentCard
-                    key={doc.id}
+                    key={doc.uuid}
                     doc={doc}
                     onSelect={handleSelect}
                   />
@@ -148,7 +148,7 @@ export function DocumentosCommandCenter({
               <div className="flex flex-col gap-1">
                 {docs.map((doc) => (
                   <DocumentListRow
-                    key={doc.id}
+                    key={doc.uuid}
                     doc={doc}
                     onSelect={handleSelect}
                     selected={selectedDoc?.id === doc.id}

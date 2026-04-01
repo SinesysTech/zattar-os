@@ -85,7 +85,7 @@ describe('Endereços Actions', () => {
       }
 
       // Verify cache revalidation
-      expect(revalidatePath).toHaveBeenCalledWith('/enderecos');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/enderecos');
     });
 
     it('deve retornar erro quando service falha', async () => {
@@ -139,7 +139,7 @@ describe('Endereços Actions', () => {
       }
 
       // Verify cache revalidation
-      expect(revalidatePath).toHaveBeenCalledWith('/enderecos');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/enderecos');
     });
 
     it('deve retornar erro quando service falha', async () => {
@@ -320,7 +320,7 @@ describe('Endereços Actions', () => {
       expect(result.success).toBe(true);
 
       // Verify cache revalidation
-      expect(revalidatePath).toHaveBeenCalledWith('/enderecos');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/enderecos');
     });
 
     it('deve retornar erro quando service falha', async () => {

@@ -1,19 +1,21 @@
 import { Suspense } from 'react';
-import { AudienciasContent } from '@/features/audiencias';
 import { fetchAudienciasPageData } from '@/features/audiencias/queries';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AudienciasClient } from '../audiencias-client';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 function AudienciasLoading() {
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Skeleton className="h-10 w-50" />
-        <Skeleton className="h-10 w-75" />
+    <div className="max-w-350 mx-auto space-y-5">
+      <Skeleton className="h-9 w-40" />
+      <Skeleton className="h-14 w-full rounded-2xl" />
+      <div className="space-y-2">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <Skeleton key={i} className="h-12 w-full rounded-xl" />
+        ))}
       </div>
-      <Skeleton className="h-150 w-full" />
     </div>
   );
 }
@@ -23,8 +25,8 @@ export default async function AudienciasListaPage() {
 
   return (
     <Suspense fallback={<AudienciasLoading />}>
-      <AudienciasContent
-        visualizacao="lista"
+      <AudienciasClient
+        initialView="lista"
         initialUsuarios={usuarios}
         initialTiposAudiencia={tiposAudiencia}
       />

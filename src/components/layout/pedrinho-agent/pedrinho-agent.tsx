@@ -1,7 +1,6 @@
 'use client'
 
 import { useCallback, useEffect } from 'react'
-import { PulseOrb } from './pulse-orb'
 import { CommandBar } from './command-bar'
 import { BriefingPanel } from './briefing-panel'
 
@@ -31,21 +30,12 @@ export function PedrinhoAgent({ userId, mode, onModeChange }: PedrinhoAgentProps
   }, [mode, onModeChange])
 
   const handleCloseToOrb = useCallback(() => onModeChange('orb'), [onModeChange])
-  const handleOpenCommand = useCallback(() => onModeChange('command'), [onModeChange])
   const handleOpenBriefing = useCallback(() => onModeChange('briefing'), [onModeChange])
 
+  // O toggle do Pedrinho agora vive na DashboardHeader (PedrinhoHeaderToggle).
+  // Aqui renderizamos apenas CommandBar e BriefingPanel.
   return (
     <>
-      {/* Orb — visible when in orb mode */}
-      {mode === 'orb' && (
-        <PulseOrb
-          onOpenCommandBar={handleOpenCommand}
-          onOpenBriefing={handleOpenBriefing}
-          hasProactiveNudge={false}
-          nudgeMessage={undefined}
-        />
-      )}
-
       {/* Command Bar */}
       {mode === 'command' && (
         <CommandBar

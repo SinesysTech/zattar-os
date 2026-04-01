@@ -1,10 +1,18 @@
 "use client";
 
+/**
+ * EditarDocumentoClient — Etapa 2: Configurar assinantes e posicionar campos
+ *
+ * Layout: PDF canvas à esquerda + sidebar de configuração à direita.
+ * Integrado com DocumentFlowShell (stepper no header).
+ */
+
 import { useDocumentEditor } from "../../../feature/components/editor/hooks/use-document-editor";
 import { PDF_CANVAS_SIZE } from "../../../feature/types/pdf-preview.types";
 import EditorCanvas from "../../../feature/components/editor/components/EditorCanvas";
 import FloatingSidebar from "../../../feature/components/editor/components/FloatingSidebar";
 import { Loader2 } from "lucide-react";
+import { DocumentFlowShell } from "../../../feature/components/flow";
 
 interface EditarDocumentoClientProps {
   uuid: string;
@@ -58,94 +66,105 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
 
   if (isLoading || !documento) {
     return (
-      <div className="flex w-full h-96 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-muted-foreground">Carregando documento...</span>
-      </div>
+      <DocumentFlowShell fullHeight>
+        <div className="flex w-full h-full items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <span className="ml-2 text-muted-foreground">
+            Carregando documento...
+          </span>
+        </div>
+      </DocumentFlowShell>
     );
   }
 
   return (
-    <div
-      className="-m-6 flex overflow-hidden bg-background"
-      style={{ height: 'calc(100% + 3rem)', minHeight: 'calc(100% + 3rem)' }}
-    >
-      {/* PDF Canvas Area */}
-      <div className="relative flex h-full min-h-0 flex-1 flex-col overflow-hidden">
-        {/* Indicador de salvamento — discreto no topo */}
-        {isSaving && (
-          <div className="absolute top-3 right-6 z-20">
-            <span className="text-xs animate-pulse font-bold text-primary bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full border">
-              Salvando...
-            </span>
-          </div>
-        )}
+    <DocumentFlowShell fullHeight>
+      <div className="flex h-full min-h-0 overflow-hidden">
+        {/* PDF Canvas Area */}
+        <div className="relative flex h-full min-h-0 flex-1 flex-col overflow-hidden">
+          {/* Indicador de salvamento */}
+          {isSaving && (
+            <div className="absolute top-3 right-6 z-20">
+              <span className="text-xs animate-pulse font-bold text-primary bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full border">
+                Salvando...
+              </span>
+            </div>
+          )}
 
-        {/* PDF Canvas - Scrollable */}
-        <div className="flex-1 overflow-auto p-6 relative scroll-smooth scrollbar-custom bg-muted/30">
-          <div className="flex justify-center min-h-full pb-20">
-            <EditorCanvas
-              canvasRef={canvasRef}
-              canvasSize={PDF_CANVAS_SIZE}
-              zoom={zoom}
-              pdfUrl={pdfUrl}
-              previewKey={1}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              onLoadSuccess={setTotalPages}
-              onLoadError={(e: Error) => console.error("Error loading PDF", e)}
-              fields={fields}
-              fieldsWithHeightWarning={new Set()}
-              onCanvasClick={handleCanvasClick}
-              onFieldClick={(f, e) => handleFieldClick(f, e, dragState.isDragging)}
-              onFieldMouseDown={handleFieldMouseDown}
-              onFieldKeyboard={handleFieldKeyboard}
-              onResizeMouseDown={handleResizeMouseDown}
-              onDragOver={handleCanvasDragOver}
-              onDrop={(e) => handleCanvasDrop(e, activeSigner)}
-              selectedField={selectedField}
-              onOpenProperties={() => { }}
-              onDuplicateField={duplicateField}
-              onDeleteField={deleteField}
-              onAddTextField={() => { }}
-              onAddImageField={() => { }}
-              onAddRichTextField={() => { }}
-              onEditRichText={() => { }}
-              onAdjustHeight={() => { }}
-              onZoomIn={handleZoomIn}
-              onZoomOut={handleZoomOut}
-              onResetZoom={handleResetZoom}
-              getSignerColor={getSignerColor}
-              getSignerById={getSignerById}
-              signers={signers}
-              onReassignField={(fId, sId) => {
-                setFields(prev => prev.map(f => f.id === fId ? { ...f, signatario_id: sId } : f));
-              }}
-            />
+          {/* PDF Canvas — Scrollable */}
+          <div className="flex-1 overflow-auto p-6 relative scroll-smooth scrollbar-custom bg-muted/30">
+            <div className="flex justify-center min-h-full pb-20">
+              <EditorCanvas
+                canvasRef={canvasRef}
+                canvasSize={PDF_CANVAS_SIZE}
+                zoom={zoom}
+                pdfUrl={pdfUrl}
+                previewKey={1}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                onLoadSuccess={setTotalPages}
+                onLoadError={(e: Error) =>
+                  console.error("Error loading PDF", e)
+                }
+                fields={fields}
+                fieldsWithHeightWarning={new Set()}
+                onCanvasClick={handleCanvasClick}
+                onFieldClick={(f, e) =>
+                  handleFieldClick(f, e, dragState.isDragging)
+                }
+                onFieldMouseDown={handleFieldMouseDown}
+                onFieldKeyboard={handleFieldKeyboard}
+                onResizeMouseDown={handleResizeMouseDown}
+                onDragOver={handleCanvasDragOver}
+                onDrop={(e) => handleCanvasDrop(e, activeSigner)}
+                selectedField={selectedField}
+                onOpenProperties={() => {}}
+                onDuplicateField={duplicateField}
+                onDeleteField={deleteField}
+                onAddTextField={() => {}}
+                onAddImageField={() => {}}
+                onAddRichTextField={() => {}}
+                onEditRichText={() => {}}
+                onAdjustHeight={() => {}}
+                onZoomIn={handleZoomIn}
+                onZoomOut={handleZoomOut}
+                onResetZoom={handleResetZoom}
+                getSignerColor={getSignerColor}
+                getSignerById={getSignerById}
+                signers={signers}
+                onReassignField={(fId, sId) => {
+                  setFields((prev) =>
+                    prev.map((f) =>
+                      f.id === fId ? { ...f, signatario_id: sId } : f
+                    )
+                  );
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Right Sidebar */}
-      <div className="hidden h-full min-h-0 w-85 shrink-0 border-l bg-background lg:flex">
-        <FloatingSidebar
-          className="h-full flex flex-col"
-          signers={signers}
-          activeSigner={activeSigner}
-          onSelectSigner={setActiveSigner}
-          onAddSigner={handleAddSigner}
-          onUpdateSigner={handleUpdateSigner}
-          onDeleteSigner={handleDeleteSigner}
-          fields={fields}
-          onPaletteDragStart={() => { }}
-          onPaletteDragEnd={() => { }}
-          onReviewAndSend={handleSaveAndReview}
-          documentTitle={documento.titulo ?? ''}
-          selfieEnabled={documento.selfie_habilitada}
-          onUpdateSettings={handleUpdateSettings}
-        />
+        {/* Right Sidebar */}
+        <div className="hidden h-full min-h-0 w-85 shrink-0 border-l bg-background lg:flex">
+          <FloatingSidebar
+            className="h-full flex flex-col"
+            signers={signers}
+            activeSigner={activeSigner}
+            onSelectSigner={setActiveSigner}
+            onAddSigner={handleAddSigner}
+            onUpdateSigner={handleUpdateSigner}
+            onDeleteSigner={handleDeleteSigner}
+            fields={fields}
+            onPaletteDragStart={() => {}}
+            onPaletteDragEnd={() => {}}
+            onReviewAndSend={handleSaveAndReview}
+            documentTitle={documento.titulo ?? ""}
+            selfieEnabled={documento.selfie_habilitada}
+            onUpdateSettings={handleUpdateSettings}
+          />
+        </div>
       </div>
-    </div>
+    </DocumentFlowShell>
   );
 }

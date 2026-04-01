@@ -32,8 +32,7 @@ describe('Advogados Service', () => {
     const input = {
       nome_completo: 'Novo Advogado',
       cpf: '123.456.789-00', // formatted
-      oab: '12345',
-      uf_oab: 'SP',
+      oabs: [{ numero: '12345', uf: 'SP' }],
       email: 'adv@test.com'
     };
 
@@ -48,7 +47,8 @@ describe('Advogados Service', () => {
       expect(result.cpf).toBe('12345678900');
       expect(criarAdvogadoDb).toHaveBeenCalledWith(expect.objectContaining({
         cpf: '12345678900',
-        nome_completo: input.nome_completo
+        nome_completo: input.nome_completo,
+        oabs: [{ numero: '12345', uf: 'SP' }],
       }));
     });
 

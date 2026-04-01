@@ -1,5 +1,5 @@
-import { UpdatePasswordForm } from '@/components/auth/update-password-form'
+import { UpdatePasswordFormV2 } from '@/components/auth/v2'
 
 export default function Page() {
-  return <UpdatePasswordForm />
+  return <UpdatePasswordFormV2 />
 }
