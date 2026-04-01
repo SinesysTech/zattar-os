@@ -1,5 +1,3 @@
-"use server";
-
 /**
  * NOTIFICAÇÕES REPOSITORY - Camada de Persistência
  *

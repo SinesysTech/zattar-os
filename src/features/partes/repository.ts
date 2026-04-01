@@ -1,4 +1,3 @@
-"use server";
 /**
  * PARTES REPOSITORY - Camada de Persistência
  *

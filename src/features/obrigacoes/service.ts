@@ -3,7 +3,7 @@ import { TipoObrigacao, StatusAcordo } from "./domain";
 import { ObrigacoesRepository } from "./repository";
 import { calcularDataVencimento } from "./utils";
 import { normalizarDocumento } from "@/features/partes/domain";
-import { findClienteByCPF, findClienteByCNPJ } from "@/features/partes";
+import { findClienteByCPF, findClienteByCNPJ } from "@/features/partes/repository";
 import { err, appError } from "@/types";
 import { buscarProcessosPorClienteCPF, buscarProcessosPorClienteCNPJ, buscarProcessoPorNumero } from "@/features/processos/service";
 import { normalizarNumeroProcesso } from "@/features/processos/utils";

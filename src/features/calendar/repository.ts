@@ -1,5 +1,3 @@
-"use server";
-
 /**
  * CALENDAR REPOSITORY - Camada de Persistência
  *
