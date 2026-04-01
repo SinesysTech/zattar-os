@@ -88,6 +88,7 @@ export { fetchContratoCompleto } from './queries';
 // =============================================================================
 export type {
   ActionResult,
+  ContratosStatsData,
 } from './actions';
 export {
   actionCriarContrato,
@@ -97,6 +98,7 @@ export {
   actionBuscarContratoCompleto,
   actionContarContratosPorStatus,
   actionContarContratosComEstatisticas,
+  actionContratosStats,
 } from './actions';
 
 // =============================================================================

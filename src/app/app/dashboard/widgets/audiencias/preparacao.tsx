@@ -28,16 +28,6 @@ function formatarDataAudiencia(isoDate: string): string {
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
 }
 
-// Mapear tipo de audiência para cor de destaque
-function corPorTipo(tipo: string | null): string {
-  if (!tipo) return 'hsl(var(--muted-foreground) / 0.55)';
-  const t = tipo.toLowerCase();
-  if (t.includes('instrução') || t.includes('instrucao')) return 'hsl(var(--primary))';
-  if (t.includes('conciliação') || t.includes('conciliacao')) return 'hsl(var(--warning))';
-  if (t.includes('julgamento')) return 'hsl(var(--destructive))';
-  return 'hsl(var(--primary) / 0.5)';
-}
-
 /**
  * Calcula score de preparação baseado nos campos disponíveis em AudienciaProxima.
  * Pesos: responsável (30%), tipo definido (20%), URL virtual (25%), local (25%).
@@ -92,7 +82,6 @@ export function WidgetPreparacao() {
       ) : (
         <div className="space-y-3">
           {audiencias.map((audiencia) => {
-            const _cor = corPorTipo(audiencia.tipo_audiencia);
             const prepScore = calcPrepScoreFromProxima(audiencia);
             const ringColor = scoreColor(prepScore);
             return (
