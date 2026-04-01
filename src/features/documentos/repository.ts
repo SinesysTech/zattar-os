@@ -1,5 +1,3 @@
-"use server";
-
 /**
  * DOCUMENTOS REPOSITORY - Camada de Persistência
  *

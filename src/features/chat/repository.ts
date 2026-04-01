@@ -1,5 +1,3 @@
-"use server";
-
 /**
  * CHAT REPOSITORY - Camada de Persistência
  *

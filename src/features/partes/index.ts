@@ -193,19 +193,9 @@ export {
 // ============================================================================
 // Server-only exports
 // ============================================================================
-// Actions, Services e Repositories devem ser importados de "@/features/partes/server".
-
-// ============================================================================
-// Repository (server-side functions exported for external modules)
-// ============================================================================
-export {
-  findClienteById,
-  findClienteByCPF,
-  findClienteByCNPJ,
-  findParteContrariaById,
-  findTerceiroById,
-  vincularParteProcesso,
-} from './repository';
+// Actions, Services e Repositories devem ser importados diretamente:
+//   import { findClienteById } from '@/features/partes/repository';
+// NÃO re-exportar aqui para evitar vazamento de server-only no bundle client.
 
 // ============================================================================
 // Errors

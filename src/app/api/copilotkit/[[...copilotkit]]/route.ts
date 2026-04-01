@@ -1,5 +1,5 @@
 /**
- * CopilotKit Runtime Endpoint (Next.js App Router)
+ * CopilotKit Runtime Endpoint (Next.js App Router — v2 API)
  *
  * Usa BuiltInAgent com:
  * - Google Gemini como LLM (via AI SDK)
@@ -8,14 +8,15 @@
  *
  * As ferramentas MCP são executadas no mesmo processo via bridge direta.
  *
- * Segue o padrão oficial da documentação CopilotKit v1.54:
- * https://docs.copilotkit.ai/integrations/built-in-agent/quickstart
+ * Usa a API v2 do CopilotKit (createCopilotEndpoint + Hono) que é compatível
+ * com o client v2 (@copilotkit/react-core/v2) e serve os endpoints:
+ * /info, /agent/:name/connect, /agent/:name/run, etc.
  */
 
 import {
   CopilotRuntime,
-  copilotRuntimeNextJSAppRouterEndpoint,
-} from "@copilotkit/runtime";
+  createCopilotEndpoint,
+} from "@copilotkit/runtime/v2";
 import { BuiltInAgent } from "@copilotkit/runtime/v2";
 import { NextRequest, NextResponse } from "next/server";
 import {
@@ -26,11 +27,11 @@ import { SYSTEM_PROMPT } from "@/lib/copilotkit/system-prompt";
 
 const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? process.env.GOOGLE_API_KEY;
 
-// Lazy-init: cria o runtime uma única vez
-let cachedRuntime: CopilotRuntime | null = null;
+// Lazy-init: cria o Hono app uma única vez
+let cachedApp: { fetch: (req: Request) => Response | Promise<Response> } | null = null;
 
-async function getOrCreateRuntime() {
-  if (cachedRuntime) return cachedRuntime;
+async function getOrCreateApp() {
+  if (cachedApp) return cachedApp;
 
   await ensureMcpToolsRegistered();
   const tools = getMcpToolsAsDefinitions();
@@ -43,11 +44,16 @@ async function getOrCreateRuntime() {
     maxSteps: 5,
   });
 
-  cachedRuntime = new CopilotRuntime({
+  const runtime = new CopilotRuntime({
     agents: { default: agent },
   });
 
-  return cachedRuntime;
+  cachedApp = createCopilotEndpoint({
+    runtime,
+    basePath: "/api/copilotkit",
+  });
+
+  return cachedApp;
 }
 
 async function handleCopilotRequest(req: NextRequest) {
@@ -59,13 +65,8 @@ async function handleCopilotRequest(req: NextRequest) {
   }
 
   try {
-    const runtime = await getOrCreateRuntime();
-    const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
-      runtime,
-      endpoint: "/api/copilotkit",
-    });
-
-    return handleRequest(req);
+    const app = await getOrCreateApp();
+    return app.fetch(req);
   } catch (error) {
     console.error("CopilotKit error:", error);
     return NextResponse.json(

@@ -114,15 +114,6 @@ export function useFluxoCaixa(meses: number = 6) {
         // Fim: 6 meses no futuro para incluir projeções
         const fim = new Date(hoje.getFullYear(), hoje.getMonth() + 6, 0);
 
-        // Log de debug para diagnóstico
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[Dashboard Financeiro] Buscando fluxo de caixa:', {
-            dataInicio: inicio.toISOString(),
-            dataFim: fim.toISOString(),
-            meses,
-          });
-        }
-
         // Usar a action correta que retorna dados agrupados por período
         const result = await actionObterFluxoCaixaPorPeriodo(
           {
@@ -141,14 +132,6 @@ export function useFluxoCaixa(meses: number = 6) {
             despesas: p.totalSaidas,
             saldo: p.saldoFinal,
           }));
-
-          // Log de debug para diagnóstico
-          if (process.env.NODE_ENV === 'development') {
-            console.log('[Dashboard Financeiro] Fluxo de caixa transformado:', {
-              periodosOriginais: periodos.length,
-              dadosGrafico: dadosGrafico.length,
-            });
-          }
 
           setData(dadosGrafico);
         } else {
@@ -188,23 +171,10 @@ export function useDespesasPorCategoria() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Log de debug para diagnóstico
-        if (process.env.NODE_ENV === 'development') {
-          console.log('[Dashboard Financeiro] Buscando despesas por categoria...');
-        }
-
         const result = await actionObterTopCategorias('despesa', 5);
 
         if (result.success && result.data) {
           const categorias = result.data.categorias || [];
-
-          // Log de debug para diagnóstico
-          if (process.env.NODE_ENV === 'development') {
-            console.log('[Dashboard Financeiro] Despesas por categoria:', {
-              total: categorias.length,
-              categorias: categorias.map(c => c.categoria),
-            });
-          }
 
           setData(categorias.map((c) => ({
             categoria: c.categoria,
