@@ -22,19 +22,14 @@ import { ptBR } from 'date-fns/locale';
 import {
   ChevronLeft,
   ChevronRight,
-  CalendarDays,
-  Gavel,
   Video,
   Building2,
-  CheckCircle2,
-  AlertTriangle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/app/app/dashboard/mock/widgets/primitives';
 import type { Audiencia } from '../../domain';
 import { StatusAudiencia } from '../../domain';
 import { calcPrepItems, calcPrepScore } from '../prep-score';
-import { HearingCountdown } from '../hearing-countdown';
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -63,11 +58,20 @@ export function AudienciasSemanaView({
   onDateChange,
   onViewDetail,
 }: AudienciasSemanaViewProps) {
-  const weekStart = startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 });
-  const weekEnd = endOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 });
+  const weekStart = useMemo(
+    () => startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 }),
+    [currentDate],
+  );
+  const weekEnd = useMemo(
+    () => endOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 }),
+    [currentDate],
+  );
   // Apenas dias úteis (seg-sex) — audiências não ocorrem no fim de semana
-  const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd })
-    .filter((d) => d.getDay() !== 0 && d.getDay() !== 6);
+  const weekDays = useMemo(
+    () => eachDayOfInterval({ start: weekStart, end: weekEnd })
+      .filter((d) => d.getDay() !== 0 && d.getDay() !== 6),
+    [weekStart, weekEnd],
+  );
 
   const audienciasByDay = useMemo(() => {
     const map = new Map<string, Audiencia[]>();
@@ -209,7 +213,7 @@ function WeekDayCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: ()
         'w-full text-left p-3 rounded-xl border transition-all duration-200 cursor-pointer',
         'bg-card/80 border-border/40 hover:border-border/60 hover:shadow-sm hover:scale-[1.01]',
         (isPast || isFinalizada) && 'opacity-60',
-        isOngoing && 'ring-1 ring-success/30 border-success/25 bg-success/[0.03]',
+        isOngoing && 'ring-1 ring-success/30 border-success/25 bg-success/3',
       )}
     >
       {/* Time range + Status indicators */}
