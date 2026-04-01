@@ -6,8 +6,8 @@
  * Conectado ao hook useDashboard().
  * Usa produtividade.porDia (últimos N dias de baixas) para preencher um grid
  * de 35 células (5 semanas × 7 dias). Os dias sem dados são preenchidos com 0.
- * Esta é uma solução temporária — o heatmap completo aguarda um repositório
- * de dados de atividade dedicado.
+ * Para usuários, usa produtividade.porDia. Para admins, estima atividade
+ * a partir das baixas semanais/mensais agregadas de todos os advogados.
  *
  * Uso:
  *   import { WidgetHeatmapAtividade } from '@/app/app/dashboard/widgets/processos/heatmap-atividade'
