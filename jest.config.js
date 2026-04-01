@@ -61,7 +61,6 @@ const config = {
         '<rootDir>/src/components/**/__tests__/**/*.test.ts',
         '<rootDir>/src/components/**/__tests__/**/*.test.tsx',
         '<rootDir>/src/features/**/__tests__/**/*.test.tsx',
-        '<rootDir>/src/hooks/**/__tests__/**/*.test.ts',
         '<rootDir>/src/hooks/**/__tests__/**/*.test.tsx',
         '<rootDir>/src/providers/**/__tests__/**/*.test.tsx',
       ],

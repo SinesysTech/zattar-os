@@ -31,6 +31,10 @@ IMAGE_NAME="zattar-os"
 CLOUDRON_APP="zattaradvogados.com"
 KEEP_IMAGES=5  # Numero de imagens locais antigas para manter
 
+# Autenticacao CI/CD (via env vars ou flags)
+CLOUDRON_SERVER="${CLOUDRON_SERVER:-}"
+CLOUDRON_TOKEN="${CLOUDRON_TOKEN:-}"
+
 # Variaveis providas automaticamente pelos addons do Cloudron (nao setar)
 # Redis: mapeadas pelo start.sh de CLOUDRON_REDIS_* -> REDIS_*
 # Mail:  mapeadas pelo start.sh de CLOUDRON_MAIL_*  -> SYSTEM_SMTP_* / SYSTEM_MAIL_*
@@ -71,6 +75,8 @@ while [[ $# -gt 0 ]]; do
         --no-cache)     NO_CACHE="--no-cache"; shift ;;
         --dry-run)      DRY_RUN=true; shift ;;
         --cleanup)      DO_CLEANUP=true; shift ;;
+        --server)       CLOUDRON_SERVER="$2"; shift 2 ;;
+        --token)        CLOUDRON_TOKEN="$2"; shift 2 ;;
         --help|-h)
             echo "Uso: $0 [opcoes]"
             echo ""
@@ -81,7 +87,12 @@ while [[ $# -gt 0 ]]; do
             echo "  --no-cache       Build sem cache Docker"
             echo "  --dry-run        Simula sem executar (mostra o que faria)"
             echo "  --cleanup        Remove imagens antigas apos deploy (mantem ${KEEP_IMAGES})"
+            echo "  --server <url>   Cloudron server (ou env CLOUDRON_SERVER)"
+            echo "  --token <token>  Cloudron token (ou env CLOUDRON_TOKEN)"
             echo "  --help           Mostra esta ajuda"
+            echo ""
+            echo "CI/CD (nao-interativo):"
+            echo "  CLOUDRON_SERVER=my.cloudron.com CLOUDRON_TOKEN=xxx $0"
             exit 0
             ;;
         *)
@@ -90,6 +101,12 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# Montar flags globais do Cloudron CLI para autenticacao
+CLOUDRON_AUTH_FLAGS=""
+if [ -n "$CLOUDRON_SERVER" ] && [ -n "$CLOUDRON_TOKEN" ]; then
+    CLOUDRON_AUTH_FLAGS="--server ${CLOUDRON_SERVER} --token ${CLOUDRON_TOKEN}"
+fi
 
 # -----------------------------------------------------------------------------
 # Funcoes auxiliares
@@ -184,7 +201,8 @@ wait_for_health() {
     while [ $attempt -lt $max_attempts ]; do
         attempt=$((attempt + 1))
         local state
-        state=$(cloudron status --app "$app" 2>/dev/null | grep "Run state:" | awk '{print $NF}')
+        # shellcheck disable=SC2086
+        state=$(cloudron status --app "$app" $CLOUDRON_AUTH_FLAGS 2>/dev/null | grep "Run state:" | awk '{print $NF}')
 
         if [ "$state" = "running" ]; then
             success "App running e healthy! (tentativa ${attempt}/${max_attempts})"
@@ -341,9 +359,11 @@ if [ "$SKIP_UPDATE" = false ]; then
     header "STEP 3/4: Cloudron Update"
 
     if [ "$SKIP_BUILD" = false ]; then
-        run cloudron update --app "$CLOUDRON_APP" --image "$FULL_IMAGE"
+        # shellcheck disable=SC2086
+        run cloudron update --app "$CLOUDRON_APP" --image "$FULL_IMAGE" $CLOUDRON_AUTH_FLAGS
     else
-        run cloudron update --app "$CLOUDRON_APP"
+        # shellcheck disable=SC2086
+        run cloudron update --app "$CLOUDRON_APP" $CLOUDRON_AUTH_FLAGS
     fi
 
     success "Update concluido!"
@@ -362,7 +382,8 @@ fi
 header "STEP 4/4: Cloudron Env Set"
 info "Setando ${RUNTIME_COUNT} variaveis de runtime..."
 
-run cloudron env set --app "$CLOUDRON_APP" "${RUNTIME_ENVS[@]}"
+# shellcheck disable=SC2086
+run cloudron env set --app "$CLOUDRON_APP" $CLOUDRON_AUTH_FLAGS "${RUNTIME_ENVS[@]}"
 
 success "Variaveis de ambiente configuradas!"
 

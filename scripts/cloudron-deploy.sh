@@ -28,6 +28,14 @@ DOCKERFILE="Dockerfile.cloudron"
 ENV_FILE="${PROJECT_DIR}/.env.local"
 ENV_PRODUCTION="${PROJECT_DIR}/.env.production"
 CLOUDRON_APP="zattaradvogados.com"
+REGISTRY="registry.sinesys.online"
+IMAGE_NAME="zattar-os"
+DOCKER_REPOSITORY="${REGISTRY}/${IMAGE_NAME}"
+
+# Autenticacao CI/CD (via env vars ou flags)
+# Setar CLOUDRON_SERVER e CLOUDRON_TOKEN para automacao completa sem login interativo
+CLOUDRON_SERVER="${CLOUDRON_SERVER:-}"
+CLOUDRON_TOKEN="${CLOUDRON_TOKEN:-}"
 
 # Variaveis providas automaticamente pelos addons do Cloudron (nao setar)
 # Redis: mapeadas pelo start.sh de CLOUDRON_REDIS_* -> REDIS_*
@@ -67,6 +75,8 @@ while [[ $# -gt 0 ]]; do
         --env-only)     ENV_ONLY=true; SKIP_BUILD=true; SKIP_UPDATE=true; shift ;;
         --no-cache)     NO_CACHE="--no-cache"; shift ;;
         --dry-run)      DRY_RUN=true; shift ;;
+        --server)       CLOUDRON_SERVER="$2"; shift 2 ;;
+        --token)        CLOUDRON_TOKEN="$2"; shift 2 ;;
         --help|-h)
             echo "Uso: $0 [opcoes]"
             echo ""
@@ -76,7 +86,12 @@ while [[ $# -gt 0 ]]; do
             echo "  --env-only       Apenas seta as variaveis de ambiente"
             echo "  --no-cache       Build sem cache"
             echo "  --dry-run        Simula sem executar"
+            echo "  --server <url>   Cloudron server (ou env CLOUDRON_SERVER)"
+            echo "  --token <token>  Cloudron token (ou env CLOUDRON_TOKEN)"
             echo "  --help           Mostra esta ajuda"
+            echo ""
+            echo "CI/CD (nao-interativo):"
+            echo "  CLOUDRON_SERVER=my.cloudron.com CLOUDRON_TOKEN=xxx $0"
             echo ""
             echo "NOTA: Se o build remoto falhar por memoria, use:"
             echo "  ./scripts/cloudron-deploy-local.sh"
@@ -88,6 +103,12 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# Montar flags globais do Cloudron CLI para autenticacao
+CLOUDRON_AUTH_FLAGS=""
+if [ -n "$CLOUDRON_SERVER" ] && [ -n "$CLOUDRON_TOKEN" ]; then
+    CLOUDRON_AUTH_FLAGS="--server ${CLOUDRON_SERVER} --token ${CLOUDRON_TOKEN}"
+fi
 
 # -----------------------------------------------------------------------------
 # Funcoes auxiliares
@@ -152,7 +173,8 @@ wait_for_health() {
     while [ $attempt -lt $max_attempts ]; do
         attempt=$((attempt + 1))
         local state
-        state=$(cloudron status --app "$app" 2>/dev/null | grep "Run state:" | awk '{print $NF}')
+        # shellcheck disable=SC2086
+        state=$(cloudron status --app "$app" $CLOUDRON_AUTH_FLAGS 2>/dev/null | grep "Run state:" | awk '{print $NF}')
 
         if [ "$state" = "running" ]; then
             success "App running e healthy! (tentativa ${attempt}/${max_attempts})"
@@ -177,9 +199,11 @@ echo ""
 echo -e "${BOLD}Zattar OS - Cloudron Deploy (Build Remoto)${NC}"
 echo "============================================================"
 echo -e "  Git:       ${DIM}${GIT_SHA}${NC}"
+echo -e "  Registry:  ${CYAN}${DOCKER_REPOSITORY}${NC}"
 echo -e "  Build:     $([ "$SKIP_BUILD" = true ] && echo -e "${YELLOW}skip${NC}" || echo -e "${GREEN}cloudron build (remoto)${NC}")"
 echo -e "  Update:    $([ "$SKIP_UPDATE" = true ] && echo -e "${YELLOW}skip${NC}" || echo -e "${GREEN}cloudron update${NC}")"
 echo -e "  Env set:   ${GREEN}cloudron env set${NC}"
+echo -e "  Auth:      $([ -n "$CLOUDRON_AUTH_FLAGS" ] && echo -e "${GREEN}token (CI/CD)${NC}" || echo -e "${DIM}login local${NC}")"
 [ "$DRY_RUN" = true ] && echo -e "  Modo:      ${YELLOW}DRY RUN (sem execucao real)${NC}"
 echo "============================================================"
 
@@ -240,7 +264,8 @@ if [ "$SKIP_BUILD" = false ]; then
     BUILD_START=$(date +%s)
 
     cd "$PROJECT_DIR"
-    run cloudron build build -f "$DOCKERFILE" ${NO_CACHE}
+    # --repository: evita prompt interativo (armazena para builds futuros)
+    run cloudron build build -f "$DOCKERFILE" --repository "$DOCKER_REPOSITORY" ${NO_CACHE}
 
     BUILD_END=$(date +%s)
     BUILD_DURATION=$(( BUILD_END - BUILD_START ))
@@ -258,7 +283,8 @@ fi
 if [ "$SKIP_UPDATE" = false ]; then
     header "STEP 2/3: Cloudron Update"
 
-    run cloudron update --app "$CLOUDRON_APP"
+    # shellcheck disable=SC2086
+    run cloudron update --app "$CLOUDRON_APP" $CLOUDRON_AUTH_FLAGS
 
     success "Update concluido!"
 
@@ -276,7 +302,8 @@ fi
 header "STEP 3/3: Cloudron Env Set"
 info "Setando ${RUNTIME_COUNT} variaveis de runtime..."
 
-run cloudron env set --app "$CLOUDRON_APP" "${RUNTIME_ENVS[@]}"
+# shellcheck disable=SC2086
+run cloudron env set --app "$CLOUDRON_APP" $CLOUDRON_AUTH_FLAGS "${RUNTIME_ENVS[@]}"
 
 success "Variaveis de ambiente configuradas!"
 
