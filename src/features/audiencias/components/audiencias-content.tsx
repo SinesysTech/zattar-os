@@ -280,6 +280,10 @@ export function AudienciasContent({
               setSelectedMissionAudiencia(a);
               setIsMissionDetailOpen(true);
             }}
+            onEdit={(a) => {
+              setSelectedMissionAudiencia(a);
+              setIsMissionDetailOpen(true);
+            }}
             responsavelNomes={responsavelNomesMap}
           />
         );

@@ -13,14 +13,18 @@ import {
     COMMON_VIEWPORTS,
 } from '@/testing/helpers/responsive-test-helpers';
 import * as usuariosModule from '@/features/usuarios';
-import * as authModule from '@/hooks/use-auth';
+import * as authModule from '@/providers/user-provider';
 
 // Mock dos hooks necessários
-jest.mock('@/hooks/use-auth', () => ({
-    useAuth: jest.fn(() => ({
+jest.mock('@/providers/user-provider', () => ({
+    useAuthSession: jest.fn(() => ({
+        user: { id: 'test-user-123' },
         isAuthenticated: true,
+        isLoading: false,
         logout: jest.fn(),
     })),
+    useUser: jest.fn(() => null),
+    usePermissoes: jest.fn(() => ({ temPermissao: jest.fn(() => true), permissoes: [] })),
 }));
 
 jest.mock('@/features/usuarios', () => ({
@@ -203,9 +207,12 @@ describe('AppSidebar - Property-Based Tests', () => {
                 fc.constant(true),
                 () => {
                     // Mock para simular usuário não carregado
-                    const useAuth = jest.mocked(authModule.useAuth);
-                    useAuth.mockImplementation(() => ({
+                    const useAuthSession = jest.mocked(authModule.useAuthSession);
+                    useAuthSession.mockImplementation(() => ({
+                        user: null,
                         isAuthenticated: false,
+                        isLoading: false,
+                        sessionToken: null,
                         logout: jest.fn(),
                     }));
 

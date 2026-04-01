@@ -4,12 +4,16 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 
 import { LayoutSwitcher } from '../layout-switcher';
 
-jest.mock('@/hooks/use-auth', () => ({
-  useAuth: () => ({
+jest.mock('@/providers/user-provider', () => ({
+  useAuthSession: () => ({
     user: { id: 'test-user-123' },
     isLoading: false,
     isAuthenticated: true,
+    sessionToken: 'test-token',
+    logout: jest.fn(),
   }),
+  useUser: () => null,
+  usePermissoes: () => ({ temPermissao: jest.fn(() => true), permissoes: [] }),
 }));
 
 function createLocalStorageMock(initial?: Record<string, string>) {

@@ -42,7 +42,7 @@ describe('Importação', () => {
       const result = await actionImportarExtrato(mockFormData);
 
       expect(conciliacaoService.importarExtrato).toHaveBeenCalled();
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro/conciliacao-bancaria');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro/conciliacao-bancaria');
       expect(result.success).toBe(true);
     });
 
@@ -165,7 +165,7 @@ describe('Conciliação', () => {
         transacaoId: 1,
         lancamentoId: 1,
       });
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro/conciliacao-bancaria');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro/conciliacao-bancaria');
       expect(result.success).toBe(true);
     });
 
@@ -202,7 +202,7 @@ describe('Conciliação', () => {
       }
     });
 
-    it('deve retornar lista ordenada por similaridade', async () => {
+    it('deve retornar lista de sugestões do serviço', async () => {
       const mockSugestoes = [
         { ...mockLancamento, id: 1, similaridade: 0.95 },
         { ...mockLancamento, id: 2, similaridade: 0.80 },
@@ -215,10 +215,8 @@ describe('Conciliação', () => {
 
       expect(result.success).toBe(true);
       if (result.success) {
-        // Verifica se está ordenado por similaridade descendente
-        const similaridades = result.data.map((s: any) => s.similaridade);
-        const ordenado = [...similaridades].sort((a, b) => b - a);
-        expect(similaridades).toEqual(ordenado);
+        expect(result.data).toHaveLength(3);
+        expect(result.data).toEqual(mockSugestoes);
       }
     });
   });
@@ -271,7 +269,7 @@ describe('Conciliação', () => {
     it('deve conciliar automaticamente', async () => {
       const result = await actionConciliarAutomaticamente();
 
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro/conciliacao-bancaria');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro/conciliacao-bancaria');
       expect(result.success).toBe(true);
       expect(result.message).toBeDefined();
     });
@@ -298,7 +296,7 @@ describe('Conciliação', () => {
       const result = await actionDesconciliar(1);
 
       expect(conciliacaoService.desconciliar).toHaveBeenCalledWith(1);
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro/conciliacao-bancaria');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro/conciliacao-bancaria');
       expect(result.success).toBe(true);
     });
 

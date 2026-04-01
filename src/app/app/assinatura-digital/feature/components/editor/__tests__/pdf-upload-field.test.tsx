@@ -248,13 +248,12 @@ describe('PdfUploadField', () => {
 
       render(<PdfUploadField {...defaultProps} value={fileValue} />);
 
-      const fileInput = document.getElementById('pdf-upload-field')! as HTMLInputElement;
-      fileInput.value = 'test.pdf';
-
+      // When showing file preview, the component hides the file input
+      // but still keeps the ref. Clicking remove calls onChange(null).
       const removeButton = screen.getByTestId('remove-button');
       fireEvent.click(removeButton);
 
-      expect(fileInput.value).toBe('');
+      expect(defaultProps.onChange).toHaveBeenCalledWith(null);
     });
   });
 

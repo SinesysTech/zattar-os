@@ -4,14 +4,13 @@ import { LogoutButton } from '../logout-button';
 
 const mockLogout = jest.fn();
 
-jest.mock('@/hooks/use-auth', () => ({
-  useAuth: () => ({
+jest.mock('@/providers/user-provider', () => ({
+  useAuthSession: () => ({
     user: { id: 'test-user-123' },
     sessionToken: 'test-session-token',
     isLoading: false,
     isAuthenticated: true,
     logout: mockLogout,
-    checkSession: jest.fn(),
   }),
 }));
 

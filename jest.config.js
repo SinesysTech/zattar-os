@@ -67,6 +67,8 @@ const config = {
         '^server-only$': '<rootDir>/src/__mocks__/server-only.js',
         '^next/cache$': '<rootDir>/src/__mocks__/next-cache.js',
         '^next/headers$': '<rootDir>/src/__mocks__/next-headers.js',
+        // Mock ESM-only packages that Jest cannot transform
+        '^uuid$': '<rootDir>/src/__mocks__/uuid.js',
         // Mock CSS and static assets
         '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
         '\\.(png|jpg|jpeg|gif|svg|webp)$': '<rootDir>/src/__mocks__/fileMock.js',
@@ -77,10 +79,6 @@ const config = {
           diagnostics: false,
         }],
       },
-      // Transform ESM-only packages that Jest cannot parse out of the box
-      transformIgnorePatterns: [
-        '/node_modules/(?!(uuid|platejs|@platejs|@udecode)/)',
-      ],
     },
   ],
 };

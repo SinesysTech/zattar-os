@@ -108,7 +108,7 @@ describe('CRUD de Lançamentos', () => {
       const result = await actionCriarLancamento(novoLancamento);
 
       expect(LancamentosService.criar).toHaveBeenCalledWith(novoLancamento);
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro');
       expect(result.success).toBe(true);
     });
 
@@ -144,7 +144,7 @@ describe('CRUD de Lançamentos', () => {
         descricao: 'Lançamento atualizado',
         valor: 2000,
       });
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro');
       expect(result.success).toBe(true);
     });
 
@@ -169,7 +169,7 @@ describe('CRUD de Lançamentos', () => {
       const result = await actionExcluirLancamento(1);
 
       expect(LancamentosService.excluir).toHaveBeenCalledWith(1);
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro');
       expect(result.success).toBe(true);
     });
 
@@ -201,7 +201,7 @@ describe('CRUD de Lançamentos', () => {
         status: 'confirmado',
         dataEfetivacao: expect.any(String),
       });
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro');
       expect(result.success).toBe(true);
     });
 
@@ -231,7 +231,7 @@ describe('CRUD de Lançamentos', () => {
       expect(LancamentosService.atualizar).toHaveBeenCalledWith(1, {
         status: 'cancelado',
       });
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro');
       expect(result.success).toBe(true);
     });
 
@@ -261,7 +261,7 @@ describe('CRUD de Lançamentos', () => {
       expect(LancamentosService.atualizar).toHaveBeenCalledWith(1, {
         status: 'estornado',
       });
-      expect(revalidatePath).toHaveBeenCalledWith('/financeiro');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro');
       expect(result.success).toBe(true);
     });
 

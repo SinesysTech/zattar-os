@@ -8,6 +8,18 @@ import { useDocumentUpload } from "../../components/upload/hooks/use-document-up
 import { useSigners } from "../../components/editor/hooks/use-signers";
 
 // Mocks
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+    refresh: jest.fn(),
+    prefetch: jest.fn(),
+  })),
+  usePathname: jest.fn(() => "/app/assinatura-digital"),
+  useSearchParams: jest.fn(() => new URLSearchParams()),
+}));
 jest.mock("../../components/upload/hooks/use-document-upload");
 jest.mock("../../components/editor/hooks/use-signers");
 jest.mock("../../store/formulario-store");

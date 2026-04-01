@@ -243,6 +243,9 @@ export type { DocumentUploadDropzoneProps } from "./components/upload";
 export { SignatureWorkflowStepper } from "./components/workflow";
 export type { SignatureWorkflowStepperProps, WorkflowStep, WorkflowNavigationState } from "./components/workflow";
 
+// Flow Shell (Document creation wizard)
+export { DocumentFlowShell } from "./components/flow";
+
 // Form
 export { FormularioPage } from "./components/form";
 

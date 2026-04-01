@@ -7,6 +7,26 @@ import { useIsMobile } from "../../../../hooks/use-breakpoint";
 // Mock hooks
 jest.mock("../../../../features/notificacoes/hooks/use-notificacoes");
 jest.mock("../../../../hooks/use-breakpoint");
+jest.mock("@/providers/user-provider", () => ({
+    useUser: () => ({
+        id: 1,
+        authUserId: 'test-auth-id',
+        nomeCompleto: 'Test User',
+        nomeExibicao: 'Test',
+        emailCorporativo: 'test@example.com',
+        emailPessoal: null,
+        avatarUrl: null,
+        isSuperAdmin: false,
+    }),
+    useAuthSession: () => ({
+        user: { id: 'test-user-123' },
+        isAuthenticated: true,
+        isLoading: false,
+        sessionToken: 'test-token',
+        logout: jest.fn(),
+    }),
+    usePermissoes: () => ({ temPermissao: jest.fn(() => true), permissoes: [] }),
+}));
 
 // Mock UI components that might cause issues in JSDOM or are not the focus
 jest.mock("@/components/ui/dropdown-menu", () => ({

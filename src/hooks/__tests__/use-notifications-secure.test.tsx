@@ -3,19 +3,21 @@ import React from 'react';
 import { render, waitFor, renderHook, act, fireEvent } from '@testing-library/react';
 
 import { NotificationProvider, useNotifications } from '@/hooks/use-notifications';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuthSession } from '@/providers/user-provider';
 
-jest.mock('@/hooks/use-auth', () => ({
-  useAuth: () => ({
+jest.mock('@/providers/user-provider', () => ({
+  useAuthSession: () => ({
     user: { id: 'test-user-123' },
     isLoading: false,
     isAuthenticated: true,
+    sessionToken: 'test-token',
     logout: async () => {
       if (typeof window === 'undefined') return;
       ['chat-notifications', 'chat-unread-counts', 'call-layout'].forEach((k) => localStorage.removeItem(k));
     },
-    checkSession: async () => true,
   }),
+  useUser: () => null,
+  usePermissoes: () => ({ temPermissao: jest.fn(() => true), permissoes: [] }),
 }));
 
 function createLocalStorageMock(initial?: Record<string, string>) {
@@ -212,7 +214,7 @@ describe('use-notifications secure storage integration', () => {
       configurable: true,
     });
 
-    const { result } = renderHook(() => useAuth());
+    const { result } = renderHook(() => useAuthSession());
 
     await act(async () => {
       await result.current.logout();

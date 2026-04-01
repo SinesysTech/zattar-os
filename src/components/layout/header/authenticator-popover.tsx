@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import {
-  ShieldCheckIcon,
+  Fingerprint,
   CopyIcon,
   CheckIcon,
   ChevronLeftIcon,
   Loader2Icon,
   AlertCircleIcon,
   KeyRoundIcon,
+  ShieldCheckIcon,
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -131,8 +132,8 @@ export function AuthenticatorPopover() {
   return (
     <Popover open={isOpen} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
-        <Button size="icon" variant="ghost">
-          <ShieldCheckIcon className="size-4" />
+        <Button size="icon" variant="ghost" className="size-8 rounded-lg">
+          <Fingerprint className="size-4" />
         </Button>
       </PopoverTrigger>
 

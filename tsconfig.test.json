@@ -10,7 +10,7 @@
     "declarationMap": true,
     "outDir": "./dist-test",
     "baseUrl": ".",
-    "module": "Node16",
+    "module": "CommonJS",
     "moduleResolution": "Node16",
     "resolvePackageJsonExports": false,
     "resolvePackageJsonImports": false,

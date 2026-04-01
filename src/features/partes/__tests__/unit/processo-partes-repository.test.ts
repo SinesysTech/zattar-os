@@ -12,6 +12,16 @@ import { createMockSupabaseClient, createMockQueryBuilder, mockPostgresError } f
 
 jest.mock('@/lib/supabase');
 
+/**
+ * Makes a mockQueryBuilder thenable so `await query` resolves to the given value.
+ * Also keeps all methods chainable (returning the builder itself).
+ */
+function makeThenable(builder: any, resolvedValue: { data: any; error: any }) {
+  builder.then = (resolve: any, reject?: any) => Promise.resolve(resolvedValue).then(resolve, reject);
+  builder.catch = (fn: any) => Promise.resolve(resolvedValue).catch(fn);
+  return builder;
+}
+
 describe('Processo Partes Repository', () => {
   let mockSupabaseClient: any;
   let mockQueryBuilder: any;
@@ -144,7 +154,7 @@ describe('Processo Partes Repository', () => {
       ];
 
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: dbData, error: null });
+      makeThenable(mockQueryBuilder, { data: dbData, error: null });
 
       const result = await listarPartesDoProcesso(100);
 
@@ -158,7 +168,7 @@ describe('Processo Partes Repository', () => {
 
     it('deve filtrar por tipoEntidade se fornecido', async () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: [], error: null });
+      makeThenable(mockQueryBuilder, { data: [], error: null });
 
       await listarPartesDoProcesso(100, 'cliente');
 
@@ -168,7 +178,7 @@ describe('Processo Partes Repository', () => {
 
     it('deve filtrar por tipoParticipacao se fornecido', async () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: [], error: null });
+      makeThenable(mockQueryBuilder, { data: [], error: null });
 
       await listarPartesDoProcesso(100, undefined, 'autor');
 
@@ -178,7 +188,7 @@ describe('Processo Partes Repository', () => {
 
     it('deve retornar array vazio se não houver partes', async () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: [], error: null });
+      makeThenable(mockQueryBuilder, { data: [], error: null });
 
       const result = await listarPartesDoProcesso(999);
 
@@ -191,7 +201,7 @@ describe('Processo Partes Repository', () => {
     it('deve mapear campos para camelCase', async () => {
       const dbData = [criarProcessoPartesDbMock()];
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: dbData, error: null });
+      makeThenable(mockQueryBuilder, { data: dbData, error: null });
 
       const result = await listarPartesDoProcesso(100);
 
@@ -216,7 +226,7 @@ describe('Processo Partes Repository', () => {
       ];
 
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: dbData, error: null });
+      makeThenable(mockQueryBuilder, { data: dbData, error: null });
 
       const result = await listarProcessosDaParte('cliente', 1);
 
@@ -231,7 +241,7 @@ describe('Processo Partes Repository', () => {
 
     it('deve filtrar por tipoParticipacao se fornecido', async () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: [], error: null });
+      makeThenable(mockQueryBuilder, { data: [], error: null });
 
       await listarProcessosDaParte('cliente', 1, 'autor');
 
@@ -242,7 +252,7 @@ describe('Processo Partes Repository', () => {
 
     it('deve retornar array vazio se não houver processos', async () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: [], error: null });
+      makeThenable(mockQueryBuilder, { data: [], error: null });
 
       const result = await listarProcessosDaParte('cliente', 999);
 
@@ -256,7 +266,7 @@ describe('Processo Partes Repository', () => {
   describe('desvincularParteDoProcesso', () => {
     it('deve remover vínculo', async () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.delete.mockResolvedValue({ data: null, error: null });
+      makeThenable(mockQueryBuilder, { data: null, error: null });
 
       const result = await desvincularParteDoProcesso(1);
 
@@ -268,7 +278,7 @@ describe('Processo Partes Repository', () => {
 
     it('deve retornar sucesso mesmo se vínculo não existe', async () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.delete.mockResolvedValue({ data: null, error: null });
+      makeThenable(mockQueryBuilder, { data: null, error: null });
 
       const result = await desvincularParteDoProcesso(999);
 
@@ -278,7 +288,7 @@ describe('Processo Partes Repository', () => {
     it('deve retornar erro para falhas de banco', async () => {
       const error = mockPostgresError('42P01', 'Table does not exist');
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.delete.mockResolvedValue({ data: null, error });
+      makeThenable(mockQueryBuilder, { data: null, error });
 
       const result = await desvincularParteDoProcesso(1);
 

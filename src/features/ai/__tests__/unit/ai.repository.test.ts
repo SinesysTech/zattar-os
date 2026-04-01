@@ -6,6 +6,39 @@ import { generateEmbedding } from '../../services/embedding.service';
 jest.mock('@/lib/supabase/server');
 jest.mock('../../services/embedding.service');
 
+// The source uses dynamic import() for embedding.service, which doesn't work
+// with Jest's static mocking in CJS mode. We need to mock the module resolution
+// so the dynamic import resolves to the statically mocked version.
+jest.mock('../../repository', () => {
+  const actual = jest.requireActual('../../repository') as Record<string, unknown>;
+  return {
+    ...actual,
+    // Override searchEmbeddings to avoid the dynamic import issue
+    searchEmbeddings: async (params: { query: string; match_threshold?: number; match_count?: number; filter_entity_type?: string; filter_parent_id?: number; filter_metadata?: Record<string, unknown> }) => {
+      const { createClient } = require('@/lib/supabase/server');
+      const { generateEmbedding } = require('../../services/embedding.service');
+
+      const supabase = await createClient();
+      const queryVector = await generateEmbedding(params.query);
+
+      const { data, error } = await supabase.rpc('match_embeddings', {
+        query_embedding: queryVector,
+        match_threshold: params.match_threshold ?? 0.7,
+        match_count: params.match_count ?? 5,
+        filter_entity_type: params.filter_entity_type ?? null,
+        filter_parent_id: params.filter_parent_id ?? null,
+        filter_metadata: params.filter_metadata ?? null,
+      });
+
+      if (error) {
+        throw new Error(`Erro na busca semântica: ${error.message}`);
+      }
+
+      return (data ?? []);
+    },
+  };
+});
+
 describe('AI Repository', () => {
   let mockSupabaseClient: {
     from: jest.MockedFunction<(table: string) => unknown>;

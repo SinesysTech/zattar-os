@@ -78,6 +78,21 @@ jest.mock("../../repositories/documentos-repository", () => ({
   verificarAcessoDocumento: jest.fn(),
 }));
 
+// Mock authorization service (used by deletarArquivo for permission checks)
+jest.mock("@/lib/auth/authorization", () => ({
+  checkPermission: jest.fn().mockResolvedValue(false as never),
+}));
+
+// Mock supabase service client (used by authorization)
+jest.mock("@/lib/supabase/service-client", () => ({
+  createServiceClient: jest.fn().mockReturnValue({
+    from: jest.fn().mockReturnThis(),
+    select: jest.fn().mockReturnThis(),
+    eq: jest.fn().mockReturnThis(),
+    single: jest.fn().mockResolvedValue({ data: null, error: null }),
+  }),
+}));
+
 // Import service after mocks are set up
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const service = require("../../service") as typeof import("../../service");
@@ -484,7 +499,7 @@ describe("Arquivos API Integration", () => {
 
       // Act & Assert
       await expect(service.deletarArquivo(1, mockUser.id)).rejects.toThrow(
-        "Acesso negado: apenas o proprietário pode deletar"
+        "Acesso negado: apenas o proprietário ou usuários com permissão podem deletar o arquivo."
       );
     });
 
@@ -496,7 +511,7 @@ describe("Arquivos API Integration", () => {
 
       // Act & Assert
       await expect(service.deletarArquivo(999, mockUser.id)).rejects.toThrow(
-        "Acesso negado: apenas o proprietário pode deletar"
+        "Arquivo não encontrado."
       );
     });
   });

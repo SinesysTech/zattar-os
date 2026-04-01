@@ -17,6 +17,40 @@ import {
 
 jest.mock('@/lib/supabase');
 
+/**
+ * Creates a chainable query mock that resolves to the given result when awaited.
+ * Supports arbitrary chains: .select().eq().eq().order().order() etc.
+ */
+function createChainableQuery(resolvedValue: { data: any; error: any }) {
+  const chain: any = {};
+  const methods = ['select', 'eq', 'neq', 'in', 'order', 'limit', 'range', 'not', 'or', 'ilike', 'gte', 'lte', 'single', 'maybeSingle', 'delete', 'insert', 'update'];
+  for (const m of methods) {
+    chain[m] = jest.fn().mockReturnValue(chain);
+  }
+  // Make it thenable so `await chain` resolves to the result
+  chain.then = (resolve: any, reject?: any) => Promise.resolve(resolvedValue).then(resolve, reject);
+  chain.catch = (reject: any) => Promise.resolve(resolvedValue).catch(reject);
+  return chain;
+}
+
+/**
+ * Creates a mock for supabase.from() that returns different chainable queries
+ * based on table name. For tables called multiple times, provide an array of results.
+ */
+function createTableMock(tableMap: Record<string, { data: any; error: any } | Array<{ data: any; error: any }>>) {
+  const callCounts: Record<string, number> = {};
+  return (table: string) => {
+    const config = tableMap[table] || { data: [], error: null };
+    if (Array.isArray(config)) {
+      callCounts[table] = (callCounts[table] || 0);
+      const result = config[callCounts[table]] || config[config.length - 1];
+      callCounts[table]++;
+      return createChainableQuery(result);
+    }
+    return createChainableQuery(config);
+  };
+}
+
 describe('actionBuscarPartesPorProcessoEPolo', () => {
   let mockSupabase: ReturnType<typeof createMockSupabaseClient>;
 
@@ -27,20 +61,20 @@ describe('actionBuscarPartesPorProcessoEPolo', () => {
   });
 
   it('deve validar processoId obrigatório', async () => {
-    const result = await actionBuscarPartesPorProcessoEPolo({
-      processoId: null as any,
-      polo: 'ATIVO',
-    });
+    const result = await actionBuscarPartesPorProcessoEPolo(
+      null as any,
+      'ATIVO',
+    );
 
     expect(result.success).toBe(false);
     expect(result.error).toContain('processoId inválido');
   });
 
   it('deve validar polo válido', async () => {
-    const result = await actionBuscarPartesPorProcessoEPolo({
-      processoId: 100,
-      polo: 'INVALIDO' as any,
-    });
+    const result = await actionBuscarPartesPorProcessoEPolo(
+      100,
+      'INVALIDO' as any,
+    );
 
     expect(result.success).toBe(false);
     expect(result.error).toContain('polo inválido');
@@ -51,19 +85,17 @@ describe('actionBuscarPartesPorProcessoEPolo', () => {
       criarVinculoProcessoParteMock({ tipo_entidade: 'cliente', entidade_id: 1 }),
     ];
 
-    (mockSupabase.from as jest.Mock).mockReturnValue({
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      order: jest.fn().mockResolvedValue({
-        data: mockVinculos,
-        error: null,
-      }),
+    (mockSupabase.from as jest.Mock).mockImplementation((table: string) => {
+      if (table === 'processo_partes') {
+        return createChainableQuery({ data: mockVinculos, error: null });
+      }
+      return createChainableQuery({ data: [], error: null });
     });
 
-    await actionBuscarPartesPorProcessoEPolo({
-      processoId: 100,
-      polo: 'ATIVO',
-    });
+    await actionBuscarPartesPorProcessoEPolo(
+      100,
+      'ATIVO',
+    );
 
     expect(mockSupabase.from).toHaveBeenCalledWith('processo_partes');
   });
@@ -81,14 +113,7 @@ describe('actionBuscarPartesPorProcessoEPolo', () => {
 
     (mockSupabase.from as jest.Mock).mockImplementation((table: string) => {
       if (table === 'processo_partes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          eq: jest.fn().mockReturnThis(),
-          order: jest.fn().mockResolvedValue({
-            data: mockVinculos,
-            error: null,
-          }),
-        };
+        return createChainableQuery({ data: mockVinculos, error: null });
       }
       if (table === 'clientes') {
         return {
@@ -126,10 +151,10 @@ describe('actionBuscarPartesPorProcessoEPolo', () => {
       };
     });
 
-    const result = await actionBuscarPartesPorProcessoEPolo({
-      processoId: 100,
-      polo: 'ATIVO',
-    });
+    const result = await actionBuscarPartesPorProcessoEPolo(
+      100,
+      'ATIVO',
+    );
 
     expect(result.success).toBe(true);
     expect(mockSupabase.from).toHaveBeenCalledWith('clientes');
@@ -151,14 +176,7 @@ describe('actionBuscarPartesPorProcessoEPolo', () => {
 
     (mockSupabase.from as jest.Mock).mockImplementation((table: string) => {
       if (table === 'processo_partes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          eq: jest.fn().mockReturnThis(),
-          order: jest.fn().mockResolvedValue({
-            data: mockVinculos,
-            error: null,
-          }),
-        };
+        return createChainableQuery({ data: mockVinculos, error: null });
       }
       if (table === 'clientes') {
         return {
@@ -178,10 +196,10 @@ describe('actionBuscarPartesPorProcessoEPolo', () => {
       };
     });
 
-    const result = await actionBuscarPartesPorProcessoEPolo({
-      processoId: 100,
-      polo: 'ATIVO',
-    });
+    const result = await actionBuscarPartesPorProcessoEPolo(
+      100,
+      'ATIVO',
+    );
 
     expect(result.success).toBe(true);
     if (result.success && result.data.partes.length > 0) {
@@ -205,14 +223,7 @@ describe('actionBuscarPartesPorProcessoEPolo', () => {
 
     (mockSupabase.from as jest.Mock).mockImplementation((table: string) => {
       if (table === 'processo_partes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          eq: jest.fn().mockReturnThis(),
-          order: jest.fn().mockResolvedValue({
-            data: mockVinculos,
-            error: null,
-          }),
-        };
+        return createChainableQuery({ data: mockVinculos, error: null });
       }
       if (table === 'clientes') {
         return {
@@ -232,10 +243,10 @@ describe('actionBuscarPartesPorProcessoEPolo', () => {
       };
     });
 
-    const result = await actionBuscarPartesPorProcessoEPolo({
-      processoId: 100,
-      polo: 'ATIVO',
-    });
+    const result = await actionBuscarPartesPorProcessoEPolo(
+      100,
+      'ATIVO',
+    );
 
     expect(result.success).toBe(true);
     if (result.success) {
@@ -245,19 +256,14 @@ describe('actionBuscarPartesPorProcessoEPolo', () => {
   });
 
   it('deve retornar array vazio se não houver partes', async () => {
-    (mockSupabase.from as jest.Mock).mockReturnValue({
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      order: jest.fn().mockResolvedValue({
-        data: [],
-        error: null,
-      }),
-    });
+    (mockSupabase.from as jest.Mock).mockReturnValue(
+      createChainableQuery({ data: [], error: null }),
+    );
 
-    const result = await actionBuscarPartesPorProcessoEPolo({
-      processoId: 100,
-      polo: 'ATIVO',
-    });
+    const result = await actionBuscarPartesPorProcessoEPolo(
+      100,
+      'ATIVO',
+    );
 
     expect(result.success).toBe(true);
     if (result.success) {
@@ -282,17 +288,11 @@ describe('actionBuscarRepresentantesPorCliente', () => {
       criarVinculoProcessoParteMock({ processo_id: 101 }),
     ];
 
-    (mockSupabase.from as jest.Mock).mockReturnValue({
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockResolvedValue({
-        data: mockProcessos,
-        error: null,
-      }),
-    });
+    (mockSupabase.from as jest.Mock).mockReturnValue(
+      createChainableQuery({ data: mockProcessos, error: null }),
+    );
 
-    await actionBuscarRepresentantesPorCliente({
-      clienteId: 1,
-    });
+    await actionBuscarRepresentantesPorCliente(1);
 
     expect(mockSupabase.from).toHaveBeenCalledWith('processo_partes');
   });
@@ -312,50 +312,15 @@ describe('actionBuscarRepresentantesPorCliente', () => {
 
     const mockRepresentante = criarRepresentanteMock();
 
-    (mockSupabase.from as jest.Mock).mockImplementation((table: string) => {
-      if (table === 'processo_partes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          eq: jest.fn().mockImplementation((field: string, value: any) => {
-            if (field === 'tipo_entidade' && value === 'cliente') {
-              return Promise.resolve({
-                data: mockProcessosCliente,
-                error: null,
-              });
-            }
-            if (field === 'tipo_entidade' && value === 'representante') {
-              return {
-                in: jest.fn().mockResolvedValue({
-                  data: mockRepresentantes,
-                  error: null,
-                }),
-              };
-            }
-            return Promise.resolve({ data: [], error: null });
-          }),
-        };
-      }
-      if (table === 'representantes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          in: jest.fn().mockResolvedValue({
-            data: [mockRepresentante],
-            error: null,
-          }),
-        };
-      }
-      return {
-        select: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockResolvedValue({
-          data: [],
-          error: null,
-        }),
-      };
-    });
+    (mockSupabase.from as jest.Mock).mockImplementation(createTableMock({
+      processo_partes: [
+        { data: mockProcessosCliente, error: null },
+        { data: mockRepresentantes, error: null },
+      ],
+      representantes: { data: [mockRepresentante], error: null },
+    }));
 
-    const result = await actionBuscarRepresentantesPorCliente({
-      clienteId: 1,
-    });
+    const result = await actionBuscarRepresentantesPorCliente(1);
 
     expect(result.success).toBe(true);
   });
@@ -381,47 +346,15 @@ describe('actionBuscarRepresentantesPorCliente', () => {
 
     const mockRepresentante = criarRepresentanteMock();
 
-    (mockSupabase.from as jest.Mock).mockImplementation((table: string) => {
-      if (table === 'processo_partes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          eq: jest.fn().mockImplementation((field: string, value: any) => {
-            if (field === 'tipo_entidade' && value === 'cliente') {
-              return Promise.resolve({
-                data: mockProcessosCliente,
-                error: null,
-              });
-            }
-            return {
-              in: jest.fn().mockResolvedValue({
-                data: mockRepresentantes,
-                error: null,
-              }),
-            };
-          }),
-        };
-      }
-      if (table === 'representantes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          in: jest.fn().mockResolvedValue({
-            data: [mockRepresentante],
-            error: null,
-          }),
-        };
-      }
-      return {
-        select: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockResolvedValue({
-          data: [],
-          error: null,
-        }),
-      };
-    });
+    (mockSupabase.from as jest.Mock).mockImplementation(createTableMock({
+      processo_partes: [
+        { data: mockProcessosCliente, error: null },
+        { data: mockRepresentantes, error: null },
+      ],
+      representantes: { data: [mockRepresentante], error: null },
+    }));
 
-    const result = await actionBuscarRepresentantesPorCliente({
-      clienteId: 1,
-    });
+    const result = await actionBuscarRepresentantesPorCliente(1);
 
     expect(result.success).toBe(true);
     if (result.success && result.data.length > 0) {
@@ -449,47 +382,15 @@ describe('actionBuscarRepresentantesPorCliente', () => {
       ],
     });
 
-    (mockSupabase.from as jest.Mock).mockImplementation((table: string) => {
-      if (table === 'processo_partes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          eq: jest.fn().mockImplementation((field: string) => {
-            if (field === 'tipo_entidade') {
-              return Promise.resolve({
-                data: mockProcessosCliente,
-                error: null,
-              });
-            }
-            return {
-              in: jest.fn().mockResolvedValue({
-                data: mockRepresentantes,
-                error: null,
-              }),
-            };
-          }),
-        };
-      }
-      if (table === 'representantes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          in: jest.fn().mockResolvedValue({
-            data: [mockRepresentante],
-            error: null,
-          }),
-        };
-      }
-      return {
-        select: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockResolvedValue({
-          data: [],
-          error: null,
-        }),
-      };
-    });
+    (mockSupabase.from as jest.Mock).mockImplementation(createTableMock({
+      processo_partes: [
+        { data: mockProcessosCliente, error: null },
+        { data: mockRepresentantes, error: null },
+      ],
+      representantes: { data: [mockRepresentante], error: null },
+    }));
 
-    const result = await actionBuscarRepresentantesPorCliente({
-      clienteId: 1,
-    });
+    const result = await actionBuscarRepresentantesPorCliente(1);
 
     expect(result.success).toBe(true);
     if (result.success && result.data.length > 0) {
@@ -527,14 +428,9 @@ describe('actionBuscarProcessosPorEntidade', () => {
       criarVinculoProcessoParteMock({ processo_id: 101, tipo_entidade: 'cliente' }),
     ];
 
-    (mockSupabase.from as jest.Mock).mockReturnValue({
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      order: jest.fn().mockResolvedValue({
-        data: mockVinculos,
-        error: null,
-      }),
-    });
+    (mockSupabase.from as jest.Mock).mockReturnValue(
+      createChainableQuery({ data: mockVinculos, error: null }),
+    );
 
     const result = await actionBuscarProcessosPorEntidade('cliente', 1);
 
@@ -549,14 +445,9 @@ describe('actionBuscarProcessosPorEntidade', () => {
       criarVinculoProcessoParteMock({ processo_id: 100, tipo_entidade: 'parte_contraria' }),
     ];
 
-    (mockSupabase.from as jest.Mock).mockReturnValue({
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      order: jest.fn().mockResolvedValue({
-        data: mockVinculos,
-        error: null,
-      }),
-    });
+    (mockSupabase.from as jest.Mock).mockReturnValue(
+      createChainableQuery({ data: mockVinculos, error: null }),
+    );
 
     const result = await actionBuscarProcessosPorEntidade('parte_contraria', 1);
 
@@ -571,14 +462,9 @@ describe('actionBuscarProcessosPorEntidade', () => {
       criarVinculoProcessoParteMock({ processo_id: 100, tipo_entidade: 'terceiro' }),
     ];
 
-    (mockSupabase.from as jest.Mock).mockReturnValue({
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      order: jest.fn().mockResolvedValue({
-        data: mockVinculos,
-        error: null,
-      }),
-    });
+    (mockSupabase.from as jest.Mock).mockReturnValue(
+      createChainableQuery({ data: mockVinculos, error: null }),
+    );
 
     const result = await actionBuscarProcessosPorEntidade('terceiro', 1);
 
@@ -589,14 +475,9 @@ describe('actionBuscarProcessosPorEntidade', () => {
   });
 
   it('deve tratar erro do Supabase', async () => {
-    (mockSupabase.from as jest.Mock).mockReturnValue({
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      order: jest.fn().mockResolvedValue({
-        data: null,
-        error: { message: 'Database error' },
-      }),
-    });
+    (mockSupabase.from as jest.Mock).mockReturnValue(
+      createChainableQuery({ data: null, error: { message: 'Database error' } }),
+    );
 
     const result = await actionBuscarProcessosPorEntidade('cliente', 1);
 
@@ -622,13 +503,9 @@ describe('actionBuscarClientesPorRepresentante', () => {
   });
 
   it('deve retornar array vazio se representante não tem processos', async () => {
-    (mockSupabase.from as jest.Mock).mockReturnValue({
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockResolvedValue({
-        data: [],
-        error: null,
-      }),
-    });
+    (mockSupabase.from as jest.Mock).mockReturnValue(
+      createChainableQuery({ data: [], error: null }),
+    );
 
     const result = await actionBuscarClientesPorRepresentante(1);
 
@@ -655,46 +532,13 @@ describe('actionBuscarClientesPorRepresentante', () => {
       criarClienteMock({ id: 2, nome: 'Cliente B' }),
     ];
 
-    (mockSupabase.from as jest.Mock).mockImplementation((table: string) => {
-      if (table === 'processo_partes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          eq: jest.fn().mockImplementation((field: string, value: any) => {
-            if (field === 'tipo_entidade' && value === 'representante') {
-              return Promise.resolve({
-                data: mockProcessosRep,
-                error: null,
-              });
-            }
-            if (field === 'tipo_entidade' && value === 'cliente') {
-              return {
-                in: jest.fn().mockResolvedValue({
-                  data: mockClientesVinculos,
-                  error: null,
-                }),
-              };
-            }
-            return Promise.resolve({ data: [], error: null });
-          }),
-        };
-      }
-      if (table === 'clientes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          in: jest.fn().mockResolvedValue({
-            data: mockClientes,
-            error: null,
-          }),
-        };
-      }
-      return {
-        select: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockResolvedValue({
-          data: [],
-          error: null,
-        }),
-      };
-    });
+    (mockSupabase.from as jest.Mock).mockImplementation(createTableMock({
+      processo_partes: [
+        { data: mockProcessosRep, error: null },
+        { data: mockClientesVinculos, error: null },
+      ],
+      clientes: { data: mockClientes, error: null },
+    }));
 
     const result = await actionBuscarClientesPorRepresentante(1);
 
@@ -725,43 +569,13 @@ describe('actionBuscarClientesPorRepresentante', () => {
       criarClienteMock({ id: 2, nome: 'Cliente B' }),
     ];
 
-    (mockSupabase.from as jest.Mock).mockImplementation((table: string) => {
-      if (table === 'processo_partes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          eq: jest.fn().mockImplementation((field: string, value: any) => {
-            if (field === 'tipo_entidade' && value === 'representante') {
-              return Promise.resolve({
-                data: mockProcessosRep,
-                error: null,
-              });
-            }
-            return {
-              in: jest.fn().mockResolvedValue({
-                data: mockClientesVinculos,
-                error: null,
-              }),
-            };
-          }),
-        };
-      }
-      if (table === 'clientes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          in: jest.fn().mockResolvedValue({
-            data: mockClientes,
-            error: null,
-          }),
-        };
-      }
-      return {
-        select: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockResolvedValue({
-          data: [],
-          error: null,
-        }),
-      };
-    });
+    (mockSupabase.from as jest.Mock).mockImplementation(createTableMock({
+      processo_partes: [
+        { data: mockProcessosRep, error: null },
+        { data: mockClientesVinculos, error: null },
+      ],
+      clientes: { data: mockClientes, error: null },
+    }));
 
     const result = await actionBuscarClientesPorRepresentante(1);
 
@@ -786,43 +600,13 @@ describe('actionBuscarClientesPorRepresentante', () => {
       }),
     ];
 
-    (mockSupabase.from as jest.Mock).mockImplementation((table: string) => {
-      if (table === 'processo_partes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          eq: jest.fn().mockImplementation((field: string, value: any) => {
-            if (field === 'tipo_entidade' && value === 'representante') {
-              return Promise.resolve({
-                data: mockProcessosRep,
-                error: null,
-              });
-            }
-            return {
-              in: jest.fn().mockResolvedValue({
-                data: mockClientesVinculos,
-                error: null,
-              }),
-            };
-          }),
-        };
-      }
-      if (table === 'clientes') {
-        return {
-          select: jest.fn().mockReturnThis(),
-          in: jest.fn().mockResolvedValue({
-            data: mockClientes,
-            error: null,
-          }),
-        };
-      }
-      return {
-        select: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockResolvedValue({
-          data: [],
-          error: null,
-        }),
-      };
-    });
+    (mockSupabase.from as jest.Mock).mockImplementation(createTableMock({
+      processo_partes: [
+        { data: mockProcessosRep, error: null },
+        { data: mockClientesVinculos, error: null },
+      ],
+      clientes: { data: mockClientes, error: null },
+    }));
 
     const result = await actionBuscarClientesPorRepresentante(1);
 

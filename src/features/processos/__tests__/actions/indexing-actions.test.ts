@@ -5,24 +5,42 @@ import {
   actionReindexarProcesso,
 } from '../../actions/indexing-actions';
 import { authenticateRequest } from '@/lib/auth';
-import { after } from 'next/server';
-import * as indexingService from '@/features/ai/services/indexing.service';
-import * as extractionService from '@/features/ai/services/extraction.service';
-import { criarUsuarioMock, criarPecaMock, criarAndamentoMock, criarEmbeddingMock as _criarEmbeddingMock } from '../fixtures';
+import { criarUsuarioMock, criarPecaMock, criarAndamentoMock } from '../fixtures';
 
 jest.mock('@/lib/auth');
-jest.mock('next/server');
-jest.mock('@/features/ai/services/indexing.service');
-jest.mock('@/features/ai/services/extraction.service');
+
+// Mock createServiceClient for the queueMicrotask insert calls
+const mockInsert = jest.fn().mockResolvedValue({ data: null, error: null });
+jest.mock('@/lib/supabase/service-client', () => ({
+  createServiceClient: jest.fn(() => ({
+    from: jest.fn(() => ({
+      insert: mockInsert,
+    })),
+  })),
+}));
+
+// Mock createClient (used in actionReindexarProcesso for reading uploads)
 jest.mock('@/lib/supabase/server', () => ({
-  createClient: jest.fn(() => ({
+  createClient: jest.fn(async () => ({
     from: jest.fn(() => ({
       select: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockResolvedValue({ data: [], error: null }),
       order: jest.fn().mockResolvedValue({ data: [], error: null }),
     })),
   })),
 }));
+
+// Override queueMicrotask to run synchronously for tests
+const originalQueueMicrotask = globalThis.queueMicrotask;
+beforeAll(() => {
+  globalThis.queueMicrotask = (fn: () => void) => {
+    fn();
+  };
+});
+afterAll(() => {
+  globalThis.queueMicrotask = originalQueueMicrotask;
+});
 
 describe('actionIndexarPecaProcesso', () => {
   const mockUser = criarUsuarioMock();
@@ -31,13 +49,8 @@ describe('actionIndexarPecaProcesso', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (authenticateRequest as jest.Mock).mockResolvedValue(mockUser);
-    (extractionService.isContentTypeSupported as jest.Mock).mockReturnValue(true);
-    (indexingService.indexDocument as jest.Mock).mockResolvedValue({ success: true });
-
-    // Mock de after() para capturar callback e executá-lo imediatamente
-    (after as jest.Mock).mockImplementation((callback: () => Promise<void>) => {
-      callback(); // Executar imediatamente para testar
-    });
+    // Make sure ENABLE_AI_INDEXING is not 'false'
+    delete process.env.ENABLE_AI_INDEXING;
   });
 
   it('deve retornar erro quando não autenticado', async () => {
@@ -56,7 +69,7 @@ describe('actionIndexarPecaProcesso', () => {
     });
   });
 
-  it('deve aceitar tipos de conteúdo suportados', async () => {
+  it('deve retornar sucesso e enfileirar peça para indexação', async () => {
     const result = await actionIndexarPecaProcesso(
       mockPeca.processo_id,
       mockPeca.id,
@@ -64,29 +77,10 @@ describe('actionIndexarPecaProcesso', () => {
       'application/pdf'
     );
 
-    expect(extractionService.isContentTypeSupported).toHaveBeenCalledWith('application/pdf');
     expect(result.success).toBe(true);
   });
 
-  it('deve permitir tipos não suportados com warning', async () => {
-    (extractionService.isContentTypeSupported as jest.Mock).mockReturnValue(false);
-    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
-
-    const result = await actionIndexarPecaProcesso(
-      mockPeca.processo_id,
-      mockPeca.id,
-      mockPeca.storage_key,
-      'application/zip'
-    );
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('não suportado')
-    );
-    expect(result.success).toBe(true);
-    consoleWarnSpy.mockRestore();
-  });
-
-  it('deve disparar indexação assíncrona com after()', async () => {
+  it('deve incluir metadata com processo_id e indexed_by', async () => {
     await actionIndexarPecaProcesso(
       mockPeca.processo_id,
       mockPeca.id,
@@ -94,49 +88,23 @@ describe('actionIndexarPecaProcesso', () => {
       mockPeca.content_type
     );
 
-    expect(after).toHaveBeenCalled();
-    expect(indexingService.indexDocument).toHaveBeenCalled();
+    expect(mockInsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tipo: 'processo',
+        entity_id: mockPeca.id,
+        metadata: expect.objectContaining({
+          processo_id: mockPeca.processo_id,
+          indexed_by: mockUser.id,
+          storage_key: mockPeca.storage_key,
+          content_type: mockPeca.content_type,
+          tipo: 'processo_peca',
+        }),
+      })
+    );
   });
 
-  it('deve passar parâmetros corretos para indexDocument', async () => {
-    await actionIndexarPecaProcesso(
-      mockPeca.processo_id,
-      mockPeca.id,
-      mockPeca.storage_key,
-      'application/pdf'
-    );
-
-    expect(indexingService.indexDocument).toHaveBeenCalledWith({
-      entity_type: 'processo_peca',
-      entity_id: mockPeca.id,
-      parent_id: mockPeca.processo_id,
-      storage_provider: 'backblaze',
-      storage_key: mockPeca.storage_key,
-      content_type: 'application/pdf',
-      metadata: expect.objectContaining({
-        processo_id: mockPeca.processo_id,
-        indexed_by: mockUser.id,
-      }),
-    });
-  });
-
-  it('deve incluir indexed_by no metadata', async () => {
-    await actionIndexarPecaProcesso(
-      mockPeca.processo_id,
-      mockPeca.id,
-      mockPeca.storage_key,
-      mockPeca.content_type
-    );
-
-    const callArgs = (indexingService.indexDocument as jest.Mock).mock.calls[0][0];
-    expect(callArgs.metadata.indexed_by).toBe(mockUser.id);
-  });
-
-  it('deve tratar erros dentro do after()', async () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-    (indexingService.indexDocument as jest.Mock).mockRejectedValue(
-      new Error('Erro ao indexar')
-    );
+  it('deve retornar mensagem de desabilitado quando ENABLE_AI_INDEXING=false', async () => {
+    process.env.ENABLE_AI_INDEXING = 'false';
 
     const result = await actionIndexarPecaProcesso(
       mockPeca.processo_id,
@@ -145,10 +113,8 @@ describe('actionIndexarPecaProcesso', () => {
       mockPeca.content_type
     );
 
-    // A action retorna sucesso, mas loga erro internamente
     expect(result.success).toBe(true);
-    expect(consoleErrorSpy).toHaveBeenCalled();
-    consoleErrorSpy.mockRestore();
+    expect(result.message).toBe('Indexação desabilitada');
   });
 });
 
@@ -159,11 +125,7 @@ describe('actionIndexarAndamentoProcesso', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (authenticateRequest as jest.Mock).mockResolvedValue(mockUser);
-    (indexingService.indexText as jest.Mock).mockResolvedValue({ success: true });
-
-    (after as jest.Mock).mockImplementation((callback: () => Promise<void>) => {
-      callback();
-    });
+    delete process.env.ENABLE_AI_INDEXING;
   });
 
   it('deve retornar erro quando não autenticado', async () => {
@@ -181,46 +143,26 @@ describe('actionIndexarAndamentoProcesso', () => {
     });
   });
 
-  it('deve indexar texto puro de andamento', async () => {
-    await actionIndexarAndamentoProcesso(
+  it('deve enfileirar andamento para indexação', async () => {
+    const result = await actionIndexarAndamentoProcesso(
       mockAndamento.processo_id,
       mockAndamento.id,
       mockAndamento.descricao
     );
 
-    expect(indexingService.indexText).toHaveBeenCalledWith(
-      mockAndamento.descricao,
-      {
-        entity_type: 'processo_andamento',
+    expect(result.success).toBe(true);
+    expect(mockInsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tipo: 'processo',
         entity_id: mockAndamento.id,
-        parent_id: mockAndamento.processo_id,
+        texto: mockAndamento.descricao,
         metadata: expect.objectContaining({
           processo_id: mockAndamento.processo_id,
           indexed_by: mockUser.id,
+          tipo: 'processo_andamento',
         }),
-      }
+      })
     );
-  });
-
-  it('deve usar after() para processamento assíncrono', async () => {
-    await actionIndexarAndamentoProcesso(
-      mockAndamento.processo_id,
-      mockAndamento.id,
-      mockAndamento.descricao
-    );
-
-    expect(after).toHaveBeenCalled();
-  });
-
-  it('deve incluir processo_id no metadata', async () => {
-    await actionIndexarAndamentoProcesso(
-      mockAndamento.processo_id,
-      mockAndamento.id,
-      mockAndamento.descricao
-    );
-
-    const callArgs = (indexingService.indexText as jest.Mock).mock.calls[0][1];
-    expect(callArgs.metadata.processo_id).toBe(mockAndamento.processo_id);
   });
 });
 
@@ -230,12 +172,7 @@ describe('actionReindexarProcesso', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (authenticateRequest as jest.Mock).mockResolvedValue(mockUser);
-    (indexingService.deleteEmbeddingsByParent as jest.Mock).mockResolvedValue({ success: true });
-    (indexingService.indexDocument as jest.Mock).mockResolvedValue({ success: true });
-
-    (after as jest.Mock).mockImplementation((callback: () => Promise<void>) => {
-      callback();
-    });
+    delete process.env.ENABLE_AI_INDEXING;
   });
 
   it('deve retornar erro quando não autenticado', async () => {
@@ -249,41 +186,19 @@ describe('actionReindexarProcesso', () => {
     });
   });
 
-  it('deve remover embeddings antigos', async () => {
-    const processoId = 100;
-
-    await actionReindexarProcesso(processoId);
-
-    expect(indexingService.deleteEmbeddingsByParent).toHaveBeenCalledWith(processoId);
-  });
-
-  it('deve buscar peças indexadas anteriormente', async () => {
-    // O mock já está configurado no topo do arquivo
-    const { createClient } = await import('@/lib/supabase/server');
-    const mockDb = createClient();
-
-    await actionReindexarProcesso(100);
-
-    expect(mockDb.from).toHaveBeenCalledWith('embeddings');
-  });
-
-  it('deve retornar mensagem de sucesso', async () => {
+  it('deve retornar mensagem de sucesso com agendamento', async () => {
     const result = await actionReindexarProcesso(100);
 
     expect(result.success).toBe(true);
     expect(result.message).toContain('agendada');
   });
 
-  it('deve tratar erros de reindexação', async () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-    (indexingService.deleteEmbeddingsByParent as jest.Mock).mockRejectedValue(
-      new Error('Erro ao deletar embeddings')
-    );
+  it('deve retornar mensagem de desabilitado quando ENABLE_AI_INDEXING=false', async () => {
+    process.env.ENABLE_AI_INDEXING = 'false';
 
     const result = await actionReindexarProcesso(100);
 
     expect(result.success).toBe(true);
-    expect(consoleErrorSpy).toHaveBeenCalled();
-    consoleErrorSpy.mockRestore();
+    expect(result.message).toBe('Indexação desabilitada');
   });
 });

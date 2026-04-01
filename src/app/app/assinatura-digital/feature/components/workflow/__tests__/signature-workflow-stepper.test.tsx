@@ -52,8 +52,9 @@ describe('SignatureWorkflowStepper', () => {
 
     it('deve exibir os steps com labels', () => {
       render(<SignatureWorkflowStepper />);
-      expect(screen.getByText(/Upload/i)).toBeInTheDocument();
-      expect(screen.getByText(/Configurar/i)).toBeInTheDocument();
+      // Labels may appear in both the sr-only text and the stepper itself
+      expect(screen.getAllByText(/Upload/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/Configurar/i).length).toBeGreaterThanOrEqual(1);
     });
   });
 

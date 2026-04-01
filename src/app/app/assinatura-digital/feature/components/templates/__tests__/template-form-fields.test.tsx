@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { useForm } from 'react-hook-form';
 import { TemplateFormFields } from '../template-form-fields';
@@ -123,7 +124,7 @@ describe('TemplateFormFields', () => {
       expect(screen.getByLabelText(/nome do template/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/descrição/i)).toBeInTheDocument();
       // Segmento uses Radix Select (no native input), check label text instead
-      expect(screen.getByText(/segmento/i)).toBeInTheDocument();
+      expect(screen.getByText(/Segmento \(Opcional\)/)).toBeInTheDocument();
     });
 
     it('deve renderizar seletor de tipo de template', () => {
@@ -149,13 +150,12 @@ describe('TemplateFormFields', () => {
   });
 
   describe('Mudança de Tipo de Template', () => {
-    it('deve chamar onTipoTemplateChange quando tipo muda', () => {
+    it('deve chamar onTipoTemplateChange quando tipo muda', async () => {
+      const user = userEvent.setup();
       render(<TemplateFormFieldsWrapper {...defaultProps} />);
 
-      const pdfTab = screen.getByText(/pdf upload/i).closest('button');
-      if (pdfTab) {
-        fireEvent.click(pdfTab);
-      }
+      const pdfTab = screen.getByRole('tab', { name: /pdf upload/i });
+      await user.click(pdfTab);
 
       expect(defaultProps.onTipoTemplateChange).toHaveBeenCalledWith('pdf');
     });
@@ -212,8 +212,9 @@ describe('TemplateFormFields', () => {
       const clearButton = screen.getByText(/limpar seleção/i);
       fireEvent.click(clearButton);
 
-      // The trigger should show the placeholder again
-      expect(segmentoTrigger).toHaveTextContent('Selecione um segmento');
+      // After clearing, the "Limpar seleção" button should disappear
+      // (the component conditionally renders it when segmentoId is truthy)
+      expect(screen.queryByText(/limpar seleção/i)).not.toBeInTheDocument();
     });
   });
 
