@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ProfileShell } from '@/features/profiles';
+import { ProfileShell } from '@/lib/domain/profiles';
 
 interface PageProps {
   params: Promise<{ id: string }>;

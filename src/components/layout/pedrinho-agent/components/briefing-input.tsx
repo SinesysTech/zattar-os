@@ -2,12 +2,9 @@
 
 import { useCallback, useRef, useState } from 'react'
 import { ArrowUp, Mic, Paperclip, Square } from 'lucide-react'
+import { useSuggestions } from '@copilotkit/react-core/v2'
 import { cn } from '@/lib/utils'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-} from '@/components/ui/input-group'
+import { Button } from '@/components/ui/button'
 import { useAttachments } from '../hooks/use-attachments'
 import { useAudioRecorder } from '../hooks/use-audio-recorder'
 import { AttachmentStrip } from './attachment-strip'
@@ -31,6 +28,7 @@ export function BriefingInput({
 }: BriefingInputProps) {
   const [text, setText] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const { suggestions } = useSuggestions()
   const { attachments, error, addFiles, addAudioBlob, remove, clear, openFilePicker, toBase64Array } =
     useAttachments()
   const recorder = useAudioRecorder()
@@ -65,6 +63,14 @@ export function BriefingInput({
       textareaRef.current.style.height = 'auto'
     }
   }, [text, attachments, isAgentRunning, toBase64Array, onSendMultimodal, onSendText, clear, threadId])
+
+  const handleSendSuggestion = useCallback(
+    (message: string) => {
+      if (isAgentRunning) return
+      onSendText(message)
+    },
+    [isAgentRunning, onSendText]
+  )
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -105,7 +111,30 @@ export function BriefingInput({
   const hasContent = text.trim().length > 0 || attachments.length > 0
 
   return (
-    <div className="px-3 pb-3 pt-1">
+    <div className="px-3 pb-3">
+      {/* Suggestion pills — above the input */}
+      {suggestions.length > 0 && !isAgentRunning && (
+        <div className="flex flex-wrap gap-1.5 px-1 pb-2.5">
+          {suggestions.slice(0, 5).map((s) => (
+            <button
+              key={s.title}
+              onClick={() => handleSendSuggestion(s.message)}
+              className={cn(
+                'text-[11px] font-medium px-2.5 py-1 rounded-lg',
+                'bg-muted/60 dark:bg-white/6',
+                'border border-border/25 dark:border-border/15',
+                'text-foreground/70',
+                'hover:bg-muted/80 dark:hover:bg-white/10',
+                'hover:text-foreground/90 hover:border-border/40',
+                'transition-all duration-150 cursor-pointer'
+              )}
+            >
+              {s.title}
+            </button>
+          ))}
+        </div>
+      )}
+
       <AttachmentStrip attachments={attachments} onRemove={remove} />
 
       {error && (
@@ -114,9 +143,18 @@ export function BriefingInput({
         </div>
       )}
 
-      <InputGroup className="rounded-xl bg-muted/50 dark:bg-white/4 border-border/20 dark:border-border/10">
+      {/* Input container */}
+      <div
+        className={cn(
+          'relative flex flex-col w-full rounded-xl',
+          'border border-border/25 dark:border-border/15',
+          'bg-muted/40 dark:bg-white/4',
+          'transition-colors duration-150',
+          'focus-within:border-border/40 dark:focus-within:border-border/25',
+        )}
+      >
         {isRecording ? (
-          <div className="flex-1 px-3 py-2.5">
+          <div className="px-3 py-2.5">
             <AudioRecorder
               duration={recorder.duration}
               waveformData={recorder.waveformData}
@@ -128,7 +166,6 @@ export function BriefingInput({
           <>
             <textarea
               ref={textareaRef}
-              data-slot="input-group-control"
               value={text}
               onChange={handleTextChange}
               onKeyDown={handleKeyDown}
@@ -137,68 +174,68 @@ export function BriefingInput({
               disabled={isAgentRunning}
               rows={1}
               className={cn(
-                'flex-1 min-h-10 max-h-40 resize-none',
-                'rounded-none border-0 bg-transparent shadow-none',
-                'px-3 py-2.5 text-[13px] text-foreground',
+                'w-full min-h-11 max-h-40 resize-none',
+                'bg-transparent text-[13px] text-foreground',
                 'placeholder:text-muted-foreground/50',
-                'focus-visible:ring-0 outline-none',
+                'px-3 pt-2.5 pb-0',
+                'outline-none',
                 'disabled:opacity-50'
               )}
             />
 
-            <InputGroupAddon align="block-end" className="gap-1 px-2 pb-2 pt-0">
-              <InputGroupButton
+            <div className="flex items-center gap-1 px-2 pb-2 pt-1">
+              <Button
                 variant="ghost"
-                size="icon-xs"
+                size="icon"
                 onClick={() => openFilePicker('document')}
                 disabled={isAgentRunning}
                 aria-label="Anexar arquivo"
-                className="text-muted-foreground/60 hover:text-foreground/80"
+                className="size-7 rounded-lg text-muted-foreground/50 hover:text-foreground/70"
               >
                 <Paperclip className="size-4" />
-              </InputGroupButton>
+              </Button>
 
               {recorder.isSupported && (
-                <InputGroupButton
+                <Button
                   variant="ghost"
-                  size="icon-xs"
+                  size="icon"
                   onClick={recorder.start}
                   disabled={isAgentRunning}
                   aria-label="Gravar áudio"
-                  className="text-muted-foreground/60 hover:text-foreground/80"
+                  className="size-7 rounded-lg text-muted-foreground/50 hover:text-foreground/70"
                 >
                   <Mic className="size-4" />
-                </InputGroupButton>
+                </Button>
               )}
 
               <div className="ml-auto">
                 {isAgentRunning ? (
-                  <InputGroupButton
+                  <Button
                     variant="ghost"
-                    size="icon-xs"
+                    size="icon"
                     onClick={onStopAgent}
                     aria-label="Parar resposta"
-                    className="rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 hover:text-destructive"
+                    className="size-7 rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 hover:text-destructive"
                   >
                     <Square className="size-3.5" />
-                  </InputGroupButton>
+                  </Button>
                 ) : (
-                  <InputGroupButton
+                  <Button
                     variant="default"
-                    size="icon-xs"
+                    size="icon"
                     onClick={handleSend}
                     disabled={!hasContent}
                     aria-label="Enviar mensagem"
-                    className="rounded-full"
+                    className="size-7 rounded-full"
                   >
                     <ArrowUp className="size-3.5" />
-                  </InputGroupButton>
+                  </Button>
                 )}
               </div>
-            </InputGroupAddon>
+            </div>
           </>
         )}
-      </InputGroup>
+      </div>
     </div>
   )
 }

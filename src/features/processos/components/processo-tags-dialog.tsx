@@ -19,7 +19,7 @@ import {
   actionListarTags,
   actionCriarTag,
   actionAtualizarTagsDoProcesso,
-} from '@/features/tags';
+} from '@/lib/domain/tags';
 import type { ProcessoUnificado } from '../domain';
 
 interface ProcessoTagsDialogProps {

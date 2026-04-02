@@ -7,18 +7,18 @@ import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 import { useBreakpointBelow } from '@/hooks/use-breakpoint'
 import { usePanelResize } from './hooks/use-panel-resize'
+import { useThreadHistory } from './hooks/use-thread-history'
 import { BriefingHeader } from './components/briefing-header'
 import { BriefingInput } from './components/briefing-input'
 import type { MultimodalRequest } from './types'
 
 interface BriefingPanelProps {
   onClose: () => void
-  onMinimize: () => void
   onWidthChange?: (width: number) => void
   threadId?: string
 }
 
-export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: BriefingPanelProps) {
+export function BriefingPanel({ onClose, onWidthChange, threadId: initialThreadId }: BriefingPanelProps) {
   const pathname = usePathname()
   const moduleLabel = getModuleLabel(pathname || '')
   const isMobile = useBreakpointBelow('md')
@@ -26,6 +26,15 @@ export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: 
 
   const { width, isResizing, handleMouseDown } = usePanelResize(onWidthChange)
   const panelWidth = isMobile ? '100vw' : width
+
+  const {
+    threads,
+    activeThreadId,
+    createThread,
+    switchThread,
+    deleteThread,
+    ensureTracked,
+  } = useThreadHistory(initialThreadId)
 
   // Close on Escape
   useEffect(() => {
@@ -46,6 +55,10 @@ export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: 
   const handleSendText = useCallback(
     async (text: string) => {
       if (!text.trim() || agent.isRunning) return
+
+      // Track thread with first message as title
+      ensureTracked(text.trim())
+
       agent.addMessage({
         id: crypto.randomUUID(),
         role: 'user' as const,
@@ -57,12 +70,15 @@ export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: 
         // Agent handles errors internally
       }
     },
-    [agent]
+    [agent, ensureTracked]
   )
 
   const handleSendMultimodal = useCallback(
     async (request: MultimodalRequest) => {
       if (agent.isRunning) return
+
+      // Track thread
+      ensureTracked(request.text || 'Anexo(s)')
 
       // Show user message in chat
       const userContent = request.text || 'Enviou anexo(s)'
@@ -104,7 +120,7 @@ export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: 
         })
       }
     },
-    [agent]
+    [agent, ensureTracked]
   )
 
   const handleStopAgent = useCallback(() => {
@@ -149,12 +165,20 @@ export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: 
       )}
 
       {/* Header */}
-      <BriefingHeader moduleLabel={moduleLabel} onMinimize={onMinimize} onClose={onClose} />
+      <BriefingHeader
+        moduleLabel={moduleLabel}
+        threads={threads}
+        activeThreadId={activeThreadId}
+        onNewThread={createThread}
+        onSwitchThread={switchThread}
+        onDeleteThread={deleteThread}
+        onClose={onClose}
+      />
 
       {/* Chat messages — CopilotChat with native v2 slot overrides */}
       <div className="flex-1 min-h-0 pedrinho-chat-wrapper">
         <CopilotChat
-          threadId={threadId}
+          threadId={activeThreadId}
           labels={{
             modalHeaderTitle: 'Pedrinho',
             welcomeMessageText: 'Olá! Como posso ajudar? Envie textos, imagens, documentos ou grave áudios.',
@@ -171,7 +195,7 @@ export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: 
             userMessage:
               'bg-primary/7 text-foreground/90 rounded-[14px] rounded-br-[6px] border border-primary/10 text-[13px] leading-[1.6] px-3.5 py-2.5',
           }}
-          suggestionView="text-[11px] font-medium px-3 py-1.5 rounded-lg bg-muted/60 dark:bg-white/6 border border-border/25 dark:border-border/15 text-foreground/70 hover:bg-muted/80 dark:hover:bg-white/10 hover:text-foreground/90 hover:border-border/40 transition-all duration-150 cursor-pointer"
+          /* suggestionView hidden via CSS — rendered in BriefingInput instead */
         />
       </div>
 
@@ -181,7 +205,7 @@ export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: 
         onSendMultimodal={handleSendMultimodal}
         onStopAgent={handleStopAgent}
         isAgentRunning={agent.isRunning}
-        threadId={threadId}
+        threadId={activeThreadId}
       />
 
       {/* Mobile close hint */}

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AuditLogTimeline } from '@/components/common/audit-log-timeline';
-import { useAuditLogs } from '@/features/audit/hooks/use-audit-logs';
+import { useAuditLogs } from '@/lib/domain/audit/hooks/use-audit-logs';
 
 import type { Pericia } from '../domain';
 import { SITUACAO_PERICIA_LABELS, SituacaoPericiaCodigo } from '../domain';

@@ -17,11 +17,11 @@ jest.mock('next/navigation', () => ({
 }));
 
 // Mock audit service to prevent module-level createClient call (env vars missing in test)
-jest.mock('@/features/audit/services/audit-log.service', () => ({
+jest.mock('@/lib/domain/audit/services/audit-log.service', () => ({
   auditLogService: { log: jest.fn(), query: jest.fn() },
   AuditLogService: jest.fn(),
 }));
-jest.mock('@/features/audit/hooks/use-audit-logs', () => ({
+jest.mock('@/lib/domain/audit/hooks/use-audit-logs', () => ({
   useAuditLogs: jest.fn(() => ({ logs: [], isLoading: false })),
 }));
 
