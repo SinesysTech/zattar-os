@@ -4,7 +4,7 @@
  * Componentes React para integração com CopilotKit
  *
  * NOTA: Para controlar o estado do chat (open/setOpen), use o hook
- * `useChatContext` diretamente do `@copilotkit/react-ui`.
+ * `useAgent` diretamente do `@copilotkit/react-core/v2`.
  */
 
 export { CopilotGlobalActions } from './copilot-global-actions';

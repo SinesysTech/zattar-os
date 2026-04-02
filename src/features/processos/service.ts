@@ -431,8 +431,8 @@ export async function buscarProcessosPorClienteCPF(
   client?: DbClient
 ): Promise<Result<Processo[]>> {
   // Import dynamically to avoid circular dependency
-  const { findClienteByCPF } = await import("@/features/partes/repository");
-  const { normalizarDocumento } = await import("@/features/partes/domain");
+  const { findClienteByCPF } = await import("@/features/partes/server");
+  const { normalizarDocumento } = await import("@/features/partes");
 
   if (!cpf || !cpf.trim()) {
     return err(appError("VALIDATION_ERROR", "CPF e obrigatorio"));
@@ -483,8 +483,8 @@ export async function buscarProcessosPorClienteCNPJ(
   client?: DbClient
 ): Promise<Result<Processo[]>> {
   // Import dynamically to avoid circular dependency
-  const { findClienteByCNPJ } = await import("@/features/partes/repository");
-  const { normalizarDocumento } = await import("@/features/partes/domain");
+  const { findClienteByCNPJ } = await import("@/features/partes/server");
+  const { normalizarDocumento } = await import("@/features/partes");
 
   if (!cnpj || !cnpj.trim()) {
     return err(appError("VALIDATION_ERROR", "CNPJ e obrigatorio"));

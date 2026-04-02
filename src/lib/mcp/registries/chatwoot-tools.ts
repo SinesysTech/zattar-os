@@ -50,7 +50,7 @@ import {
   findMapeamentoPorEntidade,
   listarMapeamentos,
 } from '@/features/chatwoot';
-import { findClienteById, findParteContrariaById, findTerceiroById } from '@/features/partes/repository';
+import { findClienteById, findParteContrariaById, findTerceiroById } from '@/features/partes/server';
 
 /**
  * Registra ferramentas MCP do módulo Chatwoot

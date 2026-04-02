@@ -26,13 +26,10 @@ jest.mock('@/features/audit/hooks/use-audit-logs', () => ({
 // Mock ESM-only @copilotkit modules to prevent "unexpected token 'export'" from @a2ui/lit
 jest.mock('@copilotkit/react-core/v2', () => ({
   useAgentContext: jest.fn(() => ({})),
-  useCopilotAction: jest.fn(),
-  useCopilotReadable: jest.fn(),
-}));
-jest.mock('@copilotkit/react-core', () => ({
-  useAgentContext: jest.fn(() => ({})),
-  useCopilotAction: jest.fn(),
-  useCopilotReadable: jest.fn(),
+  useAgent: jest.fn(() => ({ run: jest.fn() })),
+  useFrontendTool: jest.fn(),
+  useConfigureSuggestions: jest.fn(),
+  CopilotKitProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
 // Mock supabase client to avoid missing env vars

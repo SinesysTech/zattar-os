@@ -14,7 +14,7 @@
  */
 
 import { z } from "zod";
-import type { ClienteBase, ParteContraria } from "@/features/partes/domain";
+import type { ClienteBase, ParteContraria } from "@/features/partes";
 
 // =============================================================================
 // TIPOS BASE E ENUMS

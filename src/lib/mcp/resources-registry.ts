@@ -6,7 +6,7 @@
 
 import { registerMcpResource, jsonResourceResult } from "./resources";
 import type { Processo } from "@/features/processos/domain";
-import type { Cliente } from "@/features/partes/domain";
+import type { Cliente } from "@/features/partes";
 import type { Contrato } from "@/features/contratos/domain";
 import type { Audiencia } from "@/features/audiencias/domain";
 

@@ -18,7 +18,7 @@ import type {
   CreateParteContrariaPJInput as CriarParteContrariaPJParams,
   CreateTerceiroPFInput as CriarTerceiroPFParams,
   CreateTerceiroPJInput as CriarTerceiroPJParams,
-} from "@/features/partes/domain";
+} from "@/features/partes";
 import {
   upsertClientePorCPF,
   upsertClientePorCNPJ,
@@ -38,7 +38,7 @@ import {
   buscarEntidadePorIdPessoaPJE,
   upsertTerceiroByCPF,
   upsertTerceiroByCNPJ,
-} from "@/features/partes/repository";
+} from "@/features/partes/server";
 import { withRetry } from "@/lib/utils/retry";
 import { CAPTURA_CONFIG } from "../config";
 import { PersistenceError } from "../errors";

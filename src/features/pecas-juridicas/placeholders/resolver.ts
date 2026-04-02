@@ -5,7 +5,7 @@
  * no conteúdo do documento pelos valores reais do contrato.
  */
 
-import type { Cliente, ParteContraria } from '@/features/partes/domain';
+import type { Cliente, ParteContraria } from '@/features/partes';
 import type { Endereco } from '@/features/enderecos/types';
 
 // =============================================================================
