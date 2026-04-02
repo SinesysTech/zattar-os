@@ -271,15 +271,6 @@ function calculateWeightedTotal(scores: Record<string, number>): number {
   }, 0)
 }
 
-function getScoreColorClass(score: number): string {
-  if (score >= 9.0)
-    return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-  if (score >= 7.5)
-    return 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300'
-  if (score >= 6.0)
-    return 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-  return 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
-}
 
 function getTotalScoreColorClass(score: number): string {
   if (score >= 85) return 'bg-emerald-600 text-white'
@@ -331,8 +322,8 @@ export default function RecrutamentoScorecardPage() {
     <TooltipProvider delayDuration={200}>
       <div className="min-h-screen bg-muted/40">
         {/* ─── Navigation ─── */}
-        <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between px-6">
+        <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+          <div className="mx-auto flex h-14 max-w-350 items-center justify-between px-6">
             <div className="flex items-center gap-2">
               <Briefcase className="h-5 w-5 text-primary" />
               <span className="font-heading font-semibold tracking-tight">
@@ -345,7 +336,7 @@ export default function RecrutamentoScorecardPage() {
 
         {/* ─── Header ─── */}
         <div className="border-b bg-background">
-          <div className="mx-auto max-w-[1400px] px-6 py-8">
+          <div className="mx-auto max-w-350 px-6 py-8">
             <div className="flex items-center gap-2 mb-2">
               <Badge variant="secondary" tone="soft">
                 Vaga #2024-087
@@ -379,7 +370,7 @@ export default function RecrutamentoScorecardPage() {
         </div>
 
         {/* ─── Content ─── */}
-        <main className="mx-auto max-w-[1400px] px-6 py-6 space-y-6">
+        <main className="mx-auto max-w-350 px-6 py-6 space-y-6">
           {/* ─── KPI Cards ─── */}
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <Card>
@@ -467,11 +458,11 @@ export default function RecrutamentoScorecardPage() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-12 text-center">#</TableHead>
-                    <TableHead className="min-w-[240px]">Candidato</TableHead>
+                    <TableHead className="min-w-60">Candidato</TableHead>
                     {competencies.map((comp) => (
                       <TableHead
                         key={comp.id}
-                        className="text-center min-w-[90px]"
+                        className="text-center min-w-22.5"
                       >
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -484,7 +475,7 @@ export default function RecrutamentoScorecardPage() {
                               </span>
                             </div>
                           </TooltipTrigger>
-                          <TooltipContent side="top" className="max-w-[200px]">
+                          <TooltipContent side="top" className="max-w-50">
                             <p className="font-medium">{comp.name}</p>
                             <p className="text-muted-foreground">
                               {comp.description}
@@ -493,7 +484,7 @@ export default function RecrutamentoScorecardPage() {
                         </Tooltip>
                       </TableHead>
                     ))}
-                    <TableHead className="text-center min-w-[80px]">
+                    <TableHead className="text-center min-w-20">
                       <div className="flex flex-col items-center gap-0.5">
                         <span className="text-xs font-medium">Total</span>
                         <span className="text-[10px] font-normal text-muted-foreground">
@@ -501,7 +492,7 @@ export default function RecrutamentoScorecardPage() {
                         </span>
                       </div>
                     </TableHead>
-                    <TableHead className="text-center min-w-[120px]">
+                    <TableHead className="text-center min-w-30">
                       Status
                     </TableHead>
                   </TableRow>
@@ -555,7 +546,7 @@ export default function RecrutamentoScorecardPage() {
                               className="text-center px-1.5 py-2"
                             >
                               <span
-                                className={`inline-flex items-center justify-center rounded-md px-2 py-1 text-xs font-semibold tabular-nums min-w-[3rem] ${getScoreColorClass(score)}`}
+                                className={`inline-flex items-center justify-center rounded-md px-2 py-1 text-xs font-semibold tabular-nums min-w-12etScoreColorClass(score)}`}
                               >
                                 {score.toFixed(1)}
                               </span>

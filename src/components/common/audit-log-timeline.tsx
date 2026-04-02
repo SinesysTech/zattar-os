@@ -26,7 +26,7 @@ export function AuditLogTimeline({ logs, isLoading, className }: AuditLogTimelin
         {logs.map((log) => (
           <div key={log.id} className="relative pl-6">
             {/* Dot on the timeline */}
-            <div className="absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full bg-primary ring-4 ring-background" />
+            <div className="absolute -left-1.25 top-1 h-2.5 w-2.5 rounded-full bg-primary ring-4 ring-background" />
 
             <div className="flex flex-col gap-2">
               {/* Header: User and Date */}

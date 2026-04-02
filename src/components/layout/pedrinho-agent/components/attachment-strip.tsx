@@ -68,11 +68,12 @@ function AttachmentChip({
 
       <button
         onClick={() => onRemove(attachment.id)}
+        aria-label={`Remover ${attachment.name}`}
         className={cn(
           'size-5 rounded flex items-center justify-center shrink-0',
           'text-muted-foreground/40 hover:text-destructive',
           'hover:bg-destructive/8',
-          'opacity-0 group-hover/chip:opacity-100',
+          'opacity-0 group-hover/chip:opacity-100 focus-visible:opacity-100',
           'transition-all duration-150 cursor-pointer'
         )}
         title="Remover"

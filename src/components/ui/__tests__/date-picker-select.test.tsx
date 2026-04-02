@@ -5,7 +5,7 @@
  * de seleção de data e select em diferentes viewports.
  */
 
-import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import { render, fireEvent, cleanup } from '@testing-library/react';
 import * as fc from 'fast-check';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
@@ -221,7 +221,7 @@ describe('Date Picker and Select Property Tests', () => {
                     setViewport({ width, height: 800 });
 
                     // Renderiza combobox
-                    const { container, getAllByRole } = render(
+                    const { getAllByRole } = render(
                         <Combobox
                             options={options as ComboboxOption[]}
                             value={[]}

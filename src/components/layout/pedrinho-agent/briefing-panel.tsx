@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 import { CopilotChat } from '@copilotkit/react-core/v2'
 import { useAgent } from '@copilotkit/react-core/v2'
 import { cn } from '@/lib/utils'
@@ -20,7 +20,6 @@ interface BriefingPanelProps {
 
 export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: BriefingPanelProps) {
   const pathname = usePathname()
-  const panelRef = useRef<HTMLDivElement>(null)
   const moduleLabel = getModuleLabel(pathname || '')
   const isMobile = useBreakpointBelow('md')
   const { agent } = useAgent()
@@ -114,7 +113,6 @@ export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: 
 
   return (
     <div
-      ref={panelRef}
       className={cn(
         'fixed top-0 right-0 z-40 h-full',
         'flex flex-col',
@@ -153,7 +151,7 @@ export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: 
       {/* Header */}
       <BriefingHeader moduleLabel={moduleLabel} onMinimize={onMinimize} onClose={onClose} />
 
-      {/* Chat messages — CopilotChat with hidden input */}
+      {/* Chat messages — CopilotChat with native v2 slot overrides */}
       <div className="flex-1 min-h-0 pedrinho-chat-wrapper">
         <CopilotChat
           threadId={threadId}
@@ -164,6 +162,16 @@ export function BriefingPanel({ onClose, onMinimize, onWidthChange, threadId }: 
             chatDisclaimerText: '',
           }}
           className="pedrinho-chat h-full"
+          input="hidden"
+          welcomeScreen={false}
+          messageView={{
+            className: 'gap-3 p-4',
+            assistantMessage:
+              'bg-muted/40 text-foreground/85 rounded-[14px] border border-border/10 text-[13px] leading-[1.6] px-4 py-3 dark:bg-primary/4 dark:border-primary/6',
+            userMessage:
+              'bg-primary/7 text-foreground/90 rounded-[14px] rounded-br-[6px] border border-primary/10 text-[13px] leading-[1.6] px-3.5 py-2.5',
+          }}
+          suggestionView="text-[11px] font-medium px-3 py-1.5 rounded-lg bg-muted/60 dark:bg-white/6 border border-border/25 dark:border-border/15 text-foreground/70 hover:bg-muted/80 dark:hover:bg-white/10 hover:text-foreground/90 hover:border-border/40 transition-all duration-150 cursor-pointer"
         />
       </div>
 

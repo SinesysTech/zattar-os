@@ -4,7 +4,7 @@ import {
   buscarPasta,
   atualizarPasta,
   deletarPasta,
-} from '@/features/documentos';
+} from '@/features/documentos/service';
 
 /**
  * GET /api/pastas/[id]

@@ -28,7 +28,7 @@ export function AudioRecorder({ duration, waveformData, onFinish, onCancel }: Au
       </button>
 
       <div className="flex items-center gap-2 shrink-0">
-        <span className="size-2 rounded-full bg-red-500 animate-pulse" />
+        <span className="size-2 rounded-full bg-destructive animate-pulse" />
         <span className="text-xs font-mono text-muted-foreground/80 tabular-nums w-8">
           {formatDuration(duration)}
         </span>

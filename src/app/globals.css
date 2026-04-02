@@ -1238,131 +1238,55 @@
  * O CopilotChat é embutido no Briefing Panel com overrides visuais.
  */
 
-/* --- Orb: pulse animation para estado proativo --- */
-.pedrinho-orb-pulse {
-  animation: pedrinho-pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
+/*
+ * Briefing Panel: Minimal CSS for properties not expressible via CopilotKit v2 slots.
+ * Message styling, input visibility, and suggestions are handled via slot props
+ * in briefing-panel.tsx (messageView, input, suggestionView).
+ */
 
-@keyframes pedrinho-pulse {
-  0%, 100% {
-    box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.2),
-      0 0 0 0 hsl(var(--primary) / 0.15);
-  }
-  50% {
-    box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.2),
-      0 0 20px 4px hsl(var(--primary) / 0.1);
-  }
-}
-
-/* --- Briefing Panel: CopilotChat minimal overrides --- */
-
-/* Hide built-in header (we use BriefingHeader) */
-.pedrinho-chat-wrapper .copilotKitHeader {
-  display: none !important;
-}
-
-/* Hide built-in input (we use BriefingInput) */
-.pedrinho-chat-wrapper .copilotKitInput {
-  display: none !important;
-}
-
-/* Chat container: transparent bg, proper font */
+/* Chat container: transparent bg, Inter font, thin scrollbar */
 .pedrinho-chat-wrapper .copilotKitChat {
-  background-color: transparent !important;
-  font-family: var(--font-inter), system-ui, sans-serif !important;
+  background-color: transparent;
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
 
-/* Messages area */
 .pedrinho-chat-wrapper .copilotKitMessages {
-  background: transparent !important;
-  scrollbar-width: thin !important;
-  scrollbar-color: hsl(var(--border) / 0.15) transparent !important;
-  padding: 1rem !important;
-  gap: 0.75rem !important;
+  background: transparent;
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border) / 0.15) transparent;
 }
 
-/* Assistant message */
-.pedrinho-chat-wrapper .copilotKitAssistantMessage {
-  background-color: hsl(var(--muted) / 0.4) !important;
-  color: hsl(var(--foreground) / 0.85) !important;
-  border-radius: 0.875rem !important;
-  border: 1px solid hsl(var(--border) / 0.1) !important;
-  font-size: 0.8125rem !important;
-  line-height: 1.6 !important;
-  padding: 0.75rem 1rem !important;
-}
-
-:is(.dark) .pedrinho-chat-wrapper .copilotKitAssistantMessage {
-  background-color: hsl(var(--primary) / 0.04) !important;
-  border-color: hsl(var(--primary) / 0.06) !important;
-}
-
-/* User message */
-.pedrinho-chat-wrapper .copilotKitUserMessage {
-  background-color: hsl(var(--primary) / 0.07) !important;
-  color: hsl(var(--foreground) / 0.9) !important;
-  border-radius: 0.875rem !important;
-  border-bottom-right-radius: 0.375rem !important;
-  border: 1px solid hsl(var(--primary) / 0.1) !important;
-  font-size: 0.8125rem !important;
-  line-height: 1.6 !important;
-  padding: 0.625rem 0.875rem !important;
-}
-
-/* Markdown content */
+/* Markdown: inline code & code blocks */
 .pedrinho-chat-wrapper .copilotKitMarkdown {
-  font-size: 0.8125rem !important;
-  line-height: 1.6 !important;
-  color: inherit !important;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: inherit;
 }
 
 .pedrinho-chat-wrapper .copilotKitMarkdown code {
-  font-size: 0.75rem !important;
-  background-color: hsl(var(--foreground) / 0.05) !important;
-  border-radius: 0.25rem !important;
-  padding: 0.125rem 0.375rem !important;
+  font-size: 0.75rem;
+  background-color: hsl(var(--foreground) / 0.05);
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.375rem;
 }
 
-/* Code blocks */
 .pedrinho-chat-wrapper .copilotKitCodeBlock {
-  border-radius: 0.625rem !important;
-  border: 1px solid hsl(var(--border) / 0.08) !important;
-  overflow: hidden !important;
+  border-radius: 0.625rem;
+  border: 1px solid hsl(var(--border) / 0.08);
+  overflow: hidden;
 }
 
 .pedrinho-chat-wrapper .copilotKitCodeBlockToolbar {
-  background-color: hsl(var(--foreground) / 0.03) !important;
-  border-bottom: 1px solid hsl(var(--border) / 0.06) !important;
-  font-size: 0.6875rem !important;
+  background-color: hsl(var(--foreground) / 0.03);
+  border-bottom: 1px solid hsl(var(--border) / 0.06);
+  font-size: 0.6875rem;
 }
 
-/* Activity dots */
+/* Activity dots — brand-tinted */
 .pedrinho-chat-wrapper .copilotKitActivityDot1,
 .pedrinho-chat-wrapper .copilotKitActivityDot2,
 .pedrinho-chat-wrapper .copilotKitActivityDot3 {
-  background-color: hsl(var(--primary) / 0.4) !important;
-}
-
-/* Suggestion pills */
-.pedrinho-chat-wrapper [class*="suggestion"],
-.pedrinho-chat-wrapper [class*="Suggestion"] {
-  font-size: 0.6875rem !important;
-  padding: 0.3rem 0.625rem !important;
-  border-radius: 0.5rem !important;
-  background-color: hsl(var(--primary) / 0.06) !important;
-  border: 1px solid hsl(var(--primary) / 0.1) !important;
-  color: hsl(var(--primary) / 0.6) !important;
-  transition: all 0.15s ease !important;
-  cursor: pointer !important;
-}
-
-.pedrinho-chat-wrapper [class*="suggestion"]:hover,
-.pedrinho-chat-wrapper [class*="Suggestion"]:hover {
-  background-color: hsl(var(--primary) / 0.12) !important;
-  color: hsl(var(--primary) / 0.8) !important;
-  border-color: hsl(var(--primary) / 0.2) !important;
+  background-color: hsl(var(--primary) / 0.4);
 }
 
 /* Command bar markdown */

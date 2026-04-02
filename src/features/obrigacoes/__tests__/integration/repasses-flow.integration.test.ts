@@ -9,7 +9,6 @@ import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as service from '../../service';
 import { ObrigacoesRepository } from '../../repository';
 import {
-  criarParcelaMock,
   criarParcelaRecebidaMock,
 } from '../fixtures';
 import type { RepassePendente, RegistrarRepasseParams } from '../../domain';

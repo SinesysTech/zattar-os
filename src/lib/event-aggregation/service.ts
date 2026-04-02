@@ -20,14 +20,11 @@ import { StatusAudiencia } from "@/features/audiencias";
 import { listarAudiencias, atualizarStatusAudiencia } from "@/features/audiencias/service";
 
 import type { Expediente } from "@/features/expedientes";
-import { listarExpedientes } from "@/features/expedientes";
-import {
-  realizarBaixa as realizarBaixaExpediente,
-  reverterBaixa as reverterBaixaExpediente
-} from "@/features/expedientes";
+import { listarExpedientes, realizarBaixa as realizarBaixaExpediente, reverterBaixa as reverterBaixaExpediente } from "@/features/expedientes/service";
 
 import type { Pericia } from "@/features/pericias";
-import { listarPericias, SituacaoPericiaCodigo } from "@/features/pericias";
+import { SituacaoPericiaCodigo } from "@/features/pericias";
+import { listarPericias } from "@/features/pericias/service";
 
 import type { AcordoComParcelas } from "@/features/obrigacoes";
 import { listarAcordos } from "@/features/obrigacoes/service";

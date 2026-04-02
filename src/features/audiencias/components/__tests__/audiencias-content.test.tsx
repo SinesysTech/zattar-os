@@ -1,5 +1,7 @@
+/* eslint-disable react/display-name */
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { usePathname } from 'next/navigation';
 import { AudienciasContent } from '../audiencias-content';
 
 // Mock next/navigation
@@ -133,8 +135,6 @@ jest.mock('@/components/ui/tooltip', () => ({
 }));
 
 describe('AudienciasContent', () => {
-  const { usePathname } = require('next/navigation');
-
   beforeEach(() => {
     // Reset to default pathname before each test
     (usePathname as jest.Mock).mockReturnValue('/audiencias/lista');

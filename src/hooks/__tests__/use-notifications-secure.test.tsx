@@ -69,6 +69,7 @@ jest.mock('@/lib/supabase/client', () => {
 // Mock useSecureStorage to avoid all crypto operations (OOM source).
 // Instead, use a simple in-memory state backed by localStorage with "enc:" prefix.
 jest.mock('@/hooks/use-secure-storage', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
 
   return {

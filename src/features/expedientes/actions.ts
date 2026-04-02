@@ -19,7 +19,7 @@ import {
 import { after } from "next/server";
 import { indexDocument } from "@/features/ai/services/indexing.service";
 import { authenticateRequest } from "@/lib/auth";
-import { listarUploads } from "@/features/documentos";
+import { listarUploads } from "@/features/documentos/service";
 
 // =============================================================================
 // TIPOS DE RETORNO DAS ACTIONS

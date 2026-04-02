@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 /**
  * Property-Based Tests - UI Integration
  *
@@ -40,7 +41,7 @@ jest.mock('@radix-ui/react-tooltip', () => ({
 
 // Mock Radix Dialog primitives to avoid portal crashes in jsdom
 jest.mock('@radix-ui/react-dialog', () => ({
-    Root: ({ children, defaultOpen, open, ...props }: any) => <div data-slot="dialog" {...props}>{children}</div>,
+    Root: ({ children, ...props }: any) => <div data-slot="dialog" {...props}>{children}</div>,
     Trigger: React.forwardRef(({ children, asChild, ...props }: any, ref: any) => {
         if (asChild && React.isValidElement(children)) {
             return React.cloneElement(children as React.ReactElement<any>, { ref, 'data-slot': 'dialog-trigger', ...props });
