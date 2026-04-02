@@ -4,15 +4,14 @@ Sistema de gestão jurídica com foco em automação e IA.
 
 **Stack**: Next.js 16 (App Router), React 19, TypeScript 5, Supabase (PostgreSQL + RLS), Redis (opcional), Tailwind CSS 4, shadcn/ui.
 
-## Status de Desenvolvimento (2026-04-01)
+## Status de Desenvolvimento (2026-04-02)
 
 `src/features` possui **42 modulos** atualmente.
 
 Classificacao estrutural (criterio: `domain.ts`, `service.ts`, `repository.ts`, `index.ts`, `actions/`, `components/`):
 
-- ✅ **Completos (23)**: `acervo`, `advogados`, `ai`, `assistentes-tipos`, `audiencias`, `captura`, `chatwoot`, `config-atribuicao`, `contratos`, `dify`, `enderecos`, `entrevistas-trabalhistas`, `expedientes`, `integracoes`, `notificacoes`, `obrigacoes`, `pecas-juridicas`, `pericias`, `processos`, `rh`, `system-prompts`, `tipos-expedientes`, `usuarios`
-- ⚠️ **Parciais (8)**: `calendar`, `cargos`, `chat`, `documentos`, `financeiro`, `partes`, `perfil`, `tags`
-- 🧩 **Iniciais (11)**: `admin`, `agenda-eventos`, `audit`, `busca`, `calculadoras`, `portal`, `profiles`, `repasses`, `tasks`, `twofauth`, `website`
+- ✅ **Completos (37)**: `acervo`, `admin`, `advogados`, `agenda-eventos`, `ai`, `assistentes-tipos`, `audiencias`, `busca`, `calendar`, `captura`, `cargos`, `chat`, `chatwoot`, `config-atribuicao`, `contratos`, `dify`, `documentos`, `enderecos`, `entrevistas-trabalhistas`, `expedientes`, `financeiro`, `integracoes`, `notificacoes`, `obrigacoes`, `partes`, `pecas-juridicas`, `perfil`, `pericias`, `processos`, `profiles`, `rh`, `system-prompts`, `tags`, `tasks`, `tipos-expedientes`, `usuarios`
+- 🧩 **Adaptativos (5)**: `calculadoras`, `portal`, `repasses`, `twofauth`, `website` — UI-only, sem persistencia propria (justificado em RULES.md)
 
 Consulte [STATUS de arquitetura](./docs/architecture/STATUS.md) e [AGENTS](./docs/architecture/AGENTS.md) para detalhes completos.
 
@@ -179,19 +178,18 @@ docker run -p 3000:3000   -e NEXT_PUBLIC_SUPABASE_URL=...   -e NEXT_PUBLIC_SUPAB
 
 Também existe `docker-compose.yml` para subir o app via env vars.
 
-## Docs
+## Documentacao
 
-- [Documentacao geral](./docs/README.md)
-- [Indice da documentacao](./docs/INDEX.md)
-- [Status da arquitetura](./docs/architecture/STATUS.md)
-- [Modulos](./docs/modules/README.md)
+- [Arquitetura do sistema](./docs/architecture/ARCHITECTURE.md)
+- [Status dos modulos](./docs/architecture/STATUS.md)
+- [Guia para agentes IA](./docs/architecture/AGENTS.md)
+- [Indice completo](./docs/INDEX.md)
 
 ### Instrucoes para agentes de IA
 
 | Arquivo | Ferramenta | Descricao |
 |---------|------------|-----------|
+| [`CLAUDE.md`](./CLAUDE.md) | Claude Code | Instrucoes detalhadas para Claude Code |
 | [`AGENTS.md`](./AGENTS.md) | Todas (padrao aberto) | Referencia concisa cross-tool |
-| [`CLAUDE.md`](./CLAUDE.md) | Claude Code | Instrucoes para Claude Code |
-| [`GEMINI.md`](./GEMINI.md) | Gemini CLI | Instrucoes para Gemini CLI |
 | [`.github/copilot-instructions.md`](./.github/copilot-instructions.md) | GitHub Copilot | Instrucoes para Copilot |
-| [`docs/architecture/AGENTS.md`](./docs/architecture/AGENTS.md) | Todas | Referencia estendida com data flows e troubleshooting |
+| [`docs/architecture/AGENTS.md`](./docs/architecture/AGENTS.md) | Todas | Referencia estendida com data flows |
