@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+// FSD: server-only action — intentional deep import to avoid bundling Redis/Node.js deps in client barrel
 import { service as usuariosService } from "@/features/usuarios/service";
 import { revalidatePath } from "next/cache";
 import type { Usuario, UsuarioDados } from "@/features/usuarios";

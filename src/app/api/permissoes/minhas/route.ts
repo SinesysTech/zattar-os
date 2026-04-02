@@ -3,8 +3,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuthentication } from '@/lib/auth/require-permission';
-import { listarPermissoesUsuario } from '@/features/usuarios/repository';
-import { usuarioRepository } from '@/features/usuarios/repository';
+// FSD: server-only API route — intentional deep import to avoid bundling Redis/Node.js deps in client barrel
+import { listarPermissoesUsuario, usuarioRepository } from '@/features/usuarios/repository';
 import type { Permissao } from '@/features/usuarios';
 
 /**
