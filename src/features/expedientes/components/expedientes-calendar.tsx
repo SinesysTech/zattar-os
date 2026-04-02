@@ -33,7 +33,7 @@ import { actionListarExpedientes } from '../actions';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
 import { buildExpedientesFilterGroups, parseExpedientesFilters } from './expedientes-toolbar-filters';
-import { TiposExpedientesList } from '@/features/tipos-expedientes';
+import { TiposExpedientesList } from '@/app/app/tipos-expedientes';
 import { ExpedientesBulkActions } from './expedientes-bulk-actions';
 
 type UsuarioOption = { id: number; nome_exibicao?: string; nomeExibicao?: string; nome?: string };

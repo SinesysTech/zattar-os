@@ -1,4 +1,4 @@
-import { WebsiteShell } from "@/features/website";
+import { WebsiteShell } from "@/app/website";
 import { MapPin, Mail, Smartphone, Send, Share2, Globe, Network, Radar } from "lucide-react";
 
 export default function ContatoPage() {

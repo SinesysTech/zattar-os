@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { listarCredenciaisMapa } from '@/features/advogados';
+import { listarCredenciaisMapa } from '@/app/app/advogados';
 
 /**
  * GET /api/captura/credenciais-mapa

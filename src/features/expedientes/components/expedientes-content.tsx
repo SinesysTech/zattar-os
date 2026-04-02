@@ -32,7 +32,7 @@ import {
 } from '@/components/shared';
 
 import { useUsuarios } from '@/features/usuarios';
-import { useTiposExpedientes, TiposExpedientesList } from '@/features/tipos-expedientes';
+import { useTiposExpedientes, TiposExpedientesList } from '@/app/app/tipos-expedientes';
 
 import { ExpedientesListWrapper } from './expedientes-list-wrapper';
 import { ExpedientesTableWrapper } from './expedientes-table-wrapper';

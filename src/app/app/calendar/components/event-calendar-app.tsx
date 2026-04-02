@@ -44,7 +44,7 @@ import {
   actionCriarAgendaEvento,
   actionAtualizarAgendaEvento,
   actionDeletarAgendaEvento,
-} from "@/features/agenda-eventos";
+} from "@/app/app/agenda";
 import { FilterPopoverMulti, type FilterOption } from "@/features/partes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { PortalShell } from "@/features/portal";
-import { EditorialHeader, FilterChips, PhaseStepper, StatCard } from "@/features/website";
-import type { PhaseStep } from "@/features/website";
+import { PortalShell } from "@/app/portal/feature";
+import { EditorialHeader, FilterChips, PhaseStepper, StatCard } from "@/app/website";
+import type { PhaseStep } from "@/app/website";
 import {
   Scale,
   Eye,

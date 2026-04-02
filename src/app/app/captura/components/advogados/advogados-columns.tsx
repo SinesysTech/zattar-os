@@ -11,7 +11,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import type { Advogado } from '@/features/advogados';
+import type { Advogado } from '@/app/app/advogados';
 
 interface ColumnOptions {
   onEdit: (advogado: Advogado) => void;

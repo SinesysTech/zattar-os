@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { fetchContratoCompleto } from '@/features/contratos/queries';
 import { LancamentosRepository } from '@/features/financeiro/repository/lancamentos';
-import { fetchEntrevistaByContratoId } from '@/features/entrevistas-trabalhistas/queries';
+import { fetchEntrevistaByContratoId } from '@/app/app/entrevistas-trabalhistas/queries';
 import { ContratoDetalhesClient } from './contrato-detalhes-client';
 
 interface PageProps {

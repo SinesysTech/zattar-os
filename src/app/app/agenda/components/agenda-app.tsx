@@ -21,7 +21,7 @@ import {
   actionCriarAgendaEvento,
   actionAtualizarAgendaEvento,
   actionDeletarAgendaEvento,
-} from "@/features/agenda-eventos";
+} from "@/app/app/agenda";
 
 import type { CalendarEvent } from "@/app/app/calendar/types";
 import { EventDialog } from "@/app/app/calendar/components/event-dialog";

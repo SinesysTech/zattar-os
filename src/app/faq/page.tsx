@@ -1,4 +1,4 @@
-import { WebsiteShell, TrustTicker } from "@/features/website";
+import { WebsiteShell, TrustTicker } from "@/app/website";
 import { Search, ArrowUpRight, Gavel, ArrowRight, Headset } from "lucide-react";
 
 export default function FAQPage() {

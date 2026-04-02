@@ -12,7 +12,7 @@ import type { AcordoComParcelas } from "@/features/obrigacoes";
 import type { Pericia } from "@/features/pericias";
 import { SituacaoPericiaCodigo } from "@/features/pericias";
 
-import type { AgendaEvento } from "@/features/agenda-eventos";
+import type { AgendaEvento } from "@/app/app/agenda";
 
 import {
   buildUnifiedEventId,

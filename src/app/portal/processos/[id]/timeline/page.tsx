@@ -2,8 +2,8 @@
 
 import { use } from "react";
 import Link from "next/link";
-import { PortalShell } from "@/features/portal";
-import { EditorialHeader } from "@/features/website";
+import { PortalShell } from "@/app/portal/feature";
+import { EditorialHeader } from "@/app/website";
 import {
   Scale,
   ArrowLeft,

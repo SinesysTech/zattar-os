@@ -1,4 +1,4 @@
-import { WebsiteShell } from "@/features/website";
+import { WebsiteShell } from "@/app/website";
 import { Shield, Users, Search, ArrowRight, Atom, Scale } from "lucide-react";
 
 export default function ExpertisePage() {

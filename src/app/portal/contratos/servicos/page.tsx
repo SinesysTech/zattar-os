@@ -1,5 +1,5 @@
-import { PortalShell } from "@/features/portal";
-import { EditorialHeader, GlassCard } from "@/features/website";
+import { PortalShell } from "@/app/portal/feature";
+import { EditorialHeader, GlassCard } from "@/app/website";
 import {
   FileText,
   Clock,

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { PortalShell } from "@/features/portal";
-import { EditorialHeader, FilterChips, GlassCard } from "@/features/website";
+import { PortalShell } from "@/app/portal/feature";
+import { EditorialHeader, FilterChips, GlassCard } from "@/app/website";
 import { ArrowRight, Bookmark, Clock, Mail } from "lucide-react";
 import Link from "next/link";
 

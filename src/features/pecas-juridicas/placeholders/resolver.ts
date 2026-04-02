@@ -6,7 +6,7 @@
  */
 
 import type { Cliente, ParteContraria } from '@/features/partes';
-import type { Endereco } from '@/features/enderecos/types';
+import type { Endereco } from '@/app/app/enderecos/types';
 
 // =============================================================================
 // TYPES

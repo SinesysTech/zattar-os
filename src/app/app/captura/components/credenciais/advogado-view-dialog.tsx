@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import type { Credencial } from '@/features/captura/types';
-import { formatOabs } from '@/features/advogados';
+import { formatOabs } from '@/app/app/advogados';
 
 type Props = {
   credencial: Credencial | null;

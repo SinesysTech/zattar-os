@@ -1,5 +1,5 @@
 import { createDbClient } from '@/lib/supabase';
-import { AssistentesTiposConfig } from '@/features/assistentes-tipos';
+import { AssistentesTiposConfig } from '@/app/app/assistentes';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';

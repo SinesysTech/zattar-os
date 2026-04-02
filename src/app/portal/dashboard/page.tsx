@@ -1,12 +1,12 @@
 "use client";
 
-import { PortalShell } from "@/features/portal";
+import { PortalShell } from "@/app/portal/feature";
 import {
   EditorialHeader,
   StatCard,
   ActivityItem,
   FilterChips,
-} from "@/features/website";
+} from "@/app/website";
 import {
   Scale,
   Calendar,

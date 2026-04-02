@@ -1,6 +1,6 @@
 "use client";
 
-import { PortalShell } from "@/features/portal";
+import { PortalShell } from "@/app/portal/feature";
 import { Briefcase, ShieldCheck, Building2, ShoppingCart, Sparkles, Printer, Download } from "lucide-react";
 
 export default function GeradorContratosPage() {

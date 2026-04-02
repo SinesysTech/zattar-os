@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useUsuarios, type Usuario } from '@/features/usuarios';
-import { useCargos } from '@/features/cargos';
+import { useCargos } from '@/app/app/cargos';
 import { actionCriarSalario, actionAtualizarSalario, actionBuscarSalariosDoUsuario } from '../../actions/salarios-actions';
 import type { SalarioComDetalhes } from '../../types';
 import { toast } from 'sonner';

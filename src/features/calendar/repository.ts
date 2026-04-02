@@ -22,8 +22,8 @@ import { listarAcordos } from "@/features/obrigacoes/service";
 import type { Pericia, ListarPericiasParams } from "@/features/pericias";
 import { listarPericias } from "@/features/pericias/service";
 
-import type { AgendaEvento } from "@/features/agenda-eventos";
-import { agendaEventosRepository as agendaEventosRepo } from "@/features/agenda-eventos";
+import type { AgendaEvento } from "@/app/app/agenda";
+import { agendaEventosRepository as agendaEventosRepo } from "@/app/app/agenda";
 
 // =============================================================================
 // BUSCA DE AUDIÊNCIAS

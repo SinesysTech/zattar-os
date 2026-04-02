@@ -11,7 +11,7 @@ import {
   type ProcessoParaCaptura,
 } from "@/features/captura/services/partes/partes-capture.service";
 import { autenticarPJE } from "@/features/captura/services/trt/trt-auth.service";
-import { buscarAdvogado } from "@/features/advogados";
+import { buscarAdvogado } from "@/app/app/advogados";
 import { createServiceClient } from "@/lib/supabase/service-client";
 import { registrarCapturaRawLog } from "@/features/captura/services/persistence/captura-raw-log.service";
 import {
