@@ -30,7 +30,7 @@ import type {
   AtualizarAdvogadoParams,
   OabEntry,
 } from '@/features/advogados';
-import { UFS_BRASIL } from '@/features/advogados/domain';
+import { UFS_BRASIL } from '@/features/advogados';
 
 type Props = {
   open: boolean;

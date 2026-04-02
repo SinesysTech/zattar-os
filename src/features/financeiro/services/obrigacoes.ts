@@ -22,8 +22,7 @@ import {
     type AcordoComParcelas,
     type ParcelaComLancamento,
 } from '@/features/obrigacoes';
-// Sync-related functions are imported directly from domain since they're not in the public API
-import { determinarStatusSincronizacao } from '@/features/obrigacoes/domain';
+import { determinarStatusSincronizacao } from '@/features/obrigacoes';
 import type { ListarLancamentosParams } from '../types/lancamentos';
 
 // Aliases locais para compatibilidade

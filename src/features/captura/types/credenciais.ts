@@ -1,5 +1,5 @@
 import type { CodigoTRT, GrauTRT } from '@/features/captura';
-import type { OabEntry } from '@/features/advogados/domain';
+import type { OabEntry } from '@/features/advogados';
 
 /**
  * Tipo usado na UI de "Captura > Credenciais" (payload da rota `/api/captura/credenciais`).

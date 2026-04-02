@@ -3,7 +3,7 @@
  * ============================================================================
  */
 
-import type { UnifiedCalendarEvent } from "@/features/calendar/domain";
+import type { UnifiedCalendarEvent } from "@/features/calendar";
 import type { BriefingEventMeta, EventColor } from "@/features/calendar/briefing-domain";
 import { extractMeta } from "@/features/calendar/briefing-helpers";
 

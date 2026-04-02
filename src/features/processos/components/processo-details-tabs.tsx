@@ -20,15 +20,15 @@ import { actionObterDetalhesComplementaresProcesso } from '../actions';
 import { ExpedienteVisualizarDialog } from '@/features/expedientes/components/expediente-visualizar-dialog';
 import { actionListarUsuarios } from '@/features/usuarios';
 import { actionListarTiposExpedientes } from '@/features/tipos-expedientes';
-import type { Audiencia } from '@/features/audiencias/domain';
+import type { Audiencia } from '@/features/audiencias';
 import {
   StatusAudiencia,
   STATUS_AUDIENCIA_LABELS,
   MODALIDADE_AUDIENCIA_LABELS,
-} from '@/features/audiencias/domain';
-import type { Expediente } from '@/features/expedientes/domain';
-import type { Pericia } from '@/features/pericias/domain';
-import { SITUACAO_PERICIA_LABELS, type SituacaoPericiaCodigo } from '@/features/pericias/domain';
+} from '@/features/audiencias';
+import type { Expediente } from '@/features/expedientes';
+import type { Pericia } from '@/features/pericias';
+import { SITUACAO_PERICIA_LABELS, type SituacaoPericiaCodigo } from '@/features/pericias';
 
 interface UsuarioInfo {
   id: number;

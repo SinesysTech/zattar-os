@@ -7,7 +7,7 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { upsertEnderecoPorIdPje } from '@/features/enderecos/repository';
+import { upsertEnderecoPorIdPje } from '@/features/enderecos';
 
 type UpsertEnderecoPorIdPjeParams = Parameters<typeof upsertEnderecoPorIdPje>[0];
 import { withRetry } from '@/lib/utils/retry';

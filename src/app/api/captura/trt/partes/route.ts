@@ -11,7 +11,7 @@ import {
   type ProcessoParaCaptura,
 } from "@/features/captura/services/partes/partes-capture.service";
 import { autenticarPJE } from "@/features/captura/services/trt/trt-auth.service";
-import { buscarAdvogado } from "@/features/advogados/service";
+import { buscarAdvogado } from "@/features/advogados";
 import { createServiceClient } from "@/lib/supabase/service-client";
 import { registrarCapturaRawLog } from "@/features/captura/services/persistence/captura-raw-log.service";
 import {
@@ -19,7 +19,7 @@ import {
   atualizarCapturaLog,
 } from "@/features/captura/services/persistence/captura-log-persistence.service";
 import type { CodigoTRT, GrauTRT } from "@/features/captura";
-import type { GrauAcervo } from "@/features/acervo/domain";
+import type { GrauAcervo } from "@/features/acervo";
 import type { CapturaLog, ResultadoCapturaPartes, TipoCaptura } from "@/features/captura";
 import getLogger, { withCorrelationId } from "@/lib/logger";
 import { withDistributedLock } from "@/lib/utils/locks/distributed-lock";

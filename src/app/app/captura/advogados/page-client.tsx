@@ -30,7 +30,7 @@ import {
   type CriarAdvogadoParams,
   type AtualizarAdvogadoParams,
 } from '@/features/advogados';
-import { UFS_BRASIL } from '@/features/advogados/domain';
+import { UFS_BRASIL } from '@/features/advogados';
 import { criarColunasAdvogados } from '../components/advogados/advogados-columns';
 import { AdvogadoDialog } from '../components/advogados/advogado-dialog';
 import { AdvogadosFilter } from '../components/advogados/advogados-filter';

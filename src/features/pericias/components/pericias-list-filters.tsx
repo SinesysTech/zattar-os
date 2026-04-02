@@ -18,7 +18,7 @@ import {
   SituacaoPericiaCodigo,
   SITUACAO_PERICIA_LABELS,
 } from '../domain';
-import { GRAU_TRIBUNAL_LABELS } from '@/features/expedientes/domain';
+import { GRAU_TRIBUNAL_LABELS } from '@/features/expedientes';
 import type { UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../types';
 
 // =============================================================================

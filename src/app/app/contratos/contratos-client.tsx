@@ -26,12 +26,12 @@ import {
   actionResolverNomesEntidadesContrato,
   actionListarSegmentos,
 } from '@/features/contratos/actions';
-import type { Contrato, StatusContrato } from '@/features/contratos/domain';
+import type { Contrato, StatusContrato } from '@/features/contratos';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
-} from '@/features/contratos/domain';
+} from '@/features/contratos';
 import {
   FinancialStrip,
   PipelineFunnel,

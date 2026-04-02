@@ -13,7 +13,7 @@ import {
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import type { Credencial } from '@/features/captura/types';
-import { formatOabs } from '@/features/advogados/domain';
+import { formatOabs } from '@/features/advogados';
 
 type Params = {
   onViewAdvogado?: (credencial: Credencial) => void;

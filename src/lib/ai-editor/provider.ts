@@ -5,7 +5,7 @@
  * Suporta: Vercel AI Gateway, OpenAI, OpenRouter, Anthropic, Google AI.
  */
 
-import type { EditorIAConfig } from "@/features/integracoes/domain";
+import type { EditorIAConfig } from "@/features/integracoes";
 import { createGateway } from "@ai-sdk/gateway";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createAnthropic } from "@ai-sdk/anthropic";

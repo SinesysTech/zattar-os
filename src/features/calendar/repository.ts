@@ -23,7 +23,7 @@ import type { Pericia, ListarPericiasParams } from "@/features/pericias";
 import { listarPericias } from "@/features/pericias";
 
 import type { AgendaEvento } from "@/features/agenda-eventos";
-import * as agendaEventosRepo from "@/features/agenda-eventos/repository";
+import { agendaEventosRepository as agendaEventosRepo } from "@/features/agenda-eventos";
 
 // =============================================================================
 // BUSCA DE AUDIÊNCIAS

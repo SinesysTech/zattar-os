@@ -51,6 +51,7 @@ export {
   calcularRepassesPendentes,
   determinarStatusAcordo,
   validarIntegridadeParcela,
+  determinarStatusSincronizacao,
 } from './domain';
 
 // Utils

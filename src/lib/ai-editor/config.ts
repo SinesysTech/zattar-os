@@ -6,7 +6,7 @@
  * Fallback para variáveis de ambiente se não houver configuração no DB.
  */
 
-import type { EditorIAConfig } from "@/features/integracoes/domain";
+import type { EditorIAConfig } from "@/features/integracoes";
 
 let cachedConfig: EditorIAConfig | null = null;
 let cacheTimestamp = 0;

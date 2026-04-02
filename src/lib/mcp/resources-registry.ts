@@ -5,10 +5,10 @@
  */
 
 import { registerMcpResource, jsonResourceResult } from "./resources";
-import type { Processo } from "@/features/processos/domain";
+import type { Processo } from "@/features/processos";
 import type { Cliente } from "@/features/partes";
-import type { Contrato } from "@/features/contratos/domain";
-import type { Audiencia } from "@/features/audiencias/domain";
+import type { Contrato } from "@/features/contratos";
+import type { Audiencia } from "@/features/audiencias";
 
 /**
  * Registra todos os resources disponíveis

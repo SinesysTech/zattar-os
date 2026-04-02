@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { FileUploadDialogUnified } from '@/features/documentos';
-import { type Arquivo } from '@/features/documentos/domain';
+import { type Arquivo } from '@/features/documentos';
 import { actionVincularArquivoAoContrato } from '@/features/pecas-juridicas/actions';
 
 interface ContratoDocumentoUploadDialogProps {

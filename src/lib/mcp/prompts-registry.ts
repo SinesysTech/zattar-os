@@ -6,7 +6,7 @@
 
 import { z } from "zod";
 import { registerMcpPrompt, createPromptResult } from "./prompts";
-import type { Processo } from "@/features/processos/domain";
+import type { Processo } from "@/features/processos";
 
 /**
  * Registra todos os prompts disponíveis

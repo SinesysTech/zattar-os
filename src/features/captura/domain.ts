@@ -11,7 +11,7 @@ import type {
   GrauTRT,
   FiltroPrazoPendentes,
 } from "./types/trt-types";
-import type { GrauCredencial } from "@/features/advogados/domain";
+import type { GrauCredencial } from "@/features/advogados";
 
 export type { CodigoTRT, GrauTRT, FiltroPrazoPendentes };
 

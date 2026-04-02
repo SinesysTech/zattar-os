@@ -36,7 +36,7 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Check, ChevronDown, ChevronsUpDown, Loader2, Search, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAdvogados } from '@/features/advogados';
-import { formatOabs, formatOab, getPrimaryOab } from '@/features/advogados/domain';
+import { formatOabs, formatOab, getPrimaryOab } from '@/features/advogados';
 import { actionListarTribunaisDisponiveis } from '../../actions/comunica-cnj-actions';
 import type { TribunalInfo } from '../../comunica-cnj/domain';
 

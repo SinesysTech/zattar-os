@@ -65,6 +65,10 @@ export {
   listarProcessos,
   atualizarProcesso,
   buscarTimeline,
+  buscarUsuariosRelacionados,
+  listarTribunais,
+  buscarProcessosPorClienteCPF,
+  buscarProcessosPorClienteCNPJ,
 } from './service';
 
 // =============================================================================

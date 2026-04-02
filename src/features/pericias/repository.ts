@@ -13,7 +13,7 @@ import type {
   SituacaoPericiaCodigo,
   CriarPericiaInput,
 } from "./domain";
-import type { CodigoTribunal, GrauTribunal } from "@/features/expedientes/domain";
+import type { CodigoTribunal, GrauTribunal } from "@/features/expedientes";
 
 const TABLE_PERICIAS = "pericias";
 

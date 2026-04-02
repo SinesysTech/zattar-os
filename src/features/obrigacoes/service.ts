@@ -5,7 +5,7 @@ import { calcularDataVencimento } from "./utils";
 import { normalizarDocumento } from "@/features/partes";
 import { findClienteByCPF, findClienteByCNPJ } from "@/features/partes/server";
 import { err, appError } from "@/types";
-import { buscarProcessosPorClienteCPF, buscarProcessosPorClienteCNPJ, buscarProcessoPorNumero } from "@/features/processos/service";
+import { buscarProcessosPorClienteCPF, buscarProcessosPorClienteCNPJ, buscarProcessoPorNumero } from "@/features/processos";
 import { normalizarNumeroProcesso } from "@/features/processos/utils";
 
 // --- Acordos Services ---

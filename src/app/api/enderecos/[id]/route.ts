@@ -7,7 +7,7 @@ import {
   buscarEnderecoPorId,
   atualizarEndereco,
   deletarEndereco,
-} from '@/features/enderecos/service';
+} from '@/features/enderecos';
 import type { AtualizarEnderecoParams } from '@/features/enderecos/types';
 
 /**

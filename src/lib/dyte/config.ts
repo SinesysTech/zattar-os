@@ -5,7 +5,7 @@
  * Utiliza cache em memória com TTL de 1 minuto para evitar queries repetidas.
  */
 
-import type { DyteConfig } from "@/features/integracoes/domain";
+import type { DyteConfig } from "@/features/integracoes";
 
 let cachedConfig: DyteConfig | null = null;
 let cacheTimestamp = 0;

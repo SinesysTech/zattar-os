@@ -50,6 +50,16 @@ export {
   findOabByState,
 } from './domain';
 
+// Service functions (server-side)
+export {
+  buscarAdvogado,
+} from './service';
+
+// Repository functions (server-side)
+export {
+  listarCredenciaisMapa,
+} from './repository';
+
 // Actions
 export {
   actionListarAdvogados,

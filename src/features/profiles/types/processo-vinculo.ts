@@ -2,7 +2,7 @@
  * Tipos para processos vinculados a entidades (clientes, partes contrárias, terceiros)
  */
 
-import { StatusProcesso } from "@/features/processos/domain";
+import { StatusProcesso } from "@/features/processos";
 import type { PoloProcessoParte, TipoParteProcesso } from "@/features/partes";
 
 /**
