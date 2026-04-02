@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createDifyServiceForUser, createDifyServiceForApp } from '@/features/dify/factory';
-import { enviarMensagemSchema } from '@/features/dify/domain';
+import { enviarMensagemSchema } from '@/features/dify';
 
 // Definir runtime como edge para melhor performance em streaming se suportado pela infra
 // Se houver dependências Node.js específicas no service, remover essa linha

@@ -1,6 +1,6 @@
-import { ProcessoRespostaIA } from "@/features/acervo/domain";
-import { Contrato } from "@/features/contratos/domain";
-import { Audiencia } from "@/features/audiencias/domain";
+import { ProcessoRespostaIA } from "@/features/acervo";
+import { Contrato } from "@/features/contratos";
+import { Audiencia } from "@/features/audiencias";
 import { AcordoComParcelas } from "@/features/obrigacoes/types";
 
 // Alias types for usage in Portal Cliente to abstract source

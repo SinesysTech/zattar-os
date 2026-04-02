@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth';
 import { indexDocument, reindexDocument } from '@/features/ai/services/indexing.service';
-import { indexDocumentSchema } from '@/features/ai/domain';
+import { indexDocumentSchema } from '@/features/ai';
 
 export async function POST(req: NextRequest) {
   try {

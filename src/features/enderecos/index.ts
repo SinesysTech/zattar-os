@@ -5,4 +5,7 @@ export * from './components';
 export * from './utils';
 
 // Repository internals - exported as namespace to avoid conflicts with service
-export * as enderecosRepository from './repository'; 
+export * as enderecosRepository from './repository';
+
+// Selected repository functions for direct import
+export { upsertEnderecoPorIdPje } from './repository';

@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import type { ProcessoInstancia, GrauProcesso } from '@/features/processos/types';
-import { ORIGEM_LABELS } from '@/features/processos/domain';
+import { ORIGEM_LABELS } from '@/features/processos';
 
 interface GrauBadgesProps {
   instances?: ProcessoInstancia[];

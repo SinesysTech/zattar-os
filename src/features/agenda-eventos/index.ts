@@ -25,5 +25,8 @@ export {
 	actionDeletarAgendaEvento,
 } from "./actions/agenda-eventos-actions";
 
+// Repository (server-side)
+export * as agendaEventosRepository from "./repository";
+
 // Components (placeholder - add as needed)
 export {} from "./components";

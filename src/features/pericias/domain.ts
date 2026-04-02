@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { CodigoTribunal as CodigoTribunalArray, GrauTribunal as GrauTribunalEnum } from "@/features/expedientes/domain";
+import { CodigoTribunal as CodigoTribunalArray, GrauTribunal as GrauTribunalEnum } from "@/features/expedientes";
 
 // Re-export array value
 export const CodigoTribunal = CodigoTribunalArray;

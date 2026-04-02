@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createDifyServiceForUser, createDifyServiceForApp } from '@/features/dify/factory';
-import { executarWorkflowSchema } from '@/features/dify/domain';
+import { executarWorkflowSchema } from '@/features/dify';
 
 export const runtime = 'nodejs';
 

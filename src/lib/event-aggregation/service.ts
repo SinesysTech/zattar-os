@@ -24,7 +24,7 @@ import { listarExpedientes } from "@/features/expedientes";
 import {
   realizarBaixa as realizarBaixaExpediente,
   reverterBaixa as reverterBaixaExpediente
-} from "@/features/expedientes/service";
+} from "@/features/expedientes";
 
 import type { Pericia } from "@/features/pericias";
 import { listarPericias, SituacaoPericiaCodigo } from "@/features/pericias";

@@ -1,6 +1,6 @@
 import { generateText } from 'ai';
 import { google } from '@ai-sdk/google';
-import { TipoChamada } from '@/features/chat/domain';
+import { TipoChamada } from '@/features/chat';
 
 export async function gerarResumoTranscricao(
   transcricao: string,

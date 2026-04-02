@@ -4,7 +4,7 @@
  */
 
 import { z } from 'zod';
-import { StatusProcesso } from '@/features/processos/domain';
+import { StatusProcesso } from '@/features/processos';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 
 // Re-export timeline types for convenience

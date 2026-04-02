@@ -10,7 +10,7 @@
 
 import React from 'react';
 import { Lock, Layers, RefreshCw, ArrowLeft } from 'lucide-react';
-import type { ProcessoUnificado } from '@/features/processos/domain';
+import type { ProcessoUnificado } from '@/features/processos';
 import type { GrauProcesso } from '@/features/partes';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

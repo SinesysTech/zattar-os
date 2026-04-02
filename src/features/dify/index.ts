@@ -12,3 +12,6 @@ export * from './hooks/use-dify-workflow';
 
 // Domain
 export * from './domain';
+
+// Service (server-side)
+export { DifyService, createDifyService } from './service';

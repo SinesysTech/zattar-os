@@ -1,6 +1,6 @@
 'use server';
 
-import { DifyService } from '@/features/dify/service';
+import { DifyService } from '@/features/dify';
 import { findAnexos } from '../repository';
 import type { RespostasEntrevista } from '../domain';
 

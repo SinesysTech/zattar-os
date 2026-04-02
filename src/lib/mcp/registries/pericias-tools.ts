@@ -13,8 +13,8 @@ import { registerMcpTool } from '../server';
 import { actionResultToMcp } from '../utils';
 import { errorResult } from '../types';
 import type { ActionResult } from '@/lib/safe-action';
-import type { CodigoTribunal, GrauTribunal } from '@/features/expedientes/domain';
-import type { SituacaoPericiaCodigo, PericiaSortBy } from '@/features/pericias/domain';
+import type { CodigoTribunal, GrauTribunal } from '@/features/expedientes';
+import type { SituacaoPericiaCodigo, PericiaSortBy } from '@/features/pericias';
 
 /**
  * Registra ferramentas MCP do módulo Perícias

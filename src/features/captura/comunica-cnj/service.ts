@@ -8,7 +8,7 @@ import { Result, ok, err, appError, PaginatedResponse } from '@/types';
 import { getComunicaCNJClient } from './cnj-client';
 import * as repository from './repository';
 // Note: importing from core/expedientes/service might need to be migrated later if expedientes becomes a feature
-import { criarExpediente } from '@/features/expedientes/service'; 
+import { criarExpediente } from '@/features/expedientes';
 import { createServiceClient } from '@/lib/supabase/service-client';
 
 import type {
@@ -29,7 +29,7 @@ import type {
   ComunicacaoCNJ,
 } from './domain';
 
-import { OrigemExpediente, CodigoTribunal } from '@/features/expedientes/domain';
+import { OrigemExpediente, CodigoTribunal } from '@/features/expedientes';
 
 import {
   consultarComunicacoesSchema,
