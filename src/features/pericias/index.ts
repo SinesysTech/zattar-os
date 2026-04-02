@@ -1,7 +1,4 @@
 export * from './domain';
-export * from './service';
-// Repository não é re-exportado para evitar conflito com service (ambos exportam criarPericia)
-// Use o service para operações públicas
 export * from './actions/pericias-actions';
 
 // Hooks

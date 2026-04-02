@@ -24,7 +24,7 @@ import { autenticarPJE, type AuthResult } from '@/features/captura/services/trt/
 import { baixarDocumento } from '@/features/captura/pje-trt/timeline/baixar-documento';
 import { getTribunalConfig } from '@/features/captura/services/trt/config';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import type { CredenciaisTRT } from '@/features/captura/types/trt-types';
+import type { CredenciaisTRT } from '@/features/captura';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

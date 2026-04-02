@@ -75,10 +75,16 @@ export function CommandBar({ onClose, onExpandToBriefing }: CommandBarProps) {
       <div
         className="fixed inset-0 z-50 bg-black/15 dark:bg-black/30 backdrop-blur-[6px] animate-in fade-in duration-200"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Command Bar */}
-      <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] px-4 pointer-events-none">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Comando rápido do Pedrinho"
+        className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] px-4 pointer-events-none"
+      >
         <div
           className={cn(
             'pointer-events-auto w-full max-w-140',

@@ -4,7 +4,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { listarExpedientes } from '@/features/expedientes';
+import { listarExpedientes } from '@/features/expedientes/service';
 import type { ListarExpedientesParams } from '@/features/expedientes';
 
 /**

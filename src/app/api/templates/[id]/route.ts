@@ -4,7 +4,7 @@ import {
   buscarTemplate,
   atualizarTemplate,
   deletarTemplate,
-} from '@/features/documentos';
+} from '@/features/documentos/service';
 
 /**
  * GET /api/templates/[id]

@@ -16,7 +16,10 @@
   // Configuracao para extensao Lua ignorar arquivos de licenca e documentacao
   "Lua.workspace.ignoreDir": ["LICENSE", "TRADEMARK", "NOTICE"],
   "Lua.diagnostics.globals": [],
-  // TypeScript: usar workspace tsdk
+  // TypeScript: usar workspace tsdk e ignorar tsconfigs de node_modules
+  "js/ts.tsserver.watchOptions": {
+    "excludeDirectories": ["node_modules"]
+  },
   "js/ts.tsdk.path": "node_modules/typescript/lib",
   "js/ts.tsdk.promptToUseWorkspaceVersion": true,
   "js/ts.validate.enabled": true,

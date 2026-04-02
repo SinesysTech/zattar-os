@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 /**
  * Property-Based Tests - Tooltip
  *

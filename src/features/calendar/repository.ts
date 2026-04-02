@@ -14,13 +14,13 @@ import { listarAudiencias } from "@/features/audiencias/service";
 import type { Audiencia } from "@/features/audiencias";
 
 import type { ListarExpedientesParams, Expediente } from "@/features/expedientes";
-import { listarExpedientes } from "@/features/expedientes";
+import { listarExpedientes } from "@/features/expedientes/service";
 
 import type { AcordoComParcelas } from "@/features/obrigacoes";
 import { listarAcordos } from "@/features/obrigacoes/service";
 
 import type { Pericia, ListarPericiasParams } from "@/features/pericias";
-import { listarPericias } from "@/features/pericias";
+import { listarPericias } from "@/features/pericias/service";
 
 import type { AgendaEvento } from "@/features/agenda-eventos";
 import { agendaEventosRepository as agendaEventosRepo } from "@/features/agenda-eventos";

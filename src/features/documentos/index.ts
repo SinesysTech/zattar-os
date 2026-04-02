@@ -56,22 +56,3 @@ export {
   actionDeletarDocumento,
 } from "./actions/documentos-actions";
 
-// Service functions (server-side) - for API routes
-export {
-  listarPastasComContadores,
-  buscarHierarquiaPastas,
-  criarPasta,
-  buscarPasta,
-  atualizarPasta,
-  deletarPasta,
-  buscarCaminhoPasta,
-  listarTemplates,
-  criarTemplate,
-  buscarTemplate,
-  atualizarTemplate,
-  usarTemplate,
-  deletarTemplate,
-  listarCategoriasTemplates,
-  listarTemplatesMaisUsados,
-  listarUploads,
-} from "./service";
