@@ -37,8 +37,8 @@ import {
   actionCriarAdvogado,
   actionAtualizarAdvogado,
   type Advogado,
-} from '@/features/advogados';
-import { UFS_BRASIL } from '@/features/advogados';
+} from '@/app/app/advogados';
+import { UFS_BRASIL } from '@/app/app/advogados';
 
 const formSchema = z.object({
   nome_completo: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),

@@ -33,7 +33,7 @@ import {
   actionAtualizarStatusCredenciaisEmLote,
   useAdvogados,
   type Advogado,
-} from '@/features/advogados';
+} from '@/app/app/advogados';
 import { AdvogadoCombobox } from '@/features/captura';
 import { criarColunasCredenciais } from '../components/credenciais/credenciais-columns';
 import { AdvogadoViewDialog } from '../components/credenciais/advogado-view-dialog';

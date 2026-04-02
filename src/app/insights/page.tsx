@@ -1,4 +1,4 @@
-import { WebsiteShell } from "@/features/website";
+import { WebsiteShell } from "@/app/website";
 import Link from "next/link";
 import { ArrowRight, Bookmark, ExternalLink } from "lucide-react";
 

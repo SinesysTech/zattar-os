@@ -34,7 +34,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { InputCEP, type InputCepAddress } from '@/features/enderecos';
+import { InputCEP, type InputCepAddress } from '@/app/app/enderecos';
 import { InputCPF, InputData, InputCPFCNPJ, ClientSearchInput, ParteContrariaSearchInput } from '../inputs';
 import { InputTelefone } from '@/components/ui/input-telefone';
 import { Info } from 'lucide-react';

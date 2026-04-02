@@ -2,9 +2,9 @@
 
 import { use } from "react";
 import Link from "next/link";
-import { PortalShell } from "@/features/portal";
-import { EditorialHeader, PhaseStepper } from "@/features/website";
-import type { PhaseStep } from "@/features/website";
+import { PortalShell } from "@/app/portal/feature";
+import { EditorialHeader, PhaseStepper } from "@/app/website";
+import type { PhaseStep } from "@/app/website";
 import {
   Scale,
   Calendar,

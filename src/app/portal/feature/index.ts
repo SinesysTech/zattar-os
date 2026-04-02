@@ -16,6 +16,8 @@ export * from "./actions/portal-actions";
 export * from "./components/cards";
 export * from "./components/hero/cpf-hero-form";
 export * from "./components/navbar/portal-navbar";
+export { DashboardView } from "./components/dashboard/dashboard-view";
+export { PortalShell } from "./components/layout/portal-shell";
 
 // Service - Server-only exports (use in Server Components and Actions only)
 // Import directly from "./service" when needed in server context

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { PortalShell } from "@/features/portal";
-import { EditorialHeader, FilterChips } from "@/features/website";
+import { PortalShell } from "@/app/portal/feature";
+import { EditorialHeader, FilterChips } from "@/app/website";
 import {
   FileText,
   PlusCircle,

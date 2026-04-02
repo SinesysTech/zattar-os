@@ -7,7 +7,7 @@
  */
 
 import type { CapturaRawLog } from '@/features/captura/types/captura-raw-log';
-import type { EntidadeTipoEndereco } from '@/features/enderecos/types';
+import type { EntidadeTipoEndereco } from '@/app/app/enderecos/types';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { buscarLogPorRawLogId } from './captura-recovery.service';
 import type { TipoCaptura } from '../../domain';

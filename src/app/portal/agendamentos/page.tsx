@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { PortalShell } from "@/features/portal";
-import { EditorialHeader } from "@/features/website";
+import { PortalShell } from "@/app/portal/feature";
+import { EditorialHeader } from "@/app/website";
 import {
   CalendarPlus,
   Video,

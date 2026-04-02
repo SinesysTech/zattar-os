@@ -27,8 +27,8 @@ import {
   getStatusVariant,
 } from '@/features/contratos';
 import type { Lancamento } from '@/features/financeiro/domain/lancamentos';
-import type { EntrevistaTrabalhista, EntrevistaAnexo } from '@/features/entrevistas-trabalhistas';
-import { EntrevistaTab } from '@/features/entrevistas-trabalhistas';
+import type { EntrevistaTrabalhista, EntrevistaAnexo } from '@/app/app/entrevistas-trabalhistas';
+import { EntrevistaTab } from '@/app/app/entrevistas-trabalhistas';
 import {
   ContratoDetalhesHeader,
   ContratoDetalhesCard,

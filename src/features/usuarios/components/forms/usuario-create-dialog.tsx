@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useCargos } from '@/features/cargos';
+import { useCargos } from '@/app/app/cargos';
 import { actionCriarUsuario } from '../../actions/usuarios-actions';
 import type { UsuarioDados, GeneroUsuario, Endereco } from '../../domain';
 import { DialogFormShell } from '@/components/shared/dialog-shell';

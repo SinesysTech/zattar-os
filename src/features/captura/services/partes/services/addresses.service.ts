@@ -15,8 +15,8 @@ import type {
   ClassificacaoEndereco,
   EntidadeTipoEndereco,
   SituacaoEndereco,
-} from "@/features/enderecos/types";
-import { upsertEnderecoPorIdPje } from "@/features/enderecos";
+} from "@/app/app/enderecos/types";
+import { upsertEnderecoPorIdPje } from "@/app/app/enderecos";
 import { withRetry } from "@/lib/utils/retry";
 import { CAPTURA_CONFIG } from "../config";
 import { PersistenceError } from "../errors";

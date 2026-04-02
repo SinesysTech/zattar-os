@@ -501,7 +501,7 @@ export function ExpedienteActions({
           createdBy: 0,
           createdAt: '',
           updatedAt: ''
-        })) as import('@/features/tipos-expedientes').TipoExpediente[]}
+        })) as import('@/app/app/tipos-expedientes').TipoExpediente[]}
       />
 
       <ExpedientesBaixarDialog

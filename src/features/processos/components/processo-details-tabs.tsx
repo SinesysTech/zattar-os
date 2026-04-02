@@ -19,7 +19,7 @@ import {
 import { actionObterDetalhesComplementaresProcesso } from '../actions';
 import { ExpedienteVisualizarDialog } from '@/features/expedientes/components/expediente-visualizar-dialog';
 import { actionListarUsuarios } from '@/features/usuarios';
-import { actionListarTiposExpedientes } from '@/features/tipos-expedientes';
+import { actionListarTiposExpedientes } from '@/app/app/tipos-expedientes';
 import type { Audiencia } from '@/features/audiencias';
 import {
   StatusAudiencia,

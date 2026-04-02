@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { PortalShell } from "@/features/portal";
-import { EditorialHeader } from "@/features/website";
-import { GlassCard } from "@/features/website";
+import { PortalShell } from "@/app/portal/feature";
+import { EditorialHeader } from "@/app/website";
+import { GlassCard } from "@/app/website";
 import { Calculator, ShieldCheck, FileDown, Share } from "lucide-react";
-import { TrustTicker } from "@/features/website";
+import { TrustTicker } from "@/app/website";
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
 

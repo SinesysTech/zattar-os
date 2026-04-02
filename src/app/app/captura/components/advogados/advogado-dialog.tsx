@@ -29,8 +29,8 @@ import type {
   CriarAdvogadoParams,
   AtualizarAdvogadoParams,
   OabEntry,
-} from '@/features/advogados';
-import { UFS_BRASIL } from '@/features/advogados';
+} from '@/app/app/advogados';
+import { UFS_BRASIL } from '@/app/app/advogados';
 
 type Props = {
   open: boolean;

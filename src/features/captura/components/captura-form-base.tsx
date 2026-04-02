@@ -13,8 +13,8 @@
 import { useEffect } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { useAdvogados } from '@/features/advogados';
-import { useCredenciais } from '@/features/advogados';
+import { useAdvogados } from '@/app/app/advogados';
+import { useCredenciais } from '@/app/app/advogados';
 import type { Credencial } from '@/features/captura/types';
 import { AdvogadoCombobox } from './advogado-combobox';
 import { CredenciaisCombobox } from './credenciais-combobox';

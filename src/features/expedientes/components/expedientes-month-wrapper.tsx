@@ -24,7 +24,7 @@ import {
 
 import { useExpedientes } from '../hooks/use-expedientes';
 import { useUsuarios } from '@/features/usuarios';
-import { useTiposExpedientes } from '@/features/tipos-expedientes';
+import { useTiposExpedientes } from '@/app/app/tipos-expedientes';
 
 import { ExpedientesListFilters, type StatusFilterType, type ResponsavelFilterType } from './expedientes-list-filters';
 import { ExpedientesCalendarCompact } from './expedientes-calendar-compact';

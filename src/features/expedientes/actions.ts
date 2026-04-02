@@ -184,7 +184,7 @@ export async function actionCriarExpediente(
           );
 
           const { gerarPecaAutomatica } = await import(
-            '@/features/assistentes-tipos/geracao-automatica-service'
+            '@/app/app/assistentes/geracao-automatica-service'
           );
 
           const resultado = await gerarPecaAutomatica(expedienteId, user.id);
