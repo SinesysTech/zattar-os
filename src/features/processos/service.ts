@@ -37,6 +37,7 @@ import {
   advogadoExists,
   usuarioExists,
 } from "./repository";
+// FSD: server-only service — intentional deep import to avoid bundling Redis/Node.js deps in client barrel
 import { usuarioRepository } from "@/features/usuarios/repository";
 
 // =============================================================================

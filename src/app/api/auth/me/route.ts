@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import { resolveAvatarUrl } from '@/lib/avatar-url';
 import { createServiceClient } from '@/lib/supabase/service-client';
+// FSD: server-only API route — intentional deep import to avoid bundling Redis/Node.js deps in client barrel
 import { listarPermissoesUsuario } from '@/features/usuarios/repository';
 
 export async function GET(request: NextRequest) {

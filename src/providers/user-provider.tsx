@@ -25,7 +25,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { resolveAvatarUrl } from '@/lib/avatar-url';
-import type { Permissao } from '@/features/usuarios/domain';
+import type { Permissao } from '@/features/usuarios';
 
 // ─── Tipos ───────────────────────────────────────────────
 
