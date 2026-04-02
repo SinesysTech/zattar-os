@@ -1,5 +1,5 @@
 import { buscarProcessosClientePorCpf } from "@/features/acervo/service";
-import { listarContratosPorClienteId } from "@/features/contratos";
+import { listarContratosPorClienteId } from "@/app/app/contratos";
 import { listarAudienciasPorBuscaCpf } from "@/features/audiencias/service";
 import { listarAcordosPorBuscaCpf } from "@/features/obrigacoes/service";
 import { buscarClientePorDocumento } from "@/app/app/partes/server";

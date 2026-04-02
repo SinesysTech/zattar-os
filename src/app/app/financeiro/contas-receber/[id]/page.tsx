@@ -24,9 +24,9 @@ import {
   useContaReceber,
   useContasBancarias,
   usePlanoContasAnaliticas,
-} from '@/features/financeiro';
+} from '@/app/app/financeiro';
 import { useClientes } from '@/app/app/partes';
-import { useContratos } from '@/features/contratos';
+import { useContratos } from '@/app/app/contratos';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {

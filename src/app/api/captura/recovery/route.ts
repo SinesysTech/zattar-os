@@ -9,12 +9,12 @@ import {
   listarLogsRecovery,
   contarLogsPorStatus,
   estatisticasPorTrt,
-} from '@/features/captura/services/recovery/captura-recovery.service';
-import { analisarGapsAgregado } from '@/features/captura/services/recovery/recovery-analysis.service';
-import type { ListarLogsRecoveryParams } from '@/features/captura/services/recovery/types';
-import type { TipoCaptura } from '@/features/captura';
-import type { CodigoTRT, GrauTRT } from '@/features/captura';
-import type { StatusCapturaRaw } from '@/features/captura';
+} from '@/app/app/captura/services/recovery/captura-recovery.service';
+import { analisarGapsAgregado } from '@/app/app/captura/services/recovery/recovery-analysis.service';
+import type { ListarLogsRecoveryParams } from '@/app/app/captura/services/recovery/types';
+import type { TipoCaptura } from '@/app/app/captura';
+import type { CodigoTRT, GrauTRT } from '@/app/app/captura';
+import type { StatusCapturaRaw } from '@/app/app/captura';
 
 /**
  * @swagger

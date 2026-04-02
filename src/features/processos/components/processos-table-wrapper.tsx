@@ -51,7 +51,7 @@ import { CopyButton } from '@/app/app/partes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
 import { ProcessosBulkActions } from './processos-bulk-actions';
-import { actionListarUsuarios } from '@/features/usuarios';
+import { actionListarUsuarios } from '@/app/app/usuarios';
 import { ConfigAtribuicaoDialog } from '@/lib/domain/config-atribuicao';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';

@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/tooltip';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
-import type { Credencial } from '@/features/captura/types';
+import type { Credencial } from '@/app/app/captura/types';
 import { formatOabs } from '@/app/app/advogados';
 
 type Params = {

@@ -7,7 +7,7 @@ import { Scale, ExternalLink, Calendar } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import type { ContratoProcessoVinculo } from '@/features/contratos';
+import type { ContratoProcessoVinculo } from '@/app/app/contratos';
 
 interface ContratoProcessosCardProps {
   processos: ContratoProcessoVinculo[];

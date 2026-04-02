@@ -12,11 +12,6 @@ import { BriefingHeader } from './components/briefing-header'
 import { BriefingInput } from './components/briefing-input'
 import type { MultimodalRequest } from './types'
 
-/** Null component to disable CopilotKit's white feather gradient */
-function HiddenFeather() {
-  return null
-}
-
 interface BriefingPanelProps {
   onClose: () => void
   onWidthChange?: (width: number) => void
@@ -193,10 +188,6 @@ export function BriefingPanel({ onClose, onWidthChange, threadId: initialThreadI
           className="pedrinho-chat h-full"
           input="hidden"
           welcomeScreen={false}
-          scrollView={{
-            feather: HiddenFeather,
-            scrollToBottomButton: 'hidden',
-          }}
           messageView={{
             className: 'gap-3 p-4',
             assistantMessage:
@@ -204,7 +195,11 @@ export function BriefingPanel({ onClose, onWidthChange, threadId: initialThreadI
             userMessage:
               'bg-primary/7 text-foreground/90 rounded-[14px] rounded-br-[6px] border border-primary/10 text-[13px] leading-[1.6] px-3.5 py-2.5',
           }}
-          /* suggestionView hidden via CSS — rendered in BriefingInput instead */
+          suggestionView={{
+            container: 'gap-2 px-4 pb-2',
+            suggestion:
+              'rounded-lg border-border/30 bg-muted/50 dark:bg-white/5 text-foreground/70 text-[11px] font-medium hover:bg-muted/70 dark:hover:bg-white/10 hover:text-foreground/90',
+          }}
         />
       </div>
 

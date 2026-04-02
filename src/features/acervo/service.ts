@@ -29,18 +29,18 @@ import {
 import { invalidateAcervoCache } from '@/lib/redis/invalidation';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
-import { capturarTimeline } from '@/features/captura/server';
-import type { CodigoTRT, GrauTRT } from '@/features/captura';
-import type { PartePJE } from '@/features/captura/pje-trt/partes/types';
-import { autenticarPJE } from '@/features/captura/services/trt/trt-auth.service';
-import { getTribunalConfig } from '@/features/captura/services/trt/config';
-import { obterPartesProcesso } from '@/features/captura/pje-trt/partes';
+import { capturarTimeline } from '@/app/app/captura/server';
+import type { CodigoTRT, GrauTRT } from '@/app/app/captura';
+import type { PartePJE } from '@/app/app/captura/pje-trt/partes/types';
+import { autenticarPJE } from '@/app/app/captura/services/trt/trt-auth.service';
+import { getTribunalConfig } from '@/app/app/captura/services/trt/config';
+import { obterPartesProcesso } from '@/app/app/captura/pje-trt/partes';
 import {
   persistirPartesProcesso,
   type ProcessoParaCaptura,
-} from '@/features/captura/services/partes/partes-capture.service';
-import { getCredentialByTribunalAndGrau } from '@/features/captura/credentials/credential.service';
-import { buscarProcessosPorIdsNoPainel } from '@/features/captura/services/trt/buscar-processos-painel.service';
+} from '@/app/app/captura/services/partes/partes-capture.service';
+import { getCredentialByTribunalAndGrau } from '@/app/app/captura/credentials/credential.service';
+import { buscarProcessosPorIdsNoPainel } from '@/app/app/captura/services/trt/buscar-processos-painel.service';
 
 /**
  * Converte data ISO string para timestamptz ou null

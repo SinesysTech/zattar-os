@@ -16,14 +16,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { Contrato, ResponsavelDetalhado } from '@/features/contratos';
+import type { Contrato, ResponsavelDetalhado } from '@/app/app/contratos';
 import {
   formatarStatusContrato,
   formatarTipoContrato,
   getStatusVariant,
   TIPO_COBRANCA_LABELS,
   ContratoDeleteDialog,
-} from '@/features/contratos';
+} from '@/app/app/contratos';
 
 function getInitials(nome: string): string {
   const parts = nome.split(' ').filter(Boolean);

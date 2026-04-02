@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { cache } from 'react';
-import { actionListarUsuarios } from '@/features/usuarios';
+import { actionListarUsuarios } from '@/app/app/usuarios';
 import { actionListarTiposAudiencia } from './actions';
 import type { TipoAudiencia } from './domain';
 

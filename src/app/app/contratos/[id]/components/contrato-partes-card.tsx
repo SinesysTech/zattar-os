@@ -7,8 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import type { ContratoParte } from '@/features/contratos';
-import { PAPEL_CONTRATUAL_LABELS } from '@/features/contratos';
+import type { ContratoParte } from '@/app/app/contratos';
+import { PAPEL_CONTRATUAL_LABELS } from '@/app/app/contratos';
 
 interface ParteDisplay {
   id: string;

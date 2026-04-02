@@ -1,6 +1,6 @@
 import { FileText } from "lucide-react";
 import { Card, CardAction, CardDescription, CardHeader } from "@/components/ui/card";
-import { actionContarContratosComEstatisticas } from "@/features/contratos";
+import { actionContarContratosComEstatisticas } from "@/app/app/contratos";
 import type { CrmDateFilter } from "../crm-date-filter";
 import { toCrmDateFilterInput } from "../crm-date-filter";
 

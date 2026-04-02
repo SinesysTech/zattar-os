@@ -11,8 +11,8 @@ import { toast } from 'sonner';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Typography } from '@/components/ui/typography';
 
-import type { TipoCaptura } from '@/features/captura';
-import { CapturaFormBase, TipoCapturaSelect, validarCamposCaptura } from '@/features/captura';
+import type { TipoCaptura } from '@/app/app/captura';
+import { CapturaFormBase, TipoCapturaSelect, validarCamposCaptura } from '@/app/app/captura';
 
 type Props = {
   open: boolean;

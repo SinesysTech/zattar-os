@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { Lancamento, StatusLancamento } from '@/features/financeiro/domain/lancamentos';
+import type { Lancamento, StatusLancamento } from '@/app/app/financeiro/domain/lancamentos';
 
 interface ContratoFinanceiroCardProps {
   lancamentos: Lancamento[];

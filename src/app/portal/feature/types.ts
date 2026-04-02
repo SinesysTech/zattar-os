@@ -1,5 +1,5 @@
 import { ProcessoRespostaIA } from "@/features/acervo";
-import { Contrato } from "@/features/contratos";
+import { Contrato } from "@/app/app/contratos";
 import { Audiencia } from "@/features/audiencias";
 import { AcordoComParcelas } from "@/features/obrigacoes/types";
 

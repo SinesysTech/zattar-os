@@ -14,7 +14,7 @@ import {
   deletePipeline,
   countContratosByPipelineId,
   updatePipelineSchema,
-} from '@/features/contratos/pipelines';
+} from '@/app/app/contratos/pipelines';
 
 type RouteContext = { params: Promise<{ id: string }> };
 

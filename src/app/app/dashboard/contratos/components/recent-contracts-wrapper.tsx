@@ -1,4 +1,4 @@
-import { actionListarContratos, type Contrato } from "@/features/contratos";
+import { actionListarContratos, type Contrato } from "@/app/app/contratos";
 import type { CrmDateFilter } from "../crm-date-filter";
 import { RecentContractsCard, type RecentContractRow } from "./recent-contracts";
 

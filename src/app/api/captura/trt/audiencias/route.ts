@@ -2,13 +2,13 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
-import { audienciasCapture } from '@/features/captura/services/trt/audiencias.service';
-import { getTribunalConfig } from '@/features/captura/services/trt/config';
-import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/features/captura/services/captura-log.service';
-import { ordenarCredenciaisPorTRT } from '@/features/captura';
-import { registrarCapturaRawLog } from '@/features/captura/services/persistence/captura-raw-log.service';
-import { formatarErroCaptura, formatarErroTecnico } from '@/features/captura';
+import { getCredentialComplete } from '@/app/app/captura/credentials/credential.service';
+import { audienciasCapture } from '@/app/app/captura/services/trt/audiencias.service';
+import { getTribunalConfig } from '@/app/app/captura/services/trt/config';
+import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/app/app/captura/services/captura-log.service';
+import { ordenarCredenciaisPorTRT } from '@/app/app/captura';
+import { registrarCapturaRawLog } from '@/app/app/captura/services/persistence/captura-raw-log.service';
+import { formatarErroCaptura, formatarErroTecnico } from '@/app/app/captura';
 
 type StatusAudiencia = 'M' | 'C' | 'F';
 

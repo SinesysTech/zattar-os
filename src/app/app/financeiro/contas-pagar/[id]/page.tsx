@@ -18,7 +18,7 @@ import {
   type StatusContaPagar,
   useContaPagar,
   useContasBancarias,
-} from '@/features/financeiro';
+} from '@/app/app/financeiro';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {

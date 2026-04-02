@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
-import { getTribunalConfig } from '@/features/captura/services/trt/config';
-import { ordenarCredenciaisPorTRT } from '@/features/captura';
-import { iniciarCapturaLog, atualizarCapturaLog } from '@/features/captura/services/captura-log.service';
-import { capturaCombinada } from '@/features/captura/services/trt/captura-combinada.service';
-import { registrarCapturaRawLog } from '@/features/captura/services/persistence/captura-raw-log.service';
+import { getCredentialComplete } from '@/app/app/captura/credentials/credential.service';
+import { getTribunalConfig } from '@/app/app/captura/services/trt/config';
+import { ordenarCredenciaisPorTRT } from '@/app/app/captura';
+import { iniciarCapturaLog, atualizarCapturaLog } from '@/app/app/captura/services/captura-log.service';
+import { capturaCombinada } from '@/app/app/captura/services/trt/captura-combinada.service';
+import { registrarCapturaRawLog } from '@/app/app/captura/services/persistence/captura-raw-log.service';
 import { buscarAdvogado } from '@/app/app/advogados';
 
 /**

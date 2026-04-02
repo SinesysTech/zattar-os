@@ -40,7 +40,7 @@ import { toast } from 'sonner';
 // TYPES
 // =============================================================================
 
-import type { Usuario } from '@/features/usuarios';
+import type { Usuario } from '@/app/app/usuarios';
 
 interface TipoExpediente {
   id: number;

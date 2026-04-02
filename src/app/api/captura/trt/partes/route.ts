@@ -4,30 +4,30 @@
 import type { Browser, Page } from "playwright";
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateRequest } from "@/lib/auth/api-auth";
-import { getCredentialComplete } from "@/features/captura/credentials/credential.service";
-import { getTribunalConfig } from "@/features/captura/services/trt/config";
+import { getCredentialComplete } from "@/app/app/captura/credentials/credential.service";
+import { getTribunalConfig } from "@/app/app/captura/services/trt/config";
 import {
   capturarPartesProcesso,
   type ProcessoParaCaptura,
-} from "@/features/captura/services/partes/partes-capture.service";
-import { autenticarPJE } from "@/features/captura/services/trt/trt-auth.service";
+} from "@/app/app/captura/services/partes/partes-capture.service";
+import { autenticarPJE } from "@/app/app/captura/services/trt/trt-auth.service";
 import { buscarAdvogado } from "@/app/app/advogados";
 import { createServiceClient } from "@/lib/supabase/service-client";
-import { registrarCapturaRawLog } from "@/features/captura/services/persistence/captura-raw-log.service";
+import { registrarCapturaRawLog } from "@/app/app/captura/services/persistence/captura-raw-log.service";
 import {
   criarCapturaLog,
   atualizarCapturaLog,
-} from "@/features/captura/services/persistence/captura-log-persistence.service";
-import type { CodigoTRT, GrauTRT } from "@/features/captura";
+} from "@/app/app/captura/services/persistence/captura-log-persistence.service";
+import type { CodigoTRT, GrauTRT } from "@/app/app/captura";
 import type { GrauAcervo } from "@/features/acervo";
-import type { CapturaLog, ResultadoCapturaPartes, TipoCaptura } from "@/features/captura";
+import type { CapturaLog, ResultadoCapturaPartes, TipoCaptura } from "@/app/app/captura";
 import getLogger, { withCorrelationId } from "@/lib/logger";
 import { withDistributedLock } from "@/lib/utils/locks/distributed-lock";
-import { CAPTURA_CONFIG } from "@/features/captura/services/partes/config";
+import { CAPTURA_CONFIG } from "@/app/app/captura/services/partes/config";
 import {
   extractErrorInfo,
   LockError,
-} from "@/features/captura/services/partes/errors";
+} from "@/app/app/captura/services/partes/errors";
 
 const GRAUS_VALIDOS: GrauTRT[] = [
   "primeiro_grau",

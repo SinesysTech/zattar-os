@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { actionCriarSala } from "../actions/chat-actions";
-import { actionListarUsuarios } from "@/features/usuarios";
+import { actionListarUsuarios } from "@/app/app/usuarios";
 import { TipoSalaChat, type ChatItem } from "../domain";
 import useChatStore from "./useChatStore";
 

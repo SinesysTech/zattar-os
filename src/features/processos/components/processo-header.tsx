@@ -19,7 +19,7 @@ import { GrauBadgesSimple } from './grau-badges';
 import { CopyButton } from '@/app/app/partes';
 import { ProximaAudienciaPopover } from './proxima-audiencia-popover';
 import { GRAU_LABELS } from '@/lib/design-system';
-import { actionListarUsuarios } from '@/features/usuarios';
+import { actionListarUsuarios } from '@/app/app/usuarios';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 

@@ -55,8 +55,8 @@ import {
   SEM_ESTAGIO_KEY,
   type KanbanContrato,
   type KanbanColumns,
-} from '@/features/contratos/hooks';
-import type { ContratoPipelineEstagio } from '@/features/contratos/pipelines/types';
+} from '@/app/app/contratos/hooks';
+import type { ContratoPipelineEstagio } from '@/app/app/contratos/pipelines/types';
 
 // =============================================================================
 // VIEW MODE OPTIONS

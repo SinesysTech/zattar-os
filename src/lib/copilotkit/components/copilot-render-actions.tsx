@@ -411,8 +411,8 @@ export function useCopilotRenderActions() {
     },
     handler: async ({ periodo }) => {
       try {
-        const { gerarPeriodoAtual } = await import('@/features/financeiro');
-        const { actionGerarDRE } = await import('@/features/financeiro/actions/dre');
+        const { gerarPeriodoAtual } = await import('@/app/app/financeiro');
+        const { actionGerarDRE } = await import('@/app/app/financeiro/actions/dre');
         const tipo = (periodo || 'mensal') as 'mensal' | 'trimestral' | 'semestral' | 'anual';
         const { dataInicio, dataFim } = gerarPeriodoAtual(tipo);
         const result = await actionGerarDRE({ dataInicio, dataFim, tipo });

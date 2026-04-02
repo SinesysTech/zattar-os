@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/tooltip';
 import { actionObterDetalhesComplementaresProcesso } from '../actions';
 import { ExpedienteVisualizarDialog } from '@/features/expedientes/components/expediente-visualizar-dialog';
-import { actionListarUsuarios } from '@/features/usuarios';
+import { actionListarUsuarios } from '@/app/app/usuarios';
 import { actionListarTiposExpedientes } from '@/app/app/tipos-expedientes';
 import type { Audiencia } from '@/features/audiencias';
 import {

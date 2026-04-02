@@ -38,7 +38,7 @@ import {
 } from '../domain';
 import { actionListarAudiencias } from '../actions';
 import { useTiposAudiencias } from '../hooks/use-tipos-audiencias';
-import { useUsuarios } from '@/features/usuarios';
+import { useUsuarios } from '@/app/app/usuarios';
 
 import { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias-list-columns';
 import { NovaAudienciaDialog } from './nova-audiencia-dialog';

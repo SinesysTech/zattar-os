@@ -8,7 +8,7 @@ import type {
   Contrato,
   ClienteDetalhado,
   ContratoCompletoStats,
-} from '@/features/contratos';
+} from '@/app/app/contratos';
 
 interface ContratoResumoCardProps {
   contrato: Contrato;
