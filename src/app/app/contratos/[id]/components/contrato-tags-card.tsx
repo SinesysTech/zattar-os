@@ -6,14 +6,14 @@ import type {
   TipoContrato,
   TipoCobranca,
   PapelContratual,
-} from '@/features/contratos';
+} from '@/app/app/contratos';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   PAPEL_CONTRATUAL_LABELS,
   getTipoContratoVariant,
-} from '@/features/contratos';
-import type { SegmentoDetalhado } from '@/features/contratos';
+} from '@/app/app/contratos';
+import type { SegmentoDetalhado } from '@/app/app/contratos';
 
 interface ContratoTagsCardProps {
   tipoContrato: TipoContrato;

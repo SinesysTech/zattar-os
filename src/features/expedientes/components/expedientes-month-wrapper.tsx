@@ -23,7 +23,7 @@ import {
 } from '@/components/shared';
 
 import { useExpedientes } from '../hooks/use-expedientes';
-import { useUsuarios } from '@/features/usuarios';
+import { useUsuarios } from '@/app/app/usuarios';
 import { useTiposExpedientes } from '@/app/app/tipos-expedientes';
 
 import { ExpedientesListFilters, type StatusFilterType, type ResponsavelFilterType } from './expedientes-list-filters';

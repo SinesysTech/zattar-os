@@ -29,8 +29,8 @@ import {
   NATUREZA_LABELS,
   NIVEL_LABELS,
   MaisFiltrosPlanoContasPopover,
-} from '@/features/financeiro';
-import { actionAtualizarConta } from '@/features/financeiro/server-actions';
+} from '@/app/app/financeiro';
+import { actionAtualizarConta } from '@/app/app/financeiro/server-actions';
 import { FilterPopover } from '@/app/app/partes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

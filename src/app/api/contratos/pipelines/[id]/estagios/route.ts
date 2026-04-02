@@ -10,7 +10,7 @@ import {
   findPipelineById,
   saveEstagio,
   createEstagioSchema,
-} from '@/features/contratos/pipelines';
+} from '@/app/app/contratos/pipelines';
 
 type RouteContext = { params: Promise<{ id: string }> };
 

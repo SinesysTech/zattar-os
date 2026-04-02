@@ -26,7 +26,7 @@ import {
   type OrcamentoItemComDetalhes,
   type StatusOrcamento,
   useOrcamento,
-} from '@/features/financeiro';
+} from '@/app/app/financeiro';
 import {
   ArrowLeft,
   Plus,

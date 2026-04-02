@@ -22,11 +22,11 @@ export async function registerUsuariosTools(): Promise<void> {
     actionListarUsuarios,
     actionBuscarPorEmail,
     actionBuscarPorCpf,
-  } = await import('@/features/usuarios/actions/usuarios-actions');
+  } = await import('@/app/app/usuarios/actions/usuarios-actions');
 
   const {
     actionListarPermissoes,
-  } = await import('@/features/usuarios/actions/permissoes-actions');
+  } = await import('@/app/app/usuarios/actions/permissoes-actions');
 
   /**
    * Lista usuários do sistema com filtros por busca, status ativo e cargo

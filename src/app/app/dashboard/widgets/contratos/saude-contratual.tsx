@@ -20,7 +20,7 @@ import {
   fmtNum,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { actionContratosStats, type ContratosStatsData } from '@/features/contratos';
+import { actionContratosStats, type ContratosStatsData } from '@/app/app/contratos';
 
 type GaugeStatus = 'good' | 'warning' | 'danger' | 'neutral';
 

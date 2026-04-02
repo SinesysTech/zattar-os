@@ -33,7 +33,7 @@ import {
   type PeriodoOrcamento,
   type StatusOrcamento,
   useOrcamentos,
-} from '@/features/financeiro';
+} from '@/app/app/financeiro';
 import { PageShell } from '@/components/shared/page-shell';
 import { FilterPopover } from '@/app/app/partes';
 import { Badge } from '@/components/ui/badge';

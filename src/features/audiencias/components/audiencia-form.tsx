@@ -34,7 +34,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { ptBR } from 'date-fns/locale';
 import { useTiposAudiencias } from '../hooks';
-import { useUsuarios } from '@/features/usuarios';
+import { useUsuarios } from '@/app/app/usuarios';
 
 interface AudienciaFormProps {
   initialData?: Audiencia;

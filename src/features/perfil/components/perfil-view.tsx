@@ -4,7 +4,7 @@ import * as React from 'react';
 import { usePerfil } from '../hooks/use-perfil';
 import { PerfilEditSheet } from './perfil-edit-sheet';
 import { AlterarSenhaDialog } from './alterar-senha-dialog';
-import { AvatarEditDialog } from '@/features/usuarios';
+import { AvatarEditDialog } from '@/app/app/usuarios';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
@@ -19,7 +19,7 @@ import {
   formatarEnderecoCompleto,
   formatarGenero,
   getAvatarUrl,
-} from '@/features/usuarios/utils';
+} from '@/app/app/usuarios/utils';
 
 function getInitials(name: string): string {
   if (!name) return 'U';

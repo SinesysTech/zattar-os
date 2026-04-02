@@ -18,8 +18,8 @@ import type { TimelineJSONB } from '@/features/acervo';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import type { GrauProcesso } from '@/app/app/partes';
 import { actionObterTimelinePorId, actionRecapturarTimeline } from '@/features/acervo';
-import { actionCapturarTimeline } from '@/features/captura';
-import type { CodigoTRT, GrauTRT } from '@/features/captura';
+import { actionCapturarTimeline } from '@/app/app/captura';
+import type { CodigoTRT, GrauTRT } from '@/app/app/captura';
 
 /**
  * Item da timeline com metadados de origem (para modo unificado)

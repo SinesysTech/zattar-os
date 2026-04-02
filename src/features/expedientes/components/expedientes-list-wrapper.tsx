@@ -30,7 +30,7 @@ import { AppBadge } from '@/components/ui/app-badge';
 import type { Expediente } from '../domain';
 import { GrauTribunal, GRAU_TRIBUNAL_LABELS, OrigemExpediente, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
 import { useExpedientes } from '../hooks/use-expedientes';
-import { useUsuarios } from '@/features/usuarios';
+import { useUsuarios } from '@/app/app/usuarios';
 import { useTiposExpedientes } from '@/app/app/tipos-expedientes';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';

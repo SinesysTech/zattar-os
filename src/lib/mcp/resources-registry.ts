@@ -7,7 +7,7 @@
 import { registerMcpResource, jsonResourceResult } from "./resources";
 import type { Processo } from "@/features/processos";
 import type { Cliente } from "@/app/app/partes";
-import type { Contrato } from "@/features/contratos";
+import type { Contrato } from "@/app/app/contratos";
 import type { Audiencia } from "@/features/audiencias";
 
 /**
@@ -125,7 +125,7 @@ export async function registerAllResources(): Promise<void> {
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
-      const { actionBuscarContrato } = await import("@/features/contratos");
+      const { actionBuscarContrato } = await import("@/app/app/contratos");
 
       const result = await actionBuscarContrato(id);
 
@@ -216,7 +216,7 @@ export async function registerAllResources(): Promise<void> {
       const id = parseInt(params.id, 10);
 
       const { actionBuscarLancamento } = await import(
-        "@/features/financeiro/actions"
+        "@/app/app/financeiro/actions"
       );
 
       const result = await actionBuscarLancamento(id);

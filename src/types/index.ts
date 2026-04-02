@@ -1,2 +1,2 @@
 export * from './result';
-export * from '@/features/contratos';
+export * from '@/app/app/contratos';

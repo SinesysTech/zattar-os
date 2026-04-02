@@ -31,7 +31,7 @@ import {
   type ViewType,
 } from '@/components/shared';
 
-import { useUsuarios } from '@/features/usuarios';
+import { useUsuarios } from '@/app/app/usuarios';
 import { useTiposExpedientes, TiposExpedientesList } from '@/app/app/tipos-expedientes';
 
 import { ExpedientesListWrapper } from './expedientes-list-wrapper';

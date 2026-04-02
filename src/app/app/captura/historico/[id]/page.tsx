@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 
-import { CapturaResult, type CapturaResultData, CapturaErrosFormatados, CapturaRawLogs } from '@/features/captura';
-import { buscarCapturaLog, buscarLogsBrutoPorCapturaId } from '@/features/captura/server';
+import { CapturaResult, type CapturaResultData, CapturaErrosFormatados, CapturaRawLogs } from '@/app/app/captura';
+import { buscarCapturaLog, buscarLogsBrutoPorCapturaId } from '@/app/app/captura/server';
 import { PageShell } from '@/components/shared/page-shell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

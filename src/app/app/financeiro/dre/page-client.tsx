@@ -46,7 +46,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useDRE, useEvolucaoDRE, useExportarDRE, gerarPeriodoAtual } from '@/features/financeiro';
+import { useDRE, useEvolucaoDRE, useExportarDRE, gerarPeriodoAtual } from '@/app/app/financeiro';
 import { toast } from 'sonner';
 import type {
   ResumoDRE,
@@ -54,7 +54,7 @@ import type {
   EvolucaoDRE,
   PeriodoDRE,
   VariacoesDRE,
-} from '@/features/financeiro';
+} from '@/app/app/financeiro';
 import {
   PieChart,
   Pie,

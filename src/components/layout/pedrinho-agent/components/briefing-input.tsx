@@ -2,7 +2,6 @@
 
 import { useCallback, useRef, useState } from 'react'
 import { ArrowUp, Mic, Paperclip, Square } from 'lucide-react'
-import { useSuggestions } from '@copilotkit/react-core/v2'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { useAttachments } from '../hooks/use-attachments'
@@ -28,7 +27,6 @@ export function BriefingInput({
 }: BriefingInputProps) {
   const [text, setText] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const { suggestions } = useSuggestions()
   const { attachments, error, addFiles, addAudioBlob, remove, clear, openFilePicker, toBase64Array } =
     useAttachments()
   const recorder = useAudioRecorder()
@@ -63,14 +61,6 @@ export function BriefingInput({
       textareaRef.current.style.height = 'auto'
     }
   }, [text, attachments, isAgentRunning, toBase64Array, onSendMultimodal, onSendText, clear, threadId])
-
-  const handleSendSuggestion = useCallback(
-    (message: string) => {
-      if (isAgentRunning) return
-      onSendText(message)
-    },
-    [isAgentRunning, onSendText]
-  )
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -112,29 +102,6 @@ export function BriefingInput({
 
   return (
     <div className="px-3 pb-3">
-      {/* Suggestion pills — above the input */}
-      {suggestions.length > 0 && !isAgentRunning && (
-        <div className="flex flex-wrap gap-1.5 px-1 pb-2.5">
-          {suggestions.slice(0, 5).map((s) => (
-            <button
-              key={s.title}
-              onClick={() => handleSendSuggestion(s.message)}
-              className={cn(
-                'text-[11px] font-medium px-2.5 py-1 rounded-lg',
-                'bg-muted/60 dark:bg-white/6',
-                'border border-border/25 dark:border-border/15',
-                'text-foreground/70',
-                'hover:bg-muted/80 dark:hover:bg-white/10',
-                'hover:text-foreground/90 hover:border-border/40',
-                'transition-all duration-150 cursor-pointer'
-              )}
-            >
-              {s.title}
-            </button>
-          ))}
-        </div>
-      )}
-
       <AttachmentStrip attachments={attachments} onRemove={remove} />
 
       {error && (

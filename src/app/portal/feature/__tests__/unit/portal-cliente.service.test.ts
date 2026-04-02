@@ -9,14 +9,14 @@ import { criarProcessoMock, criarContratoMock, criarAudienciaMock, criarPagament
 import { ok, err, appError } from '@/types';
 import * as partesService from '@/app/app/partes/server';
 import * as acervoService from '@/features/acervo/service';
-import * as contratosService from '@/features/contratos/service';
+import * as contratosService from '@/app/app/contratos/service';
 import * as audienciasService from '@/features/audiencias/service';
 import * as obrigacoesService from '@/features/obrigacoes/service';
 
 // Mock feature services
 jest.mock('@/app/app/partes/server');
 jest.mock('@/features/acervo/service');
-jest.mock('@/features/contratos/service');
+jest.mock('@/app/app/contratos/service');
 jest.mock('@/features/audiencias/service');
 jest.mock('@/features/obrigacoes/service');
 

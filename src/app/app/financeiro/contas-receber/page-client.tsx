@@ -34,7 +34,7 @@ import {
   useContasBancarias,
   useContasReceber,
   usePlanoContasAnaliticas,
-} from '@/features/financeiro';
+} from '@/app/app/financeiro';
 import { FilterPopover } from '@/app/app/partes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -67,7 +67,7 @@ import {
 } from '@/components/ui/alert-dialog';
 
 import { useClientes } from '@/app/app/partes';
-import { useContratos } from '@/features/contratos';
+import { useContratos } from '@/app/app/contratos';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

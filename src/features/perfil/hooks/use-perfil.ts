@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { actionObterPerfil } from '../actions/perfil-actions';
-import type { Usuario } from '@/features/usuarios';
+import type { Usuario } from '@/app/app/usuarios';
 
 export function usePerfil() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);

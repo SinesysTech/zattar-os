@@ -15,8 +15,8 @@ import {
   actionObterTopCategorias,
   actionListarOrcamentos,
   actionObterAnaliseOrcamentaria
-} from '@/features/financeiro/server-actions';
-import { AnaliseOrcamentariaUI } from '@/features/financeiro/actions';
+} from '@/app/app/financeiro/server-actions';
+import { AnaliseOrcamentariaUI } from '@/app/app/financeiro/actions';
 
 // ============================================================================
 // Types

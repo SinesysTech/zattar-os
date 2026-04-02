@@ -1,5 +1,5 @@
 import { Cliente, ParteContraria, Terceiro } from "@/app/app/partes/domain";
-import { Usuario } from "@/features/usuarios/domain";
+import { Usuario } from "@/app/app/usuarios/domain";
 import type { Representante } from "@/app/app/partes/types/representantes";
 import {
   formatarCpf,

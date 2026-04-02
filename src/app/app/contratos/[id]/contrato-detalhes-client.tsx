@@ -21,12 +21,12 @@ import type {
   ResponsavelDetalhado,
   SegmentoDetalhado,
   ContratoStatusHistorico,
-} from '@/features/contratos';
+} from '@/app/app/contratos';
 import {
   STATUS_CONTRATO_LABELS,
   getStatusVariant,
-} from '@/features/contratos';
-import type { Lancamento } from '@/features/financeiro/domain/lancamentos';
+} from '@/app/app/contratos';
+import type { Lancamento } from '@/app/app/financeiro/domain/lancamentos';
 import type { EntrevistaTrabalhista, EntrevistaAnexo } from '@/app/app/entrevistas-trabalhistas';
 import { EntrevistaTab } from '@/app/app/entrevistas-trabalhistas';
 import {

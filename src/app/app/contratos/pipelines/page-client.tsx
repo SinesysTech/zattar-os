@@ -55,8 +55,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { usePipelines } from '@/features/contratos/tipos-config/hooks';
-import type { ContratoPipeline, ContratoPipelineEstagio } from '@/features/contratos/pipelines/types';
+import { usePipelines } from '@/app/app/contratos/tipos-config/hooks';
+import type { ContratoPipeline, ContratoPipelineEstagio } from '@/app/app/contratos/pipelines/types';
 
 // =============================================================================
 // INTERFACES LOCAIS

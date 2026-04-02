@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useState } from 'react';
-import { CapturaList, CapturaDialog } from '@/features/captura';
+import { CapturaList, CapturaDialog } from '@/app/app/captura';
 
 export default function HistoricoClient() {
   const [capturaDialogOpen, setCapturaDialogOpen] = useState(false);

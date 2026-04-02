@@ -25,13 +25,13 @@ import {
   actionContarContratosPorStatus,
   actionResolverNomesEntidadesContrato,
   actionListarSegmentos,
-} from '@/features/contratos/actions';
-import type { Contrato, StatusContrato } from '@/features/contratos';
+} from '@/app/app/contratos/actions';
+import type { Contrato, StatusContrato } from '@/app/app/contratos';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
-} from '@/features/contratos';
+} from '@/app/app/contratos';
 import {
   FinancialStrip,
   PipelineFunnel,
@@ -39,7 +39,7 @@ import {
   ContratoListRow,
   type ContratosStatsData,
   type ContratoCardData,
-} from '@/features/contratos';
+} from '@/app/app/contratos';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

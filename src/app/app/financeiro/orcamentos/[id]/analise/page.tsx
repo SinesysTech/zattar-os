@@ -45,7 +45,7 @@ import {
   useAnaliseOrcamentaria,
   useOrcamento,
   useProjecaoOrcamentaria,
-} from '@/features/financeiro';
+} from '@/app/app/financeiro';
 import { toast } from 'sonner';
 
 // ============================================================================

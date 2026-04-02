@@ -1,3 +1,3 @@
 
 // Tipos da feature perfil
-export type { Usuario } from '@/features/usuarios';
+export type { Usuario } from '@/app/app/usuarios';

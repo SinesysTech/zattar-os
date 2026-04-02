@@ -1,4 +1,4 @@
-import type { Usuario } from "@/features/usuarios";
+import type { Usuario } from "@/app/app/usuarios";
 
 export type UsuarioOption = Pick<Usuario, "id" | "nomeExibicao" | "nomeCompleto" | "avatarUrl"> & {
   nome_exibicao?: string;

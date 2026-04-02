@@ -31,7 +31,7 @@ import { SituacaoPericiaCodigo, SITUACAO_PERICIA_LABELS } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '@/features/expedientes';
 import type { GrauTribunal } from '../domain';
 import { usePericias } from '../hooks/use-pericias';
-import { useUsuarios } from '@/features/usuarios';
+import { useUsuarios } from '@/app/app/usuarios';
 import { useEspecialidadesPericias } from '../hooks/use-especialidades-pericias';
 import { usePeritos } from '../hooks/use-peritos';
 import { columns } from './columns';

@@ -33,7 +33,7 @@ import {
   getAvatarUrl,
   type Usuario,
   actionAtualizarUsuario,
-} from '@/features/usuarios';
+} from '@/app/app/usuarios';
 import { actionObterPerfil } from '@/features/perfil';
 
 function DataField({ label, value }: { label: string; value: string | null | undefined }) {
