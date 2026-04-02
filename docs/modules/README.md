@@ -1,96 +1,38 @@
-# Índice de Features (FSD)
+# Documentacao dos Modulos
 
-Este documento acompanha o estado real de `src/features/` e da documentação em `docs/modules/`.
+Este diretorio contem documentacao dedicada para modulos que possuem materiais alem do codigo-fonte.
+A documentacao de regras de negocio fica em `src/features/{modulo}/RULES.md` diretamente no codigo.
 
-> Convenção: evitar imports profundos. Preferir sempre `@/features/<modulo>` (barrel export via `index.ts`).
-> Sincronização automática deste índice: `npm run docs:sync:modules`.
+## Modulos com documentacao dedicada
 
-## Resumo (2026-02-26)
+| Modulo | Documentacao |
+|--------|-------------|
+| assinatura-digital | [Arquitetura conceitual](assinatura-digital/arquitetura-conceitual.md), [Conformidade legal](assinatura-digital/conformidade-legal.md) |
+| assistentes-tipos | [README](assistentes-tipos/README.md) — pipeline de geracao automatica de pecas via IA |
+| captura | [Proposta de mudanca](captura/CHANGE-PROPOSAL-CAPTURA-MODULE.md) — arquitetura de drivers PJE/TRT |
+| chatwoot | 17 guias de API: accounts, agents, contacts, conversations, inboxes, messages, reports, webhooks e outros |
+| dify | [README](dify/README.md) — integracao com apps de IA (chat, workflow, completion, agent) |
+| financeiro | [Conciliacao bancaria](financeiro/conciliacao-bancaria.md), [Dashboard](financeiro/dashboard.md), [Exportacoes](financeiro/exportacoes.md) |
+| integracoes | [README](integracoes/README.md) — configuracoes de integracoes externas (2FAuth, Dify, Chatwoot, Dyte) |
+| system-prompts | [README](system-prompts/README.md) — prompts de sistema para editor, chat e copilot inline |
+| twofauth | [README](twofauth/README.md) — integracao 2FAuth para autenticacao de dois fatores |
 
-<!-- AUTO-GENERATED:START -->
-- Módulos em `src/features`: **38**
-- Pastas em `docs/modules`: **38**
-- Módulos sem pasta em `docs/modules`: `agenda-eventos`
-- Pasta sem módulo correspondente em `src/features`: `assinatura-digital`
+## Regras de negocio por modulo
 
-## Classificação estrutural dos módulos
+Cada feature module pode ter um `RULES.md` em `src/features/{modulo}/RULES.md` com regras de negocio especificas para contexto de IA. Consulte diretamente no codigo-fonte.
 
-Critério de módulo **completo**: `domain.ts` + `service.ts` + `repository.ts` + `index.ts` + `actions/` + `components/`.
+Modulos com `RULES.md` existente (9/38): `audiencias`, `busca`, `contratos`, `documentos`, `financeiro`, `notificacoes`, `obrigacoes`, `partes`, `processos`.
 
-- ✅ **Completos (18)**: `acervo`, `advogados`, `ai`, `captura`, `config-atribuicao`, `contratos`, `dify`, `enderecos`, `integracoes`, `notificacoes`, `obrigacoes`, `pecas-juridicas`, `pericias`, `processos`, `rh`, `system-prompts`, `tipos-expedientes`, `usuarios`
-- ⚠️ **Parciais (14)**: `agenda-eventos`, `assistentes-tipos`, `audiencias`, `calendar`, `cargos`, `chat`, `chatwoot`, `documentos`, `expedientes`, `financeiro`, `partes`, `perfil`, `profiles`, `tags`
-- 🧩 **Iniciais (6)**: `admin`, `audit`, `busca`, `repasses`, `tasks`, `twofauth`
+## Status estrutural dos modulos
 
-## Cobertura de artefatos por módulo
+Classificacao por completude FSD (`domain.ts` + `service.ts` + `repository.ts` + `index.ts` + `actions/` + `components/`):
 
-| Artefato              | Cobertura |
-| --------------------- | --------- |
-| `index.ts`            | 37/38     |
-| `components/`         | 30/38     |
-| `domain.ts`           | 30/38     |
-| `actions/`            | 29/38     |
-| `service.ts`          | 28/38     |
-| `repository.ts`       | 25/38     |
-| `RULES.md`            | 9/38      |
-| `README.md` no módulo | 6/38      |
+- **Completos (18)**: `acervo`, `advogados`, `ai`, `captura`, `config-atribuicao`, `contratos`, `dify`, `enderecos`, `integracoes`, `notificacoes`, `obrigacoes`, `pecas-juridicas`, `pericias`, `processos`, `rh`, `system-prompts`, `tipos-expedientes`, `usuarios`
+- **Parciais (14)**: `agenda-eventos`, `assistentes-tipos`, `audiencias`, `calendar`, `cargos`, `chat`, `chatwoot`, `documentos`, `expedientes`, `financeiro`, `partes`, `perfil`, `profiles`, `tags`
+- **Iniciais (6)**: `admin`, `audit`, `busca`, `repasses`, `tasks`, `twofauth`
 
-## Documentação funcional disponível
+Para a classificacao estrutural atualizada consulte [docs/architecture/STATUS.md](../architecture/STATUS.md).
 
-Índice navegável com status (ordem alfabética):
+## Arquivo historico
 
-| Módulo | Documento | Status estrutural | Observação |
-| --- | --- | --- | --- |
-| acervo | [README](./acervo/README.md) | Completo | — |
-| admin | [README](./admin/README.md) | Inicial | — |
-| advogados | [README](./advogados/README.md) | Completo | — |
-| ai | [README](./ai/README.md) | Completo | — |
-| assinatura-digital | [README](./assinatura-digital/README.md) | Histórico | Não há módulo correspondente em `src/features` |
-| assistentes-tipos | [README](./assistentes-tipos/README.md) | Parcial | — |
-| audiencias | [README](./audiencias/README.md) | Parcial | — |
-| audit | [README](./audit/README.md) | Inicial | — |
-| busca | [README](./busca/README.md) | Inicial | — |
-| calendar | [README](./calendar/README.md) | Parcial | — |
-| captura | [README](./captura/README.md) | Completo | — |
-| cargos | [README](./cargos/README.md) | Parcial | — |
-| chat | [README](./chat/README.md) | Parcial | — |
-| chatwoot | [README](./chatwoot/README.md) | Parcial | — |
-| config-atribuicao | [README](./config-atribuicao/README.md) | Completo | — |
-| contratos | [README](./contratos/README.md) | Completo | — |
-| dify | [README](./dify/README.md) | Completo | — |
-| documentos | [README](./documentos/README.md) | Parcial | — |
-| enderecos | [README](./enderecos/README.md) | Completo | — |
-| expedientes | [README](./expedientes/README.md) | Parcial | — |
-| financeiro | [README](./financeiro/README.md) | Parcial | — |
-| integracoes | [README](./integracoes/README.md) | Completo | — |
-| notificacoes | [README](./notificacoes/README.md) | Completo | — |
-| obrigacoes | [README](./obrigacoes/README.md) | Completo | — |
-| partes | [README](./partes/README.md) | Parcial | — |
-| pecas-juridicas | [README](./pecas-juridicas/README.md) | Completo | — |
-| perfil | [README](./perfil/README.md) | Parcial | — |
-| pericias | [README](./pericias/README.md) | Completo | — |
-| processos | [README](./processos/README.md) | Completo | — |
-| profiles | [README](./profiles/README.md) | Parcial | — |
-| repasses | [README](./repasses/README.md) | Inicial | — |
-| rh | [README](./rh/README.md) | Completo | — |
-| system-prompts | [README](./system-prompts/README.md) | Completo | — |
-| tags | [README](./tags/README.md) | Parcial | — |
-| tasks | [README](./tasks/README.md) | Inicial | — |
-| tipos-expedientes | [README](./tipos-expedientes/README.md) | Completo | — |
-| twofauth | [README](./twofauth/README.md) | Inicial | — |
-| usuarios | [README](./usuarios/README.md) | Completo | — |
-<!-- AUTO-GENERATED:END -->
-
-## Testes por feature
-
-Scripts úteis (quando aplicável) no `package.json`:
-
-- `npm run test:actions:processos`
-- `npm run test:actions:partes`
-- `npm run test:actions:financeiro`
-- `npm run test:enderecos`
-- `npm run test:pericias`
-
-E2E (Playwright): `npm run test:e2e` (docs: `../../src/testing/e2e/README.md`).
-
-
-
+Relatorios de execucao e documentos de trabalho concluidos estao em `docs/archive/2026-Q1/`.
