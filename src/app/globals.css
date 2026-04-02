@@ -1250,6 +1250,11 @@
   font-family: var(--font-inter), system-ui, sans-serif;
 }
 
+/* Hide native suggestions — rendered manually in BriefingInput */
+.pedrinho-chat-wrapper [data-testid="copilot-suggestions"] {
+  display: none;
+}
+
 .pedrinho-chat-wrapper .copilotKitMessages {
   background: transparent;
   scrollbar-width: thin;

@@ -1,4 +1,4 @@
-import { auditLogService } from '@/features/audit/services/audit-log.service';
+import { auditLogService } from '@/lib/domain/audit/services/audit-log.service';
 import useSWR from 'swr';
 
 export function useAuditLogs(entityType: string, entityId: number | undefined) {

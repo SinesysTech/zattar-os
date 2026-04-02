@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogAlteracao } from '@/features/audit/services/audit-log.service';
+import { LogAlteracao } from '@/lib/domain/audit/services/audit-log.service';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';

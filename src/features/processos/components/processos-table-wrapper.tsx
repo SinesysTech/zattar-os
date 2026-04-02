@@ -27,7 +27,7 @@ import {
   ProcessoForm,
 } from '@/features/processos/components';
 import { actionListarProcessos } from '@/features/processos/actions';
-import { type Tag, actionListarTagsDosProcessos } from '@/features/tags';
+import { type Tag, actionListarTagsDosProcessos } from '@/lib/domain/tags';
 import { TagBadgeList } from '@/components/ui/tag-badge';
 import type {
   Processo,
@@ -52,7 +52,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
 import { ProcessosBulkActions } from './processos-bulk-actions';
 import { actionListarUsuarios } from '@/features/usuarios';
-import { ConfigAtribuicaoDialog } from '@/features/config-atribuicao';
+import { ConfigAtribuicaoDialog } from '@/lib/domain/config-atribuicao';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 import { SemanticBadge } from '@/components/ui/semantic-badge';

@@ -47,7 +47,6 @@ export function PedrinhoAgent({ userId, mode, onModeChange, onWidthChange }: Ped
       {mode === 'briefing' && (
         <BriefingPanel
           onClose={handleCloseToOrb}
-          onMinimize={handleCloseToOrb}
           onWidthChange={onWidthChange}
           threadId={`user-${userId}`}
         />
