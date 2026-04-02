@@ -24,7 +24,7 @@ Powered by CopilotKit
 
 Once you've found the right variable, you can import CopilotKitCSSProperties and simply wrap CopilotKit in a div and override the CSS variables.
 
-import { CopilotKitCSSProperties } from "@copilotkit/react-ui";
+import { CopilotKitCSSProperties } from "@copilotkit/react-core/v2";
 
 <div
   style={

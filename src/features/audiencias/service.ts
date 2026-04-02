@@ -223,7 +223,7 @@ export async function buscarAudienciasPorClienteCPF(
   cpf: string,
   status?: string
 ): Promise<import('@/types').Result<import('./domain').Audiencia[]>> {
-  const { normalizarDocumento } = await import('@/features/partes/domain');
+  const { normalizarDocumento } = await import('@/features/partes');
   const { err, appError } = await import('@/types');
 
   if (!cpf || !cpf.trim()) {
@@ -255,7 +255,7 @@ export async function buscarAudienciasPorClienteCNPJ(
   cnpj: string,
   status?: string
 ): Promise<import('@/types').Result<import('./domain').Audiencia[]>> {
-  const { normalizarDocumento } = await import('@/features/partes/domain');
+  const { normalizarDocumento } = await import('@/features/partes');
   const { err, appError } = await import('@/types');
 
   if (!cnpj || !cnpj.trim()) {

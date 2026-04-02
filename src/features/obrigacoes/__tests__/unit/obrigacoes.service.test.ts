@@ -2,9 +2,9 @@ import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as service from '../../service';
 import * as repository from '../../repository';
 import * as utils from '../../utils';
-import * as partesRepository from '@/features/partes';
+import * as partesRepository from '@/features/partes/server';
 import * as processosService from '@/features/processos/service';
-import * as partesDomain from '@/features/partes/domain';
+import * as partesDomain from '@/features/partes';
 import {
   criarAcordoMock,
   criarParcelaMock,
@@ -14,8 +14,8 @@ import {
 jest.mock('../../repository');
 jest.mock('../../utils');
 jest.mock('@/features/partes');
+jest.mock('@/features/partes/server');
 jest.mock('@/features/processos/service');
-jest.mock('@/features/partes/domain');
 
 describe('Obrigações Service', () => {
   beforeEach(() => {

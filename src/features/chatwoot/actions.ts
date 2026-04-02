@@ -31,7 +31,7 @@ import {
   findParteContrariaById,
   findAllTerceirosComEnderecoEProcessos,
   findTerceiroById,
-} from '@/features/partes/repository';
+} from '@/features/partes/server';
 
 // =============================================================================
 // Tipos

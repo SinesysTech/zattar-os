@@ -193,8 +193,8 @@ export {
 // ============================================================================
 // Server-only exports
 // ============================================================================
-// Actions, Services e Repositories devem ser importados diretamente:
-//   import { findClienteById } from '@/features/partes/repository';
+// Actions, Services e Repositories devem ser importados via server entrypoint:
+//   import { findClienteById } from '@/features/partes/server';
 // NÃO re-exportar aqui para evitar vazamento de server-only no bundle client.
 
 // ============================================================================

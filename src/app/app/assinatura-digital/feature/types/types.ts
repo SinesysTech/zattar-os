@@ -15,7 +15,7 @@
  * - contrato_id: Referência ao contrato associado
  */
 
-import type { ClienteBase, ParteContraria } from "@/features/partes/domain";
+import type { ClienteBase, ParteContraria } from "@/features/partes";
 
 export interface AssinaturaDigitalTemplate {
   id: number;
@@ -453,7 +453,7 @@ export type {
   ClienteBase,
   ClientePessoaFisica,
   ParteContraria,
-} from "@/features/partes/domain";
+} from "@/features/partes";
 
 // =============================================================================
 // NOVO FLUXO: Documento via upload de PDF + links públicos
