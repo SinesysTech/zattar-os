@@ -112,7 +112,7 @@ function ProcessCard({ processo, index }: ProcessCardProps) {
           {processo.instancias.primeiroGrau && (
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <Building2 className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate max-w-[200px]" title={processo.instancias.primeiroGrau.vara}>
+              <span className="truncate max-w-50" title={processo.instancias.primeiroGrau.vara}>
                 {processo.instancias.primeiroGrau.vara}
               </span>
             </div>
@@ -135,7 +135,7 @@ function ProcessCard({ processo, index }: ProcessCardProps) {
               <p className="text-xs font-medium text-foreground">
                 {processo.ultimaMovimentacao.data}
               </p>
-              <p className="text-xs text-muted-foreground truncate max-w-[200px]" title={processo.ultimaMovimentacao.descricao}>
+              <p className="text-xs text-muted-foreground truncate max-w-50" title={processo.ultimaMovimentacao.descricao}>
                 {processo.ultimaMovimentacao.descricao}
               </p>
             </div>

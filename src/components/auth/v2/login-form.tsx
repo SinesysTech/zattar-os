@@ -13,7 +13,6 @@ import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -26,15 +25,6 @@ import {
   Loader2,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-
-// ─── Greeting ────────────────────────────────────────────────────────────────
-
-function getGreeting(): string {
-  const hour = new Date().getHours()
-  if (hour < 12) return 'Bom dia.'
-  if (hour < 18) return 'Boa tarde.'
-  return 'Boa noite.'
-}
 
 // ─── Animation ───────────────────────────────────────────────────────────────
 
@@ -110,34 +100,8 @@ export function LoginFormV2({
 
   return (
     <div className={cn('flex flex-col', className)} {...props}>
-      {/* Logo */}
-      <div className="flex flex-col items-center gap-2 mb-8">
-        <div className="relative h-10 w-10">
-          <Image
-            src="/logos/logo-small-dark.svg"
-            alt="Zattar Advogados"
-            fill
-            priority
-            className="object-contain"
-          />
-        </div>
-        <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground/50">
-          Zattar Advogados
-        </span>
-      </div>
-
-      {/* Greeting */}
-      <div className="mb-8 text-center">
-        <h1 className="text-2xl font-bold tracking-tight font-heading text-foreground">
-          {getGreeting()}
-        </h1>
-        <p className="mt-1.5 text-sm text-muted-foreground">
-          Acesse sua estação de trabalho
-        </p>
-      </div>
-
       {/* Form */}
-      <form onSubmit={handleLogin} className="flex flex-col gap-5">
+      <form onSubmit={handleLogin} className="flex flex-col gap-4">
         {/* Email */}
         <div className="space-y-1.5">
           <Label htmlFor="email">Email</Label>
