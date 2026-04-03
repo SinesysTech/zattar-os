@@ -76,7 +76,7 @@ function NotFound() {
         O tópico de documentação que você procura não existe ou foi movido.
       </p>
       <Button variant="outline" asChild>
-        <Link href="/app/ajuda">
+        <Link href="/ajuda">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar para a Central de Ajuda
         </Link>
@@ -119,12 +119,8 @@ function AjudaHome() {
   );
 }
 
-export default function DocPage({ params }: { params: Promise<{ slug?: string[] }> }) {
+export default function DocPage({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = use(params);
-
-  if (!slug || slug.length === 0) {
-    return <AjudaHome />;
-  }
 
   const entry = resolveSlug(slug);
 
