@@ -166,7 +166,7 @@ function findRegisteredActions(): Set<string> {
       }
     }
 
-    // Procurar por imports dinâmicos (const { ... } = await import('@/features/...'))
+    // Procurar por imports dinâmicos (const { ... } = await import('@/app/(authenticated)/...'))
     const dynamicImportRegex = /const\s*{\s*([^}]+)\s*}\s*=\s*await\s+import\s*\(\s*['"]@\/features\/[^'"]+['"]\s*\)/g;
     while ((match = dynamicImportRegex.exec(content)) !== null) {
       const imports = match[1].split(',').map((s) => s.trim());

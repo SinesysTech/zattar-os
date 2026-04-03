@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Briefcase } from "lucide-react";
-import { CopyButton } from "@/app/(authenticated)/partes/components/shared";
+import { CopyButton } from "@/app/(authenticated)/partes";
 
 interface RepresentanteInfoSectionProps {
   data: Record<string, unknown>;

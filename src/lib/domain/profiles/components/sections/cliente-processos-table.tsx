@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatarData } from '@/app/(authenticated)/partes/utils';
+import { formatarData } from '@/app/(authenticated)/partes';
 import { StatusProcesso, STATUS_PROCESSO_LABELS, GRAU_LABELS } from '@/app/(authenticated)/processos';
 import type { ProcessoVinculo } from '../../types';
 import type { ProfileData } from '../../configs/types';

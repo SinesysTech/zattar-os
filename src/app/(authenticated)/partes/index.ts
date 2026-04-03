@@ -38,11 +38,13 @@ export {
   // Shared
   ProcessosRelacionadosCell,
   CopyButton,
+  MapButton,
   FilterPopover,
   FilterPopoverMulti,
   // Clientes
   ClientesTableWrapper,
   ClienteForm,
+  ClienteDocumentosViewer,
   // Partes Contrarias
   PartesContrariasTableWrapper,
   // Terceiros
@@ -191,9 +193,31 @@ export {
 } from "./domain";
 
 // ============================================================================
+// Actions (Server Actions — safe for client bundles via 'use server')
+// ============================================================================
+export {
+  // Clientes
+  actionListarClientes,
+  actionBuscarCliente,
+  actionAtualizarCliente,
+  actionCriarCliente,
+  actionDesativarCliente,
+  // Partes Contrarias
+  actionBuscarParteContraria,
+  // Terceiros
+  actionBuscarTerceiro,
+  // Representantes
+  actionBuscarRepresentantePorId,
+  // Processo Partes
+  actionBuscarProcessosPorEntidade,
+  actionBuscarRepresentantesPorCliente,
+  actionBuscarClientesPorRepresentante,
+} from "./actions";
+
+// ============================================================================
 // Server-only exports
 // ============================================================================
-// Actions, Services e Repositories devem ser importados via server entrypoint:
+// Services e Repositories devem ser importados via server entrypoint:
 //   import { findClienteById } from '@/app/(authenticated)/partes/server';
 // NÃO re-exportar aqui para evitar vazamento de server-only no bundle client.
 

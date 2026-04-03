@@ -3,8 +3,9 @@
 /**
  * Script de verificação de imports arquiteturais
  *
- * Verifica se há imports de pastas legadas (@/backend, @/core, @/app/_lib)
- * em arquivos de src/ que não sejam backend/ ou core/.
+ * Verifica se há imports de pastas legadas (@/backend, @/core, @/app/_lib, @/features)
+ * em arquivos de src/, e se há imports diretos de subpastas de módulos em
+ * @/app/(authenticated)/ que deveriam passar pelo barrel export (index.ts).
  *
  * Este script funciona como um "alarme precoce" para regressões arquiteturais.
  */
@@ -20,10 +21,13 @@ const LEGACY_PATTERNS = [
   /require\s*\(\s*['"]@\/backend\//,
   /require\s*\(\s*['"]@\/core\//,
   /require\s*\(\s*['"]@\/app\/_lib\//,
+  // Legacy features/ directory (migrated to app/(authenticated)/)
+  /from\s+['"]@\/features\//,
+  /require\s*\(\s*['"]@\/features\//,
   // Feature Boundary Violations (Force Barrel Exports)
-  // Catch imports like @/features/xyz/components/...
-  /from\s+['"]@\/features\/[^/]+\/(components|hooks|actions|utils|types|domain|service|repository)/,
-  /require\s*\(\s*['"]@\/features\/[^/]+\/(components|hooks|actions|utils|types|domain|service|repository)/,
+  // Catch deep imports like @/app/(authenticated)/xyz/components/...
+  /from\s+['"]@\/app\/\(authenticated\)\/[^/]+\/(components|hooks|actions|utils|types|domain|service|repository)/,
+  /require\s*\(\s*['"]@\/app\/\(authenticated\)\/[^/]+\/(components|hooks|actions|utils|types|domain|service|repository)/,
 ];
 
 const ALLOWED_PATHS = [
@@ -121,13 +125,16 @@ function main() {
     });
 
     console.error(
-      "💡 Use imports de features via barrel exports: @/features/{modulo}"
+      "💡 Use imports de módulos via barrel exports: @/app/(authenticated)/{modulo}"
     );
     console.error(
       "💡 Para mais informações, consulte docs/arquitetura-sistema.md (seção 14.2)"
     );
     console.error(
-      "💡 Violações de Feature: Use import { ... } from '@/features/nomedafeature' ao invés de importar de subpastas."
+      "💡 Violações de Feature: Use import { ... } from '@/app/(authenticated)/nomedafeature' ao invés de importar de subpastas."
+    );
+    console.error(
+      "💡 A pasta @/features/ foi removida — módulos estão em @/app/(authenticated)/"
     );
 
     process.exit(1);

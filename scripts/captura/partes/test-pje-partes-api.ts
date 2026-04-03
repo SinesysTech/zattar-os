@@ -20,8 +20,8 @@
  * - TWOFAUTH_ACCOUNT_ID
  */
 
-import { autenticarPJE, obterPartesProcesso, obterRepresentantesPartePorID } from '@/features/captura/server';
-import { getCredentialComplete } from '@/features/advogados';
+import { autenticarPJE, obterPartesProcesso, obterRepresentantesPartePorID } from '@/app/(authenticated)/captura/server';
+import { getCredentialComplete } from '@/app/(authenticated)/captura/credentials/credential.service';
 import type { Page } from 'playwright';
 import { chromium } from 'playwright';
 

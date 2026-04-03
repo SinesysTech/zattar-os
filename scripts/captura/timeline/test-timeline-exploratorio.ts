@@ -9,7 +9,7 @@ config(); // Carregar .env também se existir
 
 import { writeFile, mkdir } from 'fs/promises';
 import { fileURLToPath } from 'url';
-import { autenticarPJE, getTribunalConfig, obterTimeline, getCredentialByTribunalAndGrau, type AuthResult } from '@/features/captura/server';
+import { autenticarPJE, getTribunalConfig, obterTimeline, getCredentialByTribunalAndGrau, type AuthResult } from '@/app/(authenticated)/captura/server';
 
 /**
  * Obter __dirname em módulos ES

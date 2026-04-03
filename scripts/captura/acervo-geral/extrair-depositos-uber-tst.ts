@@ -20,11 +20,11 @@ config();
 
 import { writeFile, mkdir } from 'fs/promises';
 import { fileURLToPath } from 'url';
-import { autenticarPJE, type AuthResult } from '@/features/captura/services/trt/trt-auth.service';
-import { baixarDocumento } from '@/features/captura/pje-trt/timeline/baixar-documento';
-import { getTribunalConfig } from '@/features/captura/services/trt/config';
+import { autenticarPJE, type AuthResult } from '@/app/(authenticated)/captura/services/trt/trt-auth.service';
+import { baixarDocumento } from '@/app/(authenticated)/captura/pje-trt/timeline/baixar-documento';
+import { getTribunalConfig } from '@/app/(authenticated)/captura/services/trt/config';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import type { CredenciaisTRT } from '@/features/captura';
+import type { CredenciaisTRT } from '@/app/(authenticated)/captura';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
