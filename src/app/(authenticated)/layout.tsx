@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { UserProvider } from "@/providers/user-provider"
 
 const MINIMAL_ROUTES = [
+  "/app/chat/call",
   "/chat/call",
 ]
 

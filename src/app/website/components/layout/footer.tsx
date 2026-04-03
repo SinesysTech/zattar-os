@@ -8,6 +8,7 @@ import {
   Mail,
   Phone,
   ArrowRight,
+  Heart,
 } from "lucide-react";
 
 const siteLinks = [
@@ -20,7 +21,7 @@ const siteLinks = [
 
 const portalLinks = [
   { href: "/portal", label: "Acesso ao Portal" },
-  { href: "/app", label: "Zattar OS" },
+  { href: "/login", label: "ZattarOS" },
   { href: "/contato", label: "Fale Conosco" },
 ];
 
@@ -91,16 +92,16 @@ export function Footer() {
             <div className="lg:col-span-4 pr-0 lg:pr-8">
               <Link
                 href="/"
-                className="relative block w-48 sm:w-56 md:w-64 h-10 sm:h-12 md:h-14 mb-5 md:mb-6 border-none outline-none"
+                className="relative block w-10 sm:w-12 md:w-14 h-10 sm:h-12 md:h-14 mb-5 md:mb-6 border-none outline-none"
               >
                 <Image
-                  src="/logos/logomarca-light.svg"
+                  src="/logos/logo-small-light.svg"
                   alt="Logo Zattar Advogados"
                   fill
                   className="object-contain object-left dark:hidden"
                 />
                 <Image
-                  src="/logos/logomarca-dark.svg"
+                  src="/logos/logo-small-dark.svg"
                   alt="Logo Zattar Advogados"
                   fill
                   className="object-contain object-left hidden dark:block"
@@ -219,7 +220,17 @@ export function Footer() {
         <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 py-4 md:py-5 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
           <p className="text-on-surface-variant/50 font-sans text-xs text-center md:text-left">
             © {new Date().getFullYear()} Zattar Advogados · OAB/MG 128.404 ·
-            Feito com dedicação pela Sinesys
+            Feito com{" "}
+            <Heart className="inline w-3 h-3 text-red-500 fill-red-500 animate-pulse" />{" "}
+            pela{" "}
+            <a
+              href="https://synthropic.com.br"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-on-surface-variant transition-colors duration-200 underline underline-offset-2"
+            >
+              Synthropic
+            </a>
           </p>
           <div className="flex items-center gap-4 md:gap-6">
             <Link
