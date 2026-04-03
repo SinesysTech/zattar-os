@@ -24,13 +24,13 @@ config();
 
 import { writeFile, mkdir } from 'fs/promises';
 import { fileURLToPath } from 'url';
-import { autenticarPJE, type AuthResult } from '@/features/captura/services/trt/trt-auth.service';
-import { obterTodosProcessosAcervoGeral } from '@/features/captura/pje-trt/acervo-geral/obter-todos-processos';
-import { obterTotalizadoresAcervoGeral } from '@/features/captura/pje-trt/acervo-geral/obter-totalizadores';
-import { obterTimeline } from '@/features/captura/pje-trt/timeline/obter-timeline';
-import { getTribunalConfig } from '@/features/captura/services/trt/config';
+import { autenticarPJE, type AuthResult } from '@/app/(authenticated)/captura/services/trt/trt-auth.service';
+import { obterTodosProcessosAcervoGeral } from '@/app/(authenticated)/captura/pje-trt/acervo-geral/obter-todos-processos';
+import { obterTotalizadoresAcervoGeral } from '@/app/(authenticated)/captura/pje-trt/acervo-geral/obter-totalizadores';
+import { obterTimeline } from '@/app/(authenticated)/captura/pje-trt/timeline/obter-timeline';
+import { getTribunalConfig } from '@/app/(authenticated)/captura/services/trt/config';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import type { CredenciaisTRT, Processo } from '@/features/captura';
+import type { CredenciaisTRT, Processo } from '@/app/(authenticated)/captura';
 
 // ============================================================================
 // CONFIGURAÇÃO

@@ -6,13 +6,14 @@
  */
 
 // Shared components
-export { ProcessosRelacionadosCell, CopyButton, FilterPopover, FilterPopoverMulti } from "./shared";
+export { ProcessosRelacionadosCell, CopyButton, MapButton, FilterPopover, FilterPopoverMulti } from "./shared";
 export type { FilterOption } from "./shared";
 
 // Clientes components
 export {
   ClientesTableWrapper,
   ClienteForm,
+  ClienteDocumentosViewer,
 } from "./clientes";
 
 // Partes Contrarias components

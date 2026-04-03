@@ -23,11 +23,11 @@ config({ path: resolve(process.cwd(), '.env.local') });
 config({ path: resolve(process.cwd(), '.env') });
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { autenticarPJE, type AuthResult } from '@/features/captura/services/trt/trt-auth.service';
-import { getTribunalConfig } from '@/features/captura/services/trt/config';
-import { getCredentialByTribunalAndGrau } from '@/features/captura/credentials/credential.service';
-import { buscarProcessosPorIdsNoPainel } from '@/features/captura/services/trt/buscar-processos-painel.service';
-import type { CodigoTRT, GrauTRT, Processo } from '@/features/captura';
+import { autenticarPJE, type AuthResult } from '@/app/(authenticated)/captura/services/trt/trt-auth.service';
+import { getTribunalConfig } from '@/app/(authenticated)/captura/services/trt/config';
+import { getCredentialByTribunalAndGrau } from '@/app/(authenticated)/captura/credentials/credential.service';
+import { buscarProcessosPorIdsNoPainel } from '@/app/(authenticated)/captura/services/trt/buscar-processos-painel.service';
+import type { CodigoTRT, GrauTRT, Processo } from '@/app/(authenticated)/captura';
 
 // ============================================================================
 // PROCESSOS ALVO (números dos processos com dados incompletos)

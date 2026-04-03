@@ -42,6 +42,7 @@ export {
   actionAtualizarParteContrariaSafe,
   actionContarPartesContrariasComEstatisticas,
   actionDesativarPartesContrariasEmMassa,
+  actionBuscarParteContraria,
 } from './partes-contrarias-actions';
 
 // =============================================================================
@@ -53,6 +54,7 @@ export {
   actionCriarTerceiroSafe,
   actionAtualizarTerceiroSafe,
   actionDesativarTerceirosEmMassa,
+  actionBuscarTerceiro,
 } from './terceiros-actions';
 
 // =============================================================================
@@ -67,7 +69,12 @@ export {
 // =============================================================================
 // PROCESSO PARTES
 // =============================================================================
-export { actionBuscarPartesPorProcessoEPolo } from './processo-partes-actions';
+export {
+  actionBuscarPartesPorProcessoEPolo,
+  actionBuscarProcessosPorEntidade,
+  actionBuscarRepresentantesPorCliente,
+  actionBuscarClientesPorRepresentante,
+} from './processo-partes-actions';
 
 // =============================================================================
 // REPRESENTANTES

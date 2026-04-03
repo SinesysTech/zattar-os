@@ -1,11 +1,14 @@
 
 import { ProfileShellClient } from "./profile-shell-client";
-import { actionBuscarCliente } from "@/app/(authenticated)/partes/actions/clientes-actions";
-import { actionBuscarParteContraria } from "@/app/(authenticated)/partes/actions/partes-contrarias-actions";
-import { actionBuscarTerceiro } from "@/app/(authenticated)/partes/actions/terceiros-actions";
-import { actionBuscarRepresentantePorId } from "@/app/(authenticated)/partes/actions/representantes-actions";
-import { actionBuscarUsuario } from "@/app/(authenticated)/usuarios/actions/usuarios-actions";
-import { actionBuscarProcessosPorEntidade, actionBuscarClientesPorRepresentante } from "@/app/(authenticated)/partes/actions/processo-partes-actions";
+import {
+  actionBuscarCliente,
+  actionBuscarParteContraria,
+  actionBuscarTerceiro,
+  actionBuscarRepresentantePorId,
+  actionBuscarProcessosPorEntidade,
+  actionBuscarClientesPorRepresentante,
+} from "@/app/(authenticated)/partes";
+import { actionBuscarUsuario } from "@/app/(authenticated)/usuarios";
 import { actionBuscarAtividadesPorEntidade } from "../actions/profile-actions";
 import {
   adaptClienteToProfile,

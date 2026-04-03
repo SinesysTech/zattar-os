@@ -6,7 +6,7 @@ import {
   actionBuscarProcessosPorEntidade,
   actionBuscarRepresentantesPorCliente,
   actionBuscarClientesPorRepresentante,
-} from "@/app/(authenticated)/partes/actions/processo-partes-actions";
+} from "@/app/(authenticated)/partes";
 
 export function useRelatedEntities(
   entityType: string,

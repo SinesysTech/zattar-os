@@ -16,10 +16,10 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
-import { autenticarPJE, getTribunalConfig } from '@/features/captura/server';
-import type { GrauTRT } from '@/features/captura';
-import { downloadAndUploadDocumento } from '@/features/captura/services/pje/pje-expediente-documento.service';
+import { getCredentialComplete } from '@/app/(authenticated)/captura/credentials/credential.service';
+import { autenticarPJE, getTribunalConfig } from '@/app/(authenticated)/captura/server';
+import type { GrauTRT } from '@/app/(authenticated)/captura';
+import { downloadAndUploadDocumento } from '@/app/(authenticated)/captura/services/pje/pje-expediente-documento.service';
 import type { FetchDocumentoParams } from '@/types/contracts/pje-trt';
 import type { Browser, Page } from 'playwright';
 

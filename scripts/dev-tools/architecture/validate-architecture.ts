@@ -222,7 +222,7 @@ async function validateNoFeatureCrossImports() {
         continue;
       }
 
-      // Busca imports reais de @/features/
+      // Busca imports reais de @/app/(authenticated)/
       const importMatch = line.match(/(?:import|export).*from ['"]@\/features\/([^'"\/]+)/);
       if (importMatch) {
         const importedFeature = importMatch[1];
