@@ -194,7 +194,7 @@ export function DashboardContent({ data, error }: DashboardContentProps) {
                       <p className="text-xs text-muted-foreground whitespace-nowrap">
                         {formatDateBR(processo.ultima_movimentacao.data)}
                       </p>
-                      <p className="text-xs text-muted-foreground truncate max-w-[200px]">
+                      <p className="text-xs text-muted-foreground truncate max-w-50">
                         {processo.ultima_movimentacao.evento}
                       </p>
                     </div>

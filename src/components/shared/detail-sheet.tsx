@@ -11,7 +11,6 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertTriangle } from 'lucide-react';
 import {
@@ -50,11 +49,8 @@ interface DetailSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   children: React.ReactNode;
-  /** Exibe skeleton de carregamento no lugar do conteúdo */
   loading?: boolean;
-  /** Exibe estado de erro no lugar do conteúdo */
   error?: string | null;
-  /** Largura customizada. Padrão: 'w-full sm:w-[540px] md:w-[620px]' */
   className?: string;
   side?: 'left' | 'right';
 }
@@ -97,7 +93,7 @@ function DetailSheet({
 }
 
 // =============================================================================
-// HEADER — DetailSheetHeader
+// HEADER
 // =============================================================================
 
 interface DetailSheetHeaderProps {
@@ -107,28 +103,27 @@ interface DetailSheetHeaderProps {
 
 function DetailSheetHeader({ children, className }: DetailSheetHeaderProps) {
   return (
-    <SheetHeader className={cn('border-b pb-4', className)}>
+    <SheetHeader className={cn('pb-4 border-b border-border/20', className)}>
       {children}
     </SheetHeader>
   );
 }
 
 // =============================================================================
-// TITLE — DetailSheetTitle
+// TITLE
 // =============================================================================
 
 interface DetailSheetTitleProps {
   children: React.ReactNode;
   className?: string;
-  /** Badge de status exibido ao lado direito do título */
   badge?: React.ReactNode;
 }
 
 function DetailSheetTitle({ children, className, badge }: DetailSheetTitleProps) {
   if (badge) {
     return (
-      <div className="flex items-start justify-between gap-4">
-        <SheetTitle className={cn('text-xl font-heading font-bold truncate flex-1 min-w-0', className)}>
+      <div className="flex items-start justify-between gap-3">
+        <SheetTitle className={cn('text-base font-heading font-semibold tracking-tight flex-1 min-w-0', className)}>
           {children}
         </SheetTitle>
         <div className="shrink-0">{badge}</div>
@@ -137,14 +132,14 @@ function DetailSheetTitle({ children, className, badge }: DetailSheetTitleProps)
   }
 
   return (
-    <SheetTitle className={cn('text-xl font-heading font-bold truncate', className)}>
+    <SheetTitle className={cn('text-base font-heading font-semibold tracking-tight', className)}>
       {children}
     </SheetTitle>
   );
 }
 
 // =============================================================================
-// DESCRIPTION — DetailSheetDescription
+// DESCRIPTION
 // =============================================================================
 
 interface DetailSheetDescriptionProps {
@@ -154,14 +149,14 @@ interface DetailSheetDescriptionProps {
 
 function DetailSheetDescription({ children, className }: DetailSheetDescriptionProps) {
   return (
-    <SheetDescription className={cn('flex items-center gap-2 mt-1 flex-wrap', className)}>
+    <SheetDescription className={cn('flex items-center gap-1.5 mt-1 flex-wrap text-[11px] text-muted-foreground/60', className)}>
       {children}
     </SheetDescription>
   );
 }
 
 // =============================================================================
-// ACTIONS — DetailSheetActions (botões do header)
+// ACTIONS
 // =============================================================================
 
 interface DetailSheetActionsProps {
@@ -171,14 +166,14 @@ interface DetailSheetActionsProps {
 
 function DetailSheetActions({ children, className }: DetailSheetActionsProps) {
   return (
-    <div className={cn('flex items-center gap-1 mt-2', className)}>
+    <div className={cn('flex items-center gap-1.5 mt-2', className)}>
       {children}
     </div>
   );
 }
 
 // =============================================================================
-// CONTENT — DetailSheetContent (área scrollável)
+// CONTENT (scrollable area)
 // =============================================================================
 
 interface DetailSheetContentProps {
@@ -188,21 +183,20 @@ interface DetailSheetContentProps {
 
 function DetailSheetContent({ children, className }: DetailSheetContentProps) {
   return (
-    <div className={cn('flex-1 overflow-y-auto p-4 space-y-4', className)}>
+    <div className={cn('flex-1 overflow-y-auto p-4 space-y-3', className)}>
       {children}
     </div>
   );
 }
 
 // =============================================================================
-// SECTION — Seção com ícone e título (card com borda)
+// SECTION — card com borda sutil
 // =============================================================================
 
 interface DetailSheetSectionProps {
   icon?: React.ReactNode;
   title: string;
   children: React.ReactNode;
-  /** Ação no canto superior direito da seção */
   action?: React.ReactNode;
   className?: string;
 }
@@ -215,21 +209,21 @@ function DetailSheetSection({
   className,
 }: DetailSheetSectionProps) {
   return (
-    <div className={cn('rounded-lg border bg-card p-4', className)}>
-      <div className="flex items-center justify-between mb-3">
-        <h4 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+    <div className={cn('rounded-xl border border-border/20 p-3', className)}>
+      <div className="flex items-center justify-between mb-2">
+        <h4 className="flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground/60 uppercase tracking-wider">
           {icon}
           {title}
         </h4>
         {action}
       </div>
-      <div className="space-y-2">{children}</div>
+      <div className="space-y-1.5">{children}</div>
     </div>
   );
 }
 
 // =============================================================================
-// INFO ROW — Par label:valor
+// INFO ROW
 // =============================================================================
 
 interface DetailSheetInfoRowProps {
@@ -240,33 +234,32 @@ interface DetailSheetInfoRowProps {
 
 function DetailSheetInfoRow({ label, children, className }: DetailSheetInfoRowProps) {
   return (
-    <div className={cn('flex items-start gap-2 text-sm', className)}>
-      <span className="text-muted-foreground min-w-25 shrink-0">{label}:</span>
-      <span className="text-foreground">{children}</span>
+    <div className={cn('flex items-start justify-between gap-2', className)}>
+      <span className="text-[11px] text-muted-foreground/55 shrink-0">{label}</span>
+      <span className="text-sm font-medium text-foreground/80 text-right">{children}</span>
     </div>
   );
 }
 
 // =============================================================================
-// META GRID — Grid de metadados (status, prioridade, prazo, etc.)
+// META GRID
 // =============================================================================
 
 interface DetailSheetMetaGridProps {
   children: React.ReactNode;
-  /** Número de colunas. Padrão: 2 em mobile, 3 em sm+ */
   className?: string;
 }
 
 function DetailSheetMetaGrid({ children, className }: DetailSheetMetaGridProps) {
   return (
-    <div className={cn('grid grid-cols-2 gap-4 sm:grid-cols-3', className)}>
+    <div className={cn('grid grid-cols-2 gap-3 sm:grid-cols-3', className)}>
       {children}
     </div>
   );
 }
 
 // =============================================================================
-// META ITEM — Item dentro do MetaGrid
+// META ITEM
 // =============================================================================
 
 interface DetailSheetMetaItemProps {
@@ -277,11 +270,11 @@ interface DetailSheetMetaItemProps {
 
 function DetailSheetMetaItem({ label, children, className }: DetailSheetMetaItemProps) {
   return (
-    <div className={cn('space-y-1', className)}>
-      <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+    <div className={cn('flex flex-col gap-0.5', className)}>
+      <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">
         {label}
       </span>
-      <div className="flex items-center gap-2 text-sm font-medium">
+      <div className="flex items-center gap-1.5 text-sm font-medium">
         {children}
       </div>
     </div>
@@ -289,7 +282,7 @@ function DetailSheetMetaItem({ label, children, className }: DetailSheetMetaItem
 }
 
 // =============================================================================
-// SEPARATOR — Separador semântico entre seções
+// SEPARATOR
 // =============================================================================
 
 interface DetailSheetSeparatorProps {
@@ -297,11 +290,11 @@ interface DetailSheetSeparatorProps {
 }
 
 function DetailSheetSeparator({ className }: DetailSheetSeparatorProps) {
-  return <Separator className={cn('my-2', className)} />;
+  return <div className={cn('h-px bg-border/10 my-1.5', className)} />;
 }
 
 // =============================================================================
-// AUDIT — Timestamps de criação/atualização
+// AUDIT
 // =============================================================================
 
 interface DetailSheetAuditProps {
@@ -323,15 +316,20 @@ function DetailSheetAudit({ createdAt, updatedAt, className }: DetailSheetAuditP
   };
 
   return (
-    <div className={cn('text-xs text-muted-foreground space-y-1 pt-2', className)}>
-      <p>Criado em: {formatDate(createdAt)}</p>
-      {updatedAt && <p>Atualizado em: {formatDate(updatedAt)}</p>}
+    <div className={cn('flex items-center gap-3 text-[9px] text-muted-foreground/40 pt-2', className)}>
+      <span>Criado: {formatDate(createdAt)}</span>
+      {updatedAt && (
+        <>
+          <span className="size-0.5 rounded-full bg-muted-foreground/20" />
+          <span>Atualizado: {formatDate(updatedAt)}</span>
+        </>
+      )}
     </div>
   );
 }
 
 // =============================================================================
-// FOOTER — Ações do rodapé
+// FOOTER
 // =============================================================================
 
 interface DetailSheetFooterProps {
@@ -341,36 +339,41 @@ interface DetailSheetFooterProps {
 
 function DetailSheetFooter({ children, className }: DetailSheetFooterProps) {
   return (
-    <SheetFooter className={cn('border-t pt-4', className)}>
+    <SheetFooter className={cn('border-t border-border/20 pt-4', className)}>
       {children}
     </SheetFooter>
   );
 }
 
 // =============================================================================
-// SKELETON — Estado de carregamento
+// SKELETON
 // =============================================================================
 
 function DetailSheetSkeleton() {
   return (
     <>
-      <SheetHeader className="border-b pb-4">
+      <SheetHeader className="pb-4 border-b border-border/20">
         <SheetTitle className="sr-only">Carregando</SheetTitle>
-        <Skeleton className="h-7 w-48" />
-        <Skeleton className="h-4 w-64 mt-2" />
+        <div className="flex items-start gap-3">
+          <Skeleton className="size-10 rounded-lg" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-5 w-48" />
+            <Skeleton className="h-3 w-36" />
+          </div>
+        </div>
       </SheetHeader>
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        <Skeleton className="h-28 w-full rounded-lg" />
-        <Skeleton className="h-24 w-full rounded-lg" />
-        <Skeleton className="h-20 w-full rounded-lg" />
-        <Skeleton className="h-16 w-full rounded-lg" />
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        <Skeleton className="h-20 w-full rounded-xl" />
+        <Skeleton className="h-24 w-full rounded-xl" />
+        <Skeleton className="h-20 w-full rounded-xl" />
+        <Skeleton className="h-16 w-full rounded-xl" />
       </div>
     </>
   );
 }
 
 // =============================================================================
-// ERROR — Estado de erro
+// ERROR
 // =============================================================================
 
 interface DetailSheetErrorProps {
@@ -381,7 +384,7 @@ interface DetailSheetErrorProps {
 function DetailSheetError({ message, onClose }: DetailSheetErrorProps) {
   return (
     <>
-      <SheetHeader className="border-b pb-4">
+      <SheetHeader className="pb-4 border-b border-border/20">
         <SheetTitle className="sr-only">Erro</SheetTitle>
       </SheetHeader>
       <div className="flex-1 flex items-center justify-center p-4">
@@ -395,7 +398,7 @@ function DetailSheetError({ message, onClose }: DetailSheetErrorProps) {
           </EmptyHeader>
         </Empty>
       </div>
-      <SheetFooter className="border-t pt-4">
+      <SheetFooter className="border-t border-border/20 pt-4">
         <Button variant="outline" onClick={onClose}>
           Fechar
         </Button>
@@ -405,7 +408,7 @@ function DetailSheetError({ message, onClose }: DetailSheetErrorProps) {
 }
 
 // =============================================================================
-// EMPTY — Estado vazio
+// EMPTY
 // =============================================================================
 
 interface DetailSheetEmptyProps {
