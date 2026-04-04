@@ -44,7 +44,7 @@ const portalNavItems = [
   { title: "Dashboard", url: "/portal/dashboard", icon: LayoutDashboard },
   { title: "Processos", url: "/portal/processos", icon: Gavel },
   { title: "Agendamentos", url: "/portal/agendamentos", icon: Calendar },
-  { title: "Calculadoras", url: "/portal/calculadoras", icon: Calculator },
+  { title: "Servicos", url: "/portal/servicos", icon: Calculator },
   { title: "Financeiro", url: "/portal/financeiro", icon: CreditCard },
   { title: "Meu Perfil", url: "/portal/perfil", icon: Settings },
 ]
