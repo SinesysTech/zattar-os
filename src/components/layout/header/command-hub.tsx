@@ -122,13 +122,10 @@ function getAllItems(canSeePangea: boolean, canSeeProjetos: boolean, isSuperAdmi
 
 function SynthropicLogo() {
   return (
-    <span className="relative inline-flex items-center justify-center size-3.5 rounded-[2px] bg-current/5 border border-current/30 overflow-hidden shrink-0">
-      <span className="absolute size-1.25 rounded-full bg-current opacity-80" />
-      <span className="absolute size-0.5 rounded-full bg-current opacity-50" style={{ transform: "translate(3px, -2px)" }} />
-      <span className="absolute size-0.5 rounded-full bg-current opacity-50" style={{ transform: "translate(-3px, 3px)" }} />
-      <span className="absolute size-0.5 rounded-full bg-current opacity-50" style={{ transform: "translate(-2px, -3px)" }} />
-      <span className="absolute size-0.5 rounded-full bg-current opacity-50" style={{ transform: "translate(3px, 2px)" }} />
-    </span>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" className="size-3.5 shrink-0">
+      <rect x="32" y="32" width="448" height="448" rx="56" ry="56" fill="currentColor" />
+      <circle cx="256" cy="256" r="64" fill="var(--popover)" />
+    </svg>
   )
 }
 

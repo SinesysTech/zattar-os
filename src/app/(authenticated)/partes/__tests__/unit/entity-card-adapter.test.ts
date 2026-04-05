@@ -1,7 +1,7 @@
 // using globals
 
 import {
-  maskDocument,
+  formatDocument,
   extractFirstEmail,
   formatPhone,
   formatLocation,
@@ -18,49 +18,44 @@ import type { ParteContrariaPessoaFisica, ParteContrariaPessoaJuridica } from '.
 import type { Representante } from '../../types/representantes';
 
 // =============================================================================
-// maskDocument
+// formatDocument
 // =============================================================================
 
-describe('maskDocument', () => {
-  it('CPF com 11 dígitos sem formatação → mascara corretamente', () => {
-    // 12345678900 → primeiros 3 = "123", últimos 2 = "00"
-    expect(maskDocument('12345678900')).toBe('123.***.***-00');
+describe('formatDocument', () => {
+  it('CPF com 11 dígitos sem formatação → formata corretamente', () => {
+    expect(formatDocument('12345678900')).toBe('123.456.789-00');
   });
 
-  it('CNPJ com 14 dígitos sem formatação → mascara corretamente', () => {
-    // 12345678000199 → últimos 2 = "99"
-    expect(maskDocument('12345678000199')).toBe('**.**.***/****-99');
+  it('CNPJ com 14 dígitos sem formatação → formata corretamente', () => {
+    expect(formatDocument('12345678000199')).toBe('12.345.678/0001-99');
   });
 
   it('null → retorna "--"', () => {
-    expect(maskDocument(null)).toBe('--');
+    expect(formatDocument(null)).toBe('--');
   });
 
   it('undefined → retorna "--"', () => {
-    expect(maskDocument(undefined)).toBe('--');
+    expect(formatDocument(undefined)).toBe('--');
   });
 
   it('string vazia → retorna "--"', () => {
-    expect(maskDocument('')).toBe('--');
+    expect(formatDocument('')).toBe('--');
   });
 
-  it('CPF formatado com pontos e traço → extrai dígitos e mascara', () => {
-    // '123.456.789-00' → digits='12345678900'
-    expect(maskDocument('123.456.789-00')).toBe('123.***.***-00');
+  it('CPF já formatado → reformata corretamente', () => {
+    expect(formatDocument('123.456.789-00')).toBe('123.456.789-00');
   });
 
-  it('CNPJ formatado com pontos, barra e traço → extrai dígitos e mascara', () => {
-    // '12.345.678/0001-90' → digits='12345678000190'
-    expect(maskDocument('12.345.678/0001-90')).toBe('**.**.***/****-90');
+  it('CNPJ já formatado → reformata corretamente', () => {
+    expect(formatDocument('12.345.678/0001-90')).toBe('12.345.678/0001-90');
   });
 
-  it('documento com comprimento não padrão → mostra os últimos 4 dígitos', () => {
-    // '12345' → 5 dígitos → '****2345'
-    expect(maskDocument('12345')).toBe('****2345');
+  it('documento com comprimento não padrão → retorna como está', () => {
+    expect(formatDocument('12345')).toBe('12345');
   });
 
-  it('CPF com dígitos repetidos → mascara corretamente', () => {
-    expect(maskDocument('00000000000')).toBe('000.***.***-00');
+  it('CPF com dígitos repetidos → formata corretamente', () => {
+    expect(formatDocument('00000000000')).toBe('000.000.000-00');
   });
 });
 
@@ -319,7 +314,7 @@ describe('clienteToEntityCard', () => {
     expect(card.id).toBe(1);
     expect(card.nome).toBe('João Silva');
     expect(card.tipo).toBe('pf');
-    expect(card.documentoMasked).toBe('123.***.***-00');
+    expect(card.documentoMasked).toBe('123.456.789-00');
     expect(card.email).toBe('joao@teste.com');
     expect(card.telefone).toBe('(11) 98765-4321');
     expect(card.ativo).toBe(true);
@@ -332,7 +327,7 @@ describe('clienteToEntityCard', () => {
     const card = clienteToEntityCard(cliente);
 
     expect(card.tipo).toBe('pj');
-    expect(card.documentoMasked).toBe('**.**.***/****-99');
+    expect(card.documentoMasked).toBe('12.345.678/0001-99');
     expect(card.nomeSocial).toBe('XYZ Soluções');
     expect(card.email).toBe('contato@xyz.com');
   });
@@ -516,7 +511,7 @@ describe('parteContrariaToEntityCard', () => {
     expect(card.id).toBe(10);
     expect(card.nome).toBe('Maria Contrária');
     expect(card.tipo).toBe('pf');
-    expect(card.documentoMasked).toBe('987.***.***-00');
+    expect(card.documentoMasked).toBe('987.654.321-00');
     expect(card.email).toBe('maria@contraria.com');
     expect(card.config).toBe(ENTITY_CONFIGS.parteContraria);
   });
@@ -527,7 +522,7 @@ describe('parteContrariaToEntityCard', () => {
 
     expect(card.tipo).toBe('pj');
     expect(card.nomeSocial).toBe('Contrária Corp');
-    expect(card.documentoMasked).toBe('**.**.***/****-88');
+    expect(card.documentoMasked).toBe('98.765.432/0001-88');
   });
 
   it('com processos_relacionados → conta corretamente', () => {
@@ -688,7 +683,7 @@ describe('terceiroToEntityCard', () => {
 
     expect(card.tipo).toBe('pj');
     expect(card.nomeSocial).toBe('Perícia Brasil');
-    expect(card.documentoMasked).toBe('**.**.***/****-55');
+    expect(card.documentoMasked).toBe('22.333.444/0001-55');
   });
 
   it('terceiro PF → nomeSocial = undefined', () => {
@@ -785,7 +780,7 @@ describe('representanteToEntityCard', () => {
   it('representante com CPF → mascara corretamente', () => {
     const card = representanteToEntityCard(criarRepresentanteBase());
     // 55566677788 → '555.***.***-88'
-    expect(card.documentoMasked).toBe('555.***.***-88');
+    expect(card.documentoMasked).toBe('555.666.777-88');
   });
 
   it('representante com emails array → retorna o primeiro', () => {
