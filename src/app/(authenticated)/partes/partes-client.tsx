@@ -40,6 +40,10 @@ import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle } from '@/components/dashboard/view-toggle';
 import { GlassPanel } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { ClienteFormDialog } from './components/clientes/cliente-form';
+import { ParteContrariaFormDialog } from './components/partes-contrarias/parte-contraria-form';
+import { TerceiroFormDialog } from './components/terceiros/terceiro-form';
+import { RepresentanteFormDialog } from './components/representantes/representante-form';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -252,7 +256,12 @@ export function PartesClient({ initialStats }: PartesClientProps) {
   const [selectedParte, setSelectedParte] = useState<EntityCardData | null>(null);
   const [pagina, setPagina] = useState(1);
 
-  const { partes, isLoading, error, total } = usePartes({
+  // Criação de parte
+  type CreateType = 'clientes' | 'partes_contrarias' | 'terceiros' | 'representantes';
+  const [createType, setCreateType] = useState<CreateType | null>(null);
+  const [showTypeMenu, setShowTypeMenu] = useState(false);
+
+  const { partes, isLoading, error, total, refetch } = usePartes({
     tipoEntidade: activeTab,
     busca: search,
     pagina,
@@ -271,6 +280,19 @@ export function PartesClient({ initialStats }: PartesClientProps) {
   const handleSelect = useCallback((data: EntityCardData) => {
     setSelectedParte((prev) => (prev?.id === data.id ? null : data));
   }, []);
+
+  const handleNovaParte = useCallback(() => {
+    if (activeTab !== 'todos') {
+      setCreateType(activeTab as CreateType);
+    } else {
+      setShowTypeMenu((prev) => !prev);
+    }
+  }, [activeTab]);
+
+  const handleCreateSuccess = useCallback(() => {
+    setCreateType(null);
+    refetch();
+  }, [refetch]);
 
   // Stats — preferem initialStats quando disponíveis, senão usa total da tab ativa
   const stats = initialStats ?? {
@@ -335,6 +357,17 @@ export function PartesClient({ initialStats }: PartesClientProps) {
 
   const skeletonCount = 6;
 
+  const createOptions: { type: CreateType; label: string; icon: typeof User }[] = [
+    { type: 'clientes', label: 'Cliente', icon: User },
+    { type: 'partes_contrarias', label: 'Parte Contrária', icon: Gavel },
+    { type: 'terceiros', label: 'Terceiro', icon: Shield },
+    { type: 'representantes', label: 'Representante', icon: Scale },
+  ];
+
+  const buttonLabel = activeTab !== 'todos'
+    ? `Novo ${createOptions.find((o) => o.type === activeTab)?.label ?? 'Registro'}`
+    : 'Nova parte';
+
   return (
     <div className="max-w-350 mx-auto space-y-5">
       {/* ── Header ──────────────────────────────────────────────── */}
@@ -343,16 +376,43 @@ export function PartesClient({ initialStats }: PartesClientProps) {
           <h1 className="text-2xl font-heading font-semibold tracking-tight">Partes</h1>
           <p className="text-sm text-muted-foreground/50 mt-0.5">
             {totalGeral > 0
-              ? `${totalGeral} registros${novosEsteMes > 0 ? ` · ${novosEsteMes} novos este mês` : ''}`
+              ? `${totalGeral.toLocaleString('pt-BR')} registros${novosEsteMes > 0 ? ` · ${novosEsteMes} novos este mês` : ''}`
               : total > 0
-                ? `${total} registros`
+                ? `${total.toLocaleString('pt-BR')} registros`
                 : 'Gestão de clientes, partes e representantes'}
           </p>
         </div>
-        <button className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm">
-          <Plus className="size-3.5" />
-          Nova parte
-        </button>
+        <div className="relative">
+          <button
+            onClick={handleNovaParte}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
+          >
+            <Plus className="size-3.5" />
+            {buttonLabel}
+          </button>
+
+          {/* Dropdown de tipo (só na tab "Todos") */}
+          {showTypeMenu && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setShowTypeMenu(false)} />
+              <div className="absolute right-0 top-full mt-1.5 z-50 w-56 rounded-xl border border-border/20 bg-popover shadow-lg p-1.5 animate-in fade-in slide-in-from-top-2 duration-150">
+                {createOptions.map((opt) => (
+                  <button
+                    key={opt.type}
+                    onClick={() => {
+                      setCreateType(opt.type);
+                      setShowTypeMenu(false);
+                    }}
+                    className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm hover:bg-accent transition-colors cursor-pointer text-left"
+                  >
+                    <opt.icon className="size-4 text-muted-foreground/60" />
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       {/* ── Pulse Strip ─────────────────────────────────────────── */}
@@ -469,6 +529,32 @@ export function PartesClient({ initialStats }: PartesClientProps) {
           </div>
         </div>
       )}
+
+      {/* ── Dialogs de criação ─────────────────────────────────── */}
+      <ClienteFormDialog
+        open={createType === 'clientes'}
+        onOpenChange={(open) => { if (!open) setCreateType(null); }}
+        onSuccess={handleCreateSuccess}
+        mode="create"
+      />
+      <ParteContrariaFormDialog
+        open={createType === 'partes_contrarias'}
+        onOpenChange={(open) => { if (!open) setCreateType(null); }}
+        onSuccess={handleCreateSuccess}
+        mode="create"
+      />
+      <TerceiroFormDialog
+        open={createType === 'terceiros'}
+        onOpenChange={(open) => { if (!open) setCreateType(null); }}
+        onSuccess={handleCreateSuccess}
+        mode="create"
+      />
+      <RepresentanteFormDialog
+        open={createType === 'representantes'}
+        onOpenChange={(open) => { if (!open) setCreateType(null); }}
+        onSuccess={handleCreateSuccess}
+        mode="create"
+      />
     </div>
   );
 }

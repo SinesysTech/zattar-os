@@ -149,26 +149,28 @@ const Notifications = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        align={isMobile ? "center" : "end"}
-        className="ms-4 w-[calc(100vw-2rem)] sm:w-80 p-0"
+        align={isMobile ? "center" : "start"}
+        className="ms-4 w-[calc(100vw-2rem)] rounded-xl border-border/20 bg-popover/80 p-0 shadow-lg backdrop-blur-xl dark:bg-popover/70 sm:w-80"
+        sideOffset={8}
       >
-        {/* Header fixo */}
+        {/* ── Header ── */}
         <DropdownMenuLabel className="sticky top-0 z-10 p-0">
-          <div className="flex items-center justify-between border-b bg-card px-4 py-3">
-            <span className="text-sm font-semibold">
+          <div className="relative flex items-center justify-between rounded-t-xl px-3.5 py-2.5">
+            <div className="pointer-events-none absolute inset-0 rounded-t-xl bg-linear-to-br from-primary/6 via-transparent to-transparent" />
+            <span className="relative text-[13px] font-semibold tracking-tight">
               Notificações
               {unreadCount > 0 && (
-                <span className="ml-1.5 text-xs font-normal text-muted-foreground">
+                <span className="ml-1.5 text-[11px] font-normal text-muted-foreground/70">
                   ({unreadCount})
                 </span>
               )}
             </span>
-            <div className="flex items-center gap-3">
+            <div className="relative flex items-center gap-2.5">
               {unreadCount > 0 && (
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground"
+                  className="h-auto p-0 text-[11px] text-muted-foreground/60 hover:text-foreground"
                   onClick={(e) => {
                     e.preventDefault();
                     marcarTodasComoLidas();
@@ -181,90 +183,93 @@ const Notifications = () => {
               <Button
                 variant="link"
                 size="sm"
-                className="h-auto p-0 text-xs"
+                className="h-auto p-0 text-[11px]"
                 asChild
               >
                 <Link href="/notificacoes">Ver todas</Link>
               </Button>
             </div>
           </div>
+          <div className="mx-3 h-px bg-border/30" />
         </DropdownMenuLabel>
 
-        {/* Lista de notificações */}
+        {/* ── Lista de notificações ── */}
         <ScrollArea className="max-h-87.5">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <span className="text-sm text-muted-foreground">
+              <span className="text-[13px] text-muted-foreground">
                 Carregando...
               </span>
             </div>
           ) : notificacoes.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-2 py-12">
-              <BellRing className="size-8 text-muted-foreground/60" />
-              <span className="text-sm text-muted-foreground">
+              <BellRing className="size-7 text-muted-foreground/40" />
+              <span className="text-[13px] text-muted-foreground/70">
                 Nenhuma notificação
               </span>
             </div>
           ) : (
-            notificacoes.map((item) => {
-              const iconConfig = TIPO_ICON_MAP[item.tipo];
-              const IconComponent = iconConfig?.icon ?? BellRing;
-              const iconClassName =
-                iconConfig?.className ?? "text-muted-foreground bg-muted";
+            <div className="p-1">
+              {notificacoes.map((item) => {
+                const iconConfig = TIPO_ICON_MAP[item.tipo];
+                const IconComponent = iconConfig?.icon ?? BellRing;
+                const iconClassName =
+                  iconConfig?.className ?? "text-muted-foreground bg-muted";
 
-              return (
-                <DropdownMenuItem
-                  key={item.id}
-                  className="flex cursor-pointer items-start gap-3 rounded-none border-b px-4 py-3.5 focus:bg-accent"
-                  asChild
-                >
-                  <Link
-                    href={getEntityLink(
-                      item.entidade_tipo,
-                      item.entidade_id
-                    )}
-                    onClick={() => {
-                      if (!item.lida) {
-                        marcarComoLida(item.id);
-                      }
-                    }}
+                return (
+                  <DropdownMenuItem
+                    key={item.id}
+                    className="flex cursor-pointer items-start gap-2.5 rounded-lg px-2.5 py-2.5 transition-colors duration-150 focus:bg-primary/6"
+                    asChild
                   >
-                    <div
-                      className={cn(
-                        "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full",
-                        iconClassName
+                    <Link
+                      href={getEntityLink(
+                        item.entidade_tipo,
+                        item.entidade_id
                       )}
+                      onClick={() => {
+                        if (!item.lida) {
+                          marcarComoLida(item.id);
+                        }
+                      }}
                     >
-                      <IconComponent className="size-4" />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <p
+                      <div
                         className={cn(
-                          "text-sm leading-snug",
-                          !item.lida
-                            ? "font-medium text-foreground"
-                            : "text-foreground/80"
+                          "mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full",
+                          iconClassName
                         )}
                       >
-                        {item.titulo}
-                      </p>
-                      <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-                        {item.descricao}
-                      </p>
-                      <p className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground/60">
-                        <ClockIcon className="size-3" />
-                        {formatDate(item.created_at)}
-                      </p>
-                    </div>
+                        <IconComponent className="size-3.5" />
+                      </div>
 
-                    {!item.lida && (
-                      <span className="mt-2.5 block size-2 shrink-0 rounded-full bg-destructive" />
-                    )}
-                  </Link>
-                </DropdownMenuItem>
-              );
-            })
+                      <div className="min-w-0 flex-1">
+                        <p
+                          className={cn(
+                            "text-[13px] leading-snug",
+                            !item.lida
+                              ? "font-medium text-foreground"
+                              : "text-foreground/70"
+                          )}
+                        >
+                          {item.titulo}
+                        </p>
+                        <p className="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground/70">
+                          {item.descricao}
+                        </p>
+                        <p className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground/50">
+                          <ClockIcon className="size-2.5" />
+                          {formatDate(item.created_at)}
+                        </p>
+                      </div>
+
+                      {!item.lida && (
+                        <span className="mt-2 block size-1.5 shrink-0 rounded-full bg-primary" />
+                      )}
+                    </Link>
+                  </DropdownMenuItem>
+                );
+              })}
+            </div>
           )}
         </ScrollArea>
       </DropdownMenuContent>
