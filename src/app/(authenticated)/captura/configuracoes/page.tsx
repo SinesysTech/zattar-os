@@ -3,9 +3,8 @@ import { redirect } from "next/navigation";
 import { actionObterMetricasDB } from "@/app/(authenticated)/admin";
 import { actionListarIntegracoesPorTipo } from "@/lib/integracoes";
 import { actionListarSystemPrompts } from "@/lib/system-prompts";
-import { ConfiguracoesTabsContent } from "./components/configuracoes-tabs-content";
+import { ConfiguracoesSettingsLayout } from "@/app/(authenticated)/configuracoes/components/configuracoes-settings-layout";
 
-// Next.js 16: Force dynamic rendering because this route uses cookies()
 export const dynamic = "force-dynamic";
 
 export default async function ConfiguracoesPage() {
@@ -28,37 +27,32 @@ export default async function ConfiguracoesPage() {
     );
   }
 
-  // Buscar integração 2FAuth (primeira ativa ou primeira encontrada)
   let integracao2FAuth = null;
   if (integracoes2FAuthResult.success && Array.isArray(integracoes2FAuthResult.data)) {
     integracao2FAuth = integracoes2FAuthResult.data.find((i) => i.ativo) || integracoes2FAuthResult.data[0] || null;
   }
 
-  // Buscar integração Chatwoot
   let integracaoChatwoot = null;
   if (integracoesChatwootResult.success && Array.isArray(integracoesChatwootResult.data)) {
     integracaoChatwoot = integracoesChatwootResult.data.find((i) => i.ativo) || integracoesChatwootResult.data[0] || null;
   }
 
-  // Buscar integração Dyte
   let integracaoDyte = null;
   if (integracoesDyteResult.success && Array.isArray(integracoesDyteResult.data)) {
     integracaoDyte = integracoesDyteResult.data.find((i) => i.ativo) || integracoesDyteResult.data[0] || null;
   }
 
-  // Buscar integração Editor de Texto IA
   let integracaoEditorIA = null;
   if (integracoesEditorIAResult.success && Array.isArray(integracoesEditorIAResult.data)) {
     integracaoEditorIA = integracoesEditorIAResult.data.find((i) => i.ativo) || integracoesEditorIAResult.data[0] || null;
   }
 
-  // System prompts
   const systemPrompts = systemPromptsResult.success && Array.isArray(systemPromptsResult.data)
     ? systemPromptsResult.data
     : [];
 
   return (
-    <ConfiguracoesTabsContent
+    <ConfiguracoesSettingsLayout
       metricas={metricasResult.data}
       integracao2FAuth={integracao2FAuth}
       integracaoChatwoot={integracaoChatwoot}

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { actionObterMetricasDB } from "@/app/(authenticated)/admin";
 import { actionListarIntegracoesPorTipo } from "@/lib/integracoes";
 import { actionListarSystemPrompts } from "@/lib/system-prompts";
-import { ConfiguracoesTabsContent } from "@/app/(authenticated)/captura/configuracoes/components/configuracoes-tabs-content";
+import { ConfiguracoesSettingsLayout } from "./components/configuracoes-settings-layout";
 
 export const dynamic = "force-dynamic";
 
@@ -52,7 +52,7 @@ export default async function ConfiguracoesPage() {
     : [];
 
   return (
-    <ConfiguracoesTabsContent
+    <ConfiguracoesSettingsLayout
       metricas={metricasResult.data}
       integracao2FAuth={integracao2FAuth}
       integracaoChatwoot={integracaoChatwoot}
