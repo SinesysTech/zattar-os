@@ -49,7 +49,7 @@ const bentoArticles: BentoArticle[] = [
   {
     title: "Novas Decisões sobre Vínculo Empregatício em Apps",
     tag: "Trabalhista",
-    tagColor: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+    tagColor: "bg-portal-warning-soft text-portal-warning border-portal-warning/20",
     href: "/portal/insights/vinculo-apps",
     colSpan: "col-span-12 lg:col-span-4",
   },
@@ -63,7 +63,7 @@ const bentoArticles: BentoArticle[] = [
   {
     title: "Como a Zattar Reduziu Custos em 40% para a TechCorp",
     tag: "Estudo de Caso",
-    tagColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    tagColor: "bg-portal-success-soft text-portal-success border-portal-success/20",
     description:
       "Uma análise detalhada do processo de reestruturação jurídica que permitiu à TechCorp Brasil reduzir passivo trabalhista e otimizar contratos de terceirização.",
     href: "/portal/insights/estudo-caso-techcorp",
@@ -85,7 +85,7 @@ function ArticleTag({
 }) {
   return (
     <span
-      className={`inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${colorClass}`}
+      className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border ${colorClass}`}
     >
       {tag}
     </span>
@@ -95,11 +95,11 @@ function ArticleTag({
 function BentoCard({ article }: { article: BentoArticle }) {
   return (
     <div className={`${article.colSpan}`}>
-      <Card className="h-full rounded-2xl p-6 flex flex-col justify-between gap-4 hover:border-border/80 transition-all duration-300 cursor-pointer min-h-48">
+      <Card className="h-full rounded-xl p-6 flex flex-col justify-between gap-4 hover:border-border/80 transition-all duration-300 cursor-pointer min-h-48">
         <div className="flex flex-col gap-3">
           <ArticleTag tag={article.tag} colorClass={article.tagColor} />
           <h3
-            className={`font-extrabold font-headline tracking-tighter text-foreground leading-snug ${
+            className={`font-extrabold tracking-tighter text-foreground leading-snug ${
               article.large ? "text-2xl" : "text-lg"
             }`}
           >
@@ -142,7 +142,7 @@ export default function InsightsPage() {
           <span className="text-primary font-bold text-xs uppercase tracking-[0.2em]">
             INSIGHTS
           </span>
-          <h1 className="text-4xl md:text-5xl font-headline font-extrabold tracking-tight text-foreground">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
             Insights.
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl leading-relaxed">
@@ -201,7 +201,7 @@ export default function InsightsPage() {
                   </span>
                 </div>
 
-                <h2 className="text-3xl lg:text-4xl font-extrabold font-headline tracking-tighter text-foreground leading-tight max-w-2xl">
+                <h2 className="text-3xl lg:text-4xl font-extrabold tracking-tighter text-foreground leading-tight max-w-2xl">
                   {featuredArticle.title}
                 </h2>
 
@@ -230,11 +230,11 @@ export default function InsightsPage() {
               </div>
 
               {/* Decorative accent badge */}
-              <div className="hidden lg:flex flex-col items-center justify-center w-40 h-40 shrink-0 bg-primary/5 border border-primary/10 rounded-2xl">
-                <span className="text-4xl font-black font-headline text-primary tabular-nums">
+              <div className="hidden lg:flex flex-col items-center justify-center w-40 h-40 shrink-0 bg-primary/5 border border-primary/10 rounded-xl">
+                <span className="text-4xl font-bold text-primary tabular-nums">
                   #1
                 </span>
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1 text-center">
+                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mt-1 text-center">
                   Mais Lido
                   <br />
                   da Semana

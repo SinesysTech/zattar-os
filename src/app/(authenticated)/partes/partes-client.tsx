@@ -16,6 +16,7 @@ import {
   Plus,
   AlertCircle,
   ChevronRight,
+  ChevronLeft,
   Users,
   User,
   Gavel,
@@ -242,21 +243,29 @@ function InfoRow({
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
+const PAGE_SIZE = 24;
+
 export function PartesClient({ initialStats }: PartesClientProps) {
   const [activeTab, setActiveTab] = useState<TipoEntidade>('todos');
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards');
   const [selectedParte, setSelectedParte] = useState<EntityCardData | null>(null);
+  const [pagina, setPagina] = useState(1);
 
   const { partes, isLoading, error, total } = usePartes({
     tipoEntidade: activeTab,
     busca: search,
+    pagina,
+    limite: PAGE_SIZE,
   });
+
+  const totalPages = Math.ceil(total / PAGE_SIZE);
 
   // Fechar painel ao trocar de tab
   const handleTabChange = useCallback((id: string) => {
     setActiveTab(id as TipoEntidade);
     setSelectedParte(null);
+    setPagina(1);
   }, []);
 
   const handleSelect = useCallback((data: EntityCardData) => {
@@ -362,7 +371,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
         <div className="flex items-center gap-2 flex-1 justify-end">
           <SearchInput
             value={search}
-            onChange={setSearch}
+            onChange={(v) => { setSearch(v); setPagina(1); }}
             placeholder="Buscar por nome, CPF, CNPJ..."
           />
           <ViewToggle mode={viewMode} onChange={(m) => setViewMode(m as 'cards' | 'list')} />
@@ -432,6 +441,34 @@ export function PartesClient({ initialStats }: PartesClientProps) {
           </div>
         )}
       </div>
+
+      {/* ── Paginação ──────────────────────────────────────────── */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between pt-2">
+          <p className="text-xs text-muted-foreground/50">
+            {((pagina - 1) * PAGE_SIZE) + 1}–{Math.min(pagina * PAGE_SIZE, total)} de {total.toLocaleString('pt-BR')}
+          </p>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setPagina((p) => Math.max(1, p - 1))}
+              disabled={pagina <= 1}
+              className="flex items-center justify-center size-8 rounded-lg hover:bg-white/4 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            >
+              <ChevronLeft className="size-4 text-muted-foreground/60" />
+            </button>
+            <span className="text-xs font-medium tabular-nums px-2">
+              {pagina} / {totalPages}
+            </span>
+            <button
+              onClick={() => setPagina((p) => Math.min(totalPages, p + 1))}
+              disabled={pagina >= totalPages}
+              className="flex items-center justify-center size-8 rounded-lg hover:bg-white/4 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            >
+              <ChevronRight className="size-4 text-muted-foreground/60" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

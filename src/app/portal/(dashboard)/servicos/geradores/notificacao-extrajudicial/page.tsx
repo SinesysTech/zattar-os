@@ -321,7 +321,7 @@ export default function NotificacaoExtrajudicialPage() {
         <>
           {/* Nome do Notificante */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Nome do Notificante (Empregado)
             </label>
             <input
@@ -335,7 +335,7 @@ export default function NotificacaoExtrajudicialPage() {
 
           {/* CPF do Notificante */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               CPF do Notificante
             </label>
             <input
@@ -349,7 +349,7 @@ export default function NotificacaoExtrajudicialPage() {
 
           {/* Endereco do Notificante */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Endereco do Notificante
             </label>
             <input
@@ -363,7 +363,7 @@ export default function NotificacaoExtrajudicialPage() {
 
           {/* Nome da Empresa */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Nome da Empresa (Notificada)
             </label>
             <input
@@ -377,7 +377,7 @@ export default function NotificacaoExtrajudicialPage() {
 
           {/* CNPJ da Empresa */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               CNPJ da Empresa
             </label>
             <input
@@ -391,7 +391,7 @@ export default function NotificacaoExtrajudicialPage() {
 
           {/* Endereco da Empresa */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Endereco da Empresa
             </label>
             <input
@@ -405,7 +405,7 @@ export default function NotificacaoExtrajudicialPage() {
 
           {/* Irregularidades */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Irregularidades
             </label>
             <div className="grid grid-cols-1 gap-2">
@@ -456,7 +456,7 @@ export default function NotificacaoExtrajudicialPage() {
 
           {/* Descricao dos Fatos */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Descricao dos Fatos
             </label>
             <textarea
@@ -491,7 +491,7 @@ export default function NotificacaoExtrajudicialPage() {
 
           {/* Cidade */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Cidade
             </label>
             <input
@@ -512,9 +512,8 @@ export default function NotificacaoExtrajudicialPage() {
           <Card>
             <CardContent className="p-6 relative overflow-hidden">
               {/* Decorative glow */}
-              <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
 
-              <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-6 relative z-10">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-6 relative z-10">
                 Visualizacao da Notificacao
               </span>
 

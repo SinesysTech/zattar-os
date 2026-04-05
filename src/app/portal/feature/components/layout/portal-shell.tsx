@@ -18,12 +18,12 @@ export function PortalShell({ children, clientName = "Cliente" }: PortalShellPro
       <SidebarInset>
         <PortalHeader clientName={clientName} />
         <ScrollArea data-sidebar="inset-content" className="flex-1">
-          <div className="flex flex-col gap-6 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-6 pb-8 canvas-dots">
+          <div className="flex flex-col gap-8 px-4 md:px-8 lg:px-12 py-6 canvas-dots">
             {children}
           </div>
           {/* Footer */}
-          <footer className="border-t border-border px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-8">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+          <footer className="border-t border-border px-4 md:px-8 lg:px-12 py-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-portal-text-muted">
               <p>&copy; {new Date().getFullYear()} Zattar Advogados. Todos os direitos reservados.</p>
               <div className="flex items-center gap-6">
                 <a href="/termos" className="hover:text-primary transition-colors">

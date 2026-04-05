@@ -1,10 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { Scale, Search, FileSearch, ShieldAlert, Calendar, Building2 } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import { Scale, FileSearch, ShieldAlert, Calendar, Building2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { EmptyState } from "@/components/shared/empty-state"
+import {
+  PortalSectionHeader,
+  PortalFilterBar,
+} from "@/app/portal/feature"
 import type { ProcessoPortal, StatusProcessoPortal } from "./domain"
 
 // ---------------------------------------------------------------------------
@@ -25,9 +28,9 @@ const FILTER_OPTIONS: { label: string; value: StatusProcessoPortal | null }[] = 
 function getStatusDot(status: StatusProcessoPortal): string {
   switch (status) {
     case "Em Andamento":
-      return "bg-emerald-500"
+      return "bg-portal-success"
     case "Concluído":
-      return "bg-blue-500"
+      return "bg-portal-info"
     case "Arquivado":
       return "bg-muted-foreground"
   }
@@ -36,9 +39,9 @@ function getStatusDot(status: StatusProcessoPortal): string {
 function getStatusLabelColor(status: StatusProcessoPortal): string {
   switch (status) {
     case "Em Andamento":
-      return "text-emerald-600 dark:text-emerald-400"
+      return "text-portal-success"
     case "Concluído":
-      return "text-blue-600 dark:text-blue-400"
+      return "text-portal-info"
     case "Arquivado":
       return "text-muted-foreground"
   }
@@ -76,13 +79,13 @@ function ProcessCard({ processo, index }: ProcessCardProps) {
               {processo.status}
             </span>
             {processo.sigilo && (
-              <ShieldAlert className="w-3.5 h-3.5 text-amber-500" aria-label="Sigilo de Justiça" />
+              <ShieldAlert className="w-3.5 h-3.5 text-portal-warning" aria-label="Sigilo de Justiça" />
             )}
           </div>
-          <p className="font-mono text-xs text-muted-foreground leading-relaxed break-all">
+          <p className="font-mono text-xs text-portal-text-muted leading-relaxed break-all">
             {processo.numero}
           </p>
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground/70">
+          <div className="flex items-center gap-1.5 text-xs text-portal-text-subtle">
             <Scale className="w-3.5 h-3.5 shrink-0" />
             <span>{processo.tribunal}</span>
           </div>
@@ -93,11 +96,11 @@ function ProcessCard({ processo, index }: ProcessCardProps) {
           <h3 className="font-heading font-bold text-lg tracking-tight leading-snug mb-1 text-foreground">
             {processo.titulo}
           </h3>
-          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+          <p className="text-sm text-portal-text-muted leading-relaxed line-clamp-2">
             {processo.descricao}
           </p>
           <div className="flex flex-wrap items-center gap-3 mt-3">
-            <p className="text-xs text-muted-foreground/60 font-mono">
+            <p className="text-xs text-portal-text-subtle font-mono">
               Protocolado em {processo.dataProtocolo}
             </p>
             <Badge variant="outline" className="text-xs">
@@ -110,7 +113,7 @@ function ProcessCard({ processo, index }: ProcessCardProps) {
         <div className="flex flex-col items-start lg:items-end gap-3 shrink-0 lg:w-56">
           {/* Vara info */}
           {processo.instancias.primeiroGrau && (
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1.5 text-xs text-portal-text-muted">
               <Building2 className="w-3.5 h-3.5 shrink-0" />
               <span className="truncate max-w-50" title={processo.instancias.primeiroGrau.vara}>
                 {processo.instancias.primeiroGrau.vara}
@@ -120,7 +123,7 @@ function ProcessCard({ processo, index }: ProcessCardProps) {
 
           {/* Proxima audiencia */}
           {proximaAudiencia && (
-            <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400">
+            <div className="flex items-center gap-1.5 text-xs text-portal-success">
               <Calendar className="w-3.5 h-3.5 shrink-0" />
               <span>Audiência: {proximaAudiencia}</span>
             </div>
@@ -129,13 +132,13 @@ function ProcessCard({ processo, index }: ProcessCardProps) {
           {/* Ultima movimentacao */}
           {processo.ultimaMovimentacao && (
             <div className="text-right">
-              <p className="text-xs text-muted-foreground/60 mb-0.5">
+              <p className="text-xs text-portal-text-subtle mb-0.5">
                 Última movimentação
               </p>
               <p className="text-xs font-medium text-foreground">
                 {processo.ultimaMovimentacao.data}
               </p>
-              <p className="text-xs text-muted-foreground truncate max-w-50" title={processo.ultimaMovimentacao.descricao}>
+              <p className="text-xs text-portal-text-muted truncate max-w-50" title={processo.ultimaMovimentacao.descricao}>
                 {processo.ultimaMovimentacao.descricao}
               </p>
             </div>
@@ -193,39 +196,20 @@ export function ProcessosContent({ processos, error }: ProcessosContentProps) {
 
   return (
     <div className="space-y-6">
-      {/* Search and filters */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-          <Input
-            type="text"
-            placeholder="Buscar processo..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 h-9"
-            aria-label="Buscar processo"
-          />
-        </div>
+      <PortalSectionHeader title="Meus Processos" />
 
-        <div className="flex items-center gap-2 flex-wrap">
-          {FILTER_OPTIONS.map((option) => (
-            <button
-              key={option.label}
-              onClick={() => setActiveFilter(option.value)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                activeFilter === option.value
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Search and filters */}
+      <PortalFilterBar
+        filters={FILTER_OPTIONS}
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Buscar processo..."
+      />
 
       {/* Summary */}
-      <p className="text-sm text-muted-foreground">
+      <p className="text-sm text-portal-text-muted">
         {filteredProcesses.length}{" "}
         {filteredProcesses.length === 1 ? "processo encontrado" : "processos encontrados"}
       </p>

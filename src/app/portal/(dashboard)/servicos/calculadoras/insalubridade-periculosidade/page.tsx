@@ -165,8 +165,8 @@ export default function InsalubridadePericulosidadeCalculatorPage() {
           )}
 
           {/* Nota sobre não cumulação */}
-          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
-            <p className="text-xs text-amber-600 dark:text-amber-400 leading-relaxed">
+          <div className="rounded-lg border border-portal-warning/20 bg-portal-warning-soft p-4">
+            <p className="text-xs text-portal-warning leading-relaxed">
               O trabalhador não pode acumular insalubridade e periculosidade simultaneamente. Deve optar pelo adicional mais vantajoso.
             </p>
           </div>
@@ -179,10 +179,8 @@ export default function InsalubridadePericulosidadeCalculatorPage() {
         <>
           <Card>
             <CardContent className="p-6 relative overflow-hidden">
-              {/* Decorative glow */}
-              <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
 
-              <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-6 relative z-10">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-6 relative z-10">
                 Detalhamento do Cálculo
               </span>
 
@@ -214,10 +212,10 @@ export default function InsalubridadePericulosidadeCalculatorPage() {
               {/* Valor do Adicional highlight */}
               <div className="mt-6 pt-4 relative z-10">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Valor do Adicional
                   </span>
-                  <span className="text-3xl font-black text-primary font-headline tabular-nums">
+                  <span className="text-3xl font-bold text-primary font-headline tabular-nums">
                     {resultado ? formatBRL(resultado.maiorValor) : formatBRL(0)}
                   </span>
                 </div>

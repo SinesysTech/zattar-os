@@ -16,7 +16,7 @@ export function ToggleOption({
   return (
     <label className="flex items-center justify-between p-4 bg-muted rounded-xl cursor-pointer hover:bg-muted/80 transition-colors">
       <div className="space-y-0.5">
-        <span className="block font-bold text-foreground text-sm">
+        <span className="block font-medium text-foreground text-sm">
           {label}
         </span>
         <span className="block text-xs text-muted-foreground">

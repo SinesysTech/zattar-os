@@ -16,7 +16,7 @@ export function PortalHeader({ clientName }: { clientName: string }) {
   const initials = getInitials(clientName)
 
   return (
-    <div className="flex h-16 shrink-0 items-center gap-4 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-2">
+    <div className="flex h-16 shrink-0 items-center gap-4 px-4 md:px-8 lg:px-12 pt-2">
       {/* Mobile sidebar trigger */}
       <SidebarTrigger className="md:hidden" />
       <Separator orientation="vertical" className="mr-2 h-4 md:hidden" />
@@ -30,7 +30,7 @@ export function PortalHeader({ clientName }: { clientName: string }) {
           <p className="text-sm font-medium text-foreground truncate max-w-48">
             {clientName}
           </p>
-          <p className="text-xs text-muted-foreground">Portal do Cliente</p>
+          <p className="text-xs text-portal-text-muted">Portal do Cliente</p>
         </div>
         <Avatar className="h-8 w-8">
           <AvatarFallback>{initials}</AvatarFallback>

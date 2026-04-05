@@ -22,7 +22,7 @@ export function ResultRow({
           dimmed
             ? "text-muted-foreground/30"
             : negative
-              ? "text-red-400"
+              ? "text-portal-danger"
               : "text-foreground",
         ].join(" ")}
       >

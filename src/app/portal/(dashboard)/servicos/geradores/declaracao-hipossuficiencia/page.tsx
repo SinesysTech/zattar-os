@@ -242,7 +242,7 @@ export default function DeclaracaoHipossuficienciaPage() {
         <>
           {/* Nome Completo */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Nome Completo
             </label>
             <input
@@ -256,7 +256,7 @@ export default function DeclaracaoHipossuficienciaPage() {
 
           {/* CPF */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               CPF
             </label>
             <input
@@ -270,7 +270,7 @@ export default function DeclaracaoHipossuficienciaPage() {
 
           {/* RG */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               RG
             </label>
             <input
@@ -284,7 +284,7 @@ export default function DeclaracaoHipossuficienciaPage() {
 
           {/* Endereco Completo */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Endereco Completo
             </label>
             <input
@@ -306,7 +306,7 @@ export default function DeclaracaoHipossuficienciaPage() {
 
           {/* Renda Mensal */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Renda Mensal (pessoal ou familiar)
             </label>
             <div className="relative">
@@ -329,8 +329,8 @@ export default function DeclaracaoHipossuficienciaPage() {
             <div
               className={`rounded-lg p-4 text-xs leading-relaxed border ${
                 isElegivel
-                  ? "bg-green-500/10 border-green-500/20 text-green-700 dark:text-green-400"
-                  : "bg-amber-500/10 border-amber-500/20 text-amber-700 dark:text-amber-400"
+                  ? "bg-portal-success-soft border-portal-success/20 text-portal-success"
+                  : "bg-portal-warning-soft border-portal-warning/20 text-portal-warning"
               }`}
             >
               {isElegivel ? (
@@ -375,7 +375,7 @@ export default function DeclaracaoHipossuficienciaPage() {
 
           {/* Numero de Dependentes */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Numero de Dependentes
             </label>
             <div className="relative">
@@ -396,7 +396,7 @@ export default function DeclaracaoHipossuficienciaPage() {
 
           {/* Cidade */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Cidade
             </label>
             <input
@@ -417,9 +417,8 @@ export default function DeclaracaoHipossuficienciaPage() {
           <Card>
             <CardContent className="p-6 relative overflow-hidden">
               {/* Decorative glow */}
-              <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
 
-              <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-6 relative z-10">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-6 relative z-10">
                 Visualizacao da Declaracao
               </span>
 

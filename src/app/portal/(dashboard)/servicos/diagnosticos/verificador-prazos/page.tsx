@@ -206,10 +206,10 @@ export default function VerificadorPrazosPage() {
         </div>
 
         {/* Info message */}
-        <Card className="border-amber-500/30 bg-amber-500/5">
+        <Card className="border-portal-warning/30 bg-portal-warning-soft">
           <CardContent className="p-6">
             <div className="flex items-start gap-3">
-              <Clock className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+              <Clock className="w-5 h-5 text-portal-warning shrink-0 mt-0.5" />
               <div className="space-y-1">
                 <p className="text-sm font-bold text-foreground">
                   Prazos nao estao correndo
@@ -287,7 +287,7 @@ export default function VerificadorPrazosPage() {
           className={cn(
             "w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl text-sm font-bold transition-all",
             isValid
-              ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_4px_20px_rgba(204,151,255,0.2)]"
+              ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md"
               : "bg-muted text-muted-foreground/40 cursor-not-allowed"
           )}
         >
@@ -327,13 +327,13 @@ export default function VerificadorPrazosPage() {
           className={cn(
             "rounded-xl border p-6 space-y-4",
             dentroDoprAzo
-              ? "border-emerald-500/30 bg-emerald-500/5"
-              : "border-red-500/30 bg-red-500/5"
+              ? "border-portal-success/30 bg-portal-success-soft"
+              : "border-portal-danger/30 bg-portal-danger-soft"
           )}
         >
           <div className="flex items-start justify-between gap-4">
             <div>
-              <span className="text-xs font-bold tracking-widest text-muted-foreground uppercase block mb-1">
+              <span className="text-xs font-bold tracking-wider text-muted-foreground uppercase block mb-1">
                 Prazo para Ajuizar Acao
               </span>
               <p className="text-sm text-muted-foreground">
@@ -343,10 +343,10 @@ export default function VerificadorPrazosPage() {
             </div>
             <span
               className={cn(
-                "shrink-0 text-xs font-black tracking-wider px-3 py-1 rounded-full border",
+                "shrink-0 text-xs font-bold tracking-wider px-3 py-1 rounded-full border",
                 dentroDoprAzo
-                  ? "text-emerald-600 border-emerald-500/40 bg-emerald-500/10"
-                  : "text-red-600 border-red-500/40 bg-red-500/10"
+                  ? "text-portal-success border-portal-success/40 bg-portal-success-soft"
+                  : "text-portal-danger border-portal-danger/40 bg-portal-danger-soft"
               )}
             >
               {dentroDoprAzo ? "DENTRO DO PRAZO" : "PRAZO EXPIRADO"}
@@ -357,8 +357,8 @@ export default function VerificadorPrazosPage() {
           <div className="flex items-end gap-2">
             <span
               className={cn(
-                "text-5xl font-black tabular-nums leading-none",
-                dentroDoprAzo ? "text-emerald-500" : "text-red-500"
+                "text-5xl font-bold tabular-nums leading-none",
+                dentroDoprAzo ? "text-portal-success" : "text-portal-danger"
               )}
             >
               {diasAbs.toLocaleString("pt-BR")}
@@ -371,7 +371,7 @@ export default function VerificadorPrazosPage() {
           <p
             className={cn(
               "text-sm font-medium",
-              dentroDoprAzo ? "text-emerald-600" : "text-red-600"
+              dentroDoprAzo ? "text-portal-success" : "text-portal-danger"
             )}
           >
             {dentroDoprAzo
@@ -383,7 +383,7 @@ export default function VerificadorPrazosPage() {
         {/* Card 2: Periodo Reclamavel */}
         <div className="rounded-xl border border-border bg-muted/40 p-6 space-y-4">
           <div>
-            <span className="text-xs font-bold tracking-widest text-muted-foreground uppercase block mb-1">
+            <span className="text-xs font-bold tracking-wider text-muted-foreground uppercase block mb-1">
               Periodo Reclamavel
             </span>
             <p className="text-sm text-muted-foreground">
@@ -421,7 +421,7 @@ export default function VerificadorPrazosPage() {
         {/* Card 3: FGTS Nao Depositado */}
         <div className="rounded-xl border border-border bg-muted/40 p-6 space-y-4">
           <div>
-            <span className="text-xs font-bold tracking-widest text-muted-foreground uppercase block mb-1">
+            <span className="text-xs font-bold tracking-wider text-muted-foreground uppercase block mb-1">
               FGTS Nao Depositado
             </span>
             <p className="text-sm text-muted-foreground">

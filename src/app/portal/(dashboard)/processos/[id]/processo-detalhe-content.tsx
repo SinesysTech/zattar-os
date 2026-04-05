@@ -23,7 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 function dotColorClass(status: TimelineEventPortal["status"]): string {
   switch (status) {
     case "done":
-      return "bg-emerald-500"
+      return "bg-portal-success"
     case "current":
       return "bg-primary"
     case "pending":
@@ -34,7 +34,7 @@ function dotColorClass(status: TimelineEventPortal["status"]): string {
 function dotRingClass(status: TimelineEventPortal["status"]): string {
   switch (status) {
     case "done":
-      return "ring-emerald-500/20"
+      return "ring-portal-success/20"
     case "current":
       return "ring-primary/20"
     case "pending":
@@ -45,7 +45,7 @@ function dotRingClass(status: TimelineEventPortal["status"]): string {
 function statusTextClass(status: TimelineEventPortal["status"]): string {
   switch (status) {
     case "done":
-      return "text-emerald-500"
+      return "text-portal-success"
     case "current":
       return "text-primary"
     case "pending":
@@ -85,7 +85,7 @@ function InfoRow({
         <span className="text-primary">{icon}</span>
       </div>
       <div className="min-w-0">
-        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-0.5">
+        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-0.5">
           {label}
         </p>
         <p
@@ -182,7 +182,7 @@ export function ProcessoDetalheContent({
   const latestMovement = processo.timeline[0]
   const statusBadgeColor =
     processo.status === "Em Andamento"
-      ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500"
+      ? "bg-portal-success-soft border-portal-success/20 text-portal-success"
       : processo.status === "Arquivado"
         ? "bg-muted border-border text-muted-foreground"
         : "bg-primary/10 border-primary/20 text-primary"
@@ -201,7 +201,7 @@ export function ProcessoDetalheContent({
 
       {/* Header */}
       <div className="mb-6">
-        <p className="text-xs font-black text-primary uppercase tracking-[0.2em] mb-2">
+        <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-2">
           PROCESSO
         </p>
         <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
@@ -233,12 +233,12 @@ export function ProcessoDetalheContent({
                   className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold ${statusBadgeColor}`}
                 >
                   {processo.status === "Em Andamento" && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-portal-success animate-pulse" />
                   )}
                   {processo.status}
                 </span>
                 {processo.sigilo && (
-                  <span className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-bold">
+                  <span className="px-3 py-1 rounded-full bg-portal-warning/10 border border-portal-warning/20 text-portal-warning text-xs font-bold">
                     Sigilo
                   </span>
                 )}
@@ -293,14 +293,14 @@ export function ProcessoDetalheContent({
           className="border-primary/20 relative overflow-hidden animate-in fade-in slide-in-from-bottom-4"
           style={{ animationDelay: "100ms", animationDuration: "400ms", animationFillMode: "both" }}
         >
-          <div className="absolute top-0 right-0 w-48 h-48 bg-primary/8 blur-[60px] rounded-full pointer-events-none" />
+          <div className="absolute top-0 right-0 w-48 h-48 bg-primary/8 blur-3xl rounded-full pointer-events-none" />
           <CardContent className="p-6 relative z-10">
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center shrink-0 border border-primary/25">
                 <Zap className="w-5 h-5 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">
+                <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-1">
                   Ultima Movimentacao
                 </p>
                 <p className="font-semibold text-foreground text-sm leading-snug">
@@ -311,7 +311,7 @@ export function ProcessoDetalheContent({
                 <p className="font-mono text-xs text-muted-foreground/70">
                   {latestMovement.data}
                 </p>
-                <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold">
+                <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold">
                   {statusLabel(latestMovement.status)}
                 </span>
               </div>
@@ -460,7 +460,7 @@ export function ProcessoDetalheContent({
               <CardContent className="space-y-4">
                 {processo.instancias.primeiroGrau && (
                   <div>
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">
                       1o Grau
                     </p>
                     <p className="text-sm font-semibold text-foreground">
@@ -475,7 +475,7 @@ export function ProcessoDetalheContent({
                 )}
                 {processo.instancias.segundoGrau && (
                   <div>
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">
                       2o Grau
                     </p>
                     <p className="text-sm font-semibold text-foreground">

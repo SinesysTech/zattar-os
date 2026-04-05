@@ -79,85 +79,84 @@ export function HeaderUserMenu() {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-72 rounded-xl border-border/20 bg-popover/80 p-0 shadow-lg backdrop-blur-xl dark:bg-popover/70"
-        align="end"
-        sideOffset={12}
+        className="min-w-56 rounded-xl border-border/20 bg-popover/80 p-0 shadow-lg backdrop-blur-xl dark:bg-popover/70"
+        align="start"
+        sideOffset={8}
       >
-        {/* ── User identity section ── */}
-        <div className="relative overflow-hidden rounded-t-xl px-4 pb-4 pt-5">
-          {/* Ambient purple glow behind avatar area */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/[0.06] via-transparent to-transparent" />
-          <div className="relative flex items-center gap-3.5">
-            <div className="rounded-full bg-gradient-to-br from-primary/40 to-primary/10 p-[2px]">
-              <Avatar className="h-11 w-11 ring-2 ring-background">
+        {/* ── User identity ── */}
+        <div className="relative px-3 pb-3 pt-3.5">
+          <div className="pointer-events-none absolute inset-0 rounded-t-xl bg-linear-to-br from-primary/6 via-transparent to-transparent" />
+          <div className="relative flex items-center gap-2.5">
+            <div className="shrink-0 rounded-full bg-linear-to-br from-primary/40 to-primary/10 p-[1.5px]">
+              <Avatar className="h-9 w-9 ring-[1.5px] ring-background">
                 <AvatarImage src={avatar} alt={name} />
-                <AvatarFallback className="bg-primary/10 text-sm font-semibold text-primary">
+                <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
                   {initials}
                 </AvatarFallback>
               </Avatar>
             </div>
-            <div className="grid min-w-0 flex-1 gap-0.5">
-              <span className="truncate text-sm font-semibold tracking-tight">
+            <div className="grid flex-1 gap-px">
+              <span className="truncate text-[13px] font-semibold leading-tight tracking-tight">
                 {name}
               </span>
-              <span className="truncate text-xs text-muted-foreground/70">
+              <span className="text-[11px] leading-tight text-muted-foreground/70">
                 {email}
               </span>
             </div>
           </div>
         </div>
 
-        <DropdownMenuSeparator className="mx-3 bg-border/30" />
+        <DropdownMenuSeparator className="mx-2.5 bg-border/30" />
 
-        {/* ── Navigation items ── */}
-        <DropdownMenuGroup className="p-1.5">
+        {/* ── Navigation ── */}
+        <DropdownMenuGroup className="p-1">
           <DropdownMenuItem
             onClick={() => router.push('/perfil')}
-            className="cursor-pointer gap-3 rounded-lg px-3 py-2.5 transition-colors duration-150 focus:bg-primary/[0.06] focus:text-foreground"
+            className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
           >
-            <BadgeCheck className="h-4 w-4 text-muted-foreground/60" />
-            <span>Conta</span>
+            <BadgeCheck className="h-3.5 w-3.5 text-muted-foreground/60" />
+            Conta
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => router.push('/notificacoes')}
-            className="cursor-pointer gap-3 rounded-lg px-3 py-2.5 transition-colors duration-150 focus:bg-primary/[0.06] focus:text-foreground"
+            className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
           >
-            <Bell className="h-4 w-4 text-muted-foreground/60" />
-            <span>Notificações</span>
+            <Bell className="h-3.5 w-3.5 text-muted-foreground/60" />
+            Notificações
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => window.open('/ajuda', '_blank')}
-            className="cursor-pointer gap-3 rounded-lg px-3 py-2.5 transition-colors duration-150 focus:bg-primary/[0.06] focus:text-foreground"
+            className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
           >
-            <HelpCircle className="h-4 w-4 text-muted-foreground/60" />
-            <span>Ajuda</span>
+            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground/60" />
+            Ajuda
           </DropdownMenuItem>
           {isSuperAdmin && (
             <DropdownMenuItem
               onClick={() => router.push('/app/configuracoes')}
-              className="cursor-pointer gap-3 rounded-lg px-3 py-2.5 transition-colors duration-150 focus:bg-primary/[0.06] focus:text-foreground"
+              className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
             >
-              <Settings className="h-4 w-4 text-muted-foreground/60" />
-              <span>Configurações</span>
+              <Settings className="h-3.5 w-3.5 text-muted-foreground/60" />
+              Configurações
             </DropdownMenuItem>
           )}
         </DropdownMenuGroup>
 
-        <DropdownMenuSeparator className="mx-3 bg-border/30" />
+        <DropdownMenuSeparator className="mx-2.5 bg-border/30" />
 
         {/* ── Theme toggle ── */}
-        <div className="p-1.5">
+        <div className="p-1">
           <DropdownMenuItem
-            className="cursor-pointer gap-3 rounded-lg px-3 py-2.5 transition-colors duration-150 focus:bg-primary/[0.06] focus:text-foreground"
+            className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] transition-colors duration-150 focus:bg-primary/6 focus:text-foreground"
             onSelect={(e) => e.preventDefault()}
           >
-            <div className="flex flex-1 items-center gap-3">
+            <div className="flex flex-1 items-center gap-2.5">
               {mounted && theme === "dark" ? (
-                <Moon className="h-4 w-4 text-muted-foreground/60" />
+                <Moon className="h-3.5 w-3.5 text-muted-foreground/60" />
               ) : (
-                <Sun className="h-4 w-4 text-muted-foreground/60" />
+                <Sun className="h-3.5 w-3.5 text-muted-foreground/60" />
               )}
-              <span>Tema escuro</span>
+              Tema escuro
             </div>
             {mounted && (
               <Switch
@@ -168,16 +167,16 @@ export function HeaderUserMenu() {
           </DropdownMenuItem>
         </div>
 
-        <DropdownMenuSeparator className="mx-3 bg-border/30" />
+        <DropdownMenuSeparator className="mx-2.5 bg-border/30" />
 
         {/* ── Logout ── */}
-        <div className="p-1.5">
+        <div className="p-1">
           <DropdownMenuItem
             onClick={() => logout()}
-            className="cursor-pointer gap-3 rounded-lg px-3 py-2.5 text-muted-foreground transition-colors duration-150 focus:bg-destructive/[0.06] focus:text-destructive"
+            className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] text-muted-foreground transition-colors duration-150 focus:bg-destructive/6 focus:text-destructive"
           >
-            <LogOut className="h-4 w-4" />
-            <span>Sair</span>
+            <LogOut className="h-3.5 w-3.5" />
+            Sair
           </DropdownMenuItem>
         </div>
       </DropdownMenuContent>

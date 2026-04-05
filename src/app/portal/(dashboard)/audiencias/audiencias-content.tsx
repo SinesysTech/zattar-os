@@ -2,25 +2,14 @@
 
 import { PageShell } from "@/components/shared/page-shell";
 import { EmptyState } from "@/components/shared/empty-state";
+import { PortalBadge } from "@/app/portal/feature";
 import type { AudienciaPortal, StatusAudienciaPortal } from "./domain";
 import { Calendar, MapPin, FileText, Clock, Video } from "lucide-react";
 
-const statusConfig: Record<
-  StatusAudienciaPortal,
-  { className: string; label: string }
-> = {
-  Agendada: {
-    className: "bg-primary/10 text-primary",
-    label: "Agendada",
-  },
-  Realizada: {
-    className: "bg-emerald-500/10 text-emerald-400",
-    label: "Realizada",
-  },
-  Adiada: {
-    className: "bg-amber-500/10 text-amber-500",
-    label: "Adiada",
-  },
+const statusVariant: Record<StatusAudienciaPortal, "info" | "success" | "warning"> = {
+  Agendada: "info",
+  Realizada: "success",
+  Adiada: "warning",
 };
 
 interface AudienciasContentProps {
@@ -35,7 +24,7 @@ export function AudienciasContent({
   if (error) {
     return (
       <PageShell title="Audiências">
-        <div className="text-center py-12 text-muted-foreground">
+        <div className="text-center py-12 text-portal-text-muted">
           <p>{error}</p>
         </div>
       </PageShell>
@@ -58,7 +47,7 @@ export function AudienciasContent({
     <PageShell title="Audiências">
       <div className="space-y-4">
         {audiencias.map((audiencia) => {
-          const status = statusConfig[audiencia.status];
+          const variant = statusVariant[audiencia.status];
           return (
             <div
               key={audiencia.id}
@@ -73,7 +62,7 @@ export function AudienciasContent({
                   <p className="text-sm font-semibold">
                     {audiencia.dataHora.split(",")[0]}
                   </p>
-                  <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                  <p className="text-xs text-portal-text-muted flex items-center gap-1 mt-0.5">
                     <Clock className="w-3 h-3 shrink-0" />
                     {audiencia.dataHora.split(",")[1]?.trim()}
                   </p>
@@ -85,11 +74,11 @@ export function AudienciasContent({
                 <p className="text-sm font-semibold truncate">
                   {audiencia.tipo}
                 </p>
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5 truncate">
+                <p className="text-xs text-portal-text-muted flex items-center gap-1.5 truncate">
                   <FileText className="w-3.5 h-3.5 shrink-0" />
                   {audiencia.processo}
                 </p>
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5 truncate">
+                <p className="text-xs text-portal-text-muted flex items-center gap-1.5 truncate">
                   <MapPin className="w-3.5 h-3.5 shrink-0" />
                   {audiencia.vara} — {audiencia.local}
                 </p>
@@ -108,11 +97,9 @@ export function AudienciasContent({
                     Entrar
                   </a>
                 )}
-                <span
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${status.className}`}
-                >
-                  {status.label}
-                </span>
+                <PortalBadge variant={variant}>
+                  {audiencia.status}
+                </PortalBadge>
               </div>
             </div>
           );

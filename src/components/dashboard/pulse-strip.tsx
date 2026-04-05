@@ -1,8 +1,7 @@
 /**
  * PulseStrip — Barra de estatísticas rápidas (totalizadores por categoria)
  * ============================================================================
- * Exibe uma linha horizontal com ícone, total e delta opcional por item.
- * Adequado para resumo de entidades: clientes, partes contrárias, etc.
+ * Exibe cards compactos com ícone, total, delta e barra de proporção.
  *
  * USO:
  *   <PulseStrip items={[
@@ -30,28 +29,62 @@ interface PulseStripProps {
   items: PulseItem[];
 }
 
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+/**
+ * Mapeia o prefixo de cor Tailwind (text-primary, text-warning, etc.)
+ * para classes de background usadas na barra de proporção.
+ */
+function colorToBg(color: string): string {
+  const base = color.replace('text-', '');
+  return `bg-${base}`;
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function PulseStrip({ items }: PulseStripProps) {
+  const grandTotal = items.reduce((sum, item) => sum + item.total, 0);
+
   return (
-    <GlassPanel className="px-5 py-3">
-      <div className="flex items-center gap-6 overflow-x-auto">
-        {items.map((item, i) => (
-          <div key={item.label} className="flex items-center gap-3 shrink-0">
-            {i > 0 && <div className="w-px h-8 bg-border/10 -ml-3" />}
-            <item.icon className={`size-4 ${item.color}/40`} />
-            <div>
-              <p className="font-display text-lg font-bold tabular-nums">{item.total}</p>
-              <p className="text-[10px] text-muted-foreground/60">
-                {item.label}
-                {item.delta && (
-                  <span className="text-success/60 ml-1">{item.delta}</span>
-                )}
-              </p>
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      {items.map((item) => {
+        const pct = grandTotal > 0 ? Math.round((item.total / grandTotal) * 100) : 0;
+
+        return (
+          <GlassPanel key={item.label} className="px-4 py-3">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider truncate">
+                  {item.label}
+                </p>
+                <div className="flex items-baseline gap-1.5 mt-1">
+                  <p className="font-display text-xl font-bold tabular-nums leading-none">
+                    {item.total.toLocaleString('pt-BR')}
+                  </p>
+                  {item.delta && (
+                    <span className="text-[10px] font-medium text-success/70">{item.delta}</span>
+                  )}
+                </div>
+              </div>
+              <div className={`size-8 rounded-lg ${colorToBg(item.color)}/8 flex items-center justify-center shrink-0`}>
+                <item.icon className={`size-4 ${item.color}/50`} />
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-    </GlassPanel>
+            {/* Barra de proporção */}
+            <div className="mt-2.5 flex items-center gap-2">
+              <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
+                <div
+                  className={`h-full rounded-full ${colorToBg(item.color)}/25 transition-all duration-500`}
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+              <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+                {pct}%
+              </span>
+            </div>
+          </GlassPanel>
+        );
+      })}
+    </div>
   );
 }

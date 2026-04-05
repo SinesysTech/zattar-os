@@ -1,7 +1,7 @@
 "use client"
 
-import { PageShell } from "@/components/shared/page-shell"
 import { EmptyState } from "@/components/shared/empty-state"
+import { PortalSectionHeader } from "@/app/portal/feature"
 import {
   Card,
   CardContent,
@@ -72,7 +72,7 @@ function InfoItem({
 }) {
   return (
     <div className="space-y-1">
-      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
+      <p className="text-xs font-medium text-portal-text-muted uppercase tracking-wide flex items-center gap-1.5">
         {Icon && <Icon className="h-3 w-3" />}
         {label}
       </p>
@@ -93,28 +93,32 @@ interface PerfilContentProps {
 export function PerfilContent({ perfil, error }: PerfilContentProps) {
   if (error) {
     return (
-      <PageShell title="Meu Perfil">
-        <div className="text-center py-12 text-muted-foreground">
+      <div className="space-y-6">
+        <PortalSectionHeader title="Meu Perfil" />
+        <div className="text-center py-12 text-portal-text-muted">
           <p>{error}</p>
         </div>
-      </PageShell>
+      </div>
     )
   }
 
   if (!perfil) {
     return (
-      <PageShell title="Meu Perfil">
+      <div className="space-y-6">
+        <PortalSectionHeader title="Meu Perfil" />
         <EmptyState
           icon={User}
           title="Perfil nao encontrado"
           description="Nao foi possivel carregar os dados do seu perfil."
         />
-      </PageShell>
+      </div>
     )
   }
 
   return (
-    <PageShell title="Meu Perfil">
+    <div className="space-y-8">
+      <PortalSectionHeader title="Meu Perfil" />
+
       <div className="space-y-6">
         {/* Header with avatar */}
         <Card>
@@ -127,7 +131,7 @@ export function PerfilContent({ perfil, error }: PerfilContentProps) {
                 <h2 className="text-xl font-semibold text-foreground truncate">
                   {perfil.nome}
                 </h2>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-portal-text-muted">
                   CPF: {mascaraCPF(perfil.cpf)}
                 </p>
               </div>
@@ -205,7 +209,7 @@ export function PerfilContent({ perfil, error }: PerfilContentProps) {
                 />
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-portal-text-muted">
                 Endereco nao cadastrado.
               </p>
             )}
@@ -226,7 +230,7 @@ export function PerfilContent({ perfil, error }: PerfilContentProps) {
                 <p className="text-2xl font-bold text-foreground">
                   {perfil.totalProcessos}
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-portal-text-muted">
                   {perfil.totalProcessos === 1
                     ? "processo vinculado"
                     : "processos vinculados"}
@@ -244,6 +248,6 @@ export function PerfilContent({ perfil, error }: PerfilContentProps) {
           </CardContent>
         </Card>
       </div>
-    </PageShell>
+    </div>
   )
 }

@@ -39,7 +39,7 @@ function formatCNPJ(value: string): string {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest pb-1 border-b border-border/40">
+    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider pb-1 border-b border-border/40">
       {children}
     </p>
   );
@@ -343,7 +343,7 @@ export default function HoleritePage() {
           <SectionLabel>Dados da Empresa</SectionLabel>
 
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Nome da Empresa
             </label>
             <input
@@ -356,7 +356,7 @@ export default function HoleritePage() {
           </div>
 
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               CNPJ
             </label>
             <input
@@ -369,7 +369,7 @@ export default function HoleritePage() {
           </div>
 
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Endereco
             </label>
             <input
@@ -385,7 +385,7 @@ export default function HoleritePage() {
           <SectionLabel>Dados do Empregado</SectionLabel>
 
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Nome do Empregado
             </label>
             <input
@@ -398,7 +398,7 @@ export default function HoleritePage() {
           </div>
 
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               CPF
             </label>
             <input
@@ -411,7 +411,7 @@ export default function HoleritePage() {
           </div>
 
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Cargo
             </label>
             <input
@@ -424,7 +424,7 @@ export default function HoleritePage() {
           </div>
 
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Data de Admissao
             </label>
             <input
@@ -436,7 +436,7 @@ export default function HoleritePage() {
           </div>
 
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Departamento
             </label>
             <input
@@ -517,7 +517,7 @@ export default function HoleritePage() {
 
           {/* Mes de Referencia */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Mes de Referencia
             </label>
             <input
@@ -548,10 +548,8 @@ export default function HoleritePage() {
         <>
           <Card>
             <CardContent className="p-0 relative overflow-hidden">
-              {/* Decorative glow */}
-              <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
 
-              <span className="text-xs font-bold tracking-widest text-primary uppercase block px-6 pt-6 pb-4 relative z-10">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase block px-6 pt-6 pb-4 relative z-10">
                 Visualizacao do Holerite
               </span>
 
@@ -619,7 +617,7 @@ export default function HoleritePage() {
 
                 {/* Proventos */}
                 <div className="p-4">
-                  <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
+                  <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
                     <span>Proventos</span>
                     <span>Valor</span>
                   </div>
@@ -649,7 +647,7 @@ export default function HoleritePage() {
 
                 {/* Descontos */}
                 <div className="p-4">
-                  <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
+                  <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
                     <span>Descontos</span>
                     <span>Valor</span>
                   </div>
@@ -707,7 +705,7 @@ export default function HoleritePage() {
                 </div>
 
                 {/* Footer */}
-                <div className="p-3 text-[10px] text-muted-foreground grid grid-cols-2 gap-x-4 gap-y-1">
+                <div className="p-3 text-xs text-muted-foreground grid grid-cols-2 gap-x-4 gap-y-1">
                   <div>
                     <span>Base INSS: </span>
                     <span className="font-mono tabular-nums">

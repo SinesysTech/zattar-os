@@ -151,7 +151,26 @@
   --color-on-error-container: var(--on-error-container);
   --color-on-error: var(--on-error);
 
-  /* --- 10. Magistrate AI: Dim & Tint Tokens --- */
+  /* --- 10. Portal do Cliente --- */
+  --color-portal-bg: var(--portal-bg);
+  --color-portal-card: var(--portal-card);
+  --color-portal-card-hover: var(--portal-card-hover);
+  --color-portal-surface: var(--portal-surface);
+  --color-portal-text: var(--portal-text);
+  --color-portal-text-muted: var(--portal-text-muted);
+  --color-portal-text-subtle: var(--portal-text-subtle);
+  --color-portal-primary: var(--portal-primary);
+  --color-portal-primary-soft: var(--portal-primary-soft);
+  --color-portal-success: var(--portal-success);
+  --color-portal-success-soft: var(--portal-success-soft);
+  --color-portal-warning: var(--portal-warning);
+  --color-portal-warning-soft: var(--portal-warning-soft);
+  --color-portal-danger: var(--portal-danger);
+  --color-portal-danger-soft: var(--portal-danger-soft);
+  --color-portal-info: var(--portal-info);
+  --color-portal-info-soft: var(--portal-info-soft);
+
+  /* --- 11. Magistrate AI: Dim & Tint Tokens --- */
   --color-primary-dim: var(--primary-dim);
   --color-secondary-dim: var(--secondary-dim);
   --color-tertiary-dim: var(--tertiary-dim);
@@ -300,6 +319,25 @@
   --error-dim: oklch(0.50 0.20 25);
   --inverse-primary: oklch(0.80 0.18 281);
   --surface-tint: oklch(0.48 0.26 281);
+
+  /* === PORTAL DO CLIENTE — Tokens Derivados (Light) === */
+  --portal-bg: oklch(0.97 0.005 281);
+  --portal-card: oklch(1.0 0 0);
+  --portal-card-hover: oklch(0.98 0.005 281);
+  --portal-surface: oklch(0.95 0.008 281);
+  --portal-text: oklch(0.15 0.01 281);
+  --portal-text-muted: oklch(0.45 0.01 281);
+  --portal-text-subtle: oklch(0.60 0.005 281);
+  --portal-primary: var(--primary);
+  --portal-primary-soft: oklch(0.95 0.05 281);
+  --portal-success: var(--success);
+  --portal-success-soft: oklch(0.95 0.05 145);
+  --portal-warning: var(--warning);
+  --portal-warning-soft: oklch(0.95 0.05 75);
+  --portal-danger: var(--destructive);
+  --portal-danger-soft: oklch(0.95 0.05 25);
+  --portal-info: var(--info);
+  --portal-info-soft: oklch(0.95 0.05 250);
 }
 
 .dark {
@@ -432,6 +470,25 @@
   --error-dim: oklch(0.55 0.18 25);
   --inverse-primary: oklch(0.48 0.26 281);
   --surface-tint: oklch(0.80 0.18 281);
+
+  /* === PORTAL DO CLIENTE — Tokens Derivados (Dark) === */
+  --portal-bg: oklch(0.14 0.005 281);
+  --portal-card: oklch(0.20 0.008 281);
+  --portal-card-hover: oklch(0.24 0.008 281);
+  --portal-surface: oklch(0.17 0.005 281);
+  --portal-text: oklch(0.95 0.005 281);
+  --portal-text-muted: oklch(0.65 0.01 281);
+  --portal-text-subtle: oklch(0.50 0.005 281);
+  --portal-primary: var(--primary);
+  --portal-primary-soft: oklch(0.25 0.05 281);
+  --portal-success: var(--success);
+  --portal-success-soft: oklch(0.25 0.05 145);
+  --portal-warning: var(--warning);
+  --portal-warning-soft: oklch(0.25 0.05 75);
+  --portal-danger: var(--destructive);
+  --portal-danger-soft: oklch(0.25 0.05 25);
+  --portal-info: var(--info);
+  --portal-info-soft: oklch(0.25 0.05 250);
 }
 
 /* =============================================================================
@@ -498,6 +555,23 @@
 }
 :root:not(.dark) [class*="bg-white/20"] {
   background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* =============================================================================
+ * FLOATING OVERLAYS — No Glassmorphism
+ * =============================================================================
+ * Dropdowns, selects, popovers, tooltips e menus de contexto devem ter
+ * fundo sólido para garantir contraste e legibilidade de texto.
+ * Remove backdrop-filter e força bg opaco em todos os floating elements.
+ */
+[data-slot="popover-content"],
+[data-slot="select-content"],
+[data-slot="dropdown-menu-content"],
+[data-slot="dropdown-menu-sub-content"],
+[data-slot="tooltip-content"],
+[data-slot="command"] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* =============================================================================

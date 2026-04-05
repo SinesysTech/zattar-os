@@ -175,7 +175,7 @@ export default function SeguroDesempregoCalculatorPage() {
               <CardContent className="p-6 space-y-4">
                 {/* Badge inelegivel */}
                 <div className="inline-flex items-center gap-2 rounded-full bg-destructive/10 px-4 py-1.5">
-                  <span className="text-xs font-black tracking-widest text-destructive uppercase">
+                  <span className="text-xs font-bold tracking-wider text-destructive uppercase">
                     NAO ELEGIVEL
                   </span>
                 </div>
@@ -193,18 +193,16 @@ export default function SeguroDesempregoCalculatorPage() {
             /* ── Elegivel / empty state ── */
             <Card>
               <CardContent className="p-6 relative overflow-hidden">
-                {/* Decorative glow */}
-                <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
 
-                <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-4 relative z-10">
+                <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-4 relative z-10">
                   Resultado do Calculo
                 </span>
 
                 {/* Elegivel badge */}
                 {resultado?.elegivel && (
-                  <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-4 py-1.5 mb-6 relative z-10">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-portal-success-soft px-4 py-1.5 mb-6 relative z-10">
                     <svg
-                      className="w-3.5 h-3.5 text-emerald-500"
+                      className="w-3.5 h-3.5 text-portal-success"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -212,7 +210,7 @@ export default function SeguroDesempregoCalculatorPage() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-xs font-black tracking-widest text-emerald-500 uppercase">
+                    <span className="text-xs font-bold tracking-wider text-portal-success uppercase">
                       ELEGIVEL
                     </span>
                   </div>
@@ -239,10 +237,10 @@ export default function SeguroDesempregoCalculatorPage() {
                 {/* Total Estimado highlight */}
                 <div className="mt-6 pt-4 border-t border-border relative z-10">
                   <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                       Total Estimado
                     </span>
-                    <span className="text-3xl font-black text-primary font-headline tabular-nums">
+                    <span className="text-3xl font-bold text-primary font-headline tabular-nums">
                       {resultado ? formatBRL(resultado.totalEstimado) : formatBRL(0)}
                     </span>
                   </div>

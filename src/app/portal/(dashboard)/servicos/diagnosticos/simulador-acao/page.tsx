@@ -271,7 +271,7 @@ export default function SimuladorAcaoPage() {
 
           {/* Multi-select Verbas */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Verbas Pleiteadas
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -422,10 +422,8 @@ export default function SimuladorAcaoPage() {
         <>
           <Card>
             <CardContent className="p-6 relative overflow-hidden">
-              {/* Decorative glow */}
-              <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
 
-              <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-6 relative z-10">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-6 relative z-10">
                 Verbas Pleiteadas
               </span>
 
@@ -480,30 +478,30 @@ export default function SimuladorAcaoPage() {
               {/* 3 Scenario Cards */}
               <div className="grid grid-cols-3 gap-3 mt-6 relative z-10">
                 <div className="bg-muted rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block mb-2">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-2">
                     Conservador
                   </span>
-                  <span className="text-xl font-black text-foreground font-headline tabular-nums">
+                  <span className="text-xl font-bold text-foreground font-headline tabular-nums">
                     {resultado ? formatBRL(resultado.cenarios[0].total) : formatBRL(0)}
                   </span>
-                  <span className="text-[10px] text-muted-foreground/50 block mt-1">-20%</span>
+                  <span className="text-xs text-muted-foreground/50 block mt-1">-20%</span>
                 </div>
                 <div className="bg-primary/10 rounded-xl p-4 text-center border border-primary/20">
-                  <span className="text-[10px] font-bold text-primary uppercase tracking-widest block mb-2">
+                  <span className="text-xs font-bold text-primary uppercase tracking-wider block mb-2">
                     Moderado
                   </span>
-                  <span className="text-xl font-black text-primary font-headline tabular-nums">
+                  <span className="text-xl font-bold text-primary font-headline tabular-nums">
                     {resultado ? formatBRL(resultado.cenarios[1].total) : formatBRL(0)}
                   </span>
                 </div>
                 <div className="bg-muted rounded-xl p-4 text-center">
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block mb-2">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-2">
                     Otimista
                   </span>
-                  <span className="text-xl font-black text-foreground font-headline tabular-nums">
+                  <span className="text-xl font-bold text-foreground font-headline tabular-nums">
                     {resultado ? formatBRL(resultado.cenarios[2].total) : formatBRL(0)}
                   </span>
-                  <span className="text-[10px] text-muted-foreground/50 block mt-1">+20%</span>
+                  <span className="text-xs text-muted-foreground/50 block mt-1">+20%</span>
                 </div>
               </div>
 

@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import {
   ExternalLink,
-  MapPin,
   ClipboardList,
   BookOpen,
   FileText,
@@ -155,10 +154,10 @@ export function AudienciaDetailSheet({
       error={shouldFetch ? error : null}
     >
       {/* ─── Header ─── */}
-      <DetailSheetHeader className="pb-3 border-b-0">
-        <div className="flex items-start gap-2.5">
-          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-            <Gavel className="size-4 text-primary" />
+      <DetailSheetHeader>
+        <div className="flex items-start gap-3">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+            <Gavel className="size-4.5 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
             <DetailSheetTitle badge={audiencia && <AudienciaStatusBadge status={audiencia.status} />}>
@@ -177,9 +176,9 @@ export function AudienciaDetailSheet({
       <DetailSheetContent>
         {/* Meta strip — scan rápido */}
         {audiencia && (
-          <DetailSheetMetaGrid className="rounded-xl border border-border/15 p-3">
+          <DetailSheetMetaGrid className="rounded-xl border border-border/30 bg-muted/30 p-4">
             <DetailSheetMetaItem label="Horário">
-              <Clock className="size-3 text-muted-foreground/40" />
+              <Clock className="size-3.5 text-muted-foreground/50" />
               {dataInicio && dataFim && (
                 <span className="tabular-nums">
                   {format(dataInicio, 'HH:mm')} – {format(dataFim, 'HH:mm')}
@@ -194,14 +193,14 @@ export function AudienciaDetailSheet({
                 <div className="flex items-center gap-1.5 min-w-0">
                   <Avatar className="size-5">
                     <AvatarImage src={responsavelAvatar || undefined} alt={responsavelNome} />
-                    <AvatarFallback className="text-[8px]">
+                    <AvatarFallback className="text-[9px]">
                       {getInitials(responsavelNome)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="truncate text-[13px]">{responsavelNome}</span>
+                  <span className="truncate">{responsavelNome}</span>
                 </div>
               ) : (
-                <span className="text-muted-foreground/50 text-[13px]">—</span>
+                <span className="text-muted-foreground/60">—</span>
               )}
             </DetailSheetMetaItem>
           </DetailSheetMetaGrid>
@@ -211,41 +210,46 @@ export function AudienciaDetailSheet({
         {audiencia && (audiencia.urlAudienciaVirtual || (isRealizada && hasAta)) && (
           <div className="flex flex-wrap gap-2">
             {audiencia.urlAudienciaVirtual && (
-              <a
-                href={audiencia.urlAudienciaVirtual}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-[11px] font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
-              >
-                <Video className="size-3" />
-                Entrar na Sala Virtual
-              </a>
+              <Button size="sm" asChild>
+                <a
+                  href={audiencia.urlAudienciaVirtual}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Video className="size-3.5" />
+                  Entrar na Sala Virtual
+                  <ExternalLink className="size-3" />
+                </a>
+              </Button>
             )}
             {isRealizada && hasAta && audiencia.urlAtaAudiencia && (
-              <a
-                href={audiencia.urlAtaAudiencia}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-muted-foreground/60 hover:text-foreground/70 hover:bg-muted/50 text-[11px] font-medium transition-colors cursor-pointer border border-border/20"
-              >
-                <FileText className="size-3" />
-                Visualizar Ata
-              </a>
+              <Button variant="outline" size="sm" asChild>
+                <a
+                  href={audiencia.urlAtaAudiencia}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FileText className="size-3.5" />
+                  Visualizar Ata
+                </a>
+              </Button>
             )}
           </div>
         )}
 
         {/* Processo */}
         {audiencia && (
-          <DetailSheetSection icon={<ClipboardList className="size-3 text-muted-foreground/40" />} title="Processo">
-            <span className="font-mono text-[13px] font-semibold tabular-nums tracking-tight text-foreground/80">
-              {audiencia.numeroProcesso}
-            </span>
-            <span className="text-[10px] text-muted-foreground/50">
-              {audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
-            </span>
+          <DetailSheetSection icon={<ClipboardList className="size-3.5 text-muted-foreground/50" />} title="Processo">
+            <div className="space-y-0.5">
+              <span className="block font-mono text-sm font-semibold tabular-nums tracking-tight text-foreground">
+                {audiencia.numeroProcesso}
+              </span>
+              <span className="block text-[11px] text-muted-foreground/60">
+                {audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
+              </span>
+            </div>
             <DetailSheetSeparator />
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <ParteBadge polo="ATIVO" className="flex" truncate maxWidth="100%">
                 {audiencia.poloAtivoOrigem || audiencia.poloAtivoNome || '—'}
               </ParteBadge>
@@ -258,12 +262,12 @@ export function AudienciaDetailSheet({
 
         {/* Local / Endereço */}
         {audiencia && (audiencia.salaAudienciaNome || audiencia.enderecoPresencial) && (
-          <DetailSheetSection icon={<Building2 className="size-3 text-muted-foreground/40" />} title="Local">
+          <DetailSheetSection icon={<Building2 className="size-3.5 text-muted-foreground/50" />} title="Local">
             {audiencia.salaAudienciaNome && (
               <DetailSheetInfoRow label="Sala">{audiencia.salaAudienciaNome}</DetailSheetInfoRow>
             )}
             {audiencia.enderecoPresencial && (
-              <p className="text-[11px] text-muted-foreground/55 leading-relaxed">
+              <p className="text-xs text-muted-foreground/70 leading-relaxed">
                 {audiencia.enderecoPresencial.logradouro}, {audiencia.enderecoPresencial.numero}
                 {audiencia.enderecoPresencial.complemento && ` – ${audiencia.enderecoPresencial.complemento}`}
                 <br />
@@ -277,20 +281,20 @@ export function AudienciaDetailSheet({
 
         {/* Flags */}
         {audiencia && (audiencia.segredoJustica || audiencia.juizoDigital || audiencia.statusDescricao) && (
-          <DetailSheetSection icon={<Scale className="size-3 text-muted-foreground/40" />} title="Informações Adicionais">
+          <DetailSheetSection icon={<Scale className="size-3.5 text-muted-foreground/50" />} title="Informações Adicionais">
             {audiencia.statusDescricao && (
               <DetailSheetInfoRow label="Situação">{audiencia.statusDescricao}</DetailSheetInfoRow>
             )}
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-2">
               {audiencia.segredoJustica && (
-                <span className="inline-flex items-center gap-1 rounded-md bg-warning/10 px-1.5 py-px text-[10px] font-semibold text-warning">
-                  <ShieldAlert className="size-2.5" />
+                <span className="inline-flex items-center gap-1.5 rounded-md bg-warning/10 px-2 py-0.5 text-[11px] font-semibold text-warning">
+                  <ShieldAlert className="size-3" />
                   Segredo de Justiça
                 </span>
               )}
               {audiencia.juizoDigital && (
-                <span className="inline-flex items-center gap-1 rounded-md bg-info/10 px-1.5 py-px text-[10px] font-semibold text-info">
-                  <Monitor className="size-2.5" />
+                <span className="inline-flex items-center gap-1.5 rounded-md bg-info/10 px-2 py-0.5 text-[11px] font-semibold text-info">
+                  <Monitor className="size-3" />
                   Juízo Digital
                 </span>
               )}
@@ -300,8 +304,8 @@ export function AudienciaDetailSheet({
 
         {/* Observações */}
         {audiencia?.observacoes && (
-          <DetailSheetSection icon={<BookOpen className="size-3 text-muted-foreground/40" />} title="Observações">
-            <p className="text-[13px] text-foreground/70 whitespace-pre-wrap leading-relaxed">
+          <DetailSheetSection icon={<BookOpen className="size-3.5 text-muted-foreground/50" />} title="Observações">
+            <p className="text-sm text-foreground/80 whitespace-pre-wrap leading-relaxed">
               {audiencia.observacoes}
             </p>
           </DetailSheetSection>

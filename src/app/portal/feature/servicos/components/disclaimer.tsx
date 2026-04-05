@@ -6,7 +6,7 @@ interface DisclaimerProps {
 
 export function Disclaimer({ text }: DisclaimerProps) {
   return (
-    <p className="text-[10px] text-muted-foreground/40 italic mt-4 leading-relaxed">
+    <p className="text-xs text-portal-text-subtle italic mt-4 leading-relaxed">
       {text}
     </p>
   );

@@ -1,10 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { FileText, Search, FileSearch, Clock, CheckCircle2, XCircle } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
+import { FileText, FileSearch, Clock, CheckCircle2, XCircle } from "lucide-react"
 import { EmptyState } from "@/components/shared/empty-state"
+import {
+  PortalSectionHeader,
+  PortalFilterBar,
+  PortalBadge,
+} from "@/app/portal/feature"
 import type { ContratoPortal, StatusContratoPortal } from "./domain"
 
 // ---------------------------------------------------------------------------
@@ -25,22 +28,22 @@ const FILTER_OPTIONS: { label: string; value: StatusContratoPortal | null }[] = 
 function getStatusDot(status: StatusContratoPortal): string {
   switch (status) {
     case "Ativo":
-      return "bg-emerald-500"
+      return "bg-portal-success"
     case "Pendente":
-      return "bg-amber-500"
+      return "bg-portal-warning"
     case "Encerrado":
       return "bg-muted-foreground"
   }
 }
 
-function getStatusLabelColor(status: StatusContratoPortal): string {
+function getStatusBadgeVariant(status: StatusContratoPortal): "success" | "warning" | "neutral" {
   switch (status) {
     case "Ativo":
-      return "text-emerald-600 dark:text-emerald-400"
+      return "success"
     case "Pendente":
-      return "text-amber-600 dark:text-amber-400"
+      return "warning"
     case "Encerrado":
-      return "text-muted-foreground"
+      return "neutral"
   }
 }
 
@@ -52,17 +55,6 @@ function getStatusIcon(status: StatusContratoPortal) {
       return <Clock className="w-3.5 h-3.5" />
     case "Encerrado":
       return <XCircle className="w-3.5 h-3.5" />
-  }
-}
-
-function getStatusBadgeVariant(status: StatusContratoPortal): "default" | "secondary" | "outline" | "destructive" {
-  switch (status) {
-    case "Ativo":
-      return "default"
-    case "Pendente":
-      return "secondary"
-    case "Encerrado":
-      return "outline"
   }
 }
 
@@ -88,14 +80,12 @@ function ContratoCard({ contrato, index }: ContratoCardProps) {
             <span
               className={`w-2.5 h-2.5 rounded-full shrink-0 ${getStatusDot(contrato.status)}`}
             />
-            <span
-              className={`text-xs font-semibold flex items-center gap-1 ${getStatusLabelColor(contrato.status)}`}
-            >
+            <PortalBadge variant={getStatusBadgeVariant(contrato.status)} dot={false}>
               {getStatusIcon(contrato.status)}
               {contrato.status}
-            </span>
+            </PortalBadge>
           </div>
-          <p className="font-mono text-xs text-muted-foreground">
+          <p className="font-mono text-xs text-portal-text-muted">
             #{contrato.id}
           </p>
         </div>
@@ -106,18 +96,22 @@ function ContratoCard({ contrato, index }: ContratoCardProps) {
             {contrato.titulo}
           </h3>
           <div className="flex flex-wrap items-center gap-2 mt-2">
-            <Badge variant={getStatusBadgeVariant(contrato.status)}>
+            <PortalBadge variant={getStatusBadgeVariant(contrato.status)}>
               {contrato.status}
-            </Badge>
-            <Badge variant="outline">{contrato.tipoCobranca}</Badge>
-            <Badge variant="outline">{contrato.papelCliente}</Badge>
+            </PortalBadge>
+            <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium text-portal-text-muted">
+              {contrato.tipoCobranca}
+            </span>
+            <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium text-portal-text-muted">
+              {contrato.papelCliente}
+            </span>
           </div>
           {contrato.partes.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-3">
               {contrato.partes.map((parte, i) => (
                 <span
                   key={i}
-                  className="px-2 py-1 bg-muted rounded-md text-xs text-muted-foreground"
+                  className="px-2 py-1 bg-muted rounded-md text-xs text-portal-text-muted"
                 >
                   {parte}
                 </span>
@@ -129,7 +123,7 @@ function ContratoCard({ contrato, index }: ContratoCardProps) {
         {/* Right -- date */}
         <div className="flex flex-col items-start lg:items-end gap-2 shrink-0 lg:w-40">
           <div className="text-right">
-            <p className="text-xs text-muted-foreground/60 mb-0.5">
+            <p className="text-xs text-portal-text-subtle mb-0.5">
               Cadastrado em
             </p>
             <p className="text-sm font-medium font-mono text-foreground">
@@ -190,39 +184,20 @@ export function ContratosContent({ contratos, error }: ContratosContentProps) {
 
   return (
     <div className="space-y-6">
-      {/* Search and filters */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-          <Input
-            type="text"
-            placeholder="Buscar contrato..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 h-9"
-            aria-label="Buscar contrato"
-          />
-        </div>
+      <PortalSectionHeader title="Meus Contratos" />
 
-        <div className="flex items-center gap-2 flex-wrap">
-          {FILTER_OPTIONS.map((option) => (
-            <button
-              key={option.label}
-              onClick={() => setActiveFilter(option.value)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                activeFilter === option.value
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Search and filters */}
+      <PortalFilterBar
+        filters={FILTER_OPTIONS}
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Buscar contrato..."
+      />
 
       {/* Summary */}
-      <p className="text-sm text-muted-foreground">
+      <p className="text-sm text-portal-text-muted">
         {filteredContratos.length}{" "}
         {filteredContratos.length === 1 ? "contrato encontrado" : "contratos encontrados"}
       </p>

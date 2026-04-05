@@ -163,34 +163,32 @@ export default function DecimoTerceiroCalculatorPage() {
         <>
           <Card>
             <CardContent className="p-6 relative overflow-hidden">
-              {/* Decorative glow */}
-              <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
 
-              <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-6 relative z-10">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-6 relative z-10">
                 Detalhamento do Calculo
               </span>
 
               {/* Parcelas highlight cards */}
               <div className="grid grid-cols-2 gap-3 mb-6 relative z-10">
                 <div className="bg-muted rounded-xl p-5">
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block mb-2">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-2">
                     1a Parcela
                   </span>
-                  <span className="text-2xl font-black text-foreground font-headline tabular-nums">
+                  <span className="text-2xl font-bold text-foreground font-headline tabular-nums">
                     {resultado ? formatBRL(resultado.primeiraParcelaValor) : formatBRL(0)}
                   </span>
-                  <span className="text-[10px] text-muted-foreground/50 font-bold uppercase tracking-widest mt-2 block">
+                  <span className="text-xs text-muted-foreground/50 font-bold uppercase tracking-wider mt-2 block">
                     S/ DESCONTOS
                   </span>
                 </div>
                 <div className="bg-muted rounded-xl p-5 border border-primary/20">
-                  <span className="text-[10px] font-bold text-primary uppercase tracking-widest block mb-2">
+                  <span className="text-xs font-bold text-primary uppercase tracking-wider block mb-2">
                     2a Parcela
                   </span>
-                  <span className="text-2xl font-black text-foreground font-headline tabular-nums">
+                  <span className="text-2xl font-bold text-foreground font-headline tabular-nums">
                     {resultado ? formatBRL(Math.max(0, resultado.segundaParcelaLiquido)) : formatBRL(0)}
                   </span>
-                  <span className="text-[10px] text-muted-foreground/50 font-bold uppercase tracking-widest mt-2 block">
+                  <span className="text-xs text-muted-foreground/50 font-bold uppercase tracking-wider mt-2 block">
                     C/ DESCONTOS
                   </span>
                 </div>
@@ -230,10 +228,10 @@ export default function DecimoTerceiroCalculatorPage() {
               {/* Total Liquido highlight */}
               <div className="mt-6 pt-4 relative z-10">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Total Liquido
                   </span>
-                  <span className="text-3xl font-black text-primary font-headline tabular-nums">
+                  <span className="text-3xl font-bold text-primary font-headline tabular-nums">
                     {resultado ? formatBRL(resultado.totalLiquido) : formatBRL(0)}
                   </span>
                 </div>

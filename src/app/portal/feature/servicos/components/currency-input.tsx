@@ -15,7 +15,7 @@ export function CurrencyInput({
 }: CurrencyInputProps) {
   return (
     <div className="space-y-3">
-      <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+      <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
         {label}
       </label>
       <div className="relative">
@@ -32,7 +32,7 @@ export function CurrencyInput({
             const parsed = parseFloat(raw.replace(",", "."));
             onChange(raw, isNaN(parsed) ? 0 : parsed);
           }}
-          className="w-full bg-muted border-none rounded-lg p-4 pl-12 text-foreground font-mono text-lg outline-none focus:ring-2 focus:ring-primary/40 transition-shadow placeholder:text-muted-foreground/20"
+          className="w-full bg-muted border-none rounded-lg p-4 pl-12 text-foreground font-mono text-lg outline-none focus:ring-2 focus:ring-primary/40 transition-shadow placeholder:text-muted-foreground/50"
         />
       </div>
     </div>

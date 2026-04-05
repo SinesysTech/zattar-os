@@ -28,25 +28,25 @@ export default function GeradorContratosPage() {
           {/* Step 1: Contract Type Selection */}
           <Card className="rounded-2xl p-8 border-l-4 border-l-primary/50 shadow-lg">
             <h3 className="font-headline text-xl font-bold mb-6 flex items-center gap-3 text-foreground">
-              <span className="h-8 w-8 rounded-full bg-primary/20 text-primary flex items-center justify-center text-sm font-black ring-2 ring-primary/20">01</span>
+              <span className="h-8 w-8 rounded-full bg-primary/20 text-primary flex items-center justify-center text-sm font-bold ring-2 ring-primary/20">01</span>
               Selecionar Instrumento Jurídico
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <button className="flex flex-col items-center justify-center p-4 rounded-xl bg-muted border border-primary/50 text-primary shadow-sm transition-all">
                 <Briefcase className="w-8 h-8 mb-3" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">Trabalhista</span>
+                <span className="text-xs font-bold uppercase tracking-wider">Trabalhista</span>
               </button>
               <button className="flex flex-col items-center justify-center p-4 rounded-xl bg-muted/50 hover:bg-muted border border-border hover:border-border/80 text-muted-foreground hover:text-foreground transition-all">
                 <ShieldCheck className="w-8 h-8 mb-3" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">A.C. / NDA</span>
+                <span className="text-xs font-bold uppercase tracking-wider">A.C. / NDA</span>
               </button>
               <button className="flex flex-col items-center justify-center p-4 rounded-xl bg-muted/50 hover:bg-muted border border-border hover:border-border/80 text-muted-foreground hover:text-foreground transition-all">
                 <Building2 className="w-8 h-8 mb-3" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">Aluguel / Imóvel</span>
+                <span className="text-xs font-bold uppercase tracking-wider">Aluguel / Imóvel</span>
               </button>
               <button className="flex flex-col items-center justify-center p-4 rounded-xl bg-muted/50 hover:bg-muted border border-border hover:border-border/80 text-muted-foreground hover:text-foreground transition-all">
                 <ShoppingCart className="w-8 h-8 mb-3" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">Vendas / B2B</span>
+                <span className="text-xs font-bold uppercase tracking-wider">Vendas / B2B</span>
               </button>
             </div>
           </Card>
@@ -54,12 +54,12 @@ export default function GeradorContratosPage() {
           {/* Step 2: Contract Details Form */}
           <Card className="rounded-2xl p-8 shadow-lg">
             <h3 className="font-headline text-xl font-bold mb-6 flex items-center gap-3 text-foreground">
-              <span className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-black">02</span>
+              <span className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">02</span>
               Configurar Parâmetros
             </h3>
             <div className="grid grid-cols-2 gap-6">
               <div className="col-span-2 sm:col-span-1">
-                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">Nome da Contratante/Cliente</label>
+                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Nome da Contratante/Cliente</label>
                 <input
                   className="w-full bg-muted border-none rounded-xl p-4 text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-primary/50 transition-all outline-none"
                   placeholder="Nome Completo da Pessoa Jurídica"
@@ -67,7 +67,7 @@ export default function GeradorContratosPage() {
                 />
               </div>
               <div className="col-span-2 sm:col-span-1">
-                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">Valor do Contrato (Opcional)</label>
+                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Valor do Contrato (Opcional)</label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary font-bold">R$</span>
                   <input
@@ -78,7 +78,7 @@ export default function GeradorContratosPage() {
                 </div>
               </div>
               <div className="col-span-2 sm:col-span-1">
-                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">Duração (Meses)</label>
+                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Duração (Meses)</label>
                 <select className="w-full bg-muted border-none rounded-xl p-4 text-foreground focus:ring-1 focus:ring-primary/50 transition-all outline-none appearance-none">
                   <option value="indeterminado">Prazo Indeterminado</option>
                   <option value="12">12 Meses</option>
@@ -87,14 +87,14 @@ export default function GeradorContratosPage() {
                 </select>
               </div>
               <div className="col-span-2 sm:col-span-1">
-                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">Data de Início/Eficácia</label>
+                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Data de Início/Eficácia</label>
                 <input
                   className="w-full bg-muted border-none rounded-xl p-4 text-foreground focus:ring-1 focus:ring-primary/50 transition-all outline-none"
                   type="date"
                 />
               </div>
               <div className="col-span-2">
-                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">Cláusulas ou Exigências Específicas</label>
+                <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Cláusulas ou Exigências Específicas</label>
                 <textarea
                   className="w-full bg-muted border-none rounded-xl p-4 text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-primary/50 transition-all outline-none resize-none"
                   placeholder="Insira estipulações personalizadas, termos de não-concorrência, obrigações de EPI ou responsabilizações específicas..."
@@ -112,10 +112,10 @@ export default function GeradorContratosPage() {
               </div>
               <div>
                 <p className="text-sm font-bold text-foreground mb-1">Verificação de IA Ativa</p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Mapeamento dinâmico CLT/Código Civil.</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">Mapeamento dinâmico CLT/Código Civil.</p>
               </div>
             </div>
-            <button className="w-full sm:w-auto bg-linear-to-r from-primary to-primary-dim text-primary-foreground px-8 py-4 rounded-xl font-black uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all text-xs">
+            <button className="w-full sm:w-auto bg-linear-to-r from-primary to-primary-dim text-primary-foreground px-8 py-4 rounded-xl font-bold uppercase tracking-wider hover:opacity-90 active:scale-95 transition-all text-xs">
               Sintetizar Minuta
             </button>
           </div>
@@ -126,7 +126,7 @@ export default function GeradorContratosPage() {
         <div className="col-span-12 xl:col-span-5 relative">
           <div className="lg:sticky lg:top-24">
             <div className="flex items-center justify-between mb-4 px-2">
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Visualização em Tempo Real</span>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Visualização em Tempo Real</span>
               <div className="flex gap-2">
                 <button className="p-2 rounded-lg bg-muted text-muted-foreground hover:text-foreground border border-border hover:border-border/80 transition-all">
                   <Printer className="w-4 h-4" />
@@ -146,7 +146,7 @@ export default function GeradorContratosPage() {
                 <div className="flex justify-between items-start border-b border-black/10 pb-6">
                   <div>
                     <h4 className="font-serif font-bold text-2xl uppercase tracking-wider mb-1">Contrato de Trabalho</h4>
-                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Ref: ZAT-2024-089-T</p>
+                    <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider">Ref: ZAT-2024-089-T</p>
                   </div>
                   <div className="w-12 h-12 bg-black rounded flex items-center justify-center">
                     <span className="text-white font-serif font-bold text-xs">ZAT</span>
@@ -155,30 +155,30 @@ export default function GeradorContratosPage() {
 
                 <div className="space-y-4">
                   <div className="p-3 bg-black/5 rounded-lg border-l-2 border-black">
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 font-bold">Parte A (Contratante)</p>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1 font-bold">Parte A (Contratante)</p>
                     <p className="text-sm font-bold font-serif">ZATTAR ADVOGADOS ASSOCIADOS</p>
                   </div>
                   <div className="p-3 bg-black/5 rounded-lg border-l-2 border-primary/60">
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1 font-bold">Parte B (Empregado/Contratado)</p>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1 font-bold">Parte B (Empregado/Contratado)</p>
                     <p className="text-sm font-medium font-serif border-b border-black/20 pb-0.5 inline-block w-full">Nome completo pendente geração...</p>
                   </div>
                 </div>
 
                 <div className="space-y-5 pt-4 flex-1 font-serif text-muted-foreground">
                   <div className="space-y-1">
-                    <h5 className="text-[11px] font-bold uppercase tracking-widest text-black mb-2">Cláusula Primeira: Do Objeto</h5>
+                    <h5 className="text-[11px] font-bold uppercase tracking-wider text-black mb-2">Cláusula Primeira: Do Objeto</h5>
                     <p className="text-[11px] leading-relaxed text-muted-foreground text-justify">
                       A Contratante, neste ato, admite o Contratado para exercer a função supracitada, de acordo com as normas diretivas da corporação, submetendo-se a legislação vigente e orientações de compliance.
                     </p>
                   </div>
                   <div className="space-y-1">
-                    <h5 className="text-[11px] font-bold uppercase tracking-widest text-black mb-2">Cláusula Segunda: Da Remuneração</h5>
+                    <h5 className="text-[11px] font-bold uppercase tracking-wider text-black mb-2">Cláusula Segunda: Da Remuneração</h5>
                     <p className="text-[11px] leading-relaxed text-muted-foreground text-justify">
                       O Contratado perceberá o salário ajustado em formulário principal, pago mensalmente, até o 5º dia útil do mês subsequente, mediante depósito em conta bancária de sua titularidade, já computados os repousos semanais.
                     </p>
                   </div>
                   <div className="space-y-1 opacity-40">
-                    <h5 className="text-[11px] font-bold uppercase tracking-widest text-black mb-2 flex items-center gap-2"><Sparkles className="w-3 h-3 text-primary" /> Cláusulas Opcionais / Específicas</h5>
+                    <h5 className="text-[11px] font-bold uppercase tracking-wider text-black mb-2 flex items-center gap-2"><Sparkles className="w-3 h-3 text-primary" /> Cláusulas Opcionais / Específicas</h5>
                     <div className="h-2 w-full bg-black/5 mt-2 rounded"></div>
                     <div className="h-2 w-3/4 bg-black/5 mt-2 rounded"></div>
                     <div className="h-2 w-5/6 bg-black/5 mt-2 rounded"></div>
@@ -198,7 +198,7 @@ export default function GeradorContratosPage() {
 
               {/* Ghost Watermark */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-20 mix-blend-overlay opacity-10">
-                <span className="text-[80px] font-black uppercase rotate-[-35deg] tracking-tighter text-black">MINUTA ZATTAR</span>
+                <span className="text-[80px] font-bold uppercase rotate-[-35deg] tracking-tighter text-black">MINUTA ZATTAR</span>
               </div>
             </Card>
           </div>

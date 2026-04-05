@@ -245,7 +245,7 @@ export default function CartaDemissaoPage() {
         <>
           {/* Nome Completo */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Nome Completo do Empregado
             </label>
             <input
@@ -259,7 +259,7 @@ export default function CartaDemissaoPage() {
 
           {/* CPF */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               CPF
             </label>
             <input
@@ -273,7 +273,7 @@ export default function CartaDemissaoPage() {
 
           {/* Nome da Empresa */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Nome da Empresa
             </label>
             <input
@@ -287,7 +287,7 @@ export default function CartaDemissaoPage() {
 
           {/* CNPJ */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               CNPJ da Empresa
             </label>
             <input
@@ -301,7 +301,7 @@ export default function CartaDemissaoPage() {
 
           {/* Cargo */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Cargo Atual
             </label>
             <input
@@ -324,7 +324,7 @@ export default function CartaDemissaoPage() {
           {/* Data Ultimo Dia (conditional) */}
           {cumpriraAviso && (
             <div className="space-y-3">
-              <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+              <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Data do Ultimo Dia de Trabalho
               </label>
               <input
@@ -338,20 +338,20 @@ export default function CartaDemissaoPage() {
 
           {/* Motivo */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Motivo (Opcional)
             </label>
             <textarea
               value={motivo}
               onChange={(e) => setMotivo(e.target.value)}
               placeholder="Descreva brevemente o motivo da demissao..."
-              className="w-full bg-muted border-none rounded-lg p-4 text-foreground font-mono text-sm min-h-[100px] outline-none focus:ring-2 focus:ring-primary/40 transition-shadow resize-y"
+              className="w-full bg-muted border-none rounded-lg p-4 text-foreground font-mono text-sm min-h-25 outline-none focus:ring-2 focus:ring-primary/40 transition-shadow resize-y"
             />
           </div>
 
           {/* Cidade */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Cidade
             </label>
             <input
@@ -371,10 +371,8 @@ export default function CartaDemissaoPage() {
         <>
           <Card>
             <CardContent className="p-6 relative overflow-hidden">
-              {/* Decorative glow */}
-              <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
 
-              <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-6 relative z-10">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-6 relative z-10">
                 Visualizacao da Carta
               </span>
 

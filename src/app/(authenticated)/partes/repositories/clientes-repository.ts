@@ -711,19 +711,15 @@ export async function softDeleteClientesEmMassa(ids: number[]): Promise<Result<n
 export async function countClientes(): Promise<Result<number>> {
   try {
     const db = createDbClient();
-    const { data, error, count } = await db
+    const { count, error } = await db
       .from(TABLE_CLIENTES)
-      // compat com mocks dos testes: eles resolvem { data: { count } } via .single()
-      .select('*')
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .single() as any;
+      .select('*', { count: 'exact', head: true });
 
     if (error) {
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    const total = (count ?? (data as { count?: number } | null)?.count ?? 0) as number;
-    return ok(total);
+    return ok(count ?? 0);
   } catch (error) {
     return err(
       appError(
@@ -742,21 +738,17 @@ export async function countClientes(): Promise<Result<number>> {
 export async function countClientesByDateRange(dataInicio: string, dataFim: string): Promise<Result<number>> {
   try {
     const db = createDbClient();
-
-    // compat com mocks: gte/lte + single({ data: { count } })
-    const { data, error } = await db
+    const { count, error } = await db
       .from(TABLE_CLIENTES)
-      .select('*')
+      .select('*', { count: 'exact', head: true })
       .gte('created_at', dataInicio)
-      .lte('created_at', dataFim)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .single() as any;
+      .lte('created_at', dataFim);
 
     if (error) {
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok(((data as { count?: number } | null)?.count ?? 0) as number);
+    return ok(count ?? 0);
   } catch (error) {
     return err(
       appError(

@@ -21,7 +21,7 @@ import { Card, CardContent } from "@/components/ui/card"
 function dotBg(status: TimelineEventPortal["status"]): string {
   switch (status) {
     case "done":
-      return "bg-emerald-500 ring-emerald-500/20"
+      return "bg-portal-success ring-portal-success/20"
     case "current":
       return "bg-primary ring-primary/20"
     case "pending":
@@ -32,7 +32,7 @@ function dotBg(status: TimelineEventPortal["status"]): string {
 function statusBadgeClass(status: TimelineEventPortal["status"]): string {
   switch (status) {
     case "done":
-      return "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+      return "bg-portal-success-soft text-portal-success border-portal-success/20"
     case "current":
       return "bg-primary/10 text-primary border-primary/20"
     case "pending":
@@ -166,7 +166,7 @@ export function TimelineContent({
   if (error || !processo) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-4">
-        <div className="w-16 h-16 rounded-2xl bg-destructive/10 flex items-center justify-center">
+        <div className="w-16 h-16 rounded-xl bg-destructive/10 flex items-center justify-center">
           <AlertCircle className="w-8 h-8 text-destructive" />
         </div>
         <div className="text-center">
@@ -217,7 +217,7 @@ export function TimelineContent({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
         <div>
-          <p className="text-xs font-black text-primary uppercase tracking-[0.2em] mb-2">
+          <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-2">
             TIMELINE
           </p>
           <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
