@@ -109,3 +109,18 @@ export {
   ProcessoForm,
   ProcessosTableWrapper,
 } from './components';
+
+// =============================================================================
+// COCKPIT COMPONENTS
+// =============================================================================
+
+// Cockpit components
+export { CaseIdentityBar } from './components/cockpit/case-identity-bar';
+export { AttentionStrip } from './components/cockpit/attention-strip';
+export { AllDetailsSheet } from './components/cockpit/all-details-sheet';
+export { PulseTimeline } from './components/cockpit/pulse-timeline';
+export { TimelineFilterChips } from './components/cockpit/timeline-filter-chips';
+export { TimelineMonthGroup } from './components/cockpit/timeline-month-group';
+export { TimelineNowMarker } from './components/cockpit/timeline-now-marker';
+export { TimelinePhaseMarker } from './components/cockpit/timeline-phase-marker';
+export type { TimelineFilterType, FutureTimelineItem, ProcessoPhase } from './components/cockpit/types';
