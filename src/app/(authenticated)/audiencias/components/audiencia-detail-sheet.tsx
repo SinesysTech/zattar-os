@@ -4,10 +4,7 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import {
   ExternalLink,
-  CalendarDays,
-  Clock,
   MapPin,
-  User,
   ClipboardList,
   BookOpen,
   FileText,
@@ -16,6 +13,8 @@ import {
   Scale,
   Video,
   Gavel,
+  Clock,
+  Building2,
 } from 'lucide-react';
 import { ParteBadge } from '@/components/ui/parte-badge';
 import { GRAU_TRIBUNAL_LABELS, StatusAudiencia, type Audiencia } from '../domain';
@@ -155,20 +154,19 @@ export function AudienciaDetailSheet({
       loading={shouldFetch && isLoading}
       error={shouldFetch ? error : null}
     >
-      {/* ─── Header com hierarquia visual forte ─── */}
-      <DetailSheetHeader className="pb-0 border-b-0">
-        <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-            <Gavel className="h-5 w-5 text-primary" />
+      {/* ─── Header ─── */}
+      <DetailSheetHeader className="pb-3 border-b-0">
+        <div className="flex items-start gap-2.5">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+            <Gavel className="size-4 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
             <DetailSheetTitle badge={audiencia && <AudienciaStatusBadge status={audiencia.status} />}>
               {audiencia?.tipoDescricao || 'Audiência'}
             </DetailSheetTitle>
-            {dataInicio && dataFim && (
+            {dataInicio && (
               <DetailSheetDescription>
-                <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>{format(dataInicio, "EEEE, dd 'de' MMMM", { locale: ptBR })}</span>
+                {format(dataInicio, "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
               </DetailSheetDescription>
             )}
           </div>
@@ -177,14 +175,14 @@ export function AudienciaDetailSheet({
 
       {/* ─── Conteúdo ─── */}
       <DetailSheetContent>
-        {/* Meta strip — info de quick-scan no topo */}
+        {/* Meta strip — scan rápido */}
         {audiencia && (
-          <DetailSheetMetaGrid className="rounded-lg border bg-muted/40 p-4">
+          <DetailSheetMetaGrid className="rounded-xl border border-border/15 p-3">
             <DetailSheetMetaItem label="Horário">
-              <Clock className="h-4 w-4 text-muted-foreground" />
+              <Clock className="size-3 text-muted-foreground/40" />
               {dataInicio && dataFim && (
-                <span>
-                  {format(dataInicio, 'HH:mm')} - {format(dataFim, 'HH:mm')}
+                <span className="tabular-nums">
+                  {format(dataInicio, 'HH:mm')} – {format(dataFim, 'HH:mm')}
                 </span>
               )}
             </DetailSheetMetaItem>
@@ -193,111 +191,106 @@ export function AudienciaDetailSheet({
             </DetailSheetMetaItem>
             <DetailSheetMetaItem label="Responsável">
               {audiencia.responsavelId && responsavelNome ? (
-                <div className="flex items-center gap-1.5">
-                  <Avatar className="h-5 w-5">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <Avatar className="size-5">
                     <AvatarImage src={responsavelAvatar || undefined} alt={responsavelNome} />
-                    <AvatarFallback className="text-[10px]">
+                    <AvatarFallback className="text-[8px]">
                       {getInitials(responsavelNome)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="truncate">{responsavelNome}</span>
+                  <span className="truncate text-[13px]">{responsavelNome}</span>
                 </div>
               ) : (
-                <span className="text-muted-foreground">Não atribuído</span>
+                <span className="text-muted-foreground/50 text-[13px]">—</span>
               )}
             </DetailSheetMetaItem>
           </DetailSheetMetaGrid>
         )}
 
-        {/* CTA: Sala Virtual / Ata — ações primárias destacadas */}
+        {/* CTAs primários */}
         {audiencia && (audiencia.urlAudienciaVirtual || (isRealizada && hasAta)) && (
           <div className="flex flex-wrap gap-2">
             {audiencia.urlAudienciaVirtual && (
-              <Button variant="default" size="sm" className="gap-2" asChild>
-                <a
-                  href={audiencia.urlAudienciaVirtual}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Video className="h-4 w-4" />
-                  Entrar na Sala Virtual
-                </a>
-              </Button>
+              <a
+                href={audiencia.urlAudienciaVirtual}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-[11px] font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
+              >
+                <Video className="size-3" />
+                Entrar na Sala Virtual
+              </a>
             )}
             {isRealizada && hasAta && audiencia.urlAtaAudiencia && (
-              <Button variant="outline" size="sm" className="gap-2" asChild>
-                <a
-                  href={audiencia.urlAtaAudiencia}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FileText className="h-4 w-4" />
-                  Visualizar Ata
-                </a>
-              </Button>
+              <a
+                href={audiencia.urlAtaAudiencia}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-muted-foreground/60 hover:text-foreground/70 hover:bg-muted/50 text-[11px] font-medium transition-colors cursor-pointer border border-border/20"
+              >
+                <FileText className="size-3" />
+                Visualizar Ata
+              </a>
             )}
           </div>
         )}
 
         {/* Processo */}
         {audiencia && (
-          <DetailSheetSection icon={<ClipboardList className="h-4 w-4" />} title="Processo">
-            <div className="flex items-baseline gap-2">
-              <span className="font-mono text-sm font-semibold tracking-tight">
-                {audiencia.numeroProcesso}
-              </span>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {audiencia.trt} - {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
-            </p>
+          <DetailSheetSection icon={<ClipboardList className="size-3 text-muted-foreground/40" />} title="Processo">
+            <span className="font-mono text-[13px] font-semibold tabular-nums tracking-tight text-foreground/80">
+              {audiencia.numeroProcesso}
+            </span>
+            <span className="text-[10px] text-muted-foreground/50">
+              {audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
+            </span>
             <DetailSheetSeparator />
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               <ParteBadge polo="ATIVO" className="flex" truncate maxWidth="100%">
-                {audiencia.poloAtivoOrigem || audiencia.poloAtivoNome || '-'}
+                {audiencia.poloAtivoOrigem || audiencia.poloAtivoNome || '—'}
               </ParteBadge>
               <ParteBadge polo="PASSIVO" className="flex" truncate maxWidth="100%">
-                {audiencia.poloPassivoOrigem || audiencia.poloPassivoNome || '-'}
+                {audiencia.poloPassivoOrigem || audiencia.poloPassivoNome || '—'}
               </ParteBadge>
             </div>
           </DetailSheetSection>
         )}
 
-        {/* Local / Endereço — só exibe se houver endereço ou sala */}
+        {/* Local / Endereço */}
         {audiencia && (audiencia.salaAudienciaNome || audiencia.enderecoPresencial) && (
-          <DetailSheetSection icon={<MapPin className="h-4 w-4" />} title="Local">
+          <DetailSheetSection icon={<Building2 className="size-3 text-muted-foreground/40" />} title="Local">
             {audiencia.salaAudienciaNome && (
               <DetailSheetInfoRow label="Sala">{audiencia.salaAudienciaNome}</DetailSheetInfoRow>
             )}
             {audiencia.enderecoPresencial && (
-              <div className="text-sm text-muted-foreground">
+              <p className="text-[11px] text-muted-foreground/55 leading-relaxed">
                 {audiencia.enderecoPresencial.logradouro}, {audiencia.enderecoPresencial.numero}
-                {audiencia.enderecoPresencial.complemento && ` - ${audiencia.enderecoPresencial.complemento}`}
+                {audiencia.enderecoPresencial.complemento && ` – ${audiencia.enderecoPresencial.complemento}`}
                 <br />
-                {audiencia.enderecoPresencial.bairro}, {audiencia.enderecoPresencial.cidade} -{' '}
-                {audiencia.enderecoPresencial.uf}
+                {audiencia.enderecoPresencial.bairro}, {audiencia.enderecoPresencial.cidade} – {audiencia.enderecoPresencial.uf}
                 <br />
                 CEP: {audiencia.enderecoPresencial.cep}
-              </div>
+              </p>
             )}
           </DetailSheetSection>
         )}
 
-        {/* Flags — Segredo de Justiça, Juízo Digital, Situação */}
+        {/* Flags */}
         {audiencia && (audiencia.segredoJustica || audiencia.juizoDigital || audiencia.statusDescricao) && (
-          <DetailSheetSection icon={<Scale className="h-4 w-4" />} title="Informações Adicionais">
+          <DetailSheetSection icon={<Scale className="size-3 text-muted-foreground/40" />} title="Informações Adicionais">
             {audiencia.statusDescricao && (
               <DetailSheetInfoRow label="Situação">{audiencia.statusDescricao}</DetailSheetInfoRow>
             )}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {audiencia.segredoJustica && (
-                <span className="inline-flex items-center gap-1 rounded-md bg-orange-500/15 px-2 py-0.5 text-xs font-medium text-orange-700 dark:text-orange-400">
-                  <ShieldAlert className="h-3 w-3" />
+                <span className="inline-flex items-center gap-1 rounded-md bg-warning/10 px-1.5 py-px text-[10px] font-semibold text-warning">
+                  <ShieldAlert className="size-2.5" />
                   Segredo de Justiça
                 </span>
               )}
               {audiencia.juizoDigital && (
-                <span className="inline-flex items-center gap-1 rounded-md bg-sky-500/15 px-2 py-0.5 text-xs font-medium text-sky-700 dark:text-sky-400">
-                  <Monitor className="h-3 w-3" />
+                <span className="inline-flex items-center gap-1 rounded-md bg-info/10 px-1.5 py-px text-[10px] font-semibold text-info">
+                  <Monitor className="size-2.5" />
                   Juízo Digital
                 </span>
               )}
@@ -307,8 +300,8 @@ export function AudienciaDetailSheet({
 
         {/* Observações */}
         {audiencia?.observacoes && (
-          <DetailSheetSection icon={<BookOpen className="h-4 w-4" />} title="Observações">
-            <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
+          <DetailSheetSection icon={<BookOpen className="size-3 text-muted-foreground/40" />} title="Observações">
+            <p className="text-[13px] text-foreground/70 whitespace-pre-wrap leading-relaxed">
               {audiencia.observacoes}
             </p>
           </DetailSheetSection>
@@ -325,7 +318,7 @@ export function AudienciaDetailSheet({
 
       {/* Footer */}
       <DetailSheetFooter>
-        <Button variant="outline" onClick={() => onOpenChange(false)}>
+        <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
           Fechar
         </Button>
       </DetailSheetFooter>

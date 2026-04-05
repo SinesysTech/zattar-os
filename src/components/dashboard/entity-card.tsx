@@ -58,7 +58,10 @@ export function getInitials(nome: string): string {
 }
 
 export function timeAgo(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
+  if (!iso) return '--';
+  const date = new Date(iso);
+  if (isNaN(date.getTime())) return '--';
+  const diff = Date.now() - date.getTime();
   const days = Math.floor(diff / 86400000);
   if (days === 0) return 'hoje';
   if (days === 1) return 'ontem';
