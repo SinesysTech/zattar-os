@@ -79,7 +79,7 @@ export function AttentionStrip({
         {proximaAudiencia && (() => {
           const countdown = formatCountdown(proximaAudiencia.dataInicio);
           return (
-            <div className="flex-1 min-w-[200px] px-4 py-3">
+            <div className="flex-1 min-w-50 px-4 py-3">
               <div className="flex items-center gap-2 mb-1.5">
                 <Calendar className="size-3.5 text-primary/40" />
                 <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">
@@ -114,7 +114,7 @@ export function AttentionStrip({
         )}
 
         {expedientesUrgentes.total > 0 && (
-          <div className="flex-1 min-w-[180px] px-4 py-3">
+          <div className="flex-1 min-w-45 px-4 py-3">
             <div className="flex items-center gap-2 mb-1.5">
               <FileText className="size-3.5 text-warning/40" />
               <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">
@@ -145,7 +145,7 @@ export function AttentionStrip({
         )}
 
         {periciasPendentes.length > 0 && (
-          <div className="flex-1 min-w-[160px] px-4 py-3">
+          <div className="flex-1 min-w-40 px-4 py-3">
             <div className="flex items-center gap-2 mb-1.5">
               <Microscope className="size-3.5 text-info/40" />
               <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">
