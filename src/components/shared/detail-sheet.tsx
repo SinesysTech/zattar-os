@@ -149,7 +149,7 @@ interface DetailSheetDescriptionProps {
 
 function DetailSheetDescription({ children, className }: DetailSheetDescriptionProps) {
   return (
-    <SheetDescription className={cn('flex items-center gap-1.5 mt-1 flex-wrap text-[11px] text-muted-foreground/60', className)}>
+    <SheetDescription className={cn('flex items-center gap-1.5 mt-1 flex-wrap text-xs text-muted-foreground/65', className)}>
       {children}
     </SheetDescription>
   );
@@ -183,7 +183,7 @@ interface DetailSheetContentProps {
 
 function DetailSheetContent({ children, className }: DetailSheetContentProps) {
   return (
-    <div className={cn('flex-1 overflow-y-auto p-4 space-y-3', className)}>
+    <div className={cn('flex-1 overflow-y-auto p-4 space-y-4', className)}>
       {children}
     </div>
   );
@@ -209,15 +209,15 @@ function DetailSheetSection({
   className,
 }: DetailSheetSectionProps) {
   return (
-    <div className={cn('rounded-xl border border-border/20 p-3', className)}>
-      <div className="flex items-center justify-between mb-2">
-        <h4 className="flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground/60 uppercase tracking-wider">
+    <div className={cn('rounded-xl border border-border/30 p-4', className)}>
+      <div className="flex items-center justify-between mb-2.5">
+        <h4 className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">
           {icon}
           {title}
         </h4>
         {action}
       </div>
-      <div className="space-y-1.5">{children}</div>
+      <div className="space-y-2">{children}</div>
     </div>
   );
 }
@@ -235,8 +235,8 @@ interface DetailSheetInfoRowProps {
 function DetailSheetInfoRow({ label, children, className }: DetailSheetInfoRowProps) {
   return (
     <div className={cn('flex items-start justify-between gap-2', className)}>
-      <span className="text-[11px] text-muted-foreground/55 shrink-0">{label}</span>
-      <span className="text-sm font-medium text-foreground/80 text-right">{children}</span>
+      <span className="text-xs text-muted-foreground/65 shrink-0">{label}</span>
+      <span className="text-sm font-medium text-foreground text-right">{children}</span>
     </div>
   );
 }
@@ -271,7 +271,7 @@ interface DetailSheetMetaItemProps {
 function DetailSheetMetaItem({ label, children, className }: DetailSheetMetaItemProps) {
   return (
     <div className={cn('flex flex-col gap-0.5', className)}>
-      <span className="text-[9px] text-muted-foreground/55 uppercase tracking-wider">
+      <span className="text-[10px] text-muted-foreground/65 uppercase tracking-wider">
         {label}
       </span>
       <div className="flex items-center gap-1.5 text-sm font-medium">
@@ -316,7 +316,7 @@ function DetailSheetAudit({ createdAt, updatedAt, className }: DetailSheetAuditP
   };
 
   return (
-    <div className={cn('flex items-center gap-3 text-[9px] text-muted-foreground/40 pt-2', className)}>
+    <div className={cn('flex items-center gap-3 text-[10px] text-muted-foreground/50 pt-2', className)}>
       <span>Criado: {formatDate(createdAt)}</span>
       {updatedAt && (
         <>

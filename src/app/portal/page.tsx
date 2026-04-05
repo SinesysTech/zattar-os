@@ -40,13 +40,13 @@ export default function PortalLoginPage() {
           <CpfHeroForm />
 
           <div className="flex items-center justify-center gap-4 mt-8">
-            <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/40 uppercase tracking-wider">
+            <span className="flex items-center gap-1.5 text-xs font-mono text-portal-text-subtle/60 uppercase tracking-wider">
               <ShieldCheck className="w-3 h-3" /> ISO-9001
             </span>
-            <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/40 uppercase tracking-wider">
+            <span className="flex items-center gap-1.5 text-xs font-mono text-portal-text-subtle/60 uppercase tracking-wider">
               <Lock className="w-3 h-3" /> SOC2
             </span>
-            <span className="flex items-center gap-1.5 text-[10px] font-mono text-on-surface-variant/40 uppercase tracking-wider">
+            <span className="flex items-center gap-1.5 text-xs font-mono text-portal-text-subtle/60 uppercase tracking-wider">
               <Scale className="w-3 h-3" /> LGPD
             </span>
           </div>

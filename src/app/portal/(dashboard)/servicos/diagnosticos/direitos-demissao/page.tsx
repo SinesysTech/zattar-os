@@ -710,7 +710,7 @@ export default function DireitosDemissaoPage() {
         {/* 1. Checklist de Direitos */}
         <Card>
           <CardContent className="p-6">
-            <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-4">
+            <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-4">
               Checklist de Direitos
             </span>
             <div className="space-y-3">
@@ -725,7 +725,7 @@ export default function DireitosDemissaoPage() {
                       className={cn(
                         "w-6 h-6 rounded-full flex items-center justify-center shrink-0",
                         temDireito
-                          ? "bg-emerald-500/20 text-emerald-500"
+                          ? "bg-portal-success-soft text-portal-success"
                           : "bg-destructive/20 text-destructive"
                       )}
                     >
@@ -760,8 +760,7 @@ export default function DireitosDemissaoPage() {
         {/* 2. Estimativa de Valores */}
         <Card>
           <CardContent className="p-6 relative overflow-hidden">
-            <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
-            <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-4 relative z-10">
+            <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-4 relative z-10">
               Estimativa de Valores
             </span>
             <div className="space-y-0 relative z-10">
@@ -775,10 +774,10 @@ export default function DireitosDemissaoPage() {
               ))}
               <div className="border-t border-border mt-2" />
               <div className="mt-4 flex justify-between items-center">
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Total Liquido Estimado
                 </span>
-                <span className="text-3xl font-black text-primary font-headline tabular-nums">
+                <span className="text-3xl font-bold text-primary font-headline tabular-nums">
                   {formatBRL(resultado.totalLiquido)}
                 </span>
               </div>
@@ -792,7 +791,7 @@ export default function DireitosDemissaoPage() {
             <CardContent className="p-6">
               <div className="flex items-center gap-2 mb-4">
                 <AlertTriangle className="w-5 h-5 text-destructive" />
-                <span className="text-xs font-bold tracking-widest text-destructive uppercase">
+                <span className="text-xs font-bold tracking-wider text-destructive uppercase">
                   Irregularidades Detectadas
                 </span>
               </div>
@@ -819,7 +818,7 @@ export default function DireitosDemissaoPage() {
           <CardContent className="p-6">
             <div className="flex items-center gap-2 mb-4">
               <Clock className="w-5 h-5 text-primary" />
-              <span className="text-xs font-bold tracking-widest text-primary uppercase">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase">
                 Prazos Importantes
               </span>
             </div>
@@ -920,7 +919,7 @@ export default function DireitosDemissaoPage() {
               className={cn(
                 "flex items-center gap-2 py-2.5 px-5 rounded-xl text-sm font-bold transition-all",
                 isStepValid
-                  ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_4px_20px_rgba(204,151,255,0.2)]"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md"
                   : "bg-muted text-muted-foreground/40 cursor-not-allowed"
               )}
             >

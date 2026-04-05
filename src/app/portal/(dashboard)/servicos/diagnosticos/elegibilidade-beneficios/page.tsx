@@ -104,16 +104,16 @@ interface BenefitCardProps {
 function BenefitCard({ title, elegivel, children }: BenefitCardProps) {
   return (
     <Card className="overflow-hidden">
-      <div className={cn("h-1.5", elegivel ? "bg-emerald-500" : "bg-red-500")} />
+      <div className={cn("h-1.5", elegivel ? "bg-portal-success" : "bg-portal-danger")} />
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-bold text-lg">{title}</h3>
           <span
             className={cn(
-              "text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full",
+              "text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full",
               elegivel
-                ? "bg-emerald-500/10 text-emerald-500"
-                : "bg-red-500/10 text-red-500"
+                ? "bg-portal-success-soft text-portal-success"
+                : "bg-portal-danger-soft text-portal-danger"
             )}
           >
             {elegivel ? "ELEGIVEL" : "NAO ELEGIVEL"}
@@ -141,7 +141,7 @@ function InfoRow({ label, value, highlight }: { label: string; value: string; hi
 function Requisito({ ok, text }: { ok: boolean; text: string }) {
   return (
     <div className="flex items-start gap-2 py-1">
-      <span className={cn("mt-0.5 text-xs font-bold", ok ? "text-emerald-500" : "text-muted-foreground/50")}>
+      <span className={cn("mt-0.5 text-xs font-bold", ok ? "text-portal-success" : "text-muted-foreground/50")}>
         {ok ? "✓" : "○"}
       </span>
       <span className={cn("text-sm", ok ? "text-foreground" : "text-muted-foreground/70")}>{text}</span>
@@ -322,7 +322,7 @@ export default function ElegibilidadeBeneficiosPage() {
 
           {/* Data PIS */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Data de Inscricao no PIS
             </label>
             <input
@@ -335,7 +335,7 @@ export default function ElegibilidadeBeneficiosPage() {
 
           {/* Modalidade FGTS */}
           <div className="space-y-3">
-            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Modalidade FGTS
             </label>
             <select
@@ -416,7 +416,7 @@ export default function ElegibilidadeBeneficiosPage() {
           <BenefitCard title="FGTS" elegivel={fgtsInfo !== null}>
             <div className="space-y-3">
               <div className="mb-1">
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Modalidade Selecionada
                 </span>
                 <p className="text-sm font-semibold mt-1">
@@ -425,7 +425,7 @@ export default function ElegibilidadeBeneficiosPage() {
               </div>
 
               <div className="space-y-0.5">
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest block mb-1">
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider block mb-1">
                   Requisitos
                 </span>
                 {REQUISITOS_FGTS[modalidadeFGTS].map((req) => (
@@ -443,7 +443,7 @@ export default function ElegibilidadeBeneficiosPage() {
               )}
 
               {(modalidadeFGTS === "saque_aniversario" || modalidadeFGTS === "saque_rescisao") && (
-                <p className="text-xs text-amber-500 bg-amber-500/10 rounded-md px-3 py-2 mt-2 leading-relaxed">
+                <p className="text-xs text-portal-warning bg-portal-warning-soft rounded-md px-3 py-2 mt-2 leading-relaxed">
                   Atencao: Saque-Rescisao e Saque-Aniversario sao modalidades exclusivas entre si. A adesao ao
                   Saque-Aniversario cancela o direito ao saque integral em caso de demissao sem justa causa.
                 </p>

@@ -105,7 +105,7 @@ function ToolBentoCard({ card }: { card: ToolCard }) {
       className={`${card.colSpan} group`}
       aria-label={`Acessar ${card.title}`}
     >
-      <Card className="h-full rounded-2xl p-6 flex flex-col gap-4 hover:border-border/80 hover:shadow-md transition-all duration-300 min-h-40">
+      <Card className="h-full rounded-xl p-6 flex flex-col gap-4 hover:border-border/80 hover:shadow-md transition-all duration-300 min-h-40">
         <div className="flex items-start justify-between gap-4">
           <div className="w-11 h-11 bg-primary/10 border border-primary/15 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-primary/15 group-hover:scale-105 transition-all">
             <Icon className="w-5 h-5 text-primary" aria-hidden="true" />
@@ -118,7 +118,7 @@ function ToolBentoCard({ card }: { card: ToolCard }) {
 
         <div className="flex flex-col gap-1.5 flex-1">
           <h3
-            className={`font-extrabold font-headline tracking-tight text-foreground leading-snug ${
+            className={`font-extrabold tracking-tight text-foreground leading-snug ${
               card.large ? "text-xl" : "text-base"
             }`}
           >
@@ -148,13 +148,13 @@ function ServiceLegalCard({ card }: { card: ServiceCard }) {
   const Icon = card.icon;
   return (
     <div className="col-span-12 md:col-span-4">
-      <Card className="h-full rounded-2xl p-6 flex flex-col gap-5 hover:border-border/80 transition-all duration-300">
+      <Card className="h-full rounded-xl p-6 flex flex-col gap-5 hover:border-border/80 transition-all duration-300">
         <div className="w-12 h-12 bg-primary/10 border border-primary/15 rounded-xl flex items-center justify-center shrink-0">
           <Icon className="w-6 h-6 text-primary" aria-hidden="true" />
         </div>
 
         <div className="flex flex-col gap-2 flex-1">
-          <h3 className="text-xl font-extrabold font-headline tracking-tight text-foreground leading-snug">
+          <h3 className="text-xl font-extrabold tracking-tight text-foreground leading-snug">
             {card.title}
           </h3>
           <p className="text-muted-foreground text-sm leading-relaxed">
@@ -190,7 +190,7 @@ export default function ServicosPage() {
           <span className="text-primary font-bold text-xs uppercase tracking-[0.2em]">
             SERVIÇOS
           </span>
-          <h1 className="text-4xl md:text-5xl font-headline font-extrabold tracking-tight text-foreground">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
             Serviços para o Trabalhador.
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl leading-relaxed">
@@ -206,7 +206,7 @@ export default function ServicosPage() {
         aria-label="Ferramentas de Inteligência"
         className="animate-in fade-in slide-in-from-bottom-6 duration-600 delay-75"
       >
-        <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-6">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-6">
           Ferramentas de Inteligência
         </h2>
 
@@ -224,7 +224,7 @@ export default function ServicosPage() {
         aria-label="Soluções Jurídicas"
         className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150"
       >
-        <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-6">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-6">
           Soluções Jurídicas
         </h2>
 
@@ -247,7 +247,7 @@ export default function ServicosPage() {
             <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
               {/* Text */}
               <div className="flex flex-col gap-2 max-w-md">
-                <h3 className="text-2xl font-extrabold font-headline tracking-tighter text-foreground">
+                <h3 className="text-2xl font-extrabold tracking-tighter text-foreground">
                   Dúvidas sobre seus direitos?
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">

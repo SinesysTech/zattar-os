@@ -225,10 +225,8 @@ export default function HorasExtrasCalculatorPage() {
         <>
           <Card>
             <CardContent className="p-6 relative overflow-hidden">
-              {/* Decorative glow */}
-              <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
 
-              <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-6 relative z-10">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-6 relative z-10">
                 Detalhamento do Cálculo
               </span>
 
@@ -277,7 +275,7 @@ export default function HorasExtrasCalculatorPage() {
 
                 {/* Reflexos */}
                 <div className="py-2">
-                  <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest">
+                  <span className="text-xs font-bold text-muted-foreground/60 uppercase tracking-wider">
                     Reflexos
                   </span>
                 </div>
@@ -306,10 +304,10 @@ export default function HorasExtrasCalculatorPage() {
               {/* Total Mensal highlight */}
               <div className="mt-6 pt-4 relative z-10">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Total Mensal
                   </span>
-                  <span className="text-3xl font-black text-primary font-headline tabular-nums">
+                  <span className="text-3xl font-bold text-primary font-headline tabular-nums">
                     {formatBRL(totalMensal)}
                   </span>
                 </div>
@@ -319,10 +317,10 @@ export default function HorasExtrasCalculatorPage() {
               {periodoFinal > 1 && (
                 <div className="mt-4 pt-4 border-t border-border relative z-10">
                   <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                       Total Período ({periodoFinal} meses)
                     </span>
-                    <span className="text-2xl font-black text-primary/80 font-headline tabular-nums">
+                    <span className="text-2xl font-bold text-primary/80 font-headline tabular-nums">
                       {formatBRL(totalPeriodo)}
                     </span>
                   </div>
@@ -341,7 +339,7 @@ export default function HorasExtrasCalculatorPage() {
             <CardContent className="p-6 relative overflow-hidden">
               <div className="flex items-center gap-2 mb-4">
                 <Calculator className="w-4 h-4 text-primary" />
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Fórmula Aplicada
                 </span>
               </div>

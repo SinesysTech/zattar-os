@@ -36,7 +36,7 @@ export function CpfHeroForm() {
   }
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border border-primary/10 bg-surface-container/70 p-8 shadow-[0_20px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+    <div className="relative w-full overflow-hidden rounded-2xl border border-primary/10 bg-surface-container/70 p-8 shadow-2xl backdrop-blur-xl">
       <div
         className="absolute top-0 right-0 w-24 h-24 bg-linear-to-bl from-primary/10 to-transparent pointer-events-none"
         aria-hidden="true"
@@ -57,7 +57,7 @@ export function CpfHeroForm() {
         <div className="space-y-2">
           <label
             htmlFor="cpf"
-            className="block text-[10px] tracking-widest uppercase text-on-surface-variant/80 ml-1 font-medium"
+            className="block text-xs tracking-wider uppercase text-portal-text-muted ml-1 font-medium"
           >
             CPF
           </label>
@@ -114,9 +114,9 @@ export function CpfHeroForm() {
         </button>
       </form>
 
-      <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/5 text-[10px] font-mono text-on-surface-variant/30 uppercase tracking-wider">
+      <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/20 text-xs font-mono text-portal-text-subtle/50 uppercase tracking-wider">
         <span className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-portal-success animate-pulse" />
           Criptografia AES-256
         </span>
         <span>Portal v2.0</span>

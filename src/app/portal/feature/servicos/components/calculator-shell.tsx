@@ -24,10 +24,8 @@ export function CalculatorShell({
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       <section className={inputColClass}>
         <Card>
-          <CardContent className="p-6 space-y-6 relative overflow-hidden">
-            {/* Decorative glow */}
-            <div className="absolute top-0 left-0 w-40 h-40 bg-primary/5 blur-[60px] rounded-full pointer-events-none" />
-            <div className="relative z-10 space-y-6">{inputPanel}</div>
+          <CardContent className="p-6 space-y-6">
+            <div className="space-y-6">{inputPanel}</div>
           </CardContent>
         </Card>
       </section>

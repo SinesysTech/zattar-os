@@ -143,10 +143,8 @@ export default function AdicionalNoturnoPag() {
         <>
           <Card>
             <CardContent className="p-6 relative overflow-hidden">
-              {/* Decorative glow */}
-              <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
 
-              <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-6 relative z-10">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-6 relative z-10">
                 Detalhamento do Cálculo
               </span>
 
@@ -178,10 +176,10 @@ export default function AdicionalNoturnoPag() {
               {/* Total Adicional highlight */}
               <div className="mt-6 pt-4 relative z-10">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Total Adicional
                   </span>
-                  <span className="text-3xl font-black text-primary font-headline tabular-nums">
+                  <span className="text-3xl font-bold text-primary font-headline tabular-nums">
                     {resultado ? formatBRL(resultado.totalAdicional) : formatBRL(0)}
                   </span>
                 </div>
@@ -191,7 +189,7 @@ export default function AdicionalNoturnoPag() {
               {resultado && (
                 <div className="mt-4 relative z-10">
                   <div className="rounded-lg bg-muted px-4 py-3 flex items-center justify-between">
-                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                       Período Noturno
                     </span>
                     <span className="text-sm font-semibold text-foreground font-mono">
@@ -204,7 +202,7 @@ export default function AdicionalNoturnoPag() {
               {/* Formula card */}
               <div className="mt-4 relative z-10">
                 <div className="rounded-lg bg-muted/50 border border-border px-4 py-3 space-y-1.5">
-                  <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest block mb-2">
+                  <span className="text-xs font-bold text-muted-foreground/60 uppercase tracking-wider block mb-2">
                     Fórmulas Aplicadas
                   </span>
                   <div className="text-xs text-muted-foreground font-mono space-y-1">
@@ -220,7 +218,7 @@ export default function AdicionalNoturnoPag() {
                     )}
                   </div>
                   {tipo !== "urbano" && (
-                    <p className="text-[10px] text-muted-foreground/60 pt-1 border-t border-border mt-2">
+                    <p className="text-xs text-muted-foreground/60 pt-1 border-t border-border mt-2">
                       * Trabalhadores rurais não possuem redução da hora noturna (hora ficta). O cômputo é feito com as horas reais trabalhadas.
                     </p>
                   )}

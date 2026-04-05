@@ -82,7 +82,7 @@ const inputCls =
   "w-full bg-muted border-none rounded-lg p-4 text-foreground text-sm outline-none focus:ring-2 focus:ring-primary/40 transition-shadow";
 
 const labelCls =
-  "block text-xs font-bold text-muted-foreground uppercase tracking-widest";
+  "block text-xs font-bold text-muted-foreground uppercase tracking-wider";
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 
@@ -406,11 +406,11 @@ export default function AcordoExtrajudicialPage() {
       inputPanel={
         <>
           {/* Warning obrigatorio */}
-          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6 mb-8">
+          <div className="bg-portal-danger-soft border border-portal-danger/30 rounded-xl p-6 mb-8">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="w-6 h-6 text-red-500 shrink-0 mt-0.5" />
+              <AlertTriangle className="w-6 h-6 text-portal-danger shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-bold text-red-400 text-sm uppercase tracking-widest mb-2">
+                <h3 className="font-bold text-portal-danger text-sm uppercase tracking-wider mb-2">
                   Requisito Obrigatorio
                 </h3>
                 <p className="text-sm text-foreground/80 leading-relaxed">
@@ -424,7 +424,7 @@ export default function AcordoExtrajudicialPage() {
 
           {/* Secao: Dados do Empregado */}
           <div className="space-y-1">
-            <p className="text-xs font-bold text-primary uppercase tracking-widest pb-1 border-b border-border/30">
+            <p className="text-xs font-bold text-primary uppercase tracking-wider pb-1 border-b border-border/30">
               Dados do Empregado
             </p>
           </div>
@@ -520,7 +520,7 @@ export default function AcordoExtrajudicialPage() {
 
           {/* Secao: Dados do Empregador */}
           <div className="space-y-1 pt-2">
-            <p className="text-xs font-bold text-primary uppercase tracking-widest pb-1 border-b border-border/30">
+            <p className="text-xs font-bold text-primary uppercase tracking-wider pb-1 border-b border-border/30">
               Dados do Empregador
             </p>
           </div>
@@ -582,7 +582,7 @@ export default function AcordoExtrajudicialPage() {
 
           {/* Secao: Contrato */}
           <div className="space-y-1 pt-2">
-            <p className="text-xs font-bold text-primary uppercase tracking-widest pb-1 border-b border-border/30">
+            <p className="text-xs font-bold text-primary uppercase tracking-wider pb-1 border-b border-border/30">
               Periodo Contratual
             </p>
           </div>
@@ -621,7 +621,7 @@ export default function AcordoExtrajudicialPage() {
 
           {/* Secao: Verbas Acordadas */}
           <div className="space-y-1 pt-2">
-            <p className="text-xs font-bold text-primary uppercase tracking-widest pb-1 border-b border-border/30">
+            <p className="text-xs font-bold text-primary uppercase tracking-wider pb-1 border-b border-border/30">
               Verbas Acordadas
             </p>
           </div>
@@ -633,17 +633,17 @@ export default function AcordoExtrajudicialPage() {
                 className="bg-muted/50 rounded-lg p-3 space-y-3"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Verba {index + 1}
                   </span>
                   {verbas.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeVerba(verba.id)}
-                      className="w-6 h-6 rounded-full bg-red-500/20 hover:bg-red-500/40 flex items-center justify-center transition-colors"
+                      className="w-6 h-6 rounded-full bg-portal-danger-soft hover:bg-portal-danger-soft/80 flex items-center justify-center transition-colors"
                       aria-label="Remover verba"
                     >
-                      <X className="w-3 h-3 text-red-400" />
+                      <X className="w-3 h-3 text-portal-danger" />
                     </button>
                   )}
                 </div>
@@ -678,7 +678,7 @@ export default function AcordoExtrajudicialPage() {
 
           {totalVerbas > 0 && (
             <div className="bg-muted/50 rounded-lg p-3 flex items-center justify-between">
-              <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Total das Verbas
               </span>
               <span className="font-bold text-foreground font-mono">
@@ -762,9 +762,8 @@ export default function AcordoExtrajudicialPage() {
         <>
           <Card>
             <CardContent className="p-6 relative overflow-hidden">
-              <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
 
-              <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-6 relative z-10">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-6 relative z-10">
                 Visualizacao da Peticao
               </span>
 

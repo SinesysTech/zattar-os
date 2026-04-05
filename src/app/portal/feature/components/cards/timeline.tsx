@@ -36,15 +36,15 @@ Timeline.displayName = "Timeline"
 const TimelineItem = React.forwardRef<HTMLDivElement, TimelineItemProps>(
   ({ date, title, description, icon, status = "completed", className, children, ...props }, ref) => {
     const statusColors = {
-      completed: "bg-black border-gray-200",
-      "in-progress": "bg-blue-500 border-blue-200",
-      pending: "bg-gray-300 border-gray-200"
+      completed: "bg-portal-success border-portal-success/30",
+      "in-progress": "bg-portal-info border-portal-info/30",
+      pending: "bg-muted border-border"
     }
 
     const lineColors = {
-      completed: "bg-gray-300",
-      "in-progress": "bg-blue-200", 
-      pending: "bg-gray-200"
+      completed: "bg-portal-success/30",
+      "in-progress": "bg-portal-info/30",
+      pending: "bg-border"
     }
 
     return (

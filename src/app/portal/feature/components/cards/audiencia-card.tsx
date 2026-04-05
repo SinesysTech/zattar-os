@@ -26,20 +26,20 @@ export const AudienciaCard: React.FC<AudienciaCardProps> = ({ audiencia, onClick
       case 'MARCADA': // Mapped from 'M' or 'AGENDADA' logic
       case 'AGENDADA':
       case 'REDESIGNADA':
-        return 'bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200';
+        return 'bg-portal-info-soft text-portal-info border-portal-info/30';
       case 'REALIZADA':
       case 'FINALIZADA':
-        return 'bg-green-100 text-green-800 border-green-200 hover:bg-green-200';
+        return 'bg-portal-success-soft text-portal-success border-portal-success/30';
       case 'CANCELADA':
       case 'SUSPENSA':
       case 'NAO_REALIZADA':
-        return 'bg-red-100 text-red-800 border-red-200 hover:bg-red-200';
+        return 'bg-portal-danger-soft text-portal-danger border-portal-danger/30';
       default:
         // Check Enum directly if stored as single char (e.g. 'M')
-        if (s === 'M') return 'bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200';
-        if (s === 'F') return 'bg-green-100 text-green-800 border-green-200 hover:bg-green-200';
-        if (s === 'C') return 'bg-red-100 text-red-800 border-red-200 hover:bg-red-200';
-        return 'bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200';
+        if (s === 'M') return 'bg-portal-info-soft text-portal-info border-portal-info/30';
+        if (s === 'F') return 'bg-portal-success-soft text-portal-success border-portal-success/30';
+        if (s === 'C') return 'bg-portal-danger-soft text-portal-danger border-portal-danger/30';
+        return 'bg-muted text-muted-foreground border-border';
     }
   };
 
@@ -115,17 +115,17 @@ export const AudienciaCard: React.FC<AudienciaCardProps> = ({ audiencia, onClick
             <span className="flex-1 flex items-center gap-2">
               {audiencia.urlAudienciaVirtual ? (
                 <>
-                  <a href={audiencia.urlAudienciaVirtual} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline truncate block max-w-[200px]">
+                  <a href={audiencia.urlAudienciaVirtual} target="_blank" rel="noopener noreferrer" className="text-primary underline truncate block max-w-50">
                     Link da sala virtual
                   </a>
-                  <ExternalLink size={14} className="text-gray-400 flex-shrink-0" />
+                  <ExternalLink size={14} className="text-muted-foreground shrink-0" />
                 </>
               ) : endereco ? (
                 <>
                   <span>{endereco}</span>
                   <button
                     onClick={() => handleMapClick(endereco)}
-                    className="text-blue-600 hover:text-blue-800 transition-colors p-1 rounded hover:bg-blue-50"
+                    className="text-primary hover:text-primary/80 transition-colors p-1 rounded hover:bg-portal-info-soft"
                     title="Abrir no Google Maps"
                     type="button"
                   >

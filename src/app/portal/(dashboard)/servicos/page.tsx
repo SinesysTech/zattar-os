@@ -45,20 +45,20 @@ export default function ServicosHub() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
         {categories.map((cat) => (
           <Link key={cat.href} href={cat.href} className="group block">
-            <Card className="h-full bg-[#191919]/60 backdrop-blur-xl border-white/5 hover:border-primary/40 transition-all duration-300 hover:-translate-y-1 shadow-lg overflow-hidden">
+            <Card className="h-full bg-card border-border/50 hover:border-primary/20 transition-all duration-300 shadow-sm overflow-hidden">
               <CardContent className="p-8">
                 <div className="flex items-center justify-between mb-6">
                   <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                     <cat.icon className="w-7 h-7" />
                   </div>
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest bg-muted px-3 py-1 rounded-full">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider bg-muted px-3 py-1 rounded-full">
                     {cat.count} servicos
                   </span>
                 </div>
-                <h3 className="text-2xl font-bold font-headline text-white mb-3">
+                <h3 className="text-2xl font-bold text-foreground mb-3">
                   {cat.title}
                 </h3>
-                <p className="text-sm text-on-surface-variant leading-relaxed">
+                <p className="text-sm text-portal-text-muted leading-relaxed">
                   {cat.description}
                 </p>
               </CardContent>

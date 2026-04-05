@@ -233,10 +233,8 @@ export default function FeriasCalculatorPage() {
         <>
           <Card>
             <CardContent className="p-6 relative overflow-hidden">
-              {/* Decorative glow */}
-              <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary/10 blur-[70px] rounded-full pointer-events-none" />
 
-              <span className="text-xs font-bold tracking-widest text-primary uppercase block mb-6 relative z-10">
+              <span className="text-xs font-bold tracking-wider text-primary uppercase block mb-6 relative z-10">
                 Detalhamento do Cálculo
               </span>
 
@@ -319,10 +317,10 @@ export default function FeriasCalculatorPage() {
               {/* Total Líquido highlight */}
               <div className="mt-6 pt-4 relative z-10">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Total Líquido
                   </span>
-                  <span className="text-3xl font-black text-primary font-headline tabular-nums">
+                  <span className="text-3xl font-bold text-primary font-headline tabular-nums">
                     {resultado ? formatBRL(resultado.totalLiquido) : formatBRL(0)}
                   </span>
                 </div>

@@ -25,10 +25,10 @@ export function RangeInput({
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-end">
-        <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+        <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
           {label}
         </label>
-        <span className="text-3xl font-black text-primary font-headline leading-none">
+        <span className="text-2xl font-semibold text-primary leading-none">
           {value}
           {unit ? ` ${unit}` : ""}
         </span>
@@ -41,11 +41,11 @@ export function RangeInput({
         onChange={(e) => onChange(Number(e.target.value))}
         className="w-full h-2 rounded-lg appearance-none cursor-pointer"
         style={{
-          background: `linear-gradient(to right, oklch(0.80 0.18 281) ${progress}%, rgba(255,255,255,0.1) ${progress}%)`,
+          background: `linear-gradient(to right, var(--portal-primary) ${progress}%, var(--border) ${progress}%)`,
         }}
       />
       {labels && (
-        <div className="flex justify-between text-[10px] text-muted-foreground/50 font-bold uppercase tracking-widest">
+        <div className="flex justify-between text-xs text-portal-text-muted font-bold uppercase tracking-wider">
           <span>{labels[0]}</span>
           <span>{labels[1]}</span>
           <span>{labels[2]}</span>

@@ -27,14 +27,14 @@ export function CtaZattar({
         {href ? (
           <a
             href={href}
-            className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest rounded-xl transition-all hover:bg-primary/90 shadow-[0_4px_20px_rgba(204,151,255,0.2)] hover:shadow-[0_4px_20px_rgba(204,151,255,0.4)]"
+            className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider rounded-xl transition-all hover:bg-primary/90 shadow-md hover:shadow-lg"
           >
             {buttonText}
           </a>
         ) : (
           <button
             type="button"
-            className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest rounded-xl transition-all hover:bg-primary/90 shadow-[0_4px_20px_rgba(204,151,255,0.2)] hover:shadow-[0_4px_20px_rgba(204,151,255,0.4)]"
+            className="inline-flex items-center justify-center gap-2 py-3 px-6 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider rounded-xl transition-all hover:bg-primary/90 shadow-md hover:shadow-lg"
           >
             {buttonText}
           </button>

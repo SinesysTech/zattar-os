@@ -17,7 +17,7 @@ export function SelectOption({
 }: SelectOptionProps) {
   return (
     <div className="space-y-3">
-      <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+      <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
         {label}
       </label>
 

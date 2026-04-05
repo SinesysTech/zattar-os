@@ -13,6 +13,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/shared/empty-state";
+import { PortalBadge, PortalSectionHeader } from "@/app/portal/feature";
 import type { AgendamentoPortal, TipoAgendamento, StatusAgendamento } from "./domain";
 
 // ---------------------------------------------------------------------------
@@ -22,43 +23,43 @@ import type { AgendamentoPortal, TipoAgendamento, StatusAgendamento } from "./do
 function TipoBadge({ tipo }: { tipo: TipoAgendamento }) {
   if (tipo === "Presencial") {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+      <PortalBadge variant="success" dot={false}>
         <MapPin className="w-3 h-3" />
         Presencial
-      </span>
+      </PortalBadge>
     );
   }
   if (tipo === "Híbrida") {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+      <PortalBadge variant="warning" dot={false}>
         <Video className="w-3 h-3" />
         Híbrida
-      </span>
+      </PortalBadge>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+    <PortalBadge variant="info" dot={false}>
       <Video className="w-3 h-3" />
       Videoconferência
-    </span>
+    </PortalBadge>
   );
 }
 
 function StatusBadge({ status }: { status: StatusAgendamento }) {
   if (status === "Realizada") {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-muted text-muted-foreground">
+      <PortalBadge variant="neutral" dot={false}>
         <CheckCircle2 className="w-3 h-3" />
         Realizada
-      </span>
+      </PortalBadge>
     );
   }
   if (status === "Cancelada") {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-destructive/10 text-destructive">
+      <PortalBadge variant="danger" dot={false}>
         <XCircle className="w-3 h-3" />
         Cancelada
-      </span>
+      </PortalBadge>
     );
   }
   return null;
@@ -79,7 +80,7 @@ function AgendamentoCard({
           <span className="text-2xl font-bold text-primary block leading-none">
             {agendamento.dia}
           </span>
-          <span className="text-[10px] uppercase tracking-widest text-primary/70 mt-1 block">
+          <span className="text-xs uppercase tracking-wider text-primary/70 mt-1 block">
             {agendamento.mes}
           </span>
         </div>
@@ -89,14 +90,14 @@ function AgendamentoCard({
           <h4 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors mb-0.5">
             {agendamento.titulo}
           </h4>
-          <p className="text-sm text-muted-foreground mb-2.5">
+          <p className="text-sm text-portal-text-muted mb-2.5">
             {agendamento.processo}{" "}
-            <span className="text-muted-foreground/60">
+            <span className="text-portal-text-subtle">
               &middot; {agendamento.tribunal}
             </span>
           </p>
-          <div className="flex flex-wrap items-center gap-2.5">
-            <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 text-sm text-portal-text-muted">
               <Clock className="w-3.5 h-3.5" />
               {agendamento.horario}
             </span>
@@ -106,7 +107,7 @@ function AgendamentoCard({
             )}
           </div>
           {agendamento.local && agendamento.tipo === "Presencial" && (
-            <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1.5">
+            <p className="text-xs text-portal-text-muted mt-2 flex items-center gap-1.5">
               <MapPin className="w-3 h-3 shrink-0" />
               {agendamento.local}
             </p>
@@ -155,7 +156,10 @@ export function AgendamentosContent({
   if (error) {
     return (
       <div className="space-y-6">
-        <Header />
+        <PortalSectionHeader
+          title="Agendamentos"
+          description="Audiências e compromissos do seu processo."
+        />
         <EmptyState
           icon={CalendarX}
           title="Erro ao carregar agendamentos"
@@ -169,7 +173,10 @@ export function AgendamentosContent({
 
   return (
     <div className="space-y-8">
-      <Header />
+      <PortalSectionHeader
+        title="Agendamentos"
+        description="Audiências e compromissos do seu processo."
+      />
 
       {isEmpty ? (
         <EmptyState
@@ -182,10 +189,10 @@ export function AgendamentosContent({
           {/* Upcoming */}
           {proximos.length > 0 && (
             <section>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-3">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-portal-text-muted mb-4 flex items-center gap-3">
                 <span className="w-1.5 h-5 bg-primary rounded-full" />
                 Próximos Agendamentos
-                <span className="text-xs font-normal text-muted-foreground/60">
+                <span className="text-xs font-normal text-portal-text-subtle">
                   ({proximos.length})
                 </span>
               </h3>
@@ -204,10 +211,10 @@ export function AgendamentosContent({
           {/* History */}
           {passados.length > 0 && (
             <section>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-3">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-portal-text-muted mb-4 flex items-center gap-3">
                 <span className="w-1.5 h-5 bg-muted-foreground/20 rounded-full" />
                 Histórico
-                <span className="text-xs font-normal text-muted-foreground/60">
+                <span className="text-xs font-normal text-portal-text-subtle">
                   ({passados.length})
                 </span>
               </h3>
@@ -220,19 +227,6 @@ export function AgendamentosContent({
           )}
         </>
       )}
-    </div>
-  );
-}
-
-function Header() {
-  return (
-    <div>
-      <h1 className="text-2xl font-bold text-foreground tracking-tight">
-        Agendamentos
-      </h1>
-      <p className="text-sm text-muted-foreground mt-1">
-        Audiências e compromissos do seu processo.
-      </p>
     </div>
   );
 }

@@ -15,6 +15,7 @@ import { Users, Scale, User, Briefcase } from 'lucide-react';
 import type { EntityCardConfig, EntityCardData } from '@/components/dashboard/entity-card';
 import type { Cliente, ParteContraria, Terceiro, ProcessoRelacionado } from '../domain';
 import type { Representante } from '../types/representantes';
+import { formatarEnderecoCompleto } from '../utils/format';
 
 // Status que indicam processo ativo (não arquivado/extinto)
 const STATUS_ATIVO = new Set(['A', 'ATIVO', 'ativo', null, undefined]);
@@ -157,9 +158,29 @@ function contarProcessos(processos?: ProcessoRelacionado[]): { ativos: number; t
   return { ativos, total: processos.length };
 }
 
+/** Mapeia processos_relacionados para o formato resumido do card */
+function mapProcessosResumo(processos?: ProcessoRelacionado[]) {
+  if (!processos || processos.length === 0) return undefined;
+  return processos.map(p => ({
+    id: p.processo_id,
+    numero: p.numero_processo,
+    status: p.codigo_status_processo ?? null,
+  }));
+}
+
 /** Tipo genérico para entidades com endereco e processos opcionais */
+type EnderecoData = {
+  logradouro?: string | null;
+  numero?: string | null;
+  complemento?: string | null;
+  bairro?: string | null;
+  municipio?: string | null;
+  estado_sigla?: string | null;
+  cep?: string | null;
+};
+
 type WithEnderecoEProcessos = {
-  endereco?: { municipio?: string | null; estado_sigla?: string | null } | null;
+  endereco?: EnderecoData | null;
   processos_relacionados?: ProcessoRelacionado[];
 };
 
@@ -189,11 +210,14 @@ export function clienteToEntityCard(
     tipo: isPF ? 'pf' : 'pj',
     config: ENTITY_CONFIGS.cliente,
     documentoMasked: formatDocument(doc),
+    documentoRaw: doc ?? undefined,
     email: extractFirstEmail(prop(r, 'emails') as string[] | string | null | undefined),
     telefone: formatPhone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
     localizacao: formatLocation(cliente.endereco),
+    enderecoCompleto: formatarEnderecoCompleto(cliente.endereco),
     ativo: cliente.ativo !== false,
     metricas: { label: 'processos', ativos, total },
+    processos: mapProcessosResumo(cliente.processos_relacionados),
     ultimaAtualizacao: strProp(r, 'updated_at') || strProp(r, 'created_at') || '',
     tags: [],
   };
@@ -219,11 +243,14 @@ export function parteContrariaToEntityCard(
     tipo: isPF ? 'pf' : 'pj',
     config: ENTITY_CONFIGS.parteContraria,
     documentoMasked: formatDocument(doc),
+    documentoRaw: doc ?? undefined,
     email: extractFirstEmail(prop(r, 'emails') as string[] | string | null | undefined),
     telefone: formatPhone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
     localizacao: formatLocation(parte.endereco),
+    enderecoCompleto: formatarEnderecoCompleto(parte.endereco),
     ativo: parte.ativo !== false,
     metricas: { label: 'processos', ativos, total },
+    processos: mapProcessosResumo(parte.processos_relacionados),
     ultimaAtualizacao: strProp(r, 'updated_at') || strProp(r, 'created_at') || '',
     tags: [],
   };
@@ -254,11 +281,14 @@ export function terceiroToEntityCard(
     tipo: isPF ? 'pf' : 'pj',
     config: ENTITY_CONFIGS.terceiro,
     documentoMasked: formatDocument(doc),
+    documentoRaw: doc ?? undefined,
     email: extractFirstEmail(prop(r, 'emails') as string[] | string | null | undefined),
     telefone: formatPhone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
     localizacao: formatLocation(terceiro.endereco),
+    enderecoCompleto: formatarEnderecoCompleto(terceiro.endereco),
     ativo: terceiro.ativo !== false,
     metricas: { label: 'processos', ativos, total },
+    processos: mapProcessosResumo(terceiro.processos_relacionados),
     ultimaAtualizacao: strProp(r, 'updated_at') || strProp(r, 'created_at') || '',
     tags: tipoParte ? [tipoParte] : [],
   };
@@ -280,17 +310,22 @@ export function representanteToEntityCard(
 
   const emails = prop(r, 'emails') ?? prop(r, 'email');
 
+  const cpf = strProp(r, 'cpf');
+
   return {
     id: representante.id,
     nome: representante.nome,
     tipo: 'pf',
     config: ENTITY_CONFIGS.representante,
-    documentoMasked: formatDocument(strProp(r, 'cpf')),
+    documentoMasked: formatDocument(cpf),
+    documentoRaw: cpf ?? undefined,
     email: extractFirstEmail(emails as string[] | string | null | undefined),
     telefone: formatPhone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
     localizacao: formatLocation(representante.endereco),
+    enderecoCompleto: formatarEnderecoCompleto(representante.endereco),
     ativo: true,
     metricas: { label: 'processos', ...contarProcessos(representante.processos_relacionados) },
+    processos: mapProcessosResumo(representante.processos_relacionados),
     ultimaAtualizacao: strProp(r, 'updated_at') || strProp(r, 'created_at') || '',
     tags: oabLabel ? [oabLabel] : [],
   };

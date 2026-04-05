@@ -15,15 +15,15 @@ export function ContratoCard({ contrato, index }: ContratoCardProps) {
     const statusLower = status.toLowerCase();
     switch (statusLower) {
       case 'distribuido':
-        return 'bg-green-500 hover:bg-green-600 text-white';
+        return 'bg-portal-success-soft text-portal-success border-portal-success/30';
       case 'em_contratacao':
-        return 'bg-red-500 hover:bg-red-600 text-white';
+        return 'bg-portal-danger-soft text-portal-danger border-portal-danger/30';
       case 'contratado':
-        return 'bg-blue-500 hover:bg-blue-600 text-white';
+        return 'bg-portal-info-soft text-portal-info border-portal-info/30';
       case 'desistencia':
-        return 'bg-black hover:bg-gray-800 text-white';
+        return 'bg-muted text-muted-foreground border-border';
       default:
-        return 'bg-gray-500 hover:bg-gray-600 text-white';
+        return 'bg-muted text-muted-foreground border-border';
     }
   };
 
