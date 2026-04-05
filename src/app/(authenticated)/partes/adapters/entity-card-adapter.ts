@@ -55,22 +55,18 @@ export const ENTITY_CONFIGS: Record<string, EntityCardConfig> = {
 // =============================================================================
 
 /**
- * Mascara CPF: oculta os 6 digitos centrais, ex: 123.***.***-45
- * Para CNPJ mostra apenas os 4 ultimos digitos.
+ * Formata CPF (000.000.000-00) ou CNPJ (00.000.000/0000-00) para exibição.
  */
-export function maskDocument(doc: string | null | undefined): string {
+export function formatDocument(doc: string | null | undefined): string {
   if (!doc) return '--';
   const digits = doc.replace(/\D/g, '');
   if (digits.length === 11) {
-    // CPF: 000.***.***-00 -> mostra primeiros 3 e últimos 2
-    return `${digits.slice(0, 3)}.***.***-${digits.slice(9)}`;
+    return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
   }
   if (digits.length === 14) {
-    // CNPJ: **.***.***/**** -> mostra últimos 4
-    return `**.**.***/****-${digits.slice(12)}`;
+    return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8, 12)}-${digits.slice(12)}`;
   }
-  // Documento desconhecido: mostra os últimos 4
-  return `****${digits.slice(-4)}`;
+  return doc;
 }
 
 /**
@@ -138,6 +134,22 @@ export function formatLocation(endereco: {
 // HELPERS INTERNOS
 // =============================================================================
 
+/**
+ * Acessa propriedade por snake_case OU camelCase.
+ * Necessário porque fromSnakeToCamel converte chaves para camelCase,
+ * mas os tipos TypeScript usam snake_case.
+ */
+function prop(obj: Record<string, unknown>, snakeKey: string): unknown {
+  if (snakeKey in obj) return obj[snakeKey];
+  const camelKey = snakeKey.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+  return obj[camelKey];
+}
+
+function strProp(obj: Record<string, unknown>, snakeKey: string): string | null {
+  const v = prop(obj, snakeKey);
+  return typeof v === 'string' ? v : null;
+}
+
 /** Conta processos ativos e total a partir de processos_relacionados */
 function contarProcessos(processos?: ProcessoRelacionado[]): { ativos: number; total: number } {
   if (!processos || processos.length === 0) return { ativos: 0, total: 0 };
@@ -163,26 +175,26 @@ type WithEnderecoEProcessos = {
 export function clienteToEntityCard(
   cliente: Cliente & WithEnderecoEProcessos
 ): EntityCardData {
-  const doc =
-    cliente.tipo_pessoa === 'pf'
-      ? (cliente as { cpf?: string }).cpf
-      : (cliente as { cnpj?: string }).cnpj;
+  const r = cliente as unknown as Record<string, unknown>;
+  const tipoPessoa = (strProp(r, 'tipo_pessoa') ?? '').toLowerCase();
+  const isPF = tipoPessoa === 'pf';
+  const doc = isPF ? strProp(r, 'cpf') : strProp(r, 'cnpj');
 
   const { ativos, total } = contarProcessos(cliente.processos_relacionados);
 
   return {
     id: cliente.id,
     nome: cliente.nome,
-    nomeSocial: cliente.nome_social_fantasia ?? undefined,
-    tipo: cliente.tipo_pessoa,
+    nomeSocial: (strProp(r, 'nome_social_fantasia')) ?? undefined,
+    tipo: isPF ? 'pf' : 'pj',
     config: ENTITY_CONFIGS.cliente,
-    documentoMasked: maskDocument(doc),
-    email: extractFirstEmail(cliente.emails),
-    telefone: formatPhone(cliente.ddd_celular, cliente.numero_celular),
+    documentoMasked: formatDocument(doc),
+    email: extractFirstEmail(prop(r, 'emails') as string[] | string | null | undefined),
+    telefone: formatPhone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
     localizacao: formatLocation(cliente.endereco),
     ativo: cliente.ativo !== false,
     metricas: { label: 'processos', ativos, total },
-    ultimaAtualizacao: cliente.updated_at || cliente.created_at || '',
+    ultimaAtualizacao: strProp(r, 'updated_at') || strProp(r, 'created_at') || '',
     tags: [],
   };
 }
@@ -193,26 +205,26 @@ export function clienteToEntityCard(
 export function parteContrariaToEntityCard(
   parte: ParteContraria & WithEnderecoEProcessos
 ): EntityCardData {
-  const doc =
-    parte.tipo_pessoa === 'pf'
-      ? (parte as { cpf?: string }).cpf
-      : (parte as { cnpj?: string }).cnpj;
+  const r = parte as unknown as Record<string, unknown>;
+  const tipoPessoa = (strProp(r, 'tipo_pessoa') ?? '').toLowerCase();
+  const isPF = tipoPessoa === 'pf';
+  const doc = isPF ? strProp(r, 'cpf') : strProp(r, 'cnpj');
 
   const { ativos, total } = contarProcessos(parte.processos_relacionados);
 
   return {
     id: parte.id,
     nome: parte.nome,
-    nomeSocial: parte.nome_social_fantasia ?? undefined,
-    tipo: parte.tipo_pessoa,
+    nomeSocial: strProp(r, 'nome_social_fantasia') ?? undefined,
+    tipo: isPF ? 'pf' : 'pj',
     config: ENTITY_CONFIGS.parteContraria,
-    documentoMasked: maskDocument(doc),
-    email: extractFirstEmail(parte.emails),
-    telefone: formatPhone(parte.ddd_celular, parte.numero_celular),
+    documentoMasked: formatDocument(doc),
+    email: extractFirstEmail(prop(r, 'emails') as string[] | string | null | undefined),
+    telefone: formatPhone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
     localizacao: formatLocation(parte.endereco),
     ativo: parte.ativo !== false,
     metricas: { label: 'processos', ativos, total },
-    ultimaAtualizacao: parte.updated_at || parte.created_at || '',
+    ultimaAtualizacao: strProp(r, 'updated_at') || strProp(r, 'created_at') || '',
     tags: [],
   };
 }
@@ -223,32 +235,32 @@ export function parteContrariaToEntityCard(
 export function terceiroToEntityCard(
   terceiro: Terceiro & WithEnderecoEProcessos
 ): EntityCardData {
-  const doc =
-    terceiro.tipo_pessoa === 'pf'
-      ? (terceiro as { cpf?: string }).cpf
-      : (terceiro as { cnpj?: string }).cnpj;
+  const r = terceiro as unknown as Record<string, unknown>;
+  const tipoPessoa = (strProp(r, 'tipo_pessoa') ?? '').toLowerCase();
+  const isPF = tipoPessoa === 'pf';
+  const doc = isPF ? strProp(r, 'cpf') : strProp(r, 'cnpj');
 
-  const nomeSocial =
-    terceiro.tipo_pessoa === 'pj'
-      ? (terceiro as { nome_fantasia?: string | null }).nome_fantasia ?? undefined
-      : undefined;
+  const nomeSocial = !isPF
+    ? strProp(r, 'nome_fantasia') ?? undefined
+    : undefined;
 
   const { ativos, total } = contarProcessos(terceiro.processos_relacionados);
+  const tipoParte = strProp(r, 'tipo_parte');
 
   return {
     id: terceiro.id,
     nome: terceiro.nome,
     nomeSocial,
-    tipo: terceiro.tipo_pessoa,
+    tipo: isPF ? 'pf' : 'pj',
     config: ENTITY_CONFIGS.terceiro,
-    documentoMasked: maskDocument(doc),
-    email: extractFirstEmail(terceiro.emails),
-    telefone: formatPhone(terceiro.ddd_celular, terceiro.numero_celular),
+    documentoMasked: formatDocument(doc),
+    email: extractFirstEmail(prop(r, 'emails') as string[] | string | null | undefined),
+    telefone: formatPhone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
     localizacao: formatLocation(terceiro.endereco),
     ativo: terceiro.ativo !== false,
     metricas: { label: 'processos', ativos, total },
-    ultimaAtualizacao: terceiro.updated_at || terceiro.created_at || '',
-    tags: terceiro.tipo_parte ? [terceiro.tipo_parte] : [],
+    ultimaAtualizacao: strProp(r, 'updated_at') || strProp(r, 'created_at') || '',
+    tags: tipoParte ? [tipoParte] : [],
   };
 }
 
@@ -259,23 +271,27 @@ export function terceiroToEntityCard(
 export function representanteToEntityCard(
   representante: Representante & WithEnderecoEProcessos
 ): EntityCardData {
+  const r = representante as unknown as Record<string, unknown>;
+  const oabs = prop(r, 'oabs') as { uf?: string; numero?: string }[] | undefined;
   const oabLabel =
-    representante.oabs && representante.oabs.length > 0
-      ? `OAB/${representante.oabs[0].uf} ${representante.oabs[0].numero}`
+    oabs && oabs.length > 0
+      ? `OAB/${oabs[0].uf} ${oabs[0].numero}`
       : undefined;
+
+  const emails = prop(r, 'emails') ?? prop(r, 'email');
 
   return {
     id: representante.id,
     nome: representante.nome,
     tipo: 'pf',
     config: ENTITY_CONFIGS.representante,
-    documentoMasked: maskDocument(representante.cpf),
-    email: extractFirstEmail(representante.emails ?? representante.email),
-    telefone: formatPhone(representante.ddd_celular, representante.numero_celular),
+    documentoMasked: formatDocument(strProp(r, 'cpf')),
+    email: extractFirstEmail(emails as string[] | string | null | undefined),
+    telefone: formatPhone(strProp(r, 'ddd_celular'), strProp(r, 'numero_celular')),
     localizacao: formatLocation(representante.endereco),
     ativo: true,
     metricas: { label: 'processos', ...contarProcessos(representante.processos_relacionados) },
-    ultimaAtualizacao: representante.updated_at || representante.created_at || '',
+    ultimaAtualizacao: strProp(r, 'updated_at') || strProp(r, 'created_at') || '',
     tags: oabLabel ? [oabLabel] : [],
   };
 }
