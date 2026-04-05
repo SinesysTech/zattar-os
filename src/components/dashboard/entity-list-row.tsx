@@ -72,7 +72,7 @@ export function EntityListRow({ data, onClick, selected = false }: EntityListRow
 
       {/* Processos */}
       <span className="text-[10px] font-medium tabular-nums shrink-0 w-12 text-right">
-        {data.metricas.ativos}
+        {data.metricas.total}
         <span className="text-muted-foreground/50"> proc</span>
       </span>
 

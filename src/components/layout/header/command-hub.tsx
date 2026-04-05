@@ -27,7 +27,6 @@ import {
   Search,
   Users,
   Clock,
-  Sparkles,
 } from "lucide-react"
 import { usePermissoes } from "@/providers/user-provider"
 
@@ -117,6 +116,20 @@ function getAllItems(canSeePangea: boolean, canSeeProjetos: boolean, isSuperAdmi
   }
 
   return sections
+}
+
+// ─── Synthropic Logo ───────────────────────────────────────────────────
+
+function SynthropicLogo() {
+  return (
+    <span className="relative inline-flex items-center justify-center size-3.5 rounded-[2px] bg-current/5 border border-current/30 overflow-hidden shrink-0">
+      <span className="absolute size-1.25 rounded-full bg-current opacity-80" />
+      <span className="absolute size-0.5 rounded-full bg-current opacity-50" style={{ transform: "translate(3px, -2px)" }} />
+      <span className="absolute size-0.5 rounded-full bg-current opacity-50" style={{ transform: "translate(-3px, 3px)" }} />
+      <span className="absolute size-0.5 rounded-full bg-current opacity-50" style={{ transform: "translate(-2px, -3px)" }} />
+      <span className="absolute size-0.5 rounded-full bg-current opacity-50" style={{ transform: "translate(3px, 2px)" }} />
+    </span>
+  )
 }
 
 // ─── Hub Panel ─────────────────────────────────────────────────────────
@@ -213,7 +226,7 @@ function HubPanel({
         onKeyDown={handleKeyDown}
         className="
           fixed top-3 left-1/2 -translate-x-1/2 z-100 w-110 max-h-[calc(100vh-80px)]
-          overflow-hidden rounded-2xl
+          overflow-hidden rounded-2xl flex flex-col
           bg-popover/95 backdrop-blur-2xl
           border border-border/50
           shadow-[0_25px_60px_-12px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.05)_inset]
@@ -240,7 +253,7 @@ function HubPanel({
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto max-h-[calc(100vh-160px)] p-2 scrollbar-macos">
+        <div className="flex-1 min-h-0 overflow-y-auto p-2 scrollbar-macos">
           {/* Recents (only when not searching and have recents) */}
           {!search.trim() && recentItems.length > 0 && (
             <div className="mb-1">
@@ -387,10 +400,15 @@ function HubPanel({
               fechar
             </span>
           </div>
-          <div className="flex items-center gap-1 text-[10px] text-muted-foreground/30">
-            <Sparkles className="size-3" />
-            <span>Sinesys</span>
-          </div>
+          <a
+            href="https://synthropic.com.br"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-1.5 text-[10px] text-muted-foreground/30 hover:text-muted-foreground/60 transition-colors cursor-pointer"
+          >
+            <SynthropicLogo />
+            <span>Synthropic</span>
+          </a>
         </div>
       </div>
     </>
