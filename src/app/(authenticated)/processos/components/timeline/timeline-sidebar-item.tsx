@@ -28,6 +28,10 @@ interface TimelineSidebarItemProps {
   isLast: boolean;
   /** Callback chamado ao clicar no item */
   onSelect: (item: TimelineItemUnificado) => void;
+  /** Se true, item é futuro — círculo vazado, texto com opacity */
+  isFuture?: boolean;
+  /** Se true, mostra badge "NOVO" inline */
+  isNew?: boolean;
 }
 
 /**
@@ -58,6 +62,8 @@ export function TimelineSidebarItem({
   isFirst,
   isLast,
   onSelect,
+  isFuture = false,
+  isNew = false,
 }: TimelineSidebarItemProps) {
   const meta = getTimelineItemMeta(item.titulo, item.documento);
   const Icon = meta.icon;
@@ -103,10 +109,10 @@ export function TimelineSidebarItem({
           {/* Círculo com ícone do tipo de evento */}
           <div
             className={cn(
-              'flex items-center justify-center size-6 rounded-full bg-card border',
-              isSelected
-                ? 'border-primary text-primary'
-                : cn('border-border', meta.colorClass)
+              'flex items-center justify-center size-6 rounded-full',
+              isFuture
+                ? cn('border-2 bg-transparent', isSelected ? 'border-primary' : 'border-border')
+                : cn('bg-card border', isSelected ? 'border-primary text-primary' : cn('border-border', meta.colorClass))
             )}
             aria-hidden="true"
           >
@@ -132,6 +138,11 @@ export function TimelineSidebarItem({
               textClass={meta.badgeTextClass}
               borderClass={meta.badgeBorderClass}
             />
+            {isNew && (
+              <span className="text-[8px] font-bold uppercase bg-primary/10 text-primary/70 px-1.5 py-0.5 rounded-full shrink-0">
+                Novo
+              </span>
+            )}
             {item.grauOrigem && (
               <span className="rounded border bg-muted/40 px-1 py-px text-[9px] font-medium uppercase tracking-wider text-muted-foreground shrink-0">
                 {item.grauOrigem === 'primeiro_grau'
