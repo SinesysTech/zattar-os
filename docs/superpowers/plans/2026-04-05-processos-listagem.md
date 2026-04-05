@@ -283,7 +283,7 @@ export function ProcessoCard({
     <GlassPanel
       className={cn(
         'p-4 cursor-pointer group',
-        isSelected && 'border-primary/20 bg-primary/[0.03]'
+        isSelected && 'border-primary/20 bg-primary/3'
       )}
     >
       <div onClick={onClick} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onClick()}>
