@@ -114,7 +114,7 @@ function PipelineFunnel() {
     <GlassPanel className="p-5">
       <div className="flex items-center gap-2 mb-5">
         <GitBranch className="size-4 text-muted-foreground/50" />
-        <h2 className="font-heading text-sm font-semibold">Pipeline de Conversão</h2>
+        <h2 className="text-widget-title">Pipeline de Conversão</h2>
         <span className="text-[10px] text-muted-foreground/55 ml-auto">
           {desistencias.length} desistência{desistencias.length !== 1 ? 's' : ''} ({fmtMoeda(getStageTotal('desistencia'))})
         </span>

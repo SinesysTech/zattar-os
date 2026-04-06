@@ -87,7 +87,7 @@ export function WidgetContainer({
         <div className="flex items-center gap-2">
           {Icon && <Icon className="size-4 text-muted-foreground/50" />}
           <div>
-            <h3 className="text-card-heading">{title}</h3>
+            <h3 className="text-widget-title">{title}</h3>
             {subtitle && <p className="text-widget-sub">{subtitle}</p>}
           </div>
         </div>

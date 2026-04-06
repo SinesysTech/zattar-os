@@ -371,27 +371,35 @@ export const TEXT_PATTERNS = {
   /**
    * Page title — título principal da página.
    * Ex: "Processos", "Audiências", "Partes"
-   * CSS class: .text-page-heading
+   * CSS class: .text-page-title  (24px, heading bold)
    */
-  pageHeading: 'text-2xl font-heading font-semibold tracking-tight',
+  pageTitle: 'text-page-title',
 
   /**
-   * Card title — título de card ou seção.
-   * CSS class: .text-card-heading
+   * Widget title — título de widget/card compacto (dashboard, glass panels).
+   * Ex: "Briefing do Dia", "Meu Dia", "Foco Agora"
+   * CSS class: .text-widget-title  (14px, heading semibold)
    */
-  cardHeading: 'text-sm font-heading font-semibold',
+  widgetTitle: 'text-widget-title',
 
   /**
-   * Widget subtitle — subtítulo compacto abaixo de headers.
-   * CSS class: .text-widget-sub
+   * Card title — título de card grande ou painel de detalhe.
+   * CSS class: .text-card-title  (18px, heading semibold)
    */
-  widgetSub: 'text-[10px] text-muted-foreground/60',
+  cardTitle: 'text-card-title',
+
+  /**
+   * Widget subtitle — subtítulo compacto abaixo de headers de widget.
+   * Ex: "Visão geral — administrador"
+   * CSS class: .text-widget-sub  (12px, muted/60)
+   */
+  widgetSub: 'text-widget-sub',
 
   /**
    * Valor de KPI grande — métricas de destaque.
-   * CSS class: .text-kpi-value
+   * CSS class: .text-kpi-value  (24px, heading bold tabular-nums)
    */
-  kpiValue: 'text-2xl font-bold font-heading tabular-nums',
+  kpiValue: 'text-kpi-value',
 
   /**
    * Tag inline — texto de tag dentro de containers de tags.
