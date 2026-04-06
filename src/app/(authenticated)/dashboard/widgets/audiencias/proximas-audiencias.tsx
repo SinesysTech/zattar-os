@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar, Clock, MapPin } from 'lucide-react';
+import { Calendar, Clock, MapPin, Video } from 'lucide-react';
 import { WidgetContainer } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
@@ -24,7 +24,7 @@ function getTipoStyles(tipo: string | null): {
   }
   if (t.includes('conciliação') || t.includes('conciliacao')) {
     return {
-      borderColor: 'border-l-[hsl(var(--warning))]',
+      borderColor: 'border-l-warning',
       pillColor: 'bg-warning/15 text-warning',
       bgColor: '',
     };
@@ -78,7 +78,10 @@ function AudienciaItem({
   isFirst: boolean;
 }) {
   const styles = getTipoStyles(audiencia.tipo_audiencia);
-  const parte = audiencia.polo_ativo_nome ?? audiencia.polo_passivo_nome ?? 'Parte não informada';
+  const partes = [audiencia.polo_ativo_nome, audiencia.polo_passivo_nome].filter(Boolean);
+  const parte = partes.length >= 2
+    ? `${partes[0]} vs ${partes[1]}`
+    : partes[0] ?? 'Partes não informadas';
 
   return (
     <div
@@ -120,12 +123,25 @@ function AudienciaItem({
           )}
         </div>
       </div>
-      {audiencia.local && (
-        <div className="flex items-center gap-1 mt-1.5 text-[9px] text-muted-foreground/60">
-          <MapPin className="size-2.5 shrink-0" />
-          <span className="truncate">{audiencia.local}</span>
-        </div>
-      )}
+      <div className="flex items-center gap-2 mt-1.5">
+        {audiencia.local && (
+          <div className="flex items-center gap-1 text-[9px] text-muted-foreground/60 min-w-0">
+            <MapPin className="size-2.5 shrink-0" />
+            <span className="truncate">{audiencia.local}</span>
+          </div>
+        )}
+        {audiencia.url_audiencia_virtual && (
+          <a
+            href={audiencia.url_audiencia_virtual}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[9px] font-medium text-primary/80 hover:text-primary transition-colors shrink-0 cursor-pointer"
+          >
+            <Video className="size-2.5" />
+            <span>Entrar</span>
+          </a>
+        )}
+      </div>
     </div>
   );
 }
@@ -145,7 +161,6 @@ export function ProximasAudiencias() {
         title="Próximas Audiências"
         icon={Calendar}
         subtitle="Agenda dos próximos 30 dias"
-        className="md:col-span-2"
       >
         <p className="text-[11px] text-muted-foreground/60 py-4 text-center">
           Não foi possível carregar as audiências.
@@ -161,7 +176,6 @@ export function ProximasAudiencias() {
       title="Próximas Audiências"
       icon={Calendar}
       subtitle="Agenda dos próximos 30 dias"
-      className="md:col-span-2"
     >
       {audiencias.length === 0 ? (
         <EmptyState />

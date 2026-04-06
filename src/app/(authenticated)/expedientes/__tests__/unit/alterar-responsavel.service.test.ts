@@ -27,7 +27,7 @@ jest.mock('@/lib/supabase');
 
 describe('atribuirResponsavel', () => {
   let mockRpc: jest.Mock;
-  let mockGetSession: jest.Mock;
+  let mockGetUser: jest.Mock;
   let mockFrom: jest.Mock;
   let mockDb: Record<string, unknown>;
 
@@ -35,8 +35,8 @@ describe('atribuirResponsavel', () => {
     jest.clearAllMocks();
 
     mockRpc = jest.fn().mockResolvedValue({ data: null, error: null });
-    mockGetSession = jest.fn().mockResolvedValue({
-      data: { session: { user: { id: 'auth-uuid-123' } } },
+    mockGetUser = jest.fn().mockResolvedValue({
+      data: { user: { id: 'auth-uuid-123' } },
       error: null,
     });
     mockFrom = jest.fn().mockReturnValue({
@@ -49,7 +49,7 @@ describe('atribuirResponsavel', () => {
 
     mockDb = {
       rpc: mockRpc,
-      auth: { getSession: mockGetSession },
+      auth: { getUser: mockGetUser },
       from: mockFrom,
     };
 
@@ -69,7 +69,7 @@ describe('atribuirResponsavel', () => {
       p_usuario_executou_id: 99,
     });
     // Não deve buscar sessão quando userId é fornecido
-    expect(mockGetSession).not.toHaveBeenCalled();
+    expect(mockGetUser).not.toHaveBeenCalled();
   });
 
   it('deve permitir remover responsável passando null', async () => {
@@ -87,7 +87,7 @@ describe('atribuirResponsavel', () => {
     const result = await atribuirResponsavel(10, 5);
 
     expect(result.success).toBe(true);
-    expect(mockGetSession).toHaveBeenCalled();
+    expect(mockGetUser).toHaveBeenCalled();
     expect(mockFrom).toHaveBeenCalledWith('usuarios');
     expect(mockRpc).toHaveBeenCalledWith('atribuir_responsavel_pendente', {
       p_pendente_id: 10,
@@ -99,9 +99,9 @@ describe('atribuirResponsavel', () => {
   // ── Erros de autenticação ────────────────────────────────────────────
 
   it('deve retornar UNAUTHORIZED se sessão não existir e userId não fornecido', async () => {
-    mockGetSession.mockResolvedValue({
-      data: { session: null },
-      error: null,
+    mockGetUser.mockResolvedValue({
+      data: { user: null },
+      error: { message: 'not authenticated' },
     });
 
     const result = await atribuirResponsavel(10, 5);

@@ -43,7 +43,7 @@ export function Sparkline({
     .map((v, i) => `${(i / (data.length - 1)) * width},${height - ((v - min) / range) * height}`)
     .join(' ');
 
-  const strokeColor = color || (alert ? 'hsl(var(--destructive))' : 'hsl(var(--primary))');
+  const strokeColor = color || (alert ? 'var(--destructive)' : 'var(--primary)');
 
   return (
     <svg width={width} height={height} className="overflow-visible shrink-0">
@@ -72,7 +72,7 @@ export function MiniArea({
   data,
   width = 120,
   height = 40,
-  color = 'hsl(var(--primary))',
+  color = 'var(--primary)',
 }: {
   data: number[];
   width?: number;
@@ -234,8 +234,8 @@ export function StackedBar({
 
 export function UrgencyDot({ level }: { level: 'critico' | 'alto' | 'medio' | 'baixo' | 'ok' }) {
   const styles: Record<string, string> = {
-    critico: 'bg-destructive shadow-[0_0_8px_hsl(var(--destructive)/0.5)] animate-pulse',
-    alto: 'bg-warning shadow-[0_0_6px_hsl(var(--warning)/0.4)]',
+    critico: 'bg-destructive shadow-[0_0_8px_color-mix(in_oklch,var(--destructive)_50%,transparent)] animate-pulse',
+    alto: 'bg-warning shadow-[0_0_6px_color-mix(in_oklch,var(--warning)_40%,transparent)]',
     medio: 'bg-primary/50',
     baixo: 'bg-muted-foreground/30',
     ok: 'bg-success/60',
@@ -282,7 +282,7 @@ export function ProgressRing({
   percent,
   size = 40,
   strokeWidth,
-  color = 'hsl(var(--primary))',
+  color = 'var(--primary)',
 }: {
   percent: number;
   size?: number;
@@ -504,10 +504,10 @@ export function GaugeMeter({
   const offset = halfCirc - percent * halfCirc;
 
   const statusColors: Record<string, string> = {
-    good: 'hsl(var(--success))',
-    warning: 'hsl(var(--warning))',
-    danger: 'hsl(var(--destructive))',
-    neutral: 'hsl(var(--primary))',
+    good: 'var(--success)',
+    warning: 'var(--warning)',
+    danger: 'var(--destructive)',
+    neutral: 'var(--primary)',
   };
   const color = statusColors[status];
 

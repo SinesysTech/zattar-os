@@ -118,8 +118,8 @@ export interface WidgetDefinition {
   description: string;
   module: 'processos' | 'audiencias' | 'expedientes' | 'financeiro' | 'contratos' | 'pessoal';
   permission: { recurso: string; operacao: string } | null;
-  /** sm = 1 col, md = 2 col, lg = 2 col tall, full = 3 col */
-  size: 'sm' | 'md' | 'lg' | 'full';
+  /** sm = 1/3, half = 1/2, md = 2/3, lg = 2/3 tall, full = 3/3 */
+  size: 'sm' | 'half' | 'md' | 'lg' | 'full';
   defaultEnabled: boolean;
   component: React.ComponentType;
 }
@@ -237,7 +237,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Timeline das próximas audiências dos próximos 30 dias com tipo, parte, data e local.',
     module: 'audiencias',
     permission: PERM.audiencias,
-    size: 'md',
+    size: 'half',
     defaultEnabled: true,
     component: ProximasAudiencias,
   },
@@ -317,7 +317,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Status documental das próximas audiências com ProgressRing por grau de preparo.',
     module: 'audiencias',
     permission: PERM.audiencias,
-    size: 'sm',
+    size: 'half',
     defaultEnabled: false,
     component: WidgetPreparacao,
   },
@@ -711,7 +711,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
 // ┌─────────────── full ───────────────┐  Row 1: Briefing pessoal
 // ├──────── md ────────┤┌─── sm ──┐    │  Row 2: Meu Dia + Foco
 // ├──────── md ────────┤               │  Row 3: Saúde Financeira
-// ├──────── md ────────┤┌─── sm ──┐    │  Row 4: Audiências + Preparação
+// ├──── half ────┤┌──── half ────┐    │  Row 4: Audiências + Preparação
 // ├──────── md ────────┤┌─── sm ──┐    │  Row 5: Expedientes + Funil
 // ├──────── md ────────┤┌─── sm ──┐    │  Row 6: Processos + Heatmap
 // ├──────── md ────────┤┌─── sm ──┐    │  Row 7: Contratos + Obrigações

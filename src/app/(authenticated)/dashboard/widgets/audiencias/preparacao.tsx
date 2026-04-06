@@ -23,9 +23,15 @@ import { useDashboard } from '../../hooks/use-dashboard';
 import type { AudienciaProxima } from '../../domain';
 
 // Formatar data de audiência para exibição amigável
-function formatarDataAudiencia(isoDate: string): string {
-  const d = new Date(isoDate + 'T00:00:00');
-  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+function formatarDataAudiencia(dateStr: string): string {
+  try {
+    // Suporta tanto "2025-04-06" quanto "2025-04-06T00:00:00.000Z"
+    const d = new Date(dateStr.includes('T') ? dateStr : dateStr + 'T00:00:00');
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+  } catch {
+    return dateStr;
+  }
 }
 
 /**
@@ -45,9 +51,9 @@ function calcPrepScoreFromProxima(a: AudienciaProxima): number {
 }
 
 function scoreColor(score: number): string {
-  if (score >= 80) return 'hsl(var(--success))';
-  if (score >= 50) return 'hsl(var(--warning))';
-  return 'hsl(var(--destructive))';
+  if (score >= 80) return 'var(--success)';
+  if (score >= 50) return 'var(--warning)';
+  return 'var(--destructive)';
 }
 
 export function WidgetPreparacao() {
@@ -99,7 +105,7 @@ export function WidgetPreparacao() {
                 <div className="flex-1 min-w-0">
                   <p className="text-[11px] font-medium leading-tight truncate">
                     {audiencia.tipo_audiencia ?? 'Audiência'} —{' '}
-                    {audiencia.polo_ativo_nome ?? audiencia.numero_processo}
+                    {[audiencia.polo_ativo_nome, audiencia.polo_passivo_nome].filter(Boolean).join(' vs ') || audiencia.numero_processo}
                   </p>
                   <p className="text-[9px] text-muted-foreground/60 font-mono truncate mt-0.5">
                     {audiencia.numero_processo}

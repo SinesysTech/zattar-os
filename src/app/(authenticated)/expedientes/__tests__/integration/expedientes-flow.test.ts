@@ -151,7 +151,7 @@ describe('Expedientes Integration - Baixa', () => {
   let mockDb: {
     rpc: jest.MockedFunction<(...args: unknown[]) => Promise<{ data: unknown; error: unknown }>>;
     auth: {
-      getSession: jest.MockedFunction<() => Promise<{ data: { session: unknown }; error: unknown }>>;
+      getUser: jest.MockedFunction<() => Promise<{ data: { user: unknown }; error: unknown }>>;
     };
     from: jest.MockedFunction<(...args: unknown[]) => unknown>;
   };
@@ -163,7 +163,7 @@ describe('Expedientes Integration - Baixa', () => {
     mockDb = {
       rpc: jest.fn().mockResolvedValue({ data: null, error: null }),
       auth: {
-        getSession: jest.fn(),
+        getUser: jest.fn(),
       },
       from: jest.fn().mockReturnThis(),
     };
@@ -303,7 +303,7 @@ describe('Expedientes Integration - Reversão', () => {
   let mockDb: {
     rpc: jest.MockedFunction<(...args: unknown[]) => Promise<{ data: unknown; error: unknown }>>;
     auth: {
-      getSession: jest.MockedFunction<() => Promise<{ data: { session: unknown }; error: unknown }>>;
+      getUser: jest.MockedFunction<() => Promise<{ data: { user: unknown }; error: unknown }>>;
     };
     from: jest.MockedFunction<(...args: unknown[]) => unknown>;
   };
@@ -313,7 +313,7 @@ describe('Expedientes Integration - Reversão', () => {
 
     mockDb = {
       rpc: jest.fn().mockResolvedValue({ data: null, error: null }),
-      auth: { getSession: jest.fn() },
+      auth: { getUser: jest.fn() },
       from: jest.fn().mockReturnThis(),
     };
 
@@ -430,7 +430,7 @@ describe('Expedientes Integration - Atribuição de Responsável', () => {
   let mockDb: {
     rpc: jest.MockedFunction<(...args: unknown[]) => Promise<{ data: unknown; error: unknown }>>;
     auth: {
-      getSession: jest.MockedFunction<() => Promise<{ data: { session: unknown }; error: unknown }>>;
+      getUser: jest.MockedFunction<() => Promise<{ data: { user: unknown }; error: unknown }>>;
     };
     from: jest.MockedFunction<(...args: unknown[]) => unknown>;
   };
@@ -441,8 +441,8 @@ describe('Expedientes Integration - Atribuição de Responsável', () => {
     mockDb = {
       rpc: jest.fn().mockResolvedValue({ data: null, error: null }),
       auth: {
-        getSession: jest.fn().mockResolvedValue({
-          data: { session: { user: { id: 'auth-user-123' } } },
+        getUser: jest.fn().mockResolvedValue({
+          data: { user: { id: 'auth-user-123' } },
           error: null,
         }),
       },
@@ -506,7 +506,7 @@ describe('Expedientes Integration - Atribuição de Responsável', () => {
     await atribuirResponsavel(1, 5, 99);
 
     // Assert: Verificar que não busca sessão
-    expect(mockDb.auth.getSession).not.toHaveBeenCalled();
+    expect(mockDb.auth.getUser).not.toHaveBeenCalled();
     expect(mockDb.rpc).toHaveBeenCalledWith('atribuir_responsavel_pendente', {
       p_pendente_id: 1,
       p_responsavel_id: 5,
