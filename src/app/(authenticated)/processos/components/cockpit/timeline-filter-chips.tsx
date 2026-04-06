@@ -17,7 +17,7 @@ const FILTER_CHIPS: FilterChip[] = [
   { id: 'decisoes', label: 'Decisões', icon: Scale },
   { id: 'recursos', label: 'Recursos', icon: ArrowUpRight },
   { id: 'citacoes', label: 'Citações', icon: Mail },
-  { id: 'audiencias', label: 'Audiências', icon: Calendar },
+  { id: 'audiencias', label: 'Aud.', icon: Calendar },
 ];
 
 interface TimelineFilterChipsProps {

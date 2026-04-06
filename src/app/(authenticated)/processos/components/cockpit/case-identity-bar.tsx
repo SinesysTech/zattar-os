@@ -45,6 +45,17 @@ interface CaseIdentityBarProps {
   onOpenSearch: () => void;
 }
 
+/** Converte "FULANO DA SILVA" para "Fulano da Silva" */
+function toTitleCase(str: string): string {
+  if (!str || str === '-') return str;
+  const minusculas = new Set(['da', 'de', 'do', 'das', 'dos', 'e', 'vs']);
+  return str
+    .toLowerCase()
+    .split(/\s+/)
+    .map((word, i) => (i > 0 && minusculas.has(word)) ? word : word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 function getInitials(name: string): string {
   if (!name) return 'U';
   const parts = name.trim().split(/\s+/);
@@ -69,8 +80,8 @@ export function CaseIdentityBar({
   const segredoJustica = processo.segredoJustica;
   const dataProximaAudiencia = processo.dataProximaAudiencia;
   const isUnificado = !!processo.grausAtivos?.length;
-  const parteAutora = processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '-';
-  const parteRe = processo.nomeParteReOrigem || processo.nomeParteRe || '-';
+  const parteAutora = toTitleCase(processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '-');
+  const parteRe = toTitleCase(processo.nomeParteReOrigem || processo.nomeParteRe || '-');
   const tituloPartes =
     parteRe && parteRe !== '-' ? `${parteAutora} vs ${parteRe}` : parteAutora;
   const responsavel = usuarios.find((u) => u.id === processo.responsavelId);
@@ -119,7 +130,7 @@ export function CaseIdentityBar({
         <CopyButton text={numeroProcesso} label="Copiar número" />
       </div>
 
-      <SemanticBadge category="tribunal" value={trt} className="text-[10px] shrink-0">
+      <SemanticBadge category="tribunal" value={trt} toneOverride="soft" className="text-[10px] shrink-0">
         {trt}
       </SemanticBadge>
 
@@ -127,7 +138,7 @@ export function CaseIdentityBar({
         <GrauBadgesSimple grausAtivos={processo.grausAtivos} />
       ) : (
         processo.grauAtual && (
-          <SemanticBadge category="grau" value={processo.grauAtual} className="text-[10px] shrink-0">
+          <SemanticBadge category="grau" value={processo.grauAtual} toneOverride="soft" className="text-[10px] shrink-0">
             {GRAU_LABELS[processo.grauAtual as keyof typeof GRAU_LABELS] || processo.grauAtual}
           </SemanticBadge>
         )
