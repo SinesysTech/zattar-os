@@ -116,7 +116,7 @@ function ResultActionButtons({ comunicacao, onViewDetails, onViewPdf }: ResultAc
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Visualizar"
               className="h-8 w-8"
               onClick={() => onViewDetails(comunicacao)}
               aria-label="Ver detalhes"
@@ -145,7 +145,7 @@ function ResultActionButtons({ comunicacao, onViewDetails, onViewPdf }: ResultAc
         {comunicacao.link && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+              <Button variant="ghost" size="icon" aria-label="Abrir em nova aba" className="h-8 w-8" asChild>
                 <a
                   href={comunicacao.link}
                   target="_blank"

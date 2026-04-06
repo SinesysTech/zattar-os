@@ -83,7 +83,7 @@ export const columns: ColumnDef<TipoExpediente>[] = [
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                            className="text-red-600 focus:text-red-600"
+                            className="text-destructive focus:text-destructive"
                             onClick={() => onDelete?.(item)}
                         >
                             <Trash className="mr-2 h-4 w-4" /> Deletar

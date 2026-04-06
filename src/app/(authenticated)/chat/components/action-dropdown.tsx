@@ -28,7 +28,7 @@ export function ActionDropdown({ variant = "default" }: ActionDropdownProps) {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant={variant} size="icon" className="rounded-full">
+          <Button variant={variant} size="icon" aria-label="Adicionar" className="rounded-full">
             <Plus className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>

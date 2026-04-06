@@ -412,7 +412,7 @@ export function getContratosColumns(
           <div className="flex items-center gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                <Button variant="ghost" size="icon" aria-label="Visualizar" className="h-8 w-8" asChild>
                   <Link href={`/app/contratos/${contrato.id}`}>
                     <Eye className="h-4 w-4" />
                     <span className="sr-only">Visualizar</span>
@@ -426,7 +426,7 @@ export function getContratosColumns(
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="icon" aria-label="Excluir"
                   className="h-8 w-8 text-muted-foreground hover:text-destructive"
                   onClick={() => onDelete(contrato)}
                 >
@@ -438,7 +438,7 @@ export function getContratosColumns(
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(contrato)}>
+                <Button variant="ghost" size="icon" aria-label="Editar" className="h-8 w-8" onClick={() => onEdit(contrato)}>
                   <Pencil className="h-4 w-4" />
                   <span className="sr-only">Editar</span>
                 </Button>
@@ -447,7 +447,7 @@ export function getContratosColumns(
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onGerarPeca(contrato)}>
+                <Button variant="ghost" size="icon" aria-label="Gerar peça" className="h-8 w-8" onClick={() => onGerarPeca(contrato)}>
                   <FileText className="h-4 w-4" />
                   <span className="sr-only">Gerar Peça</span>
                 </Button>

@@ -39,7 +39,7 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
   const repassesPendentesTransf = repasses.filter(r => r.statusRepasse === 'pendente_transferencia');
 
   if (isLoading) return <Loader2 className="h-6 w-6 animate-spin" />;
-  if (error) return <div className="text-red-500">{error}</div>;
+  if (error) return <div className="text-destructive">{error}</div>;
 
   const getStatusBadge = (status: string) => {
       // Simplification of logic

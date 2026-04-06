@@ -73,11 +73,11 @@ function getMultiLabels<T extends { value: string; label: string }>(
 function BoolDisplay({ value }: { value: boolean | undefined }) {
   if (value === undefined) return <span className="text-muted-foreground">—</span>;
   return value ? (
-    <span className="inline-flex items-center gap-1 text-green-600">
+    <span className="inline-flex items-center gap-1 text-success">
       <CheckCircle2 className="h-3.5 w-3.5" /> Sim
     </span>
   ) : (
-    <span className="inline-flex items-center gap-1 text-red-600">
+    <span className="inline-flex items-center gap-1 text-destructive">
       <XCircle className="h-3.5 w-3.5" /> Não
     </span>
   );

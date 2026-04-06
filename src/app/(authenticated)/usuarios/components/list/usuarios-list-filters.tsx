@@ -28,7 +28,7 @@ export function UsuariosListFilters({
           else onAtivoChange(value === 'true');
         }}
       >
-        <SelectTrigger className="h-10 w-[130px] bg-white dark:bg-gray-950">
+        <SelectTrigger className="h-10 w-[130px] bg-card">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>

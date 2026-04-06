@@ -24,7 +24,7 @@ export function NoteMobileSidebar({ children }: { children?: React.ReactNode }) 
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContent className="bg-white px-0 dark:bg-gray-950">
+      <SheetContent className="bg-card px-0">
         <VisuallyHidden>
           <DialogHeader>
             <DialogTitle>Menu de notas</DialogTitle>
@@ -39,7 +39,7 @@ export function NoteMobileSidebar({ children }: { children?: React.ReactNode }) 
 export function NoteSidebarContent() {
   const { labels, mode, setMode } = useNotes();
   return (
-    <div className="flex flex-col rounded-md bg-white p-2 dark:bg-gray-950 xl:w-64 xl:border">
+    <div className="flex flex-col rounded-md bg-card p-2 xl:w-64 xl:border">
       <div className="space-y-1">
         <Button
           variant={mode === "notas" ? "secondary" : "ghost"}

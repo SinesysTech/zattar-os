@@ -89,7 +89,7 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
             variant={isOverflow ? 'destructive' : 'default'}
             className={
               isOverflow
-                ? 'border-amber-500/50 bg-amber-500/10 text-amber-900 dark:text-amber-200 [&>svg]:text-amber-600 dark:[&>svg]:text-amber-400'
+                ? 'border-warning/15 bg-warning/10 text-warning [&>svg]:text-warning'
                 : 'border-emerald-500/50 bg-emerald-500/10 text-emerald-900 dark:text-emerald-200 [&>svg]:text-emerald-600 dark:[&>svg]:text-emerald-400'
             }
           >

@@ -41,11 +41,11 @@ const TIPO_ICON_MAP: Record<
 > = {
   processo_atribuido: {
     icon: FileText,
-    className: "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-950",
+    className: "text-info bg-info/10",
   },
   processo_movimentacao: {
     icon: FileText,
-    className: "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-950",
+    className: "text-info bg-info/10",
   },
   audiencia_atribuida: {
     icon: Calendar,
@@ -55,25 +55,25 @@ const TIPO_ICON_MAP: Record<
   audiencia_alterada: {
     icon: Calendar,
     className:
-      "text-amber-600 bg-amber-100 dark:text-amber-400 dark:bg-amber-950",
+      "text-warning bg-warning/10",
   },
   expediente_atribuido: {
     icon: Inbox,
-    className: "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-950",
+    className: "text-info bg-info/10",
   },
   expediente_alterado: {
     icon: Inbox,
     className:
-      "text-amber-600 bg-amber-100 dark:text-amber-400 dark:bg-amber-950",
+      "text-warning bg-warning/10",
   },
   prazo_vencendo: {
     icon: ClockIcon,
     className:
-      "text-amber-600 bg-amber-100 dark:text-amber-400 dark:bg-amber-950",
+      "text-warning bg-warning/10",
   },
   prazo_vencido: {
     icon: AlertCircle,
-    className: "text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-950",
+    className: "text-destructive bg-destructive/10",
   },
 };
 
@@ -140,7 +140,7 @@ const Notifications = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" variant="ghost" className="relative size-8 rounded-lg">
+        <Button size="icon" aria-label="Notificações" variant="ghost" className="relative size-8 rounded-lg">
           <BellRing className="size-4" />
           {unreadCount > 0 && (
             <span className="bg-destructive absolute inset-e-0 top-0 block size-2 shrink-0 rounded-full" />

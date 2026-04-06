@@ -275,7 +275,7 @@ function FilePreviewCard({
           <Button
             type="button"
             variant="ghost"
-            size="icon"
+            size="icon" aria-label="Fechar"
             className="shrink-0 text-muted-foreground hover:text-destructive"
             onClick={(e) => {
               e.stopPropagation();

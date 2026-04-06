@@ -153,7 +153,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
           </CardTitle>
           <CardAction>
             <Link href="/app/chat">
-              <Button size="icon" variant="ghost" className="size-8 text-muted-foreground hover:text-foreground">
+              <Button size="icon" aria-label="Adicionar" variant="ghost" className="size-8 text-muted-foreground hover:text-foreground">
                 <PlusCircle className="size-5" />
                 <span className="sr-only">Nova conversa</span>
               </Button>
@@ -235,7 +235,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
             disabled={sending}
             className="flex-1"
           />
-          <Button type="submit" size="icon" disabled={sending || !input.trim()}>
+          <Button type="submit" size="icon" aria-label="Enviar" disabled={sending || !input.trim()}>
             <Send className="size-4" />
             <span className="sr-only">Enviar</span>
           </Button>

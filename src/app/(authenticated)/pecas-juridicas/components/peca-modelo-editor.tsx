@@ -264,7 +264,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Voltar"
               onClick={() => router.push('/app/pecas-juridicas')}
             >
               <ArrowLeft className="h-4 w-4" />
@@ -326,7 +326,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
             {/* Export dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={exporting !== null}>
+                <Button variant="ghost" size="icon" aria-label="Exportar" disabled={exporting !== null}>
                   {exporting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (

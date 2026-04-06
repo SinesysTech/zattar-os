@@ -255,7 +255,7 @@ export function Comment(props: {
             {isEditing && (
               <div className="ml-auto flex shrink-0 gap-1">
                 <Button
-                  size="icon"
+                  size="icon" aria-label="Fechar"
                   variant="ghost"
                   className="size-7"
                   onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
@@ -269,7 +269,7 @@ export function Comment(props: {
                 </Button>
 
                 <Button
-                  size="icon"
+                  size="icon" aria-label="Confirmar"
                   variant="ghost"
                   onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     e.stopPropagation();
@@ -585,7 +585,7 @@ export function CommentCreateForm({
             />
 
             <Button
-              size="icon"
+              size="icon" aria-label="Subir"
               variant="ghost"
               className="absolute right-0.5 bottom-0.5 ml-auto size-6 shrink-0"
               disabled={commentContent.trim().length === 0}

@@ -334,10 +334,10 @@ export default function VisualizacaoPdfStep() {
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-12 space-y-4">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="text-lg font-medium text-gray-700">
+          <p className="text-lg font-medium text-muted-foreground">
             {isFetchingTemplate ? 'Buscando template...' : 'Gerando documento...'}
           </p>
-          <p className="text-sm text-gray-500">Isso pode levar alguns segundos</p>
+          <p className="text-sm text-muted-foreground">Isso pode levar alguns segundos</p>
         </div>
       )}
 
@@ -363,8 +363,8 @@ export default function VisualizacaoPdfStep() {
         <div className="space-y-4">
           {/* Multi-template selector (Comment 1) */}
           {templateMetadatas.length > 1 && (
-            <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
-              <Label className="text-sm font-medium text-gray-700">
+            <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+              <Label className="text-sm font-medium text-muted-foreground">
                 Escolha o modelo do documento
               </Label>
               <RadioGroup
@@ -384,12 +384,12 @@ export default function VisualizacaoPdfStep() {
             </div>
           )}
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-sm text-blue-900">
+          <div className="bg-info/5 border border-info/15 rounded-lg p-4">
+            <p className="text-sm text-info">
               <strong>Importante:</strong> Revise cuidadosamente todas as informações do documento antes de prosseguir para a assinatura.
             </p>
           </div>
-          <div className="border rounded-lg overflow-hidden bg-gray-50">
+          <div className="border rounded-lg overflow-hidden bg-muted">
             <PdfPreviewDynamic pdfUrl={pdfUrl} />
           </div>
         </div>

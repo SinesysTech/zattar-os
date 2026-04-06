@@ -64,15 +64,15 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
 
   // Classes de cor baseadas no grau
   const grauColorClasses: Record<GrauTribunal, string> = {
-    primeiro_grau: 'bg-green-500/15 text-green-600 dark:text-green-400',
-    segundo_grau: 'bg-orange-500/15 text-orange-600 dark:text-orange-400',
-    tribunal_superior: 'bg-violet-500/15 text-violet-600 dark:text-violet-400',
+    primeiro_grau: 'bg-success/15 text-success',
+    segundo_grau: 'bg-warning/15 text-warning',
+    tribunal_superior: 'bg-primary/15 text-primary',
   };
 
   return (
     <div className="inline-flex items-center text-xs font-medium shrink-0">
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
-      <span className="bg-sky-500/15 text-sky-700 dark:text-sky-400 px-2 py-0.5 rounded-l-full">
+      <span className="bg-info/15 text-info px-2 py-0.5 rounded-l-full">
         {trt}
       </span>
       {/* Grau (lado direito - cor baseada no grau, arredondado à direita) */}
@@ -307,11 +307,11 @@ function PrazoBadge({ dataInicio, dataFim, baixado }: {
   return (
     <div className={cn("inline-flex flex-col items-center text-xs font-medium shrink-0 gap-0.5", opacityClass)}>
       {/* Data Início (verde - arredondado) */}
-      <span className="bg-green-500/15 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full">
+      <span className="bg-success/15 text-success px-2 py-0.5 rounded-full">
         {formatDate(dataInicio)}
       </span>
       {/* Data Fim (vermelho - arredondado) */}
-      <span className="bg-red-500/15 text-red-600 dark:text-red-400 px-2 py-0.5 rounded-full">
+      <span className="bg-destructive/15 text-destructive px-2 py-0.5 rounded-full">
         {formatDate(dataFim)}
       </span>
     </div>
@@ -442,7 +442,7 @@ export function ExpedienteActions({
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Visualizar"
               className="h-8 w-8"
               onClick={() => setShowVisualizar(true)}
             >
@@ -459,7 +459,7 @@ export function ExpedienteActions({
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Confirmar"
                 className="h-8 w-8 text-success hover:text-success"
                 onClick={() => setShowBaixar(true)}
               >
@@ -477,7 +477,7 @@ export function ExpedienteActions({
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Desfazer"
                 className="h-8 w-8 text-warning hover:text-warning"
                 onClick={() => setShowReverter(true)}
               >

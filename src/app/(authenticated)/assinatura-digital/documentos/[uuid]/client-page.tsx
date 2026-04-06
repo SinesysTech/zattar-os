@@ -61,7 +61,7 @@ function HashDisplay({ label, hash }: { label: string; hash: string | null | und
       </div>
       <Button
         variant="ghost"
-        size="icon"
+        size="icon" aria-label="Copiar"
         className="h-6 w-6 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
         onClick={handleCopy}
       >
@@ -188,7 +188,7 @@ export function DocumentoVerificacaoClient({
             <div className="flex min-w-0 items-start gap-3 md:items-center">
               <Button
                 variant="outline"
-                size="icon"
+                size="icon" aria-label="Voltar"
                 className="shrink-0 rounded-full"
                 onClick={() =>
                   router.push("/app/assinatura-digital/documentos/lista")
@@ -277,7 +277,7 @@ export function DocumentoVerificacaoClient({
               <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full border border-border/60 bg-background/95 p-1 shadow-sm backdrop-blur">
                     <Button
                       variant="ghost"
-                      size="icon"
+                      size="icon" aria-label="Reduzir"
                       className="h-8 w-8 rounded-full"
                       onClick={handleZoomOut}
                       disabled={zoom <= 0.6}
@@ -289,7 +289,7 @@ export function DocumentoVerificacaoClient({
                     </div>
                     <Button
                       variant="ghost"
-                      size="icon"
+                      size="icon" aria-label="Ampliar"
                       className="h-8 w-8 rounded-full"
                       onClick={handleZoomIn}
                       disabled={zoom >= 2.2}

@@ -179,7 +179,7 @@ export function CallSetupDialog({
               </Label>
               {isTestingAudio && (
                 <div className="flex items-center gap-2 w-32">
-                  <Mic className={`w-3 h-3 ${audioLevel > 5 ? 'text-green-500' : 'text-muted-foreground'}`} />
+                  <Mic className={`w-3 h-3 ${audioLevel > 5 ? 'text-success' : 'text-muted-foreground'}`} />
                   <Progress value={audioLevel} className="h-1.5" />
                 </div>
               )}

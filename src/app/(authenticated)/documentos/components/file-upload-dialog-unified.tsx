@@ -143,7 +143,7 @@ export function FileUploadDialogUnified({
                 </DialogHeader>
 
                 <div
-                    className={`mt-2 flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 transition-colors dark:border-gray-100/25 ${dragActive ? 'bg-muted' : ''
+                    className={`mt-2 flex flex-col items-center justify-center rounded-lg border border-dashed border-border px-6 py-10 transition-colors  ${dragActive ? 'bg-muted' : ''
                         }`}
                     onDragEnter={handleDrag}
                     onDragLeave={handleDrag}
@@ -193,7 +193,7 @@ export function FileUploadDialogUnified({
                                     <div className="shrink-0">
                                         <Button
                                             variant="ghost"
-                                            size="icon"
+                                            size="icon" aria-label="Fechar"
                                             onClick={() => removeFile(index)}
                                             disabled={uploading}
                                         >

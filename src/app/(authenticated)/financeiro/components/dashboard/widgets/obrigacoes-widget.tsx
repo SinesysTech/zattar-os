@@ -114,21 +114,21 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
               valor={resumo.valorTotalVencido}
               quantidade={resumo.totalVencidas}
               icon={AlertTriangle}
-              colorClass="bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-400"
+              colorClass="bg-destructive/10 text-destructive"
             />
             <ObrigacaoItem
               label="Pendentes"
               valor={resumo.valorTotalPendente}
               quantidade={resumo.totalPendentes}
               icon={Clock}
-              colorClass="bg-orange-100 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400"
+              colorClass="bg-warning/10 text-warning"
             />
             <ObrigacaoItem
               label="Repasses Pendentes"
               valor={resumo.valorRepassesPendentes}
               quantidade={resumo.totalRepassesPendentes}
               icon={Banknote}
-              colorClass="bg-blue-100 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400"
+              colorClass="bg-info/10 text-info"
             />
           </div>
         )}

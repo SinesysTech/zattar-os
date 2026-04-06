@@ -218,7 +218,7 @@ export function AudienciasClient({
             <TooltipTrigger asChild>
               <Button
                 variant="outline"
-                size="icon"
+                size="icon" aria-label="Configurações"
                 className="h-9 w-9 bg-card"
                 onClick={() => setIsSettingsOpen(true)}
               >

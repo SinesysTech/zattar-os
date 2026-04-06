@@ -77,15 +77,15 @@ function AlertaItem({
   onAction,
 }: AlertaItemProps) {
   const variantStyles = {
-    destructive: 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/20',
-    warning: 'border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-950/20',
-    default: 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/20',
+    destructive: 'border-destructive/15 bg-destructive/5',
+    warning: 'border-warning/15 bg-warning/5',
+    default: 'border-info/15 bg-info/5',
   };
 
   const iconStyles = {
-    destructive: 'text-red-600',
-    warning: 'text-orange-600',
-    default: 'text-blue-600',
+    destructive: 'text-destructive',
+    warning: 'text-warning',
+    default: 'text-info',
   };
 
   return (

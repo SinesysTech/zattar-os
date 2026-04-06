@@ -31,20 +31,20 @@ const SEVERITY_CONFIG: Record<string, {
 }> = {
   danger: {
     icon: AlertTriangle,
-    badgeClass: 'bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-400 border-red-200 dark:border-red-900',
-    iconClass: 'text-red-600 dark:text-red-400',
+    badgeClass: 'bg-destructive/10 text-destructive border-destructive/15',
+    iconClass: 'text-destructive',
     label: 'Crítico',
   },
   warning: {
     icon: AlertCircle,
-    badgeClass: 'bg-orange-100 text-orange-700 dark:bg-orange-950/50 dark:text-orange-400 border-orange-200 dark:border-orange-900',
-    iconClass: 'text-orange-600 dark:text-orange-400',
+    badgeClass: 'bg-warning/10 text-warning border-warning/15',
+    iconClass: 'text-warning',
     label: 'Atenção',
   },
   info: {
     icon: Info,
-    badgeClass: 'bg-blue-100 text-blue-700 dark:bg-blue-950/50 dark:text-blue-400 border-blue-200 dark:border-blue-900',
-    iconClass: 'text-blue-600 dark:text-blue-400',
+    badgeClass: 'bg-info/10 text-info border-info/15',
+    iconClass: 'text-info',
     label: 'Info',
   },
 };
@@ -100,8 +100,8 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
         {alertas.length === 0 ? (
           <div className="flex items-center justify-center h-full min-h-32">
             <div className="text-center space-y-2">
-              <div className="rounded-full bg-green-100 dark:bg-green-950/50 p-3 mx-auto w-fit">
-                <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+              <div className="rounded-full bg-success/10 p-3 mx-auto w-fit">
+                <CheckCircle2 className="h-5 w-5 text-success" />
               </div>
               <p className="text-sm text-muted-foreground">Nenhum alerta ativo</p>
             </div>

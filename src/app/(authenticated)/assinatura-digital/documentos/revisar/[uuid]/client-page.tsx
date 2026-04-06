@@ -230,14 +230,14 @@ function SignerLinkCard({
       <div className="flex items-center gap-1 shrink-0">
         <Button
           variant="ghost"
-          size="icon"
+          size="icon" aria-label="Copiar"
           className="size-8"
           onClick={() => onCopyLink(assinante)}
         >
           <Copy className="size-3.5" />
           <span className="sr-only">Copiar link</span>
         </Button>
-        <Button variant="ghost" size="icon" className="size-8" asChild>
+        <Button variant="ghost" size="icon" aria-label="Abrir em nova aba" className="size-8" asChild>
           <a
             href={assinante.public_link}
             target="_blank"

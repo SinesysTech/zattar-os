@@ -180,9 +180,9 @@ export default function GeolocationStep() {
     >
       <div className="space-y-4">
         {/* Privacy Notice */}
-        <Alert variant="default" className="border-blue-600/20 bg-blue-600/10">
-          <Info className="h-4 w-4 text-blue-600" />
-          <AlertDescription className="text-sm text-blue-600 space-y-2">
+        <Alert variant="default" className="border-info/15 bg-info/10">
+          <Info className="h-4 w-4 text-info" />
+          <AlertDescription className="text-sm text-info space-y-2">
             <p className="font-semibold">Por que precisamos da sua localização?</p>
             <p>
               A geolocalização é necessária para este template/contrato e será usada apenas para validação
@@ -196,8 +196,8 @@ export default function GeolocationStep() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-12 space-y-4">
             <div className="relative">
-              <MapPin className="h-16 w-16 text-blue-600" />
-              <Loader2 className="h-8 w-8 text-blue-600 animate-spin absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              <MapPin className="h-16 w-16 text-info" />
+              <Loader2 className="h-8 w-8 text-info animate-spin absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
             </div>
             <div className="text-center space-y-2">
               <p className="text-lg font-medium text-foreground">Capturando sua localização...</p>
@@ -250,16 +250,16 @@ export default function GeolocationStep() {
         {/* Estado de Sucesso */}
         {!loading && !error && captured && (
           <div className="space-y-4">
-            <Alert variant="default" className="border-green-600/20 bg-green-600/10">
-              <CheckCircle2 className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-sm text-green-600 font-medium">
+            <Alert variant="default" className="border-success/15 bg-success/10">
+              <CheckCircle2 className="h-4 w-4 text-success" />
+              <AlertDescription className="text-sm text-success font-medium">
                 Localização capturada com sucesso!
               </AlertDescription>
             </Alert>
 
             <div className="bg-card border rounded-lg p-6 space-y-4">
               <div className="flex items-start space-x-3">
-                <MapPin className="h-6 w-6 text-blue-600 mt-1 shrink-0" />
+                <MapPin className="h-6 w-6 text-info mt-1 shrink-0" />
                 <div className="flex-1 space-y-3">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Coordenadas GPS</p>
@@ -283,9 +283,9 @@ export default function GeolocationStep() {
 
                   {/* Accuracy Warning */}
                   {geolocationAccuracy && geolocationAccuracy > 100 && (
-                    <Alert variant="default" className="border-orange-600/20 bg-orange-600/10">
-                      <AlertCircle className="h-4 w-4 text-orange-600" />
-                      <AlertDescription className="text-xs text-orange-600">
+                    <Alert variant="default" className="border-warning/15 bg-warning/10">
+                      <AlertCircle className="h-4 w-4 text-warning" />
+                      <AlertDescription className="text-xs text-warning">
                         Precisão baixa ({geolocationAccuracy.toFixed(0)}m). Para melhor precisão, vá para área
                         aberta.
                       </AlertDescription>

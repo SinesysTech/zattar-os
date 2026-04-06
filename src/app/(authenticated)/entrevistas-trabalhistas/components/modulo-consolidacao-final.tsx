@@ -59,7 +59,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
       )}
 
       {inconsistencias.length > 0 && (
-        <div className="space-y-3 rounded-lg border border-amber-500/40 bg-amber-50/40 p-4">
+        <div className="space-y-3 rounded-lg border border-warning/15 bg-warning/5 p-4">
           <h4 className="text-sm font-semibold">Inconsistencias/lacunas apontadas pela IA</h4>
           {inconsistencias.map((item, index) => (
             <div key={`${item}-${index}`} className="space-y-2">

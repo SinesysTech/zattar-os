@@ -478,7 +478,7 @@ function criarColunas(
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Visualizar"
               className="h-8 w-8"
               onClick={() => router.push(`/captura/historico/${captura.id}`)}
               title="Visualizar detalhes"

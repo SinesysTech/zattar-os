@@ -264,8 +264,8 @@ function ExpedienteSingleDetails({
             </div>
 
             {expediente.baixadoEm && (
-              <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-md border border-green-200 dark:border-green-800">
-                <div className="text-sm text-green-700 dark:text-green-400 font-semibold mb-1">Baixado em</div>
+              <div className="bg-success/5 p-3 rounded-md border border-success/15">
+                <div className="text-sm text-success font-semibold mb-1">Baixado em</div>
                 <div className="font-medium">{formatarData(expediente.baixadoEm)}</div>
                 {expediente.justificativaBaixa && (
                   <div className="text-sm mt-1 text-muted-foreground">&ldquo;{expediente.justificativaBaixa}&rdquo;</div>

@@ -72,7 +72,7 @@ export default function Summary() {
         <CardTitle>Summary</CardTitle>
         <CardDescription>Data from 1-12 Apr, 2024</CardDescription>
         <CardAction>
-          <Button size="icon" variant="outline">
+          <Button size="icon" aria-label="Avançar" variant="outline">
             <ChevronRightIcon />
           </Button>
         </CardAction>

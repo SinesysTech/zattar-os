@@ -111,7 +111,7 @@ function ItemActions({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
+        <Button variant="ghost" size="icon" aria-label="Mais opções" className="h-8 w-8">
           <MoreHorizontal className="h-4 w-4" />
           <span className="sr-only">Ações do item</span>
         </Button>
@@ -410,7 +410,7 @@ export default function OrcamentoDetalhesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={handleVoltar}>
+          <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <Badge variant={statusConfig.variant}>

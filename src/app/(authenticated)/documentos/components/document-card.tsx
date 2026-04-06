@@ -53,7 +53,7 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
             <DropdownMenuTrigger asChild onClick={handleMenuClick}>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Mais opções"
                 className="h-8 w-8 opacity-0 group-hover:opacity-100"
               >
                 <MoreVertical className="h-4 w-4" />

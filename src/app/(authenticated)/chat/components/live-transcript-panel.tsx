@@ -33,7 +33,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
         </div>
         <Button 
           variant="ghost" 
-          size="icon" 
+          size="icon" aria-label="Fechar" 
           className="h-6 w-6 text-gray-400 hover:text-white" 
           onClick={onClose}
         >

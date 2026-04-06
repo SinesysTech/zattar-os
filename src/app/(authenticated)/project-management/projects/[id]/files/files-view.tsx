@@ -117,7 +117,7 @@ export function FilesView({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
             <Link href={`/app/project-management/projects/${projeto.id}`}>
               <ArrowLeft className="size-4" />
             </Link>
@@ -186,7 +186,7 @@ export function FilesView({
                   </div>
 
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" asChild>
+                    <Button variant="ghost" size="icon" aria-label="Baixar" asChild>
                       <a
                         href={anexo.url}
                         target="_blank"
@@ -198,7 +198,7 @@ export function FilesView({
                     </Button>
                     <Button
                       variant="ghost"
-                      size="icon"
+                      size="icon" aria-label="Excluir"
                       className="text-destructive"
                       onClick={() => setDeleteAnexoId(anexo.id)}
                       disabled={isPending}

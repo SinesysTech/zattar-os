@@ -249,7 +249,7 @@ export default function FormularioContainer() {
       return (
         <div className="flex flex-col items-center justify-center py-12 space-y-4">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="text-lg font-medium text-gray-700">Carregando formulário...</p>
+          <p className="text-lg font-medium text-muted-foreground">Carregando formulário...</p>
         </div>
       );
     }
@@ -338,7 +338,7 @@ export default function FormularioContainer() {
           return (
             <div className="flex flex-col items-center justify-center py-12 space-y-4">
               <Loader2 className="h-12 w-12 animate-spin text-primary" />
-              <p className="text-lg font-medium text-gray-700">Carregando visualização...</p>
+              <p className="text-lg font-medium text-muted-foreground">Carregando visualização...</p>
             </div>
           );
         }

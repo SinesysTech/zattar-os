@@ -94,7 +94,7 @@ export const AudienciasMonthDayCell = ({
         {currentMonth && dayAudiencias.length === 0 && (
            <Button
              variant="ghost"
-             size="icon"
+             size="icon" aria-label="Adicionar"
              className="w-full h-full flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-200"
              onClick={() => onAddAudiencia(date)}
            >

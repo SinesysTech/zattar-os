@@ -388,15 +388,15 @@ function StatusBadge({
   mensagem?: string;
 }) {
   const config = {
-    criada: { color: "text-green-600", icon: CheckCircle, label: "Criada" },
+    criada: { color: "text-success", icon: CheckCircle, label: "Criada" },
     atualizada: {
-      color: "text-blue-600",
+      color: "text-info",
       icon: CheckCircle,
       label: "Atualizada",
     },
-    pulada: { color: "text-yellow-600", icon: AlertCircle, label: "Pulada" },
-    erro: { color: "text-red-600", icon: XCircle, label: "Erro" },
-  }[status] || { color: "text-gray-600", icon: AlertCircle, label: status };
+    pulada: { color: "text-warning", icon: AlertCircle, label: "Pulada" },
+    erro: { color: "text-destructive", icon: XCircle, label: "Erro" },
+  }[status] || { color: "text-muted-foreground", icon: AlertCircle, label: status };
 
   const Icon = config.icon;
 

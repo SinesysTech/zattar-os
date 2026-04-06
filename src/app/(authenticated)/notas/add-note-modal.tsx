@@ -159,7 +159,7 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
           }}
         >
           {error && (
-            <div className="rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
+            <div className="rounded-md bg-destructive/10 p-4 text-sm text-destructive">
               {error}
             </div>
           )}
@@ -182,7 +182,7 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
             name="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="bg-white dark:bg-gray-950"
+            className="bg-card"
           />
 
           <MinimalTiptapEditor
@@ -205,7 +205,7 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
                           accept="image/*"
                           onChange={handleFileChange}
                         />
-                        <Button type="button" variant="ghost" size="icon" asChild>
+                        <Button type="button" variant="ghost" size="icon" aria-label="Imagem" asChild>
                           <label htmlFor={fileInputId} className="cursor-pointer" aria-label="Adicionar imagem">
                             <ImageIcon className="size-4" />
                           </label>

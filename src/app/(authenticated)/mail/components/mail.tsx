@@ -187,7 +187,7 @@ export function Mail({
                       <TooltipTrigger asChild>
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Arquivar"
                           className="h-7 w-7"
                           disabled={bulkLoading}
                           onClick={() => runBulkAction((uids, folder) => bulkMove(uids, folder, "Archive"))}>
@@ -202,7 +202,7 @@ export function Mail({
                       <TooltipTrigger asChild>
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Arquivar"
                           className="h-7 w-7"
                           disabled={bulkLoading}
                           onClick={() => runBulkAction((uids, folder) => bulkMove(uids, folder, "Junk"))}>
@@ -217,7 +217,7 @@ export function Mail({
                       <TooltipTrigger asChild>
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Excluir"
                           className="h-7 w-7"
                           disabled={bulkLoading}
                           onClick={() => runBulkAction(bulkDelete)}>
@@ -234,7 +234,7 @@ export function Mail({
                       <TooltipTrigger asChild>
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="E-mail"
                           className="h-7 w-7"
                           disabled={bulkLoading}
                           onClick={() => runBulkAction(bulkMarkRead)}>
@@ -251,7 +251,7 @@ export function Mail({
                       <TooltipTrigger asChild>
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Fechar"
                           className="h-7 w-7"
                           onClick={clearSelectedUids}>
                           <X className="h-4 w-4" />
@@ -270,7 +270,7 @@ export function Mail({
 
                   {isMobile && (
                     <ComposeMailDialog>
-                      <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0">
+                      <Button variant="ghost" size="icon" aria-label="Editar" className="h-7 w-7 shrink-0">
                         <Pencil className="h-4 w-4" />
                         <span className="sr-only">Novo E-mail</span>
                       </Button>

@@ -23,7 +23,7 @@ export function ThemeCustomizerPanel() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" variant="ghost">
+        <Button size="icon" aria-label="Configurações" variant="ghost">
           <Settings className="animate-tada" />
         </Button>
       </DropdownMenuTrigger>

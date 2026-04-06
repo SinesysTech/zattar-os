@@ -113,7 +113,7 @@ export function CustomCallControls({
             <TooltipTrigger asChild>
               <Button
                 variant={audioEnabled ? "default" : "destructive"}
-                size="icon"
+                size="icon" aria-label="Microfone"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
                   audioEnabled ? "bg-gray-700 hover:bg-gray-600" : "bg-red-600 hover:bg-red-700"
@@ -131,7 +131,7 @@ export function CustomCallControls({
             <TooltipTrigger asChild>
               <Button
                 variant={videoEnabled ? "default" : "destructive"}
-                size="icon"
+                size="icon" aria-label="Câmera"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
                   videoEnabled ? "bg-gray-700 hover:bg-gray-600" : "bg-red-600 hover:bg-red-700"
@@ -151,7 +151,7 @@ export function CustomCallControls({
             <TooltipTrigger asChild>
               <Button
                 variant={isScreensharing ? "destructive" : "secondary"}
-                size="icon"
+                size="icon" aria-label="Favoritar"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
                   isScreensharing ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
@@ -171,7 +171,7 @@ export function CustomCallControls({
                     <PopoverTrigger asChild>
                         <Button
                             variant="secondary"
-                            size="icon"
+                            size="icon" aria-label="IA"
                             className={cn(
                                 "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
                                 activeEffect !== 'none' ? "bg-purple-600 hover:bg-purple-700 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
@@ -234,7 +234,7 @@ export function CustomCallControls({
             <TooltipTrigger asChild>
               <Button
                 variant={isRecording ? "destructive" : "secondary"}
-                size="icon"
+                size="icon" aria-label="Favoritar"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
                   isRecording ? "bg-red-600 hover:bg-red-700 animate-pulse" : "bg-gray-700 hover:bg-gray-600 text-gray-300",
@@ -262,7 +262,7 @@ export function CustomCallControls({
             <TooltipTrigger asChild>
               <Button
                 variant={showTranscript ? "default" : "secondary"}
-                size="icon"
+                size="icon" aria-label="Documento"
                 className={cn(
                   "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
                   showTranscript ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
@@ -281,7 +281,7 @@ export function CustomCallControls({
               <TooltipTrigger asChild>
                 <Button
                     variant={showParticipants ? "default" : "secondary"}
-                    size="icon"
+                    size="icon" aria-label="Usuário"
                     className={cn(
                     "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all lg:hidden",
                     showParticipants ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
@@ -302,7 +302,7 @@ export function CustomCallControls({
             <TooltipTrigger asChild>
               <Button
                 variant="destructive"
-                size="icon"
+                size="icon" aria-label="Desligar"
                 className="rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg bg-red-600 hover:bg-red-700 ml-2"
                 onClick={onLeave}
               >

@@ -80,8 +80,8 @@ export function ParteDetalheDialog({
   const poloLabel = polo === 'ATIVO' ? 'Parte Autora' : 'Parte Ré';
   const poloColorClass =
     polo === 'ATIVO'
-      ? 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800'
-      : 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800';
+      ? 'bg-info/10 text-info border-info/15'
+      : 'bg-destructive/10 text-destructive border-destructive/15';
 
   // Gera URL para página de detalhes completos
   const getDetalheUrl = (p: ParteComDadosCompletos) => {

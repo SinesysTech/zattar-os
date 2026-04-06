@@ -161,7 +161,7 @@ export function PdfUploadField({
         <div className="border rounded-lg p-4 bg-muted/50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <FileText className="h-8 w-8 text-red-500" />
+              <FileText className="h-8 w-8 text-destructive" />
               <div>
                 <p className="text-sm font-medium">{value?.nome}</p>
                 <p className="text-xs text-muted-foreground">

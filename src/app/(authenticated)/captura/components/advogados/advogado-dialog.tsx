@@ -226,7 +226,7 @@ export function AdvogadoDialog({
                     <Button
                       type="button"
                       variant="ghost"
-                      size="icon"
+                      size="icon" aria-label="Excluir"
                       onClick={() => removeOab(index)}
                       className="text-destructive hover:text-destructive"
                     >

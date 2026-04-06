@@ -100,7 +100,7 @@ export function TiposAudienciasList() {
           <span className="text-sm text-muted-foreground">
             {filteredTipos.length} tipo(s)
           </span>
-          <Button variant="ghost" size="icon" onClick={fetchTipos}>
+          <Button variant="ghost" size="icon" aria-label="Atualizar" onClick={fetchTipos}>
             <RefreshCw className="h-4 w-4" />
           </Button>
         </div>
@@ -136,8 +136,8 @@ export function TiposAudienciasList() {
                       className={cn(
                         'gap-1',
                         tipo.is_virtual
-                          ? 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300'
-                          : 'border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-300'
+                          ? 'border-info/15 bg-info/5 text-info'
+                          : 'border-warning/15 bg-warning/5 text-warning'
                       )}
                     >
                       {tipo.is_virtual ? (

@@ -32,23 +32,23 @@ export function formatarStatusRepasse(status: StatusRepasse): string {
 
 export function getTipoColorClass(tipo: TipoObrigacao): string {
   switch (tipo) {
-    case 'acordo': return 'bg-blue-100/50 text-blue-600';
-    case 'condenacao': return 'bg-red-100/50 text-red-600';
+    case 'acordo': return 'bg-info/10 text-info';
+    case 'condenacao': return 'bg-destructive/10 text-destructive';
     case 'custas_processuais': return 'bg-muted text-muted-foreground';
     default: return 'bg-muted text-muted-foreground';
   }
 }
 
 export function getDirecaoColorClass(direcao: DirecaoPagamento): string {
-  return direcao === 'recebimento' ? 'text-green-600' : 'text-red-600';
+  return direcao === 'recebimento' ? 'text-success' : 'text-destructive';
 }
 
 export function getStatusColorClass(status: StatusAcordo): string {
   switch (status) {
-    case 'pendente': return 'bg-orange-100/50 text-orange-600';
-    case 'pago_parcial': return 'bg-orange-100/50 text-orange-600';
-    case 'pago_total': return 'bg-green-100/50 text-green-600';
-    case 'atrasado': return 'bg-red-100/50 text-red-600';
+    case 'pendente': return 'bg-warning/10 text-warning';
+    case 'pago_parcial': return 'bg-warning/10 text-warning';
+    case 'pago_total': return 'bg-success/10 text-success';
+    case 'atrasado': return 'bg-destructive/10 text-destructive';
     default: return 'bg-muted text-muted-foreground';
   }
 }

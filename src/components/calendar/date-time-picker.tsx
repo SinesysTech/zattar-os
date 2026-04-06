@@ -99,7 +99,7 @@ export function DateTimePicker({ form, field }: DatePickerProps) {
 									).map((hour) => (
 										<Button
 											key={hour}
-											size="icon"
+											size="icon" aria-label="Favoritar"
 											variant={
 												field.value &&
 												field.value.getHours() % (use24HourFormat ? 24 : 12) ===
@@ -121,7 +121,7 @@ export function DateTimePicker({ form, field }: DatePickerProps) {
 									{Array.from({ length: 12 }, (_, i) => i * 5).map((minute) => (
 										<Button
 											key={minute}
-											size="icon"
+											size="icon" aria-label="Favoritar"
 											variant={
 												field.value && field.value.getMinutes() === minute
 													? "default"

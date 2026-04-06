@@ -317,7 +317,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Arquivar"
                 disabled={!mail || actionLoading === "archive"}
                 onClick={() => actions?.archive()}>
                 {actionLoading === "archive" ? (
@@ -335,7 +335,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Lixo eletrônico"
                 disabled={!mail || actionLoading === "junk"}
                 onClick={() => actions?.junk()}>
                 {actionLoading === "junk" ? (
@@ -353,7 +353,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Excluir"
                 disabled={!mail || actionLoading === "delete"}
                 onClick={() => actions?.delete()}>
                 {actionLoading === "delete" ? (
@@ -374,7 +374,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           <Popover>
             <PopoverTrigger asChild>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled={!mail}>
+                <Button variant="ghost" size="icon" aria-label="Horário" disabled={!mail}>
                   <Clock />
                   <span className="sr-only">Adiar</span>
                 </Button>
@@ -435,7 +435,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Minimizar"
                 disabled={!mail}
                 onClick={toggleMailExpanded}>
                 {isMailExpanded ? <Minimize2 /> : <Maximize2 />}
@@ -455,7 +455,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Responder"
                 disabled={!mail}
                 onClick={() => startReply("reply")}>
                 <Reply />
@@ -469,7 +469,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Responder a todos"
                 disabled={!mail}
                 onClick={() => startReply("reply-all")}>
                 <ReplyAll />
@@ -483,7 +483,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <ForwardDialog mail={mail}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" aria-label="Encaminhar">
                     <Forward />
                     <span className="sr-only">Encaminhar</span>
                   </Button>
@@ -494,7 +494,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           ) : (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" disabled>
+                <Button variant="ghost" size="icon" aria-label="Encaminhar" disabled>
                   <Forward />
                   <span className="sr-only">Encaminhar</span>
                 </Button>
@@ -508,7 +508,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" disabled={!mail}>
+            <Button variant="ghost" size="icon" aria-label="Mais opções" disabled={!mail}>
               <MoreVertical />
               <span className="sr-only">Mais</span>
             </Button>

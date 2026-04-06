@@ -209,7 +209,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
           <div className="flex items-center gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" className="h-9 w-9 bg-card">
+                <Button variant="outline" size="icon" aria-label="Configurações" className="h-9 w-9 bg-card">
                   <Settings className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>

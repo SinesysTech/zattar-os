@@ -33,7 +33,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
   if (!result.success || !result.data) {
     return (
       <div className="flex flex-col items-center justify-center p-8 space-y-4">
-        <h2 className="text-xl font-semibold text-red-500">Assistente não encontrado</h2>
+        <h2 className="text-xl font-semibold text-destructive">Assistente não encontrado</h2>
         <Button asChild variant="outline">
           <Link href="/assistentes">Voltar</Link>
         </Button>
@@ -50,7 +50,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
     if (!difyApp) {
       return (
         <div className="flex flex-col items-center justify-center p-8 space-y-4">
-          <h2 className="text-xl font-semibold text-red-500">App Dify não encontrado</h2>
+          <h2 className="text-xl font-semibold text-destructive">App Dify não encontrado</h2>
           <p className="text-sm text-muted-foreground">
             O app Dify vinculado a este assistente foi removido.
           </p>
@@ -65,7 +65,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
       <div className="flex-1 p-4 md:p-6 h-full flex flex-col">
         <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0 flex flex-col">
           <div className="flex items-center gap-3 border-b px-4 py-3 shrink-0">
-            <Button asChild variant="ghost" size="icon" className="h-7 w-7 shrink-0">
+            <Button asChild variant="ghost" size="icon" aria-label="Voltar" className="h-7 w-7 shrink-0">
               <Link href="/assistentes">
                 <ChevronLeft className="h-4 w-4" />
               </Link>
@@ -85,7 +85,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
     <div className="flex-1 p-4 md:p-6 h-full flex flex-col">
       <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0 flex flex-col">
         <div className="flex items-center gap-3 border-b px-4 py-3 shrink-0">
-          <Button asChild variant="ghost" size="icon" className="h-7 w-7 shrink-0">
+          <Button asChild variant="ghost" size="icon" aria-label="Voltar" className="h-7 w-7 shrink-0">
             <Link href="/assistentes">
               <ChevronLeft className="h-4 w-4" />
             </Link>

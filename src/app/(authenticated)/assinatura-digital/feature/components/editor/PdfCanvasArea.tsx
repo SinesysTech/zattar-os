@@ -198,10 +198,10 @@ export default function PdfCanvasArea({
         key={uniqueKey}
         className={cn(
           "group absolute select-none rounded border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-          hasHeightWarning && "border-red-500 animate-pulse",
+          hasHeightWarning && "border-destructive animate-pulse",
           !hasHeightWarning && field.isSelected && !signer && "cursor-move border-primary/80 bg-primary/10 shadow-sm",
           !hasHeightWarning && field.isSelected && signer && "cursor-move shadow-sm",
-          !hasHeightWarning && !field.isSelected && !signer && "cursor-pointer border-gray-300 bg-orange-100/70 hover:border-gray-400 hover:shadow-sm",
+          !hasHeightWarning && !field.isSelected && !signer && "cursor-pointer border-border bg-warning/10 hover:border-muted-foreground hover:shadow-sm",
           !hasHeightWarning && !field.isSelected && signer && "cursor-pointer hover:shadow-sm",
           field.justAdded && "animate-in fade-in-0 zoom-in-95",
           field.isDragging && "opacity-50"
@@ -241,7 +241,7 @@ export default function PdfCanvasArea({
             : "flex items-center justify-center text-center"
         )}>
           <span className={cn(
-            "text-xs font-medium text-gray-900",
+            "text-xs font-medium text-foreground",
             isRichTextField
               ? "line-clamp-20 wrap-break-word whitespace-pre-wrap leading-tight"
               : "truncate"
@@ -377,7 +377,7 @@ export default function PdfCanvasArea({
               onAdjustHeight && (
                 <ContextMenuItem
                   onClick={() => onAdjustHeight(activeField.id)}
-                  className="text-orange-600 focus:text-orange-600"
+                  className="text-warning focus:text-warning"
                 >
                   <svg
                     className="mr-2 h-4 w-4"

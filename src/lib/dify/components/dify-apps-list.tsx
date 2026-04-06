@@ -267,7 +267,7 @@ export function DifyAppsList() {
                                         <div className="flex justify-end gap-1">
                                             <Button
                                                 variant="ghost"
-                                                size="icon"
+                                                size="icon" aria-label="Atualizar"
                                                 onClick={() => handleSyncMetadata(app.id)}
                                                 disabled={syncingAppId === app.id}
                                                 title="Sincronizar metadata"
@@ -276,7 +276,7 @@ export function DifyAppsList() {
                                             </Button>
                                             <Button
                                                 variant="ghost"
-                                                size="icon"
+                                                size="icon" aria-label="Editar"
                                                 onClick={() => handleEdit(app)}
                                                 title="Editar"
                                             >
@@ -284,7 +284,7 @@ export function DifyAppsList() {
                                             </Button>
                                             <Button
                                                 variant="ghost"
-                                                size="icon"
+                                                size="icon" aria-label="Excluir"
                                                 className="text-destructive hover:text-destructive"
                                                 onClick={() => setDeletingAppId(app.id)}
                                                 title="Remover"

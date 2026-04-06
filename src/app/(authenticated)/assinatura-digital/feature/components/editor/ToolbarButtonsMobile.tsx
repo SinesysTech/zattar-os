@@ -131,7 +131,7 @@ export default function ToolbarButtonsMobile({
             <TooltipTrigger asChild>
               <Button
                 variant={editorMode === 'add_text' ? 'default' : 'outline'}
-                size="icon"
+                size="icon" aria-label="Texto"
                 onClick={() => onModeChange('add_text')}
                 aria-label="Texto"
               >
@@ -149,7 +149,7 @@ export default function ToolbarButtonsMobile({
             <TooltipTrigger asChild>
               <Button
                 variant={editorMode === 'add_image' ? 'default' : 'outline'}
-                size="icon"
+                size="icon" aria-label="Imagem"
                 onClick={() => onModeChange('add_image')}
                 aria-label="Imagem"
               >
@@ -299,7 +299,7 @@ export default function ToolbarButtonsMobile({
             <TooltipTrigger asChild>
               <Button
                 variant="outline"
-                size="icon"
+                size="icon" aria-label="Avançar"
                 onClick={onNextPage}
                 disabled={currentPage >= totalPages}
                 aria-label="Próxima página"

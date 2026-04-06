@@ -130,7 +130,7 @@ export function TarefasWidget({ initialTasks }: TarefasWidgetProps) {
         </CardTitle>
         <CardAction>
           <Button
-            size="icon"
+            size="icon" aria-label="Adicionar"
             variant="ghost"
             className="size-8 text-muted-foreground hover:text-foreground"
             onClick={() => setOpen(true)}

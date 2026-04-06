@@ -503,7 +503,7 @@ function criarColunas(
       cell: ({ row }) => {
         const juizoDigital = row.original.juizoDigital;
         if (juizoDigital === true) {
-          return <CheckCircle className="h-4 w-4 text-green-600" />;
+          return <CheckCircle className="h-4 w-4 text-success" />;
         } else if (juizoDigital === false) {
           return <XCircle className="h-4 w-4 text-muted-foreground" />;
         }
@@ -543,7 +543,7 @@ function criarColunas(
       cell: ({ row }) => {
         const temAssociacao = row.original.temAssociacao;
         if (temAssociacao) {
-          return <Link2 className="h-4 w-4 text-blue-600" />;
+          return <Link2 className="h-4 w-4 text-info" />;
         }
         return <span className="text-sm text-muted-foreground">-</span>;
       },
@@ -569,7 +569,7 @@ function criarColunas(
             variant={isArquivado ? 'secondary' : 'default'}
             className={cn(
               'text-xs',
-              !isArquivado && 'bg-green-500/15 text-green-700 dark:text-green-400 hover:bg-green-500/25'
+              !isArquivado && 'bg-success/15 text-success hover:bg-success/25'
             )}
           >
             {ORIGEM_LABELS[origem] || origem}
@@ -985,7 +985,7 @@ export function ProcessosTableWrapper({
                 <TooltipTrigger asChild>
                   <Button
                     variant="outline"
-                    size="icon"
+                    size="icon" aria-label="Configurações"
                     className="h-9 w-9 bg-card"
                     onClick={() => setConfigAtribuicaoOpen(true)}
                   >

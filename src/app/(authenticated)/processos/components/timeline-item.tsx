@@ -195,7 +195,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
-                        size="icon"
+                        size="icon" aria-label="Abrir em nova aba"
                         variant="default"
                         onClick={handleOpenDocument}
                         disabled={isLoadingPresignedUrl}
@@ -212,7 +212,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
-                        size="icon"
+                        size="icon" aria-label="Baixar"
                         variant="outline"
                         onClick={handleDownloadDocument}
                         disabled={isLoadingPresignedUrl}
@@ -230,7 +230,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button size="icon" variant="outline" disabled>
+                    <Button size="icon" aria-label="Bloquear" variant="outline" disabled>
                       <Lock className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>

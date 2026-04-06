@@ -14,8 +14,8 @@ interface SummaryCardsProps {
 }
 
 function formatVariacao(valor: number): { text: string; color: string } {
-  if (valor > 0) return { text: `+${valor}%`, color: "text-green-600" };
-  if (valor < 0) return { text: `${valor}%`, color: "text-red-600" };
+  if (valor > 0) return { text: `+${valor}%`, color: "text-success" };
+  if (valor < 0) return { text: `${valor}%`, color: "text-destructive" };
   return { text: "0%", color: "text-muted-foreground" };
 }
 

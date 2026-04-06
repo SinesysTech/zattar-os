@@ -37,7 +37,7 @@ export function Settings() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="outline" size="icon">
+				<Button variant="outline" size="icon" aria-label="Configurações">
 					<SettingsIcon />
 				</Button>
 			</DropdownMenuTrigger>

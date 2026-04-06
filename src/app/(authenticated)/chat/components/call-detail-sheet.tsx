@@ -161,7 +161,7 @@ export function CallDetailSheet({ isOpen, onOpenChange, chamadaId }: CallDetailS
                   <h4 className="font-semibold text-sm">Status no Dyte</h4>
                   <Button 
                     variant="ghost" 
-                    size="icon" 
+                    size="icon" aria-label="Atualizar" 
                     className="h-6 w-6" 
                     onClick={syncDyteDetails} 
                     disabled={isSyncing}

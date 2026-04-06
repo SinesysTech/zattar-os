@@ -29,17 +29,17 @@ interface ProcessoCardProps {
   onClick: () => void;
 }
 
-const STATUS_COLOR: Record<string, string> = {
-  ATIVO: 'primary',
-  DISTRIBUIDO: 'primary',
-  EM_ANDAMENTO: 'primary',
-  PENDENTE: 'warning',
-  SUSPENSO: 'muted-foreground',
-  EM_RECURSO: 'info',
-  ARQUIVADO: 'muted-foreground',
-  EXTINTO: 'muted-foreground',
-  BAIXADO: 'muted-foreground',
-  OUTRO: 'muted-foreground',
+const STATUS_CLASSES: Record<string, { bg: string; text: string }> = {
+  ATIVO: { bg: 'bg-primary/8', text: 'text-primary/50' },
+  DISTRIBUIDO: { bg: 'bg-primary/8', text: 'text-primary/50' },
+  EM_ANDAMENTO: { bg: 'bg-primary/8', text: 'text-primary/50' },
+  PENDENTE: { bg: 'bg-warning/8', text: 'text-warning/50' },
+  SUSPENSO: { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' },
+  EM_RECURSO: { bg: 'bg-info/8', text: 'text-info/50' },
+  ARQUIVADO: { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' },
+  EXTINTO: { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' },
+  BAIXADO: { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' },
+  OUTRO: { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' },
 };
 
 function getInitials(name: string): string {
@@ -56,7 +56,8 @@ export function ProcessoCard({
   isSelected,
   onClick,
 }: ProcessoCardProps) {
-  const statusColor = STATUS_COLOR[processo.codigoStatusProcesso] || 'muted-foreground';
+  const defaultClasses = { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' };
+  const statusClasses = STATUS_CLASSES[processo.codigoStatusProcesso] || defaultClasses;
   const trt = processo.trtOrigem || processo.trt;
   const parteAutora = processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '-';
   const parteRe = processo.nomeParteReOrigem || processo.nomeParteRe || '-';
@@ -74,8 +75,8 @@ export function ProcessoCard({
     >
       <div onClick={onClick} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onClick()}>
         <div className="flex items-start gap-3">
-          <div className={cn('size-10 rounded-xl flex items-center justify-center shrink-0', `bg-${statusColor}/8`)}>
-            <Scale className={cn('size-5', `text-${statusColor}/50`)} />
+          <div className={cn('size-10 rounded-xl flex items-center justify-center shrink-0', statusClasses.bg)}>
+            <Scale className={cn('size-5', statusClasses.text)} />
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-semibold truncate">{tituloPartes}</h3>

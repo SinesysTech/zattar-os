@@ -178,8 +178,8 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
             variant="secondary"
             className={
               isConcluido
-                ? "bg-green-600/10 text-green-700 dark:text-green-400"
-                : "bg-orange-600/10 text-orange-700 dark:text-orange-400"
+                ? "bg-success/10 text-success"
+                : "bg-warning/10 text-warning"
             }
           >
             {isConcluido ? "Concluído" : "Pendente"}

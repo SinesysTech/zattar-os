@@ -39,7 +39,7 @@ function TextChatBubble({ message }: { message: MensagemComUsuario }) {
         <div className={cn({ "order-2": !message.ownMessage, "hidden group-hover:block": true })}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button size="icon" variant="ghost" className="h-6 w-6">
+              <Button size="icon" aria-label="Mais opções" variant="ghost" className="h-6 w-6">
                 <Ellipsis className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>

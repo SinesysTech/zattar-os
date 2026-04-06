@@ -816,13 +816,13 @@ export default function DREClient() {
             }
             actionSlot={
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleRefresh} disabled={isLoading}>
+                <Button variant="ghost" size="icon" aria-label="Atualizar" className="h-8 w-8" onClick={handleRefresh} disabled={isLoading}>
                   <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
                   <span className="sr-only">Atualizar</span>
                 </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8" disabled={isExporting || !dre}>
+                    <Button variant="ghost" size="icon" aria-label="Baixar arquivo" className="h-8 w-8" disabled={isExporting || !dre}>
                       <FileDown className="h-4 w-4" />
                       <span className="sr-only">Exportar</span>
                     </Button>

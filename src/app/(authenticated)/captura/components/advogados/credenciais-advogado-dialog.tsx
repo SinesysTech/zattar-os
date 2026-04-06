@@ -384,7 +384,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                             </Badge>
                             <Button
                               variant="ghost"
-                              size="icon"
+                              size="icon" aria-label="Editar"
                               onClick={() => handleEdit(credencial)}
                               title="Editar"
                             >
@@ -392,7 +392,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                             </Button>
                             <Button
                               variant="ghost"
-                              size="icon"
+                              size="icon" aria-label={credencial.active ? 'Desativar' : 'Ativar'}
                               onClick={() => setToggleDialog({ open: true, credencial })}
                               title={credencial.active ? 'Desativar' : 'Ativar'}
                             >
@@ -554,7 +554,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                         <Button
                           type="button"
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Ocultar"
                           className="absolute right-0 top-0 h-full px-3"
                           onClick={() => setShowPassword(!showPassword)}
                         >
@@ -678,7 +678,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                         <Button
                           type="button"
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Ocultar"
                           className="absolute right-0 top-0 h-full px-3"
                           onClick={() => setShowPassword(!showPassword)}
                         >

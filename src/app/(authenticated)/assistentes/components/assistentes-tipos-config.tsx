@@ -172,7 +172,7 @@ export function AssistentesTiposConfig({
       )}
       {success && (
         <Alert>
-          <AlertDescription className="text-green-600">{success}</AlertDescription>
+          <AlertDescription className="text-success">{success}</AlertDescription>
         </Alert>
       )}
 

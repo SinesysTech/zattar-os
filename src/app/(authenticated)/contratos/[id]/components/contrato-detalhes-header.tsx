@@ -86,7 +86,7 @@ export function ContratoDetalhesHeader({
           {/* Botao voltar */}
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" aria-label="Voltar"
             onClick={() => router.push('/app/contratos')}
             className="shrink-0 -ml-2 -mt-1"
             title="Voltar para Contratos"
@@ -128,7 +128,7 @@ export function ContratoDetalhesHeader({
                 )}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" aria-label="Mais opções">
                       <MoreHorizontal className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>

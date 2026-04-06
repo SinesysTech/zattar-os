@@ -103,7 +103,7 @@ export function DifyMessage({
           <div className="flex gap-1">
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Curtir"
               className={cn(
                 'h-6 w-6',
                 feedback === 'like' && 'text-green-500'
@@ -114,7 +114,7 @@ export function DifyMessage({
             </Button>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Não curtir"
               className={cn(
                 'h-6 w-6',
                 feedback === 'dislike' && 'text-red-500'

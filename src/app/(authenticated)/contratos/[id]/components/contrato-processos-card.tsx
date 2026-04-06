@@ -90,7 +90,7 @@ export function ContratoProcessosCard({ processos }: ContratoProcessosCardProps)
                       )}
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon" asChild>
+                  <Button variant="ghost" size="icon" aria-label="Abrir em nova aba" asChild>
                     <Link href={`/app/processos/${processo.id}`} title="Ver processo">
                       <ExternalLink className="size-4" />
                     </Link>

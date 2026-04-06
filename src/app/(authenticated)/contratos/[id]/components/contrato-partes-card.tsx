@@ -112,7 +112,7 @@ export function ContratoPartesCard({ partes, onViewParte }: ContratoPartesCardPr
                 {onViewParte && (
                   <Button
                     variant="ghost"
-                    size="icon"
+                    size="icon" aria-label="Visualizar"
                     onClick={() => onViewParte(parte)}
                     title="Ver detalhes"
                   >

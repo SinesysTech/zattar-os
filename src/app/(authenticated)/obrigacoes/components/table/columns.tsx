@@ -52,8 +52,8 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: string }) {
   const grauLabel = GRAU_TRIBUNAL_LABELS[grau as GrauTribunal] || grau;
 
   const grauColorClasses: Record<string, string> = {
-    primeiro_grau: 'bg-green-500/15 text-green-600 dark:text-green-400',
-    segundo_grau: 'bg-orange-500/15 text-orange-600 dark:text-orange-400',
+    primeiro_grau: 'bg-success/15 text-success',
+    segundo_grau: 'bg-warning/15 text-warning',
     tribunal_superior: 'bg-violet-500/15 text-violet-600 dark:text-violet-400',
   };
 
@@ -284,7 +284,7 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="icon" aria-label="Visualizar"
                   className="h-8 w-8"
                   onClick={() => meta?.onVerDetalhes?.(acordo)}
                 >
@@ -299,7 +299,7 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
-                    size="icon"
+                    size="icon" aria-label="Valor"
                     className="h-8 w-8"
                     onClick={() => meta?.onRegistrarPagamento?.(acordo)}
                   >

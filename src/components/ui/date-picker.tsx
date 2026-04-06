@@ -105,7 +105,7 @@ export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
           <Button
             type="button"
             variant="ghost"
-            size="icon"
+            size="icon" aria-label="Calendário"
             className="absolute right-0 h-9 w-9 hover:bg-transparent"
             onClick={() => setOpen(true)}
           >

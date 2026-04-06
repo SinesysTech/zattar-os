@@ -134,7 +134,7 @@ export function AlterarSenhaDialog({
             )}
 
             {successMessage && (
-              <div className="rounded-md bg-green-500/15 p-3 text-sm text-green-700 dark:text-green-400 border border-green-500/20">
+              <div className="rounded-md bg-success/15 p-3 text-sm text-success border border-success/15">
                 {successMessage}
               </div>
             )}

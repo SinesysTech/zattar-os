@@ -316,7 +316,7 @@ export function ShareDocumentDialog({
                   <div className="flex items-center gap-2">
                     <Button
                       variant="ghost"
-                      size="icon"
+                      size="icon" aria-label="Fechar"
                       onClick={() => {
                         setSelectedUser(null);
                         setSearchQuery('');
@@ -392,9 +392,9 @@ export function ShareDocumentDialog({
                               <TooltipTrigger asChild>
                                 <Button
                                   variant="ghost"
-                                  size="icon"
+                                  size="icon" aria-label="Segurança"
                                   className={`h-8 w-8 ${compartilhamento.pode_deletar
-                                    ? 'text-orange-500 hover:text-orange-600'
+                                    ? 'text-warning hover:text-warning'
                                     : 'text-muted-foreground hover:text-foreground'
                                     }`}
                                   onClick={() =>

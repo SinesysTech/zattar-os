@@ -196,7 +196,7 @@ export function DocumentList() {
                 {busca && (
                   <Button
                     variant="ghost"
-                    size="icon"
+                    size="icon" aria-label="Fechar"
                     className="absolute right-1 top-1/2 h-6 w-6 -translate-y-1/2"
                     onClick={() => setBusca('')}
                   >

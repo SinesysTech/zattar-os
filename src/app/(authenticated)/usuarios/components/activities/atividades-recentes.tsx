@@ -40,11 +40,11 @@ const EVENT_LABELS: Record<string, string> = {
 };
 
 const EVENT_COLORS: Record<string, string> = {
-  atribuicao_responsavel: 'text-green-600 dark:text-green-400',
-  transferencia_responsavel: 'text-blue-600 dark:text-blue-400',
-  desatribuicao_responsavel: 'text-orange-600 dark:text-orange-400',
-  mudanca_status: 'text-violet-600 dark:text-violet-400',
-  observacao_adicionada: 'text-cyan-600 dark:text-cyan-400',
+  atribuicao_responsavel: 'text-success',
+  transferencia_responsavel: 'text-info',
+  desatribuicao_responsavel: 'text-warning',
+  mudanca_status: 'text-primary',
+  observacao_adicionada: 'text-info',
 };
 
 const ENTITY_LABELS: Record<string, string> = {

@@ -180,7 +180,7 @@ export function IncomingCallDialog({
           <div className="flex flex-col items-center gap-2">
             <Button
               variant="destructive"
-              size="icon"
+              size="icon" aria-label="Desligar"
               className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl hover:opacity-90 transition-all duration-200"
               onClick={handleReject}
               disabled={isProcessing}
@@ -193,7 +193,7 @@ export function IncomingCallDialog({
           <div className="flex flex-col items-center gap-2">
             <Button
               variant="default"
-              size="icon"
+              size="icon" aria-label="Câmera"
               className="h-14 w-14 rounded-full bg-green-600 hover:bg-green-700 transition-all duration-200 shadow-lg hover:shadow-xl"
               onClick={handleAccept}
               disabled={isProcessing}

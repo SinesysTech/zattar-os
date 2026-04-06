@@ -139,7 +139,7 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
             <Link href="/acordos-condenacoes"><ArrowLeft className="h-4 w-4" /></Link>
           </Button>
           <div>

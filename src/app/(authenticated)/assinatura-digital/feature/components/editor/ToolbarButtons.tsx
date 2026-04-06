@@ -130,7 +130,7 @@ export default function ToolbarButtons({
           <TooltipTrigger asChild>
             <Button
               variant={editorMode === 'add_text' ? 'default' : 'outline'}
-              size="icon"
+              size="icon" aria-label="Texto"
               onClick={() => onModeChange('add_text')}
               aria-label="Adicionar Campo de Texto"
             >
@@ -148,7 +148,7 @@ export default function ToolbarButtons({
           <TooltipTrigger asChild>
             <Button
               variant={editorMode === 'add_image' ? 'default' : 'outline'}
-              size="icon"
+              size="icon" aria-label="Imagem"
               onClick={() => onModeChange('add_image')}
               aria-label="Adicionar Campo de Imagem"
             >
@@ -382,7 +382,7 @@ export default function ToolbarButtons({
           <TooltipTrigger asChild>
             <Button
               variant="outline"
-              size="icon"
+              size="icon" aria-label="Avançar"
               onClick={onNextPage}
               disabled={currentPage >= totalPages}
               aria-label="Próxima página"

@@ -47,7 +47,7 @@ export default function FilterEvents() {
 							{color}
 							<span>
 								{selectedColors.includes(color) && (
-									<span className="text-blue-500">
+									<span className="text-info">
 										<CheckIcon className="size-4" />
 									</span>
 								)}

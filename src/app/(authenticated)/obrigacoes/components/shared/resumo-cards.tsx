@@ -101,14 +101,14 @@ function MetricCard({
         {trend && trendLabel && (
           <div className="flex items-center gap-1 mt-1">
             {trend === 'up' ? (
-              <TrendingUp className="h-3 w-3 text-green-600" />
+              <TrendingUp className="h-3 w-3 text-success" />
             ) : (
-              <TrendingDown className="h-3 w-3 text-red-600" />
+              <TrendingDown className="h-3 w-3 text-destructive" />
             )}
             <span
               className={cn(
                 'text-xs',
-                trend === 'up' ? 'text-green-600' : 'text-red-600'
+                trend === 'up' ? 'text-success' : 'text-destructive'
               )}
             >
               {trendLabel}
@@ -168,7 +168,7 @@ export function ResumoCards({ resumo, isLoading = false }: ResumoCardsProps) {
         value={formatarValor(pendentes.valor)}
         subtitle={`${pendentes.quantidade} obrigações`}
         icon={Clock}
-        iconClassName="text-orange-600"
+        iconClassName="text-warning"
       />
 
       {/* Total Vencido */}
@@ -177,7 +177,7 @@ export function ResumoCards({ resumo, isLoading = false }: ResumoCardsProps) {
         value={formatarValor(vencidas.valor)}
         subtitle={`${vencidas.quantidade} obrigações`}
         icon={AlertTriangle}
-        iconClassName="text-red-600"
+        iconClassName="text-destructive"
       />
 
       {/* A Receber */}
@@ -186,7 +186,7 @@ export function ResumoCards({ resumo, isLoading = false }: ResumoCardsProps) {
         value={formatarValor(totalRecebimentos)}
         subtitle="Acordos + Contas"
         icon={ArrowDown}
-        iconClassName="text-green-600"
+        iconClassName="text-success"
       />
 
       {/* A Pagar */}
@@ -195,7 +195,7 @@ export function ResumoCards({ resumo, isLoading = false }: ResumoCardsProps) {
         value={formatarValor(totalPagamentos)}
         subtitle="Acordos + Contas"
         icon={ArrowUp}
-        iconClassName="text-red-600"
+        iconClassName="text-destructive"
       />
 
       {/* Cards adicionais em linha abaixo */}
@@ -204,7 +204,7 @@ export function ResumoCards({ resumo, isLoading = false }: ResumoCardsProps) {
         value={formatarValor(efetivadas.valor)}
         subtitle={`${efetivadas.quantidade} operações`}
         icon={CheckCircle2}
-        iconClassName="text-green-600"
+        iconClassName="text-success"
       />
 
       <MetricCard
@@ -212,7 +212,7 @@ export function ResumoCards({ resumo, isLoading = false }: ResumoCardsProps) {
         value={formatarValor(vencendoHoje.valor)}
         subtitle={`${vencendoHoje.quantidade} obrigações`}
         icon={Clock}
-        iconClassName="text-blue-600"
+        iconClassName="text-info"
       />
 
       <MetricCard
@@ -229,7 +229,7 @@ export function ResumoCards({ resumo, isLoading = false }: ResumoCardsProps) {
         value={formatarValor(saldoPrevisto)}
         subtitle={saldoPrevisto >= 0 ? 'Positivo' : 'Negativo'}
         icon={Wallet}
-        iconClassName={saldoPrevisto >= 0 ? 'text-green-600' : 'text-red-600'}
+        iconClassName={saldoPrevisto >= 0 ? 'text-success' : 'text-destructive'}
         trend={saldoPrevisto >= 0 ? 'up' : 'down'}
         trendLabel={saldoPrevisto >= 0 ? 'Superávit' : 'Déficit'}
       />

@@ -29,9 +29,9 @@ const EVENT_LABELS = {
 } as const;
 
 const EVENT_COLORS = {
-  user_signedin: 'text-green-600 dark:text-green-400',
-  user_signedout: 'text-orange-600 dark:text-orange-400',
-  token_refreshed: 'text-blue-600 dark:text-blue-400',
+  user_signedin: 'text-success',
+  user_signedout: 'text-warning',
+  token_refreshed: 'text-info',
   other: 'text-muted-foreground',
 } as const;
 

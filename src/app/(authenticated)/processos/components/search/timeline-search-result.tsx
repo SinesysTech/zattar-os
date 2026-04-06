@@ -43,7 +43,7 @@ function getResultMeta(titulo: string, isDocumento: boolean) {
     return {
       Icon: Scale,
       badgeLabel: 'Decisão',
-      badgeClasses: 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-100 dark:border-green-800/50',
+      badgeClasses: 'bg-success/5 text-success border-success/10',
     };
   }
 
@@ -59,7 +59,7 @@ function getResultMeta(titulo: string, isDocumento: boolean) {
     return {
       Icon: MessageSquare,
       badgeLabel: 'Despacho',
-      badgeClasses: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700',
+      badgeClasses: 'bg-muted text-muted-foreground border-muted',
     };
   }
 

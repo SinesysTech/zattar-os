@@ -129,11 +129,11 @@ function LogEventContent({ log }: { log: LogAlteracao }) {
             <div key={field} className="bg-muted/50 p-2 rounded border">
               <div className="font-semibold mb-1 capitalize text-muted-foreground">{formatFieldName(field)}</div>
               <div className="grid grid-cols-[1fr,auto,1fr] gap-2 items-center">
-                <div className="bg-red-500/10 text-red-700 dark:text-red-400 px-1 rounded line-through truncate" title={String(diff.old)}>
+                <div className="bg-destructive/10 text-destructive px-1 rounded line-through truncate" title={String(diff.old)}>
                   {formatValue(diff.old)}
                 </div>
                 <div className="text-muted-foreground">➜</div>
-                <div className="bg-green-500/10 text-green-700 dark:text-green-400 px-1 rounded truncate" title={String(diff.new)}>
+                <div className="bg-success/10 text-success px-1 rounded truncate" title={String(diff.new)}>
                   {formatValue(diff.new)}
                 </div>
               </div>

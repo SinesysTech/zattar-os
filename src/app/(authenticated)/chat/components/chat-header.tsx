@@ -65,7 +65,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare }: Ch
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button size="icon" variant="secondary" onClick={onVideoCall}>
+                <Button size="icon" aria-label="Câmera" variant="secondary" onClick={onVideoCall}>
                   <Video className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -73,7 +73,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare }: Ch
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button size="icon" variant="secondary" onClick={onAudioCall}>
+                <Button size="icon" aria-label="Ligar" variant="secondary" onClick={onAudioCall}>
                   <Phone className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -82,7 +82,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare }: Ch
             {onScreenshare && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button size="icon" variant="secondary" onClick={onScreenshare}>
+                  <Button size="icon" aria-label="Compartilhar tela" variant="secondary" onClick={onScreenshare}>
                     <Monitor className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
@@ -92,7 +92,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare }: Ch
           </TooltipProvider>
         </div>
         <ChatUserDropdown chat={sala}>
-          <Button size="icon" variant="ghost">
+          <Button size="icon" aria-label="Mais opções" variant="ghost">
             <Ellipsis />
           </Button>
         </ChatUserDropdown>

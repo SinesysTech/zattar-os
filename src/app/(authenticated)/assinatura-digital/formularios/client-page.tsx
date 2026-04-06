@@ -297,7 +297,7 @@ function FormularioActions({
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Editar"
               className="h-8 w-8"
               onClick={() => onEdit(formulario)}
             >
@@ -312,7 +312,7 @@ function FormularioActions({
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" aria-label="Link"
             className="h-8 w-8"
             onClick={() => onCopyLink(formulario)}
           >
@@ -328,7 +328,7 @@ function FormularioActions({
           <Tooltip>
             <TooltipTrigger asChild>
               <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button variant="ghost" size="icon" aria-label="Excluir" className="h-8 w-8">
                   <Trash2 className="h-4 w-4" />
                   <span className="sr-only">Deletar formulário</span>
                 </Button>
@@ -538,7 +538,7 @@ export function FormulariosClient() {
                     <TooltipTrigger asChild>
                       <Button
                         variant="outline"
-                        size="icon"
+                        size="icon" aria-label="Visualizar"
                         className="bg-white dark:bg-card"
                         onClick={() => router.push('/app/contratos/kanban')}
                         title="Visualizar Kanban de Contratos"
@@ -555,7 +555,7 @@ export function FormulariosClient() {
                       <TooltipTrigger asChild>
                         <Button
                           variant="outline"
-                          size="icon"
+                          size="icon" aria-label="Etiquetas"
                           className="bg-white dark:bg-card"
                           onClick={() => setSegmentosDialogOpen(true)}
                         >

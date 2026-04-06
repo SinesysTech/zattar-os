@@ -122,14 +122,14 @@ export function ClientSearchInput({
 
       {/* Status indicator */}
       {searchStatus === 'found' && (
-        <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+        <div className="flex items-center gap-2 text-sm text-success">
           <CheckCircle2 className="w-4 h-4" />
           <span>Cliente encontrado e preenchido automaticamente</span>
         </div>
       )}
 
       {searchStatus === 'notFound' && (
-        <div className="flex items-center gap-2 text-sm text-orange-600 dark:text-orange-400">
+        <div className="flex items-center gap-2 text-sm text-warning">
           <XCircle className="w-4 h-4" />
           <span>Cliente não encontrado. Preencha os dados manualmente.</span>
         </div>
