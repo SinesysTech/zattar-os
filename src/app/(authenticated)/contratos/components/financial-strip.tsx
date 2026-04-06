@@ -44,11 +44,11 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
               Em Carteira
             </p>
             {stats.emCarteira !== undefined ? (
-              <p className="font-display text-lg font-bold tabular-nums">
+              <p className="font-display text-xl font-bold tabular-nums">
                 <AnimatedNumber value={stats.emCarteira} prefix="R$ " duration={1200} />
               </p>
             ) : (
-              <p className="font-display text-lg font-bold tabular-nums text-muted-foreground/50">
+              <p className="font-display text-xl font-bold tabular-nums text-muted-foreground/50">
                 ---
               </p>
             )}
@@ -63,11 +63,11 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
             Ticket Médio
           </p>
           {stats.ticketMedio !== undefined ? (
-            <p className="font-display text-base font-bold tabular-nums">
+            <p className="font-display text-xl font-bold tabular-nums">
               {fmtMoeda(stats.ticketMedio)}
             </p>
           ) : (
-            <p className="font-display text-base font-bold tabular-nums text-muted-foreground/50">
+            <p className="font-display text-xl font-bold tabular-nums text-muted-foreground/50">
               ---
             </p>
           )}
@@ -117,7 +117,7 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
         {/* Total */}
         <div className="shrink-0">
           <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Total</p>
-          <p className="font-display text-lg font-bold tabular-nums">
+          <p className="font-display text-xl font-bold tabular-nums">
             <AnimatedNumber value={stats.total} duration={800} />
           </p>
         </div>

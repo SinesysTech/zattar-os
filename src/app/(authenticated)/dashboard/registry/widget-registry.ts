@@ -10,31 +10,64 @@
 import React from 'react';
 
 // ═══════════════════════════════════════════════════════════════════════════
-// IMPORTS CONECTADOS (dados reais via hooks)
-// Os 18 widgets do DEFAULT_LAYOUT usam wrappers que buscam dados reais.
+// IMPORTS CONECTADOS (dados reais via useDashboard)
+// Todos os 52 widgets agora consomem dados do DashboardProvider.
 // ═══════════════════════════════════════════════════════════════════════════
 
 // ─── Processos (conectados) ─────────────────────────────────────────────────
 import { WidgetSaudeProcessual } from '../widgets/processos/saude-processual';
 import { WidgetHeatmapAtividade } from '../widgets/processos/heatmap-atividade';
+import { WidgetStatusDistribuicao } from '../widgets/processos/status-distribuicao';
+import { WidgetCasosTribunal } from '../widgets/processos/casos-tribunal';
+import { WidgetTendenciaNovos } from '../widgets/processos/tendencia-novos';
+import { WidgetAging } from '../widgets/processos/aging';
+import { WidgetSegmento } from '../widgets/processos/segmento';
+import { WidgetKpiPulse } from '../widgets/processos/kpi-pulse';
+import { WidgetProcessosComTabs } from '../widgets/processos/processos-tabs';
 
 // ─── Audiências (conectados) ────────────────────────────────────────────────
 import { ProximasAudiencias } from '../widgets/audiencias/proximas-audiencias';
 import { WidgetPreparacao } from '../widgets/audiencias/preparacao';
+import { ModalidadeDistribution } from '../widgets/audiencias/modalidade';
+import { StatusMensal } from '../widgets/audiencias/status-mensal';
+import { KpiStrip } from '../widgets/audiencias/kpi-strip';
+import { AudienciasPorTipo } from '../widgets/audiencias/por-tipo';
+import { TrendMensal } from '../widgets/audiencias/trend-mensal';
+import { WidgetComparativoMensal } from '../widgets/audiencias/comparativo-mensal';
+import { WidgetHeatmapSemanal } from '../widgets/audiencias/heatmap-semanal';
 
 // ─── Expedientes (conectados) ───────────────────────────────────────────────
 import { UrgencyList } from '../widgets/expedientes/urgency-list';
 import { AgingFunnel } from '../widgets/expedientes/aging-funnel';
+import { SaudePrazos } from '../widgets/expedientes/saude-prazos';
+import { OrigemDistribution } from '../widgets/expedientes/origem';
+import { ResultadoDecisao } from '../widgets/expedientes/resultado-decisao';
+import { VolumeSemanal } from '../widgets/expedientes/volume-semanal';
+import { PrazoMedio } from '../widgets/expedientes/prazo-medio';
+import { CalendarioPrazos } from '../widgets/expedientes/calendario-prazos';
+import { TendenciaResponsividade } from '../widgets/expedientes/tendencia-responsividade';
 
 // ─── Financeiro (conectados) ────────────────────────────────────────────────
 import { WidgetSaúdeFinanceira } from '../widgets/financeiro/saude-financeira';
 import { WidgetFluxoComTabs } from '../widgets/financeiro/fluxo-tabs';
 import { WidgetDespesasTreemap } from '../widgets/financeiro/despesas-treemap';
 import { WidgetInadimplencia } from '../widgets/financeiro/inadimplencia';
+import { WidgetFluxoCaixa } from '../widgets/financeiro/fluxo-caixa';
+import { WidgetSaldoTrend } from '../widgets/financeiro/saldo-trend';
+import { WidgetContasReceber } from '../widgets/financeiro/contas-receber';
+import { WidgetContasPagar } from '../widgets/financeiro/contas-pagar';
+import { WidgetDespesasCategoria } from '../widgets/financeiro/despesas-categoria';
+import { WidgetDREComparativo } from '../widgets/financeiro/dre-comparativo';
 
-// ─── Contratos (conectados — placeholders) ──────────────────────────────────
+// ─── Contratos (conectados) ─────────────────────────────────────────────────
 import { WidgetSaudeContratual } from '../widgets/contratos/saude-contratual';
 import { WidgetObrigacoesTreemap } from '../widgets/contratos/obrigacoes-treemap';
+import { WidgetStatusContratos } from '../widgets/contratos/status-contratos';
+import { WidgetTiposContrato } from '../widgets/contratos/tipos-contrato';
+import { WidgetObrigacoesVencer } from '../widgets/contratos/obrigacoes-vencer';
+import { WidgetParcelasStatus } from '../widgets/contratos/parcelas-status';
+import { WidgetRepassesPendentes } from '../widgets/contratos/repasses-pendentes';
+import { WidgetModeloCobranca } from '../widgets/contratos/modelo-cobranca';
 
 // ─── Pessoal (conectados) ───────────────────────────────────────────────────
 import { WidgetScorePessoal } from '../widgets/pessoal/score-pessoal';
@@ -43,69 +76,14 @@ import { WidgetFocoHoje } from '../widgets/pessoal/foco-hoje';
 import { WidgetTarefasStatus } from '../widgets/pessoal/tarefas-status';
 import { WidgetProdutividadeSemanal } from '../widgets/pessoal/produtividade-semanal';
 import { WidgetLembretesAtivos } from '../widgets/pessoal/lembretes-ativos';
+import { WidgetHeatmapProdutividade } from '../widgets/pessoal/heatmap-produtividade';
+import { WidgetCapturaStatus } from '../widgets/pessoal/captura-status';
 
 // ═══════════════════════════════════════════════════════════════════════════
-// IMPORTS MOCK (widgets secundários ainda com dados fictícios)
-// Serão migrados para dados reais na Fase 2.
+// IMPORTS MOCK (widgets que ainda dependem de módulos não implementados)
 // ═══════════════════════════════════════════════════════════════════════════
 
-// ─── Processos (mock) ───────────────────────────────────────────────────────
 import {
-  WidgetStatusDistribuicao,
-  WidgetCasosTribunal,
-  WidgetTendenciaNovos,
-  WidgetAging,
-  WidgetSegmento,
-  WidgetKpiPulse,
-  WidgetProcessosComTabs,
-} from '../mock/widgets/section-processos';
-
-// ─── Audiências (mock) ──────────────────────────────────────────────────────
-import {
-  ModalidadeDistribution,
-  StatusMensal,
-  KpiStrip,
-  AudienciasPorTipo,
-  TrendMensal,
-  WidgetComparativoMensal,
-  WidgetHeatmapSemanal,
-} from '../mock/widgets/section-audiencias';
-
-// ─── Expedientes (mock) ─────────────────────────────────────────────────────
-import {
-  OrigemDistribution,
-  ResultadoDecisao,
-  VolumeSemanal,
-  PrazoMedio,
-  SaudePrazos,
-  CalendarioPrazos,
-  TendenciaResponsividade,
-} from '../mock/widgets/section-expedientes';
-
-// ─── Financeiro (mock) ──────────────────────────────────────────────────────
-import {
-  WidgetFluxoCaixa,
-  WidgetSaldoTrend,
-  WidgetContasReceber,
-  WidgetContasPagar,
-  WidgetDespesasCategoria,
-  WidgetDREComparativo,
-} from '../mock/widgets/section-financeiro';
-
-// ─── Contratos (mock) ──────────────────────────────────────────────────────
-import {
-  WidgetStatusContratos,
-  WidgetTiposContrato,
-  WidgetObrigacoesVencer,
-  WidgetParcelasStatus,
-  WidgetRepassesPendentes,
-  WidgetModeloCobranca,
-} from '../mock/widgets/section-contratos';
-
-// ─── Pessoal (mock) ────────────────────────────────────────────────────────
-import {
-  WidgetHeatmapProdutividade,
-  WidgetCapturaStatus,
   WidgetChatAtivo,
   WidgetDocumentosRecentes,
 } from '../mock/widgets/section-pessoal';
@@ -205,7 +183,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Score composto com gauge, comparações de ativos e encerrados, e insight de movimentação.',
     module: 'processos',
     permission: PERM.processos,
-    size: 'half',
+    size: 'md',
     defaultEnabled: true,
     component: WidgetSaudeProcessual,
   },
@@ -702,58 +680,58 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
 ];
 
 // ─── DEFAULT LAYOUT — Admin com todas as permissões ─────────────────────────
-// Ordem define o posicionamento no grid de 3 colunas.
-// Regra: full(3) | md+sm(2+1) | sm+sm+sm(1+1+1)
-// Widgets removidos pelo perfil (sem permissão) são simplesmente omitidos
-// e o grid se recompõe automaticamente.
+// Ordem define o posicionamento no grid de 6 colunas.
+// Regra de encaixe: cada linha soma 6 colunas.
+//   full=6 | md+sm=4+2 | half+half=3+3 | sm+sm+sm=2+2+2
 //
 // Layout visual (admin): progressão por módulo, sem intercalar áreas.
-// ┌─────────────── full ───────────────┐  Row 1: Briefing pessoal
-// ├──── half ────┤┌──── half ────┐    │  Row 2: Meu Dia + Foco
-// ├─── sm ──┤┌─── sm ──┤┌─── sm ──┐    │  Row 3: Tarefas, Produtividade, Lembretes
-// ├──── half ────┤┌──── half ────┐    │  Row 4: Audiências em sequência
-// ├──── half ────┤┌──── half ────┐    │  Row 5: Expedientes em sequência
-// ├──────── md ────────┤┌─── sm ──┐    │  Row 6: Processos em sequência
-// ├──────── md ────────┤┌─── sm ──┐    │  Row 7: Contratos em sequência
-// ├──────── md ────────┤               │  Row 8: Saúde financeira
-// ├─── sm ──┤┌─── sm ──┤┌─── sm ──┐    │  Row 9: Financeiro detalhado
+// ┌─────────────── full (6) ───────────────┐  Row 1: Briefing pessoal
+// ├──── half (3) ────┤├──── half (3) ───┐   Row 2: Meu Dia + Foco
+// ├── sm (2) ──┤├── sm (2) ──┤├── sm (2)┤   Row 3: Tarefas, Produtividade, Lembretes
+// ├──── half (3) ────┤├──── half (3) ───┤   Row 4: Próximas Audiências + Preparação
+// ├──── half (3) ────┤├──── half (3) ───┤   Row 5: Expedientes Urgentes + Funil
+// ├──────── md (4) ──────────┤├── sm (2)┤   Row 6: Saúde Processual + Heatmap
+// ├──────── md (4) ──────────┤├── sm (2)┤   Row 7: Saúde Contratual + Obrigações
+// ├──────── md (4) ──────────┤├── sm (2)┤   Row 8: Saúde Financeira + Inadimplência
+// ├── sm (2) ──┤├── sm (2) ──┤├── sm (2)┤   Row 9: Fluxo Tabs + Despesas + outro
 
 export const DEFAULT_LAYOUT: string[] = [
-  // Row 1: Hero pessoal (full — 3 cols)
+  // Row 1: Hero pessoal (full — 6 cols)
   'pessoal-score-pessoal',
 
-  // Row 2: Dia + Foco (half + half)
+  // Row 2: Dia + Foco (half + half = 3+3)
   'pessoal-meu-dia',
   'pessoal-foco-hoje',
 
-  // Row 3: Pessoal complementar (sm + sm + sm)
+  // Row 3: Pessoal complementar (sm + sm + sm = 2+2+2)
   'pessoal-tarefas-status',
   'pessoal-produtividade-semanal',
   'pessoal-lembretes',
 
-  // Row 4: Audiências (half + half)
+  // Row 4: Audiências (half + half = 3+3)
   'audiencias-proximas',
   'audiencias-preparacao',
 
-  // Row 5: Expedientes (half + half)
+  // Row 5: Expedientes (half + half = 3+3)
   'expedientes-urgency-list',
   'expedientes-aging-funnel',
 
-  // Row 6: Processos (md + sm)
+  // Row 6: Processos (md + sm = 4+2)
   'processos-saude-processual',
   'processos-heatmap-atividade',
 
-  // Row 7: Contratos (md + sm)
+  // Row 7: Contratos (md + sm = 4+2)
   'contratos-saude-contratual',
   'contratos-obrigacoes-treemap',
 
-  // Row 8: Saúde financeira (md)
+  // Row 8: Saúde financeira + inadimplência (md + sm = 4+2)
   'financeiro-saude-financeira',
+  'financeiro-inadimplencia',
 
-  // Row 9: Financeiro detalhado (sm + sm + sm)
+  // Row 9: Financeiro detalhado (sm + sm + sm = 2+2+2)
   'financeiro-fluxo-tabs',
   'financeiro-despesas-treemap',
-  'financeiro-inadimplencia',
+  'financeiro-fluxo-caixa',
 ];
 
 // ─── Helper: label em português para cada módulo ─────────────────────────────

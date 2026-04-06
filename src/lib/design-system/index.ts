@@ -20,7 +20,6 @@
 
 // Tokens fundamentais
 export {
-  COLORS,
   SPACING,
   SPACING_CLASSES,
   SPACING_SEMANTIC,

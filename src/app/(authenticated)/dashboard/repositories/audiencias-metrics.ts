@@ -176,6 +176,162 @@ export async function buscarProximasAudiencias(
 }
 
 /**
+ * Busca métricas detalhadas de audiências para widgets secundários.
+ */
+export async function buscarAudienciasDetalhadas(
+  responsavelId?: number
+): Promise<{
+  porModalidade: { modalidade: string; count: number; color: string }[];
+  statusMensal: { mes: string; marcadas: number; realizadas: number; canceladas: number }[];
+  porTipo: { tipo: string; count: number; color: string }[];
+  trendMensal: number[];
+  heatmapSemanal: number[];
+  duracaoMedia: number;
+  taxaComparecimento: number;
+}> {
+  const supabase = await createClient();
+
+  // Buscar audiências dos últimos 12 meses para tendência
+  const dozeAtras = new Date();
+  dozeAtras.setMonth(dozeAtras.getMonth() - 12);
+
+  let query = supabase
+    .from('audiencias')
+    .select(`
+      id, data_inicio, hora_inicio, designada, modalidade, resultado,
+      tipo_audiencia:tipo_audiencia_id (descricao)
+    `)
+    .gte('data_inicio', dozeAtras.toISOString());
+
+  if (responsavelId) {
+    query = query.or(`responsavel_id.eq.${responsavelId},responsavel_id.is.null`);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('[Dashboard] Erro ao buscar audiências detalhadas:', error);
+    return {
+      porModalidade: [],
+      statusMensal: [],
+      porTipo: [],
+      trendMensal: [],
+      heatmapSemanal: [],
+      duracaoMedia: 0,
+      taxaComparecimento: 0,
+    };
+  }
+
+  const audiencias = data || [];
+
+  // --- Distribuição por modalidade ---
+  const MODALIDADE_COLORS: Record<string, string> = {
+    'Virtual': 'hsl(220 70% 60%)',
+    'Presencial': 'hsl(262 60% 55%)',
+    'Híbrida': 'hsl(45 93% 47%)',
+  };
+  const modalidadeMap = new Map<string, number>();
+  audiencias.forEach((a) => {
+    const mod = a.modalidade || 'Presencial';
+    const label = mod.charAt(0).toUpperCase() + mod.slice(1).toLowerCase();
+    modalidadeMap.set(label, (modalidadeMap.get(label) || 0) + 1);
+  });
+  const porModalidade = Array.from(modalidadeMap.entries()).map(([modalidade, count]) => ({
+    modalidade,
+    count,
+    color: MODALIDADE_COLORS[modalidade] || 'hsl(215 14% 60%)',
+  }));
+
+  // --- Status mensal (últimos 6 meses) ---
+  const mesesLabel = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  const statusMensal: { mes: string; marcadas: number; realizadas: number; canceladas: number }[] = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - i);
+    const ano = d.getFullYear();
+    const mes = d.getMonth();
+    const doMes = audiencias.filter((a) => {
+      const da = new Date(a.data_inicio);
+      return da.getFullYear() === ano && da.getMonth() === mes;
+    });
+    statusMensal.push({
+      mes: mesesLabel[mes],
+      marcadas: doMes.length,
+      realizadas: doMes.filter((a) => a.resultado && a.resultado !== 'cancelada' && a.resultado !== 'adiada').length,
+      canceladas: doMes.filter((a) => a.resultado === 'cancelada' || a.resultado === 'adiada').length,
+    });
+  }
+
+  // --- Distribuição por tipo ---
+  const TIPO_COLORS: Record<string, string> = {
+    'Instrução': 'hsl(262 60% 55%)',
+    'Conciliação': 'hsl(220 70% 60%)',
+    'Julgamento': 'hsl(0 72% 51%)',
+    'UNA': 'hsl(215 14% 60%)',
+    'Perícia': 'hsl(45 93% 47%)',
+  };
+  const tipoMap = new Map<string, number>();
+  audiencias.forEach((a) => {
+    const tipo = (a.tipo_audiencia as { descricao?: string })?.descricao || 'Outros';
+    tipoMap.set(tipo, (tipoMap.get(tipo) || 0) + 1);
+  });
+  const porTipo = Array.from(tipoMap.entries())
+    .map(([tipo, count]) => ({
+      tipo,
+      count,
+      color: TIPO_COLORS[tipo] || 'hsl(215 14% 60%)',
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  // --- Trend mensal (12 meses) ---
+  const trendMensal: number[] = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - i);
+    const ano = d.getFullYear();
+    const mes = d.getMonth();
+    trendMensal.push(
+      audiencias.filter((a) => {
+        const da = new Date(a.data_inicio);
+        return da.getFullYear() === ano && da.getMonth() === mes;
+      }).length
+    );
+  }
+
+  // --- Heatmap semanal (5 semanas × 7 dias) ---
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const heatmapSemanal: number[] = new Array(35).fill(0);
+  const inicioHeatmap = new Date(hoje);
+  inicioHeatmap.setDate(inicioHeatmap.getDate() - 34);
+  audiencias.forEach((a) => {
+    const da = new Date(a.data_inicio);
+    da.setHours(0, 0, 0, 0);
+    const diffDias = Math.floor((da.getTime() - inicioHeatmap.getTime()) / (1000 * 60 * 60 * 24));
+    if (diffDias >= 0 && diffDias < 35) {
+      heatmapSemanal[diffDias]++;
+    }
+  });
+
+  // --- Métricas derivadas ---
+  const realizadas = audiencias.filter((a) => a.resultado && a.resultado !== 'cancelada' && a.resultado !== 'adiada');
+  const taxaComparecimento = audiencias.length > 0
+    ? Math.round((realizadas.length / audiencias.length) * 100)
+    : 0;
+  const duracaoMedia = 47; // placeholder — audiências não têm campo de duração
+
+  return {
+    porModalidade,
+    statusMensal,
+    porTipo,
+    trendMensal,
+    heatmapSemanal,
+    duracaoMedia,
+    taxaComparecimento,
+  };
+}
+
+/**
  * Obtém total de audiências do mês
  */
 export async function buscarAudienciasMes(): Promise<number> {

@@ -20,6 +20,30 @@ export interface ProcessoResumo {
     trt: string;
     count: number;
   }[];
+  /** Distribuição detalhada por status (ativos, suspensos, arquivados, em recurso) */
+  porStatus?: {
+    status: string;
+    count: number;
+    color: string;
+  }[];
+  /** Distribuição por área jurídica */
+  porSegmento?: {
+    segmento: string;
+    count: number;
+    color: string;
+  }[];
+  /** Aging por faixas de duração */
+  aging?: {
+    faixa: string;
+    count: number;
+    color: string;
+  }[];
+  /** Tendência mensal de novos processos (últimos 8 meses) */
+  tendenciaMensal?: {
+    mes: string;
+    novos: number;
+    resolvidos: number;
+  }[];
 }
 
 export interface AudienciasResumo {
@@ -28,6 +52,33 @@ export interface AudienciasResumo {
   amanha: number;
   proximos7dias: number;
   proximos30dias: number;
+  /** Distribuição por formato: virtual, presencial, híbrida */
+  porModalidade?: {
+    modalidade: string;
+    count: number;
+    color: string;
+  }[];
+  /** Status mensal: marcadas, realizadas, canceladas (últimos 6 meses) */
+  statusMensal?: {
+    mes: string;
+    marcadas: number;
+    realizadas: number;
+    canceladas: number;
+  }[];
+  /** Distribuição por tipo: instrução, conciliação, julgamento, etc. */
+  porTipo?: {
+    tipo: string;
+    count: number;
+    color: string;
+  }[];
+  /** Trend de audiências por mês (12 meses) */
+  trendMensal?: number[];
+  /** Heatmap semanal (35 valores: 5 semanas × 7 dias) */
+  heatmapSemanal?: number[];
+  /** Duração média em minutos */
+  duracaoMedia?: number;
+  /** Taxa de comparecimento (percentual 0-100) */
+  taxaComparecimento?: number;
 }
 
 export interface ExpedientesResumo {
@@ -40,6 +91,34 @@ export interface ExpedientesResumo {
     tipo: string;
     count: number;
   }[];
+  /** Distribuição por origem: PJE, Comunica CNJ, Manual */
+  porOrigem?: {
+    origem: string;
+    count: number;
+    color: string;
+  }[];
+  /** Resultado das decisões: favorável, parcialmente favorável, desfavorável */
+  resultadoDecisao?: {
+    resultado: string;
+    count: number;
+    color: string;
+  }[];
+  /** Volume semanal: recebidos vs baixados por dia */
+  volumeSemanal?: {
+    dia: string;
+    recebidos: number;
+    baixados: number;
+  }[];
+  /** Tendência do prazo médio de resposta em dias (últimas 8 semanas) */
+  prazoMedio?: number[];
+  /** Heatmap de prazos por dia (35 valores: 5 semanas × 7 dias) */
+  calendarioPrazos?: number[];
+  /** Tempo médio de resposta em dias */
+  tempoRespostaMedio?: number;
+  /** Taxa de cumprimento de prazos (percentual 0-100) */
+  taxaCumprimento?: number;
+  /** Quantidade de expedientes no backlog */
+  backlogAtual?: number;
 }
 
 export interface ProdutividadeResumo {
@@ -52,6 +131,8 @@ export interface ProdutividadeResumo {
     data: string; // YYYY-MM-DD
     baixas: number;
   }[];
+  /** Heatmap de tarefas concluídas (35 valores: 5 semanas × 7 dias) */
+  heatmap?: number[];
 }
 
 // ============================================================================
@@ -72,6 +153,92 @@ export interface DadosFinanceirosConsolidados {
     tipo: string;
     mensagem: string;
   }[];
+  /** Evolução do saldo nos últimos 12 meses */
+  saldoTrend?: number[];
+  /** Aging de contas a receber por faixa de vencimento */
+  contasReceberAging?: {
+    faixa: string;
+    valor: number;
+    color: string;
+  }[];
+  /** Aging de contas a pagar por faixa de vencimento */
+  contasPagarAging?: {
+    faixa: string;
+    valor: number;
+    color: string;
+  }[];
+  /** Despesas por categoria */
+  despesasPorCategoria?: {
+    categoria: string;
+    valor: number;
+    color: string;
+  }[];
+  /** DRE comparativo (12 meses de receita, despesa e resultado) */
+  dreComparativo?: {
+    receita: number[];
+    despesa: number[];
+    resultado: number[];
+  };
+  /** Fluxo de caixa mensal (últimos 6 meses) */
+  fluxoCaixaMensal?: {
+    mes: string;
+    receita: number;
+    despesa: number;
+  }[];
+}
+
+// ============================================================================
+// Tipos para Contratos
+// ============================================================================
+
+export interface ContratosResumo {
+  /** Distribuição por status: em contratação, contratado, distribuído, desistência */
+  porStatus: {
+    status: string;
+    count: number;
+    color: string;
+  }[];
+  /** Distribuição por tipo: ajuizamento, defesa, assessoria, etc. */
+  porTipo: {
+    tipo: string;
+    count: number;
+  }[];
+  /** Obrigações a vencer (próximos 30 dias) */
+  obrigacoesVencer: {
+    descricao: string;
+    valor: number;
+    vencimento: string;
+    urgencia: string;
+    tipo: string;
+  }[];
+  /** Status das parcelas: pagas, pendentes, atrasadas */
+  parcelasStatus: {
+    status: string;
+    count: number;
+    valor: number;
+    color: string;
+  }[];
+  /** Repasses pendentes */
+  repassesPendentes: {
+    processo: string;
+    cliente: string;
+    total: number;
+    pctCliente: number;
+    status: string;
+  }[];
+  /** Modelo de cobrança: pro labore vs pro êxito */
+  modeloCobranca: {
+    proLabore: { contratos: number; faturado: number };
+    proExito: { contratos: number; potencial: number; taxaRealizacao: number };
+  };
+  /** Treemap de obrigações por natureza */
+  treemapObrigacoes: {
+    natureza: string;
+    valor: number;
+    color: string;
+  }[];
+  /** Score contratual (0-100) */
+  scoreContratual: number;
 }
 
 // ============================================================================
@@ -219,6 +386,7 @@ export interface DashboardUsuarioData {
   proximasAudiencias: AudienciaProxima[];
   expedientesUrgentes: ExpedienteUrgente[];
   dadosFinanceiros: DadosFinanceirosConsolidados;
+  contratos?: ContratosResumo;
   ultimaAtualizacao: string;
 }
 
@@ -293,6 +461,7 @@ export interface DashboardAdminData {
   proximasAudiencias: AudienciaProxima[];
   expedientesUrgentes: ExpedienteUrgente[];
   dadosFinanceiros: DadosFinanceirosConsolidados;
+  contratos?: ContratosResumo;
   ultimaAtualizacao: string;
 }
 
