@@ -133,7 +133,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
                       key={key}
                       variant="outline"
                       className="size-12 rounded-full"
-                      size="icon"
+                      size="icon" aria-label="Documento"
                       asChild>
                       <Link
                         href={item.link || '#'}

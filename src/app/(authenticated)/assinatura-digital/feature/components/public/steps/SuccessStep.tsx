@@ -86,8 +86,8 @@ export function SuccessStep({
       <div className="text-center space-y-3">
         {/* Ícone Animado - ping para após 2 iterações */}
         <div className="relative flex items-center justify-center mx-auto w-16 h-16 sm:w-20 sm:h-20">
-          <div className="absolute inset-0 bg-green-500/20 rounded-full animate-ping repeat-2" />
-          <div className="relative flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-green-100 dark:bg-green-900/30 rounded-full text-green-600 dark:text-green-400">
+          <div className="absolute inset-0 bg-success/20 rounded-full animate-ping repeat-2" />
+          <div className="relative flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-success/10 rounded-full text-success">
             <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10" aria-hidden="true" />
           </div>
         </div>
@@ -107,11 +107,11 @@ export function SuccessStep({
         {/* Thumbnail PDF */}
         <div className="relative h-24 sm:h-32 bg-linear-to-br from-muted to-muted/80 flex items-center justify-center">
           <div className="absolute inset-0 bg-linear-to-t from-black/10 to-transparent" />
-          <div className="relative z-10 flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-red-500/10 rounded-lg text-red-500">
+          <div className="relative z-10 flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-destructive/10 rounded-lg text-destructive">
             <FileText className="w-6 h-6 sm:w-8 sm:h-8" aria-hidden="true" />
           </div>
           {/* Badge de Status */}
-          <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 text-xs font-medium rounded-full">
+          <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 bg-success/10 text-success text-xs font-medium rounded-full">
             <BadgeCheck className="h-3.5 w-3.5" aria-hidden="true" />
             Assinado
           </div>

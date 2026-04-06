@@ -194,10 +194,12 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
       <PageSearchProvider>
         <div
           className={cn(
-            "fixed top-0 left-0 bottom-0 flex flex-col bg-background canvas-dots",
-            "transition-[right] duration-300 ease-out"
+            "fixed inset-0 flex flex-col bg-background canvas-dots",
+            "transition-transform duration-300 ease-out"
           )}
-          style={{ right: isBriefingOpen && !isMobile ? panelWidth : 0 }}
+          style={{
+            transform: isBriefingOpen && !isMobile ? `translateX(-${panelWidth}px)` : 'translateX(0)',
+          }}
         >
           <DashboardHeader
             onOpenCommand={() => setPedrinhoMode('command')}

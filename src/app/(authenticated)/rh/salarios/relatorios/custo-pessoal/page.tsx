@@ -103,7 +103,7 @@ export default function RelatorioCustoPessoalPage() {
             <CardHeader>
               <CardTitle>Custo Total ({ano})</CardTitle>
             </CardHeader>
-            <CardContent className="text-xl font-semibold text-green-700">
+            <CardContent className="text-xl font-semibold text-success">
               {formatCurrency(custoTotal)}
             </CardContent>
           </Card>

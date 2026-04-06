@@ -230,7 +230,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
           <div className="flex items-center gap-2 flex-1 min-w-0">
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Voltar"
               onClick={() => router.push('/documentos')}
             >
               <ArrowLeft className="h-4 w-4" />
@@ -259,7 +259,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
                   <div
                     className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs ${
                       isConnected
-                        ? 'bg-green-500/10 text-green-600'
+                        ? 'bg-success/10 text-success'
                         : 'bg-muted text-muted-foreground'
                     }`}
                   >
@@ -285,7 +285,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
 
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Mensagem"
               onClick={() => setChatOpen(!chatOpen)}
             >
               <MessageSquare className="h-4 w-4" />
@@ -293,7 +293,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
 
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Enviar"
               onClick={() => setUploadOpen(true)}
             >
               <Upload className="h-4 w-4" />
@@ -311,7 +311,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" aria-label="Mais opções">
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>

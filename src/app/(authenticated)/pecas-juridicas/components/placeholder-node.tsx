@@ -61,11 +61,11 @@ function getPlaceholderCategory(value: string): string {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  autor: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-  reu: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+  autor: 'bg-info/10 text-info',
+  reu: 'bg-destructive/10 text-destructive',
   meta: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-  contrato: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-  outro: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
+  contrato: 'bg-success/10 text-success',
+  outro: 'bg-muted text-muted-foreground',
 };
 
 // =============================================================================

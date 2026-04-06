@@ -51,12 +51,12 @@ export default function TermosAceiteStep() {
       cardClassName="w-full max-w-2xl mx-auto"
     >
       <div className="space-y-6">
-        <Alert variant="default" className="border-blue-600/20 bg-blue-600/10">
-          <Info className="h-4 w-4 text-blue-600" />
-          <AlertTitle className="text-blue-600 font-semibold">
+        <Alert variant="default" className="border-info/15 bg-info/10">
+          <Info className="h-4 w-4 text-info" />
+          <AlertTitle className="text-info font-semibold">
             Importância Legal do seu Acordo
           </AlertTitle>
-          <AlertDescription className="text-blue-600/90">
+          <AlertDescription className="text-info">
             Ao marcar a caixa abaixo, você está concordando legalmente com os
             termos do documento. Esta ação tem validade jurídica e é um passo
             essencial para a conclusão do processo.

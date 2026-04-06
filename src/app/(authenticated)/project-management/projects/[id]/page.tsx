@@ -93,7 +93,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               Editar
             </Link>
           </Button>
-          <Button variant="outline" size="icon" asChild>
+          <Button variant="outline" size="icon" aria-label="Configurações" asChild>
             <Link href={`${basePath}/settings`}>
               <Settings className="size-4" />
             </Link>

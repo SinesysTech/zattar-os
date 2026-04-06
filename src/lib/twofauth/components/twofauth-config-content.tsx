@@ -318,7 +318,7 @@ export function TwoFAuthConfigContent() {
                             className={cn("h-1 w-24", timeRemaining <= 5 && "[&>div]:bg-destructive")}
                           />
                         </div>
-                        <Button variant="ghost" size="icon" onClick={handleCopyOTP}>
+                        <Button variant="ghost" size="icon" aria-label="Confirmar" onClick={handleCopyOTP}>
                           {copied ? (
                             <CheckIcon className="h-4 w-4 text-green-500" />
                           ) : (
@@ -333,7 +333,7 @@ export function TwoFAuthConfigContent() {
                       {selectedAccountId !== account.id && (
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Gerar código"
                           onClick={() => fetchOTP(account.id)}
                           disabled={otpLoading}
                         >
@@ -346,7 +346,7 @@ export function TwoFAuthConfigContent() {
                       )}
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="icon" aria-label="Excluir"
                         onClick={() => setAccountToDelete(account)}
                         className="text-destructive hover:text-destructive"
                       >

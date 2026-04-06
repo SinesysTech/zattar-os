@@ -48,7 +48,7 @@ export function CodeBlockElement(props: PlateElementProps<TCodeBlockElement>) {
         >
           {isLangSupported(element.lang) && (
             <Button
-              size="icon"
+              size="icon" aria-label="Código"
               variant="ghost"
               className="size-6 text-xs"
               onClick={() => formatCodeBlock(editor, { element })}
@@ -61,7 +61,7 @@ export function CodeBlockElement(props: PlateElementProps<TCodeBlockElement>) {
           <CodeBlockCombobox />
 
           <CopyButton
-            size="icon"
+            size="icon" aria-label="Copiar"
             variant="ghost"
             className="size-6 gap-1 text-muted-foreground text-xs"
             value={() => NodeApi.string(element)}

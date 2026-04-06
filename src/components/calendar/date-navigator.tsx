@@ -83,7 +83,7 @@ export function DateNavigator({ view, events }: IProps) {
 			<div className="flex items-center gap-2">
 				<MotionButton
 					variant="outline"
-					size="icon"
+					size="icon" aria-label="Voltar"
 					className="h-6 w-6"
 					onClick={handlePrevious}
 					variants={buttonHover}
@@ -104,7 +104,7 @@ export function DateNavigator({ view, events }: IProps) {
 
 				<MotionButton
 					variant="outline"
-					size="icon"
+					size="icon" aria-label="Avançar"
 					className="h-6 w-6"
 					onClick={handleNext}
 					variants={buttonHover}

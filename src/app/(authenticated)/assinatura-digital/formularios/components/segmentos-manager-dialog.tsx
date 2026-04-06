@@ -127,7 +127,7 @@ export function SegmentosManagerDialog({
                         <Button
                           type="button"
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Editar"
                           className="h-8 w-8"
                           onClick={() => onEdit(segmento)}
                           aria-label="Editar segmento"
@@ -143,7 +143,7 @@ export function SegmentosManagerDialog({
                         <Button
                           type="button"
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Copiar"
                           className="h-8 w-8"
                           onClick={() => onDuplicate(segmento)}
                           aria-label="Duplicar segmento"
@@ -159,7 +159,7 @@ export function SegmentosManagerDialog({
                         <Button
                           type="button"
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Excluir"
                           className="h-8 w-8"
                           onClick={() => onDelete(segmento)}
                           aria-label="Deletar segmento"

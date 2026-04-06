@@ -79,7 +79,7 @@ export function SelfieStep({
         previousLabel="Voltar"
       >
         <div className="flex flex-col items-center justify-center py-6 sm:py-8">
-          <div className="inline-flex items-center justify-center h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 mb-3">
+          <div className="inline-flex items-center justify-center h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-success/10 text-success mb-3">
             <CheckCircle className="h-7 w-7 sm:h-8 sm:w-8" aria-hidden="true" />
           </div>
           <p className="text-sm text-muted-foreground">
@@ -117,20 +117,20 @@ export function SelfieStep({
         {/* Dicas inline - minimal, não compete com a câmera */}
         <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
-            <Lightbulb className="h-3 w-3 text-orange-500" aria-hidden="true" />
+            <Lightbulb className="h-3 w-3 text-warning" aria-hidden="true" />
             Boa iluminação
           </span>
           <span className="text-border">|</span>
           <span className="flex items-center gap-1">
-            <User className="h-3 w-3 text-blue-500" aria-hidden="true" />
+            <User className="h-3 w-3 text-info" aria-hidden="true" />
             Olhe para a câmera
           </span>
         </div>
 
         {/* Aviso de erro na webcam */}
         {webcamError && (
-          <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-2.5 text-center">
-            <p className="text-xs text-orange-800 dark:text-orange-200">
+          <div className="bg-warning/5 border border-warning/15 rounded-lg p-2.5 text-center">
+            <p className="text-xs text-warning">
               Câmera indisponível. Você pode continuar sem a verificação por foto.
             </p>
           </div>

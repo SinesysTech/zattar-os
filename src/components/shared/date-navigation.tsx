@@ -86,7 +86,7 @@ export function DateNavigation({
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Voltar"
               className={buttonSize}
               onClick={onPrevious}
               disabled={disabled}
@@ -118,7 +118,7 @@ export function DateNavigation({
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Avançar"
               className={buttonSize}
               onClick={onNext}
               disabled={disabled}
@@ -170,7 +170,7 @@ export function DateNavigationCompact({
     <div className={cn('flex items-center justify-between w-full', className)}>
       <Button
         variant="ghost"
-        size="icon"
+        size="icon" aria-label="Voltar"
         className="h-8 w-8"
         onClick={onPrevious}
         disabled={disabled}
@@ -190,7 +190,7 @@ export function DateNavigationCompact({
 
       <Button
         variant="ghost"
-        size="icon"
+        size="icon" aria-label="Avançar"
         className="h-8 w-8"
         onClick={onNext}
         disabled={disabled}

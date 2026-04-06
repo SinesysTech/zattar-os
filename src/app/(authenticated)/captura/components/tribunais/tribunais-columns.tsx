@@ -74,7 +74,7 @@ export function criarColunasTribunais({ onEdit }: Params): ColumnDef<TribunalCon
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Editar"
                 className="h-8 w-8"
                 onClick={() => onEdit?.(row.original)}
               >

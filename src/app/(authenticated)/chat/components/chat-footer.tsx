@@ -230,7 +230,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
             <FileIcon className="h-5 w-5 text-sky-700 dark:text-sky-400 shrink-0" />
             <span className="text-sm truncate max-w-50">{uploadedFile.fileName}</span>
           </div>
-          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleRemoveFile}>
+          <Button variant="ghost" size="icon" aria-label="Fechar" className="h-6 w-6" onClick={handleRemoveFile}>
             <X className="h-4 w-4" />
           </Button>
         </div>
@@ -254,7 +254,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
               <Button variant="ghost" size="sm" onClick={cancelRecording} className="text-muted-foreground hover:text-red-700 hover:bg-red-500/15 dark:hover:text-red-400 rounded-full px-4">
                 Cancelar
               </Button>
-              <Button size="icon" onClick={handleSendAudio} className="rounded-full bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700 text-white h-9 w-9">
+              <Button size="icon" aria-label="Enviar" onClick={handleSendAudio} className="rounded-full bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700 text-white h-9 w-9">
                 <SendIcon className="h-4 w-4" />
               </Button>
             </div>
@@ -304,7 +304,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon" className="rounded-full">
+                      <Button variant="ghost" size="icon" aria-label="Emoji" className="rounded-full">
                         <SmileIcon />
                       </Button>
                     </TooltipTrigger>
@@ -314,7 +314,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                     <TooltipTrigger asChild>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="icon" aria-label="Anexar arquivo"
                         className="rounded-full"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={isUploading}
@@ -328,7 +328,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                     <TooltipTrigger asChild>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="icon" aria-label="Microfone"
                         className="rounded-full hover:bg-red-500/15 hover:text-red-700 dark:hover:text-red-400 transition-colors"
                         onClick={startRecording}
                       >

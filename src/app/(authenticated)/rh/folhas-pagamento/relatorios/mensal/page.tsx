@@ -100,7 +100,7 @@ export default function RelatorioMensalFolhaPage() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Valor Total</p>
-                <p className="text-xl font-semibold text-green-700">
+                <p className="text-xl font-semibold text-success">
                   {formatCurrency(folha.valorTotal ?? 0)}
                 </p>
               </div>

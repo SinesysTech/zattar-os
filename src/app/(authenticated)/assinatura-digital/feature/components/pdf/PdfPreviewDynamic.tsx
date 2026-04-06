@@ -11,7 +11,7 @@ const PdfPreview = dynamic(() => import('./PdfPreview'), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-full">
-      <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
+      <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
     </div>
   ),
 });

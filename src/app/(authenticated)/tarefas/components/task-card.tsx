@@ -29,9 +29,9 @@ import { Separator } from "@/components/ui/separator";
 import type { TarefaDisplayItem } from "../domain";
 
 const PRIORITY_COLORS: Record<string, string> = {
-  high: "border-l-rose-500",
-  medium: "border-l-amber-500",
-  low: "border-l-emerald-500",
+  high: "border-l-destructive",
+  medium: "border-l-warning",
+  low: "border-l-success",
 };
 
 const PRIORITY_LABELS: Record<string, string> = {
@@ -47,7 +47,7 @@ interface TaskCardProps {
 }
 
 export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
-  const colorClass = PRIORITY_COLORS[tarefa.priority] ?? "border-l-sky-500";
+  const colorClass = PRIORITY_COLORS[tarefa.priority] ?? "border-l-info";
   
   const dueDate = tarefa.dueDate
     ? new Date(tarefa.dueDate).toLocaleDateString("pt-BR", {

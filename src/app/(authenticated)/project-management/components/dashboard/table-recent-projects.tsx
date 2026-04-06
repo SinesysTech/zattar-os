@@ -204,7 +204,7 @@ export function TableRecentProjects({ projetos }: TableRecentProjectsProps) {
           <div className="space-x-2">
             <Button
               variant="outline"
-              size="icon"
+              size="icon" aria-label="Voltar"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
@@ -212,7 +212,7 @@ export function TableRecentProjects({ projetos }: TableRecentProjectsProps) {
             </Button>
             <Button
               variant="outline"
-              size="icon"
+              size="icon" aria-label="Avançar"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >

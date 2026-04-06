@@ -47,7 +47,7 @@ const Dropzone = ({
       <div
         {...getRootProps({
           className: cn(
-            'border-2 border-gray-300 rounded-lg p-6 text-center bg-card transition-colors duration-300 text-foreground',
+            'border-2 border-border rounded-lg p-6 text-center bg-card transition-colors duration-300 text-foreground',
             className,
             isSuccess ? 'border-solid' : 'border-dashed',
             isActive && 'border-primary bg-primary/10',
@@ -143,7 +143,7 @@ const DropzoneContent = ({ className }: { className?: string }) => {
 
             {!loading && !isSuccessfullyUploaded && (
               <Button
-                size="icon"
+                size="icon" aria-label="Fechar"
                 variant="link"
                 className="shrink-0 justify-self-end text-muted-foreground hover:text-foreground"
                 onClick={() => handleRemoveFile(file.name)}

@@ -132,7 +132,7 @@ export function AuthenticatorPopover() {
   return (
     <Popover open={isOpen} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
-        <Button size="icon" variant="ghost" className="size-8 rounded-lg">
+        <Button size="icon" variant="ghost" className="size-8 rounded-lg" aria-label="Autenticador">
           <Fingerprint className="size-4" />
         </Button>
       </PopoverTrigger>
@@ -234,7 +234,7 @@ export function AuthenticatorPopover() {
                   >
                     {copied ? (
                       <>
-                        <CheckIcon className="mr-2 h-3.5 w-3.5 text-green-500" />
+                        <CheckIcon className="mr-2 h-3.5 w-3.5 text-success" />
                         Copiado!
                       </>
                     ) : (

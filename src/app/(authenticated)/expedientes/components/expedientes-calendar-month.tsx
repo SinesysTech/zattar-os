@@ -195,13 +195,13 @@ export function ExpedientesCalendarMonth({
                             className={`
                                 min-h-[120px] border-r border-b p-2 transition-colors relative
                                 ${!dia ? 'bg-muted/10' : ''}
-                                ${isTodayDate ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}
+                                ${isTodayDate ? 'bg-info/5' : ''}
                                 ${hasExps && dia ? 'hover:bg-muted/50' : ''}
                             `}
                         >
                             {dia && (
                                 <>
-                                    <div className={`text-sm font-medium mb-1 ${isTodayDate ? 'text-blue-600 dark:text-blue-400' : 'text-muted-foreground'}`}>
+                                    <div className={`text-sm font-medium mb-1 ${isTodayDate ? 'text-info' : 'text-muted-foreground'}`}>
                                         {dia.getDate()}
                                     </div>
                                     
@@ -213,7 +213,7 @@ export function ExpedientesCalendarMonth({
                                                     onClick={(ev) => { ev.stopPropagation(); handleExpedienteClick(e); }}
                                                     className={`
                                                         text-xs px-1.5 py-0.5 rounded cursor-pointer truncate border
-                                                        ${e.prazoVencido ? 'bg-red-50 text-red-700 border-red-100 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800' : 'bg-primary/10 text-primary border-primary/20'}
+                                                        ${e.prazoVencido ? 'bg-destructive/5 text-destructive border-destructive/10' : 'bg-primary/10 text-primary border-primary/20'}
                                                     `}
                                                     title={`${e.classeJudicial} ${e.numeroProcesso}`}
                                                 >

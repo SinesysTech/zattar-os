@@ -119,8 +119,8 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
           valor={contasPagar.valor}
           quantidade={contasPagar.quantidade}
           href="/app/financeiro/contas-pagar"
-          colorClass="bg-orange-100 dark:bg-orange-950/50"
-          iconColorClass="text-orange-600 dark:text-orange-400"
+          colorClass="bg-warning/10"
+          iconColorClass="text-warning"
         />
 
         {/* Barra de proporção */}
@@ -141,8 +141,8 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
           valor={contasReceber.valor}
           quantidade={contasReceber.quantidade}
           href="/app/financeiro/contas-receber"
-          colorClass="bg-blue-100 dark:bg-blue-950/50"
-          iconColorClass="text-blue-600 dark:text-blue-400"
+          colorClass="bg-info/10"
+          iconColorClass="text-info"
         />
       </CardContent>
     </Card>

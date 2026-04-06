@@ -158,13 +158,13 @@ export function ObrigacoesCalendarMonth({
                             className={`
                                 min-h-20 sm:min-h-30 border-r border-b p-1 sm:p-2 transition-colors relative
                                 ${!dia ? 'bg-muted/10' : ''}
-                                ${isTodayDate ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}
+                                ${isTodayDate ? 'bg-info/5' : ''}
                                 ${hasItens && dia ? 'hover:bg-muted/50' : ''}
                             `}
                         >
                             {dia && (
                                 <>
-                                    <div className={`text-sm font-medium mb-1 ${isTodayDate ? 'text-blue-600 dark:text-blue-400' : 'text-muted-foreground'}`}>
+                                    <div className={`text-sm font-medium mb-1 ${isTodayDate ? 'text-info' : 'text-muted-foreground'}`}>
                                         {dia.getDate()}
                                     </div>
                                     
@@ -176,8 +176,8 @@ export function ObrigacoesCalendarMonth({
                                                     onClick={(ev) => { ev.stopPropagation(); handleItemClick(item); }}
                                                     className={`
                                                         text-xs px-1.5 py-0.5 rounded cursor-pointer truncate border
-                                                        ${item.status === 'vencida' ? 'bg-red-50 text-red-700 border-red-100 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800' : 
-                                                          item.status === 'efetivada' ? 'bg-green-50 text-green-700 border-green-100 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800' :
+                                                        ${item.status === 'vencida' ? 'bg-destructive/5 text-destructive border-destructive/10' : 
+                                                          item.status === 'efetivada' ? 'bg-success/5 text-success border-success/10' :
                                                           'bg-primary/10 text-primary border-primary/20'}
                                                     `}
                                                     title={item.descricao}

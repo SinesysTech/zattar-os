@@ -113,7 +113,7 @@ export function UsuariosPageContent() {
               <Button
                 type="button"
                 variant="outline"
-                size="icon"
+                size="icon" aria-label="Configurações"
                 className="h-9 w-9 bg-card"
                 onClick={() => setCargosManagementOpen(true)}
                 aria-label="Gerenciar cargos"

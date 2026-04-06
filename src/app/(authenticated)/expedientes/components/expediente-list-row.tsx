@@ -147,7 +147,7 @@ export function ExpedienteListRow({
         </Button>
         <Button 
           variant="ghost" 
-          size="icon" 
+          size="icon" aria-label="Adicionar usuário" 
           className="size-8 text-primary hover:text-primary hover:bg-primary/10"
           onClick={() => onAtribuir?.(expediente.id)}
           aria-label="Atribuir responsável"
@@ -157,7 +157,7 @@ export function ExpedienteListRow({
         {expediente.arquivoUrl && (
           <Button 
             variant="ghost" 
-            size="icon" 
+            size="icon" aria-label="Arquivo" 
             className="size-8 text-muted-foreground hover:text-foreground"
             onClick={() => onVisualizar?.(expediente.id)}
             aria-label="Visualizar PDF"

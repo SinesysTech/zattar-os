@@ -165,7 +165,7 @@ export function PericiasCalendarMonth({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="border rounded-lg overflow-hidden bg-white dark:bg-card overflow-x-auto">
+      <div className="border rounded-lg overflow-hidden bg-card overflow-x-auto">
         <div className="min-w-150">
         <div className="grid grid-cols-7 bg-muted/50 border-b">
           {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia, i) => (
@@ -191,7 +191,7 @@ export function PericiasCalendarMonth({
                 className={`
                   min-h-20 sm:min-h-30 border-r border-b p-1 sm:p-2 transition-colors relative
                   ${!dia ? 'bg-muted/10' : ''}
-                  ${isTodayDate ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}
+                  ${isTodayDate ? 'bg-info/5' : ''}
                   ${hasPs && dia ? 'hover:bg-muted/50' : ''}
                 `}
               >
@@ -200,7 +200,7 @@ export function PericiasCalendarMonth({
                     <div
                       className={`text-sm font-medium mb-1 ${
                         isTodayDate
-                          ? 'text-blue-600 dark:text-blue-400'
+                          ? 'text-info'
                           : 'text-muted-foreground'
                       }`}
                     >

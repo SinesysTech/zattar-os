@@ -141,7 +141,7 @@ export default function PlaygroundPage() {
                     <Button size="default">Default</Button>
                     <Button size="lg">Large</Button>
                     <Button size="icon-sm"><Settings /></Button>
-                    <Button size="icon"><Settings /></Button>
+                    <Button size="icon" aria-label="Configurações"><Settings /></Button>
                     <Button size="icon-lg"><Settings /></Button>
                   </div>
                 </div>

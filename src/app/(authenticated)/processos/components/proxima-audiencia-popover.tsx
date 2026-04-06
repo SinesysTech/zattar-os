@@ -106,7 +106,7 @@ export function ProximaAudienciaPopover({
             <PopoverTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Calendário"
                 className={cn('h-5 w-5 p-0', getUrgenciaColor(), className)}
                 onClick={(e) => e.stopPropagation()}
               >

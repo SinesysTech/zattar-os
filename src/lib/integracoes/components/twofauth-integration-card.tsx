@@ -124,7 +124,7 @@ export function TwoFAuthIntegrationCard({ integracao }: TwoFAuthIntegrationCardP
         </Button>
 
         {/* Botão secundário: Configurações */}
-        <Button variant="outline" size="icon" onClick={() => setConfigOpen(true)}>
+        <Button variant="outline" size="icon" aria-label="Configurações" onClick={() => setConfigOpen(true)}>
           <Settings className="h-4 w-4" />
         </Button>
 

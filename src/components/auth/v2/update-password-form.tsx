@@ -47,7 +47,7 @@ function PasswordStrength({ password }: { password: string }) {
     passed <= 1
       ? 'bg-destructive'
       : passed <= 2
-        ? 'bg-amber-500'
+        ? 'bg-warning'
         : 'bg-emerald-500'
 
   return (

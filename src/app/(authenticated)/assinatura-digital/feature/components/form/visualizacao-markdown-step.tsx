@@ -336,8 +336,8 @@ export default function VisualizacaoMarkdownStep() {
           )}
 
           {/* Alert informativo */}
-          <div className="bg-blue-600/10 border border-blue-600/20 rounded-lg p-4">
-            <p className="text-sm text-blue-600">
+          <div className="bg-info/10 border border-info/15 rounded-lg p-4">
+            <p className="text-sm text-info">
               <strong>Importante:</strong> Revise cuidadosamente todas as informações do documento antes de prosseguir para a assinatura.
             </p>
           </div>

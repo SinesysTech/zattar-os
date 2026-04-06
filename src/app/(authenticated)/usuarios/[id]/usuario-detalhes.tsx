@@ -151,7 +151,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
     return (
       <div className="container mx-auto px-4 py-8 space-y-6 max-w-400">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.push('/app/usuarios')}>
+          <Button variant="ghost" size="icon" aria-label="Voltar" onClick={() => router.push('/app/usuarios')}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="h-8 w-64 bg-muted animate-pulse rounded" />
@@ -170,7 +170,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
     return (
       <div className="container mx-auto px-4 py-8 space-y-6 max-w-400">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.push('/app/usuarios')}>
+          <Button variant="ghost" size="icon" aria-label="Voltar" onClick={() => router.push('/app/usuarios')}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <Typography.H1>Usuário</Typography.H1>
@@ -202,7 +202,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           {/* Botão voltar */}
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" aria-label="Voltar"
             onClick={() => router.push('/app/usuarios')}
             className="shrink-0 -ml-2 -mt-1"
             title="Voltar para Usuários"
@@ -393,7 +393,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                       Super Admins possuem acesso total ao sistema e bypassam todas as permissões.
                     </div>
                     {usuario.id === usuarioLogado.id && (
-                      <div className="text-xs text-orange-600 dark:text-orange-500 mt-2">
+                      <div className="text-xs text-warning mt-2">
                         Você não pode remover seu próprio status de Super Admin
                       </div>
                     )}

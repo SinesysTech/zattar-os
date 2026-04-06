@@ -33,7 +33,7 @@ export function ProjectTasksView({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
             <Link
               href={`/app/project-management/projects/${projeto.id}`}
             >

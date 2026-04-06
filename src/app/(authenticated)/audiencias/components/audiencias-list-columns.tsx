@@ -55,8 +55,8 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
           <PopoverTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
-              className="h-6 w-6 text-green-700 hover:text-green-800 hover:bg-green-500/15 dark:text-green-400 dark:hover:text-green-300 dark:hover:bg-green-500/15"
+              size="icon" aria-label="Documento"
+              className="h-6 w-6 text-success hover:text-success hover:bg-success/15"
             >
               <FileText className="h-4 w-4" />
               <span className="sr-only">Ver ata de audiência</span>
@@ -68,7 +68,7 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
       <PopoverContent className="w-72 p-4" align="start">
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-green-700 dark:text-green-400" />
+            <FileText className="h-5 w-5 text-success" />
             <h4 className="font-semibold text-sm">Ata de Audiência</h4>
           </div>
           <p className="text-xs text-muted-foreground">
@@ -106,8 +106,8 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
 
   // Classes de cor baseadas no grau
   const grauColorClasses: Record<GrauTribunal, string> = {
-    primeiro_grau: 'bg-green-500/15 text-green-700 dark:text-green-400',
-    segundo_grau: 'bg-orange-500/15 text-orange-700 dark:text-orange-400',
+    primeiro_grau: 'bg-success/15 text-success',
+    segundo_grau: 'bg-warning/15 text-warning',
     tribunal_superior: 'bg-violet-500/15 text-violet-700 dark:text-violet-400',
   };
 
@@ -357,11 +357,11 @@ function ModalidadeCell({
                       <TooltipTrigger asChild>
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="icon" aria-label="Confirmar"
                           className="h-7 w-7 shrink-0"
                           onClick={() => copyToClipboard(audiencia.urlAudienciaVirtual!)}
                         >
-                          {copied ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
+                          {copied ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>{copied ? 'Copiado!' : 'Copiar link'}</TooltipContent>
@@ -405,11 +405,11 @@ function ModalidadeCell({
                     <TooltipTrigger asChild>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="icon" aria-label="Confirmar"
                         className="h-7 w-7 shrink-0"
                         onClick={() => copyToClipboard(formatEndereco(audiencia.enderecoPresencial!))}
                       >
-                        {copied ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
+                        {copied ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>{copied ? 'Copiado!' : 'Copiar endereço'}</TooltipContent>
@@ -513,7 +513,7 @@ function AudienciaActions({
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" aria-label="Visualizar"
             className="h-8 w-8"
             onClick={() => onView(audiencia)}
           >
@@ -527,7 +527,7 @@ function AudienciaActions({
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" aria-label="Editar"
             className="h-8 w-8"
             onClick={() => onEdit(audiencia)}
           >

@@ -91,30 +91,30 @@ export function AtividadesCards({ usuarioId }: AtividadesCardsProps) {
       <StatCard
         title="Processos"
         value={stats.processos}
-        icon={<Briefcase className="h-4 w-4 text-sky-700 dark:text-sky-400" />}
+        icon={<Briefcase className="h-4 w-4 text-info" />}
         href={`/app/processos?responsavel=${usuarioId}`}
-        color="bg-sky-500/15"
+        color="bg-info/15"
       />
       <StatCard
         title="Audiências"
         value={stats.audiencias}
-        icon={<Calendar className="h-4 w-4 text-violet-700 dark:text-violet-400" />}
+        icon={<Calendar className="h-4 w-4 text-primary" />}
         href={`/audiencias?responsavel=${usuarioId}`}
-        color="bg-violet-500/15"
+        color="bg-primary/15"
       />
       <StatCard
         title="Pendentes"
         value={stats.pendentes}
-        icon={<FileText className="h-4 w-4 text-orange-700 dark:text-orange-400" />}
+        icon={<FileText className="h-4 w-4 text-warning" />}
         href={`/app/expedientes/lista?responsavel=${usuarioId}`}
-        color="bg-orange-500/15"
+        color="bg-warning/15"
       />
       <StatCard
         title="Contratos"
         value={stats.contratos}
-        icon={<FileCheck className="h-4 w-4 text-green-700 dark:text-green-400" />}
+        icon={<FileCheck className="h-4 w-4 text-success" />}
         href={`/contratos?responsavel=${usuarioId}`}
-        color="bg-green-500/15"
+        color="bg-success/15"
       />
     </div>
   );

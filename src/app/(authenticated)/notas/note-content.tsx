@@ -27,9 +27,9 @@ export default function NoteContent() {
       <div className="mb-4 space-y-3">
         <div className="flex items-center gap-2">
           <div className="relative flex-1 sm:max-w-md">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
             <Input
-              className="w-full bg-white pl-10 dark:bg-gray-950"
+              className="w-full bg-card pl-10"
               placeholder="Buscar notas"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -43,7 +43,7 @@ export default function NoteContent() {
                 size="sm"
                 className={cn("rounded-none", {
                   "bg-accent text-accent-foreground": viewMode === "masonry",
-                  "bg-white dark:bg-gray-950": viewMode !== "masonry",
+                  "bg-card": viewMode !== "masonry",
                 })}
                 onClick={() => setViewMode("masonry")}>
                 <LayoutGridIcon className="h-4 w-4" />
@@ -53,7 +53,7 @@ export default function NoteContent() {
                 size="sm"
                 className={cn("rounded-none", {
                   "bg-accent text-accent-foreground": viewMode === "list",
-                  "bg-white dark:bg-gray-950": viewMode !== "list",
+                  "bg-card": viewMode !== "list",
                 })}
                 onClick={() => setViewMode("list")}>
                 <ListIcon className="h-4 w-4" />

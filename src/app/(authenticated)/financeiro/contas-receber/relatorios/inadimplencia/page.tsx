@@ -178,7 +178,7 @@ export default function RelatorioInadimplenciaPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <Button variant="ghost" size="icon" onClick={handleVoltar}>
+        <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
 

@@ -281,7 +281,7 @@ export function ExpedientesCalendar() {
                                         <TooltipTrigger asChild>
                                             <Button
                                                 variant="ghost"
-                                                size="icon"
+                                                size="icon" aria-label="Atualizar"
                                                 onClick={() => fetchData()}
                                             >
                                                 <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -294,7 +294,7 @@ export function ExpedientesCalendar() {
                                         <TooltipTrigger asChild>
                                             <Button
                                                 variant="ghost"
-                                                size="icon"
+                                                size="icon" aria-label="Configurações"
                                                 onClick={() => setIsSettingsOpen(true)}
                                             >
                                                 <Settings className="h-4 w-4" />

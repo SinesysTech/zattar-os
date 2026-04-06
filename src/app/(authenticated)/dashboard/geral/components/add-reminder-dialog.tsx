@@ -60,7 +60,7 @@ export function AddReminderDialog() {
   return (
     <>
       <Button
-        size="icon"
+        size="icon" aria-label="Adicionar"
         variant="ghost"
         className="size-8 text-muted-foreground hover:text-foreground"
         onClick={() => setOpen(true)}

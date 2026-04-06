@@ -78,7 +78,7 @@ export function ObrigacoesBulkActions({
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => setIsDeleteOpen(true)}
-            className="text-red-600 focus:text-red-600"
+            className="text-destructive focus:text-destructive"
           >
             <Trash2 className="mr-2 h-4 w-4" />
             Excluir Selecionados
@@ -103,7 +103,7 @@ export function ObrigacoesBulkActions({
                 e.preventDefault();
                 handleDelete();
               }}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-destructive hover:bg-destructive/90"
               disabled={isPending}
             >
               {isPending ? 'Excluindo...' : 'Excluir'}

@@ -212,7 +212,7 @@ export default function PdfPreview({
         {loadState.error && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/95">
             <div className="p-4 text-center text-muted-foreground">
-              <AlertCircle className="mx-auto mb-2 h-8 w-8 text-orange-500" />
+              <AlertCircle className="mx-auto mb-2 h-8 w-8 text-warning" />
               <p className="mb-1 text-sm font-medium text-foreground">Preview não disponível</p>
               <p className="mb-2 text-xs text-muted-foreground">
                 Não foi possível carregar o PDF para visualização
@@ -302,7 +302,7 @@ export default function PdfPreview({
           }
           error={
             <div className="flex max-w-md flex-col items-center gap-3 p-6">
-              <AlertCircle className="h-12 w-12 text-orange-500" />
+              <AlertCircle className="h-12 w-12 text-warning" />
               <div className="text-center space-y-2">
                 <p className="text-base font-medium text-foreground">Preview não disponível</p>
                 <p className="text-sm text-muted-foreground">

@@ -50,7 +50,7 @@ export function EditLabelsModal({ children }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="bg-white max-h-screen max-w-96 overflow-y-scroll dark:bg-gray-950 lg:overflow-y-auto">
+      <DialogContent className="bg-card max-h-screen max-w-96 overflow-y-scroll lg:overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Editar etiquetas</DialogTitle>
         </DialogHeader>
@@ -76,7 +76,7 @@ export function EditLabelsModal({ children }: Props) {
                       }}
                     />
                     <Button
-                      size="icon"
+                      size="icon" aria-label="Confirmar"
                       variant="ghost"
                       onClick={async () => {
                         const nextTitle = editingLabelTitle.trim();
@@ -89,7 +89,7 @@ export function EditLabelsModal({ children }: Props) {
                       <Check />
                     </Button>
                     <Button
-                      size="icon"
+                      size="icon" aria-label="Fechar"
                       variant="ghost"
                       onClick={() => {
                         setEditingLabelId(null);
@@ -109,7 +109,7 @@ export function EditLabelsModal({ children }: Props) {
                     </div>
                     <div className="flex items-center">
                       <Button
-                        size="icon"
+                        size="icon" aria-label="Editar"
                         variant="ghost"
                         onClick={() => {
                           setEditingLabelId(label.id);
@@ -118,7 +118,7 @@ export function EditLabelsModal({ children }: Props) {
                         <Edit2 />
                       </Button>
                       <Button
-                        size="icon"
+                        size="icon" aria-label="Excluir"
                         variant="ghost"
                         onClick={async () => {
                           await deleteLabel(label.id);
@@ -146,7 +146,7 @@ export function EditLabelsModal({ children }: Props) {
                 className="flex-1 ps-9"
               />
               <Button
-                size="icon"
+                size="icon" aria-label="Adicionar"
                 disabled={!newLabelName.trim()}
                 onClick={async () => {
                   const title = newLabelName.trim();

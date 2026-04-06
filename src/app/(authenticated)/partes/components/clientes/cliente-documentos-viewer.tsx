@@ -195,7 +195,7 @@ export function ClienteDocumentosViewer({
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button
                       variant="ghost"
-                      size="icon"
+                      size="icon" aria-label="Baixar"
                       className="h-8 w-8"
                       onClick={(e) => {
                         e.stopPropagation();

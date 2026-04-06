@@ -97,7 +97,7 @@ interface AgingFunnelProps {
 
 const FAIXAS = [
   { key: 'vencidos', label: 'Vencidos', color: 'bg-destructive' },
-  { key: 'hoje', label: 'Hoje', color: 'bg-amber-500' },
+  { key: 'hoje', label: 'Hoje', color: 'bg-warning' },
   { key: 'tresDias', label: '1-3 dias', color: 'bg-primary' },
   { key: 'seteDias', label: '4-7 dias', color: 'bg-info' },
   { key: 'quinzeMais', label: '8+ dias', color: 'bg-muted-foreground' },

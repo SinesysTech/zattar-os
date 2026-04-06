@@ -282,7 +282,7 @@ export function TaskDetailSheet() {
                                 <div className="flex items-center gap-2">
                                     <Button
                                         variant="ghost"
-                                        size="icon"
+                                        size="icon" aria-label="Favoritar"
                                         className={tarefa.starred ? "text-yellow-500" : "text-muted-foreground"}
                                         onClick={handleToggleStarred}
                                     >
@@ -290,7 +290,7 @@ export function TaskDetailSheet() {
                                     </Button>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" size="icon">
+                                            <Button variant="ghost" size="icon" aria-label="Mais opções">
                                                 <MoreVertical className="h-5 w-5" />
                                             </Button>
                                         </DropdownMenuTrigger>
@@ -381,7 +381,7 @@ export function TaskDetailSheet() {
                                                 </div>
                                                 <Button
                                                     variant="ghost"
-                                                    size="icon"
+                                                    size="icon" aria-label="Excluir"
                                                     className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
                                                     onClick={() => handleDeleteSubtask(st.id)}
                                                 >
@@ -397,7 +397,7 @@ export function TaskDetailSheet() {
                                                 onChange={(e) => setNewSubtask(e.target.value)}
                                                 className="h-10 text-sm"
                                             />
-                                            <Button type="submit" size="icon" className="h-10 w-10 shrink-0" disabled={!newSubtask.trim() || isPending}>
+                                            <Button type="submit" size="icon" aria-label="Adicionar" className="h-10 w-10 shrink-0" disabled={!newSubtask.trim() || isPending}>
                                                 <Plus className="h-4 w-4" />
                                             </Button>
                                         </form>
@@ -455,7 +455,7 @@ export function TaskDetailSheet() {
                                                 </a>
                                                 <Button
                                                     variant="ghost"
-                                                    size="icon"
+                                                    size="icon" aria-label="Excluir"
                                                     className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
                                                     onClick={() => handleRemoveFile(file.id)}
                                                 >

@@ -38,11 +38,10 @@ export function AudioRecorder({ duration, waveformData, onFinish, onCancel }: Au
         {waveformData.map((val, i) => (
           <div
             key={i}
-            className="flex-1 rounded-full bg-primary/60 transition-[height] duration-75"
+            className="flex-1 rounded-full bg-primary/60 transition-transform duration-75 origin-bottom"
             style={{
-              height: `${Math.max(8, val * 100)}%`,
-              minHeight: 3,
-              maxHeight: 32,
+              height: 32,
+              transform: `scaleY(${Math.max(0.09, val)})`,
             }}
           />
         ))}

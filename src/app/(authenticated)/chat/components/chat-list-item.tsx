@@ -55,7 +55,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <ChatUserDropdown chat={chat}>
-          <Button size="icon" variant="ghost" className="rounded-full h-8 w-8">
+          <Button size="icon" aria-label="Mais opções" variant="ghost" className="rounded-full h-8 w-8">
             <Ellipsis className="h-4 w-4" />
           </Button>
         </ChatUserDropdown>

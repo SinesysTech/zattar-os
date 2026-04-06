@@ -221,7 +221,7 @@ function criarColunas(
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
-                    size="icon"
+                    size="icon" aria-label="Editar"
                     className="h-8 w-8"
                     onClick={() => onEditar(salario)}
                   >
@@ -249,8 +249,8 @@ function criarColunas(
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-orange-600 hover:text-orange-600"
+                    size="icon" aria-label="Calendário"
+                    className="h-8 w-8 text-warning hover:text-warning"
                     onClick={() => onEncerrarVigencia(salario)}
                   >
                     <CalendarOff className="h-4 w-4" />
@@ -264,8 +264,8 @@ function criarColunas(
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-orange-600 hover:text-orange-600"
+                    size="icon" aria-label="Fechar"
+                    className="h-8 w-8 text-warning hover:text-warning"
                     onClick={() => onInativar(salario)}
                   >
                     <XCircle className="h-4 w-4" />
@@ -278,7 +278,7 @@ function criarColunas(
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="icon" aria-label="Excluir"
                   className="h-8 w-8 text-destructive hover:text-destructive"
                   onClick={() => onExcluir(salario)}
                 >

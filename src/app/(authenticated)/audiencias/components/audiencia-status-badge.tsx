@@ -27,7 +27,7 @@ export function AudienciaStatusBadge({ status, className, compact = false }: Aud
         icon={Check}
         size="sm"
         className={cn(
-          'border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/50 dark:text-green-200',
+          'border-success/15 bg-success/5 text-success',
           className
         )}
         aria-label={STATUS_AUDIENCIA_LABELS[status]}

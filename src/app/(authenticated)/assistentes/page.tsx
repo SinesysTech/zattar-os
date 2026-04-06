@@ -27,7 +27,7 @@ export default async function AssistentesPage() {
   if (!result.success || !result.data) {
     // Handle error state gracefully
     return (
-      <div className="p-4 text-red-500">
+      <div className="p-4 text-destructive">
         Erro ao carregar dados: {result.error}
       </div>
     );

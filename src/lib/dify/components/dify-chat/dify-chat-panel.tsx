@@ -137,11 +137,11 @@ export function DifyChatPanel({
                         autoFocus
                     />
                     {isLoading ? (
-                        <Button type="button" size="icon" variant="destructive" onClick={stop}>
+                        <Button type="button" size="icon" aria-label="Parar" variant="destructive" onClick={stop}>
                             <StopCircle className="h-4 w-4" />
                         </Button>
                     ) : (
-                        <Button type="submit" size="icon" disabled={!input.trim()}>
+                        <Button type="submit" size="icon" aria-label="Enviar" disabled={!input.trim()}>
                             <Send className="h-4 w-4" />
                         </Button>
                     )}

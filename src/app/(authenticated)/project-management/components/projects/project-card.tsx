@@ -34,9 +34,9 @@ function getDeadlineColor(dataPrevisaoFim: string | null): string {
   const diffDias = Math.ceil(
     (prazo.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24)
   );
-  if (diffDias < 0) return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-  if (diffDias <= 7) return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-  return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+  if (diffDias < 0) return "bg-destructive/10 text-destructive";
+  if (diffDias <= 7) return "bg-warning/10 text-warning";
+  return "bg-success/10 text-success";
 }
 
 export function ProjectCard({ projeto }: ProjectCardProps) {

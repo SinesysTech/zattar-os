@@ -77,7 +77,7 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="icon" aria-label="Visualizar"
                   className="h-8 w-8"
                   onClick={() => onViewAdvogado?.(credencial)}
                 >
@@ -90,7 +90,7 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="icon" aria-label="Editar"
                   className="h-8 w-8"
                   onClick={() => onEdit?.(credencial)}
                 >
@@ -103,7 +103,7 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="icon" aria-label={credencial.active ? 'Desativar' : 'Ativar'}
                   className="h-8 w-8"
                   onClick={() => onToggleStatus?.(credencial)}
                 >

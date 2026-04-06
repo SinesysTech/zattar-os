@@ -76,14 +76,14 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
               {/* Status Icons */}
               <div className="flex gap-2">
                  {p.audioEnabled ? (
-                     <Mic className="w-3 h-3 text-green-500" />
+                     <Mic className="w-3 h-3 text-success" />
                  ) : (
-                     <MicOff className="w-3 h-3 text-red-500" />
+                     <MicOff className="w-3 h-3 text-destructive" />
                  )}
                  {p.videoEnabled ? (
-                     <Video className="w-3 h-3 text-blue-500" />
+                     <Video className="w-3 h-3 text-info" />
                  ) : (
-                     <VideoOff className="w-3 h-3 text-gray-500" />
+                     <VideoOff className="w-3 h-3 text-muted-foreground" />
                  )}
               </div>
             </div>

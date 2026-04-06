@@ -115,15 +115,15 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
         {/* Status badges */}
         <div className="flex gap-2 flex-wrap">
           <SemanticBadge category="status" value="acima" variantOverride="outline" className="text-xs gap-1">
-            <TrendingUp className="h-3 w-3 text-red-500" />
+            <TrendingUp className="h-3 w-3 text-destructive" />
             {resumo.itensAcimaMeta} acima
           </SemanticBadge>
           <SemanticBadge category="status" value="alvo" variantOverride="outline" className="text-xs gap-1">
-            <Minus className="h-3 w-3 text-green-500" />
+            <Minus className="h-3 w-3 text-success" />
             {resumo.itensDentroMeta} no alvo
           </SemanticBadge>
           <SemanticBadge category="status" value="abaixo" variantOverride="outline" className="text-xs gap-1">
-            <TrendingDown className="h-3 w-3 text-blue-500" />
+            <TrendingDown className="h-3 w-3 text-info" />
             {resumo.itensAbaixoMeta} abaixo
           </SemanticBadge>
         </div>
@@ -147,14 +147,14 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
                     <span className="truncate max-w-[60%] text-muted-foreground">{descricao}</span>
                     <span className={cn(
                       'font-medium tabular-nums',
-                      isOver ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'
+                      isOver ? 'text-destructive' : 'text-muted-foreground'
                     )}>
                       {Math.round(percentExec)}%
                     </span>
                   </div>
                   <Progress
                     value={Math.min(percentExec, 100)}
-                    className={cn('h-1.5', isOver && '[&>div]:bg-red-500')}
+                    className={cn('h-1.5', isOver && '[&>div]:bg-destructive')}
                   />
                 </div>
               );

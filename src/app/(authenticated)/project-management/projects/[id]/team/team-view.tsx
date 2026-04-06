@@ -99,7 +99,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
             <Link href={`/app/project-management/projects/${projeto.id}`}>
               <ArrowLeft className="size-4" />
             </Link>
@@ -165,7 +165,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
                         <DropdownMenuTrigger asChild>
                           <Button
                             variant="ghost"
-                            size="icon"
+                            size="icon" aria-label="Mais opções"
                             disabled={isPending}
                           >
                             <MoreHorizontal className="size-4" />

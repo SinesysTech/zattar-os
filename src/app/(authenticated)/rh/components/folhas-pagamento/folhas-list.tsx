@@ -145,7 +145,7 @@ function criarColunas(
       enableSorting: true,
       size: 150,
       cell: ({ row }) => (
-        <div className="text-right font-medium text-green-600">
+        <div className="text-right font-medium text-success">
           {formatarValor(row.original.valorTotal ?? 0)}
         </div>
       ),

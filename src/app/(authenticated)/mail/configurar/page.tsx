@@ -195,7 +195,7 @@ export default function ConfigurarEmailPage() {
   return (
     <div className="mx-auto max-w-xl space-y-6 p-6">
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => router.push("/app/mail")}>
+        <Button variant="ghost" size="icon" aria-label="Voltar" onClick={() => router.push("/app/mail")}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
@@ -253,7 +253,7 @@ export default function ConfigurarEmailPage() {
               <Button
                 type="button"
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Ocultar"
                 className="absolute right-0 top-0 h-full px-3"
                 onClick={() => setShowPassword(!showPassword)}
               >
@@ -319,9 +319,9 @@ export default function ConfigurarEmailPage() {
             <div className="space-y-2 rounded-md border p-3">
               <div className="flex items-center gap-2 text-sm">
                 {testResult.imap.success ? (
-                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <CheckCircle2 className="h-4 w-4 text-success" />
                 ) : (
-                  <XCircle className="h-4 w-4 text-red-500" />
+                  <XCircle className="h-4 w-4 text-destructive" />
                 )}
                 <span>
                   IMAP: {testResult.imap.success ? "Conectado" : testResult.imap.error}
@@ -329,9 +329,9 @@ export default function ConfigurarEmailPage() {
               </div>
               <div className="flex items-center gap-2 text-sm">
                 {testResult.smtp.success ? (
-                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <CheckCircle2 className="h-4 w-4 text-success" />
                 ) : (
-                  <XCircle className="h-4 w-4 text-red-500" />
+                  <XCircle className="h-4 w-4 text-destructive" />
                 )}
                 <span>
                   SMTP: {testResult.smtp.success ? "Conectado" : testResult.smtp.error}
@@ -341,7 +341,7 @@ export default function ConfigurarEmailPage() {
           )}
 
           {error && (
-            <p className="text-sm text-red-500">{error}</p>
+            <p className="text-sm text-destructive">{error}</p>
           )}
 
           {/* Actions */}

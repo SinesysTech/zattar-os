@@ -133,10 +133,10 @@ function EmptyState({ onVoltar }: { onVoltar: () => void }) {
 
 function AvisoExclusaoCard() {
   return (
-    <Card className="border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950/20">
+    <Card className="border-warning/15 bg-warning/5">
       <CardContent className="flex items-center gap-3 p-4">
-        <AlertTriangle className="h-5 w-5 text-orange-600" />
-        <p className="text-sm text-orange-800 dark:text-orange-200">
+        <AlertTriangle className="h-5 w-5 text-warning" />
+        <p className="text-sm text-warning">
           Documentos na lixeira serão deletados permanentemente após 30 dias.
         </p>
       </CardContent>
@@ -349,7 +349,7 @@ export default function LixeiraClient() {
       <div className="flex items-center gap-2 mb-4">
         <Button
           variant="ghost"
-          size="icon"
+          size="icon" aria-label="Voltar"
           onClick={() => router.push('/app/documentos')}
           aria-label="Voltar para documentos"
         >

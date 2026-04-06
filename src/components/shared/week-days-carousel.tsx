@@ -467,7 +467,7 @@ export function DaysCarousel({
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Voltar"
               className="h-9 w-9 shrink-0"
               onClick={onPrevious}
             >
@@ -507,7 +507,7 @@ export function DaysCarousel({
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Avançar"
               className="h-9 w-9 shrink-0"
               onClick={onNext}
             >
@@ -643,7 +643,7 @@ export function MonthsCarousel({
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Voltar"
               className="h-9 w-9 shrink-0"
               onClick={onPrevious}
             >
@@ -682,7 +682,7 @@ export function MonthsCarousel({
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Avançar"
               className="h-9 w-9 shrink-0"
               onClick={onNext}
             >
@@ -800,7 +800,7 @@ export function YearsCarousel({
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" aria-label="Voltar"
             className="h-9 w-9 shrink-0"
             onClick={onPrevious}
           >
@@ -843,7 +843,7 @@ export function YearsCarousel({
         <TooltipTrigger asChild>
           <Button
             variant="ghost"
-            size="icon"
+            size="icon" aria-label="Avançar"
             className="h-9 w-9 shrink-0"
             onClick={onNext}
           >

@@ -170,7 +170,7 @@ export function AddEditEventDialog({
 											id="title"
 											placeholder="Digite um título"
 											{...field}
-											className={fieldState.invalid ? "border-red-500" : ""}
+											className={fieldState.invalid ? "border-destructive" : ""}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -201,7 +201,7 @@ export function AddEditEventDialog({
 										<Select value={field.value} onValueChange={field.onChange}>
 											<SelectTrigger
 												className={`w-full ${
-													fieldState.invalid ? "border-red-500" : ""
+													fieldState.invalid ? "border-destructive" : ""
 												}`}
 											>
 												<SelectValue placeholder="Selecione uma cor" />
@@ -234,7 +234,7 @@ export function AddEditEventDialog({
 										<Textarea
 											{...field}
 											placeholder="Digite uma descrição"
-											className={fieldState.invalid ? "border-red-500" : ""}
+											className={fieldState.invalid ? "border-destructive" : ""}
 										/>
 									</FormControl>
 									<FormMessage />

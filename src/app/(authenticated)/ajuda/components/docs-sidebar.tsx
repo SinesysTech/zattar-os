@@ -99,7 +99,7 @@ export function DocsSidebar() {
           {search && (
             <Button
               variant="ghost"
-              size="icon"
+              size="icon" aria-label="Fechar"
               className="absolute right-1 top-1 h-7 w-7"
               onClick={() => setSearch('')}
             >

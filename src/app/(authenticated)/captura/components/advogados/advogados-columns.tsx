@@ -97,7 +97,7 @@ export function criarColunasAdvogados({
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="icon" aria-label="Editar"
                   className="h-8 w-8"
                   onClick={() => onEdit(advogado)}
                 >
@@ -110,7 +110,7 @@ export function criarColunasAdvogados({
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="icon" aria-label="Chave"
                   className="h-8 w-8"
                   onClick={() => onViewCredenciais(advogado)}
                 >
@@ -123,7 +123,7 @@ export function criarColunasAdvogados({
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="icon" aria-label="Excluir"
                   className="h-8 w-8 text-destructive hover:text-destructive"
                   onClick={() => onDelete(advogado)}
                 >

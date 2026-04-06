@@ -43,12 +43,12 @@ function CopyableValue({ value, label }: { value: string; label?: string }) {
       </div>
       <Button
         variant="ghost"
-        size="icon"
+        size="icon" aria-label="Confirmar"
         className="h-6 w-6 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
         onClick={handleCopy}
       >
         {copied ? (
-          <Check className="h-3 w-3 text-green-600" />
+          <Check className="h-3 w-3 text-success" />
         ) : (
           <Copy className="h-3 w-3" />
         )}

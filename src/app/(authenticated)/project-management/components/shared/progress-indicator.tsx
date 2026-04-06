@@ -9,10 +9,10 @@ interface ProgressIndicatorProps {
 }
 
 function getIndicatorColor(value: number): string {
-  if (value >= 100) return "bg-green-500";
-  if (value >= 70) return "bg-blue-500";
-  if (value >= 40) return "bg-yellow-500";
-  return "bg-slate-400";
+  if (value >= 100) return "bg-success";
+  if (value >= 70) return "bg-info";
+  if (value >= 40) return "bg-warning";
+  return "bg-muted-foreground";
 }
 
 export function ProgressIndicator({

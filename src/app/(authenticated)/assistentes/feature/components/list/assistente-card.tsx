@@ -90,7 +90,7 @@ export function AssistenteCard({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon" aria-label="Mais opções"
                 className="h-7 w-7 hover:bg-accent"
                 onClick={(e) => e.stopPropagation()}
               >

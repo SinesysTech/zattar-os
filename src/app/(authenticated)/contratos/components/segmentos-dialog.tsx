@@ -409,7 +409,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                     <div className="flex items-center gap-1 ml-4">
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="icon" aria-label="Editar"
                         className="h-8 w-8"
                         onClick={() => handleEdit(segmento)}
                         disabled={editingId === segmento.id}
@@ -419,7 +419,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                       </Button>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="icon" aria-label="Excluir"
                         className="h-8 w-8"
                         onClick={() => setDeletingSegmento(segmento)}
                         title="Deletar"

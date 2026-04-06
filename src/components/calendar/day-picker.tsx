@@ -51,7 +51,7 @@ function DayPicker({
 				),
 				day_selected:
 					"bg-primary text-white dark:text-black dark:hover:!text-white",
-				day_today: "text-red-600",
+				day_today: "text-destructive",
 				day_outside: "opacity-50 aria-selected:opacity-40",
 				day_range_middle:
 					"aria-selected:bg-bg-secondary aria-selected:text-t-primary",

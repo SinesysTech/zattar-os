@@ -180,7 +180,7 @@ export function UploadDialog({
                   </div>
                   <Button
                     variant="ghost"
-                    size="icon"
+                    size="icon" aria-label="Fechar"
                     onClick={handleRemoveFile}
                     disabled={uploading}
                     className="h-8 w-8 sm:h-10 sm:w-10 shrink-0"

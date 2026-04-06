@@ -303,12 +303,12 @@ export function GerarPecaDialog({
           <div className="space-y-4">
             {/* Resumo */}
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-green-600">
+              <div className="flex items-center gap-2 text-success">
                 <CheckCircle2 className="h-4 w-4" />
                 <span>{preview.resolvidosCount} resolvidos</span>
               </div>
               {preview.naoResolvidosCount > 0 && (
-                <div className="flex items-center gap-2 text-orange-600">
+                <div className="flex items-center gap-2 text-warning">
                   <AlertCircle className="h-4 w-4" />
                   <span>{preview.naoResolvidosCount} não resolvidos</span>
                 </div>
@@ -317,10 +317,10 @@ export function GerarPecaDialog({
 
             {/* Alerta se houver não resolvidos */}
             {preview.naoResolvidosCount > 0 && (
-              <Alert className="border-orange-500/50 bg-orange-50 dark:bg-orange-950/30">
-                <AlertCircle className="h-4 w-4 text-orange-600" />
-                <AlertTitle className="text-orange-600 dark:text-orange-400">Atenção</AlertTitle>
-                <AlertDescription className="text-orange-600 dark:text-orange-400">
+              <Alert className="border-warning/15 bg-warning/5">
+                <AlertCircle className="h-4 w-4 text-warning" />
+                <AlertTitle className="text-warning">Atenção</AlertTitle>
+                <AlertDescription className="text-warning">
                   Alguns placeholders não serão substituídos por falta de dados no contrato.
                   Você poderá editar o documento após a geração.
                 </AlertDescription>
@@ -334,11 +334,11 @@ export function GerarPecaDialog({
                   <div
                     key={i}
                     className={`flex items-center justify-between p-2 rounded ${
-                      p.resolved ? 'bg-green-50 dark:bg-green-950' : 'bg-orange-50 dark:bg-orange-950'
+                      p.resolved ? 'bg-success/5' : 'bg-warning/5'
                     }`}
                   >
                     <code className="text-sm">{p.placeholder}</code>
-                    <span className={`text-sm ${p.resolved ? 'text-green-600' : 'text-orange-600'}`}>
+                    <span className={`text-sm ${p.resolved ? 'text-success' : 'text-warning'}`}>
                       {p.resolved ? p.value : '(não encontrado)'}
                     </span>
                   </div>
@@ -360,7 +360,7 @@ export function GerarPecaDialog({
         {step === 'success' && result && (
           <div className="py-8 space-y-4">
             <div className="flex flex-col items-center gap-4">
-              <CheckCircle2 className="h-12 w-12 text-green-600" />
+              <CheckCircle2 className="h-12 w-12 text-success" />
               <p className="text-lg font-medium">Peça gerada com sucesso!</p>
             </div>
 
@@ -372,7 +372,7 @@ export function GerarPecaDialog({
                 <strong>Placeholders resolvidos:</strong> {result.placeholdersResolvidos}
               </p>
               {result.placeholdersNaoResolvidos > 0 && (
-                <p className="text-orange-600">
+                <p className="text-warning">
                   <strong>Não resolvidos:</strong> {result.placeholdersNaoResolvidos}
                 </p>
               )}

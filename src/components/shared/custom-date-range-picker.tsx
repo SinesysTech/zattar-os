@@ -167,7 +167,7 @@ export default function CalendarDateRangePicker({
                     <Button
                       id="date"
                       variant={"outline"}
-                      size="icon"
+                      size="icon" aria-label="Calendário"
                       className={cn(
                         "bg-card text-muted-foreground hover:bg-muted",
                         !date && "text-muted-foreground"

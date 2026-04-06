@@ -18,19 +18,21 @@ export function getEventColorClasses(color?: EventColor | string): string {
 
   switch (eventColor) {
     case "sky":
-      return "bg-sky-200/50 hover:bg-sky-200/40 text-sky-950/80 dark:bg-sky-400/25 dark:hover:bg-sky-400/20 dark:text-sky-200 shadow-sky-700/8";
+      return "bg-info/10 hover:bg-info/8 text-info shadow-info/8";
     case "amber":
-      return "bg-amber-200/50 hover:bg-amber-200/40 text-amber-950/80 dark:bg-amber-400/25 dark:hover:bg-amber-400/20 dark:text-amber-200 shadow-amber-700/8";
+      return "bg-warning/10 hover:bg-warning/8 text-warning shadow-warning/8";
     case "violet":
+      /* TODO: add violet to design system semantic tokens */
       return "bg-violet-200/50 hover:bg-violet-200/40 text-violet-950/80 dark:bg-violet-400/25 dark:hover:bg-violet-400/20 dark:text-violet-200 shadow-violet-700/8";
     case "rose":
-      return "bg-rose-200/50 hover:bg-rose-200/40 text-rose-950/80 dark:bg-rose-400/25 dark:hover:bg-rose-400/20 dark:text-rose-200 shadow-rose-700/8";
+      return "bg-destructive/10 hover:bg-destructive/8 text-destructive shadow-destructive/8";
     case "emerald":
-      return "bg-green-200/50 hover:bg-green-200/40 text-green-950/80 dark:bg-green-400/25 dark:hover:bg-green-400/20 dark:text-green-200 shadow-green-700/8";
+      return "bg-success/10 hover:bg-success/8 text-success shadow-success/8";
     case "orange":
+      /* TODO: add orange to design system semantic tokens */
       return "bg-orange-200/50 hover:bg-orange-200/40 text-orange-950/80 dark:bg-orange-400/25 dark:hover:bg-orange-400/20 dark:text-orange-200 shadow-orange-700/8";
     default:
-      return "bg-sky-200/50 hover:bg-sky-200/40 text-sky-950/80 dark:bg-sky-400/25 dark:hover:bg-sky-400/20 dark:text-sky-200 shadow-sky-700/8";
+      return "bg-info/10 hover:bg-info/8 text-info shadow-info/8";
   }
 }
 

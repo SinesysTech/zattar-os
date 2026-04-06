@@ -26,7 +26,7 @@ export function PublicDocumentCard({
     >
       {/* PDF Icon */}
       <div className="h-10 w-10 sm:h-12 sm:w-12 bg-card rounded-lg flex items-center justify-center shrink-0 border border-border">
-        <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-red-500" aria-hidden="true" />
+        <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-destructive" aria-hidden="true" />
       </div>
 
       {/* Document Info */}

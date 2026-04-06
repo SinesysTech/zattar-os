@@ -111,7 +111,7 @@ export function PericiasKpiStrip({ pericias, className }: PericiasKpiStripProps)
               Honorários
             </p>
             <div className="flex items-baseline gap-1.5 mt-1 truncate max-w-full overflow-hidden">
-              <p className="font-display text-xl font-bold tabular-nums leading-none text-orange-500 whitespace-nowrap overflow-hidden text-ellipsis">
+              <p className="font-display text-xl font-bold tabular-nums leading-none text-warning whitespace-nowrap overflow-hidden text-ellipsis">
                 <span className="text-sm">R$</span> <AnimatedNumber value={stats.pendentes} />
               </p>
             </div>

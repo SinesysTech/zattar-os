@@ -23,7 +23,7 @@ export default async function ConfiguracoesPage() {
     }
 
     return (
-      <div className="text-red-600">{metricasResult.error || "Erro ao carregar configurações"}</div>
+      <div className="text-destructive">{metricasResult.error || "Erro ao carregar configurações"}</div>
     );
   }
 

@@ -220,7 +220,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    size="icon"
+                    size="icon" aria-label="Abrir em nova aba"
                     variant="ghost"
                     className="h-7 w-7"
                     onClick={handleOpenNewTab}
@@ -236,7 +236,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    size="icon"
+                    size="icon" aria-label="Baixar"
                     variant="ghost"
                     className="h-7 w-7"
                     onClick={handleDownload}
