@@ -12,7 +12,6 @@ import {
   WidgetContainer,
   GaugeMeter,
   ComparisonStat,
-  InsightBanner,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario, isDashboardAdmin } from '../../hooks';
@@ -40,33 +39,11 @@ function calcularScore(stats: ProcessoStats): { score: number; status: 'good' | 
   return { score, status };
 }
 
-function gerarInsight(stats: ProcessoStats): { tipo: 'success' | 'warning' | 'info'; texto: string } {
-  const taxa = stats.taxaResolucao ?? 0;
-
-  if (taxa >= 70) {
-    return {
-      tipo: 'success',
-      texto: `Taxa de resolução de ${taxa}% — portfólio em boa saúde.`,
-    };
-  }
-
-  if (taxa >= 40) {
-    return {
-      tipo: 'info',
-      texto: `Taxa de resolução de ${taxa}% — há espaço para melhorar o fluxo de encerramento.`,
-    };
-  }
-
-  return {
-    tipo: 'warning',
-    texto: `Taxa de resolução de ${taxa}% — revise processos sem movimentação recente.`,
-  };
-}
 
 export function WidgetSaudeProcessual() {
   const { data, isLoading } = useDashboard();
 
-  if (isLoading) return <WidgetSkeleton size="md" />;
+  if (isLoading) return <WidgetSkeleton size="half" />;
 
   if (!data) {
     return (
@@ -75,11 +52,10 @@ export function WidgetSaudeProcessual() {
         icon={HeartPulse}
         subtitle="Score composto — ativos e resolução"
         depth={2}
-        className="md:col-span-2"
       >
-        <InsightBanner type="warning">
+        <p className="text-xs text-muted-foreground">
           Não foi possível carregar os dados processuais.
-        </InsightBanner>
+        </p>
       </WidgetContainer>
     );
   }
@@ -111,7 +87,6 @@ export function WidgetSaudeProcessual() {
   }
 
   const { score, status } = calcularScore(stats);
-  const insight = gerarInsight(stats);
   const encerrados = stats.arquivados;
 
   return (
@@ -120,56 +95,44 @@ export function WidgetSaudeProcessual() {
       icon={HeartPulse}
       subtitle={`Score composto — ${subtitleExtra}`}
       depth={2}
-      className="md:col-span-2"
     >
-      <div className="flex flex-col gap-4">
-
-        {/* Gauge + comparisons */}
-        <div className="flex items-center gap-6 flex-wrap">
-          <div className="shrink-0">
-            <GaugeMeter
-              value={score}
-              max={100}
-              label="score geral"
-              status={status}
-              size={120}
-            />
-          </div>
-
-          <div className="flex flex-1 gap-6 flex-wrap min-w-0">
-            <ComparisonStat
-              label="Ativos"
-              current={stats.ativos}
-              previous={Math.max(0, stats.ativos - 5)} // estimativa de variação
-              format="number"
-            />
-            <ComparisonStat
-              label="Encerrados"
-              current={encerrados}
-              previous={Math.max(0, encerrados - 3)}
-              format="number"
-            />
-            {stats.taxaResolucao !== undefined && (
-              <div className="flex flex-col gap-1">
-                <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
-                  Taxa resolução
-                </p>
-                <div className="flex items-baseline gap-1">
-                  <span className="font-display text-lg font-bold">
-                    {stats.taxaResolucao}%
-                  </span>
-                </div>
-                <p className="text-[9px] text-muted-foreground/55">
-                  encerrados / total
-                </p>
+      <div className="flex items-center gap-5">
+        <GaugeMeter
+          value={score}
+          max={100}
+          label="score geral"
+          status={status}
+          size={100}
+        />
+        <div className="grid grid-cols-3 gap-x-4 gap-y-3 flex-1 min-w-0">
+          <ComparisonStat
+            label="Ativos"
+            current={stats.ativos}
+            previous={Math.max(0, stats.ativos - 5)}
+            format="number"
+          />
+          <ComparisonStat
+            label="Encerrados"
+            current={encerrados}
+            previous={Math.max(0, encerrados - 3)}
+            format="number"
+          />
+          {stats.taxaResolucao !== undefined && (
+            <div className="flex flex-col gap-1">
+              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+                Taxa resolução
+              </p>
+              <div className="flex items-baseline gap-1">
+                <span className="font-display text-lg font-bold">
+                  {stats.taxaResolucao}%
+                </span>
               </div>
-            )}
-          </div>
+              <p className="text-[9px] text-muted-foreground/55">
+                encerrados / total
+              </p>
+            </div>
+          )}
         </div>
-
-        {/* Insight */}
-        <InsightBanner type={insight.tipo}>{insight.texto}</InsightBanner>
-
       </div>
     </WidgetContainer>
   );

@@ -118,8 +118,8 @@ export interface WidgetDefinition {
   description: string;
   module: 'processos' | 'audiencias' | 'expedientes' | 'financeiro' | 'contratos' | 'pessoal';
   permission: { recurso: string; operacao: string } | null;
-  /** sm = 1/3, half = 1/2, md = 2/3, lg = 2/3 tall, full = 3/3 */
-  size: 'sm' | 'half' | 'md' | 'lg' | 'full';
+  /** xs = 1/6, sm = 1/3, half = 1/2, md = 2/3, lg = 2/3 tall, full = 3/3 */
+  size: 'xs' | 'sm' | 'half' | 'md' | 'lg' | 'full';
   defaultEnabled: boolean;
   component: React.ComponentType;
 }
@@ -145,7 +145,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Donut e legenda mostrando a proporção de processos ativos, suspensos, arquivados e em recurso.',
     module: 'processos',
     permission: PERM.processos,
-    size: 'md',
+    size: 'sm',
     defaultEnabled: false,
     component: WidgetStatusDistribuicao,
   },
@@ -195,7 +195,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Resumo operacional com total, ativos, novos e resolvidos no mês, taxa de resolução e tendência.',
     module: 'processos',
     permission: PERM.processos,
-    size: 'md',
+    size: 'sm',
     defaultEnabled: false,
     component: WidgetKpiPulse,
   },
@@ -205,7 +205,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Score composto com gauge, comparações de ativos e encerrados, e insight de movimentação.',
     module: 'processos',
     permission: PERM.processos,
-    size: 'md',
+    size: 'half',
     defaultEnabled: true,
     component: WidgetSaudeProcessual,
   },

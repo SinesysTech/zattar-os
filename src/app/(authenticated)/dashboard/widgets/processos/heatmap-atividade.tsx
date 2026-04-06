@@ -88,51 +88,37 @@ export function WidgetHeatmapAtividade() {
       subtitle="Baixas por dia — últimas 5 semanas"
       depth={1}
     >
-      <div className="flex flex-col gap-4 mt-1">
+      <div className="flex flex-col gap-3">
         <CalendarHeatmap data={heatmapData} colorScale="primary" />
 
-        {/* Legenda de intensidade */}
-        <div className="flex items-center gap-2">
-          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
-            Intensidade:
-          </span>
-          <div className="flex items-center gap-1">
-            <div className="size-3 rounded-[3px] bg-border/10" />
-            <div className="size-3 rounded-[3px] bg-primary/15" />
-            <div className="size-3 rounded-[3px] bg-primary/30" />
-            <div className="size-3 rounded-[3px] bg-primary/50" />
-            <div className="size-3 rounded-[3px] bg-primary/80" />
+        {/* Legenda + Stats */}
+        <div className="flex items-center justify-between pt-3 border-t border-border/10">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[8px] text-muted-foreground/50">Menos</span>
+            <div className="flex items-center gap-0.5">
+              <div className="size-2.5 rounded-sm bg-border/10" />
+              <div className="size-2.5 rounded-sm bg-primary/15" />
+              <div className="size-2.5 rounded-sm bg-primary/30" />
+              <div className="size-2.5 rounded-sm bg-primary/50" />
+              <div className="size-2.5 rounded-sm bg-primary/80" />
+            </div>
+            <span className="text-[8px] text-muted-foreground/50">Mais</span>
           </div>
-          <div className="flex items-center gap-1 ml-1">
-            <span className="text-[9px] text-muted-foreground/55">Nenhum</span>
-            <span className="text-[9px] text-muted-foreground/55">→</span>
-            <span className="text-[9px] text-primary/60">Alto</span>
-          </div>
-        </div>
-
-        {/* Estatísticas */}
-        <div className="pt-3 border-t border-border/10 grid grid-cols-2 gap-4">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
-              Média diária
-            </span>
-            <span className="font-display text-lg font-bold">{mediaFmt}</span>
-            <span className="text-[9px] text-muted-foreground/55">baixas / dia</span>
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
-              Pico
-            </span>
-            <span className="font-display text-lg font-bold">
-              {fmtNum(pico)}
-            </span>
-            <span className="text-[9px] text-muted-foreground/55">maior valor do período</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-baseline gap-1">
+              <span className="text-xs font-semibold tabular-nums">{mediaFmt}</span>
+              <span className="text-[8px] text-muted-foreground/50">média/dia</span>
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-xs font-semibold tabular-nums">{fmtNum(pico)}</span>
+              <span className="text-[8px] text-muted-foreground/50">pico</span>
+            </div>
           </div>
         </div>
 
         {data.role === 'admin' && (
-          <p className="text-[9px] text-muted-foreground/55 text-center">
-            Atividade agregada de {data.performanceAdvogados.length} advogado(s)
+          <p className="text-[8px] text-muted-foreground/45 text-center">
+            Agregado de {data.performanceAdvogados.length} advogado(s)
           </p>
         )}
       </div>

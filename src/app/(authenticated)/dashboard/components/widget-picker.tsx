@@ -29,7 +29,7 @@ export interface WidgetDefinition {
   title: string;
   description: string;
   module: string;
-  size: 'sm' | 'half' | 'md' | 'lg' | 'full';
+  size: 'xs' | 'sm' | 'half' | 'md' | 'lg' | 'full';
   defaultEnabled: boolean;
   component: React.ComponentType;
   permission: { recurso: string; operacao: string } | null;

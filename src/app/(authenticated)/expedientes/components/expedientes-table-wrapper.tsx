@@ -27,7 +27,7 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 
-import type { Expediente } from '../domain';
+import type { Expediente, CodigoTribunal } from '../domain';
 import { GrauTribunal, GRAU_TRIBUNAL_LABELS, OrigemExpediente, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
 import { useExpedientes } from '../hooks/use-expedientes';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
@@ -37,10 +37,13 @@ import { ExpedienteDialog } from './expediente-dialog';
 import { ExpedientesBulkActions } from './expedientes-bulk-actions';
 import {
   ExpedientesListFilters,
-  type StatusFilterType,
-  type PrazoFilterType,
-  type ResponsavelFilterType,
+  type StatusFiltro,
 } from './expedientes-list-filters';
+
+// Tipos legados usados apenas neste wrapper (single-select)
+type StatusFilterType = 'todos' | 'pendentes' | 'baixados';
+type PrazoFilterType = 'todos' | 'vencidos' | 'hoje' | 'amanha' | 'semana' | 'sem_prazo';
+type ResponsavelFilterType = 'todos' | 'sem_responsavel' | number;
 
 // =============================================================================
 // TIPOS
@@ -367,28 +370,33 @@ export function ExpedientesTableWrapper({
                 filtersSlot={
                   <>
                     <ExpedientesListFilters
-                      statusFilter={statusFilter}
-                      onStatusChange={(v) => { setStatusFilter(v); setPageIndex(0); }}
-                      prazoFilter={prazoFilter}
-                      onPrazoChange={(v) => {
-                        setPrazoFilter(v);
-                        setDateRange(undefined);
+                      statusFiltro={statusFilter === 'todos' ? [] : [statusFilter === 'pendentes' ? 'pendente' : 'baixado'] as StatusFiltro[]}
+                      onStatusChange={(v) => {
+                        const mapped: StatusFilterType = v.length === 0 ? 'todos' : v.includes('baixado') ? 'baixados' : 'pendentes';
+                        setStatusFilter(mapped);
                         setPageIndex(0);
                       }}
-                      responsavelFilter={responsavelFilter}
-                      onResponsavelChange={(v) => { setResponsavelFilter(v); setPageIndex(0); }}
-                      tribunalFilter={tribunalFilter}
-                      onTribunalChange={(v) => { setTribunalFilter(v); setPageIndex(0); }}
-                      grauFilter={grauFilter}
-                      onGrauChange={(v) => { setGrauFilter(v); setPageIndex(0); }}
-                      tipoExpedienteFilter={tipoExpedienteFilter}
-                      onTipoExpedienteChange={(v) => { setTipoExpedienteFilter(v); setPageIndex(0); }}
-                      origemFilter={origemFilter}
-                      onOrigemChange={(v) => { setOrigemFilter(v); setPageIndex(0); }}
+                      trtFiltro={tribunalFilter ? [tribunalFilter as CodigoTribunal] : []}
+                      onTrtChange={(v) => { setTribunalFilter(v[0] || ''); setPageIndex(0); }}
+                      grauFiltro={grauFilter ? [grauFilter as GrauTribunal] : []}
+                      onGrauChange={(v) => { setGrauFilter(v[0] || ''); setPageIndex(0); }}
+                      origemFiltro={origemFilter ? [origemFilter as OrigemExpediente] : []}
+                      onOrigemChange={(v) => { setOrigemFilter(v[0] || ''); setPageIndex(0); }}
+                      responsavelFiltro={
+                        responsavelFilter === 'todos' ? [] :
+                        responsavelFilter === 'sem_responsavel' ? ['null' as const] :
+                        [responsavelFilter as number]
+                      }
+                      onResponsavelChange={(v) => {
+                        if (v.length === 0) setResponsavelFilter('todos');
+                        else if (v[0] === 'null') setResponsavelFilter('sem_responsavel');
+                        else setResponsavelFilter(v[0] as number);
+                        setPageIndex(0);
+                      }}
+                      tipoExpedienteFiltro={tipoExpedienteFilter ? [parseInt(tipoExpedienteFilter, 10)] : []}
+                      onTipoExpedienteChange={(v) => { setTipoExpedienteFilter(v[0]?.toString() || ''); setPageIndex(0); }}
                       usuarios={usuarios}
                       tiposExpedientes={tiposExpedientes}
-                      hidePrazoFilter={!!hideDateFilters || !!fixedDate || isWeekMode}
-                      hideAdvancedFilters={isWeekMode}
                     />
 
                     {/* Date Range Picker — somente fora do modo semana */}
