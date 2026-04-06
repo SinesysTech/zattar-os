@@ -85,7 +85,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
             options={expedientesViewOptions}
             value={visualizacao}
             onValueChange={handleNavigate}
-            className="w-[140px] h-9"
+            className="w-35 h-9"
           />
           <Button className="h-9 gap-2">
             <Plus className="w-4 h-4" />
