@@ -25,7 +25,7 @@ export function useNavegacaoActions() {
     processos: '/processos',
     audiencias: '/audiencias/semana',
     expedientes: '/app/expedientes',
-    'acordos-condenacoes': '/acordos-condenacoes/lista',
+    obrigacoes: '/obrigacoes/lista',
     contratos: '/contratos',
     assistentes: '/assistentes',
     clientes: '/partes/clientes',
@@ -41,7 +41,7 @@ export function useNavegacaoActions() {
     description:
       'Navega para uma página específica do sistema Sinesys. Use para ir a módulos como processos, audiências, expedientes, dashboard, etc.',
     parameters: z.object({
-      pagina: z.string().describe('Módulo/página de destino: dashboard, processos, audiencias, expedientes, acordos-condenacoes, contratos, assistentes, clientes, usuarios, captura, financeiro, rh'),
+      pagina: z.string().describe('Módulo/página de destino: dashboard, processos, audiencias, expedientes, obrigacoes, contratos, assistentes, clientes, usuarios, captura, financeiro, rh'),
       id: z.number().optional().describe('ID do registro específico para ver detalhes (opcional)'),
     }),
     handler: async ({ pagina, id }) => {
@@ -70,11 +70,11 @@ export function useNavegacaoActions() {
     name: 'mudarVisualizacaoPeriodo',
     description: 'Altera a visualização de audiências, expedientes ou acordos entre semana, mês, ano ou lista',
     parameters: z.object({
-      modulo: z.string().describe('Módulo: audiencias, expedientes ou acordos-condenacoes'),
+      modulo: z.string().describe('Módulo: audiencias, expedientes ou obrigacoes'),
       visualizacao: z.string().describe('Tipo de visualização: semana, mes, ano ou lista'),
     }),
     handler: async ({ modulo, visualizacao }) => {
-      const modulosPermitidos = ['audiencias', 'expedientes', 'acordos-condenacoes'];
+      const modulosPermitidos = ['audiencias', 'expedientes', 'obrigacoes'];
       const visualizacoesPermitidas = ['semana', 'mes', 'ano', 'lista'];
 
       if (!modulosPermitidos.includes(modulo)) {

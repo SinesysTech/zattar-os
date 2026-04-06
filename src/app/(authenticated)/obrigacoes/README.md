@@ -1,10 +1,10 @@
 # Feature: Obrigações
 
-Este módulo gerencia obrigações financeiras (acordos, condenações e custas processuais) seguindo a arquitetura **FSD (Feature-Sliced Design)**.
+Este módulo gerencia obrigações financeiras (acordos, condenações e custas processuais) seguindo a arquitetura colocada com DDD.
 
 ## Onde aparece no app
 
-- Rotas principais em `src/app/app/acordos-condenacoes/*` (lista, mês, ano, semana, novo, editar, detalhes)
+- Rotas principais em `src/app/(authenticated)/obrigacoes/*` (lista, mês, ano, semana, novo, editar, detalhes)
 - Cards/resumos no dashboard podem consumir tipos/dados desta feature
 
 ## Entrypoints
@@ -40,17 +40,17 @@ Este módulo gerencia obrigações financeiras (acordos, condenações e custas 
 
 ## Fluxo de Dados
 
-1. O usuário acessa as telas de obrigações (ex.: `/acordos-condenacoes/lista`).
+1. O usuário acessa as telas de obrigações (ex.: `/obrigacoes/lista`).
 2. `ObrigacoesContent` determina a visualização inicial baseada na URL.
 3. Componentes de visualização (Table/Calendar) buscam dados via Server Actions.
 4. Ações de criação/edição/exclusão invalidam o cache e atualizam a interface.
 
 ## Testes
 
-- E2E (Playwright): `npm run test:e2e` (ver `src/testing/e2e/README.md`)
-- Unit/Integration: `npm test` (quando houver testes no módulo)
+- E2E (Playwright): `npm run test:e2e`
+- Unit/Integration: `npm test`
 
 ## Links
 
-- Regras de negócio: `src/features/obrigacoes/RULES.md`
-- Padrões de UI compartilhada: `src/components/shared/README.md`
+- Regras de negócio: `src/app/(authenticated)/obrigacoes/RULES.md`
+- Padrões de UI compartilhada: `src/components/shared/AI_INSTRUCTIONS.md`

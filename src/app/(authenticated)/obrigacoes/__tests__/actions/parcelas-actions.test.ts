@@ -60,7 +60,7 @@ describe('Parcelas Actions', () => {
       });
 
       // Assert
-      expect(revalidatePath).toHaveBeenCalledWith('/app/acordos-condenacoes');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/obrigacoes');
     });
 
     it('deve aceitar valor diferente do previsto', async () => {
@@ -139,7 +139,7 @@ describe('Parcelas Actions', () => {
       await actionRecalcularDistribuicao(acordoId);
 
       // Assert
-      expect(revalidatePath).toHaveBeenCalledWith(`/app/acordos-condenacoes/${acordoId}`);
+      expect(revalidatePath).toHaveBeenCalledWith(`/app/obrigacoes/${acordoId}`);
     });
 
     it('deve retornar erro se acordo tem parcelas pagas', async () => {

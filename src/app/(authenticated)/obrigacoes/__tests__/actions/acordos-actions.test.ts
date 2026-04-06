@@ -103,7 +103,7 @@ describe('Acordos Actions', () => {
       });
 
       // Assert
-      expect(revalidatePath).toHaveBeenCalledWith('/app/acordos-condenacoes');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/obrigacoes');
     });
 
     it('deve retornar erro quando service falha', async () => {
