@@ -3,6 +3,7 @@
 import { AlertTriangle } from 'lucide-react';
 import { WidgetContainer, UrgencyDot, ListItem, fmtData } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
+import { formatarPartes, obterContextoProcesso } from '../shared/processo-display';
 import { useDashboard } from '../../hooks';
 import type { ExpedienteUrgente } from '../../domain';
 
@@ -58,15 +59,29 @@ function EmptyState() {
 
 function ExpedienteItem({ item }: { item: ExpedienteUrgente }) {
   const level = getUrgencyLevel(item.dias_restantes);
-  const title = `${item.tipo_expediente} — Proc. ${item.numero_processo}`;
+  const partes = formatarPartes(item.nome_parte_autora, item.nome_parte_re);
+  const contextoProcesso = obterContextoProcesso(item);
   const origemStyle = ORIGEM_BADGE_STYLES[item.origem] ?? 'bg-muted/30 text-muted-foreground/50';
   const origemLabel = ORIGEM_LABELS[item.origem] ?? item.origem;
 
   return (
-    <ListItem>
+    <ListItem className="items-start">
       <UrgencyDot level={level} />
       <div className="flex-1 min-w-0">
-        <p className="text-[12px] font-medium leading-tight truncate">{title}</p>
+        <p className="text-[12px] font-medium leading-tight">{item.tipo_expediente}</p>
+        {partes && (
+          <p className="text-[10px] text-foreground/65 mt-0.5 leading-tight">
+            {partes}
+          </p>
+        )}
+        {contextoProcesso && (
+          <p className="text-[10px] text-foreground/55 mt-0.5 leading-tight">
+            {contextoProcesso}
+          </p>
+        )}
+        <p className="text-[10px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5">
+          {item.numero_processo}
+        </p>
         <p className="text-[10px] text-muted-foreground/60 mt-0.5">
           {URGENCY_LABELS[level]} · {fmtData(item.prazo_fatal)} · {getDiasLabel(item.dias_restantes)}
         </p>

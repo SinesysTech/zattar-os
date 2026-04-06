@@ -124,6 +124,7 @@ export async function actionCriarExpediente(
     }
 
     revalidatePath("/app/expedientes");
+    revalidatePath("/app/expedientes/quadro");
     revalidatePath("/app/expedientes/semana");
     revalidatePath("/app/expedientes/mes");
     revalidatePath("/app/expedientes/ano");
@@ -301,6 +302,7 @@ export async function actionAtualizarExpediente(
     }
 
     revalidatePath("/app/expedientes");
+    revalidatePath("/app/expedientes/quadro");
     revalidatePath("/app/expedientes/semana");
     revalidatePath("/app/expedientes/mes");
     revalidatePath("/app/expedientes/ano");
@@ -408,6 +410,7 @@ export async function actionBaixarExpediente(
     }
 
     revalidatePath("/app/expedientes");
+    revalidatePath("/app/expedientes/quadro");
     revalidatePath("/app/expedientes/semana");
     revalidatePath("/app/expedientes/mes");
     revalidatePath("/app/expedientes/ano");
@@ -485,6 +488,7 @@ export async function actionReverterBaixa(
     }
 
     revalidatePath("/app/expedientes");
+    revalidatePath("/app/expedientes/quadro");
     revalidatePath("/app/expedientes/semana");
     revalidatePath("/app/expedientes/mes");
     revalidatePath("/app/expedientes/ano");

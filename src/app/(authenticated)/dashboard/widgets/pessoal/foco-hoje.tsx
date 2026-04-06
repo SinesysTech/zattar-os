@@ -11,6 +11,7 @@
 import { Zap } from 'lucide-react';
 import { WidgetContainer, InsightBanner } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
+import { formatarPartes, obterContextoProcesso } from '../shared/processo-display';
 import { useDashboard } from '../../hooks';
 import type { ExpedienteUrgente, AudienciaProxima } from '../../domain';
 
@@ -20,6 +21,9 @@ type Urgencia = 'critico' | 'alto' | 'medio';
 
 interface AcaoRecomendada {
   titulo: string;
+  partes?: string;
+  contextoProcesso?: string;
+  numeroProcesso: string;
   razao: string;
   acao: string;
   urgencia: Urgencia;
@@ -75,27 +79,32 @@ function derivarAcoes(
   // Ordena expedientes pelo mais urgente (dias_restantes crescente, vencidos primeiro)
   const urgentes = [...expedientes].sort((a, b) => a.dias_restantes - b.dias_restantes);
 
-  // Ação 1: expediente mais urgente
-  if (urgentes[0]) {
-    const exp = urgentes[0];
-    acoes.push({
-      titulo: `${exp.tipo_expediente} — proc. ${exp.numero_processo}`,
+  function acaoDeExpediente(exp: ExpedienteUrgente): AcaoRecomendada {
+    return {
+      titulo: exp.tipo_expediente,
+      partes: formatarPartes(exp.nome_parte_autora, exp.nome_parte_re),
+      contextoProcesso: obterContextoProcesso(exp),
+      numeroProcesso: exp.numero_processo,
       razao: razaoExpediente(exp),
       acao: 'Abrir expediente',
       urgencia: urgenciaDeExpediente(exp),
-    });
+    };
+  }
+
+  // Ação 1: expediente mais urgente
+  if (urgentes[0]) {
+    acoes.push(acaoDeExpediente(urgentes[0]));
   }
 
   // Ação 2: próxima audiência
   if (proximasAudiencias[0]) {
     const aud = proximasAudiencias[0];
-    const titulo =
-      aud.polo_ativo_nome && aud.polo_passivo_nome
-        ? `${aud.polo_ativo_nome} x ${aud.polo_passivo_nome}`
-        : `Proc. ${aud.numero_processo}`;
 
     acoes.push({
-      titulo: `Preparar audiência — ${titulo}`,
+      titulo: 'Preparar audiência',
+      partes: formatarPartes(aud.polo_ativo_nome, aud.polo_passivo_nome),
+      contextoProcesso: obterContextoProcesso(aud),
+      numeroProcesso: aud.numero_processo,
       razao: razaoAudiencia(aud),
       acao: 'Ver processo',
       urgencia: 'alto',
@@ -104,24 +113,12 @@ function derivarAcoes(
 
   // Ação 3: segundo expediente mais urgente
   if (urgentes[1]) {
-    const exp = urgentes[1];
-    acoes.push({
-      titulo: `${exp.tipo_expediente} — proc. ${exp.numero_processo}`,
-      razao: razaoExpediente(exp),
-      acao: 'Abrir expediente',
-      urgencia: urgenciaDeExpediente(exp),
-    });
+    acoes.push(acaoDeExpediente(urgentes[1]));
   }
 
   // Fallback caso não haja 3 ações
   while (acoes.length < 3 && urgentes.length > acoes.length) {
-    const exp = urgentes[acoes.length];
-    acoes.push({
-      titulo: `${exp.tipo_expediente} — proc. ${exp.numero_processo}`,
-      razao: razaoExpediente(exp),
-      acao: 'Abrir expediente',
-      urgencia: urgenciaDeExpediente(exp),
-    });
+    acoes.push(acaoDeExpediente(urgentes[acoes.length]));
   }
 
   return acoes.slice(0, 3);
@@ -193,12 +190,25 @@ export function WidgetFocoHoje() {
               {i + 1}
             </div>
 
-            {/* Conteúdo */}
+            {/* Conteúdo — hierarquia: título → partes → processo */}
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-semibold text-foreground/85 truncate leading-tight">
+              <p className="text-[10px] font-semibold text-foreground/85 leading-tight">
                 {acao.titulo}
               </p>
-              <p className="text-[9px] text-muted-foreground/45 mt-0.5 truncate">
+              {acao.partes && (
+                <p className="text-[10px] text-foreground/65 mt-0.5 leading-tight">
+                  {acao.partes}
+                </p>
+              )}
+              {acao.contextoProcesso && (
+                <p className="text-[9px] text-foreground/55 mt-0.5 leading-tight">
+                  {acao.contextoProcesso}
+                </p>
+              )}
+              <p className="text-[9px] text-muted-foreground/50 font-mono mt-0.5 break-all leading-relaxed">
+                {acao.numeroProcesso}
+              </p>
+              <p className="text-[9px] text-muted-foreground/45 mt-0.5">
                 {acao.razao}
               </p>
             </div>

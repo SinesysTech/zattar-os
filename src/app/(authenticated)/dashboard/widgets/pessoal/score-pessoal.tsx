@@ -91,7 +91,7 @@ export function WidgetScorePessoal() {
   if (proximaAudienciaExists) {
     const proxima = proximasAudiencias[0];
     const hora = proxima.hora_audiencia ?? 'horário não definido';
-    insightTexto = `Audiência às ${hora} — proc. ${proxima.numero_processo}. Verifique os documentos com antecedência.`;
+    insightTexto = `Audiência às ${hora} — ${proxima.numero_processo}. Verifique os documentos com antecedência.`;
     insightTipo = 'warning';
   } else if (audienciasHoje > 0) {
     insightTexto = `${audienciasHoje} audiência${audienciasHoje > 1 ? 's' : ''} prevista${audienciasHoje > 1 ? 's' : ''} para hoje.`;

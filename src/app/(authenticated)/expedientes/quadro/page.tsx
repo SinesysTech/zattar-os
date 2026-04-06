@@ -1,13 +1,16 @@
 import { Suspense } from 'react';
+import { Metadata } from 'next';
 import { ExpedientesContent } from '@/app/(authenticated)/expedientes';
 import { PageShell } from '@/components/shared';
 import { Skeleton } from '@/components/ui/skeleton';
 
+export const metadata: Metadata = {
+  title: 'Expedientes | Controle',
+  description: 'Centro de comando operacional dos expedientes',
+};
+
 export const dynamic = 'force-dynamic';
 
-/**
- * Fallback de loading para o Suspense
- */
 function ExpedientesLoading() {
   return (
     <div className="flex flex-col gap-4">
@@ -17,11 +20,7 @@ function ExpedientesLoading() {
   );
 }
 
-/**
- * Página raiz de Expedientes
- * Renderiza visualização unificada com alternância entre semana, mês, ano e lista
- */
-export default function ExpedientesPage() {
+export default function ExpedientesQuadroPage() {
   return (
     <PageShell>
       <Suspense fallback={<ExpedientesLoading />}>

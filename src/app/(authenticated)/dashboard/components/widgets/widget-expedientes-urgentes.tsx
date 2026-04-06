@@ -14,6 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { formatDate } from '@/lib/formatters';
 import type { ExpedienteUrgente } from '../../domain';
+import { formatarPartes, obterContextoProcesso } from '../../widgets/shared/processo-display';
 
 interface WidgetExpedientesUrgentesProps {
   data: ExpedienteUrgente[];
@@ -69,6 +70,8 @@ export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedi
           <div className="space-y-2">
             {data.slice(0, 5).map((exp) => {
               const urgency = getUrgency(exp.dias_restantes);
+              const partes = formatarPartes(exp.nome_parte_autora, exp.nome_parte_re);
+              const contextoProcesso = obterContextoProcesso(exp);
 
               return (
                 <div
@@ -85,8 +88,14 @@ export function WidgetExpedientesUrgentes({ data, loading, error }: WidgetExpedi
                   </div>
 
                   <div className="flex-1 min-w-0 space-y-1">
-                    <p className="text-sm font-medium truncate">{exp.numero_processo}</p>
-                    <p className="text-xs text-muted-foreground truncate">{exp.tipo_expediente}</p>
+                    <p className="text-sm font-medium leading-tight">{exp.tipo_expediente}</p>
+                    {partes && (
+                      <p className="text-xs text-foreground/70 leading-tight">{partes}</p>
+                    )}
+                    {contextoProcesso && (
+                      <p className="text-xs text-muted-foreground leading-tight">{contextoProcesso}</p>
+                    )}
+                    <p className="text-xs text-muted-foreground font-mono break-all leading-relaxed">{exp.numero_processo}</p>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1">
                         <Calendar className="h-3 w-3" />

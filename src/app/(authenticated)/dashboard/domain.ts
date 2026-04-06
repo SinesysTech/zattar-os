@@ -103,6 +103,10 @@ export interface ExpedienteUrgente {
   processo_id: number;
   numero_processo: string;
   tipo_expediente: string;
+  descricao_orgao_julgador?: string | null;
+  classe_judicial?: string | null;
+  nome_parte_autora?: string | null;
+  nome_parte_re?: string | null;
   prazo_fatal: string;
   status: string; // 'pendente' | 'em_andamento' | 'concluido' | 'vencido'
   dias_restantes: number; // negativo se vencido
@@ -410,6 +414,10 @@ export const expedienteUrgenteSchema = z.object({
   processo_id: z.number(),
   numero_processo: z.string(),
   tipo_expediente: z.string(),
+  descricao_orgao_julgador: z.string().nullable().optional(),
+  classe_judicial: z.string().nullable().optional(),
+  nome_parte_autora: z.string().nullable().optional(),
+  nome_parte_re: z.string().nullable().optional(),
   prazo_fatal: z.string(),
   status: z.string(),
   dias_restantes: z.number(),

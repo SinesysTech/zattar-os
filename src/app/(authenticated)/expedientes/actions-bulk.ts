@@ -106,6 +106,7 @@ export async function actionBulkTransferirResponsavel(
     }
 
     revalidatePath("/app/expedientes");
+    revalidatePath("/app/expedientes/quadro");
     revalidatePath("/app/expedientes/semana");
     revalidatePath("/app/expedientes/mes");
     revalidatePath("/app/expedientes/ano");
@@ -214,6 +215,7 @@ export async function actionBulkBaixar(
     }
 
     revalidatePath("/app/expedientes");
+    revalidatePath("/app/expedientes/quadro");
     revalidatePath("/app/expedientes/semana");
     revalidatePath("/app/expedientes/mes");
     revalidatePath("/app/expedientes/ano");
