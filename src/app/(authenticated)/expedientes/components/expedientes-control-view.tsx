@@ -294,7 +294,7 @@ function QueueListRow({
           <p className="truncate font-mono text-[11px] text-muted-foreground/55">{expediente.numeroProcesso}</p>
         </div>
         {responsavelNome && (
-          <p className="hidden max-w-25 truncate text-[11px] text-muted-foreground/45 sm:block">{responsavelNome}</p>
+          <p className="hidden max-w-36 truncate text-[11px] text-muted-foreground/45 sm:block lg:max-w-48">{responsavelNome}</p>
         )}
         <div className="shrink-0 text-right">
           {expediente.dataPrazoLegalParte ? (
