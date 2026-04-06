@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'node:fs';
 
 // 1. Content
 let content = fs.readFileSync('src/app/(authenticated)/expedientes/components/expedientes-content.tsx', 'utf8');

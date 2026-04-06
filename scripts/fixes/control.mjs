@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'node:fs';
 const file = 'src/app/(authenticated)/expedientes/components/expedientes-control-view.tsx';
 let txt = fs.readFileSync(file, 'utf8');
 txt = txt.replace(/responsavelNome=\{.*?\}/g, '');

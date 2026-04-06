@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'node:fs';
 const file = 'src/app/(authenticated)/expedientes/components/expedientes-week-mission.tsx';
 let txt = fs.readFileSync(file, 'utf8');
 
