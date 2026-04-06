@@ -19,7 +19,7 @@
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAgentContext } from '@copilotkit/react-core/v2';
-import { Settings } from 'lucide-react';
+import { Settings, Sparkles, CalendarDays, CalendarRange, Calendar, List } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -27,6 +27,7 @@ import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 import {
   ViewModePopover,
+  type ViewModeOption,
   useWeekNavigator,
   type ViewType,
 } from '@/components/shared';
@@ -38,25 +39,35 @@ import { ExpedientesListWrapper } from './expedientes-list-wrapper';
 import { ExpedientesTableWrapper } from './expedientes-table-wrapper';
 import { ExpedientesMonthWrapper } from './expedientes-month-wrapper';
 import { ExpedientesYearWrapper } from './expedientes-year-wrapper';
+import { ExpedientesControlView } from './expedientes-control-view';
 
 // =============================================================================
 // MAPEAMENTO URL -> VIEW
 // =============================================================================
 
+const APP_BASE_ROUTE = '/app/expedientes';
+
 const VIEW_ROUTES: Record<ViewType, string> = {
-  semana: '/expedientes/semana',
-  mes: '/expedientes/mes',
-  ano: '/expedientes/ano',
-  lista: '/expedientes/lista',
-  quadro: '/expedientes/quadro',
+  semana: `${APP_BASE_ROUTE}/semana`,
+  mes: `${APP_BASE_ROUTE}/mes`,
+  ano: `${APP_BASE_ROUTE}/ano`,
+  lista: `${APP_BASE_ROUTE}/lista`,
+  quadro: `${APP_BASE_ROUTE}/quadro`,
 };
 
 const ROUTE_TO_VIEW: Record<string, ViewType> = {
-  '/expedientes': 'semana',
+  '/app/expedientes': 'quadro',
+  '/app/expedientes/semana': 'semana',
+  '/app/expedientes/mes': 'mes',
+  '/app/expedientes/ano': 'ano',
+  '/app/expedientes/lista': 'lista',
+  '/app/expedientes/quadro': 'quadro',
+  '/expedientes': 'quadro',
   '/expedientes/semana': 'semana',
   '/expedientes/mes': 'mes',
   '/expedientes/ano': 'ano',
   '/expedientes/lista': 'lista',
+  '/expedientes/quadro': 'quadro',
 };
 
 // =============================================================================
@@ -99,6 +110,14 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   // Week Navigator (apenas para view semana)
   const weekNav = useWeekNavigator();
 
+  const expedientesViewOptions: ViewModeOption[] = React.useMemo(() => [
+    { value: 'quadro', label: 'Controle', icon: Sparkles },
+    { value: 'semana', label: 'Semana', icon: CalendarDays },
+    { value: 'mes', label: 'Mês', icon: CalendarRange },
+    { value: 'ano', label: 'Ano', icon: Calendar },
+    { value: 'lista', label: 'Lista', icon: List },
+  ], []);
+
   // ── Copilot: expor contexto de expedientes ──
   useAgentContext({
     description: 'Contexto da tela de expedientes: visualização atual e semana selecionada',
@@ -128,6 +147,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
     <ViewModePopover
       value={visualizacao}
       onValueChange={handleVisualizacaoChange}
+      options={expedientesViewOptions}
     />
   );
 
@@ -153,6 +173,16 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
 
   const renderContent = () => {
     switch (visualizacao) {
+      case 'quadro':
+        return (
+          <ExpedientesControlView
+            viewModeSlot={viewModePopover}
+            settingsSlot={settingsButton}
+            usuariosData={usuarios}
+            tiposExpedientesData={tiposExpedientes}
+          />
+        );
+
       case 'lista':
         return (
           <ExpedientesListWrapper

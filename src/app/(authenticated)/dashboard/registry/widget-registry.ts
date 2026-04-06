@@ -615,7 +615,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Timeline do dia com tarefas, lembretes e audiências ordenados por horário.',
     module: 'pessoal',
     permission: PERM.pessoal,
-    size: 'md',
+    size: 'half',
     defaultEnabled: true,
     component: WidgetMeuDia,
   },
@@ -625,7 +625,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Top 3 ações recomendadas baseadas em prazos, audiências e tarefas pendentes do dia.',
     module: 'pessoal',
     permission: PERM.pessoal,
-    size: 'sm',
+    size: 'half',
     defaultEnabled: true,
     component: WidgetFocoHoje,
   },
@@ -707,53 +707,53 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
 // Widgets removidos pelo perfil (sem permissão) são simplesmente omitidos
 // e o grid se recompõe automaticamente.
 //
-// Layout visual (admin):
+// Layout visual (admin): progressão por módulo, sem intercalar áreas.
 // ┌─────────────── full ───────────────┐  Row 1: Briefing pessoal
-// ├──────── md ────────┤┌─── sm ──┐    │  Row 2: Meu Dia + Foco
-// ├──────── md ────────┤               │  Row 3: Saúde Financeira
-// ├──── half ────┤┌──── half ────┐    │  Row 4: Audiências + Preparação
-// ├──────── md ────────┤┌─── sm ──┐    │  Row 5: Expedientes + Funil
-// ├──────── md ────────┤┌─── sm ──┐    │  Row 6: Processos + Heatmap
-// ├──────── md ────────┤┌─── sm ──┐    │  Row 7: Contratos + Obrigações
-// ├─── sm ──┤┌─── sm ──┤┌─── sm ──┐    │  Row 8: Fluxo, Despesas, Inadimplência
-// ├─── sm ──┤┌─── sm ──┤┌─── sm ──┐    │  Row 9: Tarefas, Produtividade, Chat
+// ├──── half ────┤┌──── half ────┐    │  Row 2: Meu Dia + Foco
+// ├─── sm ──┤┌─── sm ──┤┌─── sm ──┐    │  Row 3: Tarefas, Produtividade, Lembretes
+// ├──── half ────┤┌──── half ────┐    │  Row 4: Audiências em sequência
+// ├──────── md ────────┤┌─── sm ──┐    │  Row 5: Expedientes em sequência
+// ├──────── md ────────┤┌─── sm ──┐    │  Row 6: Processos em sequência
+// ├──────── md ────────┤┌─── sm ──┐    │  Row 7: Contratos em sequência
+// ├──────── md ────────┤               │  Row 8: Saúde financeira
+// ├─── sm ──┤┌─── sm ──┤┌─── sm ──┐    │  Row 9: Financeiro detalhado
 
 export const DEFAULT_LAYOUT: string[] = [
   // Row 1: Hero pessoal (full — 3 cols)
   'pessoal-score-pessoal',
 
-  // Row 2: Dia + Foco (md + sm)
+  // Row 2: Dia + Foco (half + half)
   'pessoal-meu-dia',
   'pessoal-foco-hoje',
 
-  // Row 3: Hero financeiro (full — 3 cols)
-  'financeiro-saude-financeira',
-
-  // Row 4: Audiências + Preparação (md + sm)
-  'audiencias-proximas',
-  'audiencias-preparacao',
-
-  // Row 5: Expedientes + Funil (md + sm)
-  'expedientes-urgency-list',
-  'expedientes-aging-funnel',
-
-  // Row 6: Processos + Heatmap (md + sm)
-  'processos-saude-processual',
-  'processos-heatmap-atividade',
-
-  // Row 7: Contratos + Obrigações (md + sm)
-  'contratos-saude-contratual',
-  'contratos-obrigacoes-treemap',
-
-  // Row 8: Financeiro detalhado (sm + sm + sm)
-  'financeiro-fluxo-tabs',
-  'financeiro-despesas-treemap',
-  'financeiro-inadimplencia',
-
-  // Row 9: Pessoal complementar (sm + sm + sm)
+  // Row 3: Pessoal complementar (sm + sm + sm)
   'pessoal-tarefas-status',
   'pessoal-produtividade-semanal',
   'pessoal-lembretes',
+
+  // Row 4: Audiências (half + half)
+  'audiencias-proximas',
+  'audiencias-preparacao',
+
+  // Row 5: Expedientes (md + sm)
+  'expedientes-urgency-list',
+  'expedientes-aging-funnel',
+
+  // Row 6: Processos (md + sm)
+  'processos-saude-processual',
+  'processos-heatmap-atividade',
+
+  // Row 7: Contratos (md + sm)
+  'contratos-saude-contratual',
+  'contratos-obrigacoes-treemap',
+
+  // Row 8: Saúde financeira (md)
+  'financeiro-saude-financeira',
+
+  // Row 9: Financeiro detalhado (sm + sm + sm)
+  'financeiro-fluxo-tabs',
+  'financeiro-despesas-treemap',
+  'financeiro-inadimplencia',
 ];
 
 // ─── Helper: label em português para cada módulo ─────────────────────────────

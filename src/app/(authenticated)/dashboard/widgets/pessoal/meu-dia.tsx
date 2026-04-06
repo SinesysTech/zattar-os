@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * WidgetMeuDia — Widget conectado (col-span-2)
+ * WidgetMeuDia — Widget conectado
  * Fontes:
  *   - useDashboard() → proximasAudiencias (audiências de hoje)
  *   - useReminders() → lembretes de hoje
@@ -11,6 +11,7 @@
 import { Calendar, Gavel, Bell, CheckSquare } from 'lucide-react';
 import { WidgetContainer, InsightBanner } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
+import { formatarPartes, obterContextoProcesso } from '../shared/processo-display';
 import { useDashboard, useReminders, isDashboardUsuario } from '../../hooks';
 import type { AudienciaProxima, Lembrete } from '../../domain';
 
@@ -22,6 +23,9 @@ interface EventoTimeline {
   id: string;
   hora: string | null; // HH:MM
   titulo: string;
+  subtitulo?: string;
+  contextoProcesso?: string;
+  numeroProcesso?: string;
   tipo: TipoEvento;
   done: boolean;
 }
@@ -36,17 +40,14 @@ function hojeISO(): string {
 
 function audienciaParaEvento(a: AudienciaProxima): EventoTimeline {
   const hora = a.hora_audiencia ?? null;
-  const titulo =
-    a.polo_ativo_nome && a.polo_passivo_nome
-      ? `Audiência — ${a.polo_ativo_nome} x ${a.polo_passivo_nome}`
-      : a.tipo_audiencia
-      ? `${a.tipo_audiencia} — proc. ${a.numero_processo}`
-      : `Audiência — proc. ${a.numero_processo}`;
 
   return {
     id: `aud-${a.id}`,
     hora,
-    titulo,
+    titulo: a.tipo_audiencia ?? 'Audiência',
+    subtitulo: formatarPartes(a.polo_ativo_nome, a.polo_passivo_nome),
+    contextoProcesso: obterContextoProcesso(a),
+    numeroProcesso: a.numero_processo,
     tipo: 'audiencia',
     done: false,
   };
@@ -174,7 +175,6 @@ export function WidgetMeuDia() {
         icon={Calendar}
         subtitle="Tarefas, lembretes e audiências — hoje"
         depth={2}
-        className="md:col-span-2"
       >
         <InsightBanner type="info">
           Nenhum evento agendado para hoje. Aproveite para avançar nas tarefas em aberto.
@@ -195,7 +195,6 @@ export function WidgetMeuDia() {
       icon={Calendar}
       subtitle={subtitleStr}
       depth={2}
-      className="md:col-span-2"
     >
       <div className="relative">
         {/* Linha vertical conectora */}
@@ -232,17 +231,34 @@ export function WidgetMeuDia() {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span
-                      className={`text-[10px] font-medium truncate flex-1 ${
+                    <div
+                      className={`flex-1 min-w-0 ${
                         isDone
-                          ? 'line-through text-muted-foreground/55'
+                          ? 'text-muted-foreground/55'
                           : isNext
                           ? 'text-foreground/90'
                           : 'text-foreground/70'
                       }`}
                     >
-                      {evento.titulo}
-                    </span>
+                      <p className={`text-[10px] font-medium leading-tight ${isDone ? 'line-through' : ''}`}>
+                        {evento.titulo}
+                      </p>
+                      {evento.subtitulo && (
+                        <p className="text-[10px] text-foreground/60 mt-0.5 leading-tight">
+                          {evento.subtitulo}
+                        </p>
+                      )}
+                      {evento.contextoProcesso && (
+                        <p className="text-[9px] text-foreground/55 mt-0.5 leading-tight">
+                          {evento.contextoProcesso}
+                        </p>
+                      )}
+                      {evento.numeroProcesso && (
+                        <p className="text-[9px] text-muted-foreground/55 font-mono mt-0.5 break-all leading-relaxed">
+                          {evento.numeroProcesso}
+                        </p>
+                      )}
+                    </div>
                     {isNext && (
                       <span className="text-[8px] uppercase tracking-wider text-primary/70 bg-primary/10 px-1.5 py-0.5 rounded-full shrink-0">
                         próximo

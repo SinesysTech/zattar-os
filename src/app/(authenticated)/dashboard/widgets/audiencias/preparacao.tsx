@@ -12,13 +12,14 @@
  * ============================================================================
  */
 
-import { Calendar, Clock, MapPin, FileText } from 'lucide-react';
+import { Calendar, Clock, FileText, Video } from 'lucide-react';
 import {
   ProgressRing,
   InsightBanner,
   WidgetContainer,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
+import { formatarPartes, obterContextoProcesso } from '../shared/processo-display';
 import { useDashboard } from '../../hooks/use-dashboard';
 import type { AudienciaProxima } from '../../domain';
 
@@ -90,6 +91,8 @@ export function WidgetPreparacao() {
           {audiencias.map((audiencia) => {
             const prepScore = calcPrepScoreFromProxima(audiencia);
             const ringColor = scoreColor(prepScore);
+            const partesTexto = formatarPartes(audiencia.polo_ativo_nome, audiencia.polo_passivo_nome);
+            const contextoProcesso = obterContextoProcesso(audiencia);
             return (
               <div
                 key={audiencia.id}
@@ -103,11 +106,20 @@ export function WidgetPreparacao() {
 
                 {/* Informações da audiência */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] font-medium leading-tight truncate">
-                    {audiencia.tipo_audiencia ?? 'Audiência'} —{' '}
-                    {[audiencia.polo_ativo_nome, audiencia.polo_passivo_nome].filter(Boolean).join(' vs ') || audiencia.numero_processo}
+                  <p className="text-[11px] font-medium leading-tight">
+                    {audiencia.tipo_audiencia ?? 'Audiência'}
                   </p>
-                  <p className="text-[9px] text-muted-foreground/60 font-mono truncate mt-0.5">
+                  {partesTexto && (
+                    <p className="text-[10px] text-foreground/65 mt-0.5 leading-tight">
+                      {partesTexto}
+                    </p>
+                  )}
+                  {contextoProcesso && (
+                    <p className="text-[9px] text-foreground/55 mt-0.5 leading-tight">
+                      {contextoProcesso}
+                    </p>
+                  )}
+                  <p className="text-[9px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5">
                     {audiencia.numero_processo}
                   </p>
                   <div className="flex items-center gap-3 mt-1">
@@ -121,10 +133,10 @@ export function WidgetPreparacao() {
                         <span>{audiencia.hora_audiencia}</span>
                       </div>
                     )}
-                    {audiencia.local && (
-                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground/60 truncate">
-                        <MapPin className="size-2.5 shrink-0" />
-                        <span className="truncate">{audiencia.local}</span>
+                    {audiencia.url_audiencia_virtual && (
+                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground/60">
+                        <Video className="size-2.5 shrink-0" />
+                        <span>Ambiente virtual</span>
                       </div>
                     )}
                   </div>

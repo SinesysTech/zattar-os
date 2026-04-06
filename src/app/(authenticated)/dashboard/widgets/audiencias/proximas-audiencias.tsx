@@ -1,8 +1,9 @@
 'use client';
 
-import { Calendar, Clock, MapPin, Video } from 'lucide-react';
+import { Calendar, Clock, Video } from 'lucide-react';
 import { WidgetContainer } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
+import { formatarPartes, obterContextoProcesso } from '../shared/processo-display';
 import { useDashboard } from '../../hooks';
 import type { AudienciaProxima } from '../../domain';
 
@@ -78,10 +79,8 @@ function AudienciaItem({
   isFirst: boolean;
 }) {
   const styles = getTipoStyles(audiencia.tipo_audiencia);
-  const partes = [audiencia.polo_ativo_nome, audiencia.polo_passivo_nome].filter(Boolean);
-  const parte = partes.length >= 2
-    ? `${partes[0]} vs ${partes[1]}`
-    : partes[0] ?? 'Partes não informadas';
+  const parte = formatarPartes(audiencia.polo_ativo_nome, audiencia.polo_passivo_nome) ?? 'Partes não informadas';
+  const contextoProcesso = obterContextoProcesso(audiencia);
 
   return (
     <div
@@ -105,8 +104,13 @@ function AudienciaItem({
               </span>
             )}
           </div>
-          <p className="text-[11px] font-medium mt-1 truncate">{parte}</p>
-          <p className="text-[9px] text-muted-foreground/60 font-mono truncate">
+          <p className="text-[11px] font-medium mt-1 leading-tight">{parte}</p>
+          {contextoProcesso && (
+            <p className="text-[10px] text-foreground/60 mt-0.5 leading-tight">
+              {contextoProcesso}
+            </p>
+          )}
+          <p className="text-[9px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5">
             {audiencia.numero_processo}
           </p>
         </div>
@@ -124,12 +128,6 @@ function AudienciaItem({
         </div>
       </div>
       <div className="flex items-center gap-2 mt-1.5">
-        {audiencia.local && (
-          <div className="flex items-center gap-1 text-[9px] text-muted-foreground/60 min-w-0">
-            <MapPin className="size-2.5 shrink-0" />
-            <span className="truncate">{audiencia.local}</span>
-          </div>
-        )}
         {audiencia.url_audiencia_virtual && (
           <a
             href={audiencia.url_audiencia_virtual}

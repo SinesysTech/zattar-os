@@ -137,14 +137,22 @@ export async function buscarExpedientesUrgentes(
 
   // Buscar expedientes urgentes
   let pendentesQuery = supabase
-    .from('expedientes')
+    .from('expedientes_com_origem')
     .select(`
       id,
       processo_id,
       numero_processo,
+      descricao_orgao_julgador,
+      classe_judicial,
+      nome_parte_autora,
+      nome_parte_re,
+      nome_parte_autora_origem,
+      nome_parte_re_origem,
+      orgao_julgador_origem,
       data_prazo_legal_parte,
       prazo_vencido,
       responsavel_id,
+      origem,
       tipos_expedientes:tipo_expediente_id (tipo_expediente),
       usuarios:responsavel_id (nome_exibicao)
     `)
@@ -184,12 +192,16 @@ export async function buscarExpedientesUrgentes(
       processo_id: p.processo_id,
       numero_processo: p.numero_processo,
       tipo_expediente: (p.tipos_expedientes as { tipo_expediente?: string })?.tipo_expediente || 'Pendente',
+      descricao_orgao_julgador: p.orgao_julgador_origem || p.descricao_orgao_julgador,
+      classe_judicial: p.classe_judicial,
+      nome_parte_autora: p.nome_parte_autora_origem || p.nome_parte_autora,
+      nome_parte_re: p.nome_parte_re_origem || p.nome_parte_re,
       prazo_fatal: p.data_prazo_legal_parte,
       status: diasRestantes < 0 ? 'vencido' : 'pendente',
       dias_restantes: diasRestantes,
       responsavel_id: p.responsavel_id,
       responsavel_nome: (p.usuarios as { nome_exibicao?: string })?.nome_exibicao || null,
-      origem: 'expedientes' as const,
+      origem: p.origem === 'expedientes_manuais' ? 'expedientes_manuais' : 'expedientes',
     };
   });
 
