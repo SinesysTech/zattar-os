@@ -43,7 +43,7 @@ export function PipelineFunnel({ stages, desistencias }: PipelineFunnelProps) {
     <GlassPanel className="p-5">
       <div className="flex items-center gap-2 mb-5">
         <GitBranch className="size-4 text-muted-foreground/50" />
-        <h2 className="font-heading text-sm font-semibold">Pipeline de Conversão</h2>
+        <h2 className="text-widget-title">Pipeline de Conversão</h2>
         {desistCount > 0 && (
           <span className="text-[10px] text-muted-foreground/55 ml-auto">
             {desistCount} desistência{desistCount !== 1 ? 's' : ''}

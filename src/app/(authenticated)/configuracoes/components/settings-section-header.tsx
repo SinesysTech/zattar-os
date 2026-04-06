@@ -19,7 +19,7 @@ export function SettingsSectionHeader({
       <div className="flex items-center gap-2">
         <Icon className="size-4 text-muted-foreground/50" />
         <div>
-          <h3 className="font-heading text-sm font-semibold">{title}</h3>
+          <h3 className="text-widget-title">{title}</h3>
           <p className="text-[10px] text-muted-foreground/60">{description}</p>
         </div>
       </div>

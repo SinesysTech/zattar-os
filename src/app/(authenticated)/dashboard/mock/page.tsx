@@ -345,7 +345,7 @@ export default function DashboardMockPage() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <AlertCircle className="size-4 text-muted-foreground/50" />
-                <h2 className="font-heading text-sm font-semibold">Requer Atenção</h2>
+                <h2 className="text-widget-title">Requer Atenção</h2>
               </div>
               <span className="text-[10px] text-muted-foreground/60">
                 {MOCK.atencao.length} itens
@@ -378,7 +378,7 @@ export default function DashboardMockPage() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Clock className="size-4 text-muted-foreground/50" />
-                <h2 className="font-heading text-sm font-semibold">Meu Dia</h2>
+                <h2 className="text-widget-title">Meu Dia</h2>
               </div>
               <span className="text-[10px] text-muted-foreground/60">
                 {MOCK.meuDia.filter(d => d.done).length}/{MOCK.meuDia.length}
@@ -434,7 +434,7 @@ export default function DashboardMockPage() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <div className="flex items-center gap-2 shrink-0">
               <TrendingUp className="size-4 text-muted-foreground/50" />
-              <h2 className="font-heading text-sm font-semibold">Panorama</h2>
+              <h2 className="text-widget-title">Panorama</h2>
             </div>
 
             <div className="flex-1 flex items-center gap-6 overflow-x-auto">

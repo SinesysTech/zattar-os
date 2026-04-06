@@ -110,7 +110,7 @@ export function ConfiguracoesSettingsLayout({
                 <div className="flex items-center gap-2 mb-4">
                   <Blocks className="size-4 text-muted-foreground/50" />
                   <div>
-                    <h3 className="font-heading text-sm font-semibold">Zapier</h3>
+                    <h3 className="text-widget-title">Zapier</h3>
                     <p className="text-[10px] text-muted-foreground/60">Em breve</p>
                   </div>
                 </div>
@@ -127,7 +127,7 @@ export function ConfiguracoesSettingsLayout({
                 <div className="flex items-center gap-2 mb-4">
                   <Bot className="size-4 text-muted-foreground/50" />
                   <div>
-                    <h3 className="font-heading text-sm font-semibold">Apps Dify</h3>
+                    <h3 className="text-widget-title">Apps Dify</h3>
                     <p className="text-[10px] text-muted-foreground/60">Chatbots e workflows de automação</p>
                   </div>
                 </div>
@@ -145,7 +145,7 @@ export function ConfiguracoesSettingsLayout({
                 <div className="flex items-center gap-2 mb-4">
                   <Bot className="size-4 text-muted-foreground/50" />
                   <div>
-                    <h3 className="font-heading text-sm font-semibold">Vinculação por Tipo</h3>
+                    <h3 className="text-widget-title">Vinculação por Tipo</h3>
                     <p className="text-[10px] text-muted-foreground/60">Geração automática de peças</p>
                   </div>
                 </div>
