@@ -2,6 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { XCircle, AlertTriangle, Clock, Wifi } from 'lucide-react';
 
 interface ErroCaptura {
@@ -99,10 +100,10 @@ function formatarFiltro(filtro: string): string {
 
 function IconeErro({ tipo }: { tipo: ErroCaptura['tipo'] }) {
   switch (tipo) {
-    case 'timeout': return <Clock className="h-3.5 w-3.5 text-orange-500 shrink-0" />;
-    case 'auth': return <AlertTriangle className="h-3.5 w-3.5 text-red-500 shrink-0" />;
-    case 'network': return <Wifi className="h-3.5 w-3.5 text-yellow-500 shrink-0" />;
-    default: return <XCircle className="h-3.5 w-3.5 text-red-500 shrink-0" />;
+    case 'timeout': return <Clock className="h-3.5 w-3.5 text-warning shrink-0" />;
+    case 'auth': return <AlertTriangle className="h-3.5 w-3.5 text-destructive shrink-0" />;
+    case 'network': return <Wifi className="h-3.5 w-3.5 text-warning shrink-0" />;
+    default: return <XCircle className="h-3.5 w-3.5 text-destructive shrink-0" />;
   }
 }
 
@@ -130,17 +131,17 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
           <div className="flex flex-wrap gap-2">
             <Badge variant="destructive">{errosParsed.length} erro{errosParsed.length !== 1 ? 's' : ''}</Badge>
             {contagemPorTipo.timeout && (
-              <Badge variant="outline" className="border-orange-300 text-orange-700 dark:text-orange-400">
+              <Badge variant={getSemanticBadgeVariant('error_type', 'timeout')}>
                 <Clock className="mr-1 h-3 w-3" /> {contagemPorTipo.timeout} timeout{contagemPorTipo.timeout !== 1 ? 's' : ''}
               </Badge>
             )}
             {contagemPorTipo.auth && (
-              <Badge variant="outline" className="border-red-300 text-red-700 dark:text-red-400">
+              <Badge variant={getSemanticBadgeVariant('error_type', 'auth')}>
                 <AlertTriangle className="mr-1 h-3 w-3" /> {contagemPorTipo.auth} autenticacao
               </Badge>
             )}
             {contagemPorTipo.network && (
-              <Badge variant="outline" className="border-yellow-300 text-yellow-700 dark:text-yellow-400">
+              <Badge variant={getSemanticBadgeVariant('error_type', 'network')}>
                 <Wifi className="mr-1 h-3 w-3" /> {contagemPorTipo.network} rede
               </Badge>
             )}

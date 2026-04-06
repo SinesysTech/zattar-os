@@ -526,7 +526,7 @@ export default function ContaPagarDetalhesPage() {
               <span className="block mt-2 font-medium text-foreground">
                 {contaPagar.descricao} - {formatarValor(contaPagar.valor)}
               </span>
-              <span className="block mt-2 text-orange-600">
+              <span className="block mt-2 text-warning">
                 A conta será marcada como cancelada mas permanecerá no histórico.
               </span>
             </AlertDialogDescription>

@@ -238,9 +238,10 @@ export async function buscarExpedientesDetalhados(
   const sessenta = new Date(hoje);
   sessenta.setDate(sessenta.getDate() - 60);
 
+  // expedientes_com_origem NÃO tem coluna resultado_decisao
   let query = supabase
     .from('expedientes_com_origem')
-    .select('id, data_prazo_legal_parte, baixado_em, origem, resultado_decisao, created_at')
+    .select('id, data_prazo_legal_parte, baixado_em, origem, created_at')
     .gte('created_at', sessenta.toISOString());
 
   if (responsavelId) {
@@ -285,21 +286,8 @@ export async function buscarExpedientesDetalhados(
   }));
 
   // --- Resultado das decisões ---
-  const RESULTADO_COLORS: Record<string, string> = {
-    'Favorável': 'hsl(142 71% 45%)',
-    'Parc. Favorável': 'hsl(35 95% 58%)',
-    'Desfavorável': 'hsl(var(--destructive))',
-  };
-  const resultadoMap = new Map<string, number>();
-  expedientes.filter((e) => e.baixado_em && e.resultado_decisao).forEach((e) => {
-    const res = e.resultado_decisao || 'Outros';
-    resultadoMap.set(res, (resultadoMap.get(res) || 0) + 1);
-  });
-  const resultadoDecisao = Array.from(resultadoMap.entries()).map(([resultado, count]) => ({
-    resultado,
-    count,
-    color: RESULTADO_COLORS[resultado] || 'hsl(215 14% 60%)',
-  }));
+  // resultado_decisao não existe na view — retornar vazio
+  const resultadoDecisao: { resultado: string; count: number; color: string }[] = [];
 
   // --- Volume semanal (semana atual) ---
   const diasLabel = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'];

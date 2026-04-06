@@ -8,26 +8,27 @@
 import { createClient } from '@/lib/supabase/server';
 import type { ContratosResumo } from '../domain';
 
-// Cores padrão para distribuição por status
+// Cores para gráficos — valores oklch alinhados aos tokens do tema (globals.css)
+// Nota: SVG stroke/fill não resolve var(), então usamos valores literais.
 const STATUS_COLORS: Record<string, string> = {
-  'Em Contratação': 'hsl(220 70% 60%)',
-  'Contratado': 'hsl(var(--primary))',
-  'Distribuído': 'hsl(142 60% 45%)',
-  'Desistência': 'hsl(var(--destructive) / 0.7)',
-  'Encerrado': 'hsl(215 14% 60%)',
+  'Em Contratação': 'oklch(0.55 0.18 250)',   /* --info */
+  'Contratado': 'oklch(0.48 0.26 281)',        /* --primary */
+  'Distribuído': 'oklch(0.55 0.18 145)',       /* --success */
+  'Desistência': 'oklch(0.55 0.22 25 / 0.7)', /* --destructive @ 70% */
+  'Encerrado': 'oklch(0.42 0.01 281)',         /* --muted-foreground */
 };
 
 const PARCELA_COLORS: Record<string, string> = {
-  'Pagas': 'hsl(142 60% 45%)',
-  'Pendentes': 'hsl(var(--warning))',
-  'Atrasadas': 'hsl(var(--destructive))',
+  'Pagas': 'oklch(0.55 0.18 145)',       /* --success */
+  'Pendentes': 'oklch(0.60 0.18 75)',    /* --warning */
+  'Atrasadas': 'oklch(0.55 0.22 25)',    /* --destructive */
 };
 
 const TREEMAP_COLORS: Record<string, string> = {
-  'Acordos Trabalhistas': 'hsl(var(--primary) / 0.70)',
-  'Condenações': 'hsl(var(--destructive) / 0.65)',
-  'Custas Processuais': 'hsl(var(--warning) / 0.65)',
-  'Honorários Periciais': 'hsl(var(--primary) / 0.35)',
+  'Acordos Trabalhistas': 'oklch(0.48 0.26 281 / 0.70)', /* --primary @ 70% */
+  'Condenações': 'oklch(0.55 0.22 25 / 0.65)',           /* --destructive @ 65% */
+  'Custas Processuais': 'oklch(0.60 0.18 75 / 0.65)',    /* --warning @ 65% */
+  'Honorários Periciais': 'oklch(0.48 0.26 281 / 0.35)', /* --primary @ 35% */
 };
 
 /**
@@ -38,9 +39,10 @@ export async function buscarContratosResumo(): Promise<ContratosResumo> {
 
   try {
     // Buscar contratos com suas informações básicas
+    // contratos NÃO tem coluna valor_causa
     const { data: contratos, error } = await supabase
       .from('contratos')
-      .select('id, status, tipo_contrato, tipo_cobranca, valor_causa, created_at');
+      .select('id, status, tipo_contrato, tipo_cobranca, created_at');
 
     if (error) {
       console.error('[Dashboard] Erro ao buscar contratos:', error);
@@ -58,7 +60,7 @@ export async function buscarContratosResumo(): Promise<ContratosResumo> {
     const porStatus = Array.from(statusMap.entries()).map(([status, count]) => ({
       status,
       count,
-      color: STATUS_COLORS[status] || 'hsl(215 14% 60%)',
+      color: STATUS_COLORS[status] || 'oklch(0.42 0.01 281)' /* --muted-foreground */,
     }));
 
     // --- Distribuição por tipo ---
@@ -74,8 +76,8 @@ export async function buscarContratosResumo(): Promise<ContratosResumo> {
     // --- Modelo de cobrança ---
     const proLabore = data.filter((c) => c.tipo_cobranca === 'pro_labore' || c.tipo_cobranca === 'mensalidade');
     const proExito = data.filter((c) => c.tipo_cobranca === 'pro_exito' || c.tipo_cobranca === 'exito');
-    const proLaboreFaturado = proLabore.reduce((s, c) => s + (c.valor_causa || 0), 0);
-    const proExitoPotencial = proExito.reduce((s, c) => s + (c.valor_causa || 0), 0);
+    const proLaboreFaturado = 0; // valor_causa não existe na tabela contratos
+    const proExitoPotencial = 0;
 
     // --- Score contratual (heurística simples) ---
     const totalContratos = data.length;

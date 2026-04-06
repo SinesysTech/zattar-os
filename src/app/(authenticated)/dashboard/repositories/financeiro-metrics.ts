@@ -86,7 +86,7 @@ export async function buscarFinanceiroDetalhado(
   // Buscar lançamentos dos últimos 12 meses
   const { data: lancamentos, error } = await supabase
     .from('lancamentos_financeiros')
-    .select('id, tipo, valor, data_vencimento, data_pagamento, categoria, status')
+    .select('id, tipo, valor, data_vencimento, data_efetivacao, categoria, status')
     .gte('data_vencimento', dozeAtras.toISOString());
 
   if (error) {

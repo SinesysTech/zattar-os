@@ -154,10 +154,12 @@ export async function buscarProcessosDetalhados(
 }> {
   const supabase = await createClient();
 
-  // Buscar todos os processos com data de distribuição e área jurídica
+  // Buscar todos os processos (colunas que existem no schema)
+  // acervo NÃO tem: status_acervo, area_juridica, data_distribuicao
+  // Usa: origem (para status), classe_judicial (para segmento), data_autuacao (para aging)
   let query = supabase
     .from('acervo')
-    .select('numero_processo, status_acervo, area_juridica, data_distribuicao, origem, created_at')
+    .select('numero_processo, classe_judicial, data_autuacao, origem, created_at')
     .not('numero_processo', 'is', null)
     .neq('numero_processo', '');
 
@@ -183,15 +185,11 @@ export async function buscarProcessosDetalhados(
   });
   const unicos = Array.from(porNumero.values());
 
-  // --- Distribuição por status ---
+  // --- Distribuição por status (derivada de `origem`) ---
   const statusMap = new Map<string, number>();
   unicos.forEach((p) => {
     const origem = p.origem || 'acervo_geral';
-    let statusLabel: string;
-    if (origem === 'arquivado') statusLabel = 'Arquivados';
-    else if (p.status_acervo === 'suspenso') statusLabel = 'Suspensos';
-    else if (p.status_acervo === 'recurso' || p.status_acervo === 'em_recurso') statusLabel = 'Em Recurso';
-    else statusLabel = 'Ativos';
+    const statusLabel = origem === 'arquivado' ? 'Arquivados' : 'Ativos';
     statusMap.set(statusLabel, (statusMap.get(statusLabel) || 0) + 1);
   });
   const porStatus = Array.from(statusMap.entries()).map(([status, count]) => ({
@@ -200,11 +198,17 @@ export async function buscarProcessosDetalhados(
     color: STATUS_COLORS[status] || 'hsl(215 14% 60%)',
   }));
 
-  // --- Distribuição por segmento (área jurídica) ---
+  // --- Distribuição por segmento (derivada de classe_judicial) ---
   const segmentoMap = new Map<string, number>();
   unicos.forEach((p) => {
-    const area = p.area_juridica || 'Outros';
-    const label = area.charAt(0).toUpperCase() + area.slice(1).toLowerCase();
+    const classe = (p.classe_judicial || '').toLowerCase();
+    let label: string;
+    if (classe.includes('trabalhista') || classe.includes('reclamação')) label = 'Trabalhista';
+    else if (classe.includes('cível') || classe.includes('cobrança') || classe.includes('indenizat')) label = 'Cível';
+    else if (classe.includes('previdenciário') || classe.includes('benefício')) label = 'Previdenciário';
+    else if (classe.includes('penal') || classe.includes('criminal')) label = 'Criminal';
+    else if (classe) label = 'Outros';
+    else label = 'Não classificado';
     segmentoMap.set(label, (segmentoMap.get(label) || 0) + 1);
   });
   const porSegmento = Array.from(segmentoMap.entries())
@@ -219,7 +223,7 @@ export async function buscarProcessosDetalhados(
   const agora = new Date();
   const agingMap = new Map<string, number>();
   unicos.forEach((p) => {
-    const dataRef = p.data_distribuicao || p.created_at;
+    const dataRef = p.data_autuacao || p.created_at;
     if (!dataRef) return;
     const meses = Math.floor((agora.getTime() - new Date(dataRef).getTime()) / (1000 * 60 * 60 * 24 * 30));
     let faixa: string;

@@ -50,22 +50,22 @@ function AlertaCard({
 }) {
   const variantStyles = {
     danger: {
-      bg: 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800',
-      icon: 'text-red-600 dark:text-red-400',
-      text: 'text-red-900 dark:text-red-100',
-      value: 'text-red-700 dark:text-red-300',
+      bg: 'bg-destructive/5 border-destructive/20',
+      icon: 'text-destructive',
+      text: 'text-destructive',
+      value: 'text-destructive',
     },
     warning: {
-      bg: 'bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800',
-      icon: 'text-orange-600 dark:text-orange-400',
-      text: 'text-orange-900 dark:text-orange-100',
-      value: 'text-orange-700 dark:text-orange-300',
+      bg: 'bg-warning/5 border-warning/20',
+      icon: 'text-warning',
+      text: 'text-warning',
+      value: 'text-warning',
     },
     info: {
-      bg: 'bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800',
-      icon: 'text-blue-600 dark:text-blue-400',
-      text: 'text-blue-900 dark:text-blue-100',
-      value: 'text-blue-700 dark:text-blue-300',
+      bg: 'bg-info/5 border-info/20',
+      icon: 'text-info',
+      text: 'text-info',
+      value: 'text-info',
     },
     muted: {
       bg: 'bg-muted/50 border-border',

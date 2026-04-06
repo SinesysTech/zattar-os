@@ -195,10 +195,11 @@ export async function buscarAudienciasDetalhadas(
   const dozeAtras = new Date();
   dozeAtras.setMonth(dozeAtras.getMonth() - 12);
 
+  // audiencias NÃO tem coluna `resultado` — usar `status` para determinar estado
   let query = supabase
     .from('audiencias')
     .select(`
-      id, data_inicio, hora_inicio, designada, modalidade, resultado,
+      id, data_inicio, hora_inicio, designada, modalidade, status,
       tipo_audiencia:tipo_audiencia_id (descricao)
     `)
     .gte('data_inicio', dozeAtras.toISOString());
@@ -257,8 +258,8 @@ export async function buscarAudienciasDetalhadas(
     statusMensal.push({
       mes: mesesLabel[mes],
       marcadas: doMes.length,
-      realizadas: doMes.filter((a) => a.resultado && a.resultado !== 'cancelada' && a.resultado !== 'adiada').length,
-      canceladas: doMes.filter((a) => a.resultado === 'cancelada' || a.resultado === 'adiada').length,
+      realizadas: doMes.filter((a) => a.status && a.status !== 'cancelada' && a.status !== 'adiada').length,
+      canceladas: doMes.filter((a) => a.status === 'cancelada' || a.status === 'adiada').length,
     });
   }
 
@@ -314,7 +315,7 @@ export async function buscarAudienciasDetalhadas(
   });
 
   // --- Métricas derivadas ---
-  const realizadas = audiencias.filter((a) => a.resultado && a.resultado !== 'cancelada' && a.resultado !== 'adiada');
+  const realizadas = audiencias.filter((a) => a.status && a.status !== 'cancelada' && a.status !== 'adiada');
   const taxaComparecimento = audiencias.length > 0
     ? Math.round((realizadas.length / audiencias.length) * 100)
     : 0;

@@ -21,15 +21,15 @@ function getOnlineStatusColor(status: string): string {
   const variant = getSemanticBadgeVariant('online_status', status);
 
   const colorMap: Record<BadgeVisualVariant, string> = {
-    success: 'text-green-500',
-    warning: 'text-orange-500',
+    success: 'text-success',
+    warning: 'text-warning',
     neutral: 'text-muted-foreground',
-    destructive: 'text-red-500',
-    info: 'text-blue-500',
+    destructive: 'text-destructive',
+    info: 'text-info',
     default: 'text-muted-foreground',
     secondary: 'text-muted-foreground',
     outline: 'text-muted-foreground',
-    accent: 'text-purple-500',
+    accent: 'text-primary',
   };
 
   return colorMap[variant] || 'text-muted-foreground';

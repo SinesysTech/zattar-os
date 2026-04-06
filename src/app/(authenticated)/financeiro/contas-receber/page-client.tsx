@@ -160,7 +160,7 @@ function ContasReceberActions({
               Editar
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onCancelar(conta)} className="text-orange-600">
+            <DropdownMenuItem onClick={() => onCancelar(conta)} className="text-warning">
               <XCircle className="mr-2 h-4 w-4" />
               Cancelar
             </DropdownMenuItem>
@@ -258,7 +258,7 @@ function criarColunas(
       cell: ({ row }) => {
         const valor = row.getValue('valor') as number;
         return (
-          <div className="min-h-10 flex items-center justify-end font-mono text-sm font-medium text-green-600">
+          <div className="min-h-10 flex items-center justify-end font-mono text-sm font-medium text-success">
             {formatarValor(valor)}
           </div>
         );
@@ -716,7 +716,7 @@ export default function ContasReceberPage() {
                   {selectedConta.descricao} - {formatarValor(selectedConta.valor)}
                 </span>
               )}
-              <span className="block mt-2 text-orange-600">
+              <span className="block mt-2 text-warning">
                 A conta será marcada como cancelada mas permanecerá no histórico.
               </span>
             </AlertDialogDescription>
