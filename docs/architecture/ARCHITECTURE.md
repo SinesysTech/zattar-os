@@ -43,27 +43,26 @@ O Sinesys é um sistema de gestão jurídica desenvolvido com arquitetura AI-Fir
 ```
 zattar-os/
 ├── src/
-│   ├── app/                    # App Router (Next.js 16)
-│   │   ├── (auth)/             # Rotas autenticadas
+│   ├── app/                    # App Router (Next.js 16) + FSD Colocated
+│   │   ├── (auth)/             # Rotas de login
 │   │   ├── api/                # API Routes
 │   │   │   └── mcp/            # Endpoint MCP SSE
+│   │   ├── (authenticated)/    # Feature-Sliced Design (37 módulos com rotas)
+│   │   │   ├── processos/      # Gestão de processos e rota /processos
+│   │   │   │   ├── actions/        # Server Actions
+│   │   │   │   ├── components/     # Componentes React do módulo
+│   │   │   │   ├── domain.ts       # Zod schemas, regras e tipos puros
+│   │   │   │   ├── service.ts      # Casos de Uso / Lógica de negócio
+│   │   │   │   ├── repository.ts   # Acesso a dados BD
+│   │   │   │   ├── RULES.md        # Documento com contexto cognitivo IA
+│   │   │   │   ├── index.ts        # Ponto obrigatório de exportações (Barrel)
+│   │   │   │   └── page.tsx        # UI (Next route)
+│   │   │   ├── partes/
+│   │   │   ├── audiencias/
+│   │   │   ├── documentos/
+│   │   │   ├── financeiro/
+│   │   │   └── ... (32 outros módulos)
 │   │   └── layout.tsx
-│   │
-│   ├── features/               # Feature-Sliced Design (37 módulos)
-│   │   ├── processos/          # Gestão de processos
-│   │   │   ├── actions/        # Server Actions
-│   │   │   ├── components/     # Componentes React
-│   │   │   ├── domain.ts       # Entidades + Zod schemas
-│   │   │   ├── service.ts      # Lógica de negócio
-│   │   │   ├── repository.ts   # Acesso a dados
-│   │   │   ├── RULES.md        # Regras de negócio (IA context)
-│   │   │   └── index.ts        # Barrel exports
-│   │   ├── partes/
-│   │   ├── audiencias/
-│   │   ├── documentos/
-│   │   ├── financeiro/
-│   │   ├── busca/              # Busca semântica
-│   │   └── ... (17 outros módulos)
 │   │
 │   ├── lib/                    # Bibliotecas compartilhadas
 │   │   ├── ai/                 # Camada de IA/RAG

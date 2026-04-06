@@ -157,12 +157,12 @@ Sinesys is a legal management system (gestão jurídica) using **Feature-Sliced 
 
 ### Directory Structure
 
-Modules are **colocated with their routes**. There is no separate `src/features/` directory.
+Modules are **colocated with their routes**.
 
 ```
 src/
 ├── app/                      # Next.js App Router
-│   ├── app/                  # Dashboard routes + colocated feature modules
+│   ├── (authenticated)/      # Dashboard routes + colocated feature modules
 │   │   ├── layout.tsx        # Layout with AppSidebar (SidebarProvider)
 │   │   ├── processos/        # Route + full feature module (domain, service, repo, actions)
 │   │   ├── partes/           # Route + full feature module
@@ -343,25 +343,24 @@ UI (Plate) → POST /api/plate/ai { prompt: "..." }
 ### From CLAUDE.md & README.md
 
 1. **Colocation architecture is mandatory**
-   - All new feature modules go into `src/app/app/{modulo}/` (colocated with routes)
+   - All new feature modules go into `src/app/(authenticated)/{modulo}/` (colocated with routes)
    - Infrastructure with no route goes into `src/lib/`
-   - Legacy `src/features/` directory has been removed
-   - Imports: `@/app/app/{modulo}` (barrel), `@/lib/{service}`, `@/components/{type}`
+   - Imports: `@/app/(authenticated)/{modulo}` (barrel), `@/lib/{service}`, `@/components/{type}`
 
 2. **No direct imports from module internals**
    ```typescript
    // ✅ Correct - use barrel exports
-   import { ClientesTable, actionListarClientes } from "@/app/app/partes";
+   import { ClientesTable, actionListarClientes } from "@/app/(authenticated)/partes";
 
    // ❌ Wrong - no deep imports
-   import { ClientesTable } from "@/app/app/partes/components/clientes/clientes-table";
+   import { ClientesTable } from "@/app/(authenticated)/partes/components/clientes/clientes-table";
    ```
 
 3. **Server Actions pattern**
    - Always use `authenticatedAction` wrapper from `@/lib/safe-action`
    - Return `{ success: boolean; data?: T; error?: string }`
    - Prefix with `action`: `actionCriar`, `actionAtualizar`, `actionListar`
-   - Place in `src/app/app/{modulo}/actions/{entity}-actions.ts`
+   - Place in `src/app/(authenticated)/{modulo}/actions/{entity}-actions.ts`
 
 4. **Validation with Zod**
    - Define schemas in `domain.ts`
@@ -481,7 +480,7 @@ Key principles [inferred from file names]:
 
 1. **Server Action (recommended)**:
    ```typescript
-   // src/features/{modulo}/actions/{entity}-actions.ts
+   // src/app/(authenticated)/{modulo}/actions/{entity}-actions.ts
    "use server";
    import { authenticatedAction } from "@/lib/safe-action";
    import { revalidatePath } from "next/cache";

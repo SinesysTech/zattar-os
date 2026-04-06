@@ -1,246 +1,60 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Este documento provê diretivas diretas e definitivas para ferramentas baseadas em CLI como o Claude Code ou Gemini.
 
-## Project Overview
+## Visão Geral do Projeto
 
-Sinesys (Zattar OS) is a legal management system (gestao juridica) for a Brazilian law firm. The codebase is primarily in Portuguese (variable names, business terms, UI labels).
+**Sinesys (Zattar OS)** — Sistema corporativo para firmas legais. A base inteira usa linguagem de negócios em PT-BR.
+**Stack**: Next.js 16 (App Router + Turbopack), React 19, TypeScript 5, Supabase (RLS + pgvector), Redis, Tailwind CSS 4, shadcn/ui.
 
-**Stack**: Next.js 16 (App Router, Turbopack), React 19, TypeScript 5 (strict), Supabase (PostgreSQL + RLS + pgvector), Redis (optional cache), Tailwind CSS 4, shadcn/ui (new-york style)
-
-**Node**: >= 22.0.0, npm >= 10
-
-## Commands
+## Comandos Chave
 
 ```bash
-# Development
-npm run dev                          # Turbopack dev server (default)
-npm run dev:webpack                  # Webpack dev server (debugging)
-npm run type-check                   # TypeScript validation (run before commits)
-
-# Build
-npm run build                        # Standard build
-npm run build:ci                     # CI/Docker build (higher heap, 6GB)
-
-# Testing
-npm test                             # All tests (Jest 30)
-npm run test:watch                   # Watch mode
-npm run test:unit                    # Unit tests only
-npm run test:integration             # Integration tests only
-npm run test:e2e                     # Playwright E2E
-npm run test:coverage                # Coverage report (HTML)
-npx jest path/to/file.test.ts        # Single test file
-npm run test:actions:processos       # Test specific module (also: partes, financeiro, etc.)
-
-# Linting & Architecture Validation
-npm run lint                         # ESLint
-npm run check:architecture           # FSD import validation (runs before build)
-npm run validate:exports             # Barrel export validation
-
-# AI & MCP
-npm run mcp:check                    # Verify registered MCP tools
-npm run ai:reindex                   # Reindex all documents for RAG
+npm run dev                          # Servidor local via Turbopack
+npm run type-check                   # Verificação de tipagem rígida
+npm run build:ci                     # Build CI com limite de RAM alto
+npm test                             # Todos os testes de unidade
+npm run test:e2e                     # Scrappers e fluxos end-to-end
+npm run check:architecture             # Valida violações arquiteturais do FSD
+npm run validate:exports             # Valida barreiras
 ```
 
-## Architecture
+## Arquitetura de Módulos (FSD + Colocation)
 
-### Colocation Architecture with Domain-Driven Design (DDD)
+Todos os domínios funcionais do Sinesys residem sob a hierarquia de rotas em `src/app/(authenticated)`.
 
-Modules are colocated with their routes — domain logic lives alongside the page files that consume it. There is no separate `src/features/` directory.
-
-```
+```text
 src/
-├── app/                     # Next.js App Router
-│   ├── app/                 # Main dashboard routes + colocated feature modules
-│   │   ├── {modulo}/        # Each route directory IS the feature module
-│   │   │   ├── page.tsx     # Route entry point
-│   │   │   ├── domain.ts    # Zod schemas, types, business rules
-│   │   │   ├── service.ts   # Use cases, business logic
-│   │   │   ├── repository.ts# Supabase data access
-│   │   │   ├── actions/     # Server Actions
-│   │   │   ├── components/  # Feature-specific React components
-│   │   │   ├── hooks/       # Feature-specific hooks
-│   │   │   ├── RULES.md     # Business rules for AI context
-│   │   │   └── index.ts     # Barrel exports (MANDATORY)
-│   ├── api/                 # API Routes (/api/mcp, /api/plate/ai, etc.)
-│   └── portal/              # Client portal (CPF-based auth)
-├── components/
-│   ├── ui/                  # shadcn/ui primitives
-│   ├── shared/              # Zattar design patterns (DataShell, PageShell, etc.)
-│   └── layout/              # Sidebar, header, providers
-├── lib/                     # Infrastructure + cross-cutting domain
-│   ├── ai/                  # AI/RAG infrastructure
-│   ├── busca/               # Search infrastructure
-│   ├── domain/              # Cross-cutting domain modules (tags, audit, profiles, tasks)
-│   ├── integracoes/         # External integrations (dify, chatwoot, twofauth)
-│   ├── supabase/            # Supabase clients
-│   ├── redis/               # Cache layer
-│   └── ...                  # (auth, mcp, security, etc.)
-├── hooks/                   # Global hooks
-└── types/                   # Shared types (database.types.ts is Supabase-generated)
+├── app/
+│   ├── (authenticated)/         # FSD Area
+│   │   ├── processos/           # Módulo `processos`
+│   │   │   ├── domain.ts        # Tipos/Schemas (Zod)
+│   │   │   ├── service.ts       # Lógica e regras
+│   │   │   ├── repository.ts    # Fetch de Dados
+│   │   │   ├── actions/         # Actions que invocam services (+ safe-action)
+│   │   │   ├── components/      # UI (React) 
+│   │   │   ├── hooks/           # Interação UI/Logic
+│   │   │   ├── RULES.md         # Documento de Contexto
+│   │   │   ├── index.ts         # Exportação autorizada
+│   │   │   └── page.tsx         # Página e Rota Front-End
+├── components/                  # UI Shared, Shadcn, Shells, Layouts
+├── lib/                         # Core infra (Supabase, MCP, redis, AI)
 ```
 
-### Feature Module Structure
+**Regras Absolutas**:
+1. **Nada de Cross-Deep Imports**: Componentes de `processos` não podem importar de `financeiro/components/...`. Exija `import { x } from "@/app/(authenticated)/financeiro"`.
+2. **Uso de Action-Wrapper**: Se for criar Server Actions, embrulhe o método sob `authenticatedAction` (`@/lib/safe-action`).
+3. **Padrões de Shell UI**: Use componentes casca obrigatórios: `PageShell`, `DataShell`, `DialogFormShell` exportados em `@/components/shared`.
 
-Every feature follows **Domain -> Service -> Repository -> Actions**, colocated inside its route directory:
+## Base de Dados (Supabase)
 
-```
-src/app/(authenticated)/{modulo}/
-├── domain.ts            # Zod schemas, types, constants, pure business rules
-├── service.ts           # Use cases, business logic orchestration
-├── repository.ts        # Supabase data access (CRUD, filters)
-├── actions/             # Server Actions (use authenticatedAction wrapper)
-├── components/          # React components grouped by entity
-├── hooks/               # Feature-specific hooks
-├── RULES.md             # Business rules for AI context
-├── index.ts             # Barrel exports (MANDATORY)
-└── page.tsx             # Route entry point
-```
+- Todas as tabelas têm **RLS**. 
+- Os scripts SQL situam-se em `supabase/migrations/`. 
+- `database.types.ts` é autogerado.
 
-**Infrastructure modules** (no route, pure logic) live in `src/lib/`:
-- `src/lib/ai/` — AI/RAG (embeddings, indexing, retrieval)
-- `src/lib/busca/` — Search infrastructure
-- `src/lib/dify/`, `src/lib/chatwoot/`, `src/lib/twofauth/` — External integrations
-- `src/lib/domain/tags/`, `src/lib/domain/audit/`, `src/lib/domain/profiles/`, `src/lib/domain/tasks/` — Cross-cutting domain
+## RAG e Integração LLM Compartilhada
 
-### Data Flow
+- Entidades cruciais ao negócio disparam hooks `after()` do backend que processam e invocam as bibliotecas internas contidas em `src/lib/ai/indexing`.
+- Todas as **Server Actions publicadas** podem ser engajadas como *Ferramentas de IA* (Tools via Model Context Protocol), permitindo que agentes manipulem processos em CLI e na Web UI.
 
-```
-UI (React) -> Server Action (authenticatedAction + Zod validation)
-  -> service.ts (business rules)
-    -> repository.ts (Supabase query)
-      -> after(() => indexarDocumento) (async AI indexing)
-  -> revalidatePath -> return { success, data } | { success: false, error }
-```
-
-### Routing
-
-- `/` — Public website
-- `/app/*` — Dashboard (requires Supabase auth, middleware-enforced)
-- `/portal/*` — Client portal (CPF session cookie)
-- Auto-redirects configured: `/{module}` -> `/app/{module}`
-
-## Key Rules
-
-### Import Constraints (ESLint-enforced)
-
-```typescript
-// CORRECT — use barrel exports
-import { ClientesTable, actionListarClientes } from "@/app/(authenticated)/partes";
-
-// WRONG — no deep imports into module internals
-import { ClientesTable } from "@/app/(authenticated)/partes/components/clientes/clientes-table";
-```
-
-Relative imports within the same module are allowed. Cross-module imports must use the module's barrel export (`index.ts`).
-
-### Server Actions Pattern
-
-- Always use `authenticatedAction` wrapper from `@/lib/safe-action`
-- Naming: `actionCriar`, `actionAtualizar`, `actionListar`, `actionDeletar`
-- Return type: `{ success: boolean; data?: T; error?: string }`
-- Place in `src/app/(authenticated)/{modulo}/actions/{entity}-actions.ts`
-- Validate with Zod schemas defined in `domain.ts`
-
-### UI Components — Mandatory Patterns
-
-| Use Case | Component | Import From |
-|----------|-----------|-------------|
-| Page layout | `PageShell` | `@/components/shared/page-shell` |
-| Data table page | `DataShell` + `DataTable` | `@/components/shared/data-shell` |
-| Table toolbar | `DataTableToolbar` | `@/components/shared/data-shell` |
-| Pagination | `DataPagination` | `@/components/shared/data-shell` |
-| Column header | `DataTableColumnHeader` | `@/components/shared/data-shell` |
-| Form dialog | `DialogFormShell` | `@/components/shared/dialog-form-shell` |
-| Detail panel | `DetailSheet` | `@/components/shared/detail-sheet` |
-| Empty states | `EmptyState` | `@/components/shared/empty-state` |
-
-**Gold standard reference**: `src/app/(authenticated)/partes/components/clientes/clientes-table-wrapper.tsx`
-
-**Full component documentation**: `src/components/shared/AI_INSTRUCTIONS.md`
-
-### DataShell Table Pattern
-
-- Flat layout: toolbar floats above, table has `rounded-md border bg-card`, pagination floats below
-- Server component fetches initial data -> Client wrapper manages state
-- `useDebounce` for search (500ms), reset `pageIndex` on filter/search changes
-- Server-side pagination: `pageIndex` is 0-based (UI), API uses 1-based
-- Columns as factory function: `getColumns(onEdit, onDelete)` injects callbacks
-- All toolbar elements: `h-9` (36px height)
-- `actionButton` goes on `DataShell`, NOT on `DataTableToolbar`
-
-### Badge Colors — NEVER Hardcode
-
-```typescript
-// CORRECT
-import { getSemanticBadgeVariant } from '@/lib/design-system';
-<Badge variant={getSemanticBadgeVariant('status', 'ATIVO')}>Ativo</Badge>
-
-// WRONG — never use inline color classes on badges
-<Badge className="bg-blue-100 text-blue-800">TRT1</Badge>
-```
-
-Categories: `tribunal`, `status`, `grau`, `parte`, `prioridade`, `tipo`
-
-### Naming Conventions
-
-| Context | Convention | Example |
-|---------|-----------|---------|
-| Files | kebab-case | `cliente-form.tsx` |
-| Components | PascalCase | `ClienteForm` |
-| Functions | camelCase | `criarCliente` |
-| Types | PascalCase | `Cliente`, `CriarClienteParams` |
-| Constants | UPPER_SNAKE_CASE | `STATUS_LABELS` |
-| SQL | snake_case | `table_name`, `column_name` |
-
-### Path Aliases
-
-```
-@/* -> ./src/*
-@/components/* -> ./src/components/*
-@/lib/* -> ./src/lib/*
-@/hooks/* -> ./src/hooks/*
-@/types/* -> ./src/types/*
-```
-
-## Database (Supabase)
-
-- All tables require RLS (Row-Level Security) policies
-- Migrations in `supabase/migrations/` named `YYYYMMDDHHmmss_description.sql`
-- SQL style: lowercase keywords, snake_case identifiers, plural table names
-- `database.types.ts` is auto-generated — do not edit manually
-- Use `createClient()` from `@/lib/supabase/server` for server-side queries
-
-## Testing
-
-- **Framework**: Jest 30 + Testing Library + Playwright
-- **Coverage thresholds**: 80% global, 90% for domain.ts/service.ts, 95% for lib/formatters/utils
-- Unit tests: `src/**/__tests__/unit/`
-- Integration tests: `src/**/__tests__/integration/`
-- Test by module: `npm run test:actions:processos`, `npm run test:actions:partes`, etc.
-
-## Key Subsystems
-
-- **Processos**: Legal case management with PJE/TRT tribunal integration via Playwright
-- **Partes**: Clients, opposing parties, representatives (CPF/CNPJ validation)
-- **Documentos**: Collaborative editor (Plate + Yjs) with AI-powered editing
-- **Captura**: Automated data capture from tribunals (PJE, TRT, Comunica CNJ drivers)
-- **Financeiro**: Dashboard, accounts payable/receivable, OFX/CSV bank reconciliation
-- **AI/RAG**: OpenAI embeddings -> pgvector storage -> semantic search
-- **MCP**: Server Actions exposed as AI tools via SSE endpoint at `/api/mcp`
-
-## Environment Variables
-
-Required: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`, `SUPABASE_SECRET_KEY`, `SERVICE_API_KEY`, `CRON_SECRET`
-
-AI/RAG: `OPENAI_API_KEY`, `OPENAI_EMBEDDING_MODEL` (default: text-embedding-3-small)
-
-Optional: Redis (`ENABLE_REDIS_CACHE`, `REDIS_URL`), Dyte, 2FAuth, Storage (B2), Browser service, MCP
-
-Full list in `.env.example`.
-
-## Extended Documentation
-
-- `docs/architecture/AGENTS.md` — Full agent-friendly reference with data flows, troubleshooting, and development hints
-- `src/components/shared/AI_INSTRUCTIONS.md` — Complete UI component patterns with code examples
-- `src/app/(authenticated)/*/RULES.md` — Business rules per module (processos, partes, documentos, financeiro, contratos, notificacoes, obrigacoes, audiencias)
+*(Para o manual estendido de comportamento do software, diagramas SSE/MCP e troubleshooting, leia `docs/architecture/AGENTS.md` e `docs/architecture/ARCHITECTURE.md` em profundidade).*
