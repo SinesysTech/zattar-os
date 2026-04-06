@@ -576,18 +576,18 @@ export function InsightBanner({
 export function TabToggle({
   tabs,
   active,
-  onChange,
+  onChangeAction,
 }: {
   tabs: { id: string; label: string }[];
   active: string;
-  onChange: (id: string) => void;
+  onChangeAction: (id: string) => void;
 }) {
   return (
     <div className="flex gap-0.5 p-0.5 rounded-lg bg-border/10">
       {tabs.map((tab) => (
         <button
           key={tab.id}
-          onClick={() => onChange(tab.id)}
+          onClick={() => onChangeAction(tab.id)}
           className={`
             px-2.5 py-1 rounded-md text-[10px] font-medium transition-all duration-200 cursor-pointer
             ${active === tab.id

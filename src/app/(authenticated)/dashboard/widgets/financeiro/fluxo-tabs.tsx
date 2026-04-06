@@ -84,7 +84,7 @@ export function WidgetFluxoComTabs() {
         <TabToggle
           tabs={TAB_OPTIONS}
           active={tab}
-          onChange={setTab}
+          onChangeAction={setTab}
         />
       }
     >

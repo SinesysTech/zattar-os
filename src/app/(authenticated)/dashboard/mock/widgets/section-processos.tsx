@@ -522,7 +522,7 @@ export function WidgetProcessosComTabs() {
         <TabToggle
           tabs={TAB_OPTIONS}
           active={activeTab}
-          onChange={setActiveTab}
+          onChangeAction={setActiveTab}
         />
       }
     >
