@@ -95,8 +95,8 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   // Sync view mode with URL
   useEffect(() => {
     const newView = ROUTE_TO_VIEW[pathname];
-    if (newView && newView !== viewMode) setViewMode(newView);
-  }, [pathname, viewMode]);
+    if (newView) setViewMode(newView);
+  }, [pathname]);
 
   // Data fetching
   const { usuarios } = useUsuarios();
@@ -179,12 +179,13 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   // ─── Dynamic subtitle ─────────────────────────────────────────────────────────
 
   const subtitle = useMemo(() => {
+    if (isLoading) return 'Carregando...';
     const p = pendentes.length;
     const v = vencidos.length;
     const pendLabel = `${p} pendente${p !== 1 ? 's' : ''}`;
     const vencLabel = `${v} vencido${v !== 1 ? 's' : ''}`;
     return `${pendLabel} · ${vencLabel}`;
-  }, [pendentes.length, vencidos.length]);
+  }, [isLoading, pendentes.length, vencidos.length]);
 
   // ─── Insight banners ─────────────────────────────────────────────────────────
 
@@ -197,7 +198,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       {/* 1. Header */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-heading font-semibold tracking-tight text-foreground">
+          <h1 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
             Expedientes
           </h1>
           <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>

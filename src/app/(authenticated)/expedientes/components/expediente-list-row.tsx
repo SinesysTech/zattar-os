@@ -67,7 +67,7 @@ export function ExpedienteListRow({
     <GlassPanel 
       depth={1} 
       className={cn(
-        "group flex flex-col sm:flex-row sm:items-center gap-4 p-4 transition-colors hover:border-primary/20 hover:bg-primary/2",
+        "group flex flex-col sm:flex-row sm:items-center gap-4 p-4 transition-colors hover:border-primary/20 hover:bg-primary/4",
         expediente.baixadoEm && "opacity-60"
       )}
     >
@@ -109,7 +109,7 @@ export function ExpedienteListRow({
           <div className="mt-2 flex items-center gap-2 sm:hidden">
             <span className={cn(
               "text-[11px] font-medium px-1.5 py-0.5 rounded-md",
-              isUrgenteCor ? "bg-red-500/10 text-red-600 dark:text-red-400" : "bg-muted text-muted-foreground"
+              isUrgenteCor ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"
             )}>
               {prazoLabel}
             </span>
@@ -121,7 +121,7 @@ export function ExpedienteListRow({
       <div className="hidden sm:flex flex-col items-end gap-1 shrink-0 min-w-30">
         <span className={cn(
           "text-xs font-medium px-2 py-0.5 rounded-md",
-          isUrgenteCor ? "bg-red-500/10 text-red-600 dark:text-red-400" : "bg-muted text-muted-foreground"
+          isUrgenteCor ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"
         )}>
           {prazoLabel}
         </span>
@@ -129,7 +129,7 @@ export function ExpedienteListRow({
           {responsavelNome ? (
             <span className="truncate max-w-30">{responsavelNome}</span>
           ) : (
-            <span className="italic text-yellow-600/80 dark:text-yellow-500/80">Sem responsável</span>
+            <span className="italic text-warning/70">Sem responsável</span>
           )}
         </div>
       </div>
@@ -139,7 +139,7 @@ export function ExpedienteListRow({
         <Button 
           variant="ghost" 
           size="sm" 
-          className="h-8 px-2 text-xs text-green-600 hover:text-green-700 hover:bg-green-500/10 dark:text-green-500"
+          className="h-8 px-2 text-xs text-success/80 hover:text-success hover:bg-success/10"
           onClick={() => onBaixar?.(expediente.id)}
         >
           <CheckCircle2 className="size-3.5 mr-1" />
@@ -150,7 +150,7 @@ export function ExpedienteListRow({
           size="icon" 
           className="size-8 text-primary hover:text-primary hover:bg-primary/10"
           onClick={() => onAtribuir?.(expediente.id)}
-          title="Atribuir responsável"
+          aria-label="Atribuir responsável"
         >
           <UserPlus className="size-3.5" />
         </Button>
@@ -160,7 +160,7 @@ export function ExpedienteListRow({
             size="icon" 
             className="size-8 text-muted-foreground hover:text-foreground"
             onClick={() => onVisualizar?.(expediente.id)}
-            title="Visualizar PDF"
+            aria-label="Visualizar PDF"
           >
             <FileSearch className="size-3.5" />
           </Button>

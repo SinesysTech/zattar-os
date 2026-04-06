@@ -276,7 +276,7 @@ export function ExpedientesControlView({
   tiposExpedientesData,
 }: ExpedientesControlViewProps) {
   const { usuarios: usuariosFetched } = useUsuarios({ enabled: !usuariosData });
-  const { tiposExpedientes: tiposFetched } = useTiposExpedientes({ limite: 100, enabled: !tiposExpedientesData });
+  const { tiposExpedientes: tiposFetched } = useTiposExpedientes({ limite: 100 });
 
   const usuarios = usuariosData ?? usuariosFetched;
   const tiposExpedientes = tiposExpedientesData ?? tiposFetched;
@@ -304,7 +304,7 @@ export function ExpedientesControlView({
   const tiposMap = React.useMemo(() => {
     const map = new Map<number, string>();
     tiposExpedientes.forEach((tipo) => {
-      const nome = tipo.tipoExpediente || tipo.tipo_expediente || `Tipo ${tipo.id}`;
+      const nome = tipo.tipoExpediente || ('tipo_expediente' in tipo ? tipo.tipo_expediente : undefined) || `Tipo ${tipo.id}`;
       map.set(tipo.id, nome);
     });
     return map;
