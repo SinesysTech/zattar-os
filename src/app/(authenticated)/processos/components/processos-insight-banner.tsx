@@ -7,7 +7,7 @@ import type { ProcessoStats } from '../service-estatisticas';
 interface ProcessosInsightBannerProps {
   stats: ProcessoStats;
   onFilterSemResponsavel: () => void;
-  onFilterUrgentes: () => void;
+  onFilterComEventos: () => void;
 }
 
 interface BannerConfig {
@@ -24,7 +24,7 @@ const TYPE_STYLES = {
 export function ProcessosInsightBanner({
   stats,
   onFilterSemResponsavel,
-  onFilterUrgentes,
+  onFilterComEventos,
 }: ProcessosInsightBannerProps) {
   const banners: BannerConfig[] = [];
 
@@ -36,11 +36,11 @@ export function ProcessosInsightBanner({
     });
   }
 
-  if (stats.comAudienciaProxima > 0) {
+  if (stats.comEventos > 0) {
     banners.push({
       type: 'alert',
-      message: `${stats.comAudienciaProxima} processo${stats.comAudienciaProxima > 1 ? 's' : ''} com audiência próxima`,
-      onClick: onFilterUrgentes,
+      message: `${stats.comEventos} processo${stats.comEventos > 1 ? 's' : ''} com eventos pendentes`,
+      onClick: onFilterComEventos,
     });
   }
 
