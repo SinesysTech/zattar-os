@@ -88,7 +88,9 @@ export const test = base.extend<CustomFixtures>({
       { name: 'sb-mocked-auth-token', value: base64Session, domain: 'localhost', path: '/' },
       // Supabase sometimes looks for chunk 0
       { name: `${storageKey}.0`, value: base64Session, domain: 'localhost', path: '/' },
-      { name: `${storageKey}.1`, value: '', domain: 'localhost', path: '/' }
+      { name: `${storageKey}.1`, value: '', domain: 'localhost', path: '/' },
+      // Bybass do cookie E2E
+      { name: '__playwright_e2e', value: '1', domain: 'localhost', path: '/' }
     ]);
     
     // Add Supabase LocalStorage mock to prevent Supabase Auth client from throwing AuthSessionMissingError
