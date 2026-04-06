@@ -30,7 +30,7 @@ export interface ProcessosClientProps {
   currentUserId: number;
 }
 
-type ProcessoTab = 'todos' | 'meus' | 'sem_responsavel' | 'urgentes';
+type ProcessoTab = 'todos' | 'meus' | 'sem_responsavel' | 'com_eventos';
 
 const VIEW_OPTIONS: ViewToggleOption[] = [
   { id: 'cards', icon: LayoutGrid, label: 'Cards' },
@@ -85,7 +85,7 @@ export function ProcessosClient({
       case 'sem_responsavel':
         filtered = filtered.filter((p) => !p.responsavelId);
         break;
-      case 'urgentes':
+      case 'com_eventos':
         filtered = filtered.filter((p) => !!p.dataProximaAudiencia);
         break;
     }
@@ -116,7 +116,7 @@ export function ProcessosClient({
     { id: 'todos', label: 'Todos', count: processos.length },
     { id: 'meus', label: 'Meus' },
     { id: 'sem_responsavel', label: 'Sem Resp', count: stats.semResponsavel },
-    { id: 'urgentes', label: 'Urgentes', count: stats.comAudienciaProxima },
+    { id: 'com_eventos', label: 'Com Eventos', count: stats.comEventos },
   ], [processos.length, stats]);
 
   const handleSelectProcesso = useCallback((processo: ProcessoUnificado) => {
@@ -142,7 +142,7 @@ export function ProcessosClient({
       <ProcessosInsightBanner
         stats={stats}
         onFilterSemResponsavel={() => setActiveTab('sem_responsavel')}
-        onFilterUrgentes={() => setActiveTab('urgentes')}
+        onFilterComEventos={() => setActiveTab('com_eventos')}
       />
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
