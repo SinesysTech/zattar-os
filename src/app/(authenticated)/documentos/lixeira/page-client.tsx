@@ -114,21 +114,20 @@ function LoadingState() {
   );
 }
 
-function EmptyState({ onVoltar }: { onVoltar: () => void }) {
+function LixeiraEmptyState({ onVoltar }: { onVoltar: () => void }) {
   return (
-    <div className="flex h-100 items-center justify-center">
-      <div className="text-center">
-        <Trash2 className="mx-auto h-12 w-12 text-muted-foreground" />
-        <h3 className="mt-4 text-lg font-semibold">Lixeira vazia</h3>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Documentos excluídos aparecerão aqui
-        </p>
-        <Button variant="outline" className="mt-4" onClick={onVoltar}>
+    <EmptyState
+      icon={Trash2}
+      title="Lixeira vazia"
+      description="Nenhum documento na lixeira. Documentos excluídos aparecerão aqui."
+      action={
+        <Button variant="outline" onClick={onVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar para Documentos
         </Button>
-      </div>
-    </div>
+      }
+      className="h-100"
+    />
   );
 }
 
@@ -369,7 +368,7 @@ export default function LixeiraClient() {
       {loading ? (
         <LoadingState />
       ) : documentosFiltrados.length === 0 ? (
-        <EmptyState onVoltar={() => router.push('/app/documentos')} />
+        <LixeiraEmptyState onVoltar={() => router.push('/app/documentos')} />
       ) : (
         <div className="space-y-4">
           <AvisoExclusaoCard />
