@@ -124,3 +124,19 @@ export { TimelineMonthGroup } from './components/cockpit/timeline-month-group';
 export { TimelineNowMarker } from './components/cockpit/timeline-now-marker';
 export { TimelinePhaseMarker } from './components/cockpit/timeline-phase-marker';
 export type { TimelineFilterType, FutureTimelineItem, ProcessoPhase } from './components/cockpit/types';
+
+// =============================================================================
+// LISTAGEM GLASS BRIEFING COMPONENTS
+// =============================================================================
+
+// Listagem Glass Briefing components
+export { ProcessosClient } from './processos-client';
+export { ProcessoCard } from './components/processo-card';
+export { ProcessoListRow } from './components/processo-list-row';
+export { ProcessoDetailSheet } from './components/processo-detail-sheet';
+export { ProcessosPulseStrip } from './components/processos-pulse-strip';
+export { ProcessosInsightBanner } from './components/processos-insight-banner';
+
+// Stats
+export { actionObterEstatisticasProcessos } from './actions/estatisticas-actions';
+export type { ProcessoStats } from './service-estatisticas';
