@@ -1,63 +1,47 @@
-import { PageShell } from '@/components/shared/page-shell';
-import { ProcessosTableWrapper } from '@/app/(authenticated)/processos';
-
-import { listarProcessos, buscarUsuariosRelacionados, listarTribunais } from '@/app/(authenticated)/processos';
+import { authenticateRequest } from '@/lib/auth/session';
+import { ProcessosClient } from './processos-client';
+import { listarProcessos, buscarUsuariosRelacionados, listarTribunais } from './service';
+import { obterEstatisticasProcessos } from './service-estatisticas';
 
 interface ProcessosPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function ProcessosPage({ searchParams }: ProcessosPageProps) {
-  const params = await searchParams;
-  const pagina = Number(params?.page) || 1;
-  const limite = Number(params?.limit) || 50;
-  const trtParam = params?.trt;
-  let trt: string | string[] | undefined;
+export default async function ProcessosPage({ searchParams: _ }: ProcessosPageProps) {
+  const session = await authenticateRequest();
 
-  if (Array.isArray(trtParam)) {
-    trt = trtParam.filter(t => t !== 'all');
-  } else if (typeof trtParam === 'string' && trtParam !== 'all') {
-    trt = trtParam.includes(',') ? trtParam.split(',') : trtParam;
-  }
-  const busca = typeof params?.search === 'string' ? params.search : undefined;
-  const origem = typeof params?.origem === 'string' && params.origem !== 'all' ? (params.origem as 'acervo_geral' | 'arquivado') : undefined;
-
-  const result = await listarProcessos({
-    pagina,
-    limite,
-    busca,
-    trt,
-    origem,
-  });
-
-  const [initialDataResult, tribunaisResult] = await Promise.all([
-    Promise.resolve(result),
+  const [processosResult, tribunaisResult, stats] = await Promise.all([
+    listarProcessos({ pagina: 1, limite: 200, unified: true }),
     listarTribunais(),
+    obterEstatisticasProcessos(),
   ]);
 
-  const initialData = initialDataResult.success ? initialDataResult.data.data : [];
-  const initialPagination = initialDataResult.success
-    ? {
-      page: initialDataResult.data.pagination.page,
-      limit: initialDataResult.data.pagination.limit,
-      total: initialDataResult.data.pagination.total,
-      totalPages: initialDataResult.data.pagination.totalPages,
-      hasMore: initialDataResult.data.pagination.hasMore,
-    }
-    : null;
-  const initialTribunais = tribunaisResult.success ? tribunaisResult.data : [];
+  const processos = processosResult.success ? ((processosResult as any).data?.data || []) : [];
+  const total = processosResult.success ? ((processosResult as any).data?.pagination?.total ?? processos.length) : 0;
+  const tribunaisRaw = tribunaisResult.success ? ((tribunaisResult as any).data || []) : [];
+  const tribunais: string[] = tribunaisRaw.map((t: any) => (typeof t === 'string' ? t : t.codigo));
 
-  // Buscar usuarios relacionados
-  const initialUsers = await buscarUsuariosRelacionados(initialData);
+  // Resolve user names from processos array
+  const usersRecord = processos.length > 0
+    ? await buscarUsuariosRelacionados(processos)
+    : {};
+
+  const usuarios = Object.entries(usersRecord).map(([id, u]: [string, any]) => ({
+    id: Number(id),
+    nomeExibicao: u.nome,
+    avatarUrl: u.avatarUrl ?? null,
+  }));
 
   return (
-    <PageShell>
-      <ProcessosTableWrapper
-        initialData={initialData}
-        initialPagination={initialPagination}
-        initialUsers={initialUsers}
-        initialTribunais={initialTribunais}
+    <div className="max-w-350 mx-auto space-y-5 py-6">
+      <ProcessosClient
+        initialProcessos={processos}
+        initialTotal={total}
+        initialStats={stats}
+        tribunais={tribunais}
+        usuarios={usuarios}
+        currentUserId={session?.id ?? 0}
       />
-    </PageShell>
+    </div>
   );
 }
