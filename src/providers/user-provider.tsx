@@ -166,13 +166,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // Obter token da sessão local para chamadas API
-      // Nota: getSession() aqui é seguro pois a identidade já foi validada
-      // via getUser() acima — usamos apenas o access_token, não session.user
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      if (signal?.aborted) return;
-      setSessionToken(currentSession?.access_token ?? null);
-
       // Buscar dados consolidados da API
       const response = await fetch('/api/auth/me', {
         credentials: 'include',
