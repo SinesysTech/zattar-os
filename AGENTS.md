@@ -1,107 +1,68 @@
 # AGENTS.md
 
-This file provides guidance to AI coding agents working with code in this repository.
+Este documento provê diretrizes cruciais para agentes de inteligência artificial que vão iterar ou escrever código neste projeto.
 
-## Project
+## Dados do Projeto
 
-Sinesys (Zattar OS) — legal management system (gestao juridica) for a Brazilian law firm.
-Codebase is primarily in Portuguese (variable names, business terms, UI labels).
+**Sinesys (Zattar OS)** — Sistema corporativo de gestão jurídica.
+A base de banco de dados e termos de negócio está em Português.
 
-**Stack**: Next.js 16 (App Router, Turbopack), React 19, TypeScript 5 (strict), Supabase (PostgreSQL + RLS + pgvector), Tailwind CSS 4, shadcn/ui (new-york style)
+**Stack**: Next.js 16 (App Router, Turbopack), React 19, TypeScript 5 (estrito), Supabase (PostgreSQL + RLS + pgvector), Tailwind CSS 4, shadcn/ui.
 
-**Node**: >= 22.0.0, npm >= 10
+**Ambiente Operacional**: Node.js >= 22.0.0, npm >= 10.
 
-## Commands
+## Comandos Críticos
 
 ```bash
-# Development
-npm run dev                    # Turbopack dev server
-npm run dev:webpack            # Webpack dev server (debugging)
-npm run type-check             # TypeScript validation
+# Execução
+npm run dev                    # Servidor local via Turbopack
 
-# Build
-npm run build                  # Standard build
-npm run build:ci               # CI/Docker build (higher heap)
-
-# Testing
-npm test                       # All tests (Jest 30)
-npm run test:unit              # Unit tests
-npm run test:integration       # Integration tests
-npm run test:e2e               # Playwright E2E
-npx jest path/to/file.test.ts  # Single test file
-
-# Validation
+# Integração e Code Quality
+npm run type-check             # Verificação severa de TS (sem emissão)
 npm run lint                   # ESLint
-npm run check:architecture     # FSD import validation
-npm run validate:exports       # Barrel export validation
+npm run check:architecture     # Validação rígida FSD de importações
+npm run validate:exports       # Validação das exportações em Barrel files
+
+# Build e Testes
+npm run build                  # Build otimizado 
+npm run build:ci               # Build via CI (Evita out of memory em runners pesados)
+npm test                       # Bateria principal do Jest 30
+npm run test:e2e               # E2E test via Playwright
 ```
 
-## Architecture
+## Arquitetura (FSD + Colocation)
 
-Feature-Sliced Design (FSD) with Domain-Driven Design (DDD). 42 feature modules in `src/features/`.
+Nós aplicamos **Feature-Sliced Design (FSD)**, porém de modo *Colocated* com as páginas na pasta `src/app`.
+Todos os módulos devem se encontrar em `src/app/(authenticated)/{nome-do-modulo}`.
 
-```
-src/
-  app/            # Next.js App Router (app/, api/, portal/)
-  features/       # Feature modules (domain/service/repository/actions)
-  components/     # UI: ui/ (shadcn), shared/ (patterns), layout/
-  lib/            # Infrastructure (supabase, redis, ai, mcp, auth)
-  hooks/          # Global hooks
-  types/          # Shared types (database.types.ts is auto-generated)
-```
+### Estrutura do Módulo
 
-### Feature module structure
+Todo e qualquer módulo sob `/app/(authenticated)/` deve conter impreterivelmente estes componentes:
 
 ```
-src/features/{module}/
-  domain.ts       # Zod schemas, types, constants, business rules
-  service.ts      # Use cases, business logic orchestration
-  repository.ts   # Supabase data access
-  actions/        # Server Actions (authenticatedAction wrapper)
-  components/     # React components grouped by entity
-  index.ts        # Barrel exports (MANDATORY)
+src/app/(authenticated)/{modulo}/
+  domain.ts       # Zod schemas, Tipos typescript TypeScript, regras de estado puro 
+  service.ts      # Casos de uso e orquestração da regra de negócio
+  repository.ts   # Código isolado manipulador de Supabase queries
+  actions/        # Server Actions exportáveis
+  components/     # UI localizda em React atrelada às entidades
+  index.ts        # Barrel - a API Pública obrigatória!
+  RULES.md        # Documentação exclusiva p/ instruir os agentes de IA
 ```
 
-### Data flow
-
-```
-UI -> Server Action (authenticatedAction + Zod) -> service -> repository (Supabase) -> revalidatePath
-Returns: { success: boolean; data?: T; error?: string }
-```
-
-## Key Rules
-
-1. **Import constraints** (ESLint-enforced): cross-feature imports must use barrel exports (`@/features/{module}`). No deep imports into feature internals.
-
-2. **Server Actions**: use `authenticatedAction` from `@/lib/safe-action`. Naming: `actionCriar`, `actionAtualizar`, `actionListar`, `actionDeletar`.
-
-3. **UI components**: use `PageShell`, `DataShell`+`DataTable`, `DialogFormShell`, `DetailSheet` from `@/components/shared/`. Full docs in `src/components/shared/AI_INSTRUCTIONS.md`.
-
-4. **Badge colors**: never hardcode. Use `getSemanticBadgeVariant()` from `@/lib/design-system`.
-
-5. **Naming**: files=kebab-case, components=PascalCase, functions=camelCase, types=PascalCase, constants=UPPER_SNAKE_CASE, SQL=snake_case.
-
-6. **Database**: all tables require RLS. Migrations in `supabase/migrations/`. `database.types.ts` is auto-generated.
-
-7. **Testing**: 80% coverage global, 90% for domain/service, 95% for lib/utils. Test by module: `npm run test:actions:{module}`.
-
-## Routing
-
-- `/app/*` — Dashboard (Supabase auth required)
-- `/portal/*` — Client portal (CPF session cookie)
-- `/api/mcp` — MCP endpoint (SSE)
+### Regras Imprescindíveis (Quebre e você falhará no FSD):
+1. **Regra de Importação**: Nenhuma entidade fora de um módulo pode acessar o conteúdo das subpastas dele. Toda interação cross-modulo deve importar diretamente através do export agrupado (`import { X } from "@/app/(authenticated)/{modulo}"`).
+2. **Lógica UI-Safe**: As Server Actions precisam ser empacotadas obrigatoriamente usando `authenticatedAction` (`import { authenticatedAction } from "@/lib/safe-action"`). Nomenclatura das actions sempre com `actionX` (ex: `actionCriar`).
+3. **Cascas UI**: Sempre envelopar as páginas com os Shells da aplicação localizados em `@/components/shared/` (`PageShell`, `DataShell`, `DialogFormShell`).
+4. **Sem cores hardcoded**: Cores de bagdes e afins não podem ter classes hardcoded do tailwind no React. Deve ser dinâmico através do `getSemanticBadgeVariant()` (`@/lib/design-system`).
+5. **Nomes base**: Pastas e Arquivos devem ser em formato `kebab-case`. Funções devem usar `camelCase`. Componentes e Tipos usando padrão `PascalCase`. Constantes de código global usam `UPPER_SNAKE_CASE`. Tabelas e campos na database usam `snake_case`.
 
 ## Environment
 
-Required: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`, `SUPABASE_SECRET_KEY`, `SERVICE_API_KEY`, `CRON_SECRET`
+Variáveis determinantes (sem elas as actions não executam):
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`, `SUPABASE_SECRET_KEY`, `SERVICE_API_KEY`, `CRON_SECRET`
 
-Full list in `.env.example`.
+## Referência Estendida
 
-## Extended Documentation
-
-- `CLAUDE.md` — Claude Code specific guidance
-- `GEMINI.md` — Gemini CLI specific guidance
-- `.github/copilot-instructions.md` — GitHub Copilot instructions
-- `docs/architecture/AGENTS.md` — Extended agent reference with data flows, troubleshooting, development hints
-- `src/components/shared/AI_INSTRUCTIONS.md` — Complete UI component patterns
-- `src/features/*/RULES.md` — Business rules per feature module
+- Leia [`CLAUDE.md`](./CLAUDE.md) para regras de comandos CLI e fluxos internos de trabalho adaptados para a IA.
+- Leia [`docs/architecture/AGENTS.md`](./docs/architecture/AGENTS.md) para acesso em profundidade ao fluxo das APIs.
