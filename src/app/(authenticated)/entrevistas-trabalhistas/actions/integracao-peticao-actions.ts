@@ -1,6 +1,6 @@
 'use server';
 
-import { DifyService } from '@/lib/dify';
+import { DifyService } from '@/lib/dify/service';
 import { findById, findAnexos } from '../repository';
 import { createServiceClient } from '@/lib/supabase/service-client';
 

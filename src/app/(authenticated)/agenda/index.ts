@@ -26,7 +26,8 @@ export {
 } from "./actions/agenda-eventos-actions";
 
 // Repository (server-side)
-export * as agendaEventosRepository from "./repository";
+// Removed to avoid "server-only" leak to client components
+
 
 // Components (placeholder - add as needed)
 export {} from "./components";

@@ -19,4 +19,5 @@ export * from './hooks/use-dify-workflow';
 export * from './domain';
 
 // Service (server-side)
-export { DifyService, createDifyService } from './service';
+// Removed to avoid "server-only" leak to client components
+

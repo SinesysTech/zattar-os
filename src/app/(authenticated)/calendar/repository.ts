@@ -23,7 +23,7 @@ import type { Pericia, ListarPericiasParams } from "@/app/(authenticated)/perici
 import { listarPericias } from "@/app/(authenticated)/pericias/service";
 
 import type { AgendaEvento } from "@/app/(authenticated)/agenda";
-import { agendaEventosRepository as agendaEventosRepo } from "@/app/(authenticated)/agenda";
+import * as agendaEventosRepo from "@/app/(authenticated)/agenda/repository";
 
 // =============================================================================
 // BUSCA DE AUDIÊNCIAS
