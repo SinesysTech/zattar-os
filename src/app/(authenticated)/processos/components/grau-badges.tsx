@@ -52,7 +52,7 @@ export function GrauBadges({ instances }: GrauBadgesProps) {
           <TooltipProvider key={instance.id}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <SemanticBadge category="grau" value={instance.grau}>
+                <SemanticBadge category="grau" value={instance.grau} toneOverride="soft">
                   {label}
                 </SemanticBadge>
               </TooltipTrigger>
@@ -106,7 +106,8 @@ export function GrauBadgesSimple({ grausAtivos }: { grausAtivos?: GrauProcesso[]
             key={grau}
             category="grau"
             value={grau}
-            className="text-xs"
+            toneOverride="soft"
+            className="text-[10px]"
           >
             {label}
           </SemanticBadge>
