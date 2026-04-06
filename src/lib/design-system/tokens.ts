@@ -278,25 +278,38 @@ export const SPACING_SEMANTIC = {
 /**
  * Tokens de tipografia.
  * Prefira usar os componentes Typography em vez de classes inline.
+ *
+ * NOTA: html { font-size: 18px } no globals.css faz com que tamanhos rem
+ * sejam maiores que o padrão (ex: text-xs = 13.5px, text-sm = 15.75px).
+ * Por isso os tamanhos micro usam px fixo para garantir precisão.
  */
 export const TYPOGRAPHY = {
   // Font families
   fontFamily: {
-    heading: 'font-heading',
-    body: 'font-sans',
-    mono: 'font-mono',
+    heading: 'font-heading',   // Montserrat — títulos, headers
+    body: 'font-sans',         // Inter — texto corrido, UI
+    mono: 'font-mono',         // Geist Mono — código, números
+    display: 'font-display',   // Metrics grandes, KPIs
+    headline: 'font-headline', // Manrope — Magistrate AI headlines
   },
-  // Font sizes
+
+  // Font sizes — escala completa incluindo micro sizes
   fontSize: {
-    xs: 'text-xs',       // 12px
-    sm: 'text-sm',       // 14px
-    base: 'text-base',   // 16px
-    lg: 'text-lg',       // 18px
-    xl: 'text-xl',       // 20px
-    '2xl': 'text-2xl',   // 24px
-    '3xl': 'text-3xl',   // 30px
-    '4xl': 'text-4xl',   // 36px
+    // Micro sizes (px fixo — imunes ao root font-size de 18px)
+    '3xs': 'text-[9px]',    //  9px — badges micro, caption mínima
+    '2xs': 'text-[10px]',   // 10px — números mono, metadata compacta
+    'xs-fixed': 'text-[11px]', // 11px — labels uppercase, metadata
+    // Standard sizes (rem — escalam com root)
+    xs: 'text-xs',          // 12px (rem) → ~13.5px real
+    sm: 'text-sm',          // 14px (rem) → ~15.75px real
+    base: 'text-base',      // 16px (rem) → 18px real
+    lg: 'text-lg',          // 18px (rem) → ~20.25px real
+    xl: 'text-xl',          // 20px (rem) → ~22.5px real
+    '2xl': 'text-2xl',      // 24px (rem) → 27px real
+    '3xl': 'text-3xl',      // 30px (rem) → ~33.75px real
+    '4xl': 'text-4xl',      // 36px (rem) → 40.5px real
   },
+
   // Font weights
   fontWeight: {
     normal: 'font-normal',
@@ -304,6 +317,7 @@ export const TYPOGRAPHY = {
     semibold: 'font-semibold',
     bold: 'font-bold',
   },
+
   // Line heights
   lineHeight: {
     none: 'leading-none',
@@ -312,6 +326,252 @@ export const TYPOGRAPHY = {
     normal: 'leading-normal',
     relaxed: 'leading-relaxed',
   },
+} as const;
+
+// =============================================================================
+// PADRÕES TIPOGRÁFICOS COMPOSTOS
+// =============================================================================
+
+/**
+ * Padrões tipográficos recorrentes extraídos de Processos, Audiências, Dashboard e Partes.
+ * Use estes tokens para garantir consistência visual em labels, números e badges.
+ *
+ * @ai-context Use TEXT_PATTERNS em vez de compor classes manualmente.
+ * Cada padrão tem uma classe CSS correspondente em globals.css (.text-meta-label, etc.)
+ */
+export const TEXT_PATTERNS = {
+  /**
+   * Label metadata — labels de campo em maiúsculas, compactas.
+   * Ex: "RESPONSÁVEL", "LOCALIDADE", "TRIBUNAL"
+   * CSS class: .text-meta-label
+   */
+  metaLabel: 'text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground',
+
+  /**
+   * Números monospace — datas, números de processo, valores tabulares.
+   * Ex: "0001234-56.2023.5.01.0001", "15/03/2024"
+   * CSS class: .text-mono-num
+   */
+  monoNum: 'text-[10px] font-mono text-muted-foreground/55 tabular-nums',
+
+  /**
+   * Texto micro para badges — texto compacto dentro de badges e tags.
+   * Ex: "TRT1", "1º Grau", "Ativo"
+   * CSS class: .text-micro-badge
+   */
+  microBadge: 'text-[9px] font-medium',
+
+  /**
+   * Texto micro caption — informações terciárias muito pequenas.
+   * Ex: timestamps, contadores secundários
+   * CSS class: .text-micro-caption
+   */
+  microCaption: 'text-[10px] text-muted-foreground/50',
+
+  /**
+   * Page title — título principal da página.
+   * Ex: "Processos", "Audiências", "Partes"
+   * CSS class: .text-page-heading
+   */
+  pageHeading: 'text-2xl font-heading font-semibold tracking-tight',
+
+  /**
+   * Card title — título de card ou seção.
+   * CSS class: .text-card-heading
+   */
+  cardHeading: 'text-sm font-heading font-semibold',
+
+  /**
+   * Widget subtitle — subtítulo compacto abaixo de headers.
+   * CSS class: .text-widget-sub
+   */
+  widgetSub: 'text-[10px] text-muted-foreground/60',
+
+  /**
+   * Valor de KPI grande — métricas de destaque.
+   * CSS class: .text-kpi-value
+   */
+  kpiValue: 'text-2xl font-bold font-heading tabular-nums',
+
+  /**
+   * Tag inline — texto de tag dentro de containers de tags.
+   * CSS class: .text-inline-tag
+   */
+  inlineTag: 'text-[9px] px-1.5 py-0.5 rounded bg-primary/5 text-primary/50 border border-primary/10',
+
+  /**
+   * Tag pill — versão arredondada de tags em detalhe.
+   * CSS class: .text-pill-tag
+   */
+  pillTag: 'text-[10px] px-2 py-0.5 rounded-full bg-primary/6 text-primary/60 border border-primary/10',
+} as const;
+
+// =============================================================================
+// ESCALA DE OPACIDADE
+// =============================================================================
+
+/**
+ * Escala de opacidade documentada, extraída dos padrões visuais de Processos, Audiências,
+ * Dashboard e Partes. Define QUANDO usar cada nível de opacidade.
+ *
+ * @ai-context Consulte esta escala antes de escolher opacidades para bg, text e border.
+ * NUNCA invente opacidades fora desta escala sem justificativa.
+ */
+export const OPACITY_SCALE = {
+  /**
+   * Backgrounds primários — escala de ênfase crescente.
+   * Use bg-primary/{nível} conforme o destaque desejado.
+   */
+  primaryBg: {
+    subtle: '/3',      // bg-primary/3  — card selecionado (quase imperceptível)
+    whisper: '/4',     // bg-primary/4  — insight banners, hover muito sutil
+    tint: '/5',        // bg-primary/5  — container de tags, backgrounds leves
+    soft: '/6',        // bg-primary/6  — tags pill, badges suaves
+    medium: '/8',      // bg-primary/8  — icon containers, backgrounds médios
+    strong: '/10',     // bg-primary/10 — icon backgrounds, ênfase clara
+    emphasis: '/15',   // bg-primary/15 — hover forte, destaque
+  },
+
+  /**
+   * Borders — escala de visibilidade.
+   * Use border-border/{nível} para controlar a saliência da borda.
+   */
+  border: {
+    ghost: '/10',     // border-border/10 — divisores internos de card, separadores sutis
+    subtle: '/20',    // border-border/20 — bordas padrão de glass panels
+    light: '/30',     // border-border/30 — glass-kpi borders
+    medium: '/40',    // border-border/40 — hover state de borders
+    standard: '/50',  // border-border/50 — bordas padrão de Card (shadcn)
+  },
+
+  /**
+   * Texto — escala de hierarquia visual.
+   * Use text-muted-foreground/{nível} para texto secundário/terciário.
+   */
+  mutedText: {
+    ghost: '/40',     // text-muted-foreground/40 — texto quase invisível, dicas
+    faint: '/50',     // text-muted-foreground/50 — placeholders, timestamps remotos
+    subtle: '/55',    // text-muted-foreground/55 — números mono, dados secundários
+    soft: '/60',      // text-muted-foreground/60 — subtítulos de widgets, labels fracos
+    standard: '',     // text-muted-foreground    — texto secundário padrão (sem modificador)
+  },
+
+  /**
+   * Texto primário com opacidade — para elementos que usam a cor primária.
+   */
+  primaryText: {
+    faint: '/50',     // text-primary/50  — tags suaves, ícones de fundo
+    soft: '/60',      // text-primary/60  — pill tags, texto de destaque fraco
+    medium: '/70',    // text-primary/70  — links suaves, ícones médios
+    standard: '',     // text-primary     — texto primário completo
+  },
+} as const;
+
+// =============================================================================
+// LAYOUT DE PÁGINA
+// =============================================================================
+
+/**
+ * Tokens de layout para containers de página e estruturas recorrentes.
+ * Extraídos da arquitetura visual de Processos, Audiências, Dashboard e Partes.
+ *
+ * @ai-context Use PAGE_LAYOUT para containers de página e panels.
+ */
+export const PAGE_LAYOUT = {
+  /** Container principal da página — limita largura e centraliza */
+  container: 'max-w-350 mx-auto',
+
+  /** Espaçamento vertical entre seções da página */
+  sectionGap: 'space-y-5',
+
+  /** Padding vertical da página (dentro do shell) */
+  pagePadding: 'py-6',
+
+  /** Layout completo da página: container + gap + padding */
+  page: 'max-w-350 mx-auto space-y-5 py-6',
+
+  /** Grid de cards responsivo — padrão 1/2/3 colunas */
+  cardGrid: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3',
+
+  /** Layout de duas colunas com panel de detalhe fixo */
+  detailLayout: 'grid gap-3 lg:grid-cols-[1fr_380px]',
+
+  /** Panel de detalhe sticky */
+  detailPanel: 'sticky top-4 self-start',
+
+  /** Header de página: título + actions */
+  pageHeader: 'flex items-start justify-between gap-4',
+
+  /** Toolbar responsiva: empilha em mobile, lado a lado em desktop */
+  toolbar: 'flex flex-col sm:flex-row items-start sm:items-center gap-3',
+} as const;
+
+// =============================================================================
+// GLASS PANEL (Depth System)
+// =============================================================================
+
+/**
+ * Tokens do sistema de profundidade Glass para panels.
+ * GlassPanel usa depth 1-3 para criar hierarquia visual.
+ *
+ * @ai-context Use GLASS_DEPTH para referência. O componente GlassPanel
+ * já aplica estes estilos automaticamente via prop depth.
+ *
+ * Classe base de todo GlassPanel: rounded-2xl border transition-all duration-300 flex flex-col
+ */
+export const GLASS_DEPTH = {
+  /** Depth 1 — Container padrão (widget). Mais transparente, para containers maiores. */
+  1: 'glass-widget bg-transparent border-border/20',
+
+  /** Depth 2 — KPI / card métrico. Mais opaco, melhor legibilidade. */
+  2: 'glass-kpi bg-transparent border-border/30',
+
+  /** Depth 3 — Destaque máximo. Background com tint de primary. */
+  3: 'bg-primary/[0.04] backdrop-blur-xl border-primary/10',
+} as const;
+
+/**
+ * Base compartilhada de todo GlassPanel.
+ */
+export const GLASS_BASE = 'rounded-2xl border transition-all duration-300 flex flex-col' as const;
+
+// =============================================================================
+// ICON CONTAINERS
+// =============================================================================
+
+/**
+ * Padrões de containers de ícones extraídos das páginas atualizadas.
+ * Define tamanhos e estilos para ícones dentro de containers coloridos.
+ *
+ * @ai-context Use ICON_CONTAINER para containers de ícones com background.
+ */
+export const ICON_CONTAINER = {
+  /** Container grande (40px) — cards de processo, entidades */
+  lg: 'size-10 rounded-xl flex items-center justify-center shrink-0',
+
+  /** Container médio (32px) — listas, linhas de tabela */
+  md: 'size-8 rounded-lg flex items-center justify-center shrink-0',
+
+  /** Container pequeno (24px) — inline, badges */
+  sm: 'size-6 rounded-md flex items-center justify-center shrink-0',
+
+  /** Container mínimo (20px) — indicators, dots */
+  xs: 'size-5 rounded flex items-center justify-center shrink-0',
+} as const;
+
+// =============================================================================
+// AVATAR SIZES
+// =============================================================================
+
+/**
+ * Tamanhos padronizados de avatar.
+ */
+export const AVATAR_SIZES = {
+  xs: 'h-5 w-5',    // 20px — inline em texto
+  sm: 'h-6 w-6',    // 24px — listas compactas
+  md: 'h-8 w-8',    // 32px — listas normais
+  lg: 'size-10',     // 40px — cards, headers
+  xl: 'size-12',     // 48px — detail panels
 } as const;
 
 // =============================================================================
@@ -409,6 +669,13 @@ export const TOKENS = {
   spacingClasses: SPACING_CLASSES,
   spacingSemantic: SPACING_SEMANTIC,
   typography: TYPOGRAPHY,
+  textPatterns: TEXT_PATTERNS,
+  opacityScale: OPACITY_SCALE,
+  pageLayout: PAGE_LAYOUT,
+  glassDepth: GLASS_DEPTH,
+  glassBase: GLASS_BASE,
+  iconContainer: ICON_CONTAINER,
+  avatarSizes: AVATAR_SIZES,
   shadows: SHADOWS,
   radius: RADIUS,
   breakpoints: BREAKPOINTS,

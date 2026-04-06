@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Bot, Blocks, ArrowRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { GlassPanel } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { GlassPanel } from '@/components/shared/glass-panel';
 
 import { MetricasDBContent } from '@/app/(authenticated)/admin/metricas-db/components/metricas-db-content';
 import { BlockedIpsContent } from '@/app/(authenticated)/admin/security/blocked-ips/components/blocked-ips-content';

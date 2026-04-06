@@ -29,7 +29,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { GlassPanel } from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
+import { GlassPanel } from "@/components/shared/glass-panel";
 
 import {
   EventChip,

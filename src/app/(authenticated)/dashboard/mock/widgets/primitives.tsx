@@ -1,8 +1,11 @@
 /**
  * WIDGET GALLERY — Primitivas de Design
  * ============================================================================
- * Componentes compartilhados para a galeria de widgets da dashboard.
+ * Componentes de visualização para a galeria de widgets da dashboard.
  * Seguem a estética "Glass Briefing" — vidro fumê, prioridade, compacto.
+ *
+ * GlassPanel e WidgetContainer agora vivem em @/components/shared/glass-panel
+ * e são re-exportados daqui para retrocompatibilidade.
  *
  * USO: import { GlassPanel, Sparkline, MiniDonut, ... } from './primitives'
  * ============================================================================
@@ -11,67 +14,11 @@
 'use client';
 
 import React from 'react';
-import { type LucideIcon } from 'lucide-react';
 
-// ─── Glass Panel (container principal) ──────────────────────────────────
-
-export function GlassPanel({
-  children,
-  className = '',
-  depth = 1,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  depth?: 1 | 2 | 3;
-}) {
-  const depthStyles = {
-    1: 'glass-widget bg-transparent border-border/20',
-    2: 'glass-kpi bg-transparent border-border/30',
-    3: 'bg-primary/[0.04] backdrop-blur-xl border-primary/10',
-  };
-
-  return (
-    <div className={`rounded-2xl border transition-all duration-300 flex flex-col ${depthStyles[depth]} ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-// ─── Widget Container (GlassPanel + header padrão) ──────────────────────
-
-export function WidgetContainer({
-  title,
-  icon: Icon,
-  subtitle,
-  action,
-  children,
-  className = '',
-  depth = 1,
-}: {
-  title: string;
-  icon?: LucideIcon;
-  subtitle?: string;
-  action?: React.ReactNode;
-  children: React.ReactNode;
-  className?: string;
-  depth?: 1 | 2 | 3;
-}) {
-  return (
-    <GlassPanel depth={depth} className={`p-5 ${className}`}>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          {Icon && <Icon className="size-4 text-muted-foreground/50" />}
-          <div>
-            <h3 className="font-heading text-sm font-semibold">{title}</h3>
-            {subtitle && <p className="text-[10px] text-muted-foreground/60">{subtitle}</p>}
-          </div>
-        </div>
-        {action}
-      </div>
-      {children}
-    </GlassPanel>
-  );
-}
+// ─── Re-export: Glass Panel & Widget Container ─────────────────────────
+// Canonical location: @/components/shared/glass-panel
+export { GlassPanel, WidgetContainer } from '@/components/shared/glass-panel';
+export type { GlassPanelProps, WidgetContainerProps } from '@/components/shared/glass-panel';
 
 // ─── Sparkline SVG ──────────────────────────────────────────────────────
 

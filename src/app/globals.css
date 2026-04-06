@@ -977,6 +977,62 @@
     @apply font-mono text-base tabular-nums;
   }
 
+  /* =============================================================================
+   * PADRÕES TIPOGRÁFICOS DO DESIGN SYSTEM V2
+   * =============================================================================
+   * Classes compostas extraídas de Processos, Audiências, Dashboard e Partes.
+   * Cada classe corresponde a um token em TEXT_PATTERNS (tokens.ts).
+   *
+   * Usam px fixo para micro sizes (imunes ao root font-size de 18px).
+   * Compatíveis com os tokens TYPOGRAPHY.fontSize['3xs'|'2xs'|'xs-fixed'].
+   */
+
+  /* Meta Label — labels de campo em maiúsculas (RESPONSÁVEL, LOCALIDADE, TRIBUNAL) */
+  .text-meta-label {
+    font-size: 11px;
+    @apply font-semibold uppercase text-muted-foreground;
+    letter-spacing: 0.14em;
+  }
+
+  /* Mono Num — datas, números de processo, valores tabulares */
+  .text-mono-num {
+    font-size: 10px;
+    @apply font-mono text-muted-foreground/55 tabular-nums;
+  }
+
+  /* Micro Badge — texto dentro de badges e tags compactos */
+  .text-micro-badge {
+    font-size: 9px;
+    @apply font-medium;
+  }
+
+  /* Micro Caption — informações terciárias muito pequenas (timestamps, contadores) */
+  .text-micro-caption {
+    font-size: 10px;
+    @apply text-muted-foreground/50;
+  }
+
+  /* Page Heading — título principal da página (uso em PageShell ou custom headers) */
+  .text-page-heading {
+    @apply text-2xl font-heading font-semibold tracking-tight;
+  }
+
+  /* Card Heading — título de card ou widget */
+  .text-card-heading {
+    @apply text-sm font-heading font-semibold;
+  }
+
+  /* Widget Sub — subtítulo compacto abaixo de headers de widget */
+  .text-widget-sub {
+    font-size: 10px;
+    @apply text-muted-foreground/60;
+  }
+
+  /* KPI Value — valores grandes de destaque em painéis métricos */
+  .text-kpi-value {
+    @apply text-2xl font-bold font-heading tabular-nums;
+  }
+
   /* Scrollbar Thumb - Hover states e transições suaves */
   [data-slot="scroll-area-thumb"] {
     @apply transition-colors duration-200;

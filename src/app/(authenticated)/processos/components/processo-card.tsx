@@ -1,7 +1,7 @@
 'use client';
 
 import { Scale, Building2, Calendar, AlertTriangle, Clock } from 'lucide-react';
-import { GlassPanel } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CopyButton } from '@/app/(authenticated)/partes';

@@ -1,6 +1,6 @@
 'use client';
 
-import { GlassPanel } from '../../mock/widgets/primitives';
+import { GlassPanel } from '@/components/shared/glass-panel';
 
 interface WidgetSkeletonProps {
   size?: 'sm' | 'md' | 'lg' | 'full';
