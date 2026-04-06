@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AppBadge } from '@/components/ui/app-badge';
+import { EmptyState } from '@/components/shared/empty-state';
 
 import type { Expediente } from '../domain';
 
@@ -164,23 +165,22 @@ export function ExpedientesDayList({
         </>
       ) : (
         /* Empty state */
-        <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-          <Calendar className="h-12 w-12 text-muted-foreground/55 mb-3" />
-          <p className="text-sm text-muted-foreground">
-            Nenhum expediente neste dia
-          </p>
-          {onAddExpediente && (
+        <EmptyState
+          icon={Calendar}
+          title="Nenhum expediente neste dia"
+          description="Não há expedientes agendados para esta data."
+          action={onAddExpediente ? (
             <Button
               variant="outline"
               size="sm"
-              className="mt-3"
               onClick={onAddExpediente}
             >
               <Plus className="h-4 w-4 mr-1" />
               Novo Expediente
             </Button>
-          )}
-        </div>
+          ) : undefined}
+          className="flex-1"
+        />
       )}
     </div>
   );
