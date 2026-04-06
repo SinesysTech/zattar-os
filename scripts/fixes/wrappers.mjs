@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'node:fs';
 
 // Month Wrapper
 let month = fs.readFileSync('src/app/(authenticated)/expedientes/components/expedientes-month-wrapper.tsx', 'utf8');

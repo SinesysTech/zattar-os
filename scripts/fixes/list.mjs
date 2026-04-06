@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'node:fs';
 const file = 'src/app/(authenticated)/expedientes/components/expedientes-list-wrapper.tsx';
 let txt = fs.readFileSync(file, 'utf8');
 txt = txt.replace('expedienteId={selectedVisualizarId}', 'expediente={expedientes.find(e => e.id === selectedVisualizarId) as any}');

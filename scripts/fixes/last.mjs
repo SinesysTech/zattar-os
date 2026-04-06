@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'node:fs';
 
 let month = fs.readFileSync('src/app/(authenticated)/expedientes/components/expedientes-month-wrapper.tsx', 'utf8');
 month = month.replace(/<ExpedienteDialog[\s\S]*?\/>/m, `<ExpedienteVisualizarDialog\n        expediente={expedientes.find(e => e.id === selectedExpedienteId) as any}\n        open={!!selectedExpedienteId}\n        onOpenChange={(open) => {\n          if (!open) setSelectedExpedienteId(null);\n        }}\n      />`);
