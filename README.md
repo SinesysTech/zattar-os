@@ -1,195 +1,84 @@
 # Zattar OS - Sistema de Gestão Jurídica by Sinesys
 
-Sistema de gestão jurídica com foco em automação e IA.
+Sistema de gestão jurídica corporativa focado em automação e IA.
 
-**Stack**: Next.js 16 (App Router), React 19, TypeScript 5, Supabase (PostgreSQL + RLS), Redis (opcional), Tailwind CSS 4, shadcn/ui.
+**Stack Técnico**:
+- **Core**: Next.js 16 (App Router), React 19, TypeScript 5
+- **Dados**: Supabase (PostgreSQL + RLS + pgvector), Redis (cache)
+- **UI**: Tailwind CSS 4, shadcn/ui (estilo new-york)
 
-## Status de Desenvolvimento (2026-04-02)
-
-`src/features` possui **42 modulos** atualmente.
-
-Classificacao estrutural (criterio: `domain.ts`, `service.ts`, `repository.ts`, `index.ts`, `actions/`, `components/`):
-
-- ✅ **Completos (37)**: `acervo`, `admin`, `advogados`, `agenda-eventos`, `ai`, `assistentes-tipos`, `audiencias`, `busca`, `calendar`, `captura`, `cargos`, `chat`, `chatwoot`, `config-atribuicao`, `contratos`, `dify`, `documentos`, `enderecos`, `entrevistas-trabalhistas`, `expedientes`, `financeiro`, `integracoes`, `notificacoes`, `obrigacoes`, `partes`, `pecas-juridicas`, `perfil`, `pericias`, `processos`, `profiles`, `rh`, `system-prompts`, `tags`, `tasks`, `tipos-expedientes`, `usuarios`
-- 🧩 **Adaptativos (5)**: `calculadoras`, `portal`, `repasses`, `twofauth`, `website` — UI-only, sem persistencia propria (justificado em RULES.md)
-
-Consulte [STATUS de arquitetura](./docs/architecture/STATUS.md) e [AGENTS](./docs/architecture/AGENTS.md) para detalhes completos.
-
-## Requisitos
+## Pré-requisitos
 
 - Node.js `>= 22.0.0`
 - npm `>= 10`
-- (Opcional) Docker
+- (Opcional) Docker para execução conteinerizada
 
-> Windows: alguns scripts auxiliares usam shell POSIX. Se necessário, use WSL ou Git Bash.
+## Instalação e Execução
 
-## Início rápido
-
-1. Instalar dependências
-
+Instale as dependências:
 ```bash
 npm install
 ```
 
-2. Variáveis de ambiente
-
+Configure as variáveis de ambiente base:
 ```bash
 cp .env.example .env.local
 ```
 
-3. Rodar em desenvolvimento (Turbopack)
-
+Inicie o servidor de desenvolvimento (via Turbopack):
 ```bash
 npm run dev
 ```
 
-Acesse:
+Acesse a aplicação: `http://localhost:3000`
 
-- App: http://localhost:3000
-- Health: http://localhost:3000/api/health
+## Variáveis de Ambiente (Principais)
 
-## Variáveis de ambiente
+Verifique `.env.example` para a lista completa.
 
-A lista completa está em `.env.example`. Principais:
+* **Obrigatórias**: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`, `SUPABASE_SECRET_KEY`, `SERVICE_API_KEY`, `CRON_SECRET`
+* **Inteligência Artificial**: `OPENAI_API_KEY`, `AI_GATEWAY_API_KEY`, `OPENAI_EMBEDDING_MODEL`
+* **Banco/Infraestrutura**: `ENABLE_REDIS_CACHE`, `REDIS_URL`, `REDIS_PASSWORD`
 
-Obrigatórias (para o app funcionar):
+## Arquitetura: Feature-Sliced Design (Colocated)
 
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`
-- `SUPABASE_SECRET_KEY`
-- `SERVICE_API_KEY`
-- `CRON_SECRET`
+O projeto usa **Feature-Sliced Design**. Em vez de uma pasta separada para a lógica, os módulos da aplicação estão intrinsecamente amarrados às rotas dentro de `src/app/(authenticated)`.
 
-Busca semântica / RAG:
-
-- `OPENAI_API_KEY`
-- `OPENAI_EMBEDDING_MODEL` (padrão: `text-embedding-3-small`)
-- `ENABLE_AI_INDEXING` (padrão: `true`)
-
-Opcionais (dependem dos módulos):
-
-- Redis/cache: `ENABLE_REDIS_CACHE`, `REDIS_URL`, `REDIS_PASSWORD`, `REDIS_CACHE_TTL`
-- Plate AI editor: `AI_GATEWAY_API_KEY`
-- Dyte (chamadas): configurado via UI em Configurações > Integrações
-- Storage Backblaze B2: `STORAGE_PROVIDER`, `B2_*`
-- Browser service (scraping): `BROWSER_WS_ENDPOINT`, `BROWSER_SERVICE_URL`, `BROWSER_SERVICE_TOKEN`
-- MCP (integrações): `MCP_SINESYS_API_URL`, `MCP_SINESYS_API_KEY`
-- Segurança: `CSP_REPORT_ONLY`, `ALLOWED_ORIGINS`, `RATE_LIMIT_FAIL_MODE`
-
-## Comandos úteis
-
-Dev:
-
-```bash
-npm run dev
-npm run dev:webpack
-npm run type-check
+```text
+zattar-os/
+└── src/
+    ├── app/
+    │   └── (authenticated)/      # Ambiente logado da aplicação
+    │       ├── processos/        # Módulo local e Rota /processos
+    │       │   ├── actions/      # Server Actions encapsuladas
+    │       │   ├── components/   # UI React específica do domínio
+    │       │   ├── domain.ts     # Zod Schemas, tipos, constantes e regras lógicas
+    │       │   ├── service.ts    # Casos de uso
+    │       │   ├── repository.ts # Integração externa / Banco de Dados
+    │       │   ├── index.ts      # Ponto obrigatório de exportação do módulo (Barrel)
+    │       │   └── RULES.md      # Instruções de negócio anexas para agentes cognitivos
+    │       └── partes/           # Outro módulo
+    ├── components/               # UI global (shadcn, shells estruturais)
+    └── lib/                      # Infra (auth, redis, MCP, etc.)
 ```
 
-Build:
+**Regra Principal**: É estritamente proibido realizar "deep imports" (importar arquivos diretamente das pastas internas de um módulo). Use sempre os arquivos de barreira `index.ts`.
 
-```bash
-npm run build
-npm run build:ci
-npm run build:prod
-```
+*Certo*: `import { actionListarClientes } from "@/app/(authenticated)/partes"`
+*Errado*: `import { actionListarClientes } from "@/app/(authenticated)/partes/actions/listar-action"`
 
-Testes:
+## Model Context Protocol (MCP) e IA
 
-```bash
-npm test
-npm run test:ci
-npm run test:unit
-npm run test:integration
-npm run test:components
-npm run test:e2e
-```
+O Sinesys está equipado para funcionar via controle automatizado de agentes.
+A raiz do conector expõe o endpoint `/api/mcp`. As ferramentas controlam os *Server Actions* cadastrados em `src/lib/mcp/registry.ts`.
 
-Arquitetura/exports:
+- Testes de integridade de MCP: `npm run mcp:check`
+- Base de refatoração para RAG: `npm run ai:reindex`
 
-```bash
-npm run check:architecture
-npm run validate:arch
-npm run validate:exports
-```
+## Documentação & Instruções de Automação
 
-MCP / IA:
+Este repositório possui uma base documental limpa e direta paras as IAs mapearem e alterarem o código-fonte de maneira segura:
 
-```bash
-npm run mcp:check
-npm run mcp:dev
-npm run mcp:docs
-
-npm run ai:reindex
-npm run ai:index-existing
-```
-
-Segurança:
-
-```bash
-npm run security:scan
-npm run security:gitleaks
-```
-
-## Arquitetura (resumo)
-
-- UI: Next.js + React
-- Server Actions: wrapper de ação segura + validação Zod + autenticação
-- Service layer: regras e casos de uso
-- Repository layer: acesso a dados via Supabase
-- Infra: Redis (cache), AI/RAG (embeddings/pgvector), MCP (SSE)
-
-Detalhes: `ARCHITECTURE.md`.
-
-## Estrutura do projeto
-
-Padrão principal (Feature-Sliced Design):
-
-```
-src/
-  app/                 # Rotas (Next.js App Router)
-  features/            # Módulos (domain/service/repository/actions)
-  components/          # UI compartilhada (shadcn/ui + padrões)
-  lib/                 # Infra (auth, supabase, redis, mcp, ai, etc.)
-  hooks/               # Hooks globais
-```
-
-Regra importante: não usar imports profundos em features — prefira barrel exports:
-
-```ts
-import { actionListarClientes } from "@/features/partes";
-```
-
-## MCP (Model Context Protocol)
-
-Endpoint:
-
-- `GET /api/mcp` — conexão SSE
-- `POST /api/mcp` — execução de ferramenta
-
-## Docker
-
-Build e execução local:
-
-```bash
-docker build -t sinesys:local .
-docker run -p 3000:3000   -e NEXT_PUBLIC_SUPABASE_URL=...   -e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=...   -e SUPABASE_SECRET_KEY=...   sinesys:local
-```
-
-Também existe `docker-compose.yml` para subir o app via env vars.
-
-## Documentacao
-
-- [Arquitetura do sistema](./docs/architecture/ARCHITECTURE.md)
-- [Status dos modulos](./docs/architecture/STATUS.md)
-- [Guia para agentes IA](./docs/architecture/AGENTS.md)
-- [Indice completo](./docs/INDEX.md)
-
-### Instrucoes para agentes de IA
-
-| Arquivo | Ferramenta | Descricao |
-|---------|------------|-----------|
-| [`CLAUDE.md`](./CLAUDE.md) | Claude Code | Instrucoes detalhadas para Claude Code |
-| [`AGENTS.md`](./AGENTS.md) | Todas (padrao aberto) | Referencia concisa cross-tool |
-| [`.github/copilot-instructions.md`](./.github/copilot-instructions.md) | GitHub Copilot | Instrucoes para Copilot |
-| [`docs/architecture/AGENTS.md`](./docs/architecture/AGENTS.md) | Todas | Referencia estendida com data flows |
+* [**AGENTS.md**](./AGENTS.md) — Referência concisa e inter-plataforma.
+* [**ARCHITECTURE.md**](./docs/architecture/ARCHITECTURE.md) — Macro-estrutura.
+* [**CLAUDE.md**](./CLAUDE.md) — Instruções nativas direcionadas a interfaces de CLI.
