@@ -3,12 +3,6 @@
 import React, { useMemo } from 'react';
 import {
   LayoutGrid,
-  Scale,
-  Calendar,
-  FileText,
-  Wallet,
-  Users,
-  CheckSquare,
   RotateCcw,
 } from 'lucide-react';
 import {

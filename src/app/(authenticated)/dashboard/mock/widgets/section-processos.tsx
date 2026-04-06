@@ -25,7 +25,6 @@ import {
   MiniArea,
   fmtNum,
   GaugeMeter,
-  InsightBanner,
   ComparisonStat,
   CalendarHeatmap,
   TabToggle,

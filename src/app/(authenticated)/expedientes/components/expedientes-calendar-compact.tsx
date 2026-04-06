@@ -192,27 +192,11 @@ export function ExpedientesCalendarCompact({
 
             // Determinar cor do indicador baseado na prioridade:
             // Vencido > Pendente > Baixado
-            let indicatorColor = 'bg-primary';
             let hasVencido = false;
             if (hasExpedientes) {
               hasVencido = dayExpedientes.some(
                 (e) => e.prazoVencido === true && e.baixadoEm === null
               );
-              const hasPendente = dayExpedientes.some(
-                (e) => !e.prazoVencido && e.baixadoEm === null
-              );
-              const hasBaixado = dayExpedientes.some(
-                (e) => e.baixadoEm !== null
-              );
-
-              // Prioridade: Vencido > Pendente > Baixado
-              if (hasVencido) {
-                indicatorColor = 'bg-destructive';
-              } else if (hasPendente) {
-                indicatorColor = 'bg-primary';
-              } else if (hasBaixado) {
-                indicatorColor = 'bg-success';
-              }
             }
 
             // Heatmap: intensidade baseada na quantidade

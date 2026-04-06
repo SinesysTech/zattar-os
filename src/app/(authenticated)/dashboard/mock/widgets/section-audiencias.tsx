@@ -18,7 +18,6 @@ import {
   ProgressRing,
   CalendarHeatmap,
   InsightBanner,
-  ComparisonStat,
   fmtNum,
 } from './primitives';
 

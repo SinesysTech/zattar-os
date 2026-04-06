@@ -5,7 +5,6 @@ import { AlertTriangle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
-  calcularHorasExtras,
   CalculatorShell,
   CurrencyInput,
   NumberInput,
@@ -118,27 +117,6 @@ export default function AnaliseJornadaPage() {
 
     // HE feriados: feriados trabalhados = jornada completa (100%)
     const horasExtrasFeriado100 = feriadosDias * jornadaContratada;
-
-    // Usar calcularHorasExtras do dominio para valores monetarios
-    // Para dias uteis (50%)
-    const calcSemana = calcularHorasExtras({
-      salarioBruto,
-      horasMensais: 220,
-      horasExtrasSemana: horasExtrasSemana50,
-      horasExtrasFimDeSemana: 0,
-      percentualSemana: 0.5,
-      percentualFimDeSemana: 1.0,
-    });
-
-    // Para sabado + feriado (100%)
-    const calcFds = calcularHorasExtras({
-      salarioBruto,
-      horasMensais: 220,
-      horasExtrasSemana: 0,
-      horasExtrasFimDeSemana: horasExtrasSabado100 + horasExtrasFeriado100,
-      percentualSemana: 0.5,
-      percentualFimDeSemana: 1.0,
-    });
 
     const valorHoraNormal = r2(salarioBruto / 220);
     const valorHE50 = r2(valorHoraNormal * 1.5);

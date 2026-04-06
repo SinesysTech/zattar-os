@@ -1,11 +1,9 @@
 "use server"
 
 import { cookies } from "next/headers"
-// Import directly from service/utils — barrel may pull server-only deps
-import { listarContratosPorClienteId } from "@/app/(authenticated)/contratos/service"
-import { buscarClientePorDocumento } from "@/app/(authenticated)/partes/service"
-import { formatarTipoContrato, formatarTipoCobranca, formatarPapelContratual, formatarData } from "@/app/(authenticated)/contratos/utils/formatters"
-import type { Contrato, StatusContrato } from "@/app/(authenticated)/contratos/domain"
+import { listarContratosPorClienteId, formatarTipoContrato, formatarTipoCobranca, formatarPapelContratual, formatarData } from "@/app/(authenticated)/contratos"
+import { buscarClientePorDocumento } from "@/app/(authenticated)/partes/server"
+import type { Contrato, StatusContrato } from "@/app/(authenticated)/contratos"
 import type { ContratoPortal, StatusContratoPortal } from "./domain"
 
 // ---------------------------------------------------------------------------

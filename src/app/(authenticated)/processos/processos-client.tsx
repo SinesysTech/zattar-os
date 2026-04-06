@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { LayoutGrid, List } from 'lucide-react';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
@@ -25,7 +24,7 @@ export interface ProcessosClientProps {
   initialProcessos: ProcessoUnificado[];
   initialTotal: number;
   initialStats: ProcessoStats;
-  tribunais: string[];
+  tribunais?: string[];
   usuarios: Usuario[];
   currentUserId: number;
 }
@@ -41,12 +40,10 @@ export function ProcessosClient({
   initialProcessos,
   initialTotal,
   initialStats,
-  tribunais,
+  tribunais: _tribunais,
   usuarios,
   currentUserId,
 }: ProcessosClientProps) {
-  const router = useRouter();
-
   const [processos] = useState(initialProcessos);
   const [total] = useState(initialTotal);
   const [stats] = useState(initialStats);

@@ -112,6 +112,7 @@ export {
   formatarSegmentoTipo,
   formatarTipoContrato,
   formatarTipoCobranca,
+  formatarPapelContratual,
   formatarStatusContrato,
   formatarData,
   formatarDataHora,

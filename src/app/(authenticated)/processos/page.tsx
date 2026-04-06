@@ -2,6 +2,7 @@ import { authenticateRequest } from '@/lib/auth/session';
 import { ProcessosClient } from './processos-client';
 import { listarProcessos, buscarUsuariosRelacionados, listarTribunais } from './service';
 import { obterEstatisticasProcessos } from './service-estatisticas';
+import type { ProcessoUnificado } from './domain';
 
 interface ProcessosPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -16,17 +17,20 @@ export default async function ProcessosPage({ searchParams: _ }: ProcessosPagePr
     obterEstatisticasProcessos(),
   ]);
 
-  const processos = processosResult.success ? ((processosResult as any).data?.data || []) : [];
-  const total = processosResult.success ? ((processosResult as any).data?.pagination?.total ?? processos.length) : 0;
-  const tribunaisRaw = tribunaisResult.success ? ((tribunaisResult as any).data || []) : [];
-  const tribunais: string[] = tribunaisRaw.map((t: any) => (typeof t === 'string' ? t : t.codigo));
+  const processos: ProcessoUnificado[] = processosResult.success
+    ? (processosResult.data.data as ProcessoUnificado[])
+    : [];
+  const total = processosResult.success ? processosResult.data.pagination.total : 0;
+  const tribunais = tribunaisResult.success
+    ? tribunaisResult.data.map((tribunal) => tribunal.codigo)
+    : [];
 
   // Resolve user names from processos array
   const usersRecord = processos.length > 0
     ? await buscarUsuariosRelacionados(processos)
     : {};
 
-  const usuarios = Object.entries(usersRecord).map(([id, u]: [string, any]) => ({
+  const usuarios = Object.entries(usersRecord).map(([id, u]) => ({
     id: Number(id),
     nomeExibicao: u.nome,
     avatarUrl: u.avatarUrl ?? null,

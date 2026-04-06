@@ -85,40 +85,6 @@ function NotFound() {
   );
 }
 
-function AjudaHome() {
-  return (
-    <div className="max-w-4xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading">Central de Ajuda</h1>
-        <p className="text-muted-foreground mt-2">
-          Documentação completa do Sinesys. Navegue pelos módulos abaixo ou use a busca na barra lateral.
-        </p>
-      </div>
-
-      {categories.map((cat) => (
-        <div key={cat.label} className="space-y-3">
-          <h2 className="text-lg font-semibold tracking-tight">{cat.label}</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {cat.items.map((item) => (
-              <Link key={item.href} href={item.href}>
-                <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
-                  <CardHeader className="flex flex-row items-center gap-3 p-4">
-                    <item.icon className="h-5 w-5 text-primary shrink-0" />
-                    <div className="min-w-0">
-                      <CardTitle className="text-sm">{item.title}</CardTitle>
-                      <CardDescription className="text-xs">{item.desc}</CardDescription>
-                    </div>
-                  </CardHeader>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 export default function DocPage({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = use(params);
 
