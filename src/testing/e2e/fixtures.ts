@@ -57,38 +57,48 @@ export const test = base.extend<CustomFixtures>({
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co';
     const projectId = new URL(supabaseUrl).hostname.split('.')[0];
     const storageKey = `sb-${projectId}-auth-token`;
+    const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
+    const payload = Buffer.from(JSON.stringify({ 
+      exp: Math.floor(Date.now() / 1000) + 3600, 
+      aud: 'authenticated', 
+      role: 'authenticated' 
+    })).toString('base64url');
+    const jwtMock = `${header}.${payload}.mock`;
 
-    // Add Supabase Cookies to prevent Server Components from throwing AuthSessionMissingError
+    const sessionObj = {
+      access_token: jwtMock,
+      refresh_token: jwtMock,
+      expires_in: 3600,
+      expires_at: Math.floor(Date.now() / 1000) + 3600,
+      token_type: 'bearer',
+      user: {
+        id: 'mock-auth',
+        aud: 'authenticated',
+        role: 'authenticated',
+        email: 'admin@zattar.com',
+        app_metadata: {},
+        user_metadata: {},
+      },
+    };
+    const base64Session = Buffer.from(JSON.stringify(sessionObj)).toString('base64url');
+
+
     await page.context().addCookies([
-      { name: storageKey, value: 'mock-token', domain: 'localhost', path: '/' },
-      { name: 'sb-mocked-auth-token', value: 'mock-token', domain: 'localhost', path: '/' }
+      { name: storageKey, value: base64Session, domain: 'localhost', path: '/' },
+      { name: 'sb-mocked-auth-token', value: base64Session, domain: 'localhost', path: '/' },
+      // Supabase sometimes looks for chunk 0
+      { name: `${storageKey}.0`, value: base64Session, domain: 'localhost', path: '/' },
+      { name: `${storageKey}.1`, value: '', domain: 'localhost', path: '/' }
     ]);
     
     // Add Supabase LocalStorage mock to prevent Supabase Auth client from throwing AuthSessionMissingError
-    await page.addInitScript((key: string) => {
-      window.localStorage.setItem(
-        key,
-        JSON.stringify({
-          access_token: 'mock-token',
-          refresh_token: 'mock-token',
-          expires_in: 3600,
-          expires_at: Math.floor(Date.now() / 1000) + 3600,
-          token_type: 'bearer',
-          user: {
-            id: 'mock-auth',
-            aud: 'authenticated',
-            role: 'authenticated',
-            email: 'admin@zattar.com',
-            app_metadata: {},
-            user_metadata: {},
-          },
-        })
-      );
+    await page.addInitScript((data: { key: string, session: any }) => {
+      window.localStorage.setItem(data.key, JSON.stringify(data.session));
       // Try multiple possible Supabase refs
-      window.localStorage.setItem('sb-ec9bb-auth-token', window.localStorage.getItem(key)!);
-      window.localStorage.setItem('sb-127.0.0.1-auth-token', window.localStorage.getItem(key)!);
-      window.localStorage.setItem('sb-localhost-auth-token', window.localStorage.getItem(key)!);
-    }, storageKey);
+      window.localStorage.setItem('sb-ec9bb-auth-token', JSON.stringify(data.session));
+      window.localStorage.setItem('sb-127.0.0.1-auth-token', JSON.stringify(data.session));
+      window.localStorage.setItem('sb-localhost-auth-token', JSON.stringify(data.session));
+    }, { key: storageKey, session: sessionObj });
 
     // Mock network call for getUser()
     await page.route('**/auth/v1/user', async (route) => {
