@@ -12,7 +12,7 @@ import { useMemo } from "react";
 import { AlertTriangle, Clock, ArrowRight } from "lucide-react";
 import { format, parseISO, differenceInMinutes, areIntervalsOverlapping } from "date-fns";
 import { cn } from "@/lib/utils";
-import { GlassPanel } from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
+import { GlassPanel } from '@/components/shared/glass-panel';
 import type { Audiencia } from "../domain";
 
 export interface ConflictAlertProps {

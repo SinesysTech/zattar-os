@@ -11,7 +11,8 @@
  */
 
 import { Clock, Building2 } from 'lucide-react';
-import { GlassPanel, fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

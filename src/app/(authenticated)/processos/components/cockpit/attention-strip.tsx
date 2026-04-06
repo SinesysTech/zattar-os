@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { Calendar, FileText, Microscope, ChevronRight, Clock, AlertTriangle } from 'lucide-react';
 import { format, differenceInDays, differenceInHours, isPast } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { GlassPanel } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { Audiencia } from '@/app/(authenticated)/audiencias';

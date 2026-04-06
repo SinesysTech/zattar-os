@@ -5,7 +5,7 @@ import { LayoutGrid } from 'lucide-react';
 import { usePermissoes } from '@/providers/user-provider';
 import { DashboardProvider } from '../hooks/use-dashboard';
 import { useWidgetLayout } from '../hooks/use-widget-layout';
-import { GlassPanel } from '../mock/widgets/primitives';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { WidgetPicker, type WidgetDefinition } from './widget-picker';
 import { Button } from '@/components/ui/button';
 

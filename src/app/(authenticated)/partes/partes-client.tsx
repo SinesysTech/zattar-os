@@ -39,7 +39,7 @@ import { PulseStrip, type PulseItem } from '@/components/dashboard/pulse-strip';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle } from '@/components/dashboard/view-toggle';
-import { GlassPanel } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { ClienteFormDialog } from './components/clientes/cliente-form';
 import { ParteContrariaFormDialog } from './components/partes-contrarias/parte-contraria-form';
 import { TerceiroFormDialog } from './components/terceiros/terceiro-form';

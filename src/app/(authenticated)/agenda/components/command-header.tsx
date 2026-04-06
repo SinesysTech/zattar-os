@@ -17,7 +17,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { GlassPanel } from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
+import { GlassPanel } from "@/components/shared/glass-panel";
 import type { DaySummary, WeekPulseDay } from "@/app/(authenticated)/calendar/briefing-domain";
 
 // ─── Props ─────────────────────────────────────────────────────────────

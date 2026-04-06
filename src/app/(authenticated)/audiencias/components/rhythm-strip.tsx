@@ -13,7 +13,8 @@ import { Zap } from 'lucide-react';
 import { parseISO, startOfWeek, differenceInDays, subWeeks } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { GlassPanel, CalendarHeatmap } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { CalendarHeatmap } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import type { Audiencia } from '../domain';
 
 // ─── Types ────────────────────────────────────────────────────────────────

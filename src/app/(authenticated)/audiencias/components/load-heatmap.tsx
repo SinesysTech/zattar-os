@@ -12,7 +12,7 @@
 import { useMemo } from "react";
 import { BarChart3, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { GlassPanel } from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
+import { GlassPanel } from '@/components/shared/glass-panel';
 import type { Audiencia } from "../domain";
 
 export interface LoadHeatmapProps {
