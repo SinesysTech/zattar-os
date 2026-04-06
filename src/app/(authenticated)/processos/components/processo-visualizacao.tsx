@@ -96,9 +96,6 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   const [usuarios, setUsuarios] = useState<
     Array<{ id: number; nomeExibicao: string; avatarUrl?: string | null }>
   >([]);
-  const [usuariosMap, setUsuariosMap] = useState<
-    Map<number, { id: number; nomeExibicao: string; avatarUrl?: string | null }>
-  >(new Map());
 
   useEffect(() => {
     let cancelled = false;
@@ -121,7 +118,6 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
             avatarUrl: u.avatarUrl ?? null,
           }));
           setUsuarios(lista);
-          setUsuariosMap(new Map(lista.map((u) => [u.id, u])));
         }
       })
       .catch((err) => console.error('Erro ao carregar usuários:', err));
@@ -130,12 +126,15 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
     };
   }, []);
 
+  const processoId = processo?.id;
+  const processoNumero = processo?.numeroProcesso;
+
   // Fetch de dados complementares (audiências, expedientes, perícias) para AttentionStrip
   useEffect(() => {
-    if (!processo) return;
+    if (!processoId || !processoNumero) return;
     let cancelled = false;
 
-    actionObterDetalhesComplementaresProcesso(processo.id, processo.numeroProcesso)
+    actionObterDetalhesComplementaresProcesso(processoId, processoNumero)
       .then((result) => {
         if (cancelled) return;
         if (result.success && result.data) {
@@ -149,7 +148,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
     return () => {
       cancelled = true;
     };
-  }, [processo?.id, processo?.numeroProcesso]);
+  }, [processoId, processoNumero]);
 
   // Auto-selecionar primeiro documento quando timeline carrega
   useEffect(() => {
@@ -533,7 +532,6 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
         onOpenChange={setIsAllDetailsOpen}
         processoId={processo.id}
         numeroProcesso={processo.numeroProcesso}
-        usuariosMap={usuariosMap}
       />
 
       {/* Estado: Erro durante captura */}

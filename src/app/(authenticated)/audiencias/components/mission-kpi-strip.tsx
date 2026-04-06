@@ -18,7 +18,6 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 import {
   Sparkline,
   AnimatedNumber,
-  ProgressRing,
 } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import type { Audiencia } from '../domain';
 import { StatusAudiencia } from '../domain';

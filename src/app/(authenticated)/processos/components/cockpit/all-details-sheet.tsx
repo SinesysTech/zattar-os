@@ -18,18 +18,11 @@ import type { Audiencia } from '@/app/(authenticated)/audiencias';
 import type { Expediente } from '@/app/(authenticated)/expedientes';
 import type { Pericia } from '@/app/(authenticated)/pericias';
 
-interface UsuarioInfo {
-  id: number;
-  nomeExibicao: string;
-  avatarUrl?: string | null;
-}
-
 interface AllDetailsSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   processoId: number;
   numeroProcesso: string;
-  usuariosMap: Map<number, UsuarioInfo>;
 }
 
 export function AllDetailsSheet({
@@ -37,7 +30,6 @@ export function AllDetailsSheet({
   onOpenChange,
   processoId,
   numeroProcesso,
-  usuariosMap,
 }: AllDetailsSheetProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [audiencias, setAudiencias] = useState<Audiencia[]>([]);

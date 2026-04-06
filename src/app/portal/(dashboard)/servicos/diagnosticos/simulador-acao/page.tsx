@@ -11,7 +11,6 @@ import {
   type ResultadoSimuladorAcao,
   type GravidadeDanoMoral,
   type GrauInsalubridade,
-  LABELS_VERBAS,
   SALARIO_MINIMO_2026,
   INSALUBRIDADE_PERCENTUAIS,
   PERICULOSIDADE_PERCENTUAL,

@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Servicos Trabalhistas | Zattar Advogados",
@@ -11,15 +12,15 @@ export default function ServicosPublicLayout({ children }: { children: React.Rea
       {/* Simple header */}
       <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <a href="/" className="font-headline font-bold text-lg tracking-tight">
+          <Link href="/" className="font-headline font-bold text-lg tracking-tight">
             Zattar <span className="text-primary">Advogados</span>
-          </a>
-          <a
+          </Link>
+          <Link
             href="/portal"
             className="text-xs font-bold uppercase tracking-widest bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors"
           >
             Acessar Portal
-          </a>
+          </Link>
         </div>
       </header>
 

@@ -13,7 +13,7 @@ export interface ExpedientesMonthWrapperProps {
 
 export function ExpedientesMonthWrapper({
   expedientes,
-  onViewDetail,
+  onViewDetail: _onViewDetail,
 }: ExpedientesMonthWrapperProps) {
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const [currentMonth, setCurrentMonth] = React.useState<Date>(new Date());

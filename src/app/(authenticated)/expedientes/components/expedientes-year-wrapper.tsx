@@ -9,7 +9,7 @@ export interface ExpedientesYearWrapperProps {
 }
 
 export function ExpedientesYearWrapper({
-  expedientes,
+  expedientes: _expedientes,
   currentDate = new Date(),
 }: ExpedientesYearWrapperProps) {
   return (

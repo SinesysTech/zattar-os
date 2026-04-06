@@ -80,13 +80,8 @@ export function PulseTimeline({
   const nowRef = useRef<HTMLDivElement>(null);
   const [activeFilter, setActiveFilter] = useState<TimelineFilterType>('todos');
   const [activeGrau, setActiveGrau] = useState<GrauProcesso | 'todos'>('todos');
-  const [seenItems, setSeenItems] = useState<Set<number>>(new Set());
 
   const lastVisitKey = `processo_last_visit_${processoId}`;
-  const lastVisitDate = useMemo(() => {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem(lastVisitKey);
-  }, [lastVisitKey]);
 
   useEffect(() => {
     localStorage.setItem(lastVisitKey, new Date().toISOString());
@@ -113,10 +108,6 @@ export function PulseTimeline({
   );
 
   const pastGroups = useMemo(() => groupByMonth(pastItems), [pastItems]);
-
-  const handleMarkSeen = useCallback((itemId: number) => {
-    setSeenItems((prev) => new Set([...prev, itemId]));
-  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -192,7 +183,6 @@ export function PulseTimeline({
             items={monthItems}
             selectedItemId={selectedItemId}
             onSelectItem={(item) => {
-              handleMarkSeen(item.id);
               onSelectItem(item);
             }}
             defaultExpanded

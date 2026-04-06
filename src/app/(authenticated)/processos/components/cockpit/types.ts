@@ -1,5 +1,3 @@
-import type { GrauProcesso } from '@/app/(authenticated)/partes';
-
 export type TimelineFilterType =
   | 'todos'
   | 'documentos'

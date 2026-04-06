@@ -42,7 +42,6 @@ import {
   GlassPanel,
   Sparkline,
   AnimatedNumber,
-  ProgressRing,
   CalendarHeatmap,
   InsightBanner,
 } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
