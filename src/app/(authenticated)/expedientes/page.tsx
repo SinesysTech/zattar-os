@@ -53,10 +53,8 @@ function ExpedientesLoading() {
  */
 export default function ExpedientesPage() {
   return (
-    <div className="max-w-350 mx-auto space-y-5">
-      <Suspense fallback={<ExpedientesLoading />}>
-        <ExpedientesContent visualizacao="quadro" />
-      </Suspense>
-    </div>
+    <Suspense fallback={<ExpedientesLoading />}>
+      <ExpedientesContent visualizacao="quadro" />
+    </Suspense>
   );
 }

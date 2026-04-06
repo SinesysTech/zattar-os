@@ -58,8 +58,8 @@ export function ExpedientesPulseStrip({
       label: 'Hoje',
       value: hoje,
       icon: Clock,
-      color: 'text-amber-500',
-      bgColor: 'bg-amber-500',
+      color: 'text-warning',
+      bgColor: 'bg-warning',
     },
     {
       label: 'Próximos 3d',
