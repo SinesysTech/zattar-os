@@ -42,7 +42,7 @@ describe('Sincronização', () => {
 
       expect(ObrigacoesService.sincronizarParcela).toHaveBeenCalledWith(1, false);
       expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro');
-      expect(revalidatePath).toHaveBeenCalledWith('/app/acordos-condenacoes');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/obrigacoes');
       expect(result).toEqual({
         success: true,
         message: 'Parcela sincronizada com sucesso',
@@ -84,8 +84,8 @@ describe('Sincronização', () => {
 
       expect(ObrigacoesService.sincronizarAcordo).toHaveBeenCalledWith(1, false);
       expect(revalidatePath).toHaveBeenCalledWith('/app/financeiro');
-      expect(revalidatePath).toHaveBeenCalledWith('/app/acordos-condenacoes');
-      expect(revalidatePath).toHaveBeenCalledWith('/app/acordos-condenacoes/1');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/obrigacoes');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/obrigacoes/1');
       expect(result.success).toBe(true);
     });
 
@@ -97,7 +97,7 @@ describe('Sincronização', () => {
 
       await actionSincronizarAcordo(123);
 
-      expect(revalidatePath).toHaveBeenCalledWith('/app/acordos-condenacoes/123');
+      expect(revalidatePath).toHaveBeenCalledWith('/app/obrigacoes/123');
     });
   });
 

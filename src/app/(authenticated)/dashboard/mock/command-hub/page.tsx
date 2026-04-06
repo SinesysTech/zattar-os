@@ -56,7 +56,7 @@ const navEscritorio: NavItem[] = [
   { id: 'partes',      title: 'Partes',      url: '/app/partes',            icon: Users,           shortcut: '⌘4', description: 'Clientes e partes' },
   { id: 'expedientes', title: 'Expedientes', url: '/app/expedientes',       icon: Inbox,           shortcut: '⌘5', description: '14 pendentes' },
   { id: 'audiencias',  title: 'Audiências',  url: '/app/audiencias/semana', icon: Gavel,           shortcut: '⌘6', description: '3 esta semana' },
-  { id: 'obrigacoes',  title: 'Obrigações',  url: '/app/acordos-condenacoes', icon: ScrollText,    shortcut: '⌘7', description: 'Acordos e prazos' },
+  { id: 'obrigacoes',  title: 'Obrigações',  url: '/app/obrigacoes',          icon: ScrollText,    shortcut: '⌘7', description: 'Acordos e prazos' },
   { id: 'pericias',    title: 'Perícias',    url: '/app/pericias',          icon: Microscope,      shortcut: '⌘8', description: '5 em andamento' },
 ];
 
