@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { CalendarDays, Scale, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -104,7 +105,9 @@ function formatarGrau(grau: string | null | undefined): string {
  * Item individual de processo com HoverCard rico
  */
 function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
+  const router = useRouter();
   const numeroFormatado = formatarNumeroProcesso(processo.numero_processo);
+  const processoHref = `/app/processos/${processo.processo_id}`;
 
   // Determina a parte contrária baseado no polo do cliente
   // Se o cliente está no polo ATIVO, a parte contrária é do polo passivo (nome_parte_re)
@@ -119,7 +122,12 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
       <HoverCard openDelay={200} closeDelay={100}>
         <HoverCardTrigger asChild>
           <Link
-            href={`/app/processos/${processo.processo_id}`}
+            href={processoHref}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              router.push(processoHref);
+            }}
             className="inline-flex items-center text-xs min-h-6 px-2 py-0.5 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-w-0"
           >
             <span className="break-all">{numeroFormatado}</span>

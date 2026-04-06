@@ -16,115 +16,9 @@
  * Cores base do sistema usando Tailwind color palette.
  * Estas cores são usadas internamente pelos mapeamentos semânticos.
  */
-export const COLORS = {
-  // Tons de azul
-  blue: {
-    50: 'bg-blue-50',
-    100: 'bg-blue-100',
-    200: 'bg-blue-200',
-    500: 'bg-blue-500',
-    700: 'text-blue-700',
-    800: 'text-blue-800',
-    900: 'bg-blue-900',
-  },
-  // Tons de verde/emerald
-  emerald: {
-    100: 'bg-emerald-100',
-    500: 'bg-emerald-500',
-    700: 'text-emerald-700',
-    800: 'text-emerald-800',
-    900: 'bg-emerald-900',
-  },
-  // Tons de âmbar/warning
-  amber: {
-    100: 'bg-orange-100',
-    500: 'bg-orange-500',
-    700: 'text-orange-700',
-    800: 'text-orange-800',
-    900: 'bg-orange-900',
-  },
-  // Tons de vermelho/destructive
-  red: {
-    100: 'bg-red-100',
-    500: 'bg-red-500',
-    600: 'bg-red-600',
-    700: 'text-red-700',
-    800: 'text-red-800',
-    900: 'bg-red-900',
-  },
-  // Tons de roxo
-  purple: {
-    100: 'bg-purple-100',
-    500: 'bg-purple-500',
-    700: 'text-purple-700',
-    800: 'text-purple-800',
-    900: 'bg-purple-900',
-  },
-  // Tons de cinza/slate
-  slate: {
-    100: 'bg-slate-100',
-    500: 'bg-slate-500',
-    700: 'text-slate-700',
-    800: 'text-slate-800',
-    900: 'bg-slate-900',
-  },
-  // Tons de laranja
-  orange: {
-    100: 'bg-orange-100',
-    500: 'bg-orange-500',
-    700: 'text-orange-700',
-    800: 'text-orange-800',
-    900: 'bg-orange-900',
-  },
-  // Tons de teal
-  teal: {
-    100: 'bg-teal-100',
-    500: 'bg-teal-500',
-    700: 'text-teal-700',
-    800: 'text-teal-800',
-    900: 'bg-teal-900',
-  },
-  // Tons de indigo
-  indigo: {
-    100: 'bg-indigo-100',
-    500: 'bg-indigo-500',
-    700: 'text-indigo-700',
-    800: 'text-indigo-800',
-    900: 'bg-indigo-900',
-  },
-  // Tons de cyan
-  cyan: {
-    100: 'bg-cyan-100',
-    500: 'bg-cyan-500',
-    700: 'text-cyan-700',
-    800: 'text-cyan-800',
-    900: 'bg-cyan-900',
-  },
-  // Tons de pink
-  pink: {
-    100: 'bg-pink-100',
-    500: 'bg-pink-500',
-    700: 'text-pink-700',
-    800: 'text-pink-800',
-    900: 'bg-pink-900',
-  },
-  // Tons de verde
-  green: {
-    100: 'bg-green-100',
-    500: 'bg-green-500',
-    700: 'text-green-700',
-    800: 'text-green-800',
-    900: 'bg-green-900',
-  },
-  // Tons de yellow
-  yellow: {
-    100: 'bg-orange-100',
-    500: 'bg-orange-500',
-    700: 'text-orange-700',
-    800: 'text-orange-800',
-    900: 'bg-orange-900',
-  },
-} as const;
+// COLORS object removido — cores hardcoded (bg-blue-50, text-red-700 etc.)
+// violam o Design System. Use CSS variables (bg-primary, text-success, etc.)
+// e getSemanticBadgeVariant() de variants.ts para mapeamentos semânticos.
 
 // =============================================================================
 // ESPAÇAMENTOS (Grid 4px)
@@ -672,7 +566,6 @@ export const Z_INDEX = {
 // =============================================================================
 
 export const TOKENS = {
-  colors: COLORS,
   spacing: SPACING,
   spacingClasses: SPACING_CLASSES,
   spacingSemantic: SPACING_SEMANTIC,

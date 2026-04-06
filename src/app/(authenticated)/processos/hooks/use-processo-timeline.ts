@@ -268,6 +268,8 @@ export function useProcessoTimeline(
     (async () => {
       try {
         await fetchData();
+      } catch {
+        // Erro já tratado por setError dentro de fetchData
       } finally {
         if (mounted) {
           setIsLoading(false);

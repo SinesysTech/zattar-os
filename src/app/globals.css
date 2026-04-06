@@ -95,6 +95,7 @@
   --font-heading: var(--font-montserrat); /* Títulos */
   --font-headline: var(--font-manrope); /* Magistrate AI Headline */
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-montserrat); /* KPIs, métricas grandes — alias de heading */
   --font-label: var(--font-inter);   /* Alias → font-sans (labels, chips, badges) */
   --font-body: var(--font-inter);    /* Alias → font-sans (corpo de texto) */
 

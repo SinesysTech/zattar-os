@@ -215,6 +215,176 @@ export async function buscarExpedientesUrgentes(
 }
 
 /**
+ * Busca métricas detalhadas de expedientes para widgets secundários.
+ */
+export async function buscarExpedientesDetalhados(
+  responsavelId?: number
+): Promise<{
+  porOrigem: { origem: string; count: number; color: string }[];
+  resultadoDecisao: { resultado: string; count: number; color: string }[];
+  volumeSemanal: { dia: string; recebidos: number; baixados: number }[];
+  prazoMedio: number[];
+  calendarioPrazos: number[];
+  tempoRespostaMedio: number;
+  taxaCumprimento: number;
+  backlogAtual: number;
+}> {
+  const supabase = await createClient();
+
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+
+  // Buscar expedientes dos últimos 60 dias para análise
+  const sessenta = new Date(hoje);
+  sessenta.setDate(sessenta.getDate() - 60);
+
+  let query = supabase
+    .from('expedientes_com_origem')
+    .select('id, data_prazo_legal_parte, baixado_em, origem, resultado_decisao, created_at')
+    .gte('created_at', sessenta.toISOString());
+
+  if (responsavelId) {
+    query = query.eq('responsavel_id', responsavelId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('[Dashboard] Erro ao buscar expedientes detalhados:', error);
+    return {
+      porOrigem: [],
+      resultadoDecisao: [],
+      volumeSemanal: [],
+      prazoMedio: [],
+      calendarioPrazos: [],
+      tempoRespostaMedio: 0,
+      taxaCumprimento: 0,
+      backlogAtual: 0,
+    };
+  }
+
+  const expedientes = data || [];
+
+  // --- Distribuição por origem ---
+  const ORIGEM_COLORS: Record<string, string> = {
+    'Captura PJE': 'hsl(217 91% 60%)',
+    'Comunica CNJ': 'hsl(35 95% 58%)',
+    'Manual': 'hsl(var(--muted-foreground) / 0.55)',
+  };
+  const origemMap = new Map<string, number>();
+  expedientes.forEach((e) => {
+    let origemLabel: string;
+    if (e.origem === 'expedientes_manuais') origemLabel = 'Manual';
+    else origemLabel = 'Captura PJE'; // Default — em produção seria mais granular
+    origemMap.set(origemLabel, (origemMap.get(origemLabel) || 0) + 1);
+  });
+  const porOrigem = Array.from(origemMap.entries()).map(([origem, count]) => ({
+    origem,
+    count,
+    color: ORIGEM_COLORS[origem] || 'hsl(215 14% 60%)',
+  }));
+
+  // --- Resultado das decisões ---
+  const RESULTADO_COLORS: Record<string, string> = {
+    'Favorável': 'hsl(142 71% 45%)',
+    'Parc. Favorável': 'hsl(35 95% 58%)',
+    'Desfavorável': 'hsl(var(--destructive))',
+  };
+  const resultadoMap = new Map<string, number>();
+  expedientes.filter((e) => e.baixado_em && e.resultado_decisao).forEach((e) => {
+    const res = e.resultado_decisao || 'Outros';
+    resultadoMap.set(res, (resultadoMap.get(res) || 0) + 1);
+  });
+  const resultadoDecisao = Array.from(resultadoMap.entries()).map(([resultado, count]) => ({
+    resultado,
+    count,
+    color: RESULTADO_COLORS[resultado] || 'hsl(215 14% 60%)',
+  }));
+
+  // --- Volume semanal (semana atual) ---
+  const diasLabel = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'];
+  const inicioSemana = new Date(hoje);
+  const diaSemana = inicioSemana.getDay();
+  inicioSemana.setDate(inicioSemana.getDate() - ((diaSemana + 6) % 7));
+
+  const volumeSemanal: { dia: string; recebidos: number; baixados: number }[] = diasLabel.map((dia, i) => {
+    const diaDate = new Date(inicioSemana);
+    diaDate.setDate(diaDate.getDate() + i);
+    const diaStr = toDateString(diaDate);
+
+    const recebidos = expedientes.filter((e) => toDateString(new Date(e.created_at)) === diaStr).length;
+    const baixados = expedientes.filter((e) => e.baixado_em && toDateString(new Date(e.baixado_em)) === diaStr).length;
+
+    return { dia, recebidos, baixados };
+  });
+
+  // --- Prazo médio (últimas 8 semanas) ---
+  const prazoMedio: number[] = [];
+  for (let i = 7; i >= 0; i--) {
+    const semanaFim = new Date(hoje);
+    semanaFim.setDate(semanaFim.getDate() - i * 7);
+    const semanaInicio = new Date(semanaFim);
+    semanaInicio.setDate(semanaInicio.getDate() - 7);
+
+    const baixados = expedientes.filter((e) => {
+      if (!e.baixado_em) return false;
+      const baixa = new Date(e.baixado_em);
+      return baixa >= semanaInicio && baixa < semanaFim;
+    });
+
+    if (baixados.length > 0) {
+      const totalDias = baixados.reduce((sum, e) => {
+        const criado = new Date(e.created_at);
+        const baixado = new Date(e.baixado_em!);
+        return sum + Math.max(0, (baixado.getTime() - criado.getTime()) / (1000 * 60 * 60 * 24));
+      }, 0);
+      prazoMedio.push(Number((totalDias / baixados.length).toFixed(1)));
+    } else {
+      prazoMedio.push(prazoMedio.length > 0 ? prazoMedio[prazoMedio.length - 1] : 5);
+    }
+  }
+
+  // --- Calendário de prazos (heatmap 35 dias) ---
+  const calendarioPrazos: number[] = new Array(35).fill(0);
+  const inicioHeatmap = new Date(hoje);
+  inicioHeatmap.setDate(inicioHeatmap.getDate() - 34);
+  expedientes.forEach((e) => {
+    if (!e.data_prazo_legal_parte) return;
+    const prazo = new Date(e.data_prazo_legal_parte);
+    prazo.setHours(0, 0, 0, 0);
+    const diff = Math.floor((prazo.getTime() - inicioHeatmap.getTime()) / (1000 * 60 * 60 * 24));
+    if (diff >= 0 && diff < 35) {
+      calendarioPrazos[diff]++;
+    }
+  });
+
+  // --- Métricas derivadas ---
+  const baixadosTotal = expedientes.filter((e) => e.baixado_em);
+  const tempoRespostaMedio = prazoMedio.length > 0 ? prazoMedio[prazoMedio.length - 1] : 0;
+
+  const cumpridos = baixadosTotal.filter((e) => {
+    if (!e.data_prazo_legal_parte || !e.baixado_em) return false;
+    return new Date(e.baixado_em) <= new Date(e.data_prazo_legal_parte);
+  });
+  const taxaCumprimento = baixadosTotal.length > 0
+    ? Math.round((cumpridos.length / baixadosTotal.length) * 100)
+    : 0;
+
+  const backlogAtual = expedientes.filter((e) => !e.baixado_em).length;
+
+  return {
+    porOrigem,
+    resultadoDecisao,
+    volumeSemanal,
+    prazoMedio,
+    calendarioPrazos,
+    tempoRespostaMedio,
+    taxaCumprimento,
+    backlogAtual,
+  };
+}
+
+/**
  * Obtém total de expedientes pendentes
  */
 export async function buscarTotalExpedientesPendentes(): Promise<{

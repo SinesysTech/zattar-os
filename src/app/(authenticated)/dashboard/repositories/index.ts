@@ -7,12 +7,14 @@
 // Processos Metrics
 export {
   buscarProcessosResumo,
+  buscarProcessosDetalhados,
   buscarTotalProcessos,
 } from './processos-metrics';
 
 // Audiências Metrics
 export {
   buscarAudienciasResumo,
+  buscarAudienciasDetalhadas,
   buscarProximasAudiencias,
   buscarAudienciasMes,
 } from './audiencias-metrics';
@@ -20,6 +22,7 @@ export {
 // Expedientes Metrics
 export {
   buscarExpedientesResumo,
+  buscarExpedientesDetalhados,
   buscarExpedientesUrgentes,
   buscarTotalExpedientesPendentes,
 } from './expedientes-metrics';
@@ -37,7 +40,13 @@ export {
 } from './admin-metrics';
 
 // Financeiro Metrics
-export { buscarDadosFinanceirosConsolidados } from './financeiro-metrics';
+export {
+  buscarDadosFinanceirosConsolidados,
+  buscarFinanceiroDetalhado,
+} from './financeiro-metrics';
+
+// Contratos Metrics
+export { buscarContratosResumo } from './contratos-metrics';
 
 // Shared Formatters
 export { formatarMoeda } from './shared/formatters';

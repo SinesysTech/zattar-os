@@ -15,6 +15,30 @@
 import { createClient } from '@/lib/supabase/server';
 import type { ProcessoResumo } from '../domain';
 
+// Cores padrão para distribuição por status
+const STATUS_COLORS: Record<string, string> = {
+  'Ativos': 'hsl(142 60% 45%)',
+  'Suspensos': 'hsl(45 93% 47%)',
+  'Arquivados': 'hsl(215 14% 60%)',
+  'Em Recurso': 'hsl(220 70% 60%)',
+};
+
+const SEGMENTO_COLORS: Record<string, string> = {
+  'Trabalhista': 'hsl(262 60% 55%)',
+  'Cível': 'hsl(220 70% 60%)',
+  'Previdenciário': 'hsl(280 60% 60%)',
+  'Empresarial': 'hsl(45 93% 47%)',
+  'Criminal': 'hsl(0 72% 51%)',
+  'Outros': 'hsl(215 14% 60%)',
+};
+
+const AGING_COLORS: Record<string, string> = {
+  '< 1 ano': 'hsl(142 60% 45%)',
+  '1–2 anos': 'hsl(60 70% 50%)',
+  '2–5 anos': 'hsl(30 80% 52%)',
+  '> 5 anos': 'hsl(0 70% 55%)',
+};
+
 /**
  * Obtém resumo de processos do usuário
  *
@@ -114,6 +138,126 @@ export async function buscarProcessosResumo(
     porGrau,
     porTRT,
   };
+}
+
+/**
+ * Busca métricas detalhadas de processos para widgets secundários.
+ * Retorna distribuição por status, segmento, aging e tendência mensal.
+ */
+export async function buscarProcessosDetalhados(
+  responsavelId?: number
+): Promise<{
+  porStatus: { status: string; count: number; color: string }[];
+  porSegmento: { segmento: string; count: number; color: string }[];
+  aging: { faixa: string; count: number; color: string }[];
+  tendenciaMensal: { mes: string; novos: number; resolvidos: number }[];
+}> {
+  const supabase = await createClient();
+
+  // Buscar todos os processos com data de distribuição e área jurídica
+  let query = supabase
+    .from('acervo')
+    .select('numero_processo, status_acervo, area_juridica, data_distribuicao, origem, created_at')
+    .not('numero_processo', 'is', null)
+    .neq('numero_processo', '');
+
+  if (responsavelId) {
+    query = query.eq('responsavel_id', responsavelId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('[Dashboard] Erro ao buscar processos detalhados:', error);
+    return { porStatus: [], porSegmento: [], aging: [], tendenciaMensal: [] };
+  }
+
+  const processos = data || [];
+
+  // Deduplicar por numero_processo (pegar o registro mais recente)
+  const porNumero = new Map<string, (typeof processos)[0]>();
+  processos.forEach((p) => {
+    if (p.numero_processo && !porNumero.has(p.numero_processo)) {
+      porNumero.set(p.numero_processo, p);
+    }
+  });
+  const unicos = Array.from(porNumero.values());
+
+  // --- Distribuição por status ---
+  const statusMap = new Map<string, number>();
+  unicos.forEach((p) => {
+    const origem = p.origem || 'acervo_geral';
+    let statusLabel: string;
+    if (origem === 'arquivado') statusLabel = 'Arquivados';
+    else if (p.status_acervo === 'suspenso') statusLabel = 'Suspensos';
+    else if (p.status_acervo === 'recurso' || p.status_acervo === 'em_recurso') statusLabel = 'Em Recurso';
+    else statusLabel = 'Ativos';
+    statusMap.set(statusLabel, (statusMap.get(statusLabel) || 0) + 1);
+  });
+  const porStatus = Array.from(statusMap.entries()).map(([status, count]) => ({
+    status,
+    count,
+    color: STATUS_COLORS[status] || 'hsl(215 14% 60%)',
+  }));
+
+  // --- Distribuição por segmento (área jurídica) ---
+  const segmentoMap = new Map<string, number>();
+  unicos.forEach((p) => {
+    const area = p.area_juridica || 'Outros';
+    const label = area.charAt(0).toUpperCase() + area.slice(1).toLowerCase();
+    segmentoMap.set(label, (segmentoMap.get(label) || 0) + 1);
+  });
+  const porSegmento = Array.from(segmentoMap.entries())
+    .map(([segmento, count]) => ({
+      segmento,
+      count,
+      color: SEGMENTO_COLORS[segmento] || 'hsl(215 14% 60%)',
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  // --- Aging por faixas de duração ---
+  const agora = new Date();
+  const agingMap = new Map<string, number>();
+  unicos.forEach((p) => {
+    const dataRef = p.data_distribuicao || p.created_at;
+    if (!dataRef) return;
+    const meses = Math.floor((agora.getTime() - new Date(dataRef).getTime()) / (1000 * 60 * 60 * 24 * 30));
+    let faixa: string;
+    if (meses < 12) faixa = '< 1 ano';
+    else if (meses < 24) faixa = '1–2 anos';
+    else if (meses < 60) faixa = '2–5 anos';
+    else faixa = '> 5 anos';
+    agingMap.set(faixa, (agingMap.get(faixa) || 0) + 1);
+  });
+  const agingOrder = ['< 1 ano', '1–2 anos', '2–5 anos', '> 5 anos'];
+  const aging = agingOrder
+    .filter((faixa) => agingMap.has(faixa))
+    .map((faixa) => ({
+      faixa,
+      count: agingMap.get(faixa) || 0,
+      color: AGING_COLORS[faixa] || 'hsl(215 14% 60%)',
+    }));
+
+  // --- Tendência mensal (últimos 8 meses) ---
+  const tendenciaMensal: { mes: string; novos: number; resolvidos: number }[] = [];
+  const mesesLabel = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  for (let i = 7; i >= 0; i--) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - i);
+    const ano = d.getFullYear();
+    const mes = d.getMonth();
+    const novos = processos.filter((p) => {
+      const created = new Date(p.created_at);
+      return created.getFullYear() === ano && created.getMonth() === mes;
+    }).length;
+    tendenciaMensal.push({
+      mes: mesesLabel[mes],
+      novos,
+      resolvidos: 0, // Requer dados de encerramento que não estão no acervo
+    });
+  }
+
+  return { porStatus, porSegmento, aging, tendenciaMensal };
 }
 
 /**

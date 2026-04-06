@@ -11,12 +11,17 @@
 import { unstable_cache } from 'next/cache';
 import {
   buscarProcessosResumo,
+  buscarProcessosDetalhados,
   buscarAudienciasResumo,
+  buscarAudienciasDetalhadas,
   buscarExpedientesResumo,
+  buscarExpedientesDetalhados,
   buscarProximasAudiencias,
   buscarExpedientesUrgentes,
   buscarProdutividadeUsuario,
   buscarDadosFinanceirosConsolidados,
+  buscarFinanceiroDetalhado,
+  buscarContratosResumo,
   buscarMetricasEscritorio,
   buscarCargaUsuarios,
   buscarStatusCapturas,
@@ -32,6 +37,7 @@ import type {
   ExpedientesResumo,
   ProdutividadeResumo,
   DadosFinanceirosConsolidados,
+  ContratosResumo,
   AudienciaProxima,
   ExpedienteUrgente,
 } from './domain';
@@ -105,13 +111,14 @@ export async function obterDashboardUsuario(
   usuarioId: number
 ): Promise<DashboardUsuarioData> {
   // Buscar dados do usuário e permissões em paralelo
-  const [usuario, podeVerProcessos, podeVerAudiencias, podeVerExpedientes, podeVerFinanceiro] =
+  const [usuario, podeVerProcessos, podeVerAudiencias, podeVerExpedientes, podeVerFinanceiro, podeVerContratos] =
     await Promise.all([
       buscarUsuario(usuarioId),
       checkPermission(usuarioId, 'processos', 'read'),
       checkPermission(usuarioId, 'audiencias', 'read'),
       checkPermission(usuarioId, 'expedientes', 'read'),
       checkPermission(usuarioId, 'financeiro', 'read'),
+      checkPermission(usuarioId, 'contratos', 'read'),
     ]);
 
   // Buscar apenas dados permitidos em paralelo
@@ -124,6 +131,11 @@ export async function obterDashboardUsuario(
     expedientesUrgentes?: number;
     produtividade?: number;
     dadosFinanceiros?: number;
+    processosDetalhados?: number;
+    audienciasDetalhadas?: number;
+    expedientesDetalhados?: number;
+    financeiroDetalhado?: number;
+    contratos?: number;
   } = {};
 
   let currentIndex = 0;
@@ -191,7 +203,112 @@ export async function obterDashboardUsuario(
     indices.dadosFinanceiros = currentIndex++;
   }
 
+  // Métricas detalhadas para widgets secundários
+  if (podeVerProcessos) {
+    indices.processosDetalhados = currentIndex++;
+    promises.push(buscarProcessosDetalhados(usuarioId));
+  }
+
+  if (podeVerAudiencias) {
+    indices.audienciasDetalhadas = currentIndex++;
+    promises.push(buscarAudienciasDetalhadas(usuarioId));
+  }
+
+  if (podeVerExpedientes) {
+    indices.expedientesDetalhados = currentIndex++;
+    promises.push(buscarExpedientesDetalhados(usuarioId));
+  }
+
+  if (podeVerFinanceiro) {
+    indices.financeiroDetalhado = currentIndex++;
+    promises.push(buscarFinanceiroDetalhado(usuarioId));
+  }
+
+  if (podeVerContratos) {
+    indices.contratos = currentIndex++;
+    promises.push(buscarContratosResumo());
+  }
+
   const results = await Promise.all(promises);
+
+  // Mesclar dados detalhados nos resumos
+  const processos = results[indices.processos!] as ProcessoResumo;
+  if (indices.processosDetalhados !== undefined) {
+    const det = results[indices.processosDetalhados] as {
+      porStatus: ProcessoResumo['porStatus'];
+      porSegmento: ProcessoResumo['porSegmento'];
+      aging: ProcessoResumo['aging'];
+      tendenciaMensal: ProcessoResumo['tendenciaMensal'];
+    };
+    processos.porStatus = det.porStatus;
+    processos.porSegmento = det.porSegmento;
+    processos.aging = det.aging;
+    processos.tendenciaMensal = det.tendenciaMensal;
+  }
+
+  const audiencias = results[indices.audiencias!] as AudienciasResumo;
+  if (indices.audienciasDetalhadas !== undefined) {
+    const det = results[indices.audienciasDetalhadas] as {
+      porModalidade: AudienciasResumo['porModalidade'];
+      statusMensal: AudienciasResumo['statusMensal'];
+      porTipo: AudienciasResumo['porTipo'];
+      trendMensal: AudienciasResumo['trendMensal'];
+      heatmapSemanal: AudienciasResumo['heatmapSemanal'];
+      duracaoMedia: AudienciasResumo['duracaoMedia'];
+      taxaComparecimento: AudienciasResumo['taxaComparecimento'];
+    };
+    audiencias.porModalidade = det.porModalidade;
+    audiencias.statusMensal = det.statusMensal;
+    audiencias.porTipo = det.porTipo;
+    audiencias.trendMensal = det.trendMensal;
+    audiencias.heatmapSemanal = det.heatmapSemanal;
+    audiencias.duracaoMedia = det.duracaoMedia;
+    audiencias.taxaComparecimento = det.taxaComparecimento;
+  }
+
+  const expedientes = results[indices.expedientes!] as ExpedientesResumo;
+  if (indices.expedientesDetalhados !== undefined) {
+    const det = results[indices.expedientesDetalhados] as {
+      porOrigem: ExpedientesResumo['porOrigem'];
+      resultadoDecisao: ExpedientesResumo['resultadoDecisao'];
+      volumeSemanal: ExpedientesResumo['volumeSemanal'];
+      prazoMedio: ExpedientesResumo['prazoMedio'];
+      calendarioPrazos: ExpedientesResumo['calendarioPrazos'];
+      tempoRespostaMedio: ExpedientesResumo['tempoRespostaMedio'];
+      taxaCumprimento: ExpedientesResumo['taxaCumprimento'];
+      backlogAtual: ExpedientesResumo['backlogAtual'];
+    };
+    expedientes.porOrigem = det.porOrigem;
+    expedientes.resultadoDecisao = det.resultadoDecisao;
+    expedientes.volumeSemanal = det.volumeSemanal;
+    expedientes.prazoMedio = det.prazoMedio;
+    expedientes.calendarioPrazos = det.calendarioPrazos;
+    expedientes.tempoRespostaMedio = det.tempoRespostaMedio;
+    expedientes.taxaCumprimento = det.taxaCumprimento;
+    expedientes.backlogAtual = det.backlogAtual;
+  }
+
+  const dadosFinanceiros = results[indices.dadosFinanceiros!] as DadosFinanceirosConsolidados;
+  if (indices.financeiroDetalhado !== undefined) {
+    const det = results[indices.financeiroDetalhado] as {
+      saldoTrend: DadosFinanceirosConsolidados['saldoTrend'];
+      contasReceberAging: DadosFinanceirosConsolidados['contasReceberAging'];
+      contasPagarAging: DadosFinanceirosConsolidados['contasPagarAging'];
+      despesasPorCategoria: DadosFinanceirosConsolidados['despesasPorCategoria'];
+      dreComparativo: DadosFinanceirosConsolidados['dreComparativo'];
+      fluxoCaixaMensal: DadosFinanceirosConsolidados['fluxoCaixaMensal'];
+    };
+    dadosFinanceiros.saldoTrend = det.saldoTrend;
+    dadosFinanceiros.contasReceberAging = det.contasReceberAging;
+    dadosFinanceiros.contasPagarAging = det.contasPagarAging;
+    dadosFinanceiros.despesasPorCategoria = det.despesasPorCategoria;
+    dadosFinanceiros.dreComparativo = det.dreComparativo;
+    dadosFinanceiros.fluxoCaixaMensal = det.fluxoCaixaMensal;
+  }
+
+  const contratos = indices.contratos !== undefined
+    ? results[indices.contratos] as ContratosResumo
+    : undefined;
 
   return {
     role: 'user',
@@ -199,13 +316,14 @@ export async function obterDashboardUsuario(
       id: usuario.id,
       nome: usuario.nome,
     },
-    processos: results[indices.processos!] as ProcessoResumo,
-    audiencias: results[indices.audiencias!] as AudienciasResumo,
-    expedientes: results[indices.expedientes!] as ExpedientesResumo,
+    processos,
+    audiencias,
+    expedientes,
     produtividade: results[indices.produtividade!] as ProdutividadeResumo,
     proximasAudiencias: results[indices.proximasAudiencias!] as AudienciaProxima[],
     expedientesUrgentes: results[indices.expedientesUrgentes!] as ExpedienteUrgente[],
-    dadosFinanceiros: results[indices.dadosFinanceiros!] as DadosFinanceirosConsolidados,
+    dadosFinanceiros,
+    contratos,
     ultimaAtualizacao: new Date().toISOString(),
   };
 }
@@ -236,16 +354,34 @@ export async function obterDashboardAdmin(
     proximasAudiencias,
     expedientesUrgentes,
     dadosFinanceiros,
+    processosDetalhados,
+    audienciasDetalhadas,
+    expedientesDetalhados,
+    financeiroDetalhado,
+    contratos,
   ] = await Promise.all([
     usuarioPromise,
     buscarMetricasEscritorio(),
     buscarCargaUsuarios(),
     buscarStatusCapturas(),
     buscarPerformanceAdvogados(),
-    buscarProximasAudiencias(undefined, 5), // Todas as audiências
-    buscarExpedientesUrgentes(undefined, 5), // Todos os expedientes
-    buscarDadosFinanceirosConsolidados(), // Dados financeiros do escritório
+    buscarProximasAudiencias(undefined, 5),
+    buscarExpedientesUrgentes(undefined, 5),
+    buscarDadosFinanceirosConsolidados(),
+    buscarProcessosDetalhados(),
+    buscarAudienciasDetalhadas(),
+    buscarExpedientesDetalhados(),
+    buscarFinanceiroDetalhado(),
+    buscarContratosResumo(),
   ]);
+
+  // Mesclar dados detalhados no financeiro
+  dadosFinanceiros.saldoTrend = financeiroDetalhado.saldoTrend;
+  dadosFinanceiros.contasReceberAging = financeiroDetalhado.contasReceberAging;
+  dadosFinanceiros.contasPagarAging = financeiroDetalhado.contasPagarAging;
+  dadosFinanceiros.despesasPorCategoria = financeiroDetalhado.despesasPorCategoria;
+  dadosFinanceiros.dreComparativo = financeiroDetalhado.dreComparativo;
+  dadosFinanceiros.fluxoCaixaMensal = financeiroDetalhado.fluxoCaixaMensal;
 
   return {
     role: 'admin',
@@ -260,8 +396,13 @@ export async function obterDashboardAdmin(
     proximasAudiencias,
     expedientesUrgentes,
     dadosFinanceiros,
+    contratos,
+    // Métricas detalhadas disponíveis via metricas + campos extras nos tipos
+    _processosDetalhados: processosDetalhados,
+    _audienciasDetalhadas: audienciasDetalhadas,
+    _expedientesDetalhados: expedientesDetalhados,
     ultimaAtualizacao: new Date().toISOString(),
-  };
+  } as DashboardAdminData;
 }
 
 // ============================================================================
