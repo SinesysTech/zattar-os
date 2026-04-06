@@ -2,8 +2,6 @@
 
 import * as React from 'react';
 import {
-  AlertTriangle,
-  Clock,
   FileText,
   SearchX,
   Users,
@@ -17,10 +15,7 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
-import {
-  InsightBanner,
-  UrgencyDot,
-} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { UrgencyDot } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { cn } from '@/lib/utils';
 import { GRAU_TRIBUNAL_LABELS, ORIGEM_EXPEDIENTE_LABELS, type Expediente } from '../domain';
 import { useExpedientes } from '../hooks/use-expedientes';
@@ -122,50 +117,9 @@ const URGENCY_BADGE_VARIANT: Record<UrgencyLevel, 'destructive' | 'default' | 's
   ok: 'secondary',
 };
 
-// ─── Metric Card ──────────────────────────────────────────────────────────────
-
-function ControlMetricCard({
-  title,
-  value,
-  subtitle,
-  icon: Icon,
-  iconClassName,
-  highlight,
-}: {
-  title: string;
-  value: number;
-  subtitle: string;
-  icon: React.ComponentType<{ className?: string }>;
-  iconClassName?: string;
-  highlight?: boolean;
-}) {
-  return (
-    <GlassPanel
-      depth={value > 0 && highlight ? 2 : 1}
-      className={cn('p-4 gap-1.5', value > 0 && highlight && 'border-destructive/15')}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground/45">{title}</p>
-          <p className={cn(
-            'mt-1 text-2xl font-bold tabular-nums tracking-tight',
-            value > 0 && highlight && 'text-destructive/80',
-          )}>
-            {value}
-          </p>
-        </div>
-        <div className={cn('rounded-xl border border-border/20 p-2 shrink-0 mt-0.5', value > 0 && highlight ? 'border-destructive/20 bg-destructive/6' : 'bg-white/2')}>
-          <Icon className={cn('size-4', iconClassName ?? 'text-muted-foreground/50')} />
-        </div>
-      </div>
-      <p className="text-[11px] text-muted-foreground/50 leading-snug">{subtitle}</p>
-    </GlassPanel>
-  );
-}
-
 function EmptyQueue({ search }: { search: string }) {
   return (
-    <GlassPanel depth={1} className="flex min-h-[180px] flex-col items-center justify-center p-8 text-center">
+    <GlassPanel depth={1} className="flex min-h-45 flex-col items-center justify-center p-8 text-center">
       <SearchX className="size-10 text-muted-foreground/20" />
       <h3 className="mt-4 text-sm font-semibold">Nenhum expediente nesta fila</h3>
       <p className="mt-1.5 max-w-sm text-sm text-muted-foreground/55">
@@ -202,9 +156,9 @@ function QueueCard({
       <GlassPanel
         depth={selected ? 2 : 1}
         className={cn(
-          'gap-0 overflow-hidden p-0 hover:border-primary/20 hover:bg-primary/[0.025]',
+          'gap-0 overflow-hidden p-0 hover:border-primary/20 hover:bg-primary/2.5',
           URGENCY_BORDER[urgencyLevel],
-          selected && 'border-primary/20 bg-primary/[0.025]',
+          selected && 'border-primary/20 bg-primary/2.5',
         )}
       >
         <div className="flex flex-col gap-3 p-4">
@@ -283,8 +237,8 @@ function QueueListRow({
         'flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-all duration-150',
         URGENCY_BORDER[urgencyLevel],
         selected
-          ? 'border-primary/15 bg-primary/[0.05]'
-          : 'border-border/15 hover:border-border/25 hover:bg-white/[0.025]',
+          ? 'border-primary/15 bg-primary/5'
+          : 'border-border/15 hover:border-border/25 hover:bg-white/2.5',
       )}
     >
       <UrgencyDot level={urgencyLevel} />
@@ -294,7 +248,7 @@ function QueueListRow({
           <p className="truncate font-mono text-[11px] text-muted-foreground/55">{expediente.numeroProcesso}</p>
         </div>
         {responsavelNome && (
-          <p className="hidden max-w-[100px] truncate text-[11px] text-muted-foreground/45 sm:block">{responsavelNome}</p>
+          <p className="hidden max-w-25 truncate text-[11px] text-muted-foreground/45 sm:block">{responsavelNome}</p>
         )}
         <div className="shrink-0 text-right">
           {expediente.dataPrazoLegalParte ? (
@@ -320,8 +274,6 @@ function QueueListRow({
 }
 
 export function ExpedientesControlView({
-  viewModeSlot,
-  settingsSlot,
   usuariosData,
   tiposExpedientesData,
 }: ExpedientesControlViewProps) {
@@ -329,7 +281,6 @@ export function ExpedientesControlView({
   const { tiposExpedientes: tiposFetched } = useTiposExpedientes({ limite: 100 });
 
   const usuarios = usuariosData ?? usuariosFetched;
-  const tiposExpedientes = tiposExpedientesData ?? tiposFetched;
 
   const [queueMode, setQueueMode] = React.useState<QueueMode>('todos');
   const [contentMode, setContentMode] = React.useState<ContentMode>('cards');
@@ -351,14 +302,6 @@ export function ExpedientesControlView({
     return map;
   }, [usuarios]);
 
-  const tiposMap = React.useMemo(() => {
-    const map = new Map<number, string>();
-    tiposExpedientes.forEach((tipo) => {
-      const nomeAlternativo = 'tipo_expediente' in tipo ? tipo.tipo_expediente : undefined;
-      map.set(tipo.id, tipo.tipoExpediente || nomeAlternativo || `Tipo ${tipo.id}`);
-    });
-    return map;
-  }, [tiposExpedientes]);
 
   const dadosDerivados = React.useMemo(() => {
     const pendentes = expedientes.filter((item) => !item.baixadoEm);
@@ -478,56 +421,6 @@ export function ExpedientesControlView({
   return (
     <>
       <div className="mx-auto flex max-w-350 flex-col gap-5">
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-          <ControlMetricCard
-            title="Vencidos"
-            value={dadosDerivados.vencidos.length}
-            subtitle="Pedem intervencao imediata"
-            icon={AlertTriangle}
-            iconClassName="text-destructive/60"
-            highlight
-          />
-          <ControlMetricCard
-            title="Hoje"
-            value={dadosDerivados.hoje.length}
-            subtitle="Fechamento do dia"
-            icon={Clock}
-            iconClassName="text-amber-500/70"
-          />
-          <ControlMetricCard
-            title="3 dias"
-            value={dadosDerivados.proximos.length}
-            subtitle="Janela curta de resposta"
-            icon={FileText}
-            iconClassName="text-primary/60"
-          />
-          <ControlMetricCard
-            title="Sem dono"
-            value={dadosDerivados.semResponsavel.length}
-            subtitle="Sem responsavel definido"
-            icon={UserX}
-            iconClassName="text-amber-500/60"
-          />
-          <ControlMetricCard
-            title="Sem tipo"
-            value={dadosDerivados.semTipo.length}
-            subtitle="Classificacao incompleta"
-            icon={Layers3}
-            iconClassName="text-muted-foreground/50"
-          />
-        </div>
-
-        {dadosDerivados.vencidos.length > 0 && (
-          <InsightBanner type="alert">
-            <strong>{dadosDerivados.vencidos.length} expediente(s) com prazo vencido</strong> — Esses itens requerem intervencao imediata. Use a fila Criticos para triagem prioritaria.
-          </InsightBanner>
-        )}
-        {dadosDerivados.vencidos.length === 0 && dadosDerivados.semResponsavel.length > 3 && (
-          <InsightBanner type="warning">
-            <strong>{dadosDerivados.semResponsavel.length} expedientes sem responsavel</strong> — Distribua esses itens para evitar filas cegas e perda de prazo.
-          </InsightBanner>
-        )}
-
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(300px,0.8fr)]">
           <div className="flex min-w-0 flex-col gap-4">
 

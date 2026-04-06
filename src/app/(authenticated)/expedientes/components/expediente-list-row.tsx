@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { format, differenceInDays, startOfDay } from 'date-fns';
-import { FileText, CheckCircle2, UserPlus, FileSearch, AlertCircle } from 'lucide-react';
+import { CheckCircle2, UserPlus, FileSearch, AlertCircle } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { UrgencyDot } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import type { Expediente } from '../domain';
-import { GRAU_TRIBUNAL_LABELS } from '../domain';
 
 interface ExpedienteListRowProps {
   expediente: Expediente;
@@ -68,7 +67,7 @@ export function ExpedienteListRow({
     <GlassPanel 
       depth={1} 
       className={cn(
-        "group flex flex-col sm:flex-row sm:items-center gap-4 p-4 transition-colors hover:border-primary/20 hover:bg-primary/[0.02]",
+        "group flex flex-col sm:flex-row sm:items-center gap-4 p-4 transition-colors hover:border-primary/20 hover:bg-primary/2",
         expediente.baixadoEm && "opacity-60"
       )}
     >
@@ -119,7 +118,7 @@ export function ExpedienteListRow({
       </div>
 
       {/* 2. Responsável e Prazo (Desktop) */}
-      <div className="hidden sm:flex flex-col items-end gap-1 shrink-0 min-w-[120px]">
+      <div className="hidden sm:flex flex-col items-end gap-1 shrink-0 min-w-30">
         <span className={cn(
           "text-xs font-medium px-2 py-0.5 rounded-md",
           isUrgenteCor ? "bg-red-500/10 text-red-600 dark:text-red-400" : "bg-muted text-muted-foreground"
@@ -128,7 +127,7 @@ export function ExpedienteListRow({
         </span>
         <div className="text-[11px] text-muted-foreground/60">
           {responsavelNome ? (
-            <span className="truncate max-w-[120px]">{responsavelNome}</span>
+            <span className="truncate max-w-30">{responsavelNome}</span>
           ) : (
             <span className="italic text-yellow-600/80 dark:text-yellow-500/80">Sem responsável</span>
           )}

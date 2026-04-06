@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
+import { FileSearch } from 'lucide-react';
 import { TemporalViewLoading, TemporalViewError } from '@/components/shared';
 import { useExpedientes } from '../hooks/use-expedientes';
 import { ExpedienteListRow } from './expediente-list-row';
@@ -24,8 +24,6 @@ interface TipoExpedienteData {
 
 export interface ExpedientesListWrapperProps {
   searchQuery?: string;
-  viewModeSlot?: React.ReactNode;
-  settingsSlot?: React.ReactNode;
   usuariosData?: UsuarioData[];
   tiposExpedientesData?: TipoExpedienteData[];
 }
@@ -33,38 +31,56 @@ export interface ExpedientesListWrapperProps {
 export function ExpedientesListWrapper({
   usuariosData = [],
   tiposExpedientesData = [],
+  searchQuery,
 }: ExpedientesListWrapperProps) {
   const {
     expedientes,
     isLoading,
     error,
     refetch,
-  } = useExpedientes();
+  } = useExpedientes({
+    busca: searchQuery || undefined,
+    incluirSemPrazo: true,
+  });
 
   const [selectedBaixarId, setSelectedBaixarId] = React.useState<number | null>(null);
   const [selectedVisualizarId, setSelectedVisualizarId] = React.useState<number | null>(null);
-  
+
   if (isLoading) {
-    return <TemporalViewLoading message="Carregando lista de expedientes..." />;
+    return (
+      <div className="space-y-2">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className="h-18 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse"
+          />
+        ))}
+      </div>
+    );
   }
 
   if (error) {
-    return <TemporalViewError message={'Erro ao carregar expedientes'} onRetry={refetch} />;
+    return <TemporalViewError message="Erro ao carregar expedientes" onRetry={refetch} />;
   }
 
   return (
-    <div className="space-y-2 pb-10">
+    <div className="space-y-2">
       {expedientes.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <p className="text-sm font-medium text-muted-foreground/50">Nenhum expediente encontrado</p>
-          <p className="text-xs text-muted-foreground/40 mt-1">Ajuste os filtros no cabeçalho</p>
+        <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
+          <FileSearch className="size-8 text-muted-foreground/20 mb-3" />
+          <p className="text-sm font-medium text-muted-foreground/50">
+            Nenhum expediente encontrado
+          </p>
+          <p className="text-xs text-muted-foreground/30 mt-1">
+            {searchQuery ? 'Tente ajustar a busca' : 'Tente ajustar os filtros'}
+          </p>
         </div>
       ) : (
         <div className="flex flex-col gap-1.5">
           {expedientes.map((expediente) => {
             const tipo = tiposExpedientesData.find(t => t.id === expediente.tipoExpedienteId);
             const resp = usuariosData.find(u => u.id === expediente.responsavelId);
-            
+
             return (
               <ExpedienteListRow
                 key={expediente.id}
@@ -73,17 +89,13 @@ export function ExpedientesListWrapper({
                 responsavelNome={resp?.nomeExibicao || resp?.nome_exibicao || resp?.nomeCompleto || resp?.nome || ''}
                 onBaixar={(id) => setSelectedBaixarId(id)}
                 onVisualizar={(id) => setSelectedVisualizarId(id)}
-                onAtribuir={(id) => {
-                  // TODO: Implementar atribuir
-                  console.log('Atribuir', id);
-                }}
               />
             );
           })}
         </div>
       )}
 
-      {/* Dialogs de Quick Action */}
+      {/* Quick Action Dialogs */}
       {selectedBaixarId && (
         <ExpedientesBaixarDialog
           expediente={expedientes.find(e => e.id === selectedBaixarId) as any}
@@ -98,10 +110,10 @@ export function ExpedientesListWrapper({
 
       {selectedVisualizarId && (
         <ExpedienteVisualizarDialog
-        expediente={expedientes.find(e => e.id === selectedVisualizarId) as any}
-        open={!!selectedVisualizarId}
-        onOpenChange={(open) => !open && setSelectedVisualizarId(null)}
-      />
+          expediente={expedientes.find(e => e.id === selectedVisualizarId) as any}
+          open={!!selectedVisualizarId}
+          onOpenChange={(open) => !open && setSelectedVisualizarId(null)}
+        />
       )}
     </div>
   );

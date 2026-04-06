@@ -1,28 +1,38 @@
 'use client';
 
-import * as React from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Sparkles, CalendarDays, CalendarRange, Calendar, List, Search, Plus, Filter } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { GlassPanel } from '@/components/shared/glass-panel';
-
 import {
-  ViewModePopover,
-  type ViewModeOption,
-  useWeekNavigator,
-  type ViewType,
-} from '@/components/shared';
-
+  CalendarDays,
+  CalendarRange,
+  Calendar,
+  List,
+  Sparkles,
+  Plus,
+  Settings,
+} from 'lucide-react';
+import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
+import { SearchInput } from '@/components/dashboard/search-input';
+import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { type ViewType } from '@/components/shared';
+import { useWeekNavigator } from '@/components/shared';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes, TiposExpedientesList } from '@/app/(authenticated)/tipos-expedientes';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
-
+import { useExpedientes } from '../hooks/use-expedientes';
+import type { Expediente } from '../domain';
+import { ExpedientesPulseStrip } from './expedientes-pulse-strip';
+import { ExpedientesControlView } from './expedientes-control-view';
 import { ExpedientesListWrapper } from './expedientes-list-wrapper';
 import { ExpedientesMonthWrapper } from './expedientes-month-wrapper';
 import { ExpedientesYearWrapper } from './expedientes-year-wrapper';
-import { ExpedientesControlView } from './expedientes-control-view';
 import { ExpedientesWeekMission } from './expedientes-week-mission';
+import { ExpedienteDialog } from './expediente-dialog';
+
+// ─── Route constants ──────────────────────────────────────────────────────────
 
 const APP_BASE_ROUTE = '/app/expedientes';
 
@@ -43,90 +53,257 @@ const VIEW_ROUTES: Record<ViewType, string> = {
   quadro: `${APP_BASE_ROUTE}/quadro`,
 };
 
+// ─── View toggle options ──────────────────────────────────────────────────────
+
+const VIEW_OPTIONS: ViewToggleOption[] = [
+  { id: 'quadro', icon: Sparkles, label: 'Quadro' },
+  { id: 'semana', icon: CalendarDays, label: 'Semana' },
+  { id: 'mes', icon: CalendarRange, label: 'Mês' },
+  { id: 'ano', icon: Calendar, label: 'Ano' },
+  { id: 'lista', icon: List, label: 'Lista' },
+];
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function normalizarData(dataISO: string | null | undefined): Date | null {
+  if (!dataISO) return null;
+  const data = new Date(dataISO);
+  return new Date(data.getFullYear(), data.getMonth(), data.getDate());
+}
+
+function calcularDiasRestantes(expediente: Expediente): number | null {
+  const prazo = normalizarData(expediente.dataPrazoLegalParte);
+  if (!prazo) return null;
+  const hoje = new Date();
+  const hojeZerado = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+  return Math.round((prazo.getTime() - hojeZerado.getTime()) / 86400000);
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
 export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { visualizacao?: ViewType }) {
   const router = useRouter();
   const pathname = usePathname();
+
   const viewFromUrl = ROUTE_TO_VIEW[pathname] ?? initialView;
-  const [visualizacao, setVisualizacao] = React.useState<ViewType>(viewFromUrl);
-  const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
-  const [search, setSearch] = React.useState('');
+  const [viewMode, setViewMode] = useState<ViewType>(viewFromUrl);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [activeTab, setActiveTab] = useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
 
-  React.useEffect(() => {
+  // Sync view mode with URL
+  useEffect(() => {
     const newView = ROUTE_TO_VIEW[pathname];
-    if (newView && newView !== visualizacao) setVisualizacao(newView);
-  }, [pathname, visualizacao]);
+    if (newView && newView !== viewMode) setViewMode(newView);
+  }, [pathname, viewMode]);
 
+  // Data fetching
   const { usuarios } = useUsuarios();
   const { tiposExpedientes } = useTiposExpedientes({ limite: 100 });
   const weekNav = useWeekNavigator();
 
-  const expedientesViewOptions: ViewModeOption[] = React.useMemo(() => [
-    { value: 'quadro', label: 'Quadro', icon: Sparkles },
-    { value: 'semana', label: 'Semana', icon: CalendarDays },
-    { value: 'mes', label: 'Mês', icon: CalendarRange },
-    { value: 'ano', label: 'Ano', icon: Calendar },
-    { value: 'lista', label: 'Lista', icon: List },
-  ], []);
+  const { expedientes: allExpedientes, isLoading } = useExpedientes({
+    pagina: 1,
+    limite: 500,
+    incluirSemPrazo: true,
+  });
 
-  const handleNavigate = (view: ViewType) => {
-    router.push(VIEW_ROUTES[view]);
-  };
+  // ─── Derived metrics ────────────────────────────────────────────────────────
+
+  const pendentes = useMemo(
+    () => allExpedientes.filter((e) => !e.baixadoEm),
+    [allExpedientes],
+  );
+
+  const baixados = useMemo(
+    () => allExpedientes.filter((e) => !!e.baixadoEm),
+    [allExpedientes],
+  );
+
+  const vencidos = useMemo(
+    () => pendentes.filter((e) => e.prazoVencido),
+    [pendentes],
+  );
+
+  const hoje = useMemo(
+    () => pendentes.filter((e) => calcularDiasRestantes(e) === 0),
+    [pendentes],
+  );
+
+  const proximos = useMemo(
+    () => pendentes.filter((e) => {
+      const dias = calcularDiasRestantes(e);
+      return dias !== null && dias > 0 && dias <= 3;
+    }),
+    [pendentes],
+  );
+
+  const semResponsavel = useMemo(
+    () => pendentes.filter((e) => !e.responsavelId),
+    [pendentes],
+  );
+
+  // ─── Tab filtering ───────────────────────────────────────────────────────────
+
+  const tabSource = useMemo(() => {
+    if (activeTab === 'pendentes') return pendentes;
+    if (activeTab === 'baixados') return baixados;
+    return allExpedientes;
+  }, [activeTab, pendentes, baixados, allExpedientes]);
+
+  const filteredExpedientes = useMemo(() => {
+    if (!search.trim()) return tabSource;
+    const q = search.toLowerCase();
+    return tabSource.filter(
+      (e) =>
+        e.numeroProcesso.toLowerCase().includes(q) ||
+        (e.nomeParteAutora?.toLowerCase().includes(q) ?? false) ||
+        (e.nomeParteRe?.toLowerCase().includes(q) ?? false) ||
+        (e.classeJudicial?.toLowerCase().includes(q) ?? false),
+    );
+  }, [tabSource, search]);
+
+  const tabs: TabPillOption[] = useMemo(() => [
+    { id: 'todos', label: 'Todos', count: allExpedientes.length },
+    { id: 'pendentes', label: 'Pendentes', count: pendentes.length },
+    { id: 'baixados', label: 'Baixados', count: baixados.length },
+  ], [allExpedientes.length, pendentes.length, baixados.length]);
+
+  // ─── Navigation ──────────────────────────────────────────────────────────────
+
+  const handleViewChange = useCallback((view: string) => {
+    router.push(VIEW_ROUTES[view as ViewType]);
+  }, [router]);
+
+  // ─── Dynamic subtitle ─────────────────────────────────────────────────────────
+
+  const subtitle = useMemo(() => {
+    const p = pendentes.length;
+    const v = vencidos.length;
+    const pendLabel = `${p} pendente${p !== 1 ? 's' : ''}`;
+    const vencLabel = `${v} vencido${v !== 1 ? 's' : ''}`;
+    return `${pendLabel} · ${vencLabel}`;
+  }, [pendentes.length, vencidos.length]);
+
+  // ─── Insight banners ─────────────────────────────────────────────────────────
+
+  const showVencidosBanner = vencidos.length > 0;
+  const showSemResponsavelBanner = semResponsavel.length > 3 && !showVencidosBanner;
 
   return (
-    <>
-      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+    <div className="max-w-350 mx-auto space-y-5">
+
+      {/* 1. Header */}
+      <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-xl font-medium tracking-tight text-foreground">Expedientes</h1>
-          <p className="text-muted-foreground text-sm">Gerencie prazos, urgências e controles recursais</p>
+          <h1 className="text-2xl font-heading font-semibold tracking-tight text-foreground">
+            Expedientes
+          </h1>
+          <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
         </div>
-        <div className="flex gap-2">
-          {/* O seletor de View */}
-          <ViewModePopover
-            options={expedientesViewOptions}
-            value={visualizacao}
-            onValueChange={handleNavigate}
-            className="w-35 h-9"
-          />
-          <Button className="h-9 gap-2">
-            <Plus className="w-4 h-4" />
+
+        <div className="flex items-center gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 bg-card"
+                onClick={() => setIsSettingsOpen(true)}
+                aria-label="Configurações de tipos de expediente"
+              >
+                <Settings className="size-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Tipos de expediente</TooltipContent>
+          </Tooltip>
+
+          <Button
+            className="h-9 gap-2"
+            onClick={() => setIsCreateOpen(true)}
+          >
+            <Plus className="size-4" />
             Novo Expediente
           </Button>
         </div>
       </div>
 
-      <GlassPanel className="p-3">
-        <div className="flex flex-col md:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar processo, parte ou descrição..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-9"
-            />
-          </div>
-          <Button variant="outline" className="h-9 gap-2 shrink-0">
-            <Filter className="w-4 h-4" />
-            Filtros
-          </Button>
-        </div>
-      </GlassPanel>
+      {/* 2. KPI Strip */}
+      {!isLoading && (
+        <ExpedientesPulseStrip
+          vencidos={vencidos.length}
+          hoje={hoje.length}
+          proximos={proximos.length}
+          semDono={semResponsavel.length}
+          total={pendentes.length}
+        />
+      )}
 
+      {/* 3. Insight Banners */}
+      {!isLoading && showVencidosBanner && (
+        <InsightBanner type="alert">
+          {vencidos.length} expediente{vencidos.length !== 1 ? 's' : ''} com prazo vencido —
+          atenção imediata necessária.
+        </InsightBanner>
+      )}
+      {!isLoading && showSemResponsavelBanner && (
+        <InsightBanner type="warning">
+          {semResponsavel.length} expedientes pendentes sem responsável atribuído.
+        </InsightBanner>
+      )}
+
+      {/* 4. View Controls */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <TabPills
+          tabs={tabs}
+          active={activeTab}
+          onChange={(id) => setActiveTab(id as typeof activeTab)}
+        />
+
+        <div className="flex items-center gap-2 ml-auto">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Buscar processo, parte..."
+          />
+          <ViewToggle
+            mode={viewMode}
+            onChange={handleViewChange}
+            options={VIEW_OPTIONS}
+          />
+        </div>
+      </div>
+
+      {/* 5. Content Switcher */}
       <main className="min-h-0 transition-opacity duration-300">
-        {visualizacao === 'quadro' && (
+        {isLoading && (
+          <div className="space-y-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-20 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse"
+              />
+            ))}
+          </div>
+        )}
+
+        {!isLoading && viewMode === 'quadro' && (
           <ExpedientesControlView
             usuariosData={usuarios}
             tiposExpedientesData={tiposExpedientes}
           />
         )}
-        {visualizacao === 'lista' && (
+
+        {!isLoading && viewMode === 'lista' && (
           <ExpedientesListWrapper
             usuariosData={usuarios}
             tiposExpedientesData={tiposExpedientes}
             searchQuery={search}
           />
         )}
-        {visualizacao === 'semana' && (
+
+        {!isLoading && viewMode === 'semana' && (
           <ExpedientesWeekMission
             weekNavigatorProps={{
               weekDays: weekNav.weekDays,
@@ -141,13 +318,15 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
             tiposExpedientesData={tiposExpedientes}
           />
         )}
-        {visualizacao === 'mes' && (
+
+        {!isLoading && viewMode === 'mes' && (
           <ExpedientesMonthWrapper
             usuariosData={usuarios}
             tiposExpedientesData={tiposExpedientes}
           />
         )}
-        {visualizacao === 'ano' && (
+
+        {!isLoading && viewMode === 'ano' && (
           <ExpedientesYearWrapper
             usuariosData={usuarios}
             tiposExpedientesData={tiposExpedientes}
@@ -155,11 +334,29 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         )}
       </main>
 
-      <DialogFormShell open={isSettingsOpen} onOpenChange={setIsSettingsOpen} title="Tipos" maxWidth="4xl" footer={<Button variant="outline" onClick={() => setIsSettingsOpen(false)}>Fechar</Button>}>
+      {/* 6. Overlays */}
+      <ExpedienteDialog
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        onSuccess={() => setIsCreateOpen(false)}
+      />
+
+      <DialogFormShell
+        open={isSettingsOpen}
+        onOpenChange={setIsSettingsOpen}
+        title="Tipos de Expediente"
+        maxWidth="4xl"
+        footer={
+          <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
+            Fechar
+          </Button>
+        }
+      >
         <div className="flex-1 overflow-auto h-[60vh]">
           <TiposExpedientesList />
         </div>
       </DialogFormShell>
-    </>
+
+    </div>
   );
 }
