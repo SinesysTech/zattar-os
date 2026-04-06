@@ -297,7 +297,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'ComparisonStat com realizadas, canceladas, taxa de sucesso e duração média: mês atual vs anterior.',
     module: 'audiencias',
     permission: PERM.audiencias,
-    size: 'md',
+    size: 'sm',
     defaultEnabled: false,
     component: WidgetComparativoMensal,
   },

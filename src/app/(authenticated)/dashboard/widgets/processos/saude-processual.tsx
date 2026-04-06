@@ -43,7 +43,7 @@ function calcularScore(stats: ProcessoStats): { score: number; status: 'good' | 
 export function WidgetSaudeProcessual() {
   const { data, isLoading } = useDashboard();
 
-  if (isLoading) return <WidgetSkeleton size="half" />;
+  if (isLoading) return <WidgetSkeleton size="md" />;
 
   if (!data) {
     return (
