@@ -1,51 +1,12 @@
 'use client';
 
-/**
- * ExpedientesListWrapper - Wrapper auto-contido para a view de lista
- *
- * Segue o padrão de AudienciasListWrapper:
- * - Gerencia próprio estado de filtros, paginação e fetch
- * - DataShell + DataTableToolbar + DataTable + DataPagination
- * - ExpedientesListFilters no filtersSlot
- * - ExpedientesBulkActions para seleção em lote
- * - Dialog de criação interno
- */
-
 import * as React from 'react';
-import { useSearchParams } from 'next/navigation';
-import type { Table as TanstackTable } from '@tanstack/react-table';
-import { format, startOfDay, addDays, startOfWeek, endOfWeek } from 'date-fns';
-import { X } from 'lucide-react';
-
-import {
-  DataShell,
-  DataTable,
-  DataTableToolbar,
-  DataPagination,
-} from '@/components/shared/data-shell';
-import { DateRangePicker } from '@/components/ui/date-range-picker';
-import { Button } from '@/components/ui/button';
-import { AppBadge } from '@/components/ui/app-badge';
-
-import type { Expediente } from '../domain';
-import { GrauTribunal, GRAU_TRIBUNAL_LABELS, OrigemExpediente, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
-import { useExpedientes } from '../hooks/use-expedientes';
-import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
-import { columns } from './columns';
-import { ExpedienteDialog } from './expediente-dialog';
-import { ExpedientesBulkActions } from './expedientes-bulk-actions';
-import { ExpedientesPulseStrip } from './expedientes-pulse-strip';
-import {
-  ExpedientesListFilters,
-  type StatusFilterType,
-  type PrazoFilterType,
-  type ResponsavelFilterType,
-} from './expedientes-list-filters';
-
-// =============================================================================
-// TIPOS
-// =============================================================================
+import { TemporalViewLoading, TemporalViewError } from '@/components/shared';
+import { useExpedientes } from '../hooks/use-expedientes';
+import { ExpedienteListRow } from './expediente-list-row';
+import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
+import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 
 interface UsuarioData {
   id: number;
@@ -61,479 +22,84 @@ interface TipoExpedienteData {
   tipo_expediente?: string;
 }
 
-interface ExpedientesListWrapperProps {
-  /** Slot para o seletor de modo de visualização (ViewModePopover) */
+export interface ExpedientesListWrapperProps {
   viewModeSlot?: React.ReactNode;
-  /** Dados de usuários pré-carregados (evita fetch duplicado) */
+  settingsSlot?: React.ReactNode;
   usuariosData?: UsuarioData[];
-  /** Dados de tipos de expediente pré-carregados (evita fetch duplicado) */
   tiposExpedientesData?: TipoExpedienteData[];
 }
 
-// Helper para obter nome do usuário
-function getUsuarioNome(u: UsuarioData): string {
-  return u.nomeExibicao || u.nome_exibicao || u.nomeCompleto || u.nome || `Usuário ${u.id}`;
-}
-
-// =============================================================================
-// COMPONENTE PRINCIPAL
-// =============================================================================
-
 export function ExpedientesListWrapper({
-  viewModeSlot,
-  usuariosData,
-  tiposExpedientesData,
+  usuariosData = [],
+  tiposExpedientesData = [],
 }: ExpedientesListWrapperProps) {
-  const searchParams = useSearchParams();
+  const {
+    expedientes,
+    isLoading,
+    error,
+    refetch,
+  } = useExpedientes();
 
-  // ---------- Estado da Tabela ----------
-  const [table, setTable] = React.useState<TanstackTable<Expediente> | null>(null);
-  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
-  const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
+  const [selectedBaixarId, setSelectedBaixarId] = React.useState<number | null>(null);
+  const [selectedVisualizarId, setSelectedVisualizarId] = React.useState<number | null>(null);
+  
+  if (isLoading) {
+    return <TemporalViewLoading message="Carregando lista de expedientes..." />;
+  }
 
-  // ---------- Paginação ----------
-  const [pageIndex, setPageIndex] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(50);
+  if (error) {
+    return <TemporalViewError message={error.message || 'Erro ao carregar expedientes'} onRetry={refetch} />;
+  }
 
-  // ---------- Busca e Filtros ----------
-  const [globalFilter, setGlobalFilter] = React.useState('');
-  const [statusFilter, setStatusFilter] = React.useState<StatusFilterType>('pendentes');
-  const [prazoFilter, setPrazoFilter] = React.useState<PrazoFilterType>('todos');
-  const [responsavelFilter, setResponsavelFilter] = React.useState<ResponsavelFilterType>('todos');
-  const [tribunalFilter, setTribunalFilter] = React.useState('');
-  const [grauFilter, setGrauFilter] = React.useState('');
-  const [tipoExpedienteFilter, setTipoExpedienteFilter] = React.useState('');
-  const [origemFilter, setOrigemFilter] = React.useState('');
-  const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>(undefined);
-
-  // ---------- Track se já inicializou com query param ----------
-  const hasInitializedFromParams = React.useRef(false);
-
-  React.useEffect(() => {
-    if (hasInitializedFromParams.current) return;
-    hasInitializedFromParams.current = true;
-
-    const responsavelParam = searchParams.get('responsavel');
-    if (!responsavelParam) return;
-
-    if (responsavelParam === 'sem_responsavel') {
-      setResponsavelFilter('sem_responsavel');
-    } else {
-      const parsed = parseInt(responsavelParam, 10);
-      if (!Number.isNaN(parsed)) {
-        setResponsavelFilter(parsed);
-      }
-    }
-  }, [searchParams]);
-
-  // ---------- Dialogs ----------
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
-
-  // ---------- Dados Auxiliares ----------
-  const { usuarios: usuariosFetched } = useUsuarios({ enabled: !usuariosData });
-  const { tiposExpedientes: tiposFetched } = useTiposExpedientes({ limite: 100 });
-
-  const usuarios = usuariosData ?? usuariosFetched;
-  const tiposExpedientes = tiposExpedientesData ?? tiposFetched;
-
-  // ---------- Calcular datas para filtro de prazo ----------
-  const getPrazoDates = React.useCallback((prazo: PrazoFilterType): { from?: string; to?: string } | null => {
-    const hoje = new Date();
-    switch (prazo) {
-      case 'vencidos':
-      case 'sem_prazo':
-        return null;
-      case 'hoje': {
-        const hojeStr = format(startOfDay(hoje), 'yyyy-MM-dd');
-        return { from: hojeStr, to: hojeStr };
-      }
-      case 'amanha': {
-        const amanhaStr = format(startOfDay(addDays(hoje, 1)), 'yyyy-MM-dd');
-        return { from: amanhaStr, to: amanhaStr };
-      }
-      case 'semana': {
-        return {
-          from: format(startOfWeek(hoje, { weekStartsOn: 1 }), 'yyyy-MM-dd'),
-          to: format(endOfWeek(hoje, { weekStartsOn: 1 }), 'yyyy-MM-dd'),
-        };
-      }
-      default:
-        return null;
-    }
-  }, []);
-
-  // ---------- Montar params para o hook ----------
-  const hookParams = React.useMemo(() => {
-    const params: Record<string, unknown> = {
-      pagina: pageIndex + 1,
-      limite: pageSize,
-      busca: globalFilter || undefined,
-    };
-
-    // Status
-    if (statusFilter === 'pendentes') params.baixado = false;
-    if (statusFilter === 'baixados') params.baixado = true;
-
-    // Prazo
-    if (prazoFilter === 'vencidos') {
-      params.prazoVencido = true;
-    } else if (prazoFilter === 'sem_prazo') {
-      params.semPrazo = true;
-    } else if (prazoFilter !== 'todos') {
-      const prazoDates = getPrazoDates(prazoFilter);
-      if (prazoDates) {
-        params.dataPrazoLegalInicio = prazoDates.from;
-        params.dataPrazoLegalFim = prazoDates.to;
-      }
-    }
-
-    // DateRange (sobrescreve prazoFilter se definido)
-    if (dateRange?.from) params.dataPrazoLegalInicio = format(dateRange.from, 'yyyy-MM-dd');
-    if (dateRange?.to) params.dataPrazoLegalFim = format(dateRange.to, 'yyyy-MM-dd');
-
-    // Responsável
-    if (responsavelFilter === 'sem_responsavel') {
-      params.semResponsavel = true;
-    } else if (typeof responsavelFilter === 'number') {
-      params.responsavelId = responsavelFilter;
-    }
-
-    // Filtros avançados
-    if (tribunalFilter) params.trt = tribunalFilter;
-    if (grauFilter) params.grau = grauFilter;
-    if (tipoExpedienteFilter) params.tipoExpedienteId = parseInt(tipoExpedienteFilter, 10);
-    if (origemFilter) params.origem = origemFilter;
-
-    return params;
-  }, [
-    pageIndex, pageSize, globalFilter,
-    statusFilter, prazoFilter, responsavelFilter,
-    tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter,
-    dateRange, getPrazoDates,
-  ]);
-
-  // ---------- Data Fetching ----------
-  const { expedientes, paginacao, isLoading, error, refetch } = useExpedientes(hookParams);
-
-  const total = paginacao?.total ?? 0;
-  const totalPages = paginacao?.totalPaginas ?? 0;
-
-  // ---------- PulseStrip stats ----------
-  const pulseStats = React.useMemo(() => {
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-    const tresDias = new Date(hoje);
-    tresDias.setDate(tresDias.getDate() + 3);
-
-    const vencidos = expedientes.filter((e) => !e.baixadoEm && e.prazoVencido === true).length;
-    const hojeCount = expedientes.filter((e) => {
-      if (!e.dataPrazoLegalParte || e.baixadoEm) return false;
-      const d = new Date(e.dataPrazoLegalParte);
-      d.setHours(0, 0, 0, 0);
-      return d.getTime() === hoje.getTime();
-    }).length;
-    const proximos = expedientes.filter((e) => {
-      if (!e.dataPrazoLegalParte || e.baixadoEm) return false;
-      const d = new Date(e.dataPrazoLegalParte);
-      d.setHours(0, 0, 0, 0);
-      return d > hoje && d <= tresDias;
-    }).length;
-    const semDono = expedientes.filter((e) => !e.baixadoEm && !e.responsavelId).length;
-
-    return { vencidos, hoje: hojeCount, proximos, semDono, total: expedientes.length };
-  }, [expedientes]);
-
-  // ---------- Handlers ----------
-  const handleSucessoOperacao = React.useCallback(() => {
-    setRowSelection((currentSelection) => {
-      if (Object.keys(currentSelection).length === 0) {
-        return currentSelection;
-      }
-
-      return {};
-    });
-    refetch();
-  }, [refetch]);
-
-  const handleCreateSuccess = React.useCallback(() => {
-    refetch();
-    setIsCreateDialogOpen(false);
-  }, [refetch]);
-
-  // Handler para limpar todos os filtros
-  const handleClearAllFilters = React.useCallback(() => {
-    setStatusFilter('pendentes');
-    setPrazoFilter('todos');
-    setResponsavelFilter('todos');
-    setDateRange(undefined);
-    setTribunalFilter('');
-    setGrauFilter('');
-    setTipoExpedienteFilter('');
-    setOrigemFilter('');
-    setPageIndex(0);
-  }, []);
-
-  // ---------- Chips de filtros ativos ----------
-  const activeFilterChips = React.useMemo(() => {
-    const chips: { key: string; label: string; onRemove: () => void }[] = [];
-
-    if (statusFilter !== 'pendentes') {
-      chips.push({
-        key: 'status',
-        label: statusFilter === 'todos' ? 'Todos Status' : 'Baixados',
-        onRemove: () => setStatusFilter('pendentes'),
-      });
-    }
-
-    if (prazoFilter !== 'todos') {
-      const prazoLabels: Record<PrazoFilterType, string> = {
-        todos: 'Todos',
-        vencidos: 'Vencidos',
-        hoje: 'Hoje',
-        amanha: 'Amanhã',
-        semana: 'Esta Semana',
-        sem_prazo: 'Sem Prazo',
-      };
-      chips.push({
-        key: 'prazo',
-        label: prazoLabels[prazoFilter],
-        onRemove: () => setPrazoFilter('todos'),
-      });
-    }
-
-    if (responsavelFilter === 'sem_responsavel') {
-      chips.push({
-        key: 'responsavel',
-        label: 'Sem Responsável',
-        onRemove: () => setResponsavelFilter('todos'),
-      });
-    } else if (typeof responsavelFilter === 'number') {
-      const usuario = usuarios.find((u: UsuarioData) => u.id === responsavelFilter);
-      chips.push({
-        key: 'responsavel',
-        label: usuario ? getUsuarioNome(usuario) : `Responsável #${responsavelFilter}`,
-        onRemove: () => setResponsavelFilter('todos'),
-      });
-    }
-
-    if (dateRange?.from || dateRange?.to) {
-      const fromStr = dateRange.from ? format(dateRange.from, 'dd/MM') : '';
-      const toStr = dateRange.to ? format(dateRange.to, 'dd/MM') : '';
-      chips.push({
-        key: 'dateRange',
-        label: `${fromStr} - ${toStr}`,
-        onRemove: () => setDateRange(undefined),
-      });
-    }
-
-    if (tribunalFilter) {
-      chips.push({
-        key: 'tribunal',
-        label: tribunalFilter,
-        onRemove: () => setTribunalFilter(''),
-      });
-    }
-
-    if (grauFilter) {
-      chips.push({
-        key: 'grau',
-        label: GRAU_TRIBUNAL_LABELS[grauFilter as GrauTribunal] || grauFilter,
-        onRemove: () => setGrauFilter(''),
-      });
-    }
-
-    if (tipoExpedienteFilter) {
-      const tipo = tiposExpedientes.find((t: TipoExpedienteData) => t.id === parseInt(tipoExpedienteFilter, 10));
-      const tipoLabel = tipo ? (tipo.tipoExpediente || ('tipo_expediente' in tipo ? (tipo as TipoExpedienteData).tipo_expediente : undefined) || `Tipo #${tipo.id}`) : `Tipo #${tipoExpedienteFilter}`;
-      chips.push({
-        key: 'tipo',
-        label: tipoLabel,
-        onRemove: () => setTipoExpedienteFilter(''),
-      });
-    }
-
-    if (origemFilter) {
-      chips.push({
-        key: 'origem',
-        label: ORIGEM_EXPEDIENTE_LABELS[origemFilter as OrigemExpediente] || origemFilter,
-        onRemove: () => setOrigemFilter(''),
-      });
-    }
-
-    return chips;
-  }, [statusFilter, prazoFilter, responsavelFilter, dateRange, tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter, usuarios, tiposExpedientes]);
-
-  // ---------- Render ----------
   return (
-    <>
-      <DataShell
-        subHeader={
-          !isLoading && expedientes.length > 0 ? (
-            <ExpedientesPulseStrip
-              vencidos={pulseStats.vencidos}
-              hoje={pulseStats.hoje}
-              proximos={pulseStats.proximos}
-              semDono={pulseStats.semDono}
-              total={pulseStats.total}
-            />
-          ) : undefined
-        }
-        header={
-          table ? (
-            <>
-              <DataTableToolbar
-                table={table}
-                title="Expedientes"
-                density={density}
-                onDensityChange={setDensity}
-                searchValue={globalFilter}
-                onSearchValueChange={(value: string) => {
-                  setGlobalFilter(value);
-                  setPageIndex(0);
+    <div className="space-y-2 pb-10">
+      {expedientes.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <p className="text-sm font-medium text-muted-foreground/50">Nenhum expediente encontrado</p>
+          <p className="text-xs text-muted-foreground/40 mt-1">Ajuste os filtros no cabeçalho</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-1.5">
+          {expedientes.map((expediente) => {
+            const tipo = tiposExpedientesData.find(t => t.id === expediente.tipoExpedienteId);
+            const resp = usuariosData.find(u => u.id === expediente.responsavelId);
+            
+            return (
+              <ExpedienteListRow
+                key={expediente.id}
+                expediente={expediente}
+                tipoExpedienteNome={tipo?.tipoExpediente || tipo?.tipo_expediente || ''}
+                responsavelNome={resp?.nomeExibicao || resp?.nome_exibicao || resp?.nomeCompleto || resp?.nome || ''}
+                onBaixar={(id) => setSelectedBaixarId(id)}
+                onVisualizar={(id) => setSelectedVisualizarId(id)}
+                onAtribuir={(id) => {
+                  // TODO: Implementar atribuir
+                  console.log('Atribuir', id);
                 }}
-                searchPlaceholder="Buscar expedientes..."
-                actionButton={{
-                  label: 'Novo Expediente',
-                  onClick: () => setIsCreateDialogOpen(true),
-                }}
-                viewModeSlot={viewModeSlot}
-                filtersSlot={
-                  <>
-                    <ExpedientesListFilters
-                      statusFilter={statusFilter}
-                      onStatusChange={(v) => { setStatusFilter(v); setPageIndex(0); }}
-                      prazoFilter={prazoFilter}
-                      onPrazoChange={(v) => {
-                        setPrazoFilter(v);
-                        setDateRange(undefined);
-                        setPageIndex(0);
-                      }}
-                      responsavelFilter={responsavelFilter}
-                      onResponsavelChange={(v) => { setResponsavelFilter(v); setPageIndex(0); }}
-                      tribunalFilter={tribunalFilter}
-                      onTribunalChange={(v) => { setTribunalFilter(v); setPageIndex(0); }}
-                      grauFilter={grauFilter}
-                      onGrauChange={(v) => { setGrauFilter(v); setPageIndex(0); }}
-                      tipoExpedienteFilter={tipoExpedienteFilter}
-                      onTipoExpedienteChange={(v) => { setTipoExpedienteFilter(v); setPageIndex(0); }}
-                      origemFilter={origemFilter}
-                      onOrigemChange={(v) => { setOrigemFilter(v); setPageIndex(0); }}
-                      usuarios={usuarios}
-                      tiposExpedientes={tiposExpedientes}
-                    />
-
-                    <DateRangePicker
-                      value={dateRange}
-                      onChange={(range) => {
-                        setDateRange(range);
-                        if (range?.from || range?.to) {
-                          setPrazoFilter('todos');
-                        }
-                        setPageIndex(0);
-                      }}
-                      placeholder="Período"
-                      className="h-9 w-60 bg-card"
-                    />
-                  </>
-                }
               />
+            );
+          })}
+        </div>
+      )}
 
-              {/* Bulk Actions — entre toolbar e filtros ativos */}
-              {Object.keys(rowSelection).length > 0 && (
-                <ExpedientesBulkActions
-                  selectedRows={expedientes.filter((exp) => rowSelection[exp.id.toString()])}
-                  usuarios={usuarios.map((u: UsuarioData) => ({ id: u.id, nomeExibicao: getUsuarioNome(u) }))}
-                  onSuccess={() => {
-                    setRowSelection({});
-                    handleSucessoOperacao();
-                  }}
-                />
-              )}
-
-              {/* Active Filter Chips */}
-              {activeFilterChips.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2 px-6 pb-4">
-                  <span className="text-sm text-muted-foreground">Filtros:</span>
-                  {activeFilterChips.map((chip) => (
-                    <AppBadge
-                      key={chip.key}
-                      variant="secondary"
-                      className="gap-1 pr-1 cursor-pointer hover:bg-secondary/80"
-                      onClick={() => chip.onRemove()}
-                    >
-                      {chip.label}
-                      <button
-                        type="button"
-                        className="inline-flex h-5 w-5 items-center justify-center rounded-sm hover:bg-background/40"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          chip.onRemove();
-                        }}
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </AppBadge>
-                  ))}
-                  {activeFilterChips.length > 1 && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 px-2 text-xs"
-                      onClick={handleClearAllFilters}
-                    >
-                      Limpar todos
-                    </Button>
-                  )}
-                </div>
-              )}
-            </>
-          ) : undefined
-        }
-        footer={
-          totalPages > 0 ? (
-            <DataPagination
-              pageIndex={pageIndex}
-              pageSize={pageSize}
-              total={total}
-              totalPages={totalPages}
-              onPageChange={setPageIndex}
-              onPageSizeChange={(size) => {
-                setPageSize(size);
-                setPageIndex(0);
-              }}
-              isLoading={isLoading}
-            />
-          ) : null
-        }
-      >
-        <DataTable
-          data={expedientes}
-          columns={columns}
-          isLoading={isLoading}
-          error={error}
-          density={density}
-          onTableReady={(t) => setTable(t as TanstackTable<Expediente>)}
-          emptyMessage="Nenhum expediente encontrado."
-          rowSelection={{
-            state: rowSelection,
-            onRowSelectionChange: setRowSelection,
-            getRowId: (row) => row.id.toString(),
-          }}
-          options={{
-            meta: {
-              usuarios,
-              tiposExpedientes,
-              onSuccessAction: handleSucessoOperacao,
-            },
+      {/* Dialogs de Quick Action */}
+      {selectedBaixarId && (
+        <ExpedientesBaixarDialog
+          expedienteId={selectedBaixarId}
+          open={true}
+          onOpenChange={(open) => !open && setSelectedBaixarId(null)}
+          onSuccess={() => {
+            setSelectedBaixarId(null);
+            refetch();
           }}
         />
-      </DataShell>
+      )}
 
-      <ExpedienteDialog
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-        onSuccess={handleCreateSuccess}
+      <ExpedienteVisualizarDialog
+        expedienteId={selectedVisualizarId}
+        open={!!selectedVisualizarId}
+        onOpenChange={(open) => !open && setSelectedVisualizarId(null)}
       />
-    </>
+    </div>
   );
 }
