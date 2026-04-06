@@ -198,9 +198,9 @@ export async function atribuirResponsavel(
     const db = createDbClient();
     let userId = usuarioExecutouId;
     if (!userId) {
-      const { data: { session } } = await db.auth.getSession();
-      if (session?.user?.id) {
-        const { data: userData } = await db.from('usuarios').select('id').eq('auth_user_id', session.user.id).single();
+      const { data: { user }, error: authError } = await db.auth.getUser();
+      if (!authError && user?.id) {
+        const { data: userData } = await db.from('usuarios').select('id').eq('auth_user_id', user.id).single();
         userId = userData?.id;
       }
     }
@@ -233,9 +233,9 @@ export async function atualizarTipoDescricao(
   const db = createDbClient();
   let userId = usuarioExecutouId;
   if (!userId) {
-    const { data: { session } } = await db.auth.getSession();
-    if (session?.user?.id) {
-      const { data: userData } = await db.from('usuarios').select('id').eq('auth_user_id', session.user.id).single();
+    const { data: { user }, error: authError } = await db.auth.getUser();
+    if (!authError && user?.id) {
+      const { data: userData } = await db.from('usuarios').select('id').eq('auth_user_id', user.id).single();
       userId = userData?.id;
     }
   }

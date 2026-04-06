@@ -137,7 +137,7 @@ export function WidgetFluxoComTabs() {
               data={acumuladoData}
               width={240}
               height={64}
-              color="hsl(var(--success))"
+              color="var(--success)"
             />
             <div className="flex justify-between mt-1">
               <span className="text-[9px] text-muted-foreground/55 tabular-nums">{primeiroLabel}</span>

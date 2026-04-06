@@ -45,8 +45,8 @@ function createMockDb(overrides?: {
 
   const mockRpc = jest.fn().mockResolvedValue(opts.rpcResult);
   const mockGetSession = jest.fn().mockResolvedValue({
-    data: { session: opts.sessionUser ? { user: opts.sessionUser } : null },
-    error: null,
+    data: { user: opts.sessionUser || null },
+    error: opts.sessionUser ? null : { message: 'not authenticated' },
   });
   const mockSingle = jest.fn().mockResolvedValue({
     data: opts.usuarioData,
@@ -63,7 +63,7 @@ function createMockDb(overrides?: {
 
   const db = {
     rpc: mockRpc,
-    auth: { getSession: mockGetSession },
+    auth: { getUser: mockGetSession },
     from: mockFrom,
   };
 

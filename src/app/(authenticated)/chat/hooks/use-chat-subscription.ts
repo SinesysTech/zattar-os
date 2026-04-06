@@ -180,17 +180,17 @@ export function useChatSubscription({
 
     const setupSubscription = async () => {
       // Verificar autenticação antes de subscrever
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
 
       if (cancelled) return;
 
-      if (sessionError) {
-        console.error(`[Chat] Erro ao verificar sessão:`, sessionError.message);
+      if (userError) {
+        console.error(`[Chat] Erro ao verificar sessão:`, userError.message);
         setIsConnected(false);
         return;
       }
 
-      if (!session) {
+      if (!user) {
         console.warn(`[Chat] Usuário não autenticado - subscription não será criada para sala ${salaId}`);
         setIsConnected(false);
         return;

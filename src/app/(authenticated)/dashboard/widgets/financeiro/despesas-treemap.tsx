@@ -14,15 +14,15 @@ import { useDespesasPorCategoria } from '../../hooks';
 // ─── Paleta de cores por posição ─────────────────────────────────────────────
 
 const SEGMENT_COLORS = [
-  'hsl(var(--primary))',
-  'hsl(var(--warning))',
-  'hsl(var(--success))',
-  'hsl(var(--info, var(--primary)))',
-  'hsl(var(--muted-foreground) / 0.4)',
+  'var(--primary)',
+  'var(--warning)',
+  'var(--success)',
+  'var(--info, var(--primary))',
+  'oklch(from var(--muted-foreground) l c h / 0.4)',
 ];
 
 function getSegmentColor(index: number): string {
-  return SEGMENT_COLORS[index] ?? 'hsl(var(--muted-foreground) / 0.4)';
+  return SEGMENT_COLORS[index] ?? 'oklch(from var(--muted-foreground) l c h / 0.4)';
 }
 
 // ─── Empty State ──────────────────────────────────────────────────────────────

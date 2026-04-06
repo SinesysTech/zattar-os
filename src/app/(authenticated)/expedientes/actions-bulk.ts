@@ -62,11 +62,12 @@ export async function actionBulkTransferirResponsavel(
 
     const supabase = await createSupabaseClient();
     const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    const authUserId = session?.user?.id;
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+    const authUserId = user?.id;
 
-    if (!authUserId) {
+    if (authError || !authUserId) {
       return {
         success: false,
         error: "Não autenticado",
@@ -159,11 +160,12 @@ export async function actionBulkBaixar(
 
     const supabase = await createSupabaseClient();
     const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    const authUserId = session?.user?.id;
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+    const authUserId = user?.id;
 
-    if (!authUserId) {
+    if (authError || !authUserId) {
       return {
         success: false,
         error: "Não autenticado",

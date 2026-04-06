@@ -63,7 +63,7 @@ export function AgingFunnel() {
       label: 'Vencidos',
       count: vencidos,
       level: 'critico',
-      color: 'hsl(var(--destructive))',
+      color: 'var(--destructive)',
     },
     {
       label: 'Vencem Hoje',
@@ -81,7 +81,7 @@ export function AgingFunnel() {
       label: 'Restantes',
       count: restantes,
       level: 'baixo',
-      color: 'hsl(var(--muted-foreground) / 0.55)',
+      color: 'oklch(from var(--muted-foreground) l c h / 0.55)',
     },
   ];
 

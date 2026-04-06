@@ -54,8 +54,8 @@ export function useChatPresence({
   const updateDatabaseStatus = useCallback(async (status: 'online' | 'away' | 'offline') => {
     try {
       // Buscar o auth_user_id primeiro
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user?.id) {
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user?.id) {
         console.warn('[ChatPresence] Sem sessão ativa');
         return;
       }
@@ -64,7 +64,7 @@ export function useChatPresence({
       const { error } = await supabase
         .from('usuarios')
         .update({ online_status: status })
-        .eq('auth_user_id', session.user.id);
+        .eq('auth_user_id', user.id);
 
       if (error) {
         console.error('[ChatPresence] Erro ao atualizar status:', error);

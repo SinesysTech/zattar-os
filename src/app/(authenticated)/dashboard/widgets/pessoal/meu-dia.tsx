@@ -109,7 +109,7 @@ function DotLembrete({ done, isNext }: { done: boolean; isNext: boolean }) {
         done
           ? 'bg-muted-foreground/25'
           : isNext
-          ? 'bg-primary shadow-[0_0_6px_hsl(var(--primary)/0.4)]'
+          ? 'bg-primary shadow-[0_0_6px_color-mix(in_oklch,var(--primary)_40%,transparent)]'
           : 'bg-border/40'
       }`}
     />

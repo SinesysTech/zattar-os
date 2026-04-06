@@ -47,7 +47,7 @@ export function WidgetInadimplencia() {
     ? Math.round((valorVencido / totalAReceber) * 100)
     : 0;
   const isAlert = inadimplenciaPercent > 10;
-  const ringColor = isAlert ? 'hsl(var(--destructive))' : 'hsl(var(--success))';
+  const ringColor = isAlert ? 'var(--destructive)' : 'var(--success)';
 
   return (
     <WidgetContainer

@@ -28,9 +28,9 @@ interface ObrigacaoPorTipo {
 }
 
 const TIPO_CONFIG: Record<string, { label: string; color: string }> = {
-  acordo:              { label: 'Acordos',              color: 'hsl(var(--primary) / 0.50)' },
-  condenacao:          { label: 'Condenações',          color: 'hsl(var(--destructive) / 0.45)' },
-  custas_processuais:  { label: 'Custas Processuais',   color: 'hsl(var(--warning) / 0.45)' },
+  acordo:              { label: 'Acordos',              color: 'oklch(from var(--primary) l c h / 0.50)' },
+  condenacao:          { label: 'Condenações',          color: 'oklch(from var(--destructive) l c h / 0.45)' },
+  custas_processuais:  { label: 'Custas Processuais',   color: 'oklch(from var(--warning) l c h / 0.45)' },
 };
 
 function useObrigacoesPorTipo() {
@@ -57,7 +57,7 @@ function useObrigacoesPorTipo() {
         const items: ObrigacaoPorTipo[] = [];
         let total = 0;
         for (const [tipo, valor] of porTipo.entries()) {
-          const cfg = TIPO_CONFIG[tipo] ?? { label: tipo, color: 'hsl(var(--muted))' };
+          const cfg = TIPO_CONFIG[tipo] ?? { label: tipo, color: 'var(--muted)' };
           items.push({ label: cfg.label, valor, color: cfg.color });
           total += valor;
         }

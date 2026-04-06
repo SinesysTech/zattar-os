@@ -124,17 +124,13 @@ export function AudienciasClient({
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   // ── Data Fetching ───────────────────────────────────────────────────────
+  // Fetch sem filtro de status — filtragem client-side para manter KPIs e
+  // contadores de tabs precisos independente da aba ativa.
 
-  const statusFilter = activeTab === 'todas' ? undefined :
-    activeTab === 'marcada' ? StatusAudiencia.Marcada :
-    activeTab === 'finalizada' ? StatusAudiencia.Finalizada :
-    activeTab === 'cancelada' ? StatusAudiencia.Cancelada : undefined;
-
-  const { audiencias, isLoading, error, total: _total, refetch } = useAudienciasUnified({
+  const { audiencias: allAudiencias, isLoading, error, total: _total, refetch } = useAudienciasUnified({
     viewMode,
     currentDate,
     search: search || undefined,
-    status: statusFilter,
   });
 
   // ── Derived Data ────────────────────────────────────────────────────────
@@ -148,30 +144,38 @@ export function AudienciasClient({
   }, [initialUsuarios]);
 
   const totalMarcadas = useMemo(
-    () => audiencias.filter((a) => a.status === StatusAudiencia.Marcada).length,
-    [audiencias],
+    () => allAudiencias.filter((a) => a.status === StatusAudiencia.Marcada).length,
+    [allAudiencias],
   );
   const totalFinalizadas = useMemo(
-    () => audiencias.filter((a) => a.status === StatusAudiencia.Finalizada).length,
-    [audiencias],
-  );
-  const _totalCanceladas = useMemo(
-    () => audiencias.filter((a) => a.status === StatusAudiencia.Cancelada).length,
-    [audiencias],
+    () => allAudiencias.filter((a) => a.status === StatusAudiencia.Finalizada).length,
+    [allAudiencias],
   );
 
   const statusTabs: TabPillOption[] = useMemo(() => [
-    { id: 'todas', label: 'Todas', count: audiencias.length },
+    { id: 'todas', label: 'Todas', count: allAudiencias.length },
     { id: 'marcada', label: 'Marcadas', count: totalMarcadas },
     { id: 'finalizada', label: 'Realizadas', count: totalFinalizadas },
-  ], [audiencias.length, totalMarcadas, totalFinalizadas]);
+  ], [allAudiencias.length, totalMarcadas, totalFinalizadas]);
 
-  // Low prep warnings
+  // Audiências filtradas pela aba ativa — usadas nas views
+  const audiencias = useMemo(() => {
+    if (activeTab === 'todas') return allAudiencias;
+    const statusMap: Record<string, StatusAudiencia> = {
+      marcada: StatusAudiencia.Marcada,
+      finalizada: StatusAudiencia.Finalizada,
+      cancelada: StatusAudiencia.Cancelada,
+    };
+    const target = statusMap[activeTab];
+    return target ? allAudiencias.filter((a) => a.status === target) : allAudiencias;
+  }, [allAudiencias, activeTab]);
+
+  // Low prep warnings (sempre sobre marcadas, independente da tab)
   const lowPrepAudiencias = useMemo(
-    () => audiencias.filter(
+    () => allAudiencias.filter(
       (a) => a.status === StatusAudiencia.Marcada && calcPrepScore(calcPrepItems(a)) < 50,
     ),
-    [audiencias],
+    [allAudiencias],
   );
 
   // Subtitle
@@ -227,7 +231,7 @@ export function AudienciasClient({
       </div>
 
       {/* ── KPI Strip ──────────────────────────────────────── */}
-      <MissionKpiStrip audiencias={audiencias} />
+      <MissionKpiStrip audiencias={allAudiencias} />
 
       {/* ── Insight Banners ────────────────────────────────── */}
       {!isLoading && lowPrepAudiencias.length > 0 && (

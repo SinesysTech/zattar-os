@@ -55,7 +55,6 @@ import type { Audiencia } from '../domain';
 import { StatusAudiencia } from '../domain';
 import { MissionCard } from './mission-card';
 import { PostHearingFlow } from './post-hearing-flow';
-import { MissionKpiStrip } from './mission-kpi-strip';
 import { AudienciaListRow } from './audiencia-list-row';
 import { RhythmStrip } from './rhythm-strip';
 import { LoadHeatmap } from './load-heatmap';
@@ -264,9 +263,6 @@ export function AudienciasMissionView({
           </button>
         )}
       </div>
-
-      {/* ── KPI Strip ──────────────────────────────────────── */}
-      <MissionKpiStrip audiencias={audiencias} />
 
       {/* ── Date Navigator (only in mission view) ──────────── */}
       {contentView === 'missao' && (

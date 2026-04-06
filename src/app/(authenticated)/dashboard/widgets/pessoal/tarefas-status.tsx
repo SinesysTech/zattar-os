@@ -86,7 +86,7 @@ export function WidgetTarefasStatus() {
     total > 0 ? Math.round((concluidas / total) * 100) : 0;
 
   const segments = [
-    { value: pendentes || 0,   color: 'hsl(var(--warning))',      label: 'Pendentes' },
+    { value: pendentes || 0,   color: 'var(--warning)',            label: 'Pendentes' },
     { value: emAndamento || 0, color: 'hsl(220 70% 60%)',         label: 'Em Andamento' },
     { value: concluidas || 0,  color: 'hsl(142 60% 45%)',         label: 'Concluídas' },
   ].filter((s) => s.value > 0);
@@ -100,14 +100,14 @@ export function WidgetTarefasStatus() {
     >
       <div className="flex items-center gap-5">
         <MiniDonut
-          segments={segments.length > 0 ? segments : [{ value: 1, color: 'hsl(var(--muted))', label: 'Vazio' }]}
+          segments={segments.length > 0 ? segments : [{ value: 1, color: 'var(--muted)', label: 'Vazio' }]}
           size={88}
           strokeWidth={11}
           centerLabel={fmtNum(total)}
         />
         <div className="flex flex-col gap-2 flex-1 min-w-0">
           {[
-            { label: 'Pendentes',    value: pendentes,   color: 'hsl(var(--warning))' },
+            { label: 'Pendentes',    value: pendentes,   color: 'var(--warning)' },
             { label: 'Em Andamento', value: emAndamento, color: 'hsl(220 70% 60%)' },
             { label: 'Concluídas',   value: concluidas,  color: 'hsl(142 60% 45%)' },
           ].map((row) => (

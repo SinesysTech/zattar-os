@@ -166,10 +166,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // Obter token da sessão local (já atualizado pelo middleware/getClaims)
-      const { data: { session } } = await supabase.auth.getSession();
+      // Obter token da sessão local para chamadas API
+      // Nota: getSession() aqui é seguro pois a identidade já foi validada
+      // via getUser() acima — usamos apenas o access_token, não session.user
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
       if (signal?.aborted) return;
-      setSessionToken(session?.access_token ?? null);
+      setSessionToken(currentSession?.access_token ?? null);
 
       // Buscar dados consolidados da API
       const response = await fetch('/api/auth/me', {
@@ -245,14 +247,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const validateSession = async () => {
       if (!mounted || logoutInProgressRef.current) return;
 
-      const [{ data: userData, error: userError }, { data: sessionData }] = await Promise.all([
-        supabase.auth.getUser(),
-        supabase.auth.getSession(),
-      ]);
+      const { data: userData, error: userError } = await supabase.auth.getUser();
 
       if (!mounted) return;
 
-      if (userError || !userData.user || !sessionData.session) {
+      if (userError || !userData.user) {
         console.log('Sessão inválida detectada, fazendo logout automático');
         hasFetchedRef.current = false;
         await invalidateSession();
