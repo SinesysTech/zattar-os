@@ -65,10 +65,5 @@ export type { TravelEstimate } from "./travel-helpers";
 export { estimateTravelTime } from "./travel-helpers";
 
 // Repository (data fetching — use in server contexts only)
-export {
-  findAudiencias,
-  findExpedientes,
-  findAcordosComParcelas,
-  findPericias,
-  findAgendaEventos,
-} from "./repository";
+// Removed to avoid "server-only" leak to client components
+

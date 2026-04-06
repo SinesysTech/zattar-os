@@ -1,6 +1,6 @@
 'use server';
 
-import { DifyService } from '@/lib/dify';
+import { DifyService } from '@/lib/dify/service';
 import { findAnexos } from '../repository';
 import type { RespostasEntrevista } from '../domain';
 
@@ -77,7 +77,7 @@ export async function consolidarEntrevistaIAAction(
           : JSON.stringify(outputs, null, 2);
 
         const inconsistencias = Array.isArray(outputs.inconsistencias)
-          ? outputs.inconsistencias.map((item) => String(item))
+          ? outputs.inconsistencias.map((item: any) => String(item))
           : [];
 
         return {
