@@ -209,7 +209,7 @@ export function CallDetailSheet({ isOpen, onOpenChange, chamadaId }: CallDetailS
                          {p.duracaoSegundos ? (
                            <span className="text-xs font-mono">{formatarDuracao(p.duracaoSegundos)}</span>
                          ) : p.entrouEm && !p.saiuEm ? (
-                           <Badge variant="outline" className="text-[10px] text-green-600">Online</Badge>
+                           <Badge variant="success" className="text-[10px]">Online</Badge>
                          ) : (
                            <span className="text-xs text-muted-foreground">-</span>
                          )}

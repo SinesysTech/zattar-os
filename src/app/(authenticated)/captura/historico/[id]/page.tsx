@@ -6,6 +6,7 @@ import { PageShell } from '@/components/shared/page-shell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import {
   ArrowLeft,
   Clock,
@@ -23,35 +24,23 @@ interface PageProps {
   }>;
 }
 
+const STATUS_ICONS: Record<string, { icon: typeof CheckCircle2; label: string; className?: string }> = {
+  completed: { icon: CheckCircle2, label: 'Concluida' },
+  failed: { icon: XCircle, label: 'Falhou' },
+  in_progress: { icon: Loader2, label: 'Em Progresso', className: 'animate-spin' },
+  pending: { icon: Clock, label: 'Pendente' },
+};
+
 function StatusBadge({ status }: { status: string }) {
-  switch (status) {
-    case 'completed':
-      return (
-        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 hover:bg-green-100">
-          <CheckCircle2 className="mr-1 h-3 w-3" /> Concluida
-        </Badge>
-      );
-    case 'failed':
-      return (
-        <Badge variant="destructive">
-          <XCircle className="mr-1 h-3 w-3" /> Falhou
-        </Badge>
-      );
-    case 'in_progress':
-      return (
-        <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 hover:bg-blue-100">
-          <Loader2 className="mr-1 h-3 w-3 animate-spin" /> Em Progresso
-        </Badge>
-      );
-    case 'pending':
-      return (
-        <Badge variant="secondary">
-          <Clock className="mr-1 h-3 w-3" /> Pendente
-        </Badge>
-      );
-    default:
-      return <Badge variant="outline">{status}</Badge>;
-  }
+  const config = STATUS_ICONS[status];
+  if (!config) return <Badge variant="outline">{status}</Badge>;
+
+  const Icon = config.icon;
+  return (
+    <Badge variant={getSemanticBadgeVariant('captura_status', status)}>
+      <Icon className={`mr-1 h-3 w-3 ${config.className ?? ''}`} /> {config.label}
+    </Badge>
+  );
 }
 
 function calcularDuracao(inicio: string, fim: string | null): string | null {

@@ -44,28 +44,12 @@ export const STATUS_PROJETO_LABELS: Record<StatusProjeto, string> = {
   cancelado: "Cancelado",
 };
 
-export const STATUS_PROJETO_COLORS: Record<StatusProjeto, string> = {
-  planejamento: "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200",
-  ativo: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-  pausado: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-  concluido: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-  cancelado: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-};
-
 export const STATUS_TAREFA_LABELS: Record<StatusTarefa, string> = {
   a_fazer: "A Fazer",
   em_progresso: "Em Progresso",
   em_revisao: "Em Revisão",
   concluido: "Concluído",
   cancelado: "Cancelado",
-};
-
-export const STATUS_TAREFA_COLORS: Record<StatusTarefa, string> = {
-  a_fazer: "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200",
-  em_progresso: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-  em_revisao: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-  concluido: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-  cancelado: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
 };
 
 export const KANBAN_COLUMNS: StatusTarefa[] = [
@@ -80,13 +64,6 @@ export const PRIORIDADE_LABELS: Record<Prioridade, string> = {
   media: "Média",
   alta: "Alta",
   urgente: "Urgente",
-};
-
-export const PRIORIDADE_COLORS: Record<Prioridade, string> = {
-  baixa: "text-gray-500",
-  media: "text-orange-500",
-  alta: "text-red-500",
-  urgente: "text-red-700",
 };
 
 export const PAPEL_PROJETO_LABELS: Record<PapelProjeto, string> = {

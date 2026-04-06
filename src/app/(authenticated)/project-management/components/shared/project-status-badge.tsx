@@ -1,9 +1,7 @@
-import { AppBadge as Badge } from "@/components/ui/app-badge";
+import { SemanticBadge } from "@/components/ui/semantic-badge";
 import {
   STATUS_PROJETO_LABELS,
-  STATUS_PROJETO_COLORS,
   STATUS_TAREFA_LABELS,
-  STATUS_TAREFA_COLORS,
   type StatusProjeto,
   type StatusTarefa,
 } from "../../lib/domain";
@@ -18,9 +16,9 @@ export function ProjectStatusBadge({
   className,
 }: ProjectStatusBadgeProps) {
   return (
-    <Badge className={`${STATUS_PROJETO_COLORS[status]} ${className ?? ""}`}>
+    <SemanticBadge category="project_status" value={status} className={className}>
       {STATUS_PROJETO_LABELS[status]}
-    </Badge>
+    </SemanticBadge>
   );
 }
 
@@ -31,8 +29,8 @@ interface TaskStatusBadgeProps {
 
 export function TaskStatusBadge({ status, className }: TaskStatusBadgeProps) {
   return (
-    <Badge className={`${STATUS_TAREFA_COLORS[status]} ${className ?? ""}`}>
+    <SemanticBadge category="task_status" value={status} className={className}>
       {STATUS_TAREFA_LABELS[status]}
-    </Badge>
+    </SemanticBadge>
   );
 }

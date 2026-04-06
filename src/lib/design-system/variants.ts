@@ -57,7 +57,14 @@ export type BadgeCategory =
   | 'online_status'
   | 'obrigacao_status'
   | 'obrigacao_tipo'
-  | 'obrigacao_direcao';
+  | 'obrigacao_direcao'
+  | 'document_signature_status'
+  | 'project_status'
+  | 'task_status'
+  | 'priority'
+  | 'payment_status'
+  | 'financial_alert'
+  | 'error_type';
 
 /**
  * Determina o tom (intensidade) padrão por categoria.
@@ -72,6 +79,11 @@ export function getSemanticBadgeTone(category: BadgeCategory, _value?: string | 
     'captura_status',
     'status_contrato',
     'audiencia_status',
+    'document_signature_status',
+    'task_status',
+    'payment_status',
+    'financial_alert',
+    'error_type',
   ];
 
   if (softCategories.includes(category)) {
@@ -712,10 +724,167 @@ export function getSemanticBadgeVariant(
       return OBRIGACAO_DIRECAO_VARIANTS[key as string] ??
         OBRIGACAO_DIRECAO_VARIANTS[normalizedKey as string] ?? 'neutral';
 
+    case 'document_signature_status':
+      return DOCUMENT_SIGNATURE_STATUS_VARIANTS[key as string] ??
+        DOCUMENT_SIGNATURE_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'project_status':
+      return PROJECT_STATUS_VARIANTS[key as string] ??
+        PROJECT_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'task_status':
+      return TASK_STATUS_VARIANTS[key as string] ??
+        TASK_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'priority':
+      return PRIORITY_VARIANTS[key as string] ??
+        PRIORITY_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'payment_status':
+      return PAYMENT_STATUS_VARIANTS[key as string] ??
+        PAYMENT_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'financial_alert':
+      return FINANCIAL_ALERT_VARIANTS[key as string] ??
+        FINANCIAL_ALERT_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'error_type':
+      return ERROR_TYPE_VARIANTS[key as string] ??
+        ERROR_TYPE_VARIANTS[normalizedKey as string] ?? 'neutral';
+
     default:
       return 'neutral';
   }
 }
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE ASSINATURA DIGITAL
+// =============================================================================
+
+export const DOCUMENT_SIGNATURE_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  rascunho: 'neutral',
+  RASCUNHO: 'neutral',
+  pronto: 'info',
+  PRONTO: 'info',
+  enviado: 'info',
+  ENVIADO: 'info',
+  concluido: 'success',
+  CONCLUIDO: 'success',
+  cancelado: 'destructive',
+  CANCELADO: 'destructive',
+  expirado: 'warning',
+  EXPIRADO: 'warning',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE PROJETO (PROJECT MANAGEMENT)
+// =============================================================================
+
+export const PROJECT_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  planejamento: 'neutral',
+  PLANEJAMENTO: 'neutral',
+  ativo: 'success',
+  ATIVO: 'success',
+  em_andamento: 'success',
+  EM_ANDAMENTO: 'success',
+  EMANDAMENTO: 'success',
+  pausado: 'warning',
+  PAUSADO: 'warning',
+  concluido: 'info',
+  CONCLUIDO: 'info',
+  cancelado: 'destructive',
+  CANCELADO: 'destructive',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE TAREFA (PROJECT MANAGEMENT)
+// =============================================================================
+
+export const TASK_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  a_fazer: 'neutral',
+  A_FAZER: 'neutral',
+  AFAZER: 'neutral',
+  em_progresso: 'info',
+  EM_PROGRESSO: 'info',
+  EMPROGRESSO: 'info',
+  em_revisao: 'warning',
+  EM_REVISAO: 'warning',
+  EMREVISAO: 'warning',
+  concluida: 'success',
+  CONCLUIDA: 'success',
+  cancelada: 'destructive',
+  CANCELADA: 'destructive',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE PRIORIDADE
+// =============================================================================
+
+export const PRIORITY_VARIANTS: Record<string, BadgeVisualVariant> = {
+  baixa: 'neutral',
+  BAIXA: 'neutral',
+  media: 'info',
+  MEDIA: 'info',
+  alta: 'warning',
+  ALTA: 'warning',
+  urgente: 'destructive',
+  URGENTE: 'destructive',
+  critica: 'destructive',
+  CRITICA: 'destructive',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE PAGAMENTO (FINANCEIRO)
+// =============================================================================
+
+export const PAYMENT_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  pago: 'success',
+  PAGO: 'success',
+  recebido: 'success',
+  RECEBIDO: 'success',
+  pendente: 'warning',
+  PENDENTE: 'warning',
+  atrasado: 'destructive',
+  ATRASADO: 'destructive',
+  vencido: 'destructive',
+  VENCIDO: 'destructive',
+  parcial: 'info',
+  PARCIAL: 'info',
+  cancelado: 'neutral',
+  CANCELADO: 'neutral',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE ALERTA FINANCEIRO
+// =============================================================================
+
+export const FINANCIAL_ALERT_VARIANTS: Record<string, BadgeVisualVariant> = {
+  danger: 'destructive',
+  DANGER: 'destructive',
+  warning: 'warning',
+  WARNING: 'warning',
+  info: 'info',
+  INFO: 'info',
+  success: 'success',
+  SUCCESS: 'success',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE TIPO DE ERRO
+// =============================================================================
+
+export const ERROR_TYPE_VARIANTS: Record<string, BadgeVisualVariant> = {
+  timeout: 'warning',
+  TIMEOUT: 'warning',
+  auth: 'destructive',
+  AUTH: 'destructive',
+  network: 'warning',
+  NETWORK: 'warning',
+  validation: 'info',
+  VALIDATION: 'info',
+  unknown: 'neutral',
+  UNKNOWN: 'neutral',
+} as const;
 
 // =============================================================================
 // LABELS SEMÂNTICOS
@@ -839,6 +1008,13 @@ export const VARIANTS = {
   obrigacaoStatus: OBRIGACAO_STATUS_VARIANTS,
   obrigacaoTipo: OBRIGACAO_TIPO_VARIANTS,
   obrigacaoDirecao: OBRIGACAO_DIRECAO_VARIANTS,
+  documentSignatureStatus: DOCUMENT_SIGNATURE_STATUS_VARIANTS,
+  projectStatus: PROJECT_STATUS_VARIANTS,
+  taskStatus: TASK_STATUS_VARIANTS,
+  priority: PRIORITY_VARIANTS,
+  paymentStatus: PAYMENT_STATUS_VARIANTS,
+  financialAlert: FINANCIAL_ALERT_VARIANTS,
+  errorType: ERROR_TYPE_VARIANTS,
 } as const;
 
 export const LABELS = {

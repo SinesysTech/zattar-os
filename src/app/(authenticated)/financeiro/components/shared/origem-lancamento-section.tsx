@@ -211,14 +211,14 @@ export function OrigemLancamentoSection({
     const { acordo, parcela, processo, cliente } = origem;
 
     return (
-      <Card className={cn('border-blue-200 dark:border-blue-800', className)}>
+      <Card className={cn('border-info/30', className)}>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
+            <CardTitle className="flex items-center gap-2 text-info">
               <Scale className="h-5 w-5" />
               Origem: Acordo Judicial
             </CardTitle>
-            <Badge variant="outline" className="border-blue-500 text-blue-600">
+            <Badge variant="info">
               <LinkIcon className="h-3 w-3 mr-1" />
               Vinculado
             </Badge>

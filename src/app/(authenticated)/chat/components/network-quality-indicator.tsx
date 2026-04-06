@@ -18,15 +18,15 @@ function getNetworkQualityColor(quality: 'excellent' | 'good' | 'poor' | 'unknow
   const variant = getSemanticBadgeVariant('network_quality', quality);
 
   const colorMap: Record<BadgeVisualVariant, string> = {
-    success: 'text-green-500',
-    info: 'text-blue-500',
-    destructive: 'text-red-500',
-    neutral: 'text-gray-500',
-    warning: 'text-orange-500',
-    default: 'text-gray-500',
-    secondary: 'text-gray-500',
-    outline: 'text-gray-500',
-    accent: 'text-purple-500',
+    success: 'text-success',
+    info: 'text-info',
+    destructive: 'text-destructive',
+    neutral: 'text-muted-foreground',
+    warning: 'text-warning',
+    default: 'text-muted-foreground',
+    secondary: 'text-muted-foreground',
+    outline: 'text-muted-foreground',
+    accent: 'text-primary',
   };
 
   return colorMap[variant] || 'text-gray-500';

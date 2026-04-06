@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import {
   CheckCircle2,
   XCircle,
@@ -43,14 +44,14 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       <div className="flex items-center gap-2 rounded-md border bg-background p-2.5">
-        <FilePlus className="h-4 w-4 text-green-500" />
+        <FilePlus className="h-4 w-4 text-success" />
         <div>
           <p className="text-xs text-muted-foreground">Inseridos</p>
           <p className="text-sm font-semibold">{stats.inseridos}</p>
         </div>
       </div>
       <div className="flex items-center gap-2 rounded-md border bg-background p-2.5">
-        <FileEdit className="h-4 w-4 text-blue-500" />
+        <FileEdit className="h-4 w-4 text-info" />
         <div>
           <p className="text-xs text-muted-foreground">Atualizados</p>
           <p className="text-sm font-semibold">{stats.atualizados}</p>
@@ -64,7 +65,7 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
         </div>
       </div>
       <div className="flex items-center gap-2 rounded-md border bg-background p-2.5">
-        <AlertTriangle className="h-4 w-4 text-red-500" />
+        <AlertTriangle className="h-4 w-4 text-destructive" />
         <div>
           <p className="text-xs text-muted-foreground">Erros</p>
           <p className="text-sm font-semibold">{stats.erros}</p>
@@ -85,13 +86,13 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
     <div className="mt-3 space-y-3">
       {erros.length > 0 && (
         <div>
-          <p className="text-xs font-medium text-red-600 dark:text-red-400 mb-1.5">
+          <p className="text-xs font-medium text-destructive mb-1.5">
             Erros ({erros.length})
           </p>
           <div className="space-y-1">
             {erros.map((log, i) => (
               <div key={i} className="flex items-start gap-2 rounded-md border border-red-200 dark:border-red-900 bg-red-50/50 dark:bg-red-950/30 p-2 text-xs">
-                <XCircle className="h-3.5 w-3.5 text-red-500 shrink-0 mt-0.5" />
+                <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                 <div>
                   <span className="font-medium">{log.entidade}</span>
                   <span className="text-muted-foreground ml-1">— {log.erro}</span>
@@ -104,7 +105,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
 
       {inseridos.length > 0 && (
         <div>
-          <p className="text-xs font-medium text-green-600 dark:text-green-400 mb-1.5">
+          <p className="text-xs font-medium text-success mb-1.5">
             Inseridos ({inseridos.length})
           </p>
           <div className="flex flex-wrap gap-1">
@@ -124,7 +125,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
 
       {atualizados.length > 0 && (
         <div>
-          <p className="text-xs font-medium text-blue-600 dark:text-blue-400 mb-1.5">
+          <p className="text-xs font-medium text-info mb-1.5">
             Atualizados ({atualizados.length})
           </p>
           <div className="space-y-1">
@@ -170,7 +171,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
       <div className="flex flex-wrap gap-2">
         <Badge variant="outline">{rawLogs.length} registro{rawLogs.length !== 1 ? 's' : ''}</Badge>
         {totalSucesso > 0 && (
-          <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 hover:bg-green-100">
+          <Badge variant={getSemanticBadgeVariant('captura_status', 'completed')}>
             <CheckCircle2 className="mr-1 h-3 w-3" /> {totalSucesso} sucesso
           </Badge>
         )}
@@ -197,9 +198,9 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
               <AccordionTrigger className="py-3 hover:no-underline">
                 <div className="flex flex-1 items-center gap-2 text-sm">
                   {isError ? (
-                    <XCircle className="h-4 w-4 text-red-500 shrink-0" />
+                    <XCircle className="h-4 w-4 text-destructive shrink-0" />
                   ) : (
-                    <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+                    <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
                   )}
                   <span className="font-medium">{rawLog.trt}</span>
                   <Badge variant="secondary" className="text-[10px] px-1.5 py-0 font-normal">
