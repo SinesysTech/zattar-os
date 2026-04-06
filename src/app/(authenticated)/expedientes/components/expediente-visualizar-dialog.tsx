@@ -23,7 +23,7 @@ import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 
 interface ExpedienteVisualizarDialogProps {
-  expediente: Expediente;
+  expediente: Expediente | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   usuarios?: Usuario[];
@@ -114,6 +114,8 @@ export function ExpedienteVisualizarDialog({
       </Button>
     </div>
   );
+
+  if (!expediente) return null;
 
   return (
     <DialogFormShell
