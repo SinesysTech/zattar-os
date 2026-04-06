@@ -1,63 +1,51 @@
 'use client';
 
 /**
- * ExpedientesListFilters - Componente de filtros reutilizável
+ * ExpedientesListFilters — Filtros para a DataTable de expedientes
  *
- * Puramente presentacional — sem estado próprio.
- * Recebe valores + callbacks como props.
- * Usado em todos os wrappers (lista, semana, mês, ano).
- *
- * Segue o padrão de audiencias-list-filters.tsx
+ * Segue o padrão de audiencias-list-filters.tsx:
+ * - FilterPopoverMulti para seleção múltipla
+ * - Opções estáticas para enums, dinâmicas para usuarios/tipos
+ * - Props-based, sem estado próprio
  */
 
 import * as React from 'react';
-import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
-
+import { FilterPopoverMulti } from '@/app/(authenticated)/partes/components/shared/filter-popover-multi';
+import type { FilterOption } from '@/app/(authenticated)/partes/components/shared/filter-popover';
 import {
-  CodigoTribunal,
+  GrauTribunal,
   GRAU_TRIBUNAL_LABELS,
+  CodigoTribunal,
+  OrigemExpediente,
   ORIGEM_EXPEDIENTE_LABELS,
 } from '../domain';
 
-// =============================================================================
-// OPÇÕES DE FILTRO (estáticas)
-// =============================================================================
+// ─── Opções estáticas ────────────────────────────────────────────────────────
 
 const STATUS_OPTIONS: readonly FilterOption[] = [
-  { value: 'pendentes', label: 'Pendentes' },
-  { value: 'baixados', label: 'Baixados' },
+  { value: 'pendente', label: 'Pendente' },
+  { value: 'baixado', label: 'Baixado' },
+  { value: 'vencido', label: 'Vencido' },
 ];
-
-const PRAZO_OPTIONS: readonly FilterOption[] = [
-  { value: 'vencidos', label: 'Vencidos' },
-  { value: 'hoje', label: 'Vence Hoje' },
-  { value: 'amanha', label: 'Vence Amanhã' },
-  { value: 'semana', label: 'Esta Semana' },
-  { value: 'sem_prazo', label: 'Sem Prazo' },
-];
-
-const TRIBUNAL_OPTIONS: readonly FilterOption[] = CodigoTribunal.map(
-  (trt) => ({ value: trt, label: trt })
-);
 
 const GRAU_OPTIONS: readonly FilterOption[] = Object.entries(GRAU_TRIBUNAL_LABELS).map(
   ([value, label]) => ({ value, label })
+);
+
+const TRIBUNAL_OPTIONS: readonly FilterOption[] = CodigoTribunal.map(
+  (trt) => ({ value: trt, label: trt })
 );
 
 const ORIGEM_OPTIONS: readonly FilterOption[] = Object.entries(ORIGEM_EXPEDIENTE_LABELS).map(
   ([value, label]) => ({ value, label })
 );
 
-// =============================================================================
-// TIPOS
-// =============================================================================
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 interface Usuario {
   id: number;
   nomeExibicao?: string | null;
-  nome_exibicao?: string | null;
   nomeCompleto?: string | null;
-  nome?: string | null;
 }
 
 interface TipoExpediente {
@@ -66,139 +54,105 @@ interface TipoExpediente {
   tipo_expediente?: string;
 }
 
-export type StatusFilterType = 'todos' | 'pendentes' | 'baixados';
-export type PrazoFilterType = 'todos' | 'vencidos' | 'hoje' | 'amanha' | 'semana' | 'sem_prazo';
-export type ResponsavelFilterType = 'todos' | 'sem_responsavel' | number;
+export type StatusFiltro = 'pendente' | 'baixado' | 'vencido';
 
 export interface ExpedientesListFiltersProps {
-  statusFilter: StatusFilterType;
-  onStatusChange: (value: StatusFilterType) => void;
-  prazoFilter?: PrazoFilterType;
-  onPrazoChange?: (value: PrazoFilterType) => void;
-  responsavelFilter: ResponsavelFilterType;
-  onResponsavelChange: (value: ResponsavelFilterType) => void;
-  tribunalFilter: string;
-  onTribunalChange: (value: string) => void;
-  grauFilter: string;
-  onGrauChange: (value: string) => void;
-  tipoExpedienteFilter: string;
-  onTipoExpedienteChange: (value: string) => void;
-  origemFilter: string;
-  onOrigemChange: (value: string) => void;
+  statusFiltro: StatusFiltro[];
+  onStatusChange: (value: StatusFiltro[]) => void;
+  trtFiltro: CodigoTribunal[];
+  onTrtChange: (value: CodigoTribunal[]) => void;
+  grauFiltro: GrauTribunal[];
+  onGrauChange: (value: GrauTribunal[]) => void;
+  origemFiltro: OrigemExpediente[];
+  onOrigemChange: (value: OrigemExpediente[]) => void;
+  responsavelFiltro: (number | 'null')[];
+  onResponsavelChange: (value: (number | 'null')[]) => void;
+  tipoExpedienteFiltro: number[];
+  onTipoExpedienteChange: (value: number[]) => void;
   usuarios: Usuario[];
   tiposExpedientes: TipoExpediente[];
-  /** Esconder filtro de prazo (ex: visão de semana) */
-  hidePrazoFilter?: boolean;
-  /** Esconder filtros avançados: Tribunal, Grau, Origem (ex: visão de semana) */
-  hideAdvancedFilters?: boolean;
 }
 
-// =============================================================================
-// COMPONENTE
-// =============================================================================
+// ─── Component ───────────────────────────────────────────────────────────────
 
 export function ExpedientesListFilters({
-  statusFilter,
+  statusFiltro,
   onStatusChange,
-  prazoFilter = 'todos',
-  onPrazoChange,
-  responsavelFilter,
-  onResponsavelChange,
-  tribunalFilter,
-  onTribunalChange,
-  grauFilter,
+  trtFiltro,
+  onTrtChange,
+  grauFiltro,
   onGrauChange,
-  tipoExpedienteFilter,
-  onTipoExpedienteChange,
-  origemFilter,
+  origemFiltro,
   onOrigemChange,
+  responsavelFiltro,
+  onResponsavelChange,
+  tipoExpedienteFiltro,
+  onTipoExpedienteChange,
   usuarios,
   tiposExpedientes,
-  hidePrazoFilter,
-  hideAdvancedFilters,
 }: ExpedientesListFiltersProps) {
-  // Opções dinâmicas
   const responsavelOptions: readonly FilterOption[] = React.useMemo(
     () => [
-      { value: 'sem_responsavel', label: 'Sem Responsável' },
+      { value: 'null', label: 'Sem Responsável' },
       ...usuarios.map((u) => ({
         value: String(u.id),
-        label: u.nomeExibicao || u.nome_exibicao || u.nomeCompleto || u.nome || `Usuário ${u.id}`,
+        label: u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}`,
       })),
     ],
     [usuarios]
   );
 
-  const tipoExpedienteOptions: readonly FilterOption[] = React.useMemo(
-    () => tiposExpedientes.map((t) => ({
-      value: String(t.id),
-      label: t.tipoExpediente || t.tipo_expediente || `Tipo ${t.id}`,
-    })),
+  const tipoOptions: readonly FilterOption[] = React.useMemo(
+    () =>
+      tiposExpedientes.map((t) => ({
+        value: String(t.id),
+        label: t.tipoExpediente || t.tipo_expediente || `Tipo ${t.id}`,
+      })),
     [tiposExpedientes]
   );
 
   return (
     <>
-      <FilterPopover
+      <FilterPopoverMulti
         label="Status"
         options={STATUS_OPTIONS}
-        value={statusFilter}
-        onValueChange={(v) => onStatusChange(v as StatusFilterType)}
-        defaultValue="todos"
+        value={statusFiltro}
+        onValueChange={(v) => onStatusChange(v as StatusFiltro[])}
       />
-
-      {!hidePrazoFilter && onPrazoChange && (
-        <FilterPopover
-          label="Prazo"
-          options={PRAZO_OPTIONS}
-          value={prazoFilter}
-          onValueChange={(v) => onPrazoChange(v as PrazoFilterType)}
-          defaultValue="todos"
-        />
-      )}
-
-      <FilterPopover
+      <FilterPopoverMulti
+        label="Tribunal"
+        options={TRIBUNAL_OPTIONS}
+        value={trtFiltro}
+        onValueChange={(v) => onTrtChange(v as CodigoTribunal[])}
+      />
+      <FilterPopoverMulti
+        label="Grau"
+        options={GRAU_OPTIONS}
+        value={grauFiltro}
+        onValueChange={(v) => onGrauChange(v as GrauTribunal[])}
+      />
+      <FilterPopoverMulti
+        label="Origem"
+        options={ORIGEM_OPTIONS}
+        value={origemFiltro}
+        onValueChange={(v) => onOrigemChange(v as OrigemExpediente[])}
+      />
+      <FilterPopoverMulti
         label="Responsável"
         options={responsavelOptions}
-        value={typeof responsavelFilter === 'number' ? String(responsavelFilter) : responsavelFilter}
+        value={responsavelFiltro.map(String)}
         onValueChange={(v) => {
-          if (v === 'todos') onResponsavelChange('todos');
-          else if (v === 'sem_responsavel') onResponsavelChange('sem_responsavel');
-          else onResponsavelChange(parseInt(v, 10));
+          const mapped = v.map((val) => (val === 'null' ? 'null' as const : Number(val)));
+          onResponsavelChange(mapped);
         }}
-        defaultValue="todos"
+        placeholder="Filtrar por responsável..."
       />
-
-      {!hideAdvancedFilters && (
-        <>
-          <FilterPopover
-            label="Tribunal"
-            options={TRIBUNAL_OPTIONS}
-            value={tribunalFilter || 'all'}
-            onValueChange={(v) => onTribunalChange(v === 'all' ? '' : v)}
-          />
-
-          <FilterPopover
-            label="Grau"
-            options={GRAU_OPTIONS}
-            value={grauFilter || 'all'}
-            onValueChange={(v) => onGrauChange(v === 'all' ? '' : v)}
-          />
-
-          <FilterPopover
-            label="Origem"
-            options={ORIGEM_OPTIONS}
-            value={origemFilter || 'all'}
-            onValueChange={(v) => onOrigemChange(v === 'all' ? '' : v)}
-          />
-        </>
-      )}
-
-      <FilterPopover
+      <FilterPopoverMulti
         label="Tipo"
-        options={tipoExpedienteOptions}
-        value={tipoExpedienteFilter || 'all'}
-        onValueChange={(v) => onTipoExpedienteChange(v === 'all' ? '' : v)}
+        options={tipoOptions}
+        value={tipoExpedienteFiltro.map(String)}
+        onValueChange={(v) => onTipoExpedienteChange(v.map(Number))}
+        placeholder="Filtrar por tipo..."
       />
     </>
   );

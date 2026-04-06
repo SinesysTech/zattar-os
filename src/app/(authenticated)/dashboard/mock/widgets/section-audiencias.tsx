@@ -8,7 +8,7 @@
 
 'use client';
 
-import { Calendar, Clock, MapPin, Gavel, FileText } from 'lucide-react';
+import { Calendar, Clock, MapPin, Gavel, FileText, BarChart3, TrendingUp } from 'lucide-react';
 import {
   GallerySection,
   WidgetContainer,
@@ -80,9 +80,9 @@ const PROXIMAS_AUDIENCIAS = [
 ];
 
 const MODALIDADE_SEGMENTS = [
-  { value: 18, color: 'hsl(var(--primary))', label: 'Virtual' },
-  { value: 12, color: 'hsl(var(--warning))', label: 'Presencial' },
-  { value: 5, color: 'hsl(var(--muted-foreground) / 0.55)', label: 'Híbrida' },
+  { value: 18, color: 'hsl(220 70% 60%)',  label: 'Virtual' },
+  { value: 12, color: 'hsl(262 60% 55%)',  label: 'Presencial' },
+  { value: 5,  color: 'hsl(45 93% 47%)',   label: 'Híbrida' },
 ];
 
 const STATUS_MENSAL_DATA = [
@@ -95,11 +95,11 @@ const STATUS_MENSAL_DATA = [
 ];
 
 const TIPO_BARS = [
-  { label: 'Instrução', value: 14, color: 'hsl(var(--primary))' },
-  { label: 'Conciliação', value: 8, color: 'hsl(var(--warning))' },
-  { label: 'Julgamento', value: 5, color: 'hsl(var(--destructive))' },
-  { label: 'UNA', value: 3, color: 'hsl(var(--muted-foreground) / 0.55)' },
-  { label: 'Perícia', value: 2, color: 'hsl(var(--primary) / 0.4)' },
+  { label: 'Instrução', value: 14, color: 'hsl(262 60% 55%)' },
+  { label: 'Conciliação', value: 8, color: 'hsl(220 70% 60%)' },
+  { label: 'Julgamento', value: 5, color: 'hsl(0 72% 51%)' },
+  { label: 'UNA', value: 3, color: 'hsl(215 14% 60%)' },
+  { label: 'Perícia', value: 2, color: 'hsl(45 93% 47%)' },
 ];
 const TIPO_MAX = Math.max(...TIPO_BARS.map((b) => b.value));
 
@@ -267,6 +267,7 @@ export function StatusMensal() {
   return (
     <WidgetContainer
       title="Status Mensal"
+      icon={Calendar}
       subtitle="Últ. 6 meses — Marcadas vs Realizadas vs Canceladas"
     >
       <div className="space-y-3">
@@ -274,7 +275,7 @@ export function StatusMensal() {
           data={STATUS_MENSAL_DATA}
           height={56}
           barColor="bg-primary/50"
-          barColor2="bg-[hsl(var(--warning)/0.5)]"
+          barColor2="bg-[hsl(142_60%_45%/0.5)]"
         />
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
@@ -282,7 +283,7 @@ export function StatusMensal() {
             <span className="text-[9px] text-muted-foreground/50">Marcadas</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="size-2 rounded-sm bg-[hsl(var(--warning)/0.5)]" />
+            <div className="size-2 rounded-sm bg-[hsl(142_60%_45%/0.5)]" />
             <span className="text-[9px] text-muted-foreground/50">Realizadas</span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -307,7 +308,7 @@ export function StatusMensal() {
 
 export function KpiStrip() {
   return (
-    <WidgetContainer title="Resumo do Período" subtitle="Março 2026">
+    <WidgetContainer title="Resumo do Período" icon={Clock} subtitle="Março 2026">
       <div className="grid grid-cols-3 gap-3">
         {/* KPI 1 */}
         <div className="flex flex-col gap-1">
@@ -325,7 +326,7 @@ export function KpiStrip() {
           <ProgressRing
             percent={94}
             size={44}
-            color="hsl(var(--primary))"
+            color="hsl(142 60% 45%)"
           />
           <p className="text-[9px] text-muted-foreground/60">de 8 aud.</p>
         </div>
@@ -401,6 +402,7 @@ export function TrendMensal() {
   return (
     <WidgetContainer
       title="Tendência Anual"
+      icon={FileText}
       subtitle="Abr 2025 — Mar 2026"
     >
       <div className="flex items-start justify-between mb-3">
@@ -487,42 +489,57 @@ function TrendAreaChart({ data }: { data: number[] }) {
 
 // ─── Widget 7 — Comparativo Mensal (ComparisonStat + InsightBanner) ──────────
 
+const COMPARATIVO_ITEMS = [
+  { label: 'Realizadas',     current: 7,    previous: 8,    color: 'hsl(142 60% 45%)',  unit: '' },
+  { label: 'Canceladas',     current: 1,    previous: 3,    color: 'hsl(0 72% 51%)',    unit: '' },
+  { label: 'Taxa de sucesso', current: 87.5, previous: 72.7, color: 'hsl(262 60% 55%)', unit: '%' },
+  { label: 'Duração média',  current: 47,   previous: 52,   color: 'hsl(220 70% 60%)',  unit: 'min' },
+];
+
 export function WidgetComparativoMensal() {
   return (
     <WidgetContainer
       title="Comparativo Mensal"
+      icon={BarChart3}
       subtitle="Março vs Fevereiro 2026"
-      className="md:col-span-2"
     >
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 pb-4">
-        <ComparisonStat
-          label="Realizadas"
-          current={7}
-          previous={8}
-          format="number"
-        />
-        <ComparisonStat
-          label="Canceladas"
-          current={1}
-          previous={3}
-          format="number"
-        />
-        <ComparisonStat
-          label="Taxa de sucesso"
-          current={87.5}
-          previous={72.7}
-          format="percent"
-        />
-        <ComparisonStat
-          label="Duração média"
-          current={47}
-          previous={52}
-          format="number"
-        />
+      <div className="space-y-3">
+        {COMPARATIVO_ITEMS.map((item) => {
+          const diff = item.current - item.previous;
+          const pct = item.previous !== 0 ? ((diff / item.previous) * 100) : 0;
+          const isPositive = item.label === 'Canceladas' ? diff <= 0 : diff >= 0;
+          const maxVal = Math.max(item.current, item.previous);
+          const fmtVal = (v: number) => item.unit === '%' ? `${v.toFixed(1)}${item.unit}` : `${v}${item.unit ? ' ' + item.unit : ''}`;
+
+          return (
+            <div key={item.label} className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] text-muted-foreground/60">{item.label}</span>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-sm font-semibold font-display tabular-nums">{fmtVal(item.current)}</span>
+                  <span className={`text-[10px] font-medium ${isPositive ? 'text-success/70' : 'text-destructive/70'}`}>
+                    {pct >= 0 ? '+' : ''}{pct.toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-1 h-1.5">
+                <div
+                  className="rounded-full transition-all duration-500"
+                  style={{ width: `${(item.current / maxVal) * 100}%`, backgroundColor: item.color }}
+                />
+                <div
+                  className="rounded-full bg-border/20 transition-all duration-500"
+                  style={{ width: `${(item.previous / maxVal) * 100}%` }}
+                />
+              </div>
+              <div className="flex justify-between text-[8px] text-muted-foreground/45">
+                <span>atual</span>
+                <span>anterior: {fmtVal(item.previous)}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
-      <InsightBanner type="success">
-        Taxa de cancelamento caiu 66% — melhor mês do trimestre
-      </InsightBanner>
     </WidgetContainer>
   );
 }
@@ -533,10 +550,11 @@ export function WidgetHeatmapSemanal() {
   return (
     <WidgetContainer
       title="Densidade Semanal"
+      icon={TrendingUp}
       subtitle="Audiências por dia — últimas 5 semanas"
     >
       <div className="flex flex-col gap-4">
-        <CalendarHeatmap data={HEATMAP_DATA} colorScale="warning" />
+        <CalendarHeatmap data={HEATMAP_DATA} colorScale="primary" />
         <div className="grid grid-cols-1 gap-1.5 pt-1 border-t border-border/15">
           <div className="flex items-center justify-between">
             <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">

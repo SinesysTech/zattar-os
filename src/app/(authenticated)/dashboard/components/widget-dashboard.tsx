@@ -37,6 +37,8 @@ function getSaudacao(): string {
 
 function getColSpanClass(size: WidgetDefinition['size']): string {
   switch (size) {
+    case 'xs':
+      return 'lg:col-span-1';
     case 'half':
       return 'lg:col-span-3';
     case 'md':
@@ -45,7 +47,7 @@ function getColSpanClass(size: WidgetDefinition['size']): string {
     case 'full':
       return 'md:col-span-2 lg:col-span-6';
     default: // sm
-      return 'lg:col-span-2';
+      return 'lg:col-span-2 min-h-[15rem]';
   }
 }
 
@@ -176,7 +178,7 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
             return (
               <div
                 key={widget.id}
-                className={`${getColSpanClass(widget.size)} *:h-full`}
+                className={getColSpanClass(widget.size)}
               >
                 <WidgetComponent />
               </div>

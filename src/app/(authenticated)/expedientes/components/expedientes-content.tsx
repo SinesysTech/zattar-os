@@ -14,11 +14,10 @@ import {
 import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
-import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { type ViewType } from '@/components/shared';
+import { type ViewType, ViewModePopover, type ViewModeOption } from '@/components/shared';
 import { useWeekNavigator } from '@/components/shared';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes, TiposExpedientesList } from '@/app/(authenticated)/tipos-expedientes';
@@ -55,14 +54,14 @@ const VIEW_ROUTES: Record<ViewType, string> = {
   quadro: `${APP_BASE_ROUTE}/quadro`,
 };
 
-// ─── View toggle options ──────────────────────────────────────────────────────
+// ─── View mode options (popover, como Audiências) ─────────────────────────────
 
-const VIEW_OPTIONS: ViewToggleOption[] = [
-  { id: 'quadro', icon: Sparkles, label: 'Quadro' },
-  { id: 'semana', icon: CalendarDays, label: 'Semana' },
-  { id: 'mes', icon: CalendarRange, label: 'Mês' },
-  { id: 'ano', icon: Calendar, label: 'Ano' },
-  { id: 'lista', icon: List, label: 'Lista' },
+const VIEW_MODE_OPTIONS: ViewModeOption[] = [
+  { value: 'quadro', label: 'Quadro', icon: Sparkles },
+  { value: 'semana', label: 'Semana', icon: CalendarDays },
+  { value: 'mes', label: 'Mês', icon: CalendarRange },
+  { value: 'ano', label: 'Ano', icon: Calendar },
+  { value: 'lista', label: 'Lista', icon: List },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -187,6 +186,16 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
     router.push(VIEW_ROUTES[view as ViewType]);
   }, [router]);
 
+  // ─── ViewModePopover (slot passado para cada view wrapper) ──────────────────
+
+  const viewModePopover = useMemo(() => (
+    <ViewModePopover
+      value={viewMode}
+      onValueChange={(v) => handleViewChange(v)}
+      options={VIEW_MODE_OPTIONS}
+    />
+  ), [viewMode, handleViewChange]);
+
   // ─── Dynamic subtitle ─────────────────────────────────────────────────────────
 
   const subtitle = useMemo(() => {
@@ -281,27 +290,25 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         </InsightBanner>
       )}
 
-      {/* 4. View Controls */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <TabPills
-          tabs={tabs}
-          active={activeTab}
-          onChange={(id) => setActiveTab(id as typeof activeTab)}
-        />
+      {/* 4. View Controls — lista tem toolbar própria, então esconde TabPills + Search */}
+      {viewMode !== 'lista' && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <TabPills
+            tabs={tabs}
+            active={activeTab}
+            onChange={(id) => setActiveTab(id as typeof activeTab)}
+          />
 
-        <div className="flex items-center gap-2 ml-auto">
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            placeholder="Buscar processo, parte..."
-          />
-          <ViewToggle
-            mode={viewMode}
-            onChange={handleViewChange}
-            options={VIEW_OPTIONS}
-          />
+          <div className="flex items-center gap-2 ml-auto">
+            <SearchInput
+              value={search}
+              onChange={setSearch}
+              placeholder="Buscar processo, parte..."
+            />
+            {viewModePopover}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 5. Content Switcher */}
       <main className="min-h-0 transition-opacity duration-300">
@@ -326,14 +333,8 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
           />
         )}
 
-        {!isLoading && viewMode === 'lista' && (
-          <ExpedientesListWrapper
-            expedientes={filteredExpedientes}
-            usuariosData={usuarios}
-            tiposExpedientesData={tiposExpedientes}
-            onBaixar={handleBaixar}
-            onViewDetail={handleViewDetail}
-          />
+        {viewMode === 'lista' && (
+          <ExpedientesListWrapper viewModeSlot={viewModePopover} />
         )}
 
         {!isLoading && viewMode === 'semana' && (

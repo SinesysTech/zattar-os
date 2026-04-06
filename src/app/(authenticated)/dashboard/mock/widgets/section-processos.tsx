@@ -35,10 +35,10 @@ import {
 // ─── Mock Data ──────────────────────────────────────────────────────────────
 
 const STATUS_SEGMENTS = [
-  { value: 89, color: 'hsl(var(--primary))',       label: 'Ativos' },
-  { value: 7,  color: 'hsl(var(--warning))',        label: 'Suspensos' },
-  { value: 31, color: 'hsl(var(--muted-foreground) / 0.55)', label: 'Arquivados' },
-  { value: 12, color: 'hsl(220 70% 60%)',           label: 'Em Recurso' },
+  { value: 89, color: 'hsl(142 60% 45%)',  label: 'Ativos' },
+  { value: 7,  color: 'hsl(45 93% 47%)',   label: 'Suspensos' },
+  { value: 31, color: 'hsl(215 14% 60%)',  label: 'Arquivados' },
+  { value: 12, color: 'hsl(220 70% 60%)',  label: 'Em Recurso' },
 ];
 
 const TRT_DATA = [
@@ -61,11 +61,11 @@ const AGING_SEGMENTS = [
 ];
 
 const SEGMENTO_SEGMENTS = [
-  { value: 68, color: 'hsl(var(--primary))',  label: 'Trabalhista' },
-  { value: 31, color: 'hsl(220 70% 60%)',     label: 'Cível' },
-  { value: 15, color: 'hsl(280 60% 60%)',     label: 'Previdenciário' },
-  { value: 8,  color: 'hsl(var(--warning))',  label: 'Empresarial' },
-  { value: 5,  color: 'hsl(var(--destructive))', label: 'Criminal' },
+  { value: 68, color: 'hsl(262 60% 55%)',  label: 'Trabalhista' },
+  { value: 31, color: 'hsl(220 70% 60%)',  label: 'Cível' },
+  { value: 15, color: 'hsl(280 60% 60%)',  label: 'Previdenciário' },
+  { value: 8,  color: 'hsl(45 93% 47%)',   label: 'Empresarial' },
+  { value: 5,  color: 'hsl(0 72% 51%)',    label: 'Criminal' },
 ];
 
 const TOTAL_PROCESSOS  = 139;
@@ -87,7 +87,6 @@ export function WidgetStatusDistribuicao() {
       icon={PieChart}
       subtitle="Total de processos ativos"
       depth={1}
-      className="md:col-span-2"
     >
       <div className="flex items-center gap-5">
         <MiniDonut
@@ -96,7 +95,7 @@ export function WidgetStatusDistribuicao() {
           strokeWidth={11}
           centerLabel={fmtNum(total)}
         />
-        <div className="flex flex-col gap-2 flex-1 min-w-0">
+        <div className="flex flex-col justify-center gap-2.5 flex-1 min-w-0">
           {STATUS_SEGMENTS.map((seg) => (
             <div key={seg.label} className="flex items-center gap-2">
               <span
@@ -210,8 +209,8 @@ export function WidgetAging() {
       subtitle="Distribuição por tempo de duração"
       depth={1}
     >
-      <StackedBar segments={AGING_SEGMENTS} height={10} />
-      <div className="flex flex-col gap-2.5 mt-4">
+      <StackedBar segments={AGING_SEGMENTS} height={12} />
+      <div className="flex flex-col gap-3 mt-4">
         {AGING_SEGMENTS.map((seg) => {
           const pct = Math.round((seg.value / total) * 100);
           return (
@@ -224,7 +223,7 @@ export function WidgetAging() {
                 {seg.label}
               </span>
               <div className="flex items-center gap-1.5">
-                <div className="w-12 h-1 rounded-full bg-border/15 overflow-hidden">
+                <div className="w-14 h-1.5 rounded-full bg-border/15 overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{ width: `${pct}%`, backgroundColor: seg.color }}
@@ -255,20 +254,20 @@ export function WidgetSegmento() {
       subtitle="Distribuição por área jurídica"
       depth={1}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-5">
         <MiniDonut
           segments={SEGMENTO_SEGMENTS}
-          size={76}
-          strokeWidth={10}
+          size={88}
+          strokeWidth={11}
           centerLabel={`${Math.round((dominant.value / total) * 100)}%`}
         />
-        <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+        <div className="flex flex-col gap-2 flex-1 min-w-0">
           {SEGMENTO_SEGMENTS.map((seg) => {
             const pct = Math.round((seg.value / total) * 100);
             return (
               <div key={seg.label} className="flex items-center gap-2">
                 <span
-                  className="size-1.5 rounded-full shrink-0"
+                  className="size-2 rounded-full shrink-0"
                   style={{ backgroundColor: seg.color }}
                 />
                 <span className="text-[10px] text-muted-foreground/60 flex-1 truncate">
@@ -283,7 +282,7 @@ export function WidgetSegmento() {
         </div>
       </div>
       <div className="mt-3 pt-3 border-t border-border/10">
-        <StackedBar segments={SEGMENTO_SEGMENTS} height={6} />
+        <StackedBar segments={SEGMENTO_SEGMENTS} height={8} />
       </div>
     </WidgetContainer>
   );
@@ -397,49 +396,39 @@ export function WidgetSaudeProcessual() {
       icon={HeartPulse}
       subtitle="Score composto — ativos, resolução e vencimentos"
       depth={2}
-      className="md:col-span-2"
     >
-      <div className="flex flex-col gap-4">
-        {/* Gauge + comparisons */}
-        <div className="flex items-center gap-6 flex-wrap">
-          <div className="flex flex-col items-center gap-1">
-            <GaugeMeter
-              value={SAUDE_SCORE}
-              max={100}
-              label="score geral"
-              status={SAUDE_STATUS}
-              size={120}
-            />
-          </div>
-          <div className="flex flex-1 gap-6 flex-wrap min-w-0">
-            <ComparisonStat
-              label="Ativos"
-              current={89}
-              previous={82}
-              format="number"
-            />
-            <ComparisonStat
-              label="Encerrados no mês"
-              current={13}
-              previous={9}
-              format="number"
-            />
-            <div className="flex flex-col gap-1">
-              <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
-                Tempo médio
-              </p>
-              <div className="flex items-baseline gap-2">
-                <span className="font-display text-lg font-bold">8,2 meses</span>
-                <span className="text-[10px] font-medium text-success/70">-9,9%</span>
-              </div>
-              <p className="text-[9px] text-muted-foreground/55">anterior: 9,1 meses</p>
+      <div className="flex items-center gap-5">
+        <GaugeMeter
+          value={SAUDE_SCORE}
+          max={100}
+          label="score geral"
+          status={SAUDE_STATUS}
+          size={100}
+        />
+        <div className="grid grid-cols-3 gap-x-4 gap-y-3 flex-1 min-w-0">
+          <ComparisonStat
+            label="Ativos"
+            current={89}
+            previous={82}
+            format="number"
+          />
+          <ComparisonStat
+            label="Encerrados no mês"
+            current={13}
+            previous={9}
+            format="number"
+          />
+          <div className="flex flex-col gap-1">
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">
+              Tempo médio
+            </p>
+            <div className="flex items-baseline gap-2">
+              <span className="font-display text-lg font-bold">8,2 meses</span>
+              <span className="text-[10px] font-medium text-success/70">-9,9%</span>
             </div>
+            <p className="text-[9px] text-muted-foreground/55">anterior: 9,1 meses</p>
           </div>
         </div>
-        {/* Insight */}
-        <InsightBanner type="warning">
-          3 processos sem movimentação há 60+ dias — considere ação
-        </InsightBanner>
       </div>
     </WidgetContainer>
   );
@@ -498,18 +487,18 @@ export function WidgetHeatmapAtividade() {
 // ─── Widget 9: Processos com Tabs ────────────────────────────────────────────
 
 const TREEMAP_STATUS = [
-  { value: 89, label: 'Ativos',     color: 'hsl(var(--primary))' },
-  { value: 7,  label: 'Suspensos',  color: 'hsl(var(--warning))' },
-  { value: 31, label: 'Arquivados', color: 'hsl(var(--muted-foreground) / 0.4)' },
+  { value: 89, label: 'Ativos',     color: 'hsl(142 60% 45%)' },
+  { value: 7,  label: 'Suspensos',  color: 'hsl(45 93% 47%)' },
+  { value: 31, label: 'Arquivados', color: 'hsl(215 14% 60%)' },
   { value: 12, label: 'Em Recurso', color: 'hsl(220 70% 60%)' },
 ];
 
 const TREEMAP_SEGMENTO = [
-  { value: 68, label: 'Trabalhista',    color: 'hsl(var(--primary))' },
-  { value: 31, label: 'Cível',          color: 'hsl(var(--warning))' },
+  { value: 68, label: 'Trabalhista',    color: 'hsl(262 60% 55%)' },
+  { value: 31, label: 'Cível',          color: 'hsl(220 70% 60%)' },
   { value: 15, label: 'Previdenciário', color: 'hsl(142 60% 45%)' },
-  { value: 8,  label: 'Empresarial',    color: 'hsl(220 70% 60%)' },
-  { value: 5,  label: 'Criminal',       color: 'hsl(var(--destructive))' },
+  { value: 8,  label: 'Empresarial',    color: 'hsl(45 93% 47%)' },
+  { value: 5,  label: 'Criminal',       color: 'hsl(0 72% 51%)' },
 ];
 
 const TAB_OPTIONS = [

@@ -406,11 +406,12 @@ export function CalendarHeatmap({
   data,
   colorScale = 'primary',
 }: {
-  data: number[]; // 35 values (5 weeks x 7 days)
+  data: number[];
   colorScale?: 'primary' | 'success' | 'warning' | 'destructive';
 }) {
+  const weeks = Math.ceil(data.length / 7);
   const max = Math.max(...data, 1);
-  const days = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'];
+  const days = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
 
   const colorMap: Record<string, string[]> = {
     primary: [
@@ -453,24 +454,22 @@ export function CalendarHeatmap({
 
   return (
     <div className="flex gap-1">
-      {/* Day labels */}
-      <div className="flex flex-col gap-0.5 mr-0.5">
+      <div className="flex flex-col gap-1 mr-0.5">
         {days.map((d, i) => (
-          <div key={i} className="size-3.5 flex items-center justify-center text-[7px] text-muted-foreground/55">
-            {d}
+          <div key={i} className="h-5 flex items-center text-[8px] text-muted-foreground/55">
+            {i % 2 === 0 ? d : ''}
           </div>
         ))}
       </div>
-      {/* Weeks */}
-      {Array.from({ length: 5 }).map((_, week) => (
-        <div key={week} className="flex flex-col gap-0.5">
+      {Array.from({ length: weeks }).map((_, week) => (
+        <div key={week} className="flex flex-col gap-1 flex-1">
           {Array.from({ length: 7 }).map((_, day) => {
             const idx = week * 7 + day;
             const val = data[idx] ?? 0;
             return (
               <div
                 key={day}
-                className={`size-3.5 rounded-[3px] transition-colors duration-200 ${getColor(val)}`}
+                className={`h-5 rounded-[3px] transition-colors duration-200 ${getColor(val)}`}
                 title={`${val} item${val !== 1 ? 's' : ''}`}
               />
             );
