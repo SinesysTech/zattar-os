@@ -27,6 +27,7 @@ design-system/
 .gitleaks.toml
 
 # Testes
+src/testing/
 e2e/
 tests/
 test-results/
