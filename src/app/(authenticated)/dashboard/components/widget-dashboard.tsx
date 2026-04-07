@@ -53,6 +53,49 @@ function getColSpanClass(size: WidgetDefinition['size']): string {
   }
 }
 
+// ─── Bin-packing: reordena widgets para preencher linhas de 6 cols ─────────
+// Mantém o agrupamento por módulo (input já vem ordenado), e só "pula" um
+// item da fila quando ele não cabe na sobra da linha atual — buscando o
+// próximo da fila que caiba. Custo: O(n²) — desprezível para n<200.
+
+const SIZE_COLS: Record<WidgetDefinition['size'], number> = {
+  xs: 1,
+  sm: 2,
+  half: 3,
+  md: 4,
+  lg: 4,
+  full: 6,
+};
+
+const GRID_COLS = 6;
+
+function packWidgetsIntoGrid(widgets: WidgetDefinition[]): WidgetDefinition[] {
+  const queue = [...widgets];
+  const packed: WidgetDefinition[] = [];
+
+  while (queue.length > 0) {
+    let remaining = GRID_COLS;
+    let placedAny = false;
+
+    while (remaining > 0) {
+      // Próximo item EM ORDEM que ainda caiba na sobra desta linha.
+      const idx = queue.findIndex((w) => SIZE_COLS[w.size] <= remaining);
+      if (idx === -1) break; // nada mais cabe — fecha a linha
+
+      packed.push(queue[idx]);
+      remaining -= SIZE_COLS[queue[idx].size];
+      queue.splice(idx, 1);
+      placedAny = true;
+    }
+
+    // Salvaguarda: se nenhum item foi colocado nesta iteração, evita loop
+    // infinito (não deveria acontecer porque GRID_COLS=6 acomoda qualquer size).
+    if (!placedAny) break;
+  }
+
+  return packed;
+}
+
 // ─── Props ───────────────────────────────────────────────────────────────────
 
 interface WidgetDashboardProps {
@@ -102,15 +145,18 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
     // Se personalizado, ordenar usando o índice original no WIDGET_REGISTRY
     // Isso garante o agrupamento conceitual solicitado (todos os módulos juntos)
-    if (hasCustomized) {
-      return filtered.sort(
-        (a, b) =>
-          WIDGET_REGISTRY.findIndex((w) => w.id === a.id) -
-          WIDGET_REGISTRY.findIndex((w) => w.id === b.id)
-      );
-    }
+    const grouped = hasCustomized
+      ? filtered.sort(
+          (a, b) =>
+            WIDGET_REGISTRY.findIndex((w) => w.id === a.id) -
+            WIDGET_REGISTRY.findIndex((w) => w.id === b.id)
+        )
+      : filtered;
 
-    return filtered;
+    // Bin-packing final: garante que cada linha do grid (6 cols) seja
+    // preenchida ao máximo, eliminando gaps quando widgets têm tamanhos
+    // heterogêneos ou quando o usuário ativa/desativa itens.
+    return packWidgetsIntoGrid(grouped);
   }, [availableWidgets, enabledWidgets, hasCustomized]);
 
   // IDs efetivos para o picker (considera defaults quando não personalizado)
