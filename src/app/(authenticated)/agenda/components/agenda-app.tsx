@@ -243,7 +243,7 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
   const isTraditionalView = view === "month" || view === "week" || view === "day" || view === "agenda";
 
   return (
-    <div className="max-w-350 mx-auto space-y-4 pb-12">
+    <div className="space-y-4 pb-12">
       {/* Toolbar */}
       <AgendaToolbar
         view={view}

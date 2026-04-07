@@ -224,7 +224,7 @@ export default function DashboardMockPage() {
         }}
       />
 
-      <div className="max-w-300 mx-auto space-y-6">
+      <div className="space-y-6">
         {/* ────────────────────────────────────────────────────
             GREETING — Minimal, human
            ──────────────────────────────────────────────────── */}
