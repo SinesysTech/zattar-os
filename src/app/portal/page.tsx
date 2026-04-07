@@ -1,5 +1,4 @@
-import Image from 'next/image'
-import { AmbientBackdrop } from '@/components/shared'
+import { AmbientBackdrop, BrandMark } from '@/components/shared'
 import { CpfHeroForm } from './feature'
 
 export default function PortalLoginPage() {
@@ -10,15 +9,7 @@ export default function PortalLoginPage() {
 
         <main className="relative z-10 mx-auto flex min-h-svh w-full max-w-lg flex-col items-center justify-center px-6 py-6 sm:py-8">
           <div className="mb-6 flex justify-center sm:mb-8">
-            <div className="relative h-20 w-72 sm:h-24 sm:w-96">
-              <Image
-                src="/logos/logomarca-dark.svg"
-                alt="Zattar Advogados"
-                fill
-                priority
-                className="object-contain object-center"
-              />
-            </div>
+            <BrandMark variant="dark" size="xl" priority className="object-center" />
           </div>
 
           <CpfHeroForm />

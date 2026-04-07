@@ -9,6 +9,7 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 import { WidgetPicker, type WidgetDefinition } from './widget-picker';
 import { Button } from '@/components/ui/button';
 import { Heading } from '@/components/ui/typography';
+import { cn } from '@/lib/utils';
 
 // ─── Registry import (gerado por agent paralelo) ────────────────────────────
 // Se o arquivo ainda não existir no momento do build, o dashboard renderiza
@@ -173,13 +174,13 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
       {/* ── Grid de widgets ─────────────────────────────────────── */}
       {visibleWidgets.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 auto-rows-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 auto-rows-auto grid-flow-row-dense">
           {visibleWidgets.map((widget) => {
             const WidgetComponent = widget.component;
             return (
               <div
                 key={widget.id}
-                className={getColSpanClass(widget.size)}
+                className={cn(getColSpanClass(widget.size), 'h-full [&>*]:h-full')}
               >
                 <WidgetComponent />
               </div>

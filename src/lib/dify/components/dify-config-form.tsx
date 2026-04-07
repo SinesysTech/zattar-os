@@ -131,7 +131,7 @@ export function DifyConfigForm() {
                     </Alert>
                 )}
                 {connectionStatus === 'success' && (
-                    <Alert className="bg-green-50 text-green-800 border-green-200">
+                    <Alert className="bg-success/10 text-success border-success/30">
                         <CheckCircle className="h-4 w-4" />
                         <AlertTitle>Conectado</AlertTitle>
                         <AlertDescription>{connectionMessage}</AlertDescription>

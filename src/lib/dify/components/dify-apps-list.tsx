@@ -336,8 +336,8 @@ export function DifyAppsList() {
                             <div className="flex gap-2">
                                 <Input type="password" value={formData.api_key} onChange={e => setFormData({ ...formData, api_key: e.target.value })} placeholder="app-..." />
                                 <Button variant="outline" size="icon" onClick={handleTestConnection} disabled={saving} title="Testar Conexão">
-                                    {testStatus === 'success' ? <CheckCircle className="text-green-500 h-4 w-4" /> :
-                                        testStatus === 'error' ? <XCircle className="text-red-500 h-4 w-4" /> :
+                                    {testStatus === 'success' ? <CheckCircle className="text-success h-4 w-4" /> :
+                                        testStatus === 'error' ? <XCircle className="text-destructive h-4 w-4" /> :
                                             <Play className="h-4 w-4" />}
                                 </Button>
                             </div>
