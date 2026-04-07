@@ -36,7 +36,7 @@ const COLORS = {
   critico: 'var(--destructive)',
   alto:    'hsl(35 95% 58%)',   // warning amber
   medio:   'hsl(217 91% 60%)',  // blue
-  baixo:   'hsl(var(--muted-foreground) / 0.55)',
+  baixo:   'oklch(from var(--muted-foreground) l c h / 0.55)',
   ok:      'hsl(142 71% 45%)',  // success green
   parcial: 'hsl(35 95% 58%)',
 };

@@ -153,7 +153,7 @@ const STATS = {
 // ─── Helpers ────────────────────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<DocStatus, { label: string; color: string; cssColor: string; icon: typeof Clock; bg: string }> = {
-  rascunho: { label: 'Rascunho', color: 'text-muted-foreground/50', cssColor: 'hsl(var(--muted-foreground) / 0.55)', icon: FileText, bg: 'bg-muted-foreground/8' },
+  rascunho: { label: 'Rascunho', color: 'text-muted-foreground/50', cssColor: 'oklch(from var(--muted-foreground) l c h / 0.55)', icon: FileText, bg: 'bg-muted-foreground/8' },
   pronto: { label: 'Aguardando', color: 'text-warning/70', cssColor: 'var(--warning)', icon: Send, bg: 'bg-warning/8' },
   concluido: { label: 'Concluído', color: 'text-success/70', cssColor: 'var(--success)', icon: CheckCircle2, bg: 'bg-success/8' },
   cancelado: { label: 'Cancelado', color: 'text-destructive/50', cssColor: 'var(--destructive)', icon: XCircle, bg: 'bg-destructive/8' },

@@ -420,7 +420,7 @@ export function WidgetMeuDia() {
                         item.done
                           ? 'bg-muted-foreground/25'
                           : isNext
-                          ? 'bg-primary shadow-[0_0_6px_hsl(var(--primary)/0.4)]'
+                          ? 'bg-primary shadow-[0_0_6px_oklch(from var(--primary) l c h / 0.4)]'
                           : 'bg-border/40'
                       }`}
                     />

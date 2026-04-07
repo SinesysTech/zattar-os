@@ -96,15 +96,15 @@ export function WidgetSaudeProcessual() {
       subtitle={`Score composto — ${subtitleExtra}`}
       depth={2}
     >
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-3">
         <GaugeMeter
           value={score}
           max={100}
           label="score geral"
           status={status}
-          size={100}
+          size={72}
         />
-        <div className="grid grid-cols-3 gap-x-4 gap-y-3 flex-1 min-w-0">
+        <div className="grid grid-cols-3 gap-3 flex-1 min-w-0">
           <ComparisonStat
             label="Ativos"
             current={stats.ativos}

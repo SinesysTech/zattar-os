@@ -49,7 +49,7 @@ function getColSpanClass(size: WidgetDefinition['size']): string {
     case 'full':
       return 'md:col-span-2 lg:col-span-6';
     default: // sm
-      return 'lg:col-span-2 min-h-[15rem]';
+      return 'lg:col-span-2 min-h-[8rem]';
   }
 }
 
