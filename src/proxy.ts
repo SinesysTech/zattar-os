@@ -314,7 +314,9 @@ export async function proxy(request: NextRequest) {
   // Isso evita que o middleware do servidor faça uma requisição real para o Supabase
   // falhando o teste e gerando redirecionamento para o `/app/login`.
   const isE2E = request.cookies.get('__playwright_e2e')?.value === '1';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let data: any = { claims: null };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let authError: any = null;
 
   if (isE2E) {

@@ -83,11 +83,8 @@ export function WidgetHeatmapProdutividade() {
   const heatmapData =
     data.produtividade.heatmap ?? derivarHeatmap(data.produtividade.porDia);
 
-  // Calcular estatisticas
-  const totalSemanas = Math.ceil(heatmapData.length / 7);
-  const totalBaixas = heatmapData.reduce((a, b) => a + b, 0);
-  const mediaSemanal =
-    totalSemanas > 0 ? Math.round(totalBaixas / totalSemanas) : 0;
+
+
 
   // Semana atual vs semana anterior
   const semanaAtual = heatmapData.slice(-7).reduce((a, b) => a + b, 0);

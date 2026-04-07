@@ -13,7 +13,7 @@ test.describe('Assinatura Digital - Fluxo Público de Cadastro via Formulário (
   // contra aplicação Next.js exigiria Mocks na DB de testes ou E2E puro.
   // Vamos simular a interação base testando labels previstos em páginas públicas.
 
-  test('aviso: Este teste requer seeder de formulário com dados inseridos na Base de Dados (Teste E2E Puro)', async ({ page }) => {
+  test('aviso: Este teste requer seeder de formulário com dados inseridos na Base de Dados (Teste E2E Puro)', async ({ }) => {
     // Exemplo do que faríamos num ambiente Full test seeding:
     // await page.goto('/formulario/segmento-teste/form-teste');
     // await expect(page.getByText('Formulário de Cadastro Teste')).toBeVisible();

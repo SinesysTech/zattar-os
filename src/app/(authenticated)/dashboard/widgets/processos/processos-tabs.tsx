@@ -15,7 +15,7 @@ import {
   Treemap,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { useDashboard, isDashboardUsuario, isDashboardAdmin } from '../../hooks';
+import { useDashboard, isDashboardUsuario } from '../../hooks';
 
 const TAB_OPTIONS = [
   { id: 'status', label: 'Status' },

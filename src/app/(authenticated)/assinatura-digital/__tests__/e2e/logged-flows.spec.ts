@@ -1,5 +1,5 @@
 import { test, expect } from '@/testing/e2e/fixtures';
-import { waitForToast } from '@/testing/e2e/helpers';
+
 
 test.describe('Assinatura Digital - Logged Flows', () => {
   test.beforeEach(async ({ authenticatedPage: page }) => {

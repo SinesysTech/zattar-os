@@ -14,7 +14,7 @@ import {
   fmtNum,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { useDashboard, isDashboardUsuario, isDashboardAdmin } from '../../hooks';
+import { useDashboard, isDashboardUsuario } from '../../hooks';
 
 interface StatusSegment {
   value: number;
@@ -56,8 +56,8 @@ export function WidgetStatusDistribuicao() {
     } else {
       // Fallback: build from ativos/arquivados
       segments = [
-        { value: p.ativos, color: 'oklch(0.55 0.18 145)' /* --success */, label: 'Ativos' },
-        { value: p.arquivados, color: 'oklch(0.42 0.01 281)' /* --muted-foreground */, label: 'Arquivados' },
+        { value: p.ativos, color: 'var(--success)', label: 'Ativos' },
+        { value: p.arquivados, color: 'var(--muted-foreground)', label: 'Arquivados' },
       ];
     }
   } else {

@@ -20,10 +20,7 @@ interface StrapiListResponse<T> {
   };
 }
 
-interface StrapiSingleResponse<T> {
-  data: T;
-  meta: Record<string, unknown>;
-}
+
 
 // ============================================================
 // Types — espelham o content-type "blog-post" do Strapi

@@ -16,7 +16,7 @@ import {
 import { useAgentContext } from '@copilotkit/react-core/v2';
 import Link from 'next/link';
 import {
-  Card,
+  
   CardAction,
   CardDescription,
   CardHeader,
