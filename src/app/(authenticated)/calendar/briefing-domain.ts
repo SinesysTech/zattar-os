@@ -77,13 +77,31 @@ export interface ColorConfig {
   dot: string;
 }
 
+/**
+ * COLOR_MAP — Compat shim sobre @/lib/design-system/event-colors.
+ * Delega para o helper canônico. Em código novo, importe direto:
+ *   import { getEventColorClasses } from '@/lib/design-system/event-colors'
+ */
+import { getEventColorClasses as _getEventColorClasses } from "@/lib/design-system/event-colors";
+
+function _buildBriefingEntry(legacy: EventColor): ColorConfig {
+  const c = _getEventColorClasses(legacy);
+  return {
+    bg: c.bgSoft,
+    bgSolid: c.bgSolid,
+    text: c.text,
+    border: c.border,
+    dot: c.dot,
+  };
+}
+
 export const COLOR_MAP: Record<EventColor, ColorConfig> = {
-  sky:     { bg: "bg-sky-200/50 dark:bg-sky-400/25",       bgSolid: "bg-sky-500",    text: "text-sky-900 dark:text-sky-200",       border: "border-sky-300/40",    dot: "bg-sky-500" },
-  amber:   { bg: "bg-amber-200/50 dark:bg-amber-400/25",   bgSolid: "bg-amber-500",  text: "text-amber-900 dark:text-amber-200",   border: "border-amber-300/40",  dot: "bg-amber-500" },
-  violet:  { bg: "bg-violet-200/50 dark:bg-violet-400/25", bgSolid: "bg-violet-500", text: "text-violet-900 dark:text-violet-200", border: "border-violet-300/40", dot: "bg-violet-500" },
-  rose:    { bg: "bg-rose-200/50 dark:bg-rose-400/25",     bgSolid: "bg-rose-500",   text: "text-rose-900 dark:text-rose-200",     border: "border-rose-300/40",   dot: "bg-rose-500" },
-  emerald: { bg: "bg-green-200/50 dark:bg-green-400/25",   bgSolid: "bg-green-500",  text: "text-green-900 dark:text-green-200",   border: "border-green-300/40",  dot: "bg-green-500" },
-  orange:  { bg: "bg-orange-200/50 dark:bg-orange-400/25", bgSolid: "bg-orange-500", text: "text-orange-900 dark:text-orange-200", border: "border-orange-300/40", dot: "bg-orange-500" },
+  sky:     _buildBriefingEntry("sky"),
+  amber:   _buildBriefingEntry("amber"),
+  violet:  _buildBriefingEntry("violet"),
+  rose:    _buildBriefingEntry("rose"),
+  emerald: _buildBriefingEntry("emerald"),
+  orange:  _buildBriefingEntry("orange"),
 };
 
 // ─── Source Config ──────────────────────────────────────────────────────

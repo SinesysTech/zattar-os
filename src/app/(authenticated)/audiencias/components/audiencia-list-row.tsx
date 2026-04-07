@@ -75,9 +75,9 @@ function getPrepStatus(score: number): 'good' | 'warning' | 'danger' {
 }
 
 const PREP_COLORS: Record<string, string> = {
-  good: 'hsl(var(--success))',
-  warning: 'hsl(var(--warning))',
-  danger: 'hsl(var(--destructive))',
+  good: 'var(--success)',
+  warning: 'var(--warning)',
+  danger: 'var(--destructive)',
 };
 
 // ─── Component ────────────────────────────────────────────────────────────

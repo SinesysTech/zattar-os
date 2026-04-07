@@ -61,7 +61,7 @@ const MEU_DIA: {
 ];
 
 const TAREFAS_SEGMENTS = [
-  { value: 8,  color: 'hsl(var(--warning))',       label: 'Pendentes'     },
+  { value: 8,  color: 'var(--warning)',       label: 'Pendentes'     },
   { value: 3,  color: 'hsl(220 70% 60%)',          label: 'Em Andamento'  },
   { value: 14, color: 'hsl(142 60% 45%)',          label: 'Concluídas'    },
 ];

@@ -108,9 +108,9 @@ export function PrepScore({ audiencia, className, showBreakdown = false, size = 
   const offset = circumference - (score / 100) * circumference;
 
   const statusColors = {
-    good: "hsl(var(--success))",
-    warning: "hsl(var(--warning))",
-    danger: "hsl(var(--destructive))",
+    good: "var(--success)",
+    warning: "var(--warning)",
+    danger: "var(--destructive)",
   };
 
   const statusTextColors = {

@@ -7,7 +7,7 @@
  * Usado em visualizações kanban e pipeline.
  *
  * Uso:
- *   <ContratoCard contrato={c} stageColor="hsl(var(--primary))" onClick={handleClick} />
+ *   <ContratoCard contrato={c} stageColor="var(--primary)" onClick={handleClick} />
  */
 
 import { Clock, Building2 } from 'lucide-react';

@@ -33,7 +33,7 @@ import {
 // ─── Paleta de urgência (Expedientes usa warm/alert com prioridade) ──────
 
 const COLORS = {
-  critico: 'hsl(var(--destructive))',
+  critico: 'var(--destructive)',
   alto:    'hsl(35 95% 58%)',   // warning amber
   medio:   'hsl(217 91% 60%)',  // blue
   baixo:   'hsl(var(--muted-foreground) / 0.55)',

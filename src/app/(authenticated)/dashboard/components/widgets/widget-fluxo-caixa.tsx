@@ -76,8 +76,8 @@ export function WidgetFluxoCaixa() {
                   contentStyle={{ fontSize: '12px' }}
                   cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
                 />
-                <Bar dataKey="receitas" fill="hsl(var(--chart-4))" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="despesas" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="receitas" fill="var(--chart-4)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="despesas" fill="var(--destructive)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </SafeResponsiveContainer>
           </ClientOnly>

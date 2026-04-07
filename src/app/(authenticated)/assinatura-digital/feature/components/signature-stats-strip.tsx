@@ -47,7 +47,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
             <ProgressRing
               percent={stats.taxaConclusao}
               size={32}
-              color="hsl(var(--success))"
+              color="var(--success)"
             />
             <span className="text-xs font-bold text-success/70">
               {stats.taxaConclusao}%
@@ -85,7 +85,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
             data={stats.trendMensal}
             width={60}
             height={20}
-            color="hsl(var(--success))"
+            color="var(--success)"
           />
         </div>
       </div>

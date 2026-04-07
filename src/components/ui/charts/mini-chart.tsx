@@ -39,7 +39,7 @@ import { ClientOnly } from '@/components/shared/client-only';
 import { SafeResponsiveContainer } from '@/hooks/use-chart-ready';
 
 // Cores padrão para gráficos — todas vinculadas a tokens semânticos do design system.
-// IMPORTANTE: usar var(--token) direto. NUNCA hsl(var(--token)) — globals.css usa OKLCH.
+// IMPORTANTE: usar var(--token) direto. NUNCA hsl/rgb wrapping — globals.css usa OKLCH.
 export const CHART_COLORS = {
   primary: 'var(--primary)',
   success: 'var(--success)',

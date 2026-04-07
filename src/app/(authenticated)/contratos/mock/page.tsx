@@ -56,10 +56,10 @@ interface ContratoCard {
 // ─── Mock Data ──────────────────────────────────────────────────────────
 
 const PIPELINE_STAGES: { id: StatusContrato; label: string; color: string; colorBg: string }[] = [
-  { id: 'em_contratacao', label: 'Em Contratação', color: 'hsl(var(--warning))', colorBg: 'bg-warning' },
-  { id: 'contratado', label: 'Contratado', color: 'hsl(var(--primary))', colorBg: 'bg-primary' },
-  { id: 'distribuido', label: 'Distribuído', color: 'hsl(var(--success))', colorBg: 'bg-success' },
-  { id: 'desistencia', label: 'Desistência', color: 'hsl(var(--destructive))', colorBg: 'bg-destructive' },
+  { id: 'em_contratacao', label: 'Em Contratação', color: 'var(--warning)', colorBg: 'bg-warning' },
+  { id: 'contratado', label: 'Contratado', color: 'var(--primary)', colorBg: 'bg-primary' },
+  { id: 'distribuido', label: 'Distribuído', color: 'var(--success)', colorBg: 'bg-success' },
+  { id: 'desistencia', label: 'Desistência', color: 'var(--destructive)', colorBg: 'bg-destructive' },
 ];
 
 const CONTRATOS: ContratoCard[] = [
@@ -321,7 +321,7 @@ function FinancialStrip() {
         <div className="shrink-0">
           <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Conversão</p>
           <div className="flex items-center gap-2">
-            <ProgressRing percent={STATS.taxaConversao} size={32} color="hsl(var(--success))" />
+            <ProgressRing percent={STATS.taxaConversao} size={32} color="var(--success)" />
             <span className="text-xs font-bold text-success/70">{STATS.taxaConversao}%</span>
           </div>
         </div>
@@ -333,7 +333,7 @@ function FinancialStrip() {
             <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Tendência 6m</p>
             <p className="text-xs font-semibold text-success/60">+{STATS.novosMes} este mês</p>
           </div>
-          <Sparkline data={STATS.trendMensal} width={60} height={20} color="hsl(var(--success))" />
+          <Sparkline data={STATS.trendMensal} width={60} height={20} color="var(--success)" />
         </div>
       </div>
     </GlassPanel>

@@ -63,9 +63,9 @@ const MODALIDADE_ICON: Record<string, LucideIcon> = {
 };
 
 function getPrepColor(score: number): string {
-  if (score >= 80) return 'hsl(var(--success))';
-  if (score >= 50) return 'hsl(var(--warning))';
-  return 'hsl(var(--destructive))';
+  if (score >= 80) return 'var(--success)';
+  if (score >= 50) return 'var(--warning)';
+  return 'var(--destructive)';
 }
 
 function getUrgencyStyles(totalMs: number) {

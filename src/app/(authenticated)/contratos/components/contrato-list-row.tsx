@@ -61,7 +61,7 @@ export function ContratoListRow({
       {/* Status dot */}
       <div
         className="size-2.5 rounded-full shrink-0"
-        style={{ backgroundColor: stageColor ?? 'hsl(var(--muted-foreground))', opacity: 0.6 }}
+        style={{ backgroundColor: stageColor ?? 'var(--muted-foreground)', opacity: 0.6 }}
       />
 
       {/* Avatar */}

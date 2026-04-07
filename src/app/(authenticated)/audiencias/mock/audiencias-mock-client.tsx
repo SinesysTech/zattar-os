@@ -286,9 +286,9 @@ function getPrepStatus(score: number): 'good' | 'warning' | 'danger' {
 }
 
 const PREP_COLORS = {
-  good: 'hsl(var(--success))',
-  warning: 'hsl(var(--warning))',
-  danger: 'hsl(var(--destructive))',
+  good: 'var(--success)',
+  warning: 'var(--warning)',
+  danger: 'var(--destructive)',
 };
 
 const MODALIDADE_ICON = {

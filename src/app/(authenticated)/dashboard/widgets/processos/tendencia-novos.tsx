@@ -84,7 +84,7 @@ export function WidgetTendenciaNovos() {
           data={novosData}
           width={110}
           height={44}
-          color="hsl(var(--primary))"
+          color="var(--primary)"
         />
       </div>
       <div className="flex items-end justify-between pt-2 border-t border-border/10">

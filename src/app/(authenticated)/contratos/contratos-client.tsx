@@ -45,10 +45,10 @@ import { Heading } from '@/components/ui/typography';
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PIPELINE_STAGES: { id: StatusContrato; label: string; color: string }[] = [
-  { id: 'em_contratacao', label: 'Em Contratação', color: 'hsl(var(--warning))' },
-  { id: 'contratado', label: 'Contratado', color: 'hsl(var(--primary))' },
-  { id: 'distribuido', label: 'Distribuído', color: 'hsl(var(--success))' },
-  { id: 'desistencia', label: 'Desistência', color: 'hsl(var(--destructive))' },
+  { id: 'em_contratacao', label: 'Em Contratação', color: 'var(--warning)' },
+  { id: 'contratado', label: 'Contratado', color: 'var(--primary)' },
+  { id: 'distribuido', label: 'Distribuído', color: 'var(--success)' },
+  { id: 'desistencia', label: 'Desistência', color: 'var(--destructive)' },
 ];
 
 type ViewMode = 'pipeline' | 'kanban' | 'lista';

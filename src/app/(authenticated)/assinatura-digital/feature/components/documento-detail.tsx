@@ -76,8 +76,8 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             size={48}
             color={
               progress.percent === 100
-                ? "hsl(var(--success))"
-                : "hsl(var(--primary))"
+                ? "var(--success)"
+                : "var(--primary)"
             }
           />
           <div>
