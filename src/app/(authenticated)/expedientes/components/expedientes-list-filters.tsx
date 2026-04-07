@@ -40,6 +40,11 @@ const ORIGEM_OPTIONS: readonly FilterOption[] = Object.entries(ORIGEM_EXPEDIENTE
   ([value, label]) => ({ value, label })
 );
 
+const BOLEANO_OPTIONS: readonly FilterOption[] = [
+  { value: 'sim', label: 'Sim' },
+  { value: 'nao', label: 'Não' },
+];
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 interface Usuario {
@@ -71,6 +76,12 @@ export interface ExpedientesListFiltersProps {
   onTipoExpedienteChange: (value: number[]) => void;
   usuarios: Usuario[];
   tiposExpedientes: TipoExpediente[];
+  juizoDigitalFiltro: ('sim' | 'nao')[];
+  onJuizoDigitalChange: (value: ('sim' | 'nao')[]) => void;
+  segredoJusticaFiltro: ('sim' | 'nao')[];
+  onSegredoJusticaChange: (value: ('sim' | 'nao')[]) => void;
+  prioridadeProcessualFiltro: ('sim' | 'nao')[];
+  onPrioridadeProcessualChange: (value: ('sim' | 'nao')[]) => void;
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -90,6 +101,12 @@ export function ExpedientesListFilters({
   onTipoExpedienteChange,
   usuarios,
   tiposExpedientes,
+  juizoDigitalFiltro,
+  onJuizoDigitalChange,
+  segredoJusticaFiltro,
+  onSegredoJusticaChange,
+  prioridadeProcessualFiltro,
+  onPrioridadeProcessualChange,
 }: ExpedientesListFiltersProps) {
   const responsavelOptions: readonly FilterOption[] = React.useMemo(
     () => [
@@ -153,6 +170,27 @@ export function ExpedientesListFilters({
         value={tipoExpedienteFiltro.map(String)}
         onValueChange={(v) => onTipoExpedienteChange(v.map(Number))}
         placeholder="Filtrar por tipo..."
+      />
+      <FilterPopoverMulti
+        label="Juízo Digital"
+        options={BOLEANO_OPTIONS}
+        value={juizoDigitalFiltro}
+        onValueChange={(v) => onJuizoDigitalChange(v as ('sim' | 'nao')[])}
+        placeholder="Juízo Digital"
+      />
+      <FilterPopoverMulti
+        label="Segredo Justiça"
+        options={BOLEANO_OPTIONS}
+        value={segredoJusticaFiltro}
+        onValueChange={(v) => onSegredoJusticaChange(v as ('sim' | 'nao')[])}
+        placeholder="Segredo Justiça"
+      />
+      <FilterPopoverMulti
+        label="Prioridade"
+        options={BOLEANO_OPTIONS}
+        value={prioridadeProcessualFiltro}
+        onValueChange={(v) => onPrioridadeProcessualChange(v as ('sim' | 'nao')[])}
+        placeholder="Prioridade Processual"
       />
     </>
   );

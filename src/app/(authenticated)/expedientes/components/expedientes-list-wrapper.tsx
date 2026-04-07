@@ -63,6 +63,9 @@ export function ExpedientesListWrapper({
   const [origemFiltro, setOrigemFiltro] = React.useState<OrigemExpediente[]>([]);
   const [responsavelFiltro, setResponsavelFiltro] = React.useState<(number | 'null')[]>([]);
   const [tipoExpedienteFiltro, setTipoExpedienteFiltro] = React.useState<number[]>([]);
+  const [juizoDigitalFiltro, setJuizoDigitalFiltro] = React.useState<('sim' | 'nao')[]>([]);
+  const [segredoJusticaFiltro, setSegredoJusticaFiltro] = React.useState<('sim' | 'nao')[]>([]);
+  const [prioridadeProcessualFiltro, setPrioridadeProcessualFiltro] = React.useState<('sim' | 'nao')[]>([]);
 
   // ─── Derivar params de status ────────────────────────────────────────────
   // O hook aceita `baixado: boolean` e `prazoVencido: boolean` (valores únicos).
@@ -89,6 +92,9 @@ export function ExpedientesListWrapper({
     origem: origemFiltro.length === 1 ? origemFiltro[0] : undefined,
     responsavelId: responsavelFiltro.length === 1 ? responsavelFiltro[0] : undefined,
     tipoExpedienteId: tipoExpedienteFiltro.length === 1 ? tipoExpedienteFiltro[0] : undefined,
+    juizoDigital: juizoDigitalFiltro.length === 1 ? (juizoDigitalFiltro[0] === 'sim') : undefined,
+    segredoJustica: segredoJusticaFiltro.length === 1 ? (segredoJusticaFiltro[0] === 'sim') : undefined,
+    prioridadeProcessual: prioridadeProcessualFiltro.length === 1 ? (prioridadeProcessualFiltro[0] === 'sim') : undefined,
     incluirSemPrazo: true,
   });
 
@@ -143,6 +149,12 @@ export function ExpedientesListWrapper({
               onResponsavelChange={withPageReset(setResponsavelFiltro)}
               tipoExpedienteFiltro={tipoExpedienteFiltro}
               onTipoExpedienteChange={withPageReset(setTipoExpedienteFiltro)}
+              juizoDigitalFiltro={juizoDigitalFiltro}
+              onJuizoDigitalChange={withPageReset(setJuizoDigitalFiltro)}
+              segredoJusticaFiltro={segredoJusticaFiltro}
+              onSegredoJusticaChange={withPageReset(setSegredoJusticaFiltro)}
+              prioridadeProcessualFiltro={prioridadeProcessualFiltro}
+              onPrioridadeProcessualChange={withPageReset(setPrioridadeProcessualFiltro)}
               usuarios={usuarios || []}
               tiposExpedientes={tiposExpedientes || []}
             />
