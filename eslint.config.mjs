@@ -205,6 +205,7 @@ const eslintConfig = defineConfig([
       "src/components/ui/chart.tsx",
       "src/components/ui/charts/**",
       "src/lib/domain/tags/domain.ts",
+      "src/app/(authenticated)/notas/label-colors.ts",
       "src/app/globals.css",
       "**/mock/**",
       "**/mocks/**",
