@@ -53,6 +53,25 @@ function getColSpanClass(size: WidgetDefinition['size']): string {
   }
 }
 
+// ─── Pinning: widgets pessoais/briefing SEMPRE no topo do dashboard ────────
+// Independe de customização, ordem do registry ou personalização do usuário.
+// A ordem deste array define a ordem de renderização no topo (será passada
+// pelo packing para fechar linhas de 6 cols).
+//
+// Por que isto existe: o módulo `pessoal` é o último no WIDGET_REGISTRY, então
+// quando o usuário customiza, o sort por findIndex enterra esses widgets lá no
+// fundo. Mas conceitualmente o briefing pessoal é a primeira coisa que o
+// usuário deve ver ao abrir o dashboard.
+
+const PINNED_TOP_IDS: readonly string[] = [
+  'pessoal-score-pessoal',      // Briefing do Dia (full=6)
+  'pessoal-meu-dia',            // Meu Dia (half=3)
+  'pessoal-foco-hoje',          // Foco Agora (half=3)
+  'pessoal-lembretes',          // Lembretes Ativos (sm=2)
+  'pessoal-chat',               // Chat (sm=2)
+  'pessoal-documentos-recentes',// Documentos Recentes (sm=2)
+];
+
 // ─── Bin-packing: reordena widgets para preencher linhas de 6 cols ─────────
 // Mantém o agrupamento por módulo (input já vem ordenado), e só "pula" um
 // item da fila quando ele não cabe na sobra da linha atual — buscando o
@@ -153,10 +172,21 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
         )
       : filtered;
 
+    // PINNING: força os widgets pinados a aparecerem no topo, MESMO que
+    // o usuário nunca os tenha ativado via Picker (legado de customização
+    // anterior aos novos defaults). Eles vêm direto do availableWidgets
+    // (já filtrado por permissão) — não dependem do enabledWidgets do user.
+    const pinnedSet = new Set(PINNED_TOP_IDS);
+    const pinnedWidgets = PINNED_TOP_IDS
+      .map((id) => widgetMap.get(id))
+      .filter((w): w is WidgetDefinition => Boolean(w));
+    const restWidgets = grouped.filter((w) => !pinnedSet.has(w.id));
+    const reordered = [...pinnedWidgets, ...restWidgets];
+
     // Bin-packing final: garante que cada linha do grid (6 cols) seja
     // preenchida ao máximo, eliminando gaps quando widgets têm tamanhos
     // heterogêneos ou quando o usuário ativa/desativa itens.
-    return packWidgetsIntoGrid(grouped);
+    return packWidgetsIntoGrid(reordered);
   }, [availableWidgets, enabledWidgets, hasCustomized]);
 
   // IDs efetivos para o picker (considera defaults quando não personalizado)

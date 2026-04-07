@@ -644,7 +644,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     module: 'pessoal',
     permission: PERM.pessoal,
     size: 'sm',
-    defaultEnabled: false,
+    defaultEnabled: true,
     component: WidgetLembretesAtivos,
   },
   {
@@ -664,7 +664,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     module: 'pessoal',
     permission: PERM.pessoal,
     size: 'sm',
-    defaultEnabled: false,
+    defaultEnabled: true,
     component: WidgetChatAtivo,
   },
   {
@@ -674,7 +674,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     module: 'pessoal',
     permission: PERM.pessoal,
     size: 'sm',
-    defaultEnabled: false,
+    defaultEnabled: true,
     component: WidgetDocumentosRecentes,
   },
 ];
@@ -703,10 +703,16 @@ export const DEFAULT_LAYOUT: string[] = [
   'pessoal-meu-dia',
   'pessoal-foco-hoje',
 
-  // Row 3: Pessoal complementar (sm + sm + sm = 2+2+2)
+  // Row 3: Atalhos pessoais — chat, lembretes, documentos (sm+sm+sm = 2+2+2)
+  // Pinados também via PINNED_TOP_IDS no widget-dashboard.tsx
+  'pessoal-lembretes',
+  'pessoal-chat',
+  'pessoal-documentos-recentes',
+
+  // Row 4: Pessoal complementar (sm + sm + sm = 2+2+2)
   'pessoal-tarefas-status',
   'pessoal-produtividade-semanal',
-  'pessoal-lembretes',
+  'pessoal-heatmap-produtividade',
 
   // Row 4: Audiências (half + half = 3+3)
   'audiencias-proximas',

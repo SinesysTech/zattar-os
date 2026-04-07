@@ -180,6 +180,35 @@
   --color-error-dim: var(--error-dim);
   --color-inverse-primary: var(--inverse-primary);
   --color-surface-tint: var(--surface-tint);
+
+  /* --- 12. User-Selectable Palette (tags, labels, events) --- */
+  --color-palette-1: var(--palette-1);
+  --color-palette-2: var(--palette-2);
+  --color-palette-3: var(--palette-3);
+  --color-palette-4: var(--palette-4);
+  --color-palette-5: var(--palette-5);
+  --color-palette-6: var(--palette-6);
+  --color-palette-7: var(--palette-7);
+  --color-palette-8: var(--palette-8);
+  --color-palette-9: var(--palette-9);
+  --color-palette-10: var(--palette-10);
+  --color-palette-11: var(--palette-11);
+  --color-palette-12: var(--palette-12);
+  --color-palette-13: var(--palette-13);
+  --color-palette-14: var(--palette-14);
+  --color-palette-15: var(--palette-15);
+  --color-palette-16: var(--palette-16);
+  --color-palette-17: var(--palette-17);
+  --color-palette-18: var(--palette-18);
+
+  /* --- 13. Event Colors (semantic for calendar) --- */
+  --color-event-audiencia: var(--event-audiencia);
+  --color-event-expediente: var(--event-expediente);
+  --color-event-obrigacao: var(--event-obrigacao);
+  --color-event-pericia: var(--event-pericia);
+  --color-event-agenda: var(--event-agenda);
+  --color-event-prazo: var(--event-prazo);
+  --color-event-default: var(--event-default);
 }
 
 /* --- FUNDAÇÃO DE VARIÁVEIS --- */
@@ -635,6 +664,55 @@
   /* ── Search ── */
   --search-radius: 0.5rem;
   --search-bg: rgba(255, 255, 255, 0.04);
+
+  /* =========================================================================
+   * USER-SELECTABLE PALETTE — Tags, Labels, Event Colors
+   * =========================================================================
+   * 18 cores escolhidas pelo usuário (criar tag de processo, label de nota,
+   * cor de evento de calendário). Derivadas em OKLCH com luminosidade
+   * perceptualmente uniforme (L=0.65) e croma 0.18 — distinção clara entre
+   * cores adjacentes, contraste WCAG AA contra superfícies claras.
+   *
+   * Hue ordenado em ciclo cromático completo: vermelho→laranja→amarelo→
+   * verde→ciano→azul→roxo→magenta. 18 stops a cada ~20°.
+   *
+   * USO:
+   *   - Database stores hex (legacy compat) — TAG_COLORS em domain.ts mapeia
+   *   - UI consome via var(--palette-N) ou via helper getPaletteToken(n)
+   * ========================================================================= */
+  --palette-1:  oklch(0.65 0.18 25);    /* vermelho      #ED4949 */
+  --palette-2:  oklch(0.68 0.18 50);    /* laranja       #ED7E40 */
+  --palette-3:  oklch(0.74 0.16 75);    /* âmbar         #E5A23A */
+  --palette-4:  oklch(0.80 0.16 95);    /* amarelo       #DAB52D */
+  --palette-5:  oklch(0.78 0.18 130);   /* lima          #9FBE3E */
+  --palette-6:  oklch(0.70 0.18 145);   /* verde         #4FB04F */
+  --palette-7:  oklch(0.70 0.15 160);   /* esmeralda     #3DAF7A */
+  --palette-8:  oklch(0.72 0.13 180);   /* teal          #3DAFA6 */
+  --palette-9:  oklch(0.72 0.14 210);   /* ciano         #3DA8C7 */
+  --palette-10: oklch(0.68 0.16 230);   /* azul claro    #3D90D6 */
+  --palette-11: oklch(0.62 0.20 255);   /* azul          #3D6BD6 */
+  --palette-12: oklch(0.60 0.22 275);   /* índigo        #4D55E0 */
+  --palette-13: oklch(0.62 0.22 295);   /* violeta       #6E48E0 */
+  --palette-14: oklch(0.62 0.22 310);   /* roxo          #8E48E0 */
+  --palette-15: oklch(0.65 0.22 330);   /* fúcsia        #C449D6 */
+  --palette-16: oklch(0.65 0.20 0);     /* pink          #D6498F */
+  --palette-17: oklch(0.62 0.22 15);    /* rosa          #DA4566 */
+  --palette-18: oklch(0.55 0.01 281);   /* cinza neutro  #6B6B70 */
+
+  /* =========================================================================
+   * EVENT COLORS — Calendar/Agenda Event Sources
+   * =========================================================================
+   * Cores semânticas por tipo de fonte de evento. Derivadas da paleta acima
+   * mas com nomes intencionais que refletem o domínio (audiência, expediente,
+   * obrigação, perícia, agenda).
+   * ========================================================================= */
+  --event-audiencia:   var(--palette-10);  /* azul claro — formal/oficial */
+  --event-expediente:  var(--palette-3);   /* âmbar — atenção/prazo */
+  --event-obrigacao:   var(--palette-2);   /* laranja — financeiro */
+  --event-pericia:     var(--palette-13);  /* violeta — técnico/expert */
+  --event-agenda:      var(--palette-13);  /* violeta — neutro */
+  --event-prazo:       var(--palette-1);   /* vermelho — urgência */
+  --event-default:     var(--palette-11);  /* azul */
 }
 
 /* =============================================================================

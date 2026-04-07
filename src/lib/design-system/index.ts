@@ -75,6 +75,16 @@ export {
   LABELS,
 } from './variants';
 
+// Event Colors (calendar/agenda)
+export {
+  type EventType,
+  type LegacyEventColor,
+  type EventColorClasses,
+  getEventColorClasses,
+  EVENT_TYPES,
+  EVENT_TYPE_LABELS,
+} from './event-colors';
+
 // Utilitários
 export {
   cn,
