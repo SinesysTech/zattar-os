@@ -8,7 +8,7 @@
  * Merge em timeline unificada ordenada por hora.
  */
 
-import { Calendar, Gavel, Bell, CheckSquare } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { WidgetContainer, InsightBanner } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { formatarPartes, obterContextoProcesso } from '../shared/processo-display';
@@ -92,9 +92,9 @@ function DotAudiencia({ state }: { state: EventoState }) {
   const isNear = state === 'near';
   const isNext = state === 'next';
 
-  const border = isDone ? 'border-muted-foreground/20' : isNear ? 'border-orange-500/80' : isNext ? 'border-primary' : 'border-primary/50';
-  const bg = isDone ? 'bg-muted-foreground/20' : isNear ? 'bg-orange-500/30' : isNext ? 'bg-primary/30' : 'bg-transparent';
-  const innerBg = isDone ? 'bg-muted-foreground/30' : isNear ? 'bg-orange-500' : isNext ? 'bg-primary' : 'bg-primary/60';
+  const border = isDone ? 'border-muted-foreground/20' : isNear ? 'border-warning/80' : isNext ? 'border-primary' : 'border-primary/50';
+  const bg = isDone ? 'bg-muted-foreground/20' : isNear ? 'bg-warning/30' : isNext ? 'bg-primary/30' : 'bg-transparent';
+  const innerBg = isDone ? 'bg-muted-foreground/30' : isNear ? 'bg-warning' : isNext ? 'bg-primary' : 'bg-primary/60';
 
   return (
     <div className={`size-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${border} ${bg}`}>
@@ -110,7 +110,7 @@ function DotLembrete({ state }: { state: EventoState }) {
 
   let bgClass = 'bg-border/40';
   if (isDone) bgClass = 'bg-muted-foreground/25';
-  else if (isNear) bgClass = 'bg-orange-500 shadow-[0_0_6px_rgba(249,115,22,0.6)]';
+  else if (isNear) bgClass = 'bg-warning shadow-[0_0_6px_color-mix(in_oklch,var(--warning)_60%,transparent)]';
   else if (isNext) bgClass = 'bg-primary shadow-[0_0_6px_color-mix(in_oklch,var(--primary)_60%,transparent)]';
 
   return <div className={`size-2 rounded-full mt-0.5 shrink-0 ${bgClass}`} />;
@@ -121,9 +121,9 @@ function DotTarefa({ state }: { state: EventoState }) {
   const isNear = state === 'near';
   const isNext = state === 'next';
 
-  const border = isDone ? 'border-muted-foreground/20' : isNear ? 'border-orange-500' : isNext ? 'border-primary/80' : 'border-border/40';
+  const border = isDone ? 'border-muted-foreground/20' : isNear ? 'border-warning' : isNext ? 'border-primary/80' : 'border-border/40';
   const bg = isDone ? 'bg-muted-foreground/15' : 'bg-transparent';
-  const innerBg = isDone ? 'bg-muted-foreground/40' : isNear ? 'bg-orange-500' : isNext ? 'bg-primary' : 'bg-transparent';
+  const innerBg = isDone ? 'bg-muted-foreground/40' : isNear ? 'bg-warning' : isNext ? 'bg-primary' : 'bg-transparent';
 
   return (
     <div className={`size-3.5 rounded-sm border flex items-center justify-center shrink-0 ${border} ${bg}`}>
@@ -131,12 +131,6 @@ function DotTarefa({ state }: { state: EventoState }) {
     </div>
   );
 }
-
-const TIPO_ICONS: Record<TipoEvento, React.ComponentType<{ className?: string }>> = {
-  audiencia: Gavel,
-  lembrete: Bell,
-  tarefa: CheckSquare,
-};
 
 // ─── Widget ───────────────────────────────────────────────────────────────────
 
@@ -225,7 +219,7 @@ export function WidgetMeuDia() {
                 key={evento.id}
                 className={`flex items-start gap-3 px-2 py-2 rounded-xl transition-all duration-150 group ${
                   state === 'near' 
-                    ? 'bg-orange-500/[0.04] ring-1 ring-orange-500/20'
+                    ? 'bg-warning/[0.04] ring-1 ring-warning/20'
                     : isNext
                     ? 'bg-primary/[0.04] ring-1 ring-primary/20'
                     : 'hover:bg-muted/40'
@@ -245,6 +239,13 @@ export function WidgetMeuDia() {
                 <div className="flex-1 min-w-0 flex items-start justify-between gap-3">
                   {/* Informações à esquerda */}
                   <div className="flex-1 min-w-0">
+                    <span 
+                      className={`block text-[9px] font-medium uppercase tracking-wider mb-0.5 ${
+                        isDone ? 'text-muted-foreground/50' : state === 'near' ? 'text-warning/90' : 'text-primary/70'
+                      }`}
+                    >
+                      {evento.tipo === 'audiencia' ? 'Audiência' : evento.tipo}
+                    </span>
                     <p 
                       className={`text-[11px] font-semibold leading-tight truncate ${
                         isDone ? 'text-muted-foreground line-through' : 'text-foreground'
@@ -257,14 +258,14 @@ export function WidgetMeuDia() {
                         {evento.subtitulo}
                       </p>
                     )}
+                    {evento.numeroProcesso && (
+                      <p className={`text-[9px] mt-0.5 truncate ${isDone ? 'text-muted-foreground/50' : 'text-muted-foreground/80'}`}>
+                        {evento.numeroProcesso}
+                      </p>
+                    )}
                     {evento.contextoProcesso && (
                       <p className={`text-[9px] mt-0.5 leading-tight truncate ${isDone ? 'text-muted-foreground/60' : 'text-muted-foreground'}`}>
                         {evento.contextoProcesso}
-                      </p>
-                    )}
-                    {evento.numeroProcesso && (
-                      <p className={`text-[9px] font-mono mt-0.5 truncate ${isDone ? 'text-muted-foreground/50' : 'text-muted-foreground/80'}`}>
-                        {evento.numeroProcesso}
                       </p>
                     )}
                     {/* Sem badge de tipo aqui */}
@@ -275,21 +276,14 @@ export function WidgetMeuDia() {
                     {evento.hora && (
                       <span
                         className={`text-xs font-display tabular-nums font-semibold ${
-                          isDone ? 'text-muted-foreground/70' : state === 'near' ? 'text-orange-500' : 'text-foreground/90'
+                          isDone ? 'text-muted-foreground/70' : state === 'near' ? 'text-warning' : 'text-foreground/90'
                         }`}
                       >
                         {evento.hora}
                       </span>
                     )}
-                    <span 
-                      className={`text-[9px] font-medium uppercase tracking-wider mt-0.5 ${
-                        isDone ? 'text-muted-foreground/50' : state === 'near' ? 'text-orange-500/80' : 'text-primary/70'
-                      }`}
-                    >
-                      {evento.tipo === 'audiencia' ? 'Audiência' : evento.tipo}
-                    </span>
                     {state === 'near' && (
-                       <span className="mt-1 text-[9px] uppercase tracking-wider font-bold text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded shadow-sm shrink-0">
+                       <span className="mt-1 text-[9px] uppercase tracking-wider font-bold text-warning-foreground bg-warning px-2 py-0.5 rounded shadow-sm shrink-0">
                          Em Breve
                        </span>
                     )}

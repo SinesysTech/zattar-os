@@ -65,9 +65,6 @@ export function WidgetScorePessoal() {
               <AnimatedNumber value={isPending ? 0 : lembretePendentes} duration={800} />
             </Text>
           </div>
-          <InsightBanner type="info">
-            Nenhuma ação administrativa pendente na sua fila.
-          </InsightBanner>
         </div>
       </WidgetContainer>
     );
