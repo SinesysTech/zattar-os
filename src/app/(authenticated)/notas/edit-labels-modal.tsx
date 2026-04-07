@@ -15,47 +15,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useNotes } from "./notes-context";
+import { AVAILABLE_LABEL_COLORS, normalizeLabelColor } from "./label-colors";
 
 interface Props {
   children: React.ReactNode;
-}
-
-/**
- * Paleta canônica de cores para labels — usa tokens --palette-* do design system.
- * Substitui as cores Tailwind cruas (bg-red-500, etc.) por classes geradas
- * automaticamente a partir dos tokens em globals.css.
- *
- * Note: Labels é entidade SEPARADA de Tags (que vivem em lib/domain/tags).
- * Este picker é específico para etiquetas de notas.
- */
-const AVAILABLE_LABEL_COLORS = Array.from({ length: 17 }, (_, i) => `bg-palette-${i + 1}`);
-
-/**
- * Converte cores legacy (bg-red-500, bg-orange-500, etc.) salvas no banco
- * para a nova paleta de tokens. Mantém compat com dados existentes.
- */
-const LEGACY_COLOR_MAP: Record<string, string> = {
-  "bg-red-500": "bg-palette-1",
-  "bg-orange-500": "bg-palette-2",
-  "bg-amber-500": "bg-palette-3",
-  "bg-yellow-500": "bg-palette-4",
-  "bg-lime-500": "bg-palette-5",
-  "bg-green-500": "bg-palette-6",
-  "bg-emerald-500": "bg-palette-7",
-  "bg-teal-500": "bg-palette-8",
-  "bg-cyan-500": "bg-palette-9",
-  "bg-sky-500": "bg-palette-10",
-  "bg-blue-500": "bg-palette-11",
-  "bg-indigo-500": "bg-palette-12",
-  "bg-violet-500": "bg-palette-13",
-  "bg-purple-500": "bg-palette-14",
-  "bg-fuchsia-500": "bg-palette-15",
-  "bg-pink-500": "bg-palette-16",
-  "bg-rose-500": "bg-palette-17",
-};
-
-function normalizeLabelColor(color: string): string {
-  return LEGACY_COLOR_MAP[color] ?? color;
 }
 
 export function EditLabelsModal({ children }: Props) {
