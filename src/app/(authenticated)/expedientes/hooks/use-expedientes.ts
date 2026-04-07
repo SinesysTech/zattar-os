@@ -38,6 +38,7 @@ export interface BuscarExpedientesParams {
   origem?: string;
   segredoJustica?: boolean;
   prioridadeProcessual?: boolean;
+  juizoDigital?: boolean;
 }
 
 export interface UseExpedientesOptions {
@@ -94,6 +95,7 @@ export const useExpedientes = (
       origem: params.origem,
       segredoJustica: params.segredoJustica,
       prioridadeProcessual: params.prioridadeProcessual,
+      juizoDigital: params.juizoDigital,
     }),
     [
       params.pagina,
@@ -113,6 +115,7 @@ export const useExpedientes = (
       params.origem,
       params.segredoJustica,
       params.prioridadeProcessual,
+      params.juizoDigital,
     ]
   );
 
@@ -145,6 +148,7 @@ export const useExpedientes = (
         origem: paramsEstaveis.origem as ListarExpedientesParams['origem'],
         segredoJustica: paramsEstaveis.segredoJustica,
         prioridadeProcessual: paramsEstaveis.prioridadeProcessual,
+        juizoDigital: paramsEstaveis.juizoDigital,
       };
 
       const result = await actionListarExpedientes(actionParams);

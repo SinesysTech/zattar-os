@@ -116,6 +116,9 @@ export function ExpedientesTableWrapper({
   const [tipoExpedienteFilter, setTipoExpedienteFilter] = React.useState('');
   const [origemFilter, setOrigemFilter] = React.useState('');
   const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>(undefined);
+  const [juizoDigitalFilter, setJuizoDigitalFilter] = React.useState<('sim' | 'nao')[]>([]);
+  const [segredoJusticaFilter, setSegredoJusticaFilter] = React.useState<('sim' | 'nao')[]>([]);
+  const [prioridadeProcessualFilter, setPrioridadeProcessualFilter] = React.useState<('sim' | 'nao')[]>([]);
 
   // ---------- Sync query param responsavel (apenas no mount) ----------
   const hasInitializedFromParams = React.useRef(false);
@@ -222,12 +225,16 @@ export function ExpedientesTableWrapper({
     if (grauFilter) params.grau = grauFilter;
     if (tipoExpedienteFilter) params.tipoExpedienteId = parseInt(tipoExpedienteFilter, 10);
     if (origemFilter) params.origem = origemFilter;
+    if (juizoDigitalFilter.length === 1) params.juizoDigital = juizoDigitalFilter[0] === 'sim';
+    if (segredoJusticaFilter.length === 1) params.segredoJustica = segredoJusticaFilter[0] === 'sim';
+    if (prioridadeProcessualFilter.length === 1) params.prioridadeProcessual = prioridadeProcessualFilter[0] === 'sim';
 
     return params;
   }, [
     pageIndex, pageSize, globalFilter,
     statusFilter, prazoFilter, responsavelFilter,
     tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter,
+    juizoDigitalFilter, segredoJusticaFilter, prioridadeProcessualFilter,
     dateRange, fixedDate, getPrazoDates,
   ]);
 
@@ -263,6 +270,9 @@ export function ExpedientesTableWrapper({
     setGrauFilter('');
     setTipoExpedienteFilter('');
     setOrigemFilter('');
+    setJuizoDigitalFilter([]);
+    setSegredoJusticaFilter([]);
+    setPrioridadeProcessualFilter([]);
     setPageIndex(0);
   }, []);
 
@@ -341,8 +351,32 @@ export function ExpedientesTableWrapper({
       });
     }
 
+    if (juizoDigitalFilter.length === 1) {
+      chips.push({
+        key: 'juizoDigital',
+        label: `Juízo Digital: ${juizoDigitalFilter[0] === 'sim' ? 'Sim' : 'Não'}`,
+        onRemove: () => setJuizoDigitalFilter([]),
+      });
+    }
+
+    if (segredoJusticaFilter.length === 1) {
+      chips.push({
+        key: 'segredoJustica',
+        label: `Segredo Justiça: ${segredoJusticaFilter[0] === 'sim' ? 'Sim' : 'Não'}`,
+        onRemove: () => setSegredoJusticaFilter([]),
+      });
+    }
+
+    if (prioridadeProcessualFilter.length === 1) {
+      chips.push({
+        key: 'prioridadeProcessual',
+        label: `Prioridade: ${prioridadeProcessualFilter[0] === 'sim' ? 'Sim' : 'Não'}`,
+        onRemove: () => setPrioridadeProcessualFilter([]),
+      });
+    }
+
     return chips;
-  }, [statusFilter, prazoFilter, responsavelFilter, dateRange, tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter, usuarios, tiposExpedientes]);
+  }, [statusFilter, prazoFilter, responsavelFilter, dateRange, tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter, juizoDigitalFilter, segredoJusticaFilter, prioridadeProcessualFilter, usuarios, tiposExpedientes]);
 
   // ---------- Render ----------
   return (
@@ -395,6 +429,12 @@ export function ExpedientesTableWrapper({
                       }}
                       tipoExpedienteFiltro={tipoExpedienteFilter ? [parseInt(tipoExpedienteFilter, 10)] : []}
                       onTipoExpedienteChange={(v) => { setTipoExpedienteFilter(v[0]?.toString() || ''); setPageIndex(0); }}
+                      juizoDigitalFiltro={juizoDigitalFilter}
+                      onJuizoDigitalChange={(v) => { setJuizoDigitalFilter(v); setPageIndex(0); }}
+                      segredoJusticaFiltro={segredoJusticaFilter}
+                      onSegredoJusticaChange={(v) => { setSegredoJusticaFilter(v); setPageIndex(0); }}
+                      prioridadeProcessualFiltro={prioridadeProcessualFilter}
+                      onPrioridadeProcessualChange={(v) => { setPrioridadeProcessualFilter(v); setPageIndex(0); }}
                       usuarios={usuarios}
                       tiposExpedientes={tiposExpedientes}
                     />

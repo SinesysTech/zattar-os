@@ -95,7 +95,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const [activeTab, setActiveTab] = useState<'todos' | 'pendentes' | 'baixados'>('todos');
+  const [activeTab, setActiveTab] = useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
 
   // Detail/baixa dialog state
   const [selectedExpediente, setSelectedExpediente] = useState<Expediente | null>(null);
@@ -113,22 +113,18 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const { tiposExpedientes } = useTiposExpedientes({ limite: 100 });
   const weekNav = useWeekNavigator();
 
-  const { expedientes: allExpedientes, isLoading, refetch } = useExpedientes({
+  const { expedientes: rotuloExpedientes, isLoading, refetch } = useExpedientes({
     pagina: 1,
     limite: 500,
     incluirSemPrazo: true,
+    baixado: activeTab === 'pendentes' ? false : activeTab === 'baixados' ? true : undefined,
   });
 
   // ─── Derived metrics ────────────────────────────────────────────────────────
 
   const pendentes = useMemo(
-    () => allExpedientes.filter((e) => !e.baixadoEm),
-    [allExpedientes],
-  );
-
-  const baixados = useMemo(
-    () => allExpedientes.filter((e) => !!e.baixadoEm),
-    [allExpedientes],
+    () => rotuloExpedientes.filter((e) => !e.baixadoEm),
+    [rotuloExpedientes],
   );
 
   const vencidos = useMemo(
@@ -160,11 +156,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
 
   // ─── Tab filtering ───────────────────────────────────────────────────────────
 
-  const tabSource = useMemo(() => {
-    if (activeTab === 'pendentes') return pendentes;
-    if (activeTab === 'baixados') return baixados;
-    return allExpedientes;
-  }, [activeTab, pendentes, baixados, allExpedientes]);
+  const tabSource = useMemo(() => rotuloExpedientes, [rotuloExpedientes]);
 
   const filteredExpedientes = useMemo(() => {
     if (!search.trim()) return tabSource;
@@ -179,10 +171,10 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   }, [tabSource, search]);
 
   const tabs: TabPillOption[] = useMemo(() => [
-    { id: 'todos', label: 'Todos', count: allExpedientes.length },
-    { id: 'pendentes', label: 'Pendentes', count: pendentes.length },
-    { id: 'baixados', label: 'Baixados', count: baixados.length },
-  ], [allExpedientes.length, pendentes.length, baixados.length]);
+    { id: 'pendentes', label: 'Pendentes' }, // O foco principal fica listado primeiro
+    { id: 'baixados', label: 'Baixados' },
+    { id: 'todos', label: 'Todos' },
+  ], []);
 
   // ─── Navigation ──────────────────────────────────────────────────────────────
 
