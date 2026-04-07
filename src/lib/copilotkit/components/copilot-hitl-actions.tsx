@@ -34,9 +34,9 @@ function ConfirmationCard({
   onCancel: () => void;
 }) {
   return (
-    <Card className="w-full max-w-md border-orange-500/50">
+    <Card className="w-full max-w-md border-warning/50">
       <CardHeader className="pb-2 pt-3 px-4">
-        <CardTitle className="text-sm font-medium flex items-center gap-2 text-orange-600">
+        <CardTitle className="text-sm font-medium flex items-center gap-2 text-warning">
           <AlertTriangle className="h-4 w-4" />
           Confirmar: {operacao}
         </CardTitle>
@@ -60,12 +60,12 @@ function ConfirmationCard({
 
 function ConfirmationResult({ confirmed }: { confirmed: boolean }) {
   return (
-    <Card className={`w-full max-w-md ${confirmed ? 'border-green-500/50' : 'border-muted'}`}>
+    <Card className={`w-full max-w-md ${confirmed ? 'border-success/50' : 'border-muted'}`}>
       <CardContent className="p-3 flex items-center gap-2">
         {confirmed ? (
           <>
-            <CheckCircle className="h-4 w-4 text-green-500" />
-            <span className="text-xs text-green-600">Operacao confirmada pelo usuario</span>
+            <CheckCircle className="h-4 w-4 text-success" />
+            <span className="text-xs text-success">Operacao confirmada pelo usuario</span>
           </>
         ) : (
           <>

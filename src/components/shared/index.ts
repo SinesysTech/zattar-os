@@ -16,6 +16,7 @@
 
 export { PageShell } from './page-shell';
 export { AmbientBackdrop } from './ambient-backdrop';
+export { BrandMark } from './brand-mark';
 
 // =============================================================================
 // DATA SHELL - Padrão obrigatório para tabelas

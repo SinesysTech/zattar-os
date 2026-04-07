@@ -184,6 +184,57 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  // Governança do Design System (Tokens de Cor):
+  // Bloqueia padrões que ignoram os tokens semânticos definidos em globals.css.
+  // Exclusões legítimas: color pickers (font-color-toolbar-button), cursores
+  // colaborativos (yjs-kit), syntax highlighting (code-block-node, equation-node),
+  // configuração do design system (globals.css, theme files), configs (tailwind).
+  {
+    files: ["src/**/*.{ts,tsx,js,jsx}"],
+    ignores: [
+      "src/components/editor/**",
+      "src/components/ui/chart.tsx",
+      "src/components/ui/charts/**",
+      "src/app/globals.css",
+      "**/*.test.{ts,tsx}",
+      "**/*.spec.{ts,tsx}",
+      "src/app/(dev)/**",
+    ],
+    rules: {
+      "no-restricted-syntax": [
+        "warn",
+        {
+          // hsl(var(--token)) é INVÁLIDO — globals.css usa OKLCH, não HSL.
+          // Use var(--token) direto, ou oklch(from var(--token) ...) para opacidade.
+          selector: "Literal[value=/hsl\\(var\\(--/]",
+          message:
+            "Não use hsl(var(--token)). globals.css define tokens em OKLCH — hsl(oklch(...)) é CSS inválido. Use var(--token) direto ou oklch(from var(--token) l c h / alpha) para opacidade.",
+        },
+        {
+          // Templates literais com hsl(var(--))
+          selector: "TemplateElement[value.raw=/hsl\\(var\\(--/]",
+          message:
+            "Não use hsl(var(--token)) em template literals. Use var(--token) direto.",
+        },
+        {
+          // Cores Tailwind cruas (text-red-500, bg-blue-200, etc.) — use tokens semânticos
+          // text-success, text-destructive, text-warning, text-info, text-muted-foreground
+          selector:
+            "Literal[value=/(?:^|\\s)(?:text|bg|border|ring|fill|stroke|from|to|via)-(?:red|green|blue|yellow|orange|amber|lime|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose)-\\d/]",
+          message:
+            "Não use cores Tailwind cruas (ex: text-red-500). Use tokens semânticos: text-success, text-destructive, text-warning, text-info, text-muted-foreground, text-primary. Para casos decorativos use --chart-1..5 ou --portal-*-soft.",
+        },
+        {
+          // OKLCH literal (sem `from var(--`) — provável valor cru
+          // Permitido: oklch(from var(--token) ...) — relative color syntax
+          selector:
+            "Literal[value=/oklch\\(\\s*\\d/]",
+          message:
+            "Literal OKLCH detectado. Use tokens (--primary, --success, etc.) ou oklch(from var(--token) l c h / alpha) para opacidade. Veja globals.css para a lista de tokens.",
+        },
+      ],
+    },
+  },
   // Governança do Design System (Tipografia):
   // Para evitar estilos ad hoc, obrigamos o uso de `Typography.*` (ou classes `typography-*`)
   // nas telas/componentes de Usuários (escopo inicial, para não gerar milhares de erros no repo).

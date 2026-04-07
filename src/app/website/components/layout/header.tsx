@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { BrandMark } from "@/components/shared/brand-mark";
 import { Menu } from "lucide-react";
 import {
   Sheet,
@@ -29,13 +29,8 @@ export function Header() {
         <SheetContent side="left" className="bg-surface-container-highest border-white/10 w-70">
           <SheetHeader>
             <SheetTitle className="sr-only">Menu de navegação</SheetTitle>
-            <Link href="/" className="relative block w-40 h-10 mb-2">
-              <Image
-                src="/logos/logomarca-dark.svg"
-                alt="Logo Zattar Advogados"
-                fill
-                className="object-contain object-left"
-              />
+            <Link href="/" className="block mb-2" aria-label="Logo Zattar Advogados">
+              <BrandMark variant="dark" size="md" className="object-left" />
             </Link>
           </SheetHeader>
           <nav className="flex flex-col gap-1 px-2">
@@ -61,20 +56,12 @@ export function Header() {
       </Sheet>
 
       {/* Logo */}
-      <Link href="/" className="relative w-32 sm:w-40 md:w-64 h-8 sm:h-10 md:h-12 flex border-none outline-none">
-        <Image
-          src="/logos/logomarca-light.svg"
-          alt="Logo Zattar Advogados"
-          fill
-          className="object-contain object-left dark:hidden"
+      <Link href="/" className="flex border-none outline-none" aria-label="Logo Zattar Advogados">
+        <BrandMark
+          variant="auto"
+          size="custom"
           priority
-        />
-        <Image
-          src="/logos/logomarca-dark.svg"
-          alt="Logo Zattar Advogados"
-          fill
-          className="object-contain object-left hidden dark:block"
-          priority
+          className="h-8 sm:h-10 md:h-12 w-auto object-left"
         />
       </Link>
 

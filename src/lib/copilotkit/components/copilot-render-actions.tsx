@@ -197,8 +197,8 @@ interface DRERender {
 
 function DRESummaryCard({ dre, periodo }: { dre: DRERender; periodo: string }) {
   const TrendIcon = ({ value }: { value: number }) => {
-    if (value > 0) return <TrendingUp className="h-3 w-3 text-green-500" />;
-    if (value < 0) return <TrendingDown className="h-3 w-3 text-red-500" />;
+    if (value > 0) return <TrendingUp className="h-3 w-3 text-success" />;
+    if (value < 0) return <TrendingDown className="h-3 w-3 text-destructive" />;
     return <Minus className="h-3 w-3 text-muted-foreground" />;
   };
 
@@ -228,7 +228,7 @@ function DRESummaryCard({ dre, periodo }: { dre: DRERender; periodo: string }) {
               </span>
               <div className="flex items-center gap-1.5">
                 <TrendIcon value={r.value} />
-                <span className={`text-xs tabular-nums ${r.bold ? 'font-semibold' : ''} ${r.value < 0 ? 'text-red-500' : ''}`}>
+                <span className={`text-xs tabular-nums ${r.bold ? 'font-semibold' : ''} ${r.value < 0 ? 'text-destructive' : ''}`}>
                   {fmtMoeda(r.value)}
                 </span>
                 {r.margem !== undefined && (
@@ -255,10 +255,10 @@ interface TarefaRender {
 
 function TarefasList({ tarefas, total }: { tarefas: TarefaRender[]; total: number }) {
   const statusIcon = (s: string) => {
-    if (s === 'done') return <CheckCircle className="h-3.5 w-3.5 text-green-500" />;
-    if (s === 'in progress') return <Clock className="h-3.5 w-3.5 text-blue-500" />;
+    if (s === 'done') return <CheckCircle className="h-3.5 w-3.5 text-success" />;
+    if (s === 'in progress') return <Clock className="h-3.5 w-3.5 text-info" />;
     if (s === 'canceled') return <AlertTriangle className="h-3.5 w-3.5 text-muted-foreground" />;
-    return <ListTodo className="h-3.5 w-3.5 text-orange-500" />;
+    return <ListTodo className="h-3.5 w-3.5 text-warning" />;
   };
 
   const priorityColor = (p: string) => {

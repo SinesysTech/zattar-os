@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
+import { BrandMark } from "@/components/shared/brand-mark";
 import { Lock } from "lucide-react";
 
 export interface PublicPageShellProps {
@@ -31,23 +31,11 @@ export function PublicPageShell({
       <header className="shrink-0 z-50 bg-card dark:bg-card border-b border-border">
         <div className="max-w-2xl mx-auto px-4 py-2 sm:py-3 flex items-center justify-center relative">
           {/* Logo - centralizado */}
-          <Image
-            src="/logos/logomarca-light.svg"
-            alt="Zattar Advogados"
-            width={500}
-            height={200}
-            className="h-8 sm:h-10 w-auto dark:hidden"
+          <BrandMark
+            variant="auto"
+            size="custom"
             priority
-            unoptimized
-          />
-          <Image
-            src="/logos/logomarca-dark.svg"
-            alt="Zattar Advogados"
-            width={500}
-            height={200}
-            className="h-8 sm:h-10 w-auto hidden dark:block"
-            priority
-            unoptimized
+            className="h-8 sm:h-10 w-auto"
           />
 
           {/* Avatar */}

@@ -127,8 +127,8 @@ export function WorkflowRunner({
 
                 {/* Output/Error */}
                 {state.status === 'succeeded' && state.outputs && (
-                    <div className="bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-900 p-4 rounded-md">
-                        <div className="flex items-center gap-2 text-green-700 dark:text-green-400 font-medium mb-2">
+                    <div className="bg-success/10 border border-success/30 p-4 rounded-md">
+                        <div className="flex items-center gap-2 text-success font-medium mb-2">
                             <CheckCircle className="h-4 w-4" /> Sucesso
                         </div>
                         <pre className="text-xs overflow-auto max-h-60">
@@ -138,11 +138,11 @@ export function WorkflowRunner({
                 )}
 
                 {state.status === 'failed' && (
-                    <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900 p-4 rounded-md">
-                        <div className="flex items-center gap-2 text-red-700 dark:text-red-400 font-medium">
+                    <div className="bg-destructive/10 border border-destructive/30 p-4 rounded-md">
+                        <div className="flex items-center gap-2 text-destructive font-medium">
                             <AlertCircle className="h-4 w-4" /> Erro
                         </div>
-                        <p className="text-sm text-red-600 dark:text-red-300 mt-1">{state.error}</p>
+                        <p className="text-sm text-destructive/80 mt-1">{state.error}</p>
                     </div>
                 )}
 

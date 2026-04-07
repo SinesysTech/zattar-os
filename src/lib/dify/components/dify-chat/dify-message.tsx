@@ -106,7 +106,7 @@ export function DifyMessage({
               size="icon" aria-label="Curtir"
               className={cn(
                 'h-6 w-6',
-                feedback === 'like' && 'text-green-500'
+                feedback === 'like' && 'text-success'
               )}
               onClick={() => onFeedback('like')}
             >
@@ -117,7 +117,7 @@ export function DifyMessage({
               size="icon" aria-label="Não curtir"
               className={cn(
                 'h-6 w-6',
-                feedback === 'dislike' && 'text-red-500'
+                feedback === 'dislike' && 'text-destructive'
               )}
               onClick={() => onFeedback('dislike')}
             >

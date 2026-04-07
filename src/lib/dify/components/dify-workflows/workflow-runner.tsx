@@ -42,9 +42,9 @@ export function WorkflowRunner({
 
   const statusIcon = {
     [StatusExecucaoDify.RUNNING]: <Loader2 className="h-4 w-4 animate-spin" />,
-    [StatusExecucaoDify.SUCCEEDED]: <CheckCircle2 className="h-4 w-4 text-green-500" />,
-    [StatusExecucaoDify.FAILED]: <XCircle className="h-4 w-4 text-red-500" />,
-    [StatusExecucaoDify.STOPPED]: <Square className="h-4 w-4 text-yellow-500" />,
+    [StatusExecucaoDify.SUCCEEDED]: <CheckCircle2 className="h-4 w-4 text-success" />,
+    [StatusExecucaoDify.FAILED]: <XCircle className="h-4 w-4 text-destructive" />,
+    [StatusExecucaoDify.STOPPED]: <Square className="h-4 w-4 text-warning" />,
   };
 
   return (
