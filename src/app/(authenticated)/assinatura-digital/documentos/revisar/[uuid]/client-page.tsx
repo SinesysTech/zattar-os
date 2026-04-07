@@ -490,7 +490,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
 
   return (
     <DocumentFlowShell>
-      <div className="max-w-350 mx-auto w-full space-y-5">
+      <div className="w-full space-y-5">
         {/* ── Header ─────────────────────────────────── */}
         <div className="flex items-end justify-between gap-4">
           <div>

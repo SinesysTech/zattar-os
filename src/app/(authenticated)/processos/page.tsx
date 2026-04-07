@@ -37,7 +37,7 @@ export default async function ProcessosPage({ searchParams: _ }: ProcessosPagePr
   }));
 
   return (
-    <div className="max-w-350 mx-auto space-y-5 py-6">
+    <div className="space-y-5 py-6">
       <ProcessosClient
         initialProcessos={processos}
         initialTotal={total}

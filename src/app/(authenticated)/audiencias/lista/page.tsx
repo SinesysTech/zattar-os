@@ -8,7 +8,7 @@ export const revalidate = 0;
 
 function AudienciasLoading() {
   return (
-    <div className="max-w-350 mx-auto space-y-5">
+    <div className="space-y-5">
       <Skeleton className="h-9 w-40" />
       <Skeleton className="h-14 w-full rounded-2xl" />
       <div className="space-y-2">

@@ -1190,7 +1190,7 @@ export default function AgendaMockPage() {
   }
 
   return (
-    <div className="max-w-350 mx-auto space-y-4 pb-12">
+    <div className="space-y-4 pb-12">
       <Toolbar
         view={view}
         setView={setView}

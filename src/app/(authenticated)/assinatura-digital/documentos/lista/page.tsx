@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 function DocumentosLoading() {
   return (
-    <div className="max-w-350 mx-auto space-y-5">
+    <div className="space-y-5">
       <div className="flex items-end justify-between gap-4">
         <div>
           <Skeleton className="h-8 w-56" />

@@ -304,10 +304,10 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  // IMPORTANTE: Não executar código entre createServerClient e getClaims().
-  // getClaims() valida o JWT localmente e dispara o refresh de tokens
-  // quando necessário, mantendo os cookies sincronizados entre browser e server.
-  // Usar getSession() aqui causava perda aleatória de sessão no refresh (CTRL+R).
+  // IMPORTANTE: Não executar código entre createServerClient e getUser().
+  // getUser() contacta o Auth Server para garantir que o token JWT é válido e
+  // dispara o refresh de tokens se a sessão antiga for percorrida.
+  // Usar getSession() aqui causaria perda aleatória de sessão no refresh (CTRL+R).
   // Ref: https://supabase.com/docs/guides/troubleshooting/how-to-migrate-from-supabase-auth-helpers-to-ssr-package-5NRunM
   // BYPASS PARA TESTES E2E: se o cookie de teste E2E estiver presente, 
   // assumimos que a sessão mockada enviada pelo Playwright é válida.
@@ -315,13 +315,13 @@ export async function proxy(request: NextRequest) {
   // falhando o teste e gerando redirecionamento para o `/app/login`.
   const isE2E = request.cookies.get('__playwright_e2e')?.value === '1';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let data: any = { claims: null };
+  let data: any = { user: null };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let authError: any = null;
 
   if (isE2E) {
     data = {
-      claims: {
+      user: {
         id: 'mock-auth',
         aud: 'authenticated',
         role: 'authenticated',
@@ -330,12 +330,12 @@ export async function proxy(request: NextRequest) {
     };
   } else {
     // Normal auth check
-    const authResult = await supabase.auth.getClaims();
+    const authResult = await supabase.auth.getUser();
     data = authResult.data;
     authError = authResult.error;
   }
 
-  const user = data?.claims;
+  const user = data?.user;
 
   // Se não está autenticado e não é rota pública, redirecionar para login
   if ((!user || authError) && !isPublicRoute) {

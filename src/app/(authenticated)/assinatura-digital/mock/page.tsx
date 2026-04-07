@@ -584,7 +584,7 @@ export default function AssinaturaDigitalMockPage() {
   };
 
   return (
-    <div className="max-w-350 mx-auto space-y-5">
+    <div className="space-y-5">
       {/* ── Header ──────────────────────────────────────── */}
       <div className="flex items-end justify-between gap-4">
         <div>
