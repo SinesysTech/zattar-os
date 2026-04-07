@@ -1,71 +1,88 @@
-"use client";
-
 import Link from "next/link";
-import { Calculator, FileText, Stethoscope } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { ServiceIndexHeader } from "@/app/portal/feature/servicos";
+import { Calculator, FileText, Stethoscope, ArrowRight } from "lucide-react";
+import { ServicosHero } from "./_components/servicos-hero";
+import { ServicoWebCard } from "./_components/servico-web-card";
 
 const categories = [
   {
-    title: "Calculadoras Trabalhistas",
+    title: "Calculadoras",
     description:
-      "10 calculadoras com tabelas INSS/IRRF progressivas atualizadas para 2026. Rescisao, salario liquido, horas extras, ferias e mais.",
+      "10 calculadoras trabalhistas com tabelas INSS/IRRF progressivas atualizadas para 2026: rescisão, salário líquido, horas extras, férias e muito mais.",
     icon: Calculator,
     href: "/servicos/calculadoras",
-    count: 10,
+    badge: "10 serviços",
   },
   {
     title: "Geradores de Documentos",
     description:
-      "5 geradores de documentos trabalhistas prontos para download. Carta de demissao, notificacao, acordo extrajudicial e mais.",
+      "5 geradores de documentos trabalhistas prontos para download em PDF. Carta de demissão, notificação extrajudicial, acordo e outros modelos.",
     icon: FileText,
     href: "/servicos/geradores",
-    count: 5,
+    badge: "5 serviços",
   },
   {
-    title: "Diagnosticos Trabalhistas",
+    title: "Diagnósticos",
     description:
-      "5 ferramentas de analise para identificar direitos, verificar prazos e simular acoes trabalhistas.",
+      "5 ferramentas de análise para identificar direitos, verificar prazos, simular ações e auditar sua jornada de trabalho.",
     icon: Stethoscope,
     href: "/servicos/diagnosticos",
-    count: 5,
+    badge: "5 serviços",
   },
 ];
 
 export default function ServicosPublicHub() {
   return (
     <>
-      <ServiceIndexHeader
+      <ServicosHero
         eyebrow="Ferramentas Gratuitas"
-        title="Servicos"
+        title="Serviços"
         titleHighlight="Trabalhistas."
-        description="Acesse calculadoras, gere documentos e analise sua situacao trabalhista. Todas as ferramentas atualizadas com a legislacao 2026."
+        description="Calculadoras, geradores de documentos e diagnósticos trabalhistas com inteligência artificial. Todas as ferramentas atualizadas com a legislação CLT 2026."
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
         {categories.map((cat) => (
-          <Link key={cat.href} href={cat.href} className="group block">
-            <Card className="h-full bg-[#191919]/60 backdrop-blur-xl border-white/5 hover:border-primary/40 transition-all duration-300 hover:-translate-y-1 shadow-lg overflow-hidden">
-              <CardContent className="p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                    <cat.icon className="w-7 h-7" />
-                  </div>
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest bg-muted px-3 py-1 rounded-full">
-                    {cat.count} servicos
-                  </span>
-                </div>
-                <h3 className="text-2xl font-bold font-headline text-white mb-3">
-                  {cat.title}
-                </h3>
-                <p className="text-sm text-on-surface-variant leading-relaxed">
-                  {cat.description}
-                </p>
-              </CardContent>
-            </Card>
-          </Link>
+          <ServicoWebCard
+            key={cat.href}
+            title={cat.title}
+            description={cat.description}
+            href={cat.href}
+            icon={cat.icon}
+            badge={cat.badge}
+            cta="Acessar categoria"
+          />
         ))}
-      </div>
+      </section>
+
+      {/* CTA final — alinhada ao estilo do CTA da página expertise/home */}
+      <section className="mt-24">
+        <div className="relative overflow-hidden rounded-[2.5rem] border border-primary/20 bg-linear-to-br from-primary/10 to-surface-container/80 p-10 md:p-16 text-center shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgb(var(--color-primary)/0.05)_0%,transparent_70%)] pointer-events-none"
+          />
+          <div className="relative z-10 max-w-2xl mx-auto">
+            <span className="inline-block text-primary font-headline font-bold text-xs tracking-[0.2em] uppercase mb-4">
+              Consultoria Especializada
+            </span>
+            <h2 className="text-3xl md:text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-6">
+              Precisa de uma análise humana?
+            </h2>
+            <p className="text-lg text-on-surface-variant leading-relaxed mb-10">
+              Nossas ferramentas são um excelente ponto de partida, mas cada
+              caso tem nuances. Nossa equipe pode revisar seu caso com a
+              profundidade que ele merece.
+            </p>
+            <Link
+              href="/contato"
+              className="inline-flex items-center gap-3 bg-primary text-on-primary-fixed px-8 py-4 rounded-2xl font-headline font-extrabold text-base hover:brightness-110 transition-all shadow-[0_10px_30px_rgb(var(--color-primary)/0.25)] hover:shadow-[0_15px_40px_rgb(var(--color-primary)/0.4)] active:scale-95"
+            >
+              Falar com Especialista
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
