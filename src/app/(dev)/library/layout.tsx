@@ -23,10 +23,17 @@ const NAV: NavSection[] = [
     items: [
       { href: '/library', label: 'Visão geral' },
       { href: '/library/tokens/colors', label: 'Cores & Tokens' },
-      { href: '/library/tokens/palette', label: 'Paleta selecionável', status: 'new' },
-      { href: '/library/tokens/event-colors', label: 'Event colors', status: 'new' },
+      { href: '/library/tokens/semantic-tones', label: 'Semantic Tones', status: 'new' },
+      { href: '/library/tokens/palette', label: 'Paleta selecionável' },
+      { href: '/library/tokens/event-colors', label: 'Event colors' },
       { href: '/library/tokens/typography', label: 'Tipografia' },
       { href: '/library/tokens/spacing', label: 'Spacing & Radius' },
+    ],
+  },
+  {
+    title: 'Visual Diff',
+    items: [
+      { href: '/library/visual-diff/widgets', label: 'Widgets — Antes vs Depois', status: 'new' },
     ],
   },
   {
