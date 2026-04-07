@@ -47,8 +47,8 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
             size={24}
             color={
               progress.percent === 100
-                ? "hsl(var(--success))"
-                : "hsl(var(--primary))"
+                ? "var(--success)"
+                : "var(--primary)"
             }
           />
           <span className="text-[10px] tabular-nums text-muted-foreground/60">

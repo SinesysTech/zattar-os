@@ -84,7 +84,7 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
             <ProgressRing
               percent={stats.taxaConversao}
               size={32}
-              color="hsl(var(--success))"
+              color="var(--success)"
             />
             <span className="text-xs font-bold text-success/70">{stats.taxaConversao}%</span>
           </div>
@@ -107,7 +107,7 @@ export function FinancialStrip({ stats }: FinancialStripProps) {
               data={stats.trendMensal}
               width={60}
               height={20}
-              color="hsl(var(--success))"
+              color="var(--success)"
             />
           )}
         </div>

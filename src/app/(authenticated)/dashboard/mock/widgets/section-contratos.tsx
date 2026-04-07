@@ -36,7 +36,7 @@ import {
 // Widget 1 — Contratos por Status
 const STATUS_CONTRATOS = [
   { value: 5,  color: 'hsl(220 70% 60%)',              label: 'Em Contratação' },
-  { value: 18, color: 'hsl(var(--primary))',            label: 'Contratado' },
+  { value: 18, color: 'var(--primary)',            label: 'Contratado' },
   { value: 42, color: 'hsl(142 60% 45%)',              label: 'Distribuído' },
   { value: 3,  color: 'hsl(var(--destructive) / 0.7)', label: 'Desistência' },
 ];
@@ -102,8 +102,8 @@ const BADGE_STYLES: Record<ObrigacaoBadge, string> = {
 // Widget 4 — Parcelas Status
 const PARCELAS_SEGMENTS = [
   { value: 45, color: 'hsl(142 60% 45%)',   label: 'Pagas' },
-  { value: 12, color: 'hsl(var(--warning))', label: 'Pendentes' },
-  { value: 3,  color: 'hsl(var(--destructive))', label: 'Atrasadas' },
+  { value: 12, color: 'var(--warning)', label: 'Pendentes' },
+  { value: 3,  color: 'var(--destructive)', label: 'Atrasadas' },
 ];
 const PARCELAS_TOTAL    = 124800;
 const PARCELAS_PENDENTE = 18200;

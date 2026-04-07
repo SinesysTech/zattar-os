@@ -112,13 +112,13 @@ export function FluxoCaixaChart({ data, isLoading }: FluxoCaixaChartProps) {
                   dataKey="periodo"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                  tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
                   tickFormatter={formatarMoedaCurta}
-                  tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                  tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
                   width={65}
                 />
                 <Tooltip
@@ -128,12 +128,12 @@ export function FluxoCaixaChart({ data, isLoading }: FluxoCaixaChartProps) {
                     name === 'despesas' ? 'Saídas' : 'Saldo Acumulado',
                   ]}
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--background))',
-                    border: '1px solid hsl(var(--border))',
+                    backgroundColor: 'var(--background)',
+                    border: '1px solid var(--border)',
                     borderRadius: '8px',
                     fontSize: '12px',
                   }}
-                  labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}
+                  labelStyle={{ color: 'var(--foreground)', fontWeight: 600 }}
                 />
                 <Legend
                   formatter={(value: string) =>
@@ -157,11 +157,11 @@ export function FluxoCaixaChart({ data, isLoading }: FluxoCaixaChartProps) {
                 <Line
                   type="monotone"
                   dataKey="saldoAcumulado"
-                  stroke="hsl(var(--primary))"
+                  stroke="var(--primary)"
                   strokeWidth={2.5}
                   strokeDasharray="5 3"
                   dot={false}
-                  activeDot={{ r: 4, fill: 'hsl(var(--primary))' }}
+                  activeDot={{ r: 4, fill: 'var(--primary)' }}
                 />
               </ComposedChart>
             </SafeResponsiveContainer>

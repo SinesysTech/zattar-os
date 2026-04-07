@@ -54,27 +54,27 @@ const fluxoCaixaData = [
 const saldoTrend = [98200, 102400, 95800, 108300, 111200, 99700, 115600, 109800, 118400, 121000, 119300, 124350];
 
 const contasReceberAging = [
-  { label: 'A vencer',  value: 42000, color: 'hsl(var(--success))' },
-  { label: 'Até 30d',   value: 15000, color: 'hsl(142 70% 45%)' },
-  { label: '30–60d',    value:  7000, color: 'hsl(var(--warning))' },
-  { label: '60–90d',    value:  2500, color: 'hsl(30 90% 52%)' },
-  { label: '90+ dias',  value:  1000, color: 'hsl(var(--destructive))' },
+  { label: 'A vencer',  value: 42000, color: 'var(--success)' },
+  { label: 'Até 30d',   value: 15000, color: 'oklch(from var(--success) calc(l - 0.05) c h)' },
+  { label: '30–60d',    value:  7000, color: 'var(--warning)' },
+  { label: '60–90d',    value:  2500, color: 'oklch(from var(--warning) calc(l - 0.05) c h)' },
+  { label: '90+ dias',  value:  1000, color: 'var(--destructive)' },
 ];
 
 const contasPagarAging = [
-  { label: 'A vencer',  value: 22000, color: 'hsl(var(--success))' },
-  { label: 'Até 30d',   value:  6000, color: 'hsl(142 70% 45%)' },
-  { label: '30–60d',    value:  2800, color: 'hsl(var(--warning))' },
-  { label: '60–90d',    value:  1000, color: 'hsl(30 90% 52%)' },
-  { label: '90+ dias',  value:   300, color: 'hsl(var(--destructive))' },
+  { label: 'A vencer',  value: 22000, color: 'var(--success)' },
+  { label: 'Até 30d',   value:  6000, color: 'oklch(from var(--success) calc(l - 0.05) c h)' },
+  { label: '30–60d',    value:  2800, color: 'var(--warning)' },
+  { label: '60–90d',    value:  1000, color: 'oklch(from var(--warning) calc(l - 0.05) c h)' },
+  { label: '90+ dias',  value:   300, color: 'var(--destructive)' },
 ];
 
 const despesasSegmentos = [
-  { label: 'Pessoal',    value: 18500, color: 'hsl(var(--primary))' },
-  { label: 'Aluguel',    value:  6200, color: 'hsl(var(--chart-2))' },
-  { label: 'Serviços',   value:  4100, color: 'hsl(var(--chart-3))' },
-  { label: 'Tributário', value:  2800, color: 'hsl(var(--warning))' },
-  { label: 'Outros',     value:   600, color: 'hsl(var(--muted-foreground))' },
+  { label: 'Pessoal',    value: 18500, color: 'var(--primary)' },
+  { label: 'Aluguel',    value:  6200, color: 'var(--chart-2)' },
+  { label: 'Serviços',   value:  4100, color: 'var(--chart-3)' },
+  { label: 'Tributário', value:  2800, color: 'var(--warning)' },
+  { label: 'Outros',     value:   600, color: 'var(--muted-foreground)' },
 ];
 
 const dreSparklines: Record<string, number[]> = {
@@ -235,7 +235,7 @@ export function WidgetSaldoTrend() {
           data={saldoTrend}
           width={260}
           height={44}
-          color="hsl(var(--primary))"
+          color="var(--primary)"
         />
         <div className="flex justify-between mt-1">
           <span className="text-[9px] text-muted-foreground/55 tabular-nums">Abr/25</span>
@@ -396,7 +396,7 @@ export function WidgetDREComparativo() {
               data={dreSparklines.receita}
               width={64}
               height={20}
-              color="hsl(var(--success))"
+              color="var(--success)"
             />
           </div>
         </div>
@@ -415,7 +415,7 @@ export function WidgetDREComparativo() {
               data={dreSparklines.despesa}
               width={64}
               height={20}
-              color="hsl(var(--destructive))"
+              color="var(--destructive)"
             />
           </div>
         </div>
@@ -434,7 +434,7 @@ export function WidgetDREComparativo() {
               data={dreSparklines.resultado}
               width={64}
               height={20}
-              color="hsl(var(--primary))"
+              color="var(--primary)"
             />
           </div>
         </div>
@@ -455,7 +455,7 @@ export function WidgetDREComparativo() {
 
 export function WidgetInadimplencia() {
   const isAlert = INADIMPLENCIA_PERCENT > 10;
-  const ringColor = isAlert ? 'hsl(var(--destructive))' : 'hsl(var(--success))';
+  const ringColor = isAlert ? 'var(--destructive)' : 'var(--success)';
 
   return (
     <WidgetContainer
@@ -516,11 +516,11 @@ export function WidgetInadimplencia() {
 // ─── Widget 9: Despesas Treemap ──────────────────────────────────────────────
 
 const treemapSegmentos = [
-  { label: 'Pessoal',    value: 18500, color: 'hsl(var(--primary))' },
-  { label: 'Aluguel',    value:  6200, color: 'hsl(var(--warning))' },
-  { label: 'Serviços',   value:  4100, color: 'hsl(var(--success))' },
+  { label: 'Pessoal',    value: 18500, color: 'var(--primary)' },
+  { label: 'Aluguel',    value:  6200, color: 'var(--warning)' },
+  { label: 'Serviços',   value:  4100, color: 'var(--success)' },
   { label: 'Tributário', value:  2800, color: 'hsl(var(--info, var(--primary)))' },
-  { label: 'Marketing',  value:  1800, color: 'hsl(var(--chart-2))' },
+  { label: 'Marketing',  value:  1800, color: 'var(--chart-2)' },
   { label: 'Outros',     value:   600, color: 'hsl(var(--muted-foreground) / 0.4)' },
 ];
 
@@ -640,7 +640,7 @@ export function WidgetFluxoComTabs() {
               data={fluxoAcumulado}
               width={240}
               height={64}
-              color="hsl(var(--success))"
+              color="var(--success)"
             />
             <div className="flex justify-between mt-1">
               <span className="text-[9px] text-muted-foreground/55 tabular-nums">Out/25</span>

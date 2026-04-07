@@ -154,9 +154,9 @@ const STATS = {
 
 const STATUS_CONFIG: Record<DocStatus, { label: string; color: string; cssColor: string; icon: typeof Clock; bg: string }> = {
   rascunho: { label: 'Rascunho', color: 'text-muted-foreground/50', cssColor: 'hsl(var(--muted-foreground) / 0.55)', icon: FileText, bg: 'bg-muted-foreground/8' },
-  pronto: { label: 'Aguardando', color: 'text-warning/70', cssColor: 'hsl(var(--warning))', icon: Send, bg: 'bg-warning/8' },
-  concluido: { label: 'Concluído', color: 'text-success/70', cssColor: 'hsl(var(--success))', icon: CheckCircle2, bg: 'bg-success/8' },
-  cancelado: { label: 'Cancelado', color: 'text-destructive/50', cssColor: 'hsl(var(--destructive))', icon: XCircle, bg: 'bg-destructive/8' },
+  pronto: { label: 'Aguardando', color: 'text-warning/70', cssColor: 'var(--warning)', icon: Send, bg: 'bg-warning/8' },
+  concluido: { label: 'Concluído', color: 'text-success/70', cssColor: 'var(--success)', icon: CheckCircle2, bg: 'bg-success/8' },
+  cancelado: { label: 'Cancelado', color: 'text-destructive/50', cssColor: 'var(--destructive)', icon: XCircle, bg: 'bg-destructive/8' },
 };
 
 function getSignerProgress(doc: Documento): { signed: number; total: number; percent: number } {
@@ -249,7 +249,7 @@ function StatsStrip() {
         <div className="shrink-0">
           <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Taxa Conclusão</p>
           <div className="flex items-center gap-2">
-            <ProgressRing percent={STATS.taxaConclusao} size={32} color="hsl(var(--success))" />
+            <ProgressRing percent={STATS.taxaConclusao} size={32} color="var(--success)" />
             <span className="text-xs font-bold text-success/70">{STATS.taxaConclusao}%</span>
           </div>
         </div>
@@ -269,7 +269,7 @@ function StatsStrip() {
             <p className="text-[9px] text-muted-foreground/60 uppercase tracking-wider">Tendência 6m</p>
             <p className="text-xs font-semibold text-success/60">+3 este mês</p>
           </div>
-          <Sparkline data={STATS.trendMensal} width={60} height={20} color="hsl(var(--success))" />
+          <Sparkline data={STATS.trendMensal} width={60} height={20} color="var(--success)" />
         </div>
       </div>
     </GlassPanel>
@@ -310,7 +310,7 @@ function DocumentCard({ doc, onSelect }: { doc: Documento; onSelect: (d: Documen
             <ProgressRing
               percent={progress.percent}
               size={36}
-              color={progress.percent === 100 ? 'hsl(var(--success))' : 'hsl(var(--primary))'}
+              color={progress.percent === 100 ? 'var(--success)' : 'var(--primary)'}
             />
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap gap-1">
@@ -407,7 +407,7 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
           <ProgressRing
             percent={progress.percent}
             size={48}
-            color={progress.percent === 100 ? 'hsl(var(--success))' : 'hsl(var(--primary))'}
+            color={progress.percent === 100 ? 'var(--success)' : 'var(--primary)'}
           />
           <div>
             <p className="text-sm font-bold">{progress.signed}/{progress.total} assinantes</p>
@@ -532,7 +532,7 @@ function DocumentListRow({ doc, onSelect, selected }: { doc: Documento; onSelect
 
       {doc.assinantes.length > 0 && (
         <div className="flex items-center gap-1.5 shrink-0">
-          <ProgressRing percent={progress.percent} size={24} color={progress.percent === 100 ? 'hsl(var(--success))' : 'hsl(var(--primary))'} />
+          <ProgressRing percent={progress.percent} size={24} color={progress.percent === 100 ? 'var(--success)' : 'var(--primary)'} />
           <span className="text-[10px] tabular-nums text-muted-foreground/60">{progress.signed}/{progress.total}</span>
         </div>
       )}

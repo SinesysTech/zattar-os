@@ -95,8 +95,8 @@ export function EvolucaoMensalChart({ data }: EvolucaoMensalChartProps) {
                     <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id={gradientSaldo} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                    <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -104,13 +104,13 @@ export function EvolucaoMensalChart({ data }: EvolucaoMensalChartProps) {
                   dataKey="mesLabel"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                  tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
                   tickFormatter={formatarMoedaCurta}
-                  tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                  tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
                   width={65}
                 />
                 <Tooltip
@@ -120,12 +120,12 @@ export function EvolucaoMensalChart({ data }: EvolucaoMensalChartProps) {
                   ]}
                   labelFormatter={(label) => `Mês: ${label}`}
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--background))',
-                    border: '1px solid hsl(var(--border))',
+                    backgroundColor: 'var(--background)',
+                    border: '1px solid var(--border)',
                     borderRadius: '8px',
                     fontSize: '12px',
                   }}
-                  labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}
+                  labelStyle={{ color: 'var(--foreground)', fontWeight: 600 }}
                 />
                 <Legend
                   formatter={(value: string) =>
@@ -154,12 +154,12 @@ export function EvolucaoMensalChart({ data }: EvolucaoMensalChartProps) {
                 <Area
                   type="monotone"
                   dataKey="saldo"
-                  stroke="hsl(var(--primary))"
+                  stroke="var(--primary)"
                   strokeWidth={2}
                   strokeDasharray="5 3"
                   fill={`url(#${gradientSaldo})`}
                   dot={false}
-                  activeDot={{ r: 4, fill: 'hsl(var(--primary))' }}
+                  activeDot={{ r: 4, fill: 'var(--primary)' }}
                 />
               </AreaChart>
             </SafeResponsiveContainer>

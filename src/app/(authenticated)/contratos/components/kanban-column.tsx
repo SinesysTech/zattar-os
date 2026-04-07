@@ -8,7 +8,7 @@
  *
  * Uso:
  *   <KanbanColumn
- *     stage={{ id: 'contratado', label: 'Contratado', color: 'hsl(var(--primary))' }}
+ *     stage={{ id: 'contratado', label: 'Contratado', color: 'var(--primary)' }}
  *     contratos={contratos}
  *   />
  */

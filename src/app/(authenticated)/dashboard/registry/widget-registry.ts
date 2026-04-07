@@ -183,7 +183,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Score composto com gauge, comparações de ativos e encerrados, e insight de movimentação.',
     module: 'processos',
     permission: PERM.processos,
-    size: 'md',
+    size: 'sm',
     defaultEnabled: true,
     component: WidgetSaudeProcessual,
   },

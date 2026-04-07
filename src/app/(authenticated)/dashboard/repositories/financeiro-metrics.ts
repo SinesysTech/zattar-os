@@ -142,11 +142,11 @@ export async function buscarFinanceiroDetalhado(
 
   // --- Aging de contas a receber ---
   const AGING_COLORS = {
-    avencer: 'hsl(var(--success))',
+    avencer: 'var(--success)',
     ate30: 'hsl(142 70% 45%)',
-    '30_60': 'hsl(var(--warning))',
+    '30_60': 'var(--warning)',
     '60_90': 'hsl(30 90% 52%)',
-    '90mais': 'hsl(var(--destructive))',
+    '90mais': 'var(--destructive)',
   };
 
   const contasReceber = data.filter((l) => l.tipo === 'receita' && l.status !== 'pago');
@@ -160,11 +160,11 @@ export async function buscarFinanceiroDetalhado(
   const mesAtual = hoje.getMonth();
   const anoAtual = hoje.getFullYear();
   const CATEGORIA_COLORS: Record<string, string> = {
-    'Pessoal': 'hsl(var(--primary))',
-    'Aluguel': 'hsl(var(--chart-2))',
-    'Serviços': 'hsl(var(--chart-3))',
-    'Tributário': 'hsl(var(--warning))',
-    'Outros': 'hsl(var(--muted-foreground))',
+    'Pessoal': 'var(--primary)',
+    'Aluguel': 'var(--chart-2)',
+    'Serviços': 'var(--chart-3)',
+    'Tributário': 'var(--warning)',
+    'Outros': 'var(--muted-foreground)',
   };
   const despesasMes = data.filter((l) => {
     const dv = new Date(l.data_vencimento);
@@ -179,7 +179,7 @@ export async function buscarFinanceiroDetalhado(
     .map(([categoria, valor]) => ({
       categoria,
       valor,
-      color: CATEGORIA_COLORS[categoria] || 'hsl(var(--muted-foreground))',
+      color: CATEGORIA_COLORS[categoria] || 'var(--muted-foreground)',
     }))
     .sort((a, b) => b.valor - a.valor);
 

@@ -38,21 +38,21 @@ export const STATUS_CONFIG: Record<
   pronto: {
     label: "Aguardando",
     color: "text-warning/70",
-    cssColor: "hsl(var(--warning))",
+    cssColor: "var(--warning)",
     icon: Send,
     bg: "bg-warning/8",
   },
   concluido: {
     label: "Concluído",
     color: "text-success/70",
-    cssColor: "hsl(var(--success))",
+    cssColor: "var(--success)",
     icon: CheckCircle2,
     bg: "bg-success/8",
   },
   cancelado: {
     label: "Cancelado",
     color: "text-destructive/50",
-    cssColor: "hsl(var(--destructive))",
+    cssColor: "var(--destructive)",
     icon: XCircle,
     bg: "bg-destructive/8",
   },
@@ -130,8 +130,8 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
               size={36}
               color={
                 progress.percent === 100
-                  ? "hsl(var(--success))"
-                  : "hsl(var(--primary))"
+                  ? "var(--success)"
+                  : "var(--primary)"
               }
             />
             <div className="flex-1 min-w-0">

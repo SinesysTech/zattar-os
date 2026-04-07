@@ -46,7 +46,7 @@ const PROXIMAS_AUDIENCIAS = [
     parte: 'Roberto C. Mendes',
     local: 'CEJUSC — Fórum Central',
     isNext: false,
-    borderColor: 'border-l-[hsl(var(--warning))]',
+    borderColor: 'border-l-[var(--warning)]',
     bgColor: '',
     pillColor: 'bg-warning/15 text-warning',
   },
@@ -127,7 +127,7 @@ const PREPARACAO_ITEMS = [
     preparo: 80,
     statusText: 'Docs prontos',
     statusColor: 'text-success/70',
-    ringColor: 'hsl(var(--success))',
+    ringColor: 'var(--success)',
   },
   {
     nome: 'Conciliação — Roberto C. Mendes',
@@ -136,7 +136,7 @@ const PREPARACAO_ITEMS = [
     preparo: 45,
     statusText: 'Faltam 2 docs',
     statusColor: 'text-warning/70',
-    ringColor: 'hsl(var(--warning))',
+    ringColor: 'var(--warning)',
   },
   {
     nome: 'Julgamento — Indústrias Paulista S/A',
@@ -145,7 +145,7 @@ const PREPARACAO_ITEMS = [
     preparo: 0,
     statusText: 'Sem preparo',
     statusColor: 'text-destructive/70',
-    ringColor: 'hsl(var(--destructive))',
+    ringColor: 'var(--destructive)',
   },
 ];
 
@@ -453,30 +453,30 @@ function TrendAreaChart({ data }: { data: number[] }) {
     <svg width="100%" viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
       <defs>
         <linearGradient id="aud-trend-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.15" />
-          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.15" />
+          <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
         </linearGradient>
       </defs>
       <polygon points={areaPts} fill="url(#aud-trend-grad)" />
       <polyline
         points={linePts}
         fill="none"
-        stroke="hsl(var(--primary))"
+        stroke="var(--primary)"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
         className="opacity-60"
       />
       {/* Highlight current month dot */}
-      <circle cx={lastPt.x} cy={lastPt.y} r="4" fill="hsl(var(--primary))" className="opacity-90" />
-      <circle cx={lastPt.x} cy={lastPt.y} r="7" fill="hsl(var(--primary))" className="opacity-15" />
+      <circle cx={lastPt.x} cy={lastPt.y} r="4" fill="var(--primary)" className="opacity-90" />
+      <circle cx={lastPt.x} cy={lastPt.y} r="7" fill="var(--primary)" className="opacity-15" />
       {/* Value label above last dot */}
       <text
         x={lastPt.x}
         y={lastPt.y - 9}
         textAnchor="middle"
         fontSize="9"
-        fill="hsl(var(--primary))"
+        fill="var(--primary)"
         fontWeight="600"
         className="opacity-80"
       >

@@ -100,7 +100,7 @@ function Sparkline({ data, alert = false }: { data: number[]; alert?: boolean })
       <polyline
         points={points}
         fill="none"
-        stroke={alert ? 'hsl(var(--destructive))' : 'hsl(var(--primary))'}
+        stroke={alert ? 'var(--destructive)' : 'var(--primary)'}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -112,7 +112,7 @@ function Sparkline({ data, alert = false }: { data: number[]; alert?: boolean })
           cx={w}
           cy={h - ((data[data.length - 1] - min) / range) * h}
           r="3"
-          fill={alert ? 'hsl(var(--destructive))' : 'hsl(var(--primary))'}
+          fill={alert ? 'var(--destructive)' : 'var(--primary)'}
         />
       )}
     </svg>
