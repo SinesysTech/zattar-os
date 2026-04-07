@@ -22,7 +22,7 @@ export default function NovaObrigacaoClient() {
   };
 
   return (
-    <div className="container mx-auto py-8 space-y-6 max-w-4xl">
+    <div className="py-8 space-y-6 max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" aria-label="Voltar" asChild>

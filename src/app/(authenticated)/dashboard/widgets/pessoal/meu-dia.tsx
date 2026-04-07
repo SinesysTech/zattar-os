@@ -196,14 +196,14 @@ export function WidgetMeuDia() {
       subtitle={subtitleStr}
       depth={2}
     >
-      <div className="relative">
-        {/* Linha vertical conectora */}
+      <div className="relative isolate pt-1">
+        {/* Linha vertical conectora corrigida */}
         <div
-          className="absolute left-1.75 top-2 bottom-2 w-px bg-border/20"
+          className="absolute left-5 top-4 bottom-4 w-px bg-border/40 -z-10"
           aria-hidden="true"
         />
 
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-1">
           {eventos.map((evento, i) => {
             const isNext = i === proximoIdx;
             const isDone = evento.done || (evento.hora !== null && horaParaMinutos(evento.hora) < agora);
@@ -212,14 +212,14 @@ export function WidgetMeuDia() {
             return (
               <div
                 key={evento.id}
-                className={`flex items-start gap-3 px-2 py-1.5 rounded-xl transition-all duration-150 ${
+                className={`flex items-start gap-3 px-2 py-2 rounded-xl transition-all duration-150 group ${
                   isNext
-                    ? 'bg-primary/[0.07] ring-1 ring-primary/20'
-                    : 'hover:bg-white/4'
+                    ? 'bg-primary/[0.04] ring-1 ring-primary/20'
+                    : 'hover:bg-muted/40'
                 }`}
               >
-                {/* Dot no trilho */}
-                <div className="relative z-10 mt-0.5">
+                {/* Coluna do Ícone Timeline (Centralizado no box w-6) */}
+                <div className="w-6 flex justify-center shrink-0 mt-0.5 z-10 bg-background/80 rounded-full group-hover:bg-transparent backdrop-blur-sm">
                   {evento.tipo === 'audiencia' ? (
                     <DotAudiencia done={isDone} isNext={isNext} />
                   ) : evento.tipo === 'lembrete' ? (
@@ -229,65 +229,65 @@ export function WidgetMeuDia() {
                   )}
                 </div>
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`flex-1 min-w-0 ${
-                        isDone
-                          ? 'text-muted-foreground/55'
-                          : isNext
-                          ? 'text-foreground/90'
-                          : 'text-foreground/70'
+                <div className="flex-1 min-w-0 flex items-start justify-between gap-3">
+                  {/* Informações à esquerda */}
+                  <div className="flex-1 min-w-0">
+                    <p 
+                      className={`text-[11px] font-semibold leading-tight truncate ${
+                        isDone ? 'text-muted-foreground line-through' : 'text-foreground'
                       }`}
                     >
-                      <p className={`text-[10px] font-medium leading-tight ${isDone ? 'line-through' : ''}`}>
-                        {evento.titulo}
+                      {evento.titulo}
+                    </p>
+                    {evento.subtitulo && (
+                      <p className={`text-[10px] mt-0.5 leading-tight truncate ${isDone ? 'text-muted-foreground/70' : 'text-foreground/80'}`}>
+                        {evento.subtitulo}
                       </p>
-                      {evento.subtitulo && (
-                        <p className="text-[10px] text-foreground/60 mt-0.5 leading-tight">
-                          {evento.subtitulo}
-                        </p>
-                      )}
-                      {evento.contextoProcesso && (
-                        <p className="text-[9px] text-foreground/55 mt-0.5 leading-tight">
-                          {evento.contextoProcesso}
-                        </p>
-                      )}
-                      {evento.numeroProcesso && (
-                        <p className="text-[9px] text-muted-foreground/55 font-mono mt-0.5 break-all leading-relaxed">
-                          {evento.numeroProcesso}
-                        </p>
-                      )}
-                    </div>
-                    {isNext && (
-                      <span className="text-[8px] uppercase tracking-wider text-primary/70 bg-primary/10 px-1.5 py-0.5 rounded-full shrink-0">
-                        próximo
-                      </span>
                     )}
+                    {evento.contextoProcesso && (
+                      <p className={`text-[9px] mt-0.5 leading-tight truncate ${isDone ? 'text-muted-foreground/60' : 'text-muted-foreground'}`}>
+                        {evento.contextoProcesso}
+                      </p>
+                    )}
+                    {evento.numeroProcesso && (
+                      <p className={`text-[9px] font-mono mt-0.5 truncate ${isDone ? 'text-muted-foreground/50' : 'text-muted-foreground/80'}`}>
+                        {evento.numeroProcesso}
+                      </p>
+                    )}
+                    
+                    {/* Badge de tipo */}
+                     <div className="flex items-center gap-1 mt-1.5">
+                       <Icon
+                         className={`size-3 shrink-0 ${
+                           isDone ? 'text-muted-foreground/60' : 'text-primary/70'
+                         }`}
+                       />
+                       <span
+                         className={`text-[9px] font-medium uppercase tracking-wider ${
+                           isDone ? 'text-muted-foreground/60' : 'text-primary/70'
+                         }`}
+                       >
+                         {evento.tipo}
+                       </span>
+                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <Icon
-                      className={`size-2.5 shrink-0 ${
-                        isDone ? 'text-muted-foreground/45' : 'text-muted-foreground/60'
-                      }`}
-                    />
+                  {/* Horário à direita */}
+                  <div className="flex flex-col items-end shrink-0 pl-2">
                     {evento.hora && (
                       <span
-                        className={`text-[9px] tabular-nums ${
-                          isDone ? 'text-muted-foreground/50' : 'text-muted-foreground/60'
+                        className={`text-xs font-display tabular-nums font-semibold ${
+                          isDone ? 'text-muted-foreground/70' : 'text-foreground/90'
                         }`}
                       >
                         {evento.hora}
                       </span>
                     )}
-                    <span
-                      className={`text-[9px] capitalize ${
-                        isDone ? 'text-muted-foreground/45' : 'text-muted-foreground/55'
-                      }`}
-                    >
-                      {evento.tipo}
-                    </span>
+                    {isNext && (
+                      <span className="mt-1 text-[9px] uppercase tracking-wider font-bold text-primary-foreground bg-primary px-2 py-0.5 rounded shadow-sm shrink-0">
+                        Próximo
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

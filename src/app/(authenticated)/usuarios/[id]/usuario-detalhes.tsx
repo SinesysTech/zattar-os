@@ -149,7 +149,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8 space-y-6 max-w-400">
+      <div className="py-8 space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={() => router.push('/app/usuarios')}>
             <ArrowLeft className="h-5 w-5" />
@@ -168,7 +168,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   if (error || !usuario) {
     return (
-      <div className="container mx-auto px-4 py-8 space-y-6 max-w-400">
+      <div className="py-8 space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={() => router.push('/app/usuarios')}>
             <ArrowLeft className="h-5 w-5" />
@@ -195,7 +195,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-6 max-w-400">
+    <div className="py-8 space-y-6">
       {/* Header do Perfil */}
       <Card className="p-6">
         <div className="flex items-start gap-5">

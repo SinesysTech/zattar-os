@@ -7,7 +7,7 @@ export const revalidate = 0;
 
 function FormLoading() {
   return (
-    <div className="container mx-auto py-8 space-y-6 max-w-4xl">
+    <div className="py-8 space-y-6 max-w-4xl mx-auto">
       <div className="flex items-center gap-4">
         <Skeleton className="h-10 w-10" />
         <div className="space-y-2">

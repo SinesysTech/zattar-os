@@ -56,7 +56,7 @@ export default function EditarObrigacaoPage({ params }: EditarObrigacaoPageProps
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-8 max-w-4xl">
+      <div className="py-8 max-w-4xl mx-auto">
         <Empty><EmptyHeader><EmptyMedia variant="icon"><Loader2 className="h-6 w-6 animate-spin" /></EmptyMedia><EmptyTitle>Carregando...</EmptyTitle></EmptyHeader></Empty>
       </div>
     );
@@ -64,7 +64,7 @@ export default function EditarObrigacaoPage({ params }: EditarObrigacaoPageProps
 
   if (error || !acordo) {
     return (
-      <div className="container mx-auto py-8 max-w-4xl">
+      <div className="py-8 max-w-4xl mx-auto">
         <Empty className="border-destructive">
           <EmptyHeader>
             <EmptyMedia variant="icon"><AlertCircle className="h-6 w-6 text-destructive" /></EmptyMedia>
@@ -79,7 +79,7 @@ export default function EditarObrigacaoPage({ params }: EditarObrigacaoPageProps
   }
 
   return (
-    <div className="container mx-auto py-8 space-y-6 max-w-4xl">
+    <div className="py-8 space-y-6 max-w-4xl mx-auto">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
           <Link href={`/obrigacoes/${acordoId}`}><ArrowLeft className="h-4 w-4" /></Link>

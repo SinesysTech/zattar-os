@@ -143,14 +143,18 @@ export async function listarCapturasLog(
   // Filtro por data (iniciado_em)
   if (params.data_inicio) {
     const dataInicio = new Date(params.data_inicio);
-    dataInicio.setHours(0, 0, 0, 0);
-    query = query.gte('iniciado_em', dataInicio.toISOString());
+    if (!isNaN(dataInicio.getTime())) {
+      dataInicio.setHours(0, 0, 0, 0);
+      query = query.gte('iniciado_em', dataInicio.toISOString());
+    }
   }
 
   if (params.data_fim) {
     const dataFim = new Date(params.data_fim);
-    dataFim.setHours(23, 59, 59, 999);
-    query = query.lte('iniciado_em', dataFim.toISOString());
+    if (!isNaN(dataFim.getTime())) {
+      dataFim.setHours(23, 59, 59, 999);
+      query = query.lte('iniciado_em', dataFim.toISOString());
+    }
   }
 
   // Ordenação: mais recentes primeiro

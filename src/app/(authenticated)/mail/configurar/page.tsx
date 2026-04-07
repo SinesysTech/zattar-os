@@ -193,7 +193,7 @@ export default function ConfigurarEmailPage() {
   }
 
   return (
-    <div className="mx-auto max-w-xl space-y-6 p-6">
+    <div className="mx-auto max-w-xl space-y-6 py-6">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" aria-label="Voltar" onClick={() => router.push("/app/mail")}>
           <ArrowLeft className="h-4 w-4" />

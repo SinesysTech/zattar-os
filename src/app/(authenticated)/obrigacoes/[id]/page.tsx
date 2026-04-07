@@ -110,7 +110,7 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-8">
+      <div className="py-8">
         <Empty><EmptyHeader><EmptyMedia variant="icon"><Loader2 className="h-6 w-6 animate-spin" /></EmptyMedia><EmptyTitle>Carregando detalhes...</EmptyTitle></EmptyHeader></Empty>
       </div>
     );
@@ -118,7 +118,7 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
 
   if (error || !acordo) {
     return (
-      <div className="container mx-auto py-8">
+      <div className="py-8">
         <Empty className="border-destructive">
           <EmptyHeader>
             <EmptyMedia variant="icon"><AlertCircle className="h-6 w-6 text-destructive" /></EmptyMedia>
@@ -135,7 +135,7 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
   const statusConfig = statusConfigs[acordo.status] || statusConfigs.pendente;
 
   return (
-    <div className="container mx-auto py-8 space-y-6 max-w-6xl">
+    <div className="py-8 space-y-6 max-w-6xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">

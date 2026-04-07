@@ -362,7 +362,7 @@ export function ExpedientesWeekMission({
   }, [selectedDate]);
 
   return (
-    <div className="mx-auto flex max-w-350 flex-col gap-5">
+    <div className="flex flex-col gap-5">
       {/* Header */}
       {/* Week Navigator */}
       <WeekNavigator

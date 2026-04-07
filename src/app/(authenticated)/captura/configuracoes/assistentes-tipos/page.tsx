@@ -48,7 +48,7 @@ export default async function ConfiguracoesAssistentesTiposPage() {
   ]);
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold tracking-tight">Geração Automática de Peças</h1>
         <Button variant="outline" size="sm" asChild>

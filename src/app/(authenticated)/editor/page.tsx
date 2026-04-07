@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
  */
 function PlateEditorSkeleton() {
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-4 p-8">
+    <div className="mx-auto w-full max-w-4xl space-y-4 py-8">
       <Skeleton className="h-8 w-3/4" />
       <Skeleton className="h-6 w-full" />
       <Skeleton className="h-6 w-full" />
