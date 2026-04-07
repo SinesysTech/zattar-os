@@ -166,10 +166,10 @@ function QueueCard({
       onClick={onSelect}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(); } }}
       className={cn(
-        'group w-full cursor-pointer rounded-xl border p-3.5 text-left transition-all duration-200',
+        'group w-full cursor-pointer rounded-xl border bg-card p-3.5 text-left shadow-sm transition-all duration-200',
+        'border-border/40 hover:border-primary/30 hover:bg-accent/50 hover:shadow-md',
         URGENCY_BORDER[urgencyLevel],
-        'border-border/15 hover:border-primary/20 hover:bg-primary/3',
-        selected && 'border-primary/20 bg-primary/4 ring-1 ring-primary/10',
+        selected && 'border-primary/40 bg-primary/[0.06] ring-1 ring-primary/20',
       )}
     >
       {/* Header row */}
