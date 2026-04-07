@@ -25,6 +25,7 @@ import { FileSearch } from 'lucide-react';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes, TiposExpedientesList } from '@/app/(authenticated)/tipos-expedientes';
 import { useExpedientes } from '../hooks/use-expedientes';
+import { actionListarExpedientes } from '../actions';
 import type { Expediente } from '../domain';
 import { ExpedientesPulseStrip } from './expedientes-pulse-strip';
 import { ExpedientesControlView } from './expedientes-control-view';
@@ -96,6 +97,23 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
+  const [globalCounts, setGlobalCounts] = useState({ todos: 0, pendentes: 0, baixados: 0 });
+
+  // Fetch real global counts once on mount
+  useEffect(() => {
+    Promise.all([
+      actionListarExpedientes({ limite: 1, baixado: false, incluirSemPrazo: true }),
+      actionListarExpedientes({ limite: 1, baixado: true, incluirSemPrazo: true }),
+    ]).then(([pend, baix]) => {
+      const p = pend.success && 'paginacao' in pend.data ? pend.data.paginacao.total : 0;
+      const b = baix.success && 'paginacao' in baix.data ? baix.data.paginacao.total : 0;
+      setGlobalCounts({
+        pendentes: p,
+        baixados: b,
+        todos: p + b,
+      });
+    }).catch(console.error);
+  }, []);
 
   // Detail/baixa dialog state
   const [selectedExpediente, setSelectedExpediente] = useState<Expediente | null>(null);
@@ -171,10 +189,10 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   }, [tabSource, search]);
 
   const tabs: TabPillOption[] = useMemo(() => [
-    { id: 'pendentes', label: 'Pendentes' }, // O foco principal fica listado primeiro
-    { id: 'baixados', label: 'Baixados' },
-    { id: 'todos', label: 'Todos' },
-  ], []);
+    { id: 'pendentes', label: 'Pendentes', count: globalCounts.pendentes },
+    { id: 'baixados', label: 'Baixados', count: globalCounts.baixados },
+    { id: 'todos', label: 'Todos', count: globalCounts.todos },
+  ], [globalCounts]);
 
   // ─── Navigation ──────────────────────────────────────────────────────────────
 
@@ -205,8 +223,8 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
 
   // ─── Insight banners ─────────────────────────────────────────────────────────
 
-  const showVencidosBanner = vencidos.length > 0;
-  const showSemResponsavelBanner = semResponsavel.length > 3 && !showVencidosBanner;
+  const showVencidosBanner = vencidos.length > 0 && activeTab !== 'baixados';
+  const showSemResponsavelBanner = semResponsavel.length > 3 && !showVencidosBanner && activeTab !== 'baixados';
 
   // ─── Detail/action handlers ──────────────────────────────────────────────────
 
@@ -263,7 +281,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       </div>
 
       {/* 2. KPI Strip */}
-      {!isLoading && (
+      {!isLoading && activeTab !== 'baixados' && (
         <ExpedientesPulseStrip
           vencidos={vencidos.length}
           hoje={hoje.length}
