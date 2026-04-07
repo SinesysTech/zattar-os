@@ -519,9 +519,9 @@ const treemapSegmentos = [
   { label: 'Pessoal',    value: 18500, color: 'var(--primary)' },
   { label: 'Aluguel',    value:  6200, color: 'var(--warning)' },
   { label: 'Serviços',   value:  4100, color: 'var(--success)' },
-  { label: 'Tributário', value:  2800, color: 'hsl(var(--info, var(--primary)))' },
+  { label: 'Tributário', value:  2800, color: 'var(--info, var(--primary))' },
   { label: 'Marketing',  value:  1800, color: 'var(--chart-2)' },
-  { label: 'Outros',     value:   600, color: 'hsl(var(--muted-foreground) / 0.4)' },
+  { label: 'Outros',     value:   600, color: 'oklch(from var(--muted-foreground) l c h / 0.4)' },
 ];
 
 export function WidgetDespesasTreemap() {

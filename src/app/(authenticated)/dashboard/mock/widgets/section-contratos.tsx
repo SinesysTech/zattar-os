@@ -38,7 +38,7 @@ const STATUS_CONTRATOS = [
   { value: 5,  color: 'hsl(220 70% 60%)',              label: 'Em Contratação' },
   { value: 18, color: 'var(--primary)',            label: 'Contratado' },
   { value: 42, color: 'hsl(142 60% 45%)',              label: 'Distribuído' },
-  { value: 3,  color: 'hsl(var(--destructive) / 0.7)', label: 'Desistência' },
+  { value: 3,  color: 'oklch(from var(--destructive) l c h / 0.7)', label: 'Desistência' },
 ];
 
 // Widget 2 — Contratos por Tipo
@@ -161,10 +161,10 @@ const SAUDE_COMPARACOES = [
 
 // Widget 8 — Obrigações Treemap
 const TREEMAP_OBRIGACOES = [
-  { value: 245000, label: 'Acordos Trabalhistas', color: 'hsl(var(--primary) / 0.70)'     },
-  { value: 180000, label: 'Condenações',          color: 'hsl(var(--destructive) / 0.65)' },
-  { value: 42000,  label: 'Custas Processuais',   color: 'hsl(var(--warning) / 0.65)'     },
-  { value: 28000,  label: 'Honorários Periciais', color: 'hsl(var(--primary) / 0.35)'     },
+  { value: 245000, label: 'Acordos Trabalhistas', color: 'oklch(from var(--primary) l c h / 0.70)'     },
+  { value: 180000, label: 'Condenações',          color: 'oklch(from var(--destructive) l c h / 0.65)' },
+  { value: 42000,  label: 'Custas Processuais',   color: 'oklch(from var(--warning) l c h / 0.65)'     },
+  { value: 28000,  label: 'Honorários Periciais', color: 'oklch(from var(--primary) l c h / 0.35)'     },
 ];
 const TREEMAP_TOTAL = TREEMAP_OBRIGACOES.reduce((a, s) => a + s.value, 0);
 

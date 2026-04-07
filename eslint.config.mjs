@@ -186,16 +186,28 @@ const eslintConfig = defineConfig([
   },
   // Governança do Design System (Tokens de Cor):
   // Bloqueia padrões que ignoram os tokens semânticos definidos em globals.css.
-  // Exclusões legítimas: color pickers (font-color-toolbar-button), cursores
-  // colaborativos (yjs-kit), syntax highlighting (code-block-node, equation-node),
-  // configuração do design system (globals.css, theme files), configs (tailwind).
+  //
+  // Exclusões legítimas (com justificativa):
+  //   - editor/**: color pickers, syntax highlighting, equation editor — cores
+  //     são DOMÍNIO desses componentes, não decoração
+  //   - charts/**: wrappers Recharts que recebem cores via props (var(--chart-*))
+  //   - lib/domain/tags/domain.ts: SINGLE SOURCE OF TRUTH dos hex de tags
+  //     (banco armazena hex, este arquivo é a tabela de mapeamento canônica)
+  //   - **/mock/**: dados de mock/seed para playgrounds visuais — não vão
+  //     pra produção, mas precisam de cores literais para visualização
+  //   - (dev)/library/**: páginas de documentação que MOSTRAM os tokens
+  //     visualmente, podem precisar de literals para demos
+  //   - testes: fixtures
   {
     files: ["src/**/*.{ts,tsx,js,jsx}"],
     ignores: [
       "src/components/editor/**",
       "src/components/ui/chart.tsx",
       "src/components/ui/charts/**",
+      "src/lib/domain/tags/domain.ts",
       "src/app/globals.css",
+      "**/mock/**",
+      "**/mocks/**",
       "**/*.test.{ts,tsx}",
       "**/*.spec.{ts,tsx}",
       "src/app/(dev)/**",

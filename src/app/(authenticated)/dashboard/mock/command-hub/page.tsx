@@ -302,7 +302,7 @@ function CommandHub({
                         size-8 rounded-lg flex items-center justify-center shrink-0
                         transition-all duration-200
                         ${isActive
-                          ? 'bg-primary/15 text-primary shadow-[0_0_12px_hsl(var(--primary)/0.15)]'
+                          ? 'bg-primary/15 text-primary shadow-[0_0_12px_oklch(from var(--primary) l c h / 0.15)]'
                           : 'bg-muted/30 text-muted-foreground/60 group-hover:text-foreground/80'
                         }
                       `}>

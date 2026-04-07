@@ -173,7 +173,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Resumo operacional com total, ativos, novos e resolvidos no mês, taxa de resolução e tendência.',
     module: 'processos',
     permission: PERM.processos,
-    size: 'sm',
+    size: 'xs',
     defaultEnabled: false,
     component: WidgetKpiPulse,
   },

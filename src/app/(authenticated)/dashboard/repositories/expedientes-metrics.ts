@@ -270,7 +270,7 @@ export async function buscarExpedientesDetalhados(
   const ORIGEM_COLORS: Record<string, string> = {
     'Captura PJE': 'hsl(217 91% 60%)',
     'Comunica CNJ': 'hsl(35 95% 58%)',
-    'Manual': 'hsl(var(--muted-foreground) / 0.55)',
+    'Manual': 'oklch(from var(--muted-foreground) l c h / 0.55)',
   };
   const origemMap = new Map<string, number>();
   expedientes.forEach((e) => {

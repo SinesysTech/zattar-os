@@ -26,8 +26,10 @@ const badgeVariants = cva(
         accent: "",
       },
     },
+    // Compound variants — TODAS as classes usam tokens semânticos do design system.
+    // Light/dark mode são tratados automaticamente pelos tokens em globals.css.
     compoundVariants: [
-      // Soft (secondary style without outline)
+      // ─── Soft (low intensity) ────────────────────────────────────────────
       {
         tone: "soft",
         variant: "default",
@@ -41,35 +43,35 @@ const badgeVariants = cva(
       {
         tone: "soft",
         variant: "success",
-        className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
+        className: "bg-success/15 text-success",
       },
       {
         tone: "soft",
         variant: "info",
-        className: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
+        className: "bg-info/15 text-info",
       },
       {
         tone: "soft",
         variant: "warning",
-        className: "bg-orange-500/15 text-orange-700 dark:text-orange-400",
+        className: "bg-warning/15 text-warning",
       },
       {
         tone: "soft",
         variant: "destructive",
-        className: "bg-red-500/15 text-red-700 dark:text-red-400",
+        className: "bg-destructive/15 text-destructive",
       },
       {
         tone: "soft",
         variant: "neutral",
-        className: "bg-zinc-500/10 text-zinc-700 dark:text-zinc-300",
+        className: "bg-muted/60 text-muted-foreground",
       },
       {
         tone: "soft",
         variant: "accent",
-        className: "bg-violet-500/15 text-violet-700 dark:text-violet-400",
+        className: "bg-accent text-accent-foreground",
       },
 
-      // Solid (for primary states)
+      // ─── Solid (high intensity) ──────────────────────────────────────────
       {
         tone: "solid",
         variant: "default",
@@ -83,32 +85,32 @@ const badgeVariants = cva(
       {
         tone: "solid",
         variant: "success",
-        className: "bg-emerald-600 text-white dark:bg-emerald-500",
+        className: "bg-success text-success-foreground",
       },
       {
         tone: "solid",
         variant: "info",
-        className: "bg-sky-600 text-white dark:bg-sky-500",
+        className: "bg-info text-info-foreground",
       },
       {
         tone: "solid",
         variant: "warning",
-        className: "bg-orange-600 text-white dark:bg-orange-500",
+        className: "bg-warning text-warning-foreground",
       },
       {
         tone: "solid",
         variant: "destructive",
-        className: "bg-red-600 text-white dark:bg-red-500",
+        className: "bg-destructive text-destructive-foreground",
       },
       {
         tone: "solid",
         variant: "neutral",
-        className: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-zinc-900",
+        className: "bg-foreground text-background",
       },
       {
         tone: "solid",
         variant: "accent",
-        className: "bg-violet-600 text-white dark:bg-violet-500",
+        className: "bg-accent text-accent-foreground",
       },
     ],
     defaultVariants: {
