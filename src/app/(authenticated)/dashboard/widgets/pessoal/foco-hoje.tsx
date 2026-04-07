@@ -200,14 +200,16 @@ export function WidgetFocoHoje() {
                   {acao.partes}
                 </p>
               )}
+              {acao.numeroProcesso && (
+                <p className="text-[9px] text-muted-foreground/80 mt-0.5 break-all leading-relaxed">
+                  {acao.numeroProcesso}
+                </p>
+              )}
               {acao.contextoProcesso && (
                 <p className="text-[9px] text-foreground/55 mt-0.5 leading-tight">
                   {acao.contextoProcesso}
                 </p>
               )}
-              <p className="text-[9px] text-muted-foreground/50 font-mono mt-0.5 break-all leading-relaxed">
-                {acao.numeroProcesso}
-              </p>
               <p className="text-[9px] text-muted-foreground/45 mt-0.5">
                 {acao.razao}
               </p>
@@ -226,9 +228,6 @@ export function WidgetFocoHoje() {
         ))}
       </div>
 
-      <InsightBanner type="info">
-        Baseado em seus prazos, audiências e expedientes pendentes de hoje.
-      </InsightBanner>
     </WidgetContainer>
   );
 }
