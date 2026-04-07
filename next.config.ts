@@ -312,10 +312,6 @@ const nextConfig: NextConfig = {
         destination: "/website/insights/:slug",
       },
       {
-        source: "/servicos",
-        destination: "/website/servicos",
-      },
-      {
         source: "/solucoes",
         destination: "/website/solucoes",
       },
