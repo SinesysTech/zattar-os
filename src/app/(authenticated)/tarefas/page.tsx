@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default async function TaskPage() {
   const user = await getCurrentUser();
   if (!user) {
-    return <div className="p-6">Você precisa estar autenticado.</div>;
+    return <div className="py-6">Você precisa estar autenticado.</div>;
   }
 
   const isSuperAdmin = user.roles.includes("admin");
@@ -21,7 +21,7 @@ export default async function TaskPage() {
   // Buscar tarefas + eventos virtuais
   const result = await tarefasService.listarTarefasComEventos(user.id, isSuperAdmin);
   if (!result.success) {
-    return <div className="p-6">Erro ao carregar tarefas: {result.error.message}</div>;
+    return <div className="py-6">Erro ao carregar tarefas: {result.error.message}</div>;
   }
 
   // Buscar quadros

@@ -121,8 +121,8 @@ export async function obterDashboardUsuario(
       checkPermission(usuarioId, 'contratos', 'read'),
     ]);
 
-  // Buscar apenas dados permitidos em paralelo
-  const promises: Promise<unknown>[] = [];
+  // Buscar apenas dados permitidos com processo em lotes para evitar pool/connection exhaustion (fetch failed)
+  const fetchTasks: (() => Promise<unknown>)[] = [];
   const indices: {
     processos?: number;
     audiencias?: number;
@@ -143,93 +143,100 @@ export async function obterDashboardUsuario(
   // Processos
   if (podeVerProcessos) {
     indices.processos = currentIndex++;
-    promises.push(buscarProcessosResumo(usuarioId));
+    fetchTasks.push(() => buscarProcessosResumo(usuarioId));
   } else {
-    promises.push(Promise.resolve(PROCESSOS_RESUMO_PADRAO));
+    fetchTasks.push(() => Promise.resolve(PROCESSOS_RESUMO_PADRAO));
     indices.processos = currentIndex++;
   }
 
   // Audiências
   if (podeVerAudiencias) {
     indices.audiencias = currentIndex++;
-    promises.push(buscarAudienciasResumo(usuarioId));
+    fetchTasks.push(() => buscarAudienciasResumo(usuarioId));
   } else {
-    promises.push(Promise.resolve(AUDIENCIAS_RESUMO_PADRAO));
+    fetchTasks.push(() => Promise.resolve(AUDIENCIAS_RESUMO_PADRAO));
     indices.audiencias = currentIndex++;
   }
 
   // Expedientes
   if (podeVerExpedientes) {
     indices.expedientes = currentIndex++;
-    promises.push(buscarExpedientesResumo(usuarioId));
+    fetchTasks.push(() => buscarExpedientesResumo(usuarioId));
   } else {
-    promises.push(Promise.resolve(EXPEDIENTES_RESUMO_PADRAO));
+    fetchTasks.push(() => Promise.resolve(EXPEDIENTES_RESUMO_PADRAO));
     indices.expedientes = currentIndex++;
   }
 
   // Próximas audiências (requer permissão de audiências)
   if (podeVerAudiencias) {
     indices.proximasAudiencias = currentIndex++;
-    promises.push(buscarProximasAudiencias(usuarioId, 5));
+    fetchTasks.push(() => buscarProximasAudiencias(usuarioId, 5));
   } else {
-    promises.push(Promise.resolve([]));
+    fetchTasks.push(() => Promise.resolve([]));
     indices.proximasAudiencias = currentIndex++;
   }
 
   // Expedientes urgentes (requer permissão de expedientes)
   if (podeVerExpedientes) {
     indices.expedientesUrgentes = currentIndex++;
-    promises.push(buscarExpedientesUrgentes(usuarioId, 5));
+    fetchTasks.push(() => buscarExpedientesUrgentes(usuarioId, 5));
   } else {
-    promises.push(Promise.resolve([]));
+    fetchTasks.push(() => Promise.resolve([]));
     indices.expedientesUrgentes = currentIndex++;
   }
 
   // Produtividade (requer permissão de processos)
   if (podeVerProcessos) {
     indices.produtividade = currentIndex++;
-    promises.push(buscarProdutividadeUsuario(usuarioId));
+    fetchTasks.push(() => buscarProdutividadeUsuario(usuarioId));
   } else {
-    promises.push(Promise.resolve(PRODUTIVIDADE_RESUMO_PADRAO));
+    fetchTasks.push(() => Promise.resolve(PRODUTIVIDADE_RESUMO_PADRAO));
     indices.produtividade = currentIndex++;
   }
 
   // Dados financeiros
   if (podeVerFinanceiro) {
     indices.dadosFinanceiros = currentIndex++;
-    promises.push(buscarDadosFinanceirosConsolidados(usuarioId));
+    fetchTasks.push(() => buscarDadosFinanceirosConsolidados(usuarioId));
   } else {
-    promises.push(Promise.resolve(DADOS_FINANCEIROS_PADRAO));
+    fetchTasks.push(() => Promise.resolve(DADOS_FINANCEIROS_PADRAO));
     indices.dadosFinanceiros = currentIndex++;
   }
 
   // Métricas detalhadas para widgets secundários
   if (podeVerProcessos) {
     indices.processosDetalhados = currentIndex++;
-    promises.push(buscarProcessosDetalhados(usuarioId));
+    fetchTasks.push(() => buscarProcessosDetalhados(usuarioId));
   }
 
   if (podeVerAudiencias) {
     indices.audienciasDetalhadas = currentIndex++;
-    promises.push(buscarAudienciasDetalhadas(usuarioId));
+    fetchTasks.push(() => buscarAudienciasDetalhadas(usuarioId));
   }
 
   if (podeVerExpedientes) {
     indices.expedientesDetalhados = currentIndex++;
-    promises.push(buscarExpedientesDetalhados(usuarioId));
+    fetchTasks.push(() => buscarExpedientesDetalhados(usuarioId));
   }
 
   if (podeVerFinanceiro) {
     indices.financeiroDetalhado = currentIndex++;
-    promises.push(buscarFinanceiroDetalhado(usuarioId));
+    fetchTasks.push(() => buscarFinanceiroDetalhado(usuarioId));
   }
 
   if (podeVerContratos) {
     indices.contratos = currentIndex++;
-    promises.push(buscarContratosResumo());
+    fetchTasks.push(() => buscarContratosResumo());
   }
 
-  const results = await Promise.all(promises);
+  // Processar em lotes (4 tasks concorrentes) para evitar `fetch failed`
+  const results: unknown[] = [];
+  const BATCH_SIZE = 4;
+  for (let i = 0; i < fetchTasks.length; i += BATCH_SIZE) {
+    const batch = fetchTasks.slice(i, i + BATCH_SIZE).map(fn => fn());
+    const batchResults = await Promise.all(batch);
+    results.push(...batchResults);
+  }
 
   // Mesclar dados detalhados nos resumos
   const processos = results[indices.processos!] as ProcessoResumo;
@@ -344,35 +351,38 @@ export async function obterDashboardAdmin(
     ? buscarUsuario(usuarioId)
     : Promise.resolve({ id: 0, nome: 'Administrador' });
 
-  // Buscar todos os dados em paralelo
-  const [
-    usuario,
-    metricas,
-    cargaUsuarios,
-    statusCapturas,
-    performanceAdvogados,
-    proximasAudiencias,
-    expedientesUrgentes,
-    dadosFinanceiros,
-    processosDetalhados,
-    audienciasDetalhadas,
-    expedientesDetalhados,
-    financeiroDetalhado,
-    contratos,
-  ] = await Promise.all([
-    usuarioPromise,
+  // Separar em lotes (batches) menores para não esgotar as conexões 
+  // do node/fetch (Evita "TypeError: fetch failed" e pool starvation)
+
+  // 1. Dados básicos
+  const usuario = await usuarioPromise;
+
+  // 2. Resumos 1
+  const [metricas, cargaUsuarios, statusCapturas, contratos] = await Promise.all([
     buscarMetricasEscritorio(),
     buscarCargaUsuarios(),
     buscarStatusCapturas(),
+    buscarContratosResumo(),
+  ]);
+
+  // 3. Resumos 2
+  const [performanceAdvogados, proximasAudiencias, expedientesUrgentes] = await Promise.all([
     buscarPerformanceAdvogados(),
     buscarProximasAudiencias(undefined, 5),
     buscarExpedientesUrgentes(undefined, 5),
-    buscarDadosFinanceirosConsolidados(),
+  ]);
+
+  // 4. Detalhados pesados
+  const [processosDetalhados, audienciasDetalhadas, expedientesDetalhados] = await Promise.all([
     buscarProcessosDetalhados(),
     buscarAudienciasDetalhadas(),
     buscarExpedientesDetalhados(),
+  ]);
+
+  // 5. Financeiro
+  const [dadosFinanceiros, financeiroDetalhado] = await Promise.all([
+    buscarDadosFinanceirosConsolidados(),
     buscarFinanceiroDetalhado(),
-    buscarContratosResumo(),
   ]);
 
   // Mesclar dados detalhados no financeiro

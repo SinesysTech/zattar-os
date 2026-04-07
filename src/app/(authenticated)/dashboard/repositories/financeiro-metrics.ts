@@ -53,7 +53,8 @@ export async function buscarDadosFinanceirosConsolidados(
       alertas,
     };
   } catch (error) {
-    console.error('Erro ao buscar dados financeiros consolidados:', error);
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('Erro ao buscar dados financeiros consolidados:', msg);
     // Retornar dados zerados em caso de erro
     return {
       saldoTotal: 0,
