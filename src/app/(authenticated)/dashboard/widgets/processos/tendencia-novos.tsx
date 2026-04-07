@@ -14,7 +14,7 @@ import {
   fmtNum,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { useDashboard, isDashboardUsuario, isDashboardAdmin } from '../../hooks';
+import { useDashboard, isDashboardUsuario } from '../../hooks';
 
 export function WidgetTendenciaNovos() {
   const { data, isLoading } = useDashboard();

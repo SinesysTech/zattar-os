@@ -32,7 +32,7 @@ export interface PericiasKpiStripProps {
 
 export function PericiasKpiStrip({ pericias, className }: PericiasKpiStripProps) {
   const stats = useMemo(() => {
-    let totalDepositados = 0;
+
     let totalPendentes = 0;
     let winCount = 0;
     let prazosCriticos = 0;
@@ -45,9 +45,8 @@ export function PericiasKpiStrip({ pericias, className }: PericiasKpiStripProps)
       
       if (insights.missingDeposit) {
         totalPendentes += insights.honorariosVal;
-      } else {
-        totalDepositados += insights.honorariosVal;
       }
+
       if (insights.winRate > 60) winCount++;
       if (p.prazoEntrega && new Date(p.prazoEntrega) <= noPrazos) {
         prazosCriticos++;

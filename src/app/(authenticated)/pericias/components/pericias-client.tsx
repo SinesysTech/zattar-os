@@ -22,11 +22,11 @@ import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-t
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
-import { StatusAudiencia } from '@/app/(authenticated)/audiencias'; // Reusable concepts when possible
+// Reusable concepts when possible
 import { usePericias } from '../hooks/use-pericias';
 import { SituacaoPericiaCodigo, type Pericia } from '../domain';
 
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+// eslint-disable-next-line no-restricted-imports
 import { Badge } from '@/components/ui/badge';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
@@ -151,7 +151,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
 
   // Derived Metrics
   const metrics = useMemo(() => {
-    let totalDepositados = 0;
+
     let totalPendentes = 0;
     let winCount = 0;
     let prazosCriticos = 0;
@@ -164,8 +164,6 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
       const val = parseInt(insights.honorarios.replace(/\D/g, '')) / 100;
       if (insights.missingDeposit) {
         totalPendentes += val;
-      } else {
-        totalDepositados += val;
       }
       if (insights.winRate > 60) winCount++;
       if (p.prazoEntrega && new Date(p.prazoEntrega) <= noPrazos) {

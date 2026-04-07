@@ -13,7 +13,7 @@ import {
   StackedBar,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { useDashboard, isDashboardUsuario, isDashboardAdmin } from '../../hooks';
+import { useDashboard, isDashboardUsuario } from '../../hooks';
 
 export function WidgetSegmento() {
   const { data, isLoading } = useDashboard();

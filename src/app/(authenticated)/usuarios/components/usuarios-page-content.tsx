@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PageShell } from '@/components/shared/page-shell';
-import { Typography, Heading } from '@/components/ui/typography';
+import { Heading } from '@/components/ui/typography';
 import { FilterPopover } from '@/app/(authenticated)/partes';
 
 import {

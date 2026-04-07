@@ -39,7 +39,7 @@ const bentoArticles: BentoArticle[] = [
   {
     title: "O Impacto da IA na Redação de Petições Iniciais",
     tag: "IA Jurídica",
-    tagColor: "bg-violet-500/10 text-violet-400 border-violet-500/20",
+    tagColor: "bg-portal-primary-soft text-portal-primary border-portal-primary/20",
     description:
       "Como os modelos de linguagem estão redefinindo a rotina dos escritórios de advocacia e quais são os riscos éticos e processuais envolvidos.",
     href: "/portal/insights/ia-peticoes",
@@ -56,7 +56,7 @@ const bentoArticles: BentoArticle[] = [
   {
     title: "Reforma Trabalhista: 7 Anos de Impactos Práticos",
     tag: "Legislação",
-    tagColor: "bg-sky-500/10 text-sky-400 border-sky-500/20",
+    tagColor: "bg-portal-info-soft text-portal-info border-portal-info/20",
     href: "/portal/insights/reforma-trabalhista-7anos",
     colSpan: "col-span-12 lg:col-span-4",
   },

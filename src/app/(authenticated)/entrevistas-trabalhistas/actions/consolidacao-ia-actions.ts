@@ -77,7 +77,7 @@ export async function consolidarEntrevistaIAAction(
           : JSON.stringify(outputs, null, 2);
 
         const inconsistencias = Array.isArray(outputs.inconsistencias)
-          ? outputs.inconsistencias.map((item: any) => String(item))
+          ? outputs.inconsistencias.map((item: unknown) => String(item))
           : [];
 
         return {

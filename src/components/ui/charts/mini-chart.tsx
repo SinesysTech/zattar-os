@@ -38,25 +38,25 @@ import { cn } from '@/lib/utils';
 import { ClientOnly } from '@/components/shared/client-only';
 import { SafeResponsiveContainer } from '@/hooks/use-chart-ready';
 
-// Cores padrão para gráficos
+// Cores padrão para gráficos — todas vinculadas a tokens semânticos do design system.
+// IMPORTANTE: usar var(--token) direto. NUNCA hsl(var(--token)) — globals.css usa OKLCH.
 export const CHART_COLORS = {
-  primary: 'hsl(var(--primary))',
-  success: '#22c55e',
-  warning: '#f59e0b',
-  danger: '#ef4444',
-  info: '#3b82f6',
-  muted: 'hsl(var(--muted-foreground))',
+  primary: 'var(--primary)',
+  success: 'var(--success)',
+  warning: 'var(--warning)',
+  danger: 'var(--destructive)',
+  info: 'var(--info)',
+  muted: 'var(--muted-foreground)',
 };
 
+// Paleta sequencial baseada em --chart-1..5 (definidos em globals.css).
+// Light/Dark mode automáticos via CSS variables.
 export const CHART_PALETTE = [
-  '#3b82f6', // blue
-  '#22c55e', // green
-  '#f59e0b', // amber
-  '#ef4444', // red
-  '#8b5cf6', // violet
-  '#ec4899', // pink
-  '#14b8a6', // teal
-  '#f97316', // orange
+  'var(--chart-1)',
+  'var(--chart-2)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-5)',
 ];
 
 interface ChartDataPoint {
@@ -101,18 +101,18 @@ export function MiniLineChart({
                 dataKey="name"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
               />
             )}
             {showTooltip && (
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'hsl(var(--background))',
-                  border: '1px solid hsl(var(--border))',
+                  backgroundColor: 'var(--background)',
+                  border: '1px solid var(--border)',
                   borderRadius: '6px',
                   fontSize: '12px',
                 }}
-                labelStyle={{ color: 'hsl(var(--foreground))' }}
+                labelStyle={{ color: 'var(--foreground)' }}
               />
             )}
             <Line
@@ -177,18 +177,18 @@ export function MiniAreaChart({
                 dataKey="name"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
               />
             )}
             {showTooltip && (
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'hsl(var(--background))',
-                  border: '1px solid hsl(var(--border))',
+                  backgroundColor: 'var(--background)',
+                  border: '1px solid var(--border)',
                   borderRadius: '6px',
                   fontSize: '12px',
                 }}
-                labelStyle={{ color: 'hsl(var(--foreground))' }}
+                labelStyle={{ color: 'var(--foreground)' }}
               />
             )}
             <Area
@@ -255,7 +255,7 @@ export function MiniBarChart({
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                  tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
                   width={55}
                 />
               </>
@@ -266,14 +266,14 @@ export function MiniBarChart({
                     dataKey="name"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                    tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
                   />
                 )}
                 {showYAxis && (
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                    tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
                   />
                 )}
               </>
@@ -281,13 +281,13 @@ export function MiniBarChart({
             {showTooltip && (
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'hsl(var(--background))',
-                  border: '1px solid hsl(var(--border))',
+                  backgroundColor: 'var(--background)',
+                  border: '1px solid var(--border)',
                   borderRadius: '6px',
                   fontSize: '12px',
                 }}
-                labelStyle={{ color: 'hsl(var(--foreground))' }}
-                cursor={{ fill: 'hsl(var(--muted))', opacity: 0.5 }}
+                labelStyle={{ color: 'var(--foreground)' }}
+                cursor={{ fill: 'var(--muted)', opacity: 0.5 }}
               />
             )}
             <Bar dataKey={dataKey} fill={color} radius={[4, 4, 0, 0]} maxBarSize={40} />
@@ -329,8 +329,8 @@ export function MiniPieChart({
             {showTooltip && (
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'hsl(var(--background))',
-                  border: '1px solid hsl(var(--border))',
+                  backgroundColor: 'var(--background)',
+                  border: '1px solid var(--border)',
                   borderRadius: '6px',
                   fontSize: '12px',
                 }}
@@ -389,8 +389,8 @@ export function MiniDonutChart({
             {showTooltip && (
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'hsl(var(--background))',
-                  border: '1px solid hsl(var(--border))',
+                  backgroundColor: 'var(--background)',
+                  border: '1px solid var(--border)',
                   borderRadius: '6px',
                   fontSize: '12px',
                 }}

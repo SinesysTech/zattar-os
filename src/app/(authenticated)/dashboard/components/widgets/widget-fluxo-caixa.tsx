@@ -3,7 +3,7 @@
 import { Bar, BarChart, Tooltip, XAxis, YAxis } from 'recharts';
 import Link from 'next/link';
 import { TrendingUp } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { GlassPanel } from '@/components/shared/glass-panel';

@@ -10,7 +10,7 @@ import {
   ClipboardList, 
   Clock, 
   FileCheck2, 
-  UserSquare2,
+  
   ListTodo
 } from 'lucide-react';
 
@@ -29,10 +29,10 @@ import {
   DetailSheetContent,
   DetailSheetSection,
   DetailSheetInfoRow,
-  DetailSheetSeparator,
+  
   DetailSheetMetaGrid,
   DetailSheetMetaItem,
-  DetailSheetAudit,
+  
   DetailSheetFooter,
 } from '@/components/shared/detail-sheet';
 
@@ -144,7 +144,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
   const { logs, isLoading: loadingLogs } = useAuditLogs('pericias', pericia.id);
 
   const responsavelNome = pericia.responsavel?.nomeExibicao || 'Sem responsável';
-  const responsavelAvatar = (pericia.responsavel as any)?.avatarUrl;
+  const responsavelAvatar = (pericia.responsavel as { avatarUrl?: string })?.avatarUrl;
 
   return (
     <div className="space-y-6 pb-6">

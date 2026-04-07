@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { Fingerprint, ArrowRight, Loader2 } from 'lucide-react'
+import { GlassPanel } from '@/components/shared/glass-panel'
 import { actionLoginPortal } from '../../actions/portal-actions'
 
 function formatCpf(value: string) {
@@ -36,7 +37,7 @@ export function CpfHeroForm() {
   }
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border border-primary/10 bg-surface-container/70 p-8 shadow-2xl backdrop-blur-xl">
+    <GlassPanel depth={3} className="relative w-full overflow-hidden p-8 shadow-2xl">
       <div
         className="absolute top-0 right-0 w-24 h-24 bg-linear-to-bl from-primary/10 to-transparent pointer-events-none"
         aria-hidden="true"
@@ -48,7 +49,7 @@ export function CpfHeroForm() {
             Portal do Cliente
           </h1>
           <p className="mx-auto max-w-sm text-sm leading-6 text-on-surface-variant">
-            Consulte seus processos, documentos e atualizações em um ambiente seguro e direto.
+            Consulte seus processos, documentos e atualizações em um ambiente direto.
           </p>
         </div>
       </div>
@@ -88,7 +89,7 @@ export function CpfHeroForm() {
         {error && (
           <div
             id="portal-cpf-error"
-            className="rounded-xl border border-error/30 bg-error/10 px-4 py-3 text-sm text-red-300"
+            className="rounded-xl border border-error/30 bg-error/10 px-4 py-3 text-sm text-error"
             aria-live="polite"
           >
             {error}
@@ -114,13 +115,10 @@ export function CpfHeroForm() {
         </button>
       </form>
 
-      <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/20 text-xs font-mono text-portal-text-subtle/50 uppercase tracking-wider">
-        <span className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-portal-success animate-pulse" />
-          Criptografia AES-256
-        </span>
-        <span>Portal v2.0</span>
-      </div>
-    </div>
+      <p className="mt-6 pt-4 border-t border-border/20 text-center text-xs leading-5 text-on-surface-variant/70">
+        Use o CPF informado em seu contrato. Em caso de dúvida, fale com o
+        advogado responsável pelo seu processo.
+      </p>
+    </GlassPanel>
   )
 }
