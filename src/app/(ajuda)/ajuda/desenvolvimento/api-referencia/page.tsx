@@ -128,7 +128,7 @@ export default function ApiReferenciaPage() {
           <h1 className="text-3xl font-bold tracking-tight">Referência de API</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Guia completo de todos os endpoints da API REST do Synthropic.
+          Guia completo de todos os endpoints da API REST do ZattarOS.
         </p>
       </div>
 

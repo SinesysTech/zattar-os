@@ -116,7 +116,7 @@ export function CustomMeetingUI({
   return (
     <MeetingErrorBoundary>
       <MeetingThemeProvider>
-        <div className="relative w-full h-full bg-gray-950 overflow-hidden flex flex-col font-sans text-white">
+        <div className="relative w-full h-full bg-[var(--video-bg)] overflow-hidden flex flex-col font-sans text-[var(--video-text)]">
 
           <RecordingConsentDialog
             open={showConsentDialog}
@@ -164,7 +164,7 @@ export function CustomMeetingUI({
 
             {/* Sidebars (Participants / Transcript) */}
             {(effectiveShowParticipants || showTranscript) && (
-              <div className="hidden md:flex flex-col w-80 h-full border-l border-gray-800 bg-gray-900/50 backdrop-blur-sm relative z-20">
+              <div className="hidden md:flex flex-col w-80 h-full border-l border-[var(--video-border)] bg-[var(--video-surface)]/50 backdrop-blur-sm relative z-20">
                 {effectiveShowParticipants && !showTranscript && (
                   <CustomParticipantList
                     isVisible={true}

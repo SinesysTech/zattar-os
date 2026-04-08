@@ -101,7 +101,7 @@ export default function DesenvolvimentoPage() {
           <h1 className="text-3xl font-bold tracking-tight">Desenvolvimento</h1>
         </div>
         <p className="text-muted-foreground text-lg">
-          Documentação técnica para desenvolvedores do Synthropic.
+          Documentação técnica para desenvolvedores do ZattarOS.
         </p>
       </div>
 

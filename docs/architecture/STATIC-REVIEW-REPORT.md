@@ -276,5 +276,5 @@ O tempo estimado dessa validação humana é **~20-30 min de navegação**.
 
 ---
 
-**Data:** Sessão de consolidação do Design System Synthropic.
+**Data:** Sessão de consolidação do Design System do ZattarOS.
 **Validação automática:** `npm run type-check` + `npm run check:architecture` + `npx eslint src/` — todos verdes.

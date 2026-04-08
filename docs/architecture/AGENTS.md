@@ -117,7 +117,7 @@ npm run validate:design-system
 
 ### High-Level Overview
 
-Synthropic is a legal management system (gestão jurídica) using **Feature-Sliced Design (FSD)** with **Domain-Driven Design (DDD)** principles.
+ZattarOS is a legal management system (gestão jurídica) using **Feature-Sliced Design (FSD)** with **Domain-Driven Design (DDD)** principles.
 
 **Stack**: Next.js 16 (App Router), React 19, TypeScript 5, Supabase (PostgreSQL + RLS), Redis, Tailwind CSS 4, shadcn/ui
 

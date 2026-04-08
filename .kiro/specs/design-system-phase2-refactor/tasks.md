@@ -168,19 +168,19 @@ Migração incremental dos 32 módulos restantes para o Design System Synthropic
     - Criar `layout.tsx` com PageShell (page.tsx atualmente renderiza `<ChatLayout>` direto)
     - _Requisitos: 7.1_
 
-  - [-] 9.2 Migrar cores hardcoded de videochamada do módulo chat
+  - [x] 9.2 Migrar cores hardcoded de videochamada do módulo chat
     - Substituir `bg-gray-950`, `bg-gray-900`, `bg-gray-800`, `bg-gray-700`, `bg-gray-600`, `border-gray-800`, `text-gray-300`, `text-gray-400` nos 7+ componentes de videochamada
     - Usar `data-theme="dark"` no wrapper + classes semânticas (`bg-background`, `bg-card`, `bg-muted`, `border-border`, `text-muted-foreground`) OU variáveis `--video-*`
     - Componentes afetados: `meeting-error-boundary.tsx`, `layout-switcher.tsx`, `custom-meeting-ui.tsx`, `video-call-dialog.tsx`, `custom-video-grid.tsx`, `meeting-skeleton.tsx`, `custom-call-controls.tsx`
     - _Requisitos: 7.2, 21.1_
 
-  - [~] 9.3 Migrar tipografia e cores inline do módulo chat
+  - [x] 9.3 Migrar tipografia e cores inline do módulo chat
     - Substituir headings manuais por componentes Typography
     - Remover cores inline restantes de componentes de feature (fora videochamada)
     - Verificar espaçamentos Grid 4px
     - _Requisitos: 7.3, 7.4_
 
-  - [~] 9.4 Padronizar estrutura FSD do módulo chat
+  - [-] 9.4 Padronizar estrutura FSD do módulo chat
     - Mover `components/types.ts` → `domain.ts`
     - Mover `components/useChatStore.ts` → `hooks/` ou `store.ts`
     - Unificar `utils/` (pasta) e `utils.ts` (arquivo)
