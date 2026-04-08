@@ -191,12 +191,46 @@ function MissionItem({
       )}
     >
       <UrgencyDot level={urgencyLevel} />
-      <div className="flex min-w-0 flex-1 items-center gap-3">
-        <div className="min-w-0 flex-1">
-          <p className={cn('truncate text-sm font-medium', isBaixado && 'line-through')}>
+      <div className="flex min-w-0 flex-1 items-start gap-3">
+        <div className="min-w-0 flex-1 space-y-1.5">
+          <p className={cn('text-sm font-medium', isBaixado && 'line-through')}>
             {tipoExpedienteNome || 'Sem tipo'}
           </p>
-          <p className="truncate font-mono text-[11px] text-muted-foreground/55">{expediente.numeroProcesso}</p>
+
+          {/* Resumo (descrição IA) — só renderiza se houver */}
+          {expediente.descricaoArquivos && (
+            <p className="text-[12px] leading-relaxed text-foreground/85 whitespace-pre-wrap">
+              {expediente.descricaoArquivos}
+            </p>
+          )}
+
+          {/* Observações — só renderiza se houver */}
+          {expediente.observacoes && (
+            <p className="text-[11px] leading-relaxed text-muted-foreground/75 whitespace-pre-wrap">
+              {expediente.observacoes}
+            </p>
+          )}
+
+          {/* Partes (autora vs ré) */}
+          {(expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || expediente.nomeParteReOrigem || expediente.nomeParteRe) && (
+            <p className="text-[11px] text-foreground/70">
+              <span className="font-medium">{expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || '—'}</span>
+              <span className="mx-1.5 text-muted-foreground/50">vs</span>
+              <span className="font-medium">{expediente.nomeParteReOrigem || expediente.nomeParteRe || '—'}</span>
+            </p>
+          )}
+
+          {/* Número do processo (sem font-mono) */}
+          <p className="text-[11px] text-muted-foreground/65">
+            Nº {expediente.numeroProcesso}
+          </p>
+
+          {/* Órgão jurisdicional */}
+          {(expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador) && (
+            <p className="text-[11px] text-muted-foreground/55">
+              {expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador}
+            </p>
+          )}
         </div>
         <div className="hidden items-center gap-2 sm:flex">
           {expediente.trt && (
