@@ -21,6 +21,7 @@ const config = {
     '/.next/',
     '/src/.*\\.e2e\\.',
   ],
+  modulePathIgnorePatterns: ['<rootDir>/.next/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   // Prevent worker crashes from Radix UI + fast-check property tests
   workerIdleMemoryLimit: '512MB',

@@ -72,7 +72,10 @@ function getDateRange(viewMode: AudienciasViewMode, currentDate: Date) {
     case 'ano': {
       const start = startOfYear(currentDate);
       const end = endOfYear(currentDate);
-      return { start, end, limite: 1000 };
+      // Tenants grandes podem ultrapassar 1000 audiências/ano. Usar o teto do
+      // service (AUDIENCIAS_LIMITE_MAXIMO) garante contadores anuais corretos
+      // e mantém KPIs sincronizados entre as views.
+      return { start, end, limite: 10000 };
     }
     case 'lista': {
       // Lista mostra tudo — sem range de data, paginação server-side

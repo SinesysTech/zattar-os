@@ -25,6 +25,7 @@ import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
 import { useExpedientes } from '../hooks/use-expedientes';
 import { actionListarExpedientes } from '../actions';
 import type { Expediente } from '../domain';
+import { getExpedientePartyNames } from '../domain';
 import { ExpedientesPulseStrip } from './expedientes-pulse-strip';
 import { ExpedientesControlView } from './expedientes-control-view';
 import { ExpedientesListWrapper } from './expedientes-list-wrapper';
@@ -183,11 +184,13 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
     if (!search.trim()) return tabSource;
     const q = search.toLowerCase();
     return tabSource.filter(
-      (e) =>
-        e.numeroProcesso.toLowerCase().includes(q) ||
-        (e.nomeParteAutora?.toLowerCase().includes(q) ?? false) ||
-        (e.nomeParteRe?.toLowerCase().includes(q) ?? false) ||
-        (e.classeJudicial?.toLowerCase().includes(q) ?? false),
+      (e) => {
+        const partes = getExpedientePartyNames(e);
+        return e.numeroProcesso.toLowerCase().includes(q) ||
+        (partes.autora?.toLowerCase().includes(q) ?? false) ||
+        (partes.re?.toLowerCase().includes(q) ?? false) ||
+        (e.classeJudicial?.toLowerCase().includes(q) ?? false);
+      }
     );
   }, [tabSource, search]);
 

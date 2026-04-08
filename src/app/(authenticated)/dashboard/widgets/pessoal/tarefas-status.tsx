@@ -42,7 +42,7 @@ function useTarefasCounts(): { counts: TarefasCounts | null; isLoading: boolean;
           return;
         }
 
-        const tasks = (result.data as { tasks?: Array<{ status: string }> })?.tasks ?? [];
+        const tasks = Array.isArray(result.data) ? result.data as Array<{ status: string }> : [];
         const pendentes = tasks.filter(
           (t) => t.status === 'backlog' || t.status === 'todo'
         ).length;

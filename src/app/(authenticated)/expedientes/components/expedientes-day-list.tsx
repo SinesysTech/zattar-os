@@ -19,7 +19,7 @@ import { AppBadge } from '@/components/ui/app-badge';
 import { EmptyState } from '@/components/shared/empty-state';
 import { GlassPanel } from '@/components/shared/glass-panel';
 
-import type { Expediente } from '../domain';
+import { type Expediente, getExpedientePartyNames } from '../domain';
 
 // =============================================================================
 // TIPOS
@@ -115,6 +115,7 @@ export function ExpedientesDayList({
             <div className="p-3 space-y-2">
               {expedientesDoDia.map((expediente) => {
                 const status = getStatus(expediente);
+                const partes = getExpedientePartyNames(expediente);
 
                 return (
                   <GlassPanel
@@ -148,9 +149,9 @@ export function ExpedientesDayList({
 
                     {/* Terceira linha: partes */}
                     <div className="pt-2 mt-2 border-t border-border/10 text-[11px] text-muted-foreground/55 truncate">
-                      {expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || '-'}
+                      {partes.autora || '-'}
                       {' vs '}
-                      {expediente.nomeParteReOrigem || expediente.nomeParteRe || '-'}
+                      {partes.re || '-'}
                     </div>
                   </GlassPanel>
                 );

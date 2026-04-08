@@ -21,7 +21,8 @@ export type SettingsTab =
   | 'assistentes-ia'
   | 'aparencia'
   | 'prompts-ia'
-  | 'tipos-expedientes';
+  | 'tipos-expedientes'
+  | 'tipos-audiencias';
 
 export interface SettingsNavItem {
   id: SettingsTab;
@@ -105,6 +106,12 @@ export const SETTINGS_NAV_GROUPS: SettingsNavGroup[] = [
         label: 'Tipos de Expedientes',
         icon: FileType,
         description: 'Categorias de expedientes utilizadas na gestão de prazos',
+      },
+      {
+        id: 'tipos-audiencias',
+        label: 'Tipos de Audiências',
+        icon: FileType,
+        description: 'Gerenciamento dos tipos de audiências e suas modalidades',
       },
     ],
   },

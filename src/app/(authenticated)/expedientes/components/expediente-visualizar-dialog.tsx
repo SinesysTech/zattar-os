@@ -8,7 +8,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Calendar, FileText, Users, Building2, Scale, AlertCircle, AlertTriangle } from 'lucide-react';
-import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
+import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS, getExpedientePartyNames } from '../domain';
 import type { Usuario } from '@/app/(authenticated)/usuarios';
 import type { TipoExpediente } from '@/app/(authenticated)/tipos-expedientes';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
@@ -94,6 +94,7 @@ export function ExpedienteVisualizarDialog({
 
   const responsavel = usuarios.find(u => u.id === expediente.responsavelId);
   const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipoExpedienteId);
+  const partes = getExpedientePartyNames(expediente);
 
   const handleAbrirPagina = () => {
     onOpenChange(false);
@@ -232,7 +233,7 @@ export function ExpedienteVisualizarDialog({
         <DetailSheetSection icon={<Users className="h-4 w-4" />} title="Partes Envolvidas">
           <DetailSheetInfoRow label="Parte Autora">
             <span className="text-right">
-              {expediente.nomeParteAutora || '-'}
+              {partes.autora || '-'}
               {(expediente.qtdeParteAutora ?? 0) > 1 && (
                 <span className="text-xs text-muted-foreground block">
                   {expediente.qtdeParteAutora} parte(s)
@@ -242,7 +243,7 @@ export function ExpedienteVisualizarDialog({
           </DetailSheetInfoRow>
           <DetailSheetInfoRow label="Parte Ré">
             <span className="text-right">
-              {expediente.nomeParteRe || '-'}
+              {partes.re || '-'}
               {expediente.qtdeParteRe && expediente.qtdeParteRe > 1 && (
                 <span className="text-xs text-muted-foreground block">
                   {expediente.qtdeParteRe} parte(s)

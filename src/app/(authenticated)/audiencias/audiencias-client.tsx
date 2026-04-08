@@ -19,22 +19,21 @@ import {
   Calendar,
   List,
   Sparkles,
-  Settings,
+  Plus,
 } from 'lucide-react';
 import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+
+
 import {
   StatusAudiencia,
   calcPrepItems,
   calcPrepScore,
   MissionKpiStrip,
   AudienciaDetailSheet,
-  TiposAudienciasList,
+  NovaAudienciaDialog,
   AudienciasSemanaView,
   AudienciasMesView,
   AudienciasAnoView,
@@ -118,7 +117,7 @@ export function AudienciasClient({
   const [currentDate, setCurrentDate] = useState(new Date());
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState('marcada');
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isNovaAudienciaOpen, setIsNovaAudienciaOpen] = useState(false);
 
   // Dialog state
   const [selectedAudiencia, setSelectedAudiencia] = useState<Audiencia | null>(null);
@@ -214,20 +213,14 @@ export function AudienciasClient({
           <Heading level="page">Audiências</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon" aria-label="Configurações"
-                className="h-9 w-9 bg-card"
-                onClick={() => setIsSettingsOpen(true)}
-              >
-                <Settings className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Configurações</TooltipContent>
-          </Tooltip>
+        <div className="relative">
+          <button
+            onClick={() => setIsNovaAudienciaOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
+          >
+            <Plus className="size-3.5" />
+            Nova Audiência
+          </button>
         </div>
       </div>
 
@@ -329,22 +322,12 @@ export function AudienciasClient({
         />
       )}
 
-      {/* ── Settings Dialog ────────────────────────────────── */}
-      <DialogFormShell
-        open={isSettingsOpen}
-        onOpenChange={setIsSettingsOpen}
-        title="Tipos de Audiências"
-        maxWidth="4xl"
-        footer={
-          <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
-            Fechar
-          </Button>
-        }
-      >
-        <div className="flex-1 overflow-auto h-[60vh]">
-          <TiposAudienciasList />
-        </div>
-      </DialogFormShell>
+      {/* ── Nova Audiência Dialog ──────────────────────────── */}
+      <NovaAudienciaDialog
+        open={isNovaAudienciaOpen}
+        onOpenChange={setIsNovaAudienciaOpen}
+        onSuccess={refetch}
+      />
     </div>
   );
 }

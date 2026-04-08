@@ -105,11 +105,11 @@ export interface WidgetDefinition {
 // ─── Permission shortcuts ────────────────────────────────────────────────────
 
 const PERM = {
-  processos:  { recurso: 'processos',              operacao: 'read' },
-  audiencias: { recurso: 'audiencias',             operacao: 'read' },
-  expedientes:{ recurso: 'pendentes',              operacao: 'read' },
-  financeiro: { recurso: 'lancamentos_financeiros', operacao: 'read' },
-  contratos:  { recurso: 'contratos',              operacao: 'read' },
+  processos:  { recurso: 'acervo',              operacao: 'listar' },
+  audiencias: { recurso: 'audiencias',             operacao: 'listar' },
+  expedientes:{ recurso: 'pendentes',              operacao: 'listar' },
+  financeiro: { recurso: 'lancamentos_financeiros', operacao: 'listar' },
+  contratos:  { recurso: 'contratos',              operacao: 'listar' },
   pessoal:    null,
 } as const;
 
@@ -593,7 +593,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Timeline do dia com tarefas, lembretes e audiências ordenados por horário.',
     module: 'pessoal',
     permission: PERM.pessoal,
-    size: 'half',
+    size: 'md',
     defaultEnabled: true,
     component: WidgetMeuDia,
   },
@@ -643,7 +643,7 @@ export const WIDGET_REGISTRY: WidgetDefinition[] = [
     description: 'Lista de lembretes do dia com horário, urgência e próximo lembrete destacado.',
     module: 'pessoal',
     permission: PERM.pessoal,
-    size: 'sm',
+    size: 'md',
     defaultEnabled: true,
     component: WidgetLembretesAtivos,
   },

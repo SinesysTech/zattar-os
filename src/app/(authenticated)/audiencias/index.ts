@@ -45,6 +45,7 @@ export {
   // Forms and dialogs
   AudienciaForm,
   AudienciaDetailSheet,
+  NovaAudienciaDialog,
   // Settings
   TiposAudienciasList,
   // Filters

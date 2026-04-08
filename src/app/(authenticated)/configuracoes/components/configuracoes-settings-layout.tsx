@@ -13,6 +13,7 @@ import { BlockedIpsContent } from '@/app/(authenticated)/admin/security/blocked-
 import { TwoFAuthIntegrationCard, ChatwootIntegrationCard, DyteIntegrationCard, EditorIAIntegrationCard } from '@/lib/integracoes';
 import { PromptsIAContent } from '@/lib/system-prompts';
 import { TiposExpedientesList } from '@/app/(authenticated)/tipos-expedientes';
+import { TiposAudienciasList } from '@/app/(authenticated)/audiencias';
 import { AparenciaContent } from './aparencia-content';
 import { SettingsNav } from './settings-nav';
 import { SettingsMobileNav } from './settings-mobile-nav';
@@ -169,6 +170,8 @@ export function ConfiguracoesSettingsLayout({
           {activeTab === 'prompts-ia' && <PromptsIAContent systemPrompts={systemPrompts} />}
 
           {activeTab === 'tipos-expedientes' && <TiposExpedientesList />}
+
+          {activeTab === 'tipos-audiencias' && <TiposAudienciasList />}
         </div>
       </div>
     </div>
