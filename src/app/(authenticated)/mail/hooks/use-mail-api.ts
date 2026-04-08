@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { useMailStore } from "../use-mail";
+import { useMailStore } from "./use-mail";
 
 /** Adiciona accountId como query param se disponível. */
 function withAccountId(url: string, accountId: number | null): string {

@@ -7,7 +7,7 @@ import {
   type UpdateKanbanOrderInput,
   type ListarTarefasParams,
   converterParaTarefa,
-} from "../domain";
+} from "../../domain";
 import { escapeIlike, validateSortColumn } from "./utils";
 
 const TABLE = "pm_tarefas";

@@ -30,6 +30,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
+import { Typography } from '@/components/ui/typography';
 import { FolderTree } from './folder-tree';
 import { DocumentCard } from './document-card';
 import { DocumentTable } from './document-table';
@@ -40,7 +41,7 @@ import { CommandMenu } from './command-menu';
 import { useDocumentsList } from '../hooks/use-documents-list';
 import { actionListarDocumentos } from '../actions/documentos-actions';
 import { actionListarDocumentosCompartilhados } from '../actions/compartilhamento-actions';
-import type { ListarDocumentosParams } from '../types';
+import type { ListarDocumentosParams } from '../domain';
 
 type FiltroTipo = 'todos' | 'meus' | 'compartilhados' | 'recentes';
 
@@ -147,7 +148,7 @@ export function DocumentList() {
       <div className="w-80 border-r bg-muted/10">
         <div className="flex h-full flex-col">
           <div className="border-b p-4">
-            <h2 className="text-sm font-semibold">Documentos</h2>
+            <Typography.H2 className="text-sm">Documentos</Typography.H2>
           </div>
           <div className="flex-1 overflow-auto p-2">
             <FolderTree
@@ -285,9 +286,9 @@ export function DocumentList() {
             <div className="flex h-full items-center justify-center">
               <div className="text-center">
                 <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
-                <h3 className="mt-4 text-lg font-semibold">
+                <Typography.H3 className="mt-4">
                   Nenhum documento encontrado
-                </h3>
+                </Typography.H3>
                 <p className="mt-2 text-sm text-muted-foreground">
                   {busca
                     ? 'Tente buscar com outros termos'

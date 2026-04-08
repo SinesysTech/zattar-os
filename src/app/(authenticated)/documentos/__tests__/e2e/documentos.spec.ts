@@ -18,7 +18,7 @@ test.describe('Listagem de Documentos', () => {
     await page.goto('/documentos');
 
     // Verificar que a página carregou
-    await expect(page).toHaveTitle(/Documentos|Synthropic/i);
+    await expect(page).toHaveTitle(/Documentos|ZattarOS/i);
 
     // Verificar elementos principais
     await expect(page.getByRole('button', { name: /novo documento/i })).toBeVisible();

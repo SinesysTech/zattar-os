@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ProjectTable } from "../components/projects/project-table";
 import { ProjectCard } from "../components/projects/project-card";
-import type { Projeto } from "../lib/domain";
+import type { Projeto } from "../domain";
 import { Heading } from '@/components/ui/typography';
 
 interface ProjectListViewProps {

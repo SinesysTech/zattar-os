@@ -160,7 +160,7 @@ return 'parte_contraria';
    }
 ```
 
-### Modelo de Dados PJE → Synthropic
+### Modelo de Dados PJE → ZattarOS
 
 #### Parte PJE (API Response)
 ```typescript

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarDocumentos } from '../actions/documentos-actions';
-import type { DocumentoComUsuario, ListarDocumentosParams } from '../types';
+import type { DocumentoComUsuario, ListarDocumentosParams } from '../domain';
 
 export type DocumentFetcher = (params: ListarDocumentosParams) => Promise<{ success: boolean; data?: DocumentoComUsuario[]; total?: number; error?: string }>;
 
@@ -21,9 +21,9 @@ export function useDocumentsList(
       setLoading(true);
       setError(null);
     });
-    
+
     const result = await fetcher(params);
-    
+
     startTransition(() => {
       if (result.success) {
         setDocuments(result.data || []);

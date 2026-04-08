@@ -28,7 +28,7 @@ import {
 import {
   STATUS_PROJETO_LABELS,
   type DistribuicaoPorStatus,
-} from "../../lib/domain";
+} from "../../domain";
 
 interface ChartProjectEfficiencyProps {
   data: DistribuicaoPorStatus[];

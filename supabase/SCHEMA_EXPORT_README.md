@@ -1,8 +1,8 @@
-# Diego Barbosa Advocacia (Synthropic) - Schema Export Documentation
+# Diego Barbosa Advocacia (ZattarOS) - Schema Export Documentation
 
 ## Overview
 
-This directory contains the database schema export for the Zattar Advogados (Synthropic) application.
+This directory contains the database schema export for the Zattar Advogados (ZattarOS) application.
 
 ## Files
 

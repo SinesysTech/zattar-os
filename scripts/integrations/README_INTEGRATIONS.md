@@ -1,6 +1,6 @@
 # Scripts de Integrações
 
-Scripts para gerenciar a migração e configuração de integrações no Synthropic.
+Scripts para gerenciar a migração e configuração de integrações no ZattarOS.
 
 ## 📁 Arquivos
 

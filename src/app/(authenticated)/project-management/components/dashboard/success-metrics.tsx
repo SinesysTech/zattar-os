@@ -18,7 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { MembroAtivo, DashboardSummary } from "../../lib/domain";
+import type { MembroAtivo, DashboardSummary } from "../../domain";
 
 function TrendIndicator({
   value,

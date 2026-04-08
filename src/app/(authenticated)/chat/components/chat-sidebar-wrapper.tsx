@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { ChatItem } from "../domain";
 import { ChatSidebar } from "./chat-sidebar";
-import useChatStore from "./useChatStore";
+import useChatStore from "../hooks/use-chat-store";
 
 interface ChatSidebarWrapperProps {
   salas: ChatItem[];

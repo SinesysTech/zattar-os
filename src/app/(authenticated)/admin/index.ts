@@ -1,12 +1,14 @@
 /**
- * Admin Feature - Barrel Exports
+ * ADMIN MODULE — Barrel Export (API Pública)
+ *
+ * Módulo administrativo com sub-rotas (metricas-db, security, assistentes-tipos).
+ * Observabilidade do banco de dados e gestão de infraestrutura.
  */
 
-// Export actions
-export * from './actions/metricas-actions';
-export * from './actions/upgrade-actions';
+// =============================================================================
+// Types / Domain
+// =============================================================================
 
-// Export types from repositories
 export type {
   CacheHitRate,
   QueryLenta,
@@ -15,7 +17,22 @@ export type {
   IndiceNaoUtilizado,
   MetricasDiskIO,
   DiskIOStatus,
-} from './repositories/metricas-db-repository';
+  DiskIOResultWithTimestamp,
+  MetricasDB,
+} from './domain';
 
-// Re-export MetricasDB from actions
-export type { MetricasDB } from './actions/metricas-actions';
+// =============================================================================
+// Service
+// =============================================================================
+
+export { avaliarNecessidadeUpgrade } from './service';
+
+// =============================================================================
+// Actions
+// =============================================================================
+
+export {
+  actionObterMetricasDB,
+  actionAvaliarUpgrade,
+  actionDocumentarDecisao,
+} from './actions';

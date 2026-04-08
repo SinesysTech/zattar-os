@@ -1,5 +1,5 @@
 /**
- * Endpoint MCP Principal do Synthropic
+ * Endpoint MCP Principal do ZattarOS
  *
  * Implementa comunicação Server-Sent Events (SSE) para o protocolo MCP
  */

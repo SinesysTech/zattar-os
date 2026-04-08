@@ -5,7 +5,7 @@ import {
   type AddMembroInput,
   type PapelProjeto,
   converterParaMembro,
-} from "../domain";
+} from "../../domain";
 
 const TABLE = "pm_membros_projeto";
 

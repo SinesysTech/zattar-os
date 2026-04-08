@@ -18,7 +18,7 @@ import {
 const sections = [
   {
     title: 'Primeiros Passos',
-    description: 'Guia rápido para começar a usar o Synthropic',
+    description: 'Guia rápido para começar a usar o ZattarOS',
     href: '/ajuda/primeiros-passos',
     icon: Rocket,
   },
@@ -57,7 +57,7 @@ export default function AjudaPage() {
           Central de Ajuda
         </h1>
         <p className="text-xl text-muted-foreground">
-          Bem-vindo à documentação do Synthropic. Encontre guias, tutoriais e
+          Bem-vindo à documentação do ZattarOS. Encontre guias, tutoriais e
           referências para aproveitar ao máximo o sistema.
         </p>
       </div>
@@ -89,11 +89,11 @@ export default function AjudaPage() {
       {/* Overview */}
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold tracking-tight">
-          Sobre o Synthropic
+          Sobre o ZattarOS
         </h2>
         <div className="prose prose-neutral dark:prose-invert max-w-none">
           <p>
-            O <strong>Synthropic</strong> é um sistema de gestão jurídica desenvolvido
+            O <strong>ZattarOS</strong> é um sistema de gestão jurídica desenvolvido
             para o escritório Zattar Advogados, com foco em automação de captura de
             dados do PJE (Processo Judicial Eletrônico) dos Tribunais Regionais do
             Trabalho (TRT).

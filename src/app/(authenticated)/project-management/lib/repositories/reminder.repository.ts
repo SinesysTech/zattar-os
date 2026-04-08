@@ -1,6 +1,6 @@
 import { createDbClient } from "@/lib/supabase";
 import { ok, err, appError, type Result } from "@/types/result";
-import { type Lembrete, type CreateLembreteInput, converterParaLembrete } from "../domain";
+import { type Lembrete, type CreateLembreteInput, converterParaLembrete } from "../../domain";
 
 const TABLE = "pm_lembretes";
 

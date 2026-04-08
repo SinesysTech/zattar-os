@@ -9,8 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Heading } from "@/components/ui/typography";
 import { useMailActions } from "../hooks/use-mail-api";
-import { useMailStore } from "../use-mail";
+import { useMailStore } from "../hooks/use-mail";
 import { MailEditor, type MailEditorRef } from "./mail-editor";
 
 export function ComposeMailPanel() {
@@ -94,7 +95,7 @@ export function ComposeMailPanel() {
     <div className="flex h-full flex-col">
       {/* Header */}
       <div className="flex h-13 shrink-0 items-center justify-between px-4">
-        <h2 className="text-sm font-semibold">Novo E-mail</h2>
+        <Heading level="card" className="text-sm">Novo E-mail</Heading>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button

@@ -8,8 +8,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { useMailStore } from "../use-mail";
-import { buildFolderLinks } from "../lib/constants";
+import { useMailStore } from "../hooks/use-mail";
+import { buildFolderLinks } from "../utils/constants";
 
 interface NavDesktopProps {
   isCollapsed: boolean;

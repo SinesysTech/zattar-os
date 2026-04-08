@@ -10,7 +10,7 @@ import { ChevronRight, Folder, FolderOpen, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useFolders } from '../hooks/use-folders';
-import type { PastaHierarquia, PastaComContadores } from '../types';
+import type { PastaHierarquia, PastaComContadores } from '../domain';
 
 interface FolderTreeProps {
   onFolderSelect: (folderId: number | null) => void;
@@ -32,7 +32,7 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
     });
 
     const roots: PastaHierarquia[] = [];
-    
+
     allFolders.forEach(f => {
       const node = map.get(f.id)!;
       if (f.pasta_pai_id && map.has(f.pasta_pai_id)) {

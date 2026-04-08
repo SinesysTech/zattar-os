@@ -20,7 +20,7 @@ import {
   convertInchesToTwip,
   ExternalHyperlink,
 } from 'docx';
-import type { Value } from './types'; // Importando Value do types.ts
+import type { Value } from './domain'; // Importando Value do domain.ts
 
 // ============================================================================
 // TIPOS AUXILIARES PARA NODES DO PLATE.JS
@@ -328,9 +328,9 @@ export async function exportToDocx(
 
     // Criar documento
     const doc = new Document({
-      creator: 'Synthropic',
+      creator: 'ZattarOS',
       title: titulo,
-      description: 'Documento exportado do Synthropic',
+      description: 'Documento exportado do ZattarOS',
       sections: [
         {
           properties: {

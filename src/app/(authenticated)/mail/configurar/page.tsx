@@ -20,6 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Heading } from "@/components/ui/typography";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -199,7 +200,7 @@ export default function ConfigurarEmailPage() {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Configurar E-mail</h1>
+          <Heading level="page">Configurar E-mail</Heading>
           <p className="text-muted-foreground text-sm">
             Conecte sua conta de e-mail do Cloudron
           </p>

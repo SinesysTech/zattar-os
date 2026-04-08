@@ -2,7 +2,7 @@
 
 ## Visão Geral
 
-Este documento descreve o design técnico para a Fase 2 da refatoração de consistência visual do Synthropic/Zattar OS. A Fase 1 migrou com sucesso 6 módulos (partes, processos, contratos, assinatura-digital, audiências, expedientes). A Fase 2 expande para os 32 módulos restantes, organizados em 3 grupos por complexidade.
+Este documento descreve o design técnico para a Fase 2 da refatoração de consistência visual do ZattarOS. A Fase 1 migrou com sucesso 6 módulos (partes, processos, contratos, assinatura-digital, audiências, expedientes). A Fase 2 expande para os 32 módulos restantes, organizados em 3 grupos por complexidade.
 
 A Fase 2 introduz desafios técnicos adicionais não presentes na Fase 1:
 - **oklch() direto** em widgets de gráficos (dashboard, financeiro, agenda) — requer estratégia de paleta de gráficos via variáveis CSS

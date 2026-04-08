@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Typography } from '@/components/ui/typography';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Metadata } from 'next';
@@ -13,12 +14,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   if (!result.success || !result.data) {
     return {
-      title: 'Assistente não encontrado | Synthropic',
+      title: 'Assistente não encontrado | ZattarOS',
     };
   }
 
   return {
-    title: `${result.data.nome} | Assistentes | Synthropic`,
+    title: `${result.data.nome} | Assistentes | ZattarOS`,
     description: result.data.descricao || 'Detalhes do assistente',
   };
 }
@@ -33,7 +34,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
   if (!result.success || !result.data) {
     return (
       <div className="flex flex-col items-center justify-center p-8 space-y-4">
-        <h2 className="text-xl font-semibold text-destructive">Assistente não encontrado</h2>
+        <Typography.H2 className="text-destructive">Assistente não encontrado</Typography.H2>
         <Button asChild variant="outline">
           <Link href="/assistentes">Voltar</Link>
         </Button>
@@ -50,7 +51,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
     if (!difyApp) {
       return (
         <div className="flex flex-col items-center justify-center p-8 space-y-4">
-          <h2 className="text-xl font-semibold text-destructive">App Dify não encontrado</h2>
+          <Typography.H2 className="text-destructive">App Dify não encontrado</Typography.H2>
           <p className="text-sm text-muted-foreground">
             O app Dify vinculado a este assistente foi removido.
           </p>
@@ -70,7 +71,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
                 <ChevronLeft className="h-4 w-4" />
               </Link>
             </Button>
-            <h2 className="text-sm font-medium">{assistente.nome}</h2>
+            <Typography.Small className="font-medium">{assistente.nome}</Typography.Small>
           </div>
           <div className="flex-1 min-h-0">
             <AssistenteNativoView appId={difyApp.id} appType={difyApp.app_type} metadata={difyApp.metadata ?? null} />
@@ -90,7 +91,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
               <ChevronLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <h2 className="text-sm font-medium">{assistente.nome}</h2>
+          <Typography.Small className="font-medium">{assistente.nome}</Typography.Small>
         </div>
         <div className="flex-1 min-h-0">
           <div

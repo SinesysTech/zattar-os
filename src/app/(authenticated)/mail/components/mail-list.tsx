@@ -3,9 +3,9 @@ import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import type { MailMessagePreview } from "@/lib/mail/types";
-import { useMailStore } from "../use-mail";
+import { useMailStore } from "../hooks/use-mail";
 import { useMailMessages, useMailActions } from "../hooks/use-mail-api";
-import { getMailListPreview, getMailPrimaryName } from "../lib/display";
+import { getMailListPreview, getMailPrimaryName } from "../utils/display";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";

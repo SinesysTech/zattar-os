@@ -1,14 +1,13 @@
 import { Suspense } from 'react';
 import { AssistentesListWrapper, actionListarAssistentes, requireAuth } from '@/app/(authenticated)/assistentes/feature';
 import { checkMultiplePermissions } from '@/lib/auth/authorization';
-import { PageShell } from '@/components/shared/page-shell';
 import { listDifyAppsAction } from '@/lib/dify/actions';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export const metadata = {
-  title: 'Assistentes | Synthropic',
+  title: 'Assistentes | ZattarOS',
   description: 'Gerencie os assistentes de IA do sistema.',
 };
 
@@ -47,18 +46,16 @@ export default async function AssistentesPage() {
   }
 
   return (
-    <PageShell>
-      <Suspense fallback={<div>Carregando...</div>}>
-        <AssistentesListWrapper
-          initialData={initialData}
-          difyAppTypes={difyAppTypes}
-          permissions={{
-            canCreate,
-            canEdit,
-            canDelete
-          }}
-        />
-      </Suspense>
-    </PageShell>
+    <Suspense fallback={<div>Carregando...</div>}>
+      <AssistentesListWrapper
+        initialData={initialData}
+        difyAppTypes={difyAppTypes}
+        permissions={{
+          canCreate,
+          canEdit,
+          canDelete
+        }}
+      />
+    </Suspense>
   );
 }

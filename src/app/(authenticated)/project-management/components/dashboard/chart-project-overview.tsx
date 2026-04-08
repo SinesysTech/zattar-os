@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import type { ProjetosPorPeriodo } from "../../lib/domain";
+import type { ProjetosPorPeriodo } from "../../domain";
 
 const chartConfig = {
   projetos: { label: "Projetos" },

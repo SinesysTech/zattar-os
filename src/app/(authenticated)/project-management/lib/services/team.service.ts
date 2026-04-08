@@ -4,7 +4,7 @@ import {
   type AddMembroInput,
   type PapelProjeto,
   addMembroSchema,
-} from "../domain";
+} from "../../domain";
 import * as teamRepo from "../repositories/team.repository";
 
 export async function listarMembros(projetoId: string): Promise<Result<MembroProjeto[]>> {

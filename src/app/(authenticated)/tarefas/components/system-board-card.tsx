@@ -10,9 +10,9 @@ import { SOURCE_LABELS } from "@/lib/event-aggregation/domain";
 import type { SystemBoardEventItem } from "../service";
 
 const PRIORITY_COLORS: Record<string, string> = {
-  high: "border-l-rose-500",
-  medium: "border-l-amber-500",
-  low: "border-l-emerald-500",
+  high: "border-l-destructive",
+  medium: "border-l-warning",
+  low: "border-l-success",
 };
 
 interface SystemBoardCardProps {
@@ -20,16 +20,16 @@ interface SystemBoardCardProps {
 }
 
 export function SystemBoardCard({ event }: SystemBoardCardProps) {
-  const colorClass = PRIORITY_COLORS[event.priority] ?? "border-l-sky-500";
+  const colorClass = PRIORITY_COLORS[event.priority] ?? "border-l-info";
   const sourceLabel = event.source
     ? SOURCE_LABELS[event.source as keyof typeof SOURCE_LABELS]
     : undefined;
 
   const dueDate = event.dueDate
     ? new Date(event.dueDate).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "short",
-      })
+      day: "2-digit",
+      month: "short",
+    })
     : null;
 
   return (

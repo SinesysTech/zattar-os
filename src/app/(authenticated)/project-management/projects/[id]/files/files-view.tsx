@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Heading } from "@/components/ui/typography";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,11 +24,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import type { Anexo, Projeto } from "../../../lib/domain";
+import type { Anexo, Projeto } from "../../../domain";
 import {
   actionUploadAnexo,
   actionExcluirAnexo,
-} from "../../../lib/actions/file.actions";
+} from "../../../actions/file.actions";
 
 interface FilesViewProps {
   projeto: Projeto;
@@ -123,7 +124,7 @@ export function FilesView({
             </Link>
           </Button>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Arquivos</h1>
+            <Heading level="page">Arquivos</Heading>
             <p className="text-muted-foreground text-sm">{projeto.nome}</p>
           </div>
         </div>

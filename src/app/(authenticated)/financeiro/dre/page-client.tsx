@@ -4,7 +4,7 @@
  * Página de DRE (Demonstração de Resultado do Exercício)
  * Visualiza receitas, despesas e resultado por período
  *
- * REFATORADO: Migrado para layout DataShell + DataTableToolbar (padrão Synthropic)
+ * REFATORADO: Migrado para layout DataShell + DataTableToolbar (padrão ZattarOS)
  */
 
 import * as React from 'react';

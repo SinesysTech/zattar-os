@@ -4,7 +4,7 @@ set -e
 STACK_NAME="synthropic"
 COMPOSE_FILE="docker/prod/docker-compose.yml"
 
-echo "Deploying Synthropic to Docker Swarm..."
+echo "Deploying ZattarOS to Docker Swarm..."
 
 # 1. Initialize Swarm if needed
 if ! docker info | grep -q "Swarm: active"; then

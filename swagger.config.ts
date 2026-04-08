@@ -4,9 +4,9 @@ const options: Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Synthropic API',
+      title: 'ZattarOS API',
       version: '1.0.0',
-      description: 'Documentação da API do Synthropic - Sistema de captura de dados do PJE/TRT',
+      description: 'Documentação da API do ZattarOS - Sistema de captura de dados do PJE/TRT',
       contact: {
         name: 'Synthropic',
         email: 'suporte@synthropic.com.br',

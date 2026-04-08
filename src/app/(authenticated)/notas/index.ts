@@ -1,12 +1,34 @@
 /**
- * NOTAS MODULE - Exports
+ * NOTAS MODULE — Barrel Export (API Pública)
  *
  * Re-exporta tipos, schemas, serviços e actions do módulo de notas.
  * Este arquivo é o ponto de entrada para consumidores externos.
  */
 
 // =============================================================================
-// DOMAIN - Tipos, Schemas e Constantes
+// Components
+// =============================================================================
+
+export { default as NotesApp } from './components/note-app';
+
+// =============================================================================
+// Actions
+// =============================================================================
+
+export {
+  actionListarDadosNotas,
+  actionCriarNota,
+  actionAtualizarNota,
+  actionArquivarNota,
+  actionExcluirNota,
+  actionCriarEtiqueta,
+  actionAtualizarEtiqueta,
+  actionExcluirEtiqueta,
+  actionPingNotas,
+} from './actions';
+
+// =============================================================================
+// Types / Domain
 // =============================================================================
 
 export {
@@ -42,7 +64,7 @@ export {
 } from './domain';
 
 // =============================================================================
-// SERVICE - Casos de Uso
+// Service
 // =============================================================================
 
 export {
@@ -57,17 +79,7 @@ export {
 } from './service';
 
 // =============================================================================
-// ACTIONS - Server Actions
+// Utils
 // =============================================================================
 
-export {
-  actionListarDadosNotas,
-  actionCriarNota,
-  actionAtualizarNota,
-  actionArquivarNota,
-  actionExcluirNota,
-  actionCriarEtiqueta,
-  actionAtualizarEtiqueta,
-  actionExcluirEtiqueta,
-  actionPingNotas,
-} from './actions/notas-actions';
+export { AVAILABLE_LABEL_COLORS, normalizeLabelColor } from './label-colors';

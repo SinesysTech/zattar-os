@@ -45,3 +45,25 @@ export function buildUnifiedEventId(source: CalendarSource, sourceEntityId: stri
 export function safeDateToIso(date: Date): string {
   return date.toISOString();
 }
+
+// ============================================================================
+// Legacy Types (consolidated from types.ts)
+// ============================================================================
+
+export type LegacyCalendarView = "month" | "week" | "day" | "agenda";
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  description?: string;
+  start: Date;
+  end: Date;
+  allDay?: boolean;
+  color?: EventColor;
+  location?: string;
+  source?: string;
+  sourceEntityId?: number;
+  responsavelId?: number | null;
+}
+
+export type EventColor = "sky" | "amber" | "violet" | "rose" | "emerald" | "orange";

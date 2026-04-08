@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type DyteClient from '@dytesdk/web-core';
-import { handleCallError } from '../utils/call-error-handler';
+import { handleCallError } from '../utils';
 
 export type VideoEffectType = 'none' | 'blur' | 'image';
 
@@ -46,7 +46,7 @@ export function useVideoEffects(meeting: DyteClient | undefined, options?: UseVi
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSupported, setIsSupported] = useState(true);
-  
+
   const effectStateRef = useRef<VideoEffectState>({
     originalTrack: null,
     processedStream: null,
@@ -72,27 +72,27 @@ export function useVideoEffects(meeting: DyteClient | undefined, options?: UseVi
 
   const cleanupEffect = useCallback(() => {
     const state = effectStateRef.current;
-    
+
     if (state.animationFrame) {
       cancelAnimationFrame(state.animationFrame);
       state.animationFrame = null;
     }
-    
+
     if (state.processedStream) {
       state.processedStream.getTracks().forEach(track => track.stop());
       state.processedStream = null;
     }
-    
+
     if (state.videoElement) {
       state.videoElement.srcObject = null;
       state.videoElement = null;
     }
-    
+
     if (state.canvas) {
       // Canvas cleanup handled by GC
       state.canvas = null;
     }
-    
+
     state.originalTrack = null;
   }, []);
 
@@ -174,7 +174,7 @@ export function useVideoEffects(meeting: DyteClient | undefined, options?: UseVi
     }
 
     setIsProcessing(true);
-    
+
     try {
       // Remove existing effect first
       if (activeEffect !== 'none' && removeEffectRef.current) {
@@ -201,10 +201,10 @@ export function useVideoEffects(meeting: DyteClient | undefined, options?: UseVi
       try {
         const transformerModule = await import('@dytesdk/video-background-transformer');
         // Try different export patterns
-        const DyteVideoBackgroundTransformer = 
+        const DyteVideoBackgroundTransformer =
           (transformerModule as { DyteVideoBackgroundTransformer?: { init: (config: unknown) => Promise<unknown> } }).DyteVideoBackgroundTransformer ||
           (transformerModule as { default?: { init: (config: unknown) => Promise<unknown> } }).default;
-        
+
         if (DyteVideoBackgroundTransformer && typeof DyteVideoBackgroundTransformer.init === 'function') {
           if (effect === 'blur') {
             const transformer = await DyteVideoBackgroundTransformer.init({
@@ -256,7 +256,7 @@ export function useVideoEffects(meeting: DyteClient | undefined, options?: UseVi
 
   const removeEffect = useCallback(async () => {
     if (!meeting?.self) return;
-    
+
     setIsProcessing(true);
     try {
       // Try to remove Dyte middleware first

@@ -6,7 +6,7 @@ import {
   type ListarProjetosParams,
   createProjetoSchema,
   updateProjetoSchema,
-} from "../domain";
+} from "../../domain";
 import * as projectRepo from "../repositories/project.repository";
 import * as teamRepo from "../repositories/team.repository";
 import * as taskRepo from "../repositories/task.repository";

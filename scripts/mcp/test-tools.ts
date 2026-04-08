@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
 /**
- * Suite de Testes Completa - Tools MCP Synthropic
+ * Suite de Testes Completa - Tools MCP ZattarOS
  *
  * Valida todas as 96 tools MCP registradas sistematicamente
  * Testa: parâmetros válidos, validação de schema, autenticação, rate limiting, formato de resposta
@@ -814,7 +814,7 @@ async function testPerformanceELimites(): Promise<void> {
 // EXECUTAR TODOS OS TESTES
 // ========================================
 async function runAllTests(): Promise<void> {
-  console.log('🧪 Iniciando Suite de Testes MCP - Synthropic\n');
+  console.log('🧪 Iniciando Suite de Testes MCP - ZattarOS\n');
   console.log('═'.repeat(60));
 
   // Inicializar registry

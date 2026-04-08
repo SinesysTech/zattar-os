@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { actionAutoSalvar } from '../actions/documentos-actions';
-import type { AutoSavePayload } from '../types';
+import type { AutoSavePayload } from '../domain';
 
 interface UseDocumentAutoSaveOptions {
   documentoId: number;

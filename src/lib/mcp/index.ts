@@ -1,5 +1,5 @@
 /**
- * Módulo MCP do Synthropic
+ * Módulo MCP do ZattarOS
  *
  * Exporta servidor, registry e utilitários para integração MCP
  */

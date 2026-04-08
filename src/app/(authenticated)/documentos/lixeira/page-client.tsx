@@ -35,7 +35,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { PageShell } from '@/components/shared/page-shell';
+import { Heading } from '@/components/ui/typography';
 import { FilterPopover } from '@/app/(authenticated)/partes';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
@@ -69,10 +69,10 @@ function filtrarDocumentosPorPeriodo(
   periodo: PeriodoFiltro
 ): DocumentoComUsuario[] {
   if (periodo === 'todos') return documentos;
-  
+
   const agora = new Date();
   const limiteData = new Date();
-  
+
   switch (periodo) {
     case 'hoje':
       limiteData.setHours(0, 0, 0, 0);
@@ -84,7 +84,7 @@ function filtrarDocumentosPorPeriodo(
       limiteData.setDate(agora.getDate() - 30);
       break;
   }
-  
+
   return documentos.filter((doc) => {
     if (!doc.deleted_at) return false;
     const deletedDate = new Date(doc.deleted_at);
@@ -156,7 +156,7 @@ function DocumentoCard({
   onExcluir: (doc: DocumentoComUsuario) => void;
 }) {
   const isLoading = actionLoading === documento.id;
-  
+
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -255,7 +255,7 @@ function DeleteConfirmDialog({
 
 export default function LixeiraClient() {
   const router = useRouter();
-  
+
   // Estado
   const [documentos, setDocumentos] = React.useState<DocumentoComUsuario[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -341,10 +341,16 @@ export default function LixeiraClient() {
   }, [documentoParaDeletar]);
 
   return (
-    <PageShell
-      title="Lixeira"
-      description="Documentos excluídos que serão deletados permanentemente após 30 dias"
-    >
+    <>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-1.5">
+          <Heading level="page">Lixeira</Heading>
+          <p className="text-sm text-muted-foreground/50 mt-0.5">
+            Documentos excluídos que serão deletados permanentemente após 30 dias
+          </p>
+        </div>
+      </div>
+
       {/* Toolbar com filtros */}
       <div className="flex items-center gap-2 mb-4">
         <Button
@@ -391,6 +397,6 @@ export default function LixeiraClient() {
         documento={documentoParaDeletar}
         onConfirm={handleDeletarPermanentemente}
       />
-    </PageShell>
+    </>
   );
 }

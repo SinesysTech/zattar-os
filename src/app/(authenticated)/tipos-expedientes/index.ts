@@ -1,6 +1,39 @@
+/**
+ * TIPOS-EXPEDIENTES MODULE — Barrel Export (API Pública)
+ *
+ * Módulo de cadastro auxiliar para gerenciar tipos de expedientes.
+ * Tabela de domínio referenciada pelo módulo de expedientes.
+ */
+
 // =============================================================================
-// DOMAIN - Tipos, Schemas e Constantes
+// Components
 // =============================================================================
+
+export { TiposExpedientesList } from './components/tipos-expedientes-list';
+export { TipoExpedienteForm } from './components/tipo-expediente-form';
+
+// =============================================================================
+// Hooks
+// =============================================================================
+
+export { useTiposExpedientes } from './hooks/use-tipos-expedientes';
+
+// =============================================================================
+// Actions
+// =============================================================================
+
+export {
+    actionListarTiposExpedientes,
+    actionBuscarTipoExpediente,
+    actionCriarTipoExpediente,
+    actionAtualizarTipoExpediente,
+    actionDeletarTipoExpediente,
+} from './actions';
+
+// =============================================================================
+// Types / Domain
+// =============================================================================
+
 export type {
     TipoExpediente,
     CreateTipoExpedienteInput,
@@ -21,8 +54,9 @@ export {
 } from './domain';
 
 // =============================================================================
-// SERVICE - Casos de Uso
+// Service
 // =============================================================================
+
 export {
     listar,
     buscar,
@@ -32,8 +66,9 @@ export {
 } from './service';
 
 // =============================================================================
-// REPOSITORY - Acesso a Dados (para uso avançado/testes)
+// Repository
 // =============================================================================
+
 export {
     findById,
     findByNome,
@@ -43,30 +78,3 @@ export {
     deleteById,
     isInUse,
 } from './repository';
-
-// =============================================================================
-// ACTIONS - Server Actions
-// =============================================================================
-export {
-    actionListarTiposExpedientes,
-    actionBuscarTipoExpediente,
-    actionCriarTipoExpediente,
-    actionAtualizarTipoExpediente,
-    actionDeletarTipoExpediente,
-} from './actions/tipos-expedientes-actions';
-
-// =============================================================================
-// HOOKS
-// =============================================================================
-export { useTiposExpedientes } from './hooks/use-tipos-expedientes';
-
-// =============================================================================
-// COMPONENTS - UI
-// =============================================================================
-export {
-    TiposExpedientesList,
-} from './components/tipos-expedientes-list';
-
-export {
-    TipoExpedienteForm
-} from './components/tipo-expediente-form';

@@ -2,7 +2,7 @@
 
 /**
  * =============================================================================
- * DataTable - Padrão de Visualização de Dados do Synthropic
+ * DataTable - Padrão de Visualização de Dados do ZattarOS
  * =============================================================================
  *
  * IMPORTANTE: Este componente faz parte do padrão DataShell/DataTable.

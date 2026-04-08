@@ -1,7 +1,7 @@
 /**
  * Design System Tokens
  *
- * Este arquivo define os tokens fundamentais do Design System Synthropic.
+ * Este arquivo define os tokens fundamentais do Design System ZattarOS.
  * Tokens são valores atômicos que servem como base para todas as decisões visuais.
  *
  * @ai-context Use estes tokens para garantir consistência visual em todo o sistema.

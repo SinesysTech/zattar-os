@@ -1,5 +1,5 @@
 /**
- * Sistema de Quotas MCP do Synthropic
+ * Sistema de Quotas MCP do ZattarOS
  *
  * Implementa checagem e atualização de quotas por usuário
  */

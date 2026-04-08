@@ -6,7 +6,7 @@ import {
   type UpdateProjetoInput,
   type ListarProjetosParams,
   converterParaProjeto,
-} from "../domain";
+} from "../../domain";
 import { escapeIlike, validateSortColumn } from "./utils";
 
 const TABLE = "pm_projetos";

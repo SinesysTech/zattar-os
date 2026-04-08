@@ -1,5 +1,5 @@
 /**
- * Tipos compartilhados para a camada de IA do Synthropic
+ * Tipos compartilhados para a camada de IA do ZattarOS
  */
 
 /**

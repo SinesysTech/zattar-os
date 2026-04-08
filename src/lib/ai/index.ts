@@ -1,5 +1,5 @@
 /**
- * Camada de Inteligência Artificial do Synthropic
+ * Camada de Inteligência Artificial do ZattarOS
  *
  * Exporta funções para:
  * - Geração de embeddings

@@ -31,7 +31,7 @@ export interface DataShellProps extends React.HTMLAttributes<HTMLDivElement> {
 
 /**
  * =============================================================================
- * DataShell - PADRÃO OBRIGATÓRIO para Visualização de Dados no Synthropic
+ * DataShell - PADRÃO OBRIGATÓRIO para Visualização de Dados no ZattarOS
  * =============================================================================
  *
  * IMPORTANTE: Este é o padrão oficial para todas as tabelas/listas de dados.

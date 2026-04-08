@@ -1,5 +1,5 @@
 /**
- * Sistema de Prompts MCP do Synthropic
+ * Sistema de Prompts MCP do ZattarOS
  *
  * Prompts são templates pré-configurados que geram mensagens
  * para uso com LLMs, incluindo contexto relevante do sistema.

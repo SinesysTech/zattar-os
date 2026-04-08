@@ -4,9 +4,9 @@ import * as React from "react";
 import Link from "next/link";
 import { Archive, ArchiveX, MailOpen, MailWarning, Pencil, Search, Settings, Trash2, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-breakpoint";
-import { useMailStore } from "../use-mail";
+import { useMailStore } from "../hooks/use-mail";
 import { useMailFolders, useMailMessages, useMailActions } from "../hooks/use-mail-api";
-import { FOLDER_LABELS } from "../lib/constants";
+import { FOLDER_LABELS } from "../utils/constants";
 
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
@@ -23,6 +23,7 @@ import { MailList } from "./mail-list";
 import { NavDesktop } from "./nav-desktop";
 import { NavMobile } from "./nav-mobile";
 import { MailDisplayMobile } from "./mail-display-mobile";
+import { Heading } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 
 const DEFAULT_LAYOUT = [16, 36, 48];
@@ -110,7 +111,7 @@ export function Mail({
       <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
         <MailWarning className="text-muted-foreground h-12 w-12" />
         <div className="space-y-2">
-          <h2 className="text-lg font-semibold">E-mail não configurado</h2>
+          <Heading level="section" className="text-lg">E-mail não configurado</Heading>
           <p className="text-muted-foreground max-w-md text-sm">
             Configure sua conta de e-mail para começar a enviar e receber mensagens.
           </p>

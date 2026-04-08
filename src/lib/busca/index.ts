@@ -1,5 +1,5 @@
 /**
- * Feature de Busca Semântica do Synthropic
+ * Feature de Busca Semântica do ZattarOS
  *
  * Exporta actions e tipos para busca inteligente usando IA
  */

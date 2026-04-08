@@ -18,7 +18,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import type { DocumentoComUsuario } from '@/app/(authenticated)/documentos/types';
+import { Typography } from '@/components/ui/typography';
+import type { DocumentoComUsuario } from '@/app/(authenticated)/documentos/domain';
 
 interface DocumentCardProps {
   documento: DocumentoComUsuario;
@@ -42,7 +43,7 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
               <FileText className="h-5 w-5 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-medium truncate">{documento.titulo}</h3>
+              <Typography.H3 className="truncate">{documento.titulo}</Typography.H3>
               <p className="text-xs text-muted-foreground mt-1">
                 {documento.descricao || 'Sem descrição'}
               </p>

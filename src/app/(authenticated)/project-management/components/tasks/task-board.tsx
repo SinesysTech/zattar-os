@@ -16,12 +16,13 @@ import {
 } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
+import { Heading } from "@/components/ui/typography";
 import {
   KANBAN_COLUMNS,
   STATUS_TAREFA_LABELS,
   type StatusTarefa,
   type Tarefa,
-} from "../../lib/domain";
+} from "../../domain";
 import { useTaskBoard } from "../../hooks/use-task-board";
 import { TaskCard } from "./task-card";
 
@@ -39,11 +40,11 @@ function KanbanColumn({
   const { setNodeRef, isOver } = useDroppable({ id: status });
 
   const columnColors: Record<StatusTarefa, string> = {
-    a_fazer: "border-t-slate-400",
-    em_progresso: "border-t-blue-400",
-    em_revisao: "border-t-purple-400",
-    concluido: "border-t-green-400",
-    cancelado: "border-t-red-400",
+    a_fazer: "border-t-muted-foreground",
+    em_progresso: "border-t-info",
+    em_revisao: "border-t-warning",
+    concluido: "border-t-success",
+    cancelado: "border-t-destructive",
   };
 
   return (
@@ -56,9 +57,9 @@ function KanbanColumn({
       )}
     >
       <div className="flex items-center justify-between px-3 py-2">
-        <h3 className="text-sm font-semibold">
+        <Heading level="subsection" className="text-sm">
           {STATUS_TAREFA_LABELS[status]}
-        </h3>
+        </Heading>
         <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs">
           {tarefas.length}
         </span>

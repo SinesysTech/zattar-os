@@ -2,7 +2,7 @@
 
 ## Visão Geral
 
-Migração incremental dos 32 módulos restantes para o Design System Synthropic, organizados em 3 grupos por complexidade. A ordem de execução é: pré-requisitos (novas categorias de badge, variáveis CSS de gráficos e videochamada) → Grupo A (complexos) → Grupo B (médios) → Grupo C (leves em batches) → validação cross-módulo e testes.
+Migração incremental dos 32 módulos restantes para o Design System ZattarOS, organizados em 3 grupos por complexidade. A ordem de execução é: pré-requisitos (novas categorias de badge, variáveis CSS de gráficos e videochamada) → Grupo A (complexos) → Grupo B (médios) → Grupo C (leves em batches) → validação cross-módulo e testes.
 
 ## Tarefas
 
@@ -163,7 +163,7 @@ Migração incremental dos 32 módulos restantes para o Design System Synthropic
     - Organizar barrel export (`index.ts`) com seções claras
     - _Requisitos: 6.6, 6.7, 20.1, 20.3, 20.4_
 
-- [ ] 9. Migração do módulo chat (Grupo A)
+- [x] 9. Migração do módulo chat (Grupo A)
   - [x] 9.1 Criar `layout.tsx` com PageShell no módulo chat
     - Criar `layout.tsx` com PageShell (page.tsx atualmente renderiza `<ChatLayout>` direto)
     - _Requisitos: 7.1_
@@ -180,7 +180,7 @@ Migração incremental dos 32 módulos restantes para o Design System Synthropic
     - Verificar espaçamentos Grid 4px
     - _Requisitos: 7.3, 7.4_
 
-  - [-] 9.4 Padronizar estrutura FSD do módulo chat
+  - [x] 9.4 Padronizar estrutura FSD do módulo chat
     - Mover `components/types.ts` → `domain.ts`
     - Mover `components/useChatStore.ts` → `hooks/` ou `store.ts`
     - Unificar `utils/` (pasta) e `utils.ts` (arquivo)
@@ -188,30 +188,30 @@ Migração incremental dos 32 módulos restantes para o Design System Synthropic
     - Organizar barrel export (`index.ts`) com seções claras
     - _Requisitos: 7.5, 7.6, 20.1, 20.2, 20.4_
 
-- [ ] 10. Migração do módulo RH (Grupo A)
-  - [~] 10.1 Criar `layout.tsx` com PageShell centralizado no módulo RH
+- [x] 10. Migração do módulo RH (Grupo A)
+  - [x] 10.1 Criar `layout.tsx` com PageShell centralizado no módulo RH
     - Substituir o uso direto de PageShell no page.tsx client component por `layout.tsx`
     - _Requisitos: 8.1_
 
-  - [~] 10.2 Migrar tipografia, badges e cores inline do módulo RH
+  - [x] 10.2 Migrar tipografia, badges e cores inline do módulo RH
     - Substituir headings manuais por componentes Typography
     - Garantir que todos os badges usam `getSemanticBadgeVariant`
     - Remover cores inline de componentes de feature
     - Verificar espaçamentos Grid 4px
     - _Requisitos: 8.2, 8.3, 8.4, 8.5_
 
-  - [~] 10.3 Padronizar estrutura FSD do módulo RH
+  - [x] 10.3 Padronizar estrutura FSD do módulo RH
     - Consolidar `types.ts` dentro de `domain.ts`
     - Criar `actions/index.ts` com barrel export para `folhas-pagamento-actions.ts` e `salarios-actions.ts`
     - Organizar barrel export (`index.ts`) com seções claras
     - _Requisitos: 8.6, 8.7, 20.1, 20.2, 20.4_
 
-- [~] 11. Checkpoint — Grupo A (módulos complexos) migrado
+- [x] 11. Checkpoint — Grupo A (módulos complexos) migrado
   - Garantir que todos os testes passam. Verificar que nenhum módulo do Grupo A contém oklch() direto, cores hardcoded, funções locais de badge ou estrutura FSD divergente. Perguntar ao usuário se há dúvidas.
 
 
-- [ ] 12. Migração do módulo tarefas (Grupo B)
-  - [~] 12.1 Migrar tipografia, badges e cores inline do módulo tarefas
+- [x] 12. Migração do módulo tarefas (Grupo B)
+  - [x] 12.1 Migrar tipografia, badges e cores inline do módulo tarefas
     - Manter uso correto de PageShell e DataShell/DataTableToolbar já existentes
     - Substituir headings manuais em `task-detail-sheet.tsx` por componentes Typography
     - Garantir que todos os badges usam `getSemanticBadgeVariant`
@@ -219,60 +219,60 @@ Migração incremental dos 32 módulos restantes para o Design System Synthropic
     - Verificar espaçamentos Grid 4px
     - _Requisitos: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6_
 
-  - [~] 12.2 Padronizar estrutura FSD do módulo tarefas
+  - [x] 12.2 Padronizar estrutura FSD do módulo tarefas
     - Criar `actions/index.ts` com barrel export para `actions/tarefas-actions.ts`
     - Mover `data/data.ts` para `domain.ts` ou `constants.ts`
     - Organizar barrel export (`index.ts`) com seções claras
     - _Requisitos: 9.7, 9.8, 20.1, 20.2, 20.4_
 
-- [ ] 13. Migração do módulo documentos (Grupo B)
-  - [~] 13.1 Criar `layout.tsx` com PageShell no módulo documentos
+- [x] 13. Migração do módulo documentos (Grupo B)
+  - [x] 13.1 Criar `layout.tsx` com PageShell no módulo documentos
     - Substituir o uso direto de PageShell no page.tsx por `layout.tsx`
     - _Requisitos: 10.1_
 
-  - [~] 13.2 Migrar tipografia, badges e cores inline do módulo documentos
+  - [x] 13.2 Migrar tipografia, badges e cores inline do módulo documentos
     - Substituir headings manuais por componentes Typography
     - Garantir que todos os badges usam `getSemanticBadgeVariant`
     - Remover cores inline de componentes de feature
     - Verificar espaçamentos Grid 4px
     - _Requisitos: 10.2, 10.3, 10.4, 10.5_
 
-  - [~] 13.3 Padronizar estrutura FSD do módulo documentos
+  - [x] 13.3 Padronizar estrutura FSD do módulo documentos
     - Criar `actions/index.ts` com barrel export
     - Consolidar `services/` → `service.ts`
     - Consolidar `types.ts` dentro de `domain.ts`
     - Organizar barrel export (`index.ts`) com seções claras
     - _Requisitos: 10.6, 10.7, 20.1, 20.3, 20.4_
 
-- [ ] 14. Migração do módulo peças jurídicas (Grupo B)
-  - [~] 14.1 Criar `layout.tsx` com PageShell no módulo peças jurídicas
+- [x] 14. Migração do módulo peças jurídicas (Grupo B)
+  - [x] 14.1 Criar `layout.tsx` com PageShell no módulo peças jurídicas
     - Substituir o uso direto de PageShell no page.tsx por `layout.tsx`
     - _Requisitos: 11.1_
 
-  - [~] 14.2 Migrar tipografia e cores inline do módulo peças jurídicas
+  - [x] 14.2 Migrar tipografia e cores inline do módulo peças jurídicas
     - Manter uso correto de DataShell/DataTableToolbar já existente
     - Substituir headings manuais em `peca-modelo-view-sheet.tsx` e `[id]/editar/client.tsx` por componentes Typography
     - Remover cores inline de componentes de feature
     - Verificar espaçamentos Grid 4px
     - _Requisitos: 11.2, 11.3, 11.4, 11.5_
 
-  - [~] 14.3 Padronizar barrel export do módulo peças jurídicas
+  - [x] 14.3 Padronizar barrel export do módulo peças jurídicas
     - Organizar barrel export (`index.ts`) com seções claras
     - _Requisitos: 11.6, 20.4_
 
-- [ ] 15. Migração do módulo project-management (Grupo B)
-  - [~] 15.1 Criar `layout.tsx` com PageShell no módulo project-management
+- [x] 15. Migração do módulo project-management (Grupo B)
+  - [x] 15.1 Criar `layout.tsx` com PageShell no módulo project-management
     - Substituir o `<div className="space-y-4">` atual em `layout.tsx` por PageShell
     - _Requisitos: 12.1_
 
-  - [~] 15.2 Migrar tipografia, badges e cores inline do módulo project-management
+  - [x] 15.2 Migrar tipografia, badges e cores inline do módulo project-management
     - Substituir headings manuais por componentes Typography
     - Garantir que todos os badges usam `getSemanticBadgeVariant`
     - Remover cores inline de componentes de feature
     - Verificar espaçamentos Grid 4px
     - _Requisitos: 12.2, 12.3, 12.4, 12.5_
 
-  - [~] 15.3 Padronizar estrutura FSD do módulo project-management
+  - [x] 15.3 Padronizar estrutura FSD do módulo project-management
     - Mover `lib/domain.ts` → `domain.ts` na raiz
     - Mover `lib/services/` → `service.ts`
     - Mover `lib/repositories/` → `repository.ts`
@@ -281,12 +281,12 @@ Migração incremental dos 32 módulos restantes para o Design System Synthropic
     - Criar barrel export (`index.ts`) com seções claras
     - _Requisitos: 12.6, 12.7, 12.8, 20.1, 20.3, 20.4, 20.6_
 
-- [ ] 16. Migração do módulo agenda/calendar (Grupo B)
-  - [~] 16.1 Criar `layout.tsx` com PageShell no módulo agenda
+- [x] 16. Migração do módulo agenda/calendar (Grupo B)
+  - [x] 16.1 Criar `layout.tsx` com PageShell no módulo agenda
     - Criar `layout.tsx` (page.tsx atualmente renderiza `<AgendaApp>` direto)
     - _Requisitos: 13.1_
 
-  - [~] 16.2 Migrar oklch(), tipografia e cores inline do módulo agenda
+  - [x] 16.2 Migrar oklch(), tipografia e cores inline do módulo agenda
     - Substituir `oklch()` direto em `agenda/mock/page.tsx` por variáveis CSS do tema
     - Substituir headings manuais em `agenda/mock/page.tsx` por componentes Typography
     - Manter uso correto de Heading do Typography em `toolbar.tsx`
@@ -294,60 +294,60 @@ Migração incremental dos 32 módulos restantes para o Design System Synthropic
     - Verificar espaçamentos Grid 4px
     - _Requisitos: 13.2, 13.3, 13.4, 13.5, 13.6_
 
-  - [~] 16.3 Padronizar estrutura FSD do módulo agenda/calendar
+  - [x] 16.3 Padronizar estrutura FSD do módulo agenda/calendar
     - Criar `actions/index.ts` em agenda com barrel export para `actions/agenda-eventos-actions.ts`
     - Consolidar `types.ts` dentro de `domain.ts` em calendar
     - Organizar barrel export (`index.ts`) com seções claras em ambos os módulos
     - _Requisitos: 13.7, 13.8, 20.1, 20.2, 20.4_
 
-- [ ] 17. Migração do módulo assistentes (Grupo B)
-  - [~] 17.1 Criar `layout.tsx` com PageShell no módulo assistentes
+- [x] 17. Migração do módulo assistentes (Grupo B)
+  - [x] 17.1 Criar `layout.tsx` com PageShell no módulo assistentes
     - Substituir o uso direto de PageShell no page.tsx por `layout.tsx`
     - _Requisitos: 14.1_
 
-  - [~] 17.2 Migrar tipografia e cores inline do módulo assistentes
+  - [x] 17.2 Migrar tipografia e cores inline do módulo assistentes
     - Manter uso correto de DataShell/DataTableToolbar já existente
     - Substituir headings manuais por componentes Typography
     - Remover cores inline de componentes de feature
     - Verificar espaçamentos Grid 4px
     - _Requisitos: 14.2, 14.3, 14.4, 14.5_
 
-  - [~] 17.3 Padronizar estrutura FSD do módulo assistentes
+  - [x] 17.3 Padronizar estrutura FSD do módulo assistentes
     - Unificar estrutura duplicada raiz/feature (manter uma única camada)
     - Migrar `actions.ts` (arquivo) → pasta `actions/` com `index.ts`
     - Organizar barrel export (`index.ts`) com seções claras
     - _Requisitos: 14.6, 14.7, 20.1, 20.2, 20.4_
 
-- [ ] 18. Migração do módulo notas (Grupo B)
-  - [~] 18.1 Criar `layout.tsx` com PageShell no módulo notas
+- [x] 18. Migração do módulo notas (Grupo B)
+  - [x] 18.1 Criar `layout.tsx` com PageShell no módulo notas
     - Criar `layout.tsx` (page.tsx atualmente renderiza `<NotesApp>` direto)
     - _Requisitos: 15.1_
 
-  - [~] 18.2 Migrar tipografia e cores inline do módulo notas
+  - [x] 18.2 Migrar tipografia e cores inline do módulo notas
     - Substituir headings manuais em `note-list-item.tsx` e `note-content.tsx` por componentes Typography
     - Verificar e migrar cores hardcoded em `label-colors.ts` para variáveis CSS do tema
     - Remover cores inline de componentes de feature
     - Verificar espaçamentos Grid 4px
     - _Requisitos: 15.2, 15.3, 15.4, 15.5_
 
-  - [~] 18.3 Padronizar estrutura FSD do módulo notas
+  - [x] 18.3 Padronizar estrutura FSD do módulo notas
     - Mover componentes da raiz (note-app.tsx, note-content.tsx, note-list-item.tsx, note-sidebar.tsx, add-note-modal.tsx, edit-labels-modal.tsx) → pasta `components/`
     - Criar `actions/index.ts`
     - Organizar barrel export (`index.ts`) com seções claras
     - _Requisitos: 15.6, 15.7, 20.1, 20.4_
 
-- [ ] 19. Migração do módulo mail (Grupo B)
-  - [~] 19.1 Criar `layout.tsx` com PageShell no módulo mail
+- [x] 19. Migração do módulo mail (Grupo B)
+  - [x] 19.1 Criar `layout.tsx` com PageShell no módulo mail
     - Criar `layout.tsx` (page.tsx atualmente renderiza `<Mail>` direto)
     - _Requisitos: 16.1_
 
-  - [~] 19.2 Migrar tipografia e cores inline do módulo mail
+  - [x] 19.2 Migrar tipografia e cores inline do módulo mail
     - Substituir headings manuais por componentes Typography
     - Remover cores inline de componentes de feature
     - Verificar espaçamentos Grid 4px
     - _Requisitos: 16.2, 16.3, 16.4_
 
-  - [~] 19.3 Padronizar estrutura FSD do módulo mail
+  - [x] 19.3 Padronizar estrutura FSD do módulo mail
     - Criar estrutura FSD completa: `domain.ts`, `service.ts`, `repository.ts`
     - Mover `use-mail.ts` → `hooks/`
     - Mover `lib/` → `utils/`
@@ -355,122 +355,122 @@ Migração incremental dos 32 módulos restantes para o Design System Synthropic
     - Criar barrel export (`index.ts`) com seções claras
     - _Requisitos: 16.5, 16.6, 20.1, 20.4_
 
-- [~] 20. Checkpoint — Grupo B (módulos médios) migrado
+- [x] 20. Checkpoint — Grupo B (módulos médios) migrado
   - Garantir que todos os testes passam. Verificar que nenhum módulo do Grupo B contém violações do Design System. Perguntar ao usuário se há dúvidas.
 
 
-- [ ] 21. Migração Batch C1 — Configurações, Notificações, Perfil (Grupo C)
-  - [~] 21.1 Migrar módulo configurações
+- [x] 21. Migração Batch C1 — Configurações, Notificações, Perfil (Grupo C)
+  - [x] 21.1 Migrar módulo configurações
     - Criar `layout.tsx` com PageShell
     - Manter uso correto de Typography já existente em `configuracoes-settings-layout.tsx` e `settings-section-header.tsx`
     - Criar `domain.ts`, `service.ts`, `repository.ts` se aplicável
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 17.1, 17.3, 17.7, 17.8, 20.1, 20.6_
 
-  - [~] 21.2 Migrar módulo notificações
+  - [x] 21.2 Migrar módulo notificações
     - Criar `layout.tsx` com PageShell (page.tsx atualmente renderiza `<NotificacoesList>` direto)
     - Manter uso correto de DataShell/DataTableToolbar já existente
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 17.1, 17.4, 17.7, 17.8, 20.1, 20.6_
 
-  - [~] 21.3 Migrar módulo perfil
+  - [x] 21.3 Migrar módulo perfil
     - Criar `layout.tsx` com PageShell (substituir uso direto no page.tsx)
     - Substituir heading manual em `perfil-view.tsx` (`<h1 className="text-3xl font-bold">`) por componente Typography
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 17.1, 17.2, 17.7, 17.8, 20.1, 20.6_
 
-- [ ] 22. Migração Batch C2 — Tipos-Expedientes, Repasses, Pangea (Grupo C)
-  - [~] 22.1 Migrar módulo tipos-expedientes
+- [x] 22. Migração Batch C2 — Tipos-Expedientes, Repasses, Pangea (Grupo C)
+  - [x] 22.1 Migrar módulo tipos-expedientes
     - Criar `layout.tsx` com PageShell (substituir uso direto no page.tsx)
     - Criar `actions/index.ts` com barrel export
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 17.1, 17.7, 17.8, 20.1, 20.2_
 
-  - [~] 22.2 Migrar módulo repasses
+  - [x] 22.2 Migrar módulo repasses
     - Criar `layout.tsx` com PageShell (substituir uso direto no page.tsx)
     - Criar `domain.ts`, `service.ts`, `repository.ts` se aplicável
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 17.1, 17.7, 17.8, 20.1_
 
-  - [~] 22.3 Migrar módulo pangea
+  - [x] 22.3 Migrar módulo pangea
     - Criar `layout.tsx` com PageShell (substituir uso direto no page.tsx)
     - Manter uso correto de Typography já existente
     - Organizar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 17.1, 17.3, 17.7, 17.8, 20.1_
 
-- [ ] 23. Migração Batch C3 — Entrevistas-Trabalhistas, Acervo, Admin (Grupo C)
-  - [~] 23.1 Migrar módulo entrevistas-trabalhistas
+- [x] 23. Migração Batch C3 — Entrevistas-Trabalhistas, Acervo, Admin (Grupo C)
+  - [x] 23.1 Migrar módulo entrevistas-trabalhistas
     - Módulo embarcado em contratos (sem page.tsx próprio)
     - Migrar `queries.ts` para padrão FSD (`repository.ts`)
     - Criar `actions/index.ts` se aplicável
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 18.1, 18.5, 18.6, 18.7, 20.1_
 
-  - [~] 23.2 Migrar módulo acervo
+  - [x] 23.2 Migrar módulo acervo
     - Módulo de serviço/biblioteca (sem page.tsx)
     - Substituir headings manuais em `acervo-filters.tsx` por componentes Typography
     - Remover cores inline de componentes de feature
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 18.2, 18.3, 18.4, 18.6, 18.7, 20.1_
 
-  - [~] 23.3 Migrar módulo admin
+  - [x] 23.3 Migrar módulo admin
     - Verificar sub-rotas e aplicar PageShell onde houver páginas renderizáveis
     - Consolidar `repositories/` → `repository.ts` e `services/` → `service.ts`
     - Criar `domain.ts`
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 18.1, 18.5, 18.6, 18.7, 20.1, 20.3_
 
-- [ ] 24. Migração Batch C4 — Calculadoras, Endereços, Cargos, Advogados (Grupo C)
-  - [~] 24.1 Migrar módulo calculadoras
+- [x] 24. Migração Batch C4 — Calculadoras, Endereços, Cargos, Advogados (Grupo C)
+  - [x] 24.1 Migrar módulo calculadoras
     - Módulo mínimo (sem page.tsx) — apenas estrutura FSD
     - Criar `domain.ts`, `service.ts`, `repository.ts` se aplicável
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 18.5, 18.6, 18.7, 20.1_
 
-  - [~] 24.2 Migrar módulo endereços
+  - [x] 24.2 Migrar módulo endereços
     - Módulo de serviço (sem page.tsx) — apenas estrutura FSD
     - Consolidar `types/` dentro de `domain.ts`
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 18.5, 18.6, 18.7, 20.1, 20.3_
 
-  - [~] 24.3 Migrar módulo cargos
+  - [x] 24.3 Migrar módulo cargos
     - Módulo de serviço (sem page.tsx) — apenas estrutura FSD
     - Consolidar `types.ts` dentro de `domain.ts`
     - Criar `actions/index.ts` com barrel export
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 18.5, 18.6, 18.7, 20.1, 20.2, 20.3_
 
-  - [~] 24.4 Migrar módulo advogados
+  - [x] 24.4 Migrar módulo advogados
     - Módulo de serviço (sem page.tsx) — apenas estrutura FSD
     - Criar `actions/index.ts` com barrel export
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 18.5, 18.6, 18.7, 20.1, 20.2_
 
-- [ ] 25. Migração Batch C5 — Comunica-CNJ, Editor, Ajuda (Grupo C)
-  - [~] 25.1 Migrar módulo comunica-cnj
+- [x] 25. Migração Batch C5 — Comunica-CNJ, Editor, Ajuda (Grupo C)
+  - [x] 25.1 Migrar módulo comunica-cnj
     - Criar `layout.tsx` com PageShell se houver página renderizável
     - Remover cores inline de componentes de feature
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 17.1, 17.5, 17.6, 17.7, 17.8, 20.1_
 
-  - [~] 25.2 Migrar módulo editor
+  - [x] 25.2 Migrar módulo editor
     - Criar `layout.tsx` com PageShell se houver página renderizável
     - Remover cores inline de componentes de feature
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 17.1, 17.5, 17.6, 17.7, 17.8, 20.1_
 
-  - [~] 25.3 Migrar módulo ajuda
+  - [x] 25.3 Migrar módulo ajuda
     - Criar `layout.tsx` com PageShell se houver página renderizável
     - Remover cores inline de componentes de feature
     - Criar barrel export (`index.ts`) com seções claras e `RULES.md`
     - _Requisitos: 17.1, 17.5, 17.6, 17.7, 17.8, 20.1_
 
-- [~] 26. Checkpoint — Grupo C (módulos leves) migrado
+- [x] 26. Checkpoint — Grupo C (módulos leves) migrado
   - Garantir que todos os testes passam. Verificar que nenhum módulo do Grupo C contém violações do Design System. Perguntar ao usuário se há dúvidas.
 
 
 - [ ] 27. Validação cross-módulo de importações FSD
-  - [~] 27.1 Verificar regras de importação cross-módulo
+  - [-] 27.1 Verificar regras de importação cross-módulo
     - Garantir que nenhum módulo externo importa diretamente de subpastas de outro módulo
     - Toda importação cross-módulo deve passar pelo barrel export (`index.ts`)
     - Executar `npm run check:architecture` para validar

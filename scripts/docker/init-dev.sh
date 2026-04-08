@@ -7,7 +7,7 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-echo -e "${GREEN}Starting Synthropic Local Development Environment Setup...${NC}"
+echo -e "${GREEN}Starting ZattarOS Local Development Environment Setup...${NC}"
 
 # 1. Check dependencies
 echo -e "${YELLOW}Checking dependencies...${NC}"

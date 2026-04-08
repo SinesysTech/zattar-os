@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarCompartilhamentos, actionCompartilharDocumento, actionAtualizarPermissao, actionRemoverCompartilhamento } from '../actions/compartilhamento-actions';
-import type { DocumentoCompartilhadoComUsuario, CompartilharDocumentoParams } from '../types';
+import type { DocumentoCompartilhadoComUsuario, CompartilharDocumentoParams } from '../domain';
 
 export function useDocumentSharing(documentoId: number) {
   const [shares, setShares] = useState<DocumentoCompartilhadoComUsuario[]>([]);
@@ -14,9 +14,9 @@ export function useDocumentSharing(documentoId: number) {
       setLoading(true);
       setError(null);
     });
-    
+
     const result = await actionListarCompartilhamentos(documentoId);
-    
+
     startTransition(() => {
       if (result.success) {
         setShares(result.data || []);

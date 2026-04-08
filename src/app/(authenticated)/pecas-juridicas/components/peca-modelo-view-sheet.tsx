@@ -22,6 +22,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Heading, Text } from '@/components/ui/typography';
 
 import { actionBuscarPecaModelo } from '../actions';
 import { TIPO_PECA_LABELS, type PecaModeloListItem } from '../domain';
@@ -110,7 +111,7 @@ export function PecaModeloViewSheet({
               <div className="flex items-start gap-3">
                 <FileText className="h-6 w-6 text-muted-foreground shrink-0 mt-0.5" />
                 <div className="space-y-1 flex-1 min-w-0">
-                  <h3 className="font-semibold text-lg">{modelo.titulo}</h3>
+                  <Heading level="card">{modelo.titulo}</Heading>
                   {modelo.descricao && (
                     <p className="text-sm text-muted-foreground">{modelo.descricao}</p>
                   )}
@@ -146,9 +147,9 @@ export function PecaModeloViewSheet({
 
             {/* Preview do Conteúdo */}
             <div className="space-y-3">
-              <h4 className="text-sm font-medium text-muted-foreground">
+              <Text variant="label" as="h4" className="text-muted-foreground">
                 Preview do Conteúdo
-              </h4>
+              </Text>
 
               {loading ? (
                 <div className="space-y-2">

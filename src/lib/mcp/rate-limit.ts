@@ -1,5 +1,5 @@
 /**
- * Rate Limiting para MCP do Synthropic
+ * Rate Limiting para MCP do ZattarOS
  *
  * Implementa rate limiting por tier (anonymous, authenticated, service)
  * usando Redis como backend com sliding window algorithm.

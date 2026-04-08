@@ -17,7 +17,7 @@ import {
 import { generateAvatarFallback } from "@/lib/utils";
 import { TaskStatusBadge } from "../shared/project-status-badge";
 import { PriorityIndicator } from "../shared/priority-indicator";
-import type { Tarefa } from "../../lib/domain";
+import type { Tarefa } from "../../domain";
 
 interface TaskListProps {
   tarefas: Tarefa[];

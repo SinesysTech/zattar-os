@@ -1,5 +1,5 @@
 /**
- * Tipos para integração MCP do Synthropic
+ * Tipos para integração MCP do ZattarOS
  */
 
 import { z, type ZodSchema } from 'zod';

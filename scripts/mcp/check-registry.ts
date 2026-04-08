@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Script de Verificação do Registry MCP - Synthropic
+ * Script de Verificação do Registry MCP - ZattarOS
  *
  * Verifica se todas as Server Actions das features estão registradas
  * como ferramentas MCP.
@@ -193,7 +193,7 @@ function findRegisteredActions(): Set<string> {
  * Verifica o registry
  */
 function checkRegistry(): CheckResult {
-  console.log('🔍 Verificando Registry MCP do Synthropic...\n');
+  console.log('🔍 Verificando Registry MCP do ZattarOS...\n');
   
   if (useExclusions) {
     console.log('📋 Usando exclusões documentadas em exclusions-by-feature.md\n');

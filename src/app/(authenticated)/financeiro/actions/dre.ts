@@ -534,7 +534,7 @@ async function gerarDREPDF(dre: DRE): Promise<Uint8Array> {
             color: rgb(0.5, 0.5, 0.5),
         });
 
-        currentPage.drawText('Sistema Synthropic - Gestão Financeira', {
+        currentPage.drawText('Sistema ZattarOS - Gestão Financeira', {
             x: margin,
             y: 20,
             size: 8,

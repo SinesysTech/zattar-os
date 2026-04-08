@@ -1,6 +1,6 @@
-# Configuracao Multi-App do Synthropic
+# Configuracao Multi-App do ZattarOS
 
-O Synthropic opera com tres aplicacoes distintas em um unico monorepo Next.js. Este documento descreve a arquitetura e configuracao necessaria.
+O ZattarOS opera com tres aplicacoes distintas em um unico monorepo Next.js. Este documento descreve a arquitetura e configuracao necessaria.
 
 ## Arquitetura
 
@@ -134,7 +134,7 @@ import { getMeuProcessoUrl } from "@/lib/urls";
 
 ### Configuração de Produção (Domínios Separados)
 
-O Synthropic em produção utiliza **domínios separados** para cada app:
+O ZattarOS em produção utiliza **domínios separados** para cada app:
 
 | App | Domínio de Produção |
 |-----|---------------------|

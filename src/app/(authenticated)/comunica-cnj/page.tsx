@@ -1,7 +1,6 @@
 'use client';
 
 import { Suspense } from 'react';
-import { PageShell } from '@/components/shared/page-shell';
 import { ComunicaCNJTabsContent } from '@/app/(authenticated)/captura';
 
 export const dynamic = 'force-dynamic';
@@ -12,10 +11,8 @@ export const dynamic = 'force-dynamic';
  */
 export default function DiarioOficialPage() {
   return (
-    <PageShell>
-      <Suspense fallback={<div className="flex items-center justify-center h-64">Carregando...</div>}>
-        <ComunicaCNJTabsContent />
-      </Suspense>
-    </PageShell>
+    <Suspense fallback={<div className="flex items-center justify-center h-64">Carregando...</div>}>
+      <ComunicaCNJTabsContent />
+    </Suspense>
   );
 }

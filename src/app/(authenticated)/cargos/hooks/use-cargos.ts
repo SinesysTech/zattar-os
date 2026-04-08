@@ -5,7 +5,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import type { Cargo, ListarCargosParams, ListarCargosResponse } from '../types';
+import type { Cargo, ListarCargosParams, ListarCargosResponse } from '../domain';
 import { actionListarCargos } from '../actions/cargos-actions';
 
 interface UseCargosResult {

@@ -7,7 +7,7 @@ import {
 import {
   PRIORIDADE_LABELS,
   type Prioridade,
-} from "../../lib/domain";
+} from "../../domain";
 import { cn } from "@/lib/utils";
 import { getSemanticBadgeVariant, type BadgeVisualVariant } from "@/lib/design-system";
 

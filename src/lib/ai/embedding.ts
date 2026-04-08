@@ -1,5 +1,5 @@
 /**
- * Módulo de geração de embeddings para o Synthropic
+ * Módulo de geração de embeddings para o ZattarOS
  *
  * Suporta OpenAI e Cohere como provedores.
  * Inclui cache em Redis para otimização.

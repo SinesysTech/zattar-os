@@ -267,7 +267,7 @@ Bash script with ready-to-use commands:
 
 ## 📄 License
 
-This schema export is proprietary to Zattar Advogados (Synthropic).
+This schema export is proprietary to Zattar Advogados (ZattarOS).
 Not for redistribution or public use.
 
 ---

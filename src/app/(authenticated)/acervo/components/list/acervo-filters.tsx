@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
+import { Typography } from '@/components/ui/typography';
 import type { ListarAcervoParams } from '../../domain';
 
 interface AcervoFiltersProps {
@@ -35,7 +36,7 @@ export function AcervoFilters({
   return (
     <div className="space-y-4 rounded-lg border p-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Filtros</h3>
+        <Typography.H3>Filtros</Typography.H3>
         <Button variant="ghost" size="sm" onClick={onReset}>
           <X className="mr-2 h-4 w-4" />
           Limpar Filtros
@@ -124,8 +125,8 @@ export function AcervoFilters({
               filters.tem_proxima_audiencia === undefined
                 ? 'all'
                 : filters.tem_proxima_audiencia
-                ? 'sim'
-                : 'nao'
+                  ? 'sim'
+                  : 'nao'
             }
             onValueChange={(value) =>
               onFilterChange(
@@ -153,8 +154,8 @@ export function AcervoFilters({
               filters.segredo_justica === undefined
                 ? 'all'
                 : filters.segredo_justica
-                ? 'sim'
-                : 'nao'
+                  ? 'sim'
+                  : 'nao'
             }
             onValueChange={(value) =>
               onFilterChange(
@@ -182,8 +183,8 @@ export function AcervoFilters({
               filters.sem_responsavel === true
                 ? 'sem'
                 : filters.sem_responsavel === false
-                ? 'com'
-                : 'all'
+                  ? 'com'
+                  : 'all'
             }
             onValueChange={(value) =>
               onFilterChange(

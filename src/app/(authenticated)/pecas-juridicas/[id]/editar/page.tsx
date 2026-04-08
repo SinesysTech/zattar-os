@@ -7,7 +7,7 @@ import { Metadata } from 'next';
 import { EditarPecaModeloClient } from './client';
 
 export const metadata: Metadata = {
-  title: 'Editar Modelo de Peça | Synthropic',
+  title: 'Editar Modelo de Peça | ZattarOS',
   description: 'Edite um modelo de peça jurídica',
 };
 

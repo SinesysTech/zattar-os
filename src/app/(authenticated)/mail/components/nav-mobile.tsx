@@ -11,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useMailStore } from "../use-mail";
-import { buildFolderLinks } from "../lib/constants";
+import { useMailStore } from "../hooks/use-mail";
+import { buildFolderLinks } from "../utils/constants";
 
 export function NavMobile() {
   const { folders, selectedFolder, setSelectedFolder } = useMailStore();

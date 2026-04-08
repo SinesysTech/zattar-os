@@ -2,14 +2,14 @@
 
 ## LEITURA OBRIGATÓRIA
 
-Este documento contém os padrões obrigatórios para construir páginas no Synthropic.
+Este documento contém os padrões obrigatórios para construir páginas no ZattarOS.
 Agentes de IA **DEVEM** seguir estes padrões exatamente.
 
 ---
 
 ## 🚨 SYSTEM DESIGN MANDATÓRIO: "NEON MAGISTRATE" (Glass Briefing)
 
-**O Zattar OS (Synthropic) evoluiu seu padrão arquitetural para o "Neon Magistrate". O uso isolado e simplório das classes nativas do Shadcn (ex: `bg-card border-border/20`) em Dashboards, Painéis Hero ou Módulos Principais ESTÁ DEPRECADO.**
+**O ZattarOS evoluiu seu padrão arquitetural para o "Neon Magistrate". O uso isolado e simplório das classes nativas do Shadcn (ex: `bg-card border-border/20`) em Dashboards, Painéis Hero ou Módulos Principais ESTÁ DEPRECADO.**
 
 Você **SEMPRE** deve priorizar a injeção do pacote de primitivas avançadas (Glass Effects, Micro-tipografia) implementadas atualmente nos módulos mais densos.
 

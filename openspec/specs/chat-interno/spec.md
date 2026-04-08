@@ -212,7 +212,7 @@ THEN o sistema deve:
 GIVEN usuário não está focado na aba do browser
 WHEN nova mensagem chega
 THEN o sistema deve:
-- Atualizar título da página: "(3) Chat - Synthropic"
+- Atualizar título da página: "(3) Chat - ZattarOS"
 - Resetar ao voltar foco
 
 #### Scenario: Notificação sonora (opcional)

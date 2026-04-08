@@ -1,9 +1,14 @@
 /**
- * Acervo Feature - Barrel Exports
- * Public API for the acervo feature
+ * ACERVO MODULE — Barrel Export (API Pública)
+ *
+ * Módulo de serviço/biblioteca (sem page.tsx).
+ * Gestão do acervo processual capturado dos tribunais (PJE/TRT).
  */
 
-// Types
+// =============================================================================
+// Types / Domain
+// =============================================================================
+
 export type {
   Acervo,
   OrigemAcervo,
@@ -30,7 +35,6 @@ export type {
   ProcessosClienteCpfResponse,
 } from './domain';
 
-// Domain
 export {
   mapearStatusProcesso,
   converterParaAcervo,
@@ -39,7 +43,10 @@ export {
   CLASSE_JUDICIAL_NOMES,
 } from './domain';
 
+// =============================================================================
 // Utils
+// =============================================================================
+
 export {
   formatarCpf,
   formatarData,
@@ -57,7 +64,10 @@ export {
   type FormatarProcessoOpcoes,
 } from './utils';
 
+// =============================================================================
 // Actions
+// =============================================================================
+
 export {
   actionListarAcervoPaginado,
   actionListarAcervoUnificado,
@@ -69,15 +79,10 @@ export {
   actionRecapturarTimeline,
 } from './actions/acervo-actions';
 
-// NOTE:
-// Não re-exportar `./service` aqui, pois ele depende de módulos server-only (ex: captura/Playwright)
-// e este barrel é consumido por Client Components.
-
-// NOTE:
-// Não re-exportar `./timeline-unificada` aqui, pois pode depender de módulos server-only
-// e este barrel é consumido por Client Components.
-
+// =============================================================================
 // Hooks
+// =============================================================================
+
 export {
   useAcervo,
   useProcesso,
@@ -86,6 +91,15 @@ export {
   useAcervoFilters,
 } from './hooks/use-acervo';
 
+// =============================================================================
 // Components
+// =============================================================================
+
 export { AcervoTable } from './components/list/acervo-table';
 export { AcervoFilters } from './components/list/acervo-filters';
+
+// =============================================================================
+// NOTE: Não re-exportar `./service` nem `./timeline-unificada` aqui,
+// pois dependem de módulos server-only (ex: captura/Playwright)
+// e este barrel é consumido por Client Components.
+// =============================================================================

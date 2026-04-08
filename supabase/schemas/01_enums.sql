@@ -1,5 +1,5 @@
 -- ============================================================================
--- Enums do Sistema Synthropic
+-- Enums do Sistema ZattarOS
 -- Gerado automaticamente do banco de dados em produção
 -- ============================================================================
 

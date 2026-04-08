@@ -1,5 +1,5 @@
 /**
- * Logger estruturado para MCP do Synthropic
+ * Logger estruturado para MCP do ZattarOS
  *
  * Implementa logging estruturado com Pino para operações MCP,
  * incluindo métricas de performance e auditoria.

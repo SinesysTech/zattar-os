@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { generateAvatarFallback } from "@/lib/utils";
 import { FileText } from "lucide-react";
-import useChatStore from "./useChatStore";
+import useChatStore from "../hooks/use-chat-store";
 import { UsuarioChat } from "../domain";
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -94,13 +94,13 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
                         <div key={i}>
                           {item.type === "image" && (
                             <Image
-                                width={40}
-                                height={40}
-                                className="size-20 rounded-lg object-cover"
-                                src={item.url}
-                                alt="media"
-                                unoptimized
-                              />
+                              width={40}
+                              height={40}
+                              className="size-20 rounded-lg object-cover"
+                              src={item.url}
+                              alt="media"
+                              unoptimized
+                            />
                           )}
                           {/* Add other types as needed */}
                         </div>

@@ -1,5 +1,5 @@
 /**
- * Endpoint de Mensagens MCP do Synthropic
+ * Endpoint de Mensagens MCP do ZattarOS
  *
  * Endpoint alternativo para comunicação MCP via requisições individuais
  */

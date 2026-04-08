@@ -20,7 +20,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useUsuarios, type Usuario } from '@/app/(authenticated)/usuarios';
 import { useCargos } from '@/app/(authenticated)/cargos';
 import { actionCriarSalario, actionAtualizarSalario, actionBuscarSalariosDoUsuario } from '../../actions/salarios-actions';
-import type { SalarioComDetalhes } from '../../types';
+import type { SalarioComDetalhes } from '../../domain';
 import { toast } from 'sonner';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { useRouter } from 'next/navigation';
@@ -66,12 +66,12 @@ export function SalarioFormDialog({
     },
     values: salario
       ? {
-          usuarioId: salario.usuarioId,
-          cargoId: salario.cargoId,
-          salarioBruto: salario.salarioBruto,
-          dataInicioVigencia: salario.dataInicioVigencia,
-          observacoes: salario.observacoes || '',
-        }
+        usuarioId: salario.usuarioId,
+        cargoId: salario.cargoId,
+        salarioBruto: salario.salarioBruto,
+        dataInicioVigencia: salario.dataInicioVigencia,
+        observacoes: salario.observacoes || '',
+      }
       : undefined,
   });
 
@@ -116,9 +116,9 @@ export function SalarioFormDialog({
 
     let result;
     if (salario) {
-        result = await actionAtualizarSalario(salario.id, formData);
+      result = await actionAtualizarSalario(salario.id, formData);
     } else {
-        result = await actionCriarSalario(formData);
+      result = await actionCriarSalario(formData);
     }
 
     if (!result.success) {
