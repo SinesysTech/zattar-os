@@ -10,10 +10,10 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { EventCalendar } from "@/app/(authenticated)/calendar/components/event-calendar";
-import type { CalendarEvent, CalendarView as LegacyCalendarView } from "@/app/(authenticated)/calendar/types";
+import { EventCalendar } from "@/app/(authenticated)/calendar";
+import type { CalendarEvent, LegacyCalendarView } from "@/app/(authenticated)/calendar";
 import type { AgendaEvent } from "../../lib/adapters";
-import type { CalendarView } from "@/app/(authenticated)/calendar/briefing-domain";
+import type { CalendarView } from "@/app/(authenticated)/calendar";
 
 // ─── Props ─────────────────────────────────────────────────────────────
 
@@ -90,7 +90,7 @@ export function CalendarViewWrapper({
       currentDate={currentDate}
       onCurrentDateChange={onDateChange}
       view={legacyView}
-      onViewChange={() => {}}
+      onViewChange={() => { }}
       onEventSelect={handleEventClick}
       onEventAdd={onCreateEvent ? handleEventAdd : undefined}
       hideToolbar

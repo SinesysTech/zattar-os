@@ -24,7 +24,7 @@ import { AppBadge } from '@/components/ui/app-badge';
 import { Heading } from '@/components/ui/typography';
 
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
+import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WeekDaysCarousel } from '@/components/shared';
 
@@ -42,12 +42,12 @@ type TipoExpedienteOption = { id: number; tipoExpediente?: string; tipo_expedien
 
 // Helper para obter nome do usuário
 function getUsuarioNome(u: UsuarioOption): string {
-  return u.nomeExibicao || u.nome_exibicao || u.nome || `Usuário ${u.id}`;
+    return u.nomeExibicao || u.nome_exibicao || u.nome || `Usuário ${u.id}`;
 }
 
 const STATUS_OPTIONS: readonly FilterOption[] = [
-  { value: 'pendentes', label: 'Pendentes' },
-  { value: 'baixados', label: 'Baixados' },
+    { value: 'pendentes', label: 'Pendentes' },
+    { value: 'baixados', label: 'Baixados' },
 ];
 
 export function ExpedientesCalendar() {

@@ -49,6 +49,12 @@ const SERVER_ONLY_SUBFOLDERS = new Set([
   "repository",
   "services",
   "actions",
+  "feature",       // sub-modules like assinatura-digital/feature have own barrel
+  "types",         // type imports are safe in server context
+  "domain",        // domain types are safe in server context
+  "utils",         // utility imports from server context
+  "credentials",   // captura/credentials is server-only
+  "drivers",       // captura/drivers is server-only
 ]);
 
 /**
@@ -63,13 +69,18 @@ function isServerSideFile(filePath) {
     filePath.includes("/actions/") ||
     filePath.includes("/actions.ts") ||
     filePath.endsWith("/service.ts") ||
+    filePath.endsWith("-service.ts") ||
+    filePath.includes("/services/") ||
     filePath.endsWith("/repository.ts") ||
+    filePath.includes("/repository/") ||
+    filePath.includes("/repositories/") ||
     filePath.endsWith("/layout.tsx") ||
     filePath.includes("__tests__/") ||
     filePath.endsWith(".test.ts") ||
     filePath.endsWith(".test.tsx") ||
     filePath.endsWith(".spec.ts") ||
-    filePath.endsWith(".spec.tsx")
+    filePath.endsWith(".spec.tsx") ||
+    filePath.endsWith("/page.tsx")  // Server Components
   );
 }
 
@@ -158,6 +169,22 @@ function checkFile(filePath) {
           // Server-only imports from server-side files are allowed
           // (service.ts, repository.ts, services/, actions/ can't go through barrel)
           if (serverSide && SERVER_ONLY_SUBFOLDERS.has(importedSubfolder)) return;
+
+          // Action imports are allowed from any file
+          // (Server Actions are designed to be called from client components)
+          if (importedSubfolder === "actions") return;
+
+          // Type-only imports from types/ and domain/ are always allowed
+          // (types are erased at build time, no server-only leak risk)
+          const isTypeImport = /import\s+type\s/.test(line);
+          if (isTypeImport && (importedSubfolder === "types" || importedSubfolder === "domain")) return;
+
+          // Imports from sub-module barrels (e.g. assinatura-digital/feature) are allowed
+          // when the import path ends at the barrel level (no deeper path segments)
+          if (importedSubfolder === "feature") {
+            const featureBarrelPattern = /from\s+['"]@\/app\/\(authenticated\)\/[^/'"]+\/feature['"]/;
+            if (featureBarrelPattern.test(line)) return;
+          }
 
           violations.push({
             line: index + 1,

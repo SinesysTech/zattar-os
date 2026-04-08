@@ -28,7 +28,7 @@ import {
   Plus,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ContratoDocumentosList, GerarPecaDialog } from '@/app/(authenticated)/pecas-juridicas/components';
+import { ContratoDocumentosList, GerarPecaDialog } from '@/app/(authenticated)/pecas-juridicas';
 import type { Contrato } from '../domain';
 import {
   TIPO_CONTRATO_LABELS,

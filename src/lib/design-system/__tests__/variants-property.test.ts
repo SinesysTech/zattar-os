@@ -1,11 +1,13 @@
 /**
  * Property-Based Test: Cobertura completa de variantes de badge
  *
- * **Validates: Requirements 2.5, 3.4, 4.2, 8.5**
+ * **Validates: Requirements 2.5, 3.4, 4.2, 8.5, 19.5, 22.1**
  *
  * Property 1: Para qualquer categoria registrada e qualquer valor válido
  * do domínio, `getSemanticBadgeVariant(categoria, valor)` retorna variante
  * diferente de 'neutral'.
+ *
+ * Fase 2: Expandido com categorias pericia_situacao, parcela_status, repasse_status.
  */
 import fc from 'fast-check';
 import {
@@ -39,6 +41,10 @@ import {
   PAYMENT_STATUS_VARIANTS,
   FINANCIAL_ALERT_VARIANTS,
   ERROR_TYPE_VARIANTS,
+  // Fase 2 — novas categorias
+  PERICIA_SITUACAO_VARIANTS,
+  PARCELA_STATUS_VARIANTS,
+  REPASSE_STATUS_VARIANTS,
 } from '../variants';
 import type { BadgeCategory, BadgeVisualVariant } from '../variants';
 
@@ -90,6 +96,10 @@ const allPairs: CategoryValuePair[] = [
   ...pairsFromRecord('payment_status', PAYMENT_STATUS_VARIANTS),
   ...pairsFromRecord('financial_alert', FINANCIAL_ALERT_VARIANTS),
   ...pairsFromRecord('error_type', ERROR_TYPE_VARIANTS),
+  // Fase 2 — novas categorias
+  ...pairsFromRecord('pericia_situacao', PERICIA_SITUACAO_VARIANTS),
+  ...pairsFromRecord('parcela_status', PARCELA_STATUS_VARIANTS),
+  ...pairsFromRecord('repasse_status', REPASSE_STATUS_VARIANTS),
 ];
 
 // Build a fast-check arbitrary that picks uniformly from all registered pairs
@@ -144,6 +154,10 @@ const ALL_BADGE_CATEGORIES: BadgeCategory[] = [
   'payment_status',
   'financial_alert',
   'error_type',
+  // Fase 2 — novas categorias
+  'pericia_situacao',
+  'parcela_status',
+  'repasse_status',
 ];
 
 const badgeCategoryArbitrary = fc.oneof(

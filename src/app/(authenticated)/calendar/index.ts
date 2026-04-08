@@ -75,3 +75,14 @@ export {
 // ============================================================================
 export type { TravelEstimate } from "./travel-helpers";
 export { estimateTravelTime } from "./travel-helpers";
+
+// ============================================================================
+// Components
+// ============================================================================
+export { EventDialog } from "./components/event-dialog";
+export { EventCalendar } from "./components/event-calendar";
+
+// ============================================================================
+// Constants
+// ============================================================================
+export { AgendaDaysToShow } from "./constants";

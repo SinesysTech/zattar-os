@@ -32,7 +32,7 @@ import type {
   Lembrete,
 } from '../domain';
 import type { ProgressoDiario } from '../repository';
-import type { Task } from '@/app/(authenticated)/tarefas/domain';
+import type { Task } from '@/app/(authenticated)/tarefas';
 
 import {
   WidgetFluxoCaixa,

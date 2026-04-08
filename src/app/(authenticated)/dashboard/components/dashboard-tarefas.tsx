@@ -24,12 +24,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Task, TaskLabel, TaskPriority, TaskStatus } from '@/app/(authenticated)/tarefas/domain';
+import type { Task, TaskLabel, TaskPriority, TaskStatus } from '@/app/(authenticated)/tarefas';
 import {
   actionCriarTarefa,
   actionMarcarComoDone,
   actionMarcarComoTodo,
-} from '@/app/(authenticated)/tarefas/actions/tarefas-actions';
+} from '@/app/(authenticated)/tarefas';
 
 const STATUS_LABEL: Record<TaskStatus, string> = {
   backlog: 'Backlog',
