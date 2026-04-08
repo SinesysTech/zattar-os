@@ -101,12 +101,17 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
 
   // Fetch real global counts once on mount
   useEffect(() => {
+    type PaginatedData = { pagination?: { total?: number } };
+    const extractTotal = (res: Awaited<ReturnType<typeof actionListarExpedientes>>): number => {
+      if (!res.success) return 0;
+      return (res.data as PaginatedData).pagination?.total ?? 0;
+    };
     Promise.all([
       actionListarExpedientes({ limite: 1, baixado: false, incluirSemPrazo: true }),
       actionListarExpedientes({ limite: 1, baixado: true, incluirSemPrazo: true }),
     ]).then(([pend, baix]) => {
-      const p = pend.success && 'paginacao' in pend.data ? pend.data.paginacao.total : 0;
-      const b = baix.success && 'paginacao' in baix.data ? baix.data.paginacao.total : 0;
+      const p = extractTotal(pend);
+      const b = extractTotal(baix);
       setGlobalCounts({
         pendentes: p,
         baixados: b,
