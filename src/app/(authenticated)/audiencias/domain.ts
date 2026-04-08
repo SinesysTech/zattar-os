@@ -118,6 +118,32 @@ export const createAudienciaSchema = baseAudienciaSchema.refine(
 
 export const updateAudienciaSchema = baseAudienciaSchema.partial();
 
+// =============================================================================
+// FONTE DE ORIGEM (PJE captura vs. manual)
+// =============================================================================
+
+/**
+ * Conjunto de campos que podem ser editados em audiências capturadas do PJE.
+ * Audiências capturadas (idPje > 0) têm o PJE como fonte da verdade, então
+ * apenas metadados locais podem ser alterados via edição manual.
+ *
+ * Qualquer outra alteração deve ocorrer através do fluxo de captura/sincronização.
+ */
+export const ALLOWED_UPDATE_FIELDS_CAPTURADA = ['responsavelId', 'observacoes'] as const;
+export type AllowedUpdateFieldCapturada = typeof ALLOWED_UPDATE_FIELDS_CAPTURADA[number];
+
+/**
+ * Identifica se uma audiência foi capturada do PJE (origem PJE) ou criada
+ * manualmente no Sinesys. Usado para impor que registros capturados não
+ * podem ser editados localmente fora do whitelist permitido.
+ */
+export function isAudienciaCapturada(
+  audiencia: Pick<Audiencia, 'idPje'> | { idPje?: number | null }
+): boolean {
+  const idPje = (audiencia as { idPje?: number | null }).idPje;
+  return typeof idPje === 'number' && idPje > 0;
+}
+
 export const atualizarStatusSchema = z.object({
   status: z.nativeEnum(StatusAudiencia),
   statusDescricao: z.string().optional(),

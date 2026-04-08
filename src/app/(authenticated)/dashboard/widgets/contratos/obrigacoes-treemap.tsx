@@ -11,15 +11,14 @@
  * ============================================================================
  */
 
-import { useEffect, useState } from 'react';
 import { BarChart3 } from 'lucide-react';
+import { WidgetSkeleton } from '../shared/widget-skeleton';
+import { useDashboard } from '../../hooks';
 import {
   InsightBanner,
   WidgetContainer,
   fmtMoeda,
 } from '../../mock/widgets/primitives';
-import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { actionListarAcordos } from '@/app/(authenticated)/obrigacoes/server-actions';
 
 interface ObrigacaoPorTipo {
   label: string;
@@ -33,54 +32,20 @@ const TIPO_CONFIG: Record<string, { label: string; color: string }> = {
   custas_processuais:  { label: 'Custas Processuais',   color: 'oklch(from var(--warning) l c h / 0.45)' },
 };
 
-function useObrigacoesPorTipo() {
-  const [data, setData] = useState<ObrigacaoPorTipo[]>([]);
-  const [totalValor, setTotalValor] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetch() {
-      try {
-        const result = await actionListarAcordos({ pagina: 1, limite: 500 });
-        if (!result.success) return;
-
-        const acordos = (result.data as { acordos: Array<{ tipo: string; valorTotal: number; status: string }> })?.acordos ?? [];
-        // Agrupar por tipo, apenas ativos (não pagos totalmente)
-        const ativos = acordos.filter(a => a.status !== 'pago_total');
-        const porTipo = new Map<string, number>();
-
-        for (const a of ativos) {
-          const tipo = a.tipo || 'acordo';
-          porTipo.set(tipo, (porTipo.get(tipo) ?? 0) + (a.valorTotal ?? 0));
-        }
-
-        const items: ObrigacaoPorTipo[] = [];
-        let total = 0;
-        for (const [tipo, valor] of porTipo.entries()) {
-          const cfg = TIPO_CONFIG[tipo] ?? { label: tipo, color: 'var(--muted)' };
-          items.push({ label: cfg.label, valor, color: cfg.color });
-          total += valor;
-        }
-
-        items.sort((a, b) => b.valor - a.valor);
-        setData(items);
-        setTotalValor(total);
-      } catch {
-        // silently fail
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetch();
-  }, []);
-
-  return { data, totalValor, isLoading };
-}
-
 export function WidgetObrigacoesTreemap() {
-  const { data, totalValor, isLoading } = useObrigacoesPorTipo();
+  const { data: dashboardData, isLoading } = useDashboard();
 
   if (isLoading) return <WidgetSkeleton size="sm" />;
+
+  const treemapObrigacoes = dashboardData?.contratos?.treemapObrigacoes ?? [];
+
+  const data: ObrigacaoPorTipo[] = treemapObrigacoes.map(item => ({
+    label: item.natureza,
+    valor: item.valor,
+    color: TIPO_CONFIG[item.natureza.toLowerCase()]?.color ?? TIPO_CONFIG['acordo']?.color ?? 'var(--muted)',
+  })).sort((a, b) => b.valor - a.valor) ?? [];
+
+  const totalValor = data.reduce((acc, it) => acc + it.valor, 0);
 
   return (
     <WidgetContainer

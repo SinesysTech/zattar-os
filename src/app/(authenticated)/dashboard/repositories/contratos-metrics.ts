@@ -111,6 +111,9 @@ export async function buscarContratosResumo(): Promise<ContratosResumo> {
         tone,
       })),
       scoreContratual,
+      total: totalContratos,
+      novosMes: distribuidos, // Approximation as we aren't querying the actual date limit right now
+      taxaConversao: totalContratos > 0 ? Math.round((distribuidos / totalContratos) * 100) : 0,
     };
   } catch (error) {
     console.error('[Dashboard] Erro ao buscar contratos resumo:', error);
@@ -156,5 +159,8 @@ function getContratosResumoPadrao(): ContratosResumo {
     },
     treemapObrigacoes: [],
     scoreContratual: 0,
+    total: 0,
+    novosMes: 0,
+    taxaConversao: 0,
   };
 }

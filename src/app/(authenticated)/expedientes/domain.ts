@@ -255,4 +255,15 @@ export type ExpedientesFilters = Omit<
   "pagina" | "limite" | "ordenarPor" | "ordem"
 >;
 
+/**
+ * Deriva os nomes visíveis das partes com base nas regras de prioridade:
+ * origem (dados sincronizados) -> legado (digitado/modificado).
+ */
+export function getExpedientePartyNames(expediente: Expediente): { autora: string | null; re: string | null } {
+  return {
+    autora: expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || null,
+    re: expediente.nomeParteReOrigem || expediente.nomeParteRe || null,
+  };
+}
+
 // (EOF)

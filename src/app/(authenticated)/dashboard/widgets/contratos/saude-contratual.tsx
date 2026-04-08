@@ -11,7 +11,7 @@
  * ============================================================================
  */
 
-import { useEffect, useState } from 'react';
+
 import { HeartPulse } from 'lucide-react';
 import {
   GaugeMeter,
@@ -20,16 +20,20 @@ import {
   fmtNum,
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
-import { actionContratosStats, type ContratosStatsData } from '@/app/(authenticated)/contratos';
+import { useDashboard } from '../../hooks';
+import type { ContratosResumo } from '../../domain';
 
 type GaugeStatus = 'good' | 'warning' | 'danger' | 'neutral';
 
-function calcScoreContratual(stats: ContratosStatsData): { score: number; status: GaugeStatus } {
+function calcScoreContratual(stats: ContratosResumo): { score: number; status: GaugeStatus } {
   // Score baseado em: taxa de conversão (peso 60%) + novos no mês (peso 20%) + sem desistência (peso 20%)
-  const taxaConv = Math.min(stats.taxaConversao, 100);
-  const desistencias = stats.porStatus['desistencia']?.count ?? 0;
-  const taxaDesistencia = stats.total > 0 ? (desistencias / stats.total) * 100 : 0;
-  const novosMesScore = Math.min(stats.novosMes * 10, 100); // até 10 novos = 100%
+  const taxaConv = Math.min(stats.taxaConversao ?? 0, 100);
+  const countPorStatus = (status: string) => stats.porStatus.find(s => s.status.toLowerCase() === status.toLowerCase())?.count ?? 0;
+  const desistencias = countPorStatus('desistência') || countPorStatus('desistencia');
+  const total = stats.total ?? 0;
+  const taxaDesistencia = total > 0 ? (desistencias / total) * 100 : 0;
+  const novosMes = stats.novosMes ?? 0;
+  const novosMesScore = Math.min(novosMes * 10, 100); // até 10 novos = 100%
 
   const score = Math.round(
     taxaConv * 0.6 +
@@ -44,32 +48,21 @@ function calcScoreContratual(stats: ContratosStatsData): { score: number; status
 }
 
 export function WidgetSaudeContratual() {
-  const [stats, setStats] = useState<ContratosStatsData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetch() {
-      try {
-        const result = await actionContratosStats();
-        if (result.success) {
-          setStats(result.data);
-        }
-      } catch {
-        // silently fail — widget mostra skeleton
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetch();
-  }, []);
+  const { data, isLoading } = useDashboard();
 
   if (isLoading) return <WidgetSkeleton size="md" />;
+
+  const stats = data?.contratos;
 
   if (!stats) return <WidgetSkeleton size="md" />;
 
   const { score, status } = calcScoreContratual(stats);
-  const ativos = (stats.porStatus['contratado']?.count ?? 0) + (stats.porStatus['distribuido']?.count ?? 0);
-  const emContratacao = stats.porStatus['em_contratacao']?.count ?? 0;
+  const countPorStatus = (status: string) => stats.porStatus.find(s => s.status.toLowerCase() === status.toLowerCase())?.count ?? 0;
+  const ativos = countPorStatus('contratado') + countPorStatus('distribuído') + countPorStatus('distribuido');
+  const emContratacao = countPorStatus('em_contratacao') + countPorStatus('em contratação');
+  const novosMes = stats.novosMes ?? 0;
+  const total = stats.total ?? 0;
+  const taxaConversao = stats.taxaConversao ?? 0;
 
   return (
     <WidgetContainer
@@ -93,7 +86,7 @@ export function WidgetSaudeContratual() {
         <div className="grid grid-cols-3 gap-4 w-full pt-3 border-t border-border/10">
           {[
             { label: 'Contratos Ativos', value: fmtNum(ativos) },
-            { label: 'Novos no Mês', value: fmtNum(stats.novosMes) },
+            { label: 'Novos no Mês', value: fmtNum(novosMes) },
             { label: 'Em Contratação', value: fmtNum(emContratacao) },
           ].map((item) => (
             <div key={item.label} className="flex flex-col items-center gap-0.5">
@@ -107,13 +100,13 @@ export function WidgetSaudeContratual() {
           ))}
         </div>
 
-        {stats.novosMes > 0 && (
+        {novosMes > 0 && (
           <InsightBanner type="success">
-            {stats.novosMes} novo(s) contrato(s) este mês — taxa de conversão em {stats.taxaConversao}%.
+            {novosMes} novo(s) contrato(s) este mês — taxa de conversão em {taxaConversao}%.
           </InsightBanner>
         )}
 
-        {stats.total === 0 && (
+        {total === 0 && (
           <InsightBanner type="info">
             Nenhum contrato cadastrado ainda.
           </InsightBanner>

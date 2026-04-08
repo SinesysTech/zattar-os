@@ -7,8 +7,17 @@ import {
   updateAudienciaSchema,
   ListarAudienciasParams,
   StatusAudiencia,
+  isAudienciaCapturada,
+  ALLOWED_UPDATE_FIELDS_CAPTURADA,
 } from "./domain";
 import * as repo from "./repository";
+
+/**
+ * Teto máximo de itens por chamada de listagem. Calendários anuais de tenants
+ * grandes podem ter mais de 1000 audiências/ano e precisam de uma janela
+ * confortável para manter contadores e KPIs em sincronia entre views.
+ */
+export const AUDIENCIAS_LIMITE_MAXIMO = 10000;
 
 export async function criarAudiencia(
   input: z.infer<typeof createAudienciaSchema>
@@ -70,7 +79,7 @@ export async function listarAudiencias(
     ...params,
     pagina: params.pagina && params.pagina > 0 ? params.pagina : 1,
     limite:
-      params.limite && params.limite > 0 && params.limite <= 1000
+      params.limite && params.limite > 0 && params.limite <= AUDIENCIAS_LIMITE_MAXIMO
         ? params.limite
         : 100,
     ordenarPor: params.ordenarPor || "dataInicio",
@@ -98,6 +107,29 @@ export async function atualizarAudiencia(
     const audienciaExistenteResult = await repo.findAudienciaById(id);
     if (!audienciaExistenteResult.success || !audienciaExistenteResult.data) {
       return err(appError("NOT_FOUND", "Audiência não encontrada."));
+    }
+
+    // Política de fonte da verdade: audiências capturadas do PJE (idPje > 0) só
+    // podem ter o whitelist local alterado. Qualquer outro campo deve ser
+    // sincronizado pela captura, não por edição manual.
+    if (isAudienciaCapturada(audienciaExistenteResult.data)) {
+      const providedFields = Object.entries(validation.data)
+        .filter(([, value]) => value !== undefined)
+        .map(([key]) => key);
+      const forbiddenFields = providedFields.filter(
+        (field) => !ALLOWED_UPDATE_FIELDS_CAPTURADA.includes(field as never)
+      );
+      if (forbiddenFields.length > 0) {
+        return err(
+          appError(
+            "VALIDATION_ERROR",
+            `Audiência capturada do PJE — apenas ${ALLOWED_UPDATE_FIELDS_CAPTURADA.join(
+              ", "
+            )} podem ser editados manualmente. Campos não permitidos: ${forbiddenFields.join(", ")}.`,
+            { capturada: true, allowed: ALLOWED_UPDATE_FIELDS_CAPTURADA, forbidden: forbiddenFields }
+          )
+        );
+      }
     }
 
     const { processoId, tipoAudienciaId } = validation.data;

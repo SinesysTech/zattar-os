@@ -114,11 +114,11 @@ export async function obterDashboardUsuario(
   const [usuario, podeVerProcessos, podeVerAudiencias, podeVerExpedientes, podeVerFinanceiro, podeVerContratos] =
     await Promise.all([
       buscarUsuario(usuarioId),
-      checkPermission(usuarioId, 'processos', 'read'),
-      checkPermission(usuarioId, 'audiencias', 'read'),
-      checkPermission(usuarioId, 'expedientes', 'read'),
-      checkPermission(usuarioId, 'financeiro', 'read'),
-      checkPermission(usuarioId, 'contratos', 'read'),
+      checkPermission(usuarioId, 'acervo', 'listar'),
+      checkPermission(usuarioId, 'audiencias', 'listar'),
+      checkPermission(usuarioId, 'pendentes', 'listar'),
+      checkPermission(usuarioId, 'lancamentos_financeiros', 'listar'),
+      checkPermission(usuarioId, 'contratos', 'listar'),
     ]);
 
   // Buscar apenas dados permitidos com processo em lotes para evitar pool/connection exhaustion (fetch failed)

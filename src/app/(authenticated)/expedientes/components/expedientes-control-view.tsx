@@ -18,7 +18,7 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 import { Button } from '@/components/ui/button';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { UrgencyDot } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
-import { GRAU_TRIBUNAL_LABELS, type Expediente } from '../domain';
+import { GRAU_TRIBUNAL_LABELS, type Expediente, getExpedientePartyNames } from '../domain';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -142,7 +142,7 @@ function InfoRow({
 function InlineCopy({ text, label }: { text: string; label: string }) {
   const [copied, setCopied] = React.useState(false);
 
-  const handleCopy = React.useCallback((e: React.MouseEvent) => {
+  const handleCopy = React.useCallback((e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
     e.stopPropagation();
     navigator.clipboard.writeText(text).then(() => {
@@ -151,12 +151,21 @@ function InlineCopy({ text, label }: { text: string; label: string }) {
     }).catch(() => {});
   }, [text]);
 
+  const onKeyDown = React.useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.stopPropagation();
+      e.preventDefault();
+      handleCopy(e);
+    }
+  }, [handleCopy]);
+
   return (
     <button
       type="button"
       onClick={handleCopy}
+      onKeyDown={onKeyDown}
       title={copied ? 'Copiado!' : label}
-      className="inline-flex items-center justify-center size-4 rounded hover:bg-muted/50 transition-colors shrink-0 opacity-0 group-hover:opacity-100 cursor-pointer"
+      className="inline-flex items-center justify-center size-4 rounded hover:bg-muted/50 transition-colors shrink-0 opacity-0 group-hover:opacity-100 focus:opacity-100 group-focus-within:opacity-100 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-primary/50"
     >
       {copied ? (
         <Check className="size-2.5 text-success" />
@@ -183,13 +192,14 @@ function QueueCard({
   tipoNome: string | null;
   selected: boolean;
   onSelect: () => void;
-  onBaixar?: (e: React.MouseEvent) => void;
-  onViewDetail?: (e: React.MouseEvent) => void;
+  onBaixar?: (e: React.MouseEvent | React.KeyboardEvent) => void;
+  onViewDetail?: (e: React.MouseEvent | React.KeyboardEvent) => void;
 }) {
   const diasRestantes = calcularDiasRestantes(expediente);
   const urgencyLevel = getExpedienteUrgencyLevel(expediente, diasRestantes);
   const diasLabel = getDiasLabel(diasRestantes, expediente.prazoVencido);
   const grauLabel = GRAU_TRIBUNAL_LABELS[expediente.grau] ?? expediente.grau;
+  const partes = getExpedientePartyNames(expediente);
 
   return (
     <GlassPanel
@@ -224,15 +234,15 @@ function QueueCard({
       {/* Identificação do Processo (Seção 2) */}
       <div className="mt-3 pt-3 border-t border-border/10">
         {/* Partes (autora vs ré) */}
-        {(expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || expediente.nomeParteReOrigem || expediente.nomeParteRe) && (
-          <div className="flex items-center gap-1.5 min-w-0 mb-1.5">
+        {(partes.autora || partes.re) && (
+          <div className="flex items-center gap-1.5 min-w-0 mb-1.5 focus-within:ring-0">
             <p className="text-sm font-medium text-foreground truncate">
-              <span>{expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || '—'}</span>
+              <span>{partes.autora || '—'}</span>
               <span className="mx-1.5 font-normal text-muted-foreground/60">vs</span>
-              <span>{expediente.nomeParteReOrigem || expediente.nomeParteRe || '—'}</span>
+              <span>{partes.re || '—'}</span>
             </p>
             <InlineCopy 
-              text={`${expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || ''} vs ${expediente.nomeParteReOrigem || expediente.nomeParteRe || ''}`} 
+              text={`${partes.autora || ''} vs ${partes.re || ''}`} 
               label="Copiar parte" 
             />
           </div>
@@ -302,6 +312,11 @@ function QueueCard({
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); onBaixar(e); }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.stopPropagation(); e.preventDefault(); onBaixar(e);
+                }
+              }}
               className="flex h-6 items-center gap-1 rounded-md bg-primary/10 px-2 text-[10px] font-medium text-primary/80 transition-colors hover:bg-primary/20 cursor-pointer"
             >
               <CheckCircle2 className="size-3" />
@@ -312,6 +327,11 @@ function QueueCard({
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); onViewDetail(e); }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.stopPropagation(); e.preventDefault(); onViewDetail(e);
+                }
+              }}
               className="flex h-6 items-center gap-1 rounded-md border border-border/20 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 cursor-pointer"
             >
               <ExternalLink className="size-3" />
@@ -422,11 +442,11 @@ function DetailPanel({
         )}
         <InfoRow
           label="Parte Autora"
-          value={expediente.nomeParteAutora || '—'}
+          value={getExpedientePartyNames(expediente).autora || '—'}
         />
         <InfoRow
           label="Parte Ré"
-          value={expediente.nomeParteRe || '—'}
+          value={getExpedientePartyNames(expediente).re || '—'}
         />
         {responsavelNome && (
           <InfoRow label="Responsável" value={responsavelNome} />

@@ -34,12 +34,12 @@ import {
   actionListarSalasAudiencia,
 } from '@/app/(authenticated)/audiencias/actions';
 import { localToISO } from '@/app/(authenticated)/audiencias/lib/date-utils';
-import type { Audiencia } from '../domain';
+import { isAudienciaCapturada, type Audiencia } from '../domain';
 
 interface EditarAudienciaDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess: () => void;
+  onSuccess: (updated?: Audiencia) => void;
   audiencia?: Audiencia | null;
 }
 
@@ -86,6 +86,7 @@ const GRAUS = [
 ];
 
 export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia }: EditarAudienciaDialogProps) {
+  const isCapturada = audiencia ? isAudienciaCapturada(audiencia) : false;
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -324,6 +325,33 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
       return;
     }
 
+    // ─── Branch capturada (PJE) ────────────────────────────
+    // Audiências capturadas só permitem editar responsável e observações.
+    // Toda alteração estrutural deve passar pelo fluxo de captura/sincronização.
+    if (isCapturada) {
+      setIsLoading(true);
+      try {
+        const result = await actionAtualizarAudienciaPayload(audiencia.id, {
+          responsavelId: responsavelId ? parseInt(responsavelId) : null,
+          observacoes: observacoes || null,
+        });
+
+        if (!result.success) {
+          throw new Error(result.error || 'Erro ao editar audiência');
+        }
+
+        resetForm();
+        onSuccess(result.data);
+        onOpenChange(false);
+      } catch (err) {
+        console.error('Erro ao editar audiência:', err);
+        setError(err instanceof Error ? err.message : 'Erro ao editar audiência');
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
     // Validações
     if (!trt) {
       setError('Selecione o TRT');
@@ -403,7 +431,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
 
       // Resetar form
       resetForm();
-      onSuccess();
+      onSuccess(result.data);
       onOpenChange(false);
     } catch (err) {
       console.error('Erro ao editar audiência:', err);
@@ -456,7 +484,9 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
         <DialogHeader>
           <DialogTitle>Editar Audiência</DialogTitle>
           <DialogDescription>
-            Altere os dados da audiência.
+            {isCapturada
+              ? 'Esta audiência foi capturada do PJE — apenas responsável e observações podem ser editados manualmente.'
+              : 'Altere os dados da audiência.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -467,6 +497,16 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             </div>
           )}
 
+          {isCapturada && (
+            <div className="bg-info/10 text-info p-3 rounded-md text-xs leading-relaxed">
+              <strong>Origem PJE:</strong> os campos estruturais (processo, datas, tipo,
+              sala, modalidade e endereço) são mantidos pela sincronização com o tribunal.
+              Para alterá-los, atualize a captura no PJE.
+            </div>
+          )}
+
+          {!isCapturada && (
+          <>
           {/* TRT e Grau */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -726,6 +766,8 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                 </>
               )}
             </>
+          )}
+          </>
           )}
 
           {/* Responsável */}

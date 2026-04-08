@@ -244,6 +244,9 @@ export interface ContratosResumo {
   }[];
   /** Score contratual (0-100) */
   scoreContratual: number;
+  total?: number;
+  novosMes?: number;
+  taxaConversao?: number;
 }
 
 // ============================================================================
