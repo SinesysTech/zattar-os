@@ -22,11 +22,6 @@ import {
 
 // ─── Opções estáticas ────────────────────────────────────────────────────────
 
-const STATUS_OPTIONS: readonly FilterOption[] = [
-  { value: 'pendente', label: 'Pendente' },
-  { value: 'baixado', label: 'Baixado' },
-  { value: 'vencido', label: 'Vencido' },
-];
 
 const GRAU_OPTIONS: readonly FilterOption[] = Object.entries(GRAU_TRIBUNAL_LABELS).map(
   ([value, label]) => ({ value, label })
@@ -59,11 +54,7 @@ interface TipoExpediente {
   tipo_expediente?: string;
 }
 
-export type StatusFiltro = 'pendente' | 'baixado' | 'vencido';
-
 export interface ExpedientesListFiltersProps {
-  statusFiltro: StatusFiltro[];
-  onStatusChange: (value: StatusFiltro[]) => void;
   trtFiltro: CodigoTribunal[];
   onTrtChange: (value: CodigoTribunal[]) => void;
   grauFiltro: GrauTribunal[];
@@ -87,8 +78,6 @@ export interface ExpedientesListFiltersProps {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function ExpedientesListFilters({
-  statusFiltro,
-  onStatusChange,
   trtFiltro,
   onTrtChange,
   grauFiltro,
@@ -130,12 +119,6 @@ export function ExpedientesListFilters({
 
   return (
     <>
-      <FilterPopoverMulti
-        label="Status"
-        options={STATUS_OPTIONS}
-        value={statusFiltro}
-        onValueChange={(v) => onStatusChange(v as StatusFiltro[])}
-      />
       <FilterPopoverMulti
         label="Tribunal"
         options={TRIBUNAL_OPTIONS}
