@@ -6,6 +6,7 @@ import {
   Palette,
   Sparkles,
   Users,
+  FileType,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -19,7 +20,8 @@ export type SettingsTab =
   | 'integracoes'
   | 'assistentes-ia'
   | 'aparencia'
-  | 'prompts-ia';
+  | 'prompts-ia'
+  | 'tipos-expedientes';
 
 export interface SettingsNavItem {
   id: SettingsTab;
@@ -92,6 +94,17 @@ export const SETTINGS_NAV_GROUPS: SettingsNavGroup[] = [
         label: 'Prompts IA',
         icon: Sparkles,
         description: 'Gerencie prompts de sistema para assistentes de IA',
+      },
+    ],
+  },
+  {
+    label: 'Operacional',
+    items: [
+      {
+        id: 'tipos-expedientes',
+        label: 'Tipos de Expedientes',
+        icon: FileType,
+        description: 'Categorias de expedientes utilizadas na gestão de prazos',
       },
     ],
   },
