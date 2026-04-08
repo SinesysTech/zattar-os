@@ -10,8 +10,7 @@
  */
 
 import * as React from 'react';
-import { FilterPopoverMulti } from '@/app/(authenticated)/partes/components/shared/filter-popover-multi';
-import type { FilterOption } from '@/app/(authenticated)/partes/components/shared/filter-popover';
+import { FilterPopoverMulti, type FilterOption } from '@/app/(authenticated)/partes';
 import {
   GrauTribunal,
   GRAU_TRIBUNAL_LABELS,

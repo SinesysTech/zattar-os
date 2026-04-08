@@ -23,9 +23,8 @@ import {
   actionDeletarAgendaEvento,
 } from "@/app/(authenticated)/agenda";
 
-import type { CalendarEvent } from "@/app/(authenticated)/calendar/types";
-import { EventDialog } from "@/app/(authenticated)/calendar/components/event-dialog";
-import { AgendaDaysToShow } from "@/app/(authenticated)/calendar/constants";
+import type { CalendarEvent } from "@/app/(authenticated)/calendar";
+import { EventDialog, AgendaDaysToShow } from "@/app/(authenticated)/calendar";
 
 import { adaptEvents, filterBySearch, filterBySource, type AgendaEvent } from "../lib/adapters";
 import { AgendaToolbar } from "./toolbar";

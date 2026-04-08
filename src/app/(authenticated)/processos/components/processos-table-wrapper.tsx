@@ -16,7 +16,7 @@ import { useAgentContext } from '@copilotkit/react-core/v2';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable, DataShell, DataTableToolbar, DataPagination } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { FilterPopover, FilterPopoverMulti, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
+import { FilterPopover, FilterPopoverMulti, type FilterOption } from '@/app/(authenticated)/partes';
 import {
   GrauBadgesSimple,
   ProcessosEmptyState,

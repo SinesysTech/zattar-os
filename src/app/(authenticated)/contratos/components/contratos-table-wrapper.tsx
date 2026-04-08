@@ -25,7 +25,7 @@ import {
   DataTableToolbar,
   DataPagination,
 } from '@/components/shared/data-shell';
-import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes/components/shared';
+import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes';
 import { ViewModePopover, type ViewModeOption } from '@/components/shared/view-mode-popover';
 import { Button } from '@/components/ui/button';
 import {
@@ -49,7 +49,7 @@ import {
   AlterarSegmentoMassaDialog,
   ExcluirMassaDialog,
 } from './contratos-bulk-actions';
-import { GerarPecaDialog } from '@/app/(authenticated)/pecas-juridicas/components';
+import { GerarPecaDialog } from '@/app/(authenticated)/pecas-juridicas';
 import type {
   Contrato,
   ListarContratosParams,

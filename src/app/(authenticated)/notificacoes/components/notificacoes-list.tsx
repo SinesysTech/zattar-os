@@ -12,8 +12,7 @@ import {
   DataTableToolbar,
   type DataTableDensity,
 } from "@/components/shared/data-shell";
-import { FilterPopover } from "@/app/(authenticated)/partes/components/shared";
-import type { FilterOption } from "@/app/(authenticated)/partes/components/shared";
+import { FilterPopover, type FilterOption } from "@/app/(authenticated)/partes";
 import type { Table as TanstackTable, ColumnDef } from "@tanstack/react-table";
 import { CheckCheckIcon, ClockIcon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
@@ -353,7 +352,7 @@ export function NotificacoesList() {
             total={total}
             totalPages={totalPaginas}
             onPageChange={handlePageChange}
-            onPageSizeChange={() => {}}
+            onPageSizeChange={() => { }}
             isLoading={isLoading}
           />
         ) : null
@@ -370,7 +369,7 @@ export function NotificacoesList() {
           total,
           totalPages: totalPaginas,
           onPageChange: handlePageChange,
-          onPageSizeChange: () => {},
+          onPageSizeChange: () => { },
         }}
         hidePagination={true}
         onTableReady={setTable}

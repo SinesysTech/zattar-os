@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { actionObterMetricasDB } from "@/app/(authenticated)/admin";
 import { actionListarIntegracoesPorTipo } from "@/lib/integracoes";
 import { actionListarSystemPrompts } from "@/lib/system-prompts";
-import { ConfiguracoesSettingsLayout } from "@/app/(authenticated)/configuracoes/components/configuracoes-settings-layout";
+import { ConfiguracoesSettingsLayout } from "@/app/(authenticated)/configuracoes";
 
 export const dynamic = "force-dynamic";
 

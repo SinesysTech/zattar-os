@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/tooltip';
 import { actionObterDetalhesComplementaresProcesso } from '../actions';
 import { Text } from '@/components/ui/typography';
-import { ExpedienteVisualizarDialog } from '@/app/(authenticated)/expedientes/components/expediente-visualizar-dialog';
+import { ExpedienteVisualizarDialog } from '@/app/(authenticated)/expedientes';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import { actionListarTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
 import type { Audiencia } from '@/app/(authenticated)/audiencias';
@@ -452,10 +452,10 @@ export function ProcessoDetailsTabs({
           ReturnType<typeof actionListarUsuarios> | Promise<null>,
           ReturnType<typeof actionListarTiposExpedientes>,
         ] = [
-          actionObterDetalhesComplementaresProcesso(processoId, numeroProcesso),
-          temUsuariosExternos ? Promise.resolve(null) : actionListarUsuarios({ ativo: true, limite: 200 }),
-          actionListarTiposExpedientes({ limite: 200 }),
-        ];
+            actionObterDetalhesComplementaresProcesso(processoId, numeroProcesso),
+            temUsuariosExternos ? Promise.resolve(null) : actionListarUsuarios({ ativo: true, limite: 200 }),
+            actionListarTiposExpedientes({ limite: 200 }),
+          ];
 
         const [result, usuariosResult, tiposResult] = await Promise.all(promises);
         if (cancelled) return;
@@ -563,57 +563,57 @@ export function ProcessoDetailsTabs({
 
       <CollapsibleContent>
         <Tabs defaultValue="expedientes">
-        <TabsList variant="line" className="w-full justify-start">
-          <TabsTrigger value="expedientes" className="gap-1.5 text-sm">
-            <FileText className="h-3.5 w-3.5" />
-            Expedientes
-            {!isLoading && totalExpedientes > 0 && (
-              <SemanticBadge category="status" value={totalExpedientes} variantOverride="secondary" toneOverride="soft" className="ml-1 text-[10px] px-1.5 py-0">
-                {totalExpedientes}
-              </SemanticBadge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="audiencias" className="gap-1.5 text-sm">
-            <Calendar className="h-3.5 w-3.5" />
-            Audiências
-            {!isLoading && totalAudiencias > 0 && (
-              <SemanticBadge category="status" value={totalAudiencias} variantOverride="secondary" toneOverride="soft" className="ml-1 text-[10px] px-1.5 py-0">
-                {totalAudiencias}
-              </SemanticBadge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="pericias" className="gap-1.5 text-sm">
-            <Microscope className="h-3.5 w-3.5" />
-            Perícias
-            {!isLoading && totalPericias > 0 && (
-              <SemanticBadge category="status" value={totalPericias} variantOverride="secondary" toneOverride="soft" className="ml-1 text-[10px] px-1.5 py-0">
-                {totalPericias}
-              </SemanticBadge>
-            )}
-          </TabsTrigger>
-        </TabsList>
+          <TabsList variant="line" className="w-full justify-start">
+            <TabsTrigger value="expedientes" className="gap-1.5 text-sm">
+              <FileText className="h-3.5 w-3.5" />
+              Expedientes
+              {!isLoading && totalExpedientes > 0 && (
+                <SemanticBadge category="status" value={totalExpedientes} variantOverride="secondary" toneOverride="soft" className="ml-1 text-[10px] px-1.5 py-0">
+                  {totalExpedientes}
+                </SemanticBadge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="audiencias" className="gap-1.5 text-sm">
+              <Calendar className="h-3.5 w-3.5" />
+              Audiências
+              {!isLoading && totalAudiencias > 0 && (
+                <SemanticBadge category="status" value={totalAudiencias} variantOverride="secondary" toneOverride="soft" className="ml-1 text-[10px] px-1.5 py-0">
+                  {totalAudiencias}
+                </SemanticBadge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="pericias" className="gap-1.5 text-sm">
+              <Microscope className="h-3.5 w-3.5" />
+              Perícias
+              {!isLoading && totalPericias > 0 && (
+                <SemanticBadge category="status" value={totalPericias} variantOverride="secondary" toneOverride="soft" className="ml-1 text-[10px] px-1.5 py-0">
+                  {totalPericias}
+                </SemanticBadge>
+              )}
+            </TabsTrigger>
+          </TabsList>
 
-        {isLoading ? (
-          loadingContent
-        ) : (
-          <>
-            <TabsContent value="expedientes" className="mt-0 rounded-xl border bg-background/70 p-3">
-              <div className="max-h-96 overflow-y-auto pr-1">
-                <ExpedientesTable expedientes={expedientes} usuariosMap={usuariosMap} tiposMap={tiposMap} />
-              </div>
-            </TabsContent>
-            <TabsContent value="audiencias" className="mt-0 rounded-xl border bg-background/70 p-3">
-              <div className="max-h-96 overflow-y-auto pr-1">
-                <AudienciasTable audiencias={audiencias} />
-              </div>
-            </TabsContent>
-            <TabsContent value="pericias" className="mt-0 rounded-xl border bg-background/70 p-3">
-              <div className="max-h-96 overflow-y-auto pr-1">
-                <PericiasTable pericias={pericias} />
-              </div>
-            </TabsContent>
-          </>
-        )}
+          {isLoading ? (
+            loadingContent
+          ) : (
+            <>
+              <TabsContent value="expedientes" className="mt-0 rounded-xl border bg-background/70 p-3">
+                <div className="max-h-96 overflow-y-auto pr-1">
+                  <ExpedientesTable expedientes={expedientes} usuariosMap={usuariosMap} tiposMap={tiposMap} />
+                </div>
+              </TabsContent>
+              <TabsContent value="audiencias" className="mt-0 rounded-xl border bg-background/70 p-3">
+                <div className="max-h-96 overflow-y-auto pr-1">
+                  <AudienciasTable audiencias={audiencias} />
+                </div>
+              </TabsContent>
+              <TabsContent value="pericias" className="mt-0 rounded-xl border bg-background/70 p-3">
+                <div className="max-h-96 overflow-y-auto pr-1">
+                  <PericiasTable pericias={pericias} />
+                </div>
+              </TabsContent>
+            </>
+          )}
         </Tabs>
       </CollapsibleContent>
     </Collapsible>

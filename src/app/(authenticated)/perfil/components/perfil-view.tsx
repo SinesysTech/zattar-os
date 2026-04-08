@@ -20,7 +20,7 @@ import {
   formatarEnderecoCompleto,
   formatarGenero,
   getAvatarUrl,
-} from '@/app/(authenticated)/usuarios/utils';
+} from '@/app/(authenticated)/usuarios';
 
 function getInitials(name: string): string {
   if (!name) return 'U';

@@ -469,31 +469,31 @@ Migração incremental dos 32 módulos restantes para o Design System ZattarOS, 
   - Garantir que todos os testes passam. Verificar que nenhum módulo do Grupo C contém violações do Design System. Perguntar ao usuário se há dúvidas.
 
 
-- [ ] 27. Validação cross-módulo de importações FSD
-  - [-] 27.1 Verificar regras de importação cross-módulo
+- [x] 27. Validação cross-módulo de importações FSD
+  - [x] 27.1 Verificar regras de importação cross-módulo
     - Garantir que nenhum módulo externo importa diretamente de subpastas de outro módulo
     - Toda importação cross-módulo deve passar pelo barrel export (`index.ts`)
     - Executar `npm run check:architecture` para validar
     - _Requisitos: 20.5_
 
-  - [~] 27.2 Verificar RULES.md em todos os módulos da Fase 2
+  - [x] 27.2 Verificar RULES.md em todos os módulos da Fase 2
     - Garantir que cada módulo possui `RULES.md` atualizado com entidades, regras de validação, regras de negócio, filtros, integrações e revalidação de cache
     - _Requisitos: 20.6_
 
-- [ ] 28. Testes de validação
-  - [~] 28.1 Estender property test — Cobertura completa de variantes de badge (Fase 2)
+- [x] 28. Testes de validação
+  - [x] 28.1 Estender property test — Cobertura completa de variantes de badge (Fase 2)
     - **Property 1: Cobertura completa de variantes de badge para todos os valores de domínio (expandida)**
     - Expandir o test existente da Fase 1 para incluir pares (categoria, valor) das novas categorias: `pericia_situacao` (F, A, C, R, P), `parcela_status` (pendente, paga, vencida, cancelada), `repasse_status` (nao_aplicavel, pendente_declaracao, pendente_transferencia, realizado)
     - Usar fast-check com mínimo 100 iterações
     - **Valida: Requisitos 19.5, 22.1**
 
-  - [~] 28.2 Estender property test — Idempotência da normalização (Fase 2)
+  - [x] 28.2 Estender property test — Idempotência da normalização (Fase 2)
     - **Property 2: Idempotência da normalização de badge variant (expandida)**
     - Expandir o test existente para incluir as novas categorias no gerador de inputs
     - Usar fast-check com mínimo 100 iterações
     - **Valida: Requisitos 22.1**
 
-  - [~] 28.3 Estender smoke tests de análise estática (Fase 2)
+  - [x] 28.3 Estender smoke tests de análise estática (Fase 2)
     - Expandir escopo dos smoke tests existentes para cobrir todos os módulos da Fase 2
     - Verificar ausência de `oklch()` direto em componentes de feature (exceto `globals.css` e primitivos UI)
     - Verificar ausência de `bg-gray-*` em componentes de chat (devem usar variáveis semânticas)
@@ -503,7 +503,7 @@ Migração incremental dos 32 módulos restantes para o Design System ZattarOS, 
     - Verificar existência de `domain.ts`, `service.ts`, `repository.ts`, `actions/`, `index.ts`, `RULES.md` em cada módulo
     - **Valida: Requisitos 22.2, 22.3, 22.4, 22.5**
 
-- [~] 29. Checkpoint final — Validação completa da Fase 2
+- [-] 29. Checkpoint final — Validação completa da Fase 2
   - Executar `npm run check:architecture`, `npm run validate:exports`, `npm test`, `npm run lint`
   - Garantir que todos os testes passam. Perguntar ao usuário se há dúvidas.
 
