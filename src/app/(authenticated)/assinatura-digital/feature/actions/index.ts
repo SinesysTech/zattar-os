@@ -1,10 +1,12 @@
-"use server";
-
 /**
  * ASSINATURA DIGITAL ACTIONS - Export Central
  *
  * Re-exporta todas as server actions do módulo de assinatura digital.
  * Organizado por domínio seguindo o padrão FSD.
+ *
+ * Nota: Cada arquivo de action individual já possui "use server".
+ * Este barrel file NÃO deve ter "use server" pois re-exports não são
+ * permitidos em arquivos "use server" (Next.js 16+).
  */
 
 // =============================================================================
