@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Servidor MCP de Desenvolvimento - Synthropic
+ * Servidor MCP de Desenvolvimento - ZattarOS
  *
  * Inicia o servidor MCP via stdio para testes locais.
  *

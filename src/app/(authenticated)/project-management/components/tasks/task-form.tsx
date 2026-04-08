@@ -38,11 +38,11 @@ import {
   type Tarefa,
   type StatusTarefa,
   type Prioridade,
-} from "../../lib/domain";
+} from "../../domain";
 import {
   actionCriarTarefa,
   actionAtualizarTarefa,
-} from "../../lib/actions";
+} from "../../actions";
 import { toast } from "sonner";
 
 const formSchema = z.object({

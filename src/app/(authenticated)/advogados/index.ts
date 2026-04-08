@@ -1,8 +1,13 @@
 /**
- * Advogados Feature - Barrel Exports
+ * ADVOGADOS MODULE — Barrel Export (API Pública)
+ *
+ * Módulo de serviço (sem page.tsx) — cadastro de advogados e credenciais PJE.
  */
 
-// Types
+// =============================================================================
+// Types / Domain
+// =============================================================================
+
 export type {
   Advogado,
   OabEntry,
@@ -15,7 +20,6 @@ export type {
   CriarCredencialParams,
   AtualizarCredencialParams,
   ListarCredenciaisParams,
-  // Credenciais em Lote
   GrauCredencial,
   ModoDuplicata,
   CriarCredenciaisEmLoteParams,
@@ -23,26 +27,17 @@ export type {
   ResumoCriacaoEmLote,
 } from './domain';
 
-// Constants
 export {
   TRIBUNAIS_ATIVOS,
   TRIBUNAIS_LABELS,
   GRAUS_LABELS,
   UFS_BRASIL,
-} from './domain';
-
-// Schemas
-export {
   criarAdvogadoSchema,
   atualizarAdvogadoSchema,
   criarCredencialSchema,
   atualizarCredencialSchema,
   criarCredenciaisEmLoteSchema,
   oabEntrySchema,
-} from './domain';
-
-// Helper functions
-export {
   getPrimaryOab,
   formatOabs,
   formatOab,
@@ -50,36 +45,44 @@ export {
   findOabByState,
 } from './domain';
 
-// Service functions (server-side)
-export {
-  buscarAdvogado,
-} from './service';
+// =============================================================================
+// Service
+// =============================================================================
 
-// Repository functions (server-side)
-export {
-  listarCredenciaisMapa,
-} from './repository';
+export { buscarAdvogado } from './service';
 
+// =============================================================================
+// Repository
+// =============================================================================
+
+export { listarCredenciaisMapa } from './repository';
+
+// =============================================================================
 // Actions
+// =============================================================================
+
 export {
   actionListarAdvogados,
   actionBuscarAdvogado,
   actionCriarAdvogado,
   actionAtualizarAdvogado,
-} from './actions/advogados-actions';
-
-export {
   actionListarCredenciais,
   actionBuscarCredencial,
   actionCriarCredencial,
   actionAtualizarCredencial,
   actionCriarCredenciaisEmLote,
   actionAtualizarStatusCredenciaisEmLote,
-} from './actions/credenciais-actions';
+} from './actions';
 
+// =============================================================================
 // Hooks
+// =============================================================================
+
 export { useAdvogados } from './hooks/use-advogados';
 export { useCredenciais } from './hooks/use-credenciais';
 
+// =============================================================================
 // Components
+// =============================================================================
+
 export { CredenciaisLoteDialog } from './components';

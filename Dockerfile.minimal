@@ -68,9 +68,9 @@ USER nextjs
 EXPOSE 3000
 
 # OCI Labels
-LABEL org.opencontainers.image.title="Synthropic App"
-LABEL org.opencontainers.image.description="Synthropic Application - Minimal Production Image"
-LABEL org.opencontainers.image.vendor="Synthropic Tech"
+LABEL org.opencontainers.image.title="ZattarOS App"
+LABEL org.opencontainers.image.description="ZattarOS Application - Minimal Production Image"
+LABEL org.opencontainers.image.vendor="Synthropic"
 LABEL org.opencontainers.image.source="https://github.com/SynthropicTech/zattar-os"
 # These should be passed as build-args ideally, but we can set defaults or placeholders
 ARG VERSION=latest

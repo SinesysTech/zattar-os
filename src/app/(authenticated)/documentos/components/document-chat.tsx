@@ -9,6 +9,7 @@
 import * as React from 'react';
 import { MessageSquare } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Typography } from '@/components/ui/typography';
 import { RealtimeChat } from '@/components/realtime/realtime-chat';
 
 
@@ -90,10 +91,10 @@ export function DocumentChat({ documentoId, currentUserName, currentUserId }: Do
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="border-b p-4">
-        <h3 className="font-semibold flex items-center gap-2">
+        <Typography.H3 className="flex items-center gap-2">
           <MessageSquare className="h-4 w-4" />
           Chat do Documento
-        </h3>
+        </Typography.H3>
         <p className="text-xs text-muted-foreground mt-1">
           Conversa em tempo real
         </p>

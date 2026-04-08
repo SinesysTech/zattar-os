@@ -58,7 +58,7 @@ import {
 } from '../actions/arquivos-actions';
 import { actionDeletarDocumento } from '../actions/documentos-actions';
 import type { ItemDocumento } from '../domain';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Typography } from '@/components/ui/typography';
 
 type SortOption = 'name' | 'date' | 'size';
 type SortDirection = 'asc' | 'desc';
@@ -421,9 +421,9 @@ export function FileManager() {
                         ) : filteredItems.length === 0 ? (
                             <div className="flex flex-1 flex-col items-center justify-center rounded-lg border bg-card text-center">
                                 <File className="mx-auto h-12 w-12 opacity-50" />
-                                <h2 className="mt-4 text-muted-foreground">
+                                <Typography.H2 className="mt-4 text-muted-foreground">
                                     {searchQuery ? 'Nenhum item encontrado' : 'Não há arquivos'}
-                                </h2>
+                                </Typography.H2>
                                 {!searchQuery && (
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
@@ -684,18 +684,18 @@ export function FileManager() {
                                 {/* Área do ícone e nome */}
                                 <div className="flex flex-col items-center gap-4 rounded-t-xl bg-muted/50 p-6 pt-10">
                                     {getPreviewIcon(selectedItem)}
-                                    <h2 className="max-w-full wrap-break-word text-center text-sm font-medium leading-tight">
+                                    <Heading level="card" className="max-w-full wrap-break-word text-center text-sm leading-tight">
                                         {getItemName(selectedItem)}
-                                    </h2>
+                                    </Heading>
                                 </div>
 
                                 {/* Conteúdo do card */}
                                 <div className="flex flex-1 flex-col space-y-4 p-6">
                                     {/* Seção de metadados */}
                                     <div className="space-y-3">
-                                        <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                        <Heading level="subsection" className="text-xs uppercase tracking-wide text-muted-foreground">
                                             Informações
-                                        </h3>
+                                        </Heading>
 
                                         <div className="space-y-2 text-sm">
                                             <div className="flex justify-between py-1">
@@ -771,18 +771,18 @@ export function FileManager() {
                             {/* Área do ícone e nome */}
                             <div className="flex flex-col items-center gap-4 rounded-xl border bg-muted/30 p-6">
                                 {getPreviewIcon(selectedItem)}
-                                <h2 className="max-w-full wrap-break-word text-center text-sm font-medium leading-tight">
+                                <Heading level="card" className="max-w-full wrap-break-word text-center text-sm leading-tight">
                                     {getItemName(selectedItem)}
-                                </h2>
+                                </Heading>
                             </div>
 
                             <Separator />
 
                             {/* Seção de metadados */}
                             <div className="space-y-3">
-                                <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                <Heading level="subsection" className="text-xs uppercase tracking-wide text-muted-foreground">
                                     Informações
-                                </h3>
+                                </Heading>
 
                                 <div className="space-y-2 text-sm">
                                     <div className="flex justify-between py-1">

@@ -6,10 +6,11 @@ import { ArrowLeft, KanbanSquare, List, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { ComboboxOption } from "@/components/ui/combobox";
+import { Heading } from "@/components/ui/typography";
 import { TaskBoard } from "../../../components/tasks/task-board";
 import { TaskList } from "../../../components/tasks/task-list";
 import { TaskFormDialog } from "../../../components/tasks/task-form";
-import type { Projeto, Tarefa } from "../../../lib/domain";
+import type { Projeto, Tarefa } from "../../../domain";
 
 interface ProjectTasksViewProps {
   projeto: Projeto;
@@ -41,9 +42,9 @@ export function ProjectTasksView({
             </Link>
           </Button>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">
+            <Heading level="page">
               Tarefas
-            </h1>
+            </Heading>
             <p className="text-muted-foreground text-sm">
               {projeto.nome}
             </p>

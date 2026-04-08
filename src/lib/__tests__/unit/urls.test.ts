@@ -1,7 +1,7 @@
 /**
  * Testes Unitários para URLs
  *
- * Valida funções de geração de URLs dos apps Synthropic
+ * Valida funções de geração de URLs dos apps ZattarOS
  */
 
 import { getDashboardUrl, getMeuProcessoUrl, getWebsiteUrl } from '@/lib/urls';

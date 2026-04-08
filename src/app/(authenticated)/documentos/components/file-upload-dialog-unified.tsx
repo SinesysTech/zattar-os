@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Typography } from '@/components/ui/typography';
 import { toast } from 'sonner';
 import { actionUploadArquivoGenerico } from '../actions/arquivos-actions';
 import type { Arquivo } from '../domain';
@@ -175,7 +176,7 @@ export function FileUploadDialogUnified({
 
                 {files.length > 0 && (
                     <div className="mt-4">
-                        <h4 className="text-sm font-medium">Arquivos Selecionados ({files.length})</h4>
+                        <Typography.H4 className="text-sm">Arquivos Selecionados ({files.length})</Typography.H4>
                         <ul className="mt-2 max-h-40 divide-y overflow-auto rounded-md border">
                             {files.map((file, index) => (
                                 <li

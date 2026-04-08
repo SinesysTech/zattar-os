@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { authenticateRequest } from "@/lib/auth/session";
-import NotesApp from "./note-app";
+import NotesApp from "./components/note-app";
 import * as notasService from "./service";
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
 /**
- * Sistema de Resources MCP do Synthropic
+ * Sistema de Resources MCP do ZattarOS
  *
  * Resources permitem expor dados estruturados (documentos, arquivos, processos)
  * para clientes MCP que podem acessá-los via URI.

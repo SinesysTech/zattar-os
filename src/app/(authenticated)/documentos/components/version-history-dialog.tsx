@@ -34,11 +34,12 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Typography } from '@/components/ui/typography';
 import { toast } from 'sonner';
 import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDocumentVersions } from '../hooks/use-document-versions';
-import type { DocumentoVersaoComUsuario } from '../types';
+import type { DocumentoVersaoComUsuario } from '../domain';
 
 interface VersionHistoryDialogProps {
   open: boolean;
@@ -113,7 +114,7 @@ export function VersionHistoryDialog({
             ) : versions.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-64 text-center">
                 <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="font-medium text-lg">Sem histórico de versões</h3>
+                <Typography.H3>Sem histórico de versões</Typography.H3>
                 <p className="text-sm text-muted-foreground mt-1">
                   As versões serão salvas automaticamente conforme você edita
                 </p>
@@ -141,9 +142,9 @@ export function VersionHistoryDialog({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <h4 className="font-medium truncate">
+                          <Typography.H4 className="truncate">
                             {version.titulo || 'Sem título'}
-                          </h4>
+                          </Typography.H4>
                           <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
                             <span className="flex items-center gap-1">
                               <Clock className="h-3.5 w-3.5" />

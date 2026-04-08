@@ -35,7 +35,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { MailMessagePreview } from "@/lib/mail/types";
 import { useMailActions } from "../hooks/use-mail-api";
-import { useMailStore } from "../use-mail";
+import { useMailStore } from "../hooks/use-mail";
 import { useMailDisplay } from "../hooks/use-mail-display";
 import { MailEditor, type MailEditorRef } from "./mail-editor";
 import { toast } from "sonner";

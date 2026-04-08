@@ -1,5 +1,5 @@
 import { AvatarStack } from "@/components/ui/avatar-stack";
-import type { MembroProjeto } from "../../lib/domain";
+import type { MembroProjeto } from "../../domain";
 
 interface MemberAvatarGroupProps {
   membros: Pick<MembroProjeto, "usuarioNome" | "usuarioAvatar">[];

@@ -1,5 +1,5 @@
 /**
- * Registry de Resources MCP do Synthropic
+ * Registry de Resources MCP do ZattarOS
  *
  * Registra todos os recursos acessíveis via MCP
  */

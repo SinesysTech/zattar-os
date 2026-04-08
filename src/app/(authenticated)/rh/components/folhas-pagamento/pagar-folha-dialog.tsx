@@ -28,7 +28,7 @@ import { useContasBancarias } from '@/app/(authenticated)/financeiro';
 import { todayDateString } from '@/lib/date-utils';
 import { pagarFolha } from '../../hooks';
 import { FORMA_PAGAMENTO_FOLHA_LABELS } from '../../domain';
-import type { FormaPagamentoFolha, PagarFolhaDTO } from '../../types';
+import type { FormaPagamentoFolha, PagarFolhaDTO } from '../../domain';
 import { toast } from 'sonner';
 
 const schema = z.object({

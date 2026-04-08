@@ -7,7 +7,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { actionEntrarNaChamada, actionSairDaChamada, actionSalvarTranscricao } from "../actions/chamadas-actions";
 import { SelectedDevices } from "../domain";
 import { useScreenshare, useTranscription, useRecording, useAdaptiveQuality } from "../hooks";
-import { handleCallError } from "../utils/call-error-handler";
+import { handleCallError } from "../utils";
 import { CallLoadingState, LoadingStage } from "./call-loading-state";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";

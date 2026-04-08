@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { authenticateRequest } from '@/lib/auth';
 import * as service from '../service';
-import { CriarTemplateParams, ListarTemplatesParams } from '../types';
+import { CriarTemplateParams, ListarTemplatesParams } from '../domain';
 
 export async function actionListarTemplates(params: ListarTemplatesParams) {
   try {

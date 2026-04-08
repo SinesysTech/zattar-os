@@ -269,11 +269,11 @@ export interface PaginatedResponse<T> {
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
   | {
-      success: false;
-      error: string;
-      errors?: Record<string, string[]>;
-      message: string;
-    };
+    success: false;
+    error: string;
+    errors?: Record<string, string[]>;
+    message: string;
+  };
 
 // =============================================================================
 // DATABASE ROW TYPES (snake_case - from Supabase)
@@ -503,3 +503,15 @@ export interface DyteMeetingDetails {
   endedAt?: string;
   duration?: number;
 }
+
+// =============================================================================
+// LEGACY UI TYPES (migrated from components/types.ts)
+// =============================================================================
+
+export type MediaListItemType = {
+  type: string;
+};
+
+export type MessageStatusIconType = {
+  status?: string;
+};

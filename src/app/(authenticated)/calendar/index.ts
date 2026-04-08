@@ -2,13 +2,22 @@
  * Feature: Calendar
  *
  * Barrel export para a Agenda global (agregação de eventos).
- * Nota: componentes do template em `src/app/(authenticated)/calendar/*` permanecem como UI.
  */
 
+// ============================================================================
+// Actions
+// ============================================================================
+export { actionListarEventosCalendar, actionListarBriefingData } from "./actions";
+
+// ============================================================================
+// Types / Domain
+// ============================================================================
 export type {
 	UnifiedCalendarEvent,
 	CalendarSource,
 	ListarEventosCalendarInput,
+	CalendarEvent,
+	LegacyCalendarView,
 } from "./domain";
 
 export {
@@ -19,10 +28,9 @@ export {
 	buildUnifiedEventId,
 } from "./domain";
 
-export { actionListarEventosCalendar } from "./actions/calendar-actions";
-export { actionListarBriefingData } from "./actions/briefing-actions";
-
-// Briefing domain
+// ============================================================================
+// Briefing Domain
+// ============================================================================
 export type {
 	PrepStatus,
 	CalendarView,
@@ -39,7 +47,9 @@ export {
 	SOURCE_CONFIG,
 } from "./briefing-domain";
 
-// Briefing helpers
+// ============================================================================
+// Briefing Helpers
+// ============================================================================
 export {
 	extractMeta,
 	getEventsForDay,
@@ -60,10 +70,8 @@ export {
 	monthName,
 } from "./briefing-helpers";
 
-// Travel helpers
+// ============================================================================
+// Utils
+// ============================================================================
 export type { TravelEstimate } from "./travel-helpers";
 export { estimateTravelTime } from "./travel-helpers";
-
-// Repository (data fetching — use in server contexts only)
-// Removed to avoid "server-only" leak to client components
-

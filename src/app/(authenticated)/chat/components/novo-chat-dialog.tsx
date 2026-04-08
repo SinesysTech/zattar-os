@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { actionCriarSala } from "../actions/chat-actions";
 import { actionListarUsuarios } from "@/app/(authenticated)/usuarios";
 import { TipoSalaChat, type ChatItem } from "../domain";
-import useChatStore from "./useChatStore";
+import useChatStore from "../hooks/use-chat-store";
 
 interface NovoChatDialogProps {
   open: boolean;

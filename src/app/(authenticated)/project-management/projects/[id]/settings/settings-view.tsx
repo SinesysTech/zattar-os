@@ -22,7 +22,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { actionExcluirProjeto } from "../../../lib/actions";
+import { Heading } from "@/components/ui/typography";
+import { actionExcluirProjeto } from "../../../actions";
 
 interface SettingsViewProps {
   projetoId: string;
@@ -43,9 +44,9 @@ export function SettingsView({ projetoId }: SettingsViewProps) {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">
+      <Heading level="page">
         Configurações do Projeto
-      </h1>
+      </Heading>
 
       <Card className="border-destructive/50">
         <CardHeader>

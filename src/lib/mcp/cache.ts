@@ -1,5 +1,5 @@
 /**
- * Cache de Schemas MCP do Synthropic
+ * Cache de Schemas MCP do ZattarOS
  *
  * Implementa cache Redis para schemas de tools MCP,
  * melhorando performance de listagem de ferramentas.

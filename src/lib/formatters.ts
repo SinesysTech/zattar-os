@@ -1,5 +1,5 @@
 /**
- * Synthropic - Formatadores de Dados Brasileiros
+ * ZattarOS - Formatadores de Dados Brasileiros
  *
  * ⚠️ Legado/Compat:
  * - O "single source of truth" de formatação é o Design System em `@/lib/design-system`.

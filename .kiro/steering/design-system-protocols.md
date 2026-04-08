@@ -2,9 +2,9 @@
 inclusion: always
 ---
 
-# Design System Synthropic - Protocolos AI-First
+# Design System ZattarOS - Protocolos AI-First
 
-Este documento define as regras que agentes de IA devem seguir ao gerar ou modificar codigo no Synthropic.
+Este documento define as regras que agentes de IA devem seguir ao gerar ou modificar codigo no ZattarOS.
 
 ## 1. Layout & Shells
 

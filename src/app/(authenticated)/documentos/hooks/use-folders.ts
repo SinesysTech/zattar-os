@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarPastas, actionCriarPasta, actionDeletarPasta, actionMoverDocumento } from '../actions/pastas-actions';
-import type { PastaComContadores } from '../types';
+import type { PastaComContadores } from '../domain';
 
 export function useFolders() {
   const [folders, setFolders] = useState<PastaComContadores[]>([]);
@@ -14,9 +14,9 @@ export function useFolders() {
       setLoading(true);
       setError(null);
     });
-    
+
     const result = await actionListarPastas();
-    
+
     startTransition(() => {
       if (result.success) {
         setFolders(result.data || []);

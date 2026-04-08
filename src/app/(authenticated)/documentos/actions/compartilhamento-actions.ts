@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { authenticateRequest } from '@/lib/auth';
 import * as service from '../service';
-import { CompartilharDocumentoParams } from '../types';
+import { CompartilharDocumentoParams } from '../domain';
 
 export async function actionCompartilharDocumento(formData: FormData) {
   try {

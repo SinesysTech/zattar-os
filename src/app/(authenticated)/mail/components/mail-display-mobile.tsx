@@ -13,7 +13,7 @@ import {
   ReplyAll,
   Trash2,
 } from "lucide-react";
-import { useMailStore } from "../use-mail";
+import { useMailStore } from "../hooks/use-mail";
 import { useMailActions } from "../hooks/use-mail-api";
 
 import {

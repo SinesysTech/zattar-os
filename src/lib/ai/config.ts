@@ -1,5 +1,5 @@
 /**
- * Configurações da camada de IA do Synthropic
+ * Configurações da camada de IA do ZattarOS
  */
 
 import type { EmbeddingModelConfig } from './types';

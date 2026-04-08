@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarTemplates, actionUsarTemplate, actionCriarTemplate, actionDeletarTemplate } from '../actions/templates-actions';
-import type { TemplateComUsuario, ListarTemplatesParams, CriarTemplateParams } from '../types';
+import type { TemplateComUsuario, ListarTemplatesParams, CriarTemplateParams } from '../domain';
 
 export function useTemplates(initialParams?: ListarTemplatesParams) {
   const [templates, setTemplates] = useState<TemplateComUsuario[]>([]);
@@ -16,9 +16,9 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
       setLoading(true);
       setError(null);
     });
-    
+
     const result = await actionListarTemplates(params);
-    
+
     startTransition(() => {
       if (result.success) {
         setTemplates(result.data || []);

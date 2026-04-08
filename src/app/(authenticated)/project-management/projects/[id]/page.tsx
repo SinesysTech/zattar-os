@@ -17,6 +17,7 @@ import {
   Settings,
   Users,
 } from "lucide-react";
+import { Heading } from "@/components/ui/typography";
 import * as projectService from "../../lib/services/project.service";
 import * as taskService from "../../lib/services/task.service";
 import * as teamService from "../../lib/services/team.service";
@@ -75,7 +76,7 @@ export default async function ProjectDetailPage({ params }: Props) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight">{projeto.nome}</h1>
+          <Heading level="page">{projeto.nome}</Heading>
           <div className="flex items-center gap-3">
             <ProjectStatusBadge status={projeto.status} />
             <PriorityIndicator prioridade={projeto.prioridade} />
@@ -157,9 +158,9 @@ export default async function ProjectDetailPage({ params }: Props) {
               <CardTitle className="text-2xl">
                 {projeto.orcamento != null
                   ? new Intl.NumberFormat("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    }).format(projeto.orcamento)
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(projeto.orcamento)
                   : "—"}
               </CardTitle>
             </CardHeader>
@@ -217,8 +218,8 @@ export default async function ProjectDetailPage({ params }: Props) {
                 <dd>
                   {projeto.dataInicio
                     ? new Date(projeto.dataInicio).toLocaleDateString(
-                        "pt-BR"
-                      )
+                      "pt-BR"
+                    )
                     : "—"}
                 </dd>
               </div>
@@ -229,8 +230,8 @@ export default async function ProjectDetailPage({ params }: Props) {
                 <dd>
                   {projeto.dataPrevisaoFim
                     ? new Date(
-                        projeto.dataPrevisaoFim
-                      ).toLocaleDateString("pt-BR")
+                      projeto.dataPrevisaoFim
+                    ).toLocaleDateString("pt-BR")
                     : "—"}
                 </dd>
               </div>

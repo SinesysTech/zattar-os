@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/server";
 import { generateMeta } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Heading } from "@/components/ui/typography";
 import * as dashboardService from "./lib/services/dashboard.service";
 import * as projectService from "./lib/services/project.service";
 import * as reminderService from "./lib/services/reminder.service";
@@ -67,9 +68,9 @@ export default async function ProjectManagementDashboard() {
   return (
     <>
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">
+        <Heading level="page">
           Gestão de Projetos
-        </h1>
+        </Heading>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">

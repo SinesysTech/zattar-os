@@ -1,7 +1,9 @@
+import { PageShell } from '@/components/shared/page-shell';
+
 export default function ProjectManagementLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="space-y-4">{children}</div>;
+  return <PageShell>{children}</PageShell>;
 }

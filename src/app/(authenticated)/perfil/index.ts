@@ -1,8 +1,32 @@
+/**
+ * PERFIL MODULE — Barrel Export (API Pública)
+ *
+ * Módulo de visualização e edição do perfil do usuário autenticado.
+ * Camada de apresentação sobre o módulo `usuarios`.
+ */
 
-// Barrel exports para feature perfil
-export * from './domain';
-export * from './hooks/use-perfil';
-export * from './actions/perfil-actions';
+// =============================================================================
+// Components
+// =============================================================================
+
+export { PerfilView } from './components/perfil-view';
 export { PerfilEditSheet } from './components/perfil-edit-sheet';
 export { AlterarSenhaDialog } from './components/alterar-senha-dialog';
-export { PerfilView } from './components/perfil-view';
+
+// =============================================================================
+// Hooks
+// =============================================================================
+
+export { usePerfil } from './hooks/use-perfil';
+
+// =============================================================================
+// Actions
+// =============================================================================
+
+export { actionObterPerfil, actionAtualizarPerfil } from './actions/perfil-actions';
+
+// =============================================================================
+// Types / Domain
+// =============================================================================
+
+export type { Usuario } from './domain';

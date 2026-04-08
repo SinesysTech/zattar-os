@@ -1,17 +1,4 @@
-export type CalendarView = "month" | "week" | "day" | "agenda";
-
-export interface CalendarEvent {
-  id: string;
-  title: string;
-  description?: string;
-  start: Date;
-  end: Date;
-  allDay?: boolean;
-  color?: EventColor;
-  location?: string;
-  source?: string;
-  sourceEntityId?: number;
-  responsavelId?: number | null;
-}
-
-export type EventColor = "sky" | "amber" | "violet" | "rose" | "emerald" | "orange";
+/**
+ * @deprecated Consolidado em domain.ts — importe de lá ou do barrel (index.ts).
+ */
+export type { LegacyCalendarView as CalendarView, CalendarEvent, EventColor } from "./domain";

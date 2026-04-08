@@ -1,6 +1,6 @@
-# Testes E2E - Synthropic
+# Testes E2E - ZattarOS
 
-Este diretório contém a infraestrutura e testes end-to-end (E2E) para a aplicação Synthropic, cobrindo os fluxos críticos de negócio.
+Este diretório contém a infraestrutura e testes end-to-end (E2E) para a aplicação ZattarOS, cobrindo os fluxos críticos de negócio.
 
 ## 📁 Estrutura
 

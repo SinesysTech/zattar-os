@@ -25,7 +25,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useCentrosCusto, useContasBancarias, usePlanoContas } from '@/app/(authenticated)/financeiro';
 import { aprovarFolha } from '../../hooks';
-import type { AprovarFolhaDTO } from '../../types';
+import type { AprovarFolhaDTO } from '../../domain';
 import { toast } from 'sonner';
 
 const schema = z.object({

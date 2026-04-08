@@ -18,7 +18,7 @@ import { GerarFolhaDialog } from './gerar-folha-dialog';
 import { useFolhasPagamento } from '../../hooks';
 import { MESES_LABELS, STATUS_FOLHA_LABELS } from '../../domain';
 import { STATUS_FOLHA_CORES } from '../../utils';
-import type { FolhaPagamentoComDetalhes } from '../../types';
+import type { FolhaPagamentoComDetalhes } from '../../domain';
 
 import { FilterPopover } from '@/app/(authenticated)/partes';
 

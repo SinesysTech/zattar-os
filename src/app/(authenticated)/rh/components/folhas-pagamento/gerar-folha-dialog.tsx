@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { gerarFolha } from '../../hooks';
-import type { GerarFolhaDTO } from '../../types';
+import type { GerarFolhaDTO } from '../../domain';
 import { MESES_LABELS } from '../../domain';
 import { toast } from 'sonner';
 

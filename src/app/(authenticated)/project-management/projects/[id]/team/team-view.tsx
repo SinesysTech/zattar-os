@@ -33,17 +33,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { ComboboxOption } from "@/components/ui/combobox";
+import { Heading } from "@/components/ui/typography";
 import {
   type MembroProjeto,
   type Projeto,
   type PapelProjeto,
   PAPEL_PROJETO_LABELS,
   PAPEL_PROJETO_VALUES,
-} from "../../../lib/domain";
+} from "../../../domain";
 import {
   actionRemoverMembro,
   actionAlterarPapel,
-} from "../../../lib/actions";
+} from "../../../actions";
 import { AddMemberDialog } from "../../../components/team/add-member-dialog";
 import { toast } from "sonner";
 
@@ -105,7 +106,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
             </Link>
           </Button>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Equipe</h1>
+            <Heading level="page">Equipe</Heading>
             <p className="text-muted-foreground text-sm">{projeto.nome}</p>
           </div>
         </div>

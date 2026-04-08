@@ -2,7 +2,7 @@
 
 ## Arquitetura Geral
 
-O sistema de editor de documentos segue a arquitetura em camadas do Synthropic:
+O sistema de editor de documentos segue a arquitetura em camadas do ZattarOS:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

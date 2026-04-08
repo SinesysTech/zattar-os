@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
-import useChatStore from "./useChatStore";
+import useChatStore from "../hooks/use-chat-store";
 import { ChatHeader } from "./chat-header";
 import { ChatContent } from "./chat-content";
 import { ChatFooter } from "./chat-footer";
@@ -106,7 +106,7 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
   const { broadcastNewMessage } = useChatSubscription({
     salaId: selectedChat?.id || 0,
     onNewMessage: (msg) => {
-       adicionarMensagem(msg);
+      adicionarMensagem(msg);
     },
     enabled: !!selectedChat,
     currentUserId,
@@ -426,14 +426,14 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
         onVideoCall={() => handleStartCall(TipoChamada.Video)}
         onAudioCall={() => handleStartCall(TipoChamada.Audio)}
       />
-      
+
       <ChatContent
         mensagens={mensagens}
         salaAtiva={selectedChat}
       />
-      
-      <ChatFooter 
-        salaId={selectedChat.id} 
+
+      <ChatFooter
+        salaId={selectedChat.id}
         onEnviarMensagem={handleEnviarMensagem}
         onTyping={startTyping}
         typingIndicatorText={typingIndicatorText}
@@ -449,7 +449,7 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
         onJoinCall={handleJoinFromSetup}
       />
 
-      <IncomingCallDialog 
+      <IncomingCallDialog
         open={!!incomingCall}
         callData={incomingCall}
         onAccept={handleAcceptIncomingCall}

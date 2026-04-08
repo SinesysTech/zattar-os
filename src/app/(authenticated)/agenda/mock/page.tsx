@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/shared/glass-panel";
+import { Heading } from '@/components/ui/typography';
 import {
   type CalendarView,
   type EventSource,
@@ -130,7 +131,7 @@ function Toolbar({
       {/* Row 1: Title + New Event */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-heading font-semibold tracking-tight">Agenda</h1>
+          <Heading level="page">Agenda</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">{dateLabel}</p>
         </div>
         <button
@@ -966,7 +967,7 @@ function NowLine() {
   return (
     <div className="flex items-center gap-3 py-0.5 -my-0.5 z-10 relative">
       <span className="w-11 text-right text-[10px] tabular-nums text-primary font-semibold shrink-0">{t}</span>
-      <div className="size-2 rounded-full bg-primary shadow-[0_0_6px_oklch(0.48_0.26_281/0.35)] animate-pulse shrink-0" />
+      <div className="size-2 rounded-full bg-primary shadow-[0_0_6px_var(--glow-primary)] animate-pulse shrink-0" />
       <div className="flex-1 h-px bg-primary/25" />
     </div>
   );
@@ -1045,7 +1046,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
             </div>
             <div>
               <p className="text-[9px] font-medium text-muted-foreground/60 uppercase tracking-wider">{isAgenda ? "Editar Evento" : "Detalhes do Evento"}</p>
-              <h2 className="text-sm font-heading font-semibold">{event.title}</h2>
+              <Heading level="card" className="text-sm">{event.title}</Heading>
             </div>
           </div>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-white/4 text-muted-foreground/55 cursor-pointer">
@@ -1202,7 +1203,7 @@ export default function AgendaMockPage() {
         setSearch={setSearch}
         sourceFilter={sourceFilter}
         toggleSource={toggleSource}
-        onNewEvent={() => {}}
+        onNewEvent={() => { }}
       />
 
       {/* Command Header — visible on briefing & day views */}

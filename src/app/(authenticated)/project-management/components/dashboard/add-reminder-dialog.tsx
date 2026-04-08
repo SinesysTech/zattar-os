@@ -14,8 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { DateTimePicker } from "@/components/layout/pickers/date-time-picker";
-import { actionCriarLembrete } from "../../lib/actions";
-import type { Prioridade } from "../../lib/domain";
+import { actionCriarLembrete } from "../../actions";
+import type { Prioridade } from "../../domain";
 
 export function AddReminderDialog() {
   const [open, setOpen] = React.useState(false);

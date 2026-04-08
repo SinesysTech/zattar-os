@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { DashboardSummary } from "../../lib/domain";
+import type { DashboardSummary } from "../../domain";
 
 interface SummaryCardsProps {
   data: DashboardSummary;

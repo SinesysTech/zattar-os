@@ -7,7 +7,7 @@ import {
   type ListarTarefasParams,
   createTarefaSchema,
   updateTarefaSchema,
-} from "../domain";
+} from "../../domain";
 import * as taskRepo from "../repositories/task.repository";
 import * as teamRepo from "../repositories/team.repository";
 import { recalcularProgresso } from "./project.service";

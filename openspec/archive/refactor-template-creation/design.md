@@ -8,7 +8,7 @@ O sistema de criação de templates de assinatura digital apresenta problemas de
 - Não conformidade com padrões do projeto (FSD, DialogFormShell)
 - Lógica de upload inline sem reutilização
 
-A refatoração visa alinhar o código com os padrões estabelecidos no projeto Synthropic.
+A refatoração visa alinhar o código com os padrões estabelecidos no projeto ZattarOS.
 
 ## Goals / Non-Goals
 

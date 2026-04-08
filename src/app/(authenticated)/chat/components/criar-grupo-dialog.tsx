@@ -28,7 +28,7 @@ import {
 import { actionCriarGrupo } from "../actions/chat-actions";
 import { actionListarUsuarios } from "@/app/(authenticated)/usuarios";
 import { type ChatItem } from "../domain";
-import useChatStore from "./useChatStore";
+import useChatStore from "../hooks/use-chat-store";
 
 // Schema para criação de grupo
 const criarGrupoSchema = z.object({
@@ -68,7 +68,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
   useEffect(() => {
     if (open && usuarios.length === 0) {
       let cancelled = false;
-      
+
       const loadUsuarios = async () => {
         setLoadingUsuarios(true);
         try {

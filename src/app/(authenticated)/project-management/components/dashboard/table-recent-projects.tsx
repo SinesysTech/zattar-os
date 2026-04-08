@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/table";
 import { ProjectStatusBadge } from "../shared/project-status-badge";
 import { ProgressIndicator } from "../shared/progress-indicator";
-import type { Projeto } from "../../lib/domain";
+import type { Projeto } from "../../domain";
 
 interface TableRecentProjectsProps {
   projetos: Projeto[];
@@ -153,9 +153,9 @@ export function TableRecentProjects({ projetos }: TableRecentProjectsProps) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   ))}
                 </TableRow>

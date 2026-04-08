@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/avatar";
 import { cn, generateAvatarFallback } from "@/lib/utils";
 import { PriorityIndicator } from "../shared/priority-indicator";
-import type { Tarefa } from "../../lib/domain";
+import type { Tarefa } from "../../domain";
 
 interface TaskCardProps {
   tarefa: Tarefa;
@@ -36,14 +36,14 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
 
   const prazoFormatado = tarefa.dataPrazo
     ? new Date(tarefa.dataPrazo).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "short",
-      })
+      day: "2-digit",
+      month: "short",
+    })
     : null;
 
   const isPrazoPerto = tarefa.dataPrazo
     ? new Date(tarefa.dataPrazo).getTime() - Date.now() <
-      3 * 24 * 60 * 60 * 1000
+    3 * 24 * 60 * 60 * 1000
     : false;
 
   return (
@@ -80,11 +80,10 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
 
                 {prazoFormatado && (
                   <span
-                    className={`inline-flex items-center gap-1 text-xs ${
-                      isPrazoPerto
+                    className={`inline-flex items-center gap-1 text-xs ${isPrazoPerto
                         ? "text-destructive"
                         : "text-muted-foreground"
-                    }`}
+                      }`}
                   >
                     <Calendar className="size-3" />
                     {prazoFormatado}

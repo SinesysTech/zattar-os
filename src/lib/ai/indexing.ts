@@ -1,5 +1,5 @@
 /**
- * Pipeline de indexação de documentos para o Synthropic
+ * Pipeline de indexação de documentos para o ZattarOS
  *
  * ⚠️ LEGACY: Este módulo está descontinuado.
  * Use src/features/ai/services/indexing.service.ts para novas implementações.

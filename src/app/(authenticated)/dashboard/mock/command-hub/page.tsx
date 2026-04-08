@@ -360,7 +360,7 @@ function CommandHub({
           </div>
           <div className="flex items-center gap-1 text-[10px] text-muted-foreground/30">
             <Sparkles className="size-3" />
-            <span>Synthropic v2</span>
+            <span>ZattarOS v2</span>
           </div>
         </div>
       </div>

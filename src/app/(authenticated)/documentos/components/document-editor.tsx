@@ -40,6 +40,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Typography } from '@/components/ui/typography';
 import { toast } from 'sonner';
 
 /**
@@ -77,7 +78,7 @@ import { DocumentChat } from './document-chat';
 import { useRealtimeCollaboration } from '@/hooks/use-realtime-collaboration';
 import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
 import { exportToPdf, exportTextToPdf, exportToDocx } from '../utils';
-import type { Value } from '../types';
+import type { Value } from '../domain';
 import type { Descendant } from 'platejs';
 import { useDocument } from '../hooks/use-document';
 import { useDocumentAutoSave } from '../hooks/use-document-auto-save';
@@ -90,7 +91,7 @@ interface DocumentEditorProps {
 export function DocumentEditor({ documentoId }: DocumentEditorProps) {
   const router = useRouter();
   const { documento, loading, saving: manualSaving, saveDocument } = useDocument(documentoId);
-  
+
   const [conteudo, setConteudo] = React.useState<Value>([]);
   const [titulo, setTitulo] = React.useState('');
   const [chatOpen, setChatOpen] = React.useState(false);
@@ -209,7 +210,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
           <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
-          <h2 className="mt-4 text-2xl font-semibold">Documento não encontrado</h2>
+          <Typography.H2 className="mt-4">Documento não encontrado</Typography.H2>
           <p className="text-muted-foreground mt-2">
             O documento que você está procurando não existe ou foi removido.
           </p>
@@ -257,11 +258,10 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div
-                    className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs ${
-                      isConnected
-                        ? 'bg-success/10 text-success'
-                        : 'bg-muted text-muted-foreground'
-                    }`}
+                    className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs ${isConnected
+                      ? 'bg-success/10 text-success'
+                      : 'bg-muted text-muted-foreground'
+                      }`}
                   >
                     {isConnected ? (
                       <Wifi className="h-3 w-3" />

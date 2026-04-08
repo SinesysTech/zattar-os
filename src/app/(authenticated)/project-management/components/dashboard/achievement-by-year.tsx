@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ChartContainer } from "@/components/ui/chart";
-import type { ComparativoAnual } from "../../lib/domain";
+import type { ComparativoAnual } from "../../domain";
 
 interface AchievementByYearProps {
   data: ComparativoAnual[];

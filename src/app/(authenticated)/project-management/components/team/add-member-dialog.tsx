@@ -21,8 +21,8 @@ import {
   PAPEL_PROJETO_VALUES,
   PAPEL_PROJETO_LABELS,
   type PapelProjeto,
-} from "../../lib/domain";
-import { actionAdicionarMembro } from "../../lib/actions";
+} from "../../domain";
+import { actionAdicionarMembro } from "../../actions";
 import { toast } from "sonner";
 
 interface AddMemberDialogProps {

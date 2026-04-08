@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { authenticateRequest } from '@/lib/auth'; // Assuming this utility exists
 import * as service from '../service';
-import { CriarDocumentoParams, AtualizarDocumentoParams, ListarDocumentosParams, AutoSavePayload } from '../types';
+import { CriarDocumentoParams, AtualizarDocumentoParams, ListarDocumentosParams, AutoSavePayload } from '../domain';
 
 export async function actionListarDocumentos(params: ListarDocumentosParams) {
   try {

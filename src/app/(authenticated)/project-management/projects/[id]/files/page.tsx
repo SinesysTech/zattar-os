@@ -2,7 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/server";
 import { generateMeta } from "@/lib/utils";
 import * as projectService from "../../../lib/services/project.service";
-import { actionListarAnexos } from "../../../lib/actions/file.actions";
+import { actionListarAnexos } from "../../../actions/file.actions";
 import { FilesView } from "./files-view";
 
 interface Props {

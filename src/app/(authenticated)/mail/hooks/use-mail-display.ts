@@ -2,14 +2,14 @@
 
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { useMailActions } from "./use-mail-api";
-import { useMailStore } from "../use-mail";
+import { useMailStore } from "./use-mail";
 import type { MailMessagePreview } from "@/lib/mail/types";
 import type { MailEditorRef } from "../components/mail-editor";
 import {
   getMailParticipantLabel,
   getMailParticipantLine,
   getMailPrimaryName,
-} from "../lib/display";
+} from "../utils/display";
 import { toast } from "sonner";
 
 type ReplyMode = "reply" | "reply-all" | null;

@@ -35,6 +35,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { Typography } from "@/components/ui/typography";
+
 import type { Task, TarefaDisplayItem } from "../domain";
 import { useTarefaStore } from "../store";
 import { labels, priorities, statuses } from "../data/data";
@@ -358,7 +360,7 @@ export function TaskDetailSheet() {
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-                                            <h3 className="text-sm font-semibold">Subtarefas</h3>
+                                            <Typography.H3 className="text-sm font-semibold">Subtarefas</Typography.H3>
                                         </div>
                                         {tarefa.subTasks && tarefa.subTasks.length > 0 && (
                                             <span className="text-xs text-muted-foreground">
@@ -411,7 +413,7 @@ export function TaskDetailSheet() {
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <Paperclip className="h-4 w-4 text-muted-foreground" />
-                                            <h3 className="text-sm font-semibold">Anexos</h3>
+                                            <Typography.H3 className="text-sm font-semibold">Anexos</Typography.H3>
                                         </div>
                                         <Button
                                             variant="ghost"
@@ -475,7 +477,7 @@ export function TaskDetailSheet() {
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-2">
                                         <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                                        <h3 className="text-sm font-semibold">Comentários</h3>
+                                        <Typography.H3 className="text-sm font-semibold">Comentários</Typography.H3>
                                     </div>
 
                                     <div className="space-y-4 pb-4">

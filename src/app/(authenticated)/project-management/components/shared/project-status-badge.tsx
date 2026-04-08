@@ -4,7 +4,7 @@ import {
   STATUS_TAREFA_LABELS,
   type StatusProjeto,
   type StatusTarefa,
-} from "../../lib/domain";
+} from "../../domain";
 
 interface ProjectStatusBadgeProps {
   status: StatusProjeto;

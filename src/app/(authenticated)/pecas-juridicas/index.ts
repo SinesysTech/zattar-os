@@ -7,27 +7,56 @@
  * @example
  * ```typescript
  * import {
- *   // Types
  *   type PecaModelo,
  *   type ContratoDocumento,
- *   type TipoPecaJuridica,
- *
- *   // Constants
  *   TIPO_PECA_LABELS,
- *   TIPOS_PECA_JURIDICA,
- *
- *   // Placeholders
- *   ALL_PLACEHOLDERS,
- *   getAllIndexedPlaceholders,
- *
- *   // Actions
  *   actionCriarPecaModelo,
  *   actionGerarPecaDeContrato,
  * } from '@/app/(authenticated)/pecas-juridicas';
  * ```
  */
 
-// Domain - Types, Schemas, Constants
+// ============================================================================
+// Components
+// ============================================================================
+export {
+  PlaceholderNodeElement,
+  PlaceholderNodeStatic,
+  PlaceholderInsertMenu,
+  PlaceholderToolbarButton,
+  GerarPecaDialog,
+  ContratoDocumentosList,
+  PecasModelosTableWrapper,
+  PecaModeloEditor,
+  PecaModeloViewSheet,
+} from './components';
+
+// ============================================================================
+// Actions
+// ============================================================================
+export {
+  // Modelos Actions
+  actionBuscarPecaModelo,
+  actionListarPecasModelos,
+  actionCriarPecaModelo,
+  actionAtualizarPecaModelo,
+  actionDeletarPecaModelo,
+  actionGetTiposPecaOptions,
+  // Geração Actions
+  actionBuscarContextoContrato,
+  actionPreviewGeracaoPeca,
+  actionGerarPecaDeContrato,
+  actionListarDocumentosDoContrato,
+  actionDesvincularDocumentoDoContrato,
+  actionVincularArquivoAoContrato,
+  actionDesvincularItemDoContrato,
+  // Types
+  type ActionResult,
+} from './actions';
+
+// ============================================================================
+// Types / Domain
+// ============================================================================
 export {
   // Types
   type PecaModelo,
@@ -54,7 +83,9 @@ export {
   visibilidadeModeloSchema,
 } from './domain';
 
+// ============================================================================
 // Placeholders
+// ============================================================================
 export {
   // Types
   type PlaceholderDefinition,
@@ -83,7 +114,9 @@ export {
   generatePreview,
 } from './placeholders';
 
+// ============================================================================
 // Service
+// ============================================================================
 export {
   // Modelos
   buscarPecaModelo,
@@ -100,35 +133,3 @@ export {
   vincularDocumentoAoContrato,
   desvincularDocumentoDoContrato,
 } from './service';
-
-// Actions
-export {
-  // Modelos Actions
-  actionBuscarPecaModelo,
-  actionListarPecasModelos,
-  actionCriarPecaModelo,
-  actionAtualizarPecaModelo,
-  actionDeletarPecaModelo,
-  actionGetTiposPecaOptions,
-  // Geração Actions
-  actionBuscarContextoContrato,
-  actionPreviewGeracaoPeca,
-  actionGerarPecaDeContrato,
-  actionListarDocumentosDoContrato,
-  actionDesvincularDocumentoDoContrato,
-  // Types
-  type ActionResult,
-} from './actions';
-
-// Components
-export {
-  PlaceholderNodeElement,
-  PlaceholderNodeStatic,
-  PlaceholderInsertMenu,
-  PlaceholderToolbarButton,
-  GerarPecaDialog,
-  ContratoDocumentosList,
-  PecasModelosTableWrapper,
-  PecaModeloEditor,
-  PecaModeloViewSheet,
-} from './components';

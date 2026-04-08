@@ -2,8 +2,8 @@ import { DocsHeader } from '@/components/layout/docs/docs-header';
 import { DocsSidebar } from '@/components/layout/docs/docs-sidebar';
 
 export const metadata = {
-  title: 'Documentação - Synthropic',
-  description: 'Central de ajuda e documentação do Synthropic',
+  title: 'Documentação - ZattarOS',
+  description: 'Central de ajuda e documentação do ZattarOS',
 };
 
 export default function DocsLayout({

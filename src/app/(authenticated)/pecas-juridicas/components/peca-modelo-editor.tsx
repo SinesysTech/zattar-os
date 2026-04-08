@@ -52,7 +52,7 @@ import {
 import { PlaceholderToolbarButton } from './placeholder-insert-menu';
 import { exportToDocx, exportTextToPdf } from '@/app/(authenticated)/documentos/utils';
 
-import type { Value } from '@/app/(authenticated)/documentos/types';
+import type { Value } from '@/app/(authenticated)/documentos/domain';
 import type { PlateEditorRef } from '@/components/editor/plate/plate-editor';
 
 // =============================================================================

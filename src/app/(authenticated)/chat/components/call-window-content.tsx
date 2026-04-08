@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback, useRef, Suspense, lazy } from 
 import { useDyteClient, DyteProvider } from "@dytesdk/react-web-core";
 import { actionEntrarNaChamada, actionSairDaChamada, actionSalvarTranscricao } from "../actions/chamadas-actions";
 import { useScreenshare, useTranscription, useRecording, useAdaptiveQuality } from "../hooks";
-import { handleCallError } from "../utils/call-error-handler";
+import { handleCallError } from "../utils";
 import { CallLoadingState, LoadingStage } from "./call-loading-state";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";

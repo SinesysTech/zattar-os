@@ -9,7 +9,7 @@ import {
 import { ProjectStatusBadge } from "../shared/project-status-badge";
 import { ProgressIndicator } from "../shared/progress-indicator";
 import { MemberAvatarGroup } from "../shared/member-avatar-group";
-import type { Projeto } from "../../lib/domain";
+import type { Projeto } from "../../domain";
 
 interface ProjectCardProps {
   projeto: Projeto;

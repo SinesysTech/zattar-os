@@ -12,7 +12,7 @@ import {
 import { ProjectStatusBadge } from "../shared/project-status-badge";
 import { ProgressIndicator } from "../shared/progress-indicator";
 import { PriorityIndicator } from "../shared/priority-indicator";
-import type { Projeto } from "../../lib/domain";
+import type { Projeto } from "../../domain";
 
 interface ReportsProps {
   projetos: Projeto[];

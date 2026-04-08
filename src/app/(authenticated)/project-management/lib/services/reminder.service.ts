@@ -1,5 +1,5 @@
 import { err, appError, type Result } from "@/types/result";
-import { type Lembrete, type CreateLembreteInput, createLembreteSchema } from "../domain";
+import { type Lembrete, type CreateLembreteInput, createLembreteSchema } from "../../domain";
 import * as reminderRepo from "../repositories/reminder.repository";
 
 export async function listarLembretes(

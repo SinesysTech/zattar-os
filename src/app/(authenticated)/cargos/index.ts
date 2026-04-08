@@ -1,8 +1,13 @@
 /**
- * Cargos Feature - Barrel Exports
+ * CARGOS MODULE — Barrel Export (API Pública)
+ *
+ * Módulo de serviço (sem page.tsx) — gestão de cargos do escritório.
  */
 
-// Types
+// =============================================================================
+// Types / Domain
+// =============================================================================
+
 export type {
   Cargo,
   CriarCargoDTO,
@@ -12,17 +17,31 @@ export type {
   CargoComUsuariosError,
 } from './domain';
 
+export {
+  criarCargoSchema,
+  atualizarCargoSchema,
+} from './domain';
+
+// =============================================================================
 // Actions
+// =============================================================================
+
 export {
   actionListarCargos,
   actionBuscarCargo,
   actionCriarCargo,
   actionAtualizarCargo,
   actionDeletarCargo,
-} from './actions/cargos-actions';
+} from './actions';
 
+// =============================================================================
 // Hooks
+// =============================================================================
+
 export { useCargos } from './hooks/use-cargos';
 
-// Components (placeholder - add as needed)
-export {} from './components';
+// =============================================================================
+// Components
+// =============================================================================
+
+export { } from './components';

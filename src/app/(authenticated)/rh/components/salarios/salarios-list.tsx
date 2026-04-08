@@ -58,7 +58,7 @@ import {
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { SalarioComDetalhes } from '../../types';
+import type { SalarioComDetalhes } from '../../domain';
 
 
 // ============================================================================

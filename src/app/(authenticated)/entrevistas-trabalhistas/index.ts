@@ -1,4 +1,14 @@
-// Domain types and schemas
+/**
+ * ENTREVISTAS TRABALHISTAS MODULE — Barrel Export (API Pública)
+ *
+ * Módulo embarcado em contratos (sem page.tsx próprio).
+ * Suporta três trilhas de investigação trabalhista com módulos de perguntas.
+ */
+
+// =============================================================================
+// Types / Domain
+// =============================================================================
+
 export type {
   TipoLitigio,
   StatusEntrevista,
@@ -80,7 +90,10 @@ export {
   BENEFICIO_RECEBIDO_OPTIONS,
 } from './domain';
 
-// Service layer
+// =============================================================================
+// Service
+// =============================================================================
+
 export {
   iniciarEntrevista,
   salvarModulo,
@@ -89,24 +102,38 @@ export {
   buscarEntrevistaPorContrato,
 } from './service';
 
+// =============================================================================
 // Queries (Server Components)
+// =============================================================================
+
 export type { EntrevistaComAnexos } from './queries';
 export { fetchEntrevistaByContratoId } from './queries';
 
-// Actions (Server Actions)
-export type { EntrevistaActionResult } from './actions/entrevista-actions';
+// =============================================================================
+// Actions
+// =============================================================================
+
+export type { EntrevistaActionResult } from './actions';
 export {
   iniciarEntrevistaAction,
   salvarModuloAction,
   finalizarEntrevistaAction,
   reabrirEntrevistaAction,
-} from './actions/entrevista-actions';
-export { uploadAnexoAction, uploadArquivoAnexoAction, deleteAnexoAction } from './actions/anexo-actions';
-export { consolidarEntrevistaIAAction } from './actions/consolidacao-ia-actions';
-export { enviarParaIntegracaoPeticaoAction } from './actions/integracao-peticao-actions';
+  uploadAnexoAction,
+  uploadArquivoAnexoAction,
+  deleteAnexoAction,
+  consolidarEntrevistaIAAction,
+  enviarParaIntegracaoPeticaoAction,
+} from './actions';
 
-// Hooks (Client Components)
+// =============================================================================
+// Hooks
+// =============================================================================
+
 export { useEntrevista } from './hooks/use-entrevista';
 
-// Components (Client)
+// =============================================================================
+// Components
+// =============================================================================
+
 export { EntrevistaTab } from './components/entrevista-tab';

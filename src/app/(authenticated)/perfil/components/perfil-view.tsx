@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Heading } from '@/components/ui/typography';
 import { Edit, Mail, Phone, MapPin, Briefcase, User, Calendar, KeyRound, Camera } from 'lucide-react';
 import {
   formatarCpf,
@@ -111,12 +112,12 @@ export function PerfilView() {
 
           {/* Informações */}
           <div>
-            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
+            <Heading level="page" className="flex items-center gap-3">
               {usuario.nomeExibicao}
               <Badge variant={usuario.ativo ? 'success' : 'outline'}>
                 {usuario.ativo ? 'Ativo' : 'Inativo'}
               </Badge>
-            </h1>
+            </Heading>
             <p className="text-muted-foreground mt-1">
               Visualize e edite suas informações pessoais
             </p>

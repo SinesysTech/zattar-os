@@ -8,8 +8,8 @@ import {
   KANBAN_COLUMNS,
   type StatusTarefa,
   type Tarefa,
-} from "../lib/domain";
-import { actionReordenarKanban } from "../lib/actions";
+} from "../domain";
+import { actionReordenarKanban } from "../actions";
 
 type ColumnMap = Record<StatusTarefa, Tarefa[]>;
 

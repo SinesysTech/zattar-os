@@ -26,7 +26,7 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from '@/components/ui/command';
-import type { DocumentoComUsuario } from '../types';
+import type { DocumentoComUsuario } from '../domain';
 import { actionListarDocumentos } from '../actions/documentos-actions';
 
 interface CommandMenuProps {

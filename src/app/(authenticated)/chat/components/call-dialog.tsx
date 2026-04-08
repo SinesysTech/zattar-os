@@ -8,7 +8,7 @@ import { actionEntrarNaChamada, actionSairDaChamada } from "../actions/chamadas-
 import { SelectedDevices } from "../domain";
 import { useScreenshare, useRecording } from "../hooks";
 import { cn } from "@/lib/utils";
-import { handleCallError } from "../utils/call-error-handler";
+import { handleCallError } from "../utils";
 import { CallLoadingState, LoadingStage } from "./call-loading-state";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";

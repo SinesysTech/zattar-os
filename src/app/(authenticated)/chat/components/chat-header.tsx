@@ -4,7 +4,7 @@ import React from "react";
 import { ArrowLeft, Ellipsis, Video, Phone, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { generateAvatarFallback } from "@/lib/utils";
-import useChatStore from "./useChatStore";
+import useChatStore from "../hooks/use-chat-store";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ChatUserDropdown } from "./chat-list-item-dropdown";
@@ -55,7 +55,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare }: Ch
           )}
           {isGroup && (
             <span className="text-muted-foreground text-xs">
-               {sala.tipo === 'geral' ? 'Sala Geral' : 'Grupo'}
+              {sala.tipo === 'geral' ? 'Sala Geral' : 'Grupo'}
             </span>
           )}
         </div>

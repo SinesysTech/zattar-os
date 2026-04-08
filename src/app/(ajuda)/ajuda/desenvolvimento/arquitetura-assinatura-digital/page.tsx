@@ -74,7 +74,7 @@ export default function ArquiteturaAssinaturaDigitalPage() {
         <CardContent>
           <pre className="text-xs bg-muted p-4 rounded-md overflow-x-auto">
             {`┌─────────────────────────────────────────────────────────────┐
-│                     SYNTHROPIC (Next.js 16)                    │
+│                      ZATTAROS (Next.js 16)                     │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  ┌──────────────────┐         ┌──────────────────┐         │

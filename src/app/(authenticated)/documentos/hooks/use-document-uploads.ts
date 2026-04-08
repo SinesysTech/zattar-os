@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarUploads, actionUploadArquivo, actionGerarPresignedUrl } from '../actions/uploads-actions';
-import type { DocumentoUploadComInfo } from '../types';
+import type { DocumentoUploadComInfo } from '../domain';
 
 export function useDocumentUploads(documentoId: number) {
   const [uploads, setUploads] = useState<DocumentoUploadComInfo[]>([]);
@@ -16,9 +16,9 @@ export function useDocumentUploads(documentoId: number) {
       setLoading(true);
       setError(null);
     });
-    
+
     const result = await actionListarUploads(documentoId);
-    
+
     startTransition(() => {
       if (result.success) {
         setUploads(result.data || []);

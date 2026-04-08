@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarVersoes, actionRestaurarVersao } from '../actions/versoes-actions';
-import type { DocumentoVersaoComUsuario } from '../types';
+import type { DocumentoVersaoComUsuario } from '../domain';
 
 export function useDocumentVersions(documentoId: number) {
   const [versions, setVersions] = useState<DocumentoVersaoComUsuario[]>([]);
@@ -15,9 +15,9 @@ export function useDocumentVersions(documentoId: number) {
       setLoading(true);
       setError(null);
     });
-    
+
     const result = await actionListarVersoes(documentoId);
-    
+
     startTransition(() => {
       if (result.success) {
         setVersions(result.data || []);

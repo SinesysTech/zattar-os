@@ -35,11 +35,11 @@ import {
   type Projeto,
   type StatusProjeto,
   type Prioridade,
-} from "../../lib/domain";
+} from "../../domain";
 import {
   actionCriarProjeto,
   actionAtualizarProjeto,
-} from "../../lib/actions";
+} from "../../actions";
 
 const formSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório").max(255),
@@ -104,9 +104,9 @@ export function ProjectForm({
         orcamento: values.orcamento ? Number(values.orcamento) : null,
         tags: values.tags
           ? values.tags
-              .split(",")
-              .map((t) => t.trim())
-              .filter(Boolean)
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean)
           : [],
       };
 

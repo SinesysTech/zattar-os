@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { authenticateRequest } from '@/lib/auth';
 import * as service from '../service';
-import { CriarPastaParams } from '../types';
+import { CriarPastaParams } from '../domain';
 
 export async function actionListarPastas() {
   try {

@@ -11,7 +11,7 @@ import type {
   AtualizarCargoDTO,
   ListarCargosParams,
   ListarCargosResponse,
-} from './types';
+} from './domain';
 
 // Helper to map DB record to Domain entity
 const mapearCargo = (registro: Record<string, unknown>): Cargo => {
@@ -27,7 +27,7 @@ const mapearCargo = (registro: Record<string, unknown>): Cargo => {
 };
 
 const getCargosListKey = (params: ListarCargosParams) => {
-    return `${CACHE_PREFIXES.cargos}:list:${JSON.stringify(params)}`;
+  return `${CACHE_PREFIXES.cargos}:list:${JSON.stringify(params)}`;
 };
 
 /**
@@ -205,7 +205,7 @@ export const atualizarCargo = async (
   if (data.ativo !== undefined) {
     updateData.ativo = data.ativo;
   }
-  
+
   // Set updated_at explicitly or let Trigger handle it? Supabase usually handle triggers.
   // But explicit update is safer if trigger missing.
 

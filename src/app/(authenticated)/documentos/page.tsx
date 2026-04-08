@@ -6,21 +6,18 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { FileManager } from '@/app/(authenticated)/documentos';
-import { PageShell } from '@/components/shared';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const metadata: Metadata = {
-  title: 'Documentos | Synthropic',
+  title: 'Documentos | ZattarOS',
   description: 'Gerencie seus documentos e arquivos',
 };
 
 export default function DocumentosPage() {
   return (
-    <PageShell>
-      <Suspense fallback={<FileManagerSkeleton />}>
-        <FileManager />
-      </Suspense>
-    </PageShell>
+    <Suspense fallback={<FileManagerSkeleton />}>
+      <FileManager />
+    </Suspense>
   );
 }
 

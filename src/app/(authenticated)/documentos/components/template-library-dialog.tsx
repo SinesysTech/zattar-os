@@ -35,11 +35,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Typography } from '@/components/ui/typography';
 import { toast } from 'sonner';
 import { TemplateCard } from './template-card';
 import { useTemplates } from '../hooks/use-templates';
 import { actionListarCategorias, actionListarTemplatesMaisUsados } from '../actions/templates-actions';
-import type { TemplateComUsuario } from '../types';
+import type { TemplateComUsuario } from '../domain';
 
 interface TemplateLibraryDialogProps {
   open: boolean;
@@ -229,7 +230,7 @@ export function TemplateLibraryDialog({
                 ) : templates.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-64 text-center">
                     <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="font-medium text-lg">Nenhum template encontrado</h3>
+                    <Typography.H3>Nenhum template encontrado</Typography.H3>
                     <p className="text-sm text-muted-foreground mt-1">
                       {hasFilters
                         ? 'Tente ajustar os filtros de busca'
@@ -255,7 +256,7 @@ export function TemplateLibraryDialog({
                 {maisUsados.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-64 text-center">
                     <Star className="h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="font-medium text-lg">Nenhum template popular ainda</h3>
+                    <Typography.H3>Nenhum template popular ainda</Typography.H3>
                     <p className="text-sm text-muted-foreground mt-1">
                       Templates mais usados aparecerão aqui
                     </p>

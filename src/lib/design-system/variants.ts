@@ -1,7 +1,7 @@
 /**
  * Design System Variants
  *
- * Este arquivo define os mapeamentos semânticos do Design System Synthropic.
+ * Este arquivo define os mapeamentos semânticos do Design System ZattarOS.
  * Aqui centralizamos TODA a lógica de mapeamento de domínio para variante visual.
  *
  * @ai-context Use getSemanticBadgeVariant() para determinar a variante visual correta.

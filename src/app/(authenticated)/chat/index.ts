@@ -19,14 +19,14 @@
  */
 
 // =============================================================================
-// TYPES
+// Types / Domain
 // =============================================================================
 export type {
   SalaChat,
   MensagemChat,
   MensagemComUsuario,
   UsuarioChat,
-  ChatItem, // Added
+  ChatItem,
   TypingUser,
   CriarSalaChatInput,
   CriarMensagemChatInput,
@@ -47,6 +47,9 @@ export type {
   ChamadaComParticipantes,
   TipoChamada,
   StatusChamada,
+  // Legacy UI Types
+  MediaListItemType,
+  MessageStatusIconType,
 } from "./domain";
 
 export {
@@ -60,22 +63,31 @@ export {
 } from "./domain";
 
 // =============================================================================
-// REPOSITORY
+// Components
 // =============================================================================
-// NOTA: ChatRepository e createChatRepository NÃO são exportados aqui
-// porque usam código do servidor (next/headers). Use import dinâmico
-// em Server Components/Actions: await import('@/app/(authenticated)/chat/repository')
+export {
+  ChatLayout,
+  ChatWindow,
+  ChatSidebarWrapper,
+  ChatSidebar,
+  CallHistoryList,
+  CallWindowContent,
+  MeetingSkeleton,
+} from "./components";
 
 // =============================================================================
-// SERVICE
+// Hooks
 // =============================================================================
-// NOTA: ChatService e createChatService NÃO são exportados aqui
-// porque usam código do servidor (next/headers). Use import direto
-// em Server Components/Actions: import { createChatService } from '@/app/(authenticated)/chat/service'
+export { useChatSubscription } from "./hooks/use-chat-subscription";
+export { useTypingIndicator } from "./hooks/use-typing-indicator";
+export { useChatStore } from "./hooks";
 
 // =============================================================================
-// ACTIONS (Server Actions)
+// Actions (Server Actions)
 // =============================================================================
+// NOTA: Server Actions usam código do servidor (next/headers).
+// Para uso em Server Components/Actions, importe diretamente:
+//   import { actionCriarSala } from '@/app/(authenticated)/chat/actions';
 export {
   actionCriarSala,
   actionCriarGrupo,
@@ -88,22 +100,16 @@ export {
   actionBuscarHistorico,
 } from "./actions/chat-actions";
 export * from "./actions/chamadas-actions";
+export * from "./actions/file-actions";
 
 // =============================================================================
-// HOOKS
-// =============================================================================
-export { useChatSubscription } from "./hooks/use-chat-subscription";
-export { useTypingIndicator } from "./hooks/use-typing-indicator";
-
-// =============================================================================
-// COMPONENTS
+// Utils
 // =============================================================================
 export {
-  ChatLayout,
-  ChatWindow,
-  ChatSidebarWrapper,
-  ChatSidebar,
-  CallHistoryList,
-  CallWindowContent,
-  MeetingSkeleton,
-} from "./components";
+  formatarDuracao,
+  getStatusBadgeVariant,
+  getStatusLabel,
+  getTipoChamadaIcon,
+  getStatusIcon,
+  handleCallError,
+} from "./utils";

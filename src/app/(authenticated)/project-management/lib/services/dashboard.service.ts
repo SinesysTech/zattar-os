@@ -5,7 +5,7 @@ import type {
   DistribuicaoPorStatus,
   ComparativoAnual,
   MembroAtivo,
-} from "../domain";
+} from "../../domain";
 import * as dashboardRepo from "../repositories/dashboard.repository";
 
 export async function obterResumo(): Promise<Result<DashboardSummary>> {

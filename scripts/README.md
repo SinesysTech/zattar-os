@@ -1,6 +1,6 @@
-# Scripts de Desenvolvimento do Synthropic
+# Scripts de Desenvolvimento do ZattarOS
 
-Este diretório contém **scripts standalone** para desenvolvimento, manutenção e testes do sistema Synthropic. **Nenhum destes scripts é usado diretamente pelo aplicativo em produção** - são ferramentas de desenvolvimento, testes de API, sincronização de dados e utilitários de manutenção.
+Este diretório contém **scripts standalone** para desenvolvimento, manutenção e testes do sistema ZattarOS. **Nenhum destes scripts é usado diretamente pelo aplicativo em produção** - são ferramentas de desenvolvimento, testes de API, sincronização de dados e utilitários de manutenção.
 
 ## 📋 Índice
 

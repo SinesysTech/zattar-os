@@ -1,5 +1,5 @@
 /**
- * URLs dos Apps do Synthropic
+ * URLs dos Apps do ZattarOS
  *
  * Este módulo é usado para gerar URLs absolutas (ex.: e-mails/links externos)
  * e por isso retorna URLs completas por padrão.

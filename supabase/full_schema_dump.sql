@@ -1,5 +1,5 @@
 -- =====================================================
--- Diego Barbosa Advocacia (SYNTHROPIC) - FULL SCHEMA DUMP
+-- Diego Barbosa Advocacia (ZATTAROS) - FULL SCHEMA DUMP
 -- Generated on: 2026-02-10
 -- PostgreSQL Database Schema Export
 -- =====================================================

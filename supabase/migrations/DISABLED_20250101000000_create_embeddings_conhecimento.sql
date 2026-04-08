@@ -1,6 +1,6 @@
 -- Migration: Create embeddings_conhecimento table for semantic search
 -- Description: Tabela para armazenamento de vetores de embedding para busca semântica (RAG)
--- Author: Synthropic Architecture 2.0
+-- Author: ZattarOS Architecture 2.0
 -- Date: 2025-01-01
 --
 -- ⚠️ LEGACY: Esta migration está descontinuada.

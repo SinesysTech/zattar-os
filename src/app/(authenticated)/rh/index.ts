@@ -1,5 +1,63 @@
+/**
+ * RH Feature Module — Barrel Export (API Pública)
+ *
+ * Este é o ponto de entrada público do módulo de RH.
+ * Toda importação cross-módulo DEVE passar por este arquivo.
+ *
+ * Entidades: Salários, Folhas de Pagamento
+ */
 
-// Types
+// ============================================================================
+// Components
+// ============================================================================
+export {
+  SalariosList,
+  SalarioFormDialog,
+  FolhasPagamentoList,
+  FolhaDetalhes,
+  GerarFolhaDialog,
+  AprovarFolhaDialog,
+  PagarFolhaDialog,
+} from './components';
+
+export { HistoricoSalarios } from './components/shared/historico-salarios';
+
+// ============================================================================
+// Hooks
+// ============================================================================
+export * from './hooks';
+
+// ============================================================================
+// Actions (Server Actions)
+// ============================================================================
+export {
+  // Salários
+  actionListarSalarios,
+  actionBuscarSalario,
+  actionCriarSalario,
+  actionAtualizarSalario,
+  actionEncerrarVigenciaSalario,
+  actionInativarSalario,
+  actionExcluirSalario,
+  actionBuscarSalariosDoUsuario,
+  // Folhas de Pagamento
+  actionListarFolhasPagamento,
+  actionBuscarFolhaPagamento,
+  actionBuscarFolhaPorPeriodo,
+  actionGerarFolhaPagamento,
+  actionPreviewGerarFolha,
+  actionAprovarFolhaPagamento,
+  actionPagarFolhaPagamento,
+  actionAtualizarFolhaPagamento,
+  actionVerificarCancelamentoFolha,
+  actionObterResumoPagamento,
+  actionCancelarFolhaPagamento,
+  actionExcluirFolhaPagamento,
+} from './actions';
+
+// ============================================================================
+// Types / Domain
+// ============================================================================
 export type {
   Salario,
   SalarioComDetalhes,
@@ -21,7 +79,6 @@ export type {
   FormaPagamentoFolha,
 } from './domain';
 
-// Domain
 export {
   criarSalarioSchema,
   atualizarSalarioSchema,
@@ -37,7 +94,9 @@ export {
   isTransicaoStatusValida,
 } from './domain';
 
+// ============================================================================
 // Utils
+// ============================================================================
 export {
   formatarPeriodo,
   validarPeriodoFolha,
@@ -49,67 +108,9 @@ export {
   STATUS_FOLHA_CORES,
 } from './utils';
 
-// Values/Functions from Service
-export {
-  gerarFolhaPagamento,
-  previewGerarFolha,
-  aprovarFolhaPagamento,
-  pagarFolhaPagamento,
-  calcularTotalAPagar,
-  cancelarFolhaPagamento,
-  podeCancelarFolha,
-
-  // Re-exported from repository via service
-  listarSalarios,
-  buscarSalarioPorId,
-  buscarSalariosDoUsuario,
-  buscarSalarioVigente,
-  criarSalario,
-  atualizarSalario,
-  encerrarVigenciaSalario,
-  inativarSalario,
-  deletarSalario,
-  calcularTotaisSalariosAtivos,
-  listarUsuariosSemSalarioVigente,
-  buscarFolhaPorId,
-  buscarFolhaPorPeriodo,
-  listarFolhasPagamento,
-  deletarFolhaPagamento
-} from './service';
-
-// Actions
-export {
-  actionListarSalarios,
-  actionBuscarSalario,
-  actionCriarSalario,
-  actionAtualizarSalario,
-  actionEncerrarVigenciaSalario,
-  actionInativarSalario,
-  actionExcluirSalario,
-  actionBuscarSalariosDoUsuario
-} from './actions/salarios-actions';
-
-export {
-  actionListarFolhasPagamento,
-  actionBuscarFolhaPagamento,
-  actionGerarFolhaPagamento,
-  actionPreviewGerarFolha,
-  actionAprovarFolhaPagamento,
-  actionPagarFolhaPagamento,
-  actionCancelarFolhaPagamento,
-  actionExcluirFolhaPagamento,
-
-  actionBuscarFolhaPorPeriodo
-} from './actions/folhas-pagamento-actions';
-
-
-// Hooks
-export * from './hooks';
-export { SalariosList } from './components/salarios/salarios-list';
-export { SalarioFormDialog } from './components/salarios/salario-form-dialog';
-export { FolhasPagamentoList } from './components/folhas-pagamento/folhas-list';
-export { FolhaDetalhes } from './components/folhas-pagamento/folha-detalhes';
-export { GerarFolhaDialog } from './components/folhas-pagamento/gerar-folha-dialog';
-export { AprovarFolhaDialog } from './components/folhas-pagamento/aprovar-folha-dialog';
-export { PagarFolhaDialog } from './components/folhas-pagamento/pagar-folha-dialog';
-export { HistoricoSalarios } from './components/shared/historico-salarios';
+// ============================================================================
+// Service / Repository
+// ============================================================================
+// Services e Repositories devem ser importados diretamente:
+//   import { gerarFolhaPagamento } from '@/app/(authenticated)/rh/service';
+// NÃO re-exportar aqui para evitar vazamento de server-only no bundle client.

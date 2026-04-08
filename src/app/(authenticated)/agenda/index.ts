@@ -4,6 +4,23 @@
  * Eventos criados diretamente pelo usuário na agenda.
  */
 
+// ============================================================================
+// Actions
+// ============================================================================
+export {
+	actionCriarAgendaEvento,
+	actionAtualizarAgendaEvento,
+	actionDeletarAgendaEvento,
+} from "./actions";
+
+// ============================================================================
+// Components
+// ============================================================================
+export { } from "./components";
+
+// ============================================================================
+// Types / Domain
+// ============================================================================
 export type {
 	AgendaEvento,
 	CriarAgendaEventoInput,
@@ -18,16 +35,3 @@ export {
 	deletarAgendaEventoSchema,
 	listarAgendaEventosSchema,
 } from "./domain";
-
-export {
-	actionCriarAgendaEvento,
-	actionAtualizarAgendaEvento,
-	actionDeletarAgendaEvento,
-} from "./actions/agenda-eventos-actions";
-
-// Repository (server-side)
-// Removed to avoid "server-only" leak to client components
-
-
-// Components (placeholder - add as needed)
-export {} from "./components";

@@ -12,3 +12,5 @@ export * from './use-network-quality';
 export * from './use-adaptive-quality';
 export * from './use-call-keyboard-shortcuts';
 export * from './use-video-effects';
+
+export { default as useChatStore } from './use-chat-store';

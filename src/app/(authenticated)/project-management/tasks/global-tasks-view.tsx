@@ -29,7 +29,7 @@ import {
   type Tarefa,
   type StatusTarefa,
   type Prioridade,
-} from "../lib/domain";
+} from "../domain";
 
 // =============================================================================
 // Filter options

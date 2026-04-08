@@ -1,5 +1,5 @@
 /**
- * Módulo de busca semântica para o Synthropic
+ * Módulo de busca semântica para o ZattarOS
  *
  * ⚠️ LEGACY: Este módulo está descontinuado.
  * Use src/features/ai/repository.ts e searchEmbeddings() para novas implementações.

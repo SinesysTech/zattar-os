@@ -20,7 +20,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import useChatStore from "./useChatStore";
+import useChatStore from "../hooks/use-chat-store";
 import { ChatItem } from "../domain";
 import { actionRemoverConversa } from "../actions/chat-actions";
 

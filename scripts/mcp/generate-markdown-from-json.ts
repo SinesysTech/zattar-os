@@ -33,11 +33,11 @@ const moduleNames: Record<string, string> = {
   assinatura: 'Assinatura Digital',
 };
 
-let md = `# Referência Completa - Tools MCP Synthropic
+let md = `# Referência Completa - Tools MCP ZattarOS
 
 ## Visão Geral
 
-O Synthropic expõe **${totalTools} ferramentas MCP** organizadas em ${totalModules} módulos funcionais. Estas ferramentas permitem que agentes de IA interajam com o sistema de forma estruturada e segura.
+O ZattarOS expõe **${totalTools} ferramentas MCP** organizadas em ${totalModules} módulos funcionais. Estas ferramentas permitem que agentes de IA interajam com o sistema de forma estruturada e segura.
 
 ## Índice Rápido
 

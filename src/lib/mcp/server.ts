@@ -1,5 +1,5 @@
 /**
- * Servidor MCP do Synthropic
+ * Servidor MCP do ZattarOS
  *
  * Configuração singleton do McpServer para exposição de ferramentas
  */
@@ -27,13 +27,13 @@ import {
 import { auditMcpCall } from "./audit";
 
 /**
- * Configuração do servidor MCP Synthropic
+ * Configuração do servidor MCP ZattarOS
  */
 const SERVER_CONFIG: MCPServerConfig = {
   info: {
     name: "synthropic-api",
     version: "2.0.0",
-    description: "API MCP do Synthropic - Sistema de Gestão Jurídica",
+    description: "API MCP do ZattarOS - Sistema de Gestão Jurídica",
   },
   capabilities: {
     tools: true,

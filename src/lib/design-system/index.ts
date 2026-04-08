@@ -1,5 +1,5 @@
 /**
- * Design System Synthropic
+ * Design System ZattarOS
  *
  * Sistema de Design Determinístico para aplicações AI-First.
  * Este módulo centraliza tokens, variantes e utilitários para garantir

@@ -5,7 +5,6 @@
  */
 
 import { Suspense } from 'react';
-import { PageShell } from '@/components/shared/page-shell';
 import { Skeleton } from '@/components/ui/skeleton';
 import { listarPecasModelos, PecasModelosTableWrapper } from '@/app/(authenticated)/pecas-juridicas';
 
@@ -32,13 +31,13 @@ export default async function PecasJuridicasPage() {
   const pagination = result.success ? result.data.pagination : null;
 
   return (
-    <PageShell>
+    <>
       <Suspense fallback={<PecasModelosLoading />}>
         <PecasModelosTableWrapper
           initialData={modelos}
           initialPagination={pagination}
         />
       </Suspense>
-    </PageShell>
+    </>
   );
 }

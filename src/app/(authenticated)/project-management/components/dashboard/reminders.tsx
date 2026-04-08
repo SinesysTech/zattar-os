@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { CircleCheck } from "lucide-react";
-import { PRIORIDADE_LABELS, type Lembrete } from "../../lib/domain";
-import { actionConcluirLembrete } from "../../lib/actions";
+import { PRIORIDADE_LABELS, type Lembrete } from "../../domain";
+import { actionConcluirLembrete } from "../../actions";
 import { AddReminderDialog } from "./add-reminder-dialog";
 
 interface RemindersProps {

@@ -1,4 +1,4 @@
-# Sistema de Integrações - Synthropic
+# Sistema de Integrações - ZattarOS
 
 ## ✅ Status: Operacional
 

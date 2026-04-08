@@ -1,18 +1,29 @@
 /**
- * Barrel export do módulo Repasses
+ * REPASSES MODULE — Barrel Export (API Pública)
  *
- * Feature minimalista que delega para @/app/(authenticated)/obrigacoes
+ * Módulo proxy/minimal que renderiza repasses pendentes.
+ * Toda lógica de negócio vive no módulo `obrigacoes`.
  *
- * @example
- * import { RepassesPageContent } from '@/app/(authenticated)/repasses';
+ * @see README.md para justificativa da ausência de domain/service/repository
  */
+
+// =============================================================================
+// Components
+// =============================================================================
 
 export { RepassesPageContent } from './components/repasses-page-content';
 
-// Re-exportar tipos e componentes de obrigacoes para conveniência
+// =============================================================================
+// Types / Domain (re-export de obrigacoes)
+// =============================================================================
+
 export type {
   RepassePendente,
   FiltrosRepasses,
 } from '@/app/(authenticated)/obrigacoes';
+
+// =============================================================================
+// Hooks (re-export de obrigacoes)
+// =============================================================================
 
 export { useRepassesPendentes } from '@/app/(authenticated)/obrigacoes';

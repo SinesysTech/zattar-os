@@ -7,8 +7,6 @@
 
 import * as React from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { } from 'lucide-react';
-import { PageShell } from '@/components/shared/page-shell';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -54,29 +52,27 @@ export default function RHPage() {
   );
 
   return (
-    <PageShell>
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="flex flex-col h-full">
-        <TabsList>
-          <TabsTrigger value="salarios">
-            Salários
-          </TabsTrigger>
-          <TabsTrigger value="folhas-pagamento">
-            Folhas de Pagamento
-          </TabsTrigger>
-        </TabsList>
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="flex flex-col h-full">
+      <TabsList>
+        <TabsTrigger value="salarios">
+          Salários
+        </TabsTrigger>
+        <TabsTrigger value="folhas-pagamento">
+          Folhas de Pagamento
+        </TabsTrigger>
+      </TabsList>
 
-        <TabsContent value="salarios" className="flex-1 min-h-0 mt-6">
-          <React.Suspense fallback={<TabSkeleton />}>
-            <SalariosList />
-          </React.Suspense>
-        </TabsContent>
+      <TabsContent value="salarios" className="flex-1 min-h-0 mt-6">
+        <React.Suspense fallback={<TabSkeleton />}>
+          <SalariosList />
+        </React.Suspense>
+      </TabsContent>
 
-        <TabsContent value="folhas-pagamento" className="flex-1 min-h-0 mt-6">
-          <React.Suspense fallback={<TabSkeleton />}>
-            <FolhasPagamentoList />
-          </React.Suspense>
-        </TabsContent>
-      </Tabs>
-    </PageShell>
+      <TabsContent value="folhas-pagamento" className="flex-1 min-h-0 mt-6">
+        <React.Suspense fallback={<TabSkeleton />}>
+          <FolhasPagamentoList />
+        </React.Suspense>
+      </TabsContent>
+    </Tabs>
   );
 }

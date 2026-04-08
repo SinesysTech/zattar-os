@@ -8,7 +8,7 @@ import type {
   ComparativoAnual,
   MembroAtivo,
   StatusProjeto,
-} from "../domain";
+} from "../../domain";
 
 export async function getDashboardSummary(): Promise<Result<DashboardSummary>> {
   try {
@@ -110,8 +110,8 @@ export async function getDashboardSummary(): Promise<Result<DashboardSummary>> {
     const taxaAnterior =
       (totalPrevQuarter.count ?? 0) > 0
         ? Math.round(
-            ((concluidosPrevQuarter.count ?? 0) / (totalPrevQuarter.count ?? 1)) * 100
-          )
+          ((concluidosPrevQuarter.count ?? 0) / (totalPrevQuarter.count ?? 1)) * 100
+        )
         : 0;
 
     return ok({
