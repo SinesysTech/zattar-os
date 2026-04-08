@@ -95,6 +95,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
   const [globalCounts, setGlobalCounts] = useState({ todos: 0, pendentes: 0, baixados: 0 });
+  const [refreshCounter, setRefreshCounter] = useState(0);
 
   // Fetch real global counts once on mount
   useEffect(() => {
@@ -115,7 +116,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         todos: p + b,
       });
     }).catch(console.error);
-  }, []);
+  }, [refreshCounter]);
 
   // Detail/baixa dialog state
   const [selectedExpediente, setSelectedExpediente] = useState<Expediente | null>(null);
@@ -232,6 +233,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const handleBaixaSuccess = useCallback(() => {
     setBaixarExpediente(null);
     refetch();
+    setRefreshCounter((c) => c + 1);
   }, [refetch]);
 
   return (
@@ -354,7 +356,11 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         )}
 
         {viewMode === 'lista' && (
-          <ExpedientesListWrapper />
+          <ExpedientesListWrapper
+            search={search}
+            activeTab={activeTab}
+            refreshCounter={refreshCounter}
+          />
         )}
 
         {!isLoading && viewMode === 'semana' && filteredExpedientes.length > 0 && (
@@ -392,7 +398,11 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       <ExpedienteDialog
         open={isCreateOpen}
         onOpenChange={setIsCreateOpen}
-        onSuccess={() => { setIsCreateOpen(false); refetch(); }}
+        onSuccess={() => {
+          setIsCreateOpen(false);
+          refetch();
+          setRefreshCounter((c) => c + 1);
+        }}
       />
 
       <ExpedienteVisualizarDialog

@@ -37,7 +37,6 @@ import { ExpedienteDialog } from './expediente-dialog';
 import { ExpedientesBulkActions } from './expedientes-bulk-actions';
 import {
   ExpedientesListFilters,
-  type StatusFiltro,
 } from './expedientes-list-filters';
 
 // Tipos legados usados apenas neste wrapper (single-select)
@@ -399,13 +398,7 @@ export function ExpedientesTableWrapper({
                 }}
                 filtersSlot={
                   <>
-                    <ExpedientesListFilters
-                      statusFiltro={statusFilter === 'todos' ? [] : [statusFilter === 'pendentes' ? 'pendente' : 'baixado'] as StatusFiltro[]}
-                      onStatusChange={(v) => {
-                        const mapped: StatusFilterType = v.length === 0 ? 'todos' : v.includes('baixado') ? 'baixados' : 'pendentes';
-                        setStatusFilter(mapped);
-                        setPageIndex(0);
-                      }}
+                      <ExpedientesListFilters
                       trtFiltro={tribunalFilter ? [tribunalFilter as CodigoTribunal] : []}
                       onTrtChange={(v) => { setTribunalFilter(v[0] || ''); setPageIndex(0); }}
                       grauFiltro={grauFilter ? [grauFilter as GrauTribunal] : []}

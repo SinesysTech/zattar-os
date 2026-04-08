@@ -21,11 +21,10 @@ import {
 import { useExpedientes } from '../hooks/use-expedientes';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
-import { ExpedienteDialog } from './expediente-dialog';
+
 import { columns, type ExpedientesTableMeta } from './columns';
 import {
   ExpedientesListFilters,
-  type StatusFiltro,
 } from './expedientes-list-filters';
 import type {
   Expediente,
@@ -35,21 +34,26 @@ import type {
 } from '../domain';
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export function ExpedientesListWrapper() {
+export interface ExpedientesListWrapperProps {
+  search?: string;
+  activeTab?: 'todos' | 'pendentes' | 'baixados';
+  refreshCounter?: number;
+}
+
+export function ExpedientesListWrapper({
+  search = '',
+  activeTab = 'pendentes',
+  refreshCounter = 0,
+}: ExpedientesListWrapperProps) {
   // ─── Table instance ──────────────────────────────────────────────────────
   const [table, setTable] = React.useState<TanstackTable<Expediente> | null>(null);
-  const [isCreateOpen, setIsCreateOpen] = React.useState(false);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // ─── Pagination (0-based no UI, convertido para 1-based no hook) ─────────
   const [pageIndex, setPageIndex] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(50);
 
-  // ─── Search ──────────────────────────────────────────────────────────────
-  const [globalFilter, setGlobalFilter] = React.useState('');
-
   // ─── Filters ─────────────────────────────────────────────────────────────
-  const [statusFiltro, setStatusFiltro] = React.useState<StatusFiltro[]>([]);
   const [trtFiltro, setTrtFiltro] = React.useState<CodigoTribunal[]>([]);
   const [grauFiltro, setGrauFiltro] = React.useState<GrauTribunal[]>([]);
   const [origemFiltro, setOrigemFiltro] = React.useState<OrigemExpediente[]>([]);
@@ -59,26 +63,24 @@ export function ExpedientesListWrapper() {
   const [segredoJusticaFiltro, setSegredoJusticaFiltro] = React.useState<('sim' | 'nao')[]>([]);
   const [prioridadeProcessualFiltro, setPrioridadeProcessualFiltro] = React.useState<('sim' | 'nao')[]>([]);
 
-  // ─── Derivar params de status ────────────────────────────────────────────
-  // O hook aceita `baixado: boolean` e `prazoVencido: boolean` (valores únicos).
-  // Com multi-select, só enviamos filtro server-side quando exatamente 1 opção selecionada.
+  // ─── Derivar params de status a partir da activeTab ──────────────────────
   const baixadoParam = React.useMemo(() => {
-    const temBaixado = statusFiltro.includes('baixado');
-    const temPendente = statusFiltro.includes('pendente');
-    if (temBaixado && !temPendente) return true;
-    if (temPendente && !temBaixado) return false;
-    return undefined;
-  }, [statusFiltro]);
+    if (activeTab === 'pendentes') return false;
+    if (activeTab === 'baixados') return true;
+    return undefined; // todos
+  }, [activeTab]);
 
-  const prazoVencidoParam = statusFiltro.includes('vencido') ? true : undefined;
+  // Reset pagination when search or tab changes
+  React.useEffect(() => {
+    setPageIndex(0);
+  }, [search, activeTab]);
 
   // ─── Data fetching (server-side pagination) ──────────────────────────────
   const { expedientes, paginacao, isLoading, error, refetch } = useExpedientes({
     pagina: pageIndex + 1,
     limite: pageSize,
-    busca: globalFilter || undefined,
+    busca: search || undefined,
     baixado: baixadoParam,
-    prazoVencido: prazoVencidoParam,
     trt: trtFiltro.length === 1 ? trtFiltro[0] : undefined,
     grau: grauFiltro.length === 1 ? grauFiltro[0] : undefined,
     origem: origemFiltro.length === 1 ? origemFiltro[0] : undefined,
@@ -89,6 +91,12 @@ export function ExpedientesListWrapper() {
     prioridadeProcessual: prioridadeProcessualFiltro.length === 1 ? (prioridadeProcessualFiltro[0] === 'sim') : undefined,
     incluirSemPrazo: true,
   });
+
+  React.useEffect(() => {
+    if (refreshCounter > 0) {
+      refetch();
+    }
+  }, [refreshCounter, refetch]);
 
   // ─── Related data (para células de Responsável e TipoExpediente) ─────────
   const { usuarios } = useUsuarios();
@@ -119,20 +127,10 @@ export function ExpedientesListWrapper() {
       header={
         <DataTableToolbar
           table={table ?? undefined}
-          title="Expedientes"
           density={density}
           onDensityChange={setDensity}
-          searchValue={globalFilter}
-          onSearchValueChange={(v) => {
-            setGlobalFilter(v);
-            setPageIndex(0);
-          }}
-          searchPlaceholder="Buscar por processo, parte, classe..."
-          actionButton={{ label: 'Novo Expediente', onClick: () => setIsCreateOpen(true) }}
           filtersSlot={
             <ExpedientesListFilters
-              statusFiltro={statusFiltro}
-              onStatusChange={withPageReset(setStatusFiltro)}
               trtFiltro={trtFiltro}
               onTrtChange={withPageReset(setTrtFiltro)}
               grauFiltro={grauFiltro}
@@ -194,11 +192,6 @@ export function ExpedientesListWrapper() {
         striped
       />
     </DataShell>
-      <ExpedienteDialog
-        open={isCreateOpen}
-        onOpenChange={setIsCreateOpen}
-        onSuccess={() => { setIsCreateOpen(false); refetch(); }}
-      />
     </>
   );
 }
