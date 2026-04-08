@@ -1,8 +1,8 @@
-# Arquitetura Synthropic
+# Arquitetura ZattarOS
 
 ## Visão Geral
 
-O Synthropic é um sistema de gestão jurídica desenvolvido com arquitetura AI-First, utilizando Next.js 16, React 19, Supabase e integração MCP (Model Context Protocol).
+O ZattarOS é um sistema de gestão jurídica desenvolvido com arquitetura AI-First, utilizando Next.js 16, React 19, Supabase e integração MCP (Model Context Protocol).
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐

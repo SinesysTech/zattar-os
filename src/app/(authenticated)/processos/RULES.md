@@ -1,7 +1,7 @@
 # Regras de Negócio - Processos
 
 ## Contexto
-Módulo central do Synthropic responsável pela gestão de processos judiciais trabalhistas. Gerencia o acervo de processos do escritório, integrando-se com o PJE (Processo Judicial Eletrônico) para captura automática de movimentações.
+Módulo central do ZattarOS responsável pela gestão de processos judiciais trabalhistas. Gerencia o acervo de processos do escritório, integrando-se com o PJE (Processo Judicial Eletrônico) para captura automática de movimentações.
 
 ## Entidades Principais
 - **Processo**: Representa um processo judicial com 27 campos mapeados da tabela `acervo`
@@ -68,7 +68,7 @@ Módulo central do Synthropic responsável pela gestão de processos judiciais t
 ### Captura de Processos do PJE
 1. Autenticar via credenciais do advogado
 2. Consultar API do tribunal correspondente
-3. Extrair dados e mapear para estrutura Synthropic
+3. Extrair dados e mapear para estrutura ZattarOS
 4. Verificar se processo já existe (update vs insert)
 5. Indexar para busca semântica após persistência
 

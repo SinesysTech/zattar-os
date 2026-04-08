@@ -37,12 +37,12 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
 
   return (
     <div className={cn(
-      "absolute right-4 top-4 bottom-24 w-64 bg-gray-900/90 backdrop-blur-md rounded-lg border border-gray-800 shadow-lg z-30 flex flex-col",
+      "absolute right-4 top-4 bottom-24 w-64 bg-[var(--video-surface)]/90 backdrop-blur-md rounded-lg border border-[var(--video-border)] shadow-lg z-30 flex flex-col",
       "animate-in slide-in-from-right-10 duration-300",
       className
     )}>
-      <div className="p-4 border-b border-gray-800 flex justify-between items-center">
-        <h3 className="text-white font-semibold">Participantes ({allParticipants.length})</h3>
+      <div className="p-4 border-b border-[var(--video-border)] flex justify-between items-center">
+        <h3 className="text-[var(--video-text)] font-semibold">Participantes ({allParticipants.length})</h3>
         {/* Close button for mobile could go here */}
       </div>
 
@@ -52,52 +52,52 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
             icon={Users}
             title="Sem participantes"
             description="Aguardando participantes entrarem na chamada."
-            className="py-6 [&_h3]:text-sm [&_h3]:text-white [&_p]:text-xs [&_p]:text-gray-400 [&>div:first-child]:mb-2 [&>div:first-child]:h-12 [&>div:first-child]:w-12 [&_svg]:h-6 [&_svg]:w-6 [&>div:first-child]:bg-gray-800"
+            className="py-6 [&_h3]:text-sm [&_h3]:text-[var(--video-text)] [&_p]:text-xs [&_p]:text-[var(--video-muted)] [&>div:first-child]:mb-2 [&>div:first-child]:h-12 [&>div:first-child]:w-12 [&_svg]:h-6 [&_svg]:w-6 [&>div:first-child]:bg-[var(--video-surface-hover)]"
           />
         ) : (
-        <div className="space-y-1">
-          {allParticipants.map((p: DyteParticipant) => (
-            <div key={p.id} className="flex items-center gap-3 p-3 hover:bg-gray-800/50 transition-colors rounded-lg group">
-              {/* Avatar */}
-              <div className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm",
-                "bg-linear-to-br from-info to-primary",
-                p.audioEnabled && "ring-2 ring-success"
-              )}>
-                 {p.picture ? (
-                     
+          <div className="space-y-1">
+            {allParticipants.map((p: DyteParticipant) => (
+              <div key={p.id} className="flex items-center gap-3 p-3 hover:bg-[var(--video-surface-hover)]/50 transition-colors rounded-lg group">
+                {/* Avatar */}
+                <div className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-[var(--video-text)] shadow-sm",
+                  "bg-linear-to-br from-info to-primary",
+                  p.audioEnabled && "ring-2 ring-success"
+                )}>
+                  {p.picture ? (
+
                     <img src={p.picture} alt={p.name} className="w-full h-full rounded-full object-cover" />
-                 ) : (
+                  ) : (
                     <span>{p.name?.charAt(0)?.toUpperCase() ?? "?"}</span>
-                 )}
-              </div>
+                  )}
+                </div>
 
-              {/* Info */}
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">
-                  {p.name} {p.id === self?.id && "(Você)"}
-                </p>
-                <p className="text-xs text-gray-400">
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-[var(--video-text)] truncate">
+                    {p.name} {p.id === self?.id && "(Você)"}
+                  </p>
+                  <p className="text-xs text-[var(--video-muted)]">
                     {p.id === self?.id ? "Conectado" : "Na chamada"}
-                </p>
-              </div>
+                  </p>
+                </div>
 
-              {/* Status Icons */}
-              <div className="flex gap-2">
-                 {p.audioEnabled ? (
-                     <Mic className="w-3 h-3 text-success" />
-                 ) : (
-                     <MicOff className="w-3 h-3 text-destructive" />
-                 )}
-                 {p.videoEnabled ? (
-                     <Video className="w-3 h-3 text-info" />
-                 ) : (
-                     <VideoOff className="w-3 h-3 text-muted-foreground" />
-                 )}
+                {/* Status Icons */}
+                <div className="flex gap-2">
+                  {p.audioEnabled ? (
+                    <Mic className="w-3 h-3 text-success" />
+                  ) : (
+                    <MicOff className="w-3 h-3 text-destructive" />
+                  )}
+                  {p.videoEnabled ? (
+                    <Video className="w-3 h-3 text-info" />
+                  ) : (
+                    <VideoOff className="w-3 h-3 text-muted-foreground" />
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         )}
       </ScrollArea>
     </div>

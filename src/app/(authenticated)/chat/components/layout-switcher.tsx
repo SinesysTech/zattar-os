@@ -32,50 +32,50 @@ export function LayoutSwitcher({ currentLayout, onLayoutChange }: LayoutSwitcher
     onLayoutChange(layout);
     setSavedLayout(layout);
   };
-    
+
   return (
-    <div className="absolute top-4 left-4 z-50 flex gap-1 bg-gray-900/80 backdrop-blur-md rounded-lg p-1 border border-gray-800">
+    <div className="absolute top-4 left-4 z-50 flex gap-1 bg-[var(--video-surface)]/80 backdrop-blur-md rounded-lg p-1 border border-[var(--video-border)]">
       <TooltipProvider>
         <Tooltip>
-            <TooltipTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className={cn("h-8 w-8 hover:bg-gray-700", currentLayout === 'grid' && "bg-info text-white hover:bg-info")}
-                    onClick={() => handleLayoutChange('grid')}
-                >
-                    <Grid3x3 className="h-4 w-4" />
-                </Button>
-            </TooltipTrigger>
-            <TooltipContent>Grid</TooltipContent>
-        </Tooltip>
-        
-        <Tooltip>
-            <TooltipTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className={cn("h-8 w-8 hover:bg-gray-700", currentLayout === 'spotlight' && "bg-info text-white hover:bg-info")}
-                    onClick={() => handleLayoutChange('spotlight')}
-                >
-                    <Focus className="h-4 w-4" />
-                </Button>
-            </TooltipTrigger>
-            <TooltipContent>Destaque</TooltipContent>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn("h-8 w-8 hover:bg-[var(--video-surface-hover)]", currentLayout === 'grid' && "bg-info text-white hover:bg-info")}
+              onClick={() => handleLayoutChange('grid')}
+            >
+              <Grid3x3 className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Grid</TooltipContent>
         </Tooltip>
 
         <Tooltip>
-            <TooltipTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className={cn("h-8 w-8 hover:bg-gray-700", currentLayout === 'sidebar' && "bg-info text-white hover:bg-info")}
-                    onClick={() => handleLayoutChange('sidebar')}
-                >
-                    <PanelRight className="h-4 w-4" />
-                </Button>
-            </TooltipTrigger>
-            <TooltipContent>Barra Lateral</TooltipContent>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn("h-8 w-8 hover:bg-[var(--video-surface-hover)]", currentLayout === 'spotlight' && "bg-info text-white hover:bg-info")}
+              onClick={() => handleLayoutChange('spotlight')}
+            >
+              <Focus className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Destaque</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn("h-8 w-8 hover:bg-[var(--video-surface-hover)]", currentLayout === 'sidebar' && "bg-info text-white hover:bg-info")}
+              onClick={() => handleLayoutChange('sidebar')}
+            >
+              <PanelRight className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Barra Lateral</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </div>

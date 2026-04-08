@@ -25,16 +25,16 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
   if (!isVisible) return null;
 
   return (
-    <div className="absolute right-2 top-16 bottom-20 w-[calc(100%-1rem)] sm:right-4 sm:top-20 sm:bottom-24 sm:w-80 bg-black/80 backdrop-blur-md border border-gray-700 rounded-lg shadow-2xl flex flex-col z-50 transition-all duration-300 animate-in slide-in-from-right-10">
-      <div className="flex items-center justify-between p-3 border-b border-gray-700">
-        <div className="flex items-center gap-2 text-white">
+    <div className="absolute right-2 top-16 bottom-20 w-[calc(100%-1rem)] sm:right-4 sm:top-20 sm:bottom-24 sm:w-80 bg-black/80 backdrop-blur-md border border-[var(--video-surface-hover)] rounded-lg shadow-2xl flex flex-col z-50 transition-all duration-300 animate-in slide-in-from-right-10">
+      <div className="flex items-center justify-between p-3 border-b border-[var(--video-surface-hover)]">
+        <div className="flex items-center gap-2 text-[var(--video-text)]">
           <MessageSquareText className="w-4 h-4" />
           <h3 className="font-semibold text-sm">Transcrição em Tempo Real</h3>
         </div>
-        <Button 
-          variant="ghost" 
-          size="icon" aria-label="Fechar" 
-          className="h-6 w-6 text-gray-400 hover:text-white" 
+        <Button
+          variant="ghost"
+          size="icon" aria-label="Fechar"
+          className="h-6 w-6 text-[var(--video-muted)] hover:text-[var(--video-text)]"
           onClick={onClose}
         >
           <X className="w-4 h-4" />
@@ -44,7 +44,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
       <ScrollArea className="flex-1 p-4" ref={scrollRef}>
         <div className="flex flex-col gap-3">
           {transcripts.length === 0 ? (
-            <div className="text-center text-gray-500 text-sm py-8">
+            <div className="text-center text-[var(--video-muted)] text-sm py-8">
               Aguardando fala...
             </div>
           ) : (
@@ -54,13 +54,13 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
                   <span className="text-xs font-bold text-info truncate max-w-37.5">
                     {segment.participantName}
                   </span>
-                  <span className="text-[10px] text-gray-500">
+                  <span className="text-[10px] text-[var(--video-muted)]">
                     {new Date(segment.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                   </span>
                 </div>
                 <p className={cn(
                   "text-sm leading-relaxed wrap-break-word",
-                  segment.isFinal ? "text-white" : "text-gray-400 italic"
+                  segment.isFinal ? "text-[var(--video-text)]" : "text-[var(--video-muted)] italic"
                 )}>
                   {segment.text}
                 </p>

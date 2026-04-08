@@ -21,31 +21,31 @@ export function KeyboardShortcutsHelp({ open, onOpenChange }: KeyboardShortcutsH
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-gray-900 border-gray-800 text-white">
+      <DialogContent className="max-w-md bg-[var(--video-surface)] border-[var(--video-border)] text-[var(--video-text)]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Keyboard className="w-5 h-5" />
             Atalhos de Teclado
           </DialogTitle>
         </DialogHeader>
-        
+
         <Table>
           <TableHeader>
-            <TableRow className="border-gray-800 hover:bg-gray-800/50">
-              <TableHead className="text-gray-400">Ação</TableHead>
-              <TableHead className="text-right text-gray-400">Atalho</TableHead>
+            <TableRow className="border-[var(--video-border)] hover:bg-[var(--video-surface-hover)]/50">
+              <TableHead className="text-[var(--video-muted)]">Ação</TableHead>
+              <TableHead className="text-right text-[var(--video-muted)]">Atalho</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {shortcuts.map((shortcut) => (
-              <TableRow key={shortcut.action} className="border-gray-800 hover:bg-gray-800/50">
+              <TableRow key={shortcut.action} className="border-[var(--video-border)] hover:bg-[var(--video-surface-hover)]/50">
                 <TableCell className="font-medium">{shortcut.action}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
                     {shortcut.keys.map((key) => (
-                      <kbd 
+                      <kbd
                         key={key}
-                        className="px-2 py-1 text-xs font-semibold text-gray-100 bg-gray-800 border border-gray-700 rounded-md"
+                        className="px-2 py-1 text-xs font-semibold text-[var(--video-text)] bg-[var(--video-surface-hover)] border border-[var(--video-surface-hover)] rounded-md"
                       >
                         {key}
                       </kbd>

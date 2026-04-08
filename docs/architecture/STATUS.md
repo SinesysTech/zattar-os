@@ -1,4 +1,4 @@
-# Relatório de Status do Projeto Synthropic
+# Relatório de Status do Projeto ZattarOS
 
 **Data:** 2026-04-06  
 **Versão:** Next.js 16 / React 19

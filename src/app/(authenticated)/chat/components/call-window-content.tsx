@@ -147,7 +147,7 @@ export function CallWindowContent({
   const { isRecording, startRecording, stopRecording } = useRecording(
     meeting,
     meetingId,
-    () => {},
+    () => { },
     async (recId: string | undefined) => {
       if (chamadaId && recId) {
         setTimeout(async () => {
@@ -396,7 +396,7 @@ export function CallWindowContent({
     const handleBeforeUnload = () => {
       if (chamadaId && joinedRef.current) {
         // Fire-and-forget exit
-        actionSairDaChamada(chamadaId).catch(() => {});
+        actionSairDaChamada(chamadaId).catch(() => { });
       }
       if (window.opener) {
         try {
@@ -414,7 +414,7 @@ export function CallWindowContent({
 
   if (!authToken && !error) {
     return (
-      <div className="h-screen w-screen bg-black text-white relative">
+      <div className="h-screen w-screen bg-black text-[var(--video-text)] relative">
         <CallLoadingState
           stage="connecting"
           message="Aguardando conexão..."
@@ -425,7 +425,7 @@ export function CallWindowContent({
   }
 
   return (
-    <div className="h-screen w-screen bg-black text-white relative">
+    <div className="h-screen w-screen bg-black text-[var(--video-text)] relative">
       {loading && (
         <CallLoadingState
           stage={loadingStage}
@@ -435,17 +435,17 @@ export function CallWindowContent({
       )}
 
       {error && (
-        <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-gray-900">
+        <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-[var(--video-surface)]">
           <div className="bg-destructive/10 p-4 rounded-full">
             <RotateCcw className="w-12 h-12 text-destructive" />
           </div>
-          <h3 className="text-xl font-semibold text-white">Erro na Chamada</h3>
-          <p className="text-gray-400 max-w-sm">{error}</p>
+          <h3 className="text-xl font-semibold text-[var(--video-text)]">Erro na Chamada</h3>
+          <p className="text-[var(--video-muted)] max-w-sm">{error}</p>
           <div className="flex gap-4 mt-4">
             <Button
               variant="outline"
               onClick={() => window.close()}
-              className="border-gray-700 hover:bg-gray-800"
+              className="border-[var(--video-surface-hover)] hover:bg-[var(--video-surface-hover)]"
             >
               Fechar
             </Button>

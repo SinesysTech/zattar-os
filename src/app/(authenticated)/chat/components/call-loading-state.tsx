@@ -12,17 +12,17 @@ interface CallLoadingStateProps {
   className?: string;
 }
 
-export function CallLoadingState({ 
-  stage, 
-  message, 
+export function CallLoadingState({
+  stage,
+  message,
   onCancel,
-  className 
+  className
 }: CallLoadingStateProps) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let targetProgress = 0;
-    
+
     switch (stage) {
       case 'connecting':
         targetProgress = 30;
@@ -57,31 +57,31 @@ export function CallLoadingState({
   };
 
   return (
-    <div className={cn("flex flex-col items-center justify-center h-full w-full bg-gray-950 text-white p-6", className)}>
+    <div className={cn("flex flex-col items-center justify-center h-full w-full bg-[var(--video-bg)] text-[var(--video-text)] p-6", className)}>
       <div className="w-full max-w-sm flex flex-col items-center gap-6">
         <div className="relative">
           <div className="absolute inset-0 bg-info/20 blur-xl rounded-full" />
           <Loader2 className="w-16 h-16 animate-spin text-info relative z-10" />
         </div>
-        
+
         <div className="text-center space-y-2 w-full">
           <h3 className="text-xl font-semibold tracking-tight">
             {message || defaultMessages[stage]}
           </h3>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-[var(--video-muted)]">
             Aguarde um momento...
           </p>
         </div>
 
         <div className="w-full space-y-2">
           <Progress value={progress} className="h-2" />
-          <p className="text-xs text-right text-gray-500">{Math.round(progress)}%</p>
+          <p className="text-xs text-right text-[var(--video-muted)]">{Math.round(progress)}%</p>
         </div>
 
         {onCancel && (
           <button
             onClick={onCancel}
-            className="mt-4 text-sm text-gray-400 hover:text-white transition-colors underline decoration-dotted"
+            className="mt-4 text-sm text-[var(--video-muted)] hover:text-[var(--video-text)] transition-colors underline decoration-dotted"
           >
             Cancelar
           </button>
