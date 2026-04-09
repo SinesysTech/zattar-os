@@ -19,7 +19,6 @@ import {
   ReceberContaDialog,
   type FormaPagamento,
   type StatusContaReceber,
-  type StatusLancamento,
   useCentrosCustoAtivos,
   useContaReceber,
   useContasBancarias,
@@ -76,8 +75,6 @@ import { cn } from '@/lib/utils';
 // ============================================================================
 // Constantes
 // ============================================================================
-
-type BadgeVariant = 'default' | 'secondary' | 'outline' | 'info' | 'success' | 'warning' | 'destructive' | 'neutral' | 'accent';
 
 const STATUS_LABELS: Record<StatusContaReceber, string> = {
   pendente: 'Pendente',

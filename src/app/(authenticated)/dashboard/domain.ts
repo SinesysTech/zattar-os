@@ -8,6 +8,7 @@
 
 import { z } from 'zod';
 import type { SemanticTone } from '@/lib/design-system';
+import type { DashboardFinanceiroData } from '@/app/(authenticated)/financeiro/services/dashboard';
 
 // ============================================================================
 // Tipos Compartilhados
@@ -144,7 +145,7 @@ export interface ProdutividadeResumo {
 // Tipos para Dados Financeiros Consolidados
 // ============================================================================
 
-export interface DadosFinanceirosConsolidados {
+export interface DadosFinanceirosConsolidados extends DashboardFinanceiroData {
   saldoTotal: number;
   contasPagar: {
     quantidade: number;

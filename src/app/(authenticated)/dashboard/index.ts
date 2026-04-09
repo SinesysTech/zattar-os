@@ -44,4 +44,23 @@ export * from './components';
 // ============================================================================
 // Utils
 // ============================================================================
-export * from './utils';
+// `formatarMoeda` já é exportado pelo barrel de `./repositories` (via `./repository`).
+// Re-exportamos os demais utilitários explicitamente para evitar ambiguidade.
+export {
+  formatarDataRelativa,
+  formatarDataHora,
+  formatarHora,
+  formatarValorAbreviado,
+  calcularPercentual,
+  calcularVariacao,
+  getDirecaoVariacao,
+  getNivelUrgencia,
+  getCorUrgencia,
+  formatarDiasRestantes,
+  formatarStatusExpediente,
+  formatarStatusCaptura,
+  formatarTRT,
+  formatarGrau,
+  agruparPor,
+  contarOcorrencias,
+} from './utils';

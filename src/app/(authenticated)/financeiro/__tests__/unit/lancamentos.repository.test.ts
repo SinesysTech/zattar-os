@@ -4,9 +4,7 @@ import {
 } from '../../repository/lancamentos';
 import {
   criarLancamentoReceitaMock,
-  criarLancamentoDespesaMock as _criarLancamentoDespesaMock,
   criarLancamentoDbMock,
-  criarResumoVencimentosCompleteMock as _criarResumoVencimentosCompleteMock,
 } from '../fixtures';
 import { createMockSupabaseClient, createMockQueryBuilder, mockPostgresError } from '../../../processos/__tests__/helpers';
 

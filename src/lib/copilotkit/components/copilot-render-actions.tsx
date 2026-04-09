@@ -56,6 +56,54 @@ const fmtDataHora = (iso: string | null) => {
   }
 };
 
+/**
+ * Gera intervalo de datas [dataInicio, dataFim] no formato YYYY-MM-DD para um
+ * período DRE. Cópia local da função pura `gerarPeriodoAtual` de
+ * `financeiro/hooks/use-dre` — inlineada aqui para evitar que o barrel
+ * `@/app/(authenticated)/financeiro` seja puxado ao bundle cliente
+ * (o barrel transita para services com `import 'server-only'`).
+ */
+function gerarPeriodoDRE(
+  tipo: 'mensal' | 'trimestral' | 'semestral' | 'anual'
+): { dataInicio: string; dataFim: string } {
+  const toYMD = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
+  const hoje = new Date();
+  const ano = hoje.getFullYear();
+  const mes = hoje.getMonth();
+  switch (tipo) {
+    case 'mensal': {
+      return {
+        dataInicio: toYMD(new Date(ano, mes, 1)),
+        dataFim: toYMD(new Date(ano, mes + 1, 0)),
+      };
+    }
+    case 'trimestral': {
+      const trimestre = Math.floor(mes / 3);
+      const mesInicio = trimestre * 3;
+      return {
+        dataInicio: toYMD(new Date(ano, mesInicio, 1)),
+        dataFim: toYMD(new Date(ano, mesInicio + 3, 0)),
+      };
+    }
+    case 'semestral': {
+      const semestre = mes < 6 ? 0 : 1;
+      const mesInicio = semestre * 6;
+      return {
+        dataInicio: toYMD(new Date(ano, mesInicio, 1)),
+        dataFim: toYMD(new Date(ano, mesInicio + 6, 0)),
+      };
+    }
+    case 'anual':
+    default:
+      return { dataInicio: `${ano}-01-01`, dataFim: `${ano}-12-31` };
+  }
+}
+
 function LoadingCard() {
   return (
     <Card className="w-full max-w-md">
@@ -411,10 +459,12 @@ export function useCopilotRenderActions() {
     },
     handler: async ({ periodo }) => {
       try {
-        const { gerarPeriodoAtual } = await import('@/app/(authenticated)/financeiro');
+        // NOTA: Não importamos do barrel `@/app/(authenticated)/financeiro` porque
+        // ele puxa transitivamente `dashboard`→`tarefas`→services com `import 'server-only'`,
+        // o que quebra o bundle cliente. Inline-amos a lógica pura de período aqui.
         const { actionGerarDRE } = await import('@/app/(authenticated)/financeiro/actions/dre');
         const tipo = (periodo || 'mensal') as 'mensal' | 'trimestral' | 'semestral' | 'anual';
-        const { dataInicio, dataFim } = gerarPeriodoAtual(tipo);
+        const { dataInicio, dataFim } = gerarPeriodoDRE(tipo);
         const result = await actionGerarDRE({ dataInicio, dataFim, tipo });
         if (result?.success && result.data) {
           const resumo = (result.data as { dre: { resumo: DRERender }; geradoEm: string }).dre.resumo;

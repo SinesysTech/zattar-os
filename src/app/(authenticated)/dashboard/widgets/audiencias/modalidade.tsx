@@ -19,7 +19,7 @@ import {
 } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
-import { tokenForTone, type SemanticTone } from '@/lib/design-system';
+import { tokenForTone } from '@/lib/design-system';
 import { ToneDot } from '@/components/ui/tone-dot';
 
 export function ModalidadeDistribution() {

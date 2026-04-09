@@ -117,19 +117,8 @@ export {
 // ============================================================================
 // Service
 // ============================================================================
-export {
-  // Modelos
-  buscarPecaModelo,
-  listarPecasModelos,
-  criarPecaModelo,
-  atualizarPecaModelo,
-  deletarPecaModelo,
-  // Geração
-  gerarPecaDeContrato,
-  previewGeracaoPeca,
-  type GerarPecaResult,
-  // Contrato Documentos
-  listarDocumentosDoContrato,
-  vincularDocumentoAoContrato,
-  desvincularDocumentoDoContrato,
-} from './service';
+// NÃO reexportamos `./service` aqui: tem `import 'server-only'` e polui
+// transitivamente qualquer Client Component que importe do barrel (ex:
+// `GerarPecaDialog`, `ContratoDocumentosList`). Server Components que
+// precisam do service devem importar via `./service` (path relativo).
+export type { GerarPecaResult } from './service';

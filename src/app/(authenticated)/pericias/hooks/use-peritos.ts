@@ -45,12 +45,15 @@ export const usePeritos = (
         situacao: 'A',
       });
 
-      if (!result.success) {
+      if (!result.success || !result.data) {
         throw new Error('Erro ao buscar peritos');
       }
 
-      const data = result.data?.data as unknown as { id: number; nome: string }[] | undefined;
-      setPeritos((data || []).map((p) => ({ id: p.id, nome: p.nome })));
+      // `actionListarTerceiros` retorna `ActionResult<unknown>`, portanto
+      // precisamos refinar o payload manualmente para o shape paginado.
+      const payload = result.data as { data?: { id: number; nome: string }[] };
+      const terceiros = payload.data ?? [];
+      setPeritos(terceiros.map((p) => ({ id: p.id, nome: p.nome })));
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar peritos';
       setError(errorMessage);

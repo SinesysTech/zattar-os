@@ -69,8 +69,6 @@ import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 // Constantes e Helpers
 // ============================================================================
 
-type BadgeVariant = 'default' | 'secondary' | 'outline' | 'info' | 'success' | 'warning' | 'destructive' | 'neutral' | 'accent';
-
 const STATUS_LABELS: Record<StatusLancamento, string> = {
   pendente: 'Pendente',
   confirmado: 'Pago',

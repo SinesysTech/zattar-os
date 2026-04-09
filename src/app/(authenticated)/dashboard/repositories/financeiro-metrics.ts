@@ -41,6 +41,9 @@ export async function buscarDadosFinanceirosConsolidados(
     }
 
     return {
+      // Campos originais do DashboardFinanceiroData (preservados)
+      ...dashboardData,
+      // Campos consolidados (agregações de conveniência para o dashboard)
       saldoTotal: dashboardData.saldoMes || 0,
       contasPagar: {
         quantidade: dashboardData.qtdDespesasPendentes || 0,
@@ -57,6 +60,17 @@ export async function buscarDadosFinanceirosConsolidados(
     console.error('Erro ao buscar dados financeiros consolidados:', msg);
     // Retornar dados zerados em caso de erro
     return {
+      receitasMes: 0,
+      despesasMes: 0,
+      saldoMes: 0,
+      receitasPendentes: 0,
+      qtdReceitasPendentes: 0,
+      despesasPendentes: 0,
+      qtdDespesasPendentes: 0,
+      contasVencidas: 0,
+      valorVencido: 0,
+      evolucaoMensal: [],
+      topCategorias: [],
       saldoTotal: 0,
       contasPagar: { quantidade: 0, valor: 0 },
       contasReceber: { quantidade: 0, valor: 0 },

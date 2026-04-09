@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 
 import type { GrauTribunal, Pericia, UsuarioOption } from '../domain';
-import { SITUACAO_PERICIA_LABELS, SituacaoPericiaCodigo } from '../domain';
+import { SITUACAO_PERICIA_LABELS } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
 import { PericiaDetalhesDialog } from './pericia-detalhes-dialog';
 import { PericiaAtribuirResponsavelDialog } from './pericia-atribuir-responsavel-dialog';

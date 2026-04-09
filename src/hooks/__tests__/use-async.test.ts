@@ -4,7 +4,7 @@
  * Tests async execution, loading states, error handling, cancellation, and cleanup
  */
 
-import { renderHook, act, waitFor as _waitFor } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useAsync } from '@/hooks/use-async';
 
 describe('useAsync hook', () => {

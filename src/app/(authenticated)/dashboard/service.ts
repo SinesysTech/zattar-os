@@ -87,6 +87,17 @@ const PRODUTIVIDADE_RESUMO_PADRAO: ProdutividadeResumo = {
 };
 
 const DADOS_FINANCEIROS_PADRAO: DadosFinanceirosConsolidados = {
+  receitasMes: 0,
+  despesasMes: 0,
+  saldoMes: 0,
+  receitasPendentes: 0,
+  qtdReceitasPendentes: 0,
+  despesasPendentes: 0,
+  qtdDespesasPendentes: 0,
+  contasVencidas: 0,
+  valorVencido: 0,
+  evolucaoMensal: [],
+  topCategorias: [],
   saldoTotal: 0,
   contasPagar: {
     quantidade: 0,

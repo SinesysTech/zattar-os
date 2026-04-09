@@ -1,5 +1,5 @@
 import { buscarProcessosClientePorCpf } from "@/app/(authenticated)/acervo/service";
-import { listarContratosPorClienteId } from "@/app/(authenticated)/contratos";
+import { listarContratosPorClienteId } from "@/app/(authenticated)/contratos/service";
 import { listarAudienciasPorBuscaCpf } from "@/app/(authenticated)/audiencias/service";
 import { listarAcordosPorBuscaCpf } from "@/app/(authenticated)/obrigacoes/service";
 import { buscarClientePorDocumento } from "@/app/(authenticated)/partes/server";
@@ -47,7 +47,7 @@ export async function obterDashboardCliente(
 
   try {
     [contratos, audiencias, pagamentos] = await Promise.all([
-      listarContratosPorClienteId(cliente.id).catch(e => {
+      listarContratosPorClienteId(cliente.id).catch((e: unknown) => {
         const errorMsg = serializeError(e);
         console.error('[Portal] Erro ao buscar contratos:', errorMsg);
         errors.contratos = errorMsg || 'Erro ao carregar contratos';

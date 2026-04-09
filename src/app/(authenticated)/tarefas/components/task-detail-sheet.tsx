@@ -39,7 +39,7 @@ import { Typography } from "@/components/ui/typography";
 
 import type { Task, TarefaDisplayItem } from "../domain";
 import { useTarefaStore } from "../store";
-import { labels, priorities, statuses } from "../data/data";
+import { labels, priorities, statuses } from "../constants";
 import * as actions from "../actions/tarefas-actions";
 import { toast } from "sonner";
 
