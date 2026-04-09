@@ -114,4 +114,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-09 after milestone v1.1 started*
+*Last updated: 2026-04-09 after Phase 01 (layout-shell-sidebar) complete — chat module has 3-column Glass Briefing shell, redesigned sidebar with TabPills/SearchInput/sections, fixada field in DB*
