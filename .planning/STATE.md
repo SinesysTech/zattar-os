@@ -1,19 +1,3 @@
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: Defining requirements
-stopped_at: Phase 1 context gathered
-last_updated: "2026-04-09T15:28:52.806Z"
-last_activity: 2026-04-09 — Milestone v1.1 started
-progress:
-  total_phases: 4
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
----
-
 # Project State
 
 ## Project Reference
@@ -21,21 +5,20 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-09)
 
 **Core value:** Gestao eficiente de audiencias judiciais com visualizacao completa de dados, preparo e historico
-**Current focus:** Defining requirements for Audiencias revision
+**Current focus:** Phase 5 — Indicadores & Detail Dialog
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 5 of 8 (Indicadores & Detail Dialog)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-04-09 — Milestone v1.1 started
+Status: Ready to plan
+Last activity: 2026-04-09 — Roadmap created for v1.1 (Phases 5-8)
 
 Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
 **Velocity:**
-
 - Total plans completed: 0
 - Average duration: -
 - Total execution time: 0 hours
@@ -47,7 +30,6 @@ Progress: [░░░░░░░░░░] 0%
 | - | - | - | - |
 
 **Recent Trend:**
-
 - Last 5 plans: -
 - Trend: -
 
@@ -60,11 +42,12 @@ Progress: [░░░░░░░░░░] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- Detail Sheet → Dialog centrado (mais espaco para historico)
+- Detail Sheet -> Dialog centrado (mais espaco para historico)
 - documento_ativo = flag simples (sem documento real)
 - designada = badge independente do status
 - Mocks aprovados em .mocks/ (lista, mes, ano, dialog)
 - Presenca hibrida com badge explicativo
+- INDIC badges built first (shared across dialog and views)
 
 ### Pending Todos
 
@@ -76,6 +59,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-09T15:28:52.799Z
-Stopped at: Phase 1 context gathered
-Resume file: .planning/phases/01-layout-shell-sidebar/01-CONTEXT.md
+Last session: 2026-04-09
+Stopped at: Roadmap created for v1.1, ready to plan Phase 5
+Resume file: None
