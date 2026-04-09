@@ -1,14 +1,14 @@
 'use client';
 
-import { Scale, Building2, Calendar, AlertTriangle, Clock } from 'lucide-react';
+import { Building2, Calendar, AlertTriangle, Clock } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CopyButton } from '@/app/(authenticated)/partes';
 import { timeAgo } from '@/components/dashboard/entity-card';
 import { cn } from '@/lib/utils';
-import { IconContainer } from '@/components/ui/icon-container';
 import { Heading } from '@/components/ui/typography';
+import { ResponsavelPopover } from './responsavel-popover';
 import type { ProcessoUnificado } from '../domain';
 import { GRAU_LABELS } from '@/lib/design-system';
 
@@ -27,8 +27,10 @@ interface ProcessoCardProps {
   processo: ProcessoUnificado;
   tags?: Tag[];
   responsavel?: Usuario;
+  usuarios: Usuario[];
   isSelected?: boolean;
   onClick: () => void;
+  onUpdateResponsavel: (processoId: number, novoResponsavelId: number | null) => void;
 }
 
 const STATUS_CLASSES: Record<string, { bg: string; text: string }> = {
@@ -55,8 +57,10 @@ export function ProcessoCard({
   processo,
   tags,
   responsavel,
+  usuarios,
   isSelected,
   onClick,
+  onUpdateResponsavel,
 }: ProcessoCardProps) {
   const defaultClasses = { bg: 'bg-muted-foreground/8', text: 'text-muted-foreground/50' };
   const statusClasses = STATUS_CLASSES[processo.codigoStatusProcesso] || defaultClasses;
@@ -77,9 +81,10 @@ export function ProcessoCard({
     >
       <div onClick={onClick} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onClick()}>
         <div className="flex items-start gap-3">
-          <IconContainer size="lg" className={statusClasses.bg}>
-            <Scale className={cn('size-5', statusClasses.text)} />
-          </IconContainer>
+          <div
+            className={cn('size-2.5 rounded-full shrink-0 mt-2', statusClasses.bg)}
+            title={processo.codigoStatusProcesso}
+          />
           <div className="flex-1 min-w-0">
             <Heading level="card" className="text-sm truncate">{tituloPartes}</Heading>
             <div className="flex items-center gap-1 mt-0.5">
@@ -135,24 +140,29 @@ export function ProcessoCard({
             )}
           </div>
         )}
+      </div>
 
-        <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/10">
-          <div className="flex items-center gap-1.5">
-            <Avatar size="xs" className="border">
-              <AvatarImage src={responsavel?.avatarUrl || undefined} />
-              <AvatarFallback className="text-[8px]">
-                {responsavel ? getInitials(responsavel.nomeExibicao) : 'NA'}
-              </AvatarFallback>
-            </Avatar>
-            <span className="text-[9px] text-muted-foreground/50">
-              {responsavel?.nomeExibicao || 'Sem resp.'}
-            </span>
-          </div>
-          <span className="text-[9px] text-muted-foreground/40 flex items-center gap-1">
-            <Clock className="size-2.5" />
-            {timeAgo(processo.updatedAt)}
+      <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/10">
+        <ResponsavelPopover
+          processoId={processo.id}
+          responsavel={responsavel}
+          usuarios={usuarios}
+          onUpdate={onUpdateResponsavel}
+        >
+          <Avatar size="xs" className="border">
+            <AvatarImage src={responsavel?.avatarUrl || undefined} />
+            <AvatarFallback className="text-[8px]">
+              {responsavel ? getInitials(responsavel.nomeExibicao) : 'NA'}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-[9px] text-muted-foreground/50">
+            {responsavel?.nomeExibicao || 'Sem resp.'}
           </span>
-        </div>
+        </ResponsavelPopover>
+        <span className="text-[9px] text-muted-foreground/40 flex items-center gap-1">
+          <Clock className="size-2.5" />
+          {timeAgo(processo.updatedAt)}
+        </span>
       </div>
     </GlassPanel>
   );
