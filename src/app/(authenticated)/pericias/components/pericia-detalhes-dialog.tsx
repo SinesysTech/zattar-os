@@ -39,7 +39,7 @@ import {
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 
 import type { Pericia } from '../domain';
-import { SITUACAO_PERICIA_LABELS, SituacaoPericiaCodigo } from '../domain';
+import { SITUACAO_PERICIA_LABELS } from '../domain';
 
 interface PericiaDetalhesDialogProps {
   pericia: Pericia | null;

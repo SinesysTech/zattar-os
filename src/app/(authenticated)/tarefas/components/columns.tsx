@@ -6,7 +6,7 @@ import { ExternalLink } from "lucide-react";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { labels, priorities, statuses } from "../data/data";
+import { labels, priorities, statuses } from "../constants";
 import type { TarefaDisplayItem } from "../domain";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";

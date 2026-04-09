@@ -7,7 +7,6 @@ import {
   pangeaProcessoParadigmaSchema,
   PANGEA_MAX_TAMANHO_PAGINA,
   PANGEA_ORDENACAO_VALUES,
-  PANGEA_TIPO_VALUES as _PANGEA_TIPO_VALUES,
 } from '../../domain';
 
 describe('Pangea Domain', () => {

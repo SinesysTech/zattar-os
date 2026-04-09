@@ -9,7 +9,6 @@ import {
   marcarTodasComoLidas,
 } from "../../service";
 import * as repository from "../../repository";
-import { appError as _appError } from "../../../../types";
 
 // Mock do repository
 jest.mock("../../repository");

@@ -9,7 +9,7 @@ import { PieChart } from 'lucide-react';
 import { WidgetContainer, MiniDonut, fmtMoeda } from '../../mock/widgets/primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
-import { tokenForTone, type SemanticTone } from '@/lib/design-system';
+import { tokenForTone } from '@/lib/design-system';
 import { ToneDot } from '@/components/ui/tone-dot';
 
 export function WidgetDespesasCategoria() {

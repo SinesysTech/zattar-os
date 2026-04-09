@@ -17,7 +17,6 @@ import {
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { isPermissaoValida } from '@/app/(authenticated)/usuarios';
 import type { Recurso, Operacao } from '@/app/(authenticated)/usuarios';
-import type { SupabaseClient as _SupabaseClient } from '@supabase/supabase-js';
 
 // Mocks
 jest.mock('@/lib/supabase/service-client');

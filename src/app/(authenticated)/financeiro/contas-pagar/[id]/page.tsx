@@ -64,8 +64,6 @@ import { cn } from '@/lib/utils';
 // Constantes
 // ============================================================================
 
-type BadgeVariant = React.ComponentProps<typeof Badge>['variant'];
-
 const STATUS_LABELS: Record<StatusContaPagar, string> = {
   pendente: 'Pendente',
   confirmado: 'Pago',

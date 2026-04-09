@@ -1,7 +1,8 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { listarContratosPorClienteId, formatarTipoContrato, formatarTipoCobranca, formatarPapelContratual, formatarData } from "@/app/(authenticated)/contratos"
+import { formatarTipoContrato, formatarTipoCobranca, formatarPapelContratual, formatarData } from "@/app/(authenticated)/contratos"
+import { listarContratosPorClienteId } from "@/app/(authenticated)/contratos/service"
 import { buscarClientePorDocumento } from "@/app/(authenticated)/partes/server"
 import type { Contrato, StatusContrato } from "@/app/(authenticated)/contratos"
 import type { ContratoPortal, StatusContratoPortal } from "./domain"

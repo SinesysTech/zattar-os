@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { DialogFormShell } from "@/components/shared";
 import { actionCriarTarefa } from "../actions/tarefas-actions";
-import { priorities, statuses } from "../data/data";
+import { priorities, statuses } from "../constants";
 import type { TaskStatus, TaskLabel, TaskPriority } from "../domain";
 
 interface TaskDialogProps {

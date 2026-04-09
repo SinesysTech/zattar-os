@@ -59,6 +59,10 @@ const eslintConfig = defineConfig([
     "public/pdfjs/**",
     // Library folder (component library, not part of main app)
     "library/**",
+    // ESLint custom rules definitions: não fazem parte do bundle e contêm
+    // strings literais que descrevem anti-padrões detectados pelas próprias regras
+    // (ex.: no-hsl-var-tokens.js usa "hsl(var(--token))" na mensagem de erro).
+    "eslint-rules/**",
     // Coverage reports (auto-generated)
     "coverage/**",
     // Non-code files (avoid parser errors)

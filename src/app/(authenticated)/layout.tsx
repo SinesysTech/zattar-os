@@ -6,7 +6,7 @@ import type { UserData } from "@/providers/user-provider"
 
 export default async function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   let initialUser: UserData | null = null;
-  let initialPermissoes: any[] = [];
+  let initialPermissoes: Awaited<ReturnType<typeof listarPermissoesUsuario>> = [];
   
   try {
      const supabase = await createClient();

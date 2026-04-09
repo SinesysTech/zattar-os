@@ -104,7 +104,11 @@ export { statuses, priorities, labels } from './constants';
 // ============================================================================
 // Service
 // ============================================================================
-export * as tarefasService from './service';
+// NÃO reexportamos `service.ts` aqui: ele tem `import 'server-only'` e polui
+// transitivamente o bundle cliente de qualquer Client Component que importe
+// deste barrel (widgets de dashboard, copilot actions, etc).
+// Server Components que precisam do service devem importar `./service` diretamente
+// via path relativo (padrão já usado em page.tsx e quadro/[boardSlug]/page.tsx).
 
 // ============================================================================
 // Errors

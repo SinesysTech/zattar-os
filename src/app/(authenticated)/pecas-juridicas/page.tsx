@@ -6,7 +6,8 @@
 
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { listarPecasModelos, PecasModelosTableWrapper } from '@/app/(authenticated)/pecas-juridicas';
+import { PecasModelosTableWrapper } from '@/app/(authenticated)/pecas-juridicas';
+import { listarPecasModelos } from './service';
 
 function PecasModelosLoading() {
   return (
