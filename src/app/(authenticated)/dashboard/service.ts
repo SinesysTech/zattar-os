@@ -28,6 +28,8 @@ import {
   buscarPerformanceAdvogados,
   buscarUsuario,
 } from './repository';
+import { buscarChatResumo } from './repositories/chat-metrics';
+import { buscarDocumentosRecentes } from './repositories/documentos-recentes';
 import { checkPermission } from '@/lib/auth/authorization';
 import type {
   DashboardUsuarioData,
@@ -40,6 +42,8 @@ import type {
   ContratosResumo,
   AudienciaProxima,
   ExpedienteUrgente,
+  ChatResumo,
+  DocumentoRecente,
 } from './domain';
 
 // ============================================================================
@@ -147,6 +151,8 @@ export async function obterDashboardUsuario(
     expedientesDetalhados?: number;
     financeiroDetalhado?: number;
     contratos?: number;
+    chatResumo?: number;
+    documentosRecentes?: number;
   } = {};
 
   let currentIndex = 0;
@@ -239,6 +245,13 @@ export async function obterDashboardUsuario(
     indices.contratos = currentIndex++;
     fetchTasks.push(() => buscarContratosResumo());
   }
+
+  // Chat e documentos recentes (sempre buscados, sem restrição de permissão)
+  indices.chatResumo = currentIndex++;
+  fetchTasks.push(() => buscarChatResumo(usuarioId).catch(() => undefined));
+
+  indices.documentosRecentes = currentIndex++;
+  fetchTasks.push(() => buscarDocumentosRecentes(usuarioId, 5).catch(() => undefined));
 
   // Processar em lotes (4 tasks concorrentes) para evitar `fetch failed`
   const results: unknown[] = [];
@@ -342,6 +355,8 @@ export async function obterDashboardUsuario(
     expedientesUrgentes: results[indices.expedientesUrgentes!] as ExpedienteUrgente[],
     dadosFinanceiros,
     contratos,
+    chatResumo: results[indices.chatResumo!] as ChatResumo | undefined,
+    documentosRecentes: results[indices.documentosRecentes!] as DocumentoRecente[] | undefined,
     ultimaAtualizacao: new Date().toISOString(),
   };
 }
@@ -404,6 +419,12 @@ export async function obterDashboardAdmin(
   dadosFinanceiros.dreComparativo = financeiroDetalhado.dreComparativo;
   dadosFinanceiros.fluxoCaixaMensal = financeiroDetalhado.fluxoCaixaMensal;
 
+  // 6. Chat e documentos recentes do admin
+  const [chatResumo, documentosRecentes] = await Promise.all([
+    usuarioId ? buscarChatResumo(usuarioId).catch(() => undefined) : Promise.resolve(undefined),
+    usuarioId ? buscarDocumentosRecentes(usuarioId, 5).catch(() => undefined) : Promise.resolve(undefined),
+  ]);
+
   return {
     role: 'admin',
     usuario: {
@@ -422,6 +443,8 @@ export async function obterDashboardAdmin(
     _processosDetalhados: processosDetalhados,
     _audienciasDetalhadas: audienciasDetalhadas,
     _expedientesDetalhados: expedientesDetalhados,
+    chatResumo,
+    documentosRecentes,
     ultimaAtualizacao: new Date().toISOString(),
   } as DashboardAdminData;
 }
