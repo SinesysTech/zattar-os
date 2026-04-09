@@ -130,8 +130,8 @@ export function MiniBar({
 
   return (
     <div className="flex items-end gap-2 w-full" style={{ height }}>
-      {data.map((d) => (
-        <div key={d.label} className="flex-1 flex flex-col items-center gap-0.5">
+      {data.map((d, i) => (
+        <div key={`${i}-${d.label}`} className="flex-1 flex flex-col items-center gap-0.5">
           <div className="flex gap-0.5 items-end w-full" style={{ height: height - 14 }}>
             <div
               className={`flex-1 rounded-t-sm ${barColor} transition-all duration-500`}
