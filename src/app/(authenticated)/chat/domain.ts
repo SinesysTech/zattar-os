@@ -98,6 +98,7 @@ export interface SalaChat {
   createdAt: string;
   updatedAt: string;
   isArchive?: boolean; // Novo campo
+  fixada?: boolean; // Per-user pinned conversation (D-04)
 }
 
 /**
