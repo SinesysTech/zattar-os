@@ -85,13 +85,49 @@ Requirements para revisao completa do modulo de audiencias. Cada um mapeia para 
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (Populated during roadmap creation) | | |
+| DIALOG-01 | Phase 5 | Pending |
+| DIALOG-02 | Phase 5 | Pending |
+| DIALOG-03 | Phase 5 | Pending |
+| DIALOG-04 | Phase 5 | Pending |
+| DIALOG-05 | Phase 5 | Pending |
+| DIALOG-06 | Phase 5 | Pending |
+| DIALOG-07 | Phase 5 | Pending |
+| DIALOG-08 | Phase 5 | Pending |
+| DIALOG-09 | Phase 5 | Pending |
+| DIALOG-10 | Phase 5 | Pending |
+| INDIC-01 | Phase 5 | Pending |
+| INDIC-02 | Phase 5 | Pending |
+| INDIC-03 | Phase 5 | Pending |
+| INDIC-04 | Phase 5 | Pending |
+| INDIC-05 | Phase 5 | Pending |
+| INDIC-06 | Phase 5 | Pending |
+| VIEW-01 | Phase 6 | Pending |
+| VIEW-02 | Phase 6 | Pending |
+| VIEW-03 | Phase 6 | Pending |
+| VIEW-04 | Phase 6 | Pending |
+| VIEW-05 | Phase 6 | Pending |
+| VIEW-06 | Phase 6 | Pending |
+| VIEW-07 | Phase 6 | Pending |
+| VIEW-08 | Phase 6 | Pending |
+| VIEW-09 | Phase 6 | Pending |
+| WIRE-01 | Phase 7 | Pending |
+| WIRE-02 | Phase 7 | Pending |
+| WIRE-03 | Phase 7 | Pending |
+| WIRE-04 | Phase 7 | Pending |
+| EDIT-01 | Phase 7 | Pending |
+| EDIT-02 | Phase 7 | Pending |
+| EDIT-03 | Phase 7 | Pending |
+| FILT-01 | Phase 8 | Pending |
+| FILT-02 | Phase 8 | Pending |
+| FILT-03 | Phase 8 | Pending |
+| FILT-04 | Phase 8 | Pending |
+| FILT-05 | Phase 8 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 34 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 34
+- v1.1 requirements: 37 total
+- Mapped to phases: 37/37
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-09*
-*Last updated: 2026-04-09 after milestone v1.1 definition*
+*Last updated: 2026-04-09 after roadmap creation*
