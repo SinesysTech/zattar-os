@@ -130,7 +130,7 @@ export function ProcessoCard({
               {responsavel ? getInitials(responsavel.nomeExibicao) : 'NA'}
             </AvatarFallback>
           </Avatar>
-          <span className="text-[9px] text-muted-foreground/50">
+          <span className="text-[9px] text-muted-foreground/50 whitespace-nowrap">
             {responsavel?.nomeExibicao || 'Sem resp.'}
           </span>
         </ResponsavelPopover>
