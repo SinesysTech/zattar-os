@@ -173,23 +173,23 @@ Top-to-bottom vertical flow:
    - Right: "Nova Conversa" button
 
 2. **Search** (SIDE-03):
-   - Use SearchInput component or equivalent: `bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 pl-9 text-[0.7rem]`
+   - Use SearchInput component or equivalent: `bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2 pl-9 text-[0.7rem]`
    - Search icon: 14px, text-muted-foreground/55, absolute left
    - Placeholder: "Buscar conversas..."
    - Focus: `border-primary/30 ring-2 ring-primary/[0.08]`
 
 3. **Tab pills** (SIDE-02):
-   - Container: `flex gap-1 p-1 rounded-xl bg-white/[0.03] mx-6 mb-3`
+   - Container: `flex gap-1 p-1 rounded-xl bg-white/[0.03] mx-6 mb-4`
    - Pills: Todas (default active), Privadas, Grupos, Processos
    - Each pill shows count in parentheses: e.g. "Todas (12)"
-   - Active: `bg-primary/12 text-primary shadow-sm rounded-lg px-3 py-1.5 text-[0.7rem] font-normal`
+   - Active: `bg-primary/12 text-primary shadow-sm rounded-lg px-2 py-1 text-[0.7rem] font-normal`
    - Inactive: `text-muted-foreground/50 text-[0.7rem] font-normal`
    - Hover (inactive): `text-muted-foreground/70`
    - Count digit: `text-[0.6rem] tabular-nums opacity-50` (active: `opacity-60 text-primary`)
 
 ### "Nova Conversa" Button (SIDE-07)
 
-- `bg-primary text-white rounded-xl px-3 py-1.5 text-[0.7rem] font-semibold`
+- `bg-primary text-white rounded-xl px-4 py-1 text-[0.7rem] font-semibold`
 - Icon: Plus (lucide), 14px, inline before text
 - Box-shadow: `0 2px 8px rgba(139,92,246,0.25)`
 - Hover: `bg-[#7c4ddb] translateY(-1px)`
@@ -198,7 +198,7 @@ Top-to-bottom vertical flow:
 ### Section Labels (SIDE-04)
 
 - Text: "Fixadas", "Recentes"
-- Style: `text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 px-3 pt-3 pb-1.5`
+- Style: `text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 px-2 pt-3 pb-2`
 
 ### Conversation List
 
@@ -214,7 +214,7 @@ Top-to-bottom vertical flow:
 +-----------------------------------------------+
 ```
 
-- Container: `flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all duration-200`
+- Container: `flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all duration-200`
 - Default: `border border-transparent`
 - Hover: `bg-foreground/[0.03]`
 - Active: `bg-[--chat-sidebar-active] border border-primary/[0.08]`
@@ -230,9 +230,9 @@ Top-to-bottom vertical flow:
 - Top row (flex, items-center, justify-between, gap-2):
   - Name: `text-[0.8rem] font-semibold text-foreground truncate`
   - Timestamp: `text-[0.6rem] text-muted-foreground/40 tabular-nums shrink-0`
-- Bottom row (flex, items-center, justify-between, gap-2, mt-0.5):
+- Bottom row (flex, items-center, justify-between, gap-2, mt-1):
   - Preview: `text-[0.7rem] text-muted-foreground/50 truncate flex-1`
-  - Unread badge: `min-w-[18px] h-[18px] rounded-full bg-primary text-white text-[0.6rem] font-semibold flex items-center justify-center px-[5px] shrink-0`
+  - Unread badge: `min-w-[18px] h-[18px] rounded-full bg-primary text-white text-[0.6rem] font-semibold flex items-center justify-center px-1 shrink-0`
 
 ---
 
