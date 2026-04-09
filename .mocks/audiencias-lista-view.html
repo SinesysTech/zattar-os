@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock: Audiências — Vista Lista</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+
+    body {
+      background: #09090b;
+      min-height: 100vh;
+    }
+
+    /* Glass Briefing tokens */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.062);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 1rem;
+    }
+
+    .glass-panel-depth2 {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 0.75rem;
+    }
+
+    .glass-row {
+      background: rgba(255, 255, 255, 0.028);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 0.875rem;
+      transition: all 0.18s ease;
+      cursor: pointer;
+    }
+
+    .glass-row:hover {
+      background: rgba(255, 255, 255, 0.055);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: scale(1.0025) translateY(-1px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    .glass-row-alt {
+      background: rgba(255, 255, 255, 0.018);
+    }
+
+    .glass-badge {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.55rem;
+    }
+
+    .icon-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.625rem;
+      flex-shrink: 0;
+    }
+
+    /* SVG ring animation */
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.6s ease;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    /* Empty state shimmer */
+    @keyframes shimmer {
+      0% { opacity: 0.4; }
+      50% { opacity: 0.7; }
+      100% { opacity: 0.4; }
+    }
+    .shimmer { animation: shimmer 2.2s ease-in-out infinite; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+  </style>
+</head>
+<body class="p-8">
+
+  <!-- Page Header -->
+  <div class="max-w-6xl mx-auto mb-6">
+    <div class="flex items-center gap-3 mb-1">
+      <span class="text-xs font-semibold tracking-widest text-zinc-500 uppercase">Mock Visual</span>
+      <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
+      <span class="text-xs text-zinc-600">Aprovação de Design</span>
+    </div>
+    <h1 class="text-2xl font-bold text-white tracking-tight">Mock: Audiências — Vista Lista</h1>
+    <p class="text-sm text-zinc-500 mt-1">Design System: Glass Briefing · ZattarOS · Synthropic</p>
+  </div>
+
+  <!-- Main Glass Panel -->
+  <div class="max-w-6xl mx-auto glass-panel p-5">
+
+    <!-- Panel Header -->
+    <div class="flex items-center justify-between mb-5">
+      <div class="flex items-center gap-3">
+        <div class="icon-container w-9 h-9 bg-blue-500/10">
+          <i data-lucide="calendar-days" class="w-4 h-4 text-blue-400"></i>
+        </div>
+        <div>
+          <h2 class="text-sm font-semibold text-white">Audiências</h2>
+          <p class="text-xs text-zinc-500">8 registros encontrados</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <!-- Legend -->
+        <div class="flex items-center gap-3 mr-3">
+          <div class="flex items-center gap-1.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+            <span class="text-xs text-zinc-500">Marcada</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+            <span class="text-xs text-zinc-500">Finalizada</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+            <span class="text-xs text-zinc-500">Cancelada</span>
+          </div>
+        </div>
+        <button class="glass-badge bg-white/5 border border-white/8 text-zinc-400 flex items-center gap-1.5 py-1.5 px-3 text-xs rounded-lg hover:bg-white/10 transition-colors">
+          <i data-lucide="sliders-horizontal" class="w-3 h-3"></i>
+          Filtros
+        </button>
+        <button class="glass-badge bg-blue-500/15 border border-blue-500/25 text-blue-400 flex items-center gap-1.5 py-1.5 px-3 text-xs rounded-lg hover:bg-blue-500/25 transition-colors">
+          <i data-lucide="plus" class="w-3 h-3"></i>
+          Nova
+        </button>
+      </div>
+    </div>
+
+    <!-- Column Headers -->
+    <div class="grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center px-4 mb-2">
+      <div class="w-10"></div>
+      <span class="text-xs font-medium text-zinc-600 uppercase tracking-wider">Audiência / Processo</span>
+      <span class="text-xs font-medium text-zinc-600 uppercase tracking-wider">Data</span>
+      <span class="text-xs font-medium text-zinc-600 uppercase tracking-wider">Modalidade</span>
+      <span class="text-xs font-medium text-zinc-600 uppercase tracking-wider">Tribunal</span>
+      <span class="text-xs font-medium text-zinc-600 uppercase tracking-wider">Preparo</span>
+      <span class="text-xs font-medium text-zinc-600 uppercase tracking-wider">Status</span>
+      <div></div>
+    </div>
+
+    <!-- List Rows -->
+    <div class="flex flex-col gap-2">
+
+      <!-- Row 1: Marcada, Virtual, TRT1, prep 82%, segredo, próxima -->
+      <div class="glass-row grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center p-4">
+        <!-- Status dot -->
+        <div class="flex items-center gap-2 w-10">
+          <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.7)] flex-shrink-0"></div>
+        </div>
+
+        <!-- Main info -->
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="icon-container w-9 h-9 bg-blue-500/8 flex-shrink-0">
+            <i data-lucide="gavel" class="w-4 h-4 text-blue-400"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-sm font-semibold text-white truncate">Audiência de Instrução e Julgamento</span>
+              <!-- Segredo de justiça -->
+              <span class="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold">
+                <i data-lucide="lock" class="w-2.5 h-2.5"></i>
+                Segredo
+              </span>
+            </div>
+            <div class="font-mono text-xs text-zinc-500 mt-0.5">0001234-56.2024.5.01.0001</div>
+            <div class="text-xs text-zinc-500 mt-0.5">João Silva <span class="text-zinc-600">vs.</span> Empresa XYZ Ltda <span class="text-zinc-600 font-medium">e outros</span></div>
+          </div>
+        </div>
+
+        <!-- Date/time -->
+        <div class="text-right">
+          <div class="text-sm font-medium text-zinc-200">15 Abr 2026</div>
+          <div class="text-xs text-zinc-500 mt-0.5">09:30 – 11:00</div>
+        </div>
+
+        <!-- Modalidade badge -->
+        <div>
+          <span class="glass-badge inline-flex items-center gap-1.5 bg-blue-500/12 border border-blue-500/20 text-blue-300">
+            <i data-lucide="monitor" class="w-2.5 h-2.5"></i>
+            Virtual
+          </span>
+        </div>
+
+        <!-- TRT badge -->
+        <div>
+          <span class="glass-badge inline-flex bg-white/6 border border-white/10 text-zinc-400">TRT1</span>
+        </div>
+
+        <!-- Prep score ring -->
+        <div class="flex items-center justify-center">
+          <div class="relative w-10 h-10">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+              <circle class="progress-ring-circle" cx="20" cy="20" r="16" fill="none"
+                stroke="#34d399" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="100.53" stroke-dashoffset="18.1"/>
+            </svg>
+            <span class="absolute inset-0 flex items-center justify-center text-[0.6rem] font-bold text-emerald-400">82%</span>
+          </div>
+        </div>
+
+        <!-- Countdown -->
+        <div class="text-right">
+          <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400">
+            <i data-lucide="clock" class="w-3 h-3"></i>
+            Em 2h 15min
+          </span>
+        </div>
+
+        <!-- Chevron -->
+        <div class="flex items-center justify-end">
+          <i data-lucide="chevron-right" class="w-4 h-4 text-zinc-600"></i>
+        </div>
+      </div>
+
+      <!-- Row 2: Marcada, Presencial, TRT2, prep 45%, litisconsórcio, designada -->
+      <div class="glass-row glass-row-alt grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center p-4">
+        <div class="flex items-center gap-2 w-10">
+          <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.7)] flex-shrink-0"></div>
+        </div>
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="icon-container w-9 h-9 bg-blue-500/8 flex-shrink-0">
+            <i data-lucide="gavel" class="w-4 h-4 text-blue-400"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-sm font-semibold text-white truncate">Audiência de Conciliação</span>
+              <!-- Designada badge -->
+              <span class="inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold">
+                <i data-lucide="check-circle-2" class="w-2.5 h-2.5"></i>
+                Designada
+              </span>
+            </div>
+            <div class="font-mono text-xs text-zinc-500 mt-0.5">0009876-12.2023.5.02.0032</div>
+            <div class="text-xs text-zinc-500 mt-0.5">Maria Oliveira <span class="text-zinc-600">vs.</span> Construtora Alpha S.A. <span class="text-zinc-600 font-medium">e outros</span></div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-sm font-medium text-zinc-200">17 Abr 2026</div>
+          <div class="text-xs text-zinc-500 mt-0.5">14:00 – 15:30</div>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex items-center gap-1.5 bg-amber-500/12 border border-amber-500/20 text-amber-300">
+            <i data-lucide="building-2" class="w-2.5 h-2.5"></i>
+            Presencial
+          </span>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex bg-white/6 border border-white/10 text-zinc-400">TRT2</span>
+        </div>
+        <div class="flex items-center justify-center">
+          <div class="relative w-10 h-10">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+              <circle class="progress-ring-circle" cx="20" cy="20" r="16" fill="none"
+                stroke="#f59e0b" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="100.53" stroke-dashoffset="55.3"/>
+            </svg>
+            <span class="absolute inset-0 flex items-center justify-center text-[0.6rem] font-bold text-amber-400">45%</span>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400">
+            <i data-lucide="clock" class="w-3 h-3"></i>
+            Em 2 dias
+          </span>
+        </div>
+        <div class="flex items-center justify-end">
+          <i data-lucide="chevron-right" class="w-4 h-4 text-zinc-600"></i>
+        </div>
+      </div>
+
+      <!-- Row 3: Marcada, Híbrida, TRT3, prep 91%, segredo + designada -->
+      <div class="glass-row grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center p-4">
+        <div class="flex items-center gap-2 w-10">
+          <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.7)] flex-shrink-0"></div>
+        </div>
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="icon-container w-9 h-9 bg-blue-500/8 flex-shrink-0">
+            <i data-lucide="gavel" class="w-4 h-4 text-blue-400"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-sm font-semibold text-white truncate">Audiência de Julgamento</span>
+              <span class="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold">
+                <i data-lucide="lock" class="w-2.5 h-2.5"></i>
+                Segredo
+              </span>
+              <span class="inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold">
+                <i data-lucide="check-circle-2" class="w-2.5 h-2.5"></i>
+                Designada
+              </span>
+            </div>
+            <div class="font-mono text-xs text-zinc-500 mt-0.5">0003321-88.2024.5.03.0045</div>
+            <div class="text-xs text-zinc-500 mt-0.5">Sindicato dos Trabalhadores <span class="text-zinc-600">vs.</span> Metalúrgica Beta Ltda</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-sm font-medium text-zinc-200">22 Abr 2026</div>
+          <div class="text-xs text-zinc-500 mt-0.5">10:00 – 12:30</div>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex items-center gap-1.5 bg-purple-500/12 border border-purple-500/20 text-purple-300">
+            <i data-lucide="layers" class="w-2.5 h-2.5"></i>
+            Híbrida
+          </span>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex bg-white/6 border border-white/10 text-zinc-400">TRT3</span>
+        </div>
+        <div class="flex items-center justify-center">
+          <div class="relative w-10 h-10">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+              <circle class="progress-ring-circle" cx="20" cy="20" r="16" fill="none"
+                stroke="#34d399" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="100.53" stroke-dashoffset="9.05"/>
+            </svg>
+            <span class="absolute inset-0 flex items-center justify-center text-[0.6rem] font-bold text-emerald-400">91%</span>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="text-xs font-medium text-zinc-400">Em 13 dias</span>
+        </div>
+        <div class="flex items-center justify-end">
+          <i data-lucide="chevron-right" class="w-4 h-4 text-zinc-600"></i>
+        </div>
+      </div>
+
+      <!-- Row 4: Finalizada, Virtual, TRT1, prep 100% -->
+      <div class="glass-row glass-row-alt grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center p-4">
+        <div class="flex items-center gap-2 w-10">
+          <div class="w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_6px_rgba(96,165,250,0.6)] flex-shrink-0"></div>
+        </div>
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="icon-container w-9 h-9 bg-blue-500/8 flex-shrink-0">
+            <i data-lucide="gavel" class="w-4 h-4 text-blue-400/60"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-semibold text-zinc-400 truncate">Audiência Inicial</span>
+            </div>
+            <div class="font-mono text-xs text-zinc-600 mt-0.5">0007654-99.2023.5.01.0012</div>
+            <div class="text-xs text-zinc-600 mt-0.5">Carlos Mendes <span class="text-zinc-700">vs.</span> Transportadora Delta S/A <span class="text-zinc-700 font-medium">e outros</span></div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-sm font-medium text-zinc-500">03 Mar 2026</div>
+          <div class="text-xs text-zinc-600 mt-0.5">13:00 – 14:00</div>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex items-center gap-1.5 bg-blue-500/8 border border-blue-500/15 text-blue-400/70">
+            <i data-lucide="monitor" class="w-2.5 h-2.5"></i>
+            Virtual
+          </span>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex bg-white/4 border border-white/8 text-zinc-600">TRT1</span>
+        </div>
+        <div class="flex items-center justify-center">
+          <div class="relative w-10 h-10">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+              <circle class="progress-ring-circle" cx="20" cy="20" r="16" fill="none"
+                stroke="#60a5fa" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="100.53" stroke-dashoffset="0"/>
+            </svg>
+            <span class="absolute inset-0 flex items-center justify-center text-[0.6rem] font-bold text-blue-400/70">100%</span>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="inline-flex items-center gap-1 text-xs font-semibold text-blue-400/80">
+            <i data-lucide="check" class="w-3 h-3"></i>
+            Realizada
+          </span>
+        </div>
+        <div class="flex items-center justify-end">
+          <i data-lucide="chevron-right" class="w-4 h-4 text-zinc-700"></i>
+        </div>
+      </div>
+
+      <!-- Row 5: Cancelada, Presencial, TRT4, prep 28% -->
+      <div class="glass-row grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center p-4 opacity-70">
+        <div class="flex items-center gap-2 w-10">
+          <div class="w-2 h-2 rounded-full bg-red-400 flex-shrink-0"></div>
+        </div>
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="icon-container w-9 h-9 bg-red-500/8 flex-shrink-0">
+            <i data-lucide="gavel" class="w-4 h-4 text-red-400/50"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-semibold text-zinc-500 truncate line-through decoration-red-400/40">Audiência de Conciliação</span>
+            </div>
+            <div class="font-mono text-xs text-zinc-600 mt-0.5">0005567-44.2024.5.04.0008</div>
+            <div class="text-xs text-zinc-600 mt-0.5">Ana Paula Costa <span class="text-zinc-700">vs.</span> Banco Epsilon S.A.</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-sm font-medium text-zinc-600">10 Fev 2026</div>
+          <div class="text-xs text-zinc-700 mt-0.5">11:00 – 12:00</div>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex items-center gap-1.5 bg-amber-500/6 border border-amber-500/10 text-amber-400/50">
+            <i data-lucide="building-2" class="w-2.5 h-2.5"></i>
+            Presencial
+          </span>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex bg-white/4 border border-white/8 text-zinc-600">TRT4</span>
+        </div>
+        <div class="flex items-center justify-center">
+          <div class="relative w-10 h-10">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+              <circle class="progress-ring-circle" cx="20" cy="20" r="16" fill="none"
+                stroke="#f87171" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="100.53" stroke-dashoffset="72.4"/>
+            </svg>
+            <span class="absolute inset-0 flex items-center justify-center text-[0.6rem] font-bold text-red-400/70">28%</span>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="inline-flex items-center gap-1 text-xs font-semibold text-red-400/80">
+            <i data-lucide="x-circle" class="w-3 h-3"></i>
+            Cancelada
+          </span>
+        </div>
+        <div class="flex items-center justify-end">
+          <i data-lucide="chevron-right" class="w-4 h-4 text-zinc-700"></i>
+        </div>
+      </div>
+
+      <!-- Row 6: Marcada, Híbrida, TRT15, prep 60%, segredo -->
+      <div class="glass-row glass-row-alt grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center p-4">
+        <div class="flex items-center gap-2 w-10">
+          <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.7)] flex-shrink-0"></div>
+        </div>
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="icon-container w-9 h-9 bg-blue-500/8 flex-shrink-0">
+            <i data-lucide="gavel" class="w-4 h-4 text-blue-400"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-sm font-semibold text-white truncate">Audiência de Prosseguimento</span>
+              <span class="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold">
+                <i data-lucide="lock" class="w-2.5 h-2.5"></i>
+                Segredo
+              </span>
+            </div>
+            <div class="font-mono text-xs text-zinc-500 mt-0.5">0002219-07.2025.5.15.0002</div>
+            <div class="text-xs text-zinc-500 mt-0.5">Roberto Ferreira <span class="text-zinc-600">vs.</span> Indústria Gama Ltda <span class="text-zinc-600 font-medium">e outros</span></div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-sm font-medium text-zinc-200">29 Abr 2026</div>
+          <div class="text-xs text-zinc-500 mt-0.5">08:30 – 10:30</div>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex items-center gap-1.5 bg-purple-500/12 border border-purple-500/20 text-purple-300">
+            <i data-lucide="layers" class="w-2.5 h-2.5"></i>
+            Híbrida
+          </span>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex bg-white/6 border border-white/10 text-zinc-400">TRT15</span>
+        </div>
+        <div class="flex items-center justify-center">
+          <div class="relative w-10 h-10">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+              <circle class="progress-ring-circle" cx="20" cy="20" r="16" fill="none"
+                stroke="#f59e0b" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="100.53" stroke-dashoffset="40.2"/>
+            </svg>
+            <span class="absolute inset-0 flex items-center justify-center text-[0.6rem] font-bold text-amber-400">60%</span>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="text-xs font-medium text-zinc-400">Em 20 dias</span>
+        </div>
+        <div class="flex items-center justify-end">
+          <i data-lucide="chevron-right" class="w-4 h-4 text-zinc-600"></i>
+        </div>
+      </div>
+
+      <!-- Row 7: Finalizada, Virtual, TRT2, prep 100%, designada -->
+      <div class="glass-row grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center p-4">
+        <div class="flex items-center gap-2 w-10">
+          <div class="w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_6px_rgba(96,165,250,0.6)] flex-shrink-0"></div>
+        </div>
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="icon-container w-9 h-9 bg-blue-500/8 flex-shrink-0">
+            <i data-lucide="gavel" class="w-4 h-4 text-blue-400/60"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-semibold text-zinc-400 truncate">Audiência de Instrução</span>
+              <span class="inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold">
+                <i data-lucide="check-circle-2" class="w-2.5 h-2.5"></i>
+                Designada
+              </span>
+            </div>
+            <div class="font-mono text-xs text-zinc-600 mt-0.5">0004408-33.2022.5.02.0066</div>
+            <div class="text-xs text-zinc-600 mt-0.5">Luciana Barbosa <span class="text-zinc-700">vs.</span> Supermercado Zeta Ltda</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-sm font-medium text-zinc-500">18 Jan 2026</div>
+          <div class="text-xs text-zinc-600 mt-0.5">16:00 – 17:30</div>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex items-center gap-1.5 bg-blue-500/8 border border-blue-500/15 text-blue-400/70">
+            <i data-lucide="monitor" class="w-2.5 h-2.5"></i>
+            Virtual
+          </span>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex bg-white/4 border border-white/8 text-zinc-600">TRT2</span>
+        </div>
+        <div class="flex items-center justify-center">
+          <div class="relative w-10 h-10">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+              <circle class="progress-ring-circle" cx="20" cy="20" r="16" fill="none"
+                stroke="#60a5fa" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="100.53" stroke-dashoffset="0"/>
+            </svg>
+            <span class="absolute inset-0 flex items-center justify-center text-[0.6rem] font-bold text-blue-400/70">100%</span>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="inline-flex items-center gap-1 text-xs font-semibold text-blue-400/80">
+            <i data-lucide="check" class="w-3 h-3"></i>
+            Realizada
+          </span>
+        </div>
+        <div class="flex items-center justify-end">
+          <i data-lucide="chevron-right" class="w-4 h-4 text-zinc-700"></i>
+        </div>
+      </div>
+
+      <!-- Row 8: Marcada, Presencial, TRT9, prep 15% (alert) -->
+      <div class="glass-row glass-row-alt grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center p-4" style="border-color: rgba(239,68,68,0.15);">
+        <div class="flex items-center gap-2 w-10">
+          <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.7)] flex-shrink-0"></div>
+        </div>
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="icon-container w-9 h-9 bg-red-500/10 flex-shrink-0">
+            <i data-lucide="gavel" class="w-4 h-4 text-red-400"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-sm font-semibold text-white truncate">Audiência de Julgamento de Embargos</span>
+              <!-- Low prep alert -->
+              <span class="inline-flex items-center gap-1 bg-red-500/10 border border-red-500/20 text-red-400 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold">
+                <i data-lucide="alert-triangle" class="w-2.5 h-2.5"></i>
+                Baixo preparo
+              </span>
+            </div>
+            <div class="font-mono text-xs text-zinc-500 mt-0.5">0006643-21.2025.5.09.0001</div>
+            <div class="text-xs text-zinc-500 mt-0.5">Rodrigo Lima <span class="text-zinc-600">vs.</span> Construtora Theta Engenharia S.A. <span class="text-zinc-600 font-medium">e outros</span></div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-sm font-medium text-zinc-200">12 Abr 2026</div>
+          <div class="text-xs text-zinc-500 mt-0.5">15:00 – 17:00</div>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex items-center gap-1.5 bg-amber-500/12 border border-amber-500/20 text-amber-300">
+            <i data-lucide="building-2" class="w-2.5 h-2.5"></i>
+            Presencial
+          </span>
+        </div>
+        <div>
+          <span class="glass-badge inline-flex bg-white/6 border border-white/10 text-zinc-400">TRT9</span>
+        </div>
+        <div class="flex items-center justify-center">
+          <div class="relative w-10 h-10">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+              <circle class="progress-ring-circle" cx="20" cy="20" r="16" fill="none"
+                stroke="#f87171" stroke-width="3" stroke-linecap="round"
+                stroke-dasharray="100.53" stroke-dashoffset="85.5"/>
+            </svg>
+            <span class="absolute inset-0 flex items-center justify-center text-[0.6rem] font-bold text-red-400">15%</span>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="inline-flex items-center gap-1 text-xs font-semibold text-amber-400">
+            <i data-lucide="clock" class="w-3 h-3"></i>
+            Em 3 dias
+          </span>
+        </div>
+        <div class="flex items-center justify-end">
+          <i data-lucide="chevron-right" class="w-4 h-4 text-zinc-600"></i>
+        </div>
+      </div>
+
+    </div><!-- end list rows -->
+
+    <!-- Pagination footer -->
+    <div class="flex items-center justify-between mt-5 pt-4 border-t border-white/5">
+      <span class="text-xs text-zinc-600">Exibindo 8 de 8 audiências</span>
+      <div class="flex items-center gap-1">
+        <button class="w-7 h-7 flex items-center justify-center rounded-lg bg-white/4 border border-white/8 text-zinc-600 hover:bg-white/8 transition-colors disabled:opacity-30" disabled>
+          <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+        </button>
+        <button class="w-7 h-7 flex items-center justify-center rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold">1</button>
+        <button class="w-7 h-7 flex items-center justify-center rounded-lg bg-white/4 border border-white/8 text-zinc-600 hover:bg-white/8 transition-colors disabled:opacity-30" disabled>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- end main glass panel -->
+
+  <!-- Empty State Section -->
+  <div class="max-w-6xl mx-auto mt-8">
+    <div class="mb-4 flex items-center gap-3">
+      <div class="h-px flex-1 bg-white/5"></div>
+      <span class="text-xs text-zinc-600 font-medium tracking-wider uppercase">Estado Vazio (sem resultados)</span>
+      <div class="h-px flex-1 bg-white/5"></div>
+    </div>
+
+    <div class="glass-panel p-5">
+      <!-- Same header as above, collapsed -->
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
+          <div class="icon-container w-9 h-9 bg-blue-500/10">
+            <i data-lucide="calendar-days" class="w-4 h-4 text-blue-400"></i>
+          </div>
+          <div>
+            <h2 class="text-sm font-semibold text-white">Audiências</h2>
+            <p class="text-xs text-zinc-500">0 registros encontrados</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="glass-badge bg-white/5 border border-white/8 text-zinc-400 flex items-center gap-1.5 py-1.5 px-3 text-xs rounded-lg hover:bg-white/10 transition-colors">
+            <i data-lucide="sliders-horizontal" class="w-3 h-3"></i>
+            Filtros
+          </button>
+          <button class="glass-badge bg-blue-500/15 border border-blue-500/25 text-blue-400 flex items-center gap-1.5 py-1.5 px-3 text-xs rounded-lg hover:bg-blue-500/25 transition-colors">
+            <i data-lucide="plus" class="w-3 h-3"></i>
+            Nova
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty state body -->
+      <div class="glass-panel-depth2 flex flex-col items-center justify-center py-16 px-8 text-center">
+        <!-- Animated icon area -->
+        <div class="relative mb-6">
+          <div class="shimmer w-16 h-16 rounded-2xl bg-white/4 border border-white/8 flex items-center justify-center">
+            <i data-lucide="calendar-x-2" class="w-7 h-7 text-zinc-600"></i>
+          </div>
+          <!-- Floating mini dots -->
+          <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-blue-500/20 border border-blue-500/30"></div>
+          <div class="absolute -bottom-1 -left-1 w-2 h-2 rounded-full bg-emerald-500/20 border border-emerald-500/30"></div>
+        </div>
+
+        <h3 class="text-base font-semibold text-zinc-400 mb-2">Nenhuma audiência encontrada</h3>
+        <p class="text-sm text-zinc-600 max-w-sm leading-relaxed mb-6">
+          Nenhuma audiência corresponde aos filtros aplicados. Tente ajustar os critérios de busca ou cadastre uma nova audiência.
+        </p>
+
+        <!-- Action suggestions -->
+        <div class="flex items-center gap-3">
+          <button class="glass-badge inline-flex items-center gap-2 bg-white/4 border border-white/10 text-zinc-400 py-2 px-4 text-xs rounded-xl hover:bg-white/8 transition-colors">
+            <i data-lucide="x" class="w-3 h-3"></i>
+            Limpar filtros
+          </button>
+          <button class="glass-badge inline-flex items-center gap-2 bg-blue-500/15 border border-blue-500/25 text-blue-400 py-2 px-4 text-xs rounded-xl hover:bg-blue-500/25 transition-colors font-semibold">
+            <i data-lucide="plus" class="w-3 h-3"></i>
+            Nova Audiência
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Design tokens reference bar (for design review) -->
+  <div class="max-w-6xl mx-auto mt-8 mb-4">
+    <div class="glass-panel-depth2 p-4">
+      <div class="flex items-center gap-6 flex-wrap">
+        <span class="text-xs text-zinc-600 font-medium uppercase tracking-wider">Tokens de Design</span>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 rounded bg-emerald-400/80"></div>
+          <span class="text-xs text-zinc-600">Marcada / Prep &gt;70%</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 rounded bg-amber-400/80"></div>
+          <span class="text-xs text-zinc-600">Prep 40–70%</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 rounded bg-red-400/80"></div>
+          <span class="text-xs text-zinc-600">Cancelada / Prep &lt;40%</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 rounded bg-blue-400/80"></div>
+          <span class="text-xs text-zinc-600">Finalizada / Virtual</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 rounded bg-purple-400/80"></div>
+          <span class="text-xs text-zinc-600">Híbrida</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 rounded" style="background: rgba(255,255,255,0.062); border: 1px solid rgba(255,255,255,0.10);"></div>
+          <span class="text-xs text-zinc-600">Glass depth-1 (62% white)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>

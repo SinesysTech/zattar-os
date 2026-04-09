@@ -32,13 +32,6 @@ const STATUS_DOT_COLOR: Record<string, string> = {
   default: 'bg-muted-foreground/20',
 };
 
-function getInitials(name: string): string {
-  if (!name) return 'NA';
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
-}
-
 export function ProcessoListRow({
   processo,
   responsavel,
@@ -89,7 +82,7 @@ export function ProcessoListRow({
         <Avatar size="sm" className="border">
           <AvatarImage src={responsavel?.avatarUrl || undefined} />
           <AvatarFallback className="text-[8px]">
-            {responsavel ? getInitials(responsavel.nomeExibicao) : 'NA'}
+            {responsavel?.nomeExibicao?.slice(0, 2).toUpperCase() || 'NA'}
           </AvatarFallback>
         </Avatar>
       </ResponsavelPopover>

@@ -80,7 +80,6 @@ export function ResponsavelPopover({
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            e.preventDefault();
           }}
           className={cn(
             'flex items-center gap-1.5 rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5',
@@ -93,31 +92,39 @@ export function ResponsavelPopover({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-56 p-0"
+        className="w-60 p-0 rounded-2xl glass-widget border-border/20 shadow-lg overflow-hidden"
         align="start"
         side="bottom"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
-        <Command>
-          <CommandInput placeholder="Buscar responsável..." />
-          <CommandList>
+        <Command className="bg-transparent">
+          <div className="px-3 pt-3 pb-1.5">
+            <p className="text-[10px] font-medium text-muted-foreground/40 uppercase tracking-wider mb-2">
+              Responsável
+            </p>
+            <CommandInput
+              placeholder="Buscar..."
+              className="h-8 text-xs rounded-lg"
+            />
+          </div>
+          <CommandList className="max-h-52 px-1.5 pb-1.5">
             <CommandEmpty>
-              <div className="flex flex-col items-center gap-1 py-2">
-                <Search className="size-4 text-muted-foreground/40" />
-                <span className="text-xs text-muted-foreground/50">Nenhum usuário encontrado</span>
+              <div className="flex flex-col items-center gap-1 py-3">
+                <Search className="size-4 text-muted-foreground/30" />
+                <span className="text-[11px] text-muted-foreground/40">Nenhum usuário encontrado</span>
               </div>
             </CommandEmpty>
             <CommandGroup>
               <CommandItem
                 value="sem-responsavel"
                 onSelect={() => handleSelect(null)}
-                className="gap-2"
+                className="gap-2 rounded-lg text-xs px-2 py-1.5"
               >
-                <UserX className="size-4 text-muted-foreground/40" />
-                <span className="text-sm">Sem responsável</span>
+                <UserX className="size-3.5 text-muted-foreground/40" />
+                <span>Sem responsável</span>
                 {!responsavel && (
-                  <Check className="size-3.5 ml-auto text-primary" />
+                  <Check className="size-3 ml-auto text-primary" />
                 )}
               </CommandItem>
               {usuarios.map((usuario) => (
@@ -125,17 +132,17 @@ export function ResponsavelPopover({
                   key={usuario.id}
                   value={usuario.nomeExibicao}
                   onSelect={() => handleSelect(usuario.id)}
-                  className="gap-2"
+                  className="gap-2 rounded-lg text-xs px-2 py-1.5"
                 >
-                  <Avatar size="xs" className="border">
+                  <Avatar size="xs" className="border size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} />
                     <AvatarFallback className="text-[7px]">
                       {getInitials(usuario.nomeExibicao)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-sm truncate">{usuario.nomeExibicao}</span>
+                  <span>{usuario.nomeExibicao}</span>
                   {responsavel?.id === usuario.id && (
-                    <Check className="size-3.5 ml-auto text-primary shrink-0" />
+                    <Check className="size-3 ml-auto text-primary shrink-0" />
                   )}
                 </CommandItem>
               ))}

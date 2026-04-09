@@ -1,13 +1,13 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
+milestone: v1.1
+milestone_name: Revisao Completa — Audiencias
 status: planning
-stopped_at: Phase 1 UI-SPEC approved
-last_updated: "2026-04-09T15:08:14.173Z"
-last_activity: 2026-04-09 -- Roadmap created
+stopped_at: Defining requirements
+last_updated: "2026-04-09T20:00:00.000Z"
+last_activity: 2026-04-09 -- Milestone v1.1 started
 progress:
-  total_phases: 4
+  total_phases: 0
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -20,15 +20,15 @@ progress:
 
 See: .planning/PROJECT.md (updated 2026-04-09)
 
-**Core value:** Comunicacao em tempo real entre advogados com coerencia visual total ao design system Glass Briefing
-**Current focus:** Phase 1 - Layout Shell & Sidebar
+**Core value:** Gestao eficiente de audiencias judiciais com visualizacao completa de dados, preparo e historico
+**Current focus:** Defining requirements for Audiencias revision
 
 ## Current Position
 
-Phase: 1 of 4 (Layout Shell & Sidebar)
-Plan: 0 of 0 in current phase
-Status: Ready to plan
-Last activity: 2026-04-09 -- Roadmap created
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-09 — Milestone v1.1 started
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -60,10 +60,11 @@ Progress: [░░░░░░░░░░] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- Layout 3 colunas (sidebar + chat + detail) aprovado
-- Detail panel fixo em desktop, Sheet em mobile
-- Textarea auto-resize substitui Input single-line
-- Audio waveform visual customizado substitui player nativo
+- Detail Sheet → Dialog centrado (mais espaco para historico)
+- documento_ativo = flag simples (sem documento real)
+- designada = badge independente do status
+- Mocks aprovados em .mocks/ (lista, mes, ano, dialog)
+- Presenca hibrida com badge explicativo
 
 ### Pending Todos
 
@@ -75,6 +76,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-09T15:08:14.166Z
-Stopped at: Phase 1 UI-SPEC approved
-Resume file: .planning/phases/01-layout-shell-sidebar/01-UI-SPEC.md
+Last session: 2026-04-09
+Stopped at: Defining requirements
+Resume file: .planning/PROJECT.md

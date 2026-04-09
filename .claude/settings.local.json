@@ -42,7 +42,9 @@
       "mcp__copilotkit-mcp__search-code",
       "WebFetch(domain:docs.copilotkit.ai)",
       "WebFetch(domain:www.copilotkit.ai)",
-      "WebFetch(domain:cdn.21st.dev)"
+      "WebFetch(domain:cdn.21st.dev)",
+      "Skill(gsd:new-milestone)",
+      "Skill(gsd:new-milestone:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
