@@ -173,7 +173,7 @@ Top-to-bottom vertical flow:
    - Right: "Nova Conversa" button
 
 2. **Search** (SIDE-03):
-   - Use SearchInput component or equivalent: `bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2 pl-9 text-[0.7rem]`
+   - Use SearchInput component or equivalent: `bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-2 pl-8 text-[0.7rem]`
    - Search icon: 14px, text-muted-foreground/55, absolute left
    - Placeholder: "Buscar conversas..."
    - Focus: `border-primary/30 ring-2 ring-primary/[0.08]`
@@ -198,7 +198,7 @@ Top-to-bottom vertical flow:
 ### Section Labels (SIDE-04)
 
 - Text: "Fixadas", "Recentes"
-- Style: `text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 px-2 pt-3 pb-2`
+- Style: `text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 px-2 pt-4 pb-2`
 
 ### Conversation List
 
@@ -303,11 +303,11 @@ No third-party registry blocks are used in this phase. All components are either
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: PASS
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS (pl-9→pl-8, pt-3→pt-4 fixed inline)
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** approved (2026-04-09, after 2 revision cycles + inline fix)
