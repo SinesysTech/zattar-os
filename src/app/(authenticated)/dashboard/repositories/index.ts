@@ -48,6 +48,9 @@ export {
 // Contratos Metrics
 export { buscarContratosResumo } from './contratos-metrics';
 
+// Chat Metrics
+export { buscarChatResumo } from './chat-metrics';
+
 // Shared Formatters
 export { formatarMoeda } from './shared/formatters';
 
