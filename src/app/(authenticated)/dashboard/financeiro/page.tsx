@@ -1,51 +1,86 @@
-import type { Metadata } from "next";
-import { Suspense } from "react";
-
-import { Skeleton } from "@/components/ui/skeleton";
-
-import CalendarDateRangePicker from "@/components/shared/custom-date-range-picker";
-import CreditCards from "./components/my-wallet";
-import Revenue from "./components/revenue";
-import MonthlyExpenses from "./components/monthly-expenses";
-import Summary from "./components/summary";
-import Transactions from "./components/transactions";
-import SavingGoal from "./components/saving-goal";
-import KPICards from "./components/kpi-cards";
+import type { Metadata } from 'next';
+import { createClient } from '@/lib/supabase/server';
+import { obterDashboardUsuario, obterDashboardAdmin } from '../service';
+import { DashboardProvider } from '../hooks';
 import { Heading } from '@/components/ui/typography';
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Finance Admin Dashboard",
-    description:
-      "A finance dashboard is an admin panel that visualizes key financial data such as income, expenses, cash flow, budget, and profit. Built with shadcn/ui, Tailwind CSS, Next.js.",
-  };
+// Widgets financeiros
+import { WidgetSaúdeFinanceira } from '../widgets/financeiro/saude-financeira';
+import { WidgetFluxoComTabs } from '../widgets/financeiro/fluxo-tabs';
+import { WidgetFluxoCaixa } from '../widgets/financeiro/fluxo-caixa';
+import { WidgetSaldoTrend } from '../widgets/financeiro/saldo-trend';
+import { WidgetContasReceber } from '../widgets/financeiro/contas-receber';
+import { WidgetContasPagar } from '../widgets/financeiro/contas-pagar';
+import { WidgetDespesasCategoria } from '../widgets/financeiro/despesas-categoria';
+import { WidgetDREComparativo } from '../widgets/financeiro/dre-comparativo';
+import { WidgetInadimplencia } from '../widgets/financeiro/inadimplencia';
+import { WidgetDespesasTreemap } from '../widgets/financeiro/despesas-treemap';
+
+export const metadata: Metadata = {
+  title: 'Dashboard — Financeiro',
+  description: 'Visão financeira consolidada: fluxo de caixa, contas, despesas e DRE.',
+};
+
+export const dynamic = 'force-dynamic';
+
+async function prefetchData() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data: usuario } = await supabase
+    .from('usuarios')
+    .select('id, is_super_admin')
+    .eq('auth_uid', user.id)
+    .single();
+
+  if (!usuario) return null;
+
+  return usuario.is_super_admin
+    ? obterDashboardAdmin(usuario.id)
+    : obterDashboardUsuario(usuario.id);
 }
 
-export default function Page() {
+export default async function FinanceiroPage() {
+  const initialData = await prefetchData().catch(() => null);
+
   return (
-    <div className="space-y-4">
-      <div className="flex flex-row items-center justify-between">
-        <Heading level="page">Dashboard Financeiro</Heading>
-        <Suspense fallback={<Skeleton className="h-10 w-65" />}>
-          <CalendarDateRangePicker />
-        </Suspense>
-      </div>
+    <DashboardProvider initialData={initialData}>
+      <div className="space-y-4">
+        <Heading level="page">Financeiro</Heading>
 
-      <KPICards />
+        {/* Row 1: Saúde Financeira (col-span-2) + Inadimplência */}
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="xl:col-span-2">
+            <WidgetSaúdeFinanceira />
+          </div>
+          <WidgetInadimplencia />
+        </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <Revenue />
-        <MonthlyExpenses />
-        <Summary />
-      </div>
+        {/* Row 2: Fluxo de Caixa (col-span-2) + Saldo Trend */}
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="xl:col-span-2">
+            <WidgetFluxoCaixa />
+          </div>
+          <WidgetSaldoTrend />
+        </div>
 
-      <div className="grid-cols-2 gap-4 space-y-4 lg:grid lg:space-y-0">
-        <Transactions />
-        <div className="space-y-4">
-          <SavingGoal />
-          <CreditCards />
+        {/* Row 3: Contas Receber + Contas Pagar + Despesas Categoria */}
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <WidgetContasReceber />
+          <WidgetContasPagar />
+          <WidgetDespesasCategoria />
+        </div>
+
+        {/* Row 4: DRE + Fluxo Tabs + Despesas Treemap */}
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <WidgetDREComparativo />
+          <WidgetFluxoComTabs />
+          <WidgetDespesasTreemap />
         </div>
       </div>
-    </div>
+    </DashboardProvider>
   );
 }
