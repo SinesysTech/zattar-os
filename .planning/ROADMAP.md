@@ -43,8 +43,8 @@
 **UI hint**: yes
 
 Plans:
-- [ ] 01-01-PLAN.md — SQL migration fixada + domain type update
-- [ ] 01-02-PLAN.md — Big-bang refactor: 3-column layout, sidebar Glass Briefing, conversation items redesign
+- [x] 01-01-PLAN.md — SQL migration fixada + domain type update
+- [x] 01-02-PLAN.md — Big-bang refactor: 3-column layout, sidebar Glass Briefing, conversation items redesign
 
 ### Phase 2: Header, Messages & Media
 **Goal**: Users experience the core chat conversation with glassmorphic header, redesigned message bubbles with asymmetric corners, and rich media rendering

@@ -1,3 +1,17 @@
+---
+gsd_state_version: 1.0
+milestone: v1.1
+milestone_name: Revisao Completa — Audiencias
+status: Ready to plan
+stopped_at: Completed 01-02-PLAN.md (Tasks 1-2), awaiting human-verify checkpoint (Task 3)
+last_updated: "2026-04-09T18:01:20.227Z"
+progress:
+  total_phases: 8
+  completed_phases: 1
+  total_plans: 2
+  completed_plans: 2
+---
+
 # Project State
 
 ## Project Reference
@@ -5,20 +19,17 @@
 See: .planning/PROJECT.md (updated 2026-04-09)
 
 **Core value:** Gestao eficiente de audiencias judiciais com visualizacao completa de dados, preparo e historico
-**Current focus:** Phase 5 — Indicadores & Detail Dialog
+**Current focus:** Phase 01 — layout-shell-sidebar
 
 ## Current Position
 
-Phase: 5 of 8 (Indicadores & Detail Dialog)
-Plan: —
-Status: Ready to plan
-Last activity: 2026-04-09 — Roadmap created for v1.1 (Phases 5-8)
-
-Progress: [░░░░░░░░░░] 0%
+Phase: 2
+Plan: Not started
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 0
 - Average duration: -
 - Total execution time: 0 hours
@@ -30,10 +41,13 @@ Progress: [░░░░░░░░░░] 0%
 | - | - | - | - |
 
 **Recent Trend:**
+
 - Last 5 plans: -
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01 P01 | 1min | 1 tasks | 2 files |
+| Phase 01-layout-shell-sidebar P02 | 4min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -48,6 +62,9 @@ Recent decisions affecting current work:
 - Mocks aprovados em .mocks/ (lista, mes, ano, dialog)
 - Presenca hibrida com badge explicativo
 - INDIC badges built first (shared across dialog and views)
+- [Phase 01]: fixada field optional in TS types; per-user state on junction table salas_chat_participantes
+- [Phase 01-02]: Tailwind v4 syntax bg-(--variable) used for chat components
+- [Phase 01-02]: Detail panel placeholder reuses showProfileSheet from Zustand store
 
 ### Pending Todos
 
@@ -59,6 +76,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-09
-Stopped at: Roadmap created for v1.1, ready to plan Phase 5
+Last session: 2026-04-09T17:49:52.393Z
+Stopped at: Completed 01-02-PLAN.md (Tasks 1-2), awaiting human-verify checkpoint (Task 3)
 Resume file: None
