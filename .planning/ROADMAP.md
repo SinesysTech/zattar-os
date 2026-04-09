@@ -61,7 +61,7 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — Header glassmorphic + MessageStatusIcon resize
 - [x] 02-02-PLAN.md — DateSeparator + MessageGroup + text bubble asymmetric corners
-- [ ] 02-03-PLAN.md — Media bubbles: file, audio waveform, image, video
+- [x] 02-03-PLAN.md — Media bubbles: file, audio waveform, image, video
 
 ### Phase 3: Input, Context Bar & Empty State
 **Goal**: Users can compose messages through a modern textarea with glass styling, see linked legal process context, and encounter helpful suggestion cards when no conversation is selected
@@ -169,7 +169,7 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1. Layout Shell & Sidebar | v1.0 | 0/0 | Not started | - |
-| 2. Header, Messages & Media | v1.0 | 2/3 | In Progress|  |
+| 2. Header, Messages & Media | v1.0 | 3/3 | Complete   | 2026-04-09 |
 | 3. Input, Context Bar & Empty State | v1.0 | 0/0 | Not started | - |
 | 4. Detail Panel & Preservation | v1.0 | 0/0 | Not started | - |
 | 5. Indicadores & Detail Dialog | v1.1 | 0/0 | Not started | - |
