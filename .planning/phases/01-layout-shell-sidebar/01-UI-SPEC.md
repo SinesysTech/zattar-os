@@ -33,13 +33,13 @@ Declared values (must be multiples of 4):
 |-------|-------|-------|
 | xs | 4px | Icon gaps, inline padding, tab-pill internal gap (0.25rem) |
 | sm | 8px | Compact element spacing, conversation list padding (0.5rem) |
-| md | 12px | Conversation item padding (0.75rem) |
-| lg | 16px | Section padding, sidebar header gap (1rem) |
-| xl | 20px | Sidebar header horizontal padding (1.25rem) |
-| 2xl | 24px | Messages area padding (1.5rem) |
+| md | 16px | Conversation item padding, section padding, sidebar header gap (1rem) |
+| lg | 24px | Sidebar header horizontal padding, messages area padding (1.5rem) |
+| xl | 32px | Reserved for larger section gaps |
+| 2xl | 48px | Reserved for major layout divisions |
 | 3xl | 64px | Not used in this phase |
 
-Exceptions: Tab pills container uses 0.25rem (4px) internal padding with 0.75rem (12px) pill padding. Sidebar width is fixed at 360px desktop, w-full on mobile. Detail panel placeholder is 320px (populated in Phase 4).
+Exceptions: Tab pills container uses 4px (xs) internal padding with 8px (sm) pill padding. Sidebar width is fixed at 360px desktop, w-full on mobile. Detail panel placeholder is 320px (populated in Phase 4).
 
 ---
 
@@ -47,17 +47,20 @@ Exceptions: Tab pills container uses 0.25rem (4px) internal padding with 0.75rem
 
 | Role | Size | Weight | Line Height | Font Family |
 |------|------|--------|-------------|-------------|
-| Sidebar title | 17.6px (1.1rem) | 700 | 1.2 | Montserrat |
-| Sidebar subtitle | 10.4px (0.65rem) | 500 | 1.4 | Inter |
+| Sidebar title | 17.6px (1.1rem) | 600 | 1.2 | Montserrat |
+| Sidebar subtitle | 9.6px (0.6rem) | 400 | 1.4 | Inter |
 | Section label | 9.6px (0.6rem) | 600 | 1.4 | Inter |
 | Conversation name | 12.8px (0.8rem) | 600 | 1.3 | Inter |
 | Preview text | 11.2px (0.7rem) | 400 | 1.4 | Inter |
 | Timestamp | 9.6px (0.6rem) | 400 | 1.0 | Inter |
-| Tab pill | 11.2px (0.7rem) | 500 | 1.0 | Inter |
+| Tab pill | 11.2px (0.7rem) | 400 | 1.0 | Inter |
 | Tab count | 9.6px (0.6rem) | 400 | 1.0 | Inter |
-| Unread badge | 9.6px (0.6rem) | 700 | 1.0 | Inter |
-| CTA button ("Nova") | 11.2px (0.7rem) | 600 | 1.0 | Inter |
-| Search placeholder | 12px (0.75rem) | 400 | 1.5 | Inter |
+| Unread badge | 9.6px (0.6rem) | 600 | 1.0 | Inter |
+| CTA button ("Nova Conversa") | 11.2px (0.7rem) | 600 | 1.0 | Inter |
+| Search placeholder | 11.2px (0.7rem) | 400 | 1.5 | Inter |
+
+Font sizes used: 9.6px, 11.2px, 12.8px, 17.6px (4 sizes).
+Font weights used: 400 (regular), 600 (semibold) (2 weights).
 
 ---
 
@@ -68,7 +71,7 @@ Exceptions: Tab pills container uses 0.25rem (4px) internal padding with 0.75rem
 | Dominant (60%) | --background (#1a1625) | Page background behind shell |
 | Chat thread (60%) | --chat-thread-bg (#161222) | Main chat area background |
 | Sidebar surface (30%) | --surface-container-low (#1e1a2e) | Sidebar background, shell background |
-| Accent (10%) | --primary (#8b5cf6 / oklch(0.70 0.20 281)) | Active tab highlight, unread badge, "Nova" button, avatar fallback tint, ambient glow |
+| Accent (10%) | --primary (#8b5cf6 / oklch(0.70 0.20 281)) | Active tab highlight, unread badge, "Nova Conversa" button, avatar fallback tint, ambient glow |
 | Success | --success (#34d399) | Online indicator dot |
 | Border | rgba(255,255,255,0.12) | Shell outer border |
 | Border subtle | rgba(255,255,255,0.06) | Sidebar right border, internal dividers |
@@ -76,11 +79,13 @@ Exceptions: Tab pills container uses 0.25rem (4px) internal padding with 0.75rem
 Accent reserved for:
 - Active tab pill background (bg-primary/12) and text color
 - Unread badge background (bg-primary)
-- "Nova" button background (bg-primary) and box-shadow (rgba(139,92,246,0.25))
+- "Nova Conversa" button background (bg-primary) and box-shadow (rgba(139,92,246,0.25))
 - Active conversation item background (--chat-sidebar-active = rgba(139,92,246,0.08)) and border (rgba(139,92,246,0.08))
 - Avatar fallback background (rgba(139,92,246,0.12))
 - Ambient glow radial gradients (rgba(139,92,246,0.04) top-right, rgba(139,92,246,0.02) bottom-left)
 - Search input focus border (rgba(139,92,246,0.3)) and ring (rgba(139,92,246,0.08))
+
+**Focal point:** The "Nova Conversa" button in the sidebar header is the primary focal point of this phase. It uses full accent background with an elevated box-shadow to draw the eye, positioned top-right of the sidebar for immediate discoverability.
 
 ---
 
@@ -157,32 +162,32 @@ Implementation: CSS `::before` and `::after` pseudo-elements with `pointer-event
 - Background: transparent (inherits from surface-container-low)
 - Border-right: 1px solid rgba(255,255,255,0.06)
 - No rounded corners (flush with shell edges)
-- Internal padding: sidebar-header gets px-5 (1.25rem) pt-5
+- Internal padding: sidebar-header gets px-6 (1.5rem / lg) pt-6
 
 ### Header Section
 
 Top-to-bottom vertical flow:
 
 1. **Title row** (flex, items-center, justify-between):
-   - Left: `<Heading level="page">Mensagens</Heading>` + subtitle "Comunicacao da equipe" in text-[0.65rem] uppercase tracking-[0.08em] text-muted-foreground/50 font-medium
-   - Right: "Nova" button
+   - Left: `<Heading level="page">Mensagens</Heading>` + subtitle "Comunicacao da equipe" in text-[0.6rem] uppercase tracking-[0.08em] text-muted-foreground/50 font-normal
+   - Right: "Nova Conversa" button
 
 2. **Search** (SIDE-03):
-   - Use SearchInput component or equivalent: `bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 pl-9 text-xs`
+   - Use SearchInput component or equivalent: `bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 pl-9 text-[0.7rem]`
    - Search icon: 14px, text-muted-foreground/55, absolute left
    - Placeholder: "Buscar conversas..."
    - Focus: `border-primary/30 ring-2 ring-primary/[0.08]`
 
 3. **Tab pills** (SIDE-02):
-   - Container: `flex gap-1 p-1 rounded-xl bg-white/[0.03] mx-5 mb-3`
+   - Container: `flex gap-1 p-1 rounded-xl bg-white/[0.03] mx-6 mb-3`
    - Pills: Todas (default active), Privadas, Grupos, Processos
    - Each pill shows count in parentheses: e.g. "Todas (12)"
-   - Active: `bg-primary/12 text-primary shadow-sm rounded-lg px-3 py-1.5 text-[0.7rem] font-medium`
-   - Inactive: `text-muted-foreground/50 text-[0.7rem] font-medium`
+   - Active: `bg-primary/12 text-primary shadow-sm rounded-lg px-3 py-1.5 text-[0.7rem] font-normal`
+   - Inactive: `text-muted-foreground/50 text-[0.7rem] font-normal`
    - Hover (inactive): `text-muted-foreground/70`
    - Count digit: `text-[0.6rem] tabular-nums opacity-50` (active: `opacity-60 text-primary`)
 
-### "Nova" Button (SIDE-07)
+### "Nova Conversa" Button (SIDE-07)
 
 - `bg-primary text-white rounded-xl px-3 py-1.5 text-[0.7rem] font-semibold`
 - Icon: Plus (lucide), 14px, inline before text
@@ -209,7 +214,7 @@ Top-to-bottom vertical flow:
 +-----------------------------------------------+
 ```
 
-- Container: `flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200`
+- Container: `flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all duration-200`
 - Default: `border border-transparent`
 - Hover: `bg-foreground/[0.03]`
 - Active: `bg-[--chat-sidebar-active] border border-primary/[0.08]`
@@ -227,7 +232,7 @@ Top-to-bottom vertical flow:
   - Timestamp: `text-[0.6rem] text-muted-foreground/40 tabular-nums shrink-0`
 - Bottom row (flex, items-center, justify-between, gap-2, mt-0.5):
   - Preview: `text-[0.7rem] text-muted-foreground/50 truncate flex-1`
-  - Unread badge: `min-w-[18px] h-[18px] rounded-full bg-primary text-white text-[0.6rem] font-bold flex items-center justify-center px-[5px] shrink-0`
+  - Unread badge: `min-w-[18px] h-[18px] rounded-full bg-primary text-white text-[0.6rem] font-semibold flex items-center justify-center px-[5px] shrink-0`
 
 ---
 
@@ -238,7 +243,7 @@ Top-to-bottom vertical flow:
 | Conversation item | border-transparent | bg-foreground/[0.03] | bg-chat-sidebar-active, border-primary/[0.08] | N/A |
 | Tab pill (inactive) | text-muted-foreground/50 | text-muted-foreground/70 | N/A | N/A |
 | Tab pill (active) | bg-primary/12, text-primary, shadow-sm | -- (stays active) | -- | N/A |
-| "Nova" button | bg-primary, shadow | bg-[#7c4ddb], translateY(-1px) | ring-2 ring-primary/20 | opacity-50 cursor-not-allowed |
+| "Nova Conversa" button | bg-primary, shadow | bg-[#7c4ddb], translateY(-1px) | ring-2 ring-primary/20 | opacity-50 cursor-not-allowed |
 | Search input | bg-white/[0.04], border-white/[0.08] | -- | border-primary/30, ring-2 ring-primary/[0.08] | N/A |
 | Online dot | bg-success | -- | -- | bg-muted-foreground/30 (offline) |
 
@@ -250,14 +255,14 @@ Top-to-bottom vertical flow:
 |---------|------|
 | Sidebar title | "Mensagens" |
 | Sidebar subtitle | "Comunicacao da equipe" |
-| Primary CTA | "Nova" (button label, triggers new conversation dialog) |
+| Primary CTA | "Nova Conversa" (button label, triggers new conversation dialog) |
 | Search placeholder | "Buscar conversas..." |
 | Tab labels | "Todas", "Privadas", "Grupos", "Processos" |
 | Section labels | "Fixadas", "Recentes" |
 | Empty search heading | "Nenhuma conversa" |
 | Empty search body | "Nenhuma conversa encontrada. Inicie uma nova conversa." |
 | Error state | "Erro ao carregar conversas. Tente novamente em alguns instantes." |
-| No conversations (fresh state) | "Nenhuma conversa ainda. Clique em 'Nova' para iniciar." |
+| No conversations (fresh state) | "Nenhuma conversa ainda. Clique em 'Nova Conversa' para iniciar." |
 
 ---
 
@@ -278,7 +283,7 @@ Top-to-bottom vertical flow:
 | Element | Property | Duration | Easing |
 |---------|----------|----------|--------|
 | Conversation item hover | background-color | 200ms | ease (default) |
-| "Nova" button hover | background-color, transform | 200ms | ease |
+| "Nova Conversa" button hover | background-color, transform | 200ms | ease |
 | Search focus | border-color, box-shadow | 200ms | ease |
 | Sidebar show/hide (mobile) | all | 300ms | ease (via transition-all) |
 | Tab pill switch | background-color, color | 200ms | ease |
