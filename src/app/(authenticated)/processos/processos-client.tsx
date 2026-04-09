@@ -12,6 +12,7 @@ import { ProcessosPulseStrip } from './components/processos-pulse-strip';
 import { ProcessosInsightBanner } from './components/processos-insight-banner';
 import { ProcessoCard } from './components/processo-card';
 import { ProcessoListRow } from './components/processo-list-row';
+import { ProcessosFilterBar, type ProcessosFilters } from './components/processos-filter-bar';
 import { actionListarProcessos } from './actions';
 import type { ProcessoUnificado, ListarProcessosParams } from './domain';
 import type { ProcessoStats } from './service-estatisticas';
@@ -32,7 +33,7 @@ export interface ProcessosClientProps {
   currentUserId: number;
 }
 
-type ProcessoTab = 'todos' | 'meus' | 'sem_responsavel' | 'com_eventos';
+type ProcessoTab = 'ativos' | 'arquivados' | 'meus' | 'sem_responsavel' | 'com_eventos';
 
 const PAGE_SIZE = 50;
 
@@ -40,6 +41,12 @@ const VIEW_OPTIONS: ViewToggleOption[] = [
   { id: 'cards', icon: LayoutGrid, label: 'Cards' },
   { id: 'lista', icon: List, label: 'Lista' },
 ];
+
+const INITIAL_FILTERS: ProcessosFilters = {
+  trt: [],
+  grau: null,
+  responsavelId: null,
+};
 
 export function ProcessosClient({
   initialProcessos,
@@ -56,7 +63,8 @@ export function ProcessosClient({
   const [total, setTotal] = useState(initialTotal);
   const [stats] = useState(initialStats);
 
-  const [activeTab, setActiveTab] = useState<ProcessoTab>('todos');
+  const [activeTab, setActiveTab] = useState<ProcessoTab>('ativos');
+  const [filters, setFilters] = useState<ProcessosFilters>(INITIAL_FILTERS);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
 
@@ -76,9 +84,9 @@ export function ProcessosClient({
     [usuarios]
   );
 
-  // ── Server-side fetch quando tab, página ou busca mudam ──────────────
+  // ── Server-side fetch ────────────────────────────────────────────────
   const fetchProcessos = useCallback(
-    async (tab: ProcessoTab, page: number, busca: string) => {
+    async (tab: ProcessoTab, page: number, busca: string, f: ProcessosFilters) => {
       const params: ListarProcessosParams = {
         pagina: page + 1,
         limite: PAGE_SIZE,
@@ -87,7 +95,14 @@ export function ProcessosClient({
 
       if (busca) params.busca = busca;
 
+      // Tab filters
       switch (tab) {
+        case 'ativos':
+          params.origem = 'acervo_geral';
+          break;
+        case 'arquivados':
+          params.origem = 'arquivado';
+          break;
         case 'meus':
           params.responsavelId = currentUserId;
           break;
@@ -97,6 +112,13 @@ export function ProcessosClient({
         case 'com_eventos':
           params.processoIds = stats.processoIdsComEventos;
           break;
+      }
+
+      // Popover filters (combinam com a tab)
+      if (f.trt.length > 0) params.trt = f.trt;
+      if (f.grau) params.grau = f.grau as ListarProcessosParams['grau'];
+      if (f.responsavelId && tab !== 'meus' && tab !== 'sem_responsavel') {
+        params.responsavelId = f.responsavelId;
       }
 
       const result = await actionListarProcessos(params);
@@ -113,7 +135,7 @@ export function ProcessosClient({
     [currentUserId, stats.processoIdsComEventos]
   );
 
-  // Re-fetch quando filtros mudam (pula o primeiro render — dados vêm do SSR)
+  // Re-fetch quando qualquer filtro muda (pula o primeiro render — SSR)
   const isInitialRender = useMemo(() => ({ current: true }), []);
 
   useEffect(() => {
@@ -123,13 +145,18 @@ export function ProcessosClient({
     }
 
     startTransition(() => {
-      fetchProcessos(activeTab, pageIndex, debouncedSearch);
+      fetchProcessos(activeTab, pageIndex, debouncedSearch, filters);
     });
-  }, [activeTab, pageIndex, debouncedSearch, fetchProcessos, isInitialRender]);
+  }, [activeTab, pageIndex, debouncedSearch, filters, fetchProcessos, isInitialRender]);
 
-  // Reset página ao mudar tab ou busca
+  // Reset página ao mudar tab, busca ou filtros
   const handleTabChange = useCallback((tab: string) => {
     setActiveTab(tab as ProcessoTab);
+    setPageIndex(0);
+  }, []);
+
+  const handleFiltersChange = useCallback((newFilters: ProcessosFilters) => {
+    setFilters(newFilters);
     setPageIndex(0);
   }, []);
 
@@ -151,7 +178,8 @@ export function ProcessosClient({
 
   // ── Tab counts vêm das stats (server-side, sempre corretas) ──────────
   const tabOptions: TabPillOption[] = useMemo(() => [
-    { id: 'todos', label: 'Todos', count: stats.total },
+    { id: 'ativos', label: 'Ativos', count: stats.emCurso },
+    { id: 'arquivados', label: 'Arquivados', count: stats.arquivados },
     { id: 'meus', label: 'Meus' },
     { id: 'sem_responsavel', label: 'Sem Resp', count: stats.semResponsavel },
     { id: 'com_eventos', label: 'Com Eventos', count: stats.comEventos },
@@ -159,6 +187,8 @@ export function ProcessosClient({
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
   const subtitle = `${stats.total} processo${stats.total !== 1 ? 's' : ''}${stats.emCurso > 0 ? ` · ${stats.emCurso} em curso` : ''}`;
+
+  const hasActiveFilters = filters.trt.length > 0 || !!filters.grau || !!filters.responsavelId;
 
   return (
     <>
@@ -197,6 +227,12 @@ export function ProcessosClient({
         </div>
       </div>
 
+      <ProcessosFilterBar
+        filters={filters}
+        onChange={handleFiltersChange}
+        usuarios={usuarios}
+      />
+
       <div className={isPending ? 'opacity-60 pointer-events-none transition-opacity' : 'transition-opacity'}>
         {viewMode === 'cards' && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -231,7 +267,12 @@ export function ProcessosClient({
         {processos.length === 0 && !isPending && (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <p className="text-sm font-medium text-muted-foreground/50">Nenhum processo encontrado</p>
-            <p className="text-xs text-muted-foreground/40 mt-1">Tente ajustar a busca ou os filtros</p>
+            <p className="text-xs text-muted-foreground/40 mt-1">
+              {hasActiveFilters
+                ? 'Tente remover alguns filtros'
+                : 'Tente ajustar a busca ou os filtros'
+              }
+            </p>
           </div>
         )}
       </div>

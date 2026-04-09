@@ -13,7 +13,7 @@ export default async function ProcessosPage({ searchParams: _ }: ProcessosPagePr
   const session = await authenticateRequest();
 
   const [processosResult, stats, usuariosResult] = await Promise.all([
-    listarProcessos({ pagina: 1, limite: 50, unified: true }),
+    listarProcessos({ pagina: 1, limite: 50, unified: true, origem: 'acervo_geral' }),
     obterEstatisticasProcessos(),
     usuarioRepository.findAll({ ativo: true }),
   ]);
