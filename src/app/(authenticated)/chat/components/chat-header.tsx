@@ -19,7 +19,7 @@ interface ChatHeaderProps {
 }
 
 export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onScreenshare }: ChatHeaderProps) {
-  const { setSelectedChat } = useChatStore();
+  const { setSelectedChat, showProfileSheet, toggleProfileSheet } = useChatStore();
 
   const isGroup = sala.tipo === 'grupo' || sala.tipo === 'geral';
   const name = sala.name;
@@ -45,39 +45,46 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
         >
           <ArrowLeft className="size-4" />
         </Button>
-        <div className="relative size-9 rounded-xl overflow-hidden shrink-0">
-          <Avatar
-            className="size-9 rounded-xl overflow-visible"
-          >
-            <AvatarImage src={image} alt={name} />
-            <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold rounded-xl">
-              {generateAvatarFallback(name)}
-            </AvatarFallback>
-            {!isGroup && <AvatarIndicator variant={onlineStatus} />}
-          </Avatar>
-        </div>
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[0.8125rem] font-semibold text-foreground leading-[1.2]">{name}</span>
-          {!isGroup && (
-            onlineStatus === "online" ? (
-              <span
-                className="text-[0.625rem] leading-[1.4]"
-                style={{ color: 'rgba(52,211,153,0.7)' }}
-              >
-                Online
-              </span>
-            ) : (
+        <button
+          type="button"
+          onClick={() => toggleProfileSheet(!showProfileSheet)}
+          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity duration-150 rounded-lg px-1 -mx-1"
+          aria-label="Ver perfil"
+        >
+          <div className="relative size-9 rounded-xl overflow-hidden shrink-0">
+            <Avatar
+              className="size-9 rounded-xl overflow-visible"
+            >
+              <AvatarImage src={image} alt={name} />
+              <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold rounded-xl">
+                {generateAvatarFallback(name)}
+              </AvatarFallback>
+              {!isGroup && <AvatarIndicator variant={onlineStatus} />}
+            </Avatar>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[0.8125rem] font-semibold text-foreground leading-[1.2]">{name}</span>
+            {!isGroup && (
+              onlineStatus === "online" ? (
+                <span
+                  className="text-[0.625rem] leading-[1.4]"
+                  style={{ color: 'rgba(52,211,153,0.7)' }}
+                >
+                  Online
+                </span>
+              ) : (
+                <span className="text-[0.625rem] text-muted-foreground/50 leading-[1.4]">
+                  {lastSeen ? `Visto por ultimo ${new Date(lastSeen).toLocaleString()}` : 'Offline'}
+                </span>
+              )
+            )}
+            {isGroup && (
               <span className="text-[0.625rem] text-muted-foreground/50 leading-[1.4]">
-                {lastSeen ? `Visto por ultimo ${new Date(lastSeen).toLocaleString()}` : 'Offline'}
+                {sala.tipo === 'geral' ? 'Sala Geral' : 'Grupo'}
               </span>
-            )
-          )}
-          {isGroup && (
-            <span className="text-[0.625rem] text-muted-foreground/50 leading-[1.4]">
-              {sala.tipo === 'geral' ? 'Sala Geral' : 'Grupo'}
-            </span>
-          )}
-        </div>
+            )}
+          </div>
+        </button>
       </div>
       <div className="flex gap-1 items-center">
         <div className="hidden lg:flex lg:gap-1">
