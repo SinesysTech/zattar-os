@@ -72,13 +72,13 @@ Plans:
   2. Typing indicator shows redesigned bouncing dots animation below the input area
   3. Context bar appears below header when conversation has a linked legal process
   4. Empty state displays centered logo, description text, and clickable suggestion cards
-**Plans**: TBD
+**Plans**: 3 plans
 **UI hint**: yes
 
 Plans:
-- [ ] 03-01: TBD
-- [x] 03-02: TBD
-- [x] 03-03: TBD
+- [ ] 03-01-PLAN.md — ChatFooter: Input→Textarea glass wrapper + send button + typingBounce animation
+- [ ] 03-02-PLAN.md — ChatContextBar: new component + wire into chat-window.tsx
+- [ ] 03-03-PLAN.md — ChatEmptyState: icon + title + suggestion cards + wire into chat-layout.tsx
 
 ### Phase 4: Detail Panel & Preservation
 **Goal**: Users can view contact/group details in a side panel and all existing chat functionality remains fully operational with zero regression
@@ -90,12 +90,12 @@ Plans:
   3. All messaging features work end-to-end: text, file upload, image, video, and audio recording
   4. Dyte SDK calls remain functional, online/offline presence and typing indicators work, mobile toggle preserved
   5. Lazy loading of ChatWindow and Suspense boundaries maintained; Zustand store has no breaking changes
-**Plans**: TBD
+**Plans**: 2 plans
 **UI hint**: yes
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md — ChatDetailPanel new component + wire into chat-layout.tsx + header toggle trigger
+- [ ] 04-02-PLAN.md — Zero regression audit: automated checks + human walkthrough of all features
 
 </details>
 
@@ -171,7 +171,7 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8
 | 1. Layout Shell & Sidebar | v1.0 | 0/0 | Not started | - |
 | 2. Header, Messages & Media | v1.0 | 3/3 | Complete   | 2026-04-09 |
 | 3. Input, Context Bar & Empty State | v1.0 | 2/1 | Complete   | 2026-04-10 |
-| 4. Detail Panel & Preservation | v1.0 | 0/0 | Not started | - |
+| 4. Detail Panel & Preservation | v1.0 | 0/2 | Not started | - |
 | 5. Indicadores & Detail Dialog | v1.1 | 0/0 | Not started | - |
 | 6. Redesign Views | v1.1 | 0/0 | Not started | - |
 | 7. Wiring & Edicao | v1.1 | 0/0 | Not started | - |
