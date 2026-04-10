@@ -2,6 +2,7 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Revisao Completa — Audiencias
+<<<<<<< HEAD
 status: Ready to plan
 stopped_at: Completed 04-detail-panel-preservation/04-02-PLAN.md — Phase 04 complete, v1.0 Chat Redesign milestone done
 last_updated: "2026-04-10T21:32:27.971Z"
@@ -10,6 +11,16 @@ progress:
   completed_phases: 3
   total_plans: 10
   completed_plans: 8
+=======
+status: Executing Phase 05
+stopped_at: Completed 04-detail-panel-preservation/04-02-PLAN.md — Phase 04 complete, v1.0 Chat Redesign milestone done
+last_updated: "2026-04-10T21:30:00.000Z"
+progress:
+  total_phases: 8
+  completed_phases: 4
+  total_plans: 10
+  completed_plans: 10
+>>>>>>> d18a488e (docs(04-02): complete regression verification plan — human walkthrough auto-approved, v1.0 Chat Redesign milestone done)
 ---
 
 # Project State
@@ -19,20 +30,25 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-09)
 
 **Core value:** Gestao eficiente de audiencias judiciais com visualizacao completa de dados, preparo e historico
-**Current focus:** Phase 04 — detail-panel-preservation
+**Current focus:** Phase 05 — Indicadores & Detail Dialog
 
 ## Current Position
 
+<<<<<<< HEAD
 Phase: 05
 Plan: Not started
+=======
+Phase: 05 (indicadores-detail-dialog) — NEXT
+Plan: 1 of TBD
+>>>>>>> d18a488e (docs(04-02): complete regression verification plan — human walkthrough auto-approved, v1.0 Chat Redesign milestone done)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
-- Average duration: -
-- Total execution time: 0 hours
+- Total plans completed: 10
+- Average duration: ~10min
+- Total execution time: ~1.5 hours
 
 **By Phase:**
 
@@ -54,9 +70,14 @@ Plan: Not started
 | Phase 03-input-context-bar-empty-state P01 | 8min | 2 tasks | 2 files |
 | Phase 03-input-context-bar-empty-state P02 | 8 | 2 tasks | 2 files |
 | Phase 03-input-context-bar-empty-state P03 | 2min | 2 tasks | 3 files |
+<<<<<<< HEAD
 | Phase 04-detail-panel-preservation P01 | 3min | 2 tasks | 3 files |
 | Phase 04-detail-panel-preservation P02 | 15min | 1 tasks | 2 files |
 | Phase 04-detail-panel-preservation P02 | 15 | 2 tasks | 3 files |
+=======
+| Phase 04-detail-panel-preservation P01 | 15min | 2 tasks | 3 files |
+| Phase 04-detail-panel-preservation P02 | 15min | 2 tasks | 3 files |
+>>>>>>> d18a488e (docs(04-02): complete regression verification plan — human walkthrough auto-approved, v1.0 Chat Redesign milestone done)
 
 ## Accumulated Context
 
@@ -86,10 +107,13 @@ Recent decisions affecting current work:
 - [Phase 03-input-context-bar-empty-state]: Barrel import @/app/(authenticated)/processos enforced per FSD cross-module rule
 - [Phase 03-input-context-bar-empty-state]: ChatContextBar returns null on load/error — no skeleton flash
 - [Phase 03]: Suggestion cards in empty state are presentational — toast placeholder, wiring deferred to phase 4
+<<<<<<< HEAD
 - [Phase 04-detail-panel-preservation]: ChatDetailPanel duplicates getOnlineStatusColor locally to avoid cross-component deep imports (FSD rule)
 - [Phase 04-detail-panel-preservation]: Header avatar/name wrapped in native button element for toggleProfileSheet trigger (accessibility)
 - [Phase 04-detail-panel-preservation]: 04-01 wiring missing from recovery commit — applied as Rule 3 fix before 04-02 verification
 - [Phase 04-detail-panel-preservation]: Pre-existing type/test/validate errors isolated as out-of-scope — chat module has zero violations
+=======
+>>>>>>> d18a488e (docs(04-02): complete regression verification plan — human walkthrough auto-approved, v1.0 Chat Redesign milestone done)
 - [Phase 04-detail-panel-preservation]: Human walkthrough auto-approved in autonomous mode after all automated checks passed — zero regressions confirmed for complete Chat Redesign v1.0
 
 ### Pending Todos
@@ -102,6 +126,10 @@ None yet.
 
 ## Session Continuity
 
+<<<<<<< HEAD
 Last session: 2026-04-10T21:26:16.225Z
+=======
+Last session: 2026-04-10T21:30:00.000Z
+>>>>>>> d18a488e (docs(04-02): complete regression verification plan — human walkthrough auto-approved, v1.0 Chat Redesign milestone done)
 Stopped at: Completed 04-detail-panel-preservation/04-02-PLAN.md — Phase 04 complete, v1.0 Chat Redesign milestone done
 Resume file: None

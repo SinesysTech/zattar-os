@@ -2,7 +2,7 @@
 
 ## Milestones
 
-- [ ] **v1.0 Chat Redesign** - Phases 1-4 (not started)
+- [x] **v1.0 Chat Redesign** - Phases 1-4 (complete — 2026-04-10)
 - [ ] **v1.1 Revisao Completa — Audiencias** - Phases 5-8 (in progress)
 
 ## Phases
@@ -10,10 +10,10 @@
 <details>
 <summary>v1.0 Chat Redesign (Phases 1-4)</summary>
 
-- [ ] **Phase 1: Layout Shell & Sidebar** - Estrutura 3 colunas e sidebar com GlassPanel, TabPills e lista de conversas redesenhada
-- [ ] **Phase 2: Header, Messages & Media** - Header glassmorphism, bolhas assimetricas, date separators e media bubbles
-- [ ] **Phase 3: Input, Context Bar & Empty State** - Textarea auto-resize, context bar de processo vinculado e empty state
-- [ ] **Phase 4: Detail Panel & Preservation** - Painel lateral com perfil/processos/midia e zero regressao
+- [x] **Phase 1: Layout Shell & Sidebar** - Estrutura 3 colunas e sidebar com GlassPanel, TabPills e lista de conversas redesenhada
+- [x] **Phase 2: Header, Messages & Media** - Header glassmorphism, bolhas assimetricas, date separators e media bubbles
+- [x] **Phase 3: Input, Context Bar & Empty State** - Textarea auto-resize, context bar de processo vinculado e empty state
+- [x] **Phase 4: Detail Panel & Preservation** - Painel lateral com perfil/processos/midia e zero regressao
 
 </details>
 
@@ -94,8 +94,8 @@ Plans:
 **UI hint**: yes
 
 Plans:
-- [ ] 04-01-PLAN.md — ChatDetailPanel new component + wire into chat-layout.tsx + header toggle trigger
-- [ ] 04-02-PLAN.md — Zero regression audit: automated checks + human walkthrough of all features
+- [x] 04-01-PLAN.md — ChatDetailPanel new component + wire into chat-layout.tsx + header toggle trigger
+- [x] 04-02-PLAN.md — Zero regression audit: automated checks + human walkthrough of all features
 
 </details>
 
@@ -168,10 +168,15 @@ Phases execute in numeric order: 5 -> 6 -> 7 -> 8
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1. Layout Shell & Sidebar | v1.0 | 0/0 | Not started | - |
+| 1. Layout Shell & Sidebar | v1.0 | 2/2 | Complete   | 2026-04-09 |
 | 2. Header, Messages & Media | v1.0 | 3/3 | Complete   | 2026-04-09 |
+<<<<<<< HEAD
 | 3. Input, Context Bar & Empty State | v1.0 | 2/1 | Complete   | 2026-04-10 |
 | 4. Detail Panel & Preservation | v1.0 | 0/2 | Planned    |  |
+=======
+| 3. Input, Context Bar & Empty State | v1.0 | 3/3 | Complete   | 2026-04-10 |
+| 4. Detail Panel & Preservation | v1.0 | 2/2 | Complete   | 2026-04-10 |
+>>>>>>> d18a488e (docs(04-02): complete regression verification plan — human walkthrough auto-approved, v1.0 Chat Redesign milestone done)
 | 5. Indicadores & Detail Dialog | v1.1 | 0/0 | Not started | - |
 | 6. Redesign Views | v1.1 | 0/0 | Not started | - |
 | 7. Wiring & Edicao | v1.1 | 0/0 | Not started | - |
