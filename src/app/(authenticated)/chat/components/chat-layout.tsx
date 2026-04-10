@@ -8,6 +8,7 @@ import { ChatItem } from "../domain";
 import { useChatPresence } from "../hooks/use-chat-presence";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChatEmptyState } from "./chat-empty-state";
+import { ChatDetailPanel } from "./chat-detail-panel";
 
 // Lazy load ChatWindow to defer Dyte SDK loading until chat is selected
 const ChatWindow = lazy(() =>
@@ -85,10 +86,10 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
         </div>
       </div>
 
-      {/* Detail panel placeholder (LAYOUT-03, D-07, D-09) */}
+      {/* Detail panel (LAYOUT-03, D-07, D-09, DETAIL-01) */}
       {showProfileSheet && (
         <div className="hidden xl:flex w-[320px] shrink-0 border-l border-white/[0.06] bg-(--surface-container-low)">
-          {/* Phase 4 content — placeholder only */}
+          <ChatDetailPanel user={selectedChat?.usuario} />
         </div>
       )}
     </div>
