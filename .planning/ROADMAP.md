@@ -109,12 +109,14 @@ Plans:
   3. User can view the full change history (dados_anteriores) as a vertical timeline inside the dialog
   4. User can click through to the ata de audiencia when url_ata_audiencia is present
   5. User can open the edit form from the dialog (respecting PJE whitelist for captured audiencias)
-**Plans**: TBD
+**Plans**: 4 plans
 **UI hint**: yes
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md — Design system extension: audiencia_indicador badge category + AUDIENCIA_FIELD_LABELS + buildPjeUrl
+- [ ] 05-02-PLAN.md — Shared components: AudienciaIndicadorBadges + AudienciaTimeline
+- [ ] 05-03-PLAN.md — AudienciaDetailDialog: full dialog with all 7 sections
+- [ ] 05-04-PLAN.md — Big-bang migration: Sheet → Dialog across all 5 usage points
 
 ### Phase 6: Redesign Views
 **Goal**: Users experience all four secondary views (Lista, Mes, Ano, Semana) fully redesigned with Glass Briefing styling, shared navigation, and the new indicator badges
