@@ -409,15 +409,9 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
     }
   };
 
-  if (!selectedChat) {
-    return (
-      <div className="hidden h-full flex-1 items-center justify-center lg:flex bg-muted/20">
-        <div className="text-center text-muted-foreground">
-          <p className="text-lg font-medium">Selecione uma conversa para começar</p>
-        </div>
-      </div>
-    );
-  }
+  // Note: selectedChat guard is handled by chat-layout.tsx (ChatEmptyState branch).
+  // ChatWindow is only rendered when selectedChat is truthy.
+  if (!selectedChat) return null;
 
   return (
     <div className="flex h-full flex-col flex-1 relative bg-background">

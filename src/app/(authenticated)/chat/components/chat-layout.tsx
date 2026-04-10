@@ -7,6 +7,7 @@ import { ChatSidebarWrapper } from "./chat-sidebar-wrapper";
 import { ChatItem } from "../domain";
 import { useChatPresence } from "../hooks/use-chat-presence";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ChatEmptyState } from "./chat-empty-state";
 
 // Lazy load ChatWindow to defer Dyte SDK loading until chat is selected
 const ChatWindow = lazy(() =>
@@ -80,7 +81,7 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
             >
               <ChatWindow currentUserId={currentUserId} currentUserName={currentUserName} />
             </Suspense>
-          ) : null}
+          ) : <ChatEmptyState />}
         </div>
       </div>
 
