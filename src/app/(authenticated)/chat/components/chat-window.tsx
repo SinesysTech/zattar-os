@@ -7,6 +7,7 @@ import { ChatContent } from "./chat-content";
 import { ChatFooter } from "./chat-footer";
 import { IncomingCallDialog } from "./incoming-call-dialog";
 import { CallSetupDialog } from "./call-setup-dialog";
+import { ChatContextBar } from "./chat-context-bar";
 import { UserDetailSheet } from "./user-detail-sheet";
 import { useChatSubscription } from "../hooks/use-chat-subscription";
 import { useTypingIndicator } from "../hooks/use-typing-indicator";
@@ -420,6 +421,10 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
         onVideoCall={() => handleStartCall(TipoChamada.Video)}
         onAudioCall={() => handleStartCall(TipoChamada.Audio)}
       />
+
+      {selectedChat.documentoId && (
+        <ChatContextBar documentoId={selectedChat.documentoId} />
+      )}
 
       <ChatContent
         mensagens={mensagens}
