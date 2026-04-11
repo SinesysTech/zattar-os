@@ -41,7 +41,7 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
       {/* Sidebar column (LAYOUT-01, LAYOUT-02) */}
       <div
         className={cn(
-          "h-full flex flex-col border-r border-white/[0.06] bg-(--surface-container-low)",
+          "h-full flex flex-col border-r border-border/40 dark:border-white/[0.06] bg-(--surface-container-low)",
           "w-full md:w-[360px] md:min-w-[360px] shrink-0",
           selectedChat ? "hidden md:flex" : "flex"
         )}
@@ -67,7 +67,7 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
           style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.02) 0%, transparent 70%)' }}
         />
         {/* Content at z-10 */}
-        <div className="relative z-10 flex-1 flex flex-col">
+        <div className="relative z-10 flex-1 min-h-0 flex flex-col">
           {selectedChat ? (
             <Suspense
               fallback={
@@ -90,7 +90,7 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
 
       {/* Detail panel (LAYOUT-03, D-07, D-09, DETAIL-01) */}
       {showProfileSheet && (
-        <div className="hidden xl:flex w-[320px] shrink-0 border-l border-white/[0.06] bg-(--surface-container-low)">
+        <div className="hidden lg:flex w-[320px] shrink-0 border-l border-border/40 dark:border-white/[0.06] bg-(--surface-container-low)">
           <ChatDetailPanel user={selectedChat?.usuario} />
         </div>
       )}
