@@ -508,6 +508,55 @@ export const STATUS_AUDIENCIA_NOMES: Record<string, string> = {
 };
 
 // =============================================================================
+// LABELS DE CAMPOS (TIMELINE DE ALTERAÇÕES)
+// =============================================================================
+
+/**
+ * Labels legíveis para campos de audiência — usados na timeline de alterações.
+ * Chaves são snake_case (formato de dados_anteriores e logs_alteracao).
+ */
+export const AUDIENCIA_FIELD_LABELS: Record<string, string> = {
+  data_inicio: 'Data/Horário de Início',
+  data_fim: 'Data/Horário de Fim',
+  hora_inicio: 'Hora de Início',
+  hora_fim: 'Hora de Fim',
+  responsavel_id: 'Responsável',
+  status: 'Status',
+  status_descricao: 'Situação',
+  modalidade: 'Modalidade',
+  observacoes: 'Observações',
+  url_audiencia_virtual: 'URL da Sala Virtual',
+  endereco_presencial: 'Endereço Presencial',
+  tipo_audiencia_id: 'Tipo de Audiência',
+  sala_audiencia_nome: 'Sala',
+  designada: 'Designada',
+  segredo_justica: 'Segredo de Justiça',
+  juizo_digital: 'Juízo Digital',
+  documento_ativo: 'Documento Ativo',
+  presenca_hibrida: 'Presença Híbrida',
+  polo_ativo_nome: 'Polo Ativo',
+  polo_passivo_nome: 'Polo Passivo',
+  numero_processo: 'Número do Processo',
+  url_ata_audiencia: 'URL da Ata',
+};
+
+// =============================================================================
+// URL HELPERS (PJE)
+// =============================================================================
+
+/**
+ * Constrói a URL de consulta processual no PJe a partir do TRT e número do processo.
+ * Formato: https://pje.{trt_lower}.jus.br/consultaprocessual/detalhe-processo/{numeroProcesso}
+ *
+ * @example buildPjeUrl('TRT1', '0001234-56.2024.5.01.0001')
+ * // returns 'https://pje.trt1.jus.br/consultaprocessual/detalhe-processo/0001234-56.2024.5.01.0001'
+ */
+export function buildPjeUrl(trt: string, numeroProcesso: string): string {
+  const trtLower = trt.toLowerCase();
+  return `https://pje.${trtLower}.jus.br/consultaprocessual/detalhe-processo/${numeroProcesso}`;
+}
+
+// =============================================================================
 // COLUMN SELECTION HELPERS (Disk I/O Optimization)
 // =============================================================================
 
