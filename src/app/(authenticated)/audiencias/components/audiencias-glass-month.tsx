@@ -116,8 +116,9 @@ function DayCell({
       type="button"
       onClick={() => count > 0 && onSelect(day, audienciasDia)}
       className={cn(
-        'relative min-h-[88px] p-2 rounded-xl border border-transparent transition-all duration-150 text-left',
-        'hover:bg-white/[0.06] hover:border-white/[0.08]',
+        'relative min-h-[88px] p-2 rounded-xl transition-all duration-150 text-left',
+        'hover:bg-foreground/[0.04] hover:ring-1 hover:ring-foreground/[0.08]',
+        'active:bg-foreground/[0.02] active:scale-[0.98]',
         !isCurrentMonth && 'opacity-35',
         weekend && isCurrentMonth && 'opacity-55',
         count > 0 && 'cursor-pointer',
@@ -133,7 +134,7 @@ function DayCell({
         {format(day, 'd')}
       </div>
 
-      {count > 0 && count <= 3 && (
+      {count > 0 && count < 3 && (
         <div className="flex gap-1 mt-1.5 flex-wrap">
           {audienciasDia.map((aud) => (
             <div
@@ -144,9 +145,9 @@ function DayCell({
         </div>
       )}
 
-      {count > 3 && (
+      {count >= 3 && (
         <div className="flex gap-1 mt-1.5">
-          <span className="text-[0.65rem] font-bold text-foreground/70 bg-white/[0.10] border border-white/[0.10] rounded-full px-1.5 py-px inline-flex items-center justify-center">
+          <span className="text-[0.65rem] font-bold text-foreground/70 bg-foreground/[0.08] border border-foreground/[0.08] rounded-full px-1.5 py-px inline-flex items-center justify-center">
             {count}
           </span>
         </div>

@@ -29,12 +29,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
 
   return (
     <div
-      className="relative z-10 flex items-center justify-between px-5 py-3 border-b border-white/[0.06] dark:border-white/[0.06] light:border-border backdrop-blur-[20px]"
-      style={{
-        backgroundColor: 'rgba(22,18,34,0.8)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-      }}
+      className="relative z-10 flex items-center justify-between px-5 py-3 border-b border-border/40 dark:border-white/[0.06] backdrop-blur-[20px] bg-white/85 dark:bg-[rgba(22,18,34,0.8)]"
     >
       <div className="flex gap-3 items-center">
         <Button
