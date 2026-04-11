@@ -48,7 +48,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
   return (
     <div className="flex flex-col h-full w-full">
       {/* Panel header — "Detalhes" per mock */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06] shrink-0">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-border/40 dark:border-white/[0.06] shrink-0">
         <span className="text-[0.75rem] font-semibold text-foreground">Detalhes</span>
         <Button
           size="icon"
@@ -88,7 +88,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
         </div>
 
         {/* Informacoes section — icon + label + value per mock */}
-        <div className="px-5 py-3.5 border-t border-white/[0.06]">
+        <div className="px-5 py-3.5 border-t border-border/40 dark:border-white/[0.06]">
           <h5 className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 mb-3">
             Informacoes
           </h5>
@@ -101,7 +101,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
               <div>
                 <p className="text-[0.6rem] text-muted-foreground/40">Email</p>
                 <p className="text-[0.725rem] font-medium text-foreground">
-                  {user.about || "—"}
+                  {user.email || user.emailCorporativo || "—"}
                 </p>
               </div>
             </div>
@@ -134,7 +134,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
 
         {/* Media section — 3-column grid per mock */}
         {user.medias && user.medias.length > 0 && (
-          <div className="px-5 py-3.5 border-t border-white/[0.06]">
+          <div className="px-5 py-3.5 border-t border-border/40 dark:border-white/[0.06]">
             <h5 className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 mb-3">
               Midia Compartilhada
             </h5>
@@ -160,7 +160,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
 
         {/* Website */}
         {user.website && (
-          <div className="px-5 py-3.5 border-t border-white/[0.06]">
+          <div className="px-5 py-3.5 border-t border-border/40 dark:border-white/[0.06]">
             <h5 className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 mb-3">
               Website
             </h5>

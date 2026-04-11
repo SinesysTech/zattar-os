@@ -116,7 +116,7 @@ function TextChatBubble({
           "px-4 py-2 text-[0.8125rem] leading-[1.5]",
           bubbleCornerClass(!!message.ownMessage, isFirstInGroup),
           // Received bubble
-          !message.ownMessage && "bg-(--chat-bubble-received) border border-white/[0.05]",
+          !message.ownMessage && "bg-(--chat-bubble-received) border border-border/30 dark:border-white/[0.05] shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
           // Sent bubble
           message.ownMessage && "bg-primary text-white shadow-lg shadow-primary/20"
         )}
@@ -272,7 +272,7 @@ function AudioChatBubble({
         className={cn(
           "px-4 py-2 flex items-center gap-[0.625rem] min-w-[220px]",
           bubbleCornerClass(isOwn, isFirstInGroup),
-          !isOwn && "bg-(--chat-bubble-received) border border-white/[0.05]",
+          !isOwn && "bg-(--chat-bubble-received) border border-border/30 dark:border-white/[0.05] shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
           isOwn && "bg-primary text-white shadow-lg shadow-primary/20"
         )}
       >
@@ -348,7 +348,7 @@ function ImageChatBubble({
         className={cn(
           "p-2",
           bubbleCornerClass(isOwn, isFirstInGroup),
-          !isOwn && "bg-(--chat-bubble-received) border border-white/[0.05]",
+          !isOwn && "bg-(--chat-bubble-received) border border-border/30 dark:border-white/[0.05] shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
           isOwn && "bg-primary shadow-lg shadow-primary/20"
         )}
       >

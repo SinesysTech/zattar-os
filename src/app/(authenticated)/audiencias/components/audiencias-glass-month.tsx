@@ -12,7 +12,6 @@ import {
   isSameMonth,
   isSameDay,
   isToday,
-  isWeekend,
   addMonths,
   subMonths,
   getDay,
@@ -108,7 +107,6 @@ function DayCell({
   onSelect: (day: Date, audiencias: Audiencia[]) => void;
 }) {
   const today = isToday(day);
-  const weekend = isWeekend(day);
   const count = audienciasDia.length;
 
   return (
@@ -121,7 +119,6 @@ function DayCell({
         'hover:bg-accent/40 hover:border-border/60',
         'active:bg-accent/20 active:scale-[0.98]',
         !isCurrentMonth && 'opacity-35',
-        weekend && isCurrentMonth && 'opacity-50',
         count > 0 && 'cursor-pointer',
         count === 0 && 'cursor-default',
       )}
@@ -148,7 +145,7 @@ function DayCell({
 
       {count >= 3 && (
         <div className="flex gap-1 mt-1.5">
-          <span className="text-[0.65rem] font-bold text-muted-foreground bg-muted rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-[18px]">
+          <span className="text-[0.65rem] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-[18px]">
             {count}
           </span>
         </div>

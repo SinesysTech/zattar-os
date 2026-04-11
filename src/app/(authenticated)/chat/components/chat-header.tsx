@@ -46,25 +46,18 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
           className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity duration-150 rounded-lg px-1 -mx-1"
           aria-label="Ver perfil"
         >
-          <div className="relative size-9 rounded-xl overflow-hidden shrink-0">
-            <Avatar
-              className="size-9 rounded-xl overflow-visible"
-            >
-              <AvatarImage src={image} alt={name} />
-              <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold rounded-xl">
-                {generateAvatarFallback(name)}
-              </AvatarFallback>
-              {!isGroup && <AvatarIndicator variant={onlineStatus} />}
-            </Avatar>
-          </div>
+          <Avatar className="size-9 rounded-[0.625rem] overflow-visible shrink-0">
+            <AvatarImage src={image} alt={name} className="rounded-[0.625rem]" />
+            <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold rounded-[0.625rem]">
+              {generateAvatarFallback(name)}
+            </AvatarFallback>
+            {!isGroup && <AvatarIndicator variant={onlineStatus} />}
+          </Avatar>
           <div className="flex flex-col gap-0.5">
             <span className="text-[0.8125rem] font-semibold text-foreground leading-[1.2]">{name}</span>
             {!isGroup && (
               onlineStatus === "online" ? (
-                <span
-                  className="text-[0.625rem] leading-[1.4]"
-                  style={{ color: 'rgba(52,211,153,0.7)' }}
-                >
+                <span className="text-[0.625rem] leading-[1.4] text-emerald-600 dark:text-emerald-400/70">
                   Online
                 </span>
               ) : (
