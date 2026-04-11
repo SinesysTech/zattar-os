@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Revisao Completa — Audiencias
-status: Ready to plan
-stopped_at: Completed 04-detail-panel-preservation/04-02-PLAN.md — Phase 04 complete, v1.0 Chat Redesign milestone done
-last_updated: "2026-04-10T21:32:27.971Z"
+status: Ready to execute
+stopped_at: Completed 05-indicadores-detail-dialog/05-02-PLAN.md
+last_updated: "2026-04-11T21:28:26.954Z"
 progress:
   total_phases: 8
   completed_phases: 4
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 14
+  completed_plans: 12
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-09)
 
 **Core value:** Gestao eficiente de audiencias judiciais com visualizacao completa de dados, preparo e historico
-**Current focus:** Phase 05 — Indicadores & Detail Dialog
+**Current focus:** Phase 05 — indicadores-detail-dialog
 
 ## Current Position
 
-Phase: 05 (indicadores-detail-dialog) — NEXT
-Plan: Not started
+Phase: 05 (indicadores-detail-dialog) — EXECUTING
+Plan: 2 of 4
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Plan: Not started
 | Phase 03-input-context-bar-empty-state P03 | 2min | 2 tasks | 3 files |
 | Phase 04-detail-panel-preservation P01 | 15min | 2 tasks | 3 files |
 | Phase 04-detail-panel-preservation P02 | 15min | 2 tasks | 3 files |
+| Phase 05 P02 | 2min | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,8 @@ Recent decisions affecting current work:
 - [Phase 04-detail-panel-preservation]: 04-01 wiring missing from recovery commit — applied as Rule 3 fix before 04-02 verification
 - [Phase 04-detail-panel-preservation]: Pre-existing type/test/validate errors isolated as out-of-scope — chat module has zero violations
 - [Phase 04-detail-panel-preservation]: Human walkthrough auto-approved in autonomous mode after all automated checks passed — zero regressions confirmed for complete Chat Redesign v1.0
+- [Phase 05]: snakeToCamel inline to avoid cross-deep import from captura module (FSD rule)
+- [Phase 05]: Presenca hibrida badge: Tooltip compact vs explicit text dialog via showPresencaDetail prop
 
 ### Pending Todos
 
@@ -101,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-10T21:32:27.971Z
-Stopped at: Completed 04-detail-panel-preservation/04-02-PLAN.md — Phase 04 complete, v1.0 Chat Redesign milestone done
+Last session: 2026-04-11T21:28:26.951Z
+Stopped at: Completed 05-indicadores-detail-dialog/05-02-PLAN.md
 Resume file: None
