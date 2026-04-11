@@ -16,7 +16,7 @@ Requirements para revisao completa do modulo de audiencias. Cada um mapeia para 
 - [ ] **DIALOG-05**: Dialog exibe secao Indicadores com badges: segredo de justica, juizo digital, designada, documento ativo
 - [ ] **DIALOG-06**: Dialog exibe secao Preparo com ring SVG + checklist de itens (6 itens ponderados)
 - [ ] **DIALOG-07**: Dialog exibe secao Observacoes com texto preservando whitespace
-- [ ] **DIALOG-08**: Dialog exibe secao Historico de Alteracoes como timeline vertical usando dados_anteriores
+- [x] **DIALOG-08**: Dialog exibe secao Historico de Alteracoes como timeline vertical usando dados_anteriores
 - [ ] **DIALOG-09**: Dialog exibe link/botao direto para ata de audiencia quando disponivel (url_ata_audiencia)
 - [ ] **DIALOG-10**: Dialog permite abrir formulario de edicao (respeitando whitelist PJE para capturadas)
 
@@ -41,12 +41,12 @@ Requirements para revisao completa do modulo de audiencias. Cada um mapeia para 
 
 ### Indicadores
 
-- [ ] **INDIC-01**: Badge "Segredo de Justica" (icone cadeado) visivel em cards, rows e dialog
-- [ ] **INDIC-02**: Badge "Juizo Digital" visivel em cards, rows e dialog
-- [ ] **INDIC-03**: Badge "Designada" visivel em cards, rows e dialog
-- [ ] **INDIC-04**: Badge "Documento Ativo" visivel no dialog
-- [ ] **INDIC-05**: Indicador de litisconsorcio ("e outros") quando polo_*_representa_varios = true
-- [ ] **INDIC-06**: Badge de presenca hibrida indicando quem e presencial e quem e virtual
+- [x] **INDIC-01**: Badge "Segredo de Justica" (icone cadeado) visivel em cards, rows e dialog
+- [x] **INDIC-02**: Badge "Juizo Digital" visivel em cards, rows e dialog
+- [x] **INDIC-03**: Badge "Designada" visivel em cards, rows e dialog
+- [x] **INDIC-04**: Badge "Documento Ativo" visivel no dialog
+- [x] **INDIC-05**: Indicador de litisconsorcio ("e outros") quando polo_*_representa_varios = true
+- [x] **INDIC-06**: Badge de presenca hibrida indicando quem e presencial e quem e virtual
 
 ### Edicao e Dados
 
@@ -92,15 +92,15 @@ Requirements para revisao completa do modulo de audiencias. Cada um mapeia para 
 | DIALOG-05 | Phase 5 | Pending |
 | DIALOG-06 | Phase 5 | Pending |
 | DIALOG-07 | Phase 5 | Pending |
-| DIALOG-08 | Phase 5 | Pending |
+| DIALOG-08 | Phase 5 | Complete |
 | DIALOG-09 | Phase 5 | Pending |
 | DIALOG-10 | Phase 5 | Pending |
-| INDIC-01 | Phase 5 | Pending |
-| INDIC-02 | Phase 5 | Pending |
-| INDIC-03 | Phase 5 | Pending |
-| INDIC-04 | Phase 5 | Pending |
-| INDIC-05 | Phase 5 | Pending |
-| INDIC-06 | Phase 5 | Pending |
+| INDIC-01 | Phase 5 | Complete |
+| INDIC-02 | Phase 5 | Complete |
+| INDIC-03 | Phase 5 | Complete |
+| INDIC-04 | Phase 5 | Complete |
+| INDIC-05 | Phase 5 | Complete |
+| INDIC-06 | Phase 5 | Complete |
 | VIEW-01 | Phase 6 | Pending |
 | VIEW-02 | Phase 6 | Pending |
 | VIEW-03 | Phase 6 | Pending |
