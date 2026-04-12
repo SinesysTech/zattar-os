@@ -72,61 +72,61 @@ Plano de implementação para completar a cobertura de testes do ZattarOS, segui
     - Criar `src/app/(authenticated)/configuracoes/__tests__/unit/configuracoes.test.ts` testando lógica existente
     - _Requirements: 1.4, 1.5_
 
-- [-] 2. Checkpoint — Validar P0
+- [x] 2. Checkpoint — Validar P0
   - Executar `npm test` e garantir que todos os testes P0 passam
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 3. P1 — Testes de actions para módulos parciais
-  - [ ] 3.1 Criar testes de actions para `acervo`
+  - [x] 3.1 Criar testes de actions para `acervo`
     - Criar `src/app/(authenticated)/acervo/__tests__/actions/acervo-actions.test.ts`
     - Testar autenticação, validação Zod e delegação ao service para cada action
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 3.2 Criar testes de actions para `admin`
+  - [x] 3.2 Criar testes de actions para `admin`
     - Criar `src/app/(authenticated)/admin/__tests__/actions/admin-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 3.3 Criar testes de actions para `advogados`
+  - [-] 3.3 Criar testes de actions para `advogados`
     - Criar `src/app/(authenticated)/advogados/__tests__/actions/advogados-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 3.4 Criar testes de actions para `agenda`
+  - [~] 3.4 Criar testes de actions para `agenda`
     - Criar `src/app/(authenticated)/agenda/__tests__/actions/agenda-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 3.5 Criar testes de actions para `calendar`
+  - [~] 3.5 Criar testes de actions para `calendar`
     - Criar `src/app/(authenticated)/calendar/__tests__/actions/calendar-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 3.6 Criar testes de actions para `captura`
+  - [~] 3.6 Criar testes de actions para `captura`
     - Criar `src/app/(authenticated)/captura/__tests__/actions/captura-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 3.7 Criar testes de actions para `cargos`
+  - [~] 3.7 Criar testes de actions para `cargos`
     - Criar `src/app/(authenticated)/cargos/__tests__/actions/cargos-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 3.8 Criar testes de actions para `contratos`
+  - [~] 3.8 Criar testes de actions para `contratos`
     - Criar `src/app/(authenticated)/contratos/__tests__/actions/contratos-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 3.9 Criar testes de actions para `entrevistas-trabalhistas`
+  - [~] 3.9 Criar testes de actions para `entrevistas-trabalhistas`
     - Criar `src/app/(authenticated)/entrevistas-trabalhistas/__tests__/actions/entrevistas-trabalhistas-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 3.10 Criar testes de actions para `expedientes`
+  - [~] 3.10 Criar testes de actions para `expedientes`
     - Criar `src/app/(authenticated)/expedientes/__tests__/actions/expedientes-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 3.11 Criar testes de actions para `pecas-juridicas`
+  - [~] 3.11 Criar testes de actions para `pecas-juridicas`
     - Criar `src/app/(authenticated)/pecas-juridicas/__tests__/actions/pecas-juridicas-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 3.12 Criar testes de actions para `rh`
+  - [~] 3.12 Criar testes de actions para `rh`
     - Criar `src/app/(authenticated)/rh/__tests__/actions/rh-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [ ] 3.13 Criar testes de actions para `tipos-expedientes`
+  - [~] 3.13 Criar testes de actions para `tipos-expedientes`
     - Criar `src/app/(authenticated)/tipos-expedientes/__tests__/actions/tipos-expedientes-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
