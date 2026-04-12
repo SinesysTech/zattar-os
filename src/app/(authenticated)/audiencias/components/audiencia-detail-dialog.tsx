@@ -22,6 +22,8 @@ import { ptBR } from 'date-fns/locale';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
+import { Heading } from '@/components/ui/typography';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ParteBadge } from '@/components/ui/parte-badge';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
@@ -155,14 +157,14 @@ export function AudienciaDetailDialog({
           <div className="flex-shrink-0 px-7 pt-6 pb-4 border-b border-border/20">
             {/* Linha 1: icone + titulo + status badge */}
             <div className="flex items-start gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+              <IconContainer size="md" className="bg-primary/10">
                 <Gavel className="size-4.5 text-primary" />
-              </div>
+              </IconContainer>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-lg font-semibold leading-tight truncate">
+                  <Heading level="section" className="truncate">
                     {audiencia?.tipoDescricao || 'Audiencia'}
-                  </h2>
+                  </Heading>
                   {audiencia && <AudienciaStatusBadge status={audiencia.status} />}
                 </div>
                 {/* Linha 2: data por extenso */}
