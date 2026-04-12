@@ -145,7 +145,7 @@ function DayCell({
 
       {count >= 3 && (
         <div className="flex gap-1 mt-1.5">
-          <span className="text-[0.65rem] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-[18px]">
+          <span className="text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-[18px]">
             {count}
           </span>
         </div>
@@ -174,7 +174,7 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
           </div>
         </div>
         <span className={cn(
-          'text-[0.625rem] font-semibold tracking-[0.03em] px-[7px] py-0.5 rounded-full border shrink-0',
+          'text-[10px] font-semibold tracking-[0.03em] px-[7px] py-0.5 rounded-full border shrink-0',
           getStatusBadgeClass(audiencia.status),
         )}>
           {STATUS_AUDIENCIA_LABELS[audiencia.status]}
@@ -281,13 +281,13 @@ export function AudienciasGlassMonth({
           {/* Legend */}
           <div className="flex items-center gap-4 mb-4 px-1">
             {[
-              { color: 'bg-emerald-500', label: 'Marcada' },
-              { color: 'bg-blue-400', label: 'Finalizada' },
-              { color: 'bg-red-400', label: 'Cancelada' },
+              { color: 'bg-success', label: 'Marcada' },
+              { color: 'bg-info', label: 'Finalizada' },
+              { color: 'bg-destructive', label: 'Cancelada' },
             ].map(({ color, label }) => (
               <div key={label} className="flex items-center gap-1.5">
                 <div className={cn('w-[7px] h-[7px] rounded-full', color)} />
-                <span className="text-[0.7rem] text-foreground/45">{label}</span>
+                <span className="text-[11px] text-foreground/45">{label}</span>
               </div>
             ))}
           </div>
@@ -327,7 +327,7 @@ export function AudienciasGlassMonth({
                         </div>
                       </PopoverTrigger>
                       <PopoverContent
-                        className="w-72 p-3.5 bg-background/95 backdrop-blur-3xl border-white/[0.12] rounded-2xl shadow-[0_24px_48px_rgba(0,0,0,0.5)]"
+                        className="w-72 p-3.5 bg-background/95 backdrop-blur-3xl border-white/[0.12] rounded-2xl shadow-2xl"
                         side="bottom"
                         align="center"
                       >
@@ -384,17 +384,17 @@ export function AudienciasGlassMonth({
               </div>
               <div className="w-px h-8 bg-white/10" />
               <div className="text-center">
-                <p className="text-lg font-bold text-emerald-400/80">{summary.marcadas}</p>
+                <p className="text-lg font-bold text-success/80">{summary.marcadas}</p>
                 <p className="text-xs text-foreground/30 mt-0.5">Marcadas</p>
               </div>
               <div className="w-px h-8 bg-white/10" />
               <div className="text-center">
-                <p className="text-lg font-bold text-blue-400/80">{summary.finalizadas}</p>
+                <p className="text-lg font-bold text-info/80">{summary.finalizadas}</p>
                 <p className="text-xs text-foreground/30 mt-0.5">Finalizadas</p>
               </div>
               <div className="w-px h-8 bg-white/10" />
               <div className="text-center">
-                <p className="text-lg font-bold text-red-400/80">{summary.canceladas}</p>
+                <p className="text-lg font-bold text-destructive/80">{summary.canceladas}</p>
                 <p className="text-xs text-foreground/30 mt-0.5">Canceladas</p>
               </div>
             </div>

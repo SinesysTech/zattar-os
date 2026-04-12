@@ -161,10 +161,10 @@ const MonthGrid = React.memo(function MonthGrid({
 
   return (
     <div>
-      <div className="text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground/70 mb-[5px]">
+      <div className="text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground/70 mb-1">
         {MONTH_NAMES[monthIndex]}
       </div>
-      <div className="flex gap-[2px] mb-[3px]">
+      <div className="flex gap-[2px] mb-0.5">
         {WEEKDAY_LABELS.map((lbl, i) => (
           <div key={i} className="text-[8px] text-muted-foreground/60 text-center w-[10px] shrink-0">
             {lbl}
@@ -337,7 +337,7 @@ export function AudienciasYearHeatmap({
             </StatCard>
 
             {/* Média Semanal */}
-            <StatCard icon={BarChart2} iconBg="bg-emerald-500/12" iconColor="text-emerald-400" label="Média Semanal">
+            <StatCard icon={BarChart2} iconBg="bg-success/12" iconColor="text-success" label="Média Semanal">
               <div className="text-3xl font-display font-bold tracking-tight">{stats.weekAvg}</div>
               <div className="text-xs text-muted-foreground mt-1">audiências / semana</div>
             </StatCard>
