@@ -42,32 +42,32 @@ Plano de implementação para completar a cobertura de testes do ZattarOS, segui
     - Validar autenticação, validação Zod e delegação ao service
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-  - [-] 1.7 Criar testes unitários para o módulo `project-management`
+  - [x] 1.7 Criar testes unitários para o módulo `project-management`
     - Criar `src/app/(authenticated)/project-management/__tests__/unit/project-management.domain.test.ts`
     - Criar `src/app/(authenticated)/project-management/__tests__/unit/project-management.service.test.ts`
     - Criar `src/app/(authenticated)/project-management/__tests__/unit/project-management.repository.test.ts`
     - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
-  - [~] 1.8 Criar testes de actions para o módulo `project-management`
+  - [x] 1.8 Criar testes de actions para o módulo `project-management`
     - Criar `src/app/(authenticated)/project-management/__tests__/actions/project-management-actions.test.ts`
     - Validar autenticação, validação Zod e delegação ao service
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-  - [~] 1.9 Criar testes unitários para o módulo `comunica-cnj`
+  - [x] 1.9 Criar testes unitários para o módulo `comunica-cnj`
     - Nota: módulo possui apenas README.md, RULES.md, index.ts, layout.tsx, page.tsx — sem domain/service/repository
     - Criar `src/app/(authenticated)/comunica-cnj/__tests__/unit/comunica-cnj.test.ts` testando lógica existente em index.ts e page
     - _Requirements: 1.4, 1.5_
 
-  - [~] 1.10 Criar testes unitários para o módulo `perfil`
+  - [x] 1.10 Criar testes unitários para o módulo `perfil`
     - Criar `src/app/(authenticated)/perfil/__tests__/unit/perfil.domain.test.ts` testando schemas Zod
     - Criar `src/app/(authenticated)/perfil/__tests__/unit/perfil.service.test.ts` com mocks (perfil não possui repository.ts)
     - _Requirements: 1.1, 1.2, 1.4_
 
-  - [~] 1.11 Criar testes de actions para o módulo `perfil`
+  - [x] 1.11 Criar testes de actions para o módulo `perfil`
     - Criar `src/app/(authenticated)/perfil/__tests__/actions/perfil-actions.test.ts`
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-  - [~] 1.12 Criar testes unitários para o módulo `configuracoes`
+  - [-] 1.12 Criar testes unitários para o módulo `configuracoes`
     - Nota: módulo possui apenas components/, index.ts, layout.tsx, page.tsx — sem domain/service
     - Criar `src/app/(authenticated)/configuracoes/__tests__/unit/configuracoes.test.ts` testando lógica existente
     - _Requirements: 1.4, 1.5_
