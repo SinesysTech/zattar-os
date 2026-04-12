@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POC — Audiência Detail Dialog v2</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        heading: ['Montserrat', 'Inter', 'system-ui', 'sans-serif'],
+      },
+      colors: {
+        primary: { DEFAULT: '#7c3aed', foreground: '#fff' },
+        success: '#22c55e',
+        warning: '#f59e0b',
+        destructive: '#ef4444',
+        info: '#3b82f6',
+      }
+    },
+  },
+}
+</script>
+<style>
+  * { font-family: 'Inter', system-ui, sans-serif; }
+  .font-heading { font-family: 'Montserrat', 'Inter', system-ui, sans-serif; }
+
+  /* ── Page Background (Glass Briefing) ── */
+  .page-bg {
+    background: linear-gradient(145deg, #ede9f5 0%, #e4e0ed 40%, #f0ecf8 100%);
+  }
+
+  /* ── Glass Widget (page cards) ── */
+  .glass-widget {
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+
+  /* ── Glass Dialog ── */
+  .glass-dialog {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow:
+      0 24px 48px rgba(0, 0, 0, 0.12),
+      0 8px 24px rgba(0, 0, 0, 0.08),
+      0 2px 6px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  .glass-overlay {
+    background: rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* ── Polo indicators ── */
+  .polo-ativo::before {
+    content: '';
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #3b82f6;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+  .polo-passivo::before {
+    content: '';
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #ef4444;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+
+  /* ── Timeline connector ── */
+  .timeline-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .timeline-line {
+    width: 1px;
+    flex: 1;
+    background: rgba(0,0,0,0.06);
+    margin-left: 2.5px;
+  }
+</style>
+</head>
+
+<body class="page-bg min-h-screen">
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- OVERLAY + DIALOG (centered)                -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="fixed inset-0 glass-overlay z-40"></div>
+
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+
+  <!-- ── PAGE CARDS (visible behind overlay for context) ── -->
+  <div class="absolute left-8 top-1/2 -translate-y-1/2 w-52 space-y-2 opacity-40 pointer-events-none">
+    <div class="glass-widget p-3 rounded-xl">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold tabular-nums text-gray-700/80">10:15 – 10:16</span>
+        <span class="text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full bg-red-500/15 text-red-600">25%</span>
+      </div>
+      <p class="text-xs font-medium text-gray-800 mt-1.5 leading-snug">Inicial por videoconferência</p>
+      <p class="text-[10px] text-gray-500/60 tabular-nums mt-0.5">0000201-89.2026.5.20.0004</p>
+      <p class="text-[10px] text-gray-500/55 mt-1">YURI SANTOS <span class="text-gray-400/35">vs</span> MOTTU TEC.</p>
+      <div class="flex items-center gap-1.5 mt-2">
+        <span class="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-600/70">TRT20</span>
+        <span class="text-[9px] text-gray-400/55">Virtual</span>
+      </div>
+    </div>
+    <div class="glass-widget p-3 rounded-xl opacity-60">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-semibold tabular-nums text-gray-700/80">08:50 – 09:00</span>
+        <span class="text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full bg-yellow-500/15 text-yellow-700">50%</span>
+      </div>
+      <p class="text-xs font-medium text-gray-800 mt-1.5 leading-snug">Una por videoconferência</p>
+      <p class="text-[10px] text-gray-500/60 tabular-nums mt-0.5">0010808-81.2025.5.03.0093</p>
+      <div class="flex items-center gap-1.5 mt-2">
+        <span class="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-600/70">TRT3</span>
+        <span class="text-[9px] text-gray-400/55">Virtual</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- DIALOG                                      -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="glass-dialog rounded-2xl overflow-hidden w-full max-w-xl flex flex-col max-h-[85vh]">
+
+    <!-- ── HEADER ── -->
+    <div class="px-5 pt-4 pb-3 border-b border-black/[0.06] shrink-0">
+      <div class="flex items-start justify-between gap-3">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 class="font-heading text-[15px] font-semibold tracking-tight text-gray-900 truncate">
+              Inicial por videoconferência
+            </h2>
+            <!-- Status badge (SemanticBadge audiencia_status) -->
+            <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-violet-500/12 text-violet-600 border border-violet-500/15">
+              Marcada
+            </span>
+          </div>
+          <p class="text-[11px] text-gray-500/60 mt-0.5 capitalize">
+            quarta-feira, 15 de abril de 2026
+          </p>
+        </div>
+        <!-- Close X -->
+        <button class="size-7 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-black/[0.04] transition-colors shrink-0">
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-1.5 mt-2.5">
+        <a href="#" class="inline-flex items-center gap-1.5 h-7 px-3 text-[11px] font-medium rounded-lg bg-violet-600 text-white hover:bg-violet-700 transition-colors">
+          <svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.934a.5.5 0 0 0-.777-.416L16 11"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+          Sala Virtual
+          <svg class="size-2.5 opacity-60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+        <button class="inline-flex items-center gap-1.5 h-7 px-3 text-[11px] font-medium rounded-lg border border-black/[0.08] text-gray-600 hover:bg-black/[0.03] transition-colors">
+          <svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          PJe
+        </button>
+      </div>
+    </div>
+
+    <!-- ── BODY (scrollable) ── -->
+    <div class="flex-1 overflow-y-auto px-5 py-4" style="scrollbar-width: thin;">
+      <div class="space-y-3.5">
+
+        <!-- Meta grid 2×2 -->
+        <div class="grid grid-cols-2 gap-x-5 gap-y-2.5">
+          <div>
+            <div class="text-[10px] font-semibold uppercase tracking-wider text-gray-500/60 mb-0.5">Horário</div>
+            <div class="flex items-center gap-1.5">
+              <svg class="size-3 text-gray-400/50 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span class="text-[13px] font-medium tabular-nums text-gray-800">10:15 – 10:16</span>
+            </div>
+          </div>
+          <div>
+            <div class="text-[10px] font-semibold uppercase tracking-wider text-gray-500/60 mb-0.5">Modalidade</div>
+            <!-- ModalidadeBadge (SemanticBadge audiencia_modalidade=virtual → info) -->
+            <span class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-600 border border-blue-500/10">
+              <svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.934a.5.5 0 0 0-.777-.416L16 11"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+              Virtual
+            </span>
+          </div>
+          <div>
+            <div class="text-[10px] font-semibold uppercase tracking-wider text-gray-500/60 mb-0.5">Tribunal</div>
+            <span class="text-[13px] font-medium text-gray-800 truncate block">TRT da 20ª Região (SE)</span>
+          </div>
+          <div>
+            <div class="text-[10px] font-semibold uppercase tracking-wider text-gray-500/60 mb-0.5">Responsável</div>
+            <div class="flex items-center gap-1.5">
+              <div class="size-5 rounded-full bg-violet-500/15 flex items-center justify-center shrink-0">
+                <span class="text-[8px] font-semibold text-violet-600">VB</span>
+              </div>
+              <span class="text-[13px] font-medium text-gray-800 truncate">Viviane Batista</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="h-px bg-black/[0.05]"></div>
+
+        <!-- Processo -->
+        <div>
+          <div class="text-[10px] font-semibold uppercase tracking-wider text-gray-500/60 mb-1">Processo</div>
+          <div class="text-[13px] font-semibold tabular-nums tracking-tight text-gray-900">
+            0000201-89.2026.5.20.0004
+          </div>
+          <div class="text-[10px] text-gray-500/50 mt-0.5">
+            TRT da 20ª Região (SE) · 1º Grau
+          </div>
+          <!-- Partes (ParteBadge) -->
+          <div class="mt-2 space-y-1">
+            <div class="flex items-center text-[12px] font-medium text-gray-800 polo-ativo">
+              YURI SANTOS DE OLIVEIRA
+            </div>
+            <div class="flex items-center text-[12px] font-medium text-gray-800 polo-passivo">
+              MOTTU TECNOLOGIA LTDA
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="h-px bg-black/[0.05]"></div>
+
+        <!-- Local / Acesso -->
+        <div>
+          <div class="text-[10px] font-semibold uppercase tracking-wider text-gray-500/60 mb-1">Local / Acesso</div>
+          <div class="flex items-center gap-2 min-w-0">
+            <svg class="size-3 text-gray-400/50 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.934a.5.5 0 0 0-.777-.416L16 11"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+            <a href="#" class="text-[12px] text-violet-600 truncate hover:underline">
+              https://trt1-jus-br.zoom.us/my/vt02ni?pwd=a3dsNW9rak...
+            </a>
+            <button class="size-5 rounded flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-black/[0.04] shrink-0 transition-colors">
+              <svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="h-px bg-black/[0.05]"></div>
+
+        <!-- Indicadores (SemanticBadge audiencia_indicador) -->
+        <div>
+          <div class="text-[10px] font-semibold uppercase tracking-wider text-gray-500/60 mb-1">Indicadores</div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-600 border border-blue-500/10">
+              <svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+              Juízo Digital
+            </span>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="h-px bg-black/[0.05]"></div>
+
+        <!-- Preparo (PrepScore component) -->
+        <div>
+          <div class="text-[10px] font-semibold uppercase tracking-wider text-gray-500/60 mb-1.5">Preparo</div>
+          <div class="flex items-center gap-3">
+            <!-- Ring gauge -->
+            <div class="relative size-11 shrink-0">
+              <svg class="size-11 -rotate-90" viewBox="0 0 36 36">
+                <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(0,0,0,0.04)" stroke-width="3.5"/>
+                <circle cx="18" cy="18" r="14" fill="none" stroke="#ef4444" stroke-width="3.5" stroke-dasharray="22 66" stroke-linecap="round"/>
+              </svg>
+              <span class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-red-500 tabular-nums">25%</span>
+            </div>
+            <!-- Breakdown -->
+            <div class="space-y-1">
+              <div class="flex items-center gap-1.5">
+                <span class="size-[5px] rounded-full bg-gray-300 shrink-0"></span>
+                <span class="text-[11px] text-gray-500">Responsável designado</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="size-[5px] rounded-full bg-green-500 shrink-0"></span>
+                <span class="text-[11px] text-gray-500">Observações registradas</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="size-[5px] rounded-full bg-green-500 shrink-0"></span>
+                <span class="text-[11px] text-gray-500">Tipo definido</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="size-[5px] rounded-full bg-gray-300 shrink-0"></span>
+                <span class="text-[11px] text-gray-500">Documentos anexados</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="h-px bg-black/[0.05]"></div>
+
+        <!-- Histórico (AudienciaTimeline) -->
+        <div>
+          <div class="text-[10px] font-semibold uppercase tracking-wider text-gray-500/60 mb-1.5">Histórico</div>
+          <div class="relative">
+            <div class="space-y-0">
+              <!-- Entry 1 -->
+              <div class="flex gap-2.5 pb-4">
+                <div class="flex flex-col items-center">
+                  <div class="timeline-dot bg-violet-400"></div>
+                  <div class="timeline-line"></div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-[10px] text-gray-400/60 tabular-nums">15/04/2026 · 08:30</p>
+                  <p class="text-[11px] text-gray-600 mt-0.5">Audiência criada via sincronização PJe</p>
+                </div>
+              </div>
+              <!-- Entry 2 -->
+              <div class="flex gap-2.5">
+                <div class="flex flex-col items-center">
+                  <div class="timeline-dot bg-gray-300"></div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-[10px] text-gray-400/60 tabular-nums">14/04/2026 · 22:15</p>
+                  <p class="text-[11px] text-gray-600 mt-0.5">Status alterado: Designada → Marcada</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <div class="px-5 py-3 border-t border-black/[0.06] flex items-center justify-between shrink-0">
+      <button class="h-8 px-3.5 text-[12px] font-medium rounded-lg text-gray-500 hover:text-gray-700 hover:bg-black/[0.04] transition-colors">
+        Fechar
+      </button>
+      <button class="inline-flex items-center gap-1.5 h-8 px-4 text-[12px] font-medium rounded-lg bg-violet-600 text-white hover:bg-violet-700 transition-colors">
+        <svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+        Editar
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Nota de escala (fora do overlay) -->
+<div class="fixed bottom-4 right-4 z-60 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-sm border border-gray-200/50 text-[10px] text-gray-500 space-y-0.5">
+  <p><strong>Título:</strong> 15px Montserrat semibold</p>
+  <p><strong>Labels:</strong> 10px Inter semibold uppercase</p>
+  <p><strong>Valores:</strong> 13px Inter medium (sem mono)</p>
+  <p><strong>Processo:</strong> 13px Inter semibold tabular-nums</p>
+  <p><strong>Partes:</strong> 12px Inter medium</p>
+  <p><strong>Timeline:</strong> 10-11px Inter</p>
+  <p><strong>Padding:</strong> px-5 py-4 (20px/16px)</p>
+</div>
+
+</body>
+</html>

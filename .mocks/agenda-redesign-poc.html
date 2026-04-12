@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>POC: Agenda Redesign — Glass Briefing · ZattarOS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { DEFAULT: '#6366f1', 50:'#eef2ff', 100:'#e0e7ff', 200:'#c7d2fe', 300:'#a5b4fc', 400:'#818cf8', 500:'#6366f1', 600:'#4f46e5', 700:'#4338ca', 800:'#3730a3', 900:'#312e81' },
+            surface: { low: 'rgba(255,255,255,0.04)', mid: 'rgba(255,255,255,0.062)', high: 'rgba(255,255,255,0.10)' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Montserrat', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { font-family: 'Inter', system-ui, sans-serif; box-sizing: border-box; }
+
+    body {
+      background: #020617;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 20% 0%, rgba(59,130,246,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(99,102,241,0.07) 0%, transparent 60%);
+      min-height: 100vh;
+      color: #e2e8f0;
+    }
+
+    /* ── Glass Tokens ── */
+    .glass-panel {
+      background: rgba(255,255,255,0.062);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 1rem;
+    }
+    .glass-panel-depth2 {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 0.75rem;
+    }
+    .glass-kpi {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 0.875rem;
+      padding: 1rem 1.25rem;
+    }
+    .glass-row {
+      background: rgba(255,255,255,0.028);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 0.875rem;
+      transition: all 0.18s ease;
+      cursor: pointer;
+    }
+    .glass-row:hover {
+      background: rgba(255,255,255,0.055);
+      border-color: rgba(255,255,255,0.12);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    }
+    .glass-btn {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 0.625rem;
+      transition: background 0.15s ease, transform 0.1s ease;
+      cursor: pointer;
+    }
+    .glass-btn:hover { background: rgba(255,255,255,0.12); }
+    .glass-btn:active { transform: scale(0.96); background: rgba(255,255,255,0.05); }
+
+    .glass-badge {
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-radius: 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.55rem;
+    }
+
+    .glass-dialog-overlay {
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+    }
+    .glass-dialog {
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+    .glass-card-light {
+      background: rgba(248,250,252,0.8);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    /* ── Mini Calendar ── */
+    .mini-cal-day { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; transition: background 0.12s; }
+    .mini-cal-day:hover { background: rgba(255,255,255,0.08); }
+    .mini-cal-day.today { background: rgba(99,102,241,0.85); color: white; font-weight: 700; }
+    .mini-cal-day.selected { outline: 1.5px solid #6366f1; outline-offset: 1px; }
+    .mini-cal-day.has-event::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: #6366f1; }
+    .mini-cal-day { position: relative; }
+    .mini-cal-day.other-month { opacity: 0.3; }
+
+    /* ── Week Time Grid ── */
+    .time-slot { height: 60px; border-top: 1px solid rgba(255,255,255,0.04); position: relative; }
+    .time-label { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.3); font-family: 'JetBrains Mono', monospace; width: 48px; text-align: right; padding-right: 12px; flex-shrink: 0; }
+    .day-column { flex: 1; min-width: 0; position: relative; border-left: 1px solid rgba(255,255,255,0.04); }
+    .day-header { text-align: center; padding: 8px 4px; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.5); }
+    .day-header .day-num { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; margin: 2px auto 0; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); }
+    .day-header .day-num.today { background: #6366f1; color: white; }
+
+    /* ── Event Chips ── */
+    .event-chip {
+      position: absolute;
+      left: 3px; right: 3px;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 10.5px;
+      font-weight: 500;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.1s, box-shadow 0.15s;
+      z-index: 2;
+    }
+    .event-chip:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      z-index: 10;
+    }
+    .event-chip .chip-time { font-size: 9px; font-family: 'JetBrains Mono', monospace; opacity: 0.7; }
+
+    /* Event colors by source */
+    .ev-audiencia    { background: rgba(59,130,246,0.25); border-left: 3px solid #3b82f6; color: #93c5fd; }
+    .ev-expediente   { background: rgba(234,179,8,0.20); border-left: 3px solid #eab308; color: #fde68a; }
+    .ev-obrigacao    { background: rgba(249,115,22,0.20); border-left: 3px solid #f97316; color: #fdba74; }
+    .ev-pericia      { background: rgba(168,85,247,0.22); border-left: 3px solid #a855f7; color: #d8b4fe; }
+    .ev-pessoal      { background: rgba(99,102,241,0.20); border-left: 3px solid #6366f1; color: #a5b4fc; }
+    .ev-prazo        { background: rgba(239,68,68,0.20); border-left: 3px solid #ef4444; color: #fca5a5; }
+
+    /* ── Heatmap cells (Ano) ── */
+    .heat-cell { width: 10px; height: 10px; border-radius: 2px; cursor: pointer; transition: opacity 0.1s, transform 0.1s; flex-shrink: 0; position: relative; }
+    .heat-cell:hover { opacity: 0.85; transform: scale(1.3); z-index: 10; }
+    .heat-none   { background: rgba(255,255,255,0.05); }
+    .heat-low    { background: rgba(99,102,241,0.30); }
+    .heat-mid    { background: rgba(99,102,241,0.55); }
+    .heat-high   { background: rgba(99,102,241,0.85); }
+    .heat-today  { outline: 1.5px solid #6366f1; outline-offset: 1px; }
+
+    /* ── Current Time Line ── */
+    .now-line { position: absolute; left: 0; right: 0; height: 2px; background: #ef4444; z-index: 15; pointer-events: none; }
+    .now-line::before { content: ''; position: absolute; left: -4px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    /* ── View Toggle (tab pills) ── */
+    .view-toggle { display: flex; gap: 2px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 3px; }
+    .view-toggle button { padding: 6px 14px; font-size: 12px; font-weight: 500; border-radius: 8px; color: rgba(255,255,255,0.5); transition: all 0.15s; cursor: pointer; border: none; background: none; display: flex; align-items: center; gap: 5px; }
+    .view-toggle button:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.04); }
+    .view-toggle button.active { background: rgba(99,102,241,0.15); color: #a5b4fc; font-weight: 600; }
+
+    /* ── Source Filter Pills ── */
+    .source-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 500; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; transition: all 0.15s; background: transparent; color: rgba(255,255,255,0.45); }
+    .source-pill:hover { background: rgba(255,255,255,0.04); }
+    .source-pill.active { border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.08); color: #a5b4fc; }
+    .source-pill .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── Tooltip ── */
+    .tooltip { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: rgba(15,23,42,0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 8px; white-space: nowrap; font-size: 10px; color: #e2e8f0; z-index: 100; pointer-events: none; }
+    .tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: rgba(15,23,42,0.95); }
+
+    /* ── Icon Container ── */
+    .icon-container { display: flex; align-items: center; justify-content: center; border-radius: 0.625rem; flex-shrink: 0; }
+
+    /* ── Section Divider ── */
+    .section-divider { height: 1px; background: rgba(255,255,255,0.06); }
+
+    /* ── Progress Ring ── */
+    .progress-ring { transform: rotate(-90deg); }
+    .progress-ring-bg { fill: none; stroke: rgba(255,255,255,0.06); }
+    .progress-ring-fill { fill: none; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+
+    /* ── Month Grid (Mês) ── */
+    .month-day { min-height: 88px; padding: 8px; border-radius: 0.75rem; border: 1px solid transparent; transition: background 0.15s, border-color 0.15s; cursor: pointer; }
+    .month-day:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.08); }
+    .month-day.other { opacity: 0.35; }
+    .month-day .mn-num { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+    .month-day .mn-num.today { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(59,130,246,0.9); color: white; font-size: 11px; }
+    .month-day .mn-event { font-size: 9.5px; padding: 2px 6px; border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+
+    /* ── Animations ── */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-in { animation: fadeIn 0.3s ease-out; }
+
+    /* ── Badge Colors (light dialog) ── */
+    .badge-light { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 500; line-height: 1.6; }
+    .badge-green  { background: #dcfce7; color: #15803d; }
+    .badge-blue   { background: #dbeafe; color: #1d4ed8; }
+    .badge-red    { background: #fee2e2; color: #b91c1c; }
+    .badge-amber  { background: #fef3c7; color: #b45309; }
+    .badge-purple { background: #ede9fe; color: #7c3aed; }
+    .badge-slate  { background: #f1f5f9; color: #475569; }
+
+    /* ── Dialog buttons ── */
+    .btn-dialog-primary { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; background: #4f46e5; color: white; border: none; border-radius: 10px; font-size: 13.5px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+    .btn-dialog-primary:hover { background: #4338ca; }
+    .btn-dialog-outline { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; background: transparent; color: #374151; border: 1.5px solid rgba(0,0,0,0.14); border-radius: 10px; font-size: 13.5px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+    .btn-dialog-outline:hover { background: #f1f5f9; border-color: rgba(0,0,0,0.22); }
+
+    /* Meta labels (dialog) */
+    .meta-label { font-size: 11px; font-weight: 500; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+    .meta-value { font-size: 13.5px; font-weight: 500; color: #1e293b; display: flex; align-items: center; gap: 6px; }
+
+    /* ── Briefing view ── */
+    .briefing-card {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 0.875rem;
+      padding: 16px 20px;
+      transition: all 0.18s ease;
+      cursor: pointer;
+    }
+    .briefing-card:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    /* ── Prep status bar ── */
+    .prep-bar { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
+    .prep-bar-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+
+    /* Hide all views by default */
+    .view-content { display: none; }
+    .view-content.active { display: block; }
+
+    /* ── Lista (table) row cells ── */
+    .table-header { display: grid; grid-template-columns: 200px 1fr 120px 100px 90px 80px 40px; gap: 16px; padding: 10px 16px; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.35); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .table-row { display: grid; grid-template-columns: 200px 1fr 120px 100px 90px 80px 40px; gap: 16px; padding: 14px 16px; align-items: center; }
+  </style>
+</head>
+<body class="p-6 md:p-8">
+
+  <!-- ████████████████████████████████████████████████████
+       HEADER: Marca do Mock
+       ████████████████████████████████████████████████████ -->
+  <div class="max-w-[1400px] mx-auto mb-6">
+    <div class="flex items-center gap-3 mb-1">
+      <span class="text-[10px] font-semibold tracking-widest text-zinc-500 uppercase">POC Visual</span>
+      <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
+      <span class="text-[10px] text-zinc-600">Aprovacao de Design</span>
+    </div>
+    <h1 class="text-2xl font-heading font-bold text-white tracking-tight">Agenda — Redesign Completo</h1>
+    <p class="text-xs text-zinc-500 mt-1">Design System: Glass Briefing · ZattarOS · Synthropic</p>
+  </div>
+
+  <!-- ████████████████████████████████████████████████████
+       MODULE SHELL
+       ████████████████████████████████████████████████████ -->
+  <div class="max-w-[1400px] mx-auto space-y-4 animate-in">
+
+    <!-- ── ROW 1: Title + View Toggle + CTA ── -->
+    <div class="flex items-center justify-between flex-wrap gap-4">
+      <div>
+        <h2 class="text-xl font-heading font-bold text-white tracking-tight">Agenda</h2>
+        <p class="text-xs text-zinc-500 mt-0.5">Abril 2026 · 23 eventos</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <!-- View Toggle -->
+        <div class="view-toggle" id="viewToggle">
+          <button class="active" data-view="semana" onclick="switchView('semana')">
+            <i data-lucide="columns-3" class="w-3.5 h-3.5"></i> Semana
+          </button>
+          <button data-view="mes" onclick="switchView('mes')">
+            <i data-lucide="grid-3x3" class="w-3.5 h-3.5"></i> Mes
+          </button>
+          <button data-view="ano" onclick="switchView('ano')">
+            <i data-lucide="calendar-range" class="w-3.5 h-3.5"></i> Ano
+          </button>
+          <button data-view="lista" onclick="switchView('lista')">
+            <i data-lucide="list" class="w-3.5 h-3.5"></i> Lista
+          </button>
+          <button data-view="briefing" onclick="switchView('briefing')">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Briefing
+          </button>
+        </div>
+        <!-- New Event CTA -->
+        <button class="glass-btn flex items-center gap-2 px-4 py-2 text-xs font-semibold text-primary-300 hover:text-white" onclick="openDialog()">
+          <i data-lucide="plus" class="w-4 h-4"></i> Novo Evento
+        </button>
+      </div>
+    </div>
+
+    <!-- ── ROW 2: KPI Strip (padrao PulseStrip/MissionKpiStrip) ── -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <!-- KPI 1: Eventos -->
+      <div class="glass-panel p-4">
+        <div class="flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <p class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Eventos</p>
+            <div class="flex items-baseline gap-1.5 mt-1">
+              <p class="text-xl font-bold text-white tabular-nums leading-none">23</p>
+              <span class="text-[10px] text-zinc-600">total</span>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-lg bg-primary-500/8 flex items-center justify-center shrink-0">
+            <i data-lucide="calendar-days" class="w-4 h-4 text-primary-400 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+      <!-- KPI 2: Audiencias Hoje -->
+      <div class="glass-panel p-4">
+        <div class="flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <p class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Audiencias Hoje</p>
+            <div class="flex items-baseline gap-1.5 mt-1">
+              <p class="text-xl font-bold text-white tabular-nums leading-none">2</p>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-lg bg-blue-500/8 flex items-center justify-center shrink-0">
+            <i data-lucide="gavel" class="w-4 h-4 text-blue-400 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+      <!-- KPI 3: Prazos 7d -->
+      <div class="glass-panel p-4">
+        <div class="flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <p class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Prazos 7d</p>
+            <div class="flex items-baseline gap-1.5 mt-1">
+              <p class="text-xl font-bold text-white tabular-nums leading-none">5</p>
+              <span class="text-[10px] text-zinc-600">fatais</span>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-lg bg-red-500/8 flex items-center justify-center shrink-0">
+            <i data-lucide="alarm-clock" class="w-4 h-4 text-red-400 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+      <!-- KPI 4: Horas Ocupadas -->
+      <div class="glass-panel p-4">
+        <div class="flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <p class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Horas Ocupadas</p>
+            <div class="flex items-baseline gap-1.5 mt-1">
+              <p class="text-xl font-bold text-white tabular-nums leading-none">18</p>
+              <span class="text-[10px] text-zinc-600">h</span>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-lg bg-amber-500/8 flex items-center justify-center shrink-0">
+            <i data-lucide="clock" class="w-4 h-4 text-amber-400 opacity-50"></i>
+          </div>
+        </div>
+        <!-- Progress bar -->
+        <div class="mt-2.5 flex items-center gap-2">
+          <div class="flex-1 h-1 rounded-full bg-white/[0.06] overflow-hidden">
+            <div class="h-full rounded-full bg-amber-500/25" style="width: 100%"></div>
+          </div>
+          <span class="text-[9px] tabular-nums text-zinc-600 shrink-0">100%</span>
+        </div>
+      </div>
+      <!-- KPI 5: Preparo -->
+      <div class="glass-panel p-4">
+        <div class="flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <p class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Preparo</p>
+            <div class="flex items-baseline gap-1.5 mt-1">
+              <p class="text-xl font-bold text-white tabular-nums leading-none">60%</p>
+              <span class="text-[10px] text-zinc-600">Bom</span>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-lg bg-primary-500/8 flex items-center justify-center shrink-0">
+            <i data-lucide="shield-check" class="w-4 h-4 text-primary-400 opacity-50"></i>
+          </div>
+        </div>
+        <!-- Progress bar -->
+        <div class="mt-2.5 flex items-center gap-2">
+          <div class="flex-1 h-1 rounded-full bg-white/[0.06] overflow-hidden">
+            <div class="h-full rounded-full bg-amber-500/30" style="width: 60%"></div>
+          </div>
+          <span class="text-[9px] tabular-nums text-zinc-600 shrink-0">60%</span>
+        </div>
+      </div>
+      <!-- KPI 6: Conflitos -->
+      <div class="glass-panel p-4">
+        <div class="flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <p class="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Conflitos</p>
+            <div class="flex items-baseline gap-1.5 mt-1">
+              <p class="text-xl font-bold text-amber-400 tabular-nums leading-none">1</p>
+            </div>
+          </div>
+          <div class="w-8 h-8 rounded-lg bg-amber-500/8 flex items-center justify-center shrink-0">
+            <i data-lucide="triangle-alert" class="w-4 h-4 text-amber-400 opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ROW 3: Filter Bar ── -->
+    <div class="flex items-center gap-3 flex-wrap">
+      <!-- Search Input -->
+      <div class="relative">
+        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500"></i>
+        <input type="text" placeholder="Buscar eventos..." class="bg-white/[0.04] border border-white/[0.08] rounded-lg pl-9 pr-3 py-2 text-xs text-zinc-300 placeholder-zinc-600 w-56 focus:outline-none focus:ring-1 focus:ring-primary-500/30 focus:border-primary-500/20 transition-all" />
+      </div>
+      <!-- Date Navigation -->
+      <div class="flex items-center gap-1">
+        <button class="glass-btn p-1.5" title="Anterior"><i data-lucide="chevron-left" class="w-3.5 h-3.5 text-zinc-400"></i></button>
+        <button class="glass-btn px-3 py-1.5 text-xs font-medium text-zinc-300">Hoje</button>
+        <button class="glass-btn p-1.5" title="Proximo"><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-zinc-400"></i></button>
+      </div>
+      <!-- Separator -->
+      <div class="w-px h-5 bg-white/[0.06]"></div>
+      <!-- Source Filter Pills -->
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <button class="source-pill active"><span class="dot" style="background:#6366f1"></span> Todos</button>
+        <button class="source-pill"><span class="dot" style="background:#3b82f6"></span> Audiencias</button>
+        <button class="source-pill"><span class="dot" style="background:#eab308"></span> Expedientes</button>
+        <button class="source-pill"><span class="dot" style="background:#f97316"></span> Obrigacoes</button>
+        <button class="source-pill"><span class="dot" style="background:#a855f7"></span> Pericias</button>
+        <button class="source-pill"><span class="dot" style="background:#ef4444"></span> Prazos</button>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████████████████████████████
+         VIEW: SEMANA (Default)
+         ████████████████████████████████████████████████████ -->
+    <div id="view-semana" class="view-content active">
+      <div class="flex gap-4">
+        <!-- Left Sidebar: Mini Calendar + Filtros + Resumo -->
+        <div class="w-56 flex-shrink-0 space-y-4 hidden xl:block">
+          <!-- Mini Calendar -->
+          <div class="glass-panel p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-semibold text-zinc-300">Abril 2026</span>
+              <div class="flex gap-1">
+                <button class="w-5 h-5 flex items-center justify-center rounded hover:bg-white/[0.06] text-zinc-500"><i data-lucide="chevron-left" class="w-3 h-3"></i></button>
+                <button class="w-5 h-5 flex items-center justify-center rounded hover:bg-white/[0.06] text-zinc-500"><i data-lucide="chevron-right" class="w-3 h-3"></i></button>
+              </div>
+            </div>
+            <!-- Week headers -->
+            <div class="grid grid-cols-7 gap-0 mb-1">
+              <div class="mini-cal-day text-[9px] font-semibold text-zinc-600 cursor-default">D</div>
+              <div class="mini-cal-day text-[9px] font-semibold text-zinc-600 cursor-default">S</div>
+              <div class="mini-cal-day text-[9px] font-semibold text-zinc-600 cursor-default">T</div>
+              <div class="mini-cal-day text-[9px] font-semibold text-zinc-600 cursor-default">Q</div>
+              <div class="mini-cal-day text-[9px] font-semibold text-zinc-600 cursor-default">Q</div>
+              <div class="mini-cal-day text-[9px] font-semibold text-zinc-600 cursor-default">S</div>
+              <div class="mini-cal-day text-[9px] font-semibold text-zinc-600 cursor-default">S</div>
+            </div>
+            <!-- Week 1 -->
+            <div class="grid grid-cols-7 gap-0">
+              <div class="mini-cal-day other-month text-zinc-600">29</div>
+              <div class="mini-cal-day other-month text-zinc-600">30</div>
+              <div class="mini-cal-day other-month text-zinc-600">31</div>
+              <div class="mini-cal-day text-zinc-400">1</div>
+              <div class="mini-cal-day text-zinc-400">2</div>
+              <div class="mini-cal-day text-zinc-400">3</div>
+              <div class="mini-cal-day text-zinc-400">4</div>
+            </div>
+            <!-- Week 2 -->
+            <div class="grid grid-cols-7 gap-0">
+              <div class="mini-cal-day text-zinc-400">5</div>
+              <div class="mini-cal-day text-zinc-400 has-event">6</div>
+              <div class="mini-cal-day text-zinc-400 has-event">7</div>
+              <div class="mini-cal-day text-zinc-400">8</div>
+              <div class="mini-cal-day text-zinc-400 has-event">9</div>
+              <div class="mini-cal-day text-zinc-400">10</div>
+              <div class="mini-cal-day text-zinc-400">11</div>
+            </div>
+            <!-- Week 3 (current) -->
+            <div class="grid grid-cols-7 gap-0">
+              <div class="mini-cal-day text-zinc-400 today">12</div>
+              <div class="mini-cal-day text-zinc-400 has-event selected">13</div>
+              <div class="mini-cal-day text-zinc-400 has-event">14</div>
+              <div class="mini-cal-day text-zinc-400 has-event">15</div>
+              <div class="mini-cal-day text-zinc-400 has-event">16</div>
+              <div class="mini-cal-day text-zinc-400">17</div>
+              <div class="mini-cal-day text-zinc-400">18</div>
+            </div>
+            <!-- Week 4 -->
+            <div class="grid grid-cols-7 gap-0">
+              <div class="mini-cal-day text-zinc-400">19</div>
+              <div class="mini-cal-day text-zinc-400 has-event">20</div>
+              <div class="mini-cal-day text-zinc-400">21</div>
+              <div class="mini-cal-day text-zinc-400 has-event">22</div>
+              <div class="mini-cal-day text-zinc-400">23</div>
+              <div class="mini-cal-day text-zinc-400">24</div>
+              <div class="mini-cal-day text-zinc-400">25</div>
+            </div>
+            <!-- Week 5 -->
+            <div class="grid grid-cols-7 gap-0">
+              <div class="mini-cal-day text-zinc-400">26</div>
+              <div class="mini-cal-day text-zinc-400">27</div>
+              <div class="mini-cal-day text-zinc-400 has-event">28</div>
+              <div class="mini-cal-day text-zinc-400">29</div>
+              <div class="mini-cal-day text-zinc-400">30</div>
+              <div class="mini-cal-day other-month text-zinc-600">1</div>
+              <div class="mini-cal-day other-month text-zinc-600">2</div>
+            </div>
+          </div>
+
+          <!-- Upcoming Deadlines -->
+          <div class="glass-panel p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="alarm-clock" class="w-3.5 h-3.5 text-red-400"></i>
+              <span class="text-xs font-semibold text-zinc-300">Prazos Proximos</span>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 p-2 rounded-lg bg-red-500/[0.06] border border-red-500/10">
+                <div class="w-1 h-8 rounded-full bg-red-500 flex-shrink-0"></div>
+                <div class="min-w-0">
+                  <div class="text-[10px] font-mono font-semibold text-red-400">AMANHA</div>
+                  <div class="text-[11px] text-zinc-300 truncate">Contestacao - Proc. 0012345</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 p-2 rounded-lg bg-amber-500/[0.04] border border-amber-500/8">
+                <div class="w-1 h-8 rounded-full bg-amber-500 flex-shrink-0"></div>
+                <div class="min-w-0">
+                  <div class="text-[10px] font-mono font-semibold text-amber-400">3 DIAS</div>
+                  <div class="text-[11px] text-zinc-300 truncate">Recurso Ordinario - Proc. 0067890</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 p-2 rounded-lg bg-amber-500/[0.04] border border-amber-500/8">
+                <div class="w-1 h-8 rounded-full bg-amber-400 flex-shrink-0"></div>
+                <div class="min-w-0">
+                  <div class="text-[10px] font-mono font-semibold text-amber-300">5 DIAS</div>
+                  <div class="text-[11px] text-zinc-300 truncate">Juntada de Documentos - 0045678</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendarios (Sources Legend) -->
+          <div class="glass-panel p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="layers" class="w-3.5 h-3.5 text-zinc-400"></i>
+              <span class="text-xs font-semibold text-zinc-300">Calendarios</span>
+            </div>
+            <div class="space-y-1.5">
+              <label class="flex items-center gap-2.5 cursor-pointer group">
+                <div class="w-3 h-3 rounded border-2 border-blue-400 bg-blue-400/20 flex items-center justify-center"><i data-lucide="check" class="w-2 h-2 text-blue-400"></i></div>
+                <span class="text-[11px] text-zinc-400 group-hover:text-zinc-300">Audiencias</span>
+                <span class="text-[9px] ml-auto font-mono text-zinc-600">8</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-pointer group">
+                <div class="w-3 h-3 rounded border-2 border-amber-400 bg-amber-400/20 flex items-center justify-center"><i data-lucide="check" class="w-2 h-2 text-amber-400"></i></div>
+                <span class="text-[11px] text-zinc-400 group-hover:text-zinc-300">Expedientes</span>
+                <span class="text-[9px] ml-auto font-mono text-zinc-600">5</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-pointer group">
+                <div class="w-3 h-3 rounded border-2 border-orange-400 bg-orange-400/20 flex items-center justify-center"><i data-lucide="check" class="w-2 h-2 text-orange-400"></i></div>
+                <span class="text-[11px] text-zinc-400 group-hover:text-zinc-300">Obrigacoes</span>
+                <span class="text-[9px] ml-auto font-mono text-zinc-600">3</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-pointer group">
+                <div class="w-3 h-3 rounded border-2 border-purple-400 bg-purple-400/20 flex items-center justify-center"><i data-lucide="check" class="w-2 h-2 text-purple-400"></i></div>
+                <span class="text-[11px] text-zinc-400 group-hover:text-zinc-300">Pericias</span>
+                <span class="text-[9px] ml-auto font-mono text-zinc-600">2</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-pointer group">
+                <div class="w-3 h-3 rounded border-2 border-red-400 bg-red-400/20 flex items-center justify-center"><i data-lucide="check" class="w-2 h-2 text-red-400"></i></div>
+                <span class="text-[11px] text-zinc-400 group-hover:text-zinc-300">Prazos</span>
+                <span class="text-[9px] ml-auto font-mono text-zinc-600">4</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-pointer group">
+                <div class="w-3 h-3 rounded border-2 border-primary-400 bg-primary-400/20 flex items-center justify-center"><i data-lucide="check" class="w-2 h-2 text-primary-400"></i></div>
+                <span class="text-[11px] text-zinc-400 group-hover:text-zinc-300">Pessoal</span>
+                <span class="text-[9px] ml-auto font-mono text-zinc-600">1</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content: Week Time Grid -->
+        <div class="flex-1 glass-panel overflow-hidden">
+          <!-- All-day row -->
+          <div class="flex border-b border-white/[0.06]">
+            <div class="time-label flex items-center justify-end text-[9px] pr-3" style="height:40px;">DIA TODO</div>
+            <!-- Day headers -->
+            <div class="flex flex-1">
+              <div class="day-column">
+                <div class="flex items-center justify-center gap-1 py-2">
+                  <span class="text-[10px] text-zinc-500">DOM</span>
+                  <span class="day-num text-xs font-semibold text-zinc-500">12</span>
+                </div>
+              </div>
+              <div class="day-column">
+                <div class="flex items-center justify-center gap-1 py-2">
+                  <span class="text-[10px] text-zinc-500">SEG</span>
+                  <span class="day-num today text-xs">13</span>
+                </div>
+              </div>
+              <div class="day-column">
+                <div class="flex items-center justify-center gap-1 py-2">
+                  <span class="text-[10px] text-zinc-500">TER</span>
+                  <span class="day-num text-xs font-semibold text-zinc-400">14</span>
+                </div>
+              </div>
+              <div class="day-column">
+                <div class="flex items-center justify-center gap-1 py-2">
+                  <span class="text-[10px] text-zinc-500">QUA</span>
+                  <span class="day-num text-xs font-semibold text-zinc-400">15</span>
+                </div>
+              </div>
+              <div class="day-column">
+                <div class="flex items-center justify-center gap-1 py-2">
+                  <span class="text-[10px] text-zinc-500">QUI</span>
+                  <span class="day-num text-xs font-semibold text-zinc-400">16</span>
+                </div>
+              </div>
+              <div class="day-column">
+                <div class="flex items-center justify-center gap-1 py-2">
+                  <span class="text-[10px] text-zinc-500">SEX</span>
+                  <span class="day-num text-xs font-semibold text-zinc-400">17</span>
+                </div>
+              </div>
+              <div class="day-column">
+                <div class="flex items-center justify-center gap-1 py-2">
+                  <span class="text-[10px] text-zinc-500">SAB</span>
+                  <span class="day-num text-xs font-semibold text-zinc-500">18</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Time Grid (scrollable) -->
+          <div class="overflow-y-auto" style="max-height: 560px;">
+            <!-- 07:00 -->
+            <div class="flex">
+              <div class="time-label flex items-start pt-1">07:00</div>
+              <div class="flex flex-1">
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+              </div>
+            </div>
+            <!-- 08:00 -->
+            <div class="flex">
+              <div class="time-label flex items-start pt-1">08:00</div>
+              <div class="flex flex-1">
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot relative">
+                  <!-- Prep Focus Block -->
+                  <div class="absolute inset-x-1 top-0 bottom-0 rounded-md bg-primary-500/[0.06] border border-primary-500/10 flex items-center justify-center">
+                    <span class="text-[9px] text-primary-400/60 font-medium">Foco: Prep</span>
+                  </div>
+                </div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+              </div>
+            </div>
+            <!-- 09:00 -->
+            <div class="flex">
+              <div class="time-label flex items-start pt-1">09:00</div>
+              <div class="flex flex-1">
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot relative">
+                  <!-- Audiencia event -->
+                  <div class="event-chip ev-audiencia" style="top:4px; height:116px;" onclick="openDialog()">
+                    <div class="chip-time">09:30</div>
+                    <div class="font-semibold text-[11px] mt-0.5">Aud. Instrucao</div>
+                    <div class="text-[9px] opacity-60 mt-0.5">TRT1 · Virtual</div>
+                    <div class="text-[9px] opacity-50 mt-0.5 font-mono">0012345-XX</div>
+                  </div>
+                </div>
+                <div class="day-column time-slot relative">
+                  <div class="event-chip ev-expediente" style="top:0; height:56px;">
+                    <div class="chip-time">09:00</div>
+                    <div class="font-semibold text-[11px]">Publicacao DJE</div>
+                  </div>
+                </div>
+                <div class="day-column time-slot relative">
+                  <!-- Audiencia Wed -->
+                  <div class="event-chip ev-audiencia" style="top:4px; height:116px;" onclick="openDialog()">
+                    <div class="chip-time">09:30</div>
+                    <div class="font-semibold text-[11px] mt-0.5">Aud. Conciliacao</div>
+                    <div class="text-[9px] opacity-60 mt-0.5">TRT2 · Presencial</div>
+                  </div>
+                </div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot relative">
+                  <div class="event-chip ev-pericia" style="top:0; height:176px;">
+                    <div class="chip-time">09:00</div>
+                    <div class="font-semibold text-[11px] mt-0.5">Pericia Medica</div>
+                    <div class="text-[9px] opacity-60 mt-0.5">Dr. Carlos Lima</div>
+                  </div>
+                </div>
+                <div class="day-column time-slot"></div>
+              </div>
+            </div>
+            <!-- 10:00 -->
+            <div class="flex">
+              <div class="time-label flex items-start pt-1">10:00</div>
+              <div class="flex flex-1">
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot relative">
+                  <!-- Now line (10:25 = ~42% of the hour) -->
+                  <div class="now-line" style="top: 25px;"></div>
+                </div>
+                <div class="day-column time-slot relative">
+                  <div class="event-chip ev-pessoal" style="top:0; height:56px;">
+                    <div class="chip-time">10:00</div>
+                    <div class="font-semibold text-[11px]">Reuniao Equipe</div>
+                  </div>
+                </div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot relative">
+                  <div class="event-chip ev-obrigacao" style="top:0; height:56px;">
+                    <div class="chip-time">10:00</div>
+                    <div class="font-semibold text-[11px]">Pagamento FGTS</div>
+                  </div>
+                </div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+              </div>
+            </div>
+            <!-- 11:00 -->
+            <div class="flex">
+              <div class="time-label flex items-start pt-1">11:00</div>
+              <div class="flex flex-1">
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+              </div>
+            </div>
+            <!-- 12:00 (Lunch) -->
+            <div class="flex">
+              <div class="time-label flex items-start pt-1">12:00</div>
+              <div class="flex flex-1">
+                <div class="day-column time-slot relative">
+                  <div class="absolute inset-x-0 top-0 h-[90px] bg-white/[0.015] flex items-center justify-center"><span class="text-[9px] text-zinc-700">Almoco</span></div>
+                </div>
+                <div class="day-column time-slot relative">
+                  <div class="absolute inset-x-0 top-0 h-[90px] bg-white/[0.015]"></div>
+                </div>
+                <div class="day-column time-slot relative">
+                  <div class="absolute inset-x-0 top-0 h-[90px] bg-white/[0.015]"></div>
+                </div>
+                <div class="day-column time-slot relative">
+                  <div class="absolute inset-x-0 top-0 h-[90px] bg-white/[0.015]"></div>
+                </div>
+                <div class="day-column time-slot relative">
+                  <div class="absolute inset-x-0 top-0 h-[90px] bg-white/[0.015]"></div>
+                </div>
+                <div class="day-column time-slot relative">
+                  <div class="absolute inset-x-0 top-0 h-[90px] bg-white/[0.015]"></div>
+                </div>
+                <div class="day-column time-slot relative">
+                  <div class="absolute inset-x-0 top-0 h-[90px] bg-white/[0.015]"></div>
+                </div>
+              </div>
+            </div>
+            <!-- 13:00 -->
+            <div class="flex">
+              <div class="time-label flex items-start pt-1">13:00</div>
+              <div class="flex flex-1">
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot relative">
+                  <!-- Conflict indicator -->
+                  <div class="absolute -top-2 right-2 z-20 flex items-center gap-1 px-1.5 py-0.5 rounded bg-orange-500/20 border border-orange-500/30">
+                    <i data-lucide="triangle-alert" class="w-2.5 h-2.5 text-orange-400"></i>
+                    <span class="text-[8px] font-bold text-orange-400">CONFLITO</span>
+                  </div>
+                  <div class="event-chip ev-audiencia" style="top:10px; height:116px; left:3px; right:50%;" onclick="openDialog()">
+                    <div class="chip-time">13:30</div>
+                    <div class="font-semibold text-[11px]">Aud. Julg.</div>
+                    <div class="text-[9px] opacity-60">TRT1</div>
+                  </div>
+                  <div class="event-chip ev-pessoal" style="top:10px; height:56px; left:50%; right:3px;">
+                    <div class="chip-time">13:30</div>
+                    <div class="font-semibold text-[11px]">Reuniao</div>
+                  </div>
+                </div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+              </div>
+            </div>
+            <!-- 14:00 -->
+            <div class="flex">
+              <div class="time-label flex items-start pt-1">14:00</div>
+              <div class="flex flex-1">
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot relative">
+                  <div class="event-chip ev-prazo" style="top:0; height:56px;">
+                    <div class="chip-time">14:00</div>
+                    <div class="font-semibold text-[11px]">Prazo: Recurso</div>
+                    <div class="text-[9px] opacity-60 font-mono">0067890-XX</div>
+                  </div>
+                </div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot relative">
+                  <div class="event-chip ev-expediente" style="top:0; height:56px;">
+                    <div class="chip-time">14:00</div>
+                    <div class="font-semibold text-[11px]">Despacho</div>
+                  </div>
+                </div>
+                <div class="day-column time-slot relative">
+                  <div class="event-chip ev-audiencia" style="top:0; height:116px;" onclick="openDialog()">
+                    <div class="chip-time">14:00</div>
+                    <div class="font-semibold text-[11px] mt-0.5">Aud. Instrucao</div>
+                    <div class="text-[9px] opacity-60 mt-0.5">TRT5 · Virtual</div>
+                  </div>
+                </div>
+                <div class="day-column time-slot"></div>
+              </div>
+            </div>
+            <!-- 15:00 -->
+            <div class="flex">
+              <div class="time-label flex items-start pt-1">15:00</div>
+              <div class="flex flex-1">
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot relative">
+                  <div class="event-chip ev-pessoal" style="top:0; height:56px;">
+                    <div class="chip-time">15:00</div>
+                    <div class="font-semibold text-[11px]">Atend. Cliente</div>
+                  </div>
+                </div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+              </div>
+            </div>
+            <!-- 16:00 -->
+            <div class="flex">
+              <div class="time-label flex items-start pt-1">16:00</div>
+              <div class="flex flex-1">
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+              </div>
+            </div>
+            <!-- 17:00 -->
+            <div class="flex">
+              <div class="time-label flex items-start pt-1">17:00</div>
+              <div class="flex flex-1">
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot relative">
+                  <div class="absolute inset-x-1 top-0 bottom-0 rounded-md bg-green-500/[0.04] border border-green-500/8 flex items-center justify-center">
+                    <span class="text-[9px] text-green-400/50 font-medium">Foco Livre</span>
+                  </div>
+                </div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+              </div>
+            </div>
+            <!-- 18:00 -->
+            <div class="flex">
+              <div class="time-label flex items-start pt-1">18:00</div>
+              <div class="flex flex-1">
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+                <div class="day-column time-slot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████████████████████████████
+         VIEW: MES
+         ████████████████████████████████████████████████████ -->
+    <div id="view-mes" class="view-content">
+      <div class="glass-panel p-5">
+        <!-- Month header -->
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="icon-container w-8 h-8 bg-primary-500/10">
+              <i data-lucide="calendar" class="w-4 h-4 text-primary-400"></i>
+            </div>
+            <span class="text-sm font-semibold text-white">Abril 2026</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button class="glass-btn p-1.5"><i data-lucide="chevron-left" class="w-3.5 h-3.5 text-zinc-400"></i></button>
+            <button class="glass-btn px-3 py-1.5 text-xs text-zinc-300">Hoje</button>
+            <button class="glass-btn p-1.5"><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-zinc-400"></i></button>
+          </div>
+        </div>
+        <!-- Weekday headers -->
+        <div class="grid grid-cols-7 gap-1 mb-1">
+          <div class="text-center text-[10px] font-semibold text-zinc-600 uppercase tracking-wider py-2">Dom</div>
+          <div class="text-center text-[10px] font-semibold text-zinc-600 uppercase tracking-wider py-2">Seg</div>
+          <div class="text-center text-[10px] font-semibold text-zinc-600 uppercase tracking-wider py-2">Ter</div>
+          <div class="text-center text-[10px] font-semibold text-zinc-600 uppercase tracking-wider py-2">Qua</div>
+          <div class="text-center text-[10px] font-semibold text-zinc-600 uppercase tracking-wider py-2">Qui</div>
+          <div class="text-center text-[10px] font-semibold text-zinc-600 uppercase tracking-wider py-2">Sex</div>
+          <div class="text-center text-[10px] font-semibold text-zinc-600 uppercase tracking-wider py-2">Sab</div>
+        </div>
+        <!-- Month grid -->
+        <div class="grid grid-cols-7 gap-1">
+          <!-- Week 1 -->
+          <div class="month-day other"><span class="mn-num">29</span></div>
+          <div class="month-day other"><span class="mn-num">30</span></div>
+          <div class="month-day other"><span class="mn-num">31</span></div>
+          <div class="month-day"><span class="mn-num">1</span></div>
+          <div class="month-day"><span class="mn-num">2</span></div>
+          <div class="month-day"><span class="mn-num">3</span></div>
+          <div class="month-day"><span class="mn-num">4</span></div>
+          <!-- Week 2 -->
+          <div class="month-day"><span class="mn-num">5</span></div>
+          <div class="month-day">
+            <span class="mn-num">6</span>
+            <div class="mn-event ev-audiencia">09:30 Aud. Instrucao</div>
+          </div>
+          <div class="month-day">
+            <span class="mn-num">7</span>
+            <div class="mn-event ev-expediente">10:00 Publicacao</div>
+            <div class="mn-event ev-prazo">14:00 Prazo Recurso</div>
+          </div>
+          <div class="month-day"><span class="mn-num">8</span></div>
+          <div class="month-day">
+            <span class="mn-num">9</span>
+            <div class="mn-event ev-obrigacao">FGTS Comp.</div>
+          </div>
+          <div class="month-day"><span class="mn-num">10</span></div>
+          <div class="month-day"><span class="mn-num">11</span></div>
+          <!-- Week 3 -->
+          <div class="month-day">
+            <span class="mn-num today">12</span>
+          </div>
+          <div class="month-day">
+            <span class="mn-num">13</span>
+            <div class="mn-event ev-audiencia">09:30 Aud. Instrucao</div>
+            <div class="mn-event ev-prazo">14:00 Prazo Recurso</div>
+          </div>
+          <div class="month-day">
+            <span class="mn-num">14</span>
+            <div class="mn-event ev-expediente">09:00 Public. DJE</div>
+            <div class="mn-event ev-pessoal">10:00 Reuniao</div>
+            <div class="mn-event ev-pessoal">15:00 Atend. Cliente</div>
+          </div>
+          <div class="month-day">
+            <span class="mn-num">15</span>
+            <div class="mn-event ev-audiencia">09:30 Aud. Concil.</div>
+            <div class="mn-event ev-audiencia" style="background:rgba(249,115,22,0.15); border-left-color:#f97316; color:#fdba74;">13:30 Aud. Julg. <span class="text-[8px] text-orange-400">!</span></div>
+          </div>
+          <div class="month-day">
+            <span class="mn-num">16</span>
+            <div class="mn-event ev-obrigacao">10:00 FGTS</div>
+            <div class="mn-event ev-expediente">14:00 Despacho</div>
+          </div>
+          <div class="month-day">
+            <span class="mn-num">17</span>
+            <div class="mn-event ev-pericia">09:00 Per. Medica</div>
+            <div class="mn-event ev-audiencia">14:00 Aud. Instrucao</div>
+          </div>
+          <div class="month-day"><span class="mn-num">18</span></div>
+          <!-- Week 4 -->
+          <div class="month-day"><span class="mn-num">19</span></div>
+          <div class="month-day">
+            <span class="mn-num">20</span>
+            <div class="mn-event ev-audiencia">10:00 Aud. Instrucao</div>
+          </div>
+          <div class="month-day"><span class="mn-num">21</span>
+            <div class="mn-event" style="background:rgba(239,68,68,0.12); color:#fca5a5; border-left: 2px solid #ef4444;">Feriado: Tiradentes</div>
+          </div>
+          <div class="month-day">
+            <span class="mn-num">22</span>
+            <div class="mn-event ev-expediente">09:00 Intimacao</div>
+          </div>
+          <div class="month-day"><span class="mn-num">23</span></div>
+          <div class="month-day"><span class="mn-num">24</span></div>
+          <div class="month-day"><span class="mn-num">25</span></div>
+          <!-- Week 5 -->
+          <div class="month-day"><span class="mn-num">26</span></div>
+          <div class="month-day"><span class="mn-num">27</span></div>
+          <div class="month-day">
+            <span class="mn-num">28</span>
+            <div class="mn-event ev-audiencia">10:00 Aud. Concil.</div>
+          </div>
+          <div class="month-day"><span class="mn-num">29</span></div>
+          <div class="month-day"><span class="mn-num">30</span></div>
+          <div class="month-day other"><span class="mn-num">1</span></div>
+          <div class="month-day other"><span class="mn-num">2</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████████████████████████████
+         VIEW: ANO (Heatmap)
+         ████████████████████████████████████████████████████ -->
+    <div id="view-ano" class="view-content">
+      <div class="glass-panel p-5">
+        <div class="flex items-center justify-between mb-5">
+          <div class="flex items-center gap-3">
+            <div class="icon-container w-8 h-8 bg-primary-500/10"><i data-lucide="calendar-range" class="w-4 h-4 text-primary-400"></i></div>
+            <span class="text-sm font-semibold text-white">2026</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 text-[10px] text-zinc-500">
+              <span>Menos</span>
+              <div class="flex gap-0.5">
+                <div class="w-2.5 h-2.5 rounded-sm heat-none"></div>
+                <div class="w-2.5 h-2.5 rounded-sm heat-low"></div>
+                <div class="w-2.5 h-2.5 rounded-sm heat-mid"></div>
+                <div class="w-2.5 h-2.5 rounded-sm heat-high"></div>
+              </div>
+              <span>Mais</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat summary -->
+        <div class="flex gap-4 mb-6">
+          <div class="glass-kpi flex-1 text-center">
+            <div class="text-2xl font-bold text-white font-mono">156</div>
+            <div class="text-[10px] text-zinc-500 mt-0.5">Total Eventos</div>
+          </div>
+          <div class="glass-kpi flex-1 text-center">
+            <div class="text-2xl font-bold text-blue-400 font-mono">64</div>
+            <div class="text-[10px] text-zinc-500 mt-0.5">Audiencias</div>
+          </div>
+          <div class="glass-kpi flex-1 text-center">
+            <div class="text-2xl font-bold text-amber-400 font-mono">38</div>
+            <div class="text-[10px] text-zinc-500 mt-0.5">Expedientes</div>
+          </div>
+          <div class="glass-kpi flex-1 text-center">
+            <div class="text-2xl font-bold text-red-400 font-mono">12</div>
+            <div class="text-[10px] text-zinc-500 mt-0.5">Prazos Criticos</div>
+          </div>
+        </div>
+
+        <!-- Heatmap grid (simplified: 4 months per row) -->
+        <div class="grid grid-cols-4 gap-6" id="heatmap">
+          <!-- Jan -->
+          <div>
+            <div class="text-[11px] font-semibold text-zinc-400 mb-2">Janeiro</div>
+            <div class="flex flex-wrap gap-[3px]">
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-high"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-low"></div>
+              <div class="heat-cell heat-none"></div>
+            </div>
+          </div>
+          <!-- Fev -->
+          <div>
+            <div class="text-[11px] font-semibold text-zinc-400 mb-2">Fevereiro</div>
+            <div class="flex flex-wrap gap-[3px]">
+              <div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-high"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div>
+              <div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div>
+              <div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div>
+            </div>
+          </div>
+          <!-- Mar -->
+          <div>
+            <div class="text-[11px] font-semibold text-zinc-400 mb-2">Marco</div>
+            <div class="flex flex-wrap gap-[3px]">
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-high"></div>
+              <div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-high"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div>
+              <div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div>
+              <div class="heat-cell heat-none"></div>
+            </div>
+          </div>
+          <!-- Abr (current) -->
+          <div>
+            <div class="text-[11px] font-semibold text-primary-400 mb-2">Abril <span class="text-[9px] text-zinc-500">· Atual</span></div>
+            <div class="flex flex-wrap gap-[3px]">
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-today heat-low"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-high"></div>
+              <div class="heat-cell heat-mid"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div>
+              <div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div>
+            </div>
+          </div>
+          <!-- Mai-Dez abbreviated for brevity -->
+          <div><div class="text-[11px] font-semibold text-zinc-400 mb-2">Maio</div><div class="flex flex-wrap gap-[3px]"><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-mid"></div></div></div>
+          <div><div class="text-[11px] font-semibold text-zinc-400 mb-2">Junho</div><div class="flex flex-wrap gap-[3px]"><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div></div></div>
+          <div><div class="text-[11px] font-semibold text-zinc-400 mb-2">Julho</div><div class="flex flex-wrap gap-[3px]"><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div></div></div>
+          <div><div class="text-[11px] font-semibold text-zinc-400 mb-2">Agosto</div><div class="flex flex-wrap gap-[3px]"><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div></div></div>
+          <div><div class="text-[11px] font-semibold text-zinc-400 mb-2">Setembro</div><div class="flex flex-wrap gap-[3px]"><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div></div></div>
+          <div><div class="text-[11px] font-semibold text-zinc-400 mb-2">Outubro</div><div class="flex flex-wrap gap-[3px]"><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div></div></div>
+          <div><div class="text-[11px] font-semibold text-zinc-400 mb-2">Novembro</div><div class="flex flex-wrap gap-[3px]"><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-high"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div></div></div>
+          <div><div class="text-[11px] font-semibold text-zinc-400 mb-2">Dezembro</div><div class="flex flex-wrap gap-[3px]"><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-mid"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-low"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div><div class="heat-cell heat-none"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████████████████████████████
+         VIEW: LISTA
+         ████████████████████████████████████████████████████ -->
+    <div id="view-lista" class="view-content">
+      <div class="glass-panel overflow-hidden">
+        <!-- Table Header -->
+        <div class="table-header">
+          <span>Evento</span>
+          <span>Processo / Partes</span>
+          <span>Data</span>
+          <span>Horario</span>
+          <span>Tipo</span>
+          <span>Status</span>
+          <span></span>
+        </div>
+        <!-- Rows -->
+        <div class="glass-row table-row" onclick="openDialog()">
+          <div class="flex items-center gap-3">
+            <div class="w-1 h-10 rounded-full bg-blue-500 flex-shrink-0"></div>
+            <div>
+              <div class="text-[12px] font-semibold text-zinc-200">Aud. Instrucao e Julgamento</div>
+              <div class="text-[10px] text-zinc-500">TRT1 · 1o Grau · Virtual</div>
+            </div>
+          </div>
+          <div>
+            <div class="text-[11px] font-mono text-zinc-400">0012345-67.2025.5.01.0001</div>
+            <div class="text-[10px] text-zinc-500 mt-0.5">Silva vs Empresa ABC Ltda</div>
+          </div>
+          <div class="text-[11px] text-zinc-300">13/Abr/2026</div>
+          <div class="text-[11px] font-mono text-zinc-300">09:30 – 11:00</div>
+          <div><span class="glass-badge bg-blue-500/15 text-blue-400 border border-blue-500/20">Audiencia</span></div>
+          <div><span class="glass-badge bg-green-500/15 text-green-400 border border-green-500/20">Marcada</span></div>
+          <div><button class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/[0.06]"><i data-lucide="more-horizontal" class="w-4 h-4 text-zinc-500"></i></button></div>
+        </div>
+        <div class="glass-row table-row">
+          <div class="flex items-center gap-3">
+            <div class="w-1 h-10 rounded-full bg-red-500 flex-shrink-0"></div>
+            <div>
+              <div class="text-[12px] font-semibold text-zinc-200">Prazo: Recurso Ordinario</div>
+              <div class="text-[10px] text-zinc-500">Fatal · 5 dias uteis</div>
+            </div>
+          </div>
+          <div>
+            <div class="text-[11px] font-mono text-zinc-400">0067890-12.2024.5.01.0042</div>
+            <div class="text-[10px] text-zinc-500 mt-0.5">Pereira vs Industria XYZ S.A.</div>
+          </div>
+          <div class="text-[11px] text-red-400 font-semibold">13/Abr/2026</div>
+          <div class="text-[11px] font-mono text-zinc-300">14:00</div>
+          <div><span class="glass-badge bg-red-500/15 text-red-400 border border-red-500/20">Prazo</span></div>
+          <div><span class="glass-badge bg-amber-500/15 text-amber-400 border border-amber-500/20">Pendente</span></div>
+          <div><button class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/[0.06]"><i data-lucide="more-horizontal" class="w-4 h-4 text-zinc-500"></i></button></div>
+        </div>
+        <div class="glass-row table-row">
+          <div class="flex items-center gap-3">
+            <div class="w-1 h-10 rounded-full bg-amber-500 flex-shrink-0"></div>
+            <div>
+              <div class="text-[12px] font-semibold text-zinc-200">Publicacao DJE</div>
+              <div class="text-[10px] text-zinc-500">Diario Eletronico</div>
+            </div>
+          </div>
+          <div>
+            <div class="text-[11px] font-mono text-zinc-400">0034567-89.2024.5.02.0015</div>
+            <div class="text-[10px] text-zinc-500 mt-0.5">Oliveira vs Comercio Beta Ltda</div>
+          </div>
+          <div class="text-[11px] text-zinc-300">14/Abr/2026</div>
+          <div class="text-[11px] font-mono text-zinc-300">09:00</div>
+          <div><span class="glass-badge bg-amber-500/15 text-amber-400 border border-amber-500/20">Expediente</span></div>
+          <div><span class="glass-badge bg-blue-500/15 text-blue-400 border border-blue-500/20">Recebido</span></div>
+          <div><button class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/[0.06]"><i data-lucide="more-horizontal" class="w-4 h-4 text-zinc-500"></i></button></div>
+        </div>
+        <div class="glass-row table-row" onclick="openDialog()">
+          <div class="flex items-center gap-3">
+            <div class="w-1 h-10 rounded-full bg-blue-500 flex-shrink-0"></div>
+            <div>
+              <div class="text-[12px] font-semibold text-zinc-200">Aud. Conciliacao</div>
+              <div class="text-[10px] text-zinc-500">TRT2 · 1o Grau · Presencial</div>
+            </div>
+          </div>
+          <div>
+            <div class="text-[11px] font-mono text-zinc-400">0098765-43.2025.5.02.0033</div>
+            <div class="text-[10px] text-zinc-500 mt-0.5">Santos vs Construtora Gama</div>
+          </div>
+          <div class="text-[11px] text-zinc-300">15/Abr/2026</div>
+          <div class="text-[11px] font-mono text-zinc-300">09:30 – 11:00</div>
+          <div><span class="glass-badge bg-blue-500/15 text-blue-400 border border-blue-500/20">Audiencia</span></div>
+          <div><span class="glass-badge bg-green-500/15 text-green-400 border border-green-500/20">Marcada</span></div>
+          <div><button class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/[0.06]"><i data-lucide="more-horizontal" class="w-4 h-4 text-zinc-500"></i></button></div>
+        </div>
+        <div class="glass-row table-row">
+          <div class="flex items-center gap-3">
+            <div class="w-1 h-10 rounded-full bg-purple-500 flex-shrink-0"></div>
+            <div>
+              <div class="text-[12px] font-semibold text-zinc-200">Pericia Medica</div>
+              <div class="text-[10px] text-zinc-500">Dr. Carlos Lima · Presencial</div>
+            </div>
+          </div>
+          <div>
+            <div class="text-[11px] font-mono text-zinc-400">0045678-90.2024.5.05.0008</div>
+            <div class="text-[10px] text-zinc-500 mt-0.5">Ferreira vs Metalurgica Delta</div>
+          </div>
+          <div class="text-[11px] text-zinc-300">17/Abr/2026</div>
+          <div class="text-[11px] font-mono text-zinc-300">09:00 – 12:00</div>
+          <div><span class="glass-badge bg-purple-500/15 text-purple-400 border border-purple-500/20">Pericia</span></div>
+          <div><span class="glass-badge bg-amber-500/15 text-amber-400 border border-amber-500/20">Ag. Laudo</span></div>
+          <div><button class="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/[0.06]"><i data-lucide="more-horizontal" class="w-4 h-4 text-zinc-500"></i></button></div>
+        </div>
+        <!-- Pagination -->
+        <div class="flex items-center justify-between px-5 py-3 border-t border-white/[0.06]">
+          <span class="text-[11px] text-zinc-500">Exibindo 1-5 de 23 eventos</span>
+          <div class="flex items-center gap-1">
+            <button class="glass-btn px-2 py-1 text-[10px] text-zinc-500">Anterior</button>
+            <button class="glass-btn px-2.5 py-1 text-[10px] text-primary-400 bg-primary-500/10">1</button>
+            <button class="glass-btn px-2.5 py-1 text-[10px] text-zinc-500">2</button>
+            <button class="glass-btn px-2.5 py-1 text-[10px] text-zinc-500">3</button>
+            <button class="glass-btn px-2 py-1 text-[10px] text-zinc-500">Proximo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ████████████████████████████████████████████████████
+         VIEW: BRIEFING
+         ████████████████████████████████████████████████████ -->
+    <div id="view-briefing" class="view-content">
+      <div class="flex gap-4">
+        <!-- Main Timeline -->
+        <div class="flex-1 space-y-4">
+          <!-- Day Narrative -->
+          <div class="glass-panel p-5">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="icon-container w-9 h-9 bg-primary-500/12"><i data-lucide="sparkles" class="w-4 h-4 text-primary-400"></i></div>
+              <div>
+                <div class="text-sm font-semibold text-white">Bom dia, Jordan</div>
+                <div class="text-xs text-zinc-400">Segunda-feira, 13 de Abril de 2026</div>
+              </div>
+            </div>
+            <p class="text-[13px] text-zinc-400 leading-relaxed">
+              Voce tem <span class="text-white font-semibold">4 compromissos</span> hoje, incluindo <span class="text-blue-400 font-semibold">1 audiencia</span> e <span class="text-red-400 font-semibold">1 prazo fatal</span>.
+              A audiencia de instrucao esta marcada para as 09:30 no TRT1 (virtual). O prazo do recurso ordinario vence as 14:00. Recomendo priorizar a preparacao da peca antes das 09:00.
+            </p>
+          </div>
+
+          <!-- Morning Section -->
+          <div class="flex items-center gap-3 mt-6 mb-3">
+            <i data-lucide="sun" class="w-4 h-4 text-amber-400"></i>
+            <span class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Manha</span>
+            <div class="flex-1 h-px bg-white/[0.06]"></div>
+          </div>
+
+          <!-- Event Card: Audiencia -->
+          <div class="briefing-card" onclick="openDialog()">
+            <div class="flex items-start gap-4">
+              <div class="text-right flex-shrink-0 w-14">
+                <div class="text-sm font-mono font-bold text-white">09:30</div>
+                <div class="text-[9px] text-zinc-500 font-mono">11:00</div>
+              </div>
+              <div class="w-1 self-stretch rounded-full bg-blue-500 flex-shrink-0"></div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-[13px] font-semibold text-white">Audiencia de Instrucao e Julgamento</span>
+                  <span class="glass-badge bg-blue-500/15 text-blue-400 border border-blue-500/20 text-[9px]">Audiencia</span>
+                  <span class="glass-badge bg-green-500/15 text-green-400 border border-green-500/20 text-[9px]">Marcada</span>
+                </div>
+                <div class="flex items-center gap-4 mt-2 text-[11px] text-zinc-500">
+                  <span class="flex items-center gap-1"><i data-lucide="landmark" class="w-3 h-3"></i> TRT1 · 1o Grau</span>
+                  <span class="flex items-center gap-1"><i data-lucide="video" class="w-3 h-3"></i> Virtual</span>
+                </div>
+                <!-- Process Link -->
+                <div class="mt-2 p-2 rounded-lg bg-white/[0.03] border border-white/[0.05] flex items-center gap-3">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-zinc-500 flex-shrink-0"></i>
+                  <div class="min-w-0">
+                    <div class="text-[10px] font-mono text-zinc-400">0012345-67.2025.5.01.0001</div>
+                    <div class="text-[10px] text-zinc-500">Silva vs Empresa ABC Ltda</div>
+                  </div>
+                  <i data-lucide="external-link" class="w-3 h-3 text-zinc-600 ml-auto flex-shrink-0"></i>
+                </div>
+                <!-- Prep bar -->
+                <div class="flex items-center gap-2 mt-2">
+                  <span class="text-[9px] text-zinc-500">Preparo:</span>
+                  <div class="prep-bar flex-1">
+                    <div class="prep-bar-fill bg-amber-400" style="width:60%"></div>
+                  </div>
+                  <span class="text-[9px] font-mono text-amber-400">60%</span>
+                </div>
+                <!-- Responsavel -->
+                <div class="flex items-center gap-2 mt-2">
+                  <div class="w-5 h-5 rounded-full bg-primary-500/15 flex items-center justify-center text-[8px] font-bold text-primary-400 flex-shrink-0">M</div>
+                  <span class="text-[10px] text-zinc-400">Dra. Maria Santos</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Afternoon Section -->
+          <div class="flex items-center gap-3 mt-6 mb-3">
+            <i data-lucide="sunset" class="w-4 h-4 text-orange-400"></i>
+            <span class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Tarde</span>
+            <div class="flex-1 h-px bg-white/[0.06]"></div>
+          </div>
+
+          <!-- Event Card: Prazo -->
+          <div class="briefing-card border-red-500/15">
+            <div class="flex items-start gap-4">
+              <div class="text-right flex-shrink-0 w-14">
+                <div class="text-sm font-mono font-bold text-red-400">14:00</div>
+                <div class="text-[9px] text-red-500/60 font-bold uppercase">FATAL</div>
+              </div>
+              <div class="w-1 self-stretch rounded-full bg-red-500 flex-shrink-0"></div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-[13px] font-semibold text-white">Prazo: Recurso Ordinario</span>
+                  <span class="glass-badge bg-red-500/15 text-red-400 border border-red-500/20 text-[9px]">Prazo Fatal</span>
+                </div>
+                <div class="flex items-center gap-4 mt-2 text-[11px] text-zinc-500">
+                  <span class="flex items-center gap-1"><i data-lucide="landmark" class="w-3 h-3"></i> TRT1 · 1o Grau</span>
+                  <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> Vence hoje</span>
+                </div>
+                <div class="mt-2 p-2 rounded-lg bg-red-500/[0.04] border border-red-500/10 flex items-center gap-3">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-red-500/50 flex-shrink-0"></i>
+                  <div class="min-w-0">
+                    <div class="text-[10px] font-mono text-zinc-400">0067890-12.2024.5.01.0042</div>
+                    <div class="text-[10px] text-zinc-500">Pereira vs Industria XYZ S.A.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event Card: Pessoal -->
+          <div class="briefing-card">
+            <div class="flex items-start gap-4">
+              <div class="text-right flex-shrink-0 w-14">
+                <div class="text-sm font-mono font-bold text-white">15:00</div>
+                <div class="text-[9px] text-zinc-500 font-mono">16:00</div>
+              </div>
+              <div class="w-1 self-stretch rounded-full bg-primary-500 flex-shrink-0"></div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="text-[13px] font-semibold text-white">Atendimento Cliente — Novo caso</span>
+                  <span class="glass-badge bg-primary-500/15 text-primary-400 border border-primary-500/20 text-[9px]">Pessoal</span>
+                </div>
+                <div class="flex items-center gap-4 mt-2 text-[11px] text-zinc-500">
+                  <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> Escritorio · Sala 3</span>
+                  <span class="flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i> Roberto Mendes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Sidebar: Prep Radar + Alerts + Quick Actions -->
+        <div class="w-64 flex-shrink-0 space-y-4 hidden lg:block">
+          <!-- Prep Radar -->
+          <div class="glass-panel p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-primary-400"></i>
+              <span class="text-xs font-semibold text-zinc-300">Radar de Preparo</span>
+            </div>
+            <div class="space-y-3">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[11px] text-zinc-400">Aud. Instrucao (09:30)</span>
+                  <span class="text-[10px] font-mono text-amber-400">60%</span>
+                </div>
+                <div class="prep-bar"><div class="prep-bar-fill bg-amber-400" style="width:60%"></div></div>
+                <div class="text-[9px] text-zinc-600 mt-1">Falta: Rol de testemunhas</div>
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[11px] text-zinc-400">Aud. Conciliacao (15/04)</span>
+                  <span class="text-[10px] font-mono text-green-400">100%</span>
+                </div>
+                <div class="prep-bar"><div class="prep-bar-fill bg-green-400" style="width:100%"></div></div>
+                <div class="text-[9px] text-zinc-600 mt-1">Completo</div>
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[11px] text-zinc-400">Pericia Medica (17/04)</span>
+                  <span class="text-[10px] font-mono text-red-400">25%</span>
+                </div>
+                <div class="prep-bar"><div class="prep-bar-fill bg-red-400" style="width:25%"></div></div>
+                <div class="text-[9px] text-zinc-600 mt-1">Falta: Laudo medico, Quesitos</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alerts -->
+          <div class="glass-panel p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="bell" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span class="text-xs font-semibold text-zinc-300">Alertas</span>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-start gap-2 p-2 rounded-lg bg-red-500/[0.06] border border-red-500/10">
+                <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-400 mt-0.5 flex-shrink-0"></i>
+                <div>
+                  <div class="text-[10px] font-semibold text-red-400">Prazo Fatal Hoje</div>
+                  <div class="text-[9px] text-zinc-500">Recurso Ordinario 14:00</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-2 p-2 rounded-lg bg-orange-500/[0.06] border border-orange-500/10">
+                <i data-lucide="triangle-alert" class="w-3.5 h-3.5 text-orange-400 mt-0.5 flex-shrink-0"></i>
+                <div>
+                  <div class="text-[10px] font-semibold text-orange-400">Conflito 15/04</div>
+                  <div class="text-[9px] text-zinc-500">2 eventos as 13:30</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-2 p-2 rounded-lg bg-amber-500/[0.04] border border-amber-500/8">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400 mt-0.5 flex-shrink-0"></i>
+                <div>
+                  <div class="text-[10px] font-semibold text-amber-400">Preparo Pendente</div>
+                  <div class="text-[9px] text-zinc-500">Pericia 17/04 — 25%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="glass-panel p-4">
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-primary-400"></i>
+              <span class="text-xs font-semibold text-zinc-300">Acoes Rapidas</span>
+            </div>
+            <div class="space-y-1.5">
+              <button class="glass-btn w-full flex items-center gap-2 px-3 py-2 text-[11px] text-zinc-300">
+                <i data-lucide="external-link" class="w-3.5 h-3.5 text-zinc-500"></i> Abrir PJe
+              </button>
+              <button class="glass-btn w-full flex items-center gap-2 px-3 py-2 text-[11px] text-zinc-300">
+                <i data-lucide="file-pen" class="w-3.5 h-3.5 text-zinc-500"></i> Preparar Peca
+              </button>
+              <button class="glass-btn w-full flex items-center gap-2 px-3 py-2 text-[11px] text-zinc-300">
+                <i data-lucide="users" class="w-3.5 h-3.5 text-zinc-500"></i> Confirmar Testemunhas
+              </button>
+              <button class="glass-btn w-full flex items-center gap-2 px-3 py-2 text-[11px] text-zinc-300">
+                <i data-lucide="calendar-check" class="w-3.5 h-3.5 text-zinc-500"></i> Pauta da Semana
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /module shell -->
+
+  <!-- ████████████████████████████████████████████████████
+       DIALOG: Event Detail (Light glass dialog)
+       ████████████████████████████████████████████████████ -->
+  <div id="eventDialog" class="fixed inset-0 z-50 hidden" onclick="closeDialog(event)">
+    <div class="absolute inset-0 glass-dialog-overlay"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-6">
+      <div class="glass-dialog w-full max-w-[780px] max-h-[92vh] flex flex-col overflow-hidden" onclick="event.stopPropagation()" role="dialog" aria-modal="true">
+        <!-- Dialog Header -->
+        <div style="padding: 24px 28px 0; flex-shrink: 0;">
+          <div class="flex items-start justify-between gap-4 mb-4">
+            <div class="flex items-start gap-3.5 flex-1 min-w-0">
+              <div class="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i data-lucide="gavel" class="w-5 h-5 text-blue-700"></i>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2.5 flex-wrap mb-1">
+                  <h2 class="text-[17px] font-bold text-gray-900">Audiencia de Instrucao e Julgamento</h2>
+                  <span class="badge-light badge-green"><i data-lucide="circle-dot" class="w-3 h-3"></i> Marcada</span>
+                </div>
+                <p class="text-[13px] text-gray-500 flex items-center gap-1.5">
+                  <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                  Segunda-feira, 13 de Abril de 2026
+                </p>
+              </div>
+            </div>
+            <button class="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors cursor-pointer" onclick="closeDialog()" aria-label="Fechar">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Meta strip -->
+          <div class="glass-card-light flex gap-0 mb-4" style="padding: 14px 20px;">
+            <div class="flex-1">
+              <span class="meta-label">Horario</span>
+              <span class="meta-value mt-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-gray-400"></i> 09:30 – 11:00</span>
+            </div>
+            <div class="w-px bg-gray-200/60 mx-4"></div>
+            <div class="flex-1">
+              <span class="meta-label">Modalidade</span>
+              <span class="meta-value mt-1"><span class="badge-light badge-purple text-[11px]" style="padding:2px 8px;"><i data-lucide="video" class="w-3 h-3"></i> Virtual</span></span>
+            </div>
+            <div class="w-px bg-gray-200/60 mx-4"></div>
+            <div class="flex-1">
+              <span class="meta-label">Tribunal</span>
+              <span class="meta-value mt-1"><i data-lucide="landmark" class="w-3.5 h-3.5 text-gray-400"></i> TRT1 · 1o Grau</span>
+            </div>
+            <div class="w-px bg-gray-200/60 mx-4"></div>
+            <div class="flex-1">
+              <span class="meta-label">Responsavel</span>
+              <span class="meta-value mt-1">
+                <div class="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center text-[9px] font-bold text-indigo-700 flex-shrink-0">M</div>
+                Dra. Maria Santos
+              </span>
+            </div>
+          </div>
+
+          <!-- Action buttons -->
+          <div class="flex items-center gap-2.5 mb-5 flex-wrap">
+            <button class="btn-dialog-primary"><i data-lucide="video" class="w-4 h-4"></i> Entrar na Sala Virtual</button>
+            <button class="btn-dialog-outline"><i data-lucide="file-text" class="w-4 h-4"></i> Visualizar Ata</button>
+            <button class="btn-dialog-outline"><i data-lucide="external-link" class="w-4 h-4"></i> Abrir PJe</button>
+          </div>
+
+          <div class="h-px bg-gray-200/40"></div>
+        </div>
+
+        <!-- Scrollable body -->
+        <div class="overflow-y-auto flex-1 px-7 py-5" style="scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.12) transparent;">
+          <!-- Processo Section -->
+          <div class="mb-5">
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="file-text" class="w-3.5 h-3.5 text-gray-400"></i>
+              <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Processo Vinculado</span>
+            </div>
+            <div class="glass-card-light">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-[12px] font-mono font-semibold text-gray-800">0012345-67.2025.5.01.0001</div>
+                  <div class="text-[11px] text-gray-500 mt-1">Vara do Trabalho de Niteroi · 1a VT</div>
+                </div>
+                <button class="btn-dialog-outline text-xs" style="padding: 6px 12px;"><i data-lucide="external-link" class="w-3 h-3"></i> Ver Processo</button>
+              </div>
+              <div class="h-px bg-gray-200/40 my-3"></div>
+              <div class="flex gap-6">
+                <div>
+                  <div class="flex items-center gap-1.5 mb-1">
+                    <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                    <span class="text-[10px] font-medium text-blue-600 uppercase tracking-wider">Reclamante</span>
+                  </div>
+                  <span class="text-[12px] font-medium text-gray-800">Jose da Silva</span>
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5 mb-1">
+                    <div class="w-1.5 h-1.5 rounded-full bg-red-500"></div>
+                    <span class="text-[10px] font-medium text-red-600 uppercase tracking-wider">Reclamada</span>
+                  </div>
+                  <span class="text-[12px] font-medium text-gray-800">Empresa ABC Ltda</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preparo Section -->
+          <div class="mb-5">
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-gray-400"></i>
+              <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Checklist de Preparo</span>
+              <span class="badge-light badge-amber text-[10px] ml-1" style="padding:2px 8px;">60%</span>
+            </div>
+            <div class="glass-card-light space-y-0">
+              <div class="flex items-center gap-3 py-2.5 border-b border-gray-100">
+                <div class="w-5 h-5 rounded border-2 border-green-400 bg-green-50 flex items-center justify-center"><i data-lucide="check" class="w-3 h-3 text-green-600"></i></div>
+                <span class="text-[13px] text-gray-700">Documentacao do processo revisada</span>
+              </div>
+              <div class="flex items-center gap-3 py-2.5 border-b border-gray-100">
+                <div class="w-5 h-5 rounded border-2 border-green-400 bg-green-50 flex items-center justify-center"><i data-lucide="check" class="w-3 h-3 text-green-600"></i></div>
+                <span class="text-[13px] text-gray-700">Estrategia de argumentacao definida</span>
+              </div>
+              <div class="flex items-center gap-3 py-2.5 border-b border-gray-100">
+                <div class="w-5 h-5 rounded border-2 border-green-400 bg-green-50 flex items-center justify-center"><i data-lucide="check" class="w-3 h-3 text-green-600"></i></div>
+                <span class="text-[13px] text-gray-700">Sala virtual testada</span>
+              </div>
+              <div class="flex items-center gap-3 py-2.5 border-b border-gray-100">
+                <div class="w-5 h-5 rounded border-2 border-gray-300 bg-white flex items-center justify-center"></div>
+                <span class="text-[13px] text-gray-500">Rol de testemunhas confirmado</span>
+              </div>
+              <div class="flex items-center gap-3 py-2.5">
+                <div class="w-5 h-5 rounded border-2 border-gray-300 bg-white flex items-center justify-center"></div>
+                <span class="text-[13px] text-gray-500">Calculos atualizados</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Observacoes -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="message-square" class="w-3.5 h-3.5 text-gray-400"></i>
+              <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Observacoes</span>
+            </div>
+            <div class="glass-card-light">
+              <p class="text-[13px] text-gray-600 leading-relaxed">
+                Reclamante alega adicional de insalubridade grau maximo. Empresa contesta com laudo pericial proprio. Verificar se perito judicial foi nomeado. Audiencia anterior foi adiada por ausencia do preposto.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dialog Footer -->
+        <div class="flex items-center justify-between px-7 py-4 border-t border-gray-200/40 flex-shrink-0">
+          <button class="btn-dialog-outline" onclick="closeDialog()">Fechar</button>
+          <div class="flex gap-2">
+            <button class="btn-dialog-outline"><i data-lucide="pencil" class="w-4 h-4"></i> Editar</button>
+            <button class="btn-dialog-primary"><i data-lucide="check-circle" class="w-4 h-4"></i> Marcar Preparado</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ████████████████████████████████████████████████████
+       SCRIPTS
+       ████████████████████████████████████████████████████ -->
+  <script>
+    // Init Lucide icons
+    lucide.createIcons();
+
+    // View switching
+    function switchView(viewName) {
+      // Hide all views
+      document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active'));
+      // Show target
+      const target = document.getElementById('view-' + viewName);
+      if (target) {
+        target.classList.add('active');
+        target.classList.add('animate-in');
+      }
+      // Update toggle buttons
+      document.querySelectorAll('#viewToggle button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === viewName);
+      });
+      // Re-init icons for newly visible content
+      lucide.createIcons();
+    }
+
+    // Dialog
+    function openDialog() {
+      document.getElementById('eventDialog').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+    function closeDialog(event) {
+      // Close only when clicking the overlay or calling directly (no event)
+      if (event && event.target && !event.target.classList.contains('glass-dialog-overlay') && event.target.id !== 'eventDialog') return;
+      document.getElementById('eventDialog').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+    // Also close on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { document.getElementById('eventDialog').classList.add('hidden'); document.body.style.overflow = ''; }
+    });
+  </script>
+
+</body>
+</html>
