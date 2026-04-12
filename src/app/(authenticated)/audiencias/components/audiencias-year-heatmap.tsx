@@ -124,7 +124,7 @@ const MonthGrid = React.memo(function MonthGrid({
 
   // Empty cells before first day
   for (let i = 0; i < firstDow; i++) {
-    cells.push(<div key={`e-${i}`} className="w-[10px] h-[10px]" />);
+    cells.push(<div key={`e-${i}`} className="aspect-square" />);
   }
 
   for (let d = 1; d <= daysInMonth; d++) {
@@ -143,7 +143,7 @@ const MonthGrid = React.memo(function MonthGrid({
           type="button"
           onClick={() => count > 0 && onDayClick(monthIndex, d)}
           className={cn(
-            'w-[10px] h-[10px] rounded-[2px] transition-all duration-100 shrink-0',
+            'aspect-square rounded-[2px] transition-all duration-100',
             getDayIntensity(count),
             today && 'ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent',
             count > 0 && 'cursor-pointer hover:opacity-80 hover:scale-[1.3]',
@@ -151,7 +151,7 @@ const MonthGrid = React.memo(function MonthGrid({
           )}
           aria-label={tooltipText}
         >
-          <TooltipContent side="top" className="text-[10px] px-2 py-1">
+          <TooltipContent side="top" className="text-micro-caption px-2 py-1">
             {tooltipText}
           </TooltipContent>
         </button>
@@ -161,17 +161,17 @@ const MonthGrid = React.memo(function MonthGrid({
 
   return (
     <div>
-      <div className="text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground/70 mb-1">
+      <div className="text-overline text-muted-foreground/70 mb-1.5">
         {MONTH_NAMES[monthIndex]}
       </div>
-      <div className="flex gap-[2px] mb-0.5">
+      <div className="grid grid-cols-7 gap-[2px] mb-1">
         {WEEKDAY_LABELS.map((lbl, i) => (
-          <div key={i} className="text-[8px] text-muted-foreground/60 text-center w-[10px] shrink-0">
+          <div key={i} className="text-micro-caption text-muted-foreground/50 text-center">
             {lbl}
           </div>
         ))}
       </div>
-      <div className="grid gap-[2px]" style={{ gridTemplateColumns: 'repeat(7, 10px)' }}>
+      <div className="grid grid-cols-7 gap-[2px]">
         {cells}
       </div>
     </div>
@@ -201,7 +201,7 @@ function StatCard({
         <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />
         </IconContainer>
-        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+        <span className="text-meta-label">
           {label}
         </span>
       </div>
@@ -257,7 +257,7 @@ export function AudienciasYearHeatmap({
             >
               <ChevronLeft className="w-4 h-4" />
             </Button>
-            <span className="text-lg font-semibold tracking-tight w-14 text-center select-none">
+            <span className="text-section-title w-14 text-center select-none">
               {year}
             </span>
             <Button
@@ -283,7 +283,7 @@ export function AudienciasYearHeatmap({
         <div className="flex gap-5 flex-wrap xl:flex-nowrap">
           {/* Heatmap Panel */}
           <GlassPanel depth={1} className="p-6 flex-1 min-w-0">
-            <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+            <div className="grid grid-cols-4 gap-x-6 gap-y-8">
               {Array.from({ length: 12 }, (_, i) => (
                 <Tooltip key={i}>
                   <MonthGrid
@@ -298,19 +298,19 @@ export function AudienciasYearHeatmap({
 
             {/* Legend */}
             <div className="mt-8 flex items-center gap-3">
-              <span className="text-xs text-muted-foreground/60">Menos</span>
+              <span className="text-micro-caption">Menos</span>
               <div className="flex items-center gap-1">
-                <div className="w-[10px] h-[10px] rounded-[2px] bg-white/[0.05]" />
-                <div className="w-[10px] h-[10px] rounded-[2px] bg-primary/30" />
-                <div className="w-[10px] h-[10px] rounded-[2px] bg-primary/55" />
-                <div className="w-[10px] h-[10px] rounded-[2px] bg-primary/[0.65]" />
-                <div className="w-[10px] h-[10px] rounded-[2px] bg-primary/85" />
+                <div className="w-2.5 h-2.5 rounded-[2px] bg-white/[0.05]" />
+                <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/30" />
+                <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/55" />
+                <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/[0.65]" />
+                <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/85" />
               </div>
-              <span className="text-xs text-muted-foreground/60">Mais</span>
-              <span className="text-muted-foreground/40 mx-2 text-xs">·</span>
+              <span className="text-micro-caption">Mais</span>
+              <span className="text-muted-foreground/40 mx-2 text-micro-caption">·</span>
               <div className="flex items-center gap-1.5">
-                <div className="w-[10px] h-[10px] rounded-[2px] bg-white/[0.05] ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
-                <span className="text-xs text-muted-foreground/60">Hoje</span>
+                <div className="w-2.5 h-2.5 rounded-[2px] bg-white/[0.05] ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
+                <span className="text-micro-caption">Hoje</span>
               </div>
             </div>
           </GlassPanel>
@@ -319,13 +319,13 @@ export function AudienciasYearHeatmap({
           <div className="flex flex-col gap-4 w-full xl:w-64 shrink-0">
             {/* Total no Ano */}
             <StatCard icon={CalendarDays} iconBg="bg-primary/15" iconColor="text-primary" label="Total no Ano">
-              <div className="text-3xl font-display font-bold tracking-tight">{stats.total}</div>
+              <div className="text-kpi-value">{stats.total}</div>
             </StatCard>
 
             {/* Mês Mais Intenso */}
             <StatCard icon={Flame} iconBg="bg-orange-500/12" iconColor="text-orange-400" label="Mês Mais Intenso">
-              <div className="text-xl font-display font-bold">{MONTH_NAMES[stats.maxMonth]}</div>
-              <div className="text-xs text-muted-foreground mt-0.5">
+              <div className="text-card-title">{MONTH_NAMES[stats.maxMonth]}</div>
+              <div className="text-widget-sub mt-0.5">
                 {stats.maxMonthCount} audiências
               </div>
               <div className="mt-3 h-1 rounded-full bg-white/[0.06]">
@@ -338,15 +338,15 @@ export function AudienciasYearHeatmap({
 
             {/* Média Semanal */}
             <StatCard icon={BarChart2} iconBg="bg-success/12" iconColor="text-success" label="Média Semanal">
-              <div className="text-3xl font-display font-bold tracking-tight">{stats.weekAvg}</div>
-              <div className="text-xs text-muted-foreground mt-1">audiências / semana</div>
+              <div className="text-kpi-value">{stats.weekAvg}</div>
+              <div className="text-widget-sub mt-1">audiências / semana</div>
             </StatCard>
 
             {/* Taxa de Realização */}
             <StatCard icon={CheckCircle2} iconBg="bg-primary/15" iconColor="text-primary" label="Taxa de Realização">
-              <div className="text-3xl font-display font-bold tracking-tight">
+              <div className="text-kpi-value">
                 {stats.taxa}
-                <span className="text-lg text-muted-foreground font-medium">%</span>
+                <span className="text-subsection-title text-muted-foreground">%</span>
               </div>
               <div className="mt-3 h-1.5 rounded-full bg-white/[0.06]">
                 <div
@@ -354,7 +354,7 @@ export function AudienciasYearHeatmap({
                   style={{ width: `${stats.taxa}%` }}
                 />
               </div>
-              <div className="text-xs text-muted-foreground mt-1.5">
+              <div className="text-widget-sub mt-1.5">
                 {stats.realizadas} de {stats.total} realizadas
               </div>
             </StatCard>
@@ -362,15 +362,15 @@ export function AudienciasYearHeatmap({
             {/* Próxima Audiência */}
             {stats.proxima && (
               <StatCard icon={Clock} iconBg="bg-sky-500/12" iconColor="text-sky-400" label="Próxima">
-                <div className="text-sm font-semibold">
+                <div className="text-label font-semibold">
                   {format(parseISO(stats.proxima.dataInicio), "dd MMM · HH'h'mm", { locale: ptBR })}
                 </div>
-                <div className="text-xs text-muted-foreground mt-0.5 font-mono">
+                <div className="text-mono-num mt-0.5">
                   {stats.proxima.numeroProcesso.substring(0, 15)}
                 </div>
                 {stats.proxima.tipoDescricao && (
                   <div className="mt-2">
-                    <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-sky-500/12 text-sky-300 border border-sky-500/20">
+                    <span className="text-micro-badge px-2 py-0.5 rounded-full font-medium bg-sky-500/12 text-sky-300 border border-sky-500/20">
                       {stats.proxima.tipoDescricao}
                     </span>
                   </div>
