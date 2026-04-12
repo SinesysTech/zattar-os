@@ -150,7 +150,7 @@ export function AudienciaDetailDialog({
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
-          className="sm:max-w-3xl max-h-[92vh] flex flex-col p-0 gap-0 overflow-hidden [scrollbar-width:thin]"
+          className="sm:max-w-3xl max-h-[92vh] flex flex-col p-0 gap-0 overflow-hidden [scrollbar-width:thin] glass-dialog"
           showCloseButton
         >
           {/* ── HEADER (fixo) ── */}
@@ -266,7 +266,7 @@ export function AudienciaDetailDialog({
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {/* Horario */}
                     <div className="space-y-1">
-                      <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+                      <span className="text-meta-label">
                         Horario
                       </span>
                       <div className="flex items-center gap-1.5 text-sm">
@@ -281,7 +281,7 @@ export function AudienciaDetailDialog({
 
                     {/* Modalidade */}
                     <div className="space-y-1">
-                      <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+                      <span className="text-meta-label">
                         Modalidade
                       </span>
                       <div>
@@ -291,7 +291,7 @@ export function AudienciaDetailDialog({
 
                     {/* TRT/Grau */}
                     <div className="space-y-1">
-                      <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+                      <span className="text-meta-label">
                         TRT / Grau
                       </span>
                       <p className="text-sm truncate">
@@ -301,7 +301,7 @@ export function AudienciaDetailDialog({
 
                     {/* Responsavel */}
                     <div className="space-y-1">
-                      <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-wider">
+                      <span className="text-meta-label">
                         Responsavel
                       </span>
                       {audiencia.responsavelId && responsavelNome ? (
@@ -325,14 +325,14 @@ export function AudienciaDetailDialog({
                 <GlassPanel depth={1} className="p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <ClipboardList className="size-3.5 text-muted-foreground/50" />
-                    <span className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">Processo</span>
+                    <span className="text-meta-label">Processo</span>
                   </div>
                   <div className="space-y-2.5">
                     <div className="space-y-0.5">
                       <span className="block font-mono text-sm font-semibold tabular-nums tracking-tight text-foreground">
                         {audiencia.numeroProcesso}
                       </span>
-                      <span className="block text-[11px] text-muted-foreground/60">
+                      <span className="block text-meta-label font-normal">
                         {TRT_NOMES[audiencia.trt] || audiencia.trt} · {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
                       </span>
                     </div>
@@ -362,13 +362,13 @@ export function AudienciaDetailDialog({
                   <GlassPanel depth={1} className="p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Building2 className="size-3.5 text-muted-foreground/50" />
-                      <span className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">Local / Acesso</span>
+                      <span className="text-meta-label">Local / Acesso</span>
                     </div>
                     <div className="space-y-3">
                       {/* URL Virtual */}
                       {(audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida') && audiencia.urlAudienciaVirtual && (
                         <div className="space-y-1">
-                          <span className="text-[11px] font-medium text-muted-foreground/60">Sala Virtual</span>
+                          <span className="text-meta-label font-normal">Sala Virtual</span>
                           <div className="flex items-center gap-2">
                             <a
                               href={audiencia.urlAudienciaVirtual}
@@ -397,7 +397,7 @@ export function AudienciaDetailDialog({
                       {/* Endereco presencial */}
                       {(audiencia.modalidade === 'presencial' || audiencia.modalidade === 'hibrida') && audiencia.enderecoPresencial && (
                         <div className="space-y-1">
-                          <span className="text-[11px] font-medium text-muted-foreground/60">Endereco Presencial</span>
+                          <span className="text-meta-label font-normal">Endereco Presencial</span>
                           <div className="flex items-start gap-1.5">
                             <MapPin className="size-3.5 text-muted-foreground/50 mt-0.5 shrink-0" />
                             <p className="text-sm text-foreground/80 leading-relaxed">
@@ -426,7 +426,7 @@ export function AudienciaDetailDialog({
                 <GlassPanel depth={1} className="p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Scale className="size-3.5 text-muted-foreground/50" />
-                    <span className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">Indicadores</span>
+                    <span className="text-meta-label">Indicadores</span>
                   </div>
                   <AudienciaIndicadorBadges
                     audiencia={audiencia}
@@ -445,7 +445,7 @@ export function AudienciaDetailDialog({
                 <GlassPanel depth={1} className="p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <ClipboardList className="size-3.5 text-muted-foreground/50" />
-                    <span className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">Preparo</span>
+                    <span className="text-meta-label">Preparo</span>
                   </div>
                   <PrepScore
                     audiencia={audiencia}
@@ -459,7 +459,7 @@ export function AudienciaDetailDialog({
                   <GlassPanel depth={1} className="p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <FileText className="size-3.5 text-muted-foreground/50" />
-                      <span className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">Observacoes</span>
+                      <span className="text-meta-label">Observacoes</span>
                     </div>
                     <p className="text-sm whitespace-pre-wrap text-muted-foreground">
                       {audiencia.observacoes}
@@ -471,7 +471,7 @@ export function AudienciaDetailDialog({
                 <GlassPanel depth={1} className="p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Clock className="size-3.5 text-muted-foreground/50" />
-                    <span className="text-xs font-semibold text-muted-foreground/70 uppercase tracking-wider">Historico de Alteracoes</span>
+                    <span className="text-meta-label">Historico de Alteracoes</span>
                   </div>
                   <AudienciaTimeline
                     audienciaId={audiencia.id}
@@ -483,7 +483,7 @@ export function AudienciaDetailDialog({
           </div>
 
           {/* ── FOOTER (fixo) ── */}
-          <div className="flex-shrink-0 px-7 py-4 border-t border-border/20 flex items-center justify-between bg-muted/30">
+          <div className="flex-shrink-0 px-7 py-4 border-t border-border/20 flex items-center justify-between">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Fechar
             </Button>

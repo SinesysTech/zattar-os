@@ -107,19 +107,19 @@ export function DialogFormShell({
         showCloseButton={false} // Removemos o botão X padrão
         className={cn(
           maxWidthClass,
-          "bg-card overflow-hidden",
-          "p-0 gap-0", // Removemos padding padrão para controlar layout
-          "transition-[max-width] duration-300 ease-in-out", // Transição suave ao mudar largura
+          "glass-dialog overflow-hidden",
+          "p-0 gap-0",
+          "transition-[max-width] duration-300 ease-in-out",
           className
         )}
       >
-        <ResponsiveDialogHeader className="px-6 py-4 shrink-0 border-b">
-          <ResponsiveDialogTitle className="text-lg font-semibold leading-none tracking-tight">
+        <ResponsiveDialogHeader className="px-6 py-4 shrink-0 border-b border-border/20">
+          <ResponsiveDialogTitle className="text-card-title">
             {title}
           </ResponsiveDialogTitle>
 
           {description && (
-            <ResponsiveDialogDescription className="text-sm text-muted-foreground">
+            <ResponsiveDialogDescription className="text-caption">
               {description}
             </ResponsiveDialogDescription>
           )}
@@ -145,7 +145,7 @@ export function DialogFormShell({
         </ResponsiveDialogBody>
 
         {!hideFooter && (
-          <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0">
+          <ResponsiveDialogFooter className="px-6 py-4 border-t border-border/20 shrink-0">
             <div className="flex w-full items-center justify-between gap-2">
               <Button
                 type="button"

@@ -1,15 +1,29 @@
 'use client';
 
 import * as React from 'react';
-import { ChevronLeft, ChevronRight, Calendar, Clock, User, Video, Building2 } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  User,
+  Video,
+  Building2,
+  Gavel,
+  ExternalLink,
+} from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { IconContainer } from '@/components/ui/icon-container';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { TabPills } from '@/components/dashboard/tab-pills';
+import { AuditLogTimeline } from '@/components/common/audit-log-timeline';
+import { useAuditLogs } from '@/lib/domain/audit/hooks/use-audit-logs';
 
 import type { Audiencia } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '../domain';
@@ -23,15 +37,10 @@ import { useUsuarios } from '@/app/(authenticated)/usuarios';
 // =============================================================================
 
 interface AudienciasDiaDialogProps {
-  /** Lista de audiências do dia */
   audiencias: Audiencia[];
-  /** Data selecionada */
   data: Date;
-  /** Estado de abertura */
   open: boolean;
-  /** Callback para mudar estado */
   onOpenChange: (open: boolean) => void;
-  /** Callback após ação (refetch) */
   onSuccess?: () => void;
 }
 
@@ -66,15 +75,10 @@ function getUsuarioNome(u: Usuario): string {
 }
 
 // =============================================================================
-// COMPONENTE CARD DE AUDIÊNCIA
+// AUDIÊNCIA CONTENT — flat layout, no nested containers
 // =============================================================================
 
-import { TabPills } from '@/components/dashboard/tab-pills';
-import { GlassPanel } from '@/components/shared/glass-panel';
-import { AuditLogTimeline } from '@/components/common/audit-log-timeline';
-import { useAuditLogs } from '@/lib/domain/audit/hooks/use-audit-logs';
-
-function AudienciaCard({
+function AudienciaContent({
   audiencia,
   usuarios,
   onSuccess,
@@ -91,7 +95,42 @@ function AudienciaCard({
   const nomeResponsavel = responsavel ? getUsuarioNome(responsavel) : null;
 
   return (
-    <GlassPanel depth={1} className="p-4">
+    <>
+      {/* ── Processo + Status ── */}
+      <div className="flex items-start justify-between gap-3 mb-1">
+        <div className="flex-1 min-w-0">
+          <div
+            className="font-mono text-card-title tabular-nums tracking-tight truncate"
+            title={audiencia.numeroProcesso}
+          >
+            {audiencia.numeroProcesso}
+          </div>
+        </div>
+        <AudienciaStatusBadge status={audiencia.status} />
+      </div>
+
+      {/* ── Badges + meta inline ── */}
+      <div className="flex items-center gap-2 flex-wrap mb-5">
+        <SemanticBadge category="tribunal" value={audiencia.trt} className="text-micro-badge">
+          {audiencia.trt}
+        </SemanticBadge>
+        <SemanticBadge category="grau" value={audiencia.grau} className="text-micro-badge">
+          {GRAU_TRIBUNAL_LABELS[audiencia.grau] || audiencia.grau}
+        </SemanticBadge>
+        <span className="text-muted-foreground/30">|</span>
+        <div className="flex items-center gap-1.5">
+          <Clock className="size-3.5 text-muted-foreground/50" />
+          <span className="text-label tabular-nums">
+            {formatarHora(audiencia.dataInicio)}
+            {audiencia.dataFim && ` – ${formatarHora(audiencia.dataFim)}`}
+          </span>
+        </div>
+        {audiencia.modalidade && (
+          <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
+        )}
+      </div>
+
+      {/* ── Tabs ── */}
       <TabPills
         tabs={[
           { id: 'detalhes', label: 'Detalhes' },
@@ -101,110 +140,92 @@ function AudienciaCard({
         onChange={setActiveTab}
       />
 
-      {activeTab === 'detalhes' && (<div className="space-y-3 mt-4">
-          {/* Header: Número do processo + Status */}
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <SemanticBadge category="tribunal" value={audiencia.trt} className="text-xs shrink-0">
-                  {audiencia.trt}
-                </SemanticBadge>
-                <SemanticBadge category="grau" value={audiencia.grau} className="text-xs shrink-0">
-                  {GRAU_TRIBUNAL_LABELS[audiencia.grau] || audiencia.grau}
-                </SemanticBadge>
-              </div>
-              <div className="font-semibold text-base truncate" title={audiencia.numeroProcesso}>
-                {audiencia.numeroProcesso}
-              </div>
-            </div>
-            <AudienciaStatusBadge status={audiencia.status} />
-          </div>
-
-          {/* Horário e Modalidade */}
-          <div className="flex items-center gap-4 text-sm">
-            <div className="flex items-center gap-1.5 text-muted-foreground">
-              <Clock className="h-4 w-4" />
-              <span className="font-medium text-foreground">
-                {formatarHora(audiencia.dataInicio)}
-                {audiencia.dataFim && ` - ${formatarHora(audiencia.dataFim)}`}
-              </span>
-            </div>
-            {audiencia.modalidade && (
-              <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
-            )}
-          </div>
-
-          {/* Tipo de Audiência */}
+      {activeTab === 'detalhes' && (
+        <div className="mt-5 space-y-5">
+          {/* Tipo */}
           {audiencia.tipoDescricao && (
-            <div className="text-sm">
-              <span className="text-muted-foreground">Tipo: </span>
-              <span className="font-medium">{audiencia.tipoDescricao}</span>
+            <div>
+              <div className="text-meta-label mb-1">Tipo</div>
+              <span className="text-label">{audiencia.tipoDescricao}</span>
             </div>
           )}
 
           {/* Local */}
           {(audiencia.salaAudienciaNome || audiencia.urlAudienciaVirtual) && (
-            <div className="flex items-start gap-1.5 text-sm">
-              {audiencia.modalidade === 'presencial' ? (
-                <Building2 className="h-4 w-4 text-muted-foreground mt-0.5" />
-              ) : (
-                <Video className="h-4 w-4 text-muted-foreground mt-0.5" />
-              )}
-              <div className="flex-1">
-                {audiencia.salaAudienciaNome && <div>{audiencia.salaAudienciaNome}</div>}
+            <div>
+              <div className="text-meta-label mb-1">Local</div>
+              <div className="flex items-center gap-1.5 text-sm">
+                {audiencia.modalidade === 'presencial' ? (
+                  <Building2 className="size-3.5 text-muted-foreground/50 shrink-0" />
+                ) : (
+                  <Video className="size-3.5 text-muted-foreground/50 shrink-0" />
+                )}
+                {audiencia.salaAudienciaNome && (
+                  <span className="text-label">{audiencia.salaAudienciaNome}</span>
+                )}
                 {audiencia.urlAudienciaVirtual && (
                   <a
                     href={audiencia.urlAudienciaVirtual}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary hover:underline truncate block"
+                    className="text-primary hover:underline inline-flex items-center gap-1"
                   >
-                    {audiencia.urlAudienciaVirtual}
+                    Entrar na sala
+                    <ExternalLink className="size-3" />
                   </a>
                 )}
               </div>
             </div>
           )}
 
-          {/* Partes */}
-          <div className="grid grid-cols-2 gap-3 text-sm border-t pt-3">
+          {/* Partes — grid simples, sem boxes */}
+          <div className="grid grid-cols-2 gap-x-6 gap-y-1">
             <div>
-              <div className="text-xs text-muted-foreground mb-1">Polo Ativo</div>
-              <div className="font-medium truncate" title={audiencia.poloAtivoNome || ''}>
-                {audiencia.poloAtivoNome || '-'}
+              <div className="text-meta-label mb-1">Polo Ativo</div>
+              <div className="text-label truncate" title={audiencia.poloAtivoNome || ''}>
+                {audiencia.poloAtivoNome || '—'}
               </div>
             </div>
             <div>
-              <div className="text-xs text-muted-foreground mb-1">Polo Passivo</div>
-              <div className="font-medium truncate" title={audiencia.poloPassivoNome || ''}>
-                {audiencia.poloPassivoNome || '-'}
+              <div className="text-meta-label mb-1">Polo Passivo</div>
+              <div className="text-label truncate" title={audiencia.poloPassivoNome || ''}>
+                {audiencia.poloPassivoNome || '—'}
               </div>
             </div>
           </div>
 
-          {/* Responsável - Edição inline */}
-          <div className="border-t pt-3">
-            <div className="text-xs text-muted-foreground mb-1.5">Responsável</div>
+          {/* Responsável */}
+          <div>
+            <div className="text-meta-label mb-1.5">Responsável</div>
             <button
               type="button"
               onClick={() => setIsResponsavelDialogOpen(true)}
-              className="flex items-center gap-2 text-sm w-full hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
-              title={nomeResponsavel ? `Clique para alterar responsável: ${nomeResponsavel}` : 'Clique para atribuir responsável'}
+              className="flex items-center gap-2.5 hover:bg-accent/40 transition-colors rounded-lg p-2 -m-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+              title={
+                nomeResponsavel
+                  ? `Alterar responsável: ${nomeResponsavel}`
+                  : 'Atribuir responsável'
+              }
             >
               {responsavel ? (
                 <>
-                  <Avatar className="h-7 w-7 shrink-0">
-                    <AvatarImage src={responsavel?.avatarUrl || undefined} alt={nomeResponsavel || undefined} />
-                    <AvatarFallback className="text-xs font-medium">
+                  <Avatar className="size-7 shrink-0">
+                    <AvatarImage
+                      src={responsavel?.avatarUrl || undefined}
+                      alt={nomeResponsavel || undefined}
+                    />
+                    <AvatarFallback className="text-micro-badge">
                       {getInitials(nomeResponsavel)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="font-medium">{nomeResponsavel}</span>
+                  <span className="text-label">{nomeResponsavel}</span>
                 </>
               ) : (
                 <>
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">Sem responsável - clique para atribuir</span>
+                  <div className="size-7 rounded-full bg-muted/40 flex items-center justify-center shrink-0">
+                    <User className="size-3.5 text-muted-foreground/40" />
+                  </div>
+                  <span className="text-caption">Clique para atribuir</span>
                 </>
               )}
             </button>
@@ -215,26 +236,27 @@ function AudienciaCard({
             onOpenChange={setIsResponsavelDialogOpen}
             audiencia={audiencia}
             usuarios={usuarios}
-            onSuccess={() => {
-              onSuccess?.();
-            }}
+            onSuccess={() => onSuccess?.()}
           />
 
           {/* Observações */}
           {audiencia.observacoes && (
-            <div className="text-sm bg-muted/50 p-2 rounded border-t">
-              <div className="text-xs text-muted-foreground mb-1">Observações</div>
-              <div className="whitespace-pre-wrap">{audiencia.observacoes}</div>
+            <div>
+              <div className="text-meta-label mb-1.5">Observações</div>
+              <p className="text-caption whitespace-pre-wrap leading-relaxed">
+                {audiencia.observacoes}
+              </p>
             </div>
           )}
-      </div>)}
+        </div>
+      )}
 
       {activeTab === 'historico' && (
         <div className="mt-4">
           <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-100" />
         </div>
       )}
-    </GlassPanel>
+    </>
   );
 }
 
@@ -249,93 +271,83 @@ export function AudienciasDiaDialog({
   onOpenChange,
   onSuccess,
 }: AudienciasDiaDialogProps) {
-  // Estado do wizard - índice da audiência atual
   const [currentIndex, setCurrentIndex] = React.useState(0);
-
-  // Carregar usuários para edição inline do responsável
   const { usuarios } = useUsuarios();
 
-  // Reset index quando abre o dialog ou muda a lista
   React.useEffect(() => {
-    if (open) {
-      setCurrentIndex(0);
-    }
+    if (open) setCurrentIndex(0);
   }, [open, audiencias]);
 
-  const totalAudiencias = audiencias.length;
+  const total = audiencias.length;
   const audienciaAtual = audiencias[currentIndex];
 
-  // Navegação
-  const handlePrevious = () => {
+  const handlePrevious = () =>
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
-  };
+  const handleNext = () =>
+    setCurrentIndex((prev) => (prev < total - 1 ? prev + 1 : prev));
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev < totalAudiencias - 1 ? prev + 1 : prev));
-  };
+  const dataFormatada = format(data, "EEEE, dd 'de' MMMM", { locale: ptBR });
 
-  // Título formatado
-  const dataFormatada = format(data, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-
-  // Footer com navegação wizard
-  const footerContent = (
-    <div className="flex items-center justify-between w-full">
-      {totalAudiencias > 1 ? (
-        <>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePrevious}
-            disabled={currentIndex === 0}
-          >
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            Anterior
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            {currentIndex + 1} de {totalAudiencias}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNext}
-            disabled={currentIndex === totalAudiencias - 1}
-          >
-            Próxima
-            <ChevronRight className="h-4 w-4 ml-1" />
-          </Button>
-        </>
-      ) : (
-        <Button variant="outline" onClick={() => onOpenChange(false)}>
-          Fechar
-        </Button>
-      )}
-    </div>
-  );
-
-  if (!audienciaAtual) {
-    return null;
-  }
+  if (!audienciaAtual) return null;
 
   return (
-    <DialogFormShell
-      open={open}
-      onOpenChange={onOpenChange}
-      title={
-        <div className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-primary" />
-          <span>Audiências - {dataFormatada}</span>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-xl max-h-[85vh] flex flex-col p-0 gap-0 overflow-hidden">
+        {/* ── HEADER ── */}
+        <div className="shrink-0 px-6 pt-5 pb-4 border-b border-border/20">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <IconContainer size="md" className="bg-primary/10 shrink-0">
+                <Gavel className="size-4 text-primary" />
+              </IconContainer>
+              <div className="min-w-0">
+                <h2 className="text-card-title capitalize truncate">{dataFormatada}</h2>
+                <p className="text-widget-sub mt-0.5">
+                  {total} audiência{total > 1 ? 's' : ''}
+                </p>
+              </div>
+            </div>
+
+            {/* Navegação inline no header */}
+            {total > 1 && (
+              <div className="flex items-center gap-1 shrink-0">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-7"
+                  onClick={handlePrevious}
+                  disabled={currentIndex === 0}
+                >
+                  <ChevronLeft className="size-4" />
+                </Button>
+                <span className="text-widget-sub tabular-nums w-8 text-center">
+                  {currentIndex + 1}/{total}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-7"
+                  onClick={handleNext}
+                  disabled={currentIndex === total - 1}
+                >
+                  <ChevronRight className="size-4" />
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
-      }
-      maxWidth="2xl"
-      footer={footerContent}
-    >
-      <ScrollArea className="max-h-[60vh] pr-4">
-        <AudienciaCard
-          audiencia={audienciaAtual}
-          usuarios={usuarios}
-          onSuccess={onSuccess}
-        />
-      </ScrollArea>
-    </DialogFormShell>
+
+        {/* ── BODY — conteúdo direto, sem cards aninhados ── */}
+        <ScrollArea className="flex-1 min-h-0">
+          <div className="px-6 py-5">
+            <AudienciaContent
+              audiencia={audienciaAtual}
+              usuarios={usuarios}
+              onSuccess={onSuccess}
+            />
+          </div>
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
   );
 }
