@@ -149,22 +149,22 @@ export function AudienciasSemanaView({
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className={cn(
-                    'text-xs font-semibold uppercase tracking-wider',
-                    today ? 'text-primary' : 'text-muted-foreground/60',
+                    'text-[10px] font-semibold uppercase tracking-wider',
+                    today ? 'text-primary' : 'text-muted-foreground/55',
                   )}>
                     {format(day, 'EEE', { locale: ptBR })}
                   </span>
                   <span className={cn(
-                    'text-base font-bold tabular-nums',
+                    'text-sm font-bold tabular-nums',
                     today
-                      ? 'bg-primary text-primary-foreground size-7 rounded-full flex items-center justify-center text-xs'
+                      ? 'bg-primary text-primary-foreground size-6 rounded-full flex items-center justify-center text-[11px]'
                       : 'text-foreground/80',
                   )}>
                     {format(day, 'd')}
                   </span>
                 </div>
                 {dayAudiencias.length > 0 && (
-                  <span className="text-xs tabular-nums text-muted-foreground/50 font-medium">
+                  <span className="text-[10px] tabular-nums text-muted-foreground/45 font-medium">
                     {dayAudiencias.length}
                   </span>
                 )}
@@ -223,10 +223,10 @@ function WeekDayCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: ()
         </span>
         <div className="flex items-center gap-1.5">
           {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
-          {isFinalizada && <span className="text-[10px] font-semibold text-success px-1.5 py-0.5 rounded-full bg-success/15">OK</span>}
+          {isFinalizada && <span className="text-[9px] font-semibold text-success px-1.5 py-0.5 rounded-full bg-success/15">OK</span>}
           {/* Prep badge */}
           <span className={cn(
-            'text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
+            'text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
             prepStatus === 'good' ? 'bg-success/15 text-success' : prepStatus === 'warning' ? 'bg-warning/15 text-warning' : 'bg-destructive/15 text-destructive',
           )}>
             {prepScore}%
@@ -235,37 +235,37 @@ function WeekDayCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: ()
       </div>
 
       {/* Type */}
-      <p className="text-sm font-medium text-foreground mt-1.5 break-words">
+      <p className="text-xs font-medium text-foreground mt-1.5 break-words leading-snug">
         {audiencia.tipoDescricao || 'Audiência'}
       </p>
 
       {/* Process number */}
       {audiencia.numeroProcesso && (
-        <p className="text-[11px] font-mono text-muted-foreground/60 tabular-nums mt-0.5 break-all">
+        <p className="text-[10px] font-mono text-muted-foreground/60 tabular-nums mt-0.5 break-all">
           {audiencia.numeroProcesso}
         </p>
       )}
 
       {/* Parties */}
       {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-        <p className="text-[11px] text-muted-foreground/60 mt-1 break-words">
-          {audiencia.poloAtivoNome || '—'} <span className="text-muted-foreground/40">vs</span> {audiencia.poloPassivoNome || '—'}
+        <p className="text-[10px] text-muted-foreground/55 mt-1 break-words leading-snug">
+          {audiencia.poloAtivoNome || '—'} <span className="text-muted-foreground/35">vs</span> {audiencia.poloPassivoNome || '—'}
         </p>
       )}
 
       {/* Bottom: TRT + Modalidade */}
-      <div className="flex items-center gap-2 mt-2 flex-wrap">
+      <div className="flex items-center gap-1.5 mt-2 flex-wrap">
         {audiencia.trt && (
-          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70">{audiencia.trt}</span>
+          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70">{audiencia.trt}</span>
         )}
         <div className="flex items-center gap-1">
-          {isVirtual ? <Video className="size-3 text-info/60" /> : audiencia.modalidade === 'presencial' ? <Building2 className="size-3 text-warning/60" /> : null}
-          <span className="text-[10px] text-muted-foreground/60">
+          {isVirtual ? <Video className="size-2.5 text-info/60" /> : audiencia.modalidade === 'presencial' ? <Building2 className="size-2.5 text-warning/60" /> : null}
+          <span className="text-[9px] text-muted-foreground/55">
             {audiencia.modalidade === 'virtual' ? 'Virtual' : audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : ''}
           </span>
         </div>
         {audiencia.urlAudienciaVirtual && isVirtual && (
-          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70">Sala</span>
+          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70">Sala</span>
         )}
       </div>
     </button>
