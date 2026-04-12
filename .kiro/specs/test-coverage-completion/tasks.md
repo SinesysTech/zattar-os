@@ -31,18 +31,18 @@ Plano de implementação para completar a cobertura de testes do ZattarOS, segui
     - Validar autenticação, validação Zod e delegação ao service para cada action
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-  - [-] 1.5 Criar testes unitários para o módulo `mail`
+  - [x] 1.5 Criar testes unitários para o módulo `mail`
     - Criar `src/app/(authenticated)/mail/__tests__/unit/mail.domain.test.ts` testando schemas Zod
     - Criar `src/app/(authenticated)/mail/__tests__/unit/mail.service.test.ts` com mocks do repository
     - Criar `src/app/(authenticated)/mail/__tests__/unit/mail.repository.test.ts` com mocks do Supabase client
     - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
-  - [~] 1.6 Criar testes de actions para o módulo `mail`
+  - [x] 1.6 Criar testes de actions para o módulo `mail`
     - Criar `src/app/(authenticated)/mail/__tests__/actions/mail-actions.test.ts`
     - Validar autenticação, validação Zod e delegação ao service
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-  - [~] 1.7 Criar testes unitários para o módulo `project-management`
+  - [-] 1.7 Criar testes unitários para o módulo `project-management`
     - Criar `src/app/(authenticated)/project-management/__tests__/unit/project-management.domain.test.ts`
     - Criar `src/app/(authenticated)/project-management/__tests__/unit/project-management.service.test.ts`
     - Criar `src/app/(authenticated)/project-management/__tests__/unit/project-management.repository.test.ts`
