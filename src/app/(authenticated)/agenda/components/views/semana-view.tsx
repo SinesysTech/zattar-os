@@ -95,14 +95,14 @@ function WeekEventChip({ event, onClick }: { event: AgendaEvent; onClick?: () =>
     >
       <div className={cn("text-[9px] font-mono opacity-70", colors.text)}>{fmtTime(event.start)}</div>
       <div className={cn("text-[11px] font-semibold truncate", colors.text)}>{event.title}</div>
-      {eventHeight(event) > 40 && event.meta.trt && (
+      {eventHeight(event) > 40 && event.meta?.trt && (
         <div className={cn("text-[9px] opacity-60 truncate", colors.text)}>
-          {event.meta.trt}{event.meta.modalidade ? ` · ${event.meta.modalidade === "virtual" ? "Virtual" : "Presencial"}` : ""}
+          {event.meta?.trt}{event.meta?.modalidade ? ` · ${event.meta?.modalidade === "virtual" ? "Virtual" : "Presencial"}` : ""}
         </div>
       )}
-      {eventHeight(event) > 56 && event.meta.processo && (
+      {eventHeight(event) > 56 && event.meta?.processo && (
         <div className={cn("text-[9px] opacity-50 font-mono truncate", colors.text)}>
-          {event.meta.processo.slice(0, 18)}...
+          {event.meta?.processo.slice(0, 18)}...
         </div>
       )}
     </button>
@@ -156,15 +156,15 @@ export function SemanaView({
   const deadlines: Deadline[] = useMemo(() => {
     const now = new Date();
     return events
-      .filter((e) => e.meta.prazoVencido !== undefined || e.source === "agenda")
+      .filter((e) => e.meta?.prazoVencido !== undefined)
       .filter((e) => e.start > now)
       .slice(0, 5)
       .map((e) => ({
         id: e.id,
-        label: `${e.title} — ${e.meta.processo ?? ""}`,
-        processo: e.meta.processo ?? "",
+        label: `${e.title} — ${e.meta?.processo ?? ""}`,
+        processo: e.meta?.processo ?? "",
         daysLeft: Math.max(0, Math.ceil((e.start.getTime() - now.getTime()) / 86400000)),
-        fatal: e.meta.prazoVencido === true,
+        fatal: e.meta?.prazoVencido === true,
       }));
   }, [events]);
 

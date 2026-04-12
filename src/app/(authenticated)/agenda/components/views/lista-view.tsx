@@ -68,14 +68,14 @@ export function ListaView({ events, onEventClick, className }: ListaViewProps) {
                 <div className="min-w-0">
                   <div className="text-[12px] font-semibold text-foreground truncate">{evt.title}</div>
                   <div className="text-[10px] text-muted-foreground/45 truncate">
-                    {evt.meta.trt ? `${evt.meta.trt} · ${evt.meta.grau ?? ""}` : evt.meta.local ?? ""}
-                    {evt.meta.modalidade ? ` · ${evt.meta.modalidade === "virtual" ? "Virtual" : "Presencial"}` : ""}
+                    {evt.meta?.trt ? `${evt.meta?.trt} · ${evt.meta?.grau ?? ""}` : evt.meta?.local ?? ""}
+                    {evt.meta?.modalidade ? ` · ${evt.meta?.modalidade === "virtual" ? "Virtual" : "Presencial"}` : ""}
                   </div>
                 </div>
               </div>
               <div className="min-w-0">
-                {evt.meta.processo ? (
-                  <div className="text-[11px] font-mono text-muted-foreground/55 truncate">{evt.meta.processo}</div>
+                {evt.meta?.processo ? (
+                  <div className="text-[11px] font-mono text-muted-foreground/55 truncate">{evt.meta?.processo}</div>
                 ) : (
                   <span className="text-[10px] text-muted-foreground/25">—</span>
                 )}

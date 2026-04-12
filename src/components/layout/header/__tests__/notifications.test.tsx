@@ -1,12 +1,12 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Notifications from "../notifications";
-import { useNotificacoes, useNotificacoesRealtime } from "../../../../features/notificacoes/hooks/use-notificacoes";
-import { useIsMobile } from "../../../../hooks/use-breakpoint";
+import { useNotificacoes, useNotificacoesRealtime } from "@/app/(authenticated)/notificacoes";
+import { useIsMobile } from "@/hooks/use-breakpoint";
 
 // Mock hooks
-jest.mock("../../../../features/notificacoes/hooks/use-notificacoes");
-jest.mock("../../../../hooks/use-breakpoint");
+jest.mock("@/app/(authenticated)/notificacoes");
+jest.mock("@/hooks/use-breakpoint");
 jest.mock("@/providers/user-provider", () => ({
     useUser: () => ({
         id: 1,

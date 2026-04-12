@@ -105,8 +105,8 @@ function adaptAgendaToCalendarEvent(event: AgendaEvent): CalendarEvent {
     end: event.end,
     allDay: event.allDay,
     color: event.color as CalendarEvent["color"],
-    description: event.meta.descricao,
-    location: event.meta.local,
+    description: event.meta?.descricao,
+    location: event.meta?.local,
     source: event.source,
     sourceEntityId: event.raw.sourceEntityId as number | undefined,
     responsavelId: event.responsavelId ?? undefined,
@@ -177,13 +177,13 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
     }
 
     // Avg prep
-    const withPrep = allEvents.filter((e) => e.meta.prepStatus);
+    const withPrep = allEvents.filter((e) => e.meta?.prepStatus);
     const avgPrep =
       withPrep.length > 0
         ? Math.round(
             withPrep.reduce((acc, e) => {
-              if (e.meta.prepStatus === "preparado") return acc + 100;
-              if (e.meta.prepStatus === "parcial") return acc + 60;
+              if (e.meta?.prepStatus === "preparado") return acc + 100;
+              if (e.meta?.prepStatus === "parcial") return acc + 60;
               return acc + 20;
             }, 0) / withPrep.length,
           )
@@ -193,7 +193,7 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
     const now = new Date();
     const in7d = addDays(now, 7);
     const prazos7d = allEvents.filter(
-      (e) => e.meta.prazoVencido !== undefined && e.start >= now && e.start <= in7d,
+      (e) => e.meta?.prazoVencido !== undefined && e.start >= now && e.start <= in7d,
     ).length;
 
     return {

@@ -6,11 +6,11 @@ import {
   listarDocumentos as listarDocumentosRepo,
   criarDocumento as criarDocumentoRepo,
   buscarDocumentoComUsuario as buscarDocumentoComUsuarioRepo,
-} from '../../repositories/documentos-repository';
+} from '../../repository';
 import { createServiceClient } from "@/lib/supabase/service-client";
 
 // Mock dependencies
-jest.mock('../../repositories/documentos-repository');
+jest.mock('../../repository');
 jest.mock('@/lib/supabase/service-client', () => ({
   createServiceClient: jest.fn(),
 }));

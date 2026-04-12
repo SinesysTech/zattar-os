@@ -34,9 +34,9 @@ jest.mock('@radix-ui/react-slot', () => {
 // Mock ResizeObserver (used by Radix components)
 beforeAll(() => {
   window.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
+    observe() { }
+    unobserve() { }
+    disconnect() { }
   } as unknown as typeof ResizeObserver;
 
   Element.prototype.scrollIntoView = jest.fn();
@@ -205,7 +205,7 @@ describe("FormShell - Property-Based Tests", () => {
 
             // Verifica que tem a classe de erro
             const hasErrorClass = errorElement?.classList.contains("text-destructive") ||
-                                  errorElement?.getAttribute("data-slot") === "form-message";
+              errorElement?.getAttribute("data-slot") === "form-message";
             expect(hasErrorClass).toBe(true);
           });
         }
@@ -497,9 +497,14 @@ describe("FormShell - Property-Based Tests", () => {
    * todas as opções devem estar disponíveis
    */
   test("Property 9: Select fields render with correct options structure", () => {
+    // Reserved names from Object.prototype that can't be used as field names
+    const reservedNames = new Set(Object.getOwnPropertyNames(Object.prototype));
+
     fc.assert(
       fc.property(
-        fc.string({ minLength: 3, maxLength: 30 }).map((s) => s.replace(/[^a-zA-Z0-9]/g, "a")),
+        fc.string({ minLength: 3, maxLength: 30 })
+          .map((s) => s.replace(/[^a-zA-Z0-9]/g, "a"))
+          .filter((s) => s.length >= 3 && !reservedNames.has(s)),
         fc.array(selectOptionArbitrary, { minLength: 2, maxLength: 5 }),
         (fieldName, options) => {
           const mockSubmit = jest.fn();
@@ -540,10 +545,14 @@ describe("FormShell - Property-Based Tests", () => {
    * deve aplicar a classe de coluna correta
    */
   test("Property 10: Field span applies correct column span classes", () => {
+    const reservedNames = new Set(Object.getOwnPropertyNames(Object.prototype));
+
     fc.assert(
       fc.property(
         fc.constantFrom<1 | 2 | 3 | "full">(1, 2, 3, "full"),
-        fc.string({ minLength: 3, maxLength: 30 }).map((s) => s.replace(/[^a-zA-Z0-9]/g, "a")),
+        fc.string({ minLength: 3, maxLength: 30 })
+          .map((s) => s.replace(/[^a-zA-Z0-9]/g, "a"))
+          .filter((s) => s.length >= 3 && !reservedNames.has(s)),
         (span, fieldName) => {
           const mockSubmit = jest.fn();
 
