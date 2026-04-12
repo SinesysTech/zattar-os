@@ -49,6 +49,51 @@ src/
 **Módulos Intencionalmente Minimais**:
 Alguns módulos sob `(authenticated)/` são propositalmente embrionários (proxies, sistemas auto-descritivos, cálculos puros, FSD aninhado em `feature/`). **Não tente "consertá-los" criando arquivos vazios** — eles têm `README.md` próprio explicando o estado intencional. Consulte [docs/architecture/MINIMAL_MODULES.md](docs/architecture/MINIMAL_MODULES.md) para a lista completa e os critérios de promoção.
 
+## Design System — "Glass Briefing"
+
+O ZattarOS segue o Design System **Glass Briefing** — glassmorphism com hierarquia por profundidade, cores em OKLCH, e sistema de superfícies inspirado em Material Design 3. **Toda implementação de UI DEVE respeitar este sistema.**
+
+### Fontes Canônicas
+
+| Arquivo | O que contém |
+|---------|-------------|
+| `src/app/globals.css` | 145+ CSS custom properties (`:root` e `.dark`), classes `.glass-*` |
+| `src/lib/design-system/tokens.ts` | Tokens TS exportados (spacing, typography, opacity, layout, z-index) |
+| `tailwind.config.ts` | Mapeamento Tailwind → CSS variables |
+| `src/components/shared/glass-panel.tsx` | `GlassPanel` (depth 1–3) e `WidgetContainer` |
+| `src/components/ui/typography.tsx` | `Heading` (5 níveis) e `Text` (10+ variantes semânticas) |
+
+### Regras Obrigatórias de UI
+
+1. **Nunca hardcode cores** — Use CSS variables (`bg-primary`, `text-muted-foreground`, `border-outline-variant`) ou tokens de `tokens.ts`. Cores literais como `bg-blue-500` ou `#hex` são proibidas.
+2. **Hierarquia por Glass Depth** — Containers usam `GlassPanel` com depth semântico:
+   - **Depth 1** (`glass-widget`): containers transparentes, painéis grandes
+   - **Depth 2** (`glass-kpi`): cards de métricas, KPIs, destaque médio
+   - **Depth 3** (`primary tint`): ênfase máxima
+3. **Dialogs/Modals** — Usar classes `glass-dialog` e `glass-dialog-overlay` para manter consistência com blur/transparência.
+4. **Tipografia via componentes** — Usar `Heading` e `Text` de `@/components/ui/typography` com as variantes semânticas (page, section, card, kpi-value, label, caption, meta-label, micro-caption, overline). Não inventar tamanhos avulsos.
+5. **Espaçamento via tokens** — Seguir o grid de 4px definido em `SPACING` e os layouts semânticos (`PAGE_LAYOUT`, `SEMANTIC_SPACING`) de `tokens.ts`.
+6. **Componentes shared obrigatórios** — Antes de criar componentes novos, verificar se já existe em `@/components/shared/` ou `@/components/ui/`:
+   - Layout: `PageShell`, `FormShell`, `TemporalViewShell`, `DetailSheet`
+   - Glass: `GlassPanel`, `WidgetContainer`, `AmbientBackdrop`
+   - Navegação: `TabPills`, `ViewSwitcher`, `DateNavigation`, `WeekNavigator`
+   - Dados: `DataTable`, `TablePagination`, `EmptyState`
+   - Tipografia: `Heading`, `Text`, `BrandMark`
+7. **Cores semânticas por namespace** — Usar os namespaces corretos:
+   - Status: `--success`, `--warning`, `--info`, `--destructive`
+   - Superfícies: `--surface-*` (9 variantes de container)
+   - Chart/dados: `--chart-1` a `--chart-8`
+   - Eventos: `--event-audiencia`, `--event-expediente`, `--event-prazo`, etc.
+   - Portal: `--portal-*` (11 tokens dedicados)
+   - Chat: `--chat-thread-bg`, `--chat-bubble-received`, `--chat-bubble-sent`, `--chat-sidebar-active`
+   - Widgets: `--widget-*` (radius, padding, gap, transition)
+8. **Opacidade via escala definida** — Usar os níveis de `OPACITY_SCALE` de `tokens.ts` (subtle, whisper, tint, soft, medium, strong, emphasis) em vez de valores arbitrários.
+9. **Dark mode** — Toda UI deve funcionar em light e dark. As CSS variables já têm override em `.dark` — não criar lógica condicional manual.
+
+### Referência Rápida de Validação Visual
+
+Consulte `docs/architecture/VISUAL-REVIEW-CHECKLIST.md` para o checklist completo de auditoria visual (11 widgets, mapeamento semântico de tons, portal dashboard).
+
 ## Base de Dados (Supabase)
 
 - Todas as tabelas têm **RLS**. 
@@ -84,13 +129,26 @@ Redesign completo do modulo de chat do ZattarOS para alinhar ao design system "G
 <!-- GSD:stack-start source:STACK.md -->
 ## Technology Stack
 
-Technology stack not yet documented. Will populate after codebase mapping or first phase.
+- **Framework**: Next.js 16 (App Router, Turbopack, Server Actions, React 19)
+- **Linguagem**: TypeScript 5 (strict mode)
+- **Estilização**: Tailwind CSS 4 + CSS variables OKLCH em `globals.css`
+- **Componentes**: shadcn/ui + Design System "Glass Briefing" (`GlassPanel`, `Heading`, `Text`, `TabPills`)
+- **Backend**: Supabase (PostgreSQL + RLS + pgvector), Redis
+- **Design Tokens**: `src/lib/design-system/tokens.ts` (spacing, typography, opacity, layout)
+- **Fonts**: Inter (body), Montserrat (heading), Manrope (headline/display), Geist Mono (mono)
 <!-- GSD:stack-end -->
 
 <!-- GSD:conventions-start source:CONVENTIONS.md -->
 ## Conventions
 
-Conventions not yet established. Will populate as patterns emerge during development.
+- **Cores**: Sempre via CSS variables (`bg-primary`, `text-muted-foreground`) — nunca `bg-blue-500` ou `#hex`
+- **Glass Depth**: `GlassPanel depth={1}` (containers) → `depth={2}` (KPIs) → `depth={3}` (ênfase)
+- **Tipografia**: `Heading level="page|section|card"` e `Text variant="label|caption|kpi-value"` — sem tamanhos avulsos
+- **Espaçamento**: Grid 4px via `SPACING`/`SEMANTIC_SPACING` de `tokens.ts`
+- **Opacidade**: Escala semântica de `OPACITY_SCALE` (subtle → emphasis) — sem valores arbitrários
+- **Componentes**: Verificar `@/components/shared/` e `@/components/ui/` antes de criar novos
+- **Dialogs**: Classes `glass-dialog` + `glass-dialog-overlay` para consistência visual
+- **Dark mode**: Obrigatório — CSS variables já têm override `.dark`, não criar lógica manual
 <!-- GSD:conventions-end -->
 
 <!-- GSD:architecture-start source:ARCHITECTURE.md -->

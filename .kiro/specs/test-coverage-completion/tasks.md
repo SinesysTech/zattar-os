@@ -76,7 +76,7 @@ Plano de implementação para completar a cobertura de testes do ZattarOS, segui
   - Executar `npm test` e garantir que todos os testes P0 passam
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 3. P1 — Testes de actions para módulos parciais
+- [x] 3. P1 — Testes de actions para módulos parciais
   - [x] 3.1 Criar testes de actions para `acervo`
     - Criar `src/app/(authenticated)/acervo/__tests__/actions/acervo-actions.test.ts`
     - Testar autenticação, validação Zod e delegação ao service para cada action
@@ -86,51 +86,51 @@ Plano de implementação para completar a cobertura de testes do ZattarOS, segui
     - Criar `src/app/(authenticated)/admin/__tests__/actions/admin-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [-] 3.3 Criar testes de actions para `advogados`
+  - [x] 3.3 Criar testes de actions para `advogados`
     - Criar `src/app/(authenticated)/advogados/__tests__/actions/advogados-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [~] 3.4 Criar testes de actions para `agenda`
+  - [x] 3.4 Criar testes de actions para `agenda`
     - Criar `src/app/(authenticated)/agenda/__tests__/actions/agenda-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [~] 3.5 Criar testes de actions para `calendar`
+  - [x] 3.5 Criar testes de actions para `calendar`
     - Criar `src/app/(authenticated)/calendar/__tests__/actions/calendar-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [~] 3.6 Criar testes de actions para `captura`
+  - [x] 3.6 Criar testes de actions para `captura`
     - Criar `src/app/(authenticated)/captura/__tests__/actions/captura-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [~] 3.7 Criar testes de actions para `cargos`
+  - [x] 3.7 Criar testes de actions para `cargos`
     - Criar `src/app/(authenticated)/cargos/__tests__/actions/cargos-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [~] 3.8 Criar testes de actions para `contratos`
+  - [x] 3.8 Criar testes de actions para `contratos`
     - Criar `src/app/(authenticated)/contratos/__tests__/actions/contratos-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [~] 3.9 Criar testes de actions para `entrevistas-trabalhistas`
+  - [x] 3.9 Criar testes de actions para `entrevistas-trabalhistas`
     - Criar `src/app/(authenticated)/entrevistas-trabalhistas/__tests__/actions/entrevistas-trabalhistas-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [~] 3.10 Criar testes de actions para `expedientes`
+  - [x] 3.10 Criar testes de actions para `expedientes`
     - Criar `src/app/(authenticated)/expedientes/__tests__/actions/expedientes-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [~] 3.11 Criar testes de actions para `pecas-juridicas`
+  - [x] 3.11 Criar testes de actions para `pecas-juridicas`
     - Criar `src/app/(authenticated)/pecas-juridicas/__tests__/actions/pecas-juridicas-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [~] 3.12 Criar testes de actions para `rh`
+  - [x] 3.12 Criar testes de actions para `rh`
     - Criar `src/app/(authenticated)/rh/__tests__/actions/rh-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [~] 3.13 Criar testes de actions para `tipos-expedientes`
+  - [x] 3.13 Criar testes de actions para `tipos-expedientes`
     - Criar `src/app/(authenticated)/tipos-expedientes/__tests__/actions/tipos-expedientes-actions.test.ts`
     - _Requirements: 3.1, 3.2, 3.3_
 
-- [ ] 4. Checkpoint — Validar P0 + P1
+- [-] 4. Checkpoint — Validar P0 + P1
   - Executar `npm test` e garantir que todos os testes de actions passam
   - Ensure all tests pass, ask the user if questions arise.
 
