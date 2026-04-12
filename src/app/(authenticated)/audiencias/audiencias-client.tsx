@@ -214,15 +214,10 @@ export function AudienciasClient({
             <Heading level="page">Audiências</Heading>
             <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
           </div>
-          <div className="relative">
-            <button
-              onClick={() => setIsNovaAudienciaOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
-            >
-              <Plus className="size-3.5" />
-              Nova Audiência
-            </button>
-          </div>
+          <Button size="sm" className="rounded-xl" onClick={() => setIsNovaAudienciaOpen(true)}>
+            <Plus className="size-3.5" />
+            Nova Audiência
+          </Button>
         </div>
       )}
 

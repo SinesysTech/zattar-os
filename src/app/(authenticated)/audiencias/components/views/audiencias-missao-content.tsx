@@ -10,6 +10,7 @@
 'use client';
 
 import { useMemo, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   parseISO,
   isSameDay,
@@ -81,6 +82,7 @@ export function AudienciasMissaoContent({
   onViewDetail,
   responsavelNomes,
 }: AudienciasMissaoContentProps) {
+  const router = useRouter();
   const now = useMemo(() => new Date(), []);
 
   // Day audiencias
@@ -148,7 +150,7 @@ export function AudienciasMissaoContent({
       {nextAudiencia && (
         <MissionCard
           audiencia={nextAudiencia}
-          onOpenProcess={(id) => { window.location.href = `/app/processos/${id}`; }}
+          onOpenProcess={(id) => { router.push(`/app/processos/${id}`); }}
           onViewChecklist={(a) => onViewDetail(a)}
         />
       )}

@@ -56,11 +56,11 @@ interface AudienciasGlassListProps {
 function getStatusDotColor(status: StatusAudiencia): string {
   switch (status) {
     case StatusAudiencia.Marcada:
-      return 'bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.7)]';
+      return 'bg-success shadow-[0_0_6px_var(--success)]';
     case StatusAudiencia.Finalizada:
-      return 'bg-blue-400 shadow-[0_0_6px_rgba(96,165,250,0.7)]';
+      return 'bg-info shadow-[0_0_6px_var(--info)]';
     case StatusAudiencia.Cancelada:
-      return 'bg-red-400 shadow-[0_0_6px_rgba(248,113,113,0.7)]';
+      return 'bg-destructive shadow-[0_0_6px_var(--destructive)]';
     default:
       return 'bg-muted-foreground';
   }
@@ -80,15 +80,15 @@ function getModalidadeIcon(modalidade: ModalidadeAudiencia | null) {
 }
 
 function getScoreColor(score: number): string {
-  if (score >= 80) return 'text-emerald-400';
+  if (score >= 80) return 'text-success';
   if (score >= 50) return 'text-amber-400';
-  return 'text-red-400';
+  return 'text-destructive';
 }
 
 function getScoreStrokeColor(score: number): string {
-  if (score >= 80) return '#34d399';
+  if (score >= 80) return 'var(--success)';
   if (score >= 50) return '#fbbf24';
-  return '#f87171';
+  return 'var(--destructive)';
 }
 
 function formatCountdown(dataInicio: string): { text: string; isUrgent: boolean } | null {
@@ -125,7 +125,7 @@ function PrepRing({ audiencia }: { audiencia: Audiencia }) {
       <svg width="40" height="40" viewBox="0 0 40 40">
         <circle
           cx="20" cy="20" r={radius}
-          fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3"
+          fill="none" stroke="var(--border)" strokeOpacity="0.15" strokeWidth="3"
         />
         <circle
           cx="20" cy="20" r={radius}
@@ -140,7 +140,7 @@ function PrepRing({ audiencia }: { audiencia: Audiencia }) {
         />
       </svg>
       <span className={cn(
-        'absolute inset-0 flex items-center justify-center text-[0.6rem] font-bold',
+        'absolute inset-0 flex items-center justify-center text-[10px] font-bold',
         getScoreColor(score),
       )}>
         {score}%
@@ -172,9 +172,9 @@ function GlassRow({
       type="button"
       onClick={onView}
       className={cn(
-        'w-full text-left rounded-[0.875rem] border border-white/[0.06] p-4 cursor-pointer',
+        'w-full text-left rounded-2xl border border-white/[0.06] p-4 cursor-pointer',
         'transition-all duration-[180ms] ease-out',
-        'hover:bg-white/[0.055] hover:border-white/[0.12] hover:scale-[1.0025] hover:-translate-y-px hover:shadow-[0_8px_32px_rgba(0,0,0,0.35)]',
+        'hover:bg-white/[0.055] hover:border-white/[0.12] hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
         isAlt ? 'bg-white/[0.018]' : 'bg-white/[0.028]',
       )}
     >
@@ -196,25 +196,25 @@ function GlassRow({
               </span>
               {/* Indicador badges inline */}
               {audiencia.segredoJustica && (
-                <span className="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold">
+                <span className="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded px-1.5 py-0.5 text-[10px] font-semibold">
                   <Lock className="w-2.5 h-2.5" />
                   Segredo
                 </span>
               )}
               {audiencia.designada && (
-                <span className="inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold">
+                <span className="inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded px-1.5 py-0.5 text-[10px] font-semibold">
                   <CheckCircle2 className="w-2.5 h-2.5" />
                   Designada
                 </span>
               )}
               {audiencia.juizoDigital && (
-                <span className="inline-flex items-center gap-1 bg-blue-500/10 border border-blue-500/20 text-blue-300 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold">
+                <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded px-1.5 py-0.5 text-[10px] font-semibold">
                   <Monitor className="w-2.5 h-2.5" />
                   Digital
                 </span>
               )}
               {(audiencia.poloAtivoRepresentaVarios || audiencia.poloPassivoRepresentaVarios) && (
-                <span className="inline-flex items-center gap-1 bg-white/[0.06] border border-white/[0.10] text-muted-foreground rounded px-1.5 py-0.5 text-[0.6rem] font-semibold">
+                <span className="inline-flex items-center gap-1 bg-white/[0.06] border border-white/[0.10] text-muted-foreground rounded px-1.5 py-0.5 text-[10px] font-semibold">
                   <Users className="w-2.5 h-2.5" />
                   Litisconsórcio
                 </span>
@@ -257,7 +257,7 @@ function GlassRow({
         {/* Modalidade badge */}
         <div>
           {audiencia.modalidade && (
-            <span className="inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[0.7rem] font-semibold tracking-[0.04em] px-2 py-1 bg-primary/[0.12] border border-primary/20 text-primary/80">
+            <span className="inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-primary/[0.12] border border-primary/20 text-primary/80">
               <ModalidadeIcon className="w-2.5 h-2.5" />
               {MODALIDADE_AUDIENCIA_LABELS[audiencia.modalidade]}
             </span>
@@ -266,7 +266,7 @@ function GlassRow({
 
         {/* TRT badge */}
         <div>
-          <span className="inline-flex backdrop-blur-sm rounded-lg text-[0.7rem] font-semibold tracking-[0.04em] px-2 py-1 bg-white/[0.06] border border-white/[0.10] text-muted-foreground">
+          <span className="inline-flex backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-white/[0.06] border border-white/[0.10] text-muted-foreground">
             {audiencia.trt}
           </span>
         </div>
@@ -281,7 +281,7 @@ function GlassRow({
           {countdown ? (
             <span className={cn(
               'inline-flex items-center gap-1 text-xs font-semibold',
-              countdown.isUrgent ? 'text-amber-400' : 'text-emerald-400',
+              countdown.isUrgent ? 'text-amber-400' : 'text-success',
             )}>
               <Clock className="w-3 h-3" />
               {countdown.text}
@@ -290,7 +290,7 @@ function GlassRow({
             <SemanticBadge
               category="audiencia_status"
               value={audiencia.status}
-              className="text-[0.6rem]"
+              className="text-[10px]"
             >
               {STATUS_AUDIENCIA_LABELS[audiencia.status]}
             </SemanticBadge>
@@ -314,7 +314,7 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: 5 }, (_, i) => (
-        <div key={i} className="rounded-[0.875rem] border border-white/[0.06] bg-white/[0.028] p-4">
+        <div key={i} className="rounded-2xl border border-white/[0.06] bg-white/[0.028] p-4">
           <div className="grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center">
             <Skeleton className="w-2 h-2 rounded-full" />
             <div className="flex items-center gap-3">

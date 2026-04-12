@@ -15,6 +15,7 @@ import {
 
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -195,11 +196,11 @@ function StatCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-[0.875rem] border border-white/[0.07] bg-white/[0.04] p-4 px-5">
+    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4 px-5">
       <div className="flex items-center gap-2 mb-3">
-        <div className={cn('w-7 h-7 rounded-lg flex items-center justify-center', iconBg)}>
+        <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />
-        </div>
+        </IconContainer>
         <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
           {label}
         </span>
@@ -318,12 +319,12 @@ export function AudienciasYearHeatmap({
           <div className="flex flex-col gap-4 w-full xl:w-64 shrink-0">
             {/* Total no Ano */}
             <StatCard icon={CalendarDays} iconBg="bg-primary/15" iconColor="text-primary" label="Total no Ano">
-              <div className="text-3xl font-bold tracking-tight">{stats.total}</div>
+              <div className="text-3xl font-display font-bold tracking-tight">{stats.total}</div>
             </StatCard>
 
             {/* Mês Mais Intenso */}
             <StatCard icon={Flame} iconBg="bg-orange-500/12" iconColor="text-orange-400" label="Mês Mais Intenso">
-              <div className="text-xl font-bold">{MONTH_NAMES[stats.maxMonth]}</div>
+              <div className="text-xl font-display font-bold">{MONTH_NAMES[stats.maxMonth]}</div>
               <div className="text-xs text-muted-foreground mt-0.5">
                 {stats.maxMonthCount} audiências
               </div>
@@ -337,13 +338,13 @@ export function AudienciasYearHeatmap({
 
             {/* Média Semanal */}
             <StatCard icon={BarChart2} iconBg="bg-emerald-500/12" iconColor="text-emerald-400" label="Média Semanal">
-              <div className="text-3xl font-bold tracking-tight">{stats.weekAvg}</div>
+              <div className="text-3xl font-display font-bold tracking-tight">{stats.weekAvg}</div>
               <div className="text-xs text-muted-foreground mt-1">audiências / semana</div>
             </StatCard>
 
             {/* Taxa de Realização */}
             <StatCard icon={CheckCircle2} iconBg="bg-primary/15" iconColor="text-primary" label="Taxa de Realização">
-              <div className="text-3xl font-bold tracking-tight">
+              <div className="text-3xl font-display font-bold tracking-tight">
                 {stats.taxa}
                 <span className="text-lg text-muted-foreground font-medium">%</span>
               </div>

@@ -52,9 +52,9 @@ const WEEKDAY_HEADERS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
 
 function getStatusDotClass(status: StatusAudiencia): string {
   switch (status) {
-    case StatusAudiencia.Marcada: return 'bg-emerald-500';
-    case StatusAudiencia.Finalizada: return 'bg-blue-400';
-    case StatusAudiencia.Cancelada: return 'bg-red-400';
+    case StatusAudiencia.Marcada: return 'bg-success';
+    case StatusAudiencia.Finalizada: return 'bg-info';
+    case StatusAudiencia.Cancelada: return 'bg-destructive';
     default: return 'bg-muted-foreground';
   }
 }
@@ -62,11 +62,11 @@ function getStatusDotClass(status: StatusAudiencia): string {
 function getStatusBadgeClass(status: StatusAudiencia): string {
   switch (status) {
     case StatusAudiencia.Marcada:
-      return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25';
+      return 'bg-success/15 text-success border-success/25';
     case StatusAudiencia.Finalizada:
-      return 'bg-blue-400/15 text-blue-300 border-blue-400/25';
+      return 'bg-info/15 text-info border-info/25';
     case StatusAudiencia.Cancelada:
-      return 'bg-red-400/15 text-red-300 border-red-400/25';
+      return 'bg-destructive/15 text-destructive border-destructive/25';
     default:
       return 'bg-white/10 text-muted-foreground border-white/10';
   }
@@ -241,8 +241,8 @@ export function AudienciasGlassMonth({
 
   return (
     <>
-      <div className="p-4 sm:p-6 flex flex-col h-full overflow-y-auto">
-        <GlassPanel depth={1} className="p-5 md:p-6 flex-1">
+      <div className="flex h-full flex-col overflow-y-auto p-4 sm:p-6">
+        <GlassPanel depth={1} className="p-6 flex-1 min-w-0">
           {/* Month Navigator */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
