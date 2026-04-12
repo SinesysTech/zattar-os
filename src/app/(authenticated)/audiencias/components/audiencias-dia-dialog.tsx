@@ -17,7 +17,7 @@ import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { IconContainer } from '@/components/ui/icon-container';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -301,7 +301,7 @@ export function AudienciasDiaDialog({
                 <Gavel className="size-4 text-primary" />
               </IconContainer>
               <div className="min-w-0">
-                <h2 className="text-card-title capitalize truncate">{dataFormatada}</h2>
+                <DialogTitle className="text-card-title capitalize truncate">{dataFormatada}</DialogTitle>
                 <p className="text-widget-sub mt-0.5">
                   {total} audiência{total > 1 ? 's' : ''}
                 </p>
