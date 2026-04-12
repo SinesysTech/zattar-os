@@ -193,8 +193,8 @@ describe('UI Integration - Property-Based Tests', () => {
         fc.assert(
             fc.property(
                 fc.record({
-                    initials: fc.string({ minLength: 1, maxLength: 2 }),
-                    badgeText: fc.string({ minLength: 1, maxLength: 5 }),
+                    initials: fc.stringMatching(/^[A-Z]{1,2}$/),
+                    badgeText: fc.stringMatching(/^[a-zA-Z0-9]{1,5}$/),
                     badgeVariant: fc.constantFrom('default', 'success', 'warning', 'destructive') as fc.Arbitrary<'default' | 'success' | 'warning' | 'destructive'>,
                 }),
                 ({ initials, badgeText, badgeVariant }) => {

@@ -17,8 +17,7 @@
  */
 
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
-import * as arquivosRepo from "../../repositories/arquivos-repository";
-import * as pastasRepo from "../../repositories/pastas-repository";
+import * as repository from "../../repository";
 import * as b2Service from "../../services/b2-upload.service";
 import type {
   Arquivo,
@@ -26,9 +25,6 @@ import type {
   PastaComContadores,
   DocumentoComUsuario,
 } from "../../domain";
-
-// Alias for backward compatibility in tests
-const repository = { ...arquivosRepo, ...pastasRepo };
 
 // Mock B2 upload service
 jest.mock("../../services/b2-upload.service", () => ({
@@ -55,8 +51,8 @@ jest.mock("@/lib/storage/backblaze-b2.service", () => ({
     .mockResolvedValue("https://presigned.url/file" as never),
 }));
 
-// Mock repositories
-jest.mock("../../repositories/arquivos-repository", () => ({
+// Mock consolidated repository
+jest.mock("../../repository", () => ({
   criarArquivo: jest.fn(),
   buscarArquivoPorId: jest.fn(),
   buscarArquivoComUsuario: jest.fn(),
@@ -65,15 +61,9 @@ jest.mock("../../repositories/arquivos-repository", () => ({
   deletarArquivo: jest.fn(),
   restaurarArquivo: jest.fn(),
   listarItensUnificados: jest.fn(),
-}));
-
-jest.mock("../../repositories/pastas-repository", () => ({
   listarPastasComContadores: jest.fn(),
   verificarAcessoPasta: jest.fn(),
   buscarCaminhoPasta: jest.fn(),
-}));
-
-jest.mock("../../repositories/documentos-repository", () => ({
   listarDocumentos: jest.fn(),
   verificarAcessoDocumento: jest.fn(),
 }));

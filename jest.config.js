@@ -1,4 +1,14 @@
 /** @type {import('jest').Config} */
+
+// Shared ESM packages that need to be transformed by ts-jest
+const esmPackages = [
+  '@lit-labs', '@lit', 'lit',
+  'lodash-es',
+  '@a2ui', '@copilotkit', '@copilotkitnext',
+  'react-resizable-panels',
+  'signal-utils',
+].join('|');
+
 const config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
@@ -40,13 +50,19 @@ const config = {
         '<rootDir>/src/lib/**/__tests__/**/*.test.ts',
       ],
       moduleNameMapper: {
+        '^@copilotkit/react-core(.*)$': '<rootDir>/src/__mocks__/@copilotkit/react-core.js',
+        '^radix-ui$': '<rootDir>/src/__mocks__/radix-ui.js',
         '^@/(.*)$': '<rootDir>/src/$1',
         '^server-only$': '<rootDir>/src/__mocks__/server-only.js',
         '^next/cache$': '<rootDir>/src/__mocks__/next-cache.js',
         '^next/headers$': '<rootDir>/src/__mocks__/next-headers.js',
       },
+      setupFiles: ['<rootDir>/src/__mocks__/env-setup.js'],
+      transformIgnorePatterns: [
+        `/node_modules/(?!(${esmPackages})/)`
+      ],
       transform: {
-        '^.+\\.(ts|tsx)$': ['ts-jest', {
+        '^.+\\.(ts|tsx|js|jsx|mjs)$': ['ts-jest', {
           tsconfig: '<rootDir>/tsconfig.test.json',
           diagnostics: false,
         }],
@@ -56,7 +72,11 @@ const config = {
       displayName: 'jsdom',
       preset: 'ts-jest',
       testEnvironment: 'jest-environment-jsdom',
+      testEnvironmentOptions: {
+        customExportConditions: ['node', 'require', 'default'],
+      },
       setupFilesAfterEnv: ['<rootDir>/src/__mocks__/jest-dom-setup.ts'],
+      setupFiles: ['<rootDir>/src/__mocks__/env-setup.js'],
       testMatch: [
         '<rootDir>/src/app/**/__tests__/**/*.test.ts',
         '<rootDir>/src/app/**/__tests__/**/*.test.tsx',
@@ -67,6 +87,8 @@ const config = {
         '<rootDir>/src/providers/**/__tests__/**/*.test.tsx',
       ],
       moduleNameMapper: {
+        '^@copilotkit/react-core(.*)$': '<rootDir>/src/__mocks__/@copilotkit/react-core.js',
+        '^radix-ui$': '<rootDir>/src/__mocks__/radix-ui.js',
         '^@/(.*)$': '<rootDir>/src/$1',
         '^server-only$': '<rootDir>/src/__mocks__/server-only.js',
         '^next/cache$': '<rootDir>/src/__mocks__/next-cache.js',
@@ -79,7 +101,7 @@ const config = {
         '\\.(png|jpg|jpeg|gif|svg|webp)$': '<rootDir>/src/__mocks__/fileMock.js',
       },
       transformIgnorePatterns: [
-        '/node_modules/(?!(@lit-labs|@lit|lit|lodash-es)/)',
+        `/node_modules/(?!(${esmPackages})/)`
       ],
       transform: {
         '^.+\\.(ts|tsx|js|jsx|mjs)$': ['ts-jest', {

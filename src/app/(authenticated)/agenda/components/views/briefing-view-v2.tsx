@@ -71,8 +71,8 @@ function sourceColors(source: string) {
 
 function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick?: () => void }) {
   const colors = sourceColors(event.source);
-  const isFatal = event.meta.prazoVencido;
-  const prepPct = event.meta.prepStatus === "preparado" ? 100 : event.meta.prepStatus === "parcial" ? 60 : event.meta.prepStatus === "pendente" ? 20 : undefined;
+  const isFatal = event.meta?.prazoVencido;
+  const prepPct = event.meta?.prepStatus === "preparado" ? 100 : event.meta?.prepStatus === "parcial" ? 60 : event.meta?.prepStatus === "pendente" ? 20 : undefined;
 
   return (
     <button onClick={onClick} className={cn("w-full text-left rounded-xl p-4 bg-muted/[0.035] border border-border/8 transition-all hover:bg-muted/[0.06] hover:border-border/15 cursor-pointer", isFatal && "border-destructive/15")}>
@@ -87,34 +87,34 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick?: (
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-[13px] font-semibold text-foreground">{event.title}</span>
             <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold border", colors.bg, colors.text, colors.border)}>{colors.label}</span>
-            {event.meta.status && (
+            {event.meta?.status && (
               <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold border",
-                event.meta.status === "Marcada" && "bg-success/15 text-success border-success/20",
-                event.meta.status === "Pendente" && "bg-warning/15 text-warning border-warning/20",
-              )}>{event.meta.status}</span>
+                event.meta?.status === "Marcada" && "bg-success/15 text-success border-success/20",
+                event.meta?.status === "Pendente" && "bg-warning/15 text-warning border-warning/20",
+              )}>{event.meta?.status}</span>
             )}
           </div>
           <div className="flex items-center gap-4 mt-2 text-[11px] text-muted-foreground/45">
-            {event.meta.trt && <span className="flex items-center gap-1"><Landmark className="size-3" /> {event.meta.trt}{event.meta.grau ? ` · ${event.meta.grau}` : ""}</span>}
-            {event.meta.modalidade && <span className="flex items-center gap-1">{event.meta.modalidade === "virtual" ? <Video className="size-3" /> : <MapPin className="size-3" />} {event.meta.modalidade === "virtual" ? "Virtual" : "Presencial"}</span>}
-            {event.meta.local && <span className="flex items-center gap-1"><MapPin className="size-3" /> {event.meta.local}</span>}
+            {event.meta?.trt && <span className="flex items-center gap-1"><Landmark className="size-3" /> {event.meta?.trt}{event.meta?.grau ? ` · ${event.meta?.grau}` : ""}</span>}
+            {event.meta?.modalidade && <span className="flex items-center gap-1">{event.meta?.modalidade === "virtual" ? <Video className="size-3" /> : <MapPin className="size-3" />} {event.meta?.modalidade === "virtual" ? "Virtual" : "Presencial"}</span>}
+            {event.meta?.local && <span className="flex items-center gap-1"><MapPin className="size-3" /> {event.meta?.local}</span>}
           </div>
-          {event.meta.processo && (
+          {event.meta?.processo && (
             <div className="mt-2 p-2 rounded-lg bg-muted/[0.03] border border-border/6 flex items-center gap-3">
               <FileText className="size-3.5 text-muted-foreground/35 flex-shrink-0" />
               <div className="min-w-0 flex-1">
-                <div className="text-[10px] font-mono text-muted-foreground/50">{event.meta.processo}</div>
+                <div className="text-[10px] font-mono text-muted-foreground/50">{event.meta?.processo}</div>
               </div>
               <ExternalLink className="size-3 text-muted-foreground/25 flex-shrink-0" />
             </div>
           )}
           {prepPct != null && <div className="mt-2"><PrepProgress percent={prepPct} size="sm" /></div>}
-          {event.meta.responsavelNome && (
+          {event.meta?.responsavelNome && (
             <div className="flex items-center gap-2 mt-2">
               <div className="size-5 rounded-full bg-primary/10 flex items-center justify-center text-[8px] font-bold text-primary flex-shrink-0">
-                {event.meta.responsavelNome.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+                {event.meta?.responsavelNome.split(" ").map((w) => w[0]).join("").slice(0, 2)}
               </div>
-              <span className="text-[10px] text-muted-foreground/45">{event.meta.responsavelNome}</span>
+              <span className="text-[10px] text-muted-foreground/45">{event.meta?.responsavelNome}</span>
             </div>
           )}
         </div>
@@ -139,12 +139,12 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
   // Derive prep items from events with prepStatus
   const prepItems: PrepItem[] = useMemo(() => {
     return events
-      .filter((e) => e.meta.prepStatus)
+      .filter((e) => e.meta?.prepStatus)
       .map((e) => ({
         id: e.id,
         label: `${e.title.slice(0, 25)}${e.title.length > 25 ? "..." : ""} (${fmtTime(e.start)})`,
         date: `${e.start.getDate()}/${String(e.start.getMonth() + 1).padStart(2, "0")}`,
-        percent: e.meta.prepStatus === "preparado" ? 100 : e.meta.prepStatus === "parcial" ? 60 : 20,
+        percent: e.meta?.prepStatus === "preparado" ? 100 : e.meta?.prepStatus === "parcial" ? 60 : 20,
       }))
       .slice(0, 5);
   }, [events]);
@@ -154,11 +154,11 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
     const items: AlertItem[] = [];
     const now = new Date();
     // Fatal deadlines today
-    dayEvents.filter((e) => e.meta.prazoVencido).forEach((e) => {
+    dayEvents.filter((e) => e.meta?.prazoVencido).forEach((e) => {
       items.push({ id: `alert-${e.id}`, severity: "critical", title: "Prazo Fatal Hoje", description: `${e.title} ${fmtTime(e.start)}` });
     });
     // Low prep
-    events.filter((e) => e.meta.prepStatus === "pendente" && e.start > now).forEach((e) => {
+    events.filter((e) => e.meta?.prepStatus === "pendente" && e.start > now).forEach((e) => {
       items.push({ id: `alert-prep-${e.id}`, severity: "info", title: "Preparo Pendente", description: `${e.title.slice(0, 20)} — ${e.start.getDate()}/${String(e.start.getMonth() + 1).padStart(2, "0")}` });
     });
     return items.slice(0, 4);

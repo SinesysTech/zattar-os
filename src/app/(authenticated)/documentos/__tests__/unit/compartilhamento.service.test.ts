@@ -1,16 +1,18 @@
 import { compartilharDocumento } from '../../service';
-import * as documentosRepo from '../../repositories/documentos-repository';
-import * as compartilhamentoRepo from '../../repositories/compartilhamento-repository';
+import * as repository from '../../repository';
 import { usuarioRepository } from '@/app/(authenticated)/usuarios/repository';
 
-// Mock dependencies
-jest.mock('../../repositories/documentos-repository');
-jest.mock('../../repositories/compartilhamento-repository');
+// Mock dependencies — the service imports everything from a single repository.ts
+jest.mock('../../repository');
 jest.mock('@/app/(authenticated)/usuarios/repository', () => ({
   usuarioRepository: {
     findById: jest.fn(),
   },
 }));
+
+// Aliases for readability
+const documentosRepo = repository;
+const compartilhamentoRepo = repository;
 
 describe('Documentos Service - Compartilhamento', () => {
   const mockUsuarioId = 123;

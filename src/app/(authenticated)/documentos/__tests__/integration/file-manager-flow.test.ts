@@ -5,12 +5,6 @@
  */
 
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
-import * as arquivosRepo from "../../repositories/arquivos-repository";
-import * as pastasRepo from "../../repositories/pastas-repository";
-import * as documentosRepo from "../../repositories/documentos-repository";
-
-// Alias for backward compatibility in tests
-const repository = { ...arquivosRepo, ...pastasRepo, ...documentosRepo };
 
 // Mock dependencies
 jest.mock("@/lib/storage/backblaze-b2.service", () => ({
@@ -22,20 +16,32 @@ jest.mock("@/lib/storage/backblaze-b2.service", () => ({
   validateFileSize: jest.fn(),
 }));
 
-jest.mock("../../repositories/arquivos-repository", () => ({
+jest.mock("../../repository", () => ({
   listarItensUnificados: jest.fn(),
   listarArquivos: jest.fn(),
-}));
-
-jest.mock("../../repositories/pastas-repository", () => ({
   listarPastasComContadores: jest.fn(),
   buscarCaminhoPasta: jest.fn(),
   verificarAcessoPasta: jest.fn(),
+  listarDocumentos: jest.fn(),
+  criarArquivo: jest.fn(),
+  buscarArquivoPorId: jest.fn(),
+  buscarArquivoComUsuario: jest.fn(),
+  atualizarArquivo: jest.fn(),
+  deletarArquivo: jest.fn(),
+  restaurarArquivo: jest.fn(),
+  verificarAcessoDocumento: jest.fn(),
 }));
 
-jest.mock("../../repositories/documentos-repository", () => ({
-  listarDocumentos: jest.fn(),
+jest.mock("@/lib/mcp/quotas", () => ({
+  checkQuota: jest.fn().mockResolvedValue({ allowed: true } as never),
+  incrementQuota: jest.fn(),
 }));
+
+jest.mock("@/lib/auth/authorization", () => ({
+  checkPermission: jest.fn().mockResolvedValue(true as never),
+}));
+
+import * as repository from "../../repository";
 
 // Import service after mocks
 // eslint-disable-next-line @typescript-eslint/no-require-imports
