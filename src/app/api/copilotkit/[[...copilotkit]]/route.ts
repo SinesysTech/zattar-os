@@ -1,16 +1,13 @@
 /**
  * CopilotKit Runtime Endpoint (Next.js App Router — v2 API)
  *
- * Usa BuiltInAgent com:
- * - Google Gemini como LLM (via AI SDK)
- * - Todas as ferramentas MCP como server tools (defineTool + Zod nativo)
- * - maxSteps: 5 para permitir chains de tool calls
+ * Per-request agent creation with permission-based tool filtering:
+ * 1. Authenticates user via Supabase session cookies
+ * 2. getMcpToolsForUser() filters tools down to user's authorized set
+ * 3. BuiltInAgent is created per-request with filtered tools
+ * 4. System prompt is fetched from DB with hardcoded fallback
  *
- * As ferramentas MCP são executadas no mesmo processo via bridge direta.
- *
- * Usa a API v2 do CopilotKit (createCopilotEndpoint + Hono) que é compatível
- * com o client v2 (@copilotkit/react-core/v2) e serve os endpoints:
- * /info, /agent/:name/connect, /agent/:name/run, etc.
+ * Uses CopilotKit v2 API (createCopilotEndpoint + Hono).
  */
 
 import {
@@ -21,39 +18,48 @@ import { BuiltInAgent } from "@copilotkit/runtime/v2";
 import { NextRequest, NextResponse } from "next/server";
 import {
   ensureMcpToolsRegistered,
-  getMcpToolsAsDefinitions,
+  getMcpToolsForUser,
 } from "@/lib/copilotkit/mcp-bridge";
-import { SYSTEM_PROMPT } from "@/lib/copilotkit/system-prompt";
+import { getPromptContent } from "@/lib/system-prompts/get-prompt";
+import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service-client";
 
 const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? process.env.GOOGLE_API_KEY;
 
-// Lazy-init: cria o Hono app uma única vez
-let cachedApp: { fetch: (req: Request) => Response | Promise<Response> } | null = null;
+/** Ensures MCP tools are registered once (idempotent) */
+let toolsInitialized = false;
 
-async function getOrCreateApp() {
-  if (cachedApp) return cachedApp;
+async function ensureToolsInit() {
+  if (!toolsInitialized) {
+    await ensureMcpToolsRegistered();
+    toolsInitialized = true;
+  }
+}
 
-  await ensureMcpToolsRegistered();
-  const tools = getMcpToolsAsDefinitions();
+/**
+ * Authenticates the user via Supabase session cookies.
+ * Returns the numeric usuarioId or null if unauthenticated.
+ */
+async function authenticateUser(): Promise<number | null> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error } = await supabase.auth.getUser();
 
-  const agent = new BuiltInAgent({
-    model: "google/gemini-3.1-pro-preview-customtools",
-    apiKey,
-    tools,
-    prompt: SYSTEM_PROMPT,
-    maxSteps: 5,
-  });
+    if (error || !user) return null;
 
-  const runtime = new CopilotRuntime({
-    agents: { default: agent },
-  });
+    const dbClient = createServiceClient();
+    const { data: userData } = await dbClient
+      .from('usuarios')
+      .select('id')
+      .eq('auth_user_id', user.id)
+      .eq('ativo', true)
+      .limit(1)
+      .maybeSingle();
 
-  cachedApp = createCopilotEndpoint({
-    runtime,
-    basePath: "/api/copilotkit",
-  });
-
-  return cachedApp;
+    return userData?.id ?? null;
+  } catch {
+    return null;
+  }
 }
 
 async function handleCopilotRequest(req: NextRequest) {
@@ -64,8 +70,43 @@ async function handleCopilotRequest(req: NextRequest) {
     );
   }
 
+  // 1. Authenticate user
+  const usuarioId = await authenticateUser();
+  if (!usuarioId) {
+    return NextResponse.json(
+      { error: "Não autorizado. Por favor faça login." },
+      { status: 401 },
+    );
+  }
+
   try {
-    const app = await getOrCreateApp();
+    // 2. Ensure MCP tools are registered
+    await ensureToolsInit();
+
+    // 3. Get filtered tools for this user
+    const tools = await getMcpToolsForUser(usuarioId);
+
+    // 4. Get system prompt (DB first, fallback to hardcoded)
+    const prompt = await getPromptContent('copilotkit_pedrinho');
+
+    // 5. Create agent per-request with user-specific tools
+    const agent = new BuiltInAgent({
+      model: "google/gemini-3.1-pro-preview-customtools",
+      apiKey,
+      tools,
+      prompt,
+      maxSteps: 5,
+    });
+
+    const runtime = new CopilotRuntime({
+      agents: { default: agent },
+    });
+
+    const app = createCopilotEndpoint({
+      runtime,
+      basePath: "/api/copilotkit",
+    });
+
     return app.fetch(req);
   } catch (error) {
     console.error("CopilotKit error:", error);
