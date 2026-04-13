@@ -965,6 +965,113 @@ export async function countContratosTrendMensal(
 }
 
 /**
+ * Soma o valor_causa de todos os contratos ativos (contratado ou distribuido)
+ */
+export async function sumValorContratosAtivos(): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+
+    const { data, error } = await db
+      .from(TABLE_CONTRATOS)
+      .select("valor_causa")
+      .in("status", ["contratado", "distribuido"]);
+
+    if (error) {
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
+    }
+
+    const total = (data ?? []).reduce(
+      (acc, row) => acc + (row.valor_causa ?? 0),
+      0,
+    );
+    return ok(total);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao somar valor dos contratos ativos",
+        undefined,
+        error instanceof Error ? error : undefined,
+      ),
+    );
+  }
+}
+
+/**
+ * Conta contratos ativos com vencimento nos próximos N dias
+ */
+export async function countContratosVencendo(
+  dias: number,
+): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+
+    const now = new Date().toISOString();
+    const futureDate = new Date(
+      Date.now() + dias * 24 * 60 * 60 * 1000,
+    ).toISOString();
+
+    const { count, error } = await db
+      .from(TABLE_CONTRATOS)
+      .select("*", { count: "exact", head: true })
+      .in("status", ["contratado", "distribuido"])
+      .gte("data_vencimento", now)
+      .lte("data_vencimento", futureDate);
+
+    if (error) {
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao contar contratos vencendo",
+        undefined,
+        error instanceof Error ? error : undefined,
+      ),
+    );
+  }
+}
+
+/**
+ * Conta contratos em andamento sem responsável atribuído
+ */
+export async function countContratosSemResponsavel(): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+
+    const { count, error } = await db
+      .from(TABLE_CONTRATOS)
+      .select("*", { count: "exact", head: true })
+      .in("status", ["em_contratacao", "contratado", "distribuido"])
+      .is("responsavel_id", null);
+
+    if (error) {
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code }),
+      );
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao contar contratos sem responsável",
+        undefined,
+        error instanceof Error ? error : undefined,
+      ),
+    );
+  }
+}
+
+/**
  * Remove permanentemente um contrato
  */
 export async function deleteContrato(id: number): Promise<Result<void>> {
