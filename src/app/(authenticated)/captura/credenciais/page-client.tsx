@@ -4,12 +4,16 @@ import * as React from 'react';
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import type { Table as TanstackTable, RowSelectionState } from '@tanstack/react-table';
-import { Plus, PowerOff, Power, KeyRound, CheckCircle2, XCircle, Landmark } from 'lucide-react';
+import { Plus, PowerOff, Power, KeyRound, CheckCircle2, XCircle, Landmark, List, LayoutGrid, Users } from 'lucide-react';
 import { DataTable } from '@/components/shared/data-shell';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { PulseStrip } from '@/components/dashboard/pulse-strip';
 import type { PulseItem } from '@/components/dashboard/pulse-strip';
 import { SearchInput } from '@/components/dashboard/search-input';
+import { ViewToggle } from '@/components/dashboard/view-toggle';
+import type { ViewToggleOption } from '@/components/dashboard/view-toggle';
+import { EmptyState } from '@/components/shared/empty-state';
+import { cn } from '@/lib/utils';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
   AlertDialog,
@@ -136,6 +140,15 @@ export default function CredenciaisPage() {
     open: false,
     advogado: null,
   });
+
+  // View mode
+  const [viewMode, setViewMode] = useState('tabela');
+
+  // View options
+  const CRED_VIEW_OPTIONS: ViewToggleOption[] = [
+    { id: 'tabela', icon: List, label: 'Tabela' },
+    { id: 'cards', icon: LayoutGrid, label: 'Cards' },
+  ];
 
   // Row selection para bulk actions
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -344,72 +357,159 @@ export default function CredenciaisPage() {
         <PulseStrip items={kpiItems} />
 
         {/* Filter Bar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <div className="flex items-center gap-2 flex-wrap">
-            <AdvogadosFilter
-              title="Tribunal"
-              options={tribunalOptions}
-              value={tribunalFilter}
-              onValueChange={setTribunalFilter}
-            />
-            <AdvogadosFilter
-              title="Grau"
-              options={grauOptions}
-              value={grauFilter}
-              onValueChange={setGrauFilter}
-            />
-            <AdvogadosFilter
-              title="Status"
-              options={statusOptions}
-              value={statusFilter}
-              onValueChange={setStatusFilter}
-            />
-          </div>
-          <div className="flex items-center gap-2 flex-1 justify-end">
-            <SearchInput
-              value={busca}
-              onChange={setBusca}
-              placeholder="Buscar credenciais..."
-            />
-            <Button size="sm" className="rounded-xl" onClick={handleNovaCredencial}>
-              <Plus className="size-3.5" />
-              Nova Credencial
-            </Button>
-          </div>
-        </div>
-
-        {/* Bulk Actions Bar (when rows selected) */}
-        {selectedCount > 0 && (
-          <div className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-primary/5 px-4 py-2.5">
-            <span className="text-sm font-medium text-primary">{selectedCount} selecionada(s)</span>
-            <div className="flex items-center gap-2 ml-auto">
-              <Button variant="outline" size="sm" onClick={() => handleBulkToggle('ativar')}>
-                <Power className="size-3.5 mr-1" /> Ativar
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => handleBulkToggle('desativar')}>
-                <PowerOff className="size-3.5 mr-1" /> Desativar
+        <GlassPanel depth={1} className="px-4 py-2.5">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="flex items-center gap-2 flex-wrap">
+              <AdvogadosFilter
+                title="Tribunal"
+                options={tribunalOptions}
+                value={tribunalFilter}
+                onValueChange={setTribunalFilter}
+              />
+              <AdvogadosFilter
+                title="Grau"
+                options={grauOptions}
+                value={grauFilter}
+                onValueChange={setGrauFilter}
+              />
+              <AdvogadosFilter
+                title="Status"
+                options={statusOptions}
+                value={statusFilter}
+                onValueChange={setStatusFilter}
+              />
+            </div>
+            <div className="flex items-center gap-2 flex-1 justify-end">
+              <SearchInput
+                value={busca}
+                onChange={setBusca}
+                placeholder="Buscar credenciais..."
+              />
+              <ViewToggle mode={viewMode} onChange={setViewMode} options={CRED_VIEW_OPTIONS} />
+              <Button size="sm" className="rounded-xl" onClick={handleNovaCredencial}>
+                <Plus className="size-3.5" />
+                Nova Credencial
               </Button>
             </div>
           </div>
+        </GlassPanel>
+
+        {/* Table View */}
+        {viewMode === 'tabela' && (
+          <>
+            {/* Bulk Actions Bar (when rows selected) */}
+            {selectedCount > 0 && (
+              <div className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-primary/5 px-4 py-2.5">
+                <span className="text-sm font-medium text-primary">{selectedCount} selecionada(s)</span>
+                <div className="flex items-center gap-2 ml-auto">
+                  <Button variant="outline" size="sm" onClick={() => handleBulkToggle('ativar')}>
+                    <Power className="size-3.5 mr-1" /> Ativar
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkToggle('desativar')}>
+                    <PowerOff className="size-3.5 mr-1" /> Desativar
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            <GlassPanel depth={1} className="overflow-hidden">
+              <div className="flex items-center px-4 py-2.5 border-b border-white/[0.05]">
+                <span className="text-xs text-muted-foreground/60">
+                  {credenciaisFiltradas.length} credenciais
+                </span>
+              </div>
+              <DataTable
+                data={credenciaisFiltradas}
+                columns={colunas}
+                isLoading={isLoading}
+                error={error}
+                density={density}
+                emptyMessage="Nenhuma credencial encontrada."
+                hidePagination={true}
+                rowSelection={{
+                  state: rowSelection,
+                  onRowSelectionChange: setRowSelection,
+                }}
+                onTableReady={(t) => setTable(t as TanstackTable<Credencial>)}
+              />
+            </GlassPanel>
+          </>
         )}
 
-        {/* Table in Glass Panel */}
-        <GlassPanel depth={1} className="overflow-hidden">
-          <DataTable
-            data={credenciaisFiltradas}
-            columns={colunas}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            emptyMessage="Nenhuma credencial encontrada."
-            hidePagination={true}
-            rowSelection={{
-              state: rowSelection,
-              onRowSelectionChange: setRowSelection,
-            }}
-            onTableReady={(t) => setTable(t as TanstackTable<Credencial>)}
-          />
-        </GlassPanel>
+        {/* Card View */}
+        {viewMode === 'cards' && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {isLoading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-40 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse" />
+              ))
+            ) : credenciaisFiltradas.length === 0 ? (
+              <div className="col-span-full">
+                <EmptyState
+                  icon={KeyRound}
+                  title="Nenhuma credencial encontrada"
+                  description="Ajuste os filtros ou cadastre uma nova credencial."
+                />
+              </div>
+            ) : (
+              credenciaisFiltradas.map((credencial) => (
+                <GlassPanel key={credencial.id} depth={2} className="p-4">
+                  {/* Tribunal + Grau header */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-9 h-9 rounded-[0.625rem] bg-primary/[0.08] flex items-center justify-center shrink-0">
+                      <Landmark className="w-4 h-4 text-primary" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold">{credencial.tribunal}</div>
+                      <div className="text-xs text-muted-foreground/55">
+                        {GRAU_LABELS[credencial.grau] ?? credencial.grau}
+                      </div>
+                    </div>
+                    {/* Status dot */}
+                    <div className="ml-auto flex items-center gap-1.5">
+                      <div className={cn('size-2 rounded-full', credencial.active ? 'bg-success' : 'bg-muted-foreground/40')} />
+                      <span className={cn('text-[11px] font-medium', credencial.active ? 'text-success' : 'text-muted-foreground/50')}>
+                        {credencial.active ? 'Ativa' : 'Inativa'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-border/10 my-2" />
+
+                  {/* Advogado info */}
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground/60">
+                      <Users className="size-3 shrink-0" />
+                      <span className="truncate">{credencial.advogado_nome}</span>
+                    </div>
+                    {credencial.usuario && (
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground/60">
+                        <KeyRound className="size-3 shrink-0" />
+                        <span className="font-mono text-[11px]">{credencial.usuario}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="border-t border-border/10 mt-3 pt-3" />
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm" className="flex-1 text-xs h-7" onClick={() => handleToggleStatus(credencial)}>
+                      {credencial.active ? (
+                        <><PowerOff className="size-3 mr-1" />Desativar</>
+                      ) : (
+                        <><Power className="size-3 mr-1" />Ativar</>
+                      )}
+                    </Button>
+                    <Button variant="ghost" size="sm" className="text-xs h-7" onClick={() => handleEdit(credencial)}>
+                      Editar
+                    </Button>
+                  </div>
+                </GlassPanel>
+              ))
+            )}
+          </div>
+        )}
       </div>
 
       {/* Dialog de visualização do advogado */}
