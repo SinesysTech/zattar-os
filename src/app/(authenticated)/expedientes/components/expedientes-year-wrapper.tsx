@@ -1,3 +1,5 @@
+'use client';
+
 import { ExpedientesYearHeatmap } from './expedientes-year-heatmap';
 import type { Expediente } from '../domain';
 
