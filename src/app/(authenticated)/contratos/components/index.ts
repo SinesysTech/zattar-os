@@ -27,3 +27,8 @@ export type { ContratosStatsData, FinancialStripProps } from './financial-strip'
 
 export { KanbanColumn } from './kanban-column';
 export type { KanbanColumnProps } from './kanban-column';
+
+// ─── Glass Briefing Orchestrator ─────────────────────────────────────────────
+export { ContratosContent } from './contratos-content';
+export { ContratosPulseStrip } from './contratos-pulse-strip';
+export { ContratosPipelineStepper } from './contratos-pipeline-stepper';
