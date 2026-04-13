@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Registro de Ferramentas MCP - Mail
  *
@@ -9,8 +8,8 @@
  * - mail_buscar_mensagens: Busca mensagens por critérios
  * - mail_enviar_email: Envia email via SMTP
  *
- * Adapter: Usa getUserMailConfig para obter MailConfig do usuário autenticado.
- * As funções de @/lib/mail/ operam diretamente via IMAP/SMTP (não são services FSD).
+ * IMPORTANTE: As ferramentas MCP chamam o SERVICE do módulo FSD diretamente,
+ * não os clientes de protocolo em @/lib/mail/.
  */
 
 import { z } from 'zod';
@@ -21,20 +20,22 @@ import { jsonResult, errorResult } from '../types';
  * Registra ferramentas MCP do módulo Mail
  */
 export async function registerMailTools(): Promise<void> {
-  const { listFolders, listMessages, getMessage, searchMessages } = await import('@/lib/mail/imap-client');
-  const { sendEmail } = await import('@/lib/mail/smtp-client');
-  const { getUserMailConfig } = await import('@/lib/mail/credentials');
+  const {
+    listarPastas,
+    listarMensagens,
+    lerMensagem,
+    buscarMensagens,
+    enviarEmail,
+  } = await import('@/app/(authenticated)/mail/service');
   const { getCurrentUser } = await import('@/lib/auth/server');
 
   /**
-   * Helper: obtém MailConfig do usuário autenticado
+   * Helper: obtém userId autenticado
    */
-  async function getAuthenticatedMailConfig() {
+  async function getAuthUserId() {
     const user = await getCurrentUser();
-    if (!user) return { error: 'Usuário não autenticado' as const, config: null, userId: null };
-    const config = await getUserMailConfig(user.id);
-    if (!config) return { error: 'Credenciais de email não configuradas' as const, config: null, userId: user.id };
-    return { error: null, config, userId: user.id };
+    if (!user) return null;
+    return user.id;
   }
 
   /**
@@ -45,16 +46,20 @@ export async function registerMailTools(): Promise<void> {
     description: 'Lista pastas do email do usuário (INBOX, Sent, Drafts, etc.) com contagem de mensagens e não lidas',
     feature: 'mail',
     requiresAuth: true,
-    schema: z.object({}),
-    handler: async () => {
+    schema: z.object({
+      accountId: z.number().optional().describe('ID da conta de email (multi-conta)'),
+    }),
+    handler: async (args) => {
       try {
-        const { error, config } = await getAuthenticatedMailConfig();
-        if (error || !config) return errorResult(error || 'Erro ao obter configuração');
+        const userId = await getAuthUserId();
+        if (!userId) return errorResult('Usuário não autenticado');
 
-        const folders = await listFolders(config);
+        const result = await listarPastas(userId, args.accountId);
+        if (!result.success) return errorResult(result.error.message);
+
         return jsonResult({
-          message: `${folders.length} pasta(s) encontrada(s)`,
-          data: folders,
+          message: `${result.data.length} pasta(s) encontrada(s)`,
+          data: result.data,
         });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar pastas');
@@ -71,20 +76,22 @@ export async function registerMailTools(): Promise<void> {
     feature: 'mail',
     requiresAuth: true,
     schema: z.object({
-      pasta: z.string().describe('Nome da pasta (ex: INBOX, Sent, Drafts)'),
+      pasta: z.string().default('INBOX').describe('Nome da pasta (ex: INBOX, Sent, Drafts)'),
       pagina: z.number().min(1).default(1).describe('Página'),
       limite: z.number().min(1).max(50).default(20).describe('Mensagens por página'),
+      accountId: z.number().optional().describe('ID da conta de email'),
     }),
     handler: async (args) => {
       try {
-        const { error, config } = await getAuthenticatedMailConfig();
-        if (error || !config) return errorResult(error || 'Erro ao obter configuração');
+        const userId = await getAuthUserId();
+        if (!userId) return errorResult('Usuário não autenticado');
 
-         
-        const result = await listMessages(config, (args as any).pasta, (args as any).pagina, (args as any).limite);
+        const result = await listarMensagens(userId, args);
+        if (!result.success) return errorResult(result.error.message);
+
         return jsonResult({
-          message: `${result.data.length} mensagem(ns) na pasta ${args.pasta}`,
-          data: result,
+          message: `${result.data.data.length} mensagem(ns) na pasta ${args.pasta}`,
+          data: result.data,
         });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar mensagens');
@@ -101,28 +108,30 @@ export async function registerMailTools(): Promise<void> {
     feature: 'mail',
     requiresAuth: true,
     schema: z.object({
-      pasta: z.string().describe('Pasta onde a mensagem está'),
+      pasta: z.string().default('INBOX').describe('Pasta onde a mensagem está'),
       uid: z.number().describe('UID da mensagem'),
+      accountId: z.number().optional().describe('ID da conta de email'),
     }),
     handler: async (args) => {
       try {
-        const { error, config } = await getAuthenticatedMailConfig();
-        if (error || !config) return errorResult(error || 'Erro ao obter configuração');
+        const userId = await getAuthUserId();
+        if (!userId) return errorResult('Usuário não autenticado');
 
-        const message = await getMessage(config, args.pasta, args.uid);
-        if (!message) return errorResult('Mensagem não encontrada');
+        const result = await lerMensagem(userId, { ...args, pasta: args.pasta ?? 'INBOX' });
+        if (!result.success) return errorResult(result.error.message);
+        if (!result.data) return errorResult('Mensagem não encontrada');
 
         return jsonResult({
-          message: `Mensagem: ${message.subject}`,
+          message: `Mensagem: ${result.data.subject}`,
           data: {
-            uid: message.uid,
-            from: message.from,
-            to: message.to,
-            cc: message.cc,
-            subject: message.subject,
-            text: message.text,
-            date: message.date,
-            flags: message.flags,
+            uid: result.data.uid,
+            from: result.data.from,
+            to: result.data.to,
+            cc: result.data.cc,
+            subject: result.data.subject,
+            text: result.data.text,
+            date: result.data.date,
+            flags: result.data.flags,
           },
         });
       } catch (error) {
@@ -140,18 +149,21 @@ export async function registerMailTools(): Promise<void> {
     feature: 'mail',
     requiresAuth: true,
     schema: z.object({
-      pasta: z.string().describe('Pasta onde buscar'),
+      pasta: z.string().default('INBOX').describe('Pasta onde buscar'),
       busca: z.string().describe('Texto para buscar (assunto, remetente, conteúdo)'),
+      accountId: z.number().optional().describe('ID da conta de email'),
     }),
     handler: async (args) => {
       try {
-        const { error, config } = await getAuthenticatedMailConfig();
-        if (error || !config) return errorResult(error || 'Erro ao obter configuração');
+        const userId = await getAuthUserId();
+        if (!userId) return errorResult('Usuário não autenticado');
 
-        const messages = await searchMessages(config, args.pasta, args.busca);
+        const result = await buscarMensagens(userId, { ...args, pasta: args.pasta ?? 'INBOX' });
+        if (!result.success) return errorResult(result.error.message);
+
         return jsonResult({
-          message: `${messages.length} mensagem(ns) encontrada(s)`,
-          data: messages,
+          message: `${result.data.length} mensagem(ns) encontrada(s)`,
+          data: result.data,
         });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar mensagens');
@@ -168,24 +180,20 @@ export async function registerMailTools(): Promise<void> {
     feature: 'mail',
     requiresAuth: true,
     schema: z.object({
-      para: z.array(z.string().email()).describe('Destinatários (emails)'),
+      para: z.array(z.string()).describe('Destinatários (emails)'),
       assunto: z.string().describe('Assunto do email'),
       texto: z.string().describe('Corpo do email em texto'),
-      cc: z.array(z.string().email()).optional().describe('Cópia (CC)'),
-      cco: z.array(z.string().email()).optional().describe('Cópia oculta (BCC)'),
+      cc: z.array(z.string()).optional().describe('Cópia (CC)'),
+      cco: z.array(z.string()).optional().describe('Cópia oculta (BCC)'),
+      accountId: z.number().optional().describe('ID da conta de email'),
     }),
     handler: async (args) => {
       try {
-        const { error, config } = await getAuthenticatedMailConfig();
-        if (error || !config) return errorResult(error || 'Erro ao obter configuração');
+        const userId = await getAuthUserId();
+        if (!userId) return errorResult('Usuário não autenticado');
 
-        await sendEmail(config, {
-          to: args.para,
-          subject: args.assunto,
-          text: args.texto,
-          cc: args.cc,
-          bcc: args.cco,
-        });
+        const result = await enviarEmail(userId, args);
+        if (!result.success) return errorResult(result.error.message);
 
         return jsonResult({
           message: `Email enviado para ${args.para.join(', ')}`,

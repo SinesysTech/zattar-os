@@ -29,7 +29,35 @@ export type {
     MailMessage,
     MailFolder,
     MailAddress,
+    MailConfig,
+    EmailCredentials,
+    SaveEmailCredentialsInput,
+    SendEmailRequest,
+    ReplyRequest,
+    ForwardRequest,
+    FlagUpdateRequest,
+    MoveRequest,
+    PaginatedResponse,
 } from './domain';
+
+// =============================================================================
+// Actions
+// =============================================================================
+
+export {
+    actionListarPastas,
+    actionListarMensagens,
+    actionLerMensagem,
+    actionBuscarMensagens,
+    actionEnviarEmail,
+    actionResponderEmail,
+    actionEncaminharEmail,
+    actionAtualizarFlags,
+    actionMoverMensagem,
+    actionListarContas,
+    actionSalvarConta,
+    actionExcluirConta,
+} from './actions';
 
 // =============================================================================
 // Utils
