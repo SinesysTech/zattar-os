@@ -14,6 +14,7 @@
  */
 
 import { FileText } from 'lucide-react';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { EmptyState } from '@/components/shared/empty-state';
 import { fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { ContratoCard } from './contrato-card';
@@ -33,7 +34,7 @@ export function KanbanColumn({ stage, contratos, onCardClick }: KanbanColumnProp
   const total = contratos.reduce((sum, c) => sum + c.valor, 0);
 
   return (
-    <div className="flex-1 min-w-65 flex flex-col gap-2">
+    <GlassPanel className="flex-1 min-w-65 flex flex-col gap-2 p-3">
       {/* Column header */}
       <div
         className="flex items-center justify-between px-1 pb-2 border-b-2"
@@ -69,6 +70,6 @@ export function KanbanColumn({ stage, contratos, onCardClick }: KanbanColumnProp
           />
         )}
       </div>
-    </div>
+    </GlassPanel>
   );
 }

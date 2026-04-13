@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { cn } from '@/lib/utils';
 import {
   Calendar,
@@ -167,7 +168,7 @@ export function ContratoViewSheet({
             {/* Partes */}
             <Section title="Partes do Contrato" icon={<Users className="h-4 w-4" />}>
               <div className="space-y-3">
-                <div className="p-3 rounded-lg bg-muted/50 border">
+                <div className="p-3 rounded-2xl border border-border/20 glass-widget bg-transparent">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs text-muted-foreground">Cliente</span>
                     <AppBadge variant="outline" className="text-xs">
@@ -178,7 +179,7 @@ export function ContratoViewSheet({
                 </div>
 
                 {contrato.partes.filter(p => p.tipoEntidade === 'parte_contraria').map((parte, idx) => (
-                  <div key={idx} className="p-3 rounded-lg bg-muted/50 border">
+                  <div key={idx} className="p-3 rounded-2xl border border-border/20 glass-widget bg-transparent">
                     <span className="text-xs text-muted-foreground block mb-1">
                       Parte Contrária
                     </span>
@@ -241,7 +242,7 @@ export function ContratoViewSheet({
               <>
                 <Separator />
                 <Section title="Observações" icon={<FileText className="h-4 w-4" />}>
-                  <div className="p-3 rounded-lg bg-muted/50 border">
+                  <div className="p-3 rounded-2xl border border-border/20 glass-widget bg-transparent">
                     <p className="text-sm whitespace-pre-wrap">{contrato.observacoes}</p>
                   </div>
                 </Section>
@@ -297,7 +298,7 @@ export function ContratoViewSheet({
                 <Section title="Histórico de Status" icon={<Clock className="h-4 w-4" />}>
                   <div className="space-y-2">
                     {contrato.statusHistorico.map((item) => (
-                      <div key={item.id} className="p-3 rounded-lg bg-muted/50 border">
+                      <div key={item.id} className="p-3 rounded-2xl border border-border/20 glass-widget bg-transparent">
                         <div className="flex items-center justify-between gap-2">
                           <AppBadge variant="outline" className="text-xs">
                             {item.fromStatus ? STATUS_CONTRATO_LABELS[item.fromStatus] : '—'}
