@@ -323,14 +323,14 @@ export function AudienciasYearHeatmap({
             </StatCard>
 
             {/* Mês Mais Intenso */}
-            <StatCard icon={Flame} iconBg="bg-orange-500/12" iconColor="text-orange-400" label="Mês Mais Intenso">
+            <StatCard icon={Flame} iconBg="bg-warning/12" iconColor="text-warning" label="Mês Mais Intenso">
               <div className="text-card-title">{MONTH_NAMES[stats.maxMonth]}</div>
               <div className="text-widget-sub mt-0.5">
                 {stats.maxMonthCount} audiências
               </div>
               <div className="mt-3 h-1 rounded-full bg-white/[0.06]">
                 <div
-                  className="h-1 rounded-full bg-orange-400/70"
+                  className="h-1 rounded-full bg-warning/70"
                   style={{ width: `${stats.total > 0 ? Math.round((stats.maxMonthCount / stats.total) * 100) : 0}%` }}
                 />
               </div>
@@ -361,7 +361,7 @@ export function AudienciasYearHeatmap({
 
             {/* Próxima Audiência */}
             {stats.proxima && (
-              <StatCard icon={Clock} iconBg="bg-sky-500/12" iconColor="text-sky-400" label="Próxima">
+              <StatCard icon={Clock} iconBg="bg-info/12" iconColor="text-info" label="Próxima">
                 <div className="text-label font-semibold">
                   {format(parseISO(stats.proxima.dataInicio), "dd MMM · HH'h'mm", { locale: ptBR })}
                 </div>
@@ -370,7 +370,7 @@ export function AudienciasYearHeatmap({
                 </div>
                 {stats.proxima.tipoDescricao && (
                   <div className="mt-2">
-                    <span className="text-micro-badge px-2 py-0.5 rounded-full font-medium bg-sky-500/12 text-sky-300 border border-sky-500/20">
+                    <span className="text-micro-badge px-2 py-0.5 rounded-full font-medium bg-info/12 text-info border border-info/20">
                       {stats.proxima.tipoDescricao}
                     </span>
                   </div>

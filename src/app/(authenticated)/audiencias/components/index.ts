@@ -27,6 +27,7 @@ export { AudienciaIndicadorBadges, AUDIENCIA_INDICADOR_SHOW_CONFIGS } from './au
 export { AudienciaTimeline } from './audiencia-timeline';
 export { AudienciasDiaDialog } from './audiencias-dia-dialog';
 export { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
+export { AudienciaResponsavelPopover, ResponsavelTriggerContent } from './audiencia-responsavel-popover';
 export { NovaAudienciaDialog } from './nova-audiencia-dialog';
 export { EditarAudienciaDialog } from './editar-audiencia-dialog';
 

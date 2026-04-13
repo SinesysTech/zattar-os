@@ -48,7 +48,7 @@ interface AudienciasFilterBarProps {
 
 const POPOVER_CLASSES = 'rounded-2xl glass-dropdown overflow-hidden p-0';
 
-function FilterChip({
+function _FilterChip({
   label,
   active,
   onClear,

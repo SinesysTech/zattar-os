@@ -5,7 +5,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
-  User,
   Video,
   Building2,
   Gavel,
@@ -14,13 +13,11 @@ import {
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { IconContainer } from '@/components/ui/icon-container';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TabPills } from '@/components/dashboard/tab-pills';
 import { AuditLogTimeline } from '@/components/common/audit-log-timeline';
 import { useAuditLogs } from '@/lib/domain/audit/hooks/use-audit-logs';
@@ -29,7 +26,7 @@ import type { Audiencia } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '../domain';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
-import { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
+import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from './audiencia-responsavel-popover';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 
 // =============================================================================
@@ -45,6 +42,17 @@ interface AudienciasDiaDialogProps {
 }
 
 // =============================================================================
+// TIPOS
+// =============================================================================
+
+interface Usuario {
+  id: number;
+  nomeExibicao?: string;
+  nomeCompleto?: string;
+  avatarUrl?: string | null;
+}
+
+// =============================================================================
 // HELPERS
 // =============================================================================
 
@@ -56,23 +64,6 @@ const formatarHora = (dataISO: string): string => {
   }
 };
 
-function getInitials(name: string | null | undefined): string {
-  if (!name) return 'SR';
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
-interface Usuario {
-  id: number;
-  nomeExibicao?: string;
-  nomeCompleto?: string;
-  avatarUrl?: string | null;
-}
-
-function getUsuarioNome(u: Usuario): string {
-  return u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}`;
-}
 
 // =============================================================================
 // AUDIÊNCIA CONTENT — flat layout, no nested containers
@@ -87,12 +78,8 @@ function AudienciaContent({
   usuarios: Usuario[];
   onSuccess?: () => void;
 }) {
-  const [isResponsavelDialogOpen, setIsResponsavelDialogOpen] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState<string>('detalhes');
   const { logs, isLoading: loadingLogs } = useAuditLogs('audiencias', audiencia.id);
-
-  const responsavel = usuarios.find((u) => u.id === audiencia.responsavelId);
-  const nomeResponsavel = responsavel ? getUsuarioNome(responsavel) : null;
 
   return (
     <>
@@ -194,50 +181,22 @@ function AudienciaContent({
             </div>
           </div>
 
-          {/* Responsável */}
+          {/* Responsável — inline popover */}
           <div>
             <div className="text-meta-label mb-1.5">Responsável</div>
-            <button
-              type="button"
-              onClick={() => setIsResponsavelDialogOpen(true)}
-              className="flex items-center gap-2.5 hover:bg-accent/40 transition-colors rounded-lg p-2 -m-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
-              title={
-                nomeResponsavel
-                  ? `Alterar responsável: ${nomeResponsavel}`
-                  : 'Atribuir responsável'
-              }
+            <AudienciaResponsavelPopover
+              audienciaId={audiencia.id}
+              responsavelId={audiencia.responsavelId}
+              usuarios={usuarios}
+              onSuccess={() => onSuccess?.()}
             >
-              {responsavel ? (
-                <>
-                  <Avatar className="size-7 shrink-0">
-                    <AvatarImage
-                      src={responsavel?.avatarUrl || undefined}
-                      alt={nomeResponsavel || undefined}
-                    />
-                    <AvatarFallback className="text-micro-badge">
-                      {getInitials(nomeResponsavel)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-label">{nomeResponsavel}</span>
-                </>
-              ) : (
-                <>
-                  <div className="size-7 rounded-full bg-muted/40 flex items-center justify-center shrink-0">
-                    <User className="size-3.5 text-muted-foreground/40" />
-                  </div>
-                  <span className="text-caption">Clique para atribuir</span>
-                </>
-              )}
-            </button>
+              <ResponsavelTriggerContent
+                responsavelId={audiencia.responsavelId}
+                usuarios={usuarios}
+                size="md"
+              />
+            </AudienciaResponsavelPopover>
           </div>
-
-          <AudienciasAlterarResponsavelDialog
-            open={isResponsavelDialogOpen}
-            onOpenChange={setIsResponsavelDialogOpen}
-            audiencia={audiencia}
-            usuarios={usuarios}
-            onSuccess={() => onSuccess?.()}
-          />
 
           {/* Observações */}
           {audiencia.observacoes && (

@@ -19,7 +19,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { ParteBadge } from '@/components/ui/parte-badge';
 import { Heading } from '@/components/ui/typography';
@@ -30,7 +29,7 @@ import { GRAU_TRIBUNAL_LABELS, ModalidadeAudiencia, StatusAudiencia } from '../d
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 import { Textarea } from '@/components/ui/textarea';
-import { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
+import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from './audiencia-responsavel-popover';
 import { actionAtualizarObservacoes, actionAtualizarUrlVirtual, actionAtualizarEnderecoPresencial } from '../actions';
 
 // =============================================================================
@@ -444,10 +443,6 @@ function ModalidadeCell({
 // RESPONSÁVEL CELL - Edição inline
 // =============================================================================
 
-function getUsuarioNome(u: Usuario): string {
-  return u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}`;
-}
-
 export function ResponsavelCell({
   audiencia,
   usuarios = [],
@@ -457,43 +452,19 @@ export function ResponsavelCell({
   usuarios?: Usuario[];
   onSuccessAction?: () => void;
 }) {
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-  const responsavel = usuarios.find((u) => u.id === audiencia.responsavelId);
-  const nomeExibicao = responsavel ? getUsuarioNome(responsavel) : audiencia.responsavelNome || '-';
-
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setIsDialogOpen(true)}
-        className="flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer"
-        title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
-      >
-        {responsavel || audiencia.responsavelId ? (
-          <>
-            <Avatar size="sm">
-              <AvatarImage src={responsavel?.avatarUrl || undefined} alt={nomeExibicao} />
-              <AvatarFallback className="text-[10px] font-medium">
-                {getInitials(nomeExibicao)}
-              </AvatarFallback>
-            </Avatar>
-            <span className="truncate">{nomeExibicao}</span>
-          </>
-        ) : (
-          <span className="text-muted-foreground">Sem responsável</span>
-        )}
-      </button>
-
-      <AudienciasAlterarResponsavelDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        audiencia={audiencia}
+    <AudienciaResponsavelPopover
+      audienciaId={audiencia.id}
+      responsavelId={audiencia.responsavelId}
+      usuarios={usuarios}
+      onSuccess={onSuccessAction}
+    >
+      <ResponsavelTriggerContent
+        responsavelId={audiencia.responsavelId}
         usuarios={usuarios}
-        onSuccess={() => {
-          onSuccessAction?.();
-        }}
+        size="md"
       />
-    </>
+    </AudienciaResponsavelPopover>
   );
 }
 
@@ -549,13 +520,6 @@ function formatarDataHora(dataISO: string): string {
   } catch {
     return '-';
   }
-}
-
-function getInitials(name: string | null | undefined): string {
-  if (!name) return 'SR';
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
 // Factory function for columns

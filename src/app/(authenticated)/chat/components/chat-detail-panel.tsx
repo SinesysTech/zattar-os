@@ -9,7 +9,7 @@ import useChatStore from "../hooks/use-chat-store";
 import { UsuarioChat } from "../domain";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage, AvatarIndicator } from "@/components/ui/avatar";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { getSemanticBadgeVariant, type BadgeVisualVariant } from "@/lib/design-system";
 
 /**

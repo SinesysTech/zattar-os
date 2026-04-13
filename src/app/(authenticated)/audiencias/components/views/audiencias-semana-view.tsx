@@ -30,8 +30,16 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 import type { Audiencia } from '../../domain';
 import { StatusAudiencia } from '../../domain';
 import { calcPrepItems, calcPrepScore } from '../prep-score';
+import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from '../audiencia-responsavel-popover';
 
 // ─── Types ────────────────────────────────────────────────────────────────
+
+interface Usuario {
+  id: number;
+  nomeExibicao?: string;
+  nomeCompleto?: string;
+  avatarUrl?: string | null;
+}
 
 export interface AudienciasSemanaViewProps {
   audiencias: Audiencia[];
@@ -39,6 +47,8 @@ export interface AudienciasSemanaViewProps {
   onDateChange: (date: Date) => void;
   onViewDetail: (audiencia: Audiencia) => void;
   responsavelNomes?: Map<number, string>;
+  usuarios?: Usuario[];
+  onResponsavelChange?: () => void;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
@@ -59,6 +69,8 @@ export function AudienciasSemanaView({
   onDateChange,
   onViewDetail,
   responsavelNomes,
+  usuarios,
+  onResponsavelChange,
 }: AudienciasSemanaViewProps) {
   const weekStart = useMemo(
     () => startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 }),
@@ -180,7 +192,7 @@ export function AudienciasSemanaView({
               ) : (
                 <div className="space-y-2">
                   {dayAudiencias.map((a) => (
-                    <WeekDayCard key={a.id} audiencia={a} onClick={() => onViewDetail(a)} responsavelNomes={responsavelNomes} />
+                    <WeekDayCard key={a.id} audiencia={a} onClick={() => onViewDetail(a)} responsavelNomes={responsavelNomes} usuarios={usuarios} onResponsavelChange={onResponsavelChange} />
                   ))}
                 </div>
               )}
@@ -194,7 +206,7 @@ export function AudienciasSemanaView({
 
 // ─── Internal: Week Day Card ──────────────────────────────────────────────
 
-function WeekDayCard({ audiencia, onClick, responsavelNomes }: { audiencia: Audiencia; onClick: () => void; responsavelNomes?: Map<number, string> }) {
+function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onResponsavelChange }: { audiencia: Audiencia; onClick: () => void; responsavelNomes?: Map<number, string>; usuarios?: Usuario[]; onResponsavelChange?: () => void }) {
   const now = new Date();
   let isPast = false;
   let isOngoing = false;
@@ -226,7 +238,6 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes }: { audiencia: Audi
         <div className="flex items-center gap-1.5">
           {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
           {isFinalizada && <span className="text-[9px] font-semibold text-success px-1.5 py-0.5 rounded-full bg-success/15">OK</span>}
-          {/* Prep badge */}
           <span className={cn(
             'text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
             prepStatus === 'good' ? 'bg-success/15 text-success' : prepStatus === 'warning' ? 'bg-warning/15 text-warning' : 'bg-destructive/15 text-destructive',
@@ -241,42 +252,63 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes }: { audiencia: Audi
         {audiencia.tipoDescricao || 'Audiência'}
       </p>
 
-      {/* Process number */}
-      {audiencia.numeroProcesso && (
-        <p className="text-[10px] font-mono text-muted-foreground/60 tabular-nums mt-0.5 break-all">
-          {audiencia.numeroProcesso}
-        </p>
-      )}
-
-      {/* Parties */}
+      {/* Parties (antes do número) */}
       {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
         <p className="text-[10px] text-muted-foreground/55 mt-1 break-words leading-snug">
           {audiencia.poloAtivoNome || '—'} <span className="text-muted-foreground/35">vs</span> {audiencia.poloPassivoNome || '—'}
         </p>
       )}
 
-      {/* Bottom: TRT + Modalidade */}
-      <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-        {audiencia.trt && (
-          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70">{audiencia.trt}</span>
-        )}
-        <div className="flex items-center gap-1">
-          {isVirtual ? <Video className="size-2.5 text-info/60" /> : audiencia.modalidade === 'presencial' ? <Building2 className="size-2.5 text-warning/60" /> : null}
-          <span className="text-[9px] text-muted-foreground/55">
-            {audiencia.modalidade === 'virtual' ? 'Virtual' : audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : ''}
-          </span>
+      {/* TRT badge + Responsável à direita (antes do número) */}
+      <div className="flex items-center justify-between gap-1.5 mt-2">
+        <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+          {audiencia.trt && (
+            <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70">{audiencia.trt}</span>
+          )}
+          <div className="flex items-center gap-1">
+            {isVirtual ? <Video className="size-2.5 text-info/60" /> : audiencia.modalidade === 'presencial' ? <Building2 className="size-2.5 text-warning/60" /> : null}
+            <span className="text-[9px] text-muted-foreground/55">
+              {audiencia.modalidade === 'virtual' ? 'Virtual' : audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : ''}
+            </span>
+          </div>
+          {audiencia.urlAudienciaVirtual && isVirtual && (
+            <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70">Sala</span>
+          )}
         </div>
-        {audiencia.urlAudienciaVirtual && isVirtual && (
-          <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-info/15 text-info/70">Sala</span>
-        )}
-        {audiencia.responsavelId && responsavelNomes?.get(audiencia.responsavelId) ? (
-          <span className="text-[9px] text-muted-foreground/55">
-            {responsavelNomes.get(audiencia.responsavelId)}
-          </span>
-        ) : (
-          <span className="text-[9px] italic text-warning/60">Sem resp.</span>
-        )}
+        {/* Responsável — inline popover à direita */}
+        <div className="shrink-0">
+          {usuarios ? (
+            <AudienciaResponsavelPopover
+              audienciaId={audiencia.id}
+              responsavelId={audiencia.responsavelId}
+              usuarios={usuarios}
+              onSuccess={onResponsavelChange}
+              align="end"
+            >
+              <ResponsavelTriggerContent
+                responsavelId={audiencia.responsavelId}
+                usuarios={usuarios}
+                size="sm"
+              />
+            </AudienciaResponsavelPopover>
+          ) : (
+            audiencia.responsavelId && responsavelNomes?.get(audiencia.responsavelId) ? (
+              <span className="text-[9px] text-muted-foreground/55">
+                {responsavelNomes.get(audiencia.responsavelId)}
+              </span>
+            ) : (
+              <span className="text-[9px] italic text-warning/60">Sem resp.</span>
+            )
+          )}
+        </div>
       </div>
+
+      {/* Process number (sem font-mono, sem break-all) */}
+      {audiencia.numeroProcesso && (
+        <p className="text-[10px] text-muted-foreground/60 tabular-nums mt-1.5 truncate">
+          {audiencia.numeroProcesso}
+        </p>
+      )}
     </button>
   );
 }

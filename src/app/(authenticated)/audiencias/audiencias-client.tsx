@@ -303,6 +303,8 @@ export function AudienciasClient({
           onDateChange={setCurrentDate}
           onViewDetail={handleViewDetail}
           responsavelNomes={responsavelNomesMap}
+          usuarios={initialUsuarios}
+          onResponsavelChange={refetch}
         />
       )}
 

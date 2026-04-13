@@ -16,13 +16,9 @@ import {
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { GlassPanel } from '@/components/shared/glass-panel';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import {
-  Tooltip,
-  TooltipContent,
   TooltipProvider,
-  TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -81,7 +77,7 @@ function getModalidadeIcon(modalidade: ModalidadeAudiencia | null) {
 
 function getScoreColor(score: number): string {
   if (score >= 80) return 'text-success';
-  if (score >= 50) return 'text-amber-400';
+  if (score >= 50) return 'text-warning';
   return 'text-destructive';
 }
 
@@ -196,7 +192,7 @@ function GlassRow({
               </span>
               {/* Indicador badges inline */}
               {audiencia.segredoJustica && (
-                <span className="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded px-1.5 py-0.5 text-[10px] font-semibold">
+                <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/20 text-warning rounded px-1.5 py-0.5 text-[10px] font-semibold">
                   <Lock className="w-2.5 h-2.5" />
                   Segredo
                 </span>
@@ -281,7 +277,7 @@ function GlassRow({
           {countdown ? (
             <span className={cn(
               'inline-flex items-center gap-1 text-xs font-semibold',
-              countdown.isUrgent ? 'text-amber-400' : 'text-success',
+              countdown.isUrgent ? 'text-warning' : 'text-success',
             )}>
               <Clock className="w-3 h-3" />
               {countdown.text}

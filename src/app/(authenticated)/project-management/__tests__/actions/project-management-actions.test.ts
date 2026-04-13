@@ -81,7 +81,7 @@ jest.mock('@/lib/storage/supabase-storage.service', () => ({
 import { revalidatePath } from 'next/cache';
 import { getCurrentUser } from '@/lib/auth/server';
 import { createDbClient } from '@/lib/supabase';
-import { uploadToSupabase, deleteFromSupabase } from '@/lib/storage/supabase-storage.service';
+import { deleteFromSupabase } from '@/lib/storage/supabase-storage.service';
 
 // Import REAL actions (after mocks)
 import {
@@ -856,7 +856,7 @@ describe('Project Management Actions', () => {
 
         describe('actionExcluirAnexo', () => {
             it('deve excluir anexo e revalidar cache', async () => {
-                const mockDb = createMockQueryBuilder();
+                const _mockDb = createMockQueryBuilder();
                 // First call: fetch URL
                 const fetchBuilder: Record<string, jest.Mock> = {};
                 fetchBuilder.from = jest.fn().mockReturnValue(fetchBuilder);
