@@ -1,5 +1,5 @@
 import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
 
 export default function ContratoDetalhesLoading() {
   return (
@@ -28,68 +28,58 @@ export default function ContratoDetalhesLoading() {
         {/* Left column */}
         <div className="space-y-4 xl:col-span-1">
           {/* Resumo card */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-8">
-                <div className="flex flex-col items-center space-y-4">
-                  <Skeleton className="size-20 rounded-full" />
-                  <div className="text-center space-y-2">
-                    <Skeleton className="h-6 w-48 mx-auto" />
-                    <Skeleton className="h-6 w-24 mx-auto" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <Skeleton className="h-16" />
-                  <Skeleton className="h-16" />
-                  <Skeleton className="h-16" />
-                </div>
-                <div className="space-y-3">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
+          <GlassPanel className="p-6">
+            <div className="space-y-8">
+              <div className="flex flex-col items-center space-y-4">
+                <Skeleton className="size-20 rounded-full" />
+                <div className="text-center space-y-2">
+                  <Skeleton className="h-6 w-48 mx-auto" />
+                  <Skeleton className="h-6 w-24 mx-auto" />
                 </div>
               </div>
-            </CardContent>
-          </Card>
+              <div className="grid grid-cols-3 gap-4">
+                <Skeleton className="h-16" />
+                <Skeleton className="h-16" />
+                <Skeleton className="h-16" />
+              </div>
+              <div className="space-y-3">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </div>
+          </GlassPanel>
 
           {/* Progress card */}
-          <Card>
-            <CardHeader>
-              <Skeleton className="h-5 w-40" />
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <GlassPanel className="p-6">
+            <Skeleton className="h-5 w-40 mb-4" />
+            <div className="space-y-4">
               <Skeleton className="h-2 w-full" />
               <div className="flex justify-between">
                 <Skeleton className="h-8 w-16" />
                 <Skeleton className="h-8 w-16" />
                 <Skeleton className="h-8 w-16" />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </GlassPanel>
 
           {/* Tags card */}
-          <Card>
-            <CardHeader>
-              <Skeleton className="h-5 w-32" />
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                <Skeleton className="h-6 w-24" />
-                <Skeleton className="h-6 w-20" />
-                <Skeleton className="h-6 w-28" />
-              </div>
-            </CardContent>
-          </Card>
+          <GlassPanel className="p-6">
+            <Skeleton className="h-5 w-32 mb-4" />
+            <div className="flex flex-wrap gap-2">
+              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-6 w-20" />
+              <Skeleton className="h-6 w-28" />
+            </div>
+          </GlassPanel>
         </div>
 
         {/* Right column */}
         <div className="space-y-4 xl:col-span-2">
           {/* Partes card */}
-          <Card>
-            <CardHeader>
-              <Skeleton className="h-5 w-40" />
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <GlassPanel className="p-6">
+            <Skeleton className="h-5 w-40 mb-4" />
+            <div className="space-y-4">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="flex items-center gap-4">
                   <Skeleton className="size-10 rounded-full" />
@@ -100,20 +90,18 @@ export default function ContratoDetalhesLoading() {
                   <Skeleton className="h-8 w-8" />
                 </div>
               ))}
-            </CardContent>
-          </Card>
+            </div>
+          </GlassPanel>
 
           {/* Processos card */}
-          <Card>
-            <CardHeader>
-              <Skeleton className="h-5 w-48" />
-            </CardHeader>
-            <CardContent className="space-y-3">
+          <GlassPanel className="p-6">
+            <Skeleton className="h-5 w-48 mb-4" />
+            <div className="space-y-3">
               {[1, 2].map((i) => (
                 <Skeleton key={i} className="h-20 w-full" />
               ))}
-            </CardContent>
-          </Card>
+            </div>
+          </GlassPanel>
         </div>
       </div>
     </div>

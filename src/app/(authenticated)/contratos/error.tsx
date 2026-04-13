@@ -4,7 +4,8 @@ import { useEffect } from 'react';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading } from '@/components/ui/typography';
 
 export default function ContratosError({
   error,
@@ -19,14 +20,14 @@ export default function ContratosError({
 
   return (
     <div className="flex items-center justify-center min-h-[50vh]">
-      <Card className="max-w-md w-full">
-        <CardHeader className="text-center">
+      <GlassPanel className="max-w-md w-full p-6">
+        <div className="text-center">
           <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
             <AlertTriangle className="size-6 text-destructive" />
           </div>
-          <CardTitle>Erro ao carregar contratos</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          <Heading level="card" className="mb-4">Erro ao carregar contratos</Heading>
+        </div>
+        <div className="space-y-4">
           <p className="text-center text-muted-foreground">
             Ocorreu um erro ao tentar carregar a lista de contratos.
             Por favor, tente novamente.
@@ -38,8 +39,8 @@ export default function ContratosError({
               Tentar novamente
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </GlassPanel>
     </div>
   );
 }
