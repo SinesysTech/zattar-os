@@ -10,7 +10,6 @@
 
 import * as React from 'react';
 import {
-  differenceInDays,
   format,
   isSameDay,
   isToday,
@@ -25,7 +24,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { getCalendarCells } from '@/components/calendar/helpers';
-import type { Expediente } from '../domain';
+import { type Expediente, getExpedienteUrgencyLevel } from '../domain';
 
 // =============================================================================
 // TIPOS
@@ -48,23 +47,6 @@ interface ExpedientesCalendarCompactProps {
 
 // Dias da semana em português (abreviados)
 const WEEK_DAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-
-// =============================================================================
-// URGENCY HELPERS (for calendar dots)
-// =============================================================================
-
-type UrgencyLevel = 'critico' | 'alto' | 'medio' | 'baixo' | 'ok';
-
-function getExpUrgency(exp: Expediente): UrgencyLevel {
-  if (exp.baixadoEm) return 'ok';
-  const prazo = exp.dataPrazoLegalParte;
-  if (!prazo) return 'ok';
-  const dias = differenceInDays(parseISO(prazo), new Date());
-  if (dias < 0 || exp.prazoVencido) return 'critico';
-  if (dias === 0) return 'alto';
-  if (dias <= 3) return 'medio';
-  return 'baixo';
-}
 
 // =============================================================================
 // COMPONENTE PRINCIPAL
@@ -102,7 +84,7 @@ export function ExpedientesCalendarCompact({
     for (const [dateStr, exps] of expedientesByDay.entries()) {
       const counts = { critico: 0, alto: 0, medio: 0, baixo: 0 };
       for (const exp of exps) {
-        const urgency = getExpUrgency(exp);
+        const urgency = getExpedienteUrgencyLevel(exp);
         if (urgency in counts) counts[urgency as keyof typeof counts]++;
       }
       map.set(dateStr, counts);

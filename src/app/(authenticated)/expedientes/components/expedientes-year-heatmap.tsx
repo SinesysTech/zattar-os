@@ -175,6 +175,7 @@ const MonthGrid = React.memo(function MonthGrid({
             <Tooltip key={day}>
               <TooltipTrigger asChild>
                 <button
+                  aria-label={`${format(new Date(year, monthIndex, day), "d 'de' MMMM", { locale: ptBR })}, ${count} expediente${count !== 1 ? 's' : ''}`}
                   type="button"
                   onClick={() => count > 0 && onDayClick(monthIndex, day)}
                   className={cn(

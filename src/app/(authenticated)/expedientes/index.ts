@@ -60,6 +60,7 @@ export type {
   ExpedienteSortBy,
   ListarExpedientesParams,
   ExpedientesFilters,
+  UrgencyLevel,
 } from './domain';
 
 export {
@@ -75,4 +76,5 @@ export {
   baixaExpedienteSchema,
   reverterBaixaSchema,
   getExpedientePartyNames,
+  getExpedienteUrgencyLevel,
 } from './domain';

@@ -9,7 +9,7 @@
  */
 
 import * as React from 'react';
-import { differenceInDays, format, isSameDay, parseISO } from 'date-fns';
+import { format, isSameDay, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Calendar, Plus } from 'lucide-react';
 
@@ -21,7 +21,11 @@ import { EmptyState } from '@/components/shared/empty-state';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Heading, Text } from '@/components/ui/typography';
 
-import { type Expediente, getExpedientePartyNames } from '../domain';
+import { type Expediente, type UrgencyLevel, getExpedienteUrgencyLevel, getExpedientePartyNames } from '../domain';
+import {
+  URGENCY_SECTIONS,
+  URGENCY_BORDER,
+} from './urgency-helpers';
 
 // =============================================================================
 // TIPOS
@@ -34,42 +38,11 @@ interface ExpedientesDayListProps {
   expedientes: Expediente[];
   /** Callback para adicionar novo expediente */
   onAddExpediente?: () => void;
+  /** Callback para visualizar detalhes de um expediente */
+  onViewDetail?: (expediente: Expediente) => void;
   /** Classes CSS adicionais */
   className?: string;
 }
-
-// =============================================================================
-// URGENCY HELPERS
-// =============================================================================
-
-type UrgencyLevel = 'critico' | 'alto' | 'medio' | 'baixo' | 'ok';
-
-function getExpUrgency(exp: Expediente): UrgencyLevel {
-  if (exp.baixadoEm) return 'ok';
-  const prazo = exp.dataPrazoLegalParte;
-  if (!prazo) return 'ok';
-  const dias = differenceInDays(parseISO(prazo), new Date());
-  if (dias < 0 || exp.prazoVencido) return 'critico';
-  if (dias === 0) return 'alto';
-  if (dias <= 3) return 'medio';
-  return 'baixo';
-}
-
-const URGENCY_SECTIONS = [
-  { key: 'critico' as const, label: 'Vencidos', color: 'bg-destructive' },
-  { key: 'alto' as const, label: 'Vence Hoje', color: 'bg-warning' },
-  { key: 'medio' as const, label: 'Proximos Dias', color: 'bg-info' },
-  { key: 'baixo' as const, label: 'No Prazo', color: 'bg-success' },
-  { key: 'ok' as const, label: 'Outros', color: 'bg-muted-foreground/40' },
-];
-
-const URGENCY_BORDER: Record<UrgencyLevel, string> = {
-  critico: 'border-l-[3px] border-l-destructive',
-  alto: 'border-l-[3px] border-l-warning',
-  medio: 'border-l-[3px] border-l-info',
-  baixo: 'border-l-[3px] border-l-success',
-  ok: '',
-};
 
 // =============================================================================
 // URGENCY SECTION DIVIDER
@@ -94,6 +67,7 @@ export function ExpedientesDayList({
   selectedDate,
   expedientes,
   onAddExpediente,
+  onViewDetail,
   className,
 }: ExpedientesDayListProps) {
   // Filtrar expedientes do dia selecionado
@@ -124,7 +98,7 @@ export function ExpedientesDayList({
   const groups = React.useMemo(() => {
     const g: Record<UrgencyLevel, Expediente[]> = { critico: [], alto: [], medio: [], baixo: [], ok: [] };
     for (const exp of expedientesDoDia) {
-      g[getExpUrgency(exp)].push(exp);
+      g[getExpedienteUrgencyLevel(exp)].push(exp);
     }
     return g;
   }, [expedientesDoDia]);
@@ -235,7 +209,10 @@ export function ExpedientesDayList({
 
                             {/* CTA buttons on hover */}
                             <div className="flex items-center gap-1.5 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button className="px-2 py-0.5 rounded-md bg-primary/6 text-primary text-[10px] font-medium hover:bg-primary/12 transition-colors cursor-pointer">
+                              <button
+                                onClick={() => onViewDetail?.(expediente)}
+                                className="px-2 py-0.5 rounded-md bg-primary/6 text-primary text-[10px] font-medium hover:bg-primary/12 transition-colors cursor-pointer"
+                              >
                                 Detalhes
                               </button>
                             </div>

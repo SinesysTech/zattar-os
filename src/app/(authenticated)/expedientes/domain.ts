@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { differenceInDays, parseISO } from "date-fns";
 
 // =============================================================================
 // ENUMS & CONSTANTS
@@ -264,6 +265,23 @@ export function getExpedientePartyNames(expediente: Expediente): { autora: strin
     autora: expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || null,
     re: expediente.nomeParteReOrigem || expediente.nomeParteRe || null,
   };
+}
+
+// =============================================================================
+// URGENCY HELPERS
+// =============================================================================
+
+export type UrgencyLevel = 'critico' | 'alto' | 'medio' | 'baixo' | 'ok';
+
+export function getExpedienteUrgencyLevel(exp: { baixadoEm?: string | null; dataPrazoLegalParte?: string | null; prazoVencido?: boolean | null }): UrgencyLevel {
+  if (exp.baixadoEm) return 'ok';
+  const prazo = exp.dataPrazoLegalParte;
+  if (!prazo) return 'ok';
+  const dias = differenceInDays(parseISO(prazo), new Date());
+  if (dias < 0 || exp.prazoVencido) return 'critico';
+  if (dias === 0) return 'alto';
+  if (dias <= 3) return 'medio';
+  return 'baixo';
 }
 
 // (EOF)
