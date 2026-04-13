@@ -102,6 +102,12 @@ interface ContratosTableWrapperProps {
   partesContrariasOptions: ClienteInfo[];
   usuariosOptions?: ClienteInfo[];
   segmentosOptions?: Array<{ id: number; nome: string }>;
+  /** Filtro de status externo (ex.: vindo do PipelineStepper). null = sem filtro. */
+  statusFilter?: string | null;
+  /** Controlled open state for the create dialog (lifted from parent). */
+  createOpen?: boolean;
+  /** Callback when the create dialog open state changes. */
+  onCreateOpenChange?: (open: boolean) => void;
 }
 
 // =============================================================================
@@ -115,6 +121,9 @@ export function ContratosTableWrapper({
   partesContrariasOptions,
   usuariosOptions = [],
   segmentosOptions = [],
+  statusFilter: externalStatusFilter,
+  createOpen: externalCreateOpen,
+  onCreateOpenChange: externalOnCreateOpenChange,
 }: ContratosTableWrapperProps) {
   // ---------- Navegação (view mode) ----------
   const router = useRouter();
@@ -168,7 +177,9 @@ export function ContratosTableWrapper({
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
   // ---------- Estado de Dialogs/Sheets ----------
-  const [createOpen, setCreateOpen] = React.useState(false);
+  const [internalCreateOpen, setInternalCreateOpen] = React.useState(false);
+  const createOpen = externalCreateOpen ?? internalCreateOpen;
+  const setCreateOpen = externalOnCreateOpenChange ?? setInternalCreateOpen;
   const [editOpen, setEditOpen] = React.useState(false);
   const [gerarPecaOpen, setGerarPecaOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
@@ -182,6 +193,17 @@ export function ContratosTableWrapper({
 
   // Debounce da busca (500ms)
   const buscaDebounced = useDebounce(busca, 500);
+
+  // ── Sync filtro externo de status (PipelineStepper) → estado interno ──
+  React.useEffect(() => {
+    if (externalStatusFilter === undefined) return; // prop não fornecida — ignorar
+    const next = externalStatusFilter ?? '';
+    setStatus((prev) => {
+      if (prev === next) return prev;
+      setPageIndex(0);
+      return next;
+    });
+  }, [externalStatusFilter]);
 
   // ── Copilot: expor contexto de contratos ──
   useAgentContext({

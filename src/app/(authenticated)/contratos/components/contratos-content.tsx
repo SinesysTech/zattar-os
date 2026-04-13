@@ -30,6 +30,7 @@ export function ContratosContent() {
   const [stats, setStats] = React.useState<ContratosPulseStats | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [statusFilter, setStatusFilter] = React.useState<string | null>(null);
+  const [createOpen, setCreateOpen] = React.useState(false);
 
   // ── Fetch stats on mount ──────────────────────────────────────────────────
 
@@ -137,6 +138,7 @@ export function ContratosContent() {
         initialPagination={null}
         clientesOptions={[]}
         partesContrariasOptions={[]}
+        statusFilter={statusFilter}
       />
     </div>
   );
