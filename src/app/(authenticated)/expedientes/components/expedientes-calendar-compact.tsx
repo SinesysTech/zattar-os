@@ -10,6 +10,7 @@
 
 import * as React from 'react';
 import {
+  differenceInDays,
   format,
   isSameDay,
   isToday,
@@ -49,6 +50,23 @@ interface ExpedientesCalendarCompactProps {
 const WEEK_DAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
 // =============================================================================
+// URGENCY HELPERS (for calendar dots)
+// =============================================================================
+
+type UrgencyLevel = 'critico' | 'alto' | 'medio' | 'baixo' | 'ok';
+
+function getExpUrgency(exp: Expediente): UrgencyLevel {
+  if (exp.baixadoEm) return 'ok';
+  const prazo = exp.dataPrazoLegalParte;
+  if (!prazo) return 'ok';
+  const dias = differenceInDays(parseISO(prazo), new Date());
+  if (dias < 0 || exp.prazoVencido) return 'critico';
+  if (dias === 0) return 'alto';
+  if (dias <= 3) return 'medio';
+  return 'baixo';
+}
+
+// =============================================================================
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
@@ -77,6 +95,20 @@ export function ExpedientesCalendarCompact({
     });
     return map;
   }, [expedientes]);
+
+  // Urgency counts per day (for colored dots)
+  const dayUrgencyCounts = React.useMemo(() => {
+    const map = new Map<string, { critico: number; alto: number; medio: number; baixo: number }>();
+    for (const [dateStr, exps] of expedientesByDay.entries()) {
+      const counts = { critico: 0, alto: 0, medio: 0, baixo: 0 };
+      for (const exp of exps) {
+        const urgency = getExpUrgency(exp);
+        if (urgency in counts) counts[urgency as keyof typeof counts]++;
+      }
+      map.set(dateStr, counts);
+    }
+    return map;
+  }, [expedientesByDay]);
 
   // Handlers de navegação
   const handlePreviousMonth = React.useCallback(() => {
@@ -212,6 +244,8 @@ export function ExpedientesCalendarCompact({
               ? dayExpedientes.filter((e) => e.prazoVencido === true && e.baixadoEm === null).length
               : 0;
 
+            const urgency = dayUrgencyCounts.get(dateKey);
+
             return (
               <button
                 key={index}
@@ -258,6 +292,16 @@ export function ExpedientesCalendarCompact({
                     >
                       {vencidosCount > 0 && !isSelected ? `/${count}` : count}
                     </span>
+                  </div>
+                )}
+
+                {/* Urgency dots */}
+                {count > 0 && cell.currentMonth && urgency && (
+                  <div className="flex gap-0.5 mt-0.5 justify-center">
+                    {urgency.critico > 0 && <div className="size-1.5 rounded-full bg-destructive" />}
+                    {urgency.alto > 0 && <div className="size-1.5 rounded-full bg-warning" />}
+                    {urgency.medio > 0 && <div className="size-1.5 rounded-full bg-info" />}
+                    {urgency.baixo > 0 && <div className="size-1.5 rounded-full bg-success" />}
                   </div>
                 )}
               </button>
