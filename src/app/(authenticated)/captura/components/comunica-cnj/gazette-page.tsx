@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react';
 import { useGazetteStore } from './hooks/use-gazette-store';
+import { useGazetteKeyboard } from './hooks/use-gazette-keyboard';
+import { GazetteKeyboardHelp } from './gazette-keyboard-help';
 import { GazetteAlertBanner } from './gazette-alert-banner';
 import { GazetteAiInsights } from './gazette-ai-insights';
 import { GazetteKpiStrip } from './gazette-kpi-strip';
@@ -19,6 +21,8 @@ import {
 } from '@/app/(authenticated)/captura/actions/comunica-cnj-actions';
 
 export function GazettePage() {
+  useGazetteKeyboard();
+
   const {
     metricas,
     viewAtiva,
@@ -98,6 +102,7 @@ export function GazettePage() {
         )}
         <GazetteDetailPanel />
       </div>
+      <GazetteKeyboardHelp />
     </div>
   );
 }
