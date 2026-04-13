@@ -1,0 +1,394 @@
+<h2>Seção 3: Tabela / Cards + Detail Panel</h2>
+<p class="subtitle">Área principal de dados com toggle entre modos e painel contextual deslizante</p>
+
+<!-- Table Mode -->
+<div class="section">
+  <h3>Modo Tabela — Alta Densidade (Padrão)</h3>
+  <div class="mockup">
+    <div class="mockup-header">Data Table com inline actions + row selection</div>
+    <div class="mockup-body" style="padding: 0; background: #0a0a12; font-family: system-ui, sans-serif; color: #e2e8f0; min-height: 420px;">
+
+      <!-- Toolbar -->
+      <div style="padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.04);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 12px; color: rgba(255,255,255,0.35);">142 publicações</span>
+          <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.06);"></div>
+          <div style="display: flex; gap: 2px; padding: 2px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+            <div style="padding: 3px 8px; background: rgba(255,255,255,0.08); border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.6);">Tabela</div>
+            <div style="padding: 3px 8px; border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.25);">Cards</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="display: flex; gap: 2px; padding: 2px; background: rgba(255,255,255,0.04); border-radius: 6px;">
+            <div style="padding: 3px 6px; border-radius: 4px; font-size: 9px; color: rgba(255,255,255,0.25);">Compacto</div>
+            <div style="padding: 3px 6px; background: rgba(255,255,255,0.08); border-radius: 4px; font-size: 9px; color: rgba(255,255,255,0.5);">Padrão</div>
+            <div style="padding: 3px 6px; border-radius: 4px; font-size: 9px; color: rgba(255,255,255,0.25);">Confortável</div>
+          </div>
+          <div style="padding: 4px 8px; border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; font-size: 10px; color: rgba(255,255,255,0.3); cursor: pointer;">Colunas ⚙</div>
+        </div>
+      </div>
+
+      <!-- Table Header -->
+      <div style="display: grid; grid-template-columns: 32px 72px 1fr 160px 80px 80px 80px 100px 40px; padding: 8px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.25);">
+        <div></div>
+        <div>Tipo</div>
+        <div>Processo / Partes</div>
+        <div>Órgão</div>
+        <div>Fonte</div>
+        <div>Data</div>
+        <div>Prazo</div>
+        <div>Status</div>
+        <div></div>
+      </div>
+
+      <!-- Row 1 - Active/Selected -->
+      <div style="display: grid; grid-template-columns: 32px 72px 1fr 160px 80px 80px 80px 100px 40px; padding: 10px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); background: rgba(99,102,241,0.06); border-left: 2px solid #818cf8; align-items: center; cursor: pointer;">
+        <div><div style="width: 14px; height: 14px; border-radius: 3px; background: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 9px; color: white;">✓</div></div>
+        <div><span style="font-size: 10px; padding: 2px 8px; background: rgba(59,130,246,0.12); color: #60a5fa; border-radius: 4px; font-weight: 500;">INT</span></div>
+        <div>
+          <div style="font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums;">0001234-56.2024.8.16.0001</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 2px;">Silva vs. Santos Ltda.</div>
+        </div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.4);">2ª Vara Cível de Curitiba</div>
+        <div><span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px;">TJ-PR</span></div>
+        <div style="font-size: 11px; font-variant-numeric: tabular-nums; color: rgba(255,255,255,0.5);">12/04</div>
+        <div>
+          <span style="font-size: 10px; padding: 2px 6px; background: rgba(239,68,68,0.1); color: #f87171; border-radius: 4px; font-weight: 500;">2 dias</span>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e;"></div>
+            <span style="font-size: 10px; color: #4ade80;">Vinculado</span>
+          </div>
+        </div>
+        <div style="font-size: 14px; color: rgba(255,255,255,0.2); cursor: pointer;">⋯</div>
+      </div>
+
+      <!-- Row 2 - Normal -->
+      <div style="display: grid; grid-template-columns: 32px 72px 1fr 160px 80px 80px 80px 100px 40px; padding: 10px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); align-items: center; cursor: pointer;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+        <div><div style="width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.1);"></div></div>
+        <div><span style="font-size: 10px; padding: 2px 8px; background: rgba(245,158,11,0.12); color: #fbbf24; border-radius: 4px; font-weight: 500;">DES</span></div>
+        <div>
+          <div style="font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums;">0009876-54.2023.5.09.0001</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 2px;">Oliveira vs. Empresa ABC S.A.</div>
+        </div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.4);">1ª Vara do Trabalho</div>
+        <div><span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px;">TRT-9</span></div>
+        <div style="font-size: 11px; font-variant-numeric: tabular-nums; color: rgba(255,255,255,0.5);">12/04</div>
+        <div style="font-size: 10px; color: rgba(255,255,255,0.25);">—</div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: #f59e0b;"></div>
+            <span style="font-size: 10px; color: #fbbf24;">Pendente</span>
+          </div>
+        </div>
+        <div style="font-size: 14px; color: rgba(255,255,255,0.2); cursor: pointer;">⋯</div>
+      </div>
+
+      <!-- Row 3 - Órfão -->
+      <div style="display: grid; grid-template-columns: 32px 72px 1fr 160px 80px 80px 80px 100px 40px; padding: 10px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); align-items: center; cursor: pointer;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+        <div><div style="width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.1);"></div></div>
+        <div><span style="font-size: 10px; padding: 2px 8px; background: rgba(168,85,247,0.12); color: #a78bfa; border-radius: 4px; font-weight: 500;">SEN</span></div>
+        <div>
+          <div style="font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums;">0005555-00.2024.8.16.0002</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 2px;">Costa vs. Indústria XYZ Ltda.</div>
+        </div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.4);">3ª Vara Cível</div>
+        <div><span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px;">TJ-PR</span></div>
+        <div style="font-size: 11px; font-variant-numeric: tabular-nums; color: rgba(255,255,255,0.5);">11/04</div>
+        <div>
+          <span style="font-size: 10px; padding: 2px 6px; background: rgba(245,158,11,0.1); color: #fbbf24; border-radius: 4px;">5 dias</span>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <div style="width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid #f59e0b; background: transparent;"></div>
+            <span style="font-size: 10px; color: rgba(245,158,11,0.7);">Órfão</span>
+            <span style="font-size: 8px; padding: 1px 4px; background: rgba(99,102,241,0.1); color: #818cf8; border-radius: 3px;">AI 92%</span>
+          </div>
+        </div>
+        <div style="font-size: 14px; color: rgba(255,255,255,0.2); cursor: pointer;">⋯</div>
+      </div>
+
+      <!-- Row 4 -->
+      <div style="display: grid; grid-template-columns: 32px 72px 1fr 160px 80px 80px 80px 100px 40px; padding: 10px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); align-items: center; cursor: pointer;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+        <div><div style="width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.1);"></div></div>
+        <div><span style="font-size: 10px; padding: 2px 8px; background: rgba(59,130,246,0.12); color: #60a5fa; border-radius: 4px; font-weight: 500;">INT</span></div>
+        <div>
+          <div style="font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums;">0003210-78.2025.5.09.0004</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 2px;">Pereira vs. Comércio Beta Ltda.</div>
+        </div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.4);">4ª Vara do Trabalho</div>
+        <div><span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px;">TRT-9</span></div>
+        <div style="font-size: 11px; font-variant-numeric: tabular-nums; color: rgba(255,255,255,0.5);">11/04</div>
+        <div>
+          <span style="font-size: 10px; padding: 2px 6px; background: rgba(34,197,94,0.1); color: #4ade80; border-radius: 4px;">12 dias</span>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e;"></div>
+            <span style="font-size: 10px; color: #4ade80;">Vinculado</span>
+          </div>
+        </div>
+        <div style="font-size: 14px; color: rgba(255,255,255,0.2); cursor: pointer;">⋯</div>
+      </div>
+
+      <!-- Pagination -->
+      <div style="padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.04);">
+        <div style="font-size: 11px; color: rgba(255,255,255,0.3);">1–50 de 142</div>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <div style="padding: 4px 8px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 11px; color: rgba(255,255,255,0.2);">◀</div>
+          <div style="padding: 4px 8px; background: rgba(99,102,241,0.12); border-radius: 4px; font-size: 11px; color: #818cf8;">1</div>
+          <div style="padding: 4px 8px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 11px; color: rgba(255,255,255,0.35);">2</div>
+          <div style="padding: 4px 8px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 11px; color: rgba(255,255,255,0.35);">3</div>
+          <div style="padding: 4px 8px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 11px; color: rgba(255,255,255,0.35);">▶</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 10px; color: rgba(255,255,255,0.25);">Por página</span>
+          <div style="padding: 3px 8px; border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; font-size: 11px; color: rgba(255,255,255,0.4);">50 ▾</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Card Mode -->
+<div class="section">
+  <h3>Modo Cards — Preview Rico</h3>
+  <div class="mockup">
+    <div class="mockup-header">Cards com excerpt, badges semânticos e ações inline</div>
+    <div class="mockup-body" style="padding: 16px 20px; background: #0a0a12; font-family: system-ui, sans-serif; color: #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+
+      <!-- Card 1 -->
+      <div style="padding: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(99,102,241,0.25)';this.style.background='rgba(99,102,241,0.04)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='rgba(255,255,255,0.03)'">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(59,130,246,0.12); color: #60a5fa; border-radius: 4px; font-weight: 500;">INTIMAÇÃO</span>
+            <span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: rgba(255,255,255,0.4);">TJ-PR</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <span style="font-size: 10px; padding: 2px 6px; background: rgba(239,68,68,0.1); color: #f87171; border-radius: 4px; font-weight: 500;">2d</span>
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e;"></div>
+          </div>
+        </div>
+        <div style="font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; margin-bottom: 4px;">0001234-56.2024.8.16.0001</div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 8px;">Silva vs. Santos Ltda. · 2ª Vara Cível</div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.3); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+          "Fica intimado o Sr. João da Silva, já qualificado nos autos, para que, no prazo de 15 dias, apresente contestação sob pena de..."
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.04);">
+          <span style="font-size: 10px; color: rgba(255,255,255,0.2);">12/04/2026</span>
+          <div style="flex: 1;"></div>
+          <div style="padding: 3px 8px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.3);">PDF</div>
+          <div style="padding: 3px 8px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.3);">Detalhes</div>
+        </div>
+      </div>
+
+      <!-- Card 2 - Órfão -->
+      <div style="padding: 16px; background: rgba(245,158,11,0.02); border: 1px solid rgba(245,158,11,0.12); border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(168,85,247,0.12); color: #a78bfa; border-radius: 4px; font-weight: 500;">SENTENÇA</span>
+            <span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: rgba(255,255,255,0.4);">TJ-PR</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <span style="font-size: 8px; padding: 2px 5px; background: rgba(99,102,241,0.12); color: #818cf8; border-radius: 3px; font-weight: 500;">AI 92%</span>
+            <div style="width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid #f59e0b;"></div>
+          </div>
+        </div>
+        <div style="font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; margin-bottom: 4px;">0005555-00.2024.8.16.0002</div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 8px;">Costa vs. Indústria XYZ Ltda. · 3ª Vara Cível</div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.3); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+          "Julgo procedente em parte o pedido para condenar a reclamada ao pagamento de horas extras referentes ao período de..."
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(245,158,11,0.08);">
+          <span style="font-size: 10px; color: rgba(255,255,255,0.2);">11/04/2026</span>
+          <div style="flex: 1;"></div>
+          <div style="padding: 3px 8px; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); border-radius: 4px; font-size: 10px; color: #818cf8; font-weight: 500;">Vincular</div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div style="padding: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; cursor: pointer;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(245,158,11,0.12); color: #fbbf24; border-radius: 4px; font-weight: 500;">DESPACHO</span>
+            <span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: rgba(255,255,255,0.4);">TRT-9</span>
+          </div>
+          <div style="width: 6px; height: 6px; border-radius: 50%; background: #f59e0b;"></div>
+        </div>
+        <div style="font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; margin-bottom: 4px;">0009876-54.2023.5.09.0001</div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 8px;">Oliveira vs. Empresa ABC S.A. · 1ª VT</div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.3); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+          "Designo audiência de instrução para o dia 28/04/2026, às 14h, devendo as partes comparecerem acompanhadas de..."
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.04);">
+          <span style="font-size: 10px; color: rgba(255,255,255,0.2);">12/04/2026</span>
+          <div style="flex: 1;"></div>
+          <div style="padding: 3px 8px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.3);">PDF</div>
+          <div style="padding: 3px 8px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.3);">Detalhes</div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div style="padding: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; cursor: pointer;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(59,130,246,0.12); color: #60a5fa; border-radius: 4px; font-weight: 500;">INTIMAÇÃO</span>
+            <span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: rgba(255,255,255,0.4);">TRT-9</span>
+          </div>
+          <div style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e;"></div>
+        </div>
+        <div style="font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; margin-bottom: 4px;">0003210-78.2025.5.09.0004</div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 8px;">Pereira vs. Comércio Beta Ltda. · 4ª VT</div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.3); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+          "Intimem-se as partes para ciência do laudo pericial, abrindo-se prazo de 10 dias para manifestação sobre..."
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.04);">
+          <span style="font-size: 10px; color: rgba(255,255,255,0.2);">11/04/2026</span>
+          <div style="flex: 1;"></div>
+          <div style="padding: 3px 8px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.3);">PDF</div>
+          <div style="padding: 3px 8px; border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 10px; color: rgba(255,255,255,0.3);">Detalhes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Panel -->
+<div class="section">
+  <h3>Detail Panel — Slide-in Contextual</h3>
+  <div class="mockup">
+    <div class="mockup-header">Painel deslizante à direita com todas as informações da publicação</div>
+    <div class="mockup-body" style="padding: 0; background: #0a0a12; font-family: system-ui, sans-serif; color: #e2e8f0; display: flex; min-height: 500px;">
+
+      <!-- Table area (dimmed) -->
+      <div style="flex: 1; opacity: 0.4; padding: 16px; border-right: 1px solid rgba(255,255,255,0.04);">
+        <div style="height: 36px; background: rgba(255,255,255,0.02); border-radius: 6px; margin-bottom: 8px;"></div>
+        <div style="height: 36px; background: rgba(99,102,241,0.04); border-radius: 6px; margin-bottom: 8px; border-left: 2px solid #818cf8;"></div>
+        <div style="height: 36px; background: rgba(255,255,255,0.02); border-radius: 6px; margin-bottom: 8px;"></div>
+        <div style="height: 36px; background: rgba(255,255,255,0.02); border-radius: 6px; margin-bottom: 8px;"></div>
+        <div style="height: 36px; background: rgba(255,255,255,0.02); border-radius: 6px;"></div>
+      </div>
+
+      <!-- Detail Panel -->
+      <div style="width: 420px; background: rgba(255,255,255,0.02); border-left: 1px solid rgba(255,255,255,0.06); overflow-y: auto;">
+        <!-- Panel Header -->
+        <div style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 10px; padding: 3px 10px; background: rgba(59,130,246,0.12); color: #60a5fa; border-radius: 4px; font-weight: 600;">INTIMAÇÃO</span>
+            <span style="font-size: 10px; color: rgba(255,255,255,0.3);">12/04/2026</span>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 12px; color: rgba(255,255,255,0.3); cursor: pointer;">↑</div>
+            <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 12px; color: rgba(255,255,255,0.3); cursor: pointer;">↓</div>
+            <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 12px; color: rgba(255,255,255,0.3); cursor: pointer;">✕</div>
+          </div>
+        </div>
+
+        <!-- Processo Info -->
+        <div style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.25); margin-bottom: 8px;">Processo</div>
+          <div style="font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; margin-bottom: 6px;">0001234-56.2024.8.16.0001</div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px;">TJ-PR</span>
+            <span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px;">2ª Vara Cível de Curitiba</span>
+            <span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px;">1º Grau</span>
+          </div>
+        </div>
+
+        <!-- Partes -->
+        <div style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.25); margin-bottom: 8px;">Partes</div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 9px; padding: 1px 5px; background: rgba(59,130,246,0.1); color: #60a5fa; border-radius: 3px; font-weight: 600;">A</span>
+              <span style="font-size: 12px;">João da Silva</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 9px; padding: 1px 5px; background: rgba(239,68,68,0.1); color: #f87171; border-radius: 3px; font-weight: 600;">R</span>
+              <span style="font-size: 12px;">Santos Comércio Ltda.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prazo Alert -->
+        <div style="padding: 12px 20px; background: rgba(239,68,68,0.04); border-bottom: 1px solid rgba(239,68,68,0.08);">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 14px;">⚠</span>
+            <div>
+              <div style="font-size: 12px; font-weight: 500; color: #f87171;">Prazo: 2 dias restantes</div>
+              <div style="font-size: 10px; color: rgba(239,68,68,0.6);">Vence em 14/04/2026 · Contestação (15 dias)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Summary -->
+        <div style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+            <span style="font-size: 10px; padding: 2px 6px; background: rgba(99,102,241,0.12); color: #818cf8; border-radius: 4px; font-weight: 500;">AI</span>
+            <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.25);">Resumo</span>
+          </div>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.6;">
+            Intimação para o réu apresentar contestação no prazo de 15 dias. Processo de cobrança referente a contrato de prestação de serviços. Valor da causa: R$ 45.000,00.
+          </div>
+        </div>
+
+        <!-- Texto Completo (collapsible) -->
+        <div style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.25);">Texto da Comunicação</div>
+            <span style="font-size: 10px; color: #818cf8; cursor: pointer;">Expandir ▾</span>
+          </div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.6; max-height: 80px; overflow: hidden; position: relative;">
+            "Fica intimado o Sr. João da Silva, já qualificado nos autos, para que, no prazo de 15 (quinze) dias, apresente contestação, sob pena de revelia e confissão quanto à matéria de fato. Fica, ainda, intimado para comparecer à audiência de conciliação..."
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 30px; background: linear-gradient(transparent, rgba(10,10,18,1));"></div>
+          </div>
+        </div>
+
+        <!-- Expediente vinculado -->
+        <div style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.25); margin-bottom: 8px;">Expediente Vinculado</div>
+          <div style="padding: 10px 12px; background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.12); border-radius: 8px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e;"></div>
+            <div>
+              <div style="font-size: 12px; font-weight: 500;">Expediente #4521</div>
+              <div style="font-size: 10px; color: rgba(255,255,255,0.35);">Vinculado em 12/04 · Auto</div>
+            </div>
+            <div style="flex: 1;"></div>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.25);">→</span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="padding: 16px 20px; display: flex; gap: 8px; flex-wrap: wrap;">
+          <div style="padding: 7px 14px; background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25); border-radius: 8px; font-size: 11px; color: #818cf8; font-weight: 500; cursor: pointer;">Ver Certidão PDF</div>
+          <div style="padding: 7px 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 11px; color: rgba(255,255,255,0.4); cursor: pointer;">Abrir no PJE</div>
+          <div style="padding: 7px 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 11px; color: rgba(255,255,255,0.4); cursor: pointer;">Ver Expediente</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Design Decisions -->
+<div class="section">
+  <h3>Decisões de Design</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Toggle Tabela / Cards</div>
+      <p style="font-size: 13px; margin: 8px 0 0;"><strong>Tabela</strong> = processamento em volume (advogado vendo 142 items). <strong>Cards</strong> = review com contexto (lendo excerpts). Estado persistido por view.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">3 Densidades</div>
+      <p style="font-size: 13px; margin: 8px 0 0;"><strong>Compacto</strong> (32px rows), <strong>Padrão</strong> (42px), <strong>Confortável</strong> (56px com excerpt). Persistido por usuário. Toggle ao lado do Tabela/Cards.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Detail Panel — Não Página</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">Clicar na row/card abre painel à direita (~420px). Usuário mantém contexto da lista. ↑↓ para navegar entre items. Esc para fechar. Padrão Linear.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Status Visual Semântico</div>
+      <p style="font-size: 13px; margin: 8px 0 0;"><span style="color: #4ade80;">● Vinculado</span> (sólido verde), <span style="color: #fbbf24;">● Pendente</span> (sólido âmbar), <span style="color: rgba(245,158,11,0.7);">○ Órfão</span> (anel âmbar + badge AI %). Cores semânticas do design system.</p>
+    </div>
+  </div>
+</div>

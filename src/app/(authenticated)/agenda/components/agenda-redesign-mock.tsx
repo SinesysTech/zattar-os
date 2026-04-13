@@ -20,7 +20,6 @@ import {
   Sparkles,
   Plus,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Heading } from "@/components/ui/typography";
 import { ViewToggle, type ViewToggleOption } from "@/components/dashboard/view-toggle";
 import { AgendaKpiStrip, type AgendaKpiData } from "./agenda-kpi-strip";
@@ -32,9 +31,6 @@ import {
   type MockEvent,
   type AgendaSource,
   MOCK_EVENTS,
-  MOCK_DEADLINES,
-  MOCK_PREP_ITEMS,
-  MOCK_ALERTS,
 } from "./mock-data";
 
 /** Adapter: MockEvent → AgendaEvent-compatible shape for preview pages */
@@ -104,7 +100,7 @@ export function AgendaRedesignMock() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   // Convert mock events to AgendaEvent-compatible shape
-  const allAgendaEvents = useMemo(() => MOCK_EVENTS.map(mockToAgendaEvent), []);
+  const _allAgendaEvents = useMemo(() => MOCK_EVENTS.map(mockToAgendaEvent), []);
 
   // Filter events
   const filteredEvents = useMemo(() => {

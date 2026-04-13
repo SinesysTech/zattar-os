@@ -25,7 +25,6 @@ import { ptBR } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { IconContainer } from '@/components/ui/icon-container';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ParteBadge } from '@/components/ui/parte-badge';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
@@ -33,7 +32,7 @@ import { PrepScore } from './prep-score';
 import { AudienciaIndicadorBadges } from './audiencia-indicador-badges';
 import { AudienciaTimeline } from './audiencia-timeline';
 import { EditarAudienciaDialog } from './editar-audiencia-dialog';
-import { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
+import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from './audiencia-responsavel-popover';
 import {
   type Audiencia,
   GRAU_TRIBUNAL_LABELS,
@@ -47,13 +46,6 @@ import { useUsuarios } from '@/app/(authenticated)/usuarios';
 // =============================================================================
 // HELPERS
 // =============================================================================
-
-function getInitials(name: string | null | undefined): string {
-  if (!name) return 'SR';
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
 
 // =============================================================================
 // SECTION HEADER — ícone + label uppercase (padrão do POC)
@@ -116,7 +108,6 @@ export function AudienciaDetailDialog({
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
-  const [isAlterarResponsavelOpen, setIsAlterarResponsavelOpen] = React.useState(false);
   const [copiedUrl, setCopiedUrl] = React.useState(false);
 
   const { usuarios } = useUsuarios();
@@ -160,19 +151,6 @@ export function AudienciaDetailDialog({
   const dataInicio = audiencia ? parseISO(audiencia.dataInicio) : null;
   const dataFim = audiencia ? parseISO(audiencia.dataFim) : null;
 
-  const getResponsavelNome = React.useCallback(
-    (responsavelId: number | null | undefined) => {
-      if (!responsavelId) return null;
-      const usuario = usuarios.find((u) => u.id === responsavelId);
-      return usuario?.nomeExibicao || usuario?.nomeCompleto || `Usuário ${responsavelId}`;
-    },
-    [usuarios],
-  );
-
-  const responsavelNome = audiencia ? getResponsavelNome(audiencia.responsavelId) : null;
-  const responsavelAvatar = audiencia?.responsavelId
-    ? usuarios.find((u) => u.id === audiencia.responsavelId)?.avatarUrl ?? null
-    : null;
 
   const handleCopyUrl = React.useCallback(async (url: string) => {
     try {
@@ -253,23 +231,22 @@ export function AudienciaDetailDialog({
                   </span>
                 </div>
                 <div className="w-px bg-border/40 mx-4" />
-                {/* Responsável */}
+                {/* Responsável — inline popover */}
                 <div className="flex-1">
                   <span className="text-[11px] font-medium text-muted-foreground/60 uppercase tracking-[0.05em] block">Responsável</span>
-                  <div className="flex items-center gap-1.5 mt-1">
-                    {audiencia.responsavelId && responsavelNome ? (
-                      <>
-                        <Avatar size="xs">
-                          <AvatarImage src={responsavelAvatar || undefined} alt={responsavelNome} />
-                          <AvatarFallback className="text-[9px] font-bold">
-                            {getInitials(responsavelNome)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-[13.5px] font-medium text-foreground truncate">{responsavelNome}</span>
-                      </>
-                    ) : (
-                      <span className="text-[13.5px] text-muted-foreground/50">—</span>
-                    )}
+                  <div className="mt-1">
+                    <AudienciaResponsavelPopover
+                      audienciaId={audiencia.id}
+                      responsavelId={audiencia.responsavelId}
+                      usuarios={usuarios}
+                      onSuccess={() => onOpenChange(false)}
+                    >
+                      <ResponsavelTriggerContent
+                        responsavelId={audiencia.responsavelId}
+                        usuarios={usuarios}
+                        size="md"
+                      />
+                    </AudienciaResponsavelPopover>
                   </div>
                 </div>
               </SectionCard>
@@ -485,7 +462,7 @@ export function AudienciaDetailDialog({
             </Button>
             {audiencia && (
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setIsAlterarResponsavelOpen(true)}>
+                <Button variant="outline" onClick={() => setIsEditDialogOpen(true)}>
                   <Pencil className="size-4" />
                   Editar
                 </Button>
@@ -507,17 +484,6 @@ export function AudienciaDetailDialog({
         />
       )}
 
-      {audiencia && (
-        <AudienciasAlterarResponsavelDialog
-          open={isAlterarResponsavelOpen}
-          onOpenChange={setIsAlterarResponsavelOpen}
-          audiencia={audiencia}
-          usuarios={usuarios}
-          onSuccess={() => {
-            setIsAlterarResponsavelOpen(false);
-          }}
-        />
-      )}
     </>
   );
 }

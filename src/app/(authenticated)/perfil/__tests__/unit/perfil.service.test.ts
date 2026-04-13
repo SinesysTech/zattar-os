@@ -81,19 +81,19 @@ const PERMISSOES_DATA = [
 // Helpers
 // ---------------------------------------------------------------------------
 
-function setupSupabaseChain(data: unknown, error: unknown = null) {
+function _setupSupabaseChain(data: unknown, error: unknown = null) {
     mockSingle.mockResolvedValue({ data, error });
     mockEq.mockReturnValue({ single: mockSingle });
     mockSelect.mockReturnValue({ eq: mockEq });
     mockFrom.mockReturnValue({ select: mockSelect });
 }
 
-function setupPermissoes(data: unknown) {
+function _setupPermissoes(data: unknown) {
     // The second call to mockFrom (for permissoes_usuarios) needs different chain
-    let callCount = 0;
+    let _callCount = 0;
     mockFrom.mockImplementation((table: string) => {
         if (table === 'usuarios') {
-            callCount++;
+            _callCount++;
             return { select: mockSelect };
         }
         if (table === 'permissoes_usuarios') {

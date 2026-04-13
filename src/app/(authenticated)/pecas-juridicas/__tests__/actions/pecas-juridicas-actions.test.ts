@@ -57,7 +57,7 @@ jest.mock('../../service', () => ({
 
 // Mock Supabase client (used by actionBuscarContextoContrato)
 const mockSingle = jest.fn();
-const mockMaybeSingle = jest.fn();
+const _mockMaybeSingle = jest.fn();
 const mockEq = jest.fn().mockReturnThis();
 const mockIn = jest.fn();
 const mockSelect = jest.fn().mockReturnThis();

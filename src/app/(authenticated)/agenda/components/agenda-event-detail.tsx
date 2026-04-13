@@ -34,7 +34,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { MockEvent, ChecklistItem } from "./mock-data";
-import { MOCK_CHECKLIST, sourceColorClasses, SOURCE_CONFIGS } from "./mock-data";
+import { MOCK_CHECKLIST, sourceColorClasses } from "./mock-data";
 
 // ─── Types ────────────────────────────────────────────────────────────
 

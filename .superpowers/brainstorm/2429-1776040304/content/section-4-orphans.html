@@ -1,0 +1,256 @@
+<h2>Seção 4: View Órfãos + Resolução Inteligente</h2>
+<p class="subtitle">Interface dedicada para resolver comunicações sem expediente vinculado — inspirada em reconciliação bancária</p>
+
+<!-- Orphan View Overview -->
+<div class="section">
+  <h3>View "Órfãos" — Visão Geral</h3>
+  <div class="mockup">
+    <div class="mockup-header">Tab Órfãos ativa — header com progresso + ações batch</div>
+    <div class="mockup-body" style="padding: 0; background: #0a0a12; font-family: system-ui, sans-serif; color: #e2e8f0;">
+
+      <!-- Orphan View Header -->
+      <div style="padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="font-size: 15px; font-weight: 600;">Comunicações Órfãs</div>
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(245,158,11,0.12); color: #fbbf24; border-radius: 10px; font-weight: 500;">3 pendentes</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <div style="padding: 6px 12px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); border-radius: 8px; font-size: 11px; color: #4ade80; font-weight: 500; cursor: pointer;">Aceitar Alta Confiança (2)</div>
+            <div style="padding: 6px 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 11px; color: rgba(255,255,255,0.4); cursor: pointer;">Ignorar Todos</div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.04); border-radius: 3px; overflow: hidden;">
+            <div style="display: flex; height: 100%;">
+              <div style="width: 67%; background: linear-gradient(90deg, #22c55e, #4ade80); border-radius: 3px;"></div>
+              <div style="width: 15%; background: rgba(245,158,11,0.4);"></div>
+            </div>
+          </div>
+          <span style="font-size: 11px; color: rgba(255,255,255,0.35); white-space: nowrap;">89 de 132 resolvidos (67%)</span>
+        </div>
+
+        <!-- Confidence legend -->
+        <div style="display: flex; gap: 16px; margin-top: 10px;">
+          <div style="display: flex; align-items: center; gap: 4px; font-size: 10px; color: rgba(255,255,255,0.3);">
+            <div style="width: 8px; height: 8px; border-radius: 2px; background: #22c55e;"></div> Alta (&gt;85%)
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px; font-size: 10px; color: rgba(255,255,255,0.3);">
+            <div style="width: 8px; height: 8px; border-radius: 2px; background: #f59e0b;"></div> Média (50-85%)
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px; font-size: 10px; color: rgba(255,255,255,0.3);">
+            <div style="width: 8px; height: 8px; border-radius: 2px; background: rgba(255,255,255,0.15);"></div> Sem match
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Split Panel Resolution -->
+<div class="section">
+  <h3>Interface de Resolução — Split Panel</h3>
+  <div class="mockup">
+    <div class="mockup-header">Publicação à esquerda ↔ Match sugerido à direita</div>
+    <div class="mockup-body" style="padding: 0; background: #0a0a12; font-family: system-ui, sans-serif; color: #e2e8f0; min-height: 520px;">
+
+      <!-- Navigation -->
+      <div style="padding: 10px 24px; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="padding: 4px 8px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.3); cursor: pointer;">← Anterior</div>
+          <span style="font-size: 11px; color: rgba(255,255,255,0.25);">1 de 3 pendentes</span>
+          <div style="padding: 4px 8px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 11px; color: rgba(255,255,255,0.3); cursor: pointer;">Próximo →</div>
+        </div>
+        <div style="font-size: 10px; color: rgba(255,255,255,0.2);">↑↓ navegar · Enter aceitar · Esc pular</div>
+      </div>
+
+      <div style="display: flex; min-height: 440px;">
+        <!-- Left: Publication -->
+        <div style="flex: 1; padding: 20px; border-right: 1px solid rgba(255,255,255,0.04);">
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.2); margin-bottom: 12px;">Publicação Original</div>
+
+          <!-- Type + Source -->
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+            <span style="font-size: 10px; padding: 3px 10px; background: rgba(168,85,247,0.12); color: #a78bfa; border-radius: 4px; font-weight: 600;">SENTENÇA</span>
+            <span style="font-size: 10px; padding: 2px 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: rgba(255,255,255,0.4);">TJ-PR</span>
+            <span style="font-size: 10px; color: rgba(255,255,255,0.25);">11/04/2026</span>
+          </div>
+
+          <!-- Processo -->
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-bottom: 4px;">Processo</div>
+            <div style="font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; padding: 4px 0;">
+              <span style="background: rgba(99,102,241,0.15); padding: 2px 4px; border-radius: 3px;">0005555-00</span>.2024.8.16.0002
+            </div>
+          </div>
+
+          <!-- Partes -->
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-bottom: 6px;">Partes</div>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 9px; padding: 1px 5px; background: rgba(59,130,246,0.1); color: #60a5fa; border-radius: 3px; font-weight: 600;">A</span>
+                <span style="font-size: 12px;"><span style="background: rgba(99,102,241,0.15); padding: 1px 3px; border-radius: 2px;">Maria da Costa</span></span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 9px; padding: 1px 5px; background: rgba(239,68,68,0.1); color: #f87171; border-radius: 3px; font-weight: 600;">R</span>
+                <span style="font-size: 12px;"><span style="background: rgba(99,102,241,0.15); padding: 1px 3px; border-radius: 2px;">Indústria XYZ Ltda.</span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Órgão -->
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-bottom: 4px;">Órgão</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.5);"><span style="background: rgba(99,102,241,0.15); padding: 1px 3px; border-radius: 2px;">3ª Vara Cível</span> de Curitiba</div>
+          </div>
+
+          <!-- Texto excerpt -->
+          <div>
+            <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-bottom: 6px;">Texto</div>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.6; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid rgba(255,255,255,0.04);">
+              "Julgo <strong style="color: rgba(255,255,255,0.6);">procedente em parte</strong> o pedido para condenar a reclamada <span style="background: rgba(99,102,241,0.15); padding: 1px 3px; border-radius: 2px;">Indústria XYZ Ltda.</span> ao pagamento de horas extras referentes ao período de janeiro a dezembro de 2023..."
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Suggested Match -->
+        <div style="flex: 1; padding: 20px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.2);">Match Sugerido</div>
+            <!-- Confidence -->
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div style="width: 60px; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden;">
+                <div style="width: 92%; height: 100%; background: linear-gradient(90deg, #22c55e, #4ade80); border-radius: 2px;"></div>
+              </div>
+              <span style="font-size: 12px; font-weight: 600; color: #22c55e;">92%</span>
+            </div>
+          </div>
+
+          <!-- Matched expediente -->
+          <div style="padding: 16px; background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.12); border-radius: 12px; margin-bottom: 16px;">
+            <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Expediente #7823</div>
+            <div style="font-size: 12px; font-variant-numeric: tabular-nums; color: rgba(255,255,255,0.6); margin-bottom: 6px;">0005555-00.2024.8.16.0002</div>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 4px;">Costa vs. Indústria XYZ Ltda.</div>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.35);">3ª Vara Cível de Curitiba · 1º Grau</div>
+            <div style="font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 6px;">Criado em 08/04/2026 · Status: Em andamento</div>
+          </div>
+
+          <!-- Match reasons -->
+          <div style="margin-bottom: 20px;">
+            <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-bottom: 8px;">Critérios de Match</div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+                <span style="color: #22c55e;">✓</span>
+                <span style="color: rgba(255,255,255,0.5);">Número do processo</span>
+                <span style="font-size: 10px; color: rgba(255,255,255,0.2);">— match exato</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+                <span style="color: #22c55e;">✓</span>
+                <span style="color: rgba(255,255,255,0.5);">Nome da parte autora</span>
+                <span style="font-size: 10px; color: rgba(255,255,255,0.2);">— "Maria da Costa" ≈ "M. Costa"</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+                <span style="color: #22c55e;">✓</span>
+                <span style="color: rgba(255,255,255,0.5);">Vara compatível</span>
+                <span style="font-size: 10px; color: rgba(255,255,255,0.2);">— 3ª Vara Cível</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+                <span style="color: #22c55e;">✓</span>
+                <span style="color: rgba(255,255,255,0.5);">Data compatível</span>
+                <span style="font-size: 10px; color: rgba(255,255,255,0.2);">— dentro da janela de 3 dias</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+                <span style="color: rgba(255,255,255,0.15);">○</span>
+                <span style="color: rgba(255,255,255,0.3);">CPF/CNPJ</span>
+                <span style="font-size: 10px; color: rgba(255,255,255,0.15);">— não disponível</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="padding: 10px 16px; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.25); border-radius: 10px; font-size: 13px; color: #4ade80; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.2s;">
+              Vincular a Este Expediente
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <div style="flex: 1; padding: 8px 16px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer; text-align: center;">
+                Buscar Outro
+              </div>
+              <div style="flex: 1; padding: 8px 16px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer; text-align: center;">
+                Criar Expediente
+              </div>
+            </div>
+            <div style="padding: 8px 16px; border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; font-size: 11px; color: rgba(255,255,255,0.2); cursor: pointer; text-align: center;">
+              Marcar Irrelevante
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Undo Toast -->
+      <div style="padding: 10px 24px 16px;">
+        <div style="padding: 10px 16px; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+            <span style="color: #22c55e;">✓</span>
+            <span style="color: rgba(255,255,255,0.5);">Comunicação #4518 vinculada ao Expediente #7820</span>
+          </div>
+          <div style="padding: 4px 10px; border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-size: 11px; color: #818cf8; cursor: pointer;">Desfazer (8s)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- No Match State -->
+<div class="section">
+  <h3>Estado: Sem Match Encontrado</h3>
+  <div class="mockup">
+    <div class="mockup-header">Quando a AI não encontra expediente correspondente</div>
+    <div class="mockup-body" style="padding: 20px; background: #0a0a12; font-family: system-ui, sans-serif; color: #e2e8f0;">
+
+      <div style="padding: 24px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.08); border-radius: 12px; text-align: center;">
+        <div style="font-size: 32px; margin-bottom: 8px; opacity: 0.3;">○</div>
+        <div style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.5); margin-bottom: 4px;">Nenhum match encontrado</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.25); margin-bottom: 16px;">Não encontramos um expediente compatível no acervo atual</div>
+
+        <div style="display: flex; gap: 8px; justify-content: center;">
+          <div style="padding: 8px 16px; background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25); border-radius: 8px; font-size: 12px; color: #818cf8; font-weight: 500; cursor: pointer;">
+            Buscar Manualmente
+          </div>
+          <div style="padding: 8px 16px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer;">
+            Criar Novo Expediente
+          </div>
+          <div style="padding: 8px 16px; border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; font-size: 12px; color: rgba(255,255,255,0.2); cursor: pointer;">
+            Ignorar
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Design Decisions -->
+<div class="section">
+  <h3>Decisões de Design</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Split-Panel Reconciliação</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">Publicação à esquerda, match sugerido à direita. Textos coincidentes são <span style="background: rgba(99,102,241,0.15); padding: 1px 3px; border-radius: 2px;">highlighted</span> em ambos os lados para que o advogado confirme visualmente.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Confidence Score Visual</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">Barra de progresso + percentual. Critérios de match mostrados como checklist (✓ número, ✓ parte, ✓ vara, ○ CPF). Transparência total — o advogado vê POR QUE o sistema sugere esse match.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">Batch "Aceitar Alta Confiança"</div>
+      <p style="font-size: 13px; margin: 8px 0 0;">Botão no header da view aceita todos os matches &gt;85% de uma vez. Para escritórios com volume alto, isso resolve dezenas de órfãos em 1 clique. Cada vinculação é undoable por 10s.</p>
+    </div>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+      <div class="label">4 Caminhos de Resolução</div>
+      <p style="font-size: 13px; margin: 8px 0 0;"><strong>1.</strong> Aceitar sugestão AI · <strong>2.</strong> Buscar manualmente · <strong>3.</strong> Criar novo expediente · <strong>4.</strong> Marcar irrelevante. Cobrindo 100% dos cenários possíveis.</p>
+    </div>
+  </div>
+</div>

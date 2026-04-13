@@ -14,7 +14,6 @@ import {
   isToday,
   addMonths,
   subMonths,
-  getDay,
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -23,7 +22,6 @@ import {
   Clock,
   Monitor,
   Building2,
-  User,
   X,
 } from 'lucide-react';
 
@@ -206,7 +204,7 @@ export function AudienciasGlassMonth({
   audiencias,
   currentMonth,
   onMonthChange,
-  refetch,
+  refetch: _refetch,
 }: {
   audiencias: Audiencia[];
   currentMonth: Date;
@@ -214,7 +212,7 @@ export function AudienciasGlassMonth({
   refetch: () => void;
 }) {
   const [popoverDay, setPopoverDay] = React.useState<Date | null>(null);
-  const [popoverAuds, setPopoverAuds] = React.useState<Audiencia[]>([]);
+  const [_popoverAuds, setPopoverAuds] = React.useState<Audiencia[]>([]);
   const [detailAudiencia, setDetailAudiencia] = React.useState<Audiencia | null>(null);
   const [detailOpen, setDetailOpen] = React.useState(false);
 

@@ -49,7 +49,6 @@ import {
   actionDeletarAgendaEvento,
 } from "@/app/(authenticated)/agenda";
 
-import { cn } from "@/lib/utils";
 import { Heading } from "@/components/ui/typography";
 import { ViewToggle, type ViewToggleOption } from "@/components/dashboard/view-toggle";
 

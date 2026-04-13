@@ -57,7 +57,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
             <span className="text-[0.8125rem] font-semibold text-foreground leading-[1.2]">{name}</span>
             {!isGroup && (
               onlineStatus === "online" ? (
-                <span className="text-[0.625rem] leading-[1.4] text-emerald-600 dark:text-emerald-400/70">
+                <span className="text-[0.625rem] leading-[1.4] text-success">
                   Online
                 </span>
               ) : (
