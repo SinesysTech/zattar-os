@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { Text } from '@/components/ui/typography';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import type {
   Contrato,
@@ -207,13 +209,46 @@ export function ContratoDetalhesClient({
 }: ContratoDetalhesClientProps) {
   const clienteNome = cliente?.nome ?? `Cliente #${contrato.clienteId}`;
 
+  const totalPartes = contrato.partes.length;
+  const totalProcessos = contrato.processos.length;
+  const totalLancamentos = lancamentos.length;
+  const totalValor = lancamentos
+    .filter((l) => l.tipo === 'receita' && l.status !== 'cancelado' && l.status !== 'estornado')
+    .reduce((acc, l) => acc + l.valor, 0);
+
+  const formatCurrencyCompact = (value: number) =>
+    new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      maximumFractionDigits: 0,
+    }).format(value);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <ContratoDetalhesHeader
         contrato={contrato}
         clienteNome={clienteNome}
         responsavel={responsavel}
       />
+
+      <div className="grid grid-cols-4 gap-3">
+        <GlassPanel depth={2} className="px-4 py-3 text-center">
+          <p className="font-display text-xl font-bold tabular-nums">{totalPartes}</p>
+          <Text variant="meta-label">Partes</Text>
+        </GlassPanel>
+        <GlassPanel depth={2} className="px-4 py-3 text-center">
+          <p className="font-display text-xl font-bold tabular-nums">{totalProcessos}</p>
+          <Text variant="meta-label">Processos</Text>
+        </GlassPanel>
+        <GlassPanel depth={2} className="px-4 py-3 text-center">
+          <p className="font-display text-xl font-bold tabular-nums">{totalLancamentos}</p>
+          <Text variant="meta-label">Documentos</Text>
+        </GlassPanel>
+        <GlassPanel depth={2} className="px-4 py-3 text-center">
+          <p className="font-display text-xl font-bold tabular-nums">{formatCurrencyCompact(totalValor)}</p>
+          <Text variant="meta-label">Valor</Text>
+        </GlassPanel>
+      </div>
 
       <Tabs defaultValue="resumo" className="space-y-6">
         <TabsList className="flex w-full overflow-x-auto">
