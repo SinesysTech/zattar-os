@@ -153,20 +153,21 @@
     align-items: center;
   }
 
-  /* ── LOGO — fixed top center, large ─────────────────────── */
+  /* ── LOGO — fixed top center ────────────────────────────── */
   .top-brand {
     position: fixed;
-    top: 2.5rem;
+    top: 0.75rem;
     left: 50%;
     transform: translateX(-50%);
     z-index: 20;
   }
 
-  /* The SVG is 500x500 but content is a wide horizontal band
-     inside that square. We need width-based sizing, not height. */
+  /* SVG is 375x375 but content sits in a narrow horizontal band
+     from ~43% to ~67% vertically. Clip the dead whitespace. */
   .top-brand img {
-    width: 220px;
+    width: 160px;
     height: auto;
+    clip-path: inset(28% 0 0 0);
   }
 
   /* Default: dark bg → show dark.svg (white logo) */
@@ -490,8 +491,8 @@
     .statement h1 { font-size: 2rem; }
     .statement p { font-size: 0.875rem; }
     .statement { margin-bottom: 2.25rem; }
-    .top-brand { top: 1.5rem; }
-    .top-brand img { width: 180px; }
+    .top-brand { top: 0.5rem; }
+    .top-brand img { width: 130px; }
     .runway { max-width: 360px; }
   }
 
