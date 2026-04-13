@@ -2,47 +2,24 @@
  * Registro de Ferramentas MCP - Admin
  *
  * Tools disponíveis:
- * - admin_obter_metricas_db: Retorna métricas do banco de dados (cache hit, queries lentas, disk I/O)
- * - admin_avaliar_upgrade: Avalia necessidade de upgrade de compute com base em métricas
+ * - avaliar_upgrade_compute: Avalia necessidade de upgrade de compute com base em métricas
  */
 
 import { z } from 'zod';
 import { registerMcpTool } from '../server';
 import { jsonResult, errorResult } from '../types';
-import { actionResultToMcp } from '../utils';
-import type { ActionResult } from '@/lib/safe-action';
 
 /**
  * Registra ferramentas MCP do módulo Admin
  */
 export async function registerAdminTools(): Promise<void> {
-  const { actionObterMetricasDB } = await import('@/app/(authenticated)/admin/actions/metricas-actions');
   const { avaliarNecessidadeUpgrade } = await import('@/app/(authenticated)/admin/services/upgrade-advisor');
-
-  /**
-   * Obtém métricas de performance do banco de dados Supabase
-   */
-  registerMcpTool({
-    name: 'admin_obter_metricas_db',
-    description: 'Retorna métricas de performance do banco de dados: cache hit rate, queries lentas, tabelas com sequential scan, bloat e disk I/O',
-    feature: 'admin',
-    requiresAuth: true,
-    schema: z.object({}),
-    handler: async () => {
-      try {
-        const result = await actionObterMetricasDB();
-        return actionResultToMcp(result as ActionResult<unknown>);
-      } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao obter métricas do banco de dados');
-      }
-    },
-  });
 
   /**
    * Avalia necessidade de upgrade de compute com base em métricas de performance
    */
   registerMcpTool({
-    name: 'admin_avaliar_upgrade',
+    name: 'avaliar_upgrade_compute',
     description: 'Avalia se é necessário fazer upgrade do compute Supabase com base no cache hit rate, disk I/O e tier atual. Retorna recomendação com motivos e estimativa de custo.',
     feature: 'admin',
     requiresAuth: true,

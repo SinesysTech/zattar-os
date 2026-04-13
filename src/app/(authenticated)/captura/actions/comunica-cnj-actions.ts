@@ -122,3 +122,43 @@ export async function actionListarTribunaisDisponiveis(): Promise<{ success: boo
     return { success: false, error: error instanceof Error ? error.message : 'Erro ao listar tribunais' };
   }
 }
+
+// =============================================================================
+// GAZETTE FUSION CLIENT ACTIONS
+// =============================================================================
+
+export async function actionObterMetricas(params?: { advogadoId?: number }): Promise<{ success: boolean; data?: import('../comunica-cnj/domain').GazetteMetrics; error?: string }> {
+  try {
+    await requireAuth(['comunica_cnj:listar']);
+    const { findMetricas } = await import('../comunica-cnj/repository');
+    const result = await findMetricas(params?.advogadoId);
+    if (!result.success) return { success: false, error: result.error.message };
+    return { success: true, data: result.data };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Erro ao obter metricas' };
+  }
+}
+
+export async function actionListarViews(): Promise<{ success: boolean; data?: import('../comunica-cnj/domain').GazetteView[]; error?: string }> {
+  try {
+    const auth = await requireAuth();
+    const { findViews } = await import('../comunica-cnj/repository');
+    const result = await findViews(auth.userId);
+    if (!result.success) return { success: false, error: result.error.message };
+    return { success: true, data: result.data };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Erro ao listar views' };
+  }
+}
+
+export async function actionListarSyncLogs(limite: number = 10): Promise<{ success: boolean; data?: import('../comunica-cnj/domain').SyncLogEntry[]; error?: string }> {
+  try {
+    await requireAuth(['comunica_cnj:listar']);
+    const { findSyncLogs } = await import('../comunica-cnj/repository');
+    const result = await findSyncLogs(limite);
+    if (!result.success) return { success: false, error: result.error.message };
+    return { success: true, data: result.data };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Erro ao listar sync logs' };
+  }
+}

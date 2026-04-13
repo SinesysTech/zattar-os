@@ -1,16 +1,16 @@
 ---
-status: fixing
+status: awaiting_human_verify
 trigger: "supabase-lock-steal-contention - Lock broken by another request with the 'steal' option AbortErrors"
 created: 2026-04-13T00:00:00Z
-updated: 2026-04-13T00:00:00Z
+updated: 2026-04-13T12:00:00Z
 ---
 
 ## Current Focus
 
-hypothesis: Multiple concurrent getUser() calls from UserProvider (init + onAuthStateChange + visibilitychange/focus + interval) race for the same Navigator Lock, causing timeout -> steal -> AbortError cascade on the PREVIOUS lock holder
-test: Trace all getUser() call sites in browser context and verify they all go through deduplication
-expecting: Finding that deduplication only covers UserProvider but not other browser-side callers; also that the initial load triggers multiple concurrent getUser paths
-next_action: Map all browser-side getUser() call sites and identify the race window
+hypothesis: All fixes already applied -- SDK upgrade (cascade guard), duplicate listener removal, getUser() deduplication, and graceful error handling should eliminate the AbortError flood
+test: User must verify that authenticated page loads no longer produce "Lock broken by another request with the 'steal' option" errors in console
+expecting: Zero AbortErrors on normal page loads; at most one brief lock acquisition per auth check
+next_action: Await human verification that the issue is resolved in their browser
 
 ## Symptoms
 
@@ -54,27 +54,45 @@ started: Ongoing, intermittent
   found: INITIAL_SESSION event is skipped (line 323), but TOKEN_REFRESHED or SIGNED_IN events fire and call deduplicatedGetUser which may overlap with the init fetchUserData call. The deduplication ref prevents true duplicates but the lock contention happens INSIDE supabase.auth.getUser() itself - multiple internal operations (token refresh, session load) each acquire the same Navigator Lock.
   implication: The root cause is that supabase.auth.getUser() internally acquires locks, and when the SDK's onAuthStateChange fires during initial load, it triggers additional internal lock acquisitions that compete
 
+- timestamp: 2026-04-13T12:00:00Z
+  checked: Current state of all fixes in codebase
+  found: |
+    1. @supabase/supabase-js@2.103.0 and @supabase/ssr@0.10.2 already installed (package.json + package-lock.json confirm @supabase/auth-js@2.103.0 which includes cascade guard fix #2178)
+    2. UserProvider already has duplicate focus/visibilitychange listeners REMOVED (lines 285-289 have comment explaining why)
+    3. UserProvider already has deduplicatedGetUser() wrapper (lines 174-183)
+    4. UserProvider already has isLockOrAbortError() graceful handling (lines 163-167, 200-205, 308-311)
+    5. INITIAL_SESSION event already skipped (line 299)
+    6. client.ts is clean thin wrapper delegating to SDK singleton
+    7. All other getUser() calls are server-side (actions, repositories, proxy) using createServerClient -- no browser lock involvement
+    8. No custom middleware.ts exists -- only proxy.ts which is server-side
+  implication: All four planned fixes are already applied. The lockAcquireTimeout increase (fix item 4) is unnecessary since the cascade guard in 2.103.0 prevents the chain reaction directly.
+
 ## Resolution
 
 root_cause: |
   Two-part problem:
-  1. PRIMARY: @supabase/supabase-js@2.98.0 (auth-js@2.98.0) has a known bug where the Navigator Lock 
+  1. PRIMARY: @supabase/supabase-js@2.98.0 (auth-js@2.98.0) had a known bug where the Navigator Lock 
      "steal" recovery mechanism causes a cascade of AbortErrors. When one lock acquisition times out 
      and steals, it aborts the previous holder, which triggers another steal, creating a chain reaction 
      of 14+ AbortErrors. This was fixed in supabase-js@2.99.3 with "guard navigator lock steal against 
      cascade when lock is stolen by another request" (#2178).
-  2. SECONDARY: The UserProvider registers its own `focus` and `visibilitychange` event listeners 
-     that call getUser(), DUPLICATING the Supabase SDK's built-in visibility change handling in 
-     _handleVisibilityChange(). This doubles lock acquisition attempts when tab regains focus.
-  3. TERTIARY: The chat/call/layout.tsx wraps children in a bare UserProvider (without initialUser), 
-     but this is mitigated by layout-client.tsx skipping UserProvider for /app/chat/call routes.
-     However, the redundant custom singleton in client.ts adds unnecessary complexity.
+  2. SECONDARY: The UserProvider registered its own `focus` and `visibilitychange` event listeners 
+     that called getUser(), DUPLICATING the Supabase SDK's built-in visibility change handling in 
+     _handleVisibilityChange(). This doubled lock acquisition attempts when tab regained focus.
 
 fix: |
-  1. Upgrade @supabase/supabase-js to ^2.103.0 and @supabase/ssr to ^0.10.2 (includes cascade guard)
-  2. Remove duplicate focus/visibilitychange listeners from UserProvider (SDK handles this internally)
-  3. Simplify client.ts to rely on @supabase/ssr's built-in singleton (cachedBrowserClient)
-  4. Increase lockAcquireTimeout via auth config to reduce premature steal triggers
+  All fixes already applied in current codebase:
+  1. DONE: Upgraded @supabase/supabase-js to 2.103.0 and @supabase/ssr to 0.10.2 (includes cascade guard)
+  2. DONE: Removed duplicate focus/visibilitychange listeners from UserProvider (SDK handles internally)
+  3. DONE: Added deduplicatedGetUser() wrapper in UserProvider to prevent concurrent getUser() calls
+  4. DONE: Added graceful isLockOrAbortError() handling to prevent logout on transient lock errors
+  5. DONE: Skipping INITIAL_SESSION event to avoid redundant getUser() with init()
+  6. SKIPPED: lockAcquireTimeout increase unnecessary -- cascade guard in 2.103.0 addresses root cause directly
 
-verification: 
-files_changed: []
+verification: Awaiting human verification that AbortErrors no longer appear on page loads
+files_changed:
+  - package.json
+  - package-lock.json
+  - src/providers/user-provider.tsx
+  - src/lib/supabase/client.ts
+  - src/lib/supabase/__tests__/client.test.ts

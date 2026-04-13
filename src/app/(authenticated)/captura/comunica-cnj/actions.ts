@@ -27,6 +27,18 @@ import type {
   ConsultarComunicacoesParams,
   SincronizarParams,
 } from './domain';
+import {
+  salvarViewSchema,
+  buscarMatchSchema,
+} from './domain';
+import {
+  findMetricas,
+  findSyncLogs,
+  findViews,
+  saveView,
+  deleteView,
+  findResumo,
+} from './repository';
 
 // =============================================================================
 // SCHEMAS
@@ -304,3 +316,64 @@ export async function actionVincularExpediente(
     };
   }
 }
+
+// =============================================================================
+// GAZETTE FUSION ACTIONS
+// =============================================================================
+
+export const actionObterMetricasSafe = authenticatedAction(
+  z.object({ advogadoId: z.number().optional() }),
+  async (input) => {
+    const result = await findMetricas(input.advogadoId);
+    if (!result.success) throw new Error(result.error.message);
+    return result.data;
+  }
+);
+
+export const actionListarSyncLogsSafe = authenticatedAction(
+  z.object({ limite: z.number().int().min(1).max(50).default(10) }),
+  async (input) => {
+    const result = await findSyncLogs(input.limite);
+    if (!result.success) throw new Error(result.error.message);
+    return result.data;
+  }
+);
+
+export const actionSalvarViewSafe = authenticatedAction(
+  salvarViewSchema,
+  async (input, context) => {
+    const parsed = salvarViewSchema.parse(input);
+    const result = await saveView({ ...parsed, criadoPor: context.user.id });
+    if (!result.success) throw new Error(result.error.message);
+    revalidatePath('/app/comunica-cnj');
+    return result.data;
+  }
+);
+
+export const actionListarViewsSafe = authenticatedAction(
+  z.object({}),
+  async (_input, context) => {
+    const result = await findViews(context.user.id);
+    if (!result.success) throw new Error(result.error.message);
+    return result.data;
+  }
+);
+
+export const actionDeletarViewSafe = authenticatedAction(
+  z.object({ viewId: z.number().int().positive() }),
+  async (input, context) => {
+    const result = await deleteView(input.viewId, context.user.id);
+    if (!result.success) throw new Error(result.error.message);
+    revalidatePath('/app/comunica-cnj');
+    return { success: true };
+  }
+);
+
+export const actionObterResumoSafe = authenticatedAction(
+  buscarMatchSchema,
+  async (input) => {
+    const result = await findResumo(input.comunicacaoId);
+    if (!result.success) throw new Error(result.error.message);
+    return result.data;
+  }
+);

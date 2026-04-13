@@ -7,7 +7,6 @@
  * - atualizar_nota: Atualiza o conteúdo ou etiquetas de uma nota existente
  * - arquivar_nota: Arquiva ou desarquiva uma nota
  * - excluir_nota: Exclui uma nota permanentemente
- * - gerenciar_etiqueta_nota: Cria, atualiza ou exclui etiquetas de notas
  */
 
 import { z } from 'zod';
@@ -24,9 +23,6 @@ export async function registerNotasTools(): Promise<void> {
     atualizarNota,
     arquivarNota,
     excluirNota,
-    criarEtiqueta,
-    atualizarEtiqueta,
-    excluirEtiqueta,
   } = await import('@/app/(authenticated)/notas/service');
 
   /**
@@ -216,88 +212,6 @@ export async function registerNotasTools(): Promise<void> {
         });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro interno ao excluir nota');
-      }
-    },
-  });
-
-  /**
-   * Cria, atualiza ou exclui etiquetas de notas
-   */
-  registerMcpTool({
-    name: 'gerenciar_etiqueta_nota',
-    description: 'Gerencia etiquetas de notas: cria uma nova etiqueta, atualiza uma existente ou exclui permanentemente',
-    feature: 'notas',
-    requiresAuth: true,
-    schema: z.object({
-      acao: z
-        .enum(['criar', 'atualizar', 'excluir'])
-        .describe('Ação a executar: criar (nova etiqueta), atualizar (etiqueta existente) ou excluir (remove permanentemente)'),
-      id: z.number().optional().describe('ID da etiqueta (obrigatório para atualizar e excluir)'),
-      title: z.string().optional().describe('Nome/título da etiqueta (obrigatório para criar, opcional para atualizar)'),
-      color: z.string().optional().describe('Cor da etiqueta em formato CSS variable ou hex (obrigatório para criar, opcional para atualizar)'),
-    }),
-    handler: async (args) => {
-      try {
-        const { getCurrentUser } = await import('@/lib/auth/server');
-        const user = await getCurrentUser();
-        if (!user) return errorResult('Usuário não autenticado');
-
-        if (args.acao === 'criar') {
-          if (!args.title) return errorResult('O campo "title" é obrigatório para criar uma etiqueta');
-          if (!args.color) return errorResult('O campo "color" é obrigatório para criar uma etiqueta');
-
-          const result = await criarEtiqueta(user.id, {
-            title: args.title,
-            color: args.color,
-          });
-
-          if (!result.success) {
-            return errorResult(result.error?.message || 'Erro ao criar etiqueta');
-          }
-
-          return jsonResult({
-            message: 'Etiqueta criada com sucesso',
-            data: result.data,
-          });
-        }
-
-        if (args.acao === 'atualizar') {
-          if (!args.id) return errorResult('O campo "id" é obrigatório para atualizar uma etiqueta');
-
-          const result = await atualizarEtiqueta(user.id, {
-            id: args.id,
-            title: args.title,
-            color: args.color,
-          });
-
-          if (!result.success) {
-            return errorResult(result.error?.message || 'Erro ao atualizar etiqueta');
-          }
-
-          return jsonResult({
-            message: 'Etiqueta atualizada com sucesso',
-            data: result.data,
-          });
-        }
-
-        if (args.acao === 'excluir') {
-          if (!args.id) return errorResult('O campo "id" é obrigatório para excluir uma etiqueta');
-
-          const result = await excluirEtiqueta(user.id, { id: args.id });
-
-          if (!result.success) {
-            return errorResult(result.error?.message || 'Erro ao excluir etiqueta');
-          }
-
-          return jsonResult({
-            message: 'Etiqueta excluída com sucesso',
-            id: args.id,
-          });
-        }
-
-        return errorResult('Ação inválida');
-      } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro interno ao gerenciar etiqueta');
       }
     },
   });

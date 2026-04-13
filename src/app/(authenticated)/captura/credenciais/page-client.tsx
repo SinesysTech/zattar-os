@@ -59,8 +59,8 @@ export default function CredenciaisPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Table state for DataTableToolbar
-  const [table, setTable] = useState<TanstackTable<Credencial> | null>(null);
-  const [density, setDensity] = useState<'compact' | 'standard' | 'relaxed'>('standard');
+  const [_table, setTable] = useState<TanstackTable<Credencial> | null>(null);
+  const [density, _setDensity] = useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   const buscarCredenciais = useCallback(async () => {
     setIsLoading(true);

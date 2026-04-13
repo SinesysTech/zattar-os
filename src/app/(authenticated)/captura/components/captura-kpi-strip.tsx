@@ -18,7 +18,7 @@ interface CapturaKpiStripProps {
   isLoading?: boolean;
 }
 
-export function CapturaKpiStrip({ data, isLoading }: CapturaKpiStripProps) {
+export function CapturaKpiStrip({ data, isLoading: _isLoading }: CapturaKpiStripProps) {
   const items = useMemo<PulseItem[]>(() => [
     {
       label: 'Total Capturas',
