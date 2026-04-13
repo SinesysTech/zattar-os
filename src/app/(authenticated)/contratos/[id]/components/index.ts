@@ -4,7 +4,6 @@
 
 export { ContratoDetalhesHeader } from './contrato-detalhes-header';
 export { ContratoDetalhesCard } from './contrato-detalhes-card';
-export { ContratoProgressCard } from './contrato-progress-card';
 export { ContratoProcessosCard } from './contrato-processos-card';
 export { ContratoFinanceiroCard } from './contrato-financeiro-card';
 export { ContratoDocumentosCard } from './contrato-documentos-card';

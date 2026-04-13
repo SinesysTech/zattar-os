@@ -34,7 +34,6 @@ import { EntrevistaTab } from '@/app/(authenticated)/entrevistas-trabalhistas';
 import {
   ContratoDetalhesHeader,
   ContratoDetalhesCard,
-  ContratoProgressCard,
   ContratoProcessosCard,
   ContratoFinanceiroCard,
   ContratoDocumentosCard,
@@ -291,7 +290,6 @@ export function ContratoDetalhesClient({
               segmento={segmento}
               cliente={cliente}
             />
-            <ContratoProgressCard status={contrato.status} />
           </div>
 
           {/* 3. Processos Vinculados (full width) */}
