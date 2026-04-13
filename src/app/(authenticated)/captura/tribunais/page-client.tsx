@@ -2,11 +2,15 @@
 
 import * as React from 'react';
 import { useState, useMemo, useCallback } from 'react';
-import type { Table as TanstackTable } from '@tanstack/react-table';
-import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { PulseStrip } from '@/components/dashboard/pulse-strip';
+import type { PulseItem } from '@/components/dashboard/pulse-strip';
+import { SearchInput } from '@/components/dashboard/search-input';
+import { EmptyState } from '@/components/shared/empty-state';
+import { Button } from '@/components/ui/button';
+import { Landmark, Settings, Plus } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useTribunais } from '@/app/(authenticated)/captura';
-import { criarColunasTribunais } from '../components/tribunais/tribunais-columns';
 import { TribunaisDialog } from '../components/tribunais/tribunais-dialog';
 import { AdvogadosFilter } from '../components/advogados/advogados-filter';
 import type { TribunalConfigDb as TribunalConfig } from '@/app/(authenticated)/captura';
@@ -21,13 +25,9 @@ export default function TribunaisPage() {
   const {
     tribunais,
     isLoading,
-    error,
+    error: _error,
     refetch,
   } = useTribunais();
-
-  // Table state for DataTableToolbar
-  const [table, setTable] = useState<TanstackTable<TribunalConfig> | null>(null);
-  const [density, setDensity] = useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Estados de busca e filtros
   const [busca, setBusca] = useState('');
@@ -92,64 +92,131 @@ export default function TribunaisPage() {
     });
   }, [tribunais, buscaDebounced, tribunalFilter, tipoAcessoFilter]);
 
-  const colunas = useMemo(
-    () =>
-      criarColunasTribunais({
-        onEdit: handleEdit,
-      }),
-    [handleEdit]
-  );
+  // KPI items
+  const kpiItems = useMemo<PulseItem[]>(() => {
+    const porGrau = tribunais.reduce<Record<string, number>>((acc, t) => {
+      acc[t.tipo_acesso] = (acc[t.tipo_acesso] ?? 0) + 1;
+      return acc;
+    }, {});
+    return [
+      { label: 'Configurados', total: tribunais.length, icon: Landmark, color: 'text-primary' },
+      { label: '1º Grau', total: porGrau['primeiro_grau'] ?? 0, icon: Settings, color: 'text-success' },
+      { label: '2º Grau', total: porGrau['segundo_grau'] ?? 0, icon: Settings, color: 'text-warning' },
+    ];
+  }, [tribunais]);
 
   return (
     <>
-      <DataShell
-        header={
-          table ? (
-            <DataTableToolbar
-              table={table}
-              title="Tribunais"
-              density={density}
-              onDensityChange={setDensity}
-              searchValue={busca}
-              onSearchValueChange={setBusca}
-              searchPlaceholder="Buscar tribunais..."
-              actionButton={{
-                label: 'Nova Configuração',
-                onClick: () => setTribunalDialog({ open: true, tribunal: null }),
-              }}
-              filtersSlot={
-                <>
-                  <AdvogadosFilter
-                    title="Tribunal"
-                    options={tribunalOptions}
-                    value={tribunalFilter}
-                    onValueChange={setTribunalFilter}
-                  />
-                  <AdvogadosFilter
-                    title="Grau"
-                    options={tipoAcessoOptions}
-                    value={tipoAcessoFilter}
-                    onValueChange={setTipoAcessoFilter}
-                  />
-                </>
-              }
+      <div className="space-y-5">
+        {/* KPI Strip */}
+        <PulseStrip items={kpiItems} />
+
+        {/* Filter Bar */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <AdvogadosFilter
+              title="Tribunal"
+              options={tribunalOptions}
+              value={tribunalFilter}
+              onValueChange={setTribunalFilter}
             />
-          ) : (
-            <div className="p-6" />
-          )
-        }
-      >
-        <DataTable
-          data={tribunaisFiltrados}
-          columns={colunas}
-          isLoading={isLoading}
-          error={error}
-          density={density}
-          emptyMessage="Nenhuma configuração de tribunal encontrada."
-          hidePagination={true}
-          onTableReady={(t) => setTable(t as TanstackTable<TribunalConfig>)}
-        />
-      </DataShell>
+            <AdvogadosFilter
+              title="Grau"
+              options={tipoAcessoOptions}
+              value={tipoAcessoFilter}
+              onValueChange={setTipoAcessoFilter}
+            />
+          </div>
+          <div className="flex items-center gap-2 flex-1 justify-end">
+            <SearchInput value={busca} onChange={setBusca} placeholder="Buscar tribunais..." />
+            <Button
+              size="sm"
+              className="rounded-xl"
+              onClick={() => setTribunalDialog({ open: true, tribunal: null })}
+            >
+              <Plus className="size-3.5" />
+              Nova Configuração
+            </Button>
+          </div>
+        </div>
+
+        {/* Loading skeleton */}
+        {isLoading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-44 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse"
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Card Grid */}
+        {!isLoading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {tribunaisFiltrados.map((tribunal) => (
+              // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+              <div
+                key={tribunal.id}
+                className="cursor-pointer hover:scale-[1.01] hover:shadow-lg transition-all duration-200"
+                onClick={() => handleEdit(tribunal)}
+              >
+              <GlassPanel
+                depth={2}
+                className="p-4 h-full"
+              >
+                {/* Tribunal code + name */}
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary/[0.08] flex items-center justify-center shrink-0">
+                    <Landmark className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold truncate">{tribunal.tribunal_codigo}</div>
+                    <div className="text-xs text-muted-foreground/55 truncate">{tribunal.tribunal_nome}</div>
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-border/10 my-2" />
+
+                {/* Details */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] text-muted-foreground/60">Grau</span>
+                    <span className="text-[11px] font-medium">
+                      {TIPO_ACESSO_LABELS[tribunal.tipo_acesso] ?? tribunal.tipo_acesso}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] text-muted-foreground/60">Sistema</span>
+                    <span className="text-[11px] font-medium truncate max-w-[120px]">
+                      {tribunal.sistema}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Action */}
+                <div className="border-t border-border/10 mt-3 pt-3">
+                  <Button variant="ghost" size="sm" className="w-full text-xs h-7 text-primary">
+                    Configurar
+                  </Button>
+                </div>
+              </GlassPanel>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && tribunaisFiltrados.length === 0 && (
+          <EmptyState
+            icon={Landmark}
+            title="Nenhum tribunal encontrado"
+            description="Ajuste os filtros ou cadastre uma nova configuração."
+          />
+        )}
+      </div>
 
       <TribunaisDialog
         tribunal={tribunalDialog.tribunal}
