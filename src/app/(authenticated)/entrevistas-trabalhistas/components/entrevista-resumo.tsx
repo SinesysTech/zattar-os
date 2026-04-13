@@ -6,6 +6,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading, Text } from '@/components/ui/typography';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Button } from '@/components/ui/button';
 import { Pencil, FileText, CheckCircle2, XCircle } from 'lucide-react';
@@ -445,15 +447,15 @@ export function EntrevistaResumo({
 
       {/* Notas do operador */}
       {entrevista.notasOperador && Object.keys(entrevista.notasOperador).length > 0 && (
-        <div className="rounded-lg border bg-muted/50 p-4">
-          <p className="mb-2 text-xs font-medium text-muted-foreground">Notas do Operador</p>
+        <GlassPanel className="p-4">
+          <Text variant="label" className="mb-2 text-muted-foreground">Notas do Operador</Text>
           {Object.entries(entrevista.notasOperador).map(([modulo, nota]) => (
             <div key={modulo} className="mb-2 last:mb-0">
-              <p className="text-xs font-medium">{MODULO_LABELS[modulo as keyof typeof MODULO_LABELS] ?? modulo}</p>
-              <p className="text-sm text-muted-foreground">{nota}</p>
+              <Text variant="label">{MODULO_LABELS[modulo as keyof typeof MODULO_LABELS] ?? modulo}</Text>
+              <Text variant="caption" className="text-muted-foreground">{nota}</Text>
             </div>
           ))}
-        </div>
+        </GlassPanel>
       )}
     </div>
   );
