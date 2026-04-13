@@ -22,6 +22,7 @@ import type {
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
 import { SimNaoRadio } from './sim-nao-radio';
+import { Heading } from '@/components/ui/typography';
 
 interface ModuloFraudeVerbasProps {
   data: RespostasFraudeVerbas;
@@ -51,7 +52,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">O Que Você Perdeu</h3>
+        <Heading level="card">O Que Você Perdeu</Heading>
         <p className="text-sm text-muted-foreground">
           Calcular os prejuízos trabalhistas decorrentes da pejotização
         </p>

@@ -23,6 +23,7 @@ import type {
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
 import { SimNaoRadio } from './sim-nao-radio';
+import { Heading } from '@/components/ui/typography';
 
 interface ModuloContratoPJProps {
   data: RespostasContratoPJ;
@@ -35,7 +36,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">A Máscara do CNPJ</h3>
+        <Heading level="card">A Máscara do CNPJ</Heading>
         <p className="text-sm text-muted-foreground">
           Investigar como a relação PJ foi constituída e se houve imposição da empresa
         </p>

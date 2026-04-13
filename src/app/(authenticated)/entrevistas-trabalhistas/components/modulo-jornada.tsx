@@ -9,6 +9,7 @@ import { CONTROLE_PONTO_OPTIONS } from '../domain';
 import type { RespostasJornada, ControlePonto } from '../domain';
 import { OperadorAlert } from './operador-alert';
 import { SimNaoRadio } from './sim-nao-radio';
+import { Heading } from '@/components/ui/typography';
 
 interface ModuloJornadaProps {
   data: RespostasJornada;
@@ -42,7 +43,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">Apropriação do Tempo</h3>
+        <Heading level="card">Apropriação do Tempo</Heading>
         <p className="text-sm text-muted-foreground">
           Jornada de trabalho, horas extras e intervalos
         </p>

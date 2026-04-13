@@ -5,6 +5,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import type { RespostasConsolidacaoFinal } from '../domain';
 import { OperadorAlert } from './operador-alert';
+import { Heading } from '@/components/ui/typography';
+import { GlassPanel } from '@/components/shared/glass-panel';
 
 interface ModuloConsolidacaoFinalProps {
   data: RespostasConsolidacaoFinal;
@@ -18,7 +20,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">Consolidacao Final da Entrevista</h3>
+        <Heading level="card">Consolidacao Final da Entrevista</Heading>
         <p className="text-sm text-muted-foreground">
           Sintetize o relato integral e anexe a entrevista completa (audio e manuscrito, quando houver).
         </p>
@@ -47,15 +49,17 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
       </div>
 
       {data.relato_consolidado_ia && (
-        <div className="space-y-2 rounded-lg border bg-muted/20 p-4">
-          <Label htmlFor="relato-ia">Relato consolidado pela IA</Label>
-          <Textarea
-            id="relato-ia"
-            value={data.relato_consolidado_ia}
-            onChange={(e) => onChange({ ...data, relato_consolidado_ia: e.target.value })}
-            rows={10}
-          />
-        </div>
+        <GlassPanel className="p-4">
+          <div className="space-y-2">
+            <Label htmlFor="relato-ia">Relato consolidado pela IA</Label>
+            <Textarea
+              id="relato-ia"
+              value={data.relato_consolidado_ia}
+              onChange={(e) => onChange({ ...data, relato_consolidado_ia: e.target.value })}
+              rows={10}
+            />
+          </div>
+        </GlassPanel>
       )}
 
       {inconsistencias.length > 0 && (

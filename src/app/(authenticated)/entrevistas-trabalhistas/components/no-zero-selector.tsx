@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import { Building2, Smartphone, Briefcase, ChevronRight } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -65,10 +66,10 @@ export function NoZeroSelector({ onSelect, isLoading }: NoZeroSelectorProps) {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div className="text-center">
-        <h3 className="text-lg font-semibold">Qual era a natureza principal do serviço prestado?</h3>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <Heading level="card">Qual era a natureza principal do serviço prestado?</Heading>
+        <Text variant="caption" className="mt-1">
           Isso define o modelo de investigação que será utilizado
-        </p>
+        </Text>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -76,33 +77,37 @@ export function NoZeroSelector({ onSelect, isLoading }: NoZeroSelectorProps) {
           const isSelected = selected === value;
 
           return (
-            <Card
+            <div
               key={value}
-              className={`relative cursor-pointer transition-all ${
-                isSelected
-                  ? 'ring-2 ring-primary'
-                  : 'hover:border-primary/50'
-              }`}
+              role="button"
+              tabIndex={0}
               onClick={() => handleSelect(value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSelect(value)}
             >
-              <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
+              <GlassPanel
+                className={`relative cursor-pointer transition-all flex flex-col items-center gap-3 p-6 text-center ${
+                  isSelected
+                    ? 'ring-2 ring-primary border-primary/20'
+                    : 'hover:border-primary/50'
+                }`}
+              >
                 <div className={isSelected ? 'text-primary' : 'text-muted-foreground'}>
                   {icon}
                 </div>
                 <div>
                   <p className="font-medium">{TIPO_LITIGIO_LABELS[value]}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <Text variant="caption" className="mt-1">
                     {TIPO_LITIGIO_DESCRICAO[value]}
-                  </p>
+                  </Text>
                 </div>
-              </CardContent>
-            </Card>
+              </GlassPanel>
+            </div>
           );
         })}
       </div>
 
       {selected && (
-        <div className="space-y-4 rounded-lg border p-4">
+        <GlassPanel className="space-y-4 p-4">
           <div className="space-y-2">
             <Label htmlFor="perfil">Perfil do reclamante (opcional)</Label>
             <Select value={perfil ?? ''} onValueChange={(v) => setPerfil(v as PerfilReclamante)}>
@@ -127,7 +132,7 @@ export function NoZeroSelector({ onSelect, isLoading }: NoZeroSelectorProps) {
             {isLoading ? 'Iniciando...' : 'Iniciar Entrevista'}
             <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
-        </div>
+        </GlassPanel>
       )}
     </div>
   );

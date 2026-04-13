@@ -8,6 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { TIPO_RISCO_OPTIONS } from '../domain';
 import type { RespostasSaudeAmbiente, TipoRisco } from '../domain';
 import { OperadorAlert } from './operador-alert';
+import { Heading } from '@/components/ui/typography';
 
 interface ModuloSaudeAmbienteProps {
   data: RespostasSaudeAmbiente;
@@ -27,7 +28,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">O Corpo e o Ambiente</h3>
+        <Heading level="card">O Corpo e o Ambiente</Heading>
         <p className="text-sm text-muted-foreground">
           Exposição a riscos, insalubridade, periculosidade e assédio
         </p>
