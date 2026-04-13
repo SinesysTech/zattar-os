@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZattarOS Auth POC - Minimal Magistrate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&family=Manrope:wght@800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5523eb;
+            --background: #0a0a0c;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .font-heading { font-family: 'Montserrat', sans-serif; }
+        .font-headline { font-family: 'Manrope', sans-serif; }
+
+        /* Subtle Center Glow */
+        .center-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 80vh;
+            background: radial-gradient(circle, rgba(85, 35, 235, 0.08) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(100px);
+        }
+
+        /* Border Reveal Animation */
+        .reveal-line {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reveal-line::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            animation: reveal 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes reveal {
+            to { transform: translateX(100%); }
+        }
+
+        /* Input Styling */
+        .input-minimal {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            border-radius: 0;
+        }
+
+        .input-minimal:focus {
+            border-bottom-color: var(--primary);
+            padding-left: 8px;
+        }
+
+        /* Button Styling */
+        .btn-minimal {
+            background: white;
+            color: black;
+            transition: all 0.3s ease;
+        }
+
+        .btn-minimal:hover {
+            background: var(--primary);
+            color: white;
+            letter-spacing: 2px;
+        }
+
+        /* Reveal Animations */
+        .fade-reveal {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes fadeReveal {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <div class="center-glow"></div>
+
+    <!-- Header -->
+    <header class="p-8 flex justify-between items-center w-full max-w-7xl mx-auto fade-reveal">
+        <div class="flex items-center gap-2">
+            <div class="w-6 h-6 bg-primary rounded-full"></div>
+            <span class="font-heading font-extrabold text-lg tracking-tighter uppercase">Zattar</span>
+        </div>
+        <nav>
+            <a href="#" class="text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-white transition-colors">Precisando de ajuda?</a>
+        </nav>
+    </header>
+
+    <!-- Main -->
+    <main class="flex-grow flex items-center justify-center p-6">
+        <div class="w-full max-w-md">
+            <div class="mb-12 text-center">
+                <h1 class="font-headline text-5xl mb-4 fade-reveal delay-1">Acesso à <span class="italic font-normal">Justiça</span>.</h1>
+                <p class="text-white/30 text-xs uppercase tracking-[0.3em] fade-reveal delay-1">Escritório de Inteligência Zattar</p>
+            </div>
+
+            <form class="space-y-10 fade-reveal delay-2">
+                <div class="space-y-2 group">
+                    <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 group-focus-within:text-primary transition-colors">Identificação</label>
+                    <input type="email" placeholder="voce@dominio.com" class="input-minimal w-full h-12 outline-none text-xl placeholder:text-white/5">
+                </div>
+
+                <div class="space-y-2 group">
+                    <div class="flex justify-between items-center">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 group-focus-within:text-primary transition-colors">Senha de Acesso</label>
+                    </div>
+                    <input type="password" placeholder="••••••••" class="input-minimal w-full h-12 outline-none text-xl placeholder:text-white/5">
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="btn-minimal w-full h-14 font-bold uppercase tracking-[0.2em] text-[11px]">
+                        Autenticar
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-16 text-center fade-reveal delay-3">
+                <div class="flex justify-center gap-8 text-[10px] font-bold uppercase tracking-widest text-white/20">
+                    <a href="#" class="hover:text-white transition-colors">Recuperar Senha</a>
+                    <span class="text-white/5">•</span>
+                    <a href="#" class="hover:text-white transition-colors">Criar Nova Conta</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Decoration -->
+    <footer class="p-8 w-full max-w-7xl mx-auto flex justify-center opacity-10 fade-reveal delay-3">
+        <p class="text-[9px] uppercase tracking-[0.5em] font-bold">ZattarOS © 2026 — Protocolo de Segurança Ativo</p>
+    </footer>
+
+</body>
+</html>

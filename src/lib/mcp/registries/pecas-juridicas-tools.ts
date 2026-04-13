@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Registro de Ferramentas MCP - Peças Jurídicas
  *
@@ -48,11 +49,19 @@ export async function registerPecasJuridicasTools(): Promise<void> {
       limite: z.number().optional().default(20).describe('Número máximo de modelos por página'),
       busca: z.string().optional().describe('Busca textual por título ou descrição'),
       tipo: z.string().optional().describe('Filtrar por tipo de peça (ex: peticao_inicial, recurso_ordinario)'),
-      visibilidade: z.string().optional().describe('Filtrar por visibilidade: publico ou privado'),
+      visibilidade: z.enum(['publico', 'privado']).optional().describe('Filtrar por visibilidade: publico ou privado'),
     }),
     handler: async (args) => {
       try {
-        const result = await listarPecasModelos(args);
+         
+        const result = await listarPecasModelos({
+           
+          ...(args as any),
+          search: args.busca,
+          page: args.pagina,
+          pageSize: args.limite,
+          tipoPeca: args.tipo as any,
+        });
         if (!result.success) return errorResult(result.error?.message || 'Erro ao listar modelos');
         return jsonResult({ message: 'Modelos carregados', data: result.data });
       } catch (error) {
@@ -94,9 +103,9 @@ export async function registerPecasJuridicasTools(): Promise<void> {
     schema: z.object({
       titulo: z.string().describe('Título do modelo'),
       tipo: z.string().describe('Tipo da peça (peticao_inicial, contestacao, recurso_ordinario, etc.)'),
-      conteudo: z.unknown().optional().describe('Conteúdo do modelo em formato Plate.js (JSON)'),
+      conteudo: z.array(z.unknown()).optional().describe('Conteúdo do modelo em formato Plate.js (JSON)'),
       descricao: z.string().optional().describe('Descrição do modelo'),
-      visibilidade: z.string().optional().describe('Visibilidade: publico ou privado'),
+      visibilidade: z.enum(['publico', 'privado']).optional().describe('Visibilidade: publico ou privado'),
     }),
     handler: async (args) => {
       try {
@@ -105,7 +114,14 @@ export async function registerPecasJuridicasTools(): Promise<void> {
         if (!user) return errorResult('Usuário não autenticado');
 
         const result = await criarPecaModelo(
-          { ...args, tipoPeca: args.tipo as never },
+          {
+            titulo: args.titulo,
+            tipoPeca: args.tipo as any,
+            conteudo: args.conteudo ?? [],
+            descricao: args.descricao,
+            visibilidade: args.visibilidade as any,
+            placeholdersDefinidos: [],
+          },
           user.id,
         );
         if (!result.success) return errorResult(result.error?.message || 'Erro ao criar modelo');
@@ -128,14 +144,19 @@ export async function registerPecasJuridicasTools(): Promise<void> {
       id: z.number().describe('ID do modelo'),
       titulo: z.string().optional().describe('Novo título do modelo'),
       tipo: z.string().optional().describe('Novo tipo da peça'),
-      conteudo: z.unknown().optional().describe('Novo conteúdo em formato Plate.js (JSON)'),
+      conteudo: z.array(z.unknown()).optional().describe('Novo conteúdo em formato Plate.js (JSON)'),
       descricao: z.string().optional().describe('Nova descrição'),
-      visibilidade: z.string().optional().describe('Nova visibilidade: publico ou privado'),
+      visibilidade: z.enum(['publico', 'privado']).optional().describe('Nova visibilidade: publico ou privado'),
     }),
     handler: async (args) => {
       try {
-        const { id, tipo, ...input } = args;
-        const updateInput = tipo ? { ...input, tipoPeca: tipo as never } : input;
+        const { id, tipo, ...rest } = args;
+         
+        const updateInput: any = {
+          ...rest,
+           
+          ...(tipo ? { tipoPeca: tipo as any } : {}),
+        };
         const result = await atualizarPecaModelo(id, updateInput);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao atualizar modelo');
         return jsonResult({ message: 'Modelo atualizado com sucesso', data: result.data });

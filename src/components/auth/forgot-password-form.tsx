@@ -1,155 +1,126 @@
 'use client'
 
-import { cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
-import Image from 'next/image'
-import Link from 'next/link'
 import { useState } from 'react'
-import { AtSign, AlertCircle, ArrowRight, ArrowLeft, CheckCircle2, Loader2 } from 'lucide-react'
+import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
+import { AlertCircle, ArrowLeft, Loader2, Check } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 
-export function ForgotPasswordForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
+const ease = [0.22, 1, 0.36, 1]
+
+export function ForgotPasswordForm() {
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
 
-  const handleForgotPassword = async (e: React.FormEvent) => {
+  const handleReset = async (e: React.FormEvent) => {
     e.preventDefault()
     const supabase = createClient()
     setIsLoading(true)
     setError(null)
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/app/update-password`,
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/confirm`,
       })
-      if (error) throw error
+
+      if (resetError) throw resetError
+
       setSuccess(true)
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'Ocorreu um erro')
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError('Ocorreu um erro ao enviar o e-mail.')
+      }
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className={cn('flex flex-col', className)} {...props}>
-      {/* Logo */}
-      <div className="flex flex-col items-center gap-4 mb-10">
-        <div className="relative h-12 w-12">
-          <Image
-            src="/logos/logo-small-dark.svg"
-            alt="Zattar Advogados"
-            fill
-            priority
-            className="object-contain"
-          />
-        </div>
-        <span className="text-[10px] font-medium uppercase tracking-[3px] text-on-surface-variant/25">
-          Zattar Advogados
-        </span>
-      </div>
-
+    <div className="flex flex-col">
       {success ? (
-        <div className="flex flex-col gap-6">
-          <div className="text-center">
-            <h1 className="font-headline text-3xl font-extrabold tracking-tight text-on-surface">
-              Pronto.
-            </h1>
-            <p className="mt-2 text-sm text-on-surface-variant/60 leading-relaxed">
-              Se o email estiver cadastrado, você receberá<br />
-              um link para redefinir sua senha.
-            </p>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center py-8"
+        >
+          <div className="w-16 h-16 bg-success/10 text-success rounded-full flex items-center justify-center mx-auto mb-6">
+            <Check size={32} strokeWidth={3} />
           </div>
-
-          <div className="flex items-start gap-2.5 rounded-xl border border-success/15 bg-success/5 p-4">
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-            <p className="text-sm leading-relaxed text-on-surface-variant/60">
-              Verifique sua caixa de entrada e a pasta de spam.
-            </p>
-          </div>
-
-          <div className="text-center">
-            <Link
-              href="/app/login"
-              className="inline-flex items-center gap-1.5 text-xs text-on-surface-variant/30 transition-colors hover:text-primary"
-            >
-              <ArrowLeft className="h-3 w-3" />
-              Voltar para o login
-            </Link>
-          </div>
-        </div>
+          <h3 className="text-xl font-bold font-heading mb-2">E-mail Enviado</h3>
+          <p className="text-white/40 text-sm mb-8">
+            Verifique sua caixa de entrada para continuar o processo de recuperação.
+          </p>
+          <Link 
+            href="/login" 
+            className="text-[10px] text-white/20 hover:text-white transition-colors font-bold uppercase tracking-widest inline-flex items-center gap-2"
+          >
+            <ArrowLeft size={12} /> Voltar para o login
+          </Link>
+        </motion.div>
       ) : (
-        <>
-          {/* Heading */}
-          <div className="mb-9 text-center">
-            <h1 className="font-headline text-3xl font-extrabold tracking-tight text-on-surface">
-              Sem problemas.
-            </h1>
-            <p className="mt-2 text-sm text-on-surface-variant/60 leading-relaxed">
-              Digite seu email e enviamos<br />
-              um link para redefinir.
-            </p>
+        <form onSubmit={handleReset} className="space-y-6">
+          <div className="space-y-2 group">
+            <label 
+              htmlFor="email" 
+              className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 ml-1 group-focus-within:text-primary transition-colors"
+            >
+              E-mail Associado
+            </label>
+            <input
+              id="email"
+              type="email"
+              placeholder="nome@zattar.com.br"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input-tactile w-full h-14 px-6 rounded-2xl outline-none text-white placeholder:text-white/10 text-lg"
+              autoComplete="email"
+            />
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleForgotPassword} className="space-y-3">
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
-                <AtSign className="h-4 w-4 text-on-surface-variant/25" />
-              </div>
-              <input
-                id="email"
-                type="email"
-                placeholder="voce@zattar.com.br"
-                className="w-full rounded-xl border border-outline-variant/10 bg-on-surface/4 py-4 pl-12 pr-4 font-mono text-sm text-on-surface placeholder:text-on-surface-variant/25 focus:border-primary/30 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="email"
-              />
-            </div>
-
+          <AnimatePresence mode="wait">
             {error && (
-              <div className="flex items-start gap-2.5 rounded-xl border border-destructive/20 bg-destructive/5 p-3">
-                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
-                <p className="text-sm leading-relaxed text-destructive">{error}</p>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="flex items-center gap-2 rounded-xl bg-destructive/10 border border-destructive/20 p-4 text-destructive text-xs font-bold uppercase tracking-wider">
+                  <AlertCircle size={14} />
+                  {error}
+                </div>
+              </motion.div>
             )}
+          </AnimatePresence>
 
+          <div className="pt-2">
             <button
               type="submit"
               disabled={isLoading}
-              className="mt-1 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-brrom-primary to-primary-dim py-4 px-6 font-headline text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+              className="btn-luminous w-full h-14 rounded-2xl font-bold text-white shadow-xl flex items-center justify-center gap-3 text-xs uppercase tracking-[0.2em]"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Enviando...
-                </>
+                <Loader2 className="animate-spin" size={20} />
               ) : (
-                <>
-                  Enviar link
-                  <ArrowRight className="h-4 w-4" />
-                </>
+                'Recuperar Acesso'
               )}
             </button>
-          </form>
+          </div>
 
-          {/* Footer */}
-          <div className="mt-8 text-center">
-            <Link
-              href="/app/login"
-              className="inline-flex items-center gap-1.5 text-xs text-on-surface-variant/30 transition-colors hover:text-primary"
+          <div className="mt-10 flex justify-center">
+            <Link 
+              href="/login" 
+              className="text-[10px] text-white/10 hover:text-white transition-colors font-bold uppercase tracking-widest"
             >
-              <ArrowLeft className="h-3 w-3" />
               Voltar para o login
             </Link>
           </div>
-        </>
+        </form>
       )}
     </div>
   )

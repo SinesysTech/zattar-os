@@ -1,29 +1,22 @@
 'use client'
 
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
+import { AlertCircle, ArrowRight, Loader2, Check, Eye, EyeOff } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { AtSign, AlertCircle, ArrowRight, Eye, EyeOff, Loader2, Lock } from 'lucide-react'
 
-function getGreeting(): string {
-  const hour = new Date().getHours()
-  if (hour < 12) return 'Bom dia.'
-  if (hour < 18) return 'Boa tarde.'
-  return 'Boa noite.'
-}
+const ease = [0.22, 1, 0.36, 1]
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
+export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [success, setSuccess] = useState(false)
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -33,165 +26,147 @@ export function LoginForm({
     setError(null)
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
-      if (error) {
-        if (
-          error.message?.includes('Database error querying schema') ||
-          error.message?.includes('email_change')
-        ) {
-          console.error(
-            'Erro conhecido do Supabase Auth relacionado a email_change.'
-          )
-        }
-        throw error
-      }
+      if (signInError) throw signInError
+      if (!data.user) throw new Error('Falha na autenticação')
 
-      if (!data.user) {
-        throw new Error('Falha na autenticação: usuário não retornado')
-      }
-
-      router.push('/app/dashboard')
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        if (error.message.includes('Invalid login credentials')) {
-          setError('Email ou senha incorretos')
-        } else if (error.message.includes('Email not confirmed')) {
-          setError('Por favor, confirme seu email antes de fazer login')
-        } else if (
-          error.message.includes('500') ||
-          error.message.includes('Database error')
-        ) {
-          setError(
-            'Erro no servidor de autenticação. Tente novamente mais tarde.'
-          )
-        } else if (error.message.includes('email_change')) {
-          setError(
-            'Erro interno de autenticação. Entre em contato com o suporte.'
-          )
+      setSuccess(true)
+      setTimeout(() => router.push('/app/dashboard'), 700)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        if (err.message.includes('Invalid login credentials')) {
+          setError('Credenciais incorretas')
         } else {
-          setError(error.message)
+          setError(err.message)
         }
       } else {
-        setError('Ocorreu um erro ao fazer login. Tente novamente.')
+        setError('Ocorreu um erro ao entrar.')
       }
-    } finally {
       setIsLoading(false)
     }
   }
 
   return (
     <div className={cn('flex flex-col', className)} {...props}>
-      {/* Logo */}
-      <div className="flex flex-col items-center gap-4 mb-10">
-        <div className="relative h-12 w-12">
-          <Image
-            src="/logos/logo-small-dark.svg"
-            alt="Zattar Advogados"
-            fill
-            priority
-            className="object-contain"
-          />
-        </div>
-        <span className="text-[10px] font-medium uppercase tracking-[3px] text-on-surface-variant/25">
-          Zattar Advogados
-        </span>
-      </div>
-
-      {/* Greeting */}
-      <div className="mb-9 text-center">
-        <h1 className="font-headline text-3xl font-extrabold tracking-tight text-on-surface">
-          {getGreeting()}
-        </h1>
-        <p className="mt-2 text-sm text-on-surface-variant/60">
-          Acesse sua estação de trabalho
-        </p>
-      </div>
-
-      {/* Form */}
-      <form onSubmit={handleLogin} className="space-y-3">
-        <div className="relative">
-          <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
-            <AtSign className="h-4 w-4 text-on-surface-variant/25" />
-          </div>
+      <form onSubmit={handleLogin} className="space-y-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, ease }}
+          className="space-y-2 group"
+        >
+          <label 
+            htmlFor="email" 
+            className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 ml-1 group-focus-within:text-primary transition-colors"
+          >
+            E-mail
+          </label>
           <input
             id="email"
             type="email"
-            placeholder="voce@zattar.com.br"
-            className="w-full rounded-xl border border-outline-variant/10 bg-on-surface/4 py-4 pl-12 pr-4 font-mono text-sm text-on-surface placeholder:text-on-surface-variant/25 focus:border-primary/30 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+            placeholder="nome@zattar.com.br"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="input-tactile w-full h-14 px-6 rounded-2xl outline-none text-white placeholder:text-white/10 text-lg"
             autoComplete="email"
           />
-        </div>
+        </motion.div>
 
-        <div className="relative">
-          <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
-            <Lock className="h-4 w-4 text-on-surface-variant/25" />
-          </div>
-          <input
-            id="password"
-            type={showPassword ? 'text' : 'password'}
-            placeholder="••••••••••••"
-            className="w-full rounded-xl border border-outline-variant/10 bg-on-surface/4 py-4 pl-12 pr-12 text-sm text-on-surface placeholder:text-on-surface-variant/25 focus:border-primary/30 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-on-surface-variant/20 transition-colors hover:text-on-surface-variant/50"
-            aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, ease }}
+          className="space-y-2 group"
+        >
+          <label 
+            htmlFor="password" 
+            className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 ml-1 group-focus-within:text-primary transition-colors"
           >
-            {showPassword ? (
-              <EyeOff className="h-4 w-4" />
+            Senha
+          </label>
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="••••••••"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="input-tactile w-full h-14 px-6 rounded-2xl outline-none text-white placeholder:text-white/10 text-lg"
+              autoComplete="current-password"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+        </motion.div>
+
+        <AnimatePresence mode="wait">
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="flex items-center gap-2 rounded-xl bg-destructive/10 border border-destructive/20 p-4 text-destructive text-xs font-bold uppercase tracking-wider">
+                <AlertCircle size={14} />
+                {error}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, ease }}
+          className="pt-2"
+        >
+          <button
+            type="submit"
+            disabled={isLoading || success}
+            className={cn(
+              "btn-luminous w-full h-14 rounded-2xl font-bold text-white shadow-xl flex items-center justify-center gap-3 text-xs uppercase tracking-[0.2em] transition-all",
+              success && "bg-success shadow-success/20"
+            )}
+          >
+            {success ? (
+              <Check size={20} strokeWidth={3} />
+            ) : isLoading ? (
+              <Loader2 className="animate-spin" size={20} />
             ) : (
-              <Eye className="h-4 w-4" />
+              <>
+                Autenticar
+                <ArrowRight size={16} />
+              </>
             )}
           </button>
-        </div>
-
-        {error && (
-          <div className="flex items-start gap-2.5 rounded-xl border border-destructive/20 bg-destructive/5 p-3">
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
-            <p className="text-sm leading-relaxed text-destructive">{error}</p>
-          </div>
-        )}
-
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="mt-1 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-brrom-primary to-primary-dim py-4 px-6 font-headline text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Entrando...
-            </>
-          ) : (
-            <>
-              Entrar
-              <ArrowRight className="h-4 w-4" />
-            </>
-          )}
-        </button>
+        </motion.div>
       </form>
 
-      {/* Footer */}
-      <div className="mt-8 text-center">
-        <Link
-          href="/app/forgot-password"
-          className="text-xs text-on-surface-variant/30 transition-colors hover:text-primary"
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4, ease }}
+        className="mt-10 flex justify-center"
+      >
+        <Link 
+          href="/forgot-password" 
+          className="text-[10px] text-white/10 hover:text-white transition-colors font-bold uppercase tracking-widest"
         >
-          Esqueci minha senha
+          Recuperar Acesso
         </Link>
-      </div>
+      </motion.div>
     </div>
   )
 }

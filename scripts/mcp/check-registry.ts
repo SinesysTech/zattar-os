@@ -189,7 +189,7 @@ function checkOrchestration(registries: Map<string, RegistryInfo>): string[] {
 
   // Extrair todas as funções de registro chamadas no registry.ts
   const calledFunctions = new Set<string>();
-  const callRegex = /await\s+(register\w+Tools)\(\)/g;
+  const callRegex = /await\s+(register\w+)\(\)/g;
   let callMatch;
   while ((callMatch = callRegex.exec(content)) !== null) {
     calledFunctions.add(callMatch[1]);

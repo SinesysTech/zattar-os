@@ -323,8 +323,8 @@ export async function actionVincularExpediente(
 
 export const actionObterMetricasSafe = authenticatedAction(
   z.object({ advogadoId: z.number().optional() }),
-  async (input) => {
-    const result = await findMetricas(input.advogadoId);
+  async (_input) => {
+    const result = await findMetricas();
     if (!result.success) throw new Error(result.error.message);
     return result.data;
   }

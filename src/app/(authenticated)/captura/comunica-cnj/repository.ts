@@ -485,7 +485,7 @@ export async function findExpedienteCorrespondente(
 // GAZETTE FUSION - METRICAS
 // =============================================================================
 
-export async function findMetricas(_advogadoId?: number): Promise<Result<GazetteMetrics>> {
+export async function findMetricas(): Promise<Result<GazetteMetrics>> {
   try {
     const client = await createServiceClient();
 

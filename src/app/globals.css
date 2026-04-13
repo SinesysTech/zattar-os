@@ -1488,6 +1488,72 @@
     --dot-color: oklch(1 0 0 / 0.06);
   }
 
+  /* Aurora Background - Sutil e Profundo */
+  .aurora-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: 
+      radial-gradient(circle at 50% 40%, oklch(0.48 0.26 281 / 0.12) 0%, transparent 60%),
+      radial-gradient(circle at 80% 80%, oklch(0.60 0.22 45 / 0.05) 0%, transparent 40%);
+    filter: blur(80px);
+    pointer-events: none;
+  }
+
+  /* Glass Panel Profundidade Máxima — Específico para Auth */
+  .glass-card-luminous {
+    background: oklch(1 0 0 / 0.02);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid oklch(1 0 0 / 0.08);
+    box-shadow: 
+      0 40px 100px oklch(0 0 0 / 0.6),
+      inset 0 1px 1px oklch(1 0 0 / 0.05);
+  }
+
+  /* Luminous Button — Botão com gradiente rotativo interno */
+  .btn-luminous {
+    @apply relative overflow-hidden transition-all duration-300;
+    background: var(--primary);
+    border: 1px solid oklch(1 0 0 / 0.1);
+  }
+
+  .btn-luminous:hover {
+    @apply -translate-y-0.5;
+    box-shadow: 0 15px 30px oklch(from var(--primary) l c h / 0.4);
+    filter: brightness(1.1);
+  }
+
+  .btn-luminous::after {
+    content: '';
+    @apply absolute pointer-events-none;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, oklch(1 0 0 / 0.15), transparent 30%);
+    animation: rotate-luminous 6s linear infinite;
+  }
+
+  @keyframes rotate-luminous {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Tactile Input — Minimalista e Reativo */
+  .input-tactile {
+    @apply transition-all duration-300 ease-out;
+    background: oklch(0 0 0 / 0.25);
+    border: 1px solid oklch(1 0 0 / 0.04);
+  }
+
+  .input-tactile:focus {
+    @apply -translate-y-px;
+    background: oklch(0 0 0 / 0.4);
+    border-color: oklch(from var(--primary) l c h / 0.5);
+    box-shadow: 0 0 0 1px oklch(from var(--primary) l c h / 0.3);
+  }
+
   /* macOS-style overlay scrollbar */
   .scrollbar-macos {
     scrollbar-width: thin;

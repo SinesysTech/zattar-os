@@ -59,7 +59,7 @@ export default function CredenciaisPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Table state for DataTableToolbar
-  const [_table, setTable] = useState<TanstackTable<Credencial> | null>(null);
+  const [_table, _setTable] = useState<TanstackTable<Credencial> | null>(null);
   const [density, _setDensity] = useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   const buscarCredenciais = useCallback(async () => {
@@ -430,7 +430,7 @@ export default function CredenciaisPage() {
                   state: rowSelection,
                   onRowSelectionChange: setRowSelection,
                 }}
-                onTableReady={(t) => setTable(t as TanstackTable<Credencial>)}
+                onTableReady={(t) => _setTable(t as TanstackTable<Credencial>)}
               />
             </GlassPanel>
           </>
