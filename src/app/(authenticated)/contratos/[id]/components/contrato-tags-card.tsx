@@ -1,6 +1,8 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tags } from 'lucide-react';
+
+import { WidgetContainer } from '@/components/shared/glass-panel';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import type {
   TipoContrato,
@@ -34,35 +36,30 @@ export function ContratoTagsCard({
   const tipoContratoVariant = getSemanticBadgeVariant('tipo_contrato', tipoContrato);
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium">Informações</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-2">
-          {/* Tipo de Contrato */}
-          <Badge variant={tipoContratoVariant}>
-            {tipoContratoLabel}
-          </Badge>
+    <WidgetContainer title="Informações" icon={Tags}>
+      <div className="flex flex-wrap gap-2">
+        {/* Tipo de Contrato */}
+        <Badge variant={tipoContratoVariant}>
+          {tipoContratoLabel}
+        </Badge>
 
-          {/* Tipo de Cobrança */}
-          <Badge variant="secondary">
-            {tipoCobrancaLabel}
-          </Badge>
+        {/* Tipo de Cobrança */}
+        <Badge variant="secondary">
+          {tipoCobrancaLabel}
+        </Badge>
 
-          {/* Papel do Cliente */}
+        {/* Papel do Cliente */}
+        <Badge variant="outline">
+          Cliente {papelLabel}
+        </Badge>
+
+        {/* Segmento */}
+        {segmento && (
           <Badge variant="outline">
-            Cliente {papelLabel}
+            {segmento.nome}
           </Badge>
-
-          {/* Segmento */}
-          {segmento && (
-            <Badge variant="outline">
-              {segmento.nome}
-            </Badge>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+        )}
+      </div>
+    </WidgetContainer>
   );
 }

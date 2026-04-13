@@ -1,8 +1,8 @@
 'use client';
 
-import { Mail, MapPin, PhoneCall, FolderOpen, Hash } from 'lucide-react';
+import { Mail, MapPin, PhoneCall, FolderOpen, Hash, ClipboardList } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { WidgetContainer } from '@/components/shared/glass-panel';
 import { formatPhone as formatPhoneLib } from '@/lib/formatters';
 import type {
   Contrato,
@@ -63,11 +63,8 @@ export function ContratoResumoCard({
   const hasContactInfo = email || telefone || localizacao || cliente?.cpfCnpj;
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-medium">Resumo</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <WidgetContainer title="Resumo" icon={ClipboardList}>
+      <div className="space-y-6">
         {/* Estatisticas */}
         <div className="bg-muted grid grid-cols-3 divide-x rounded-md border text-center *:py-3">
           <div>
@@ -126,7 +123,7 @@ export function ContratoResumoCard({
             </span>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </WidgetContainer>
   );
 }

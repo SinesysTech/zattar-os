@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Eye, Users } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { WidgetContainer } from '@/components/shared/glass-panel';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
@@ -60,71 +60,63 @@ export function ContratoPartesCard({ partes, onViewParte }: ContratoPartesCardPr
   const isEmpty = partesDisplay.length === 0;
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium flex items-center gap-2">
-          <Users className="size-4" />
-          Partes do Contrato
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {isEmpty ? (
-          <div className="text-center py-6 text-muted-foreground">
-            <Users className="size-8 mx-auto mb-2 opacity-50" />
-            <p>Nenhuma parte registrada</p>
-          </div>
-        ) : (
-          <div className="grid gap-4">
-            {partesDisplay.map((parte) => (
-              <div key={parte.id} className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Avatar>
-                    <AvatarFallback
-                      className={
-                        parte.tipoEntidade === 'cliente'
-                          ? 'bg-primary/10 text-primary'
-                          : 'bg-destructive/10 text-destructive'
-                      }
+    <WidgetContainer title="Partes do Contrato" icon={Users}>
+      {isEmpty ? (
+        <div className="text-center py-6 text-muted-foreground">
+          <Users className="size-8 mx-auto mb-2 opacity-50" />
+          <p>Nenhuma parte registrada</p>
+        </div>
+      ) : (
+        <div className="grid gap-4">
+          {partesDisplay.map((parte) => (
+            <div key={parte.id} className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Avatar>
+                  <AvatarFallback
+                    className={
+                      parte.tipoEntidade === 'cliente'
+                        ? 'bg-primary/10 text-primary'
+                        : 'bg-destructive/10 text-destructive'
+                    }
+                  >
+                    {getInitials(parte.nome)}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className="font-medium flex items-center gap-2">
+                    {parte.nome}
+                    <Badge
+                      variant={parte.tipoEntidade === 'cliente' ? 'default' : 'destructive'}
+                      className="text-xs"
                     >
-                      {getInitials(parte.nome)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className="font-medium flex items-center gap-2">
-                      {parte.nome}
-                      <Badge
-                        variant={parte.tipoEntidade === 'cliente' ? 'default' : 'destructive'}
-                        className="text-xs"
-                      >
-                        {parte.tipoEntidade === 'cliente' ? 'Cliente' : 'Parte Contrária'}
-                      </Badge>
-                    </div>
-                    <div className="text-muted-foreground text-xs flex items-center gap-2">
-                      {parte.cpfCnpj && (
-                        <span>{formatCpfCnpj(parte.cpfCnpj)}</span>
-                      )}
-                      <span className="text-muted-foreground/60">
-                        ({PAPEL_CONTRATUAL_LABELS[parte.papelContratual] || parte.papelContratual})
-                      </span>
-                    </div>
+                      {parte.tipoEntidade === 'cliente' ? 'Cliente' : 'Parte Contrária'}
+                    </Badge>
+                  </div>
+                  <div className="text-muted-foreground text-xs flex items-center gap-2">
+                    {parte.cpfCnpj && (
+                      <span>{formatCpfCnpj(parte.cpfCnpj)}</span>
+                    )}
+                    <span className="text-muted-foreground/60">
+                      ({PAPEL_CONTRATUAL_LABELS[parte.papelContratual] || parte.papelContratual})
+                    </span>
                   </div>
                 </div>
-                {onViewParte && (
-                  <Button
-                    variant="ghost"
-                    size="icon" aria-label="Visualizar"
-                    onClick={() => onViewParte(parte)}
-                    title="Ver detalhes"
-                  >
-                    <Eye className="size-4" />
-                  </Button>
-                )}
               </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+              {onViewParte && (
+                <Button
+                  variant="ghost"
+                  size="icon" aria-label="Visualizar"
+                  onClick={() => onViewParte(parte)}
+                  title="Ver detalhes"
+                >
+                  <Eye className="size-4" />
+                </Button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </WidgetContainer>
   );
 }
 

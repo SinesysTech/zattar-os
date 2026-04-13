@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Scale, ExternalLink, Calendar } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { WidgetContainer } from '@/components/shared/glass-panel';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import type { ContratoProcessoVinculo } from '@/app/(authenticated)/contratos';
@@ -43,64 +43,56 @@ export function ContratoProcessosCard({ processos }: ContratoProcessosCardProps)
   const isEmpty = processos.length === 0;
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium flex items-center gap-2">
-          <Scale className="size-4" />
-          Processos Vinculados
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {isEmpty ? (
-          <div className="text-center py-6 text-muted-foreground">
-            <Scale className="size-8 mx-auto mb-2 opacity-50" />
-            <p>Nenhum processo vinculado</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {processos.map((vinculo) => {
-              const processo = vinculo.processo;
-              if (!processo) return null;
+    <WidgetContainer title="Processos Vinculados" icon={Scale}>
+      {isEmpty ? (
+        <div className="text-center py-6 text-muted-foreground">
+          <Scale className="size-8 mx-auto mb-2 opacity-50" />
+          <p>Nenhum processo vinculado</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {processos.map((vinculo) => {
+            const processo = vinculo.processo;
+            if (!processo) return null;
 
-              return (
-                <div
-                  key={vinculo.id}
-                  className="flex items-center justify-between p-3 rounded-lg border bg-muted/30"
-                >
-                  <div className="space-y-1">
-                    <div className="font-mono text-sm font-medium">
-                      {processo.numeroProcesso || `Processo #${processo.id}`}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      {processo.trt && (
-                        <Badge variant="outline" className="text-xs">
-                          {processo.trt}
-                        </Badge>
-                      )}
-                      {processo.grau && (
-                        <Badge variant="secondary" className="text-xs">
-                          {formatGrau(processo.grau)}
-                        </Badge>
-                      )}
-                      {processo.dataAutuacao && (
-                        <span className="flex items-center gap-1">
-                          <Calendar className="size-3" />
-                          {formatDate(processo.dataAutuacao)}
-                        </span>
-                      )}
-                    </div>
+            return (
+              <div
+                key={vinculo.id}
+                className="flex items-center justify-between p-3 rounded-lg border bg-muted/30"
+              >
+                <div className="space-y-1">
+                  <div className="font-mono text-sm font-medium">
+                    {processo.numeroProcesso || `Processo #${processo.id}`}
                   </div>
-                  <Button variant="ghost" size="icon" aria-label="Abrir em nova aba" asChild>
-                    <Link href={`/app/processos/${processo.id}`} title="Ver processo">
-                      <ExternalLink className="size-4" />
-                    </Link>
-                  </Button>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    {processo.trt && (
+                      <Badge variant="outline" className="text-xs">
+                        {processo.trt}
+                      </Badge>
+                    )}
+                    {processo.grau && (
+                      <Badge variant="secondary" className="text-xs">
+                        {formatGrau(processo.grau)}
+                      </Badge>
+                    )}
+                    {processo.dataAutuacao && (
+                      <span className="flex items-center gap-1">
+                        <Calendar className="size-3" />
+                        {formatDate(processo.dataAutuacao)}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+                <Button variant="ghost" size="icon" aria-label="Abrir em nova aba" asChild>
+                  <Link href={`/app/processos/${processo.id}`} title="Ver processo">
+                    <ExternalLink className="size-4" />
+                  </Link>
+                </Button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </WidgetContainer>
   );
 }
