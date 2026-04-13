@@ -82,7 +82,7 @@ export function ContratosContent() {
             </p>
           )}
         </div>
-        <Button size="sm" className="rounded-xl">
+        <Button size="sm" className="rounded-xl" onClick={() => setCreateOpen(true)}>
           <Plus className="size-3.5" />
           Novo Contrato
         </Button>
@@ -139,6 +139,8 @@ export function ContratosContent() {
         clientesOptions={[]}
         partesContrariasOptions={[]}
         statusFilter={statusFilter}
+        createOpen={createOpen}
+        onCreateOpenChange={setCreateOpen}
       />
     </div>
   );
