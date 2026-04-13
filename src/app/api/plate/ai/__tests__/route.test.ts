@@ -1,5 +1,29 @@
-import { afterAll, beforeEach, describe, expect, jest, test } from '@jest/globals';
+/** @jest-environment node */
 import { NextRequest } from 'next/server';
+
+// Mock server-only and Next.js server modules to prevent worker crashes
+jest.mock('server-only', () => ({}));
+jest.mock('next/headers', () => ({
+  cookies: jest.fn(() => ({
+    getAll: jest.fn(() => []),
+    set: jest.fn(),
+  })),
+}));
+
+// Mock Supabase server client
+jest.mock('@/lib/supabase', () => ({
+  createDbClient: jest.fn(() => ({
+    auth: { getUser: jest.fn() },
+    from: jest.fn(),
+  })),
+}));
+
+jest.mock('@/lib/supabase/server', () => ({
+  createClient: jest.fn(() => ({
+    auth: { getUser: jest.fn() },
+    from: jest.fn(),
+  })),
+}));
 
 // Mock ESM-only modules that Jest cannot transform
 jest.mock('platejs', () => ({

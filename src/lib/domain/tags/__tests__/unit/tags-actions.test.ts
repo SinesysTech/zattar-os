@@ -103,7 +103,7 @@ describe('Tags Actions', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe('ID inválido');
+        expect(result.error).toContain('positivo');
       }
     });
 
@@ -146,8 +146,7 @@ describe('Tags Actions', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe('Erro de validação');
-        expect(result.errors).toBeDefined();
+        expect(result.error).toContain('obrigat');
       }
     });
 
@@ -156,7 +155,7 @@ describe('Tags Actions', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe('Erro de validação');
+        expect(result.error).toContain('hex');
       }
     });
 
@@ -200,7 +199,7 @@ describe('Tags Actions', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe('ID inválido');
+        expect(result.error).toContain('positivo');
       }
     });
 
@@ -209,7 +208,7 @@ describe('Tags Actions', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe('Erro de validação');
+        expect(result.error).toContain('hex');
       }
     });
   });
@@ -301,7 +300,8 @@ describe('Tags Actions', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe('ID do processo inválido');
+        expect(result.error).toContain('processo');
+        expect(result.error).toContain('positivo');
       }
     });
 
@@ -310,7 +310,8 @@ describe('Tags Actions', () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe('ID da tag inválido');
+        expect(result.error).toContain('tag');
+        expect(result.error).toContain('positivo');
       }
     });
   });

@@ -10,7 +10,7 @@ class FakeRedisPipeline {
     args: unknown[];
   }> = [];
 
-  constructor(private redis: FakeRedisClient) {}
+  constructor(private redis: FakeRedisClient) { }
 
   zremrangebyscore(key: string, min: string | number, max: string | number) {
     this.ops.push({ name: 'zremrangebyscore', args: [key, min, max] });
@@ -134,7 +134,7 @@ describe('Rate Limit Module', () => {
   describe('Sliding Window Behavior (Redis)', () => {
     beforeEach(async () => {
       jest.useFakeTimers();
-      jest.setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
+      jest.setSystemTime(Date.parse('2024-01-01T00:00:00.000Z'));
 
       const redis = new FakeRedisClient();
       const redisClientModule = await import('@/lib/redis/client');
@@ -163,7 +163,7 @@ describe('Rate Limit Module', () => {
       expect(sixth.blockedReason).toBe('rate_limit');
 
       // advance beyond 60s window
-      jest.setSystemTime(new Date('2024-01-01T00:01:01.000Z'));
+      jest.setSystemTime(Date.parse('2024-01-01T00:01:01.000Z'));
 
       const afterWindow = await checkRateLimit('ip-1', 'anonymous');
       expect(afterWindow.allowed).toBe(true);
@@ -187,11 +187,15 @@ describe('Rate Limit Module', () => {
       process.env.RATE_LIMIT_FAIL_MODE = 'closed';
       const { checkRateLimit } = await import('../rate-limit');
 
-      // Keep under the minute limit by spacing requests > 60s
-      for (let i = 0; i < 100; i++) {
-        const r = await checkRateLimit('ip-hourly', 'anonymous');
-        expect(r.allowed).toBe(true);
-        jest.setSystemTime(new Date(Date.now() + 61_000));
+      // Send 5 requests per batch (under minute limit of 5), then advance past the minute window.
+      // 20 batches × 5 requests = 100 requests, all within ~20 minutes (well under 1 hour).
+      for (let batch = 0; batch < 20; batch++) {
+        for (let i = 0; i < 5; i++) {
+          const r = await checkRateLimit('ip-hourly', 'anonymous');
+          expect(r.allowed).toBe(true);
+        }
+        // Advance past the 60s minute window so the next batch doesn't hit minute limit
+        jest.setSystemTime(Date.now() + 61_000);
       }
 
       const hourlyBlocked = await checkRateLimit('ip-hourly', 'anonymous');

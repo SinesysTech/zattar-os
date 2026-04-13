@@ -499,7 +499,8 @@ describe('Clientes Repository', () => {
   describe('countClientes', () => {
     it('deve contar total de clientes', async () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.single.mockResolvedValue({ data: { count: 42 }, error: null });
+      // countClientes uses .select('*', { count: 'exact', head: true }) which returns { count, error } directly
+      mockQueryBuilder.select.mockResolvedValue({ count: 42, error: null });
 
       const result = await countClientes();
 
@@ -514,7 +515,8 @@ describe('Clientes Repository', () => {
   describe('countClientesByDateRange', () => {
     it('deve contar por intervalo de datas', async () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.single.mockResolvedValue({ data: { count: 15 }, error: null });
+      // countClientesByDateRange chains .gte().lte() which return this, then the final await resolves
+      mockQueryBuilder.lte.mockResolvedValue({ count: 15, error: null });
 
       const result = await countClientesByDateRange('2024-01-01', '2024-12-31');
 

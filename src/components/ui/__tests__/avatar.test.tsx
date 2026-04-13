@@ -119,11 +119,11 @@ describe('Avatar - Property-Based Tests', () => {
                     // Verifica cor baseada na variante
                     const className = indicator?.className || '';
                     if (variant === 'online' || variant === 'success') {
-                        expect(className).toMatch(/bg-green-500/);
+                        expect(className).toMatch(/bg-success/);
                     } else if (variant === 'away') {
-                        expect(className).toMatch(/bg-orange-500/);
+                        expect(className).toMatch(/bg-warning/);
                     } else if (variant === 'offline') {
-                        expect(className).toMatch(/bg-slate-400/);
+                        expect(className).toMatch(/bg-muted-foreground/);
                     }
                 }
             ),

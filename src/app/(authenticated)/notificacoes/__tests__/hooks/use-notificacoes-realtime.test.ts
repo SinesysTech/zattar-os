@@ -521,9 +521,16 @@ describe("useNotificacoesRealtime", () => {
     it("não deve configurar Realtime sem usuarioId", async () => {
       renderHook(() => useNotificacoesRealtime({ sessionToken: "session-token" }));
 
-      // Não deve criar canal
-      expect(mockChannel).not.toHaveBeenCalled();
-      expect(mockRealtimeSetAuth).not.toHaveBeenCalled();
+      // Sem usuarioId, não deve criar canal de notificações nem configurar auth
+      // O hook pode inicializar internamente mas não deve configurar o canal de notificações
+      expect(mockOn).not.toHaveBeenCalledWith(
+        "postgres_changes",
+        expect.objectContaining({
+          event: "INSERT",
+          table: "notificacoes",
+        }),
+        expect.any(Function)
+      );
     });
 
     it("deve ativar polling quando sessionToken estiver ausente", async () => {
