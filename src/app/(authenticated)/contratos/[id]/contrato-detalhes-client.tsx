@@ -22,6 +22,7 @@ import type {
   ResponsavelDetalhado,
   SegmentoDetalhado,
   ContratoStatusHistorico,
+  ContratoCompletoStats,
 } from '@/app/(authenticated)/contratos';
 import {
   STATUS_CONTRATO_LABELS,
@@ -161,6 +162,7 @@ interface ContratoDetalhesClientProps {
   cliente: ClienteDetalhado | null;
   responsavel: ResponsavelDetalhado | null;
   segmento: SegmentoDetalhado | null;
+  stats: ContratoCompletoStats;
   lancamentos: Lancamento[];
   entrevista?: EntrevistaTrabalhista | null;
   entrevistaAnexos?: EntrevistaAnexo[];
@@ -171,15 +173,16 @@ export function ContratoDetalhesClient({
   cliente,
   responsavel,
   segmento,
+  stats,
   lancamentos,
   entrevista = null,
   entrevistaAnexos = [],
 }: ContratoDetalhesClientProps) {
   const clienteNome = cliente?.nome ?? `Cliente #${contrato.clienteId}`;
 
-  const totalPartes = contrato.partes.length;
-  const totalProcessos = contrato.processos.length;
-  const totalLancamentos = lancamentos.length;
+  const totalPartes = stats.totalPartes;
+  const totalProcessos = stats.totalProcessos;
+  const totalDocumentos = stats.totalDocumentos;
   const totalValor = lancamentos
     .filter((l) => l.tipo === 'receita' && l.status !== 'cancelado' && l.status !== 'estornado')
     .reduce((acc, l) => acc + l.valor, 0);
@@ -209,7 +212,7 @@ export function ContratoDetalhesClient({
           <Text variant="meta-label">Processos</Text>
         </GlassPanel>
         <GlassPanel depth={2} className="px-4 py-3 text-center">
-          <p className="font-display text-xl font-bold tabular-nums">{totalLancamentos}</p>
+          <p className="font-display text-xl font-bold tabular-nums">{totalDocumentos}</p>
           <Text variant="meta-label">Documentos</Text>
         </GlassPanel>
         <GlassPanel depth={2} className="px-4 py-3 text-center">
