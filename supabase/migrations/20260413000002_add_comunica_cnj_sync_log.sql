@@ -22,4 +22,4 @@ create policy "Usuarios autenticados podem ver logs de sync"
 
 create policy "Usuarios autenticados podem criar logs"
   on comunica_cnj_sync_log for insert
-  with check (executado_por = (select auth.uid()::bigint));
+  with check (executado_por = get_current_user_id());

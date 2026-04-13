@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZattarOS Auth — Concept A: Split Glass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ================================================================
+     CONCEPT A — SPLIT GLASS
+     Split-screen: painel branded escuro (esquerda) + glass form (direita)
+     Inspirado em: Linear, Vercel, Stripe — adaptado ao Glass Briefing
+     ================================================================ */
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Glass Briefing tokens (Light) */
+    --primary: oklch(0.48 0.26 281);
+    --primary-foreground: oklch(1.0 0 0);
+    --background: oklch(0.96 0.01 281);
+    --foreground: oklch(0.15 0.01 281);
+    --card: oklch(1.0 0 0);
+    --muted: oklch(0.92 0.01 281);
+    --muted-foreground: oklch(0.42 0.01 281);
+    --border: oklch(0.87 0.01 281);
+    --input: oklch(0.87 0.01 281);
+    --destructive: oklch(0.55 0.22 25);
+    --success: oklch(0.55 0.18 145);
+    --secondary: oklch(0.95 0.04 281);
+    --radius: 0.5rem;
+    --glow-primary: oklch(from var(--primary) l c h / 0.35);
+
+    /* Brand panel (always dark) */
+    --brand-bg: oklch(0.14 0.02 281);
+    --brand-surface: oklch(0.20 0.015 281);
+    --brand-text: oklch(0.98 0 0);
+    --brand-muted: oklch(0.60 0.01 281);
+    --brand-primary-light: oklch(0.70 0.20 281);
+
+    /* Fonts */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-heading: 'Montserrat', sans-serif;
+    --font-headline: 'Manrope', sans-serif;
+  }
+
+  html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--background);
+    color: var(--foreground);
+    min-height: 100svh;
+    display: flex;
+  }
+
+  /* ── BRAND PANEL (Left) ─────────────────────────────────── */
+  .brand-panel {
+    position: relative;
+    width: 45%;
+    min-height: 100svh;
+    background: var(--brand-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    overflow: hidden;
+  }
+
+  /* Canvas dots (matching app) */
+  .brand-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, oklch(1 0 0 / 0.04) 0.8px, transparent 0.8px);
+    background-size: 14px 14px;
+    pointer-events: none;
+  }
+
+  /* Ambient glow — primary purple */
+  .brand-glow {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, oklch(0.48 0.26 281 / 0.15), transparent 70%);
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: blur(80px);
+    animation: glow-pulse 8s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  .brand-glow-secondary {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, oklch(0.60 0.22 45 / 0.08), transparent 70%);
+    bottom: 15%;
+    right: 10%;
+    filter: blur(60px);
+    animation: glow-pulse 10s ease-in-out infinite alternate-reverse;
+    pointer-events: none;
+  }
+
+  @keyframes glow-pulse {
+    0% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  }
+
+  .brand-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 380px;
+    gap: 2rem;
+  }
+
+  /* Logo placeholder (SVG inline) */
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .brand-logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, oklch(0.70 0.20 281), oklch(0.48 0.26 281));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 20px;
+    color: white;
+  }
+
+  .brand-logo-text {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: var(--brand-text);
+    letter-spacing: -0.01em;
+  }
+
+  .brand-logo-badge {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--brand-primary-light);
+    background: oklch(0.70 0.20 281 / 0.12);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 4px;
+  }
+
+  .brand-headline {
+    font-family: var(--font-headline);
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.2;
+    color: var(--brand-text);
+    letter-spacing: -0.02em;
+  }
+
+  .brand-headline span {
+    background: linear-gradient(135deg, oklch(0.70 0.20 281), oklch(0.80 0.15 281));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .brand-description {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--brand-muted);
+  }
+
+  /* Feature pills */
+  .brand-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .feature-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    background: oklch(1 0 0 / 0.04);
+    border: 1px solid oklch(1 0 0 / 0.08);
+    font-size: 12px;
+    color: oklch(0.75 0.005 281);
+    transition: all 0.2s ease;
+  }
+
+  .feature-pill:hover {
+    background: oklch(1 0 0 / 0.07);
+    border-color: oklch(1 0 0 / 0.12);
+  }
+
+  .feature-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--brand-primary-light);
+  }
+
+  /* Footer */
+  .brand-footer {
+    position: absolute;
+    bottom: 2rem;
+    left: 3rem;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 11px;
+    color: var(--brand-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .brand-footer::before {
+    content: '';
+    width: 16px;
+    height: 1px;
+    background: var(--brand-muted);
+    opacity: 0.4;
+  }
+
+  /* ── FORM PANEL (Right) ────────────────────────────────── */
+  .form-panel {
+    flex: 1;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+    background: var(--background);
+  }
+
+  /* Subtle ambient gradient on form side */
+  .form-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 30% 50%, oklch(0.48 0.26 281 / 0.04), transparent);
+    pointer-events: none;
+  }
+
+  .form-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  /* Glass card */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow:
+      0 1px 3px oklch(0 0 0 / 0.04),
+      0 8px 32px oklch(0 0 0 / 0.06);
+  }
+
+  .form-header {
+    margin-bottom: 2rem;
+  }
+
+  .form-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--foreground);
+    letter-spacing: -0.02em;
+  }
+
+  .form-subtitle {
+    margin-top: 0.375rem;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+
+  /* Form fields */
+  .field {
+    margin-bottom: 1rem;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--foreground);
+    margin-bottom: 0.375rem;
+  }
+
+  .field-input {
+    width: 100%;
+    height: 44px;
+    padding: 0 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--foreground);
+    transition: all 0.2s ease;
+    outline: none;
+  }
+
+  .field-input::placeholder {
+    color: oklch(0.55 0.005 281);
+  }
+
+  .field-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px oklch(0.48 0.26 281 / 0.08);
+  }
+
+  .field-input-wrapper {
+    position: relative;
+  }
+
+  .field-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--muted-foreground);
+    opacity: 0.4;
+    cursor: pointer;
+    padding: 4px;
+    transition: opacity 0.2s;
+  }
+
+  .field-toggle:hover {
+    opacity: 0.8;
+  }
+
+  /* Error alert */
+  .error-alert {
+    display: none;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: var(--radius);
+    border: 1px solid oklch(0.55 0.22 25 / 0.15);
+    background: oklch(0.55 0.22 25 / 0.05);
+    margin-bottom: 1rem;
+    animation: slide-in 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .error-alert.visible { display: flex; }
+
+  .error-alert svg { flex-shrink: 0; margin-top: 1px; color: var(--destructive); }
+
+  .error-alert p { font-size: 0.8125rem; color: var(--destructive); line-height: 1.4; }
+
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Submit button */
+  .btn-primary {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: none;
+    border-radius: var(--radius);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 0.25rem;
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 4px 16px oklch(0.48 0.26 281 / 0.25);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  .btn-primary svg {
+    transition: transform 0.2s ease;
+  }
+
+  .btn-primary:hover svg {
+    transform: translateX(2px);
+  }
+
+  /* Footer link */
+  .form-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .form-footer a {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    opacity: 0.6;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .form-footer a:hover {
+    opacity: 1;
+    color: var(--primary);
+  }
+
+  /* ── DARK MODE TOGGLE ─────────────────────────────────── */
+  .theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 100;
+    width: 40px;
+    height: 40px;
+    border: 1px solid oklch(0.5 0 0 / 0.15);
+    border-radius: 10px;
+    background: oklch(1 0 0 / 0.6);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    color: var(--foreground);
+  }
+
+  .theme-toggle:hover { background: oklch(1 0 0 / 0.8); }
+
+  /* ── DARK MODE ────────────────────────────────────────── */
+  .dark {
+    --primary: oklch(0.70 0.20 281);
+    --primary-foreground: oklch(0.15 0.10 281);
+    --background: oklch(0.17 0.005 281);
+    --foreground: oklch(0.98 0 0);
+    --card: oklch(0.22 0.005 281);
+    --muted: oklch(0.28 0.005 281);
+    --muted-foreground: oklch(0.65 0.005 281);
+    --border: oklch(1.0 0 0 / 0.12);
+    --input: oklch(1.0 0 0 / 0.12);
+    --secondary: oklch(0.28 0.01 281);
+    --destructive: oklch(0.65 0.20 25);
+    --brand-bg: oklch(0.11 0.02 281);
+    --brand-surface: oklch(0.16 0.015 281);
+  }
+
+  .dark .glass-card {
+    background: oklch(0.22 0.005 281 / 0.60);
+    border-color: oklch(1 0 0 / 0.08);
+    box-shadow:
+      0 1px 3px oklch(0 0 0 / 0.15),
+      0 8px 32px oklch(0 0 0 / 0.25);
+  }
+
+  .dark .theme-toggle {
+    background: oklch(0.22 0.005 281 / 0.6);
+    border-color: oklch(1 0 0 / 0.1);
+    color: oklch(0.98 0 0);
+  }
+
+  .dark .feature-pill {
+    color: oklch(0.70 0.005 281);
+  }
+
+  /* ── RESPONSIVE ───────────────────────────────────────── */
+  @media (max-width: 1024px) {
+    .brand-panel { width: 40%; padding: 2rem; }
+    .brand-headline { font-size: 1.625rem; }
+  }
+
+  @media (max-width: 768px) {
+    body { flex-direction: column; }
+    .brand-panel {
+      width: 100%;
+      min-height: auto;
+      padding: 2rem 1.5rem 1.5rem;
+    }
+    .brand-content { max-width: 100%; gap: 1rem; }
+    .brand-headline { font-size: 1.375rem; }
+    .brand-description { display: none; }
+    .brand-features { display: none; }
+    .brand-footer { display: none; }
+    .brand-glow { width: 300px; height: 300px; }
+    .form-panel { min-height: auto; padding: 1.5rem; }
+    .glass-card { padding: 1.5rem; }
+  }
+
+  @media (max-width: 480px) {
+    .glass-card { padding: 1.25rem; border-radius: 12px; }
+    .form-title { font-size: 1.25rem; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .brand-glow, .brand-glow-secondary { animation: none; }
+    .btn-primary svg { transition: none; }
+    .error-alert { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" onclick="document.body.classList.toggle('dark')" aria-label="Alternar tema">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+  </svg>
+</button>
+
+<!-- ═══ BRAND PANEL ═══ -->
+<aside class="brand-panel" aria-hidden="true">
+  <div class="brand-glow"></div>
+  <div class="brand-glow-secondary"></div>
+
+  <div class="brand-content">
+    <div class="brand-logo">
+      <div class="brand-logo-icon">Z</div>
+      <div>
+        <div class="brand-logo-text">ZattarOS</div>
+      </div>
+      <span class="brand-logo-badge">v4</span>
+    </div>
+
+    <h1 class="brand-headline">
+      Gestao juridica com <span>inteligencia operacional</span>.
+    </h1>
+
+    <p class="brand-description">
+      Processos, audiencias, prazos e comunicacao — tudo integrado em uma plataforma construida para escritorios que exigem precisao.
+    </p>
+
+    <div class="brand-features">
+      <div class="feature-pill"><span class="feature-dot"></span> Processos</div>
+      <div class="feature-pill"><span class="feature-dot"></span> Audiencias</div>
+      <div class="feature-pill"><span class="feature-dot"></span> Prazos</div>
+      <div class="feature-pill"><span class="feature-dot"></span> Financeiro</div>
+      <div class="feature-pill"><span class="feature-dot"></span> Chat</div>
+      <div class="feature-pill"><span class="feature-dot"></span> IA</div>
+    </div>
+  </div>
+
+  <div class="brand-footer">
+    Synthropic &middot; Tecnologia para o Direito
+  </div>
+</aside>
+
+<!-- ═══ FORM PANEL ═══ -->
+<main class="form-panel">
+  <div class="form-container">
+    <div class="glass-card">
+      <div class="form-header">
+        <h2 class="form-title">Entrar</h2>
+        <p class="form-subtitle">Acesse sua conta para continuar</p>
+      </div>
+
+      <form onsubmit="return false;">
+        <div class="field">
+          <label class="field-label" for="email">Email</label>
+          <input class="field-input" id="email" type="email" placeholder="voce@zattar.com.br" autocomplete="email" required>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="password">Senha</label>
+          <div class="field-input-wrapper">
+            <input class="field-input" id="password" type="password" placeholder="Digite sua senha" autocomplete="current-password" required style="padding-right: 2.5rem;">
+            <button type="button" class="field-toggle" aria-label="Mostrar senha" onclick="togglePassword()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="error-alert" id="error" role="alert">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>Email ou senha incorretos</p>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          Entrar
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+      </form>
+
+      <div class="form-footer">
+        <a href="#">Esqueci minha senha</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+function togglePassword() {
+  const input = document.getElementById('password');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+</script>
+</body>
+</html>

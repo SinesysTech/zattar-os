@@ -50,11 +50,9 @@ export { CredenciaisCombobox } from './components/credenciais-combobox';
 
 // Comunica CNJ Components (client-safe)
 export {
-  ComunicaCNJConsulta,
-  ComunicaCNJCapturadas,
-  ComunicaCNJResultsTable,
-  ComunicaCNJSearchForm,
   ComunicaCNJTabsContent,
+  ComunicaCNJResultsTable,
+  GazettePage,
 } from './components/comunica-cnj';
 
 // ============================================================================

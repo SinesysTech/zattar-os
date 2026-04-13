@@ -18,18 +18,18 @@ alter table comunica_cnj_views enable row level security;
 create policy "Usuarios podem ver views pessoais e de equipe"
   on comunica_cnj_views for select
   using (
-    criado_por = (select auth.uid()::bigint)
+    criado_por = get_current_user_id()
     or visibilidade = 'equipe'
   );
 
 create policy "Usuarios podem criar views"
   on comunica_cnj_views for insert
-  with check (criado_por = (select auth.uid()::bigint));
+  with check (criado_por = get_current_user_id());
 
 create policy "Usuarios podem editar suas views"
   on comunica_cnj_views for update
-  using (criado_por = (select auth.uid()::bigint));
+  using (criado_por = get_current_user_id());
 
 create policy "Usuarios podem deletar suas views"
   on comunica_cnj_views for delete
-  using (criado_por = (select auth.uid()::bigint));
+  using (criado_por = get_current_user_id());
