@@ -51,7 +51,8 @@ describe('PageShell - Property-Based Tests', () => {
                     expect(h1).toHaveTextContent(title);
 
                     // Verifica descrição (procura por elemento com text-muted-foreground)
-                    const descriptionElement = container.querySelector('.text-muted-foreground');
+                    // PageShell uses text-muted-foreground/50 which CSS selectors can't match with dot notation
+                    const descriptionElement = container.querySelector('[class*="text-muted-foreground"]');
                     expect(descriptionElement).toBeInTheDocument();
                     expect(descriptionElement).toHaveTextContent(description);
                 }

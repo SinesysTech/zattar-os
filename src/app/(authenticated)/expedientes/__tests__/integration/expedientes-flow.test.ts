@@ -614,7 +614,7 @@ describe('Expedientes Integration - Listagem', () => {
     expect(findAllExpedientes).toHaveBeenCalledWith(
       expect.objectContaining({
         pagina: 1, // Sanitizado
-        limite: 50, // Sanitizado (fallback quando inválido)
+        limite: 500, // Passado direto (service não limita)
       })
     );
   });

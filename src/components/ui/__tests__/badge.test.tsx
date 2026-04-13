@@ -63,11 +63,11 @@ describe('Badge - Property-Based Tests', () => {
 
                     // Para cada variant, verifica padrões de cores específicos
                     if (tone === 'soft' && variant === 'success') {
-                        expect(className).toMatch(/bg-emerald-500\/15|text-emerald-700|text-emerald-400/);
+                        expect(className).toMatch(/bg-success\/15|text-success/);
                     } else if (tone === 'soft' && variant === 'warning') {
-                        expect(className).toMatch(/bg-orange-500\/15|text-orange-700|text-orange-400/);
+                        expect(className).toMatch(/bg-warning\/15|text-warning/);
                     } else if (tone === 'soft' && variant === 'destructive') {
-                        expect(className).toMatch(/bg-red-500\/15|text-red-700|text-red-400/);
+                        expect(className).toMatch(/bg-destructive\/15|text-destructive/);
                     } else if (tone === 'solid' && variant === 'default') {
                         expect(className).toMatch(/bg-primary|text-primary-foreground/);
                     }

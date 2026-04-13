@@ -10,12 +10,12 @@ import {
   findClienteByCNPJ,
   findClienteById,
   updateCliente as updateClienteRepo,
-} from '../../repositories';
+} from '../../repository';
 import { ok } from '@/types';
-import type { CriarClienteInput } from '../../domain';
+import type { CreateClienteInput } from '../../domain';
 
 // Mock repository
-jest.mock('../../repositories');
+jest.mock('../../repository');
 
 // Mock helpers in service if any (none obvious besides errors)
 // errors are imported from ./errors, which are pure functions usually.
@@ -45,7 +45,7 @@ describe('Partes Service - Cliente', () => {
       (saveCliente as jest.Mock).mockResolvedValue(ok({ id: 1, ...validClientePF }));
 
       // Act
-      const result = await criarCliente(validClientePF as CriarClienteInput);
+      const result = await criarCliente(validClientePF as CreateClienteInput);
 
       // Assert
       expect(result.success).toBe(true);
@@ -62,7 +62,7 @@ describe('Partes Service - Cliente', () => {
       (saveCliente as jest.Mock).mockResolvedValue(ok({ id: 2, ...validClientePJ }));
 
       // Act
-      const result = await criarCliente(validClientePJ as CriarClienteInput);
+      const result = await criarCliente(validClientePJ as CreateClienteInput);
 
       // Assert
       expect(result.success).toBe(true);
@@ -75,7 +75,7 @@ describe('Partes Service - Cliente', () => {
       (findClienteByCPF as jest.Mock).mockResolvedValue(ok({ id: 99, cpf: validClientePF.cpf })); // Duplicate
 
       // Act
-      const result = await criarCliente(validClientePF as CriarClienteInput);
+      const result = await criarCliente(validClientePF as CreateClienteInput);
 
       // Assert
       expect(result.success).toBe(false);
@@ -94,7 +94,7 @@ describe('Partes Service - Cliente', () => {
       const invalidInput = { ...validClientePF, nome: '' };
 
       // Act
-      const result = await criarCliente(invalidInput as CriarClienteInput);
+      const result = await criarCliente(invalidInput as CreateClienteInput);
 
       // Assert
       expect(result.success).toBe(false);

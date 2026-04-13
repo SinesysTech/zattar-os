@@ -1,3 +1,11 @@
+/** @jest-environment jest-environment-jsdom */
+import { TextEncoder, TextDecoder } from 'util';
+
+// Polyfill TextEncoder/TextDecoder for jsdom
+if (typeof globalThis.TextEncoder === 'undefined') {
+  Object.assign(globalThis, { TextEncoder, TextDecoder });
+}
+
 import { webcrypto } from 'crypto';
 
 import {
@@ -83,7 +91,7 @@ describe('secure-storage', () => {
   });
 
   it('decryptData(): returns null on corrupted data', async () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
     const userId = 'test-user-123';
     const salt = generateSalt();
     const key = await deriveKey(userId, salt);
