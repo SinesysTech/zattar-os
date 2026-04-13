@@ -23,7 +23,7 @@ const TIPO_BADGE_CONFIG: Record<
   },
   sentenca: {
     label: 'SENTENÇA',
-    className: 'bg-purple-500/10 text-purple-400',
+    className: 'bg-chart-3/10 text-chart-3',
   },
   edital: {
     label: 'EDITAL',

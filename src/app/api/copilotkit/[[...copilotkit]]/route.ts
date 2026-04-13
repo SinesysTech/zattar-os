@@ -13,8 +13,8 @@
 import {
   CopilotRuntime,
   createCopilotEndpoint,
+  BuiltInAgent,
 } from "@copilotkit/runtime/v2";
-import { BuiltInAgent } from "@copilotkit/runtime/v2";
 import { NextRequest, NextResponse } from "next/server";
 import {
   ensureMcpToolsRegistered,
@@ -91,7 +91,7 @@ async function handleCopilotRequest(req: NextRequest) {
 
     // 5. Create agent per-request with user-specific tools
     const agent = new BuiltInAgent({
-      model: "google/gemini-3.1-pro-preview-customtools",
+      model: "google:gemini-2.5-flash",
       apiKey,
       tools,
       prompt,

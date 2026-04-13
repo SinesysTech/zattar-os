@@ -19,7 +19,6 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 import { useGazetteStore } from './hooks/use-gazette-store';
 import type {
   ComunicacaoCNJEnriquecida,
-  MatchSugestao,
   MatchCriterio,
 } from '@/app/(authenticated)/captura/comunica-cnj/domain';
 
@@ -102,7 +101,7 @@ function ProgressSegment({
     <div className="space-y-1.5">
       <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-border/20">
         <div
-          className="rounded-full bg-gradient-to-r from-success/80 to-success transition-all duration-500"
+          className="rounded-full bg-linear-to-r from-success/80 to-success transition-all duration-500"
           style={{ width: `${pctResolved}%` }}
         />
         <div
@@ -157,7 +156,7 @@ function NoMatchState({
           Nao encontramos um expediente compativel
         </p>
       </div>
-      <div className="flex flex-col items-center gap-2 w-full max-w-[240px]">
+      <div className="flex flex-col items-center gap-2 w-full max-w-60">
         <Button
           variant="outline"
           className="w-full gap-2 text-[12px]"
@@ -541,7 +540,7 @@ export function GazetteOrphanResolver() {
               </div>
 
               {/* Match card */}
-              <div className="mt-3 rounded-xl border border-success/10 bg-success/[0.03] p-4 space-y-2.5">
+              <div className="mt-3 rounded-xl border border-success/10 bg-success/3 p-4 space-y-2.5">
                 <div>
                   <span className="text-[10px] text-muted-foreground">Expediente</span>
                   <p className="text-[13px] font-semibold text-foreground">

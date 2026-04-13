@@ -3,10 +3,10 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AlertCircle, ArrowLeft, Loader2, Check } from 'lucide-react'
+import { AlertCircle, ArrowLeft, ArrowRight, Loader2, Mail } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
-const ease = [0.22, 1, 0.36, 1]
+const customEase: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState('')
@@ -22,106 +22,147 @@ export function ForgotPasswordForm() {
 
     try {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/confirm`,
+        redirectTo: `${window.location.origin}/update-password`,
       })
-
       if (resetError) throw resetError
-
       setSuccess(true)
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('Ocorreu um erro ao enviar o e-mail.')
-      }
+      setError(err instanceof Error ? err.message : 'Ocorreu um erro ao enviar o e-mail.')
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="flex flex-col">
-      {success ? (
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center py-8"
-        >
-          <div className="w-16 h-16 bg-success/10 text-success rounded-full flex items-center justify-center mx-auto mb-6">
-            <Check size={32} strokeWidth={3} />
-          </div>
-          <h3 className="text-xl font-bold font-heading mb-2">E-mail Enviado</h3>
-          <p className="text-white/40 text-sm mb-8">
-            Verifique sua caixa de entrada para continuar o processo de recuperação.
-          </p>
-          <Link 
-            href="/login" 
-            className="text-[10px] text-white/20 hover:text-white transition-colors font-bold uppercase tracking-widest inline-flex items-center gap-2"
+    <div className="flex flex-col items-center">
+      <AnimatePresence mode="wait">
+        {success ? (
+          <motion.div
+            key="success"
+            initial={{ opacity: 0, x: 12 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -12 }}
+            transition={{ duration: 0.3, ease: customEase }}
+            className="text-center w-full"
           >
-            <ArrowLeft size={12} /> Voltar para o login
-          </Link>
-        </motion.div>
-      ) : (
-        <form onSubmit={handleReset} className="space-y-6">
-          <div className="space-y-2 group">
-            <label 
-              htmlFor="email" 
-              className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 ml-1 group-focus-within:text-primary transition-colors"
-            >
-              E-mail Associado
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="nome@zattar.com.br"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-tactile w-full h-14 px-6 rounded-2xl outline-none text-white placeholder:text-white/10 text-lg"
-              autoComplete="email"
-            />
-          </div>
+            <div className="text-center mb-8">
+              <h1 className="font-headline font-extrabold text-4xl leading-tight tracking-tight text-foreground">
+                Pronto.
+              </h1>
+              <p className="mt-3 text-[0.9375rem] text-muted-foreground">
+                Se o email estiver cadastrado, você receberá um link.
+              </p>
+            </div>
 
-          <AnimatePresence mode="wait">
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="overflow-hidden"
-              >
-                <div className="flex items-center gap-2 rounded-xl bg-destructive/10 border border-destructive/20 p-4 text-destructive text-xs font-bold uppercase tracking-wider">
-                  <AlertCircle size={14} />
-                  {error}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+            <div className="flex items-start gap-3 rounded-xl border border-success/15 bg-success/5 p-4 mb-8">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-success/10">
+                <Mail className="h-4 w-4 text-success" />
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-medium text-foreground/80">Email enviado</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Verifique sua caixa de entrada e a pasta de spam.
+                </p>
+              </div>
+            </div>
 
-          <div className="pt-2">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="btn-luminous w-full h-14 rounded-2xl font-bold text-white shadow-xl flex items-center justify-center gap-3 text-xs uppercase tracking-[0.2em]"
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/50 hover:text-primary transition-colors"
             >
-              {isLoading ? (
-                <Loader2 className="animate-spin" size={20} />
-              ) : (
-                'Recuperar Acesso'
-              )}
-            </button>
-          </div>
-
-          <div className="mt-10 flex justify-center">
-            <Link 
-              href="/login" 
-              className="text-[10px] text-white/10 hover:text-white transition-colors font-bold uppercase tracking-widest"
-            >
+              <ArrowLeft className="h-3 w-3" />
               Voltar para o login
             </Link>
-          </div>
-        </form>
-      )}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="form"
+            initial={{ opacity: 0, x: 12 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -12 }}
+            transition={{ duration: 0.3, ease: customEase }}
+            className="w-full"
+          >
+            <div className="text-center mb-10">
+              <motion.h1
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: customEase }}
+                className="font-headline font-extrabold text-4xl leading-tight tracking-tight text-foreground"
+              >
+                Sem problemas.
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1, ease: customEase }}
+                className="mt-3 text-[0.9375rem] text-muted-foreground"
+              >
+                Digite seu email e enviamos um link para redefinir.
+              </motion.p>
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.8, delay: 0.3, ease: customEase }}
+                className="auth-accent-line"
+              />
+            </div>
+
+            <form onSubmit={handleReset} className="w-full space-y-5">
+              <div>
+                <label htmlFor="email" className="auth-label">Email</label>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="voce@zattar.com.br"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="auth-input"
+                  autoComplete="email"
+                />
+              </div>
+
+              <AnimatePresence mode="wait">
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25, ease: customEase }}
+                    className="auth-error"
+                    role="alert"
+                  >
+                    <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                    <p>{error}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <button type="submit" disabled={isLoading} className="auth-btn-primary">
+                {isLoading ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <>
+                    Enviar link
+                    <ArrowRight className="h-4.5 w-4.5" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/50 hover:text-primary transition-colors"
+              >
+                <ArrowLeft className="h-3 w-3" />
+                Voltar para o login
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

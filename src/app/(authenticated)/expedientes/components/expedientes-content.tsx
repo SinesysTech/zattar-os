@@ -121,7 +121,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   // exatamente o subconjunto esperado, sem depender de uma amostra parcial.
   const {
     expedientes: expedientesDaAba,
-    paginacao,
+    paginacao: _paginacao,
     isLoading,
     refetch,
   } = useExpedientes({

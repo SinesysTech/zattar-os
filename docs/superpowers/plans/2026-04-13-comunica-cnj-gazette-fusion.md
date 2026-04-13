@@ -937,7 +937,7 @@ export function GazetteKpiCard({
       className={cn(
         'cursor-pointer transition-all duration-200 relative',
         isActive && 'ring-1 ring-primary/25',
-        isDanger && 'border-destructive/20 bg-destructive/[0.03]',
+        isDanger && 'border-destructive/20 bg-destructive/3',
       )}
       onClick={onClick}
     >
@@ -996,7 +996,7 @@ export function GazetteKpiCard({
         {progressBar && (
           <div className="mt-2 h-1 bg-muted-foreground/5 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-success to-success/70 rounded-full"
+              className="h-full bg-linear-to-r from-success to-success/70 rounded-full"
               style={{
                 width: `${Math.min(100, (progressBar.valor / progressBar.max) * 100)}%`,
               }}
@@ -1116,7 +1116,7 @@ export function GazetteAlertBanner({ count, descricao, onVerPrazos }: GazetteAle
   if (dismissed || count === 0) return null;
 
   return (
-    <div className="px-6 py-2.5 bg-destructive/[0.04] border-b border-destructive/10 flex items-center gap-3">
+    <div className="px-6 py-2.5 bg-destructive/4 border-b border-destructive/10 flex items-center gap-3">
       <div className="size-7 flex items-center justify-center bg-destructive/10 rounded-lg shrink-0">
         <AlertTriangle className="size-3.5 text-destructive" />
       </div>
@@ -1193,7 +1193,7 @@ function InsightCard({ insight }: { insight: GazetteInsight }) {
   return (
     <div
       className={cn(
-        'p-3 rounded-xl border min-w-[220px] max-w-[280px] shrink-0 cursor-pointer transition-all hover:-translate-y-px',
+        'p-3 rounded-xl border min-w-55 max-w-70 shrink-0 cursor-pointer transition-all hover:-translate-y-px',
         style.bg,
       )}
     >
@@ -1676,11 +1676,11 @@ export function EmptyFirstTime({ onSync }: { onSync: () => void }) {
         }
       />
       <div className="flex gap-2 mt-4">
-        <div className="p-2.5 bg-surface-container border border-border/20 rounded-lg text-left max-w-[180px] cursor-pointer hover:border-primary/25 transition-colors">
+        <div className="p-2.5 bg-surface-container border border-border/20 rounded-lg text-left max-w-45 cursor-pointer hover:border-primary/25 transition-colors">
           <p className="text-[10px] text-primary font-medium mb-0.5">Configurar OAB</p>
           <p className="text-[10px] text-muted-foreground/25">Vincule advogados para captura automatica</p>
         </div>
-        <div className="p-2.5 bg-surface-container border border-border/20 rounded-lg text-left max-w-[180px] cursor-pointer hover:border-primary/25 transition-colors">
+        <div className="p-2.5 bg-surface-container border border-border/20 rounded-lg text-left max-w-45 cursor-pointer hover:border-primary/25 transition-colors">
           <p className="text-[10px] text-primary font-medium mb-0.5">Selecionar Tribunais</p>
           <p className="text-[10px] text-muted-foreground/25">Escolha as fontes para monitoramento</p>
         </div>

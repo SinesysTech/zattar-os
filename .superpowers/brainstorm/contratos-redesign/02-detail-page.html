@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contratos - Detail Page (Tabs Layout)</title>
+  <link rel="stylesheet" href="00-shared-styles.css">
+  <style>
+    /* === DETAIL PAGE SPECIFIC === */
+
+    /* Header card */
+    .detail-header {
+      padding: 20px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .detail-avatar {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: rgba(85,35,235,0.1);
+      color: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .detail-header-content { flex: 1; min-width: 0; }
+    .detail-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .detail-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.111rem;
+      font-weight: 700;
+      color: var(--foreground);
+    }
+    .detail-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .detail-meta-item {
+      font-size: 12px;
+      color: var(--muted-foreground);
+      opacity: 0.6;
+    }
+    .detail-meta-dot {
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: var(--muted-foreground);
+      opacity: 0.3;
+    }
+    .detail-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Pipeline stepper (detail - compact) */
+    .detail-stepper {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 0 24px 16px;
+    }
+    .detail-step {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .detail-step.completed .detail-step-dot {
+      background: var(--success);
+    }
+    .detail-step.current .detail-step-dot {
+      background: var(--primary);
+      box-shadow: 0 0 8px rgba(85,35,235,0.4);
+    }
+    .detail-step.current {
+      background: rgba(85,35,235,0.06);
+    }
+    .detail-step.future .detail-step-dot {
+      background: var(--muted-foreground);
+      opacity: 0.3;
+    }
+    .detail-step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .detail-step-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted-foreground);
+    }
+    .detail-step.current .detail-step-label {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .detail-step.completed .detail-step-label {
+      color: var(--success);
+    }
+    .detail-step-connector {
+      width: 20px;
+      height: 2px;
+      background: rgba(0,0,0,0.06);
+      flex-shrink: 0;
+    }
+    .dark .detail-step-connector { background: rgba(255,255,255,0.08); }
+    .detail-step-connector.done { background: var(--success); opacity: 0.4; }
+
+    /* Mini KPI Row */
+    .mini-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .mini-kpi {
+      padding: 12px 16px;
+      text-align: center;
+    }
+    .mini-kpi-value {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.111rem;
+      font-weight: 700;
+      color: var(--foreground);
+    }
+    .mini-kpi-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+      margin-top: 2px;
+    }
+
+    /* Tabs */
+    .detail-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 0 4px;
+    }
+    .dark .detail-tabs { border-color: rgba(255,255,255,0.06); }
+    .detail-tab {
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted-foreground);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      font-family: 'Inter', sans-serif;
+    }
+    .detail-tab:hover { color: var(--foreground); }
+    .detail-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Tab content */
+    .tab-content { padding: 20px 0; }
+    .tab-hidden { display: none; }
+
+    /* Widget container */
+    .widget {
+      padding: 16px 20px;
+    }
+    .widget-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .widget-icon {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(85,35,235,0.06);
+    }
+    .widget-icon svg { width: 14px; height: 14px; color: var(--primary); opacity: 0.6; }
+    .widget-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.778rem;
+      font-weight: 600;
+      color: var(--foreground);
+    }
+
+    /* Info grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 640px) {
+      .info-grid { grid-template-columns: 1fr; }
+    }
+    .info-field {}
+    .info-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+      margin-bottom: 2px;
+    }
+    .info-value {
+      font-size: 13px;
+      color: var(--foreground);
+    }
+    .info-value-mono {
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      color: var(--foreground);
+    }
+
+    /* Parte card */
+    .parte-card {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .parte-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .parte-info { flex: 1; min-width: 0; }
+    .parte-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--foreground);
+    }
+    .parte-detail {
+      font-size: 11px;
+      color: var(--muted-foreground);
+      opacity: 0.6;
+      margin-top: 1px;
+    }
+
+    /* Financial KPIs */
+    .fin-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .fin-kpi {
+      padding: 14px 16px;
+    }
+    .fin-kpi-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+    }
+    .fin-kpi-value {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Progress bar */
+    .progress-container {
+      margin-bottom: 20px;
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .progress-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted-foreground);
+    }
+    .progress-pct {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+    .progress-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .dark .progress-bar { background: rgba(255,255,255,0.06); }
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--primary);
+      transition: width 0.7s ease;
+    }
+
+    /* Timeline */
+    .timeline { padding: 0 4px; }
+    .timeline-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      position: relative;
+    }
+    .timeline-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 40px;
+      bottom: 0;
+      width: 1px;
+      background: rgba(0,0,0,0.06);
+    }
+    .dark .timeline-item:not(:last-child)::after {
+      background: rgba(255,255,255,0.06);
+    }
+    .timeline-dot {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      z-index: 1;
+    }
+    .timeline-dot svg { width: 14px; height: 14px; }
+    .timeline-content { flex: 1; min-width: 0; padding-top: 4px; }
+    .timeline-action {
+      font-size: 13px;
+      color: var(--foreground);
+    }
+    .timeline-action strong { font-weight: 600; }
+    .timeline-date {
+      font-size: 11px;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+    .timeline-date-group {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted-foreground);
+      opacity: 0.4;
+      padding: 8px 0 4px 44px;
+    }
+
+    /* Document grid */
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+    .doc-card {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .doc-card:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.12);
+    }
+    .doc-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .doc-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--foreground);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .doc-meta {
+      font-size: 10px;
+      color: var(--muted-foreground);
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar-mock" aria-label="Menu principal">
+  <div class="logo"></div>
+  <div class="nav-dot">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+  </div>
+  <div class="nav-dot active" aria-current="page">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+  </div>
+  <div class="nav-dot">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="page-container space-y-5 animate-in">
+
+    <!-- Breadcrumb -->
+    <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted-foreground); opacity: 0.5;">
+      <span style="cursor:pointer;">Contratos</span>
+      <span>/</span>
+      <span style="color: var(--foreground); opacity: 1;">CT-2026/0042</span>
+    </div>
+
+    <!-- 1. HEADER -->
+    <div class="glass-widget">
+      <div class="detail-header">
+        <div class="detail-avatar">GE</div>
+        <div class="detail-header-content">
+          <div class="detail-title-row">
+            <span class="detail-title">Assessoria Juridica — Grupo Equatorial</span>
+            <span class="badge badge-success">Contratado</span>
+          </div>
+          <div class="detail-meta">
+            <span class="detail-meta-item">CT-2026/0042</span>
+            <div class="detail-meta-dot"></div>
+            <span class="badge badge-sm badge-primary">Assessoria</span>
+            <div class="detail-meta-dot"></div>
+            <span class="badge badge-sm badge-muted">Pro Labore</span>
+            <div class="detail-meta-dot"></div>
+            <span class="detail-meta-item">Trabalhista</span>
+            <div class="detail-meta-dot"></div>
+            <span class="detail-meta-item">Resp: Jordan M.</span>
+          </div>
+        </div>
+        <div class="detail-actions">
+          <button class="btn btn-outline" style="font-size: 12px; padding: 6px 12px; border-radius: 10px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Editar
+          </button>
+          <button class="btn btn-ghost" style="font-size: 12px; padding: 6px 10px; border-radius: 10px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pipeline stepper (detail) -->
+      <div class="detail-stepper">
+        <div class="detail-step completed">
+          <div class="detail-step-dot"></div>
+          <span class="detail-step-label">Em Contratacao</span>
+        </div>
+        <div class="detail-step-connector done"></div>
+        <div class="detail-step current">
+          <div class="detail-step-dot"></div>
+          <span class="detail-step-label">Contratado</span>
+        </div>
+        <div class="detail-step-connector"></div>
+        <div class="detail-step future">
+          <div class="detail-step-dot"></div>
+          <span class="detail-step-label">Distribuido</span>
+        </div>
+        <div class="detail-step-connector"></div>
+        <div class="detail-step future">
+          <div class="detail-step-dot"></div>
+          <span class="detail-step-label">Desistencia</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. MINI KPI ROW -->
+    <div class="mini-kpi-row">
+      <div class="glass-kpi mini-kpi">
+        <div class="mini-kpi-value">3</div>
+        <div class="mini-kpi-label">Partes</div>
+      </div>
+      <div class="glass-kpi mini-kpi">
+        <div class="mini-kpi-value">2</div>
+        <div class="mini-kpi-label">Processos</div>
+      </div>
+      <div class="glass-kpi mini-kpi">
+        <div class="mini-kpi-value">5</div>
+        <div class="mini-kpi-label">Documentos</div>
+      </div>
+      <div class="glass-kpi mini-kpi">
+        <div class="mini-kpi-value" style="font-size: 0.889rem;">R$ 180k</div>
+        <div class="mini-kpi-label">Valor</div>
+      </div>
+    </div>
+
+    <!-- 3. TABS -->
+    <div>
+      <div class="detail-tabs">
+        <button class="detail-tab active" onclick="showTab('resumo')">Resumo</button>
+        <button class="detail-tab" onclick="showTab('partes')">Partes</button>
+        <button class="detail-tab" onclick="showTab('processos')">Processos</button>
+        <button class="detail-tab" onclick="showTab('financeiro')">Financeiro</button>
+        <button class="detail-tab" onclick="showTab('documentos')">Documentos</button>
+        <button class="detail-tab" onclick="showTab('timeline')">Timeline</button>
+        <button class="detail-tab" onclick="showTab('entrevista')">Entrevista</button>
+      </div>
+
+      <!-- TAB: RESUMO -->
+      <div id="tab-resumo" class="tab-content space-y-4">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <!-- Detalhes Gerais -->
+          <div class="glass-widget widget">
+            <div class="widget-header">
+              <div class="widget-icon">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
+              </div>
+              <span class="widget-title">Detalhes Gerais</span>
+            </div>
+            <div class="info-grid">
+              <div class="info-field">
+                <div class="info-label">Numero</div>
+                <div class="info-value-mono">CT-2026/0042</div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Tipo</div>
+                <div class="info-value">Assessoria</div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Cobranca</div>
+                <div class="info-value">Pro Labore</div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Segmento</div>
+                <div class="info-value">Trabalhista</div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Cliente</div>
+                <div class="info-value">Equatorial Energia Para S.A.</div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Valor da Causa</div>
+                <div class="info-value-mono">R$ 180.000,00</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Datas & Prazos -->
+          <div class="glass-widget widget">
+            <div class="widget-header">
+              <div class="widget-icon">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+              </div>
+              <span class="widget-title">Datas & Prazos</span>
+            </div>
+            <div class="info-grid">
+              <div class="info-field">
+                <div class="info-label">Data Inicio</div>
+                <div class="info-value-mono">15/01/2026</div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Data Vencimento</div>
+                <div class="info-value-mono">15/07/2026</div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Dias Restantes</div>
+                <div class="info-value" style="display: flex; align-items: center; gap: 6px;">
+                  93 dias
+                  <span class="badge badge-sm badge-success">OK</span>
+                </div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Duracao Total</div>
+                <div class="info-value">6 meses</div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Criado Em</div>
+                <div class="info-value-mono">10/01/2026</div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Atualizado Em</div>
+                <div class="info-value-mono">08/04/2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Observacoes -->
+        <div class="glass-widget widget">
+          <div class="widget-header">
+            <div class="widget-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+            </div>
+            <span class="widget-title">Observacoes</span>
+          </div>
+          <p style="font-size: 13px; color: var(--muted-foreground); line-height: 1.6;">
+            Contrato de assessoria juridica permanente para o Grupo Equatorial, cobrindo todas as demandas trabalhistas na regiao Norte. Inclui acompanhamento de audiencias, elaboracao de defesas e recursos, e consultoria preventiva para o departamento de RH. Renovacao automatica a cada 6 meses, condicionada a avaliacao de desempenho mutua.
+          </p>
+        </div>
+      </div>
+
+      <!-- TAB: PARTES -->
+      <div id="tab-partes" class="tab-content tab-hidden space-y-3">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="text-widget-title">3 partes vinculadas</span>
+          <button class="btn btn-outline" style="font-size: 11px; padding: 4px 10px; border-radius: 8px;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar Parte
+          </button>
+        </div>
+
+        <div class="glass-widget parte-card">
+          <div class="parte-avatar" style="background: rgba(85,35,235,0.1); color: var(--primary);">EE</div>
+          <div class="parte-info">
+            <div class="parte-name">Equatorial Energia Para S.A.</div>
+            <div class="parte-detail">CNPJ: 04.065.033/0001-70 &middot; contato@equatorial.com.br</div>
+          </div>
+          <span class="badge badge-sm badge-success">Contratante</span>
+        </div>
+
+        <div class="glass-widget parte-card">
+          <div class="parte-avatar" style="background: rgba(60,120,200,0.1); color: var(--info);">ZA</div>
+          <div class="parte-info">
+            <div class="parte-name">Zattar Advocacia</div>
+            <div class="parte-detail">CNPJ: 12.345.678/0001-90 &middot; contato@zattar.adv.br</div>
+          </div>
+          <span class="badge badge-sm badge-info">Contratado</span>
+        </div>
+
+        <div class="glass-widget parte-card">
+          <div class="parte-avatar" style="background: rgba(200,150,50,0.1); color: var(--warning);">JM</div>
+          <div class="parte-info">
+            <div class="parte-name">Jordan Medeiros</div>
+            <div class="parte-detail">OAB/PA 12345 &middot; jordan@zattar.adv.br</div>
+          </div>
+          <span class="badge badge-sm badge-warning">Responsavel</span>
+        </div>
+      </div>
+
+      <!-- TAB: PROCESSOS -->
+      <div id="tab-processos" class="tab-content tab-hidden space-y-3">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="text-widget-title">2 processos vinculados</span>
+          <button class="btn btn-outline" style="font-size: 11px; padding: 4px 10px; border-radius: 8px;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Vincular Processo
+          </button>
+        </div>
+
+        <div class="glass-widget" style="padding: 14px 16px; cursor: pointer;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-size: 13px; font-weight: 500;">Reclamacao Trabalhista — Raphael Costa vs Equatorial</div>
+              <div style="font-size: 10px; font-variant-numeric: tabular-nums; color: var(--muted-foreground); opacity: 0.5; margin-top: 2px;">0000127-66.2025.5.08.0016</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="badge badge-sm badge-primary">TRT8</span>
+              <span class="badge badge-sm badge-success">Em Andamento</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-widget" style="padding: 14px 16px; cursor: pointer;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-size: 13px; font-weight: 500;">Recurso Ordinario — Jose Carlos vs Equatorial</div>
+              <div style="font-size: 10px; font-variant-numeric: tabular-nums; color: var(--muted-foreground); opacity: 0.5; margin-top: 2px;">0000891-12.2025.5.08.0002</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="badge badge-sm badge-primary">TRT8</span>
+              <span class="badge badge-sm badge-warning">Suspenso</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: FINANCEIRO -->
+      <div id="tab-financeiro" class="tab-content tab-hidden space-y-4">
+        <!-- Financial KPIs -->
+        <div class="fin-kpi-row">
+          <div class="glass-kpi fin-kpi">
+            <div class="fin-kpi-label">Valor Total</div>
+            <div class="fin-kpi-value" style="color: var(--foreground);">R$ 180.000</div>
+          </div>
+          <div class="glass-kpi fin-kpi">
+            <div class="fin-kpi-label">Recebido</div>
+            <div class="fin-kpi-value" style="color: var(--success);">R$ 90.000</div>
+          </div>
+          <div class="glass-kpi fin-kpi">
+            <div class="fin-kpi-label">Pendente</div>
+            <div class="fin-kpi-value" style="color: var(--warning);">R$ 90.000</div>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="progress-container">
+          <div class="progress-header">
+            <span class="progress-label">Progresso de recebimento</span>
+            <span class="progress-pct">50%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 50%;"></div>
+          </div>
+        </div>
+
+        <!-- Lancamentos table -->
+        <div class="glass-widget" style="padding: 4px;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Descricao</th>
+                <th>Valor</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-row-glass" style="background: rgba(255,255,255,0.018);">
+                <td style="font-size:12px; font-variant-numeric: tabular-nums;">15/01/2026</td>
+                <td style="font-size:12px;">Honorarios — Janeiro</td>
+                <td style="font-size:12px; font-weight:600; font-variant-numeric: tabular-nums;">R$ 30.000</td>
+                <td><span class="badge badge-sm badge-success">Pago</span></td>
+              </tr>
+              <tr class="table-row-glass" style="background: rgba(255,255,255,0.018);">
+                <td style="font-size:12px; font-variant-numeric: tabular-nums;">15/02/2026</td>
+                <td style="font-size:12px;">Honorarios — Fevereiro</td>
+                <td style="font-size:12px; font-weight:600; font-variant-numeric: tabular-nums;">R$ 30.000</td>
+                <td><span class="badge badge-sm badge-success">Pago</span></td>
+              </tr>
+              <tr class="table-row-glass" style="background: rgba(255,255,255,0.018);">
+                <td style="font-size:12px; font-variant-numeric: tabular-nums;">15/03/2026</td>
+                <td style="font-size:12px;">Honorarios — Marco</td>
+                <td style="font-size:12px; font-weight:600; font-variant-numeric: tabular-nums;">R$ 30.000</td>
+                <td><span class="badge badge-sm badge-success">Pago</span></td>
+              </tr>
+              <tr class="table-row-glass" style="background: rgba(255,255,255,0.018);">
+                <td style="font-size:12px; font-variant-numeric: tabular-nums;">15/04/2026</td>
+                <td style="font-size:12px;">Honorarios — Abril</td>
+                <td style="font-size:12px; font-weight:600; font-variant-numeric: tabular-nums;">R$ 30.000</td>
+                <td><span class="badge badge-sm badge-warning">Pendente</span></td>
+              </tr>
+              <tr class="table-row-glass" style="background: rgba(255,255,255,0.018);">
+                <td style="font-size:12px; font-variant-numeric: tabular-nums;">15/05/2026</td>
+                <td style="font-size:12px;">Honorarios — Maio</td>
+                <td style="font-size:12px; font-weight:600; font-variant-numeric: tabular-nums;">R$ 30.000</td>
+                <td><span class="badge badge-sm badge-muted">Futuro</span></td>
+              </tr>
+              <tr class="table-row-glass" style="background: rgba(255,255,255,0.018);">
+                <td style="font-size:12px; font-variant-numeric: tabular-nums;">15/06/2026</td>
+                <td style="font-size:12px;">Honorarios — Junho</td>
+                <td style="font-size:12px; font-weight:600; font-variant-numeric: tabular-nums;">R$ 30.000</td>
+                <td><span class="badge badge-sm badge-muted">Futuro</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: DOCUMENTOS -->
+      <div id="tab-documentos" class="tab-content tab-hidden space-y-4">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="text-widget-title">5 documentos</span>
+          <button class="btn btn-primary" style="font-size: 11px; padding: 6px 12px; border-radius: 8px;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload
+          </button>
+        </div>
+
+        <div class="doc-grid">
+          <div class="glass-widget doc-card">
+            <div class="doc-icon" style="background: rgba(200,60,60,0.08);">
+              <svg width="16" height="16" fill="none" stroke="var(--destructive)" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
+            </div>
+            <div class="doc-name">Contrato_Assinado.pdf</div>
+            <div class="doc-meta">PDF &middot; 2.4 MB &middot; 15/01/2026</div>
+          </div>
+          <div class="glass-widget doc-card">
+            <div class="doc-icon" style="background: rgba(60,120,200,0.08);">
+              <svg width="16" height="16" fill="none" stroke="var(--info)" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
+            </div>
+            <div class="doc-name">Procuracao_Ad_Judicia.docx</div>
+            <div class="doc-meta">DOCX &middot; 180 KB &middot; 16/01/2026</div>
+          </div>
+          <div class="glass-widget doc-card">
+            <div class="doc-icon" style="background: rgba(85,180,85,0.08);">
+              <svg width="16" height="16" fill="none" stroke="var(--success)" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
+            </div>
+            <div class="doc-name">Planilha_Custos.xlsx</div>
+            <div class="doc-meta">XLSX &middot; 340 KB &middot; 02/02/2026</div>
+          </div>
+          <div class="glass-widget doc-card">
+            <div class="doc-icon" style="background: rgba(200,60,60,0.08);">
+              <svg width="16" height="16" fill="none" stroke="var(--destructive)" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
+            </div>
+            <div class="doc-name">Aditivo_01.pdf</div>
+            <div class="doc-meta">PDF &middot; 890 KB &middot; 10/03/2026</div>
+          </div>
+          <div class="glass-widget doc-card">
+            <div class="doc-icon" style="background: rgba(200,60,60,0.08);">
+              <svg width="16" height="16" fill="none" stroke="var(--destructive)" stroke-width="2" viewBox="0 0 24 24" style="opacity:0.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
+            </div>
+            <div class="doc-name">Recibo_Pagamento_Mar.pdf</div>
+            <div class="doc-meta">PDF &middot; 120 KB &middot; 15/03/2026</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: TIMELINE -->
+      <div id="tab-timeline" class="tab-content tab-hidden">
+        <div class="timeline">
+          <div class="timeline-date-group">Abril 2026</div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: rgba(60,120,200,0.1);">
+              <svg fill="none" stroke="var(--info)" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-action"><strong>Jordan M.</strong> anexou <strong>Aditivo_01.pdf</strong></div>
+              <div class="timeline-date">08/04/2026 as 14:32</div>
+            </div>
+          </div>
+
+          <div class="timeline-date-group">Marco 2026</div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: rgba(85,180,85,0.1);">
+              <svg fill="none" stroke="var(--success)" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-action">Pagamento de <strong>R$ 30.000</strong> registrado — Honorarios Marco</div>
+              <div class="timeline-date">15/03/2026 as 10:00</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: rgba(85,35,235,0.1);">
+              <svg fill="none" stroke="var(--primary)" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-action"><strong>Larissa S.</strong> vinculou processo <strong>0000891-12.2025.5.08.0002</strong></div>
+              <div class="timeline-date">05/03/2026 as 09:15</div>
+            </div>
+          </div>
+
+          <div class="timeline-date-group">Janeiro 2026</div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: rgba(85,180,85,0.1);">
+              <svg fill="none" stroke="var(--success)" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-action">Status alterado para <span class="badge badge-sm badge-success">Contratado</span></div>
+              <div class="timeline-date">15/01/2026 as 16:00</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: rgba(85,35,235,0.1);">
+              <svg fill="none" stroke="var(--primary)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-action"><strong>Jordan M.</strong> criou o contrato <strong>CT-2026/0042</strong></div>
+              <div class="timeline-date">10/01/2026 as 11:20</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: ENTREVISTA -->
+      <div id="tab-entrevista" class="tab-content tab-hidden space-y-4">
+
+        <!-- Wizard View (em andamento) -->
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="badge badge-sm badge-warning">Em Andamento</span>
+            <span style="font-size: 12px; color: var(--muted-foreground); opacity: 0.6;">Modulo atual: Jornada</span>
+          </div>
+          <span style="font-size: 11px; color: var(--muted-foreground); opacity: 0.4;">Trilha: Trabalhista Classico</span>
+        </div>
+
+        <!-- Wizard Stepper -->
+        <div class="glass-widget" style="padding: 10px 16px;">
+          <div style="display: flex; align-items: center; gap: 0;">
+            <div class="detail-step completed">
+              <div class="detail-step-dot"></div>
+              <span class="detail-step-label">Vinculo</span>
+            </div>
+            <div class="detail-step-connector done"></div>
+            <div class="detail-step current">
+              <div class="detail-step-dot"></div>
+              <span class="detail-step-label">Jornada</span>
+            </div>
+            <div class="detail-step-connector"></div>
+            <div class="detail-step future">
+              <div class="detail-step-dot"></div>
+              <span class="detail-step-label">Saude/Ambiente</span>
+            </div>
+            <div class="detail-step-connector"></div>
+            <div class="detail-step future">
+              <div class="detail-step-dot"></div>
+              <span class="detail-step-label">Ruptura</span>
+            </div>
+            <div class="detail-step-connector"></div>
+            <div class="detail-step future">
+              <div class="detail-step-dot"></div>
+              <span class="detail-step-label">Consolidacao</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wizard Content -->
+        <div class="glass-widget" style="padding: 20px 24px;">
+          <div class="widget-header">
+            <div class="widget-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <span class="widget-title">Jornada de Trabalho</span>
+          </div>
+
+          <!-- Form fields in WidgetContainer pattern -->
+          <div class="glass-widget" style="padding: 16px; margin-bottom: 16px;">
+            <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted-foreground); opacity: 0.5; margin-bottom: 10px;">Horario Contratual</div>
+            <div class="info-grid">
+              <div class="info-field">
+                <div class="info-label">Horario de Entrada</div>
+                <div style="padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); font-size: 13px; color: var(--foreground);">08:00</div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Horario de Saida</div>
+                <div style="padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); font-size: 13px; color: var(--foreground);">17:00</div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Intervalo</div>
+                <div style="padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); font-size: 13px; color: var(--foreground);">1 hora</div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Controle de Ponto</div>
+                <div style="padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); font-size: 13px; color: var(--foreground);">Eletronico</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-widget" style="padding: 16px; margin-bottom: 16px;">
+            <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted-foreground); opacity: 0.5; margin-bottom: 10px;">Horas Extras</div>
+            <div class="info-grid">
+              <div class="info-field">
+                <div class="info-label">Fazia horas extras?</div>
+                <div style="display: flex; gap: 8px;">
+                  <span style="padding: 5px 14px; border-radius: 8px; background: rgba(85,35,235,0.08); color: var(--primary); font-size: 12px; font-weight: 500; border: 1px solid rgba(85,35,235,0.15);">Sim</span>
+                  <span style="padding: 5px 14px; border-radius: 8px; background: transparent; color: var(--muted-foreground); font-size: 12px; font-weight: 500; border: 1px solid rgba(255,255,255,0.06); opacity: 0.5;">Nao</span>
+                </div>
+              </div>
+              <div class="info-field">
+                <div class="info-label">Frequencia Semanal</div>
+                <div style="padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); font-size: 13px; color: var(--foreground);">3-4 vezes por semana</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Operador Alert -->
+          <div style="padding: 10px 14px; border-radius: 10px; background: rgba(60,120,200,0.06); border: 1px solid rgba(60,120,200,0.12); display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px;">
+            <svg width="16" height="16" fill="none" stroke="var(--info)" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0; margin-top: 1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span style="font-size: 12px; color: var(--info);">Horas extras habituais nao registradas configuram pedido de integracao ao salario (Sumula 376 TST)</span>
+          </div>
+
+          <div class="glass-widget" style="padding: 16px;">
+            <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted-foreground); opacity: 0.5; margin-bottom: 10px;">Observacoes do Modulo</div>
+            <div style="padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); font-size: 13px; color: var(--muted-foreground); min-height: 60px;">Reclamante relata que frequentemente ficava alem do horario para fechar relatorios, mas nao recebia horas extras. Testemunha Maria confirmara.</div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <button class="btn btn-outline" style="font-size: 12px; padding: 8px 16px; border-radius: 10px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Anterior
+          </button>
+          <span style="font-size: 11px; color: var(--muted-foreground); opacity: 0.4;">Modulo 2 de 5</span>
+          <button class="btn btn-primary" style="font-size: 12px; padding: 8px 16px; border-radius: 10px;">
+            Proximo
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Theme toggle -->
+<button class="theme-toggle" onclick="document.documentElement.classList.toggle('dark')" aria-label="Alternar tema">
+  <span class="dark-icon">&#9790;</span>
+</button>
+
+<script>
+function showTab(tabId) {
+  // Hide all tabs
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.add('tab-hidden'));
+  // Deactivate all tab buttons
+  document.querySelectorAll('.detail-tab').forEach(el => el.classList.remove('active'));
+  // Show selected tab
+  document.getElementById('tab-' + tabId).classList.remove('tab-hidden');
+  // Activate button
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
