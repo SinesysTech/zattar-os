@@ -1,6 +1,8 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FileText } from 'lucide-react';
+
+import { WidgetContainer } from '@/components/shared/glass-panel';
 import type {
   TipoCobranca,
   PapelContratual,
@@ -37,21 +39,16 @@ export function ContratoDetalhesCard({
   const papelLabel = PAPEL_CONTRATUAL_LABELS[papelClienteNoContrato] || papelClienteNoContrato;
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-medium">Detalhes do Contrato</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-4">
-          <DataField label="Tipo de Cobrança" value={tipoCobrancaLabel} />
-          <DataField label="Papel do Cliente" value={papelLabel} />
-          <DataField label="Segmento" value={segmento?.nome} />
-          <DataField
-            label={cliente?.tipoPessoa === 'pj' ? 'CNPJ' : 'CPF'}
-            value={cliente?.cpfCnpj}
-          />
-        </div>
-      </CardContent>
-    </Card>
+    <WidgetContainer title="Detalhes do Contrato" icon={FileText}>
+      <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+        <DataField label="Tipo de Cobrança" value={tipoCobrancaLabel} />
+        <DataField label="Papel do Cliente" value={papelLabel} />
+        <DataField label="Segmento" value={segmento?.nome} />
+        <DataField
+          label={cliente?.tipoPessoa === 'pj' ? 'CNPJ' : 'CPF'}
+          value={cliente?.cpfCnpj}
+        />
+      </div>
+    </WidgetContainer>
   );
 }
