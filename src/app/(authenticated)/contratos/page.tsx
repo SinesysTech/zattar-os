@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { ContratosClient } from './contratos-client';
+import { ContratosContent } from './components/contratos-content';
 
 export const metadata: Metadata = {
   title: 'Contratos',
@@ -9,11 +9,9 @@ export const metadata: Metadata = {
 /**
  * ContratosPage — Server Component
  *
- * Delega toda interatividade ao ContratosClient.
- *
- * TODO: Buscar initialStats no servidor quando actionContratosStats estiver
- * disponivel para evitar o loading state inicial do FinancialStrip.
+ * Delega toda interatividade ao ContratosContent, que orquestra:
+ * Header, PulseStrip, InsightBanners, PipelineStepper e TableWrapper.
  */
 export default async function ContratosPage() {
-  return <ContratosClient />;
+  return <ContratosContent />;
 }

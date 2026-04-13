@@ -23,6 +23,10 @@ export {
   PipelineFunnel,
   FinancialStrip,
   KanbanColumn,
+  // Glass Briefing
+  ContratosContent,
+  ContratosPulseStrip,
+  ContratosPipelineStepper,
 } from './components';
 
 export type {
