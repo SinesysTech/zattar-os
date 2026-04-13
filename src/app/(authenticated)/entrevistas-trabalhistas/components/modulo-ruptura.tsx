@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { MOTIVO_RUPTURA_OPTIONS, VERBAS_RECEBIDAS_OPTIONS } from '../domain';
 import type { RespostasRuptura, MotivoRuptura, VerbaRecebida } from '../domain';
 import { OperadorAlert } from './operador-alert';
+import { Heading } from '@/components/ui/typography';
 
 interface ModuloRupturaProps {
   data: RespostasRuptura;
@@ -43,7 +44,7 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">A Ruptura e o Acerto de Contas</h3>
+        <Heading level="card">A Ruptura e o Acerto de Contas</Heading>
         <p className="text-sm text-muted-foreground">
           Como o trabalho terminou e se as verbas foram pagas
         </p>

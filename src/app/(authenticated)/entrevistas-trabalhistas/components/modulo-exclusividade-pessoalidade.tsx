@@ -20,6 +20,7 @@ import type {
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
 import { SimNaoRadio } from './sim-nao-radio';
+import { Heading } from '@/components/ui/typography';
 
 interface ModuloExclusividadePessoalidadeProps {
   data: RespostasExclusividadePessoalidade;
@@ -32,7 +33,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">Só Você Serve</h3>
+        <Heading level="card">Só Você Serve</Heading>
         <p className="text-sm text-muted-foreground">
           Avaliar exclusividade e pessoalidade — indícios fortes de vínculo disfarçado
         </p>

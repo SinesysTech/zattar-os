@@ -21,6 +21,7 @@ import type {
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
 import { SimNaoRadio } from './sim-nao-radio';
+import { Heading } from '@/components/ui/typography';
 
 interface ModuloDependenciaEconomicaProps {
   data: RespostasDependenciaEconomica;
@@ -33,7 +34,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">Preso na Plataforma</h3>
+        <Heading level="card">Preso na Plataforma</Heading>
         <p className="text-sm text-muted-foreground">
           Avaliar o grau de dependência econômica do trabalhador em relação à plataforma
         </p>

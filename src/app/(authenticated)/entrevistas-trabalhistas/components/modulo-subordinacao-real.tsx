@@ -14,6 +14,7 @@ import { LOCAL_TRABALHO_OPTIONS } from '../domain';
 import type { RespostasSubordinacaoReal, LocalTrabalho } from '../domain';
 import { OperadorAlert } from './operador-alert';
 import { SimNaoRadio } from './sim-nao-radio';
+import { Heading } from '@/components/ui/typography';
 
 interface ModuloSubordinacaoRealProps {
   data: RespostasSubordinacaoReal;
@@ -28,7 +29,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">CLT Disfarçada</h3>
+        <Heading level="card">CLT Disfarçada</Heading>
         <p className="text-sm text-muted-foreground">
           Investigar se havia subordinação real típica de emprego, mesmo com contrato PJ
         </p>

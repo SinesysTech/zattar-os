@@ -22,6 +22,7 @@ import type {
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
 import { SimNaoRadio } from './sim-nao-radio';
+import { Heading } from '@/components/ui/typography';
 
 interface ModuloDesligamentoPlataformaProps {
   data: RespostasDesligamentoPlataforma;
@@ -37,7 +38,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">Desligado pelo Algoritmo</h3>
+        <Heading level="card">Desligado pelo Algoritmo</Heading>
         <p className="text-sm text-muted-foreground">
           Como foi encerrada a relação com a plataforma
         </p>

@@ -21,6 +21,7 @@ import type {
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
 import { SimNaoRadio } from './sim-nao-radio';
+import { Heading } from '@/components/ui/typography';
 
 interface ModuloCondicoesTrabalhoGigProps {
   data: RespostasCondicoesTrabalhoGig;
@@ -33,7 +34,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">Precarização do Trabalho</h3>
+        <Heading level="card">Precarização do Trabalho</Heading>
         <p className="text-sm text-muted-foreground">
           Condições reais de trabalho: jornada, segurança e dignidade do trabalhador de plataforma
         </p>

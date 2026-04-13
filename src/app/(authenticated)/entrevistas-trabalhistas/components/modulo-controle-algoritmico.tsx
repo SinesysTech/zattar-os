@@ -22,6 +22,7 @@ import type {
 } from '../domain';
 import { OperadorAlert } from './operador-alert';
 import { SimNaoRadio } from './sim-nao-radio';
+import { Heading } from '@/components/ui/typography';
 
 interface ModuloControleAlgoritmicoProps {
   data: RespostasControleAlgoritmico;
@@ -34,7 +35,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">O Algoritmo que Manda</h3>
+        <Heading level="card">O Algoritmo que Manda</Heading>
         <p className="text-sm text-muted-foreground">
           Investigar como a plataforma controla o trabalhador por meio de algoritmos
         </p>

@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { CTPS_OPTIONS } from '../domain';
 import type { RespostasVinculo, CtpsAssinada } from '../domain';
 import { OperadorAlert } from './operador-alert';
+import { Heading } from '@/components/ui/typography';
 
 interface ModuloVinculoProps {
   data: RespostasVinculo;
@@ -27,7 +28,7 @@ export function ModuloVinculo({ data, onChange }: ModuloVinculoProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold">A Máscara do Vínculo</h3>
+        <Heading level="card">A Máscara do Vínculo</Heading>
         <p className="text-sm text-muted-foreground">
           Investigar a formalização da relação de trabalho
         </p>
