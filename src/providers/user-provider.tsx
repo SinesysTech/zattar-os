@@ -268,7 +268,6 @@ export function UserProvider({
   // Fetch inicial + listener de auth state
   useEffect(() => {
     let mounted = true;
-    let intervalId: NodeJS.Timeout | null = null;
 
     const controller = new AbortController();
     abortControllerRef.current = controller;
@@ -281,37 +280,13 @@ export function UserProvider({
       }
     };
 
-    const validateSession = async () => {
-      if (!mounted || logoutInProgressRef.current) return;
-
-      const { data: userData, error: userError } = await deduplicatedGetUser();
-
-      if (!mounted) return;
-
-      if (userError || !userData.user) {
-        if (isLockOrAbortError(userError)) {
-          console.warn('Cuidado: Sessão validation teve Lock/Abort Error. Ignorando.');
-          return;
-        }
-        console.log('Sessão inválida detectada, fazendo logout automático');
-        hasFetchedRef.current = false;
-        await invalidateSession();
-      }
-    };
-
     init();
 
-    // Revalidar quando a aba volta a receber foco e também periodicamente.
-    // visibilitychange deve checar o estado para evitar validações
-    // desnecessárias quando o usuário SAI da aba (hidden).
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        validateSession();
-      }
-    };
-    window.addEventListener('focus', validateSession);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    intervalId = setInterval(validateSession, 60000);
+    // NÃO registrar listeners de focus/visibilitychange aqui.
+    // O Supabase SDK (GoTrueClient._handleVisibilityChange) já gerencia
+    // a revalidação de sessão quando a aba volta ao foco, e emite eventos
+    // TOKEN_REFRESHED/SIGNED_IN que o onAuthStateChange abaixo captura.
+    // Listeners duplicados causavam lock contention no Navigator LockManager.
 
     // Escutar mudanças de autenticação
     const {
@@ -319,7 +294,7 @@ export function UserProvider({
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted || logoutInProgressRef.current) return;
 
-      // Ignite initial fetch if not INITIAL_SESSION, to avoid duplicate concurrent getUser()
+      // Ignorar INITIAL_SESSION para evitar getUser() duplicado com init()
       if (event === 'INITIAL_SESSION') return;
 
       if (session?.access_token) {
@@ -328,7 +303,7 @@ export function UserProvider({
         // Supabase recomenda não confiar em session.user de onAuthStateChange,
         // pois esse objeto vem do storage local; validar via getUser().
         const { data: verifiedUserData, error: verifiedUserError } = await deduplicatedGetUser();
-        
+
         if (verifiedUserError || !verifiedUserData.user) {
           if (isLockOrAbortError(verifiedUserError)) {
              console.warn('onAuthStateChange teve Lock/Abort Error. Ignorando.');
@@ -354,9 +329,6 @@ export function UserProvider({
     return () => {
       mounted = false;
       controller.abort();
-      if (intervalId) clearInterval(intervalId);
-      window.removeEventListener('focus', validateSession);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
       subscription.unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

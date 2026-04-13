@@ -46,7 +46,9 @@
       "Skill(gsd:new-milestone)",
       "Skill(gsd:new-milestone:*)",
       "Skill(gsd:execute-phase)",
-      "Skill(gsd:execute-phase:*)"
+      "Skill(gsd:execute-phase:*)",
+      "Skill(gsd:debug)",
+      "Skill(gsd:debug:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

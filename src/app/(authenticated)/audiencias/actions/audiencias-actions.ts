@@ -30,14 +30,10 @@ function formatZodErrors(zodError: z.ZodError): Record<string, string[]> {
 }
 
 function revalidateAudienciasPaths() {
-  // Rotas do dashboard
-  revalidatePath('/app/audiencias');
-  revalidatePath('/app/audiencias/semana');
-  revalidatePath('/app/audiencias/mes');
-  revalidatePath('/app/audiencias/ano');
-  revalidatePath('/app/audiencias/lista');
+  // Layout path propaga para todas as sub-rotas (semana, mes, ano, lista, quadro)
+  revalidatePath('/app/audiencias', 'layout');
   // Portal do cliente
-  revalidatePath('/portal/audiencias');
+  revalidatePath('/portal/audiencias', 'layout');
   // Dashboard principal (widget de audiências)
   revalidatePath('/app/dashboard');
 }

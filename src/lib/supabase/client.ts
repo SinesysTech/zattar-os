@@ -1,26 +1,12 @@
 import { createBrowserClient } from '@supabase/ssr';
 import { Database } from '@/lib/supabase/database.types';
 
-type BrowserSupabaseClient = ReturnType<typeof createBrowserClient<Database>>;
-
-const SUPABASE_BROWSER_CLIENT_KEY = '__zattar_supabase_browser_client__';
-
-type GlobalWithSupabaseClient = typeof globalThis & {
-  [SUPABASE_BROWSER_CLIENT_KEY]?: BrowserSupabaseClient;
-};
-
-let browserClient: BrowserSupabaseClient | undefined;
-
-function getGlobalBrowserClient() {
-  return (globalThis as GlobalWithSupabaseClient)[SUPABASE_BROWSER_CLIENT_KEY];
-}
-
-function setGlobalBrowserClient(client: BrowserSupabaseClient) {
-  (globalThis as GlobalWithSupabaseClient)[SUPABASE_BROWSER_CLIENT_KEY] = client;
-}
-
 /**
  * Cliente Supabase para Client Components / browser.
+ *
+ * @supabase/ssr >=0.8.0 já gerencia um singleton interno via `cachedBrowserClient`.
+ * Em ambiente de browser (isBrowser()===true), chamadas subsequentes retornam
+ * a mesma instância automaticamente — nenhuma lógica extra de cache é necessária.
  *
  * Regra: prefira importar daqui ao invés de `@/lib/client` (legado).
  */
@@ -35,20 +21,5 @@ export function createClient() {
     );
   }
 
-  if (typeof window === 'undefined') {
-    return createBrowserClient<Database>(url, anonKey);
-  }
-
-  const globalBrowserClient = getGlobalBrowserClient();
-  if (globalBrowserClient) {
-    browserClient = globalBrowserClient;
-    return globalBrowserClient;
-  }
-
-  if (!browserClient) {
-    browserClient = createBrowserClient<Database>(url, anonKey);
-    setGlobalBrowserClient(browserClient);
-  }
-
-  return browserClient;
+  return createBrowserClient<Database>(url, anonKey);
 }

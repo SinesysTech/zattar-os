@@ -10,8 +10,10 @@ describe('supabase browser client', () => {
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY = 'anon-key';
   });
 
-  it('reuses the same browser client instance', () => {
+  it('delegates to createBrowserClient from @supabase/ssr', () => {
     const mockClient = { auth: {} };
+    // @supabase/ssr's createBrowserClient already returns a singleton in browser.
+    // Our createClient() is a thin wrapper that delegates directly to it.
     const mockCreateBrowserClient = jest.fn().mockReturnValue(mockClient);
 
     jest.doMock('@supabase/ssr', () => ({
@@ -25,10 +27,20 @@ describe('supabase browser client', () => {
 
     expect(firstClient).toBe(mockClient);
     expect(secondClient).toBe(mockClient);
-    expect(mockCreateBrowserClient).toHaveBeenCalledTimes(1);
+    // Each call delegates to createBrowserClient; the SDK handles singleton caching internally
+    expect(mockCreateBrowserClient).toHaveBeenCalledTimes(2);
     expect(mockCreateBrowserClient).toHaveBeenCalledWith(
       'https://example.supabase.co',
       'anon-key'
     );
+  });
+
+  it('throws when env vars are missing', () => {
+    delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+    delete process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY;
+
+    const { createClient } = require('@/lib/supabase/client');
+
+    expect(() => createClient()).toThrow('Supabase URL e Anon Key são obrigatórios');
   });
 });

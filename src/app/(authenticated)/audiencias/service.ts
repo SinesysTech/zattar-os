@@ -132,24 +132,8 @@ export async function atualizarAudiencia(
       }
     }
 
-    const { processoId, tipoAudienciaId } = validation.data;
-
-    if (processoId) {
-      const processoExistsResult = await repo.processoExists(processoId);
-      if (!processoExistsResult.success || !processoExistsResult.data) {
-        return err(appError("VALIDATION_ERROR", "Processo não encontrado."));
-      }
-    }
-
-    if (tipoAudienciaId) {
-      const tipoExistsResult = await repo.tipoAudienciaExists(tipoAudienciaId);
-      if (!tipoExistsResult.success || !tipoExistsResult.data) {
-        return err(
-          appError("VALIDATION_ERROR", "Tipo de audiência não encontrado.")
-        );
-      }
-    }
-
+    // FK constraints do Postgres validam processoId e tipoAudienciaId —
+    // queries de pré-validação removidas para eliminar N+1.
     const result = await repo.updateAudiencia(
       id,
       validation.data,
@@ -175,11 +159,8 @@ export async function atualizarObservacoesAudiencia(
     return err(appError("VALIDATION_ERROR", "ID inválido."));
   }
 
-  const audienciaExistenteResult = await repo.findAudienciaById(id);
-  if (!audienciaExistenteResult.success || !audienciaExistenteResult.data) {
-    return err(appError("NOT_FOUND", "Audiência não encontrada."));
-  }
-
+  // Supabase .single() retorna erro PGRST116 se o ID não existir,
+  // dispensando query de pré-validação (N+1).
   return repo.atualizarObservacoes(id, observacoes);
 }
 
@@ -222,14 +203,8 @@ export async function atualizarStatusAudiencia(
     return err(appError("VALIDATION_ERROR", "Status inválido."));
   }
 
-  const audienciaExistenteResult = await repo.findAudienciaById(id);
-  if (!audienciaExistenteResult.success || !audienciaExistenteResult.data) {
-    return err(appError("NOT_FOUND", "Audiência não encontrada."));
-  }
-
-  // TODO: Log the user who made the change if a logging system exists
-  // logService.log(`User ${userId} changed status of audiencia ${id} to ${status}`);
-
+  // Supabase .single() retorna erro PGRST116 se o ID não existir,
+  // dispensando query de pré-validação (N+1).
   return repo.atualizarStatus(id, status, statusDescricao);
 }
 

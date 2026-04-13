@@ -30,8 +30,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ExpedientesAlterarResponsavelDialog } from './expedientes-alterar-responsavel-dialog';
+import { ExpedienteResponsavelPopover, ResponsavelTriggerContent } from './expediente-responsavel-popover';
 import { ParteBadge } from '@/components/ui/parte-badge';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { toast } from 'sonner';
@@ -339,54 +338,20 @@ export function PrazoCell({ expediente }: { expediente: Expediente }) {
   );
 }
 
-function getInitials(name: string): string {
-  if (!name) return 'U';
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) {
-    return parts[0].substring(0, 2).toUpperCase();
-  }
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
 export function ResponsavelCell({ expediente, usuarios = [], onSuccessAction }: { expediente: Expediente; usuarios?: Usuario[]; onSuccessAction?: () => void }) {
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-  const responsavel = usuarios.find(u => u.id === expediente.responsavelId);
-  const nomeExibicao = responsavel?.nomeExibicao || '-';
-  const handleSuccess = React.useCallback(() => {
-    onSuccessAction?.();
-  }, [onSuccessAction]);
-
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setIsDialogOpen(true)}
-        className="flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded px-1 -mx-1 cursor-pointer"
-        title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
-      >
-        {responsavel ? (
-          <>
-            <Avatar size="sm">
-              <AvatarImage src={responsavel.avatarUrl || undefined} alt={responsavel.nomeExibicao} />
-              <AvatarFallback className="text-[10px] font-medium">
-                {getInitials(responsavel.nomeExibicao)}
-              </AvatarFallback>
-            </Avatar>
-            <span className="truncate">{responsavel.nomeExibicao}</span>
-          </>
-        ) : (
-          <span className="text-muted-foreground">Sem responsável</span>
-        )}
-      </button>
-
-      <ExpedientesAlterarResponsavelDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        expediente={expediente}
+    <ExpedienteResponsavelPopover
+      expedienteId={expediente.id}
+      responsavelId={expediente.responsavelId}
+      usuarios={usuarios}
+      onSuccess={onSuccessAction}
+    >
+      <ResponsavelTriggerContent
+        responsavelId={expediente.responsavelId}
         usuarios={usuarios}
-        onSuccess={handleSuccess}
+        size="md"
       />
-    </>
+    </ExpedienteResponsavelPopover>
   );
 }
 

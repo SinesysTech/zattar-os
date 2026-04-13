@@ -15,6 +15,12 @@ import type {
   MeioComunicacao,
   ComunicacaoDestinatario,
   ComunicacaoDestinatarioAdvogado,
+  GazetteMetrics,
+  SyncLogEntry,
+  GazetteView,
+  GazetteFilters,
+  ComunicacaoResumo,
+  SalvarViewInput,
 } from "./domain";
 
 // =============================================================================
@@ -472,5 +478,276 @@ export async function findExpedienteCorrespondente(
         error instanceof Error ? error : undefined
       )
     );
+  }
+}
+
+// =============================================================================
+// GAZETTE FUSION - METRICAS
+// =============================================================================
+
+export async function findMetricas(advogadoId?: number): Promise<Result<GazetteMetrics>> {
+  try {
+    const client = await createServiceClient();
+
+    const today = new Date().toISOString().split('T')[0];
+
+    const [hojeRes, totalRes, vinculadosRes, orfaosRes] = await Promise.all([
+      client
+        .from(TABLE_COMUNICA_CNJ)
+        .select('id', { count: 'exact', head: true })
+        .gte('data_disponibilizacao', today)
+        .then(r => r.count ?? 0),
+      client
+        .from(TABLE_COMUNICA_CNJ)
+        .select('id', { count: 'exact', head: true })
+        .then(r => r.count ?? 0),
+      client
+        .from(TABLE_COMUNICA_CNJ)
+        .select('id', { count: 'exact', head: true })
+        .not('expediente_id', 'is', null)
+        .then(r => r.count ?? 0),
+      client
+        .from(TABLE_COMUNICA_CNJ)
+        .select('id', { count: 'exact', head: true })
+        .is('expediente_id', null)
+        .then(r => r.count ?? 0),
+    ]);
+
+    const publicacoesHoje = hojeRes;
+    const total = totalRes;
+    const vinculados = vinculadosRes;
+    const orfaos = orfaosRes;
+    const pendentes = Math.max(0, total - vinculados - orfaos);
+
+    return ok({
+      publicacoesHoje,
+      vinculados,
+      totalCapturadas: total,
+      pendentes,
+      prazosCriticos: 0,
+      orfaos,
+      orfaosComSugestao: 0,
+      taxaVinculacao: total > 0 ? Math.round((vinculados / total) * 100) : 0,
+    });
+  } catch (error) {
+    return err(appError('DATABASE_ERROR', 'Erro ao buscar metricas.', undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+// =============================================================================
+// GAZETTE FUSION - SYNC LOG
+// =============================================================================
+
+const TABLE_SYNC_LOG = 'comunica_cnj_sync_log';
+
+function converterParaSyncLog(row: Record<string, unknown>): SyncLogEntry {
+  return {
+    id: row.id as number,
+    tipo: row.tipo as SyncLogEntry['tipo'],
+    status: row.status as SyncLogEntry['status'],
+    totalProcessados: row.total_processados as number,
+    novos: row.novos as number,
+    duplicados: row.duplicados as number,
+    vinculadosAuto: row.vinculados_auto as number,
+    orfaos: row.orfaos as number,
+    erros: (row.erros ?? []) as SyncLogEntry['erros'],
+    parametros: (row.parametros ?? {}) as Record<string, unknown>,
+    duracaoMs: row.duracao_ms as number | null,
+    executadoPor: row.executado_por as number,
+    createdAt: row.created_at as string,
+  };
+}
+
+export async function saveSyncLog(
+  data: Omit<SyncLogEntry, 'id' | 'createdAt'>
+): Promise<Result<SyncLogEntry>> {
+  try {
+    const client = await createServiceClient();
+    const { data: row, error } = await client
+      .from(TABLE_SYNC_LOG)
+      .insert({
+        tipo: data.tipo,
+        status: data.status,
+        total_processados: data.totalProcessados,
+        novos: data.novos,
+        duplicados: data.duplicados,
+        vinculados_auto: data.vinculadosAuto,
+        orfaos: data.orfaos,
+        erros: data.erros,
+        parametros: data.parametros,
+        duracao_ms: data.duracaoMs,
+        executado_por: data.executadoPor,
+      })
+      .select()
+      .single();
+
+    if (error) return err(appError('DATABASE_ERROR', error.message));
+    return ok(converterParaSyncLog(row));
+  } catch (error) {
+    return err(appError('DATABASE_ERROR', 'Erro ao salvar sync log.', undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+export async function findSyncLogs(limite: number = 10): Promise<Result<SyncLogEntry[]>> {
+  try {
+    const client = await createServiceClient();
+    const { data: rows, error } = await client
+      .from(TABLE_SYNC_LOG)
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(limite);
+
+    if (error) return err(appError('DATABASE_ERROR', error.message));
+    return ok((rows ?? []).map(converterParaSyncLog));
+  } catch (error) {
+    return err(appError('DATABASE_ERROR', 'Erro ao listar sync logs.', undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+// =============================================================================
+// GAZETTE FUSION - VIEWS
+// =============================================================================
+
+const TABLE_VIEWS = 'comunica_cnj_views';
+
+function converterParaView(row: Record<string, unknown>): GazetteView {
+  return {
+    id: row.id as number,
+    nome: row.nome as string,
+    icone: (row.icone as string) ?? 'bookmark',
+    filtros: (row.filtros ?? {}) as GazetteFilters,
+    colunas: (row.colunas ?? []) as string[],
+    sort: (row.sort ?? { campo: 'data_disponibilizacao', direcao: 'desc' }) as GazetteView['sort'],
+    densidade: (row.densidade as GazetteView['densidade']) ?? 'padrao',
+    modoVisualizacao: (row.modo_visualizacao as GazetteView['modoVisualizacao']) ?? 'tabela',
+    visibilidade: (row.visibilidade as GazetteView['visibilidade']) ?? 'pessoal',
+    criadoPor: row.criado_por as number,
+    createdAt: row.created_at as string,
+    updatedAt: row.updated_at as string,
+  };
+}
+
+export async function findViews(usuarioId: number): Promise<Result<GazetteView[]>> {
+  try {
+    const client = await createServiceClient();
+    const { data: rows, error } = await client
+      .from(TABLE_VIEWS)
+      .select('*')
+      .or(`criado_por.eq.${usuarioId},visibilidade.eq.equipe`)
+      .order('created_at', { ascending: true });
+
+    if (error) return err(appError('DATABASE_ERROR', error.message));
+    return ok((rows ?? []).map(converterParaView));
+  } catch (error) {
+    return err(appError('DATABASE_ERROR', 'Erro ao listar views.', undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+export async function saveView(
+  data: SalvarViewInput & { criadoPor: number }
+): Promise<Result<GazetteView>> {
+  try {
+    const client = await createServiceClient();
+    const { data: row, error } = await client
+      .from(TABLE_VIEWS)
+      .insert({
+        nome: data.nome,
+        icone: data.icone,
+        filtros: data.filtros,
+        colunas: data.colunas,
+        sort: data.sort,
+        densidade: data.densidade,
+        modo_visualizacao: data.modoVisualizacao,
+        visibilidade: data.visibilidade,
+        criado_por: data.criadoPor,
+      })
+      .select()
+      .single();
+
+    if (error) return err(appError('DATABASE_ERROR', error.message));
+    return ok(converterParaView(row));
+  } catch (error) {
+    return err(appError('DATABASE_ERROR', 'Erro ao salvar view.', undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+export async function deleteView(viewId: number, usuarioId: number): Promise<Result<void>> {
+  try {
+    const client = await createServiceClient();
+    const { error } = await client
+      .from(TABLE_VIEWS)
+      .delete()
+      .eq('id', viewId)
+      .eq('criado_por', usuarioId);
+
+    if (error) return err(appError('DATABASE_ERROR', error.message));
+    return ok(undefined);
+  } catch (error) {
+    return err(appError('DATABASE_ERROR', 'Erro ao deletar view.', undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+// =============================================================================
+// GAZETTE FUSION - RESUMOS AI
+// =============================================================================
+
+const TABLE_RESUMOS = 'comunica_cnj_resumos';
+
+export async function findResumo(comunicacaoId: number): Promise<Result<ComunicacaoResumo | null>> {
+  try {
+    const client = await createServiceClient();
+    const { data: row, error } = await client
+      .from(TABLE_RESUMOS)
+      .select('*')
+      .eq('comunicacao_id', comunicacaoId)
+      .maybeSingle();
+
+    if (error) return err(appError('DATABASE_ERROR', error.message));
+    if (!row) return ok(null);
+    return ok({
+      id: row.id as number,
+      comunicacaoId: row.comunicacao_id as number,
+      resumo: row.resumo as string,
+      tags: (row.tags ?? []) as ComunicacaoResumo['tags'],
+      createdAt: row.created_at as string,
+      updatedAt: row.updated_at as string,
+    });
+  } catch (error) {
+    return err(appError('DATABASE_ERROR', 'Erro ao buscar resumo.', undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+export async function saveResumo(
+  comunicacaoId: number,
+  resumo: string,
+  tags: ComunicacaoResumo['tags']
+): Promise<Result<ComunicacaoResumo>> {
+  try {
+    const client = await createServiceClient();
+    const { data: row, error } = await client
+      .from(TABLE_RESUMOS)
+      .upsert(
+        {
+          comunicacao_id: comunicacaoId,
+          resumo,
+          tags,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'comunicacao_id' }
+      )
+      .select()
+      .single();
+
+    if (error) return err(appError('DATABASE_ERROR', error.message));
+    return ok({
+      id: row.id as number,
+      comunicacaoId: row.comunicacao_id as number,
+      resumo: row.resumo as string,
+      tags: (row.tags ?? []) as ComunicacaoResumo['tags'],
+      createdAt: row.created_at as string,
+      updatedAt: row.updated_at as string,
+    });
+  } catch (error) {
+    return err(appError('DATABASE_ERROR', 'Erro ao salvar resumo.', undefined, error instanceof Error ? error : undefined));
   }
 }

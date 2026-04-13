@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { format, differenceInDays, startOfDay } from 'date-fns';
-import { CheckCircle2, UserPlus, FileSearch, AlertCircle } from 'lucide-react';
+import { CheckCircle2, UserPlus, FileSearch } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { UrgencyDot } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
 import type { Expediente } from '../domain';
+import { GRAU_TRIBUNAL_LABELS } from '../domain';
 
 interface ExpedienteListRowProps {
   expediente: Expediente;
@@ -83,29 +83,36 @@ export function ExpedienteListRow({
             <Heading level="card" as="h3" className="truncate text-sm text-foreground">
               {tipoExpedienteNome || 'Expediente sem tipo'}
             </Heading>
-            {expediente.observacoes && (
-              <Tooltip>
-                <TooltipTrigger>
-                  <AlertCircle className="size-3.5 text-muted-foreground/60" />
-                </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-xs text-xs">
-                  {expediente.observacoes}
-                </TooltipContent>
-              </Tooltip>
-            )}
           </div>
           
-          <div className="mt-0.5 flex items-center gap-2 text-xs truncate">
-            <span className="tabular-nums tracking-tight text-muted-foreground/70">{expediente.numeroProcesso || 'Sem processo vinculado'}</span>
-            {expediente.nomeParteAutora && expediente.nomeParteRe && (
-              <>
-                <span className="opacity-50 text-muted-foreground/55">•</span>
-                <span className="truncate text-muted-foreground/55">
-                  {expediente.nomeParteAutora} x {expediente.nomeParteRe}
-                </span>
-              </>
+          {/* Processo: TRT + Grau + Número */}
+          <div className="mt-0.5 flex items-center gap-1.5 text-xs min-w-0">
+            {expediente.trt && (
+              <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0">{expediente.trt}</span>
             )}
+            {expediente.grau && (
+              <span className="text-[9px] text-muted-foreground/45 shrink-0">{GRAU_TRIBUNAL_LABELS[expediente.grau]}</span>
+            )}
+            <span className="tabular-nums tracking-tight text-muted-foreground/70 truncate">{expediente.numeroProcesso || 'Sem processo vinculado'}</span>
           </div>
+          {/* Órgão jurisdicional */}
+          {(expediente.descricaoOrgaoJulgador || expediente.orgaoJulgadorOrigem) && (
+            <p className="text-[9px] text-muted-foreground/40 mt-0.5 truncate" title={expediente.descricaoOrgaoJulgador || expediente.orgaoJulgadorOrigem || ''}>
+              {expediente.descricaoOrgaoJulgador || expediente.orgaoJulgadorOrigem}
+            </p>
+          )}
+          {/* Partes */}
+          {expediente.nomeParteAutora && expediente.nomeParteRe && (
+            <p className="text-[10px] text-muted-foreground/55 mt-0.5 truncate">
+              {expediente.nomeParteAutora} <span className="text-muted-foreground/35">x</span> {expediente.nomeParteRe}
+            </p>
+          )}
+          {/* Observações inline */}
+          {expediente.observacoes && (
+            <p className="text-[9px] text-muted-foreground/35 mt-0.5 truncate italic" title={expediente.observacoes}>
+              {expediente.observacoes}
+            </p>
+          )}
           
           <div className="mt-2 flex items-center gap-2 sm:hidden">
             <span className={cn(
