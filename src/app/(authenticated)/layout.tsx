@@ -4,6 +4,13 @@ import { resolveAvatarUrl } from "@/lib/avatar-url"
 import { listarPermissoesUsuario } from "@/app/(authenticated)/usuarios/repository"
 import type { UserData } from "@/providers/user-provider"
 
+function isDynamicServerUsageError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false
+
+  const maybeDigest = (error as { digest?: unknown }).digest
+  return maybeDigest === "DYNAMIC_SERVER_USAGE"
+}
+
 export default async function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   let initialUser: UserData | null = null;
   let initialPermissoes: Awaited<ReturnType<typeof listarPermissoesUsuario>> = [];
@@ -35,8 +42,11 @@ export default async function AuthenticatedLayout({ children }: { children: Reac
           initialPermissoes = await listarPermissoesUsuario(usuario.id);
         }
      }
-  } catch (e) {
-     console.error("[Layout] Erro ao pré-buscar usuário:", e);
+    } catch (e) {
+      // During static generation, cookies()-based auth prefetch is expected to be skipped.
+      if (!isDynamicServerUsageError(e)) {
+       console.error("[Layout] Erro ao pré-buscar usuário:", e);
+      }
   }
 
   return (

@@ -70,13 +70,18 @@ module.exports = class CacheHandler {
     }
   }
 
-  async set(/** @type {string} */ key, /** @type {any} */ value) {
+  async set(
+    /** @type {string} */ key,
+    /** @type {any} */ value,
+    /** @type {{ tags?: string[] } | undefined} */ ctx
+  ) {
     const filePath = getCachePath(key);
 
     try {
       ensureCacheDir();
       const entry = {
         ...value,
+        tags: Array.isArray(ctx?.tags) ? ctx.tags : Array.isArray(value?.tags) ? value.tags : [],
         revalidatedAt: Date.now(),
       };
       fs.writeFileSync(filePath, JSON.stringify(entry));
@@ -84,6 +89,39 @@ module.exports = class CacheHandler {
     } catch (err) {
       console.error(`[CacheHandler] Erro ao salvar cache para ${key}:`, err);
     }
+  }
+
+  async revalidateTag(/** @type {string | string[]} */ tags) {
+    const tagsToInvalidate = [tags].flat().filter(Boolean);
+    if (tagsToInvalidate.length === 0) return;
+
+    try {
+      ensureCacheDir();
+      const files = fs.readdirSync(CACHE_DIR);
+
+      for (const fileName of files) {
+        const filePath = path.join(CACHE_DIR, fileName);
+
+        try {
+          const raw = fs.readFileSync(filePath, "utf-8");
+          const entry = JSON.parse(raw);
+          const entryTags = Array.isArray(entry?.tags) ? entry.tags : [];
+
+          if (entryTags.some((tag) => tagsToInvalidate.includes(tag))) {
+            fs.unlinkSync(filePath);
+            log(`REVALIDATE_TAG: ${fileName} [${entryTags.join(",")}]`);
+          }
+        } catch {
+          // Arquivo inválido/corrompido não deve interromper revalidação global.
+        }
+      }
+    } catch (err) {
+      console.error("[CacheHandler] Erro ao revalidar tags:", err);
+    }
+  }
+
+  resetRequestCache() {
+    // Sem cache por-request em memória neste handler.
   }
 
   async delete(/** @type {string} */ key) {

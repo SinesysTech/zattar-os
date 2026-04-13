@@ -8,7 +8,7 @@ import { AlertCircle, ArrowRight, Loader2, Check, Eye, EyeOff } from 'lucide-rea
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 
-const ease = [0.22, 1, 0.36, 1]
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')

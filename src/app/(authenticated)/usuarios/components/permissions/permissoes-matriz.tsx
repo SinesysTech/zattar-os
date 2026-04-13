@@ -107,6 +107,7 @@ export function PermissoesMatriz({
             {canEdit && !isSuperAdmin && hasChanges && (
               <div className="flex items-center gap-2">
                 <Button
+                  type="button"
                   variant="outline"
                   size="sm"
                   onClick={onResetar}
@@ -116,6 +117,7 @@ export function PermissoesMatriz({
                   Resetar
                 </Button>
                 <Button
+                  type="button"
                   size="sm"
                   onClick={handleSalvarClick}
                   disabled={isSaving}
@@ -256,13 +258,14 @@ export function PermissoesMatriz({
           </div>
           <DialogFooter>
             <Button
+              type="button"
               variant="outline"
               onClick={() => setConfirmDialogOpen(false)}
               disabled={isSaving}
             >
               Cancelar
             </Button>
-            <Button onClick={handleConfirmarSalvar} disabled={isSaving}>
+            <Button type="button" onClick={handleConfirmarSalvar} disabled={isSaving}>
               {isSaving ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />

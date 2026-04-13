@@ -86,6 +86,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
     matriz,
     isLoading: isLoadingPermissoes,
     isSaving: isSavingPermissoes,
+    error: erroPermissoes,
     togglePermissao,
     save: savePermissoes,
     resetar,
@@ -139,7 +140,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
     if (success) {
       toast.success('Permissões atualizadas com sucesso');
     } else {
-       toast.error('Erro ao salvar permissões');
+      toast.error(erroPermissoes || 'Erro ao salvar permissões');
     }
     return success;
   };
