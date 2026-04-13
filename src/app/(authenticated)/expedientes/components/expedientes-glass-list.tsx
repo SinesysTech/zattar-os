@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { differenceInDays, parseISO, format } from 'date-fns';
+import { parseISO, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { FileSearch, ChevronRight } from 'lucide-react';
 
@@ -9,14 +9,22 @@ import { cn } from '@/lib/utils';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 
-import type { Expediente } from '../domain';
 import {
+  type Expediente,
+  type UrgencyLevel,
+  getExpedienteUrgencyLevel,
   GRAU_TRIBUNAL_LABELS,
   ORIGEM_EXPEDIENTE_LABELS,
   OrigemExpediente,
   getExpedientePartyNames,
 } from '../domain';
 import type { Usuario } from '@/app/(authenticated)/usuarios';
+import {
+  getExpedienteDiasRestantes,
+  URGENCY_BORDER,
+  URGENCY_DOT,
+  URGENCY_COUNTDOWN,
+} from './urgency-helpers';
 
 // =============================================================================
 // TYPES
@@ -31,60 +39,14 @@ interface ExpedientesGlassListProps {
 }
 
 // =============================================================================
-// URGENCY HELPERS
-// =============================================================================
-
-type UrgencyLevel = 'critico' | 'alto' | 'medio' | 'baixo' | 'ok';
-
-function getUrgencyLevel(exp: Expediente): UrgencyLevel {
-  if (exp.baixadoEm) return 'ok';
-  const prazo = exp.dataPrazoLegalParte;
-  if (!prazo) return 'ok';
-  const dias = differenceInDays(parseISO(prazo), new Date());
-  if (dias < 0 || exp.prazoVencido) return 'critico';
-  if (dias === 0) return 'alto';
-  if (dias <= 3) return 'medio';
-  return 'baixo';
-}
-
-function getDiasRestantes(exp: Expediente): number | null {
-  const prazo = exp.dataPrazoLegalParte;
-  if (!prazo) return null;
-  return differenceInDays(parseISO(prazo), new Date());
-}
-
-const URGENCY_BORDER: Record<UrgencyLevel, string> = {
-  critico: 'border-l-[3px] border-l-destructive',
-  alto: 'border-l-[3px] border-l-warning',
-  medio: 'border-l-[3px] border-l-info',
-  baixo: 'border-l-[3px] border-l-success',
-  ok: 'border-l-[3px] border-l-border/20',
-};
-
-const URGENCY_DOT: Record<UrgencyLevel, string> = {
-  critico: 'bg-destructive shadow-[0_0_6px_var(--destructive)]',
-  alto: 'bg-warning shadow-[0_0_4px_var(--warning)]',
-  medio: 'bg-info',
-  baixo: 'bg-success',
-  ok: 'bg-muted-foreground/40',
-};
-
-// =============================================================================
 // COUNTDOWN BADGE
 // =============================================================================
 
 function CountdownBadge({ dias, urgency }: { dias: number | null; urgency: UrgencyLevel }) {
   if (dias === null) return <span className="text-[11px] text-muted-foreground/40 tabular-nums">--</span>;
   const label = `${dias}d`;
-  const colorMap: Record<UrgencyLevel, string> = {
-    critico: 'bg-destructive/8 text-destructive',
-    alto: 'bg-warning/8 text-warning',
-    medio: 'bg-info/8 text-info',
-    baixo: 'bg-success/6 text-success',
-    ok: 'bg-muted text-muted-foreground/50',
-  };
   return (
-    <span className={cn('text-[11px] font-semibold tabular-nums px-2 py-1 rounded-lg text-center', colorMap[urgency])}>
+    <span className={cn('text-[11px] font-semibold tabular-nums px-2 py-1 rounded-lg text-center', URGENCY_COUNTDOWN[urgency])}>
       {label}
     </span>
   );
@@ -114,7 +76,7 @@ function ColumnHeaders() {
         Origem
       </span>
       <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-center">
-        Prazo
+        Restante
       </span>
       <div />
     </div>
@@ -128,16 +90,18 @@ function ColumnHeaders() {
 function GlassRow({
   expediente,
   onViewDetail,
+  onBaixar,
   isAlt,
   usuariosData,
 }: {
   expediente: Expediente;
   onViewDetail: () => void;
+  onBaixar?: (expediente: Expediente) => void;
   isAlt: boolean;
   usuariosData?: Usuario[];
 }) {
-  const urgency = getUrgencyLevel(expediente);
-  const dias = getDiasRestantes(expediente);
+  const urgency = getExpedienteUrgencyLevel(expediente);
+  const dias = getExpedienteDiasRestantes(expediente);
   const partes = getExpedientePartyNames(expediente);
   const grauLabel = GRAU_TRIBUNAL_LABELS[expediente.grau] ?? expediente.grau;
   const origemLabel = ORIGEM_EXPEDIENTE_LABELS[expediente.origem] ?? expediente.origem;
@@ -250,8 +214,16 @@ function GlassRow({
           <CountdownBadge dias={dias} urgency={urgency} />
         </div>
 
-        {/* 8. Chevron */}
-        <div className="flex items-center justify-end">
+        {/* 8. Actions */}
+        <div className="flex items-center justify-end gap-1">
+          {onBaixar && !expediente.baixadoEm && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onBaixar(expediente); }}
+              className="px-2 py-1 rounded-md bg-success/6 text-success text-[10px] font-medium hover:bg-success/12 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+            >
+              Baixar
+            </button>
+          )}
           <ChevronRight className="w-4 h-4 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
       </div>
@@ -318,6 +290,7 @@ export function ExpedientesGlassList({
   expedientes,
   isLoading,
   onViewDetail,
+  onBaixar,
   usuariosData,
 }: ExpedientesGlassListProps) {
   if (isLoading) return <ListSkeleton />;
@@ -332,6 +305,7 @@ export function ExpedientesGlassList({
             key={exp.id}
             expediente={exp}
             onViewDetail={() => onViewDetail(exp)}
+            onBaixar={onBaixar}
             isAlt={i % 2 === 1}
             usuariosData={usuariosData}
           />
