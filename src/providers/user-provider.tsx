@@ -97,8 +97,16 @@ export function UserProvider({
   const userRef = useRef<UserData | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Deduplicação de getUser(): reutiliza a Promise em voo se já existe uma
+  // Flag para indicar que o init() está em andamento — impede que
+  // onAuthStateChange dispare getUser() concorrente durante o boot.
+  const initInProgressRef = useRef(false);
+
+  // Deduplicação de getUser(): reutiliza a Promise em voo se já existe uma.
+  // O cooldown evita que uma segunda chamada imediatamente após o .finally()
+  // da primeira crie uma nova requisição (race entre init e onAuthStateChange).
   const getUserPromiseRef = useRef<ReturnType<typeof supabase.auth.getUser> | null>(null);
+  const getUserCooldownRef = useRef(false);
+  const lastGetUserResultRef = useRef<Awaited<ReturnType<typeof supabase.auth.getUser>> | null>(null);
 
   // Manter ref sincronizado com state
   userRef.current = user;
@@ -131,7 +139,7 @@ export function UserProvider({
       await fetch('/api/auth/logout', {
         method: 'POST',
         credentials: 'include',
-      }).catch(() => {});
+      }).catch(() => { });
 
       // Limpar localStorage
       if (typeof window !== 'undefined') {
@@ -168,14 +176,30 @@ export function UserProvider({
 
   /**
    * Wrapper deduplicado para supabase.auth.getUser().
-   * Se já existe uma chamada em voo, reutiliza a mesma Promise
-   * ao invés de disparar outra — evita lock contention na Web Locks API.
+   * Se já existe uma chamada em voo OU acabou de terminar (cooldown de 2s),
+   * reutiliza a mesma Promise — evita lock contention na Web Locks API.
    */
   const deduplicatedGetUser = useCallback(() => {
     if (getUserPromiseRef.current) return getUserPromiseRef.current;
 
-    const promise = supabase.auth.getUser().finally(() => {
+    // Se estamos no cooldown (chamada recém-concluída), retornar a última
+    // resposta em cache ao invés de disparar outra chamada ao Auth server.
+    if (getUserCooldownRef.current && lastGetUserResultRef.current) {
+      return Promise.resolve(lastGetUserResultRef.current);
+    }
+
+    const promise = supabase.auth.getUser().then((result) => {
+      lastGetUserResultRef.current = result;
+      return result;
+    }).finally(() => {
       getUserPromiseRef.current = null;
+      // Ativar cooldown de 2s para evitar chamadas duplicadas
+      // quando init() e onAuthStateChange terminam quase juntos.
+      getUserCooldownRef.current = true;
+      setTimeout(() => {
+        getUserCooldownRef.current = false;
+        lastGetUserResultRef.current = null;
+      }, 2000);
     });
 
     getUserPromiseRef.current = promise;
@@ -276,7 +300,12 @@ export function UserProvider({
       // Se não tem usuário inicial (SSR cache loss etc), deve buscar
       if (!userRef.current && !hasFetchedRef.current) {
         hasFetchedRef.current = true;
-        await fetchUserData(controller.signal);
+        initInProgressRef.current = true;
+        try {
+          await fetchUserData(controller.signal);
+        } finally {
+          initInProgressRef.current = false;
+        }
       }
     };
 
@@ -297,6 +326,17 @@ export function UserProvider({
       // Ignorar INITIAL_SESSION para evitar getUser() duplicado com init()
       if (event === 'INITIAL_SESSION') return;
 
+      // Se o init() ainda está rodando, não disparar getUser() concorrente.
+      // O init() já está validando a sessão — quando terminar, o estado
+      // será atualizado e não precisamos de outra chamada.
+      if (initInProgressRef.current) {
+        // Apenas capturar o token se disponível
+        if (session?.access_token) {
+          setSessionToken(session.access_token);
+        }
+        return;
+      }
+
       if (session?.access_token) {
         setSessionToken(session.access_token);
 
@@ -306,8 +346,8 @@ export function UserProvider({
 
         if (verifiedUserError || !verifiedUserData.user) {
           if (isLockOrAbortError(verifiedUserError)) {
-             console.warn('onAuthStateChange teve Lock/Abort Error. Ignorando.');
-             return;
+            console.warn('onAuthStateChange teve Lock/Abort Error. Ignorando.');
+            return;
           }
           hasFetchedRef.current = false;
           await invalidateSession();
@@ -404,10 +444,10 @@ export function usePermissoes() {
   return {
     data: ctx.user
       ? {
-          usuarioId: ctx.user.id,
-          isSuperAdmin: ctx.user.isSuperAdmin,
-          permissoes: ctx.permissoes,
-        }
+        usuarioId: ctx.user.id,
+        isSuperAdmin: ctx.user.isSuperAdmin,
+        permissoes: ctx.permissoes,
+      }
       : null,
     permissoes: ctx.permissoes,
     temPermissao: ctx.temPermissao,

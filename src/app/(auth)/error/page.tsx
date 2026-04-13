@@ -1,4 +1,4 @@
-import { AuthErrorV2 } from '@/components/auth/v2'
+import { AuthError } from '@/components/auth/auth-error'
 
 export default async function Page({
   searchParams,
@@ -7,5 +7,5 @@ export default async function Page({
 }) {
   const params = await searchParams
 
-  return <AuthErrorV2 error={params?.error} />
+  return <AuthError error={params?.error} />
 }

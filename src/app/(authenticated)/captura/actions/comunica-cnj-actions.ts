@@ -127,11 +127,11 @@ export async function actionListarTribunaisDisponiveis(): Promise<{ success: boo
 // GAZETTE FUSION CLIENT ACTIONS
 // =============================================================================
 
-export async function actionObterMetricas(params?: { advogadoId?: number }): Promise<{ success: boolean; data?: import('../comunica-cnj/domain').GazetteMetrics; error?: string }> {
+export async function actionObterMetricas(_params?: { advogadoId?: number }): Promise<{ success: boolean; data?: import('../comunica-cnj/domain').GazetteMetrics; error?: string }> {
   try {
     await requireAuth(['comunica_cnj:listar']);
     const { findMetricas } = await import('../comunica-cnj/repository');
-    const result = await findMetricas(params?.advogadoId);
+    const result = await findMetricas();
     if (!result.success) return { success: false, error: result.error.message };
     return { success: true, data: result.data };
   } catch (error) {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Registro de Ferramentas MCP - Gestão de Projetos
  *
@@ -16,7 +17,7 @@
  * - pm_listar_lembretes: Lista lembretes do usuário autenticado
  * - pm_listar_tarefas_global: Lista todas as tarefas do sistema com filtros globais e paginação
  * - pm_remover_membro: Remove membro de um projeto
- * - pm_criar_lembrete: Cria um novo lembrete para o usuário autenticado
+ * - pm_criar_lembrete: Cria um novo lembrete para the usuário autenticado
  * - pm_obter_resumo_dashboard: Obtém métricas resumidas da gestão de projetos
  */
 
@@ -59,11 +60,12 @@ export async function registerProjectManagementTools(): Promise<void> {
       pagina: z.number().optional().default(1).describe('Página de resultados'),
       limite: z.number().optional().default(20).describe('Número máximo de projetos por página'),
       busca: z.string().optional().describe('Busca textual por nome ou descrição'),
-      status: z.string().optional().describe('Filtrar por status do projeto'),
+      status: z.enum(['ativo', 'concluido', 'planejamento', 'pausado', 'cancelado']).optional().describe('Filtrar por status do projeto'),
     }),
     handler: async (args) => {
       try {
-        const result = await listarProjetos(args);
+         
+        const result = await listarProjetos(args as any);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao listar projetos');
         return jsonResult({ message: 'Projetos carregados', data: result.data });
       } catch (error) {
@@ -77,7 +79,7 @@ export async function registerProjectManagementTools(): Promise<void> {
    */
   registerMcpTool({
     name: 'pm_buscar_projeto',
-    description: 'Busca projeto por ID com todos os detalhes',
+    description: 'Busca projeto por ID with todos os detalhes',
     feature: 'project-management',
     requiresAuth: true,
     schema: z.object({
@@ -105,8 +107,8 @@ export async function registerProjectManagementTools(): Promise<void> {
     schema: z.object({
       nome: z.string().describe('Nome do projeto'),
       descricao: z.string().optional().describe('Descrição do projeto'),
-      status: z.string().optional().describe('Status inicial do projeto'),
-      prioridade: z.string().optional().describe('Prioridade do projeto'),
+      status: z.enum(['ativo', 'concluido', 'planejamento', 'pausado', 'cancelado']).optional().default('planejamento').describe('Status inicial do projeto'),
+      prioridade: z.enum(['baixa', 'media', 'alta', 'urgente']).optional().default('media').describe('Prioridade do projeto'),
       dataInicio: z.string().optional().describe('Data de início (YYYY-MM-DD)'),
       dataFim: z.string().optional().describe('Data de encerramento previsto (YYYY-MM-DD)'),
       clienteId: z.number().optional().describe('ID do cliente vinculado'),
@@ -118,7 +120,21 @@ export async function registerProjectManagementTools(): Promise<void> {
         const user = await getCurrentUser();
         if (!user) return errorResult('Usuário não autenticado');
 
-        const result = await criarProjeto(args, user.id);
+         
+        const result = await criarProjeto({
+          nome: args.nome,
+          descricao: args.descricao ?? null,
+           
+          status: args.status as any,
+           
+          prioridade: args.prioridade as any,
+          dataInicio: args.dataInicio ?? null,
+          dataPrevisaoFim: args.dataFim ?? null,
+          clienteId: args.clienteId ?? null,
+          processoId: args.processoId ?? null,
+          responsavelId: user.id,
+          tags: [],
+        }, user.id);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao criar projeto');
         return jsonResult({ message: 'Projeto criado com sucesso', data: result.data });
       } catch (error) {
@@ -139,14 +155,18 @@ export async function registerProjectManagementTools(): Promise<void> {
       id: z.string().describe('ID do projeto'),
       nome: z.string().optional().describe('Novo nome do projeto'),
       descricao: z.string().optional().describe('Nova descrição do projeto'),
-      status: z.string().optional().describe('Novo status do projeto'),
-      prioridade: z.string().optional().describe('Nova prioridade do projeto'),
+      status: z.enum(['ativo', 'concluido', 'planejamento', 'pausado', 'cancelado']).optional().describe('Novo status do projeto'),
+      prioridade: z.enum(['baixa', 'media', 'alta', 'urgente']).optional().describe('Nova prioridade do projeto'),
       dataInicio: z.string().optional().describe('Nova data de início (YYYY-MM-DD)'),
       dataFim: z.string().optional().describe('Nova data de encerramento (YYYY-MM-DD)'),
     }),
     handler: async (args) => {
       try {
-        const { id, ...input } = args;
+        const { id, dataFim, ...rest } = args;
+        const input: Parameters<typeof atualizarProjeto>[1] = {
+          ...rest,
+          ...(dataFim ? { dataPrevisaoFim: dataFim } : {}),
+        };
         const result = await atualizarProjeto(id, input);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao atualizar projeto');
         return jsonResult({ message: 'Projeto atualizado com sucesso', data: result.data });
@@ -183,7 +203,7 @@ export async function registerProjectManagementTools(): Promise<void> {
   // ---------------------------------------------------------------------------
 
   /**
-   * Lista tarefas de um projeto com filtro opcional por status
+   * Lista tarefas de um projeto with filtro opcional por status
    */
   registerMcpTool({
     name: 'pm_listar_tarefas_projeto',
@@ -192,11 +212,12 @@ export async function registerProjectManagementTools(): Promise<void> {
     requiresAuth: true,
     schema: z.object({
       projetoId: z.string().describe('ID do projeto'),
-      status: z.string().optional().describe('Filtrar por status da tarefa'),
+      status: z.enum(['a_fazer', 'em_progresso', 'em_revisao', 'concluido', 'cancelado']).optional().describe('Filtrar por status da tarefa'),
     }),
     handler: async (args) => {
       try {
-        const result = await listarTarefasPorProjeto(args.projetoId, args.status);
+         
+        const result = await listarTarefasPorProjeto(args.projetoId, args.status as any);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao listar tarefas');
         return jsonResult({ message: 'Tarefas carregadas', data: result.data });
       } catch (error) {
@@ -217,9 +238,9 @@ export async function registerProjectManagementTools(): Promise<void> {
       projetoId: z.string().describe('ID do projeto'),
       titulo: z.string().describe('Título da tarefa'),
       descricao: z.string().optional().describe('Descrição detalhada da tarefa'),
-      status: z.string().optional().describe('Status inicial da tarefa'),
-      prioridade: z.string().optional().describe('Prioridade da tarefa'),
-      responsavelId: z.string().optional().describe('ID do responsável pela tarefa'),
+      status: z.enum(['a_fazer', 'em_progresso', 'em_revisao', 'concluido', 'cancelado']).optional().describe('Status inicial da tarefa'),
+      prioridade: z.enum(['baixa', 'media', 'alta', 'urgente']).optional().describe('Prioridade da tarefa'),
+      responsavelId: z.number().optional().describe('ID do responsável pela tarefa'),
       dataVencimento: z.string().optional().describe('Data de vencimento (YYYY-MM-DD)'),
     }),
     handler: async (args) => {
@@ -228,7 +249,18 @@ export async function registerProjectManagementTools(): Promise<void> {
         const user = await getCurrentUser();
         if (!user) return errorResult('Usuário não autenticado');
 
-        const result = await criarTarefa(args, user.id);
+         
+        const input: any = {
+          projetoId: args.projetoId,
+          titulo: args.titulo,
+          descricao: args.descricao ?? null,
+          status: args.status ?? 'a_fazer',
+          prioridade: args.prioridade ?? 'media',
+          responsavelId: args.responsavelId ?? null,
+          dataPrazo: args.dataVencimento ?? null,
+        };
+
+        const result = await criarTarefa(input, user.id);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao criar tarefa');
         return jsonResult({ message: 'Tarefa criada com sucesso', data: result.data });
       } catch (error) {
@@ -249,15 +281,20 @@ export async function registerProjectManagementTools(): Promise<void> {
       id: z.string().describe('ID da tarefa'),
       titulo: z.string().optional().describe('Novo título da tarefa'),
       descricao: z.string().optional().describe('Nova descrição da tarefa'),
-      status: z.string().optional().describe('Novo status da tarefa'),
-      prioridade: z.string().optional().describe('Nova prioridade da tarefa'),
-      responsavelId: z.string().optional().describe('Novo responsável pela tarefa'),
+      status: z.enum(['a_fazer', 'em_progresso', 'em_revisao', 'concluido', 'cancelado']).optional().describe('Novo status da tarefa'),
+      prioridade: z.enum(['baixa', 'media', 'alta', 'urgente']).optional().describe('Nova prioridade da tarefa'),
+      responsavelId: z.number().optional().describe('Novo responsável pela tarefa'),
       dataVencimento: z.string().optional().describe('Nova data de vencimento (YYYY-MM-DD)'),
       projetoId: z.string().optional().describe('ID do projeto para recalcular progresso'),
     }),
     handler: async (args) => {
       try {
-        const { id, projetoId, ...input } = args;
+        const { id, projetoId, dataVencimento, ...rest } = args;
+         
+        const input: any = {
+          ...rest,
+          ...(dataVencimento ? { dataPrazo: dataVencimento } : {}),
+        };
         const result = await atualizarTarefa(id, input, projetoId);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao atualizar tarefa');
         return jsonResult({ message: 'Tarefa atualizada com sucesso', data: result.data });
@@ -334,7 +371,8 @@ export async function registerProjectManagementTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await adicionarMembro(args);
+         
+        const result = await adicionarMembro(args as any);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao adicionar membro');
         return jsonResult({ message: 'Membro adicionado com sucesso', data: result.data });
       } catch (error) {
@@ -365,7 +403,8 @@ export async function registerProjectManagementTools(): Promise<void> {
         const user = await getCurrentUser();
         if (!user) return errorResult('Usuário não autenticado');
 
-        const result = await listarLembretes(user.id, args);
+         
+        const result = await listarLembretes(user.id, args as any);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao listar lembretes');
         return jsonResult({ message: 'Lembretes carregados', data: result.data });
       } catch (error) {
@@ -389,12 +428,14 @@ export async function registerProjectManagementTools(): Promise<void> {
     schema: z.object({
       pagina: z.number().optional().default(1).describe('Página'),
       limite: z.number().optional().default(20).describe('Itens por página'),
-      status: z.string().optional().describe('Filtrar por status'),
+       
+      status: z.enum(['a_fazer', 'em_progresso', 'em_revisao', 'concluido', 'cancelado']).optional().describe('Filtrar por status'),
       busca: z.string().optional().describe('Busca textual'),
     }),
     handler: async (args) => {
       try {
-        const result = await listarTarefasGlobal(args);
+         
+        const result = await listarTarefasGlobal(args as any);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao listar tarefas');
         return jsonResult({ message: 'Tarefas carregadas', data: result.data });
       } catch (error) {
@@ -435,17 +476,17 @@ export async function registerProjectManagementTools(): Promise<void> {
   // ---------------------------------------------------------------------------
 
   /**
-   * Cria um novo lembrete para o usuário autenticado
+   * Cria um novo lembrete para the usuário autenticado
    */
   registerMcpTool({
     name: 'pm_criar_lembrete',
-    description: 'Cria um novo lembrete para o usuário autenticado',
+    description: 'Cria um novo lembrete para the usuário autenticado',
     feature: 'project-management',
     requiresAuth: true,
     schema: z.object({
       titulo: z.string().describe('Título do lembrete'),
       descricao: z.string().optional().describe('Descrição detalhada'),
-      dataVencimento: z.string().optional().describe('Data de vencimento (YYYY-MM-DD)'),
+      dataVencimento: z.string().describe('Data de vencimento/hora (YYYY-MM-DD HH:mm:ss)'),
       projetoId: z.string().optional().describe('ID do projeto vinculado'),
     }),
     handler: async (args) => {
@@ -453,7 +494,16 @@ export async function registerProjectManagementTools(): Promise<void> {
         const { getCurrentUser } = await import('@/lib/auth/server');
         const user = await getCurrentUser();
         if (!user) return errorResult('Usuário não autenticado');
-        const result = await criarLembrete(args, user.id);
+
+         
+        const input: any = {
+          texto: args.titulo,
+          dataHora: args.dataVencimento,
+          projetoId: args.projetoId ?? null,
+          prioridade: 'media',
+        };
+
+        const result = await criarLembrete(input, user.id);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao criar lembrete');
         return jsonResult({ message: 'Lembrete criado com sucesso', data: result.data });
       } catch (error) {

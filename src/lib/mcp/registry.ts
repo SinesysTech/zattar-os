@@ -1,7 +1,7 @@
 /**
  * Registry Principal de Ferramentas MCP do ZattarOS
  *
- * Orquestra o registro de 172 ferramentas MCP organizadas em 23 módulos.
+ * Orquestra o registro de 230+ ferramentas MCP organizadas em 34 módulos.
  * Cada módulo é responsável por registrar ferramentas relacionadas a uma feature específica.
  *
  * Módulos disponíveis:
@@ -28,6 +28,17 @@
  * - Tarefas (10 tools) - CRUD, quadros, reuniões Zoom, horários disponíveis
  * - Chatwoot (16 tools) - Contatos, conversas, labels, métricas
  * - Dify (50 tools) - Chat, workflows, knowledge base, anotações, tags, chunks
+ * - Admin (1 tool) - Avaliação de upgrade de compute
+ * - Calendar (1 tool) - Eventos unificados de 5 fontes
+ * - Tipos de Expedientes (3 tools) - CRUD de tipos
+ * - Notificações (4 tools) - Listagem, contagem, marcar lida(s)
+ * - Agenda (4 tools) - CRUD de eventos + listagem por período
+ * - Endereços (4 tools) - CRUD e busca por entidade
+ * - Notas (5 tools) - CRUD de notas pessoais
+ * - Project Management (16 tools) - Projetos, tarefas, membros, lembretes, dashboard
+ * - Peças Jurídicas (8 tools) - Modelos, tipos, geração de peças
+ * - Entrevistas Trabalhistas (4 tools) - Iniciar, salvar, finalizar, buscar
+ * - E-mail (5 tools) - IMAP/SMTP: pastas, mensagens, envio
  */
 
 import {

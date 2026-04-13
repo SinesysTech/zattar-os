@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Registro de Ferramentas MCP - Notas
  *
@@ -154,7 +155,7 @@ export async function registerNotasTools(): Promise<void> {
     requiresAuth: true,
     schema: z.object({
       id: z.number().describe('ID da nota'),
-      arquivada: z.boolean().default(true).describe('Se verdadeiro, arquiva a nota. Se falso, desarquiva.'),
+      arquivada: z.boolean().describe('Se verdadeiro, arquiva a nota. Se falso, desarquiva.'),
     }),
     handler: async (args) => {
       try {
@@ -162,9 +163,10 @@ export async function registerNotasTools(): Promise<void> {
         const user = await getCurrentUser();
         if (!user) return errorResult('Usuário não autenticado');
 
+         
         const result = await arquivarNota(user.id, {
-          id: args.id,
-          isArchived: args.arquivada,
+          id: (args as any).id,
+          isArchived: (args as any).arquivada,
         });
 
         if (!result.success) {

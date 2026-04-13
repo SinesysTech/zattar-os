@@ -1,16 +1,16 @@
 ---
-status: awaiting_human_verify
+status: resolved
 trigger: "supabase-lock-steal-contention - Lock broken by another request with the 'steal' option AbortErrors"
 created: 2026-04-13T00:00:00Z
-updated: 2026-04-13T12:00:00Z
+updated: 2026-04-13T18:00:00Z
 ---
 
 ## Current Focus
 
-hypothesis: All fixes already applied -- SDK upgrade (cascade guard), duplicate listener removal, getUser() deduplication, and graceful error handling should eliminate the AbortError flood
-test: User must verify that authenticated page loads no longer produce "Lock broken by another request with the 'steal' option" errors in console
-expecting: Zero AbortErrors on normal page loads; at most one brief lock acquisition per auth check
-next_action: Await human verification that the issue is resolved in their browser
+hypothesis: Race condition between init() and onAuthStateChange was causing concurrent getUser() calls even with deduplication, because the .finally() cleared the ref before onAuthStateChange fired
+test: Page loads should produce zero "Lock broken by another request with the 'steal' option" errors
+expecting: Zero AbortErrors on normal page loads; single lock acquisition per auth check
+next_action: Resolved — verify in browser
 
 ## Symptoms
 

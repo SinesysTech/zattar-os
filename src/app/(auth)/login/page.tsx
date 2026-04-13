@@ -1,5 +1,13 @@
-import { LoginFormV2 } from '@/components/auth/v2'
+import { LoginForm } from '@/components/auth/login-form'
 
-export default function Page() {
-  return <LoginFormV2 />
+export default function LoginPage() {
+  return (
+    <>
+      <div className="mb-10 text-center">
+        <h2 className="text-2xl font-bold font-heading mb-2">Acesso Restrito</h2>
+        <p className="text-white/30 text-sm">Insira suas credenciais corporativas.</p>
+      </div>
+      <LoginForm />
+    </>
+  )
 }

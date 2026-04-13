@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Registro de Ferramentas MCP - Entrevistas Trabalhistas
  *
@@ -67,15 +68,15 @@ export async function registerEntrevistasTrabalhistas(): Promise<void> {
     schema: z.object({
       contratoId: z.number().describe('ID do contrato ao qual a entrevista será vinculada'),
       tipoLitigio: z
-        .string()
-        .optional()
+        .enum(['trabalhista_classico', 'gig_economy', 'pejotizacao'])
         .describe(
           'Tipo do litígio: trabalhista_classico, gig_economy ou pejotizacao. Determina a trilha de módulos',
         ),
     }),
     handler: async (args) => {
       try {
-        const result = await iniciarEntrevista(args);
+         
+        const result = await iniciarEntrevista(args as any);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao iniciar entrevista');
         return jsonResult({ message: 'Entrevista iniciada com sucesso', data: result.data });
       } catch (error) {
@@ -103,8 +104,8 @@ export async function registerEntrevistasTrabalhistas(): Promise<void> {
         .string()
         .describe(
           'Nome do módulo: vinculo, jornada, saude_ambiente, ruptura (Trilha A) | ' +
-            'controle_algoritmico, dependencia_economica, condicoes_trabalho_gig, desligamento_plataforma (Trilha B) | ' +
-            'contrato_pj, subordinacao_real, exclusividade_pessoalidade, fraude_verbas, consolidacao_final (Trilha C)',
+          'controle_algoritmico, dependencia_economica, condicoes_trabalho_gig, desligamento_plataforma (Trilha B) | ' +
+          'contrato_pj, subordinacao_real, exclusividade_pessoalidade, fraude_verbas, consolidacao_final (Trilha C)',
         ),
       respostas: z
         .record(z.unknown())

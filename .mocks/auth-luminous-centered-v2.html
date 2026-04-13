@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZattarOS Auth - Centered Luminous</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&family=Manrope:wght@800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5523eb;
+            --primary-glow: rgba(85, 35, 235, 0.4);
+            --highlight: #f59e0b;
+            --background: #0a0a0c;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: 24px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: white;
+            overflow: hidden;
+        }
+
+        .font-heading { font-family: 'Montserrat', sans-serif; }
+        .font-headline { font-family: 'Manrope', sans-serif; }
+
+        /* Aurora Background - Sutil e Profundo */
+        .aurora-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 50% 40%, rgba(85, 35, 235, 0.12) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 40%);
+            filter: blur(80px);
+        }
+
+        .canvas-dots {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        /* Glass Panel Profundidade Máxima */
+        .glass-card-luminous {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 40px 100px rgba(0, 0, 0, 0.6),
+                inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Luminous Button */
+        .btn-luminous {
+            position: relative;
+            background: var(--primary);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-luminous:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px var(--primary-glow);
+            filter: brightness(1.1);
+        }
+
+        .btn-luminous::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.15), transparent 30%);
+            animation: rotate 6s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Tactile Input - Minimalista e Reativo */
+        .input-tactile {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .input-tactile:focus {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(85, 35, 235, 0.5);
+            box-shadow: 0 0 0 1px rgba(85, 35, 235, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Reveal Animations */
+        .fade-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes fadeReveal {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body class="canvas-dots min-h-screen flex items-center justify-center p-6">
+    <div class="aurora-bg"></div>
+
+    <div class="w-full max-w-[460px] fade-reveal">
+        <!-- Brand / Logo centered above card -->
+        <div class="flex flex-col items-center mb-10">
+            <div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-2xl shadow-primary/30 mb-4 transition-transform hover:scale-110 duration-500">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
+            </div>
+            <h1 class="font-heading font-extrabold text-2xl tracking-tighter uppercase">Zattar<span class="text-primary">OS</span></h1>
+            <p class="text-[9px] uppercase tracking-[0.4em] text-white/30 font-bold mt-2">Intelligence Justice System</p>
+        </div>
+
+        <!-- Main Card -->
+        <div class="glass-card-luminous p-10 sm:p-12 rounded-[48px] relative overflow-hidden">
+            <!-- Subtle internal glow -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 blur-[60px] rounded-full pointer-events-none"></div>
+            
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-bold font-heading mb-2">Bem-vindo de volta</h2>
+                <p class="text-white/40 text-sm">Identifique-se para acessar o escritório virtual.</p>
+            </div>
+
+            <form class="space-y-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 ml-1">E-mail Corporativo</label>
+                    <input type="email" placeholder="nome@escritorio.com" class="input-tactile w-full h-14 px-6 rounded-2xl outline-none text-white placeholder:text-white/10 text-lg">
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center ml-1">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20">Sua Senha</label>
+                    </div>
+                    <input type="password" placeholder="••••••••" class="input-tactile w-full h-14 px-6 rounded-2xl outline-none text-white placeholder:text-white/10 text-lg">
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="btn-luminous w-full h-14 rounded-2xl font-bold text-white shadow-xl flex items-center justify-center gap-3 text-sm uppercase tracking-widest">
+                        Entrar no Sistema
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-10 flex justify-center">
+                <a href="#" class="text-[10px] text-white/20 hover:text-primary transition-colors font-bold uppercase tracking-widest">Esqueci minhas credenciais</a>
+            </div>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="mt-12 text-center opacity-20">
+            <p class="text-[8px] uppercase tracking-[0.6em] font-bold">Protocolo de Segurança End-to-End Ativo</p>
+        </div>
+    </div>
+
+</body>
+</html>

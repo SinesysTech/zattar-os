@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Registro de Ferramentas MCP - Mail
  *
@@ -70,7 +71,7 @@ export async function registerMailTools(): Promise<void> {
     feature: 'mail',
     requiresAuth: true,
     schema: z.object({
-      pasta: z.string().default('INBOX').describe('Nome da pasta (ex: INBOX, Sent, Drafts)'),
+      pasta: z.string().describe('Nome da pasta (ex: INBOX, Sent, Drafts)'),
       pagina: z.number().min(1).default(1).describe('Página'),
       limite: z.number().min(1).max(50).default(20).describe('Mensagens por página'),
     }),
@@ -79,7 +80,8 @@ export async function registerMailTools(): Promise<void> {
         const { error, config } = await getAuthenticatedMailConfig();
         if (error || !config) return errorResult(error || 'Erro ao obter configuração');
 
-        const result = await listMessages(config, args.pasta, args.pagina, args.limite);
+         
+        const result = await listMessages(config, (args as any).pasta, (args as any).pagina, (args as any).limite);
         return jsonResult({
           message: `${result.data.length} mensagem(ns) na pasta ${args.pasta}`,
           data: result,
@@ -99,7 +101,7 @@ export async function registerMailTools(): Promise<void> {
     feature: 'mail',
     requiresAuth: true,
     schema: z.object({
-      pasta: z.string().default('INBOX').describe('Pasta onde a mensagem está'),
+      pasta: z.string().describe('Pasta onde a mensagem está'),
       uid: z.number().describe('UID da mensagem'),
     }),
     handler: async (args) => {
@@ -138,7 +140,7 @@ export async function registerMailTools(): Promise<void> {
     feature: 'mail',
     requiresAuth: true,
     schema: z.object({
-      pasta: z.string().default('INBOX').describe('Pasta onde buscar'),
+      pasta: z.string().describe('Pasta onde buscar'),
       busca: z.string().describe('Texto para buscar (assunto, remetente, conteúdo)'),
     }),
     handler: async (args) => {
