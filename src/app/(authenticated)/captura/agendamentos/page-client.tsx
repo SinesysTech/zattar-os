@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { AgendamentosList } from '../components/agendamentos/agendamentos-list';
 import { AgendamentoDialog } from '../components/agendamento-dialog';
 
@@ -14,10 +15,12 @@ export default function AgendamentosPage() {
 
   return (
     <>
-      <AgendamentosList
-        key={refreshAgendamentos}
-        onNewClick={() => setAgendamentoDialogOpen(true)}
-      />
+      <GlassPanel depth={1} className="overflow-hidden">
+        <AgendamentosList
+          key={refreshAgendamentos}
+          onNewClick={() => setAgendamentoDialogOpen(true)}
+        />
+      </GlassPanel>
 
       <AgendamentoDialog
         open={agendamentoDialogOpen}
