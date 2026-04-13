@@ -192,9 +192,11 @@ function GlassRow({
   const TipoIcon = getTipoIcon(captura.tipo_captura);
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onView}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onView(); } }}
       className={cn(
         'w-full text-left rounded-2xl border border-white/[0.06] p-4 cursor-pointer',
         'transition-all duration-[180ms] ease-out',
@@ -267,7 +269,7 @@ function GlassRow({
           </button>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -381,7 +383,7 @@ function PaginationBar({
             'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium',
             'border border-white/[0.08] transition-all duration-150',
             'disabled:opacity-30 disabled:cursor-not-allowed',
-            'hover:bg-white/[0.06] hover:border-white/[0.14]',
+            'hover:bg-white/6 hover:border-white/[0.14]',
           )}
         >
           <ChevronLeft className="w-3 h-3" />
@@ -393,7 +395,7 @@ function PaginationBar({
           disabled={pagina >= paginacao.totalPaginas}
           className={cn(
             'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium',
-            'border border-white/[0.08] transition-all duration-150',
+            'border border-white/8 transition-all duration-150',
             'disabled:opacity-30 disabled:cursor-not-allowed',
             'hover:bg-white/[0.06] hover:border-white/[0.14]',
           )}

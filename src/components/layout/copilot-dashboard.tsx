@@ -180,7 +180,6 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
   return (
     <CopilotKitProvider
       runtimeUrl="/api/copilotkit"
-      publicApiKey={process.env.NEXT_PUBLIC_COPILOTKIT_API_KEY}
       onError={(event) => {
         if (process.env.NODE_ENV === 'development') {
           console.warn(`[CopilotKit ${event.code}]`, event.error.message)

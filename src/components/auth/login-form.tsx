@@ -31,97 +31,136 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
         password,
       })
 
-      if (signInError) throw signInError
-      if (!data.user) throw new Error('Falha na autenticação')
+      if (signInError) {
+        if (
+          signInError.message?.includes('Database error querying schema') ||
+          signInError.message?.includes('email_change')
+        ) {
+          console.error('Erro conhecido do Supabase Auth relacionado a email_change.')
+        }
+        throw signInError
+      }
+
+      if (!data.user) throw new Error('Falha na autenticação: usuário não retornado')
 
       setSuccess(true)
       setTimeout(() => router.push('/app/dashboard'), 700)
     } catch (err: unknown) {
       if (err instanceof Error) {
         if (err.message.includes('Invalid login credentials')) {
-          setError('Credenciais incorretas')
+          setError('Email ou senha incorretos')
+        } else if (err.message.includes('Email not confirmed')) {
+          setError('Por favor, confirme seu email antes de fazer login')
+        } else if (err.message.includes('500') || err.message.includes('Database error')) {
+          setError('Erro no servidor de autenticação. Tente novamente mais tarde.')
+        } else if (err.message.includes('email_change')) {
+          setError('Erro interno de autenticação. Entre em contato com o suporte.')
         } else {
           setError(err.message)
         }
       } else {
-        setError('Ocorreu um erro ao entrar.')
+        setError('Ocorreu um erro ao fazer login. Tente novamente.')
       }
+    } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className={cn('flex flex-col', className)} {...props}>
-      <form onSubmit={handleLogin} className="space-y-6">
-        <motion.div 
+    <div className={cn('flex flex-col items-center', className)} {...props}>
+      {/* Statement */}
+      <div className="text-center mb-10">
+        <motion.h1
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease }}
+          className="font-headline font-extrabold text-4xl leading-tight tracking-tight text-foreground"
+        >
+          Acesse seu{' '}
+          <span className="auth-gradient-text">escritório.</span>
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1, ease }}
+          className="mt-3 text-[0.9375rem] text-muted-foreground"
+        >
+          Entre com suas credenciais para continuar
+        </motion.p>
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.8, delay: 0.3, ease }}
+          className="auth-accent-line"
+        />
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleLogin} className="w-full space-y-5">
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, ease }}
-          className="space-y-2 group"
+          transition={{ delay: 0.15, ease }}
         >
-          <label 
-            htmlFor="email" 
-            className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 ml-1 group-focus-within:text-primary transition-colors"
-          >
-            E-mail
-          </label>
+          <label htmlFor="email" className="auth-label">Email</label>
           <input
             id="email"
             type="email"
-            placeholder="nome@zattar.com.br"
+            placeholder="voce@zattar.com.br"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="input-tactile w-full h-14 px-6 rounded-2xl outline-none text-white placeholder:text-white/10 text-lg"
+            className="auth-input"
             autoComplete="email"
           />
         </motion.div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, ease }}
-          className="space-y-2 group"
         >
-          <label 
-            htmlFor="password" 
-            className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 ml-1 group-focus-within:text-primary transition-colors"
-          >
-            Senha
-          </label>
+          <label htmlFor="password" className="auth-label">Senha</label>
           <div className="relative">
             <input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              placeholder="••••••••"
+              placeholder="Sua senha"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="input-tactile w-full h-14 px-6 rounded-2xl outline-none text-white placeholder:text-white/10 text-lg"
+              className="auth-input pr-12"
               autoComplete="current-password"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors"
+              className="auth-toggle"
+              aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
             >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
         </motion.div>
 
+        <div className="flex justify-end -mt-1">
+          <Link href="/forgot-password" className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">
+            Esqueci minha senha
+          </Link>
+        </div>
+
         <AnimatePresence mode="wait">
           {error && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden"
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.25, ease }}
+              className="auth-error"
+              role="alert"
             >
-              <div className="flex items-center gap-2 rounded-xl bg-destructive/10 border border-destructive/20 p-4 text-destructive text-xs font-bold uppercase tracking-wider">
-                <AlertCircle size={14} />
-                {error}
-              </div>
+              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+              <p>{error}</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -130,43 +169,25 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, ease }}
-          className="pt-2"
         >
           <button
             type="submit"
             disabled={isLoading || success}
-            className={cn(
-              "btn-luminous w-full h-14 rounded-2xl font-bold text-white shadow-xl flex items-center justify-center gap-3 text-xs uppercase tracking-[0.2em] transition-all",
-              success && "bg-success shadow-success/20"
-            )}
+            className={cn('auth-btn-primary', success && 'auth-btn-success')}
           >
             {success ? (
-              <Check size={20} strokeWidth={3} />
+              <Check className="h-5 w-5" strokeWidth={3} />
             ) : isLoading ? (
-              <Loader2 className="animate-spin" size={20} />
+              <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
               <>
-                Autenticar
-                <ArrowRight size={16} />
+                Entrar
+                <ArrowRight className="h-4.5 w-4.5" />
               </>
             )}
           </button>
         </motion.div>
       </form>
-
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4, ease }}
-        className="mt-10 flex justify-center"
-      >
-        <Link 
-          href="/forgot-password" 
-          className="text-[10px] text-white/10 hover:text-white transition-colors font-bold uppercase tracking-widest"
-        >
-          Recuperar Acesso
-        </Link>
-      </motion.div>
     </div>
   )
 }

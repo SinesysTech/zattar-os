@@ -187,7 +187,7 @@ export function GazetteSearchBar({ className }: { className?: string }) {
         className={cn(
           'flex items-center gap-2 px-3.5 py-2',
           'bg-muted/20 border border-border/30 rounded-lg',
-          'min-w-[300px] transition-all',
+          'min-w-75 transition-all',
           'focus-within:border-primary/30 focus-within:bg-muted/30',
         )}
       >

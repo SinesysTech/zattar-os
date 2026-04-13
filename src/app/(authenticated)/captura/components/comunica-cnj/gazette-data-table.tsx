@@ -10,8 +10,8 @@ const TIPO_BADGE_MAP: Record<string, { label: string; className: string }> = {
   intimacao: { label: 'INT', className: 'bg-info/10 text-info' },
   intimação: { label: 'INT', className: 'bg-info/10 text-info' },
   despacho: { label: 'DES', className: 'bg-warning/10 text-warning' },
-  sentenca: { label: 'SEN', className: 'bg-purple-500/10 text-purple-400' },
-  sentença: { label: 'SEN', className: 'bg-purple-500/10 text-purple-400' },
+  sentenca: { label: 'SEN', className: 'bg-chart-3/10 text-chart-3' },
+  sentença: { label: 'SEN', className: 'bg-chart-3/10 text-chart-3' },
   edital: { label: 'EDIT', className: 'bg-success/10 text-success' },
   certidao: { label: 'CERT', className: 'bg-muted/30 text-muted-foreground' },
   certidão: { label: 'CERT', className: 'bg-muted/30 text-muted-foreground' },
@@ -332,7 +332,7 @@ export function GazetteDataTable({
                   className={cn(
                     'cursor-pointer border-b border-border/30 transition-colors duration-100',
                     'hover:bg-muted/30',
-                    isSelected && 'bg-primary/[0.04] border-l-2 border-l-primary',
+                    isSelected && 'bg-primary/4 border-l-2 border-l-primary',
                   )}
                 >
                   {/* Tipo */}
@@ -363,7 +363,7 @@ export function GazetteDataTable({
 
                   {/* Órgão */}
                   <td className={cn('px-3', tdPy)} style={{ width: 160 }}>
-                    <span className="text-[11px] text-muted-foreground truncate block max-w-[160px]">
+                    <span className="text-[11px] text-muted-foreground truncate block max-w-40">
                       {item.nomeOrgao ?? item.siglaTribunal ?? '—'}
                     </span>
                   </td>

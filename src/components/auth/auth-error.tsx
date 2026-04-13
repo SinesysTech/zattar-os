@@ -2,32 +2,51 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { AlertTriangle, ArrowLeft } from 'lucide-react'
+import { ShieldAlert, ArrowLeft } from 'lucide-react'
+
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 export function AuthError({ error }: { error?: string }) {
   return (
-    <div className="flex flex-col items-center text-center py-4">
-      <motion.div 
-        initial={{ scale: 0.9, opacity: 0 }}
+    <div className="flex flex-col items-center text-center">
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="w-20 h-20 bg-destructive/10 text-destructive rounded-full flex items-center justify-center mb-8"
+        transition={{ duration: 0.5, ease }}
+        className="w-16 h-16 bg-destructive/10 text-destructive rounded-2xl flex items-center justify-center mb-8"
       >
-        <AlertTriangle size={40} />
+        <ShieldAlert className="h-8 w-8" />
       </motion.div>
 
-      <h2 className="text-2xl font-bold font-heading mb-4">Erro de Autenticação</h2>
-      
-      <p className="text-white/40 text-sm mb-10 max-w-xs mx-auto leading-relaxed">
-        {error || 'Ocorreu um problema inesperado durante o processo de login. Por favor, tente novamente.'}
-      </p>
-
-      <Link 
-        href="/login" 
-        className="btn-luminous w-full h-14 rounded-2xl font-bold text-white shadow-xl flex items-center justify-center gap-3 text-xs uppercase tracking-[0.2em]"
+      <motion.h1
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, ease }}
+        className="font-headline font-extrabold text-3xl leading-tight tracking-tight text-foreground mb-3"
       >
-        <ArrowLeft size={16} />
-        Voltar ao Início
-      </Link>
+        Erro de autenticação
+      </motion.h1>
+
+      <motion.p
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, ease }}
+        className="text-sm text-muted-foreground mb-10 max-w-xs leading-relaxed"
+      >
+        {error || 'Ocorreu um problema inesperado durante o processo de login. Por favor, tente novamente.'}
+      </motion.p>
+
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, ease }}
+        className="w-full"
+      >
+        <Link href="/login" className="auth-btn-primary">
+          <ArrowLeft className="h-4.5 w-4.5>
+          Voltar ao login
+        </Link>
+      </motion.div>
     </div>
   )
 }
