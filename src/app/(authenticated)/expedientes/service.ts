@@ -36,22 +36,8 @@ export async function criarExpediente(input: z.infer<typeof createExpedienteSche
   if (!validation.success) {
     return err(appError('VALIDATION_ERROR', 'Dados de entrada inválidos.', validation.error.flatten().fieldErrors));
   }
-  const { processoId, tipoExpedienteId } = validation.data;
-
-  if (processoId) {
-    const processoExistsResult = await repository.processoExists(processoId);
-    if (!processoExistsResult.success || !processoExistsResult.data) {
-      return err(appError('NOT_FOUND', 'Processo não encontrado.'));
-    }
-  }
-
-  if (tipoExpedienteId) {
-    const tipoExistsResult = await repository.tipoExpedienteExists(tipoExpedienteId);
-    if (!tipoExistsResult.success || !tipoExistsResult.data) {
-      return err(appError('NOT_FOUND', 'Tipo de expediente não encontrado.'));
-    }
-  }
-
+  // FK constraints do Postgres validam processoId e tipoExpedienteId —
+  // queries de pré-validação removidas para eliminar N+1.
   const dataForRepo = camelToSnake(validation.data) as ExpedienteInsertInput;
 
   return repository.saveExpediente(dataForRepo);
@@ -91,26 +77,14 @@ export async function atualizarExpediente(id: number, input: z.infer<typeof upda
     return err(appError('VALIDATION_ERROR', 'Dados de entrada inválidos.', validation.error.flatten().fieldErrors));
   }
 
+  // Busca necessária para dados_anteriores (auditoria)
   const expedienteResult = await repository.findExpedienteById(id);
   if (!expedienteResult.success) return expedienteResult as Result<Expediente>;
   if (!expedienteResult.data) return err(appError('NOT_FOUND', 'Expediente não encontrado.'));
 
-  const { processoId, tipoExpedienteId } = validation.data;
-  if (processoId) {
-    const processoExistsResult = await repository.processoExists(processoId);
-    if (!processoExistsResult.success || !processoExistsResult.data) {
-      return err(appError('NOT_FOUND', 'Processo não encontrado.'));
-    }
-  }
-  if (tipoExpedienteId) {
-    const tipoExistsResult = await repository.tipoExpedienteExists(tipoExpedienteId);
-    if (!tipoExistsResult.success || !tipoExistsResult.data) {
-      return err(appError('NOT_FOUND', 'Tipo de expediente não encontrado.'));
-    }
-  }
-
+  // FK constraints do Postgres validam processoId e tipoExpedienteId —
+  // queries de pré-validação removidas para eliminar N+1.
   const dataForRepo = camelToSnake(validation.data) as ExpedienteUpdateInput;
-
 
   return repository.updateExpediente(id, dataForRepo, expedienteResult.data);
 }

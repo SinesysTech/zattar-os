@@ -246,7 +246,8 @@ export async function findAudienciasByClienteCpf(
       .from("audiencias")
       .select(getAudienciaColumnsFull())
       .in("processo_id", processoIds)
-      .order("data_inicio", { ascending: true });
+      .order("data_inicio", { ascending: true })
+      .limit(500);
 
     if (error) {
       console.error("Error finding audiencias by cpf:", error);
@@ -309,7 +310,8 @@ export async function findAudienciasByClienteCnpj(
       .from("audiencias")
       .select(getAudienciaColumnsFull())
       .in("processo_id", processoIds)
-      .order("data_inicio", { ascending: true });
+      .order("data_inicio", { ascending: true })
+      .limit(500);
 
     if (error) {
       console.error("Error finding audiencias by cnpj:", error);
@@ -343,7 +345,8 @@ export async function findAudienciasByProcessoId(
       .from("audiencias")
       .select(getAudienciaColumnsFull())
       .eq("processo_id", processoId)
-      .order("data_inicio", { ascending: true });
+      .order("data_inicio", { ascending: true })
+      .limit(500);
 
     if (status) {
       query = query.eq("status", status);
@@ -599,8 +602,6 @@ export async function buscarAudienciasPorCpf(
   // Normalizar CPF (remover formatação)
   const cpfNormalizado = cpf.replace(/\D/g, '');
 
-  console.log('🔍 [BuscarAudienciasCPF] Buscando audiências para CPF:', cpfNormalizado);
-
   // Buscar cliente
   const { data: cliente, error: errorCliente } = await supabase
     .from('clientes')
@@ -610,7 +611,6 @@ export async function buscarAudienciasPorCpf(
     .single();
 
   if (errorCliente || !cliente) {
-    console.log('ℹ️ [BuscarAudienciasCPF] Cliente não encontrado:', cpfNormalizado);
     return { cliente: null, audiencias: [] };
   }
 
@@ -622,7 +622,6 @@ export async function buscarAudienciasPorCpf(
     .eq('entidade_id', cliente.id);
 
   if (errorPart || !participacoes || participacoes.length === 0) {
-    console.log('ℹ️ [BuscarAudienciasCPF] Nenhuma participação encontrada');
     return {
       cliente: {
         id: cliente.id,
@@ -665,15 +664,15 @@ export async function buscarAudienciasPorCpf(
       classe_judicial!classe_judicial_id(descricao)
     `)
     .in('processo_id', processoIds)
-    .order('data_inicio', { ascending: true });
+    .order('data_inicio', { ascending: true })
+    .limit(500);
 
   if (errorAudiencias) {
-    console.error('❌ [BuscarAudienciasCPF] Erro ao buscar audiências:', errorAudiencias);
+    console.error('[BuscarAudienciasCPF] Erro ao buscar audiências:', errorAudiencias);
     throw new Error(`Erro ao buscar audiências: ${errorAudiencias.message}`);
   }
 
   if (!audienciasData || audienciasData.length === 0) {
-    console.log('ℹ️ [BuscarAudienciasCPF] Nenhuma audiência encontrada');
     return {
       cliente: {
         id: cliente.id,

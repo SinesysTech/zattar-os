@@ -123,12 +123,8 @@ export async function actionCriarExpediente(
       };
     }
 
-    revalidatePath("/app/expedientes");
-    revalidatePath("/app/expedientes/quadro");
-    revalidatePath("/app/expedientes/semana");
-    revalidatePath("/app/expedientes/mes");
-    revalidatePath("/app/expedientes/ano");
-    revalidatePath("/app/expedientes/lista");
+    // Layout path propaga para todas as sub-rotas (quadro, semana, mes, ano, lista)
+    revalidatePath("/app/expedientes", "layout");
 
     // 🆕 AI Indexing Hook
     if (result.success && user) {
@@ -292,12 +288,8 @@ export async function actionAtualizarExpediente(
       };
     }
 
-    revalidatePath("/app/expedientes");
-    revalidatePath("/app/expedientes/quadro");
-    revalidatePath("/app/expedientes/semana");
-    revalidatePath("/app/expedientes/mes");
-    revalidatePath("/app/expedientes/ano");
-    revalidatePath("/app/expedientes/lista");
+    // Layout path propaga para todas as sub-rotas (quadro, semana, mes, ano, lista)
+    revalidatePath("/app/expedientes", "layout");
 
     return {
       success: true,
@@ -394,12 +386,8 @@ export async function actionBaixarExpediente(
       };
     }
 
-    revalidatePath("/app/expedientes");
-    revalidatePath("/app/expedientes/quadro");
-    revalidatePath("/app/expedientes/semana");
-    revalidatePath("/app/expedientes/mes");
-    revalidatePath("/app/expedientes/ano");
-    revalidatePath("/app/expedientes/lista");
+    // Layout path propaga para todas as sub-rotas (quadro, semana, mes, ano, lista)
+    revalidatePath("/app/expedientes", "layout");
 
     return {
       success: true,
@@ -470,12 +458,8 @@ export async function actionReverterBaixa(
       };
     }
 
-    revalidatePath("/app/expedientes");
-    revalidatePath("/app/expedientes/quadro");
-    revalidatePath("/app/expedientes/semana");
-    revalidatePath("/app/expedientes/mes");
-    revalidatePath("/app/expedientes/ano");
-    revalidatePath("/app/expedientes/lista");
+    // Layout path propaga para todas as sub-rotas (quadro, semana, mes, ano, lista)
+    revalidatePath("/app/expedientes", "layout");
 
     return {
       success: true,
@@ -519,6 +503,45 @@ export async function actionListarExpedientes(
       error:
         error instanceof Error ? error.message : "Erro interno do servidor",
       message: "Erro ao carregar expedientes. Tente novamente.",
+    };
+  }
+}
+
+/**
+ * Action de atualização direta (sem FormData) — para uso em popovers inline.
+ */
+export async function actionAtualizarExpedientePayload(
+  id: number,
+  payload: z.infer<typeof updateExpedienteSchema>
+): Promise<ActionResult> {
+  try {
+    if (!id || id <= 0) {
+      return { success: false, error: "ID inválido", message: "ID do expediente é obrigatório" };
+    }
+
+    const validation = updateExpedienteSchema.safeParse(payload);
+    if (!validation.success) {
+      return {
+        success: false,
+        error: "Erro de validação",
+        errors: formatZodErrors(validation.error),
+        message: validation.error.errors[0]?.message || "Dados inválidos",
+      };
+    }
+
+    const result = await atualizarExpediente(id, validation.data);
+    if (!result.success) {
+      return { success: false, error: result.error.message, message: result.error.message };
+    }
+
+    revalidatePath("/app/expedientes", "layout");
+
+    return { success: true, data: result.data, message: "Expediente atualizado com sucesso" };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao atualizar expediente.",
     };
   }
 }

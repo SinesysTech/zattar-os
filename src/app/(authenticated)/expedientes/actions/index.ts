@@ -12,6 +12,7 @@
 export {
   actionCriarExpediente,
   actionAtualizarExpediente,
+  actionAtualizarExpedientePayload,
   actionBaixarExpediente,
   actionReverterBaixa,
   actionListarExpedientes,

@@ -104,12 +104,7 @@ export async function actionBulkTransferirResponsavel(
       };
     }
 
-    revalidatePath("/app/expedientes");
-    revalidatePath("/app/expedientes/quadro");
-    revalidatePath("/app/expedientes/semana");
-    revalidatePath("/app/expedientes/mes");
-    revalidatePath("/app/expedientes/ano");
-    revalidatePath("/app/expedientes/lista");
+    revalidatePath("/app/expedientes", "layout");
 
     return {
       success: true,
@@ -210,12 +205,7 @@ export async function actionBulkBaixar(
       };
     }
 
-    revalidatePath("/app/expedientes");
-    revalidatePath("/app/expedientes/quadro");
-    revalidatePath("/app/expedientes/semana");
-    revalidatePath("/app/expedientes/mes");
-    revalidatePath("/app/expedientes/ano");
-    revalidatePath("/app/expedientes/lista");
+    revalidatePath("/app/expedientes", "layout");
 
     return {
       success: true,

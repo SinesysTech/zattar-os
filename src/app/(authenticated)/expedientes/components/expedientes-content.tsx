@@ -22,7 +22,6 @@ import { FileSearch } from 'lucide-react';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
 import { useExpedientes } from '../hooks/use-expedientes';
-import { actionListarExpedientes } from '../actions';
 import type { Expediente } from '../domain';
 import { getExpedientePartyNames } from '../domain';
 import { ExpedientesPulseStrip } from './expedientes-pulse-strip';
@@ -94,29 +93,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
-  const [globalCounts, setGlobalCounts] = useState({ todos: 0, pendentes: 0, baixados: 0 });
   const [refreshCounter, setRefreshCounter] = useState(0);
-
-  // Fetch real global counts once on mount
-  useEffect(() => {
-    type PaginatedData = { pagination?: { total?: number } };
-    const extractTotal = (res: Awaited<ReturnType<typeof actionListarExpedientes>>): number => {
-      if (!res.success) return 0;
-      return (res.data as PaginatedData).pagination?.total ?? 0;
-    };
-    Promise.all([
-      actionListarExpedientes({ limite: 1, baixado: false, incluirSemPrazo: true }),
-      actionListarExpedientes({ limite: 1, baixado: true, incluirSemPrazo: true }),
-    ]).then(([pend, baix]) => {
-      const p = extractTotal(pend);
-      const b = extractTotal(baix);
-      setGlobalCounts({
-        pendentes: p,
-        baixados: b,
-        todos: p + b,
-      });
-    }).catch(console.error);
-  }, [refreshCounter]);
 
   // Detail/baixa dialog state
   const [selectedExpediente, setSelectedExpediente] = useState<Expediente | null>(null);
@@ -134,12 +111,31 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const { tiposExpedientes } = useTiposExpedientes({ limite: 100 });
   const [semanaDate, setSemanaDate] = useState(new Date());
 
-  const { expedientes: rotuloExpedientes, isLoading, refetch } = useExpedientes({
+  // Fetch todos os expedientes sem filtro de status — filtragem client-side
+  // para manter contadores de tabs precisos independente da aba ativa.
+  const { expedientes: allExpedientes, paginacao, isLoading, refetch } = useExpedientes({
     pagina: 1,
-    limite: 500,
+    limite: 1000,
     incluirSemPrazo: true,
-    baixado: activeTab === 'pendentes' ? false : activeTab === 'baixados' ? true : undefined,
   });
+
+  // Contadores globais derivados dos dados (sem chamadas extras)
+  const globalCounts = useMemo(() => {
+    const pendentes = allExpedientes.filter((e) => !e.baixadoEm).length;
+    const baixados = allExpedientes.filter((e) => !!e.baixadoEm).length;
+    return {
+      todos: paginacao?.total ?? allExpedientes.length,
+      pendentes,
+      baixados,
+    };
+  }, [allExpedientes, paginacao]);
+
+  // Expedientes filtrados pela tab ativa
+  const rotuloExpedientes = useMemo(() => {
+    if (activeTab === 'pendentes') return allExpedientes.filter((e) => !e.baixadoEm);
+    if (activeTab === 'baixados') return allExpedientes.filter((e) => !!e.baixadoEm);
+    return allExpedientes;
+  }, [allExpedientes, activeTab]);
 
   // ─── Derived metrics ────────────────────────────────────────────────────────
 
