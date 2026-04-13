@@ -14,7 +14,7 @@ export interface ExpedientesMonthWrapperProps {
 
 export function ExpedientesMonthWrapper({
   expedientes,
-  onViewDetail: _onViewDetail,
+  onViewDetail,
 }: ExpedientesMonthWrapperProps) {
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const [currentMonth, setCurrentMonth] = React.useState<Date>(new Date());
@@ -38,6 +38,9 @@ export function ExpedientesMonthWrapper({
           <ExpedientesDayList
             selectedDate={selectedDate}
             expedientes={expedientes}
+            onViewDetail={(exp) => {
+              setSelectedExpedienteId(exp.id);
+            }}
           />
         </GlassPanel>
       </div>
