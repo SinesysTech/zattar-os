@@ -4,6 +4,7 @@ import * as React from 'react';
 import { ExpedientesCalendarCompact } from './expedientes-calendar-compact';
 import { ExpedientesDayList } from './expedientes-day-list';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
+import { GlassPanel } from '@/components/shared/glass-panel';
 import type { Expediente } from '../domain';
 
 export interface ExpedientesMonthWrapperProps {
@@ -21,9 +22,9 @@ export function ExpedientesMonthWrapper({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Master-Detail Layout (Mês) */}
+      {/* Master-Detail Layout (Mes) */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
-        <div className="flex flex-col gap-4 h-175">
+        <GlassPanel className="flex flex-col gap-4 h-175 p-5">
           <ExpedientesCalendarCompact
             expedientes={expedientes}
             selectedDate={selectedDate}
@@ -31,14 +32,14 @@ export function ExpedientesMonthWrapper({
             currentMonth={currentMonth}
             onMonthChange={setCurrentMonth}
           />
-        </div>
+        </GlassPanel>
 
-        <div className="flex flex-col h-175 overflow-hidden">
+        <GlassPanel depth={2} className="flex flex-col h-175 overflow-hidden">
           <ExpedientesDayList
             selectedDate={selectedDate}
             expedientes={expedientes}
           />
-        </div>
+        </GlassPanel>
       </div>
 
       <ExpedienteVisualizarDialog
