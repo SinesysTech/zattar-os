@@ -8,7 +8,7 @@ import {
   substituirPermissoes
 } from '../repository';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { obterTodasPermissoes } from '../types/types';
+import { obterTodasPermissoes, validarAtribuirPermissaoDTO } from '../types/types';
 import type { Permissao } from '../domain';
 
 export async function actionListarPermissoes(usuarioId: number) {
@@ -65,21 +65,37 @@ export async function actionSalvarPermissoes(usuarioId: number, permissoes: Perm
   try {
     const { userId } = await requireAuth(['usuarios:gerenciar_permissoes']);
 
-    // Validate input
-    // We construct proper DTO expected by backend
-    // backend expects { recurso, operacao, permitido }
-    // Permissao type has { recurso, operacao, permitido }
-    
-    // We can use validarAtribuirPermissoesDTO if needed, but we are passing array directly. 
-    // Not wrapping in { permissoes: ... }.
-    
-    // Call service to replace permissions
-    await substituirPermissoes(usuarioId, permissoes, userId);
+    if (!Number.isInteger(usuarioId) || usuarioId <= 0) {
+      return { success: false, error: 'Usuário inválido para atualização de permissões' };
+    }
+
+    if (!Array.isArray(permissoes)) {
+      return { success: false, error: 'Payload de permissões inválido' };
+    }
+
+    const invalidas = permissoes.filter((p) => !validarAtribuirPermissaoDTO(p));
+    if (invalidas.length > 0) {
+      return { success: false, error: 'Foram enviadas permissões inválidas' };
+    }
+
+    // Evita colisões de UNIQUE (usuario_id, recurso, operacao).
+    const permissoesUnicas = Array.from(
+      new Map(
+        permissoes.map((p) => [`${p.recurso}:${p.operacao}`, p])
+      ).values()
+    );
+
+    await substituirPermissoes(usuarioId, permissoesUnicas, userId);
 
     revalidatePath(`/app/usuarios/${usuarioId}`);
 
     return { success: true };
   } catch (error) {
+    console.error('[Usuarios] Falha ao salvar permissões', {
+      usuarioId,
+      totalPermissoes: Array.isArray(permissoes) ? permissoes.length : 0,
+      error,
+    });
     return { success: false, error: error instanceof Error ? error.message : 'Erro ao salvar permissões' };
   }
 }
