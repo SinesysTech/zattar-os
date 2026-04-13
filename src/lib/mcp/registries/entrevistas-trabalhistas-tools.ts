@@ -2,11 +2,10 @@
  * Registro de Ferramentas MCP - Entrevistas Trabalhistas
  *
  * Tools disponíveis:
- * - et_iniciar_entrevista: Inicia nova entrevista trabalhista vinculada a um contrato
- * - et_salvar_modulo: Salva respostas de um módulo da entrevista com merge JSONB
- * - et_finalizar_entrevista: Finaliza entrevista após validação dos dados obrigatórios
- * - et_reabrir_entrevista: Reabre entrevista previamente concluída para edição
- * - et_buscar_entrevista: Busca entrevista por ID com todos os dados e respostas
+ * - buscar_entrevista: Busca entrevista por ID com todos os dados e respostas
+ * - iniciar_entrevista: Inicia nova entrevista trabalhista vinculada a um contrato
+ * - salvar_modulo_entrevista: Salva respostas de um módulo da entrevista com merge JSONB
+ * - finalizar_entrevista: Finaliza entrevista após validação dos dados obrigatórios
  */
 
 import { z } from 'zod';
@@ -21,9 +20,36 @@ export async function registerEntrevistasTrabalhistas(): Promise<void> {
     iniciarEntrevista,
     salvarModulo,
     finalizarEntrevista,
-    reabrirEntrevista,
     buscarEntrevista,
   } = await import('@/app/(authenticated)/entrevistas-trabalhistas/service');
+
+  // ---------------------------------------------------------------------------
+  // BUSCAR ENTREVISTA
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Busca entrevista por ID com todos os dados, respostas e módulo atual
+   */
+  registerMcpTool({
+    name: 'buscar_entrevista',
+    description:
+      'Busca entrevista trabalhista por ID retornando dados completos: status, trilha, módulo atual e todas as respostas salvas por módulo',
+    feature: 'entrevistas-trabalhistas',
+    requiresAuth: true,
+    schema: z.object({
+      id: z.number().describe('ID da entrevista'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await buscarEntrevista(args.id);
+        if (!result.success) return errorResult(result.error?.message || 'Erro ao buscar entrevista');
+        if (!result.data) return errorResult('Entrevista não encontrada');
+        return jsonResult({ message: 'Entrevista encontrada', data: result.data });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro interno');
+      }
+    },
+  });
 
   // ---------------------------------------------------------------------------
   // INICIAR ENTREVISTA
@@ -33,7 +59,7 @@ export async function registerEntrevistasTrabalhistas(): Promise<void> {
    * Inicia nova entrevista trabalhista vinculada a um contrato existente
    */
   registerMcpTool({
-    name: 'et_iniciar_entrevista',
+    name: 'iniciar_entrevista',
     description:
       'Inicia nova entrevista trabalhista vinculada a um contrato. Define a trilha de perguntas conforme o tipo de litígio (trabalhista_classico, gig_economy ou pejotizacao)',
     feature: 'entrevistas-trabalhistas',
@@ -66,7 +92,7 @@ export async function registerEntrevistasTrabalhistas(): Promise<void> {
    * Salva (merge JSONB) as respostas de um módulo da entrevista
    */
   registerMcpTool({
-    name: 'et_salvar_modulo',
+    name: 'salvar_modulo_entrevista',
     description:
       'Salva as respostas de um módulo específico da entrevista (vinculo, jornada, ruptura, etc.) com merge no JSONB existente. Opcionalmente avança para o próximo módulo',
     feature: 'entrevistas-trabalhistas',
@@ -118,7 +144,7 @@ export async function registerEntrevistasTrabalhistas(): Promise<void> {
    * Finaliza entrevista após validar os campos obrigatórios por trilha
    */
   registerMcpTool({
-    name: 'et_finalizar_entrevista',
+    name: 'finalizar_entrevista',
     description:
       'Finaliza entrevista trabalhista após validação dos campos obrigatórios da trilha. Requer que os módulos essenciais estejam preenchidos',
     feature: 'entrevistas-trabalhistas',
@@ -134,61 +160,6 @@ export async function registerEntrevistasTrabalhistas(): Promise<void> {
         const result = await finalizarEntrevista(args.entrevistaId, args.testemunhasMapeadas);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao finalizar entrevista');
         return jsonResult({ message: 'Entrevista finalizada com sucesso', data: result.data });
-      } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro interno');
-      }
-    },
-  });
-
-  // ---------------------------------------------------------------------------
-  // REABRIR ENTREVISTA
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Reabre entrevista concluída para edição
-   */
-  registerMcpTool({
-    name: 'et_reabrir_entrevista',
-    description:
-      'Reabre uma entrevista trabalhista previamente concluída, retornando-a ao status em_andamento para permitir edições',
-    feature: 'entrevistas-trabalhistas',
-    requiresAuth: true,
-    schema: z.object({
-      entrevistaId: z.number().describe('ID da entrevista a reabrir'),
-    }),
-    handler: async (args) => {
-      try {
-        const result = await reabrirEntrevista(args.entrevistaId);
-        if (!result.success) return errorResult(result.error?.message || 'Erro ao reabrir entrevista');
-        return jsonResult({ message: 'Entrevista reaberta com sucesso', data: result.data });
-      } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro interno');
-      }
-    },
-  });
-
-  // ---------------------------------------------------------------------------
-  // BUSCAR ENTREVISTA
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Busca entrevista por ID com todos os dados, respostas e módulo atual
-   */
-  registerMcpTool({
-    name: 'et_buscar_entrevista',
-    description:
-      'Busca entrevista trabalhista por ID retornando dados completos: status, trilha, módulo atual e todas as respostas salvas por módulo',
-    feature: 'entrevistas-trabalhistas',
-    requiresAuth: true,
-    schema: z.object({
-      id: z.number().describe('ID da entrevista'),
-    }),
-    handler: async (args) => {
-      try {
-        const result = await buscarEntrevista(args.id);
-        if (!result.success) return errorResult(result.error?.message || 'Erro ao buscar entrevista');
-        if (!result.data) return errorResult('Entrevista não encontrada');
-        return jsonResult({ message: 'Entrevista encontrada', data: result.data });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro interno');
       }

@@ -54,6 +54,17 @@ import {
   registerTarefasTools,
   registerChatwootTools,
   registerDifyTools,
+  registerAdminTools,
+  registerCalendarTools,
+  registerTiposExpedientesTools,
+  registerNotificacoesTools,
+  registerAgendaTools,
+  registerEnderecosTools,
+  registerNotasTools,
+  registerProjectManagementTools,
+  registerPecasJuridicasTools,
+  registerEntrevistasTrabalhistas,
+  registerMailTools,
 } from './registries';
 
 /**
@@ -101,6 +112,17 @@ export async function registerAllTools(): Promise<void> {
   await registerTarefasTools();
   await registerChatwootTools();
   await registerDifyTools();
+  await registerAdminTools();
+  await registerCalendarTools();
+  await registerTiposExpedientesTools();
+  await registerNotificacoesTools();
+  await registerAgendaTools();
+  await registerEnderecosTools();
+  await registerNotasTools();
+  await registerProjectManagementTools();
+  await registerPecasJuridicasTools();
+  await registerEntrevistasTrabalhistas();
+  await registerMailTools();
 
   toolsRegistered = true;
   console.log('[MCP Registry] Registro concluído');

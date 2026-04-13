@@ -156,7 +156,6 @@ export default function TribunaisPage() {
         {!isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {tribunaisFiltrados.map((tribunal) => (
-              // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
               <div
                 key={tribunal.id}
                 className="cursor-pointer hover:scale-[1.01] hover:shadow-lg transition-all duration-200"

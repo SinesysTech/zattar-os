@@ -3,9 +3,8 @@
  *
  * Tools disponíveis:
  * - listar_tipos_expedientes: Lista tipos de expedientes com paginação e filtros
- * - buscar_tipo_expediente: Busca tipo de expediente por ID
  * - criar_tipo_expediente: Cria novo tipo de expediente
- * - atualizar_tipo_expediente: Atualiza tipo de expediente existente
+ * - deletar_tipo_expediente: Remove tipo de expediente pelo ID
  *
  * NOTA: O service de tipos-expedientes lança erros diretamente em vez de retornar
  * Result<T>. Todas as chamadas são envolvidas em try/catch.
@@ -19,7 +18,7 @@ import { jsonResult, errorResult } from '../types';
  * Registra ferramentas MCP do módulo Tipos de Expedientes
  */
 export async function registerTiposExpedientesTools(): Promise<void> {
-  const { listar, buscar, criar, atualizar } = await import('@/app/(authenticated)/tipos-expedientes/service');
+  const { listar, criar, deletar } = await import('@/app/(authenticated)/tipos-expedientes/service');
 
   /**
    * Lista tipos de expedientes com paginação e filtro textual
@@ -50,37 +49,6 @@ export async function registerTiposExpedientesTools(): Promise<void> {
         });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar tipos de expedientes');
-      }
-    },
-  });
-
-  /**
-   * Busca tipo de expediente por ID
-   */
-  registerMcpTool({
-    name: 'buscar_tipo_expediente',
-    description: 'Busca um tipo de expediente específico pelo seu ID',
-    feature: 'tipos-expedientes',
-    requiresAuth: true,
-    schema: z.object({
-      id: z.number().int().positive().describe('ID do tipo de expediente'),
-    }),
-    handler: async (args) => {
-      try {
-        const { id } = args as { id: number };
-
-        const tipoExpediente = await buscar(id);
-
-        if (!tipoExpediente) {
-          return errorResult('Tipo de expediente não encontrado');
-        }
-
-        return jsonResult({
-          message: 'Tipo de expediente encontrado',
-          tipoExpediente,
-        });
-      } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar tipo de expediente');
       }
     },
   });
@@ -120,29 +88,28 @@ export async function registerTiposExpedientesTools(): Promise<void> {
   });
 
   /**
-   * Atualiza tipo de expediente existente
+   * Remove tipo de expediente pelo ID
    */
   registerMcpTool({
-    name: 'atualizar_tipo_expediente',
-    description: 'Atualiza o nome de um tipo de expediente existente. O novo nome deve ser único.',
+    name: 'deletar_tipo_expediente',
+    description: 'Remove um tipo de expediente pelo ID. Lança erro se o tipo estiver em uso por expedientes existentes.',
     feature: 'tipos-expedientes',
     requiresAuth: true,
     schema: z.object({
-      id: z.number().int().positive().describe('ID do tipo de expediente a ser atualizado'),
-      tipoExpediente: z.string().min(1).describe('Novo nome para o tipo de expediente'),
+      id: z.number().describe('ID do tipo de expediente a ser removido'),
     }),
     handler: async (args) => {
       try {
-        const { id, tipoExpediente } = args as { id: number; tipoExpediente: string };
+        const { id } = args as { id: number };
 
-        const atualizado = await atualizar(id, { tipoExpediente });
+        await deletar(id);
 
         return jsonResult({
-          message: 'Tipo de expediente atualizado com sucesso',
-          tipoExpediente: atualizado,
+          message: 'Tipo de expediente removido com sucesso',
+          id,
         });
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar tipo de expediente');
+        return errorResult(error instanceof Error ? error.message : 'Erro ao deletar tipo de expediente');
       }
     },
   });

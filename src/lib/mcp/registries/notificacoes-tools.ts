@@ -5,6 +5,7 @@
  * - listar_notificacoes: Lista notificações do usuário com paginação e filtro por lida/não lida
  * - contar_notificacoes_nao_lidas: Conta o total de notificações não lidas do usuário autenticado
  * - marcar_notificacao_lida: Marca uma notificação específica como lida
+ * - marcar_todas_notificacoes_lidas: Marca todas as notificações do usuário como lidas de uma vez
  */
 
 import { z } from 'zod';
@@ -19,6 +20,7 @@ export async function registerNotificacoesTools(): Promise<void> {
     listarNotificacoes,
     contarNotificacoesNaoLidas,
     marcarNotificacaoComoLida,
+    marcarTodasComoLidas,
   } = await import('@/app/(authenticated)/notificacoes/service');
 
   /**
@@ -112,6 +114,26 @@ export async function registerNotificacoesTools(): Promise<void> {
         });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao marcar notificação como lida');
+      }
+    },
+  });
+
+  /**
+   * Marca todas as notificações do usuário autenticado como lidas de uma vez
+   */
+  registerMcpTool({
+    name: 'marcar_todas_notificacoes_lidas',
+    description: 'Marca todas as notificações do usuário como lidas de uma vez',
+    feature: 'notificacoes',
+    requiresAuth: true,
+    schema: z.object({}),
+    handler: async () => {
+      try {
+        const result = await marcarTodasComoLidas();
+        if (!result.success) return errorResult(result.error?.message || 'Erro ao marcar notificações');
+        return jsonResult({ message: `${result.data} notificação(ões) marcada(s) como lida(s)`, total: result.data });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao marcar todas como lidas');
       }
     },
   });

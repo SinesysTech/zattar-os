@@ -7,13 +7,17 @@
  * - pm_criar_projeto: Cria novo projeto vinculado ao usuário autenticado
  * - pm_atualizar_projeto: Atualiza dados de projeto existente
  * - pm_excluir_projeto: Exclui projeto do sistema
- * - pm_listar_tarefas: Lista tarefas de um projeto com filtro por status
+ * - pm_listar_tarefas_projeto: Lista tarefas de um projeto com filtro por status
  * - pm_criar_tarefa: Cria nova tarefa em um projeto
  * - pm_atualizar_tarefa: Atualiza dados de tarefa existente
  * - pm_excluir_tarefa: Exclui tarefa do sistema
  * - pm_listar_membros: Lista membros de um projeto
  * - pm_adicionar_membro: Adiciona membro a um projeto com papel definido
  * - pm_listar_lembretes: Lista lembretes do usuário autenticado
+ * - pm_listar_tarefas_global: Lista todas as tarefas do sistema com filtros globais e paginação
+ * - pm_remover_membro: Remove membro de um projeto
+ * - pm_criar_lembrete: Cria um novo lembrete para o usuário autenticado
+ * - pm_obter_resumo_dashboard: Obtém métricas resumidas da gestão de projetos
  */
 
 import { z } from 'zod';
@@ -27,14 +31,17 @@ export async function registerProjectManagementTools(): Promise<void> {
   const { listarProjetos, buscarProjeto, criarProjeto, atualizarProjeto, excluirProjeto } =
     await import('@/app/(authenticated)/project-management/lib/services/project.service');
 
-  const { listarTarefasPorProjeto, criarTarefa, atualizarTarefa, excluirTarefa } =
+  const { listarTarefasPorProjeto, listarTarefasGlobal, criarTarefa, atualizarTarefa, excluirTarefa } =
     await import('@/app/(authenticated)/project-management/lib/services/task.service');
 
-  const { listarMembros, adicionarMembro } =
+  const { listarMembros, adicionarMembro, removerMembro } =
     await import('@/app/(authenticated)/project-management/lib/services/team.service');
 
-  const { listarLembretes } =
+  const { listarLembretes, criarLembrete } =
     await import('@/app/(authenticated)/project-management/lib/services/reminder.service');
+
+  const { obterResumo } =
+    await import('@/app/(authenticated)/project-management/lib/services/dashboard.service');
 
   // ---------------------------------------------------------------------------
   // PROJETOS
@@ -179,7 +186,7 @@ export async function registerProjectManagementTools(): Promise<void> {
    * Lista tarefas de um projeto com filtro opcional por status
    */
   registerMcpTool({
-    name: 'pm_listar_tarefas',
+    name: 'pm_listar_tarefas_projeto',
     description: 'Lista tarefas de um projeto com filtro opcional por status',
     feature: 'project-management',
     requiresAuth: true,
@@ -361,6 +368,118 @@ export async function registerProjectManagementTools(): Promise<void> {
         const result = await listarLembretes(user.id, args);
         if (!result.success) return errorResult(result.error?.message || 'Erro ao listar lembretes');
         return jsonResult({ message: 'Lembretes carregados', data: result.data });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro interno');
+      }
+    },
+  });
+
+  // ---------------------------------------------------------------------------
+  // TAREFAS GLOBAL
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Lista todas as tarefas do sistema com filtros globais e paginação
+   */
+  registerMcpTool({
+    name: 'pm_listar_tarefas_global',
+    description: 'Lista todas as tarefas do sistema com filtros globais e paginação',
+    feature: 'project-management',
+    requiresAuth: true,
+    schema: z.object({
+      pagina: z.number().optional().default(1).describe('Página'),
+      limite: z.number().optional().default(20).describe('Itens por página'),
+      status: z.string().optional().describe('Filtrar por status'),
+      busca: z.string().optional().describe('Busca textual'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await listarTarefasGlobal(args);
+        if (!result.success) return errorResult(result.error?.message || 'Erro ao listar tarefas');
+        return jsonResult({ message: 'Tarefas carregadas', data: result.data });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro interno');
+      }
+    },
+  });
+
+  // ---------------------------------------------------------------------------
+  // EQUIPE — REMOVER MEMBRO
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Remove membro de um projeto (não permite remover último gerente)
+   */
+  registerMcpTool({
+    name: 'pm_remover_membro',
+    description: 'Remove membro de um projeto (não permite remover último gerente)',
+    feature: 'project-management',
+    requiresAuth: true,
+    schema: z.object({
+      membroId: z.string().describe('ID do membro no projeto'),
+      projetoId: z.string().describe('ID do projeto'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await removerMembro(args.membroId, args.projetoId);
+        if (!result.success) return errorResult(result.error?.message || 'Erro ao remover membro');
+        return jsonResult({ message: 'Membro removido com sucesso' });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro interno');
+      }
+    },
+  });
+
+  // ---------------------------------------------------------------------------
+  // LEMBRETES — CRIAR
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Cria um novo lembrete para o usuário autenticado
+   */
+  registerMcpTool({
+    name: 'pm_criar_lembrete',
+    description: 'Cria um novo lembrete para o usuário autenticado',
+    feature: 'project-management',
+    requiresAuth: true,
+    schema: z.object({
+      titulo: z.string().describe('Título do lembrete'),
+      descricao: z.string().optional().describe('Descrição detalhada'),
+      dataVencimento: z.string().optional().describe('Data de vencimento (YYYY-MM-DD)'),
+      projetoId: z.string().optional().describe('ID do projeto vinculado'),
+    }),
+    handler: async (args) => {
+      try {
+        const { getCurrentUser } = await import('@/lib/auth/server');
+        const user = await getCurrentUser();
+        if (!user) return errorResult('Usuário não autenticado');
+        const result = await criarLembrete(args, user.id);
+        if (!result.success) return errorResult(result.error?.message || 'Erro ao criar lembrete');
+        return jsonResult({ message: 'Lembrete criado com sucesso', data: result.data });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro interno');
+      }
+    },
+  });
+
+  // ---------------------------------------------------------------------------
+  // DASHBOARD
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Obtém métricas resumidas da gestão de projetos
+   */
+  registerMcpTool({
+    name: 'pm_obter_resumo_dashboard',
+    description: 'Obtém métricas resumidas da gestão de projetos (totais, por status, ativos)',
+    feature: 'project-management',
+    requiresAuth: true,
+    schema: z.object({}),
+    handler: async () => {
+      try {
+        const result = await obterResumo();
+        if (!result.success) return errorResult(result.error?.message || 'Erro ao obter resumo');
+        return jsonResult({ message: 'Resumo do dashboard', data: result.data });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro interno');
       }

@@ -2,6 +2,7 @@
  * Registro de Ferramentas MCP - Agenda
  *
  * Tools disponíveis:
+ * - listar_eventos_agenda: Lista eventos da agenda em um período de datas
  * - criar_evento_agenda: Cria um novo evento na agenda
  * - atualizar_evento_agenda: Atualiza um evento existente na agenda
  * - excluir_evento_agenda: Exclui um evento da agenda
@@ -15,9 +16,32 @@ import { jsonResult, errorResult } from '../types';
  * Registra ferramentas MCP do módulo Agenda
  */
 export async function registerAgendaTools(): Promise<void> {
-  const { criarEvento, atualizarEvento, deletarEvento } = await import(
+  const { listarEventosPorPeriodo, criarEvento, atualizarEvento, deletarEvento } = await import(
     '@/app/(authenticated)/agenda/service'
   );
+
+  /**
+   * Lista eventos da agenda do escritório em um período de datas
+   */
+  registerMcpTool({
+    name: 'listar_eventos_agenda',
+    description: 'Lista eventos da agenda do escritório em um período de datas',
+    feature: 'agenda',
+    requiresAuth: true,
+    schema: z.object({
+      dataInicio: z.string().describe('Data de início (ISO 8601, ex: 2026-04-01T00:00:00.000Z)'),
+      dataFim: z.string().describe('Data de fim (ISO 8601, ex: 2026-04-30T23:59:59.999Z)'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await listarEventosPorPeriodo(args.dataInicio, args.dataFim);
+        if (!result.success) return errorResult(result.error?.message || 'Erro ao listar eventos');
+        return jsonResult({ message: `${(result.data as unknown[])?.length ?? 0} evento(s)`, data: result.data });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar eventos');
+      }
+    },
+  });
 
   /**
    * Cria um novo evento na agenda

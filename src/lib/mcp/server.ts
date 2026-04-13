@@ -31,7 +31,7 @@ import { auditMcpCall } from "./audit";
  */
 const SERVER_CONFIG: MCPServerConfig = {
   info: {
-    name: "synthropic-api",
+    name: "zattaros-api",
     version: "2.0.0",
     description: "API MCP do ZattarOS - Sistema de Gestão Jurídica",
   },
