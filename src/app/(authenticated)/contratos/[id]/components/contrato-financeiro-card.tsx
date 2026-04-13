@@ -1,10 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import { DollarSign, Calendar, AlertCircle } from 'lucide-react';
+import { DollarSign, Calendar } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
+import { GlassPanel, WidgetContainer } from '@/components/shared/glass-panel';
+import { Text } from '@/components/ui/typography';
 import {
   Table,
   TableBody,
@@ -71,30 +72,47 @@ export function ContratoFinanceiroCard({
     .filter((l) => l.status === 'pendente')
     .reduce((acc, l) => acc + l.valor, 0);
 
+  const valorTotal = totalReceitas + totalPendente;
+  const pctRecebido = valorTotal > 0 ? Math.round((totalReceitas / valorTotal) * 100) : 0;
+
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium flex items-center justify-between">
-          <span className="flex items-center gap-2">
-            <DollarSign className="size-4" />
-            Financeiro
-          </span>
-          {!isEmpty && (
-            <div className="flex items-center gap-4 text-sm font-normal">
-              <span className="text-muted-foreground">
-                Total: <span className="font-medium text-foreground">{formatCurrency(totalReceitas)}</span>
-              </span>
-              {totalPendente > 0 && (
-                <span className="text-warning flex items-center gap-1">
-                  <AlertCircle className="size-3" />
-                  Pendente: {formatCurrency(totalPendente)}
-                </span>
-              )}
+    <WidgetContainer title="Financeiro" icon={DollarSign}>
+      {!isEmpty && (
+        <>
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <GlassPanel depth={2} className="px-4 py-3">
+              <Text variant="meta-label">Valor Total</Text>
+              <p className="font-display text-base font-bold tabular-nums mt-1">
+                {formatCurrency(valorTotal)}
+              </p>
+            </GlassPanel>
+            <GlassPanel depth={2} className="px-4 py-3">
+              <Text variant="meta-label">Recebido</Text>
+              <p className="font-display text-base font-bold tabular-nums mt-1 text-success">
+                {formatCurrency(totalReceitas)}
+              </p>
+            </GlassPanel>
+            <GlassPanel depth={2} className="px-4 py-3">
+              <Text variant="meta-label">Pendente</Text>
+              <p className="font-display text-base font-bold tabular-nums mt-1 text-warning">
+                {formatCurrency(totalPendente)}
+              </p>
+            </GlassPanel>
+          </div>
+          <div className="mb-5">
+            <div className="flex justify-between mb-1.5">
+              <span className="text-[11px] font-medium text-muted-foreground">Progresso de recebimento</span>
+              <span className="text-[11px] font-semibold text-primary tabular-nums">{pctRecebido}%</span>
             </div>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+            <div className="h-1.5 rounded-full bg-muted/30 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-primary transition-all duration-700"
+                style={{ width: `${pctRecebido}%` }}
+              />
+            </div>
+          </div>
+        </>
+      )}
         {isLoading ? (
           <div className="text-center py-6 text-muted-foreground">
             Carregando...
@@ -146,7 +164,6 @@ export function ContratoFinanceiroCard({
             )}
           </div>
         )}
-      </CardContent>
-    </Card>
+    </WidgetContainer>
   );
 }
