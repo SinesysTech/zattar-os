@@ -246,18 +246,18 @@ function ExpedientesDayDialog({
                   </span>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Badge variant="neutral" tone="soft">
+                  <SemanticBadge category="tribunal" value={exp.trt} toneOverride="soft">
                     {exp.trt}
-                  </Badge>
+                  </SemanticBadge>
                   {exp.prazoVencido && (
-                    <Badge variant="destructive" tone="soft">
+                    <SemanticBadge category="status" value="vencido" variantOverride="destructive" toneOverride="soft">
                       Vencido
-                    </Badge>
+                    </SemanticBadge>
                   )}
                   {exp.baixadoEm && (
-                    <Badge variant="success" tone="soft">
+                    <SemanticBadge category="status" value="baixado" variantOverride="success" toneOverride="soft">
                       Baixado
-                    </Badge>
+                    </SemanticBadge>
                   )}
                 </div>
                 {exp.classeJudicial && (
