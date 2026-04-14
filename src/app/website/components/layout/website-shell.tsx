@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Header } from "./header";
 import { Footer } from "./footer";
 import { WebsiteScaleProvider } from "./website-scale-provider";
+import { ChatwootWidget } from "./chatwoot-widget";
 
 interface WebsiteShellProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ export function WebsiteShell({ children }: WebsiteShellProps) {
       <Header />
       <main>{children}</main>
       <Footer />
+      <ChatwootWidget />
     </div>
   );
 }
