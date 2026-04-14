@@ -112,9 +112,10 @@ None yet.
 |---|-------------|------|--------|-----------|
 | 260414-cqb | Refatorar captura module - botão dinâmico header, filtros glass, remover botões duplicados sub-tabs, credenciais dialog glass | 2026-04-14 | b4a6af3e1 | [260414-cqb-refatorar-captura-module-bot-o-din-mico-](./quick/260414-cqb-refatorar-captura-module-bot-o-din-mico-/) |
 | 260414-e75 | Refatorar expedientes - nova glass filter bar, simplificar wrapper (remove modo tabela), enriquecer rows com badges inline, fix header button | 2026-04-14 | 6619916e6 | [260414-e75-refatorar-expedientes-glass-briefing-rem](./quick/260414-e75-refatorar-expedientes-glass-briefing-rem/) |
+| 260414-ghv | Habilitar bubble Chatwoot (chat.sinesys.app) em /website/* e /servicos/* — CSP + ChatwootWidget client em WebsiteShell | 2026-04-14 | c742a249b | [260414-ghv-habilitar-bubble-chatwoot-chat-sinesys-a](./quick/260414-ghv-habilitar-bubble-chatwoot-chat-sinesys-a/) |
 
 ## Session Continuity
 
-Last activity: 2026-04-14 - Completed quick task 260414-e75: Refatorar expedientes Glass Briefing
-Stopped at: Completed 05-indicadores-detail-dialog/05-03-PLAN.md
+Last activity: 2026-04-14 - Completed quick task 260414-ghv: Habilitar bubble Chatwoot em páginas públicas
+Stopped at: Completed 260414-ghv
 Resume file: None
