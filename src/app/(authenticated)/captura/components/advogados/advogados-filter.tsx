@@ -1,125 +1,103 @@
-import * as React from "react";
-import { Check, PlusCircle } from "lucide-react";
+'use client';
 
-import { cn } from "@/lib/utils";
-import { AppBadge as Badge } from "@/components/ui/app-badge";
-import { Button } from "@/components/ui/button";
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-    CommandSeparator
-} from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
+import * as React from 'react';
+import { useState } from 'react';
+import { Check, ChevronDown, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface AdvogadosFilterProps {
-    title?: string;
-    options: {
-        label: string;
-        value: string;
-        icon?: React.ComponentType<{ className?: string }>;
-    }[];
+  title?: string;
+  options: {
+    label: string;
     value: string;
-    onValueChange: (value: string) => void;
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
+  value: string;
+  onValueChange: (value: string) => void;
 }
 
 export function AdvogadosFilter({
-    title,
-    options,
-    value,
-    onValueChange
+  title,
+  options,
+  value,
+  onValueChange,
 }: AdvogadosFilterProps) {
-    const selectedValues = new Set<string>();
-    if (value && value !== 'all') {
-        selectedValues.add(value);
-    }
+  const [open, setOpen] = useState(false);
 
-    return (
-        <Popover>
-            <PopoverTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9 border-dashed bg-card">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    {title}
-                    {selectedValues?.size > 0 && (
-                        <>
-                            <Separator orientation="vertical" className="mx-2 h-4" />
-                            <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
-                                {selectedValues.size}
-                            </Badge>
-                            <div className="hidden gap-1 lg:flex">
-                                {selectedValues.size > 2 ? (
-                                    <Badge variant="secondary" className="rounded-sm px-1 font-normal">
-                                        {selectedValues.size} selecionados
-                                    </Badge>
-                                ) : (
-                                    options
-                                        .filter((option) => selectedValues.has(option.value))
-                                        .map((option) => (
-                                            <Badge
-                                                variant="secondary"
-                                                key={option.value}
-                                                className="rounded-sm px-1 font-normal">
-                                                {option.label}
-                                            </Badge>
-                                        ))
-                                )}
-                            </div>
-                        </>
-                    )}
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-50 bg-background p-0" align="start">
-                <Command>
-                    <CommandInput placeholder={title} />
-                    <CommandList>
-                        <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
-                        <CommandGroup>
-                            {options.map((option) => {
-                                const isSelected = selectedValues.has(option.value);
-                                return (
-                                    <CommandItem
-                                        key={option.value}
-                                        onSelect={() => {
-                                            if (isSelected) {
-                                                onValueChange('all');
-                                            } else {
-                                                onValueChange(option.value);
-                                            }
-                                        }}>
-                                        <div
-                                            className={cn(
-                                                "flex size-4 items-center justify-center rounded-sm border",
-                                                isSelected
-                                                    ? "bg-primary border-primary text-primary-foreground"
-                                                    : "border-input [&_svg]:invisible"
-                                            )}>
-                                            <Check className="text-primary-foreground size-3.5" />
-                                        </div>
-                                        {option.icon && <option.icon className="text-muted-foreground size-4" />}
-                                        <span>{option.label}</span>
-                                    </CommandItem>
-                                );
-                            })}
-                        </CommandGroup>
-                        {selectedValues.size > 0 && (
-                            <>
-                                <CommandSeparator />
-                                <CommandGroup>
-                                    <CommandItem
-                                        onSelect={() => onValueChange('all')}
-                                        className="justify-center text-center">
-                                        Limpar filtros
-                                    </CommandItem>
-                                </CommandGroup>
-                            </>
-                        )}
-                    </CommandList>
-                </Command>
-            </PopoverContent>
-        </Popover>
-    );
+  const isActive = value !== 'all' && !!value;
+  const displayLabel = isActive
+    ? options.find((o) => o.value === value)?.label ?? title
+    : title;
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <div
+          className={cn(
+            'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+            isActive
+              ? 'border-primary/20 bg-primary/5 text-primary'
+              : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30'
+          )}
+        >
+          <span>{displayLabel}</span>
+          {isActive ? (
+            <X
+              className="size-2.5"
+              onClick={(e) => {
+                e.stopPropagation();
+                onValueChange('all');
+                setOpen(false);
+              }}
+            />
+          ) : (
+            <ChevronDown className="size-2.5 opacity-50" />
+          )}
+        </div>
+      </PopoverTrigger>
+      <PopoverContent
+        className="rounded-2xl glass-dropdown overflow-hidden p-0 w-48"
+        align="start"
+      >
+        <div className="p-2 space-y-0.5">
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => {
+                onValueChange(opt.value === value ? 'all' : opt.value);
+                setOpen(false);
+              }}
+              className={cn(
+                'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                value === opt.value
+                  ? 'bg-primary/8 text-primary'
+                  : 'hover:bg-muted/30 text-muted-foreground/70'
+              )}
+            >
+              {opt.icon && <opt.icon className="size-3.5 opacity-70" />}
+              <span>{opt.label}</span>
+              {value === opt.value && <Check className="size-3 ml-auto" />}
+            </button>
+          ))}
+          {isActive && (
+            <>
+              <div className="border-t border-border/10 my-1" />
+              <button
+                type="button"
+                onClick={() => {
+                  onValueChange('all');
+                  setOpen(false);
+                }}
+                className="w-full text-center text-[10px] text-muted-foreground/50 hover:text-muted-foreground py-1.5 cursor-pointer"
+              >
+                Limpar filtros
+              </button>
+            </>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
 }
