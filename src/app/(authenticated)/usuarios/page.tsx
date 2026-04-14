@@ -1,6 +1,6 @@
 
-import { UsuariosPageContent } from '@/app/(authenticated)/usuarios';
+import { UsuariosClient } from './components/usuarios-client';
 
 export default function UsuariosPage() {
-  return <UsuariosPageContent />;
+  return <UsuariosClient />;
 }
