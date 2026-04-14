@@ -4,7 +4,7 @@ milestone: v1.1
 milestone_name: Revisao Completa — Audiencias
 status: Ready to execute
 stopped_at: Completed 05-indicadores-detail-dialog/05-03-PLAN.md
-last_updated: "2026-04-11T21:36:11.280Z"
+last_updated: "2026-04-14T19:28:00Z"
 progress:
   total_phases: 8
   completed_phases: 4
@@ -113,9 +113,10 @@ None yet.
 | 260414-cqb | Refatorar captura module - botão dinâmico header, filtros glass, remover botões duplicados sub-tabs, credenciais dialog glass | 2026-04-14 | b4a6af3e1 | [260414-cqb-refatorar-captura-module-bot-o-din-mico-](./quick/260414-cqb-refatorar-captura-module-bot-o-din-mico-/) |
 | 260414-e75 | Refatorar expedientes - nova glass filter bar, simplificar wrapper (remove modo tabela), enriquecer rows com badges inline, fix header button | 2026-04-14 | 6619916e6 | [260414-e75-refatorar-expedientes-glass-briefing-rem](./quick/260414-e75-refatorar-expedientes-glass-briefing-rem/) |
 | 260414-ghv | Habilitar bubble Chatwoot (chat.sinesys.app) em /website/* e /servicos/* — CSP + ChatwootWidget client em WebsiteShell | 2026-04-14 | c742a249b | [260414-ghv-habilitar-bubble-chatwoot-chat-sinesys-a](./quick/260414-ghv-habilitar-bubble-chatwoot-chat-sinesys-a/) |
+| 260414-mnp | Novo skin do perfil de parte — ProfileShell redesign Glass Briefing (header banner radial + avatar square + KPI strip + sidebar glass) + fix link Ver perfil completo | 2026-04-14 | a5d6e09d9 | [260414-mnp-novo-skin-do-perfil-de-parte-profileshel](./quick/260414-mnp-novo-skin-do-perfil-de-parte-profileshel/) |
 
 ## Session Continuity
 
-Last activity: 2026-04-14 - Completed quick task 260414-ghv: Habilitar bubble Chatwoot em páginas públicas
-Stopped at: Completed 260414-ghv
+Last activity: 2026-04-14 - Completed quick task 260414-mnp: ProfileShell redesign Glass Briefing + fix link Ver perfil completo
+Stopped at: Completed 260414-mnp
 Resume file: None
