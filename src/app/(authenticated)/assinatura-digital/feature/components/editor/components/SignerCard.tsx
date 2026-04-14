@@ -15,9 +15,6 @@ interface SignerCardProps {
   onDelete: () => void;
 }
 
-/**
- * Get initials from a name (first 2 letters uppercase)
- */
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/);
   if (parts.length >= 2) {
@@ -27,13 +24,12 @@ function getInitials(name: string): string {
 }
 
 /**
- * SignerCard - Individual signer card in the sidebar
+ * SignerCard — Card glass com dot colorido + avatar.
  *
- * States:
- * - ACTIVE: bg-primary with white text (selected signer)
- * - INACTIVE: bg-background with hover state
- *
- * Uses design system tokens: bg-primary, text-primary-foreground, bg-accent
+ * Alinhado ao POC novo-documento (Step 2):
+ * - Estado ativo: border-primary/40 com glass-kpi mais opaco
+ * - Dot colorido (signer.cor) + shadow-glow para identificar
+ * - Avatar com iniciais, colorido pela `signer.cor` (NÃO bg inteiro)
  */
 const SignerCard = memo(function SignerCard({
   signer,
@@ -46,10 +42,11 @@ const SignerCard = memo(function SignerCard({
   return (
     <div
       className={cn(
-        'group relative flex items-center gap-3 p-3.5 rounded-xl cursor-pointer transition-all duration-200 border',
+        'group relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200',
+        'border backdrop-blur-md',
         isActive
-          ? 'bg-primary text-primary-foreground border-primary shadow-md ring-1 ring-primary ring-offset-1'
-          : 'bg-background hover:bg-muted/50 border-input hover:border-muted-foreground/30 shadow-sm'
+          ? 'glass-kpi border-primary/40 bg-primary/5 shadow-sm'
+          : 'glass-kpi border-border/40 bg-card/55 hover:border-border/70 hover:bg-card/75',
       )}
       onClick={onSelect}
       onKeyDown={(e) => {
@@ -63,71 +60,71 @@ const SignerCard = memo(function SignerCard({
       aria-label={`Selecionar signatário ${signer.nome}`}
       aria-pressed={isActive}
     >
-      {/* Avatar with initials */}
-      <div
-        className={cn(
-          'flex items-center justify-center size-10 rounded-full shrink-0 font-semibold text-sm',
-          isActive
-            ? 'bg-primary-foreground/20 text-primary-foreground'
-            : 'text-primary-foreground'
-        )}
+      {/* Status dot com glow na cor do signer */}
+      <span
+        aria-hidden="true"
+        className="size-2 rounded-full shrink-0"
         style={{
-          backgroundColor: isActive ? undefined : signer.cor,
+          backgroundColor: signer.cor,
+          boxShadow: `0 0 6px ${signer.cor}`,
         }}
+      />
+
+      {/* Avatar com iniciais */}
+      <div
+        className="flex items-center justify-center size-8 rounded-full shrink-0 font-semibold text-[11px] text-white"
+        style={{ backgroundColor: signer.cor }}
       >
         {getInitials(signer.nome)}
       </div>
 
-      {/* Content */}
+      {/* Info */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <p className={cn(
-            'text-sm font-medium truncate',
-            isActive ? 'text-primary-foreground' : 'text-foreground'
-          )}>
-            {signer.nome}
-            {isCurrentUser && ' (Você)'}
-          </p>
-        </div>
-        <p className={cn(
-          'text-xs truncate',
-          isActive ? 'text-primary-foreground/80' : 'text-muted-foreground'
-        )}>
+        <p className="text-sm font-medium text-foreground truncate">
+          {signer.nome}
+          {isCurrentUser && ' (Você)'}
+        </p>
+        <p className="text-[11px] text-muted-foreground truncate">
           {signer.email}
         </p>
       </div>
 
-      {/* Actions - visible on hover (only when not active for better contrast) */}
-      {!isActive && (
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      {/* Actions — visíveis on hover (ou sempre no ativo) */}
+      <div
+        className={cn(
+          'flex items-center gap-0.5 transition-opacity',
+          isActive
+            ? 'opacity-100'
+            : 'opacity-0 group-hover:opacity-100 focus-within:opacity-100',
+        )}
+      >
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-7"
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit();
+          }}
+          aria-label={`Editar signatário ${signer.nome}`}
+        >
+          <Pencil className="size-3.5" />
+        </Button>
+        {!isCurrentUser && (
           <Button
             variant="ghost"
             size="icon"
-            className="size-7"
+            className="size-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
             onClick={(e) => {
               e.stopPropagation();
-              onEdit();
+              onDelete();
             }}
-            aria-label={`Editar signatário ${signer.nome}`}
+            aria-label={`Remover signatário ${signer.nome}`}
           >
-            <Pencil className="size-3.5" />
+            <Trash2 className="size-3.5" />
           </Button>
-          {!isCurrentUser && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete();
-              }}
-              aria-label={`Remover signatário ${signer.nome}`}
-            >
-              <Trash2 className="size-3.5" />
-            </Button>
-          )}
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 });
