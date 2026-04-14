@@ -111,9 +111,10 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260414-cqb | Refatorar captura module - botão dinâmico header, filtros glass, remover botões duplicados sub-tabs, credenciais dialog glass | 2026-04-14 | b4a6af3e1 | [260414-cqb-refatorar-captura-module-bot-o-din-mico-](./quick/260414-cqb-refatorar-captura-module-bot-o-din-mico-/) |
+| 260414-e75 | Refatorar expedientes - nova glass filter bar, simplificar wrapper (remove modo tabela), enriquecer rows com badges inline, fix header button | 2026-04-14 | 6619916e6 | [260414-e75-refatorar-expedientes-glass-briefing-rem](./quick/260414-e75-refatorar-expedientes-glass-briefing-rem/) |
 
 ## Session Continuity
 
-Last activity: 2026-04-14 - Completed quick task 260414-cqb: Refatorar captura module
+Last activity: 2026-04-14 - Completed quick task 260414-e75: Refatorar expedientes Glass Briefing
 Stopped at: Completed 05-indicadores-detail-dialog/05-03-PLAN.md
 Resume file: None
