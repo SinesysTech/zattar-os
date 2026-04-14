@@ -1,30 +1,45 @@
 'use client';
 
 /**
- * TemplatesGlassList — Lista glass de templates no padrão AudienciasGlassList.
- * Rows-as-buttons com grid customizado, status dot com glow, icon tile,
- * column headers separado e skeleton replicando o grid.
+ * TemplatesGlassList — Lista/Cards glass no padrão AudienciasGlassList.
  */
 
 import * as React from 'react';
-import { FileText, FileCode2, ChevronRight, Pencil, Copy, Trash2 } from 'lucide-react';
+import {
+  FileText,
+  FileCode2,
+  ChevronRight,
+  Pencil,
+  Copy,
+  Trash2,
+  MoreHorizontal,
+} from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 
 import type { Template } from '../feature';
-import { formatFileSize, formatTemplateStatus, getTemplateDisplayName } from '../feature';
+import { formatFileSize, getTemplateDisplayName } from '../feature';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
+export type TemplatesViewMode = 'cards' | 'list';
+
 interface TemplatesGlassListProps {
   templates: Template[];
   isLoading: boolean;
+  mode?: TemplatesViewMode;
   onEdit?: (template: Template) => void;
   onDuplicate?: (template: Template) => void;
   onDelete?: (template: Template) => void;
@@ -48,6 +63,133 @@ function getStatusDotColor(status: string): string {
     default:
       return 'bg-muted-foreground';
   }
+}
+
+function getStatusLabel(status: string): string {
+  if (status === 'ativo') return 'Ativo';
+  if (status === 'rascunho') return 'Rascunho';
+  return 'Inativo';
+}
+
+function getStatusPillClass(status: string): string {
+  if (status === 'ativo') return 'bg-success/10 border-success/25 text-success';
+  if (status === 'rascunho') return 'bg-warning/10 border-warning/25 text-warning';
+  return 'bg-muted-foreground/10 border-muted-foreground/25 text-muted-foreground';
+}
+
+// =============================================================================
+// ACTIONS
+// =============================================================================
+
+function TemplateActions({
+  template,
+  onEdit,
+  onDuplicate,
+  onDelete,
+  canEdit,
+  canCreate,
+  canDelete,
+  compact = false,
+}: {
+  template: Template;
+  onEdit?: (t: Template) => void;
+  onDuplicate?: (t: Template) => void;
+  onDelete?: (t: Template) => void;
+  canEdit: boolean;
+  canCreate: boolean;
+  canDelete: boolean;
+  compact?: boolean;
+}) {
+  if (compact) {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            aria-label="Ações"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <MoreHorizontal className="w-3.5 h-3.5" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+          {canEdit && onEdit && (
+            <DropdownMenuItem onClick={() => onEdit(template)}>
+              <Pencil className="w-3.5 h-3.5 mr-2" /> Editar
+            </DropdownMenuItem>
+          )}
+          {canCreate && onDuplicate && (
+            <DropdownMenuItem onClick={() => onDuplicate(template)}>
+              <Copy className="w-3.5 h-3.5 mr-2" /> Duplicar
+            </DropdownMenuItem>
+          )}
+          {canDelete && onDelete && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => onDelete(template)} className="text-destructive">
+                <Trash2 className="w-3.5 h-3.5 mr-2" /> Deletar
+              </DropdownMenuItem>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
+
+  return (
+    <>
+      {canEdit && onEdit && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              aria-label="Editar template"
+              onClick={(e) => { e.stopPropagation(); onEdit(template); }}
+            >
+              <Pencil className="w-3.5 h-3.5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Editar</TooltipContent>
+        </Tooltip>
+      )}
+      {canCreate && onDuplicate && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              aria-label="Duplicar template"
+              onClick={(e) => { e.stopPropagation(); onDuplicate(template); }}
+            >
+              <Copy className="w-3.5 h-3.5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Duplicar</TooltipContent>
+        </Tooltip>
+      )}
+      {canDelete && onDelete && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              aria-label="Deletar template"
+              onClick={(e) => { e.stopPropagation(); onDelete(template); }}
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Deletar</TooltipContent>
+        </Tooltip>
+      )}
+    </>
+  );
 }
 
 // =============================================================================
@@ -76,7 +218,7 @@ function GlassRow({
   const displayName = getTemplateDisplayName(template);
   const isMarkdown = template.tipo_template === 'markdown';
   const Icon = isMarkdown ? FileCode2 : FileText;
-  const status = template.status as 'ativo' | 'inativo' | 'rascunho';
+  const status = template.status;
 
   const handleRowClick = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('[data-row-action]')) return;
@@ -101,9 +243,9 @@ function GlassRow({
         isAlt ? 'bg-white/[0.018]' : 'bg-white/[0.028]',
       )}
     >
-      <div className="grid grid-cols-[auto_1fr_110px_100px_100px_110px_32px] gap-4 items-center">
+      <div className="grid grid-cols-[auto_1fr_auto_auto_90px_120px] gap-4 items-center">
         {/* Status dot */}
-        <div className="flex items-center w-10">
+        <div className="flex items-center w-4">
           <div className={cn('w-2 h-2 rounded-full shrink-0', getStatusDotColor(status))} />
         </div>
 
@@ -113,115 +255,60 @@ function GlassRow({
             <Icon className="w-4 h-4 text-primary" />
           </div>
           <div className="min-w-0">
-            <div className="text-sm font-semibold truncate">{displayName}</div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm font-semibold truncate">{displayName}</span>
+              <span
+                className={cn(
+                  'inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-semibold border',
+                  isMarkdown
+                    ? 'bg-info/10 border-info/25 text-info'
+                    : 'bg-destructive/10 border-destructive/25 text-destructive',
+                )}
+              >
+                {isMarkdown ? 'Markdown' : 'PDF'}
+              </span>
+            </div>
             {template.descricao && (
-              <div className="text-xs text-muted-foreground truncate mt-0.5">
+              <div className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
                 {template.descricao}
               </div>
             )}
-            <div className="text-[10px] text-muted-foreground/50 mt-0.5 font-mono truncate">
-              {template.template_uuid ?? `#${template.id}`}
-            </div>
           </div>
         </div>
 
-        {/* Tipo */}
-        <div>
-          <span
-            className={cn(
-              'inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 border',
-              isMarkdown
-                ? 'bg-info/12 border-info/20 text-info/80'
-                : 'bg-destructive/10 border-destructive/20 text-destructive/80',
-            )}
-          >
-            {isMarkdown ? 'Markdown' : 'PDF'}
-          </span>
-        </div>
-
         {/* Versão */}
-        <div>
-          <span className="inline-flex backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-white/6 border border-white/10 text-muted-foreground">
-            v{template.versao}
-          </span>
-        </div>
+        <span className="inline-flex backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-white/6 border border-white/10 text-muted-foreground">
+          v{template.versao}
+        </span>
 
         {/* Tamanho */}
-        <div className="text-xs text-muted-foreground tabular-nums">
+        <div className="text-xs text-muted-foreground tabular-nums whitespace-nowrap">
           {formatFileSize(template.arquivo_tamanho || 0)}
         </div>
 
-        {/* Status */}
-        <div className="text-right">
-          <SemanticBadge
-            category="template_status"
-            value={status}
-            className="text-[10px]"
+        {/* Status pill */}
+        <div className="flex justify-start">
+          <span
+            className={cn(
+              'inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
+              getStatusPillClass(status),
+            )}
           >
-            {formatTemplateStatus(status)}
-          </SemanticBadge>
+            {getStatusLabel(status)}
+          </span>
         </div>
 
         {/* Actions */}
         <div className="flex items-center justify-end gap-0.5" data-row-action>
-          {canEdit && onEdit && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  aria-label="Editar template"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onEdit(template);
-                  }}
-                >
-                  <Pencil className="w-3.5 h-3.5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Editar</TooltipContent>
-            </Tooltip>
-          )}
-          {canCreate && onDuplicate && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  aria-label="Duplicar template"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDuplicate(template);
-                  }}
-                >
-                  <Copy className="w-3.5 h-3.5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Duplicar</TooltipContent>
-            </Tooltip>
-          )}
-          {canDelete && onDelete && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  aria-label="Deletar template"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(template);
-                  }}
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Deletar</TooltipContent>
-            </Tooltip>
-          )}
-          <ChevronRight className="w-4 h-4 text-muted-foreground/40 ml-1" />
+          <TemplateActions
+            template={template}
+            onEdit={onEdit}
+            onDuplicate={onDuplicate}
+            onDelete={onDelete}
+            canEdit={canEdit}
+            canCreate={canCreate}
+            canDelete={canDelete}
+          />
         </div>
       </div>
     </div>
@@ -229,54 +316,133 @@ function GlassRow({
 }
 
 // =============================================================================
-// COLUMN HEADERS / SKELETON / EMPTY
+// CARD
 // =============================================================================
 
-function ColumnHeaders() {
+function GlassCard({
+  template,
+  onEdit,
+  onDuplicate,
+  onDelete,
+  canEdit,
+  canCreate,
+  canDelete,
+}: {
+  template: Template;
+  onEdit?: (t: Template) => void;
+  onDuplicate?: (t: Template) => void;
+  onDelete?: (t: Template) => void;
+  canEdit: boolean;
+  canCreate: boolean;
+  canDelete: boolean;
+}) {
+  const displayName = getTemplateDisplayName(template);
+  const isMarkdown = template.tipo_template === 'markdown';
+  const Icon = isMarkdown ? FileCode2 : FileText;
+  const status = template.status;
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('[data-row-action]')) return;
+    onEdit?.(template);
+  };
+
   return (
-    <div className="grid grid-cols-[auto_1fr_110px_100px_100px_110px_32px] gap-4 items-center px-4 mb-2">
-      <div className="w-10" />
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Template
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Tipo
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Versão
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Tamanho
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-right">
-        Status
-      </span>
-      <div />
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={handleCardClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onEdit?.(template);
+        }
+      }}
+      className={cn(
+        'relative flex flex-col gap-3 rounded-2xl border border-white/6 bg-white/[0.028] p-4 cursor-pointer',
+        'transition-all duration-180 ease-out',
+        'hover:bg-white/5.5 hover:border-white/12 hover:-translate-y-px hover:shadow-lg',
+      )}
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="w-10 h-10 rounded-[0.625rem] bg-primary/8 flex items-center justify-center">
+          <Icon className="w-4 h-4 text-primary" />
+        </div>
+        <div className="flex items-center gap-1.5" data-row-action>
+          <div className={cn('w-2 h-2 rounded-full', getStatusDotColor(status))} />
+          <TemplateActions
+            template={template}
+            onEdit={onEdit}
+            onDuplicate={onDuplicate}
+            onDelete={onDelete}
+            canEdit={canEdit}
+            canCreate={canCreate}
+            canDelete={canDelete}
+            compact
+          />
+        </div>
+      </div>
+
+      <div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm font-semibold line-clamp-1">{displayName}</span>
+        </div>
+        <div className="mt-1 flex items-center gap-2">
+          <span
+            className={cn(
+              'inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-semibold border',
+              isMarkdown
+                ? 'bg-info/10 border-info/25 text-info'
+                : 'bg-destructive/10 border-destructive/25 text-destructive',
+            )}
+          >
+            {isMarkdown ? 'Markdown' : 'PDF'}
+          </span>
+          <span className="text-[10px] text-muted-foreground">v{template.versao}</span>
+        </div>
+      </div>
+
+      {template.descricao ? (
+        <p className="text-xs text-muted-foreground line-clamp-3 flex-1">{template.descricao}</p>
+      ) : (
+        <p className="text-xs text-muted-foreground/40 italic flex-1">Sem descrição</p>
+      )}
+
+      <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/6">
+        <span className="text-[10px] text-muted-foreground tabular-nums">
+          {formatFileSize(template.arquivo_tamanho || 0)}
+        </span>
+        <span
+          className={cn(
+            'inline-flex items-center gap-1.5 rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border',
+            getStatusPillClass(status),
+          )}
+        >
+          {getStatusLabel(status)}
+        </span>
+      </div>
     </div>
   );
 }
+
+// =============================================================================
+// SKELETONS & EMPTY
+// =============================================================================
 
 function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: 5 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-white/6 bg-white/[0.028] p-4">
-          <div className="grid grid-cols-[auto_1fr_110px_100px_100px_110px_32px] gap-4 items-center">
-            <Skeleton className="w-2 h-2 rounded-full" />
-            <div className="flex items-center gap-3">
-              <Skeleton className="w-9 h-9 rounded-[0.625rem]" />
-              <div className="space-y-1.5 flex-1">
-                <Skeleton className="h-4 w-48" />
-                <Skeleton className="h-3 w-36" />
-              </div>
-            </div>
-            <Skeleton className="h-6 w-16 rounded-lg" />
-            <Skeleton className="h-6 w-10 rounded-lg" />
-            <Skeleton className="h-4 w-14" />
-            <Skeleton className="h-5 w-16 ml-auto rounded-full" />
-            <div />
-          </div>
-        </div>
+        <div key={i} className="h-20 rounded-2xl border border-white/6 bg-white/[0.028] animate-pulse" />
+      ))}
+    </div>
+  );
+}
+
+function CardsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {Array.from({ length: 6 }, (_, i) => (
+        <div key={i} className="h-44 rounded-2xl border border-white/6 bg-white/[0.028] animate-pulse" />
       ))}
     </div>
   );
@@ -299,6 +465,7 @@ function EmptyState() {
 export function TemplatesGlassList({
   templates,
   isLoading,
+  mode = 'list',
   onEdit,
   onDuplicate,
   onDelete,
@@ -306,13 +473,27 @@ export function TemplatesGlassList({
   canCreate = false,
   canDelete = false,
 }: TemplatesGlassListProps) {
-  if (isLoading) return <ListSkeleton />;
+  if (isLoading) return mode === 'cards' ? <CardsSkeleton /> : <ListSkeleton />;
   if (templates.length === 0) return <EmptyState />;
 
   return (
     <TooltipProvider>
-      <div>
-        <ColumnHeaders />
+      {mode === 'cards' ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {templates.map((t) => (
+            <GlassCard
+              key={t.id}
+              template={t}
+              onEdit={onEdit}
+              onDuplicate={onDuplicate}
+              onDelete={onDelete}
+              canEdit={canEdit}
+              canCreate={canCreate}
+              canDelete={canDelete}
+            />
+          ))}
+        </div>
+      ) : (
         <div className="flex flex-col gap-2">
           {templates.map((t, i) => (
             <GlassRow
@@ -328,7 +509,7 @@ export function TemplatesGlassList({
             />
           ))}
         </div>
-      </div>
+      )}
     </TooltipProvider>
   );
 }

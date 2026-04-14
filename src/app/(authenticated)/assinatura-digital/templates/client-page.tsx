@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 
 import { listarTemplatesAction } from '../feature/actions';
+import { LayoutGrid, List } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { usePermissoes } from '@/providers/user-provider';
 import { GlassPanel } from '@/components/shared/glass-panel';
@@ -19,11 +20,11 @@ import { IconContainer } from '@/components/ui/icon-container';
 import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/dashboard/search-input';
-import { FilterPopoverMulti, type FilterOption } from '@/app/(authenticated)/partes';
+import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
+import { FilterChipMulti, type FilterChipOption } from '../components/filter-chip';
 
 import {
   type Template,
-  type TipoTemplate,
 } from '../feature';
 import { TemplateCreateDialog } from '../feature';
 import { TemplateDuplicateDialog } from './components/template-duplicate-dialog';
@@ -71,15 +72,20 @@ function useTemplates() {
 // FILTER OPTIONS
 // =============================================================================
 
-const STATUS_OPTIONS: readonly FilterOption[] = [
+const STATUS_OPTIONS: readonly FilterChipOption[] = [
   { value: 'ativo', label: 'Ativo' },
   { value: 'rascunho', label: 'Rascunho' },
   { value: 'inativo', label: 'Inativo' },
 ];
 
-const TIPO_OPTIONS: readonly FilterOption[] = [
+const TIPO_OPTIONS: readonly FilterChipOption[] = [
   { value: 'pdf', label: 'PDF' },
   { value: 'markdown', label: 'Markdown' },
+];
+
+const VIEW_OPTIONS: ViewToggleOption[] = [
+  { id: 'cards', icon: LayoutGrid, label: 'Visualização em cartões' },
+  { id: 'list', icon: List, label: 'Visualização em lista' },
 ];
 
 // =============================================================================
@@ -98,6 +104,7 @@ export function TemplatesClient() {
   const [busca, setBusca] = React.useState('');
   const [statusFiltro, setStatusFiltro] = React.useState<string[]>([]);
   const [tipoFiltro, setTipoFiltro] = React.useState<string[]>([]);
+  const [viewMode, setViewMode] = React.useState<'cards' | 'list'>('list');
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [duplicateOpen, setDuplicateOpen] = React.useState(false);
@@ -195,10 +202,14 @@ export function TemplatesClient() {
           </Text>
         </div>
         {canCreate && (
-          <Button size="sm" className="h-9" onClick={() => setCreateOpen(true)}>
-            <Plus className="h-4 w-4" />
-            Novo Template
-          </Button>
+          <button
+            type="button"
+            onClick={() => setCreateOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
+          >
+            <Plus className="size-3.5" />
+            Novo template
+          </button>
         )}
       </div>
 
@@ -223,16 +234,16 @@ export function TemplatesClient() {
         ))}
       </div>
 
-      {/* Toolbar — padrão audiências: filtros à esquerda, search à direita */}
+      {/* Toolbar — padrão audiências: filtros à esquerda, search + viewToggle à direita */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <div className="flex items-center gap-2 flex-wrap">
-          <FilterPopoverMulti
+          <FilterChipMulti
             label="Status"
             options={STATUS_OPTIONS}
             value={statusFiltro}
             onValueChange={setStatusFiltro}
           />
-          <FilterPopoverMulti
+          <FilterChipMulti
             label="Tipo"
             options={TIPO_OPTIONS}
             value={tipoFiltro}
@@ -244,6 +255,11 @@ export function TemplatesClient() {
             value={busca}
             onChange={setBusca}
             placeholder="Buscar por nome, UUID ou descrição..."
+          />
+          <ViewToggle
+            mode={viewMode}
+            onChange={(m) => setViewMode(m as 'cards' | 'list')}
+            options={VIEW_OPTIONS}
           />
         </div>
       </div>
@@ -261,6 +277,7 @@ export function TemplatesClient() {
       <TemplatesGlassList
         templates={filtered}
         isLoading={isLoading}
+        mode={viewMode}
         onEdit={handleEdit}
         onDuplicate={handleDuplicate}
         onDelete={handleDelete}
