@@ -119,8 +119,8 @@ describe('SignerPill', () => {
     const { container } = render(<SignerPill assinante={criarAssinanteConcluido()} />);
 
     const pill = container.firstElementChild!;
-    expect(pill.className).toContain('bg-success/6');
-    expect(pill.className).toContain('text-success/60');
+    expect(pill.className).toContain('bg-success/10');
+    expect(pill.className).toContain('text-success');
     expect(pill.textContent).toContain('Maria');
   });
 
@@ -128,16 +128,16 @@ describe('SignerPill', () => {
     const { container } = render(<SignerPill assinante={criarAssinantePendente()} />);
 
     const pill = container.firstElementChild!;
-    expect(pill.className).toContain('bg-border/6');
-    expect(pill.className).toContain('text-muted-foreground/60');
+    expect(pill.className).toContain('bg-foreground/5');
+    expect(pill.className).toContain('text-muted-foreground');
   });
 
   it('deve renderizar assinante atrasado (>7d) com estilo warning', () => {
     const { container } = render(<SignerPill assinante={criarAssinanteAtrasado()} />);
 
     const pill = container.firstElementChild!;
-    expect(pill.className).toContain('bg-warning/6');
-    expect(pill.className).toContain('text-warning/60');
+    expect(pill.className).toContain('bg-warning/10');
+    expect(pill.className).toContain('text-warning');
     expect(pill.textContent).toContain('12d');
   });
 
