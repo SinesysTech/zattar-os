@@ -22,8 +22,6 @@ import { cn } from '@/lib/utils';
 import { CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/components/shared/empty-state';
-import { GlassPanel } from '@/components/shared/glass-panel';
-
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '../types';
 import type { CapturaKpiData } from './captura-kpi-strip';
 import { useCapturasLog } from '../hooks/use-capturas-log';
@@ -149,6 +147,13 @@ const GRAU_LABELS: Record<string, string> = {
   unico: 'Único',
 };
 
+const STATUS_LABELS: Record<StatusCaptura, string> = {
+  completed: 'Concluída',
+  in_progress: 'Em Andamento',
+  failed: 'Falha',
+  pending: 'Pendente',
+};
+
 function formatarTipo(tipo: TipoCaptura): string {
   return TIPO_LABELS[tipo] ?? tipo;
 }
@@ -267,7 +272,9 @@ function GlassRow({
 
         {/* Status badge */}
         <div className="flex flex-col items-end gap-1">
-          <CapturaStatusSemanticBadge value={captura.status} className="text-[10px]" />
+          <CapturaStatusSemanticBadge value={captura.status} className="text-[10px]">
+            {STATUS_LABELS[captura.status] ?? captura.status}
+          </CapturaStatusSemanticBadge>
         </div>
 
         {/* Start time */}
@@ -308,30 +315,7 @@ function GlassRow({
   );
 }
 
-// =============================================================================
-// LIST TOOLBAR
-// =============================================================================
-
-function ListToolbar({ total, emAndamento }: { total: number; emAndamento: number }) {
-  return (
-    <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
-      <div className="flex items-center gap-3">
-        <span className="text-xs text-muted-foreground/60">
-          {total.toLocaleString('pt-BR')} capturas
-        </span>
-        {emAndamento > 0 && (
-          <>
-            <div className="w-px h-4 bg-border/10" />
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-medium text-info">
-              <span className="size-1.5 rounded-full bg-info animate-pulse" />
-              {emAndamento} em execução
-            </span>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
+// ListToolbar removido — informação já presente no KPI strip acima
 
 // =============================================================================
 // SKELETON
@@ -364,36 +348,7 @@ function ListSkeleton() {
   );
 }
 
-// =============================================================================
-// COLUMN HEADERS
-// =============================================================================
-
-function ColumnHeaders() {
-  return (
-    <div className="grid grid-cols-[10px_1fr_80px_70px_120px_80px_80px_56px] gap-3 items-center mb-2">
-      <div />
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Captura
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Tribunal
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Grau
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-right">
-        Status
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-right">
-        Início
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-right">
-        Duração
-      </span>
-      <div />
-    </div>
-  );
-}
+// ColumnHeaders removido — glass rows são auto-descritivos
 
 // =============================================================================
 // PAGINATION
@@ -503,11 +458,6 @@ export function CapturaGlassList({
     setPagina(1);
   }, [filters?.tipo, filters?.status, filters?.tribunal]);
 
-  const emAndamentoCount = React.useMemo(
-    () => capturas.filter((c) => c.status === 'in_progress').length,
-    [capturas]
-  );
-
   // Client-side search + tribunal filter
   const filtered = React.useMemo(() => {
     let result = capturas;
@@ -547,12 +497,7 @@ export function CapturaGlassList({
   }
 
   return (
-    <GlassPanel depth={1} className="overflow-hidden">
-      <ListToolbar total={paginacao?.total ?? 0} emAndamento={emAndamentoCount} />
-      <div className="px-4 pt-3">
-        <ColumnHeaders />
-      </div>
-      <div className="flex flex-col gap-2 px-4 pb-4">
+    <div className="flex flex-col gap-2">
         {filtered.map((captura, i) => {
           const { tribunal, grau } = resolveTribunalGrau(captura);
           return (
@@ -569,17 +514,14 @@ export function CapturaGlassList({
             />
           );
         })}
-      </div>
       {paginacao && paginacao.totalPaginas > 1 && (
-        <div className="px-4 pb-4">
-          <PaginationBar
-            paginacao={paginacao}
-            pagina={pagina}
-            onPrev={() => setPagina((p) => Math.max(1, p - 1))}
-            onNext={() => setPagina((p) => Math.min(paginacao.totalPaginas, p + 1))}
-          />
-        </div>
+        <PaginationBar
+          paginacao={paginacao}
+          pagina={pagina}
+          onPrev={() => setPagina((p) => Math.max(1, p - 1))}
+          onNext={() => setPagina((p) => Math.min(paginacao.totalPaginas, p + 1))}
+        />
       )}
-    </GlassPanel>
+    </div>
   );
 }

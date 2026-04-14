@@ -1582,11 +1582,6 @@
     50% { transform: translate(-50%, -50%) translate(30px, -15px); }
   }
 
-  /* Logo clip (SVG has large whitespace on top) */
-  .auth-logo-clip {
-    clip-path: inset(28% 0 0 0);
-  }
-
   /* Gradient text for "escritório" */
   .auth-gradient-text {
     background: linear-gradient(135deg, oklch(0.70 0.20 281), oklch(0.82 0.14 300));

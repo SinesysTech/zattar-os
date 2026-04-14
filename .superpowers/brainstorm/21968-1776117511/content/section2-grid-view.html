@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seção 2 — Grid View: Card de Usuário Redesenhado</title>
+<style>
+  :root {
+    --bg: #0f0f1a;
+    --card: #16162a;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.16);
+    --primary: #7c5cf0;
+    --primary-soft: rgba(124,92,240,0.12);
+    --text: #f0f0f5;
+    --text-muted: rgba(255,255,255,0.50);
+    --text-dim: rgba(255,255,255,0.35);
+    --success: #66bb6a;
+    --warning: #ffa726;
+    --info: #42a5f5;
+    --destructive: #ef5350;
+    --glass-widget: rgba(255,255,255,0.04);
+    --glass-blur: blur(16px);
+    --radius: 16px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32px;
+    line-height: 1.5;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--primary); margin-bottom: 16px; opacity: 0.7;
+  }
+  .annotation {
+    padding: 12px 16px; border-radius: 10px; background: rgba(124,92,240,0.06);
+    border-left: 3px solid var(--primary); font-size: 12px; color: var(--text-muted);
+    line-height: 1.6; margin-top: 16px; margin-bottom: 24px;
+  }
+  .annotation strong { color: var(--text); }
+
+  /* Grid */
+  .users-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  /* Card */
+  .user-card {
+    border-radius: var(--radius);
+    background: var(--glass-widget);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .user-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(124,92,240,0.08);
+  }
+
+  /* Mini banner */
+  .card-banner {
+    height: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(15,15,26,0.6) 100%);
+  }
+
+  /* Banner color by role */
+  .banner-diretor { background: linear-gradient(135deg, rgba(124,92,240,0.4), rgba(168,139,250,0.15)); }
+  .banner-advogado { background: linear-gradient(135deg, rgba(66,165,245,0.35), rgba(100,181,246,0.12)); }
+  .banner-estagiario { background: linear-gradient(135deg, rgba(102,187,106,0.35), rgba(129,199,132,0.12)); }
+  .banner-secretaria { background: linear-gradient(135deg, rgba(255,167,38,0.35), rgba(255,183,77,0.12)); }
+  .banner-inativo { background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); }
+
+  /* Avatar area */
+  .card-avatar-area {
+    display: flex;
+    align-items: flex-end;
+    padding: 0 16px;
+    margin-top: -28px;
+    position: relative;
+    z-index: 2;
+  }
+  .avatar-wrapper {
+    position: relative;
+    flex-shrink: 0;
+  }
+  .avatar {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; color: white;
+    border: 3px solid var(--bg);
+    background: linear-gradient(135deg, #7c3aed, #5523eb);
+  }
+  .avatar.has-image {
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* Status dot */
+  .status-dot {
+    position: absolute;
+    bottom: 1px; right: 1px;
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    border: 2.5px solid var(--bg);
+  }
+  .status-dot.online { background: var(--success); }
+  .status-dot.away { background: var(--warning); }
+  .status-dot.offline { background: rgba(255,255,255,0.25); }
+
+  /* Completeness ring */
+  .completeness-ring {
+    position: absolute;
+    top: -4px; left: -4px;
+    width: 60px; height: 60px;
+  }
+  .completeness-ring circle {
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  .completeness-ring .ring-bg { stroke: rgba(255,255,255,0.06); }
+  .completeness-ring .ring-fill { transform: rotate(-90deg); transform-origin: center; }
+
+  /* Card body */
+  .card-body {
+    padding: 10px 16px 14px;
+  }
+  .card-name {
+    font-size: 14px; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 8px;
+  }
+  .card-name .admin-icon { font-size: 12px; color: var(--destructive); flex-shrink: 0; }
+  .card-email {
+    font-size: 11px; color: var(--text-dim);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-top: 1px;
+  }
+
+  /* Role badge */
+  .role-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 6px;
+    font-size: 10px; font-weight: 600;
+    margin-top: 8px;
+  }
+  .role-diretor { background: rgba(124,92,240,0.12); color: #a78bfa; }
+  .role-advogado { background: rgba(66,165,245,0.12); color: #64b5f6; }
+  .role-estagiario { background: rgba(102,187,106,0.12); color: #81c784; }
+  .role-secretaria { background: rgba(255,167,38,0.12); color: #ffb74d; }
+
+  /* Stats row */
+  .card-stats {
+    display: flex; gap: 6px; margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .stat-chip {
+    flex: 1;
+    padding: 4px 0;
+    text-align: center;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.03);
+  }
+  .stat-chip .stat-val { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat-chip .stat-label { font-size: 8px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); margin-top: 1px; }
+
+  /* OAB badge */
+  .oab-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 2px 6px; border-radius: 4px;
+    background: rgba(66,165,245,0.08);
+    font-size: 9px; color: rgba(66,165,245,0.7);
+    margin-left: 6px;
+  }
+
+  /* Inactive overlay */
+  .user-card.inactive { opacity: 0.55; }
+  .user-card.inactive .card-banner { filter: grayscale(1); }
+  .inactive-badge {
+    position: absolute; top: 8px; right: 8px; z-index: 3;
+    padding: 2px 8px; border-radius: 6px;
+    background: rgba(239,83,80,0.15); color: var(--destructive);
+    font-size: 10px; font-weight: 600;
+    backdrop-filter: blur(8px);
+  }
+
+  /* Completeness tooltip */
+  .completeness-pct {
+    position: absolute; top: 4px; right: 12px; z-index: 3;
+    font-size: 9px; font-weight: 600;
+    padding: 1px 5px; border-radius: 4px;
+  }
+  .pct-high { background: rgba(102,187,106,0.15); color: var(--success); }
+  .pct-mid { background: rgba(255,167,38,0.15); color: var(--warning); }
+  .pct-low { background: rgba(239,83,80,0.15); color: var(--destructive); }
+
+  /* Grouped section */
+  .group-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: var(--glass-widget);
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .group-header:hover { border-color: var(--border-hover); }
+  .group-header .group-color { width: 4px; height: 24px; border-radius: 2px; flex-shrink: 0; }
+  .group-header .group-title { font-size: 14px; font-weight: 600; flex: 1; }
+  .group-header .group-count { font-size: 12px; color: var(--text-dim); }
+  .group-header .avatar-stack { display: flex; margin-left: auto; }
+  .group-header .avatar-stack .mini-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600; color: white;
+    border: 2px solid var(--bg);
+    margin-left: -8px;
+    background: linear-gradient(135deg, #7c3aed, #5523eb);
+  }
+  .group-header .avatar-stack .mini-avatar:first-child { margin-left: 0; }
+  .group-header .chevron { color: var(--text-dim); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div style="max-width: 1400px; margin: 0 auto;">
+
+  <div class="section-label">Seção 2 — Grid View: Cards Redesenhados</div>
+
+  <!-- ============================== -->
+  <!-- DEPARTMENT GROUPING -->
+  <!-- ============================== -->
+  <div class="group-header">
+    <div class="group-color" style="background: var(--primary);"></div>
+    <div class="group-title">Diretoria</div>
+    <div class="group-count">2 membros</div>
+    <div class="avatar-stack">
+      <div class="mini-avatar">JM</div>
+      <div class="mini-avatar" style="background: linear-gradient(135deg, #5c3fd6, #4527a0);">RS</div>
+    </div>
+    <div class="chevron">▾</div>
+  </div>
+
+  <div class="annotation">
+    <strong>Agrupamento por Cargo:</strong> Seções colapsáveis com header glass, barra de cor do departamento, contagem de membros e avatar stack. Toggle "Agrupar por Cargo" ativa/desativa. Sem agrupamento, mostra grid flat.
+  </div>
+
+  <!-- ============================== -->
+  <!-- CARDS GRID -->
+  <!-- ============================== -->
+  <div class="users-grid">
+
+    <!-- Card 1: Diretor, Super Admin, Online, 100% complete -->
+    <div class="user-card">
+      <div class="card-banner banner-diretor"></div>
+      <div class="completeness-pct pct-high">100%</div>
+      <div class="card-avatar-area">
+        <div class="avatar-wrapper">
+          <svg class="completeness-ring" viewBox="0 0 60 60">
+            <circle class="ring-bg" cx="30" cy="30" r="27"/>
+            <circle class="ring-fill" cx="30" cy="30" r="27" stroke="var(--success)" stroke-dasharray="169.6 169.6" stroke-dashoffset="0"/>
+          </svg>
+          <div class="avatar" style="margin: 4px;">JM</div>
+          <div class="status-dot online"></div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Jordan Medeiros <span class="admin-icon" title="Super Admin">🛡</span></div>
+        <div class="card-email">jordan@zattar.adv.br</div>
+        <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px;">
+          <span class="role-badge role-diretor">Diretor</span>
+          <span class="oab-badge">⚖ 123.456/SP</span>
+        </div>
+        <div class="card-stats">
+          <div class="stat-chip"><div class="stat-val">24</div><div class="stat-label">Processos</div></div>
+          <div class="stat-chip"><div class="stat-val">8</div><div class="stat-label">Audiências</div></div>
+          <div class="stat-chip"><div class="stat-val">12</div><div class="stat-label">Pendentes</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Advogada, Online, 85% complete -->
+    <div class="user-card">
+      <div class="card-banner banner-advogado"></div>
+      <div class="completeness-pct pct-high">85%</div>
+      <div class="card-avatar-area">
+        <div class="avatar-wrapper">
+          <svg class="completeness-ring" viewBox="0 0 60 60">
+            <circle class="ring-bg" cx="30" cy="30" r="27"/>
+            <circle class="ring-fill" cx="30" cy="30" r="27" stroke="var(--success)" stroke-dasharray="144.2 169.6" stroke-dashoffset="0"/>
+          </svg>
+          <div class="avatar" style="margin: 4px; background: linear-gradient(135deg, #1565c0, #42a5f5);">MO</div>
+          <div class="status-dot online"></div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Maria Oliveira</div>
+        <div class="card-email">maria@zattar.adv.br</div>
+        <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px;">
+          <span class="role-badge role-advogado">Advogada</span>
+          <span class="oab-badge">⚖ 789.012/SP</span>
+        </div>
+        <div class="card-stats">
+          <div class="stat-chip"><div class="stat-val">18</div><div class="stat-label">Processos</div></div>
+          <div class="stat-chip"><div class="stat-val">5</div><div class="stat-label">Audiências</div></div>
+          <div class="stat-chip"><div class="stat-val">7</div><div class="stat-label">Pendentes</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Estagiário, Away, 60% complete -->
+    <div class="user-card">
+      <div class="card-banner banner-estagiario"></div>
+      <div class="completeness-pct pct-mid">60%</div>
+      <div class="card-avatar-area">
+        <div class="avatar-wrapper">
+          <svg class="completeness-ring" viewBox="0 0 60 60">
+            <circle class="ring-bg" cx="30" cy="30" r="27"/>
+            <circle class="ring-fill" cx="30" cy="30" r="27" stroke="var(--warning)" stroke-dasharray="101.8 169.6" stroke-dashoffset="0"/>
+          </svg>
+          <div class="avatar" style="margin: 4px; background: linear-gradient(135deg, #2e7d32, #66bb6a);">PF</div>
+          <div class="status-dot away"></div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Pedro Ferreira</div>
+        <div class="card-email">pedro@zattar.adv.br</div>
+        <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px;">
+          <span class="role-badge role-estagiario">Estagiário</span>
+        </div>
+        <div class="card-stats">
+          <div class="stat-chip"><div class="stat-val">6</div><div class="stat-label">Processos</div></div>
+          <div class="stat-chip"><div class="stat-val">2</div><div class="stat-label">Audiências</div></div>
+          <div class="stat-chip"><div class="stat-val">15</div><div class="stat-label">Pendentes</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Secretária, Offline, 40% complete -->
+    <div class="user-card">
+      <div class="card-banner banner-secretaria"></div>
+      <div class="completeness-pct pct-mid">40%</div>
+      <div class="card-avatar-area">
+        <div class="avatar-wrapper">
+          <svg class="completeness-ring" viewBox="0 0 60 60">
+            <circle class="ring-bg" cx="30" cy="30" r="27"/>
+            <circle class="ring-fill" cx="30" cy="30" r="27" stroke="var(--warning)" stroke-dasharray="67.8 169.6" stroke-dashoffset="0"/>
+          </svg>
+          <div class="avatar" style="margin: 4px; background: linear-gradient(135deg, #e65100, #ffa726);">AS</div>
+          <div class="status-dot offline"></div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Ana Santos</div>
+        <div class="card-email">ana@zattar.adv.br</div>
+        <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px;">
+          <span class="role-badge role-secretaria">Secretária</span>
+        </div>
+        <div class="card-stats">
+          <div class="stat-chip"><div class="stat-val">—</div><div class="stat-label">Processos</div></div>
+          <div class="stat-chip"><div class="stat-val">—</div><div class="stat-label">Audiências</div></div>
+          <div class="stat-chip"><div class="stat-val">3</div><div class="stat-label">Pendentes</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="annotation">
+    <strong>Card Redesenhado:</strong> Cada card usa <code>GlassPanel depth={1}</code> com:<br>
+    • <strong>Mini-banner</strong> — gradient por cor do cargo (Diretor=roxo, Advogado=azul, Estagiário=verde, Secretária=laranja)<br>
+    • <strong>Avatar</strong> com status dot (online/away/offline) + SVG completeness ring<br>
+    • <strong>Completeness %</strong> — badge no canto (verde >70%, amarelo 30-70%, vermelho <30%)<br>
+    • <strong>Role badge</strong> + OAB badge (quando aplicável)<br>
+    • <strong>Stats row</strong> — 3 métricas compactas (Processos, Audiências, Pendentes)<br>
+    • <strong>Hover</strong> — lift + glow sutil + border highlight
+  </div>
+
+  <!-- ============================== -->
+  <!-- INACTIVE CARD EXAMPLE -->
+  <!-- ============================== -->
+  <div style="margin-top: 24px;">
+    <div class="section-label">Card Inativo (visual diferenciado)</div>
+    <div style="max-width: 320px;">
+      <div class="user-card inactive">
+        <div class="inactive-badge">Inativo</div>
+        <div class="card-banner banner-inativo"></div>
+        <div class="card-avatar-area">
+          <div class="avatar-wrapper">
+            <div class="avatar" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.4);">RL</div>
+            <div class="status-dot offline"></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-name" style="color: var(--text-muted);">Roberto Lima</div>
+          <div class="card-email">roberto@zattar.adv.br</div>
+          <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px;">
+            <span class="role-badge" style="background: rgba(255,255,255,0.06); color: var(--text-dim);">Advogado</span>
+          </div>
+          <div class="card-stats">
+            <div class="stat-chip"><div class="stat-val" style="color: var(--text-dim);">0</div><div class="stat-label">Processos</div></div>
+            <div class="stat-chip"><div class="stat-val" style="color: var(--text-dim);">0</div><div class="stat-label">Audiências</div></div>
+            <div class="stat-chip"><div class="stat-val" style="color: var(--text-dim);">0</div><div class="stat-label">Pendentes</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation">
+    <strong>Inativo:</strong> Opacity reduzida (55%), banner grayscale, avatar monocromático, badge "Inativo" no canto. Mantém visível mas claramente diferenciado dos ativos. Filtrável via TabPills "Inativos".
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -172,7 +172,11 @@ export function HeaderUserMenu() {
         {/* ── Logout ── */}
         <div className="p-1">
           <DropdownMenuItem
-            onClick={() => logout()}
+            onSelect={(e) => {
+              e.preventDefault()
+              fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+                .finally(() => { window.location.href = '/login' })
+            }}
             className="cursor-pointer gap-2.5 rounded-lg px-2.5 py-1.75 text-[13px] text-muted-foreground transition-colors duration-150 focus:bg-destructive/6 focus:text-destructive"
           >
             <LogOut className="h-3.5 w-3.5" />

@@ -34,7 +34,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Switch } from "@/components/ui/switch"
-import { createClient } from "@/lib/supabase/client"
 
 function getInitials(name: string): string {
   if (!name?.trim()) return "U"
@@ -62,44 +61,6 @@ export function NavUser({
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
   const initials = getInitials(user.name)
-
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const handleLogout = async () => {
-    try {
-      // Tentar logout via Supabase (pode falhar se sessão já expirou)
-      try {
-        const supabase = createClient()
-        await supabase.auth.signOut()
-      } catch {
-        // Ignorar erros de signOut quando a sessão já expirou
-        console.log('Sessão já expirada, limpando cookies via API')
-      }
-
-      // Sempre chamar API de logout para limpar cookies mesmo sem sessão válida
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        console.warn('Erro ao fazer logout via API, mas continuando...')
-      }
-
-      // Redirecionar para login
-      router.push("/app/login")
-
-      // Forçar reload para garantir que todos os estados sejam limpos
-      router.refresh()
-    } catch (error) {
-      console.error('Erro ao fazer logout:', error)
-      // Mesmo com erro, redirecionar para login
-      router.push("/app/login")
-      router.refresh()
-    }
-  }
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark")
@@ -178,7 +139,13 @@ export function NavUser({
               )}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault()
+                fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+                  .finally(() => { window.location.href = '/login' })
+              }}
+            >
               <LogOut />
               Sair
             </DropdownMenuItem>
