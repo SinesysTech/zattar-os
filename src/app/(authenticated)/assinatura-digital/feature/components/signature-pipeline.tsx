@@ -22,13 +22,15 @@ export function SignaturePipeline({ stats }: SignaturePipelineProps) {
   return (
     <GlassPanel className="p-5">
       <div className="flex items-center gap-2 mb-4">
-        <GitBranch className="size-4 text-muted-foreground/50" />
-        <Heading level="widget">
-          Pipeline de Assinaturas
-        </Heading>
-        <span className="text-[10px] text-muted-foreground/55 ml-auto">
-          {stats.cancelados} cancelado{stats.cancelados !== 1 ? "s" : ""}
+        <span className="inline-flex size-7 items-center justify-center rounded-lg bg-primary/8">
+          <GitBranch className="size-3.5 text-primary/70" />
         </span>
+        <Heading level="widget">Pipeline de Assinaturas</Heading>
+        {stats.cancelados > 0 && (
+          <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-destructive/10 border border-destructive/25 text-destructive px-2 py-0.5 text-[10px] font-medium">
+            {stats.cancelados} cancelado{stats.cancelados !== 1 ? "s" : ""}
+          </span>
+        )}
       </div>
 
       <div className="flex items-stretch gap-3">
@@ -41,9 +43,7 @@ export function SignaturePipeline({ stats }: SignaturePipelineProps) {
               ? Math.round((stage.count / prevCount) * 100)
               : null;
           const barWidth =
-            maxCount > 0
-              ? Math.max(15, (stage.count / maxCount) * 100)
-              : 15;
+            maxCount > 0 ? Math.max(15, (stage.count / maxCount) * 100) : 15;
 
           return (
             <div
@@ -52,27 +52,31 @@ export function SignaturePipeline({ stats }: SignaturePipelineProps) {
             >
               <div className="flex items-center gap-1.5">
                 <Icon className={`size-3.5 ${cfg.color}`} />
-                <span className="text-[10px] text-muted-foreground/50">
+                <span className="text-[10px] font-medium uppercase tracking-[0.06em] text-muted-foreground/65">
                   {cfg.label}
                 </span>
               </div>
-              <p className="font-display text-2xl font-bold">{stage.count}</p>
+              <p className="font-heading text-2xl font-bold tabular-nums">
+                {stage.count}
+              </p>
               <div
-                className="h-2.5 rounded-full transition-all duration-700"
+                className="h-2 rounded-full transition-all duration-700"
                 style={{
                   width: `${barWidth}%`,
                   backgroundColor: cfg.cssColor,
-                  opacity: 0.5,
+                  opacity: 0.65,
                 }}
               />
               {convRate !== null ? (
                 <span
-                  className={`text-[9px] ${convRate >= 70 ? "text-success/50" : "text-warning/50"}`}
+                  className={`text-[10px] font-medium tabular-nums ${convRate >= 70 ? "text-success" : "text-warning"}`}
                 >
                   {convRate}% conversão
                 </span>
               ) : (
-                <span className="text-[9px] text-transparent">-</span>
+                <span className="text-[10px] text-transparent" aria-hidden>
+                  -
+                </span>
               )}
             </div>
           );
