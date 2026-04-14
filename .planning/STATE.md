@@ -106,8 +106,14 @@ None yet.
 
 None yet.
 
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260414-cqb | Refatorar captura module - botão dinâmico header, filtros glass, remover botões duplicados sub-tabs, credenciais dialog glass | 2026-04-14 | b4a6af3e1 | [260414-cqb-refatorar-captura-module-bot-o-din-mico-](./quick/260414-cqb-refatorar-captura-module-bot-o-din-mico-/) |
+
 ## Session Continuity
 
-Last session: 2026-04-11T21:36:11.277Z
+Last activity: 2026-04-14 - Completed quick task 260414-cqb: Refatorar captura module
 Stopped at: Completed 05-indicadores-detail-dialog/05-03-PLAN.md
 Resume file: None
