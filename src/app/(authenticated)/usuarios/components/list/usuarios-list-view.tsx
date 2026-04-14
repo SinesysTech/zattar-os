@@ -41,11 +41,12 @@ export function UsuariosListView({
         header: 'Usuário',
         cell: ({ row }) => {
           const usuario = row.original;
+          const isAtivo = usuario.ativo;
           const lastLoginAt = lastLoginMap?.get(usuario.id) ?? null;
           const status = getStatusFromLastLogin(lastLoginAt);
           const displayName = usuario.nomeExibicao ?? usuario.nomeCompleto;
           return (
-            <div className="flex items-center gap-2.5 min-w-0">
+            <div className={cn('flex items-center gap-2.5 min-w-0', !isAtivo && 'opacity-50')}>
               <div className="relative shrink-0">
                 <Avatar style={{ width: 34, height: 34 }}>
                   <AvatarImage
@@ -85,11 +86,22 @@ export function UsuariosListView({
         id: 'cargo',
         accessorFn: (u) => u.cargo?.nome,
         header: 'Cargo',
-        cell: ({ getValue }) => {
+        cell: ({ row, getValue }) => {
           const nome = getValue<string | undefined>();
-          if (!nome) return <span className="text-muted-foreground/40">—</span>;
+          const isAtivo = row.original.ativo;
+          if (!nome)
+            return (
+              <span className={cn('text-muted-foreground/40', !isAtivo && 'opacity-50')}>
+                —
+              </span>
+            );
           return (
-            <span className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-muted/8 text-muted-foreground">
+            <span
+              className={cn(
+                'px-2 py-0.5 rounded-md text-[11px] font-medium bg-muted/8 text-muted-foreground',
+                !isAtivo && 'opacity-50',
+              )}
+            >
               {nome}
             </span>
           );
@@ -103,9 +115,19 @@ export function UsuariosListView({
         cell: ({ row }) => {
           const usuario = row.original;
           const hasOab = Boolean(usuario.oab?.trim());
-          if (!hasOab) return <span className="text-muted-foreground/40">—</span>;
+          if (!hasOab)
+            return (
+              <span className={cn('text-muted-foreground/40', !usuario.ativo && 'opacity-50')}>
+                —
+              </span>
+            );
           return (
-            <span className="px-1.5 py-0.5 rounded bg-info/8 text-[11px] text-info/70">
+            <span
+              className={cn(
+                'px-1.5 py-0.5 rounded bg-info/8 text-[11px] text-info/70',
+                !usuario.ativo && 'opacity-50',
+              )}
+            >
               ⚖ {formatarOab(usuario.oab, usuario.ufOab)}
             </span>
           );
@@ -138,10 +160,16 @@ export function UsuariosListView({
         id: 'processos',
         header: 'Processos',
         cell: ({ row }) => {
-          const stats = statsMap?.get(row.original.id);
-          if (!stats) return <span className="text-muted-foreground/40">—</span>;
+          const usuario = row.original;
+          const stats = statsMap?.get(usuario.id);
+          if (!stats)
+            return (
+              <span className={cn('text-muted-foreground/40', !usuario.ativo && 'opacity-50')}>
+                —
+              </span>
+            );
           return (
-            <span className="tabular-nums font-semibold text-sm">
+            <span className={cn('tabular-nums font-semibold text-sm', !usuario.ativo && 'opacity-50')}>
               {stats.processos}
             </span>
           );
@@ -153,7 +181,8 @@ export function UsuariosListView({
         id: 'perfil',
         header: 'Perfil',
         cell: ({ row }) => {
-          const { score } = calcularCompleteness(row.original);
+          const usuario = row.original;
+          const { score } = calcularCompleteness(usuario);
           const color = getCompletenessColor(score);
           const barColorClass =
             color === 'success'
@@ -168,7 +197,7 @@ export function UsuariosListView({
                 ? 'text-warning'
                 : 'text-destructive';
           return (
-            <div className="flex items-center gap-2">
+            <div className={cn('flex items-center gap-2', !usuario.ativo && 'opacity-50')}>
               <div className="w-12 h-1 rounded-full bg-muted/20 overflow-hidden shrink-0">
                 <div
                   className={cn('h-full rounded-full', barColorClass)}
@@ -227,18 +256,13 @@ export function UsuariosListView({
   );
 
   return (
-    <DataShell>
+    <DataShell ariaLabel="Lista de usuários">
       <DataTable
         columns={columns}
         data={usuarios}
         density="compact"
         onRowClick={onView}
-        options={{
-          meta: {
-            getRowClassName: (row: Usuario) =>
-              !row.ativo ? 'opacity-50' : '',
-          },
-        }}
+        ariaLabel="Tabela de usuários"
       />
     </DataShell>
   );
