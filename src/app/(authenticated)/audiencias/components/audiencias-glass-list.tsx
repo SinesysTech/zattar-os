@@ -169,9 +169,9 @@ function GlassRow({
       type="button"
       onClick={onView}
       className={cn(
-        'w-full text-left rounded-2xl border border-white/[0.06] p-4 cursor-pointer',
-        'transition-all duration-[180ms] ease-out',
-        'hover:bg-white/[0.055] hover:border-white/[0.12] hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
+        'w-full text-left rounded-2xl border border-white/6 p-4 cursor-pointer',
+        'transition-all duration-180 ease-out',
+        'hover:bg-white/5.5 hover:border-white/12 hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
         isAlt ? 'bg-white/[0.018]' : 'bg-white/[0.028]',
       )}
     >
@@ -183,7 +183,7 @@ function GlassRow({
 
         {/* Main info */}
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-[0.625rem] bg-primary/[0.08] flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-[0.625rem] bg-primary/8 flex items-center justify-center shrink-0">
             <Gavel className="w-4 h-4 text-primary" />
           </div>
           <div className="min-w-0">
@@ -211,7 +211,7 @@ function GlassRow({
                 </span>
               )}
               {(audiencia.poloAtivoRepresentaVarios || audiencia.poloPassivoRepresentaVarios) && (
-                <span className="inline-flex items-center gap-1 bg-white/[0.06] border border-white/[0.10] text-muted-foreground rounded px-1.5 py-0.5 text-[10px] font-semibold">
+                <span className="inline-flex items-center gap-1 bg-white/6 border border-white/10 text-muted-foreground rounded px-1.5 py-0.5 text-[10px] font-semibold">
                   <Users className="w-2.5 h-2.5" />
                   Litisconsórcio
                 </span>
@@ -269,7 +269,7 @@ function GlassRow({
         {/* Modalidade badge */}
         <div>
           {audiencia.modalidade && (
-            <span className="inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-primary/[0.12] border border-primary/20 text-primary/80">
+            <span className="inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-primary/12 border border-primary/20 text-primary/80">
               <ModalidadeIcon className="w-2.5 h-2.5" />
               {MODALIDADE_AUDIENCIA_LABELS[audiencia.modalidade]}
             </span>
@@ -278,7 +278,7 @@ function GlassRow({
 
         {/* TRT badge */}
         <div>
-          <span className="inline-flex backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-white/[0.06] border border-white/[0.10] text-muted-foreground">
+          <span className="inline-flex backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-white/6 border border-white/10 text-muted-foreground">
             {audiencia.trt}
           </span>
         </div>
@@ -326,7 +326,7 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: 5 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-white/[0.06] bg-white/[0.028] p-4">
+        <div key={i} className="rounded-2xl border border-white/6 bg-white/[0.028] p-4">
           <div className="grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center">
             <Skeleton className="w-2 h-2 rounded-full" />
             <div className="flex items-center gap-3">
