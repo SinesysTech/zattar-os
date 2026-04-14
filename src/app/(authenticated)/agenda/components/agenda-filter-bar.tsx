@@ -29,12 +29,12 @@ export interface AgendaFilterBarProps {
 
 function sourceDotColor(source: AgendaSource): string {
   const map: Record<AgendaSource, string> = {
-    audiencias: "bg-info",
-    expedientes: "bg-warning",
-    obrigacoes: "bg-warning",
-    pericias: "bg-primary",
-    prazos: "bg-destructive",
-    agenda: "bg-primary",
+    audiencias: "bg-event-audiencia",
+    expedientes: "bg-event-expediente",
+    obrigacoes: "bg-event-obrigacao",
+    pericias: "bg-event-pericia",
+    prazos: "bg-event-prazo",
+    agenda: "bg-event-agenda",
   };
   return map[source];
 }

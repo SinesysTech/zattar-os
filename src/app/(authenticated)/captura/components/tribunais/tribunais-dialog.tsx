@@ -3,6 +3,7 @@ import * as React from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -77,6 +78,9 @@ export function TribunaisDialog({ tribunal, open, onOpenChange, onSuccess }: Pro
           <DialogTitle>
             {tribunal ? `Editar ${tribunal.tribunal_codigo}` : 'Editar Tribunal'}
           </DialogTitle>
+          <DialogDescription>
+            Ajuste a URL base e a URL da API usadas pela captura deste tribunal.
+          </DialogDescription>
         </DialogHeader>
 
         {!tribunal ? (
