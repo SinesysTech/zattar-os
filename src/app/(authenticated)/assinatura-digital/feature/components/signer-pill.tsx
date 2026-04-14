@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle2, Clock } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { AssinanteCardData } from "../adapters/documento-card-adapter";
 
 interface SignerPillProps {
@@ -13,22 +14,23 @@ export function SignerPill({ assinante: a }: SignerPillProps) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full border transition-colors ${
-        isDone
-          ? "bg-success/6 border-success/15 text-success/60"
-          : isLate
-            ? "bg-warning/6 border-warning/15 text-warning/60"
-            : "bg-border/6 border-border/15 text-muted-foreground/60"
-      }`}
+      className={cn(
+        "inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full border backdrop-blur-sm transition-colors",
+        isDone && "bg-success/10 border-success/25 text-success",
+        isLate && "bg-warning/10 border-warning/25 text-warning",
+        !isDone && !isLate && "bg-foreground/5 border-border/40 text-muted-foreground",
+      )}
     >
       {isDone ? (
-        <CheckCircle2 className="size-2.5" />
+        <CheckCircle2 className="size-2.5" strokeWidth={2.5} />
       ) : (
         <Clock className="size-2.5" />
       )}
       <span className="truncate max-w-20">{a.nome.split(" ")[0]}</span>
       {isLate && (
-        <span className="text-[7px] text-warning/50">{a.diasPendente}d</span>
+        <span className="text-[9px] font-semibold tabular-nums text-warning/80">
+          {a.diasPendente}d
+        </span>
       )}
     </span>
   );
