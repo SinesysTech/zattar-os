@@ -15,7 +15,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import type { EditorField, Signatario, SignatureFieldType } from '../types';
 import SignerCard from './SignerCard';
@@ -35,18 +34,29 @@ interface FloatingSidebarProps {
   onPaletteDragEnd: () => void;
   onReviewAndSend?: () => void;
   className?: string;
-  // Configurações do documento
   documentTitle?: string;
   selfieEnabled?: boolean;
   onUpdateSettings?: (updates: { titulo?: string; selfie_habilitada?: boolean }) => void;
 }
 
-// --- FIELD PALETTE CARD ---
+// ─── Ambient divider ──────────────────────────────────────────────────
+
+function AmbientDivider() {
+  return (
+    <div
+      aria-hidden="true"
+      className="h-px bg-linear-to-r from-transparent via-border/50 to-transparent"
+    />
+  );
+}
+
+// ─── Field palette (glass chip alinhado ao POC) ───────────────────────
 
 interface FieldPaletteCardProps {
   type: SignatureFieldType;
   icon: React.ElementType;
   label: string;
+  tone: 'primary' | 'info';
   onDragStart: (type: SignatureFieldType) => void;
   onDragEnd: () => void;
 }
@@ -55,9 +65,14 @@ function FieldPaletteCard({
   type,
   icon: Icon,
   label,
+  tone,
   onDragStart,
-  onDragEnd
+  onDragEnd,
 }: FieldPaletteCardProps) {
+  const tile =
+    tone === 'primary'
+      ? 'bg-primary/8 text-primary/75'
+      : 'bg-info/10 text-info/75';
   return (
     <div
       draggable
@@ -68,21 +83,27 @@ function FieldPaletteCard({
       }}
       onDragEnd={onDragEnd}
       className={cn(
-        'flex flex-col items-center justify-center gap-3 p-4 border rounded-xl',
-        'cursor-grab active:cursor-grabbing select-none',
-        'bg-background hover:bg-muted/50 hover:border-primary/50 hover:shadow-sm',
-        'transition-all duration-200 group'
+        'flex items-center gap-3 p-3 rounded-xl border backdrop-blur-md select-none',
+        'glass-kpi border-border/40 bg-card/55',
+        'cursor-grab active:cursor-grabbing',
+        'hover:border-primary/40 hover:-translate-y-px hover:shadow-sm',
+        'transition-all duration-200',
       )}
     >
-      <div className="p-2.5 rounded-full bg-muted group-hover:bg-background group-hover:text-primary transition-colors">
-        <Icon className="h-5 w-5 text-muted-foreground group-hover:text-primary" />
-      </div>
-      <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">{label}</span>
+      <span
+        className={cn(
+          'inline-flex size-8 items-center justify-center rounded-lg shrink-0',
+          tile,
+        )}
+      >
+        <Icon className="size-4" />
+      </span>
+      <span className="text-xs font-medium text-foreground">{label}</span>
     </div>
   );
 }
 
-// --- SIDEBAR CONTENT ---
+// ─── Sidebar content ──────────────────────────────────────────────────
 
 function SidebarContent(props: FloatingSidebarProps) {
   const {
@@ -103,31 +124,39 @@ function SidebarContent(props: FloatingSidebarProps) {
   const [isAddSignerOpen, setIsAddSignerOpen] = useState(false);
   const titleDebounceRef = useRef<ReturnType<typeof setTimeout>>();
 
-  const handleTitleChange = useCallback((value: string) => {
-    if (titleDebounceRef.current) clearTimeout(titleDebounceRef.current);
-    titleDebounceRef.current = setTimeout(() => {
-      onUpdateSettings?.({ titulo: value });
-    }, 600);
-  }, [onUpdateSettings]);
+  const handleTitleChange = useCallback(
+    (value: string) => {
+      if (titleDebounceRef.current) clearTimeout(titleDebounceRef.current);
+      titleDebounceRef.current = setTimeout(() => {
+        onUpdateSettings?.({ titulo: value });
+      }, 600);
+    },
+    [onUpdateSettings],
+  );
 
-  const FIELD_TYPES = [
-    { type: 'signature' as const, label: 'Assinatura', icon: PenTool },
-    { type: 'initials' as const, label: 'Rubrica', icon: BadgeIcon },
+  const FIELD_TYPES: Array<{
+    type: SignatureFieldType;
+    label: string;
+    icon: React.ElementType;
+    tone: 'primary' | 'info';
+  }> = [
+    { type: 'signature', label: 'Assinatura', icon: PenTool, tone: 'primary' },
+    { type: 'initials', label: 'Rubrica', icon: BadgeIcon, tone: 'info' },
   ];
 
   const hasFieldsAndSigners = signers.length > 0 && props.fields.length > 0;
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-background">
-      {/* Scrollable Content */}
-      <div className="flex-1 min-h-0 space-y-6 overflow-y-auto px-6 py-6">
-        {/* Document Settings Section */}
-        <div className="space-y-4">
+    <div className="flex h-full min-h-0 flex-col bg-card/40 backdrop-blur-xl">
+      {/* Scrollable content */}
+      <div className="flex-1 min-h-0 space-y-5 overflow-y-auto px-5 py-5">
+        {/* ── Configurações ───────────────────────── */}
+        <section className="space-y-3">
           <SectionHeader title="Configurações" />
 
-          <div className="space-y-3">
-            <div className="space-y-2">
-              <Label htmlFor="doc-titulo" className="flex items-center gap-1.5">
+          <div className="space-y-2.5">
+            <div className="space-y-1.5">
+              <Label htmlFor="doc-titulo" className="flex items-center gap-1.5 text-xs">
                 <FileText className="size-3.5" />
                 Título
               </Label>
@@ -136,15 +165,18 @@ function SidebarContent(props: FloatingSidebarProps) {
                 placeholder="Ex: Contrato de Prestação de Serviços"
                 defaultValue={documentTitle ?? ''}
                 onChange={(e) => handleTitleChange(e.target.value)}
+                className="h-9 text-sm"
               />
             </div>
 
-            <div className="flex items-center justify-between rounded-lg border bg-background p-3">
-              <div className="flex items-center gap-2 min-w-0">
-                <Camera className="size-4 text-muted-foreground shrink-0" />
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-border/40 bg-card/55 backdrop-blur-md p-3 glass-kpi">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 shrink-0">
+                  <Camera className="size-3.5 text-info/70" />
+                </span>
                 <div className="min-w-0">
-                  <p className="text-sm font-medium">Selfie de verificação</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs font-medium">Selfie de verificação</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
                     Exigir foto do assinante
                   </p>
                 </div>
@@ -158,39 +190,48 @@ function SidebarContent(props: FloatingSidebarProps) {
               />
             </div>
           </div>
-        </div>
+        </section>
 
-        <Separator />
+        <AmbientDivider />
 
-        {/* Signers Section */}
-        <div className="space-y-4">
-          <SectionHeader title="Quem vai assinar?" />
+        {/* ── Signatários ─────────────────────────── */}
+        <section className="space-y-3">
+          <SectionHeader
+            title="Quem vai assinar?"
+            action={
+              signers.length > 0 ? (
+                <span className="text-[11px] tabular-nums px-1.5 py-0.5 rounded-full bg-foreground/8 text-muted-foreground">
+                  {signers.length}
+                </span>
+              ) : null
+            }
+          />
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             {signers.length === 0 ? (
-              <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl bg-background/50 hover:bg-background transition-colors text-center">
-                <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center mb-3">
-                  <Settings className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <p className="text-sm font-medium text-foreground mb-1">
+              <div className="flex flex-col items-center justify-center gap-2 p-5 border-2 border-dashed border-border/60 rounded-xl bg-card/30 text-center">
+                <span className="inline-flex size-9 items-center justify-center rounded-lg bg-foreground/5">
+                  <Settings className="size-4 text-muted-foreground" />
+                </span>
+                <p className="text-xs font-medium text-foreground">
                   Nenhum assinante
                 </p>
-                <p className="text-xs text-muted-foreground mb-4 max-w-45">
+                <p className="text-[11px] text-muted-foreground max-w-45 leading-relaxed">
                   Adicione as pessoas que precisam assinar este documento.
                 </p>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full"
+                  className="w-full mt-1 gap-1.5"
                   onClick={() => setIsAddSignerOpen(true)}
                 >
-                  <Plus className="size-3.5 mr-2" />
+                  <Plus className="size-3.5" />
                   Adicionar Assinante
                 </Button>
               </div>
             ) : (
               <>
-                {signers.map(signer => (
+                {signers.map((signer) => (
                   <SignerCard
                     key={signer.id}
                     signer={signer}
@@ -204,52 +245,54 @@ function SidebarContent(props: FloatingSidebarProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full border-dashed"
+                  className="w-full border-dashed gap-1.5"
                   onClick={() => setIsAddSignerOpen(true)}
                 >
-                  <Plus className="size-3.5 mr-2" />
+                  <Plus className="size-3.5" />
                   Adicionar Outro
                 </Button>
               </>
             )}
           </div>
-        </div>
+        </section>
 
-        <Separator />
+        <AmbientDivider />
 
-        {/* Fields Section */}
-        <div className="space-y-4">
+        {/* ── Campos ─────────────────────────────── */}
+        <section className="space-y-3">
           <div className="flex flex-col gap-1">
-            <SectionHeader title="Campos de Assinatura" />
-            <p className="text-xs text-muted-foreground">
-              Arraste os campos para o documento e solte onde deseja que o assinante assine.
+            <SectionHeader title="Campos" />
+            <p className="text-[11px] text-muted-foreground leading-relaxed">
+              Arraste para o documento e solte onde deseja que o assinante
+              assine.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            {FIELD_TYPES.map(ft => (
+          <div className="grid grid-cols-2 gap-2">
+            {FIELD_TYPES.map((ft) => (
               <FieldPaletteCard
                 key={ft.type}
                 type={ft.type}
                 label={ft.label}
                 icon={ft.icon}
+                tone={ft.tone}
                 onDragStart={onPaletteDragStart}
                 onDragEnd={onPaletteDragEnd}
               />
             ))}
           </div>
-        </div>
+        </section>
       </div>
 
-      {/* Footer */}
-      <div className="shrink-0 border-t p-6">
+      {/* ── Footer CTA ─────────────────────────────── */}
+      <div className="shrink-0 border-t border-border/30 p-4 bg-background/50 backdrop-blur-md">
         <Button
-          className="w-full h-12 text-base font-semibold shadow-md active:scale-[0.98] transition-all"
+          className="w-full h-11 text-sm font-semibold shadow-sm gap-2"
           onClick={onReviewAndSend}
           disabled={!hasFieldsAndSigners}
         >
           Salvar e Revisar
-          <ArrowRight className="ml-2 size-5" />
+          <ArrowRight className="size-4" />
         </Button>
       </div>
 
@@ -264,23 +307,24 @@ function SidebarContent(props: FloatingSidebarProps) {
 }
 
 /**
- * FloatingSidebar - Responsive sidebar for document configuration and field palette
+ * FloatingSidebar — Sidebar de configuracao e paleta de campos.
  *
- * Sections:
- * - Document settings (title, selfie)
- * - Signers management
- * - Field palette (signature, initials)
- * - CTA button (save & review)
+ * Desktop: renderiza dentro de container glass (parent provê bg/border).
+ * Mobile: Sheet (bottom drawer) acionado por FAB.
  *
- * Desktop: Renders inside a card container provided by parent
- * Mobile: Sheet (drawer) triggered by FAB
+ * Alinhado ao Design System Glass Briefing:
+ * - Seções separadas por ambient-divider (sem Separator hard)
+ * - SignerCard com dot colorido + avatar (não mais bg inteiro colorido)
+ * - FieldPaletteCard como glass chip com icon-tile tonalizado
  */
 export default function FloatingSidebar(props: FloatingSidebarProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
 
   return (
     <>
-      <div className={cn('hidden h-full min-h-0 flex-col lg:flex', props.className)}>
+      <div
+        className={cn('hidden h-full min-h-0 flex-col lg:flex', props.className)}
+      >
         <SidebarContent {...props} />
       </div>
 
@@ -293,7 +337,7 @@ export default function FloatingSidebar(props: FloatingSidebarProps) {
                 'fixed bottom-6 right-6 z-50',
                 'size-14 rounded-full shadow-lg',
                 'bg-primary hover:bg-primary/90',
-                'hover:scale-110 active:scale-95 transition-transform duration-200'
+                'hover:scale-105 active:scale-95 transition-transform duration-200',
               )}
               aria-label="Abrir configurações do documento"
             >

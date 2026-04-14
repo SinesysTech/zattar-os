@@ -1,10 +1,13 @@
 "use client";
 
 /**
- * EditarDocumentoClient — Etapa 2: Configurar assinantes e posicionar campos
+ * EditarDocumentoClient — Etapa 2: Configurar assinantes e posicionar campos.
  *
- * Layout: PDF canvas à esquerda + sidebar de configuração à direita.
- * Integrado com DocumentFlowShell (stepper no header).
+ * Layout: PDF canvas (bg-ambient glass) à esquerda + FloatingSidebar glass à direita.
+ * Alinhado ao Design System Glass Briefing (POC novo-documento):
+ * - Canvas com backdrop ambiente (radial glow sutil em vez de bg-muted/30 chapado)
+ * - Indicador de salvamento como pill glass-kpi com Loader2
+ * - Sidebar com divisor vertical ambient (sem border-l duro)
  */
 
 import { useDocumentEditor } from "../../../feature/components/editor/hooks/use-document-editor";
@@ -80,19 +83,26 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
   return (
     <DocumentFlowShell fullHeight>
       <div className="flex h-full min-h-0 overflow-hidden">
-        {/* PDF Canvas Area */}
+        {/* ── PDF Canvas Area ─────────────────────────── */}
         <div className="relative flex h-full min-h-0 flex-1 flex-col overflow-hidden">
-          {/* Indicador de salvamento */}
+          {/* Ambient radial gradient backdrop */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none bg-linear-to-br from-primary/3 via-transparent to-info/3"
+          />
+
+          {/* Indicador de salvamento — pill glass */}
           {isSaving && (
-            <div className="absolute top-3 right-6 z-20">
-              <span className="text-xs animate-pulse font-bold text-primary bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full border">
+            <div className="absolute top-4 right-6 z-20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-kpi border border-info/25 bg-info/5 backdrop-blur-md text-xs font-medium text-info">
+                <Loader2 className="size-3 animate-spin" />
                 Salvando...
               </span>
             </div>
           )}
 
-          {/* PDF Canvas — Scrollable */}
-          <div className="flex-1 overflow-auto p-6 relative scroll-smooth scrollbar-custom bg-muted/30">
+          {/* PDF Canvas — scrollable */}
+          <div className="relative flex-1 overflow-auto p-6 scroll-smooth scrollbar-custom bg-muted/15">
             <div className="flex justify-center min-h-full pb-20">
               <EditorCanvas
                 canvasRef={canvasRef}
@@ -145,8 +155,8 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
           </div>
         </div>
 
-        {/* Right Sidebar */}
-        <div className="hidden h-full min-h-0 w-85 shrink-0 border-l bg-background lg:flex">
+        {/* ── Right Sidebar (glass) ───────────────────── */}
+        <div className="hidden h-full min-h-0 w-85 shrink-0 border-l border-border/30 lg:flex">
           <FloatingSidebar
             className="h-full flex flex-col"
             signers={signers}
