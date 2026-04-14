@@ -8,7 +8,10 @@
  * O form "emerge" do fundo escuro.
  */
 
-import { BrandMark } from '@/components/shared/brand-mark'
+import Image from 'next/image'
+
+const Z_LIGHT = '/logos/Sem%20Fundo%20SVG/logo-z-light.svg'
+const Z_DARK = '/logos/Sem%20Fundo%20SVG/logo-z-dark.svg'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -24,11 +27,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="auth-spotlight-warm" aria-hidden="true" />
       <div className="auth-edge-glow" aria-hidden="true" />
 
-      {/* Fixed logo at top */}
+      {/* Fixed Z mark at top */}
       <div className="fixed top-5 left-1/2 -translate-x-1/2 z-20">
-        <div className="auth-logo-clip">
-          <BrandMark variant="auto" size="custom" className="w-40 h-auto" priority />
-        </div>
+        <Image src={Z_DARK} alt="Z" width={40} height={40} priority className="h-10 w-10 dark:block hidden" />
+        <Image src={Z_LIGHT} alt="Z" width={40} height={40} priority className="h-10 w-10 dark:hidden" />
       </div>
 
       {/* Content */}

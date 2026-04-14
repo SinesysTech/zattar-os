@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seção 3 — Lista View + Organograma View</title>
+<style>
+  :root {
+    --bg: #0f0f1a;
+    --card: #16162a;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.16);
+    --primary: #7c5cf0;
+    --primary-soft: rgba(124,92,240,0.12);
+    --text: #f0f0f5;
+    --text-muted: rgba(255,255,255,0.50);
+    --text-dim: rgba(255,255,255,0.35);
+    --success: #66bb6a;
+    --warning: #ffa726;
+    --info: #42a5f5;
+    --destructive: #ef5350;
+    --glass-widget: rgba(255,255,255,0.04);
+    --glass-blur: blur(16px);
+    --radius: 16px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 32px; line-height: 1.5; }
+  .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary); margin-bottom: 16px; opacity: 0.7; }
+  .annotation { padding: 12px 16px; border-radius: 10px; background: rgba(124,92,240,0.06); border-left: 3px solid var(--primary); font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-top: 16px; margin-bottom: 32px; }
+  .annotation strong { color: var(--text); }
+  .divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 40px 0; }
+
+  /* ========================= */
+  /* DATA TABLE                */
+  /* ========================= */
+  .data-shell {
+    border-radius: var(--radius);
+    background: var(--glass-widget);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-dim);
+    font-weight: 600;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .data-table th.sortable { cursor: pointer; }
+  .data-table th.sortable:hover { color: var(--text-muted); }
+  .data-table td {
+    padding: 10px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+  }
+  .data-table tr { transition: background 0.15s; }
+  .data-table tr:hover { background: rgba(255,255,255,0.03); }
+  .data-table tr:last-child td { border-bottom: none; }
+
+  /* Table avatar */
+  .table-user {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .table-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; color: white;
+    flex-shrink: 0; position: relative;
+  }
+  .table-status {
+    position: absolute; bottom: -1px; right: -1px;
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 2px solid var(--bg);
+  }
+  .table-user-info { min-width: 0; }
+  .table-user-name { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; }
+  .table-user-email { font-size: 11px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* Table badges */
+  .t-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 2px 8px; border-radius: 6px;
+    font-size: 11px; font-weight: 500;
+    white-space: nowrap;
+  }
+  .t-badge-active { background: rgba(102,187,106,0.12); color: var(--success); }
+  .t-badge-inactive { background: rgba(239,83,80,0.12); color: var(--destructive); }
+  .t-badge-role { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+  .t-badge-oab { background: rgba(66,165,245,0.08); color: rgba(66,165,245,0.7); font-size: 10px; }
+  .t-badge-admin { background: rgba(239,83,80,0.08); color: var(--destructive); font-size: 10px; }
+
+  /* Completeness bar in table */
+  .t-completeness {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .t-comp-bar { width: 48px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
+  .t-comp-fill { height: 100%; border-radius: 2px; }
+  .t-comp-pct { font-size: 11px; font-variant-numeric: tabular-nums; color: var(--text-dim); }
+
+  /* Table actions */
+  .t-actions { display: flex; gap: 4px; }
+  .t-action-btn {
+    width: 28px; height: 28px; border-radius: 6px;
+    border: none; background: transparent;
+    color: var(--text-dim); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; transition: all 0.15s;
+  }
+  .t-action-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+
+  /* Pagination */
+  .table-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-dim);
+  }
+  .pagination { display: flex; gap: 4px; }
+  .page-btn {
+    width: 28px; height: 28px; border-radius: 6px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-dim); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; transition: all 0.15s;
+  }
+  .page-btn.active { background: var(--primary-soft); border-color: rgba(124,92,240,0.3); color: var(--primary); }
+
+  /* ========================= */
+  /* ORGANOGRAMA               */
+  /* ========================= */
+  .org-container {
+    padding: 32px;
+    border-radius: var(--radius);
+    background: var(--glass-widget);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .org-tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    min-width: 700px;
+  }
+
+  /* Org node */
+  .org-node {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 16px 20px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    min-width: 180px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .org-node:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+  .org-node.root {
+    background: rgba(124,92,240,0.08);
+    border-color: rgba(124,92,240,0.2);
+    min-width: 220px;
+  }
+  .org-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: white;
+    margin-bottom: 8px;
+  }
+  .org-name { font-size: 13px; font-weight: 600; text-align: center; }
+  .org-role { font-size: 10px; color: var(--text-dim); margin-top: 2px; text-align: center; }
+  .org-stats-row {
+    display: flex; gap: 8px; margin-top: 8px;
+    font-size: 10px; color: var(--text-dim);
+  }
+  .org-stat { display: flex; align-items: center; gap: 3px; }
+  .org-stat-val { font-weight: 600; color: var(--text-muted); }
+
+  /* Connector lines */
+  .org-connector-v {
+    width: 2px; height: 28px;
+    background: rgba(255,255,255,0.1);
+    margin: 0 auto;
+  }
+  .org-level {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    position: relative;
+  }
+  .org-level::before {
+    content: '';
+    position: absolute;
+    top: -14px;
+    left: calc(50% - 45%);
+    width: 90%;
+    height: 2px;
+    background: rgba(255,255,255,0.08);
+  }
+  .org-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .org-branch .org-connector-v-short {
+    width: 2px; height: 14px;
+    background: rgba(255,255,255,0.1);
+  }
+
+  /* Member count badge on org node */
+  .org-team-count {
+    position: absolute; top: -6px; right: -6px;
+    padding: 2px 6px; border-radius: 8px;
+    background: var(--primary); color: white;
+    font-size: 10px; font-weight: 700;
+  }
+
+  /* Zoom controls */
+  .org-controls {
+    display: flex; gap: 6px; margin-bottom: 16px;
+    justify-content: flex-end;
+  }
+  .org-ctrl-btn {
+    padding: 6px 10px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--glass-widget);
+    color: var(--text-dim); cursor: pointer; font-size: 13px;
+    transition: all 0.15s;
+  }
+  .org-ctrl-btn:hover { border-color: var(--border-hover); color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div style="max-width: 1400px; margin: 0 auto;">
+
+  <!-- ============================== -->
+  <!-- LISTA VIEW                     -->
+  <!-- ============================== -->
+  <div class="section-label">Seção 3a — Lista View (DataTable)</div>
+
+  <div class="data-shell">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th class="sortable">Usuário ↕</th>
+          <th class="sortable">Cargo ↕</th>
+          <th>OAB</th>
+          <th class="sortable">Status ↕</th>
+          <th>Processos</th>
+          <th>Perfil</th>
+          <th style="width: 80px;">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="table-user">
+              <div class="table-avatar" style="background: linear-gradient(135deg, #7c3aed, #5523eb);">
+                JM
+                <div class="table-status" style="background: var(--success);"></div>
+              </div>
+              <div class="table-user-info">
+                <div class="table-user-name">Jordan Medeiros <span style="font-size: 11px; color: var(--destructive);">🛡</span></div>
+                <div class="table-user-email">jordan@zattar.adv.br</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="t-badge t-badge-role">Diretor</span></td>
+          <td><span class="t-badge t-badge-oab">⚖ 123.456/SP</span></td>
+          <td><span class="t-badge t-badge-active">Ativo</span></td>
+          <td style="font-variant-numeric: tabular-nums; font-weight: 600;">24</td>
+          <td>
+            <div class="t-completeness">
+              <div class="t-comp-bar"><div class="t-comp-fill" style="width: 100%; background: var(--success);"></div></div>
+              <span class="t-comp-pct">100%</span>
+            </div>
+          </td>
+          <td>
+            <div class="t-actions">
+              <button class="t-action-btn" title="Ver perfil">👁</button>
+              <button class="t-action-btn" title="Editar">✎</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="table-user">
+              <div class="table-avatar" style="background: linear-gradient(135deg, #1565c0, #42a5f5);">
+                MO
+                <div class="table-status" style="background: var(--success);"></div>
+              </div>
+              <div class="table-user-info">
+                <div class="table-user-name">Maria Oliveira</div>
+                <div class="table-user-email">maria@zattar.adv.br</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="t-badge t-badge-role">Advogada</span></td>
+          <td><span class="t-badge t-badge-oab">⚖ 789.012/SP</span></td>
+          <td><span class="t-badge t-badge-active">Ativo</span></td>
+          <td style="font-variant-numeric: tabular-nums; font-weight: 600;">18</td>
+          <td>
+            <div class="t-completeness">
+              <div class="t-comp-bar"><div class="t-comp-fill" style="width: 85%; background: var(--success);"></div></div>
+              <span class="t-comp-pct">85%</span>
+            </div>
+          </td>
+          <td>
+            <div class="t-actions">
+              <button class="t-action-btn" title="Ver perfil">👁</button>
+              <button class="t-action-btn" title="Editar">✎</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="table-user">
+              <div class="table-avatar" style="background: linear-gradient(135deg, #2e7d32, #66bb6a);">
+                PF
+                <div class="table-status" style="background: var(--warning);"></div>
+              </div>
+              <div class="table-user-info">
+                <div class="table-user-name">Pedro Ferreira</div>
+                <div class="table-user-email">pedro@zattar.adv.br</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="t-badge t-badge-role">Estagiário</span></td>
+          <td><span style="color: var(--text-dim);">—</span></td>
+          <td><span class="t-badge t-badge-active">Ativo</span></td>
+          <td style="font-variant-numeric: tabular-nums; font-weight: 600;">6</td>
+          <td>
+            <div class="t-completeness">
+              <div class="t-comp-bar"><div class="t-comp-fill" style="width: 60%; background: var(--warning);"></div></div>
+              <span class="t-comp-pct">60%</span>
+            </div>
+          </td>
+          <td>
+            <div class="t-actions">
+              <button class="t-action-btn" title="Ver perfil">👁</button>
+              <button class="t-action-btn" title="Editar">✎</button>
+            </div>
+          </td>
+        </tr>
+        <tr style="opacity: 0.5;">
+          <td>
+            <div class="table-user">
+              <div class="table-avatar" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.4);">
+                RL
+                <div class="table-status" style="background: rgba(255,255,255,0.2);"></div>
+              </div>
+              <div class="table-user-info">
+                <div class="table-user-name" style="color: var(--text-muted);">Roberto Lima</div>
+                <div class="table-user-email">roberto@zattar.adv.br</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="t-badge t-badge-role">Advogado</span></td>
+          <td><span class="t-badge t-badge-oab">⚖ 456.789/SP</span></td>
+          <td><span class="t-badge t-badge-inactive">Inativo</span></td>
+          <td style="font-variant-numeric: tabular-nums; color: var(--text-dim);">0</td>
+          <td>
+            <div class="t-completeness">
+              <div class="t-comp-bar"><div class="t-comp-fill" style="width: 40%; background: var(--warning);"></div></div>
+              <span class="t-comp-pct">40%</span>
+            </div>
+          </td>
+          <td>
+            <div class="t-actions">
+              <button class="t-action-btn" title="Ver perfil">👁</button>
+              <button class="t-action-btn" title="Reativar">↻</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table-footer">
+      <span>Mostrando 1–4 de 18 usuários</span>
+      <div class="pagination">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">→</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation">
+    <strong>Lista View:</strong> <code>DataShell</code> + <code>DataTable</code> com colunas: Usuário (avatar+status+nome+email), Cargo (badge), OAB (badge condicional), Status (Ativo/Inativo), Processos (count), Perfil (completeness bar), Ações (ver/editar). Colunas sortáveis, linhas inativas com opacity 50%, pagination com <code>TablePagination</code>. Usa o mesmo <code>DataTable</code> compartilhado de Processos/Expedientes.
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- ORGANOGRAMA VIEW               -->
+  <!-- ============================== -->
+  <div class="section-label">Seção 3b — Organograma View (Hierarquia por Cargo)</div>
+
+  <div class="org-container">
+    <div class="org-controls">
+      <button class="org-ctrl-btn">− Zoom</button>
+      <button class="org-ctrl-btn">100%</button>
+      <button class="org-ctrl-btn">+ Zoom</button>
+      <button class="org-ctrl-btn">⛶ Tela cheia</button>
+    </div>
+
+    <div class="org-tree">
+
+      <!-- Root: Diretoria -->
+      <div class="org-node root">
+        <div class="org-team-count">2</div>
+        <div class="org-avatar" style="background: linear-gradient(135deg, #7c3aed, #5523eb);">JM</div>
+        <div class="org-name">Jordan Medeiros</div>
+        <div class="org-role">Diretor · Super Admin</div>
+        <div class="org-stats-row">
+          <div class="org-stat">📁 <span class="org-stat-val">24</span></div>
+          <div class="org-stat">⚖ <span class="org-stat-val">SP</span></div>
+        </div>
+      </div>
+
+      <div class="org-connector-v"></div>
+
+      <!-- Level 2 -->
+      <div class="org-level">
+        <div class="org-branch">
+          <div class="org-connector-v-short"></div>
+          <div class="org-node">
+            <div class="org-team-count">4</div>
+            <div class="org-avatar" style="background: linear-gradient(135deg, #1565c0, #42a5f5);">MO</div>
+            <div class="org-name">Maria Oliveira</div>
+            <div class="org-role">Advogada</div>
+            <div class="org-stats-row">
+              <div class="org-stat">📁 <span class="org-stat-val">18</span></div>
+              <div class="org-stat">⚖ <span class="org-stat-val">SP</span></div>
+            </div>
+          </div>
+          <div class="org-connector-v" style="height: 20px;"></div>
+          <!-- Sub-level: team members -->
+          <div style="display: flex; gap: 12px;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 2px; height: 10px; background: rgba(255,255,255,0.08);"></div>
+              <div class="org-node" style="min-width: 140px; padding: 12px 14px;">
+                <div class="org-avatar" style="width: 36px; height: 36px; font-size: 13px; background: linear-gradient(135deg, #2e7d32, #66bb6a);">PF</div>
+                <div class="org-name" style="font-size: 12px;">Pedro Ferreira</div>
+                <div class="org-role" style="font-size: 9px;">Estagiário</div>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 2px; height: 10px; background: rgba(255,255,255,0.08);"></div>
+              <div class="org-node" style="min-width: 140px; padding: 12px 14px;">
+                <div class="org-avatar" style="width: 36px; height: 36px; font-size: 13px; background: linear-gradient(135deg, #2e7d32, #66bb6a);">LC</div>
+                <div class="org-name" style="font-size: 12px;">Lucas Costa</div>
+                <div class="org-role" style="font-size: 9px;">Estagiário</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="org-branch">
+          <div class="org-connector-v-short"></div>
+          <div class="org-node">
+            <div class="org-team-count">3</div>
+            <div class="org-avatar" style="background: linear-gradient(135deg, #1565c0, #42a5f5);">CS</div>
+            <div class="org-name">Carlos Silva</div>
+            <div class="org-role">Advogado</div>
+            <div class="org-stats-row">
+              <div class="org-stat">📁 <span class="org-stat-val">15</span></div>
+              <div class="org-stat">⚖ <span class="org-stat-val">RJ</span></div>
+            </div>
+          </div>
+          <div class="org-connector-v" style="height: 20px;"></div>
+          <div style="display: flex; gap: 12px;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 2px; height: 10px; background: rgba(255,255,255,0.08);"></div>
+              <div class="org-node" style="min-width: 140px; padding: 12px 14px;">
+                <div class="org-avatar" style="width: 36px; height: 36px; font-size: 13px; background: linear-gradient(135deg, #e65100, #ffa726);">AS</div>
+                <div class="org-name" style="font-size: 12px;">Ana Santos</div>
+                <div class="org-role" style="font-size: 9px;">Secretária</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="org-branch">
+          <div class="org-connector-v-short"></div>
+          <div class="org-node">
+            <div class="org-avatar" style="background: linear-gradient(135deg, #5c3fd6, #4527a0);">RS</div>
+            <div class="org-name">Ricardo Souza</div>
+            <div class="org-role">Diretor Financeiro</div>
+            <div class="org-stats-row">
+              <div class="org-stat">📁 <span class="org-stat-val">10</span></div>
+              <div class="org-stat">⚖ <span class="org-stat-val">SP</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="annotation">
+    <strong>Organograma View:</strong> Árvore hierárquica por cargo/supervisão. Cada nó é um card glass com avatar, nome, cargo e stats compactas. Badge de contagem de equipe (membros diretos). Nós clicáveis → abrem perfil.<br><br>
+    <strong>Features:</strong><br>
+    • Zoom in/out + fit-to-screen + fullscreen<br>
+    • Pan & drag para navegar em equipes grandes<br>
+    • Connectors SVG com linhas suaves<br>
+    • Nó root (Diretor) tem destaque visual (borda primary)<br>
+    • Badge com número de membros diretos no canto<br>
+    • Lazy-loaded via <code>React.lazy</code> + <code>Suspense</code> (view mais pesada)<br><br>
+    <strong>Nota:</strong> A hierarquia real depende de um campo "supervisorId" ou agrupamento por cargo. Se o campo não existir no banco, o organograma pode agrupar flat por cargo (Diretores → Advogados → Estagiários → Secretárias) sem relação pai-filho.
+  </div>
+
+</div>
+
+</body>
+</html>

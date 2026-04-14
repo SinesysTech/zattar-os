@@ -111,6 +111,13 @@ const GRAU_LABELS: Record<string, string> = {
   unico: 'Único',
 };
 
+const STATUS_LABELS: Record<string, string> = {
+  completed: 'Concluída',
+  in_progress: 'Em Andamento',
+  failed: 'Falha',
+  pending: 'Pendente',
+};
+
 function formatarTipo(tipo: TipoCaptura): string {
   return TIPO_LABELS[tipo] ?? tipo;
 }
@@ -243,7 +250,9 @@ function CapturaCard({
         {/* Status */}
         <div className="flex items-center justify-between">
           <span className="text-[11px] text-muted-foreground/60">Status</span>
-          <CapturaStatusSemanticBadge value={captura.status} className="text-[10px]" />
+          <CapturaStatusSemanticBadge value={captura.status} className="text-[10px]">
+            {STATUS_LABELS[captura.status] ?? captura.status}
+          </CapturaStatusSemanticBadge>
         </div>
 
         {/* Início */}
@@ -285,7 +294,7 @@ function CapturaCard({
 
 function CardsSkeleton() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
       {Array.from({ length: 6 }, (_, i) => (
         <div key={i} className="h-52 rounded-2xl border border-border/20 bg-muted-foreground/5 animate-pulse" />
       ))}
@@ -379,7 +388,7 @@ export function CapturaGlassCards({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
       {filtered.map((captura) => {
         const { tribunal, grau } = resolveTribunalGrau(captura);
         return (

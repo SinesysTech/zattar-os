@@ -28,6 +28,7 @@ export type { CapturaKpiData } from './components/captura-kpi-strip';
 export { CapturaFilterBar } from './components/captura-filter-bar';
 export type { CapturaFilters } from './components/captura-filter-bar';
 export { CapturaGlassList } from './components/captura-glass-list';
+export { CapturaGlassCards } from './components/captura-glass-cards';
 
 // ============================================================================
 // Components — Legacy (kept for backward compatibility)

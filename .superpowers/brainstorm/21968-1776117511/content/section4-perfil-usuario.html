@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seção 4 — Perfil do Usuário (Two-Column)</title>
+<style>
+  :root {
+    --bg: #0f0f1a;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.16);
+    --primary: #7c5cf0;
+    --primary-soft: rgba(124,92,240,0.12);
+    --text: #f0f0f5;
+    --text-muted: rgba(255,255,255,0.50);
+    --text-dim: rgba(255,255,255,0.35);
+    --success: #66bb6a;
+    --warning: #ffa726;
+    --info: #42a5f5;
+    --destructive: #ef5350;
+    --glass-widget: rgba(255,255,255,0.04);
+    --glass-kpi: rgba(255,255,255,0.06);
+    --glass-blur: blur(16px);
+    --radius: 16px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); padding: 24px; line-height: 1.5; }
+  .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary); margin-bottom: 16px; opacity: 0.7; }
+  .annotation { padding: 12px 16px; border-radius: 10px; background: rgba(124,92,240,0.06); border-left: 3px solid var(--primary); font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-top: 16px; margin-bottom: 32px; }
+  .annotation strong { color: var(--text); }
+  .divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 32px 0; }
+
+  /* ========================= */
+  /* TWO-COLUMN LAYOUT         */
+  /* ========================= */
+  .profile-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 16px;
+    min-height: 80vh;
+  }
+
+  /* ========================= */
+  /* SIDEBAR                   */
+  /* ========================= */
+  .profile-sidebar {
+    border-radius: var(--radius);
+    background: var(--glass-widget);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: sticky;
+    top: 24px;
+    align-self: start;
+  }
+
+  /* Cover area */
+  .sidebar-cover {
+    height: 100px;
+    background: linear-gradient(135deg, rgba(124,92,240,0.4), rgba(168,139,250,0.15));
+    position: relative;
+    overflow: hidden;
+  }
+  .sidebar-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.08) 0%, transparent 60%);
+  }
+  .cover-edit-btn {
+    position: absolute;
+    top: 8px; right: 8px;
+    padding: 4px 10px; border-radius: 6px;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 11px; color: rgba(255,255,255,0.7);
+    cursor: pointer; z-index: 2;
+  }
+
+  /* Avatar + info */
+  .sidebar-avatar-section {
+    display: flex; flex-direction: column; align-items: center;
+    margin-top: -44px; padding: 0 20px;
+    position: relative; z-index: 2;
+  }
+  .sidebar-avatar {
+    width: 88px; height: 88px; border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #5523eb);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 700; color: white;
+    border: 4px solid var(--bg);
+    position: relative; cursor: pointer;
+  }
+  .sidebar-avatar:hover .avatar-hover { opacity: 1; }
+  .avatar-hover {
+    position: absolute; inset: 0; border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.2s;
+    font-size: 18px;
+  }
+  .sidebar-status-dot {
+    position: absolute; bottom: 4px; right: 4px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--success);
+    border: 3px solid var(--bg);
+  }
+
+  /* Completeness ring on avatar */
+  .sidebar-ring {
+    position: absolute; top: -6px; left: -6px;
+    width: 100px; height: 100px;
+  }
+  .sidebar-ring circle { fill: none; stroke-width: 2.5; stroke-linecap: round; }
+  .sidebar-ring .ring-bg { stroke: rgba(255,255,255,0.06); }
+  .sidebar-ring .ring-fill { transform: rotate(-90deg); transform-origin: center; }
+
+  .sidebar-name { font-size: 18px; font-weight: 700; margin-top: 12px; text-align: center; }
+  .sidebar-role { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+
+  /* Badges */
+  .sidebar-badges { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; justify-content: center; }
+  .s-badge { padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+  .s-badge-active { background: rgba(102,187,106,0.12); color: var(--success); }
+  .s-badge-admin { background: rgba(239,83,80,0.1); color: var(--destructive); }
+  .s-badge-oab { background: rgba(66,165,245,0.1); color: var(--info); }
+
+  /* Contact info */
+  .sidebar-contacts {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 16px;
+  }
+  .contact-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0; font-size: 12px;
+  }
+  .contact-icon { font-size: 14px; color: var(--text-dim); width: 18px; text-align: center; flex-shrink: 0; }
+  .contact-value { color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* Completeness checklist */
+  .sidebar-completeness {
+    padding: 12px 20px 16px;
+    border-top: 1px solid var(--border);
+  }
+  .completeness-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .completeness-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); font-weight: 600; }
+  .completeness-pct { font-size: 12px; font-weight: 700; color: var(--success); }
+  .completeness-bar { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.06); overflow: hidden; margin-bottom: 10px; }
+  .completeness-fill { height: 100%; border-radius: 2px; background: var(--success); }
+  .completeness-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 3px 0; font-size: 11px;
+  }
+  .check-done { color: var(--success); }
+  .check-pending { color: var(--text-dim); }
+  .item-done { color: var(--text-dim); text-decoration: line-through; }
+  .item-pending { color: var(--warning); }
+
+  /* Quick actions */
+  .sidebar-actions {
+    padding: 12px 20px 20px;
+    border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .sidebar-btn {
+    padding: 9px 14px; border-radius: 10px;
+    font-size: 13px; font-weight: 500;
+    text-align: center; cursor: pointer;
+    transition: all 0.2s; border: none;
+  }
+  .sidebar-btn-primary { background: var(--primary-soft); color: #a78bfa; border: 1px solid rgba(124,92,240,0.25); }
+  .sidebar-btn-primary:hover { background: rgba(124,92,240,0.2); }
+  .sidebar-btn-outline { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+  .sidebar-btn-outline:hover { border-color: var(--border-hover); color: var(--text); }
+  .sidebar-btn-danger { background: rgba(239,83,80,0.08); color: var(--destructive); border: 1px solid rgba(239,83,80,0.15); }
+  .sidebar-btn-danger:hover { background: rgba(239,83,80,0.15); }
+
+  /* ========================= */
+  /* CONTENT AREA              */
+  /* ========================= */
+  .profile-content {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+
+  /* Back + breadcrumb */
+  .content-nav {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .back-btn {
+    width: 34px; height: 34px; border-radius: 8px;
+    background: var(--glass-widget); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: var(--text-dim); cursor: pointer;
+    transition: all 0.15s;
+  }
+  .back-btn:hover { border-color: var(--border-hover); color: var(--text-muted); }
+  .breadcrumb { font-size: 13px; color: var(--text-dim); }
+  .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--text); }
+
+  /* Tab pills */
+  .tab-pills {
+    display: flex; gap: 4px; padding: 4px;
+    background: rgba(255,255,255,0.03); border-radius: 12px;
+    width: fit-content;
+  }
+  .tab-pill {
+    padding: 7px 16px; border-radius: 9px;
+    font-size: 13px; color: var(--text-dim);
+    cursor: pointer; transition: all 0.2s;
+    border: none; background: transparent;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab-pill:hover { color: var(--text-muted); }
+  .tab-pill.active { background: var(--primary-soft); color: #a78bfa; font-weight: 500; }
+  .tab-pill .pill-count {
+    font-size: 10px; padding: 1px 6px; border-radius: 4px;
+    background: rgba(255,255,255,0.06); font-variant-numeric: tabular-nums;
+  }
+  .tab-pill.active .pill-count { background: rgba(124,92,240,0.2); }
+
+  /* Glass panel */
+  .glass-panel {
+    border-radius: var(--radius);
+    background: var(--glass-widget);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border);
+    padding: 20px;
+    transition: all 0.3s;
+  }
+  .glass-panel-kpi {
+    border-radius: var(--radius);
+    background: var(--glass-kpi);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+  }
+
+  /* KPI strip in content */
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .kpi-mini { text-align: center; }
+  .kpi-mini-icon { font-size: 18px; margin-bottom: 4px; }
+  .kpi-mini-val { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .kpi-mini-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); margin-top: 2px; }
+  .kpi-mini-link { font-size: 10px; color: var(--primary); margin-top: 4px; cursor: pointer; }
+
+  /* Activity heatmap */
+  .heatmap-container { overflow-x: auto; }
+  .heatmap-grid {
+    display: flex; gap: 3px;
+    min-width: 600px;
+  }
+  .heatmap-col { display: flex; flex-direction: column; gap: 3px; }
+  .heatmap-cell {
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.04);
+  }
+  .heatmap-1 { background: rgba(124,92,240,0.15); }
+  .heatmap-2 { background: rgba(124,92,240,0.3); }
+  .heatmap-3 { background: rgba(124,92,240,0.5); }
+  .heatmap-4 { background: rgba(124,92,240,0.75); }
+  .heatmap-legend {
+    display: flex; align-items: center; gap: 4px;
+    margin-top: 8px; font-size: 10px; color: var(--text-dim);
+  }
+  .heatmap-legend-cell { width: 12px; height: 12px; border-radius: 2px; }
+
+  /* Section heading */
+  .section-heading {
+    font-size: 15px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px;
+  }
+  .section-heading-icon { font-size: 16px; }
+
+  /* Data fields */
+  .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .data-field {}
+  .data-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); font-weight: 600; margin-bottom: 4px; }
+  .data-value { font-size: 13px; color: var(--text-muted); }
+
+  /* Permissions matrix preview */
+  .perm-group {
+    border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .perm-group-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px;
+    cursor: pointer;
+  }
+  .perm-group-name { font-size: 13px; font-weight: 600; }
+  .perm-group-count { font-size: 11px; padding: 2px 8px; border-radius: 6px; }
+  .perm-group-full { background: rgba(102,187,106,0.12); color: var(--success); }
+  .perm-group-partial { background: rgba(66,165,245,0.12); color: var(--info); }
+  .perm-group-none { background: rgba(255,255,255,0.06); color: var(--text-dim); }
+  .perm-items {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+  }
+  .perm-item {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 8px; border-radius: 6px; font-size: 12px;
+    transition: background 0.15s;
+  }
+  .perm-item:hover { background: rgba(255,255,255,0.04); }
+  .perm-toggle {
+    width: 32px; height: 18px; border-radius: 9px;
+    position: relative; cursor: pointer;
+  }
+  .perm-toggle.on { background: rgba(102,187,106,0.3); }
+  .perm-toggle.off { background: rgba(255,255,255,0.1); }
+  .perm-toggle .toggle-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    position: absolute; top: 2px;
+    transition: left 0.15s;
+  }
+  .perm-toggle.on .toggle-dot { left: 16px; background: var(--success); }
+  .perm-toggle.off .toggle-dot { left: 2px; background: rgba(255,255,255,0.3); }
+  .perm-changed { position: relative; }
+  .perm-changed::after {
+    content: ''; position: absolute; top: -2px; right: -2px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--warning);
+  }
+
+  /* Role presets */
+  .preset-bar {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px;
+  }
+  .preset-select {
+    padding: 6px 12px; border-radius: 8px;
+    background: var(--glass-widget); border: 1px solid var(--border);
+    color: var(--text-muted); font-size: 12px; cursor: pointer;
+  }
+  .preset-label { font-size: 11px; color: var(--text-dim); }
+
+  /* Auth timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: 11px; top: 0; bottom: 0;
+    width: 2px; background: var(--border);
+  }
+  .timeline-item { position: relative; padding-bottom: 20px; }
+  .timeline-dot {
+    position: absolute; left: -23px; top: 2px;
+    width: 20px; height: 20px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; border: 2px solid var(--bg); z-index: 1;
+  }
+  .timeline-card {
+    padding: 12px 14px; border-radius: 10px;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  }
+  .timeline-title { font-size: 13px; font-weight: 500; }
+  .timeline-meta { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
+  .timeline-detail { font-size: 11px; color: var(--text-dim); margin-top: 6px; display: flex; gap: 12px; }
+</style>
+</head>
+<body>
+
+<div style="max-width: 1400px; margin: 0 auto;">
+
+  <div class="section-label">Seção 4 — Perfil do Usuário (Two-Column Layout)</div>
+
+  <div class="profile-layout">
+
+    <!-- ============================== -->
+    <!-- SIDEBAR                        -->
+    <!-- ============================== -->
+    <div class="profile-sidebar">
+      <!-- Cover -->
+      <div class="sidebar-cover">
+        <div class="cover-edit-btn">📷 Editar</div>
+      </div>
+
+      <!-- Avatar -->
+      <div class="sidebar-avatar-section">
+        <div class="sidebar-avatar">
+          <svg class="sidebar-ring" viewBox="0 0 100 100">
+            <circle class="ring-bg" cx="50" cy="50" r="46"/>
+            <circle class="ring-fill" cx="50" cy="50" r="46" stroke="var(--success)" stroke-dasharray="260 289"/>
+          </svg>
+          JM
+          <div class="avatar-hover">📷</div>
+          <div class="sidebar-status-dot"></div>
+        </div>
+        <div class="sidebar-name">Jordan Medeiros</div>
+        <div class="sidebar-role">Diretor</div>
+
+        <div class="sidebar-badges">
+          <span class="s-badge s-badge-active">Ativo</span>
+          <span class="s-badge s-badge-admin">🛡 Super Admin</span>
+          <span class="s-badge s-badge-oab">⚖ 123.456/SP</span>
+        </div>
+      </div>
+
+      <!-- Contacts -->
+      <div class="sidebar-contacts">
+        <div class="contact-item">
+          <span class="contact-icon">✉</span>
+          <span class="contact-value">jordan@zattar.adv.br</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">📱</span>
+          <span class="contact-value">(11) 99999-0000</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">🏢</span>
+          <span class="contact-value">Ramal 101</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">📅</span>
+          <span class="contact-value">Cadastro: 15/03/2023</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-icon">🔄</span>
+          <span class="contact-value">Atualizado: 10/04/2026</span>
+        </div>
+      </div>
+
+      <!-- Completeness -->
+      <div class="sidebar-completeness">
+        <div class="completeness-header">
+          <span class="completeness-label">Perfil</span>
+          <span class="completeness-pct">90%</span>
+        </div>
+        <div class="completeness-bar">
+          <div class="completeness-fill" style="width: 90%;"></div>
+        </div>
+        <div class="completeness-item">
+          <span class="check-done">✓</span>
+          <span class="item-done">Avatar enviado</span>
+        </div>
+        <div class="completeness-item">
+          <span class="check-done">✓</span>
+          <span class="item-done">OAB preenchida</span>
+        </div>
+        <div class="completeness-item">
+          <span class="check-done">✓</span>
+          <span class="item-done">Telefone adicionado</span>
+        </div>
+        <div class="completeness-item">
+          <span class="check-pending">○</span>
+          <span class="item-pending">Endereço incompleto</span>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="sidebar-actions">
+        <button class="sidebar-btn sidebar-btn-primary">✏ Editar Perfil</button>
+        <button class="sidebar-btn sidebar-btn-outline">🔑 Redefinir Senha</button>
+        <button class="sidebar-btn sidebar-btn-danger">⏻ Desativar Usuário</button>
+      </div>
+    </div>
+
+    <!-- ============================== -->
+    <!-- CONTENT                        -->
+    <!-- ============================== -->
+    <div class="profile-content">
+
+      <!-- Nav -->
+      <div class="content-nav">
+        <button class="back-btn">←</button>
+        <div class="breadcrumb">
+          <a href="#">Usuários</a> / <strong>Jordan Medeiros</strong>
+        </div>
+      </div>
+
+      <!-- Tab Pills -->
+      <div class="tab-pills">
+        <button class="tab-pill active">Visão Geral</button>
+        <button class="tab-pill">Dados Cadastrais</button>
+        <button class="tab-pill">Atividades</button>
+        <button class="tab-pill">Permissões <span class="pill-count">24/38</span></button>
+        <button class="tab-pill">Segurança</button>
+      </div>
+
+      <!-- ============================== -->
+      <!-- TAB: VISÃO GERAL               -->
+      <!-- ============================== -->
+
+      <!-- KPI Cards -->
+      <div class="kpi-row">
+        <div class="glass-panel-kpi kpi-mini">
+          <div class="kpi-mini-icon">📁</div>
+          <div class="kpi-mini-val">24</div>
+          <div class="kpi-mini-label">Processos</div>
+          <div class="kpi-mini-link">Ver todos →</div>
+        </div>
+        <div class="glass-panel-kpi kpi-mini">
+          <div class="kpi-mini-icon">⚖</div>
+          <div class="kpi-mini-val" style="color: var(--primary);">8</div>
+          <div class="kpi-mini-label">Audiências</div>
+          <div class="kpi-mini-link">Ver todas →</div>
+        </div>
+        <div class="glass-panel-kpi kpi-mini">
+          <div class="kpi-mini-icon">📋</div>
+          <div class="kpi-mini-val" style="color: var(--warning);">12</div>
+          <div class="kpi-mini-label">Pendentes</div>
+          <div class="kpi-mini-link">Ver todos →</div>
+        </div>
+        <div class="glass-panel-kpi kpi-mini">
+          <div class="kpi-mini-icon">📄</div>
+          <div class="kpi-mini-val" style="color: var(--success);">5</div>
+          <div class="kpi-mini-label">Contratos</div>
+          <div class="kpi-mini-link">Ver todos →</div>
+        </div>
+      </div>
+
+      <!-- Activity Heatmap -->
+      <div class="glass-panel">
+        <div class="section-heading">
+          <span class="section-heading-icon">📊</span>
+          Atividade (últimos 6 meses)
+        </div>
+        <div class="heatmap-container">
+          <div class="heatmap-grid" id="heatmap"></div>
+        </div>
+        <div class="heatmap-legend">
+          <span>Menos</span>
+          <div class="heatmap-legend-cell" style="background: rgba(255,255,255,0.04);"></div>
+          <div class="heatmap-legend-cell heatmap-1"></div>
+          <div class="heatmap-legend-cell heatmap-2"></div>
+          <div class="heatmap-legend-cell heatmap-3"></div>
+          <div class="heatmap-legend-cell heatmap-4"></div>
+          <span>Mais</span>
+        </div>
+      </div>
+
+      <hr class="divider" style="margin: 8px 0;">
+
+      <!-- ============================== -->
+      <!-- TAB PREVIEW: PERMISSÕES         -->
+      <!-- ============================== -->
+      <div class="section-label" style="margin-top: 16px;">Preview — Tab Permissões (redesenhada)</div>
+
+      <!-- Role presets -->
+      <div class="preset-bar">
+        <span class="preset-label">Template de cargo:</span>
+        <select class="preset-select">
+          <option>— Selecionar preset —</option>
+          <option>Advogado (padrão)</option>
+          <option>Estagiário (restrito)</option>
+          <option>Secretária (operacional)</option>
+          <option>Administrador (full)</option>
+        </select>
+        <span style="font-size: 11px; color: var(--text-dim); margin-left: 4px;">Aplica permissões pré-definidas</span>
+      </div>
+
+      <div class="perm-group">
+        <div class="perm-group-header">
+          <span class="perm-group-name">Processos</span>
+          <span class="perm-group-count perm-group-full">6/6</span>
+        </div>
+        <div class="perm-items">
+          <div class="perm-item">
+            <div class="perm-toggle on"><div class="toggle-dot"></div></div>
+            <span>Visualizar</span>
+          </div>
+          <div class="perm-item">
+            <div class="perm-toggle on"><div class="toggle-dot"></div></div>
+            <span>Criar</span>
+          </div>
+          <div class="perm-item">
+            <div class="perm-toggle on"><div class="toggle-dot"></div></div>
+            <span>Editar</span>
+          </div>
+          <div class="perm-item perm-changed">
+            <div class="perm-toggle on"><div class="toggle-dot"></div></div>
+            <span>Deletar</span>
+          </div>
+          <div class="perm-item">
+            <div class="perm-toggle on"><div class="toggle-dot"></div></div>
+            <span>Exportar</span>
+          </div>
+          <div class="perm-item">
+            <div class="perm-toggle on"><div class="toggle-dot"></div></div>
+            <span>Importar</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="perm-group">
+        <div class="perm-group-header">
+          <span class="perm-group-name">Financeiro</span>
+          <span class="perm-group-count perm-group-partial">3/6</span>
+        </div>
+        <div class="perm-items">
+          <div class="perm-item">
+            <div class="perm-toggle on"><div class="toggle-dot"></div></div>
+            <span>Visualizar</span>
+          </div>
+          <div class="perm-item">
+            <div class="perm-toggle on"><div class="toggle-dot"></div></div>
+            <span>Criar</span>
+          </div>
+          <div class="perm-item perm-changed">
+            <div class="perm-toggle off"><div class="toggle-dot"></div></div>
+            <span style="color: var(--text-dim);">Editar</span>
+          </div>
+          <div class="perm-item">
+            <div class="perm-toggle off"><div class="toggle-dot"></div></div>
+            <span style="color: var(--text-dim);">Deletar</span>
+          </div>
+          <div class="perm-item">
+            <div class="perm-toggle on"><div class="toggle-dot"></div></div>
+            <span>Exportar</span>
+          </div>
+          <div class="perm-item">
+            <div class="perm-toggle off"><div class="toggle-dot"></div></div>
+            <span style="color: var(--text-dim);">Importar</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="annotation">
+        <strong>Permissões Redesenhadas:</strong><br>
+        • <strong>Role Presets:</strong> Dropdown que aplica template de permissões pré-definido por cargo<br>
+        • <strong>Toggle switches</strong> em vez de checkboxes — mais visual e moderno<br>
+        • <strong>Diff indicators:</strong> Dot amarelo (⚠) no canto de permissões alteradas mas não salvas<br>
+        • <strong>Contagem por grupo:</strong> Badge "3/6" colorido (verde=full, azul=parcial, cinza=nenhuma)<br>
+        • <strong>Grid 4 colunas</strong> compacto em vez de accordion — tudo visível sem clique
+      </div>
+
+      <hr class="divider" style="margin: 8px 0;">
+
+      <!-- ============================== -->
+      <!-- TAB PREVIEW: SEGURANÇA          -->
+      <!-- ============================== -->
+      <div class="section-label" style="margin-top: 16px;">Preview — Tab Segurança (Auth Timeline)</div>
+
+      <div class="glass-panel">
+        <div class="section-heading">
+          <span class="section-heading-icon">🕐</span>
+          Histórico de Acesso
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: rgba(102,187,106,0.2); color: var(--success);">↵</div>
+            <div class="timeline-card">
+              <div class="timeline-title" style="color: var(--success);">Login realizado</div>
+              <div class="timeline-meta">há 2 horas</div>
+              <div class="timeline-detail">
+                <span>🌐 IP: 189.45.xx.xx</span>
+                <span>💻 Chrome · macOS</span>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: rgba(66,165,245,0.2); color: var(--info);">↻</div>
+            <div class="timeline-card">
+              <div class="timeline-title" style="color: var(--info);">Sessão renovada</div>
+              <div class="timeline-meta">há 5 horas</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: rgba(255,167,38,0.2); color: var(--warning);">↳</div>
+            <div class="timeline-card">
+              <div class="timeline-title" style="color: var(--warning);">Logout realizado</div>
+              <div class="timeline-meta">ontem às 18:30</div>
+              <div class="timeline-detail">
+                <span>💻 Safari · iOS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Generate heatmap
+  const grid = document.getElementById('heatmap');
+  for (let w = 0; w < 26; w++) {
+    const col = document.createElement('div');
+    col.className = 'heatmap-col';
+    for (let d = 0; d < 7; d++) {
+      const cell = document.createElement('div');
+      const r = Math.random();
+      cell.className = 'heatmap-cell' + (r > 0.8 ? ' heatmap-4' : r > 0.6 ? ' heatmap-3' : r > 0.35 ? ' heatmap-2' : r > 0.15 ? ' heatmap-1' : '');
+      col.appendChild(cell);
+    }
+    grid.appendChild(col);
+  }
+</script>
+
+</body>
+</html>

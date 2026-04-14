@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle } from '@/components/dashboard/view-toggle';
 import type { ViewToggleOption } from '@/components/dashboard/view-toggle';
-import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
-import { Plus, History, CalendarClock, KeyRound, Landmark, List, LayoutGrid, AlertTriangle } from 'lucide-react';
+import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
+import { Plus, List, LayoutGrid, AlertTriangle } from 'lucide-react';
 
 import { CapturaKpiStrip } from './components/captura-kpi-strip';
 import type { CapturaKpiData } from './components/captura-kpi-strip';
@@ -26,11 +26,11 @@ import AgendamentosClient from './agendamentos/page-client';
 
 type CapturaTab = 'historico' | 'agendamentos' | 'credenciais' | 'tribunais';
 
-const TABS = [
-  { value: 'historico', label: 'Histórico', icon: <History className="size-4" /> },
-  { value: 'agendamentos', label: 'Agendamentos', icon: <CalendarClock className="size-4" /> },
-  { value: 'credenciais', label: 'Credenciais', icon: <KeyRound className="size-4" /> },
-  { value: 'tribunais', label: 'Tribunais', icon: <Landmark className="size-4" /> },
+const TABS: TabPillOption[] = [
+  { id: 'historico', label: 'Histórico' },
+  { id: 'agendamentos', label: 'Agendamentos' },
+  { id: 'credenciais', label: 'Credenciais' },
+  { id: 'tribunais', label: 'Tribunais' },
 ];
 
 const VIEW_OPTIONS: ViewToggleOption[] = [
@@ -98,11 +98,10 @@ export function CapturaClient() {
       </div>
 
       {/* Tab Pills */}
-      <AnimatedIconTabs
+      <TabPills
         tabs={TABS}
-        value={activeTab}
-        onValueChange={handleTabChange}
-        className="w-fit"
+        active={activeTab}
+        onChange={handleTabChange}
       />
 
       {/* Histórico View */}
