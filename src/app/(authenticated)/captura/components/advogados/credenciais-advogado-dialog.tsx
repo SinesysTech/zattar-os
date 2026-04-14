@@ -361,7 +361,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       {credenciais.map((credencial) => (
                         <div
                           key={credencial.id}
-                          className={`flex items-center justify-between p-3 rounded-lg border ${credencial.active ? 'bg-card' : 'bg-muted/50 opacity-60'
+                          className={`flex items-center justify-between p-3 rounded-xl border ${credencial.active ? 'bg-white/[0.03] border-border/10' : 'bg-white/[0.015] border-border/5 opacity-60'
                             }`}
                         >
                           <div className="flex items-center gap-3">
