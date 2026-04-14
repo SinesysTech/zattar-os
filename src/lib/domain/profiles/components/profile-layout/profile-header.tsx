@@ -1,43 +1,84 @@
+import type { CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AppBadge } from "@/components/ui/app-badge";
+import { Heading, Text } from "@/components/ui/typography";
 import { PencilIcon } from "lucide-react";
 import { HeaderConfig } from "../../configs/types";
+
+type ProfileEntityType =
+  | "cliente"
+  | "parte_contraria"
+  | "terceiro"
+  | "representante"
+  | "usuario";
 
 interface ProfileHeaderProps {
   config: HeaderConfig;
   data: Record<string, unknown>;
+  entityType?: ProfileEntityType;
   onEdit?: () => void;
 }
 
 const getNestedValue = (obj: Record<string, unknown>, path: string): unknown => {
-  return path.split('.').reduce<unknown>((acc, part) => (acc && typeof acc === 'object' ? (acc as Record<string, unknown>)[part] : undefined), obj);
+  return path.split('.').reduce<unknown>(
+    (acc, part) =>
+      acc && typeof acc === 'object'
+        ? (acc as Record<string, unknown>)[part]
+        : undefined,
+    obj,
+  );
 };
 
-export function ProfileHeader({ config, data, onEdit }: ProfileHeaderProps) {
-  const title = getNestedValue(data, config.titleField) as string;
+export function ProfileHeader({ config, data, entityType = 'cliente', onEdit }: ProfileHeaderProps) {
+  void entityType; // A cor aplicada vem de --tipo-color injetada pelo ProfileShellClient.
+  const title = (getNestedValue(data, config.titleField) as string) ?? '';
 
-  // Basic avatar fallback logic
   const initials = title ? title.substring(0, 2).toUpperCase() : '??';
-  const avatarUrl = (data.avatar_url || data.foto) as string; // common patterns
-
-  // Cover/Banner URL - check multiple common patterns (banner_url, cover_url, coverUrl)
+  const avatarUrl = (data.avatar_url || data.foto) as string | undefined;
   const coverUrl = (data.banner_url || data.cover_url || data.coverUrl) as string | undefined;
+
+  const bannerStyle: CSSProperties = {
+    background: [
+      'radial-gradient(600px 200px at 20% 0%, color-mix(in oklch, var(--tipo-color, var(--primary)) 25%, transparent), transparent 70%)',
+      'radial-gradient(500px 180px at 85% 80%, color-mix(in oklch, var(--tipo-color, var(--primary)) 18%, transparent), transparent 70%)',
+      'linear-gradient(135deg, color-mix(in oklch, var(--tipo-color, var(--primary)) 10%, transparent), color-mix(in oklch, var(--info) 6%, transparent))',
+    ].join(', '),
+  };
+
+  const avatarGlassStyle: CSSProperties = {
+    background: 'color-mix(in oklch, var(--card) 78%, transparent)',
+  };
+
+  const initialsStyle: CSSProperties = {
+    color: 'var(--tipo-color, var(--primary))',
+  };
 
   return (
     <div className="relative">
       {config.showBanner && (
-        <div className="relative aspect-video w-full rounded-t-md bg-cover bg-center md:max-h-60 overflow-hidden bg-muted">
-          {coverUrl ? (
-             
-            <img src={coverUrl} alt="Profile Banner" className="w-full h-full object-cover" />
-          ) : (
-            <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-primary/10 to-secondary/20" />
+        <div
+          className="relative h-44 md:h-48 lg:h-56 overflow-hidden rounded-t-2xl"
+          style={bannerStyle}
+        >
+          {coverUrl && (
+
+            <img
+              src={coverUrl}
+              alt="Banner do perfil"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           )}
+          {/* TODO POC grain overlay */}
 
           {onEdit && (
-            <div className="absolute end-4 top-4">
-              <Button size="icon-sm" className="bg-background/50 backdrop-blur-sm rounded-full" variant="ghost" onClick={onEdit}>
+            <div className="absolute inset-e-4 top-4">
+              <Button
+                size="icon-sm"
+                className="bg-background/50 backdrop-blur-sm rounded-full"
+                variant="ghost"
+                onClick={onEdit}
+                aria-label="Editar perfil"
+              >
                 <PencilIcon className="h-4 w-4" />
               </Button>
             </div>
@@ -45,60 +86,93 @@ export function ProfileHeader({ config, data, onEdit }: ProfileHeaderProps) {
         </div>
       )}
 
-      <div className={`${config.showBanner ? '-mt-10 lg:-mt-14' : ''} px-4 pb-4 text-center`}>
+      <div
+        className={`relative px-4 sm:px-6 pb-4 ${
+          config.showBanner ? '-mt-10 md:-mt-12 lg:-mt-16' : 'pt-6'
+        }`}
+      >
         {config.showAvatar && (
-          <Avatar className="border-background mx-auto size-20 border-4 lg:size-28 shadow-sm bg-background">
-            <AvatarImage src={avatarUrl} alt={title} />
-            <AvatarFallback className="text-xl lg:text-3xl">{initials}</AvatarFallback>
-          </Avatar>
+          <div
+            className="size-20 md:size-24 lg:size-28 rounded-3xl flex items-center justify-center border border-border/40 shadow-lg backdrop-blur-xl overflow-hidden"
+            style={avatarGlassStyle}
+          >
+            {avatarUrl ? (
+
+              <img
+                src={avatarUrl}
+                alt={`Avatar de ${title}`}
+                className="size-full rounded-3xl object-cover"
+              />
+            ) : (
+              <span
+                className="font-display text-3xl lg:text-4xl font-bold"
+                style={initialsStyle}
+              >
+                {initials}
+              </span>
+            )}
+          </div>
         )}
 
-        <div className="mt-4 space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">{title}</h1>
+        <Heading level="page" className="mt-3">
+          {title}
+        </Heading>
 
-          {config.subtitleFields && config.subtitleFields.length > 0 && (
-            <div className="flex flex-wrap justify-center gap-2 text-muted-foreground">
-              {config.subtitleFields.map((field, idx) => {
-                const val = getNestedValue(data, field) as React.ReactNode;
-                return val ? <span key={idx} className="flex items-center gap-2">{idx > 0 && <span>•</span>}{val}</span> : null;
-              })}
-            </div>
-          )}
-
-          {config.badges && (
-            <div className="flex flex-wrap justify-center gap-2 mt-2">
-              {config.badges.map((badge, idx) => {
-                const rawVal = getNestedValue(data, badge.field);
-                if (!rawVal) return null;
-
-                const displayVal = badge.map ? (badge.map[String(rawVal).toLowerCase()] || rawVal) : rawVal;
-
-                // Handle specific badge logic e.g. status colors if needed, otherwise use variant
+        {config.subtitleFields && config.subtitleFields.length > 0 && (
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
+            {config.subtitleFields
+              .map((field, idx) => {
+                const val = getNestedValue(data, field);
+                if (val === null || val === undefined || val === '') return null;
                 return (
-                  <AppBadge key={idx} variant={badge.variant || "secondary"}>
-                    {displayVal as React.ReactNode}
-                  </AppBadge>
+                  <span key={idx} className="flex items-center gap-2">
+                    {idx > 0 && (
+                      <Text variant="meta-label" aria-hidden="true">
+                        ·
+                      </Text>
+                    )}
+                    <Text variant="meta-label">{val as React.ReactNode}</Text>
+                  </span>
                 );
-              })}
-            </div>
-          )}
+              })
+              .filter(Boolean)}
+          </div>
+        )}
 
-          {config.metadata && (
-            <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground mt-4">
-              {config.metadata.map((meta, idx) => {
-                const val = getNestedValue(data, meta.valuePath);
-                if (!val) return null;
-                const Icon = meta.icon;
-                return (
-                  <div key={idx} className="flex items-center gap-1.5">
-                    {Icon && <Icon className="h-4 w-4" />}
-                    <span>{val as React.ReactNode}</span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+        {config.metadata && config.metadata.length > 0 && (
+          <div className="border-t border-border/40 pt-3 mt-4 flex flex-wrap gap-x-6 gap-y-2">
+            {config.metadata.map((meta, idx) => {
+              const val = getNestedValue(data, meta.valuePath);
+              if (val === null || val === undefined || val === '') return null;
+              const Icon = meta.icon;
+              return (
+                <div key={idx} className="flex items-center gap-1.5">
+                  {Icon && <Icon className="size-3.5 text-muted-foreground/60" />}
+                  <Text variant="meta-label">{val as React.ReactNode}</Text>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {config.badges && config.badges.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-3">
+            {config.badges.map((badge, idx) => {
+              const rawVal = getNestedValue(data, badge.field);
+              if (rawVal === null || rawVal === undefined || rawVal === '') return null;
+
+              const displayVal = badge.map
+                ? badge.map[String(rawVal).toLowerCase()] ?? rawVal
+                : rawVal;
+
+              return (
+                <AppBadge key={idx} variant={badge.variant || 'secondary'}>
+                  {displayVal as React.ReactNode}
+                </AppBadge>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

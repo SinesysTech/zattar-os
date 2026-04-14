@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Perfil de Parte — POC unificada Glass Briefing</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: oklch(0.985 0.003 264);
+    --bg-ambient: oklch(0.97 0.008 264);
+    --foreground: oklch(0.14 0.02 264);
+    --muted-foreground: oklch(0.45 0.015 264);
+    --border: oklch(0.88 0.01 264);
+    --card: oklch(1 0 0);
+    --primary: oklch(0.55 0.18 270);
+    --primary-tint: oklch(0.55 0.18 270 / 0.08);
+    --success: oklch(0.62 0.17 150);
+    --warning: oklch(0.72 0.16 75);
+    --info: oklch(0.62 0.17 240);
+    --destructive: oklch(0.58 0.22 25);
+    --outline: oklch(0.9 0.01 264);
+    --outline-variant: oklch(0.94 0.008 264);
+
+    /* Cores por tipo de parte */
+    --cliente: oklch(0.55 0.18 270);
+    --contraria: oklch(0.65 0.2 30);
+    --terceiro: oklch(0.62 0.17 240);
+    --representante: oklch(0.62 0.17 150);
+  }
+  html.dark {
+    --bg: oklch(0.14 0.018 264);
+    --bg-ambient: oklch(0.17 0.02 264);
+    --foreground: oklch(0.96 0.005 264);
+    --muted-foreground: oklch(0.68 0.012 264);
+    --border: oklch(0.28 0.015 264);
+    --card: oklch(0.2 0.018 264);
+    --outline: oklch(0.3 0.015 264);
+    --outline-variant: oklch(0.24 0.015 264);
+  }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--foreground);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, oklch(0.95 0.04 280 / 0.6), transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, oklch(0.95 0.04 200 / 0.5), transparent 60%),
+      var(--bg);
+    min-height: 100vh;
+  }
+  html.dark body {
+    background:
+      radial-gradient(1200px 600px at 10% -10%, oklch(0.22 0.04 280 / 0.55), transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, oklch(0.22 0.04 200 / 0.5), transparent 60%),
+      var(--bg);
+  }
+  .font-display { font-family: 'Manrope', 'Inter', sans-serif; letter-spacing: -0.01em; }
+  .font-mono { font-family: 'Geist Mono', ui-monospace, monospace; }
+
+  .glass {
+    background: color-mix(in oklch, var(--card) 65%, transparent);
+    border: 1px solid color-mix(in oklch, var(--border) 60%, transparent);
+    backdrop-filter: blur(18px) saturate(120%);
+    -webkit-backdrop-filter: blur(18px) saturate(120%);
+    border-radius: 16px;
+    box-shadow: 0 1px 0 color-mix(in oklch, white 30%, transparent) inset, 0 8px 24px -18px oklch(0.2 0.05 264 / 0.25);
+  }
+  .glass-2 {
+    background: color-mix(in oklch, var(--card) 78%, transparent);
+    border: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
+    backdrop-filter: blur(22px) saturate(135%);
+    border-radius: 14px;
+  }
+  html.dark .glass { box-shadow: 0 1px 0 color-mix(in oklch, white 5%, transparent) inset, 0 12px 30px -18px oklch(0 0 0 / 0.6); }
+
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .label-overline { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: color-mix(in oklch, var(--foreground) 45%, transparent); }
+  .meta-label { font-size: 11px; font-weight: 500; color: color-mix(in oklch, var(--foreground) 55%, transparent); }
+  .ambient-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--outline-variant), transparent); }
+
+  .tab-pill {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
+    font-size: 12px; font-weight: 500; color: color-mix(in oklch, var(--foreground) 65%, transparent);
+    transition: all .15s ease; cursor: pointer;
+  }
+  .tab-pill:hover { background: color-mix(in oklch, var(--foreground) 4%, transparent); color: var(--foreground); }
+  .tab-pill.active {
+    background: color-mix(in oklch, var(--foreground) 92%, white 8%);
+    color: var(--bg); box-shadow: 0 2px 8px -4px oklch(0.2 0.05 264 / 0.35);
+  }
+
+  .section-tab {
+    position: relative; padding: 14px 0; font-size: 13px; font-weight: 500;
+    color: color-mix(in oklch, var(--foreground) 55%, transparent);
+    cursor: pointer; transition: color .15s ease;
+  }
+  .section-tab:hover { color: var(--foreground); }
+  .section-tab.active { color: var(--foreground); }
+  .section-tab.active::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px;
+    background: var(--primary); border-radius: 2px;
+  }
+
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 500; }
+  .badge-success { background: color-mix(in oklch, var(--success) 12%, transparent); color: color-mix(in oklch, var(--success) 75%, black); }
+  .badge-warning { background: color-mix(in oklch, var(--warning) 14%, transparent); color: color-mix(in oklch, var(--warning) 75%, black); }
+  .badge-info    { background: color-mix(in oklch, var(--info) 12%, transparent);    color: color-mix(in oklch, var(--info) 75%, black); }
+  .badge-muted   { background: color-mix(in oklch, var(--foreground) 7%, transparent); color: color-mix(in oklch, var(--foreground) 65%, transparent); }
+  .badge-destructive { background: color-mix(in oklch, var(--destructive) 12%, transparent); color: color-mix(in oklch, var(--destructive) 75%, black); }
+  .badge-outline { background: transparent; color: color-mix(in oklch, var(--foreground) 70%, transparent); border: 1px solid color-mix(in oklch, var(--border) 80%, transparent); }
+
+  html.dark .badge-success { color: oklch(0.8 0.14 150); }
+  html.dark .badge-warning { color: oklch(0.85 0.13 75); }
+  html.dark .badge-info    { color: oklch(0.8 0.14 240); }
+  html.dark .badge-destructive { color: oklch(0.8 0.18 25); }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 12px;
+    background: var(--foreground); color: var(--bg); font-size: 12px; font-weight: 500; cursor: pointer;
+    box-shadow: 0 4px 14px -8px oklch(0.2 0.05 264 / 0.4); transition: all .15s ease;
+  }
+  .btn-primary:hover { background: color-mix(in oklch, var(--foreground) 88%, white 12%); }
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 12px;
+    font-size: 12px; color: color-mix(in oklch, var(--foreground) 75%, transparent); cursor: pointer;
+    border: 1px solid color-mix(in oklch, var(--border) 80%, transparent);
+    background: color-mix(in oklch, var(--card) 50%, transparent); transition: all .15s ease;
+  }
+  .btn-outline:hover { background: color-mix(in oklch, var(--card) 85%, transparent); color: var(--foreground); }
+  .btn-ghost {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 10px; border-radius: 10px;
+    font-size: 12px; color: color-mix(in oklch, var(--foreground) 70%, transparent); cursor: pointer;
+    transition: all .15s ease; border: 1px solid transparent;
+  }
+  .btn-ghost:hover { background: color-mix(in oklch, var(--foreground) 4%, transparent); color: var(--foreground); }
+
+  .kpi-card { padding: 14px 16px; }
+  .kpi-value { font-family: 'Manrope', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+
+  /* Avatar variants */
+  .avatar-lg { width: 96px; height: 96px; border-radius: 24px; }
+  @media(min-width: 1024px) { .avatar-lg { width: 120px; height: 120px; } }
+
+  .banner {
+    height: 180px; border-radius: 16px 16px 0 0; position: relative; overflow: hidden;
+    background:
+      radial-gradient(600px 200px at 20% 0%, color-mix(in oklch, var(--tipo-color, var(--primary)) 25%, transparent), transparent 70%),
+      radial-gradient(500px 180px at 85% 80%, color-mix(in oklch, var(--tipo-color, var(--primary)) 18%, transparent), transparent 70%),
+      linear-gradient(135deg, color-mix(in oklch, var(--tipo-color, var(--primary)) 10%, transparent), color-mix(in oklch, var(--info) 6%, transparent));
+  }
+  .banner-grain::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(oklch(1 0 0 / 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mix-blend-mode: overlay;
+  }
+
+  [hidden] { display: none !important; }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: color-mix(in oklch, var(--foreground) 10%, transparent); border-radius: 8px; border: 2px solid transparent; background-clip: padding-box; }
+
+  .row-hover:hover { background: color-mix(in oklch, var(--foreground) 3%, transparent); }
+
+  /* Condicional PF/PJ */
+  body[data-pessoa="pj"] [data-show="pf"] { display: none !important; }
+  body[data-pessoa="pf"] [data-show="pj"] { display: none !important; }
+
+  /* Cor dinâmica por tipo */
+  body[data-tipo="cliente"]      { --tipo-color: var(--cliente); }
+  body[data-tipo="contraria"]    { --tipo-color: var(--contraria); }
+  body[data-tipo="terceiro"]     { --tipo-color: var(--terceiro); }
+  body[data-tipo="representante"]{ --tipo-color: var(--representante); }
+
+  /* Hide/show por tipo */
+  body[data-tipo="cliente"]      [data-only]:not([data-only~="cliente"])      { display: none !important; }
+  body[data-tipo="contraria"]    [data-only]:not([data-only~="contraria"])    { display: none !important; }
+  body[data-tipo="terceiro"]     [data-only]:not([data-only~="terceiro"])     { display: none !important; }
+  body[data-tipo="representante"][data-only]:not([data-only~="representante"]){ display: none !important; }
+  body[data-tipo="cliente"]      [data-hide~="cliente"]      { display: none !important; }
+  body[data-tipo="contraria"]    [data-hide~="contraria"]    { display: none !important; }
+  body[data-tipo="terceiro"]     [data-hide~="terceiro"]     { display: none !important; }
+  body[data-tipo="representante"][data-hide~="representante"]{ display: none !important; }
+
+  /* Seletor de tipo (dev toolbar) */
+  .dev-toolbar {
+    position: fixed; bottom: 16px; right: 16px; z-index: 100;
+    display: flex; gap: 4px; padding: 6px; align-items: center;
+  }
+  .type-chip {
+    padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 500;
+    cursor: pointer; color: color-mix(in oklch, var(--foreground) 65%, transparent);
+    transition: all .15s ease;
+  }
+  .type-chip:hover { background: color-mix(in oklch, var(--foreground) 6%, transparent); }
+  .type-chip.active {
+    background: color-mix(in oklch, var(--tipo-color) 15%, transparent);
+    color: var(--tipo-color); font-weight: 600;
+  }
+</style>
+</head>
+<body class="antialiased" data-tipo="cliente" data-pessoa="pf">
+
+<div class="max-w-[1400px] mx-auto px-6 py-6">
+
+  <!-- ─── Breadcrumb ──────────────────────────────────────────────── -->
+  <div class="flex items-center gap-2 text-xs mb-5 text-[color:var(--muted-foreground)]">
+    <span>ZattarOS</span>
+    <svg class="w-3 h-3 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    <span>Partes</span>
+    <svg class="w-3 h-3 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    <span data-tipo-label>Clientes</span>
+    <svg class="w-3 h-3 opacity-40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    <span class="text-[color:var(--foreground)] font-medium" data-nome>Maria Clara Azevedo</span>
+  </div>
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗ -->
+  <!-- ║  HEADER CARD: Banner + Avatar + Info + Tabs                    ║ -->
+  <!-- ╚══════════════════════════════════════════════════════════════╝ -->
+  <div class="glass overflow-hidden mb-4">
+    <!-- Banner -->
+    <div class="banner banner-grain"></div>
+
+    <!-- Avatar + nome + badges + metadata -->
+    <div class="px-6 pb-5 -mt-14 lg:-mt-16">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+
+        <!-- Esquerda: avatar + identidade -->
+        <div class="flex flex-col lg:flex-row lg:items-end gap-4">
+          <!-- Avatar -->
+          <div class="relative">
+            <div class="avatar-lg glass-2 flex items-center justify-center shadow-lg"
+                 style="border: 4px solid var(--card); background: color-mix(in oklch, var(--tipo-color) 12%, var(--card));">
+              <span class="font-display font-bold text-[color:var(--tipo-color)]" data-iniciais style="font-size: 32px;">MA</span>
+            </div>
+            <!-- Status dot -->
+            <span class="absolute bottom-2 right-2 w-4 h-4 rounded-full border-2" style="background: var(--success); border-color: var(--card);"></span>
+          </div>
+
+          <div class="lg:pb-2">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="label-overline" data-tipo-label-overline>Cliente</span>
+              <span class="opacity-30">·</span>
+              <span class="meta-label font-mono tabular-nums" data-documento>123.456.789-00</span>
+            </div>
+            <h1 class="font-display text-2xl lg:text-3xl font-bold tracking-tight leading-tight" data-nome>Maria Clara Azevedo</h1>
+
+            <!-- Badges -->
+            <div class="flex flex-wrap items-center gap-1.5 mt-2">
+              <span class="badge badge-outline" data-show="pf">Pessoa Física</span>
+              <span class="badge badge-outline" data-show="pj" hidden>Pessoa Jurídica</span>
+              <span class="badge badge-success">Ativo</span>
+              <span class="badge badge-info" data-only="terceiro">Testemunha</span>
+              <span class="badge badge-muted" data-only="terceiro">Polo Ativo</span>
+              <span class="badge badge-warning" data-only="representante">OAB ativa</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Direita: ações -->
+        <div class="flex items-center gap-2 lg:pb-2">
+          <button class="btn-ghost" title="Copiar documento">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+          <button class="btn-outline">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Editar
+          </button>
+          <button class="btn-outline" title="Mais ações">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Metadata strip -->
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-4 pt-4 border-t border-[color:var(--outline-variant)]">
+        <div class="flex items-center gap-1.5 text-xs text-[color:var(--muted-foreground)]">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span data-documento>123.456.789-00</span>
+        </div>
+        <div class="flex items-center gap-1.5 text-xs text-[color:var(--muted-foreground)]">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>São Paulo · SP</span>
+        </div>
+        <div class="flex items-center gap-1.5 text-xs text-[color:var(--muted-foreground)]" data-only="representante">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6l9 6 9-6M3 6v12a2 2 0 002 2h14a2 2 0 002-2V6"/></svg>
+          <span>OAB/SP 284.912</span>
+        </div>
+        <div class="flex items-center gap-1.5 text-xs text-[color:var(--muted-foreground)]">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Atualizado há 3 dias</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs bar -->
+    <div class="border-t border-[color:var(--outline-variant)] px-6">
+      <div class="flex items-center gap-6">
+        <button class="section-tab active" data-section="perfil">Perfil</button>
+        <button class="section-tab" data-section="processos" data-hide="terceiro">
+          Processos <span class="badge badge-muted ml-1 tabular-nums" data-only="cliente contraria representante">12</span>
+        </button>
+        <button class="section-tab" data-section="processos" data-only="terceiro">
+          Participações <span class="badge badge-muted ml-1 tabular-nums">4</span>
+        </button>
+        <button class="section-tab" data-section="clientes" data-only="representante">
+          Clientes <span class="badge badge-muted ml-1 tabular-nums">28</span>
+        </button>
+        <button class="section-tab" data-section="representantes" data-only="cliente">
+          Representantes <span class="badge badge-muted ml-1 tabular-nums">3</span>
+        </button>
+        <button class="section-tab" data-section="documentos" data-only="cliente">
+          Documentos <span class="badge badge-muted ml-1 tabular-nums">7</span>
+        </button>
+        <button class="section-tab" data-section="atividades">Atividades</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗ -->
+  <!-- ║  KPI STRIP                                                     ║ -->
+  <!-- ╚══════════════════════════════════════════════════════════════╝ -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+    <!-- KPI 1: Processos/Participações -->
+    <div class="glass-2 kpi-card" data-hide="terceiro">
+      <p class="label-overline">Processos Ativos</p>
+      <div class="flex items-end justify-between mt-1">
+        <p class="kpi-value">8</p>
+        <span class="badge badge-success text-[10px]">+2 este mês</span>
+      </div>
+      <p class="meta-label mt-1">12 totais</p>
+    </div>
+    <div class="glass-2 kpi-card" data-only="terceiro">
+      <p class="label-overline">Participações</p>
+      <div class="flex items-end justify-between mt-1">
+        <p class="kpi-value">4</p>
+      </div>
+      <p class="meta-label mt-1">em 3 processos</p>
+    </div>
+
+    <!-- KPI 2 -->
+    <div class="glass-2 kpi-card" data-only="cliente">
+      <p class="label-overline">Representantes</p>
+      <div class="flex items-end justify-between mt-1">
+        <p class="kpi-value">3</p>
+      </div>
+      <p class="meta-label mt-1">todos ativos</p>
+    </div>
+    <div class="glass-2 kpi-card" data-only="contraria">
+      <p class="label-overline">Processos Contra</p>
+      <div class="flex items-end justify-between mt-1">
+        <p class="kpi-value">7</p>
+        <span class="badge badge-warning text-[10px]">3 em recurso</span>
+      </div>
+      <p class="meta-label mt-1">desde 2022</p>
+    </div>
+    <div class="glass-2 kpi-card" data-only="terceiro">
+      <p class="label-overline">Tipo Predominante</p>
+      <div class="flex items-end justify-between mt-1">
+        <p class="kpi-value text-[18px]">Testemunha</p>
+      </div>
+      <p class="meta-label mt-1">em 3 de 4 processos</p>
+    </div>
+    <div class="glass-2 kpi-card" data-only="representante">
+      <p class="label-overline">Clientes</p>
+      <div class="flex items-end justify-between mt-1">
+        <p class="kpi-value">28</p>
+        <span class="badge badge-info text-[10px]">+1 novo</span>
+      </div>
+      <p class="meta-label mt-1">carteira ativa</p>
+    </div>
+
+    <!-- KPI 3: PJE -->
+    <div class="glass-2 kpi-card" data-hide="representante">
+      <p class="label-overline">PJE</p>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="w-2 h-2 rounded-full" style="background: var(--success);"></span>
+        <p class="kpi-value text-[18px]">Sincronizado</p>
+      </div>
+      <p class="meta-label mt-1">última: há 12h</p>
+    </div>
+    <div class="glass-2 kpi-card" data-only="representante">
+      <p class="label-overline">OAB Principal</p>
+      <div class="flex items-end justify-between mt-1">
+        <p class="kpi-value text-[18px] font-mono">SP 284.912</p>
+      </div>
+      <p class="meta-label mt-1">+ 2 inscrições</p>
+    </div>
+
+    <!-- KPI 4: Atividade -->
+    <div class="glass-2 kpi-card">
+      <p class="label-overline">Última Atividade</p>
+      <div class="flex items-end justify-between mt-1">
+        <p class="kpi-value text-[18px]">Há 3 dias</p>
+      </div>
+      <p class="meta-label mt-1">audiência agendada</p>
+    </div>
+  </div>
+
+  <!-- ╔══════════════════════════════════════════════════════════════╗ -->
+  <!-- ║  GRID: Sidebar + Main                                          ║ -->
+  <!-- ╚══════════════════════════════════════════════════════════════╝ -->
+  <div class="grid gap-4 lg:grid-cols-[340px_1fr] xl:grid-cols-[380px_1fr]">
+
+    <!-- ═══ SIDEBAR ═══════════════════════════════════════════════ -->
+    <aside class="space-y-4">
+
+      <!-- Completude do perfil -->
+      <div class="glass p-4">
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-sm font-semibold">Complete o perfil</p>
+          <span class="text-xs font-mono tabular-nums text-[color:var(--muted-foreground)]">78%</span>
+        </div>
+        <div class="w-full h-1.5 rounded-full" style="background: color-mix(in oklch, var(--foreground) 7%, transparent);">
+          <div class="h-1.5 rounded-full" style="width: 78%; background: var(--tipo-color);"></div>
+        </div>
+        <p class="meta-label mt-2">3 campos pendentes · Nome social, CEP, Gênero</p>
+      </div>
+
+      <!-- ── Seção: Sobre ────────────────────────── -->
+      <div class="glass p-4">
+        <p class="label-overline mb-3">Sobre</p>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3 text-sm">
+            <svg class="w-3.5 h-3.5 text-[color:var(--muted-foreground)] mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <div class="min-w-0">
+              <p class="label-overline text-[9px]">Nome</p>
+              <p data-nome>Maria Clara Azevedo</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 text-sm">
+            <svg class="w-3.5 h-3.5 text-[color:var(--muted-foreground)] mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <div class="min-w-0">
+              <p class="label-overline text-[9px]">CPF / CNPJ</p>
+              <p class="font-mono" data-documento>123.456.789-00</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 text-sm" data-show="pf">
+            <svg class="w-3.5 h-3.5 text-[color:var(--muted-foreground)] mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <div class="min-w-0">
+              <p class="label-overline text-[9px]">RG</p>
+              <p class="font-mono">48.127.339-2</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 text-sm" data-show="pj">
+            <svg class="w-3.5 h-3.5 text-[color:var(--muted-foreground)] mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <div class="min-w-0">
+              <p class="label-overline text-[9px]">Inscrição Estadual</p>
+              <p class="font-mono">110.042.912.113</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Seção específica: Participação (terceiro) ── -->
+      <div class="glass p-4" data-only="terceiro">
+        <p class="label-overline mb-3">Participação</p>
+        <div class="space-y-3 text-sm">
+          <div><p class="label-overline text-[9px]">Tipo de Parte</p><p>Testemunha</p></div>
+          <div><p class="label-overline text-[9px]">Polo</p><p>Ativo</p></div>
+          <div><p class="label-overline text-[9px]">Principal</p><span class="badge badge-success">Sim</span></div>
+        </div>
+      </div>
+
+      <!-- ── Seção específica: OAB (representante) ── -->
+      <div class="glass p-4" data-only="representante">
+        <p class="label-overline mb-3">OAB</p>
+        <div class="space-y-3 text-sm">
+          <div><p class="label-overline text-[9px]">Principal</p><p class="font-mono">SP 284.912</p></div>
+          <div><p class="label-overline text-[9px]">Situação</p><span class="badge badge-success">Ativa</span></div>
+          <div>
+            <p class="label-overline text-[9px] mb-1">Demais inscrições</p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="badge badge-outline font-mono">RJ 194.812</span>
+              <span class="badge badge-outline font-mono">MG 127.305</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Seção: Dados PF ───────────────────── -->
+      <div class="glass p-4" data-show="pf" data-hide="representante">
+        <p class="label-overline mb-3">Dados Pessoais</p>
+        <div class="space-y-3 text-sm">
+          <div><p class="label-overline text-[9px]">Nascimento</p><p>14/03/1988 · 37 anos</p></div>
+          <div><p class="label-overline text-[9px]">Sexo / Gênero</p><p>Feminino</p></div>
+          <div><p class="label-overline text-[9px]">Estado Civil</p><p>Casada</p></div>
+          <div><p class="label-overline text-[9px]">Nacionalidade</p><p>Brasileira</p></div>
+          <div><p class="label-overline text-[9px]">Nome da Mãe</p><p>Lúcia Helena Azevedo</p></div>
+          <div><p class="label-overline text-[9px]">Escolaridade</p><p>Ensino Superior</p></div>
+          <div>
+            <p class="label-overline text-[9px]">Situação CPF</p>
+            <span class="badge badge-success">Regular na Receita</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Seção: Dados PJ ───────────────────── -->
+      <div class="glass p-4" data-show="pj" data-hide="representante">
+        <p class="label-overline mb-3">Dados Empresariais</p>
+        <div class="space-y-3 text-sm">
+          <div><p class="label-overline text-[9px]">Abertura</p><p>12/07/2015</p></div>
+          <div><p class="label-overline text-[9px]">Ramo</p><p>Consultoria jurídica empresarial</p></div>
+          <div><p class="label-overline text-[9px]">Porte</p><p>Médio (ME)</p></div>
+          <div><p class="label-overline text-[9px]">Responsável</p><p class="font-mono">128.349.008-12</p></div>
+          <div>
+            <p class="label-overline text-[9px]">Situação CNPJ</p>
+            <span class="badge badge-success">Ativa</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Seção: Contatos ───────────────────── -->
+      <div class="glass p-4">
+        <p class="label-overline mb-3">Contatos</p>
+        <div class="space-y-2.5 text-sm">
+          <div class="flex items-center gap-2.5 row-hover rounded-lg px-1 py-0.5 -mx-1 cursor-pointer">
+            <svg class="w-3.5 h-3.5 text-[color:var(--muted-foreground)] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            <span class="font-mono">(11) 98764-2103</span>
+            <span class="badge badge-muted ml-auto text-[10px]">Celular</span>
+          </div>
+          <div class="flex items-center gap-2.5 row-hover rounded-lg px-1 py-0.5 -mx-1 cursor-pointer">
+            <svg class="w-3.5 h-3.5 text-[color:var(--muted-foreground)] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            <span class="font-mono">(11) 3022-4410</span>
+            <span class="badge badge-muted ml-auto text-[10px]">Comercial</span>
+          </div>
+          <div class="flex items-center gap-2.5 row-hover rounded-lg px-1 py-0.5 -mx-1 cursor-pointer">
+            <svg class="w-3.5 h-3.5 text-[color:var(--muted-foreground)] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>maria.azevedo@exemplo.com</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Seção: Endereço ───────────────────── -->
+      <div class="glass p-4" data-hide="representante">
+        <div class="flex items-center justify-between mb-3">
+          <p class="label-overline">Endereço</p>
+          <button class="btn-ghost !p-1" title="Ver no mapa">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </button>
+        </div>
+        <div class="space-y-1.5 text-sm">
+          <p>Rua Augusta, 2142 · Apto 81</p>
+          <p class="text-[color:var(--muted-foreground)]">Jardim Paulista, São Paulo — SP</p>
+          <p class="font-mono text-xs text-[color:var(--muted-foreground)]">01412-100</p>
+        </div>
+      </div>
+
+      <!-- ── Seção: Dados PJE ───────────────────── -->
+      <div class="glass p-4" data-hide="representante">
+        <p class="label-overline mb-3">Integração PJE</p>
+        <div class="space-y-2.5 text-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-[color:var(--muted-foreground)]">Status</span>
+            <span class="badge badge-success">Sincronizado</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-[color:var(--muted-foreground)]">Situação</span>
+            <span>Parte regular</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-[color:var(--muted-foreground)]">Login</span>
+            <span class="font-mono">mazevedo_pje</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ═══ MAIN CONTENT ═══════════════════════════════════════════ -->
+    <main class="space-y-4">
+
+      <!-- ╔════ Seção: Informações (principal) ════╗ -->
+      <div class="glass p-5">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <h2 class="font-display text-lg font-semibold" data-info-title>Informações do Cliente</h2>
+            <p class="meta-label mt-0.5">Dados cadastrais consolidados e sincronizados com PJE/Receita.</p>
+          </div>
+          <button class="btn-ghost" title="Editar seção">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+          <div>
+            <p class="label-overline mb-1">Tipo de pessoa</p>
+            <p class="text-sm"><span data-show="pf">Pessoa Física</span><span data-show="pj" hidden>Pessoa Jurídica</span></p>
+          </div>
+          <div>
+            <p class="label-overline mb-1">Documento</p>
+            <p class="text-sm font-mono" data-documento>123.456.789-00</p>
+          </div>
+          <div>
+            <p class="label-overline mb-1">Status</p>
+            <span class="badge badge-success">Ativo</span>
+          </div>
+          <div data-only="terceiro">
+            <p class="label-overline mb-1">Papel nos autos</p>
+            <p class="text-sm">Testemunha (Polo Ativo)</p>
+          </div>
+          <div data-only="contraria">
+            <p class="label-overline mb-1">Total processos contra</p>
+            <p class="text-sm font-mono tabular-nums">7 processos · 3 ativos</p>
+          </div>
+          <div data-only="representante">
+            <p class="label-overline mb-1">Tipo</p>
+            <p class="text-sm">Advogado Externo</p>
+          </div>
+          <div data-show="pf" data-hide="representante">
+            <p class="label-overline mb-1">Data de nascimento</p>
+            <p class="text-sm">14 de março de 1988 <span class="text-[color:var(--muted-foreground)]">· 37 anos</span></p>
+          </div>
+          <div data-show="pj" data-hide="representante">
+            <p class="label-overline mb-1">Abertura</p>
+            <p class="text-sm">12 de julho de 2015</p>
+          </div>
+          <div>
+            <p class="label-overline mb-1">Cadastrado em</p>
+            <p class="text-sm">02 de março de 2024</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ╔════ Seção: Nome social / Fantasia ════╗ -->
+      <div class="glass p-5" data-only="cliente contraria terceiro">
+        <div class="flex items-start justify-between mb-2">
+          <h3 class="text-sm font-semibold">Nome social / Fantasia</h3>
+          <span class="badge badge-muted">Opcional</span>
+        </div>
+        <p class="text-sm text-[color:var(--muted-foreground)]" data-show="pf">Clara Azevedo</p>
+        <p class="text-sm text-[color:var(--muted-foreground)]" data-show="pj" hidden>Azevedo Consultoria & Advocacia</p>
+      </div>
+
+      <!-- ╔════ Seção: Processos (tabela) ════╗ -->
+      <div class="glass overflow-hidden" data-hide="representante">
+        <div class="flex items-center justify-between px-5 py-4">
+          <div>
+            <h3 class="font-display text-base font-semibold" data-only="cliente contraria">Processos relacionados</h3>
+            <h3 class="font-display text-base font-semibold" data-only="terceiro">Participações em processos</h3>
+            <p class="meta-label mt-0.5">Últimos 12 meses · ordenado por atividade recente</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="btn-ghost">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Filtrar
+            </button>
+            <button class="btn-outline">Ver todos</button>
+          </div>
+        </div>
+        <div class="ambient-divider"></div>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left border-b border-[color:var(--outline-variant)]">
+              <th class="label-overline font-medium px-5 py-2.5">Número CNJ</th>
+              <th class="label-overline font-medium px-3 py-2.5">Classe</th>
+              <th class="label-overline font-medium px-3 py-2.5" data-only="terceiro">Participação</th>
+              <th class="label-overline font-medium px-3 py-2.5">Status</th>
+              <th class="label-overline font-medium px-3 py-2.5">Última mov.</th>
+              <th class="px-3 py-2.5 w-8"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-hover border-b border-[color:var(--outline-variant)] cursor-pointer">
+              <td class="px-5 py-3 font-mono text-xs">0012345-67.2024.8.26.0100</td>
+              <td class="px-3 py-3">Procedimento Comum Cível</td>
+              <td class="px-3 py-3" data-only="terceiro">Testemunha</td>
+              <td class="px-3 py-3"><span class="badge badge-success">Ativo</span></td>
+              <td class="px-3 py-3 text-[color:var(--muted-foreground)]">há 2 dias</td>
+              <td class="px-3 py-3"><svg class="w-4 h-4 text-[color:var(--muted-foreground)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></td>
+            </tr>
+            <tr class="row-hover border-b border-[color:var(--outline-variant)] cursor-pointer">
+              <td class="px-5 py-3 font-mono text-xs">1008842-03.2023.8.26.0224</td>
+              <td class="px-3 py-3">Execução Fiscal</td>
+              <td class="px-3 py-3" data-only="terceiro">Perito</td>
+              <td class="px-3 py-3"><span class="badge badge-warning">Suspenso</span></td>
+              <td class="px-3 py-3 text-[color:var(--muted-foreground)]">há 2 semanas</td>
+              <td class="px-3 py-3"><svg class="w-4 h-4 text-[color:var(--muted-foreground)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></td>
+            </tr>
+            <tr class="row-hover cursor-pointer">
+              <td class="px-5 py-3 font-mono text-xs">0047719-55.2022.8.26.0100</td>
+              <td class="px-3 py-3">Ação de Cobrança</td>
+              <td class="px-3 py-3" data-only="terceiro">Testemunha</td>
+              <td class="px-3 py-3"><span class="badge badge-muted">Arquivado</span></td>
+              <td class="px-3 py-3 text-[color:var(--muted-foreground)]">há 3 meses</td>
+              <td class="px-3 py-3"><svg class="w-4 h-4 text-[color:var(--muted-foreground)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ╔════ Seção exclusiva Cliente: Representantes vinculados ════╗ -->
+      <div class="glass p-5" data-only="cliente">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-display text-base font-semibold">Representantes vinculados</h3>
+            <p class="meta-label mt-0.5">Advogados com procuração ativa</p>
+          </div>
+          <button class="btn-outline">+ Vincular</button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="glass-2 p-3 row-hover cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center font-semibold text-sm" style="background: color-mix(in oklch, var(--representante) 12%, transparent); color: var(--representante);">RS</div>
+              <div class="min-w-0">
+                <p class="text-sm font-medium truncate">Rafael Santos</p>
+                <p class="meta-label font-mono">OAB/SP 182.094</p>
+              </div>
+            </div>
+          </div>
+          <div class="glass-2 p-3 row-hover cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center font-semibold text-sm" style="background: color-mix(in oklch, var(--representante) 12%, transparent); color: var(--representante);">AL</div>
+              <div class="min-w-0">
+                <p class="text-sm font-medium truncate">Ana Lima</p>
+                <p class="meta-label font-mono">OAB/SP 233.514</p>
+              </div>
+            </div>
+          </div>
+          <div class="glass-2 p-3 row-hover cursor-pointer">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center font-semibold text-sm" style="background: color-mix(in oklch, var(--representante) 12%, transparent); color: var(--representante);">PM</div>
+              <div class="min-w-0">
+                <p class="text-sm font-medium truncate">Paula Mendes</p>
+                <p class="meta-label font-mono">OAB/RJ 194.812</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ╔════ Seção exclusiva Representante: Carteira de Clientes ════╗ -->
+      <div class="glass overflow-hidden" data-only="representante">
+        <div class="flex items-center justify-between px-5 py-4">
+          <div>
+            <h3 class="font-display text-base font-semibold">Carteira de clientes</h3>
+            <p class="meta-label mt-0.5">28 clientes ativos sob representação</p>
+          </div>
+          <button class="btn-outline">Ver todos</button>
+        </div>
+        <div class="ambient-divider"></div>
+        <div class="divide-y divide-[color:var(--outline-variant)]">
+          <div class="flex items-center gap-3 px-5 py-3 row-hover cursor-pointer">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center font-semibold text-xs" style="background: color-mix(in oklch, var(--cliente) 10%, transparent); color: var(--cliente);">MA</div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium">Maria Clara Azevedo</p>
+              <p class="meta-label font-mono">123.456.789-00 · PF</p>
+            </div>
+            <span class="badge badge-muted tabular-nums">12 processos</span>
+          </div>
+          <div class="flex items-center gap-3 px-5 py-3 row-hover cursor-pointer">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center font-semibold text-xs" style="background: color-mix(in oklch, var(--cliente) 10%, transparent); color: var(--cliente);">ZC</div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium">Zenith Consultoria Ltda.</p>
+              <p class="meta-label font-mono">12.345.678/0001-90 · PJ</p>
+            </div>
+            <span class="badge badge-muted tabular-nums">4 processos</span>
+          </div>
+          <div class="flex items-center gap-3 px-5 py-3 row-hover cursor-pointer">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center font-semibold text-xs" style="background: color-mix(in oklch, var(--cliente) 10%, transparent); color: var(--cliente);">JP</div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium">João Pedro Reis</p>
+              <p class="meta-label font-mono">987.654.321-00 · PF</p>
+            </div>
+            <span class="badge badge-muted tabular-nums">2 processos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ╔════ Seção: Atividades recentes (timeline) ════╗ -->
+      <div class="glass p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-display text-base font-semibold">Atividades recentes</h3>
+            <p class="meta-label mt-0.5">Últimos eventos do cadastro e operações vinculadas</p>
+          </div>
+          <button class="btn-ghost">Ver tudo</button>
+        </div>
+        <div class="space-y-0 relative">
+          <div class="absolute left-[7px] top-2 bottom-2 w-px" style="background: color-mix(in oklch, var(--outline) 80%, transparent);"></div>
+          <div class="relative flex gap-3 pb-4">
+            <span class="relative z-10 w-3.5 h-3.5 rounded-full mt-1 shrink-0" style="background: var(--success); box-shadow: 0 0 0 3px var(--card);"></span>
+            <div class="flex-1">
+              <p class="text-sm"><span class="font-medium">Documento anexado</span> — Procuração.pdf</p>
+              <p class="meta-label">há 3 horas · por Rafael Santos</p>
+            </div>
+          </div>
+          <div class="relative flex gap-3 pb-4">
+            <span class="relative z-10 w-3.5 h-3.5 rounded-full mt-1 shrink-0" style="background: var(--info); box-shadow: 0 0 0 3px var(--card);"></span>
+            <div class="flex-1">
+              <p class="text-sm"><span class="font-medium">Processo vinculado</span> — 0012345-67.2024.8.26.0100</p>
+              <p class="meta-label">há 2 dias</p>
+            </div>
+          </div>
+          <div class="relative flex gap-3 pb-4">
+            <span class="relative z-10 w-3.5 h-3.5 rounded-full mt-1 shrink-0" style="background: var(--warning); box-shadow: 0 0 0 3px var(--card);"></span>
+            <div class="flex-1">
+              <p class="text-sm"><span class="font-medium">Dado atualizado</span> — Endereço residencial</p>
+              <p class="meta-label">há 1 semana · por sistema PJE</p>
+            </div>
+          </div>
+          <div class="relative flex gap-3">
+            <span class="relative z-10 w-3.5 h-3.5 rounded-full mt-1 shrink-0" style="background: color-mix(in oklch, var(--foreground) 25%, transparent); box-shadow: 0 0 0 3px var(--card);"></span>
+            <div class="flex-1">
+              <p class="text-sm"><span class="font-medium">Cadastro criado</span></p>
+              <p class="meta-label">02 de março de 2024</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <p class="label-overline text-center mt-10 opacity-60">
+    POC · Layout unificado de perfil de parte · <span data-tipo-label-overline>Cliente</span> · <span data-pessoa-label>Pessoa Física</span>
+  </p>
+</div>
+
+<!-- ═══ Dev toolbar: seletor de tipo/pessoa ═══ -->
+<div class="dev-toolbar glass">
+  <span class="label-overline ml-2">Tipo</span>
+  <button class="type-chip active" data-set-tipo="cliente">Cliente</button>
+  <button class="type-chip" data-set-tipo="contraria">P. Contrária</button>
+  <button class="type-chip" data-set-tipo="terceiro">Terceiro</button>
+  <button class="type-chip" data-set-tipo="representante">Representante</button>
+  <span class="w-px h-5 mx-1 bg-[color:var(--outline-variant)]"></span>
+  <button class="type-chip active" data-set-pessoa="pf">PF</button>
+  <button class="type-chip" data-set-pessoa="pj">PJ</button>
+  <span class="w-px h-5 mx-1 bg-[color:var(--outline-variant)]"></span>
+  <button class="type-chip" id="toggle-dark" title="Alternar tema">
+    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+  </button>
+</div>
+
+<script>
+  const body = document.body;
+  const LABELS_TIPO = {
+    cliente:       { plural: 'Clientes', singular: 'Cliente', info: 'Informações do Cliente' },
+    contraria:     { plural: 'Partes Contrárias', singular: 'Parte Contrária', info: 'Informações da Parte Contrária' },
+    terceiro:      { plural: 'Terceiros', singular: 'Terceiro', info: 'Informações do Terceiro' },
+    representante: { plural: 'Representantes', singular: 'Representante', info: 'Dados do Representante' },
+  };
+  const MOCK = {
+    cliente:       { nome: 'Maria Clara Azevedo', iniciais: 'MA', docPF: '123.456.789-00', docPJ: '12.345.678/0001-90' },
+    contraria:     { nome: 'Industrial Norte S/A',   iniciais: 'IN', docPF: '987.654.321-00', docPJ: '09.283.174/0001-22' },
+    terceiro:      { nome: 'Carlos Eduardo Freitas', iniciais: 'CF', docPF: '456.123.789-11', docPJ: '15.482.003/0001-71' },
+    representante: { nome: 'Rafael Santos Silva',    iniciais: 'RS', docPF: '321.987.654-55', docPJ: '—' },
+  };
+
+  function applyTipo(t) {
+    body.dataset.tipo = t;
+    document.querySelectorAll('[data-set-tipo]').forEach(el => el.classList.toggle('active', el.dataset.setTipo === t));
+    document.querySelectorAll('[data-tipo-label]').forEach(el => el.textContent = LABELS_TIPO[t].plural);
+    document.querySelectorAll('[data-tipo-label-overline]').forEach(el => el.textContent = LABELS_TIPO[t].singular);
+    document.querySelectorAll('[data-info-title]').forEach(el => el.textContent = LABELS_TIPO[t].info);
+    refreshMock();
+    // Representante é sempre PF conceitualmente (advogado pessoa)
+    if (t === 'representante') applyPessoa('pf');
+  }
+  function applyPessoa(p) {
+    body.dataset.pessoa = p;
+    document.querySelectorAll('[data-set-pessoa]').forEach(el => el.classList.toggle('active', el.dataset.setPessoa === p));
+    document.querySelectorAll('[data-pessoa-label]').forEach(el => el.textContent = p === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica');
+    refreshMock();
+  }
+  function refreshMock() {
+    const t = body.dataset.tipo;
+    const p = body.dataset.pessoa;
+    const m = MOCK[t];
+    document.querySelectorAll('[data-nome]').forEach(el => el.textContent = m.nome);
+    document.querySelectorAll('[data-iniciais]').forEach(el => el.textContent = m.iniciais);
+    document.querySelectorAll('[data-documento]').forEach(el => el.textContent = p === 'pf' ? m.docPF : m.docPJ);
+  }
+
+  document.querySelectorAll('[data-set-tipo]').forEach(btn => btn.addEventListener('click', () => applyTipo(btn.dataset.setTipo)));
+  document.querySelectorAll('[data-set-pessoa]').forEach(btn => btn.addEventListener('click', () => applyPessoa(btn.dataset.setPessoa)));
+
+  // Section tabs (visual only)
+  document.querySelectorAll('.section-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // Dark toggle
+  document.getElementById('toggle-dark').addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+  });
+
+  refreshMock();
+</script>
+</body>
+</html>
