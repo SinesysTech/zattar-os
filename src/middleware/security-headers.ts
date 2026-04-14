@@ -42,8 +42,8 @@ const TRUSTED_DOMAINS = {
   dyte: ["https://api.dyte.io", "https://dyte.io", "https://*.dyte.io", "wss://*.dyte.io"],
   // Images
   images: ["https://images.unsplash.com"],
-  // Chatwoot
-  chatwoot: ["https://chatwoot-web.platform.synthropic.app"],
+  // Chatwoot (widget self-hosted - SDK em /packs/js/sdk.js + realtime em wss:.../cable)
+  chatwoot: ["https://chat.sinesys.app", "wss://chat.sinesys.app"],
   // CopilotKit
   copilotkit: ["https://api.cloud.copilotkit.ai", "https://cdn.copilotkit.ai"],
   // Cloudflare Stream - Video hosting (usado no hero da landing page)
@@ -137,7 +137,7 @@ export function buildCSPDirectives(nonce?: string): string {
       " "
     )} ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.ai.join(
       " "
-    )} ${TRUSTED_DOMAINS.dyte.join(" ")} ${TRUSTED_DOMAINS.chatwoot[0]} ${TRUSTED_DOMAINS.copilotkit.join(" ")}`,
+    )} ${TRUSTED_DOMAINS.dyte.join(" ")} ${TRUSTED_DOMAINS.chatwoot.join(" ")} ${TRUSTED_DOMAINS.copilotkit.join(" ")}`,
 
     "frame-src": `'self' ${TRUSTED_DOMAINS.dyte.slice(1).join(" ")} ${
       TRUSTED_DOMAINS.chatwoot[0]
