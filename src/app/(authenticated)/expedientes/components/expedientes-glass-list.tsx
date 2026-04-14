@@ -113,9 +113,9 @@ function GlassRow({
       type="button"
       onClick={onViewDetail}
       className={cn(
-        'group w-full text-left rounded-2xl border border-white/[0.06] p-4 cursor-pointer',
-        'transition-all duration-[180ms] ease-out',
-        'hover:bg-white/[0.055] hover:border-white/[0.12] hover:scale-[1.003] hover:-translate-y-px hover:shadow-lg',
+        'group w-full text-left rounded-2xl border border-white/6 p-4 cursor-pointer',
+        'transition-all duration-180 ease-out',
+        'hover:bg-white/5.5 hover:border-white/12 hover:scale-[1.003] hover:-translate-y-px hover:shadow-lg',
         isAlt ? 'bg-white/[0.018]' : 'bg-white/[0.028]',
         URGENCY_BORDER[urgency],
       )}
@@ -181,7 +181,7 @@ function GlassRow({
         <div className="flex items-center gap-2 min-w-0">
           {responsavel ? (
             <>
-              <div className="w-[22px] h-[22px] rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+              <div className="w-5.5 h-5.5 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <span className="text-[9px] font-semibold text-primary">
                   {(responsavel.nomeExibicao || responsavel.nomeCompleto).charAt(0).toUpperCase()}
                 </span>
@@ -239,7 +239,7 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: 6 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-white/[0.06] bg-white/[0.028] p-4">
+        <div key={i} className="rounded-2xl border border-white/6 bg-white/[0.028] p-4">
           <div className="grid grid-cols-[32px_2.5fr_1fr_0.8fr_0.8fr_80px_80px_40px] gap-3 items-center">
             <Skeleton className="w-2 h-2 rounded-full" />
             <div className="space-y-1.5">
@@ -255,7 +255,7 @@ function ListSkeleton() {
               <Skeleton className="h-5 w-14 rounded-md" />
             </div>
             <div className="flex items-center gap-2">
-              <Skeleton className="w-[22px] h-[22px] rounded-full" />
+              <Skeleton className="w-5.5 h-5.5 rounded-full" />
               <Skeleton className="h-3 w-16" />
             </div>
             <Skeleton className="h-5 w-14 rounded-md" />
