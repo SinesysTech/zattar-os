@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import {
@@ -10,7 +9,8 @@ import {
   Camera,
   MapPin,
   Plus,
-  Tags,
+  LayoutGrid,
+  List,
 } from 'lucide-react';
 
 import { useDebounce } from '@/hooks/use-debounce';
@@ -20,7 +20,8 @@ import { IconContainer } from '@/components/ui/icon-container';
 import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/dashboard/search-input';
-import { FilterPopoverMulti, type FilterOption } from '@/app/(authenticated)/partes';
+import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
+import { FilterChipMulti, type FilterChipOption } from '../components/filter-chip';
 
 import {
   type AssinaturaDigitalFormulario,
@@ -105,19 +106,24 @@ function useTemplatesAtivos() {
 // FILTER OPTIONS
 // =============================================================================
 
-const ATIVO_OPTIONS: readonly FilterOption[] = [
+const ATIVO_OPTIONS: readonly FilterChipOption[] = [
   { value: 'true', label: 'Ativo' },
   { value: 'false', label: 'Inativo' },
 ];
 
-const FOTO_OPTIONS: readonly FilterOption[] = [
+const FOTO_OPTIONS: readonly FilterChipOption[] = [
   { value: 'true', label: 'Captura foto' },
   { value: 'false', label: 'Sem foto' },
 ];
 
-const GEO_OPTIONS: readonly FilterOption[] = [
+const GEO_OPTIONS: readonly FilterChipOption[] = [
   { value: 'true', label: 'Com geoloc.' },
   { value: 'false', label: 'Sem geoloc.' },
+];
+
+const VIEW_OPTIONS: ViewToggleOption[] = [
+  { id: 'cards', icon: LayoutGrid, label: 'Visualização em cartões' },
+  { id: 'list', icon: List, label: 'Visualização em lista' },
 ];
 
 // =============================================================================
@@ -140,6 +146,7 @@ export function FormulariosClient() {
   const [fotoFiltro, setFotoFiltro] = React.useState<string[]>([]);
   const [geoFiltro, setGeoFiltro] = React.useState<string[]>([]);
   const [segmentoFiltro, setSegmentoFiltro] = React.useState<string[]>([]);
+  const [viewMode, setViewMode] = React.useState<'cards' | 'list'>('list');
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
@@ -149,7 +156,7 @@ export function FormulariosClient() {
   const buscaDebounced = useDebounce(busca, 300);
 
   // Filter options dinâmicos (Segmento)
-  const segmentoOptions: readonly FilterOption[] = React.useMemo(
+  const segmentoOptions: readonly FilterChipOption[] = React.useMemo(
     () => segmentos.map((s) => ({ value: String(s.id), label: s.nome })),
     [segmentos],
   );
@@ -255,20 +262,16 @@ export function FormulariosClient() {
             {stats.ativos > 0 ? ` · ${stats.ativos} ativo${stats.ativos !== 1 ? 's' : ''}` : ''}
           </Text>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="h-9" asChild>
-            <Link href="/app/assinatura-digital/segmentos">
-              <Tags className="h-4 w-4" />
-              Segmentos
-            </Link>
-          </Button>
-          {canCreate && (
-            <Button size="sm" className="h-9" onClick={() => setCreateOpen(true)}>
-              <Plus className="h-4 w-4" />
-              Novo Formulário
-            </Button>
-          )}
-        </div>
+        {canCreate && (
+          <button
+            type="button"
+            onClick={() => setCreateOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
+          >
+            <Plus className="size-3.5" />
+            Novo formulário
+          </button>
+        )}
       </div>
 
       {/* Stats Cards */}
@@ -295,16 +298,21 @@ export function FormulariosClient() {
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <div className="flex items-center gap-2 flex-wrap">
-          <FilterPopoverMulti label="Status" options={ATIVO_OPTIONS} value={ativoFiltro} onValueChange={setAtivoFiltro} />
-          <FilterPopoverMulti label="Segmento" options={segmentoOptions} value={segmentoFiltro} onValueChange={setSegmentoFiltro} placeholder="Filtrar por segmento..." />
-          <FilterPopoverMulti label="Foto" options={FOTO_OPTIONS} value={fotoFiltro} onValueChange={setFotoFiltro} />
-          <FilterPopoverMulti label="Geoloc." options={GEO_OPTIONS} value={geoFiltro} onValueChange={setGeoFiltro} />
+          <FilterChipMulti label="Status" options={ATIVO_OPTIONS} value={ativoFiltro} onValueChange={setAtivoFiltro} />
+          <FilterChipMulti label="Segmento" options={segmentoOptions} value={segmentoFiltro} onValueChange={setSegmentoFiltro} popoverWidth="w-56" />
+          <FilterChipMulti label="Foto" options={FOTO_OPTIONS} value={fotoFiltro} onValueChange={setFotoFiltro} />
+          <FilterChipMulti label="Geoloc." options={GEO_OPTIONS} value={geoFiltro} onValueChange={setGeoFiltro} />
         </div>
         <div className="flex items-center gap-2 flex-1 justify-end">
           <SearchInput
             value={busca}
             onChange={setBusca}
             placeholder="Buscar por nome, slug ou descrição..."
+          />
+          <ViewToggle
+            mode={viewMode}
+            onChange={(m) => setViewMode(m as 'cards' | 'list')}
+            options={VIEW_OPTIONS}
           />
         </div>
       </div>
@@ -322,6 +330,7 @@ export function FormulariosClient() {
       <FormulariosGlassList
         formularios={filtered}
         isLoading={isLoading}
+        mode={viewMode}
         onEdit={handleEdit}
         onEditSchema={handleEditSchema}
         onCopyLink={handleCopyLink}

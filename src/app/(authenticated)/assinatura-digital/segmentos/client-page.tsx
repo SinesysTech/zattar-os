@@ -7,6 +7,8 @@ import {
   CheckCircle2,
   Clock,
   FileText,
+  LayoutGrid,
+  List,
 } from 'lucide-react';
 
 import { GlassPanel } from '@/components/shared/glass-panel';
@@ -14,7 +16,8 @@ import { IconContainer } from '@/components/ui/icon-container';
 import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/dashboard/search-input';
-import { FilterPopoverMulti, type FilterOption } from '@/app/(authenticated)/partes';
+import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
+import { FilterChipMulti, type FilterChipOption } from '../components/filter-chip';
 import { useDebounce } from '@/hooks/use-debounce';
 import { usePermissoes } from '@/providers/user-provider';
 
@@ -68,9 +71,14 @@ function useSegmentos() {
 // FILTER OPTIONS
 // =============================================================================
 
-const STATUS_OPTIONS: readonly FilterOption[] = [
+const STATUS_OPTIONS: readonly FilterChipOption[] = [
   { value: 'true', label: 'Ativos' },
   { value: 'false', label: 'Inativos' },
+];
+
+const VIEW_OPTIONS: ViewToggleOption[] = [
+  { id: 'cards', icon: LayoutGrid, label: 'Visualização em cartões' },
+  { id: 'list', icon: List, label: 'Visualização em lista' },
 ];
 
 // =============================================================================
@@ -87,6 +95,7 @@ export function SegmentosClient() {
 
   const [busca, setBusca] = React.useState('');
   const [statusFiltro, setStatusFiltro] = React.useState<string[]>([]);
+  const [viewMode, setViewMode] = React.useState<'cards' | 'list'>('list');
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
@@ -158,10 +167,14 @@ export function SegmentosClient() {
           </Text>
         </div>
         {canCreate && (
-          <Button size="sm" className="h-9" onClick={() => setCreateOpen(true)}>
-            <Plus className="h-4 w-4" />
-            Novo Segmento
-          </Button>
+          <button
+            type="button"
+            onClick={() => setCreateOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
+          >
+            <Plus className="size-3.5" />
+            Novo segmento
+          </button>
         )}
       </div>
 
@@ -189,7 +202,7 @@ export function SegmentosClient() {
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <div className="flex items-center gap-2 flex-wrap">
-          <FilterPopoverMulti
+          <FilterChipMulti
             label="Status"
             options={STATUS_OPTIONS}
             value={statusFiltro}
@@ -201,6 +214,11 @@ export function SegmentosClient() {
             value={busca}
             onChange={setBusca}
             placeholder="Buscar por nome, slug ou descrição..."
+          />
+          <ViewToggle
+            mode={viewMode}
+            onChange={(m) => setViewMode(m as 'cards' | 'list')}
+            options={VIEW_OPTIONS}
           />
         </div>
       </div>
@@ -218,6 +236,7 @@ export function SegmentosClient() {
       <SegmentosGlassList
         segmentos={filtered}
         isLoading={isLoading}
+        mode={viewMode}
         onEdit={handleEdit}
         onDuplicate={handleDuplicate}
         onDelete={handleDelete}
