@@ -27,6 +27,7 @@ import { getExpedientePartyNames } from '../domain';
 import { ExpedientesPulseStrip } from './expedientes-pulse-strip';
 import { ExpedientesControlView } from './expedientes-control-view';
 import { ExpedientesListWrapper } from './expedientes-list-wrapper';
+import { ExpedientesFilterBar, type ExpedientesFilterBarFilters } from './expedientes-filter-bar';
 import { ExpedientesMonthWrapper } from './expedientes-month-wrapper';
 import { ExpedientesYearWrapper } from './expedientes-year-wrapper';
 import { ExpedientesSemanaView } from './expedientes-semana-view';
@@ -94,6 +95,9 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
   const [refreshCounter, setRefreshCounter] = useState(0);
+  const [filters, setFilters] = useState<ExpedientesFilterBarFilters>({
+    trt: null, grau: null, origem: null, responsavel: null, tipo: null,
+  });
 
   // Detail/baixa dialog state
   const [selectedExpediente, setSelectedExpediente] = useState<Expediente | null>(null);
@@ -270,13 +274,10 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setIsCreateOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
-          >
+          <Button size="sm" className="rounded-xl" onClick={() => setIsCreateOpen(true)}>
             <Plus className="size-3.5" />
             Novo Expediente
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -315,6 +316,12 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
         />
 
         <div className="flex items-center gap-2 flex-1 justify-end">
+          <ExpedientesFilterBar
+            filters={filters}
+            onChange={setFilters}
+            usuarios={usuarios || []}
+            tiposExpedientes={tiposExpedientes || []}
+          />
           <SearchInput
             value={search}
             onChange={setSearch}
@@ -383,6 +390,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
             refreshCounter={refreshCounter}
             onViewDetail={handleViewDetail}
             onBaixar={handleBaixar}
+            filters={filters}
           />
         )}
 
