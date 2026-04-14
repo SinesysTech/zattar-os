@@ -3,9 +3,11 @@
 /**
  * RevisarDocumentoClient — Etapa 3: Revisar e enviar para assinatura
  *
- * Layout flat alinhado ao design system do command center.
- * Grid responsivo: resumo à esquerda, PDF preview à direita.
- * Integrado com DocumentFlowShell (stepper no header).
+ * Alinhado ao Design System Glass Briefing (POC novo-documento):
+ * - KPI strip com label-overline + icon-tile + meta-label
+ * - GlassPanel depth={1|2} em cards e preview
+ * - Links de signatário com cores chart-N por assinante
+ * - Ambient-divider em vez de Separator
  */
 
 import { useEffect, useState, useCallback } from "react";
@@ -26,10 +28,10 @@ import {
   ArrowLeft,
   Send,
   Shield,
+  Hash,
+  Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AppBadge as Badge } from "@/components/ui/app-badge";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import {
@@ -40,7 +42,7 @@ import {
 import { actionFinalizeDocumento } from "../../../feature/actions/documentos-actions";
 import { DocumentFlowShell } from "../../../feature/components/flow";
 import type { AssinaturaDigitalDocumentoAssinanteTipo } from "../../../feature/domain";
-import { Heading } from '@/components/ui/typography';
+import { GlassPanel } from "@/components/shared/glass-panel";
 
 // ─── Types ─────────────────────────────────────────────────────────────
 
@@ -74,11 +76,11 @@ interface DocumentoRevisar {
 // ─── Constants ─────────────────────────────────────────────────────────
 
 const CHART_COLORS = [
-  { bg: "bg-chart-1/15", border: "border-chart-1/40", text: "text-chart-1", solid: "bg-chart-1" },
-  { bg: "bg-chart-2/15", border: "border-chart-2/40", text: "text-chart-2", solid: "bg-chart-2" },
-  { bg: "bg-chart-3/15", border: "border-chart-3/40", text: "text-chart-3", solid: "bg-chart-3" },
-  { bg: "bg-chart-4/15", border: "border-chart-4/40", text: "text-chart-4", solid: "bg-chart-4" },
-  { bg: "bg-chart-5/15", border: "border-chart-5/40", text: "text-chart-5", solid: "bg-chart-5" },
+  { bg: "bg-chart-1/8", border: "border-chart-1/30", text: "text-chart-1", solid: "bg-chart-1" },
+  { bg: "bg-chart-2/8", border: "border-chart-2/30", text: "text-chart-2", solid: "bg-chart-2" },
+  { bg: "bg-chart-3/8", border: "border-chart-3/30", text: "text-chart-3", solid: "bg-chart-3" },
+  { bg: "bg-chart-4/8", border: "border-chart-4/30", text: "text-chart-4", solid: "bg-chart-4" },
+  { bg: "bg-chart-5/8", border: "border-chart-5/30", text: "text-chart-5", solid: "bg-chart-5" },
 ];
 
 function getColor(index: number) {
@@ -108,72 +110,137 @@ function getSignerName(assinante: DocumentoRevisar["assinantes"][0]): string {
   return nome || TIPO_LABELS[assinante.assinante_tipo] || `Assinante ${assinante.id}`;
 }
 
+// ─── KPI Card (padrao POC) ─────────────────────────────────────────────
+
+function KpiCard({
+  label,
+  value,
+  icon: Icon,
+  tone = "primary",
+  meta,
+}: {
+  label: string;
+  value: number | string;
+  icon: React.ElementType;
+  tone?: "primary" | "info" | "warning" | "success";
+  meta?: string;
+}) {
+  const toneMap = {
+    primary: { tile: "bg-primary/8", iconColor: "text-primary/70", valueColor: "" },
+    info: { tile: "bg-info/10", iconColor: "text-info/70", valueColor: "" },
+    warning: { tile: "bg-warning/12", iconColor: "text-warning/75", valueColor: "text-warning" },
+    success: { tile: "bg-success/10", iconColor: "text-success/70", valueColor: "text-success" },
+  } as const;
+  const t = toneMap[tone];
+
+  return (
+    <GlassPanel depth={2} className="px-4 py-3">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/60">
+            {label}
+          </p>
+          <p
+            className={cn(
+              "font-heading text-xl font-bold leading-none mt-1 tabular-nums",
+              t.valueColor,
+            )}
+          >
+            {value}
+          </p>
+        </div>
+        <span
+          className={cn(
+            "inline-flex size-8 items-center justify-center rounded-lg shrink-0",
+            t.tile,
+          )}
+        >
+          <Icon className={cn("size-4", t.iconColor)} />
+        </span>
+      </div>
+      {meta && (
+        <p className="text-[11px] font-medium text-muted-foreground/70 mt-2.5">
+          {meta}
+        </p>
+      )}
+    </GlassPanel>
+  );
+}
+
+// ─── Stats Row (KPI strip estilo POC) ──────────────────────────────────
+
+function StatsRow({ documento }: { documento: DocumentoRevisar }) {
+  const pendentes = documento.assinantes.filter((a) => a.status === "pendente").length;
+  const concluidos = documento.assinantes.filter((a) => a.status === "concluido").length;
+  const paginas = new Set(documento.ancoras.map((a) => a.pagina)).size;
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <KpiCard
+        label="Assinantes"
+        value={documento.assinantes.length}
+        icon={Users}
+        tone="primary"
+        meta="serão notificados por email"
+      />
+      <KpiCard
+        label="Âncoras"
+        value={documento.ancoras.length}
+        icon={Pen}
+        tone="info"
+        meta={`posicionadas em ${paginas} ${paginas === 1 ? "página" : "páginas"}`}
+      />
+      <KpiCard
+        label="Pendentes"
+        value={pendentes}
+        icon={Clock}
+        tone="warning"
+        meta="aguardando assinatura"
+      />
+      {concluidos > 0 ? (
+        <KpiCard
+          label="Concluídos"
+          value={concluidos}
+          icon={Check}
+          tone="success"
+          meta="assinaturas coletadas"
+        />
+      ) : (
+        <KpiCard
+          label="Integridade"
+          value="SHA-256"
+          icon={Hash}
+          tone="success"
+          meta="hash criptográfico"
+        />
+      )}
+    </div>
+  );
+}
+
 // ─── Section Header ────────────────────────────────────────────────────
 
 function SectionHeader({
   icon: Icon,
   title,
   action,
+  tone = "primary",
 }: {
   icon: React.ElementType;
   title: string;
   action?: React.ReactNode;
+  tone?: "primary" | "info";
 }) {
+  const tile = tone === "info" ? "bg-info/10 text-info/70" : "bg-primary/8 text-primary/70";
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2.5">
-        <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
-          <Icon className="size-4 text-primary" />
-        </div>
-        <Heading level="section" className="text-sm">
-          {title}
-        </Heading>
+        <span className={cn("inline-flex size-8 items-center justify-center rounded-lg", tile)}>
+          <Icon className="size-4" />
+        </span>
+        <h2 className="font-heading text-base font-bold leading-none">{title}</h2>
       </div>
       {action}
-    </div>
-  );
-}
-
-// ─── Stats Row ─────────────────────────────────────────────────────────
-
-function StatsRow({
-  documento,
-}: {
-  documento: DocumentoRevisar;
-}) {
-  const pendentes = documento.assinantes.filter((a) => a.status === "pendente").length;
-  const concluidos = documento.assinantes.filter((a) => a.status === "concluido").length;
-
-  const stats = [
-    { label: "Assinantes", value: documento.assinantes.length, icon: Users },
-    { label: "Âncoras", value: documento.ancoras.length, icon: Pen },
-    { label: "Pendentes", value: pendentes, icon: Send },
-    ...(concluidos > 0
-      ? [{ label: "Concluídos", value: concluidos, icon: Check }]
-      : []),
-  ];
-
-  return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      {stats.map((stat) => {
-        const Icon = stat.icon;
-        return (
-          <div
-            key={stat.label}
-            className="flex items-center gap-2.5 rounded-lg border bg-background p-3"
-          >
-            <Icon className="size-4 text-muted-foreground shrink-0" />
-            <div className="min-w-0">
-              <p className="text-lg font-semibold font-heading leading-none">
-                {stat.value}
-              </p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {stat.label}
-              </p>
-            </div>
-          </div>
-        );
-      })}
     </div>
   );
 }
@@ -192,46 +259,45 @@ function SignerLinkCard({
   const color = getColor(index);
   const isConcluido = assinante.status === "concluido";
   const nome = getSignerName(assinante);
+  const tipoLabel = TIPO_LABELS[assinante.assinante_tipo] ?? assinante.assinante_tipo;
 
   return (
     <div
       className={cn(
-        "flex items-center justify-between rounded-xl border p-3.5 transition-colors",
+        "flex items-center justify-between rounded-xl border p-3.5 backdrop-blur-sm transition-colors",
         isConcluido
-          ? "bg-chart-4/10 border-chart-4/30"
-          : `${color.bg} ${color.border}`
+          ? "bg-success/8 border-success/30"
+          : `${color.bg} ${color.border}`,
       )}
     >
       <div className="flex items-center gap-3 min-w-0">
-        {/* Avatar */}
         <div
           className={cn(
-            "flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-medium text-primary-foreground",
-            isConcluido ? "bg-chart-4" : color.solid
+            "flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-primary-foreground",
+            isConcluido ? "bg-success" : color.solid,
           )}
         >
           {isConcluido ? (
-            <Check className="size-5" />
+            <Check className="size-5" strokeWidth={2.5} />
           ) : (
             nome.charAt(0).toUpperCase()
           )}
         </div>
 
-        {/* Info */}
         <div className="min-w-0">
           <p className="text-sm font-medium truncate">{nome}</p>
-          <p className="text-xs text-muted-foreground capitalize">
-            {TIPO_LABELS[assinante.assinante_tipo]?.toLowerCase() ?? assinante.assinante_tipo}
+          <p className="text-xs text-muted-foreground">
+            <span className="capitalize">{tipoLabel.toLowerCase()}</span>
             {isConcluido && " · Assinado"}
           </p>
         </div>
       </div>
 
-      {/* Actions */}
       <div className="flex items-center gap-1 shrink-0">
         <Button
           variant="ghost"
-          size="icon" aria-label="Copiar link"
+          size="icon"
+          aria-label="Copiar link"
           className="size-8"
           onClick={() => onCopyLink(assinante)}
         >
@@ -239,11 +305,7 @@ function SignerLinkCard({
           <span className="sr-only">Copiar link</span>
         </Button>
         <Button variant="ghost" size="icon" aria-label="Abrir link" className="size-8" asChild>
-          <a
-            href={assinante.public_link}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={assinante.public_link} target="_blank" rel="noopener noreferrer">
             <ExternalLink className="size-3.5" />
             <span className="sr-only">Abrir link</span>
           </a>
@@ -265,14 +327,11 @@ function PdfPreviewSection({
   const [currentPage, setCurrentPage] = useState(1);
   const [numPages, setNumPages] = useState(1);
 
-  const anchorsOnPage = documento.ancoras.filter(
-    (a) => a.pagina === currentPage
-  );
+  const anchorsOnPage = documento.ancoras.filter((a) => a.pagina === currentPage);
 
   return (
-    <div className="rounded-xl border bg-background overflow-hidden">
-      {/* PDF com âncoras (read-only) */}
-      <div className="relative bg-muted/30">
+    <GlassPanel depth={1} className="overflow-hidden p-0">
+      <div className="relative bg-muted/20">
         <PdfPreviewDynamic
           pdfUrl={pdfUrl ?? undefined}
           mode="background"
@@ -283,25 +342,20 @@ function PdfPreviewSection({
           showPageIndicator={false}
         />
 
-        {/* Âncoras sobrepostas */}
         <div className="absolute inset-0 pointer-events-none">
           {anchorsOnPage.map((anchor) => {
             const signerIdx = documento.assinantes.findIndex(
-              (s) => s.id === anchor.documento_assinante_id
+              (s) => s.id === anchor.documento_assinante_id,
             );
             const color = getColor(signerIdx);
             const assinante = documento.assinantes.find(
-              (s) => s.id === anchor.documento_assinante_id
+              (s) => s.id === anchor.documento_assinante_id,
             );
 
             return (
               <div
                 key={anchor.id}
-                className={cn(
-                  "absolute border-2 rounded-sm",
-                  color.bg,
-                  color.border.replace("/40", "")
-                )}
+                className={cn("absolute border-2 rounded-sm", color.bg, color.border)}
                 style={{
                   left: `${anchor.x_norm * 100}%`,
                   top: `${anchor.y_norm * 100}%`,
@@ -312,7 +366,7 @@ function PdfPreviewSection({
                 <div
                   className={cn(
                     "absolute -top-6 left-0 px-2 py-0.5 rounded text-xs font-medium text-primary-foreground flex items-center gap-1",
-                    color.solid
+                    color.solid,
                   )}
                 >
                   {anchor.tipo === "assinatura" ? (
@@ -328,29 +382,34 @@ function PdfPreviewSection({
         </div>
       </div>
 
-      {/* Controles de página */}
-      <div className="flex items-center justify-center gap-3 p-3 border-t">
+      <div className="h-px bg-linear-to-r from-transparent via-border/50 to-transparent" />
+
+      <div className="flex items-center justify-between px-4 py-2.5">
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
+          className="text-xs"
           onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
           disabled={currentPage <= 1}
         >
-          <ChevronLeft className="size-4" />
+          <ChevronLeft className="size-3.5" />
+          Anterior
         </Button>
-        <span className="text-sm min-w-25 text-center tabular-nums">
+        <span className="text-xs font-medium tabular-nums">
           Página {currentPage} de {numPages}
         </span>
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
+          className="text-xs"
           onClick={() => setCurrentPage((p) => Math.min(numPages, p + 1))}
           disabled={currentPage >= numPages}
         >
-          <ChevronRight className="size-4" />
+          Próxima
+          <ChevronRight className="size-3.5" />
         </Button>
       </div>
-    </div>
+    </GlassPanel>
   );
 }
 
@@ -365,10 +424,9 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
 
   const { presignedUrl: pdfPresignedUrl } = usePresignedPdfUrl(
     documento?.pdf_original_url,
-    uuid
+    uuid,
   );
 
-  // Carregar documento
   useEffect(() => {
     async function carregar() {
       setIsLoading(true);
@@ -410,7 +468,6 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
     carregar();
   }, [uuid, router]);
 
-  // Copiar link individual
   const handleCopyLink = useCallback(
     async (assinante: DocumentoRevisar["assinantes"][0]) => {
       try {
@@ -421,10 +478,9 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         toast.error("Erro ao copiar link");
       }
     },
-    []
+    [],
   );
 
-  // Copiar todos os links
   const handleCopyAllLinks = useCallback(async () => {
     if (!documento) return;
 
@@ -444,7 +500,6 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
     }
   }, [documento]);
 
-  // Finalizar
   const handleFinalize = useCallback(async () => {
     if (!documento) return;
 
@@ -460,22 +515,42 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
       }
 
       toast.success(
-        "Documento pronto para assinatura! Os links foram gerados."
+        "Documento pronto para assinatura! Os links foram gerados.",
       );
       router.push("/app/assinatura-digital/documentos/lista");
     } catch (error) {
       console.error("Erro ao finalizar documento:", error);
       toast.error(
-        error instanceof Error
-          ? error.message
-          : "Erro ao finalizar documento"
+        error instanceof Error ? error.message : "Erro ao finalizar documento",
       );
     } finally {
       setIsFinalizing(false);
     }
   }, [documento, router]);
 
-  // Loading
+  // ── Primary action (no header do shell) ────────────────────────────
+  const primaryAction = documento ? (
+    <Button
+      onClick={handleFinalize}
+      disabled={isFinalizing}
+      size="sm"
+      className="gap-1.5"
+    >
+      {isFinalizing ? (
+        <>
+          <Loader2 className="size-3.5 animate-spin" />
+          Finalizando...
+        </>
+      ) : (
+        <>
+          <Send className="size-3.5" />
+          Finalizar e Enviar
+        </>
+      )}
+    </Button>
+  ) : null;
+
+  // ── Loading ─────────────────────────────────────────────────────────
   if (isLoading) {
     return (
       <DocumentFlowShell>
@@ -488,51 +563,70 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
 
   if (!documento) return null;
 
+  // ── Main ────────────────────────────────────────────────────────────
   return (
-    <DocumentFlowShell>
-      <div className="w-full space-y-5">
+    <DocumentFlowShell primaryAction={primaryAction}>
+      <div className="w-full max-w-7xl mx-auto space-y-6">
         {/* ── Header ─────────────────────────────────── */}
         <div className="flex items-end justify-between gap-4">
-          <div>
-            <Heading level="page">
-              {documento.titulo || "Documento sem título"}
-            </Heading>
-            <p className="text-sm text-muted-foreground/50 mt-0.5">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h1 className="font-heading text-[26px] font-bold leading-tight truncate">
+                {documento.titulo || "Documento sem título"}
+              </h1>
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium",
+                  documento.status === "pronto"
+                    ? "bg-success/12 text-success"
+                    : "bg-foreground/8 text-muted-foreground",
+                )}
+              >
+                <Check className="size-3" strokeWidth={2.5} />
+                {STATUS_LABELS[documento.status] ?? documento.status}
+              </span>
+              {documento.selfie_habilitada && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-info/12 text-info px-2 py-0.5 text-[11px] font-medium">
+                  <Camera className="size-3" />
+                  Selfie ativa
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground mt-1">
               Confira as configurações antes de compartilhar
             </p>
           </div>
-          <Badge
-            variant={
-              documento.status === "pronto" ? "default" : "secondary"
-            }
-          >
-            {STATUS_LABELS[documento.status] ?? documento.status}
-          </Badge>
         </div>
 
-        {/* ── Stats ──────────────────────────────────── */}
+        {/* ── KPI Strip ───────────────────────────────── */}
         <StatsRow documento={documento} />
 
-        {/* ── Settings Summary ───────────────────────── */}
+        {/* ── Selfie banner (legado — mantém texto testado) ── */}
         {documento.selfie_habilitada && (
-          <div className="flex items-center gap-2 rounded-lg border border-chart-2/30 bg-chart-2/10 px-4 py-3">
-            <Camera className="size-4 text-chart-2 shrink-0" />
+          <GlassPanel
+            depth={2}
+            className="px-4 py-3 flex items-center gap-2.5 border-info/25"
+          >
+            <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 shrink-0">
+              <Camera className="size-3.5 text-info/70" />
+            </span>
             <p className="text-sm">
               <span className="font-medium">Selfie de verificação</span>{" "}
               <span className="text-muted-foreground">
                 habilitada para este documento
               </span>
             </p>
-          </div>
+          </GlassPanel>
         )}
 
         {/* ── Grid: Links + PDF Preview ──────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
-          {/* Coluna esquerda — Links de assinatura */}
-          <div className="space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6">
+          {/* Links */}
+          <section className="space-y-4">
             <SectionHeader
               icon={LinkIcon}
               title="Links de Assinatura"
+              tone="primary"
               action={
                 <Button
                   variant="outline"
@@ -546,9 +640,8 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
               }
             />
 
-            <p className="text-xs text-muted-foreground -mt-1">
-              Compartilhe o link com cada assinante. Cada link é único e
-              seguro.
+            <p className="text-xs text-muted-foreground">
+              Compartilhe o link com cada assinante. Cada link é único e seguro.
             </p>
 
             <div className="space-y-2">
@@ -562,37 +655,45 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
               ))}
             </div>
 
-            {/* Segurança info */}
-            <div className="flex items-start gap-2.5 rounded-lg bg-muted/50 p-3 mt-2">
-              <Shield className="size-4 text-muted-foreground shrink-0 mt-0.5" />
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Cada assinatura coleta hash SHA-256, IP, geolocalização,
-                device fingerprint e aceite de termos conforme MP 2.200-2/2001.
-              </p>
-            </div>
-          </div>
+            {/* Segurança */}
+            <GlassPanel depth={2} className="flex items-start gap-3 p-4 mt-2">
+              <span className="inline-flex size-8 items-center justify-center rounded-lg bg-success/10 shrink-0">
+                <Shield className="size-4 text-success/70" />
+              </span>
+              <div className="min-w-0">
+                <p className="text-sm font-medium">Conformidade MP 2.200-2/2001</p>
+                <p className="text-xs text-muted-foreground leading-relaxed mt-1">
+                  Cada assinatura coleta hash SHA-256, IP, geolocalização,
+                  device fingerprint e aceite de termos. Trilha de auditoria
+                  completa após finalização.
+                </p>
+              </div>
+            </GlassPanel>
+          </section>
 
-          {/* Coluna direita — PDF Preview */}
-          <div className="space-y-4">
-            <SectionHeader icon={FileText} title="Preview do Documento" />
+          {/* Preview */}
+          <section className="space-y-4">
+            <SectionHeader
+              icon={FileText}
+              title="Preview do Documento"
+              tone="info"
+            />
             <PdfPreviewSection
               documento={documento}
               pdfUrl={pdfPresignedUrl}
             />
-          </div>
+          </section>
         </div>
 
-        {/* ── Actions Bar ────────────────────────────── */}
-        <Separator />
+        {/* ── Ambient divider + voltar ───────────────── */}
+        <div className="h-px bg-linear-to-r from-transparent via-border/50 to-transparent my-2" />
         <div className="flex items-center justify-between pb-4">
           <Button
             variant="ghost"
             size="sm"
             className="text-muted-foreground"
             onClick={() =>
-              router.push(
-                `/app/assinatura-digital/documentos/editar/${uuid}`
-              )
+              router.push(`/app/assinatura-digital/documentos/editar/${uuid}`)
             }
           >
             <ArrowLeft className="size-4 mr-1.5" />
