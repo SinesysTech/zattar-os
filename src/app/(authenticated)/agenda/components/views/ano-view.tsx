@@ -70,8 +70,8 @@ export function AnoView({ currentDate, events, className }: AnoViewProps) {
       <div className="flex gap-4 mb-6">
         {[
           { value: totalEvents, label: "Total", color: "text-foreground" },
-          { value: audiencias, label: "Audiencias", color: "text-info" },
-          { value: expedientes, label: "Expedientes", color: "text-warning" },
+          { value: audiencias, label: "Audiencias", color: "text-event-audiencia" },
+          { value: expedientes, label: "Expedientes", color: "text-event-expediente" },
         ].map((s) => (
           <GlassPanel key={s.label} depth={2} className="flex-1 text-center px-4 py-3">
             <div className={cn("text-2xl font-bold font-mono tabular-nums", s.color)}>{s.value}</div>
@@ -85,9 +85,9 @@ export function AnoView({ currentDate, events, className }: AnoViewProps) {
             <div className={cn("text-[11px] font-semibold mb-2", md.isCurrent ? "text-primary" : "text-muted-foreground/55")}>
               {MONTH_NAMES[md.month]}{md.isCurrent && <span className="text-[9px] text-muted-foreground/40 ml-1">Atual</span>}
             </div>
-            <div className="flex flex-wrap gap-[3px]">
+            <div className="flex flex-wrap gap-0.75">
               {md.days.map((d) => (
-                <div key={d.day} className={cn("size-2.5 rounded-sm cursor-pointer transition-transform hover:scale-[1.3]", intensityClass(d.count), d.isToday && "outline outline-1.5 outline-primary outline-offset-[1px]")} title={`${d.day} ${MONTH_NAMES[md.month]}: ${d.count} evento(s)`} />
+                <div key={d.day} className={cn("size-2.5 rounded-sm cursor-pointer transition-transform hover:scale-[1.3]", intensityClass(d.count), d.isToday && "outline outline-1.5 outline-primary outline-offset-1")} title={`${d.day} ${MONTH_NAMES[md.month]}: ${d.count} evento(s)`} />
               ))}
             </div>
           </div>

@@ -8,12 +8,11 @@ import { z } from 'zod';
 import { Plus, Pencil, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { DataShell } from '@/components/shared/data-shell';
-import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
 import { DialogFormShell } from '@/components/shared/dialog-shell/dialog-form-shell';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
+import { Heading } from '@/components/ui/typography';
 import {
   Form,
   FormControl,
@@ -290,90 +289,91 @@ export function TiposPageClient() {
     await refetch();
   }, [refetch]);
 
+  const total = tipos.length;
+  const ativosCount = tipos.filter((t) => t.ativo).length;
+
   return (
-    <>
-      <DataShell
-        ariaLabel="Tipos de Contrato"
-        header={
-          <DataTableToolbar
-            title="Tipos de Contrato"
-            actionButton={{
-              label: 'Novo Tipo',
-              icon: <Plus className="h-4 w-4" />,
-              onClick: handleNovo,
-            }}
-          />
-        }
-      >
-        <GlassPanel className="p-1">
-          {isLoading ? (
-            <div className="p-4 space-y-3">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full" />
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <Heading level="page">Tipos de Contrato</Heading>
+          {!isLoading && (
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {ativosCount} ativo{ativosCount !== 1 ? 's' : ''} &middot; {total} total
+            </p>
+          )}
+        </div>
+        <Button size="sm" className="rounded-xl" onClick={handleNovo}>
+          <Plus className="size-3.5" />
+          Novo Tipo
+        </Button>
+      </div>
+
+      {/* Lista Glass */}
+      <GlassPanel depth={1} className="overflow-hidden">
+        {isLoading ? (
+          <div className="p-4 space-y-2">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-14 w-full rounded-xl" />
+            ))}
+          </div>
+        ) : error ? (
+          <div className="p-8 text-center text-sm text-destructive">{error}</div>
+        ) : tipos.length === 0 ? (
+          <div className="p-12 text-center text-sm text-muted-foreground">
+            Nenhum tipo de contrato cadastrado.
+          </div>
+        ) : (
+          <div role="table" aria-label="Tipos de Contrato">
+            <div
+              role="row"
+              className="grid grid-cols-[1.5fr_1fr_80px_100px_120px] gap-4 px-4 py-2.5 border-b border-border/40 text-[11px] uppercase tracking-wide font-medium text-muted-foreground/70"
+            >
+              <span>Nome</span>
+              <span>Slug</span>
+              <span>Ordem</span>
+              <span>Status</span>
+              <span className="text-right">Ações</span>
+            </div>
+            <div className="divide-y divide-border/30">
+              {tipos.map((tipo) => (
+                <div
+                  key={tipo.id}
+                  role="row"
+                  className="grid grid-cols-[1.5fr_1fr_80px_100px_120px] gap-4 items-center px-4 py-3 hover:bg-muted/30 transition-colors"
+                >
+                  <span className="text-sm font-medium truncate">{tipo.nome}</span>
+                  <span className="text-xs text-muted-foreground truncate">{tipo.slug}</span>
+                  <span className="text-sm text-muted-foreground">{tipo.ordem}</span>
+                  <span>
+                    <Badge tone="soft" variant={tipo.ativo ? 'success' : 'neutral'}>
+                      {tipo.ativo ? 'Ativo' : 'Inativo'}
+                    </Badge>
+                  </span>
+                  <div className="flex items-center justify-end gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 cursor-pointer"
+                      onClick={() => handleEditar(tipo)}
+                      aria-label={`Editar ${tipo.nome}`}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Switch
+                      checked={tipo.ativo}
+                      disabled={togglingId === tipo.id}
+                      onCheckedChange={() => void handleToggleAtivo(tipo)}
+                      aria-label={`${tipo.ativo ? 'Desativar' : 'Ativar'} ${tipo.nome}`}
+                    />
+                  </div>
+                </div>
               ))}
             </div>
-          ) : error ? (
-            <div className="p-8 text-center text-sm text-destructive">{error}</div>
-          ) : tipos.length === 0 ? (
-            <div className="p-8 text-center text-sm text-muted-foreground">
-              Nenhum tipo de contrato cadastrado.
-            </div>
-          ) : (
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b bg-muted/50">
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">Nome</th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">Slug</th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">Ordem</th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
-                  <th className="px-4 py-3 text-right font-medium text-muted-foreground">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tipos.map((tipo, idx) => (
-                  <tr
-                    key={tipo.id}
-                    className={idx < tipos.length - 1 ? 'border-b' : undefined}
-                  >
-                    <td className="px-4 py-3 font-medium">{tipo.nome}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                      {tipo.slug}
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">{tipo.ordem}</td>
-                    <td className="px-4 py-3">
-                      <Badge
-                        tone="soft"
-                        variant={tipo.ativo ? 'success' : 'neutral'}
-                      >
-                        {tipo.ativo ? 'Ativo' : 'Inativo'}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleEditar(tipo)}
-                          aria-label={`Editar ${tipo.nome}`}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Switch
-                          checked={tipo.ativo}
-                          disabled={togglingId === tipo.id}
-                          onCheckedChange={() => void handleToggleAtivo(tipo)}
-                          aria-label={`${tipo.ativo ? 'Desativar' : 'Ativar'} ${tipo.nome}`}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </GlassPanel>
-      </DataShell>
+          </div>
+        )}
+      </GlassPanel>
 
       <TipoDialog
         open={dialogOpen}
@@ -381,6 +381,6 @@ export function TiposPageClient() {
         tipo={editingTipo}
         onSuccess={handleDialogSuccess}
       />
-    </>
+    </div>
   );
 }

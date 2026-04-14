@@ -5,6 +5,7 @@ import * as React from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -76,6 +77,9 @@ export function CredenciaisDialog({ credencial, open, onOpenChange, onSuccess }:
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>{isEditing ? 'Editar Credencial' : 'Nova Credencial'}</DialogTitle>
+          <DialogDescription>
+            Informe tribunal e grau vinculados à credencial de captura.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">

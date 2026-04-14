@@ -9,10 +9,10 @@
 
 import { useMemo } from "react";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
-import type { CalendarSource } from "@/app/(authenticated)/calendar";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/shared/glass-panel";
 import type { AgendaEvent } from "../../lib/adapters";
+import { getSourceColors } from "../../lib/source-colors";
 
 // ─── Types ────────────────────────────────────────────────────────────
 
@@ -33,17 +33,6 @@ const MONTH_NAMES = [
   "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
-
-function sourceColors(source: CalendarSource) {
-  const map: Record<string, { bg: string; text: string; border: string }> = {
-    audiencias:  { bg: "bg-info/15",        text: "text-info",        border: "border-info/20" },
-    expedientes: { bg: "bg-warning/15",     text: "text-warning",     border: "border-warning/20" },
-    obrigacoes:  { bg: "bg-warning/15",     text: "text-warning",     border: "border-warning/20" },
-    pericias:    { bg: "bg-primary/15",     text: "text-primary",     border: "border-primary/20" },
-    agenda:      { bg: "bg-primary/15",     text: "text-primary",     border: "border-primary/20" },
-  };
-  return map[source] ?? { bg: "bg-muted/15", text: "text-muted-foreground", border: "border-border/20" };
-}
 
 function fmtTime(d: Date) {
   return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
@@ -114,7 +103,7 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
       </div>
       <div className="grid grid-cols-7 gap-1">
         {cells.map((cell, i) => (
-          <div key={i} className={cn("min-h-[88px] p-2 rounded-xl border border-transparent transition-all cursor-pointer hover:bg-muted/8 hover:border-border/10", !cell.currentMonth && "opacity-30")}>
+          <div key={i} className={cn("min-h-22 rounded-xl border border-transparent transition-all cursor-pointer hover:bg-muted/8 hover:border-border/10", !cell.currentMonth && "opacity-30")}>
             <div className="mb-1">
               <span className={cn("text-xs font-semibold", cell.isToday ? "inline-flex items-center justify-center size-6 rounded-full bg-primary text-primary-foreground text-[11px]" : "text-muted-foreground/60")}>
                 {cell.day}
@@ -122,10 +111,21 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
             </div>
             <div className="space-y-0.5">
               {cell.events.slice(0, 3).map((evt) => {
-                const colors = sourceColors(evt.source);
+                const colors = getSourceColors(evt.source);
                 return (
-                  <button key={evt.id} onClick={() => onEventClick?.(evt)} className={cn("w-full text-left text-[9.5px] px-1.5 py-0.5 rounded truncate font-medium border-l-2 cursor-pointer hover:opacity-80 transition-opacity", colors.bg, colors.border, colors.text)}>
-                    {!evt.allDay && fmtTime(evt.start)} {evt.title}
+                  <button
+                    key={evt.id}
+                    onClick={() => onEventClick?.(evt)}
+                    className={cn(
+                      "relative w-full text-left text-[9.5px] pl-2 pr-1.5 py-0.5 rounded truncate font-medium cursor-pointer hover:brightness-105 transition-all border",
+                      colors.bg, colors.border,
+                    )}
+                  >
+                    <span className={cn("absolute left-0 top-0 bottom-0 w-0.5 rounded-l", colors.accent)} aria-hidden />
+                    {!evt.allDay && (
+                      <span className={cn("tabular-nums font-semibold mr-1", colors.text)}>{fmtTime(evt.start)}</span>
+                    )}
+                    <span className="text-foreground/85">{evt.title}</span>
                   </button>
                 );
               })}

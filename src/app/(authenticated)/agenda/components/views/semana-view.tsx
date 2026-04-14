@@ -9,7 +9,6 @@
 "use client";
 
 import { useMemo } from "react";
-import type { CalendarSource } from "@/app/(authenticated)/calendar";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/shared/glass-panel";
 import { MiniCalendar } from "../mini-calendar";
@@ -17,6 +16,7 @@ import { DeadlineSidebar } from "../deadline-sidebar";
 import { SourceLegend } from "../source-legend";
 import { ConflictBadge } from "../conflict-badge";
 import type { AgendaEvent } from "../../lib/adapters";
+import { getSourceColors } from "../../lib/source-colors";
 import type { AgendaSource, Deadline } from "../mock-data";
 
 // ─── Types ────────────────────────────────────────────────────────────
@@ -65,46 +65,46 @@ function fmtTime(d: Date) {
   return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
 
-/** Maps CalendarSource to color classes */
-function sourceColors(source: CalendarSource) {
-  const map: Record<string, { bg: string; text: string; border: string; dot: string }> = {
-    audiencias:  { bg: "bg-info/15",        text: "text-info",        border: "border-info/20",        dot: "bg-info" },
-    expedientes: { bg: "bg-warning/15",     text: "text-warning",     border: "border-warning/20",     dot: "bg-warning" },
-    obrigacoes:  { bg: "bg-warning/15",     text: "text-warning",     border: "border-warning/20",     dot: "bg-warning" },
-    pericias:    { bg: "bg-primary/15",     text: "text-primary",     border: "border-primary/20",     dot: "bg-primary" },
-    agenda:      { bg: "bg-primary/15",     text: "text-primary",     border: "border-primary/20",     dot: "bg-primary" },
-  };
-  return map[source] ?? { bg: "bg-muted/15", text: "text-muted-foreground", border: "border-border/20", dot: "bg-muted-foreground" };
-}
-
 // ─── Event Chip ───────────────────────────────────────────────────────
 
 function WeekEventChip({ event, onClick }: { event: AgendaEvent; onClick?: () => void }) {
-  const colors = sourceColors(event.source);
+  const colors = getSourceColors(event.source);
+  const height = eventHeight(event);
   return (
     <button
       onClick={onClick}
       className={cn(
-        "absolute left-1 right-1 rounded-lg px-2 py-1 overflow-hidden cursor-pointer",
-        "border-l-[3px] transition-transform hover:scale-[1.02] hover:shadow-lg hover:z-10",
+        "group absolute left-1 right-1 rounded-md overflow-hidden cursor-pointer text-left",
+        "border transition-all hover:shadow-md hover:z-10 hover:brightness-105",
         "focus-visible:outline-2 focus-visible:outline-primary",
         colors.bg, colors.border,
       )}
-      style={{ top: eventTop(event), height: eventHeight(event) }}
-      aria-label={`${event.title} as ${fmtTime(event.start)}`}
+      style={{ top: eventTop(event), height }}
+      aria-label={`${event.title} às ${fmtTime(event.start)}`}
     >
-      <div className={cn("text-[9px] font-mono opacity-70", colors.text)}>{fmtTime(event.start)}</div>
-      <div className={cn("text-[11px] font-semibold truncate", colors.text)}>{event.title}</div>
-      {eventHeight(event) > 40 && event.meta?.trt && (
-        <div className={cn("text-[9px] opacity-60 truncate", colors.text)}>
-          {event.meta?.trt}{event.meta?.modalidade ? ` · ${event.meta?.modalidade === "virtual" ? "Virtual" : "Presencial"}` : ""}
+      {/* Accent bar (cor sólida do tipo) */}
+      <span className={cn("absolute left-0 top-0 bottom-0 w-0.75", colors.accent)} aria-hidden />
+      <div className="pl-2 pr-1.5 py-1">
+        <div className="flex items-baseline gap-1.5">
+          <span className={cn("text-[10px] font-semibold tabular-nums", colors.text)}>
+            {fmtTime(event.start)}
+          </span>
+          <span className="text-[10px] text-foreground/90 font-semibold truncate">
+            {event.title}
+          </span>
         </div>
-      )}
-      {eventHeight(event) > 56 && event.meta?.processo && (
-        <div className={cn("text-[9px] opacity-50 font-mono truncate", colors.text)}>
-          {event.meta?.processo.slice(0, 18)}...
-        </div>
-      )}
+        {height > 44 && event.meta?.trt && (
+          <div className="text-[9.5px] text-muted-foreground/75 truncate mt-0.5">
+            {event.meta.trt}
+            {event.meta?.modalidade ? ` · ${event.meta.modalidade === "virtual" ? "Virtual" : "Presencial"}` : ""}
+          </div>
+        )}
+        {height > 60 && event.meta?.processo && (
+          <div className="text-[9px] text-muted-foreground/60 font-mono tabular-nums truncate mt-0.5">
+            {event.meta.processo}
+          </div>
+        )}
+      </div>
     </button>
   );
 }
@@ -192,7 +192,7 @@ export function SemanaView({
   return (
     <div className={cn("flex gap-4", className)}>
       {/* Sidebar */}
-      <div className="w-56 flex-shrink-0 space-y-4 hidden xl:flex xl:flex-col">
+      <div className="w-56 shrink-0 space-y-4 hidden xl:flex xl:flex-col">
         <MiniCalendar
           currentDate={currentDate}
           selectedDate={currentDate}
@@ -211,7 +211,7 @@ export function SemanaView({
       <GlassPanel className="flex-1 overflow-hidden">
         {/* Day headers */}
         <div className="flex border-b border-border/10">
-          <div className="w-12 flex-shrink-0" />
+          <div className="w-12 shrink-0" />
           {weekDays.map((day, i) => {
             const isToday = isSameDay(day, today);
             return (
@@ -233,11 +233,11 @@ export function SemanaView({
           <div className="relative">
             {HOURS.map((hour) => (
               <div key={hour} className="flex" style={{ height: SLOT_HEIGHT }}>
-                <div className="w-12 flex-shrink-0 text-right pr-3 pt-1 text-[10px] font-mono font-medium text-muted-foreground/25 tabular-nums">
+                <div className="w-12 shrink-0 text-right pr-3 pt-1 text-[10px] font-mono font-medium text-muted-foreground/25 tabular-nums">
                   {String(hour).padStart(2, "0")}:00
                 </div>
                 {weekDays.map((_, di) => (
-                  <div key={di} className="flex-1 border-l border-border/6 first:border-l-0 border-t border-border/4 relative" />
+                  <div key={di} className="flex-1 border-l border-border/6 first:border-l-0 border-t relative" />
                 ))}
               </div>
             ))}
@@ -252,8 +252,8 @@ export function SemanaView({
                 return (
                   <div key={di} className="flex-1 relative">
                     {isToday && nowTop > 0 && nowTop < HOURS.length * SLOT_HEIGHT && (
-                      <div className="absolute left-0 right-0 h-0.5 bg-destructive z-[15] pointer-events-none" style={{ top: nowTop }}>
-                        <div className="absolute -left-1 -top-[3px] size-2 rounded-full bg-destructive" />
+                      <div className="absolute left-0 right-0 h-0.5 bg-destructive z-15 pointer-events-none" style={{ top: nowTop }}>
+                        <div className="absolute -left-1 -top-0.75 size-2 rounded-full bg-destructive" />
                       </div>
                     )}
                     {hasConflict && <div className="absolute top-0 right-1 z-20"><ConflictBadge /></div>}

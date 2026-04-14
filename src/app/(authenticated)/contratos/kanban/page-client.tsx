@@ -27,9 +27,8 @@ import {
   KanbanItem,
   KanbanOverlay,
 } from '@/components/ui/kanban';
-import { DataShell } from '@/components/shared/data-shell/data-shell';
-import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
 import { ViewModePopover, type ViewModeOption } from '@/components/shared/view-mode-popover';
+import { Heading } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -464,98 +463,98 @@ export function KanbanContratosClient() {
   );
 
   return (
-    <DataShell
-      ariaLabel="Quadro Kanban de Contratos"
-      header={
-        <DataTableToolbar
-          title="Kanban de Contratos"
-          filtersSlot={
-            <Select
-              value={selectedSegmentoId !== null ? String(selectedSegmentoId) : ''}
-              onValueChange={handleSegmentoChange}
-              disabled={segmentosLoading}
-            >
-              <SelectTrigger
-                className="w-50 bg-card"
-                aria-label="Selecionar segmento"
-              >
-                <SelectValue
-                  placeholder={
-                    segmentosLoading ? 'Carregando...' : 'Segmento'
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {segmentos.map((segmento) => (
-                  <SelectItem key={segmento.id} value={String(segmento.id)}>
-                    {segmento.nome}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          }
-          actionSlot={
-            <>
-              <DropdownMenu>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-9 w-9 bg-card"
-                        aria-label="Configurações de contratos"
-                      >
-                        <Settings className="h-4 w-4" aria-hidden="true" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                  </TooltipTrigger>
-                  <TooltipContent>Configurações</TooltipContent>
-                </Tooltip>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem asChild>
-                    <Link href="/app/contratos/tipos">Tipos de Contrato</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/app/contratos/tipos-cobranca">Tipos de Cobrança</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/app/contratos/pipelines">Pipelines</Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <button
-                type="button"
-                onClick={() => void handleRefresh()}
-                disabled={isLoading || isRefreshing}
-                aria-label="Atualizar kanban"
-                className={cn(
-                  'inline-flex items-center justify-center rounded-md border border-input bg-card',
-                  'h-9 w-9 text-muted-foreground hover:bg-accent hover:text-accent-foreground',
-                  'transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-                  'disabled:pointer-events-none disabled:opacity-50'
-                )}
-              >
-                <RefreshCw
-                  className={cn(
-                    'h-4 w-4',
-                    (isLoading || isRefreshing) && 'animate-spin'
-                  )}
-                  aria-hidden="true"
-                />
-              </button>
-            </>
-          }
-          viewModeSlot={
-            <ViewModePopover
-              value="quadro"
-              onValueChange={handleViewChange}
-              options={CONTRATOS_VIEW_OPTIONS}
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <Heading level="page">Kanban de Contratos</Heading>
+          {!isLoading && pipeline && (
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {pipeline.nome} &middot; {totalContratos} contrato{totalContratos !== 1 ? 's' : ''}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Controles: segmento à esquerda, ações à direita */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <Select
+          value={selectedSegmentoId !== null ? String(selectedSegmentoId) : ''}
+          onValueChange={handleSegmentoChange}
+          disabled={segmentosLoading}
+        >
+          <SelectTrigger
+            className="w-50 bg-card rounded-xl"
+            aria-label="Selecionar segmento"
+          >
+            <SelectValue
+              placeholder={segmentosLoading ? 'Carregando...' : 'Segmento'}
             />
-          }
-        />
-      }
-    >
+          </SelectTrigger>
+          <SelectContent>
+            {segmentos.map((segmento) => (
+              <SelectItem key={segmento.id} value={String(segmento.id)}>
+                {segmento.nome}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <div className="flex items-center gap-2 flex-wrap sm:ml-auto">
+          <DropdownMenu>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-9 w-9 bg-card rounded-xl cursor-pointer"
+                    aria-label="Configurações de contratos"
+                  >
+                    <Settings className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Configurações</TooltipContent>
+            </Tooltip>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <Link href="/app/contratos/tipos">Tipos de Contrato</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/app/contratos/tipos-cobranca">Tipos de Cobrança</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/app/contratos/pipelines">Pipelines</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => void handleRefresh()}
+            disabled={isLoading || isRefreshing}
+            aria-label="Atualizar kanban"
+            className="h-9 w-9 bg-card rounded-xl cursor-pointer"
+          >
+            <RefreshCw
+              className={cn(
+                'h-4 w-4',
+                (isLoading || isRefreshing) && 'animate-spin'
+              )}
+              aria-hidden="true"
+            />
+          </Button>
+
+          <ViewModePopover
+            value="quadro"
+            onValueChange={handleViewChange}
+            options={CONTRATOS_VIEW_OPTIONS}
+          />
+        </div>
+      </div>
+
       {/* Estado de carregamento */}
       {isLoading && <KanbanBoardSkeleton />}
 
@@ -586,35 +585,12 @@ export function KanbanContratosClient() {
 
       {/* Board */}
       {!isLoading && !error && pipeline !== null && (
-        <>
-          {/* Info bar: pipeline + total */}
-          <div className="flex items-center gap-2 mb-3 text-xs text-muted-foreground">
-            <span className="font-medium text-foreground">
-              {pipeline.nome}
-            </span>
-            <span>•</span>
-            <span>
-              {totalContratos === 0
-                ? 'Nenhum contrato'
-                : totalContratos === 1
-                  ? '1 contrato'
-                  : `${totalContratos} contratos`}
-            </span>
-            <span>•</span>
-            <span>
-              {pipeline.estagios.length === 1
-                ? '1 estágio'
-                : `${pipeline.estagios.length} estágios`}
-            </span>
-          </div>
-
-          <KanbanBoardContent
-            columns={columns}
-            estagioMap={estagioMap}
-            onMove={moveContrato}
-          />
-        </>
+        <KanbanBoardContent
+          columns={columns}
+          estagioMap={estagioMap}
+          onMove={moveContrato}
+        />
       )}
-    </DataShell>
+    </div>
   );
 }

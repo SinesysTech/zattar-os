@@ -800,8 +800,8 @@
   /* laranja — financeiro */
   --event-pericia: var(--palette-13);
   /* violeta — técnico/expert */
-  --event-agenda: var(--palette-13);
-  /* violeta — neutro */
+  --event-agenda: var(--palette-12);
+  /* índigo — pessoal/neutro (distinto de perícia) */
   --event-prazo: var(--palette-1);
   /* vermelho — urgência */
   --event-default: var(--palette-11);

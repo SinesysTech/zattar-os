@@ -16,9 +16,9 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { DataShell } from '@/components/shared/data-shell';
-import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading } from '@/components/ui/typography';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -841,126 +841,124 @@ export function PipelinesPageClient() {
     return map;
   }, [segmentos]);
 
+  const ativosCount = pipelines.filter((p) => p.ativo).length;
+
   return (
-    <>
-      <DataShell
-        ariaLabel="Pipelines de Contratos"
-        header={
-          <DataTableToolbar
-            title="Pipelines de Contratos"
-            actionButton={{
-              label: 'Novo Pipeline',
-              icon: <Plus className="h-4 w-4" />,
-              onClick: handleNovoPipeline,
-            }}
-          />
-        }
-      >
-        <div className="rounded-md border bg-card">
-          {isLoading ? (
-            <div className="p-4 space-y-3">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-14 w-full" />
-              ))}
-            </div>
-          ) : error ? (
-            <div className="p-8 text-center text-sm text-destructive">{error}</div>
-          ) : pipelines.length === 0 ? (
-            <div className="p-8 text-center text-sm text-muted-foreground">
-              Nenhum pipeline cadastrado.
-            </div>
-          ) : (
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b bg-muted/50">
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">Nome</th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">Segmento</th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">Estágios</th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
-                  <th className="px-4 py-3 text-right font-medium text-muted-foreground">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pipelines.map((pipeline, idx) => (
-                  <tr
-                    key={pipeline.id}
-                    className={idx < pipelines.length - 1 ? 'border-b' : undefined}
-                  >
-                    <td className="px-4 py-3">
-                      <div>
-                        <span className="font-medium">{pipeline.nome}</span>
-                        {pipeline.descricao && (
-                          <p className="text-xs text-muted-foreground truncate max-w-xs">
-                            {pipeline.descricao}
-                          </p>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">
-                      {segmentoNomeMap[pipeline.segmentoId] ?? `Segmento #${pipeline.segmentoId}`}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-muted-foreground">
-                          {pipeline.estagios?.length ?? 0} estágio(s)
-                        </span>
-                        {pipeline.estagios && pipeline.estagios.length > 0 && (
-                          <div className="flex -space-x-1">
-                            {pipeline.estagios.slice(0, 5).map((e) => (
-                              <div
-                                key={e.id}
-                                className="h-3 w-3 rounded-full border border-background"
-                                style={{ backgroundColor: e.cor }}
-                                title={e.nome}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <Badge
-                        tone="soft"
-                        variant={pipeline.ativo ? 'success' : 'neutral'}
-                      >
-                        {pipeline.ativo ? 'Ativo' : 'Inativo'}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-8 gap-1.5"
-                          onClick={() => handleGerenciarEstagios(pipeline)}
-                        >
-                          <Settings className="h-3.5 w-3.5" />
-                          Estágios
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleEditarPipeline(pipeline)}
-                          aria-label={`Editar ${pipeline.nome}`}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Switch
-                          checked={pipeline.ativo}
-                          disabled={togglingId === pipeline.id}
-                          onCheckedChange={() => void handleToggleAtivo(pipeline)}
-                          aria-label={`${pipeline.ativo ? 'Desativar' : 'Ativar'} ${pipeline.nome}`}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <Heading level="page">Pipelines de Contratos</Heading>
+          {!isLoading && (
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {ativosCount} ativo{ativosCount !== 1 ? 's' : ''} &middot; {pipelines.length} total
+            </p>
           )}
         </div>
-      </DataShell>
+        <Button size="sm" className="rounded-xl" onClick={handleNovoPipeline}>
+          <Plus className="size-3.5" />
+          Novo Pipeline
+        </Button>
+      </div>
+
+      {/* Lista Glass */}
+      <GlassPanel depth={1} className="overflow-hidden">
+        {isLoading ? (
+          <div className="p-4 space-y-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-14 w-full rounded-xl" />
+            ))}
+          </div>
+        ) : error ? (
+          <div className="p-8 text-center text-sm text-destructive">{error}</div>
+        ) : pipelines.length === 0 ? (
+          <div className="p-12 text-center text-sm text-muted-foreground">
+            Nenhum pipeline cadastrado.
+          </div>
+        ) : (
+          <div role="table" aria-label="Pipelines de Contratos">
+            <div
+              role="row"
+              className="grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] gap-4 px-4 py-2.5 border-b border-border/40 text-[11px] uppercase tracking-wide font-medium text-muted-foreground/70"
+            >
+              <span>Nome</span>
+              <span>Segmento</span>
+              <span>Estágios</span>
+              <span>Status</span>
+              <span className="text-right">Ações</span>
+            </div>
+            <div className="divide-y divide-border/30">
+              {pipelines.map((pipeline) => (
+                <div
+                  key={pipeline.id}
+                  role="row"
+                  className="grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] gap-4 items-center px-4 py-3 hover:bg-muted/30 transition-colors"
+                >
+                  <div className="min-w-0">
+                    <div className="text-sm font-medium truncate">{pipeline.nome}</div>
+                    {pipeline.descricao && (
+                      <p className="text-xs text-muted-foreground truncate">
+                        {pipeline.descricao}
+                      </p>
+                    )}
+                  </div>
+                  <span className="text-sm text-muted-foreground truncate">
+                    {segmentoNomeMap[pipeline.segmentoId] ?? `Segmento #${pipeline.segmentoId}`}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm text-muted-foreground">
+                      {pipeline.estagios?.length ?? 0} estágio(s)
+                    </span>
+                    {pipeline.estagios && pipeline.estagios.length > 0 && (
+                      <div className="flex -space-x-1">
+                        {pipeline.estagios.slice(0, 5).map((e) => (
+                          <div
+                            key={e.id}
+                            className="h-3 w-3 rounded-full border border-background"
+                            style={{ backgroundColor: e.cor }}
+                            title={e.nome}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <span>
+                    <Badge tone="soft" variant={pipeline.ativo ? 'success' : 'neutral'}>
+                      {pipeline.ativo ? 'Ativo' : 'Inativo'}
+                    </Badge>
+                  </span>
+                  <div className="flex items-center justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 gap-1.5 cursor-pointer"
+                      onClick={() => handleGerenciarEstagios(pipeline)}
+                    >
+                      <Settings className="h-3.5 w-3.5" />
+                      Estágios
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 cursor-pointer"
+                      onClick={() => handleEditarPipeline(pipeline)}
+                      aria-label={`Editar ${pipeline.nome}`}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Switch
+                      checked={pipeline.ativo}
+                      disabled={togglingId === pipeline.id}
+                      onCheckedChange={() => void handleToggleAtivo(pipeline)}
+                      aria-label={`${pipeline.ativo ? 'Desativar' : 'Ativar'} ${pipeline.nome}`}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </GlassPanel>
 
       <PipelineDialog
         open={pipelineDialogOpen}
@@ -978,6 +976,6 @@ export function PipelinesPageClient() {
         pipeline={estagiosSheet.pipeline}
         onPipelineUpdate={handlePipelineUpdate}
       />
-    </>
+    </div>
   );
 }
