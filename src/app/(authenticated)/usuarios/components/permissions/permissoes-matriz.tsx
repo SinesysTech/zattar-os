@@ -1,10 +1,8 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Dialog,
@@ -14,14 +12,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AppBadge } from '@/components/ui/app-badge';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading } from '@/components/ui/typography';
+import { PermissionToggle } from './permission-toggle';
+import { RolePresetSelect } from './role-preset-select';
 import { Shield, Save, RotateCcw, Info, Loader2, AlertCircle } from 'lucide-react';
 import type { PermissaoMatriz } from '../../domain';
 import {
@@ -58,6 +53,15 @@ export function PermissoesMatriz({
   onResetar,
 }: PermissoesMatrizProps) {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [presetValue, setPresetValue] = useState('none');
+
+  // Diff tracking: snapshot of initial state, refreshed whenever hasChanges goes false (saved/reset)
+  const initialMatriz = useRef<PermissaoMatriz[]>(matriz);
+  useEffect(() => {
+    if (!hasChanges) {
+      initialMatriz.current = matriz;
+    }
+  }, [hasChanges, matriz]);
 
   const handleSalvarClick = () => {
     setConfirmDialogOpen(true);
@@ -74,175 +78,207 @@ export function PermissoesMatriz({
   const totalPermissoes = obterTotalPermissoes();
   const gruposModulo = agruparPermissoesPorModulo(matriz);
 
+  // Helper: lookup initial value for diff
+  const getInitialValue = (recurso: string, operacao: string): boolean => {
+    const item = initialMatriz.current.find((m) => m.recurso === recurso);
+    if (!item) return false;
+    return Boolean(item.operacoes[operacao]);
+  };
+
   if (isLoading) {
     return (
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-6 w-48" />
-          <Skeleton className="h-4 w-full mt-2" />
-        </CardHeader>
-        <CardContent>
-          <Skeleton className="h-96 w-full" />
-        </CardContent>
-      </Card>
+      <GlassPanel depth={1} className="p-5 space-y-4">
+        <Skeleton className="h-6 w-48" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-96 w-full" />
+      </GlassPanel>
     );
   }
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                Permissões do Usuário
-              </CardTitle>
-              {!isSuperAdmin && (
-                <CardDescription className="mt-1.5">
-                  {totalPermissoesAtivas} de {totalPermissoes} permissões ativas
-                </CardDescription>
-              )}
+      <GlassPanel depth={1} className="p-5 space-y-5">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <Shield className="size-4 text-muted-foreground/50" />
+              <Heading level="card">Permissões do Usuário</Heading>
             </div>
-            {canEdit && !isSuperAdmin && hasChanges && (
-              <div className="flex items-center gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={onResetar}
-                  disabled={isSaving}
-                >
-                  <RotateCcw className="h-4 w-4 mr-1.5" />
-                  Resetar
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={handleSalvarClick}
-                  disabled={isSaving}
-                >
-                  {isSaving ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />
-                      Salvando...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="h-4 w-4 mr-1.5" />
-                      Salvar Alterações
-                    </>
-                  )}
-                </Button>
-              </div>
+            {!isSuperAdmin && (
+              <Typography.Muted>
+                {totalPermissoesAtivas} de {totalPermissoes} permissões ativas
+              </Typography.Muted>
             )}
           </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {isSuperAdmin ? (
-            <Alert>
-              <Info className="h-4 w-4" />
-              <AlertDescription>
-                Este usuário possui acesso total ao sistema. Todas as permissões estão implicitamente concedidas.
-              </AlertDescription>
-            </Alert>
-          ) : (
-            <>
-              {!canEdit && (
-                <Alert>
-                  <Info className="h-4 w-4" />
-                  <AlertDescription>
-                    Você não tem permissão para gerenciar permissões de usuários. Visualização apenas.
-                  </AlertDescription>
-                </Alert>
-              )}
 
-              <div className="space-y-5">
-                {gruposModulo.map((grupo) => {
-                  const permissoesAtivasModulo = grupo.itens.reduce((acc, item) => {
-                    return acc + Object.values(item.operacoes).filter(Boolean).length;
-                  }, 0);
-                  const totalModulo = grupo.itens.reduce((acc, item) => {
-                    return acc + Object.keys(item.operacoes).length;
-                  }, 0);
-
-                  return (
-                    <div key={grupo.chave} className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Typography.H4 className="text-sm font-semibold text-foreground">{grupo.titulo}</Typography.H4>
-                        <AppBadge variant="neutral">
-                          {permissoesAtivasModulo}/{totalModulo}
-                        </AppBadge>
-                      </div>
-
-                      <Accordion type="multiple" className="w-full">
-                        {grupo.itens.map((item) => {
-                          const permissoesAtivas = Object.values(item.operacoes).filter(Boolean).length;
-                          const totalOperacoes = Object.keys(item.operacoes).length;
-                          const todasAtivas = permissoesAtivas === totalOperacoes;
-                          const nenhumaAtiva = permissoesAtivas === 0;
-
-                          return (
-                            <AccordionItem key={item.recurso} value={item.recurso}>
-                              <AccordionTrigger className="hover:no-underline">
-                                <div className="flex items-center gap-2 w-full">
-                                  <span className="font-medium text-sm">
-                                    {formatarNomeRecurso(item.recurso)}
-                                  </span>
-                                  <AppBadge variant={todasAtivas ? 'success' : nenhumaAtiva ? 'neutral' : 'info'} className="ml-auto mr-2">
-                                    {permissoesAtivas}/{totalOperacoes}
-                                  </AppBadge>
-                                </div>
-                              </AccordionTrigger>
-                              <AccordionContent>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 pt-2">
-                                  {Object.entries(item.operacoes).map(([operacao, permitido]) => (
-                                    <label
-                                      key={`${item.recurso}-${operacao}`}
-                                      className="flex items-center gap-2 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors"
-                                    >
-                                      <Checkbox
-                                        id={`perm-${item.recurso}-${operacao}`}
-                                        checked={Boolean(permitido)}
-                                        onCheckedChange={() => {
-                                          if (canEdit) {
-                                            onTogglePermissao(item.recurso, operacao);
-                                          }
-                                        }}
-                                        disabled={!canEdit || isSaving}
-                                        aria-label={`Permitir ${formatarNomeOperacao(operacao)} em ${formatarNomeRecurso(item.recurso)}`}
-                                      />
-                                      <span className="text-sm">
-                                        {formatarNomeOperacao(operacao)}
-                                      </span>
-                                    </label>
-                                  ))}
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          );
-                        })}
-                      </Accordion>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {matriz.length === 0 && (
-                <Empty>
-                  <EmptyHeader>
-                    <EmptyMedia variant="icon">
-                      <AlertCircle className="h-6 w-6" />
-                    </EmptyMedia>
-                    <EmptyTitle>Nenhuma permissão encontrada</EmptyTitle>
-                  </EmptyHeader>
-                </Empty>
-              )}
-            </>
+          {canEdit && !isSuperAdmin && hasChanges && (
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onResetar}
+                disabled={isSaving}
+              >
+                <RotateCcw className="h-4 w-4 mr-1.5" />
+                Resetar
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleSalvarClick}
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />
+                    Salvando...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-1.5" />
+                    Salvar Alterações
+                  </>
+                )}
+              </Button>
+            </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
 
+        {/* Content */}
+        {isSuperAdmin ? (
+          <Alert>
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              Este usuário possui acesso total ao sistema. Todas as permissões estão implicitamente concedidas.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <>
+            {!canEdit && (
+              <Alert>
+                <Info className="h-4 w-4" />
+                <AlertDescription>
+                  Você não tem permissão para gerenciar permissões de usuários. Visualização apenas.
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {/* Role Preset Select — only for editors */}
+            {canEdit && (
+              <RolePresetSelect
+                value={presetValue}
+                onValueChange={setPresetValue}
+                disabled={isSaving}
+              />
+            )}
+
+            {/* Module groups — flat layout, always expanded */}
+            <div className="space-y-4">
+              {gruposModulo.map((grupo) => {
+                const permissoesAtivasModulo = grupo.itens.reduce((acc, item) => {
+                  return acc + Object.values(item.operacoes).filter(Boolean).length;
+                }, 0);
+                const totalModulo = grupo.itens.reduce((acc, item) => {
+                  return acc + Object.keys(item.operacoes).length;
+                }, 0);
+
+                const allActive = permissoesAtivasModulo === totalModulo && totalModulo > 0;
+                const noneActive = permissoesAtivasModulo === 0;
+
+                const badgeClass = allActive
+                  ? 'bg-success/12 text-success'
+                  : noneActive
+                  ? 'bg-muted/8 text-muted-foreground/40'
+                  : 'bg-info/12 text-info';
+
+                return (
+                  <GlassPanel key={grupo.chave} depth={1} className="p-4 space-y-3">
+                    {/* Group header */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold text-foreground">
+                        {grupo.titulo}
+                      </span>
+                      <span
+                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${badgeClass}`}
+                      >
+                        {permissoesAtivasModulo}/{totalModulo}
+                      </span>
+                    </div>
+
+                    {/* Permissions grid — all resources within group, flat */}
+                    <div className="space-y-2">
+                      {grupo.itens.map((item) => {
+                        const permissoesAtivas = Object.values(item.operacoes).filter(Boolean).length;
+                        const totalOperacoes = Object.keys(item.operacoes).length;
+                        const todasAtivas = permissoesAtivas === totalOperacoes;
+                        const nenhumaAtiva = permissoesAtivas === 0;
+
+                        const resourceBadgeClass = todasAtivas
+                          ? 'bg-success/12 text-success'
+                          : nenhumaAtiva
+                          ? 'bg-muted/8 text-muted-foreground/40'
+                          : 'bg-info/12 text-info';
+
+                        return (
+                          <div key={item.recurso} className="space-y-1.5">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-medium text-muted-foreground">
+                                {formatarNomeRecurso(item.recurso)}
+                              </span>
+                              <span
+                                className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium ${resourceBadgeClass}`}
+                              >
+                                {permissoesAtivas}/{totalOperacoes}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5">
+                              {Object.entries(item.operacoes).map(([operacao, permitido]) => {
+                                const initialValue = getInitialValue(item.recurso, operacao);
+                                const isChanged = Boolean(permitido) !== initialValue;
+
+                                return (
+                                  <PermissionToggle
+                                    key={`${item.recurso}-${operacao}`}
+                                    operacao={operacao}
+                                    label={formatarNomeOperacao(operacao)}
+                                    checked={Boolean(permitido)}
+                                    disabled={!canEdit || isSaving}
+                                    changed={isChanged}
+                                    onToggle={() => {
+                                      if (canEdit) {
+                                        onTogglePermissao(item.recurso, operacao);
+                                      }
+                                    }}
+                                  />
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </GlassPanel>
+                );
+              })}
+            </div>
+
+            {matriz.length === 0 && (
+              <Empty>
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <AlertCircle className="h-6 w-6" />
+                  </EmptyMedia>
+                  <EmptyTitle>Nenhuma permissão encontrada</EmptyTitle>
+                </EmptyHeader>
+              </Empty>
+            )}
+          </>
+        )}
+      </GlassPanel>
+
+      {/* Confirmation dialog */}
       <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
         <DialogContent>
           <DialogHeader>
