@@ -14,7 +14,6 @@ import {
   AlertCircle,
   MessageSquare,
   X,
-  Gavel,
   ChevronDown,
   ChevronRight,
   Globe,
@@ -309,7 +308,6 @@ export function AudienciaDetailDialog({
           'max-h-[92vh] flex p-0 gap-0 overflow-hidden [scrollbar-width:thin] transition-[max-width] duration-300 ease-out',
           ataOpen ? 'sm:max-w-275' : 'sm:max-w-2xl'
         )}
-        showCloseButton
       >
         <DialogDescription className="sr-only">Detalhes da audiência</DialogDescription>
 
@@ -323,12 +321,20 @@ export function AudienciaDetailDialog({
           {/* HEADER · Capa do processo */}
           <div className="shrink-0 px-6 pt-5 pb-4 border-b border-border/50">
             <div className="flex items-center justify-between gap-4 mb-1.5">
-              <DialogTitle className="flex-1 min-w-0 text-[16px] font-semibold text-foreground leading-[1.3] -tracking-[0.01em] truncate">
+              <DialogTitle className="flex-1 min-w-0 text-[16px] font-semibold text-foreground leading-[1.3] -tracking-[0.01em]">
                 {poloAtivo}
                 <span className="mx-1.5 font-medium text-muted-foreground/70">×</span>
                 {poloPassivo}
               </DialogTitle>
               {audiencia && <AudienciaStatusBadge status={audiencia.status} />}
+              <button
+                type="button"
+                onClick={() => onOpenChange(false)}
+                className="shrink-0 inline-flex items-center justify-center size-7 rounded-lg text-muted-foreground/60 hover:text-foreground hover:bg-muted/60 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                aria-label="Fechar"
+              >
+                <X className="size-4" />
+              </button>
             </div>
 
             {audiencia && (
@@ -367,7 +373,6 @@ export function AudienciaDetailDialog({
           {audiencia && !isLoading && !error && (
             <div className="shrink-0 mx-6 mt-4 p-4 rounded-xl bg-primary/5 border border-primary/15">
               <div className="flex items-center gap-3 mb-3.5">
-                <Gavel className="size-4.5 text-primary shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="text-[14.5px] font-semibold text-foreground leading-tight">
                     {audiencia.tipoDescricao || 'Audiência'}
@@ -454,50 +459,48 @@ export function AudienciaDetailDialog({
                     <ResponsavelTriggerContent
                       responsavelId={audiencia.responsavelId}
                       usuarios={usuarios}
-                      size="md"
+                      size="sm"
                     />
                   </AudienciaResponsavelPopover>
                 </div>
               </div>
 
               {/* Ações */}
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {(isVirtual || isHibrida) && (
-                  <Button
-                    asChild={!!audiencia.urlAudienciaVirtual}
-                    disabled={!audiencia.urlAudienciaVirtual}
-                    size="sm"
-                  >
-                    {audiencia.urlAudienciaVirtual ? (
-                      <a
-                        href={audiencia.urlAudienciaVirtual}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Video className="size-4" />
-                        Entrar na Sala Virtual
-                      </a>
-                    ) : (
-                      <>
-                        <Video className="size-4" />
-                        Entrar na Sala Virtual
-                      </>
-                    )}
-                  </Button>
-                )}
-                <Button variant="outline" size="sm" asChild={isPje} disabled={!isPje}>
-                  {isPje ? (
-                    <a href={pjeUrl} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="size-4" />
-                      Abrir no PJe
+                  audiencia.urlAudienciaVirtual ? (
+                    <a
+                      href={audiencia.urlAudienciaVirtual}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary text-primary-foreground text-[11.5px] font-medium hover:bg-primary/90 transition-colors"
+                    >
+                      <Video className="size-3" />
+                      Entrar na sala virtual
                     </a>
                   ) : (
-                    <>
-                      <ExternalLink className="size-4" />
-                      Abrir no PJe
-                    </>
-                  )}
-                </Button>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/50 text-primary-foreground/60 text-[11.5px] font-medium cursor-not-allowed">
+                      <Video className="size-3" />
+                      Entrar na sala virtual
+                    </span>
+                  )
+                )}
+                {isPje ? (
+                  <a
+                    href={pjeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-card border border-border/60 text-[11.5px] font-medium text-foreground hover:bg-muted/60 hover:border-border transition-colors"
+                  >
+                    <ExternalLink className="size-3" />
+                    Abrir no PJe
+                  </a>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-card border border-border/40 text-[11.5px] font-medium text-muted-foreground/40 cursor-not-allowed">
+                    <ExternalLink className="size-3" />
+                    Abrir no PJe
+                  </span>
+                )}
               </div>
             </div>
           )}

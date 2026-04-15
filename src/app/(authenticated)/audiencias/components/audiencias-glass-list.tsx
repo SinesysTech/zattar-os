@@ -98,9 +98,9 @@ function formatCountdown(dataInicio: string): { text: string; isUrgent: boolean 
   if (hours > 48) return null;
 
   if (hours > 0) {
-    return { text: `Em ${hours}h ${remainingMins}min`, isUrgent: hours < 2 };
+    return { text: `${hours}h ${remainingMins}min`, isUrgent: hours < 2 };
   }
-  return { text: `Em ${remainingMins}min`, isUrgent: true };
+  return { text: `${remainingMins}min`, isUrgent: true };
 }
 
 // =============================================================================
@@ -188,7 +188,6 @@ function GlassRow({
   const orgaoJulgador =
     audiencia.orgaoJulgadorDescricao ||
     audiencia.orgaoJulgadorOrigem ||
-    audiencia.salaAudienciaNome ||
     null;
 
   const handleStartObs = (e: React.MouseEvent) => {
@@ -248,66 +247,31 @@ function GlassRow({
       )}
     >
       <div className="flex items-start gap-4">
-        {/* PREP + DATA + HORA (coluna fixa à esquerda) */}
-        <div className="flex flex-col items-center gap-2 w-21 shrink-0 pt-0.5">
-          <PrepRing audiencia={audiencia} />
+        {/* DATA + HORA + PREP RING (coluna fixa à esquerda) */}
+        <div className="flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5">
           <div className="text-center">
-            <div className="text-[11.5px] font-semibold text-foreground leading-tight">
-              {format(dataInicio, "dd MMM", { locale: ptBR })}
-            </div>
-            <div className="text-[10px] text-muted-foreground/80 leading-tight mt-0.5">
-              {format(dataInicio, 'yyyy', { locale: ptBR })}
+            <div className="text-[11.5px] font-semibold text-foreground leading-tight whitespace-nowrap">
+              {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
             </div>
             {audiencia.horaInicio && (
-              <div className="text-[11px] text-muted-foreground mt-1 tabular-nums">
-                {audiencia.horaInicio}
-                {audiencia.horaFim && <>–{audiencia.horaFim}</>}
+              <div className="text-[11px] text-muted-foreground mt-0.5 tabular-nums">
+                {audiencia.horaInicio.substring(0, 5).replace(':', 'h')}
               </div>
             )}
           </div>
+          <PrepRing audiencia={audiencia} />
         </div>
 
         {/* MAIN INFO */}
         <div className="flex-1 min-w-0">
-          {/* Linha 1: título + badges de modalidade/TRT à frente + status atrás */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="text-[14px] font-semibold text-foreground leading-tight">
-              {audiencia.tipoDescricao || 'Audiência'}
-            </h3>
+          {/* Linha 1: modalidade badge + status à direita */}
+          <div className="flex items-center gap-2">
             {audiencia.modalidade && (
               <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-[10.5px] font-semibold tracking-[0.02em] text-primary">
                 <ModalidadeIcon className="w-2.5 h-2.5" />
                 {MODALIDADE_AUDIENCIA_LABELS[audiencia.modalidade]}
               </span>
             )}
-            <span className="inline-flex items-center rounded-md bg-muted border border-border/70 px-1.5 py-0.5 text-[10.5px] font-semibold tracking-[0.02em] text-muted-foreground">
-              {audiencia.trt}
-            </span>
-            {audiencia.segredoJustica && (
-              <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
-                <Lock className="w-2.5 h-2.5" />
-                Segredo
-              </span>
-            )}
-            {audiencia.juizoDigital && (
-              <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
-                <Monitor className="w-2.5 h-2.5" />
-                Digital
-              </span>
-            )}
-            {audiencia.designada && (
-              <span className="inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
-                <CheckCircle2 className="w-2.5 h-2.5" />
-                Designada
-              </span>
-            )}
-            {(audiencia.poloAtivoRepresentaVarios || audiencia.poloPassivoRepresentaVarios) && (
-              <span className="inline-flex items-center gap-1 bg-muted border border-border/70 text-muted-foreground rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
-                <Users className="w-2.5 h-2.5" />
-                Litisconsórcio
-              </span>
-            )}
-
             <div className="ml-auto flex items-center gap-1.5 shrink-0">
               {countdown ? (
                 <span
@@ -331,92 +295,81 @@ function GlassRow({
             </div>
           </div>
 
-          {/* Linha 2: partes × partes · nº processo · grau */}
-          <div className="mt-1 text-[12.5px] text-foreground/85 leading-snug">
-            <span className="font-medium">{poloAtivo}</span>
-            {audiencia.poloAtivoRepresentaVarios && (
-              <span className="text-muted-foreground/60"> e outros</span>
+          {/* Linha 2: título + partes + litisconsórcio + nº processo */}
+          <div className="mt-1">
+            <h3 className="text-[14px] font-semibold text-foreground leading-tight">
+              {audiencia.tipoDescricao || 'Audiência'}
+            </h3>
+            <div className="mt-0.5 text-[12.5px] text-foreground/85 leading-snug flex flex-wrap items-baseline gap-x-0">
+              <span className="font-medium">{poloAtivo}</span>
+              {audiencia.poloAtivoRepresentaVarios && (
+                <span className="text-muted-foreground/60"> e outros</span>
+              )}
+              <span className="mx-1.5 text-muted-foreground/60 font-medium">×</span>
+              <span className="font-medium">{poloPassivo}</span>
+              {audiencia.poloPassivoRepresentaVarios && (
+                <span className="text-muted-foreground/60"> e outros</span>
+              )}
+              <span className="mx-2 inline-block w-0.75 h-0.75 rounded-full bg-muted-foreground/50 align-middle" />
+              <span className="text-muted-foreground tabular-nums">{audiencia.numeroProcesso}</span>
+              {(audiencia.poloAtivoRepresentaVarios || audiencia.poloPassivoRepresentaVarios) && (
+                <span className="ml-2 inline-flex items-center gap-1 bg-muted border border-border/70 text-muted-foreground rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+                  <Users className="w-2.5 h-2.5" />
+                  Litisconsórcio
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Linha 3: TRT + grau + sala + órgão julgador + indicadores */}
+          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+            {audiencia.trt && (
+              <span className="text-[9px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/60">
+                {audiencia.trt}
+              </span>
             )}
-            <span className="mx-1.5 text-muted-foreground/60 font-medium">×</span>
-            <span className="font-medium">{poloPassivo}</span>
-            {audiencia.poloPassivoRepresentaVarios && (
-              <span className="text-muted-foreground/60"> e outros</span>
-            )}
-            <span className="mx-2 inline-block w-0.75 h-0.75 rounded-full bg-muted-foreground/50 align-middle" />
-            <span className="text-muted-foreground tabular-nums">
-              {audiencia.numeroProcesso}
-            </span>
             {audiencia.grau && (
+              <span className="inline-flex items-center rounded bg-muted border border-border/50 px-1.5 py-px text-[9px] font-semibold text-muted-foreground">
+                {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
+              </span>
+            )}
+            {audiencia.salaAudienciaNome && (
               <>
-                <span className="mx-2 inline-block w-0.75 h-0.75 rounded-full bg-muted-foreground/50 align-middle" />
-                <span className="text-muted-foreground">
-                  {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
+                <span className="w-0.75 h-0.75 rounded-full bg-muted-foreground/30 shrink-0" />
+                <span className="text-[11px] text-muted-foreground/60">
+                  {audiencia.salaAudienciaNome}
                 </span>
               </>
             )}
-          </div>
-
-          {/* Linha 3: órgão julgador */}
-          {orgaoJulgador && (
-            <div className="mt-0.5 text-[11.5px] text-muted-foreground truncate" title={orgaoJulgador}>
-              {orgaoJulgador}
-            </div>
-          )}
-
-          {/* Linha 4+: meta rich (link, responsável, observações) */}
-          <div className="mt-2.5 pt-2.5 border-t border-border/50 flex flex-wrap items-center gap-x-4 gap-y-2">
-            {/* Link da sala virtual */}
-            {audiencia.urlAudienciaVirtual && (
-              <div className="inline-flex items-center gap-1.5 min-w-0 max-w-55">
-                <LinkIcon className="w-3 h-3 text-muted-foreground/70 shrink-0" />
-                <a
-                  href={audiencia.urlAudienciaVirtual}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="text-[11.5px] text-primary truncate hover:underline"
-                  title={audiencia.urlAudienciaVirtual}
-                >
-                  {audiencia.urlAudienciaVirtual.replace(/^https?:\/\//, '')}
-                </a>
-                <button
-                  type="button"
-                  onClick={(e) => handleCopyUrl(e, audiencia.urlAudienciaVirtual!)}
-                  className="inline-flex items-center justify-center w-5 h-5 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                  aria-label="Copiar link"
-                >
-                  {copiedUrl ? (
-                    <Check className="w-3 h-3 text-success" />
-                  ) : (
-                    <Copy className="w-3 h-3" />
-                  )}
-                </button>
-              </div>
+            {orgaoJulgador && (
+              <>
+                <span className="w-0.75 h-0.75 rounded-full bg-muted-foreground/30 shrink-0" />
+                <span className="text-[11px] text-muted-foreground/50">{orgaoJulgador}</span>
+              </>
             )}
-
-            {/* Responsável (inline edit via popover existente) */}
-            <div
-              className="inline-flex items-center"
-              onClick={(e) => e.stopPropagation()}
-              onKeyDown={(e) => e.stopPropagation()}
-            >
-              <AudienciaResponsavelPopover
-                audienciaId={audiencia.id}
-                responsavelId={audiencia.responsavelId}
-                usuarios={usuarios}
-              >
-                <ResponsavelTriggerContent
-                  responsavelId={audiencia.responsavelId}
-                  usuarios={usuarios}
-                  size="sm"
-                />
-              </AudienciaResponsavelPopover>
-            </div>
+            {audiencia.segredoJustica && (
+              <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+                <Lock className="w-2.5 h-2.5" />
+                Segredo
+              </span>
+            )}
+            {audiencia.juizoDigital && (
+              <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+                <Monitor className="w-2.5 h-2.5" />
+                Digital
+              </span>
+            )}
+            {audiencia.designada && (
+              <span className="inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+                <CheckCircle2 className="w-2.5 h-2.5" />
+                Designada
+              </span>
+            )}
           </div>
 
-          {/* Observações (inline edit) */}
+          {/* Barra meta: obs à esquerda + responsável à direita */}
           <div
-            className="mt-2"
+            className="mt-2.5 pt-2.5 border-t border-border/50"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
@@ -456,22 +409,66 @@ function GlassRow({
                 </div>
               </div>
             ) : (
-              <button
-                type="button"
-                onClick={handleStartObs}
-                className={cn(
-                  'w-full flex items-start gap-1.5 rounded-md px-1.5 py-1 -mx-1.5 -my-1 text-left',
-                  'transition-colors cursor-pointer',
-                  'hover:bg-muted/60',
-                  obsValue ? 'text-foreground/75' : 'text-muted-foreground/60'
-                )}
-              >
-                <MessageSquare className="w-3 h-3 mt-0.5 shrink-0 text-muted-foreground/60" />
-                <span className="text-[11.5px] flex-1 line-clamp-2 leading-snug">
-                  {obsValue || 'Adicionar observações'}
-                </span>
-                <Pencil className="w-2.5 h-2.5 mt-0.5 shrink-0 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
+              <div className="flex items-center justify-between gap-2">
+                {/* Esquerda: link virtual + observações */}
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  {audiencia.urlAudienciaVirtual && (
+                    <div className="inline-flex items-center gap-1.5 min-w-0 max-w-48">
+                      <LinkIcon className="w-3 h-3 text-muted-foreground/70 shrink-0" />
+                      <a
+                        href={audiencia.urlAudienciaVirtual}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-[11.5px] text-primary truncate hover:underline"
+                        title={audiencia.urlAudienciaVirtual}
+                      >
+                        {audiencia.urlAudienciaVirtual.replace(/^https?:\/\//, '')}
+                      </a>
+                      <button
+                        type="button"
+                        onClick={(e) => handleCopyUrl(e, audiencia.urlAudienciaVirtual!)}
+                        className="inline-flex items-center justify-center w-5 h-5 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                        aria-label="Copiar link"
+                      >
+                        {copiedUrl ? (
+                          <Check className="w-3 h-3 text-success" />
+                        ) : (
+                          <Copy className="w-3 h-3" />
+                        )}
+                      </button>
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleStartObs}
+                    className={cn(
+                      'flex items-center gap-1.5 rounded-md px-1.5 py-1 -mx-1.5 -my-1 text-left',
+                      'transition-colors cursor-pointer hover:bg-muted/60',
+                      obsValue ? 'text-foreground/75' : 'text-muted-foreground/60'
+                    )}
+                  >
+                    <MessageSquare className="w-3 h-3 shrink-0 text-muted-foreground/60" />
+                    <span className="text-[11.5px] flex-1 line-clamp-1 leading-snug">
+                      {obsValue || 'Adicionar observações'}
+                    </span>
+                    <Pencil className="w-2.5 h-2.5 shrink-0 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </button>
+                </div>
+
+                {/* Direita: responsável */}
+                <AudienciaResponsavelPopover
+                  audienciaId={audiencia.id}
+                  responsavelId={audiencia.responsavelId}
+                  usuarios={usuarios}
+                >
+                  <ResponsavelTriggerContent
+                    responsavelId={audiencia.responsavelId}
+                    usuarios={usuarios}
+                    size="sm"
+                  />
+                </AudienciaResponsavelPopover>
+              </div>
             )}
           </div>
         </div>
