@@ -9,14 +9,6 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -24,8 +16,18 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { Loader2 } from 'lucide-react';
-import { Typography } from '@/components/ui/typography';
+import {
+  Loader2,
+  Landmark,
+  CalendarDays,
+  MapPin,
+  Video,
+  UserRound,
+  MessageSquare,
+  AlertCircle,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { actionListarAcervoPaginado } from '@/app/(authenticated)/acervo';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import {
@@ -34,6 +36,50 @@ import {
   actionListarSalasAudiencia,
 } from '@/app/(authenticated)/audiencias/actions';
 import { localToISO } from '@/app/(authenticated)/audiencias/lib/date-utils';
+
+// ─── Section Helpers ──────────────────────────────────────────────────────────
+
+function SectionHeader({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-2 mb-3">
+      <Icon className="size-3.5 text-primary/70" />
+      <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function SectionCard({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={cn('rounded-[14px] bg-muted/40 border border-border/30 p-4', className)}>
+      {children}
+    </div>
+  );
+}
+
+function FieldLabel({ htmlFor, children }: { htmlFor?: string; children: React.ReactNode }) {
+  return (
+    <Label htmlFor={htmlFor} className="text-[13px] font-medium text-foreground/80 mb-1.5 block">
+      {children}
+    </Label>
+  );
+}
+
+function InlineLoader({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-border/30 bg-muted/30 text-muted-foreground/60">
+      <Loader2 className="size-3.5 animate-spin shrink-0" />
+      <span className="text-sm">{label}</span>
+    </div>
+  );
+}
 
 interface NovaAudienciaDialogProps {
   open: boolean;
@@ -379,192 +425,201 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
   }, [processos]);
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Nova Audiência</DialogTitle>
-          <DialogDescription>
-            Adicione uma nova audiência manualmente ao sistema.
-          </DialogDescription>
-        </DialogHeader>
+    <DialogFormShell
+      open={open}
+      onOpenChange={handleClose}
+      title="Nova Audiência"
+      description="Preencha os dados para registrar uma nova audiência no sistema."
+      maxWidth="2xl"
+      bodyClassName="overflow-y-auto px-6 py-5"
+      footer={
+        <Button type="submit" form="nova-audiencia-form" disabled={isLoading}>
+          {isLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
+          Salvar Audiência
+        </Button>
+      }
+    >
+      <form id="nova-audiencia-form" onSubmit={handleSubmit} className="space-y-4">
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="bg-destructive/10 text-destructive p-3 rounded-md text-sm">
-              {error}
-            </div>
-          )}
-
-          {/* TRT e Grau */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="trt">Tribunal (TRT) *</Label>
-              <Select value={trt} onValueChange={setTrt}>
-                <SelectTrigger id="trt">
-                  <SelectValue placeholder="Selecione o TRT" />
-                </SelectTrigger>
-                <SelectContent>
-                  {TRTS.map((tribunal) => (
-                    <SelectItem key={tribunal.value} value={tribunal.value}>
-                      {tribunal.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="grau">Grau *</Label>
-              <Select value={grau} onValueChange={setGrau}>
-                <SelectTrigger id="grau">
-                  <SelectValue placeholder="Selecione o grau" />
-                </SelectTrigger>
-                <SelectContent>
-                  {GRAUS.map((g) => (
-                    <SelectItem key={g.value} value={g.value}>
-                      {g.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+        {/* ── Erro ─────────────────────────────────────────────────────── */}
+        {error && (
+          <div className="flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive">
+            <AlertCircle className="size-4 shrink-0 mt-0.5" />
+            <span className="text-sm leading-snug">{error}</span>
           </div>
+        )}
 
-          {/* Processo - Combobox com busca */}
-          <div className="space-y-2">
-            <Label htmlFor="processo">Processo *</Label>
-            {!trt || !grau ? (
-              <div className="flex items-center gap-2 p-2 border rounded-md bg-muted">
-                <Typography.Muted as="span">Selecione o TRT e Grau primeiro</Typography.Muted>
+        {/* ── Seção 1: Jurisdição + Processo ───────────────────────────── */}
+        <SectionCard>
+          <SectionHeader icon={Landmark} label="Jurisdição e Processo" />
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <FieldLabel htmlFor="trt">Tribunal (TRT) *</FieldLabel>
+                <Select value={trt} onValueChange={setTrt}>
+                  <SelectTrigger id="trt">
+                    <SelectValue placeholder="Selecione o TRT" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TRTS.map((tribunal) => (
+                      <SelectItem key={tribunal.value} value={tribunal.value}>
+                        {tribunal.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            ) : loadingProcessos ? (
-              <div className="flex items-center gap-2 p-2 border rounded-md">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <Typography.Muted as="span">Carregando processos...</Typography.Muted>
+              <div>
+                <FieldLabel htmlFor="grau">Grau *</FieldLabel>
+                <Select value={grau} onValueChange={setGrau}>
+                  <SelectTrigger id="grau">
+                    <SelectValue placeholder="Selecione o grau" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GRAUS.map((g) => (
+                      <SelectItem key={g.value} value={g.value}>
+                        {g.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            ) : (
-              <Combobox
-                options={processosOptions}
-                value={processoId}
-                onValueChange={setProcessoId}
-                placeholder="Buscar por número ou nome das partes..."
-                searchPlaceholder="Buscar processo..."
-                emptyText="Nenhum processo encontrado."
-                multiple={false}
-              />
-            )}
-          </div>
-
-          {/* Data e Hora de Início */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="dataInicio">Data de Início *</Label>
-              <DatePicker
-                value={dataInicio ? parseLocalDate(dataInicio) : null}
-                onChange={(d) => setDataInicio(d ? formatYYYYMMDD(d) : '')}
-                placeholder="Selecionar data"
-              />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="horaInicio">Hora de Início *</Label>
-              <Input
-                id="horaInicio"
-                type="time"
-                value={horaInicio}
-                onChange={(e) => setHoraInicio(e.target.value)}
-                required
-              />
+
+            <div>
+              <FieldLabel htmlFor="processo">Processo *</FieldLabel>
+              {!trt || !grau ? (
+                <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-dashed border-border/40 bg-muted/20 text-muted-foreground/50 text-sm">
+                  Selecione o TRT e Grau para listar os processos
+                </div>
+              ) : loadingProcessos ? (
+                <InlineLoader label="Carregando processos..." />
+              ) : (
+                <Combobox
+                  options={processosOptions}
+                  value={processoId}
+                  onValueChange={setProcessoId}
+                  placeholder="Buscar por número ou nome das partes..."
+                  searchPlaceholder="Buscar processo..."
+                  emptyText="Nenhum processo encontrado."
+                  multiple={false}
+                />
+              )}
             </div>
           </div>
+        </SectionCard>
 
-          {/* Data e Hora de Fim */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="dataFim">Data de Fim *</Label>
-              <DatePicker
-                value={dataFim ? parseLocalDate(dataFim) : null}
-                onChange={(d) => setDataFim(d ? formatYYYYMMDD(d) : '')}
-                placeholder="Selecionar data"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="horaFim">Hora de Fim *</Label>
-              <Input
-                id="horaFim"
-                type="time"
-                value={horaFim}
-                onChange={(e) => setHoraFim(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          {/* Tipo de Audiência */}
-          <div className="space-y-2">
-            <Label htmlFor="tipo">Tipo de Audiência</Label>
-            {loadingTipos ? (
-              <div className="flex items-center gap-2 p-2 border rounded-md">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <Typography.Muted as="span">Carregando tipos...</Typography.Muted>
+        {/* ── Seção 2: Data e Horário ───────────────────────────────────── */}
+        <SectionCard>
+          <SectionHeader icon={CalendarDays} label="Data e Horário" />
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <FieldLabel htmlFor="dataInicio">Data de Início *</FieldLabel>
+                <DatePicker
+                  value={dataInicio ? parseLocalDate(dataInicio) : null}
+                  onChange={(d) => setDataInicio(d ? formatYYYYMMDD(d) : '')}
+                  placeholder="Selecionar data"
+                />
               </div>
-            ) : !trt || !grau ? (
-              <Select disabled>
-                <SelectTrigger id="tipo">
-                  <SelectValue placeholder="Selecione TRT e Grau primeiro" />
-                </SelectTrigger>
-              </Select>
-            ) : (
-              <Select value={tipoAudienciaId} onValueChange={setTipoAudienciaId}>
-                <SelectTrigger id="tipo">
-                  <SelectValue placeholder="Selecione o tipo de audiência" />
-                </SelectTrigger>
-                <SelectContent>
-                  {tiposAudiencia.map((tipo) => (
-                    <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                      {tipo.descricao} {tipo.is_virtual && '(Virtual)'}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
-
-          {/* Sala de Audiência */}
-          <div className="space-y-2">
-            <Label htmlFor="sala">Sala de Audiência</Label>
-            {loadingSalas ? (
-              <div className="flex items-center gap-2 p-2 border rounded-md">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <Typography.Muted as="span">Carregando salas...</Typography.Muted>
+              <div>
+                <FieldLabel htmlFor="horaInicio">Hora de Início *</FieldLabel>
+                <Input
+                  id="horaInicio"
+                  type="time"
+                  value={horaInicio}
+                  onChange={(e) => setHoraInicio(e.target.value)}
+                  required
+                />
               </div>
-            ) : !processoSelecionado ? (
-              <Select disabled>
-                <SelectTrigger id="sala">
-                  <SelectValue placeholder="Selecione um processo primeiro" />
-                </SelectTrigger>
-              </Select>
-            ) : (
-              <Select value={salaAudienciaId} onValueChange={setSalaAudienciaId}>
-                <SelectTrigger id="sala">
-                  <SelectValue placeholder="Selecione a sala de audiência" />
-                </SelectTrigger>
-                <SelectContent>
-                  {salas.map((sala) => (
-                    <SelectItem key={sala.id} value={sala.id.toString()}>
-                      {sala.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <FieldLabel htmlFor="dataFim">Data de Fim *</FieldLabel>
+                <DatePicker
+                  value={dataFim ? parseLocalDate(dataFim) : null}
+                  onChange={(d) => setDataFim(d ? formatYYYYMMDD(d) : '')}
+                  placeholder="Selecionar data"
+                />
+              </div>
+              <div>
+                <FieldLabel htmlFor="horaFim">Hora de Fim *</FieldLabel>
+                <Input
+                  id="horaFim"
+                  type="time"
+                  value={horaFim}
+                  onChange={(e) => setHoraFim(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
           </div>
+        </SectionCard>
 
-          {/* Condicional: Virtual ou Presencial */}
-          {tipoSelecionado && (
-            <>
-              {tipoSelecionado.is_virtual ? (
-                // Audiência Virtual - Campo URL
-                <div className="space-y-2">
-                  <Label htmlFor="urlVirtual">URL da Audiência Virtual</Label>
+        {/* ── Seção 3: Tipo e Local ─────────────────────────────────────── */}
+        <SectionCard>
+          <SectionHeader
+            icon={tipoSelecionado?.is_virtual ? Video : MapPin}
+            label="Tipo e Local"
+          />
+          <div className="space-y-3">
+            <div>
+              <FieldLabel htmlFor="tipo">Tipo de Audiência</FieldLabel>
+              {loadingTipos ? (
+                <InlineLoader label="Carregando tipos..." />
+              ) : !trt || !grau ? (
+                <Select disabled>
+                  <SelectTrigger id="tipo">
+                    <SelectValue placeholder="Selecione TRT e Grau primeiro" />
+                  </SelectTrigger>
+                </Select>
+              ) : (
+                <Select value={tipoAudienciaId} onValueChange={setTipoAudienciaId}>
+                  <SelectTrigger id="tipo">
+                    <SelectValue placeholder="Selecione o tipo de audiência" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {tiposAudiencia.map((tipo) => (
+                      <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                        {tipo.descricao} {tipo.is_virtual && '(Virtual)'}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+
+            <div>
+              <FieldLabel htmlFor="sala">Sala de Audiência</FieldLabel>
+              {loadingSalas ? (
+                <InlineLoader label="Carregando salas..." />
+              ) : !processoSelecionado ? (
+                <Select disabled>
+                  <SelectTrigger id="sala">
+                    <SelectValue placeholder="Selecione um processo primeiro" />
+                  </SelectTrigger>
+                </Select>
+              ) : (
+                <Select value={salaAudienciaId} onValueChange={setSalaAudienciaId}>
+                  <SelectTrigger id="sala">
+                    <SelectValue placeholder="Selecione a sala de audiência" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {salas.map((sala) => (
+                      <SelectItem key={sala.id} value={sala.id.toString()}>
+                        {sala.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+
+            {/* Condicional: Virtual ou Presencial */}
+            {tipoSelecionado && (
+              tipoSelecionado.is_virtual ? (
+                <div>
+                  <FieldLabel htmlFor="urlVirtual">URL da Audiência Virtual</FieldLabel>
                   <Input
                     id="urlVirtual"
                     type="url"
@@ -574,15 +629,14 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                   />
                 </div>
               ) : (
-                // Audiência Presencial - Campos de Endereço
-                <>
-                  <div className="space-y-2">
-                    <Label className="text-base font-semibold">Endereço da Audiência Presencial</Label>
-                  </div>
+                <div className="space-y-3 pt-1">
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]">
+                    Endereço Presencial
+                  </p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="sm:col-span-2 space-y-2">
-                      <Label htmlFor="logradouro">Logradouro</Label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="sm:col-span-2">
+                      <FieldLabel htmlFor="logradouro">Logradouro</FieldLabel>
                       <Input
                         id="logradouro"
                         placeholder="Rua, Avenida, etc."
@@ -590,8 +644,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                         onChange={(e) => setLogradouro(e.target.value)}
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="numero">Número</Label>
+                    <div>
+                      <FieldLabel htmlFor="numero">Número</FieldLabel>
                       <Input
                         id="numero"
                         placeholder="123"
@@ -601,9 +655,9 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="complemento">Complemento</Label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <FieldLabel htmlFor="complemento">Complemento</FieldLabel>
                       <Input
                         id="complemento"
                         placeholder="Sala, Bloco, etc."
@@ -611,8 +665,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                         onChange={(e) => setComplemento(e.target.value)}
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="bairro">Bairro</Label>
+                    <div>
+                      <FieldLabel htmlFor="bairro">Bairro</FieldLabel>
                       <Input
                         id="bairro"
                         value={bairro}
@@ -621,17 +675,17 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="sm:col-span-2 space-y-2">
-                      <Label htmlFor="cidade">Cidade</Label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="sm:col-span-2">
+                      <FieldLabel htmlFor="cidade">Cidade</FieldLabel>
                       <Input
                         id="cidade"
                         value={cidade}
                         onChange={(e) => setCidade(e.target.value)}
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="estado">Estado</Label>
+                    <div>
+                      <FieldLabel htmlFor="estado">Estado</FieldLabel>
                       <Input
                         id="estado"
                         placeholder="UF"
@@ -642,8 +696,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="cep">CEP</Label>
+                  <div>
+                    <FieldLabel htmlFor="cep">CEP</FieldLabel>
                     <Input
                       id="cep"
                       placeholder="00000-000"
@@ -651,23 +705,23 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                       onChange={(e) => setCep(e.target.value)}
                     />
                   </div>
-                </>
-              )}
-            </>
-          )}
+                </div>
+              )
+            )}
+          </div>
+        </SectionCard>
 
-          {/* Responsável */}
-          <div className="space-y-2">
-            <Label htmlFor="responsavel">Responsável (opcional)</Label>
-            {loadingUsuarios ? (
-              <div className="flex items-center gap-2 p-2 border rounded-md">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <Typography.Muted as="span">Carregando usuários...</Typography.Muted>
-              </div>
-            ) : (
+        {/* ── Seção 4: Responsável ──────────────────────────────────────── */}
+        <SectionCard>
+          <SectionHeader icon={UserRound} label="Responsável" />
+          {loadingUsuarios ? (
+            <InlineLoader label="Carregando usuários..." />
+          ) : (
+            <div>
+              <FieldLabel htmlFor="responsavel">Responsável pela audiência</FieldLabel>
               <Select value={responsavelId} onValueChange={setResponsavelId}>
                 <SelectTrigger id="responsavel">
-                  <SelectValue placeholder="Selecione um responsável" />
+                  <SelectValue placeholder="Selecione um responsável (opcional)" />
                 </SelectTrigger>
                 <SelectContent>
                   {usuarios.map((usuario) => (
@@ -677,32 +731,24 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                   ))}
                 </SelectContent>
               </Select>
-            )}
-          </div>
+            </div>
+          )}
+        </SectionCard>
 
-          {/* Observações */}
-          <div className="space-y-2">
-            <Label htmlFor="observacoes">Observações</Label>
-            <Textarea
-              id="observacoes"
-              placeholder="Anotações adicionais sobre a audiência..."
-              value={observacoes}
-              onChange={(e) => setObservacoes(e.target.value)}
-              rows={3}
-            />
-          </div>
+        {/* ── Seção 5: Observações ─────────────────────────────────────── */}
+        <SectionCard>
+          <SectionHeader icon={MessageSquare} label="Observações" />
+          <Textarea
+            id="observacoes"
+            placeholder="Anotações adicionais sobre a audiência..."
+            value={observacoes}
+            onChange={(e) => setObservacoes(e.target.value)}
+            rows={3}
+            className="resize-none"
+          />
+        </SectionCard>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={handleClose} disabled={isLoading}>
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Salvar
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+      </form>
+    </DialogFormShell>
   );
 }
