@@ -9,17 +9,24 @@ import {
   Monitor,
   CheckCircle2,
   Users,
-  ChevronRight,
   Clock,
   Building2,
   Layers,
+  Video,
+  Pencil,
+  Check,
+  X,
+  Link as LinkIcon,
+  MessageSquare,
+  Loader2,
+  Copy,
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
-import {
-  TooltipProvider,
-} from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
 
 import type { Audiencia } from '../domain';
@@ -30,6 +37,9 @@ import {
   MODALIDADE_AUDIENCIA_LABELS,
   GRAU_TRIBUNAL_LABELS,
 } from '../domain';
+import { actionAtualizarObservacoes } from '../actions';
+import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from './audiencia-responsavel-popover';
+import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { calcPrepItems, calcPrepScore } from './prep-score';
 
 // =============================================================================
@@ -50,23 +60,10 @@ interface AudienciasGlassListProps {
 // HELPERS
 // =============================================================================
 
-function getStatusDotColor(status: StatusAudiencia): string {
-  switch (status) {
-    case StatusAudiencia.Marcada:
-      return 'bg-success shadow-[0_0_6px_var(--success)]';
-    case StatusAudiencia.Finalizada:
-      return 'bg-info shadow-[0_0_6px_var(--info)]';
-    case StatusAudiencia.Cancelada:
-      return 'bg-destructive shadow-[0_0_6px_var(--destructive)]';
-    default:
-      return 'bg-muted-foreground';
-  }
-}
-
 function getModalidadeIcon(modalidade: ModalidadeAudiencia | null) {
   switch (modalidade) {
     case ModalidadeAudiencia.Virtual:
-      return Monitor;
+      return Video;
     case ModalidadeAudiencia.Presencial:
       return Building2;
     case ModalidadeAudiencia.Hibrida:
@@ -84,7 +81,7 @@ function getScoreColor(score: number): string {
 
 function getScoreStrokeColor(score: number): string {
   if (score >= 80) return 'var(--success)';
-  if (score >= 50) return '#fbbf24';
+  if (score >= 50) return 'var(--warning)';
   return 'var(--destructive)';
 }
 
@@ -98,7 +95,7 @@ function formatCountdown(dataInicio: string): { text: string; isUrgent: boolean 
   const hours = Math.floor(mins / 60);
   const remainingMins = mins % 60;
 
-  if (hours > 48) return null; // Only show countdown within 48h
+  if (hours > 48) return null;
 
   if (hours > 0) {
     return { text: `Em ${hours}h ${remainingMins}min`, isUrgent: hours < 2 };
@@ -107,25 +104,32 @@ function formatCountdown(dataInicio: string): { text: string; isUrgent: boolean 
 }
 
 // =============================================================================
-// PREP RING COMPONENT
+// PREP RING
 // =============================================================================
 
 function PrepRing({ audiencia }: { audiencia: Audiencia }) {
   const items = calcPrepItems(audiencia);
   const score = calcPrepScore(items);
-  const radius = 16;
+  const radius = 18;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
 
   return (
-    <div className="relative w-10 h-10">
-      <svg width="40" height="40" viewBox="0 0 40 40">
+    <div className="relative w-11 h-11">
+      <svg width="44" height="44" viewBox="0 0 44 44">
         <circle
-          cx="20" cy="20" r={radius}
-          fill="none" stroke="var(--border)" strokeOpacity="0.15" strokeWidth="3"
+          cx="22"
+          cy="22"
+          r={radius}
+          fill="none"
+          stroke="var(--border)"
+          strokeOpacity="0.3"
+          strokeWidth="3"
         />
         <circle
-          cx="20" cy="20" r={radius}
+          cx="22"
+          cy="22"
+          r={radius}
           fill="none"
           stroke={getScoreStrokeColor(score)}
           strokeWidth="3"
@@ -136,10 +140,12 @@ function PrepRing({ audiencia }: { audiencia: Audiencia }) {
           style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
         />
       </svg>
-      <span className={cn(
-        'absolute inset-0 flex items-center justify-center text-[10px] font-bold',
-        getScoreColor(score),
-      )}>
+      <span
+        className={cn(
+          'absolute inset-0 flex items-center justify-center text-[10px] font-bold tabular-nums',
+          getScoreColor(score)
+        )}
+      >
         {score}%
       </span>
     </div>
@@ -147,174 +153,330 @@ function PrepRing({ audiencia }: { audiencia: Audiencia }) {
 }
 
 // =============================================================================
-// GLASS ROW COMPONENT
+// ROW COMPONENT
 // =============================================================================
 
 function GlassRow({
   audiencia,
   onView,
-  isAlt,
 }: {
   audiencia: AudienciaComResponsavel;
   onView: () => void;
-  isAlt: boolean;
 }) {
+  const { usuarios } = useUsuarios();
+
+  const [editingObs, setEditingObs] = React.useState(false);
+  const [obsDraft, setObsDraft] = React.useState('');
+  const [savingObs, setSavingObs] = React.useState(false);
+  const [obsValue, setObsValue] = React.useState<string | null>(audiencia.observacoes ?? null);
+  const [copiedUrl, setCopiedUrl] = React.useState(false);
+
+  React.useEffect(() => {
+    setObsValue(audiencia.observacoes ?? null);
+  }, [audiencia.observacoes]);
+
   const ModalidadeIcon = getModalidadeIcon(audiencia.modalidade);
-  const countdown = audiencia.status === StatusAudiencia.Marcada
-    ? formatCountdown(audiencia.dataInicio)
-    : null;
+  const countdown =
+    audiencia.status === StatusAudiencia.Marcada ? formatCountdown(audiencia.dataInicio) : null;
+
+  const dataInicio = parseISO(audiencia.dataInicio);
+
+  const poloAtivo =
+    audiencia.poloAtivoOrigem || audiencia.poloAtivoNome || '—';
+  const poloPassivo =
+    audiencia.poloPassivoOrigem || audiencia.poloPassivoNome || '—';
+  const orgaoJulgador =
+    audiencia.orgaoJulgadorDescricao ||
+    audiencia.orgaoJulgadorOrigem ||
+    audiencia.salaAudienciaNome ||
+    null;
+
+  const handleStartObs = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setObsDraft(obsValue ?? '');
+    setEditingObs(true);
+  };
+
+  const handleCancelObs = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setEditingObs(false);
+  };
+
+  const handleSaveObs = async (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setSavingObs(true);
+    const result = await actionAtualizarObservacoes(audiencia.id, obsDraft || null);
+    if (result.success) {
+      setObsValue(obsDraft || null);
+      setEditingObs(false);
+    }
+    setSavingObs(false);
+  };
+
+  const handleCopyUrl = async (e: React.MouseEvent, url: string) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiedUrl(true);
+      setTimeout(() => setCopiedUrl(false), 2000);
+    } catch {
+      // silencioso
+    }
+  };
+
+  const handleCardClick = () => {
+    if (editingObs) return;
+    onView();
+  };
 
   return (
-    <button
-      type="button"
-      onClick={onView}
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={handleCardClick}
+      onKeyDown={(e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && !editingObs) {
+          e.preventDefault();
+          onView();
+        }
+      }}
       className={cn(
-        'w-full text-left rounded-2xl border border-white/6 p-4 cursor-pointer',
+        'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
         'transition-all duration-180 ease-out',
-        'hover:bg-white/5.5 hover:border-white/12 hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
-        isAlt ? 'bg-white/[0.018]' : 'bg-white/[0.028]',
+        'hover:border-border hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] hover:-translate-y-px',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
       )}
     >
-      <div className="grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center">
-        {/* Status dot */}
-        <div className="flex items-center w-10">
-          <div className={cn('w-2 h-2 rounded-full shrink-0', getStatusDotColor(audiencia.status))} />
-        </div>
-
-        {/* Main info */}
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-[0.625rem] bg-primary/8 flex items-center justify-center shrink-0">
-            <Gavel className="w-4 h-4 text-primary" />
-          </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm font-semibold truncate">
-                {audiencia.tipoDescricao || 'Audiência'}
-              </span>
-              {/* Indicador badges inline */}
-              {audiencia.segredoJustica && (
-                <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/20 text-warning rounded px-1.5 py-0.5 text-[10px] font-semibold">
-                  <Lock className="w-2.5 h-2.5" />
-                  Segredo
-                </span>
-              )}
-              {audiencia.designada && (
-                <span className="inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded px-1.5 py-0.5 text-[10px] font-semibold">
-                  <CheckCircle2 className="w-2.5 h-2.5" />
-                  Designada
-                </span>
-              )}
-              {audiencia.juizoDigital && (
-                <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded px-1.5 py-0.5 text-[10px] font-semibold">
-                  <Monitor className="w-2.5 h-2.5" />
-                  Digital
-                </span>
-              )}
-              {(audiencia.poloAtivoRepresentaVarios || audiencia.poloPassivoRepresentaVarios) && (
-                <span className="inline-flex items-center gap-1 bg-white/6 border border-white/10 text-muted-foreground rounded px-1.5 py-0.5 text-[10px] font-semibold">
-                  <Users className="w-2.5 h-2.5" />
-                  Litisconsórcio
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-1.5 mt-0.5 min-w-0">
-              {audiencia.grau && (
-                <span className="text-[10px] text-muted-foreground/50 shrink-0">{GRAU_TRIBUNAL_LABELS[audiencia.grau]}</span>
-              )}
-              <span className="text-xs text-muted-foreground tabular-nums truncate">
-                {audiencia.numeroProcesso}
-              </span>
-            </div>
-            {audiencia.orgaoJulgadorOrigem && (
-              <div className="text-[10px] text-muted-foreground/45 mt-0.5 truncate" title={audiencia.orgaoJulgadorOrigem}>
-                {audiencia.orgaoJulgadorOrigem}
-              </div>
-            )}
-            {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-              <div className="text-xs text-muted-foreground mt-0.5">
-                {audiencia.poloAtivoNome}
-                {audiencia.poloAtivoRepresentaVarios && (
-                  <span className="text-muted-foreground/60 font-medium"> e outros</span>
-                )}
-                {audiencia.poloAtivoNome && audiencia.poloPassivoNome && (
-                  <span className="text-muted-foreground/60"> vs. </span>
-                )}
-                {audiencia.poloPassivoNome}
-                {audiencia.poloPassivoRepresentaVarios && (
-                  <span className="text-muted-foreground/60 font-medium"> e outros</span>
-                )}
-              </div>
-            )}
-            {audiencia.observacoes && (
-              <div className="text-[10px] text-muted-foreground/40 mt-0.5 truncate italic" title={audiencia.observacoes}>
-                {audiencia.observacoes}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Date/time */}
-        <div className="text-right">
-          <div className="text-sm font-medium">
-            {format(parseISO(audiencia.dataInicio), 'dd MMM yyyy', { locale: ptBR })}
-          </div>
-          {audiencia.horaInicio && (
-            <div className="text-xs text-muted-foreground mt-0.5">
-              {audiencia.horaInicio}
-              {audiencia.horaFim && ` – ${audiencia.horaFim}`}
-            </div>
-          )}
-        </div>
-
-        {/* Modalidade badge */}
-        <div>
-          {audiencia.modalidade && (
-            <span className="inline-flex items-center gap-1.5 backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-primary/12 border border-primary/20 text-primary/80">
-              <ModalidadeIcon className="w-2.5 h-2.5" />
-              {MODALIDADE_AUDIENCIA_LABELS[audiencia.modalidade]}
-            </span>
-          )}
-        </div>
-
-        {/* TRT badge */}
-        <div>
-          <span className="inline-flex backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-white/6 border border-white/10 text-muted-foreground">
-            {audiencia.trt}
-          </span>
-        </div>
-
-        {/* Prep score ring */}
-        <div className="flex items-center justify-center">
+      <div className="flex items-start gap-4">
+        {/* PREP + DATA + HORA (coluna fixa à esquerda) */}
+        <div className="flex flex-col items-center gap-2 w-21 shrink-0 pt-0.5">
           <PrepRing audiencia={audiencia} />
+          <div className="text-center">
+            <div className="text-[11.5px] font-semibold text-foreground leading-tight">
+              {format(dataInicio, "dd MMM", { locale: ptBR })}
+            </div>
+            <div className="text-[10px] text-muted-foreground/80 leading-tight mt-0.5">
+              {format(dataInicio, 'yyyy', { locale: ptBR })}
+            </div>
+            {audiencia.horaInicio && (
+              <div className="text-[11px] text-muted-foreground mt-1 tabular-nums">
+                {audiencia.horaInicio}
+                {audiencia.horaFim && <>–{audiencia.horaFim}</>}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Status / Countdown */}
-        <div className="text-right">
-          {countdown ? (
-            <span className={cn(
-              'inline-flex items-center gap-1 text-xs font-semibold',
-              countdown.isUrgent ? 'text-warning' : 'text-success',
-            )}>
-              <Clock className="w-3 h-3" />
-              {countdown.text}
+        {/* MAIN INFO */}
+        <div className="flex-1 min-w-0">
+          {/* Linha 1: título + badges de modalidade/TRT à frente + status atrás */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="text-[14px] font-semibold text-foreground leading-tight">
+              {audiencia.tipoDescricao || 'Audiência'}
+            </h3>
+            {audiencia.modalidade && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-[10.5px] font-semibold tracking-[0.02em] text-primary">
+                <ModalidadeIcon className="w-2.5 h-2.5" />
+                {MODALIDADE_AUDIENCIA_LABELS[audiencia.modalidade]}
+              </span>
+            )}
+            <span className="inline-flex items-center rounded-md bg-muted border border-border/70 px-1.5 py-0.5 text-[10.5px] font-semibold tracking-[0.02em] text-muted-foreground">
+              {audiencia.trt}
             </span>
-          ) : (
-            <SemanticBadge
-              category="audiencia_status"
-              value={audiencia.status}
-              className="text-[10px]"
-            >
-              {STATUS_AUDIENCIA_LABELS[audiencia.status]}
-            </SemanticBadge>
-          )}
-        </div>
+            {audiencia.segredoJustica && (
+              <span className="inline-flex items-center gap-1 bg-warning/10 border border-warning/25 text-warning rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+                <Lock className="w-2.5 h-2.5" />
+                Segredo
+              </span>
+            )}
+            {audiencia.juizoDigital && (
+              <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+                <Monitor className="w-2.5 h-2.5" />
+                Digital
+              </span>
+            )}
+            {audiencia.designada && (
+              <span className="inline-flex items-center gap-1 bg-success/10 border border-success/25 text-success rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+                <CheckCircle2 className="w-2.5 h-2.5" />
+                Designada
+              </span>
+            )}
+            {(audiencia.poloAtivoRepresentaVarios || audiencia.poloPassivoRepresentaVarios) && (
+              <span className="inline-flex items-center gap-1 bg-muted border border-border/70 text-muted-foreground rounded-md px-1.5 py-0.5 text-[10px] font-semibold">
+                <Users className="w-2.5 h-2.5" />
+                Litisconsórcio
+              </span>
+            )}
 
-        {/* Chevron */}
-        <div className="flex items-center justify-end">
-          <ChevronRight className="w-4 h-4 text-muted-foreground/40" />
+            <div className="ml-auto flex items-center gap-1.5 shrink-0">
+              {countdown ? (
+                <span
+                  className={cn(
+                    'inline-flex items-center gap-1 text-[11px] font-semibold',
+                    countdown.isUrgent ? 'text-warning' : 'text-success'
+                  )}
+                >
+                  <Clock className="w-3 h-3" />
+                  {countdown.text}
+                </span>
+              ) : (
+                <SemanticBadge
+                  category="audiencia_status"
+                  value={audiencia.status}
+                  className="text-[10px]"
+                >
+                  {STATUS_AUDIENCIA_LABELS[audiencia.status]}
+                </SemanticBadge>
+              )}
+            </div>
+          </div>
+
+          {/* Linha 2: partes × partes · nº processo · grau */}
+          <div className="mt-1 text-[12.5px] text-foreground/85 leading-snug">
+            <span className="font-medium">{poloAtivo}</span>
+            {audiencia.poloAtivoRepresentaVarios && (
+              <span className="text-muted-foreground/60"> e outros</span>
+            )}
+            <span className="mx-1.5 text-muted-foreground/60 font-medium">×</span>
+            <span className="font-medium">{poloPassivo}</span>
+            {audiencia.poloPassivoRepresentaVarios && (
+              <span className="text-muted-foreground/60"> e outros</span>
+            )}
+            <span className="mx-2 inline-block w-0.75 h-0.75 rounded-full bg-muted-foreground/50 align-middle" />
+            <span className="text-muted-foreground tabular-nums">
+              {audiencia.numeroProcesso}
+            </span>
+            {audiencia.grau && (
+              <>
+                <span className="mx-2 inline-block w-0.75 h-0.75 rounded-full bg-muted-foreground/50 align-middle" />
+                <span className="text-muted-foreground">
+                  {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* Linha 3: órgão julgador */}
+          {orgaoJulgador && (
+            <div className="mt-0.5 text-[11.5px] text-muted-foreground truncate" title={orgaoJulgador}>
+              {orgaoJulgador}
+            </div>
+          )}
+
+          {/* Linha 4+: meta rich (link, responsável, observações) */}
+          <div className="mt-2.5 pt-2.5 border-t border-border/50 flex flex-wrap items-center gap-x-4 gap-y-2">
+            {/* Link da sala virtual */}
+            {audiencia.urlAudienciaVirtual && (
+              <div className="inline-flex items-center gap-1.5 min-w-0 max-w-55">
+                <LinkIcon className="w-3 h-3 text-muted-foreground/70 shrink-0" />
+                <a
+                  href={audiencia.urlAudienciaVirtual}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="text-[11.5px] text-primary truncate hover:underline"
+                  title={audiencia.urlAudienciaVirtual}
+                >
+                  {audiencia.urlAudienciaVirtual.replace(/^https?:\/\//, '')}
+                </a>
+                <button
+                  type="button"
+                  onClick={(e) => handleCopyUrl(e, audiencia.urlAudienciaVirtual!)}
+                  className="inline-flex items-center justify-center w-5 h-5 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  aria-label="Copiar link"
+                >
+                  {copiedUrl ? (
+                    <Check className="w-3 h-3 text-success" />
+                  ) : (
+                    <Copy className="w-3 h-3" />
+                  )}
+                </button>
+              </div>
+            )}
+
+            {/* Responsável (inline edit via popover existente) */}
+            <div
+              className="inline-flex items-center"
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => e.stopPropagation()}
+            >
+              <AudienciaResponsavelPopover
+                audienciaId={audiencia.id}
+                responsavelId={audiencia.responsavelId}
+                usuarios={usuarios}
+              >
+                <ResponsavelTriggerContent
+                  responsavelId={audiencia.responsavelId}
+                  usuarios={usuarios}
+                  size="sm"
+                />
+              </AudienciaResponsavelPopover>
+            </div>
+          </div>
+
+          {/* Observações (inline edit) */}
+          <div
+            className="mt-2"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            {editingObs ? (
+              <div className="space-y-1.5">
+                <Textarea
+                  value={obsDraft}
+                  onChange={(e) => setObsDraft(e.target.value)}
+                  placeholder="Anotações sobre a audiência..."
+                  rows={2}
+                  className="text-[12px]"
+                  autoFocus
+                />
+                <div className="flex items-center justify-end gap-1">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={handleCancelObs}
+                    className="h-6 text-[11px] px-2"
+                  >
+                    <X className="w-3 h-3" />
+                    Cancelar
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleSaveObs}
+                    disabled={savingObs}
+                    className="h-6 text-[11px] px-2"
+                  >
+                    {savingObs ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <Check className="w-3 h-3" />
+                    )}
+                    Salvar
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={handleStartObs}
+                className={cn(
+                  'w-full flex items-start gap-1.5 rounded-md px-1.5 py-1 -mx-1.5 -my-1 text-left',
+                  'transition-colors cursor-pointer',
+                  'hover:bg-muted/60',
+                  obsValue ? 'text-foreground/75' : 'text-muted-foreground/60'
+                )}
+              >
+                <MessageSquare className="w-3 h-3 mt-0.5 shrink-0 text-muted-foreground/60" />
+                <span className="text-[11.5px] flex-1 line-clamp-2 leading-snug">
+                  {obsValue || 'Adicionar observações'}
+                </span>
+                <Pencil className="w-2.5 h-2.5 mt-0.5 shrink-0 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -326,22 +488,19 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: 5 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-white/6 bg-white/[0.028] p-4">
-          <div className="grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center">
-            <Skeleton className="w-2 h-2 rounded-full" />
-            <div className="flex items-center gap-3">
-              <Skeleton className="w-9 h-9 rounded-[0.625rem]" />
-              <div className="space-y-1.5 flex-1">
-                <Skeleton className="h-4 w-48" />
-                <Skeleton className="h-3 w-36" />
-              </div>
+        <div key={i} className="rounded-2xl border border-border/60 bg-card p-4">
+          <div className="flex items-start gap-4">
+            <div className="flex flex-col items-center gap-2 w-21 shrink-0">
+              <Skeleton className="w-11 h-11 rounded-full" />
+              <Skeleton className="h-3 w-14" />
+              <Skeleton className="h-3 w-12" />
             </div>
-            <Skeleton className="h-4 w-20 ml-auto" />
-            <Skeleton className="h-6 w-16 rounded-lg" />
-            <Skeleton className="h-6 w-12 rounded-lg" />
-            <Skeleton className="h-10 w-10 rounded-full mx-auto" />
-            <Skeleton className="h-5 w-16 ml-auto rounded-full" />
-            <div />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-4 w-64" />
+              <Skeleton className="h-3.5 w-full" />
+              <Skeleton className="h-3 w-48" />
+              <Skeleton className="h-8 w-full" />
+            </div>
           </div>
         </div>
       ))}
@@ -358,38 +517,9 @@ function EmptyState() {
     <div className="flex flex-col items-center justify-center py-16 opacity-60">
       <Gavel className="w-10 h-10 text-muted-foreground/30 mb-4" />
       <p className="text-sm font-medium text-muted-foreground/50">Nenhuma audiência encontrada</p>
-      <p className="text-xs text-muted-foreground/30 mt-1">Tente ajustar os filtros ou criar uma nova audiência</p>
-    </div>
-  );
-}
-
-// =============================================================================
-// COLUMN HEADERS
-// =============================================================================
-
-function ColumnHeaders() {
-  return (
-    <div className="grid grid-cols-[auto_1fr_140px_100px_80px_80px_90px_32px] gap-4 items-center px-4 mb-2">
-      <div className="w-10" />
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Audiência / Processo
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-right">
-        Data
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Modalidade
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Tribunal
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-center">
-        Preparo
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-right">
-        Status
-      </span>
-      <div />
+      <p className="text-xs text-muted-foreground/30 mt-1">
+        Tente ajustar os filtros ou criar uma nova audiência
+      </p>
     </div>
   );
 }
@@ -398,28 +528,16 @@ function ColumnHeaders() {
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function AudienciasGlassList({
-  audiencias,
-  isLoading,
-  onView,
-}: AudienciasGlassListProps) {
+export function AudienciasGlassList({ audiencias, isLoading, onView }: AudienciasGlassListProps) {
   if (isLoading) return <ListSkeleton />;
   if (audiencias.length === 0) return <EmptyState />;
 
   return (
     <TooltipProvider>
-      <div>
-        <ColumnHeaders />
-        <div className="flex flex-col gap-2">
-          {audiencias.map((aud, i) => (
-            <GlassRow
-              key={aud.id}
-              audiencia={aud}
-              onView={() => onView(aud)}
-              isAlt={i % 2 === 1}
-            />
-          ))}
-        </div>
+      <div className="flex flex-col gap-2">
+        {audiencias.map((aud) => (
+          <GlassRow key={aud.id} audiencia={aud} onView={() => onView(aud)} />
+        ))}
       </div>
     </TooltipProvider>
   );
