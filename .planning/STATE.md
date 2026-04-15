@@ -114,9 +114,10 @@ None yet.
 | 260414-e75 | Refatorar expedientes - nova glass filter bar, simplificar wrapper (remove modo tabela), enriquecer rows com badges inline, fix header button | 2026-04-14 | 6619916e6 | [260414-e75-refatorar-expedientes-glass-briefing-rem](./quick/260414-e75-refatorar-expedientes-glass-briefing-rem/) |
 | 260414-ghv | Habilitar bubble Chatwoot (chat.sinesys.app) em /website/* e /servicos/* — CSP + ChatwootWidget client em WebsiteShell | 2026-04-14 | c742a249b | [260414-ghv-habilitar-bubble-chatwoot-chat-sinesys-a](./quick/260414-ghv-habilitar-bubble-chatwoot-chat-sinesys-a/) |
 | 260414-mnp | Novo skin do perfil de parte — ProfileShell redesign Glass Briefing (header banner radial + avatar square + KPI strip + sidebar glass) + fix link Ver perfil completo | 2026-04-14 | a5d6e09d9 | [260414-mnp-novo-skin-do-perfil-de-parte-profileshel](./quick/260414-mnp-novo-skin-do-perfil-de-parte-profileshel/) |
+| 260415-c9p | Zerou 25 lint errors + 1 warning (unused imports, OKLCH literal, h2 direto, hook deps, SSR mount bug) — npm run lint passa com --max-warnings=0 | 2026-04-15 | 2767a9df8 | [260415-c9p-corrigir-todos-os-25-lint-errors-1-warni](./quick/260415-c9p-corrigir-todos-os-25-lint-errors-1-warni/) |
 
 ## Session Continuity
 
-Last activity: 2026-04-14 - Completed quick task 260414-mnp: ProfileShell redesign Glass Briefing + fix link Ver perfil completo
-Stopped at: Completed 260414-mnp
+Last activity: 2026-04-15 - Completed quick task 260415-c9p: Lint cleanup (25 errors + 1 warning zeroed)
+Stopped at: Completed 260415-c9p
 Resume file: None
