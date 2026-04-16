@@ -49,6 +49,7 @@ export {
   actionSetDocumentoAnchors,
   actionAddDocumentoSigner,
   actionRemoveDocumentoSigner,
+  actionUpdateDocumentoSigner,
   actionUpdateDocumentoSettings,
   actionDeleteDocumento,
   actionFinalizeDocumento,

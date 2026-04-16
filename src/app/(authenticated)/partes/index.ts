@@ -33,10 +33,13 @@ export {
   ClienteDocumentosViewer,
   // Partes Contrarias
   PartesContrariasTableWrapper,
+  ParteContrariaForm,
   // Terceiros
   TerceirosTableWrapper,
+  TerceiroForm,
   // Representantes
   RepresentantesTableWrapper,
+  RepresentanteForm,
 } from "./components";
 
 export type { FilterOption } from "./components";

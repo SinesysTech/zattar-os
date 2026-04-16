@@ -19,14 +19,17 @@ export {
 // Partes Contrarias components
 export {
   PartesContrariasTableWrapper,
+  ParteContrariaForm,
 } from "./partes-contrarias";
 
 // Terceiros components
 export {
   TerceirosTableWrapper,
+  TerceiroForm,
 } from "./terceiros";
 
 // Representantes components
 export {
   RepresentantesTableWrapper,
+  RepresentanteForm,
 } from "./representantes";

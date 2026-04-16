@@ -41,6 +41,13 @@ const removeSignerSchema = z.object({
   signer_id: z.number().int().positive(),
 });
 
+const updateSignerSchema = z.object({
+  documento_uuid: z.string().uuid(),
+  signer_id: z.number().int().positive(),
+  nome: z.string().min(3, "O nome deve ter pelo menos 3 caracteres").optional(),
+  email: z.string().email("Email inválido").optional(),
+});
+
 // =============================================================================
 // ACTIONS - CRIAÇÃO E GESTÃO DE DOCUMENTOS
 // =============================================================================
@@ -141,6 +148,24 @@ export const actionRemoveDocumentoSigner = authenticatedAction(
     );
     revalidatePath(`/app/assinatura-digital/documentos/${input.documento_uuid}`);
     return { success: true };
+  }
+);
+
+/**
+ * Atualiza nome e/ou email de um assinante do documento.
+ *
+ * Bloqueia edição se o documento ou o assinante já estiverem concluídos.
+ */
+export const actionUpdateDocumentoSigner = authenticatedAction(
+  updateSignerSchema,
+  async (input) => {
+    const result = await documentosService.updateSignerInDocument(
+      input.documento_uuid,
+      input.signer_id,
+      { nome: input.nome, email: input.email }
+    );
+    revalidatePath(`/app/assinatura-digital/documentos/${input.documento_uuid}`);
+    return result;
   }
 );
 
