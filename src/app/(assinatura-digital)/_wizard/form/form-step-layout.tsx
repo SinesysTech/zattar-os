@@ -6,7 +6,10 @@ import { Heading, Text } from '@/components/ui/typography'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { PublicStepCard, PublicStepFooter } from '@/shared/assinatura-digital'
+import {
+  PublicStepCard,
+  PublicStepFooter,
+} from '@/shared/assinatura-digital/components/public-shell'
 
 interface FormStepLayoutProps {
   title: string
