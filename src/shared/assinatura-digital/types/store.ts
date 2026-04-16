@@ -251,6 +251,7 @@ export interface FormularioActions {
     segmentoId: number;
     formularioId: number;
     templateIds?: string[];
+    templates?: Template[];
     formularioNome?: string;
     segmentoNome?: string;
     formSchema?: DynamicFormSchema;

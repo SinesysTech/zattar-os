@@ -18,9 +18,7 @@ import Sucesso from "./sucesso";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { Template } from '@/shared/assinatura-digital/types/domain';
 import type { StepConfig } from '@/shared/assinatura-digital/types/store';
-import { API_ROUTES } from '@/shared/assinatura-digital/constants';
 import { PublicFormShell } from '../public-form-shell';
 import type { StepProgressItem } from '../step-progress';
 
@@ -57,7 +55,6 @@ export default function FormularioContainer() {
   const templateIdSelecionado = useFormularioStore((state) => state.templateIdSelecionado);
   const templateIds = useFormularioStore((state) => state.templateIds);
   const getCachedTemplate = useFormularioStore((state) => state.getCachedTemplate);
-  const setCachedTemplate = useFormularioStore((state) => state.setCachedTemplate);
   const stepConfigs = useFormularioStore((state) => state.stepConfigs);
   const setStepConfigs = useFormularioStore((state) => state.setStepConfigs);
   const formularioFlowConfig = useFormularioStore((state) => state.formularioFlowConfig);
@@ -65,9 +62,6 @@ export default function FormularioContainer() {
 
   const [templateHasMarkdown, setTemplateHasMarkdown] = useState<boolean | null>(null);
   const [hasTemplateError, setHasTemplateError] = useState<boolean>(false);
-
-  // Comment 9: Estado para rastrear templates indisponíveis
-  const [unavailableTemplateIds, setUnavailableTemplateIds] = useState<string[]>([]);
 
   // Função que constrói configuração de etapas baseado na configuração do formulário
   const buildStepConfigs = (
@@ -145,53 +139,6 @@ export default function FormularioContainer() {
     return configs;
   };
 
-  // Comment 9: useEffect para pré-validar todos os templates (se múltiplos)
-  useEffect(() => {
-    if (!templateIds || templateIds.length <= 1) {
-      // Nenhum template ou apenas 1, não pré-validar
-      setUnavailableTemplateIds([]);
-      return;
-    }
-
-    let cancelled = false;
-
-    (async () => {
-      const validationPromises = templateIds.map(async (templateId) => {
-        try {
-          const response = await fetch(API_ROUTES.templateById(templateId));
-          const data = await response.json();
-
-          if (!data.success || !data.data) {
-            return { templateId, available: false };
-          }
-
-          // Se sucesso, armazenar no cache para reutilização
-          setCachedTemplate(templateId, data.data as Template);
-          return { templateId, available: true };
-        } catch (err) {
-          console.error(`Erro ao validar template ${templateId}:`, err);
-          return { templateId, available: false };
-        }
-      });
-
-      const results = await Promise.all(validationPromises);
-
-      if (!cancelled) {
-        const unavailable = results.filter(r => !r.available).map(r => r.templateId);
-        setUnavailableTemplateIds(unavailable);
-
-        if (unavailable.length > 0) {
-          console.warn('⚠️ Templates indisponíveis:', unavailable);
-        }
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [templateIds]);
-
   // useEffect: Inicializar configuração de etapas baseado na configuração do formulário
   useEffect(() => {
     const temPendentes = (contratosPendentes?.length ?? 0) > 0;
@@ -208,8 +155,9 @@ export default function FormularioContainer() {
   }, [formularioFlowConfig, contratosPendentes]);
 
   // useEffect: Verificar se template possui conteúdo Markdown
+  // Templates são pré-carregados server-side em page.tsx e injetados no
+  // cache via hydrateContext, então aqui só fazemos lookup síncrono.
   useEffect(() => {
-    // Verificar se a etapa atual é a de visualização (índice dinâmico, não fixo)
     const isVisualizacaoStep = stepConfigs?.find(
       (s) => s.index === etapaAtual && s.component === 'VisualizacaoPdfStep'
     );
@@ -221,58 +169,28 @@ export default function FormularioContainer() {
 
     const effectiveTemplateId = templateIdSelecionado || templateIds?.[0];
 
-    // Comment 2 fix: Early detection of missing template - set error state
     if (!effectiveTemplateId) {
       setTemplateHasMarkdown(false);
       setHasTemplateError(true);
       return;
     }
 
-    setHasTemplateError(false);
-
-    // Comment 3 fix: Check cache first to avoid duplicate fetches
     const cachedTemplate = getCachedTemplate(effectiveTemplateId);
-    if (cachedTemplate) {
-      const hasMarkdown = !!cachedTemplate.conteudo_markdown && cachedTemplate.conteudo_markdown.trim() !== '';
-      setTemplateHasMarkdown(hasMarkdown);
+    if (!cachedTemplate) {
+      // Cache vazio nessa etapa indica que o prefetch server-side falhou
+      // ou o usuário selecionou um templateId inexistente.
+      console.warn('Template não encontrado no cache:', effectiveTemplateId);
+      setTemplateHasMarkdown(false);
+      setHasTemplateError(true);
       return;
     }
 
-    let cancelled = false;
-    (async () => {
-      try {
-        const response = await fetch(API_ROUTES.templateById(effectiveTemplateId));
-        const data = await response.json();
-
-        if (!cancelled) {
-          // Comment 1 fix: Explicitly handle success=false or missing data to prevent indefinite loading
-          if (data.success && data.data) {
-            const template = data.data as Template;
-
-            // Comment 3 fix: Store in cache for reuse
-            setCachedTemplate(effectiveTemplateId, template);
-
-            const hasMarkdown = !!template.conteudo_markdown && template.conteudo_markdown.trim() !== '';
-            setTemplateHasMarkdown(hasMarkdown);
-          } else {
-            // If success=false or data is missing, fallback to non-Markdown (PDF) rendering
-            console.warn('Template fetch returned success=false or missing data, falling back to PDF view');
-            setTemplateHasMarkdown(false);
-          }
-        }
-      } catch (err) {
-        console.error('Erro ao verificar template:', err);
-        if (!cancelled) setTemplateHasMarkdown(false);
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
+    setHasTemplateError(false);
+    const hasMarkdown =
+      !!cachedTemplate.conteudo_markdown && cachedTemplate.conteudo_markdown.trim() !== '';
+    setTemplateHasMarkdown(hasMarkdown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [etapaAtual, templateIdSelecionado, templateIds, stepConfigs]);
-  // Note: Deliberately excluding getCachedTemplate and setCachedTemplate to prevent infinite loops
-  // These are stable Zustand actions that don't need to be in dependencies
 
   const renderEtapa = () => {
     if (!stepConfigs || stepConfigs.length === 0) {
@@ -308,43 +226,6 @@ export default function FormularioContainer() {
       case 'DynamicFormStep':
         return <DynamicFormStep />;
       case 'VisualizacaoPdfStep':
-        // Comment 9: Mostrar alerta se há templates indisponíveis
-        if (unavailableTemplateIds.length > 0) {
-          return (
-            <div className="flex flex-col items-center justify-center py-12 space-y-4 max-w-2xl mx-auto">
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Alguns templates estão indisponíveis</AlertTitle>
-                <AlertDescription className="mt-2 space-y-3">
-                  <p>
-                    Os seguintes templates não puderam ser carregados: {unavailableTemplateIds.join(', ')}
-                  </p>
-                  <p>
-                    Você pode continuar com os templates disponíveis ou voltar para recarregar o formulário.
-                  </p>
-                  <div className="flex gap-2 mt-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={etapaAnterior}
-                    >
-                      Voltar
-                    </Button>
-                    <Button
-                      variant="default"
-                      size="sm"
-                      onClick={() => setUnavailableTemplateIds([])}
-                    >
-                      Continuar com disponíveis
-                    </Button>
-                  </div>
-                </AlertDescription>
-              </Alert>
-            </div>
-          );
-        }
-
-        // Lógica existente de decisão entre PDF e Markdown
         if (hasTemplateError) {
           return (
             <div className="flex flex-col items-center justify-center py-12 space-y-4 max-w-2xl mx-auto">
