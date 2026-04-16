@@ -83,9 +83,15 @@ export const useFormularioStore = create<FormularioStore>()(
 
       hydrateContext: (ctx) => {
         const currentSessaoId = get().sessaoId
+        const cachedTemplates = new Map<string, Template>()
+        if (ctx.templates) {
+          for (const template of ctx.templates) {
+            cachedTemplates.set(template.template_uuid, template)
+          }
+        }
         set({
           ...initialState,
-          cachedTemplates: new Map<string, Template>(),
+          cachedTemplates,
           segmentoId: ctx.segmentoId,
           formularioId: ctx.formularioId,
           sessaoId: currentSessaoId ?? uuidv4(),

@@ -3,12 +3,13 @@
 import { useEffect } from 'react'
 import { useFormularioStore } from '@/shared/assinatura-digital/store'
 import FormularioContainer from './formulario-container'
-import type { DynamicFormSchema, MetadadoSeguranca } from '@/shared/assinatura-digital/types/domain'
+import type { DynamicFormSchema, MetadadoSeguranca, Template } from '@/shared/assinatura-digital/types/domain'
 
 interface FormularioPageProps {
   segmentoId: number
   formularioId: number
   templateIds?: string[]
+  templates?: Template[]
   formularioNome?: string
   segmentoNome?: string
   formSchema?: DynamicFormSchema
@@ -31,6 +32,7 @@ export default function FormularioPage({
   segmentoId,
   formularioId,
   templateIds,
+  templates,
   formularioNome,
   segmentoNome,
   formSchema,
@@ -57,6 +59,7 @@ export default function FormularioPage({
       segmentoId,
       formularioId,
       templateIds,
+      templates,
       formularioNome,
       segmentoNome,
       formSchema,

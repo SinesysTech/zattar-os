@@ -4,7 +4,7 @@ import FormularioPage from '@/app/(assinatura-digital)/_wizard/form/formulario-p
 import { getSegmentoBySlug } from '@/shared/assinatura-digital/services/segmentos.service'
 import { getFormularioBySlugAndSegmentoId } from '@/shared/assinatura-digital/services/formularios.service'
 import { getTemplate } from '@/shared/assinatura-digital/services/templates.service'
-import type { DynamicFormSchema, MetadadoSeguranca } from '@/shared/assinatura-digital'
+import type { DynamicFormSchema, MetadadoSeguranca, Template } from '@/shared/assinatura-digital'
 
 interface PageProps {
   params: Promise<{ segmento: string; formulario: string }>
@@ -139,14 +139,25 @@ export default async function FormularioDinamicoPage(props: PageProps) {
 
     // Determinar templateIds
     const templateIdsFromQuery = parseTemplateIds(search?.templates)
-    const templateIds = templateIdsFromQuery || formularioData.template_ids || []
-    console.log('TemplateIds:', templateIds)
+    const requestedTemplateIds = templateIdsFromQuery || formularioData.template_ids || []
+    console.log('TemplateIds:', requestedTemplateIds)
+
+    // Pré-carrega templates server-side para evitar que o cliente público
+    // chame o endpoint admin /api/assinatura-digital/templates/[id] (401).
+    const fetchedTemplates = await Promise.all(
+      requestedTemplateIds.map(id => getTemplate(id)),
+    )
+    const templates = fetchedTemplates.filter(
+      (template): template is NonNullable<typeof template> => template !== null,
+    ) as unknown as Template[]
+    const templateIds = templates.map(t => t.template_uuid)
 
     return (
       <FormularioPage
         segmentoId={segmentoData.id}
         formularioId={formularioData.id}
         templateIds={templateIds}
+        templates={templates}
         formularioNome={formularioData.nome}
         segmentoNome={segmentoData.nome}
         formSchema={formSchema}
