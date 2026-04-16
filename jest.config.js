@@ -85,6 +85,8 @@ const config = {
         '<rootDir>/src/lib/**/__tests__/**/*.test.tsx',
         '<rootDir>/src/hooks/**/__tests__/**/*.test.tsx',
         '<rootDir>/src/providers/**/__tests__/**/*.test.tsx',
+        '<rootDir>/src/shared/**/__tests__/**/*.test.ts',
+        '<rootDir>/src/shared/**/__tests__/**/*.test.tsx',
       ],
       moduleNameMapper: {
         '^@copilotkit/react-core(.*)$': '<rootDir>/src/__mocks__/@copilotkit/react-core.js',
