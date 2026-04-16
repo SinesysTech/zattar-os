@@ -1,12 +1,12 @@
 'use client'
 
 import { ReactNode } from 'react'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { GlassPanel } from '@/components/shared/glass-panel'
 import { Heading, Text } from '@/components/ui/typography'
-import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { PublicStepCard, PublicStepFooter } from '@/shared/assinatura-digital'
 
 interface FormStepLayoutProps {
   title: string
@@ -22,7 +22,7 @@ interface FormStepLayoutProps {
   isNextDisabled?: boolean
   isPreviousDisabled?: boolean
   isLoading?: boolean
-  /** Classe adicional aplicada ao GlassPanel externo */
+  /** Classe adicional aplicada ao card externo */
   cardClassName?: string
   children: ReactNode
   hidePrevious?: boolean
@@ -33,6 +33,13 @@ interface FormStepLayoutProps {
   context?: 'public' | 'internal'
 }
 
+/**
+ * Shell de step do wizard público — usa PublicStepCard + PublicStepFooter por baixo
+ * no contexto 'public' (default) para visual Glass Briefing unificado.
+ *
+ * O contexto 'internal' renderiza em GlassPanel direto (sem viewport-fit) para usos
+ * fora do wizard público.
+ */
 export default function FormStepLayout({
   title,
   description,
@@ -50,49 +57,13 @@ export default function FormStepLayout({
   formId,
   context = 'public',
 }: FormStepLayoutProps) {
-  const nextButtonType = formId ? 'submit' : 'button'
-  const nextButtonForm = formId ?? undefined
-  const handleNextClick = formId ? undefined : onNext
-
-  const previousButton = !hidePrevious ? (
-    <Button
-      type="button"
-      variant="outline"
-      onClick={onPrevious}
-      disabled={isPreviousDisabled || isLoading}
-      className="h-12 min-w-28 active:scale-95"
-    >
-      <ChevronLeft className="mr-1 h-4 w-4" />
-      {previousLabel}
-    </Button>
-  ) : null
-
-  const nextButton = !hideNext ? (
-    <Button
-      type={nextButtonType}
-      form={nextButtonForm}
-      onClick={handleNextClick}
-      disabled={isNextDisabled || isLoading}
-      className="h-12 min-w-40 active:scale-95"
-    >
-      {isLoading ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Processando...
-        </>
-      ) : (
-        <>
-          {nextLabel}
-          <ChevronRight className="ml-1 h-4 w-4" />
-        </>
-      )}
-    </Button>
-  ) : null
-
   if (context === 'internal') {
+    const nextButtonType = formId ? 'submit' : 'button'
+    const handleNextClick = formId ? undefined : onNext
+
     return (
       <GlassPanel depth={1} className={cn('w-full', cardClassName)}>
-        <div className="space-y-2 border-b border-border/20 p-6">
+        <div className="space-y-2 border-b border-outline-variant/20 p-6">
           <Heading level="page" className="text-xl">
             {title}
           </Heading>
@@ -103,56 +74,69 @@ export default function FormStepLayout({
           )}
         </div>
         <div className="p-6">{children}</div>
-        <div className="flex flex-col-reverse items-stretch gap-3 border-t border-border/20 p-6 sm:flex-row sm:items-center sm:justify-between">
-          {previousButton ?? <div className="hidden sm:block" />}
-          {nextButton}
+        <div className="flex flex-col-reverse items-stretch gap-3 border-t border-outline-variant/20 p-6 sm:flex-row sm:items-center sm:justify-between">
+          {!hidePrevious && onPrevious ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onPrevious}
+              disabled={isPreviousDisabled || isLoading}
+              className="h-12 min-w-28 cursor-pointer active:scale-95"
+            >
+              <ChevronLeft className="mr-1 h-4 w-4" />
+              {previousLabel}
+            </Button>
+          ) : (
+            <div className="hidden sm:block" />
+          )}
+          {!hideNext && (
+            <Button
+              type={nextButtonType}
+              form={formId}
+              onClick={handleNextClick}
+              disabled={isNextDisabled || isLoading}
+              className="h-12 min-w-40 cursor-pointer active:scale-95"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Processando...
+                </>
+              ) : (
+                <>
+                  {nextLabel}
+                  <ChevronRight className="ml-1 h-4 w-4" />
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </GlassPanel>
     )
   }
 
-  // Public context — viewport-fit com ScrollArea interna
+  // Public: viewport-fit com PublicStepCard + PublicStepFooter
   return (
-    <div className={cn('flex min-h-0 flex-1 flex-col', cardClassName)}>
-      {/* Header */}
-      <header className="shrink-0 px-4 pb-4 pt-6 sm:px-8 lg:px-12 lg:pt-10">
-        <div className="mx-auto w-full max-w-3xl space-y-2">
-          <Heading level="page" className="text-2xl sm:text-3xl">
-            {title}
-          </Heading>
-          {description && (
-            <Text variant="caption" className="text-muted-foreground">
-              {description}
-            </Text>
-          )}
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="flex min-h-0 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
+        <div className={cn('mx-auto w-full max-w-2xl', cardClassName)}>
+          <PublicStepCard title={title} description={description}>
+            {children}
+          </PublicStepCard>
         </div>
-      </header>
-
-      {/* Scrollable content */}
-      <ScrollArea className="min-h-0 flex-1">
-        <div className="mx-auto w-full max-w-3xl px-4 pb-8 sm:px-8 lg:px-12">
-          {children}
-        </div>
-      </ScrollArea>
-
-      {/* Sticky footer */}
-      <footer className="shrink-0 border-t border-border/20 bg-background/60 backdrop-blur-xl">
-        <div
-          className={cn(
-            'mx-auto flex w-full max-w-3xl items-stretch gap-3 px-4 py-4 sm:items-center sm:px-8 lg:px-12',
-            !previousButton ? 'justify-end' : 'justify-between',
-          )}
-        >
-          {previousButton}
-          <div className="flex-1 sm:flex-initial">
-            {nextButton && (
-              <div className="w-full sm:w-auto [&>button]:w-full sm:[&>button]:w-auto">
-                {nextButton}
-              </div>
-            )}
-          </div>
-        </div>
-      </footer>
+      </div>
+      <PublicStepFooter
+        onPrevious={onPrevious}
+        onNext={onNext}
+        nextLabel={nextLabel}
+        previousLabel={previousLabel}
+        isNextDisabled={isNextDisabled}
+        isPreviousDisabled={isPreviousDisabled}
+        isLoading={isLoading}
+        hidePrevious={hidePrevious}
+        hideNext={hideNext}
+        formId={formId}
+      />
     </div>
   )
 }
