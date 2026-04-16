@@ -110,3 +110,78 @@ export async function criarPacote(input: CriarPacoteInput): Promise<CriarPacoteR
     quantidadeDocs: input.templatesComPdfs.length,
   };
 }
+
+import type {
+  Pacote,
+  PacoteComDocumentos,
+  DocumentoNoPacote,
+  PacoteStatus,
+} from '../types/pacote';
+
+export async function lerPacotePorToken(
+  token: string,
+): Promise<PacoteComDocumentos | null> {
+  const supabase = createServiceClient();
+
+  const { data: pacote, error } = await supabase
+    .from('assinatura_digital_pacotes')
+    .select('*')
+    .eq('token_compartilhado', token)
+    .maybeSingle();
+
+  if (error || !pacote) return null;
+
+  const { data: join } = await supabase
+    .from('assinatura_digital_pacote_documentos')
+    .select(`
+      ordem,
+      documento:assinatura_digital_documentos!documento_id (
+        id, documento_uuid, titulo, status,
+        assinantes:assinatura_digital_documento_assinantes ( id, token, concluido_em )
+      )
+    `)
+    .eq('pacote_id', pacote.id)
+    .order('ordem', { ascending: true });
+
+  const documentos: DocumentoNoPacote[] = (join ?? []).map((row: Record<string, unknown>) => {
+    const docRaw = row.documento;
+    const doc = (Array.isArray(docRaw) ? docRaw[0] : docRaw) as
+      | {
+          id: number;
+          documento_uuid: string;
+          titulo: string | null;
+          status: string;
+          assinantes: Array<{ id: number; token: string; concluido_em: string | null }> | null;
+        }
+      | null
+      | undefined;
+    const assinantes = doc?.assinantes ?? [];
+    const primeiro = assinantes[0];
+    return {
+      id: doc?.id ?? 0,
+      documento_uuid: doc?.documento_uuid ?? '',
+      titulo: doc?.titulo ?? null,
+      status: doc?.status ?? 'pendente',
+      ordem: row.ordem as number,
+      token_assinante: primeiro?.token ?? '',
+      assinado_em: primeiro?.concluido_em ?? null,
+    };
+  });
+
+  const agora = new Date();
+  let status_efetivo: PacoteStatus = pacote.status as PacoteStatus;
+  if (new Date(pacote.expira_em).getTime() < agora.getTime()) {
+    status_efetivo = 'expirado';
+  } else if (
+    documentos.length > 0 &&
+    documentos.every((d) => d.assinado_em !== null)
+  ) {
+    status_efetivo = 'concluido';
+  }
+
+  return {
+    pacote: pacote as Pacote,
+    documentos,
+    status_efetivo,
+  };
+}
