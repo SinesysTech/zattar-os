@@ -122,6 +122,7 @@ function SidebarContent(props: FloatingSidebarProps) {
   } = props;
 
   const [isAddSignerOpen, setIsAddSignerOpen] = useState(false);
+  const [editingSigner, setEditingSigner] = useState<Signatario | null>(null);
   const titleDebounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const handleTitleChange = useCallback(
@@ -238,7 +239,7 @@ function SidebarContent(props: FloatingSidebarProps) {
                     isActive={activeSigner?.id === signer.id}
                     onSelect={() => onSelectSigner(signer)}
                     onDelete={() => onDeleteSigner(signer.id)}
-                    onEdit={() => onUpdateSigner(signer.id, {})}
+                    onEdit={() => setEditingSigner(signer)}
                     isCurrentUser={false}
                   />
                 ))}
@@ -301,6 +302,18 @@ function SidebarContent(props: FloatingSidebarProps) {
         onOpenChange={setIsAddSignerOpen}
         onSave={onAddSigner}
         mode="add"
+      />
+
+      <SignerDialog
+        open={!!editingSigner}
+        onOpenChange={(open) => !open && setEditingSigner(null)}
+        signer={editingSigner ?? undefined}
+        mode="edit"
+        onSave={(nome, email) => {
+          if (!editingSigner) return;
+          onUpdateSigner(editingSigner.id, { nome, email });
+          setEditingSigner(null);
+        }}
       />
     </div>
   );

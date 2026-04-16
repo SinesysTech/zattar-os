@@ -8,12 +8,25 @@ import { InfoCards } from "./sections/info-cards";
 import { RelatedTable } from "./sections/related-table";
 import { RelatedEntitiesCards } from "./sections/related-entities-cards";
 import { ActivityTimeline } from "./sections/activity-timeline";
-import { ClienteDocumentosViewer } from "@/app/(authenticated)/partes";
+import {
+    ClienteDocumentosViewer,
+    ClienteForm,
+    ParteContrariaForm,
+    TerceiroForm,
+    RepresentanteForm,
+} from "@/app/(authenticated)/partes";
+import type {
+    Cliente,
+    ParteContraria,
+    Terceiro,
+    Representante,
+} from "@/app/(authenticated)/partes";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AppBadge } from "@/components/ui/app-badge";
 import { ClientOnlyTabs, TabsList, TabsTrigger } from "@/components/ui/client-only-tabs";
 import { MoreHorizontal, Pencil } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 // Cliente sections
@@ -49,10 +62,13 @@ import { terceiroProfileConfig } from "../configs/terceiro-profile.config";
 import { representanteProfileConfig } from "../configs/representante-profile.config";
 import { usuarioProfileConfig } from "../configs/usuario-profile.config";
 
+type RawProfileEntity = Cliente | ParteContraria | Terceiro | Representante;
+
 interface ProfileShellClientProps {
   entityType: 'cliente' | 'parte_contraria' | 'terceiro' | 'representante' | 'usuario';
   entityId: number;
   initialData: ProfileData;
+  rawData?: unknown;
 }
 
 const TIPO_COLOR_VAR: Record<ProfileShellClientProps['entityType'], string> = {
@@ -80,10 +96,20 @@ const getNestedValue = (obj: Record<string, unknown>, path: string): unknown => 
   }, obj);
 };
 
-export function ProfileShellClient({ entityType, entityId, initialData }: ProfileShellClientProps) {
+export function ProfileShellClient({ entityType, entityId, initialData, rawData }: ProfileShellClientProps) {
   const config = configs[entityType];
   const data = initialData;
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState(config?.tabs[0]?.id || 'perfil');
+  const [editOpen, setEditOpen] = useState(false);
+
+  const canEdit = entityType !== 'usuario' && Boolean(rawData);
+  const rawEntity = rawData as RawProfileEntity | undefined;
+
+  const handleEditSuccess = () => {
+    setEditOpen(false);
+    router.refresh();
+  };
 
   if (!config) {
       return <div>Configuracao de perfil nao encontrada para {entityType}</div>;
@@ -254,6 +280,7 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
             config={config.headerConfig}
             data={data}
             entityType={entityType}
+            onEdit={canEdit ? () => setEditOpen(true) : undefined}
           />
 
           {/* Tabs bar com border-t */}
@@ -288,10 +315,17 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
 
               {/* Action buttons */}
               <div className="flex items-center gap-2">
-                <Button size="sm" variant="outline">
-                  <Pencil className="h-4 w-4" />
-                  <span className="hidden md:inline">Editar</span>
-                </Button>
+                {canEdit && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setEditOpen(true)}
+                    aria-label="Editar perfil"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="hidden md:inline">Editar</span>
+                  </Button>
+                )}
                 <Button variant="outline" size="icon-sm">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
@@ -322,6 +356,44 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
           </main>
         </div>
       </div>
+
+      {/* Edit dialogs (um por entityType) */}
+      {canEdit && entityType === 'cliente' && rawEntity && (
+        <ClienteForm
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          cliente={rawEntity as Cliente}
+          mode="edit"
+          onSuccess={handleEditSuccess}
+        />
+      )}
+      {canEdit && entityType === 'parte_contraria' && rawEntity && (
+        <ParteContrariaForm
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          parteContraria={rawEntity as ParteContraria}
+          mode="edit"
+          onSuccess={handleEditSuccess}
+        />
+      )}
+      {canEdit && entityType === 'terceiro' && rawEntity && (
+        <TerceiroForm
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          terceiro={rawEntity as Terceiro}
+          mode="edit"
+          onSuccess={handleEditSuccess}
+        />
+      )}
+      {canEdit && entityType === 'representante' && rawEntity && (
+        <RepresentanteForm
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          representante={rawEntity as Representante}
+          mode="edit"
+          onSuccess={handleEditSuccess}
+        />
+      )}
     </div>
   );
 }

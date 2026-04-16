@@ -8,6 +8,7 @@ import {
   actionSetDocumentoAnchors,
   actionAddDocumentoSigner,
   actionRemoveDocumentoSigner,
+  actionUpdateDocumentoSigner,
   actionUpdateDocumentoSettings,
 } from '@/shared/assinatura-digital/actions/documentos-actions';
 import { PDF_CANVAS_SIZE } from '@/shared/assinatura-digital/types/pdf-preview.types';
@@ -241,12 +242,34 @@ export function useDocumentEditor({ uuid }: UseDocumentEditorProps) {
   };
 
   const handleUpdateSigner = async (
-    _id: string,
-    _updates: { nome?: string; email?: string },
+    id: string,
+    updates: { nome?: string; email?: string },
   ) => {
-    toast.info(
-      "Edição direta de assinante não suportada, remova e adicione novamente.",
-    );
+    if (!documento) return;
+    const dbId = parseInt(id, 10);
+    if (isNaN(dbId)) {
+      toast.error("ID inválido.");
+      return;
+    }
+
+    if (updates.nome === undefined && updates.email === undefined) return;
+
+    try {
+      const res = await actionUpdateDocumentoSigner({
+        documento_uuid: documento.documento_uuid,
+        signer_id: dbId,
+        ...updates,
+      });
+      if (res?.success) {
+        toast.success("Assinante atualizado.");
+        await loadDocument();
+      } else {
+        toast.error(res?.error || "Erro ao atualizar assinante.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao atualizar assinante.");
+    }
   };
 
   const handleUpdateSettings = async (updates: {

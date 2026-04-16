@@ -218,10 +218,11 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
   }
 
   return (
-    <ProfileShellClient 
-        entityType={entityType} 
-        entityId={entityId} 
-        initialData={profileData} 
+    <ProfileShellClient
+        entityType={entityType}
+        entityId={entityId}
+        initialData={profileData}
+        rawData={result.data}
     />
   );
 }

@@ -1058,6 +1058,58 @@ export async function addSignerToDocument(
   };
 }
 
+export async function updateSignerInDocument(
+  documentoUuid: string,
+  signerId: number,
+  updates: { nome?: string; email?: string }
+): Promise<AssinaturaDigitalDocumentoAssinante> {
+  const supabase = createServiceClient();
+
+  const { data: signer, error: sError } = await supabase
+    .from(TABLE_DOCUMENTO_ASSINANTES)
+    .select("id, status, documento_id, dados_snapshot")
+    .eq("id", signerId)
+    .single();
+
+  if (sError || !signer) throw new Error("Assinante não encontrado");
+
+  const { data: doc, error: dError } = await supabase
+    .from(TABLE_DOCUMENTOS)
+    .select("id, documento_uuid, status")
+    .eq("id", signer.documento_id)
+    .eq("documento_uuid", documentoUuid)
+    .single();
+
+  if (dError || !doc) throw new Error("Documento não corresponde ao assinante");
+  if (doc.status === "concluido") throw new Error("Documento concluído");
+  if (signer.status === "concluido")
+    throw new Error("Assinante já assinou, não pode ser editado");
+
+  const mergedSnapshot = {
+    ...((signer.dados_snapshot as Record<string, unknown>) ?? {}),
+    ...(updates.nome !== undefined && {
+      nome: updates.nome,
+      nome_completo: updates.nome,
+    }),
+    ...(updates.email !== undefined && { email: updates.email }),
+  };
+
+  const { data: updated, error: updateError } = await supabase
+    .from(TABLE_DOCUMENTO_ASSINANTES)
+    .update({
+      dados_snapshot: mergedSnapshot,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", signerId)
+    .select("*")
+    .single();
+
+  if (updateError)
+    throw new Error(`Erro ao atualizar assinante: ${updateError.message}`);
+
+  return updated as AssinaturaDigitalDocumentoAssinante;
+}
+
 export async function removeSignerFromDocument(
   documentoUuid: string,
   signerId: number
