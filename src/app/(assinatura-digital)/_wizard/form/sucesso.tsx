@@ -1,272 +1,191 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { CheckCircle2, Download, FileText, Loader2, PackageOpen } from 'lucide-react';
-import { toast } from 'sonner';
-import JSZip from 'jszip';
+import { useState } from 'react'
+import { Download, FileText, Loader2, PackageOpen } from 'lucide-react'
+import { toast } from 'sonner'
+import JSZip from 'jszip'
 
-import { Button } from '@/components/ui/button';
-import { useFormularioStore } from '@/shared/assinatura-digital/store';
-import type { PdfGerado } from '@/shared/assinatura-digital/types/store';
-import FormStepLayout from './form-step-layout';
+import { Button } from '@/components/ui/button'
+import { Text } from '@/components/ui/typography'
+import { GlassPanel } from '@/components/shared/glass-panel'
+import { useFormularioStore } from '@/shared/assinatura-digital/store'
+import type { PdfGerado } from '@/shared/assinatura-digital/types/store'
+import { SuccessHero } from '@/shared/assinatura-digital'
 
 export default function Sucesso() {
-  const resetAll = useFormularioStore((state) => state.resetAll);
-  const getCachedTemplate = useFormularioStore((state) => state.getCachedTemplate);
-  const dadosPessoais = useFormularioStore((state) => state.dadosPessoais);
-  const pdfsGerados = useFormularioStore((state) => state.pdfsGerados);
+  const resetAll = useFormularioStore((state) => state.resetAll)
+  const getCachedTemplate = useFormularioStore((state) => state.getCachedTemplate)
+  const dadosPessoais = useFormularioStore((state) => state.dadosPessoais)
+  const pdfsGerados = useFormularioStore((state) => state.pdfsGerados)
 
-  const [isDownloadingZip, setIsDownloadingZip] = useState(false);
+  const [isDownloadingZip, setIsDownloadingZip] = useState(false)
 
-  /**
-   * Obtém o nome do template a partir do template_id
-   * @param templateId - UUID do template
-   * @returns Nome do template ou fallback
-   */
   const getTemplateName = (templateId: string): string => {
-    const template = getCachedTemplate(templateId);
-    return template?.nome || 'Documento';
-  };
+    const template = getCachedTemplate(templateId)
+    return template?.nome || 'Documento'
+  }
 
-  /**
-   * Faz download de um PDF individual.
-   *
-   * @param pdf - Objeto com informações do PDF
-   * @param index - Índice do PDF na lista (para nomenclatura fallback)
-   */
-  const handleDownloadIndividual = async (pdf: PdfGerado, _index: number) => {
+  const handleDownloadIndividual = async (pdf: PdfGerado) => {
     if (!pdf.pdf_url) {
-      toast.error('URL do documento não disponível');
-      return;
+      toast.error('URL do documento não disponível')
+      return
     }
-
-    // Validar URL
     if (!pdf.pdf_url.startsWith('http://') && !pdf.pdf_url.startsWith('https://')) {
-      toast.error('URL do documento inválida');
-      console.warn('⚠️ PDF com URL relativa (inválida):', pdf.pdf_url);
-      return;
+      toast.error('URL do documento inválida')
+      return
     }
 
-    console.log(`⬇️ Iniciando download individual:`, pdf.pdf_url);
+    const fileName = `${getTemplateName(pdf.template_id)}.pdf`
+    const link = document.createElement('a')
+    link.href = pdf.pdf_url
+    link.download = fileName
+    link.target = '_blank'
+    link.rel = 'noopener noreferrer'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    toast.success('Download iniciado!')
+  }
 
-    // Obter nome do template para usar como nome do arquivo
-    const templateName = getTemplateName(pdf.template_id);
-    const fileName = `${templateName}.pdf`;
-
-    // Criar elemento <a> dinamicamente
-    const link = document.createElement('a');
-    link.href = pdf.pdf_url;
-    link.download = fileName;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-
-    // Adicionar ao DOM temporariamente, clicar e remover
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    toast.success('Download iniciado!');
-  };
-
-  /**
-   * Faz download de todos os PDFs em um arquivo ZIP.
-   *
-   * Processo:
-   * 1. Valida todos os PDFs
-   * 2. Faz fetch de cada PDF como blob
-   * 3. Cria arquivo ZIP com JSZip
-   * 4. Baixa o ZIP
-   */
   const handleDownloadTodosZip = async () => {
     if (!pdfsGerados || pdfsGerados.length === 0) {
-      toast.error('Nenhum documento disponível para download');
-      return;
+      toast.error('Nenhum documento disponível para download')
+      return
     }
 
-    // Validar URLs antes de processar
-    const pdfsValidos = pdfsGerados.filter(pdf => {
-      if (!pdf.pdf_url) {
-        console.warn('⚠️ PDF sem URL:', pdf);
-        return false;
-      }
-      if (!pdf.pdf_url.startsWith('http://') && !pdf.pdf_url.startsWith('https://')) {
-        console.warn('⚠️ PDF com URL relativa (inválida):', pdf.pdf_url);
-        return false;
-      }
-      return true;
-    });
+    const pdfsValidos = pdfsGerados.filter(
+      (pdf) =>
+        pdf.pdf_url &&
+        (pdf.pdf_url.startsWith('http://') || pdf.pdf_url.startsWith('https://')),
+    )
 
     if (pdfsValidos.length === 0) {
-      toast.error('Nenhum documento válido encontrado para download');
-      return;
+      toast.error('Nenhum documento válido encontrado para download')
+      return
     }
 
-    setIsDownloadingZip(true);
-    toast.loading('Preparando documentos...', { id: 'download-zip' });
+    setIsDownloadingZip(true)
+    toast.loading('Preparando documentos...', { id: 'download-zip' })
 
     try {
-      const zip = new JSZip();
-
-      // Fazer fetch de todos os PDFs e adicionar ao ZIP
-      const fetchPromises = pdfsValidos.map(async (pdf, index) => {
-        try {
-          console.log(`📥 Fazendo fetch do PDF ${index + 1}/${pdfsValidos.length}:`, pdf.pdf_url);
-
-          const response = await fetch(pdf.pdf_url);
-
-          if (!response.ok) {
-            throw new Error(`Falha ao baixar PDF: ${response.statusText}`);
-          }
-
-          const blob = await response.blob();
-          const templateName = getTemplateName(pdf.template_id);
-          const fileName = `${templateName}.pdf`;
-
-          zip.file(fileName, blob);
-
-          console.log(`✅ PDF ${index + 1} adicionado ao ZIP: ${fileName}`);
-        } catch (error) {
-          console.error(`❌ Erro ao processar PDF ${index + 1}:`, error);
-          throw error;
-        }
-      });
-
-      await Promise.all(fetchPromises);
-
-      console.log('🗜️ Gerando arquivo ZIP...');
-
-      // Gerar o ZIP
-      const zipBlob = await zip.generateAsync({ type: 'blob' });
-
-      // Criar nome do arquivo com timestamp
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-      const zipFileName = `documentos-assinados-${timestamp}.zip`;
-
-      // Baixar o ZIP
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(zipBlob);
-      link.download = zipFileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Limpar o object URL
-      URL.revokeObjectURL(link.href);
-
-      console.log('✅ ZIP baixado com sucesso:', zipFileName);
-
-      toast.success(`${pdfsValidos.length} documento(s) baixado(s) em ZIP!`, { id: 'download-zip' });
-    } catch (error) {
-      console.error('❌ Erro ao criar ZIP:', error);
-      toast.error('Erro ao preparar documentos para download. Tente baixar individualmente.', { id: 'download-zip' });
-    } finally {
-      setIsDownloadingZip(false);
-    }
-  };
-
-  // Verificar se há PDFs gerados
-  const hasPdfs = pdfsGerados && pdfsGerados.length > 0;
-  const hasMultiplePdfs = pdfsGerados && pdfsGerados.length > 1;
-
-  // Filtrar PDFs válidos para exibição
-  const pdfsValidos = hasPdfs
-    ? pdfsGerados.filter(pdf =>
-        pdf.pdf_url &&
-        (pdf.pdf_url.startsWith('http://') || pdf.pdf_url.startsWith('https://'))
+      const zip = new JSZip()
+      await Promise.all(
+        pdfsValidos.map(async (pdf) => {
+          const response = await fetch(pdf.pdf_url)
+          if (!response.ok) throw new Error(`Falha ao baixar PDF: ${response.statusText}`)
+          const blob = await response.blob()
+          zip.file(`${getTemplateName(pdf.template_id)}.pdf`, blob)
+        }),
       )
-    : [];
+      const zipBlob = await zip.generateAsync({ type: 'blob' })
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(zipBlob)
+      link.download = `documentos-assinados-${timestamp}.zip`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(link.href)
+      toast.success(`${pdfsValidos.length} documento(s) baixado(s) em ZIP!`, { id: 'download-zip' })
+    } catch (error) {
+      console.error('❌ Erro ao criar ZIP:', error)
+      toast.error('Erro ao preparar documentos para download. Tente baixar individualmente.', {
+        id: 'download-zip',
+      })
+    } finally {
+      setIsDownloadingZip(false)
+    }
+  }
 
-  // Definir título dinamicamente baseado na quantidade de documentos
-  const tituloSucesso = pdfsValidos.length > 1
-    ? 'Documentos assinados com sucesso!'
-    : 'Documento assinado com sucesso!';
+  const hasPdfs = pdfsGerados && pdfsGerados.length > 0
+  const pdfsValidos = hasPdfs
+    ? pdfsGerados.filter(
+        (pdf) =>
+          pdf.pdf_url &&
+          (pdf.pdf_url.startsWith('http://') || pdf.pdf_url.startsWith('https://')),
+      )
+    : []
+
+  const title = pdfsValidos.length > 1 ? 'Documentos assinados!' : 'Tudo pronto!'
+  const subtitle =
+    pdfsValidos.length > 1
+      ? `${pdfsValidos.length} documentos foram assinados com sucesso.`
+      : 'Seu documento foi assinado com sucesso.'
 
   return (
-    <FormStepLayout
-      title={tituloSucesso}
-      description="Em breve entraremos em contato."
-      onNext={resetAll}
-      nextLabel="Iniciar novo formulário"
-      hidePrevious
-    >
-      <div className="space-y-6">
-        <div className="flex flex-col items-center gap-3 text-center">
-          <CheckCircle2
-            aria-hidden="true"
-            className="h-16 w-16 sm:h-20 sm:w-20 text-success"
-          />
-          {dadosPessoais?.email && (
-            <p className="text-sm text-muted-foreground">
-              Os documentos serão enviados para {dadosPessoais.email}.
-            </p>
-          )}
-        </div>
-
-        {pdfsValidos.length > 0 ? (
-          <div className="space-y-3">
-            <div className="space-y-2">
-              {pdfsValidos.map((pdf, index) => (
-                <button
-                  key={pdf.template_id || index}
-                  type="button"
-                  onClick={() => handleDownloadIndividual(pdf, index)}
-                  className="group flex w-full items-center gap-3 rounded-lg border border-border/30 bg-muted/30 p-3 text-left transition-colors hover:bg-muted active:scale-[0.98]"
-                >
-                  <FileText className="h-5 w-5 shrink-0 text-info" />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-foreground">
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="flex min-h-0 flex-1 items-start overflow-y-auto p-4 sm:p-6 md:p-8">
+        <div className="mx-auto w-full max-w-lg">
+          <SuccessHero title={title} subtitle={subtitle}>
+            {pdfsValidos.length > 0 ? (
+              <GlassPanel depth={1} className="mt-6 space-y-3 rounded-2xl p-4">
+                {pdfsValidos.map((pdf) => (
+                  <button
+                    key={pdf.template_id}
+                    type="button"
+                    onClick={() => handleDownloadIndividual(pdf)}
+                    className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-outline-variant/30 bg-surface-container-lowest/60 p-3 text-left transition-colors hover:bg-surface-container-low/60 active:scale-[0.98]"
+                  >
+                    <div className="flex h-10 w-8 shrink-0 items-center justify-center rounded-md border border-outline-variant/50 bg-linear-to-br from-background to-surface-container-low text-[9px] font-bold text-primary">
+                      PDF
+                    </div>
+                    <Text variant="label" className="min-w-0 flex-1 truncate text-foreground">
                       {getTemplateName(pdf.template_id)}
-                    </p>
-                  </div>
-                  <Download className="h-4 w-4 shrink-0 text-muted-foreground" />
-                </button>
-              ))}
-            </div>
+                    </Text>
+                    <Download className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  </button>
+                ))}
 
-            {hasMultiplePdfs && (
-              <Button
-                type="button"
-                variant="default"
-                className="h-12 w-full active:scale-95"
-                onClick={handleDownloadTodosZip}
-                disabled={isDownloadingZip}
-              >
-                {isDownloadingZip ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Preparando ZIP...
-                  </>
-                ) : (
-                  <>
-                    <PackageOpen className="mr-2 h-4 w-4" />
-                    Baixar todos em ZIP
-                  </>
+                {pdfsValidos.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="default"
+                    onClick={handleDownloadTodosZip}
+                    disabled={isDownloadingZip}
+                    className="h-11 w-full cursor-pointer"
+                  >
+                    {isDownloadingZip ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Preparando ZIP...
+                      </>
+                    ) : (
+                      <>
+                        <PackageOpen className="mr-2 h-4 w-4" />
+                        Baixar todos em ZIP
+                      </>
+                    )}
+                  </Button>
                 )}
-              </Button>
+              </GlassPanel>
+            ) : (
+              <Text variant="caption" className="mt-6 block text-destructive">
+                Documentos não disponíveis para download. Entre em contato com o suporte.
+              </Text>
             )}
-          </div>
-        ) : (
-          <div className="py-4 text-center">
-            <p className="text-sm text-destructive">
-              Documentos não disponíveis para download. Por favor, entre em contato com o suporte.
-            </p>
-          </div>
-        )}
 
-        <div className="rounded-lg border border-info/15 bg-info/10 p-4">
-          <div className="flex items-start gap-3">
-            <FileText className="mt-0.5 h-5 w-5 text-info" />
-            <div className="text-sm">
-              <p className="mb-1 font-medium text-info">Sobre seus documentos:</p>
-              <ul className="space-y-1 text-info">
-                <li>• Possuem validade jurídica</li>
-                <li>• Guarde-os para futura referência</li>
-                <li>• Em caso de dúvidas, entre em contato conosco</li>
-              </ul>
-            </div>
-          </div>
+            {dadosPessoais?.email && (
+              <GlassPanel depth={1} className="mt-3 rounded-2xl p-4">
+                <div className="flex items-start gap-3">
+                  <FileText className="mt-0.5 h-4 w-4 shrink-0 text-info" />
+                  <Text variant="micro-caption" className="text-left text-muted-foreground">
+                    Uma cópia será enviada para {dadosPessoais.email}.
+                  </Text>
+                </div>
+              </GlassPanel>
+            )}
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={resetAll}
+              className="mt-6 h-11 w-full cursor-pointer"
+            >
+              Iniciar novo formulário
+            </Button>
+          </SuccessHero>
         </div>
       </div>
-    </FormStepLayout>
-  );
+    </div>
+  )
 }
