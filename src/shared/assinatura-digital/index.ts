@@ -26,6 +26,19 @@ export { PdfPreviewDynamic } from './components/pdf'
 export { default as PdfPreview } from './components/pdf/PdfPreview'
 export { default as CanvasAssinatura } from './components/signature/canvas-assinatura'
 
+// Public wizard shell (rota pública de assinatura digital)
+export {
+  PublicWizardShell,
+  PublicWizardHeader,
+  PublicWizardProgress,
+  PublicStepCard,
+  PublicStepFooter,
+  DocumentPeekCard,
+  SelfieCaptureSheet,
+  SuccessHero,
+  type PublicWizardStep,
+} from './components/public-shell'
+
 // Hooks
 export { usePresignedPdfUrl } from './hooks/use-presigned-pdf-url'
 
