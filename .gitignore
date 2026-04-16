@@ -31,6 +31,9 @@ node_modules
 # superpowers scratch (visual brainstorm companion, local state)
 .superpowers/
 
+# git worktrees (isolated feature workspaces)
+.worktrees/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
