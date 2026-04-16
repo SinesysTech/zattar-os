@@ -125,3 +125,93 @@ describe('contratoParaInputData - edge cases', () => {
     expect(result.ctxExtras['cliente.email']).toBe('a@x.com');
   });
 });
+
+import { detectarCamposFaltantes } from '../mapeamento-contrato-input-data';
+
+describe('detectarCamposFaltantes', () => {
+  const templateMinimo = {
+    template_uuid: 'uuid-1',
+    nome: 'Contrato',
+    campos: JSON.stringify([
+      {
+        tipo: 'texto',
+        variavel: 'cliente.rg',
+        obrigatorio: true,
+      },
+      {
+        tipo: 'texto',
+        variavel: 'sistema.data_geracao',
+        obrigatorio: true,
+      },
+      {
+        tipo: 'assinatura',
+        variavel: 'assinatura.assinatura_base64',
+        obrigatorio: true,
+      },
+    ]),
+  };
+
+  it('flags missing required field', () => {
+    const inputData = {
+      cliente: { rg: null },
+    };
+    const result = detectarCamposFaltantes(inputData, [templateMinimo]);
+    expect(result).toHaveLength(1);
+    expect(result[0].chave).toBe('cliente.rg');
+    expect(result[0].templates).toContain('Contrato');
+  });
+
+  it('ignores sistema.data_geracao and assinatura.assinatura_base64', () => {
+    const inputData = {
+      cliente: { rg: 'X' },
+    };
+    const result = detectarCamposFaltantes(inputData, [templateMinimo]);
+    expect(result).toHaveLength(0);
+  });
+
+  it('returns empty when all fields present', () => {
+    const inputData = {
+      cliente: { rg: 'MG-123' },
+    };
+    expect(detectarCamposFaltantes(inputData, [templateMinimo])).toEqual([]);
+  });
+
+  it('extracts variables from texto_composto fields', () => {
+    const templateCompound = {
+      template_uuid: 'uuid-2',
+      nome: 'Procuração',
+      campos: JSON.stringify([
+        {
+          tipo: 'texto_composto',
+          obrigatorio: true,
+          conteudo_composto: {
+            json: {
+              type: 'doc',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    { type: 'variable', attrs: { key: 'cliente.cpf' } },
+                    { type: 'text', text: ' e ' },
+                    { type: 'variable', attrs: { key: 'cliente.rg' } },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      ]),
+    };
+    const inputData = { cliente: { cpf: null, rg: null } };
+    const result = detectarCamposFaltantes(inputData, [templateCompound]);
+    const chaves = result.map(c => c.chave).sort();
+    expect(chaves).toEqual(['cliente.cpf', 'cliente.rg']);
+  });
+
+  it('deduplicates chaves when multiple templates use same variable', () => {
+    const inputData = { cliente: { rg: null } };
+    const result = detectarCamposFaltantes(inputData, [templateMinimo, templateMinimo]);
+    expect(result).toHaveLength(1);
+    expect(result[0].templates).toEqual(['Contrato', 'Contrato']);
+  });
+});

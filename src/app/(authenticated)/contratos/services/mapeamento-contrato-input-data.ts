@@ -128,3 +128,105 @@ export function contratoParaInputData(dados: DadosContratoParaMapping): InputDat
 
   return { cliente: clienteMapeado, parteContrariaNome, ctxExtras };
 }
+
+import { LABELS_CAMPOS_CONTRATO } from './mapeamento-contrato-input-data.labels';
+
+export interface TemplateComCampos {
+  template_uuid: string;
+  nome: string;
+  campos: string; // JSON string, parsed internally
+}
+
+export interface CampoFaltante {
+  chave: string;
+  label: string;
+  templates: string[];
+}
+
+const CHAVES_IGNORADAS = new Set([
+  'assinatura.assinatura_base64',
+  'sistema.data_geracao',
+]);
+
+interface CampoParsed {
+  tipo: string;
+  variavel?: string;
+  obrigatorio?: boolean;
+  conteudo_composto?: {
+    json?: unknown;
+  };
+}
+
+function extrairVariaveisDoTipTap(node: unknown, out: Set<string>): void {
+  if (!node || typeof node !== 'object') return;
+  const n = node as Record<string, unknown>;
+  if (n.type === 'variable' && n.attrs && typeof n.attrs === 'object') {
+    const key = (n.attrs as Record<string, unknown>).key;
+    if (typeof key === 'string') out.add(key);
+  }
+  if (Array.isArray(n.content)) {
+    for (const child of n.content) extrairVariaveisDoTipTap(child, out);
+  }
+}
+
+function extrairVariaveisDoCampo(campo: CampoParsed): string[] {
+  const out = new Set<string>();
+  if (campo.variavel) out.add(campo.variavel);
+  if (campo.conteudo_composto?.json) {
+    extrairVariaveisDoTipTap(campo.conteudo_composto.json, out);
+  }
+  return [...out];
+}
+
+function temValor(inputData: Record<string, unknown>, chave: string): boolean {
+  const partes = chave.split('.');
+  let valor: unknown = inputData;
+  for (const p of partes) {
+    if (valor && typeof valor === 'object' && p in (valor as object)) {
+      valor = (valor as Record<string, unknown>)[p];
+    } else {
+      return false;
+    }
+  }
+  if (valor === null || valor === undefined) return false;
+  if (typeof valor === 'string' && valor.trim() === '') return false;
+  return true;
+}
+
+export function detectarCamposFaltantes(
+  inputData: Record<string, unknown>,
+  templates: TemplateComCampos[],
+): CampoFaltante[] {
+  const chaveParaTemplates = new Map<string, string[]>();
+
+  for (const template of templates) {
+    let parsed: CampoParsed[];
+    try {
+      parsed = JSON.parse(template.campos) as CampoParsed[];
+    } catch {
+      continue;
+    }
+    for (const campo of parsed) {
+      if (!campo.obrigatorio) continue;
+      for (const chave of extrairVariaveisDoCampo(campo)) {
+        if (CHAVES_IGNORADAS.has(chave)) continue;
+        const lista = chaveParaTemplates.get(chave) ?? [];
+        lista.push(template.nome);
+        chaveParaTemplates.set(chave, lista);
+      }
+    }
+  }
+
+  const faltantes: CampoFaltante[] = [];
+  for (const [chave, templatesQueUsam] of chaveParaTemplates) {
+    if (!temValor(inputData, chave)) {
+      faltantes.push({
+        chave,
+        label: LABELS_CAMPOS_CONTRATO[chave] ?? chave,
+        templates: templatesQueUsam,
+      });
+    }
+  }
+
+  return faltantes;
+}
