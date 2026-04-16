@@ -331,11 +331,20 @@ export const useFormularioStore = create<FormularioStore>()(
         _schemaVersion: SCHEMA_VERSION,
       }),
       // Rehydrate com checagem de TTL: se passou do limite, limpa tudo.
+      // Também garante que etapaAtual esteja dentro do range de stepConfigs —
+      // drafts persistidos antes de uma mudança na topologia de steps podem
+      // apontar para um step que deixou de existir (ex: GeolocationStep removido).
       onRehydrateStorage: () => (state, error) => {
         if (error || !state) return
         const ts = state._timestamp
         if (ts && Date.now() - ts > TTL_MS) {
           state.resetAll()
+          return
+        }
+        const maxIndex = (state.stepConfigs?.length ?? 0) - 1
+        if (state.etapaAtual > Math.max(0, maxIndex)) {
+          state.etapaAtual = 0
+          state._timestamp = Date.now()
         }
       },
       // Migração: schema mismatch descarta cache antigo (evita crash por shape diferente).
