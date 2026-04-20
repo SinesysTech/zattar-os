@@ -50,7 +50,11 @@ interface PublicStepCardProps {
   currentStep?: number
   /** Total de steps visíveis */
   totalSteps?: number
-  /** Label curto do step atual (ex: 'CPF', 'Dados', 'Contato') */
+  /**
+   * @deprecated O título do step agora é a única referência textual —
+   * a duplicação `N de M · Label` + heading foi eliminada. A prop é aceita
+   * por compat transitória mas é silenciosamente ignorada.
+   */
   stepLabel?: string
   /** Callback pra recomeçar — exibe ícone ao lado do label quando presente */
   onRestart?: () => void
@@ -86,7 +90,7 @@ export function PublicStepCard({
   description: _description,
   currentStep,
   totalSteps,
-  stepLabel,
+  stepLabel: _stepLabel,
   onRestart,
   chip,
   chipTone = 'primary',
@@ -142,85 +146,85 @@ export function PublicStepCard({
       )}
     >
       {hasProgress && (
-        <div className="flex flex-col gap-3 px-6 pt-5 sm:px-8 sm:pt-6">
+        <div
+          className="mx-6 mt-5 h-0.75 overflow-hidden rounded-full bg-outline-variant/30 sm:mx-8 sm:mt-6"
+          role="progressbar"
+          aria-valuemin={1}
+          aria-valuemax={totalSteps}
+          aria-valuenow={currentStep}
+          aria-label="Progresso do formulário"
+        >
           <div
-            className="h-0.75 w-full overflow-hidden rounded-full bg-outline-variant/30"
-            role="progressbar"
-            aria-valuemin={1}
-            aria-valuemax={totalSteps}
-            aria-valuenow={currentStep}
-            aria-label="Progresso do formulário"
-          >
-            <div
-              className="h-full rounded-full bg-primary shadow-[0_0_10px_color-mix(in_oklch,var(--primary)_55%,transparent)] transition-[width] duration-420 ease-out"
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-baseline gap-1.5">
-              <Text
-                variant="micro-caption"
-                className="font-semibold tracking-[0.02em] text-primary"
-              >
-                {currentStep} de {totalSteps}
-              </Text>
-              {stepLabel && (
-                <Text
-                  variant="micro-caption"
-                  className="text-muted-foreground"
-                >
-                  · {stepLabel}
-                </Text>
-              )}
-            </div>
-
-            {onRestart && (
-              <button
-                type="button"
-                onClick={onRestart}
-                className="inline-flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary active:scale-95"
-                aria-label="Recomeçar"
-                title="Recomeçar"
-              >
-                <RotateCcw className="h-3.5 w-3.5" />
-              </button>
-            )}
-          </div>
+            className="h-full rounded-full bg-primary shadow-[0_0_10px_color-mix(in_oklch,var(--primary)_55%,transparent)] transition-[width] duration-420 ease-out"
+            style={{ width: `${progressPct}%` }}
+          />
         </div>
       )}
 
       <section
         aria-labelledby={titleId}
-        className="flex min-h-0 flex-1 flex-col gap-6 px-6 py-5 **:data-[slot=form-label]:text-[11.5px] **:data-[slot=form-label]:font-medium **:data-[slot=form-label]:tracking-[0.01em] **:data-[slot=form-label]:text-muted-foreground sm:px-8 sm:py-6"
+        className="flex min-h-0 flex-1 flex-col gap-6 px-6 pt-4 pb-5 **:data-[slot=form-label]:text-[11.5px] **:data-[slot=form-label]:font-medium **:data-[slot=form-label]:tracking-[0.01em] **:data-[slot=form-label]:text-muted-foreground sm:px-8 sm:pt-5 sm:pb-6"
       >
-        <header className="flex flex-col gap-2">
-          {!hasProgress && chip && (
-            <span
-              role="status"
-              aria-label={chip}
-              className={cn(
-                'inline-flex w-fit items-center gap-2 rounded-full px-3 py-1',
-                CHIP_TONE_CLASSES[chipTone],
-              )}
-            >
+        <header className="flex items-start justify-between gap-4">
+          {!hasProgress && chip ? (
+            <div className="flex flex-col gap-2">
               <span
-                aria-hidden="true"
-                className={cn('h-1.5 w-1.5 rounded-full', CHIP_DOT_CLASSES[chipTone])}
-              />
-              <Text variant="overline" className="text-current">
-                {chip}
-              </Text>
-            </span>
+                role="status"
+                aria-label={chip}
+                className={cn(
+                  'inline-flex w-fit items-center gap-2 rounded-full px-3 py-1',
+                  CHIP_TONE_CLASSES[chipTone],
+                )}
+              >
+                <span
+                  aria-hidden="true"
+                  className={cn('h-1.5 w-1.5 rounded-full', CHIP_DOT_CLASSES[chipTone])}
+                />
+                <Text variant="overline" className="text-current">
+                  {chip}
+                </Text>
+              </span>
+              <Heading
+                id={titleId}
+                tabIndex={-1}
+                level="page"
+                className="text-[24px] leading-tight tracking-tight outline-none sm:text-[28px]"
+              >
+                {title}
+              </Heading>
+            </div>
+          ) : (
+            <Heading
+              id={titleId}
+              tabIndex={-1}
+              level="page"
+              className="min-w-0 flex-1 text-[24px] leading-tight tracking-tight outline-none sm:text-[28px]"
+            >
+              {title}
+            </Heading>
           )}
-          <Heading
-            id={titleId}
-            tabIndex={-1}
-            level="page"
-            className="text-[24px] leading-tight tracking-tight outline-none sm:text-[28px]"
-          >
-            {title}
-          </Heading>
+
+          {hasProgress && (
+            <div className="flex shrink-0 items-center gap-1.5 pt-1.5">
+              <Text
+                variant="micro-caption"
+                className="font-semibold tracking-[0.02em] text-primary"
+              >
+                {currentStep}/{totalSteps}
+              </Text>
+              {onRestart && (
+                <button
+                  type="button"
+                  onClick={onRestart}
+                  className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary active:scale-95"
+                  aria-label="Recomeçar"
+                  title="Recomeçar"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+          )}
         </header>
 
         <div

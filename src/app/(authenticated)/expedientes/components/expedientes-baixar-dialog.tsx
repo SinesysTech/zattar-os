@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { Loader2 } from 'lucide-react';
+import { LoadingSpinner } from '@/components/ui/loading-state';
 import { toast } from 'sonner';
 import { actionBaixarExpediente, type ActionResult } from '../actions';
 import { Expediente, ResultadoDecisao, RESULTADO_DECISAO_LABELS } from '../domain';
@@ -96,7 +96,7 @@ export function ExpedientesBaixarDialog({
       disabled={isPending}
       form="baixar-expediente-form"
     >
-      {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      {isPending && <LoadingSpinner className="mr-2" />}
       Baixar Expediente
     </Button>
   );

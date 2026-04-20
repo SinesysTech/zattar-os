@@ -5,7 +5,7 @@ import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { Loader2 } from 'lucide-react';
+import { LoadingSpinner } from '@/components/ui/loading-state';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { actionAtualizarExpediente, type ActionResult } from '../actions';
@@ -98,7 +98,7 @@ export function ExpedientesAlterarResponsavelDialog({
       disabled={isPending}
       form="alterar-responsavel-form"
     >
-      {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      {isPending && <LoadingSpinner className="mr-2" />}
       Salvar
     </Button>
   );

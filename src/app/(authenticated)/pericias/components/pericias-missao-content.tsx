@@ -22,19 +22,22 @@ import {
   Sparkles,
   User,
   UserMinus,
-  Building2,
+  Stethoscope,
+  Activity,
+  Hammer,
+  Calculator,
+  Briefcase,
+  type LucideIcon,
 } from 'lucide-react';
 import { differenceInCalendarDays, format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
-import { AppBadge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { Heading } from '@/components/ui/typography';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
 
 import {
   SituacaoPericiaCodigo,
@@ -98,8 +101,33 @@ function deltaLabel(prazoEntrega: string | null): string {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// CARD
+// CARD — arquitetura alinhada ao MissionCard de audiências
 // ═══════════════════════════════════════════════════════════════════════════
+
+function getIconForEspecialidade(descricao: string | undefined): LucideIcon {
+  if (!descricao) return Briefcase;
+  const d = descricao.toLowerCase();
+  if (d.includes('médic') || d.includes('insalubri') || d.includes('saúde'))
+    return Activity;
+  if (d.includes('psicol') || d.includes('psiqu')) return Stethoscope;
+  if (d.includes('engenha') || d.includes('periculos')) return Hammer;
+  if (d.includes('contáb') || d.includes('financ')) return Calculator;
+  return Briefcase;
+}
+
+function getGrauLabel(grau: string): string {
+  if (grau === 'primeiro_grau') return '1º grau';
+  if (grau === 'segundo_grau') return '2º grau';
+  return grau;
+}
+
+const URGENCY_BADGE: Record<Urgency, string> = {
+  atrasado: 'bg-destructive/10 text-destructive',
+  hoje: 'bg-warning/10 text-warning',
+  semana: 'bg-info/10 text-info',
+  futuro: 'bg-primary/6 text-primary',
+  sem_prazo: 'bg-muted text-muted-foreground/60',
+};
 
 interface PericiaMissionCardProps {
   pericia: Pericia;
@@ -107,118 +135,167 @@ interface PericiaMissionCardProps {
   onView: (pericia: Pericia) => void;
 }
 
-function PericiaMissionCard({ pericia, urgency, onView }: PericiaMissionCardProps) {
+function PericiaMissionCard({
+  pericia,
+  urgency,
+  onView,
+}: PericiaMissionCardProps) {
   const responsavel = pericia.responsavel?.nomeExibicao;
   const especialidade = pericia.especialidade?.descricao;
   const perito = pericia.perito?.nome;
+  const parteAutora = pericia.processo?.nomeParteAutora;
+  const parteRe = pericia.processo?.nomeParteRe;
 
   const isOverdue = urgency === 'atrasado';
   const isToday = urgency === 'hoje';
   const isCritical = isOverdue || isToday;
 
+  const EspecialidadeIcon = getIconForEspecialidade(especialidade);
+
   return (
     <GlassPanel
       depth={2}
       className={cn(
-        'relative overflow-hidden group transition-colors',
+        'relative overflow-hidden transition-colors',
         isCritical && 'border-destructive/20',
       )}
     >
-      <div className="flex flex-col gap-3 p-4">
-        {/* Cabeçalho: número do processo + badge de situação */}
+      <div className="p-4 flex flex-col gap-3">
+        {/* ── 1. Header: identidade (overline + heading) + countdown ── */}
         <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold tabular-nums tracking-tight text-foreground truncate">
-              {pericia.numeroProcesso}
-            </p>
-            <div className="mt-0.5 flex items-center gap-2 text-[10px] text-muted-foreground/70 uppercase tracking-wider">
-              <Building2 className="size-3 shrink-0" />
-              <span className="truncate">
-                {pericia.trt} · {pericia.grau}
-              </span>
-            </div>
-          </div>
-          <AppBadge
-            variant={getSemanticBadgeVariant('pericia_situacao', pericia.situacaoCodigo)}
-          >
-            {SITUACAO_PERICIA_LABELS[pericia.situacaoCodigo]}
-          </AppBadge>
-        </div>
-
-        {/* Info grid: especialidade + perito */}
-        <div className="grid grid-cols-2 gap-2 rounded-lg bg-muted/30 border border-border/20 px-3 py-2">
-          <div className="min-w-0">
-            <p className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground/60 mb-0.5">
-              Especialidade
-            </p>
-            <p className="text-xs font-medium text-foreground/85 truncate">
-              {especialidade || '—'}
-            </p>
-          </div>
-          <div className="min-w-0">
-            <p className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground/60 mb-0.5">
-              Perito
-            </p>
-            <p className="text-xs font-medium text-foreground/85 truncate">
-              {perito || 'A definir'}
-            </p>
-          </div>
-        </div>
-
-        {/* Rodapé: prazo + responsável + ação */}
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0">
-            <div
+          <div className="flex items-center gap-2.5 min-w-0">
+            <IconContainer
+              size="md"
               className={cn(
-                'inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-medium uppercase tracking-wider',
-                isOverdue && 'bg-destructive/10 text-destructive',
-                isToday && 'bg-warning/10 text-warning',
-                !isCritical &&
-                  urgency === 'semana' &&
-                  'bg-info/10 text-info',
-                !isCritical &&
-                  urgency === 'futuro' &&
-                  'bg-muted/60 text-muted-foreground',
-                urgency === 'sem_prazo' && 'bg-muted/40 text-muted-foreground/70',
+                'shrink-0',
+                isCritical ? 'bg-destructive/10' : 'bg-primary/10',
               )}
             >
-              {isOverdue ? (
-                <AlertTriangle className="size-3" />
-              ) : (
-                <Clock className="size-3" />
-              )}
-              <span>{deltaLabel(pericia.prazoEntrega)}</span>
-              <span className="opacity-60">·</span>
-              <span className="font-normal normal-case tracking-normal">
-                {formatPrazo(pericia.prazoEntrega)}
+              <EspecialidadeIcon
+                className={cn(
+                  'size-4',
+                  isCritical ? 'text-destructive' : 'text-primary',
+                )}
+              />
+            </IconContainer>
+            <div className="min-w-0">
+              <span className="block text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/65">
+                {SITUACAO_PERICIA_LABELS[pericia.situacaoCodigo]}
+              </span>
+              <Heading
+                level="card"
+                className="mt-0.5 truncate text-sm"
+              >
+                {especialidade || 'Perícia técnica'}
+              </Heading>
+            </div>
+          </div>
+
+          <div
+            className={cn(
+              'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg shrink-0 text-[10px] font-semibold uppercase tracking-wider',
+              URGENCY_BADGE[urgency],
+            )}
+          >
+            {isOverdue ? (
+              <AlertTriangle className="size-3" />
+            ) : (
+              <Clock className="size-3" />
+            )}
+            <span>{deltaLabel(pericia.prazoEntrega)}</span>
+          </div>
+        </div>
+
+        {/* ── 2. Info grid: Prazo | Tribunal | Processo | Perito ─── */}
+        <div className="grid grid-cols-4 gap-3 rounded-lg bg-border/5 px-3 py-2.5">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider">
+              Prazo
+            </span>
+            <span className="text-xs font-medium text-foreground/90 tabular-nums">
+              {formatPrazo(pericia.prazoEntrega)}
+            </span>
+          </div>
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider">
+              Tribunal
+            </span>
+            <span className="text-xs font-medium text-foreground/90 truncate">
+              {pericia.trt}
+              <span className="text-[9px] text-muted-foreground/55 ml-1 font-normal">
+                {getGrauLabel(pericia.grau)}
+              </span>
+            </span>
+          </div>
+          <div className="flex flex-col gap-0.5 min-w-0 col-span-2">
+            <span className="text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider">
+              Processo
+            </span>
+            <span className="text-xs font-medium text-foreground/90 tabular-nums truncate">
+              {pericia.numeroProcesso}
+            </span>
+          </div>
+        </div>
+
+        {/* ── 3. Partes: Autor vs Réu ──────────────────────────────── */}
+        {(parteAutora || parteRe) && (
+          <div className="flex items-center gap-2 rounded-lg bg-border/5 px-3 py-2">
+            <div className="flex-1 min-w-0">
+              <span className="block text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55">
+                Autor
+              </span>
+              <span className="block text-[11px] text-foreground/80 truncate">
+                {parteAutora || '—'}
               </span>
             </div>
+            <span className="text-[9px] text-muted-foreground/40 shrink-0 uppercase tracking-wider">
+              vs
+            </span>
+            <div className="flex-1 min-w-0 text-right">
+              <span className="block text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55">
+                Réu
+              </span>
+              <span className="block text-[11px] text-foreground/80 truncate">
+                {parteRe || '—'}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* ── 4. Footer: Responsável · Perito + Ação ─────────────── */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0 flex-wrap text-[11px]">
+            {responsavel ? (
+              <span className="flex items-center gap-1 text-muted-foreground/70">
+                <User className="size-3 text-muted-foreground/50" />
+                <span className="truncate max-w-37.5">{responsavel}</span>
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 text-warning/75">
+                <UserMinus className="size-3" />
+                <span>Sem responsável</span>
+              </span>
+            )}
+            {perito && (
+              <>
+                <span className="text-muted-foreground/30">·</span>
+                <span className="flex items-center gap-1 text-muted-foreground/70">
+                  <Briefcase className="size-3 text-muted-foreground/50" />
+                  <span className="truncate max-w-37.5">{perito}</span>
+                </span>
+              </>
+            )}
           </div>
 
           <Button
             variant="ghost"
             size="sm"
             onClick={() => onView(pericia)}
-            className="h-7 text-[10px] px-3 font-medium uppercase tracking-wider hover:bg-primary/10 hover:text-primary"
+            className="h-7 text-[10px] px-3 font-medium uppercase tracking-wider hover:bg-primary/10 hover:text-primary shrink-0"
           >
             Abrir
             <ChevronRight className="size-3 ml-1 opacity-70" />
           </Button>
-        </div>
-
-        {/* Indicador de responsável (abaixo dos metadados) */}
-        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground/65">
-          {responsavel ? (
-            <>
-              <User className="size-3" />
-              <span className="truncate">{responsavel}</span>
-            </>
-          ) : (
-            <>
-              <UserMinus className="size-3 text-warning/60" />
-              <span className="text-warning/70">Sem responsável</span>
-            </>
-          )}
         </div>
       </div>
     </GlassPanel>

@@ -20,9 +20,7 @@ Este diretório contém componentes de UI reutilizáveis e agnósticos de negóc
 
 - **`DialogFormShell`**: Container para formulários em modal/dialog com suporte a multi-step.
   - **Quando usar:** Para criar/editar entidades em dialogs modais.
-
-- **`DetailSheet`**: Painel lateral para exibir detalhes de uma entidade.
-  - **Quando usar:** Para visualização rápida de detalhes sem sair da listagem.
+  - **Para painel de detalhes:** Use `DialogFormShell` também — este projeto **não adota `Sheet`** como padrão. Detail panels vivem em dialog centralizado com classes `glass-dialog`.
 
 ### Exemplo de Composição para Agentes
 

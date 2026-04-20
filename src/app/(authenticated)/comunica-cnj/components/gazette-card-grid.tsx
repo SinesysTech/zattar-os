@@ -283,14 +283,14 @@ export function GazetteCardGrid() {
 
   if (comunicacoes.length === 0) {
     return (
-      <div className="p-6 flex items-center justify-center text-muted-foreground text-sm">
+      <div className="flex min-w-0 flex-1 items-center justify-center p-6 text-sm text-muted-foreground">
         Nenhuma publicação encontrada.
       </div>
     );
   }
 
   return (
-    <div className="p-6 overflow-y-auto">
+    <div className="min-w-0 flex-1 overflow-y-auto p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {comunicacoes.map((item) => (
           <GazetteCard key={item.id} item={item} />

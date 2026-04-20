@@ -32,7 +32,7 @@ import { usePermissoes } from "@/providers/user-provider"
 
 // ─── Navigation data (mirrors app-sidebar.tsx) ─────────────────────────
 
-interface HubNavItem {
+export interface HubNavItem {
   id: string
   title: string
   url: string
@@ -76,7 +76,7 @@ const navGestao: HubNavItem[] = [
 const RECENTS_KEY = "command-hub-recents"
 const MAX_RECENTS = 5
 
-function useRecents() {
+export function useRecents() {
   const [recents, setRecents] = useState<string[]>([])
 
   useEffect(() => {
@@ -99,7 +99,7 @@ function useRecents() {
 
 // ─── All items helper ──────────────────────────────────────────────────
 
-function getAllItems(canSeePangea: boolean, canSeeProjetos: boolean, isSuperAdmin: boolean) {
+export function getAllItems(canSeePangea: boolean, canSeeProjetos: boolean, isSuperAdmin: boolean) {
   const servicos = navServicos.filter((item) => {
     if (item.url === "/app/project-management") return canSeeProjetos
     if (item.url === "/app/pangea") return canSeePangea
@@ -131,18 +131,20 @@ function SynthropicLogo() {
 
 // ─── Hub Panel ─────────────────────────────────────────────────────────
 
-function HubPanel({
+export function HubPanel({
   onClose,
   onNavigate,
   activeUrl,
   sections,
   recents,
+  accountBar,
 }: {
   onClose: () => void
   onNavigate: (item: HubNavItem) => void
   activeUrl: string
   sections: { label: string; items: HubNavItem[] }[]
   recents: string[]
+  accountBar?: React.ReactNode
 }) {
   const [search, setSearch] = useState("")
   const [focusedIndex, setFocusedIndex] = useState(-1)
@@ -173,12 +175,15 @@ function HubPanel({
     return () => clearTimeout(timer)
   }, [])
 
-  // Click outside to close
+  // Click outside to close — ignora portais Radix (popovers/dropdowns filhos)
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
-        onClose()
-      }
+      const target = e.target as HTMLElement | null
+      if (!target) return
+      if (panelRef.current?.contains(target)) return
+      // Sub-popovers (Avatar, Notificações, 2FA) renderizam em portal com este wrapper
+      if (target.closest('[data-radix-popper-content-wrapper]')) return
+      onClose()
     }
     document.addEventListener("mousedown", handleClick)
     return () => document.removeEventListener("mousedown", handleClick)
@@ -230,6 +235,9 @@ function HubPanel({
           animate-in slide-in-from-top-2 fade-in duration-200
         "
       >
+        {/* Account bar (avatar + notificações + 2FA) */}
+        {accountBar}
+
         {/* Search */}
         <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border/30">
           <Search className="size-4 text-muted-foreground/50 shrink-0" />

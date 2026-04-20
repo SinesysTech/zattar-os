@@ -334,22 +334,25 @@ export function ObrigacoesGlassList({
   isLoading,
   onViewDetail,
 }: ObrigacoesGlassListProps) {
-  if (isLoading) return <ListSkeleton />;
-  if (acordos.length === 0) return <GlassEmptyState />;
-
   return (
     <div>
       <ColumnHeaders />
-      <div className="flex flex-col gap-2">
-        {acordos.map((acordo, i) => (
-          <GlassRow
-            key={acordo.id}
-            acordo={acordo}
-            onViewDetail={() => onViewDetail(acordo)}
-            isAlt={i % 2 === 1}
-          />
-        ))}
-      </div>
+      {isLoading ? (
+        <ListSkeleton />
+      ) : acordos.length === 0 ? (
+        <GlassEmptyState />
+      ) : (
+        <div className="flex flex-col gap-2">
+          {acordos.map((acordo, i) => (
+            <GlassRow
+              key={acordo.id}
+              acordo={acordo}
+              onViewDetail={() => onViewDetail(acordo)}
+              isAlt={i % 2 === 1}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

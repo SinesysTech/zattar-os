@@ -26,7 +26,6 @@ export { ObrigacoesCalendarCompact } from './components/calendar/obrigacoes-cale
 export { ObrigacoesDayList } from './components/calendar/obrigacoes-day-list';
 export { ObrigacoesPulseStrip } from './components/shared/obrigacoes-pulse-strip';
 export { AcordoPulseStrip } from './components/shared/acordo-pulse-strip';
-export { AlertasObrigacoes } from './components/shared/alertas-obrigacoes';
 export { ObrigacoesFilterBar } from './components/shared/obrigacoes-filter-bar';
 export { ObrigacoesGlassList } from './components/shared/obrigacoes-glass-list';
 export { ParcelasTable } from './components/parcelas/parcelas-table';
@@ -66,7 +65,6 @@ export type {
   FormaPagamento,
   ObrigacoesFilters,
   ResumoObrigacoes,
-  AlertasObrigacoesType,
   CriarAcordoComParcelasParams,
   ListarAcordosParams,
   AtualizarAcordoParams,

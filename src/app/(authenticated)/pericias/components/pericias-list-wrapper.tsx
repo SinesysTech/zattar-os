@@ -1,26 +1,16 @@
 'use client';
 
 /**
- * PericiasListWrapper — View de lista (thin).
+ * PericiasListWrapper — View de lista (Glass List).
  * ============================================================================
- * Renderiza apenas DataTable + paginação. Toolbar (search, filtros, botão
- * "Nova Perícia", view switcher) vive no PericiasClient pai. Este componente
- * é um view puro que consome props controlled.
- *
- * Estado local mínimo: pagination, density, rowSelection (UI-only).
+ * Renderiza `PericiasGlassList` (cards glass por perícia) + paginação própria.
+ * Toolbar vive no PericiasClient pai.
  * ============================================================================
  */
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
-import type { Table as TanstackTable } from '@tanstack/react-table';
 import { format } from 'date-fns';
-
-import {
-  DataShell,
-  DataTable,
-  DataPagination,
-} from '@/components/shared/data-shell';
+import { Button } from '@/components/ui/button';
 
 import type {
   Pericia,
@@ -30,7 +20,9 @@ import type {
 } from '../domain';
 import { SituacaoPericiaCodigo } from '../domain';
 import { usePericias } from '../hooks/use-pericias';
-import { columns } from './columns';
+
+import { PericiasGlassList } from './pericias-glass-list';
+import { PericiaDetalhesDialog } from './pericia-detalhes-dialog';
 import type {
   SituacaoFilterType,
   ResponsavelFilterType,
@@ -54,13 +46,14 @@ export interface PericiasListWrapperProps {
   usuarios: UsuarioOption[];
   especialidades: EspecialidadePericiaOption[];
   peritos: PeritoOption[];
-  /** Incrementado externamente para forçar refetch (ex: após criar perícia). */
   refetchKey: number;
 }
 
 // =============================================================================
 // COMPONENTE
 // =============================================================================
+
+const PAGE_SIZE = 25;
 
 export function PericiasListWrapper({
   busca,
@@ -72,23 +65,14 @@ export function PericiasListWrapper({
   especialidadeFilter,
   peritoFilter,
   dateRange,
-  usuarios,
   refetchKey,
 }: PericiasListWrapperProps) {
-  const router = useRouter();
-
-  // ---------- Estado local da tabela ----------
-  const [density, setDensity] = React.useState<
-    'compact' | 'standard' | 'relaxed'
-  >('standard');
-  const [rowSelection, setRowSelection] = React.useState<
-    Record<string, boolean>
-  >({});
-  const [, setTable] = React.useState<TanstackTable<Pericia> | null>(null);
-
-  // ---------- Paginação ----------
   const [pageIndex, setPageIndex] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(50);
+
+  // ---------- Dialog ----------
+  const [selectedPericia, setSelectedPericia] =
+    React.useState<Pericia | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = React.useState(false);
 
   // Reset page when filters/busca change
   React.useEffect(() => {
@@ -105,11 +89,11 @@ export function PericiasListWrapper({
     dateRange,
   ]);
 
-  // ---------- Hook params (derivados das props controlled) ----------
+  // ---------- Hook params ----------
   const hookParams = React.useMemo(() => {
     const params: Record<string, unknown> = {
       pagina: pageIndex + 1,
-      limite: pageSize,
+      limite: PAGE_SIZE,
       busca: busca || undefined,
     };
 
@@ -145,7 +129,6 @@ export function PericiasListWrapper({
     return params;
   }, [
     pageIndex,
-    pageSize,
     busca,
     situacaoFilter,
     responsavelFilter,
@@ -157,10 +140,8 @@ export function PericiasListWrapper({
     dateRange,
   ]);
 
-  const { pericias, paginacao, isLoading, error, refetch } =
-    usePericias(hookParams);
+  const { pericias, paginacao, isLoading, refetch } = usePericias(hookParams);
 
-  // Refetch external (ex: após criar perícia no dialog do client pai)
   React.useEffect(() => {
     if (refetchKey > 0) {
       refetch();
@@ -170,52 +151,64 @@ export function PericiasListWrapper({
   const total = paginacao?.total ?? 0;
   const totalPages = paginacao?.totalPaginas ?? 0;
 
-  const handleSucessoOperacao = React.useCallback(() => {
-    setRowSelection({});
-    refetch();
-    router.refresh();
-  }, [refetch, router]);
+  const handleViewDetail = React.useCallback((p: Pericia) => {
+    setSelectedPericia(p);
+    setIsDetailOpen(true);
+  }, []);
 
   return (
-    <DataShell
-      footer={
-        totalPages > 0 ? (
-          <DataPagination
-            pageIndex={pageIndex}
-            pageSize={pageSize}
-            total={total}
-            totalPages={totalPages}
-            onPageChange={setPageIndex}
-            onPageSizeChange={(size) => {
-              setPageSize(size);
-              setPageIndex(0);
-            }}
-            isLoading={isLoading}
-          />
-        ) : null
-      }
-    >
-      <DataTable
-        data={pericias}
-        columns={columns}
+    <div className="space-y-4">
+      <PericiasGlassList
+        pericias={pericias}
         isLoading={isLoading}
-        error={error}
-        density={density}
-        onDensityChange={setDensity}
-        onTableReady={(t) => setTable(t as TanstackTable<Pericia>)}
-        emptyMessage="Nenhuma perícia encontrada."
-        rowSelection={{
-          state: rowSelection,
-          onRowSelectionChange: setRowSelection,
-          getRowId: (row) => row.id.toString(),
-        }}
-        options={{
-          meta: {
-            usuarios,
-            onSuccess: handleSucessoOperacao,
-          },
-        }}
+        onViewDetail={handleViewDetail}
       />
-    </DataShell>
+
+      {/* Pagination simples */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between text-[11px] text-muted-foreground/70 pt-2">
+          <span className="tabular-nums">
+            Mostrando{' '}
+            <span className="text-foreground font-medium">
+              {pageIndex * PAGE_SIZE + 1}
+            </span>
+            –
+            <span className="text-foreground font-medium">
+              {Math.min((pageIndex + 1) * PAGE_SIZE, total)}
+            </span>{' '}
+            de <span className="text-foreground font-medium">{total}</span>
+          </span>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={pageIndex === 0}
+              onClick={() => setPageIndex((i) => Math.max(0, i - 1))}
+            >
+              Anterior
+            </Button>
+            <span className="text-[11px] tabular-nums">
+              Página {pageIndex + 1} de {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={pageIndex >= totalPages - 1}
+              onClick={() =>
+                setPageIndex((i) => Math.min(totalPages - 1, i + 1))
+              }
+            >
+              Próxima
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <PericiaDetalhesDialog
+        pericia={selectedPericia}
+        open={isDetailOpen}
+        onOpenChange={setIsDetailOpen}
+      />
+    </div>
   );
 }

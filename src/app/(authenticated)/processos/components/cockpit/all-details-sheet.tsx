@@ -1,18 +1,32 @@
 'use client';
 
+/**
+ * AllDetailsSheet — Dialog de detalhes complementares do processo
+ * ============================================================================
+ * Exibe listas de expedientes, audiências e perícias vinculados ao processo,
+ * em tabs dentro de um glass-dialog centralizado.
+ *
+ * NOTA: Nome mantido por compatibilidade com consumidor (processo-visualizacao).
+ * Estrutura interna foi migrada de DetailSheet para Dialog + GlassPanel.
+ * ============================================================================
+ */
+
 import { useEffect, useState } from 'react';
 import { FileText, Calendar, Microscope } from 'lucide-react';
+
 import {
-  DetailSheet,
-  DetailSheetHeader,
-  DetailSheetTitle,
-  DetailSheetContent,
-  DetailSheetFooter,
-} from '@/components/shared/detail-sheet';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { GlassPanel } from '@/components/shared/glass-panel';
+
 import { actionObterDetalhesComplementaresProcesso } from '../../actions';
 import type { Audiencia } from '@/app/(authenticated)/audiencias';
 import type { Expediente } from '@/app/(authenticated)/expedientes';
@@ -56,7 +70,9 @@ export function AllDetailsSheet({
         if (!cancelled) setIsLoading(false);
       });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [open, processoId, numeroProcesso]);
 
   const totalAudiencias = audiencias.length;
@@ -64,14 +80,14 @@ export function AllDetailsSheet({
   const totalPericias = pericias.length;
 
   return (
-    <DetailSheet open={open} onOpenChange={onOpenChange} side="right">
-      <DetailSheetHeader>
-        <DetailSheetTitle>Detalhes Complementares</DetailSheetTitle>
-      </DetailSheetHeader>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="glass-dialog max-w-3xl">
+        <DialogHeader>
+          <DialogTitle>Detalhes complementares</DialogTitle>
+        </DialogHeader>
 
-      <DetailSheetContent>
         {isLoading ? (
-          <div className="space-y-4">
+          <div className="space-y-2">
             {[...Array(4)].map((_, i) => (
               <Skeleton key={i} className="h-16 w-full rounded-lg" />
             ))}
@@ -83,7 +99,13 @@ export function AllDetailsSheet({
                 <FileText className="size-3.5" />
                 Expedientes
                 {totalExpedientes > 0 && (
-                  <SemanticBadge category="status" value={totalExpedientes} variantOverride="secondary" toneOverride="soft" className="ml-1 text-[10px] px-1.5 py-0">
+                  <SemanticBadge
+                    category="status"
+                    value={totalExpedientes}
+                    variantOverride="secondary"
+                    toneOverride="soft"
+                    className="ml-1 text-[10px] px-1.5 py-0"
+                  >
                     {totalExpedientes}
                   </SemanticBadge>
                 )}
@@ -92,7 +114,13 @@ export function AllDetailsSheet({
                 <Calendar className="size-3.5" />
                 Audiências
                 {totalAudiencias > 0 && (
-                  <SemanticBadge category="status" value={totalAudiencias} variantOverride="secondary" toneOverride="soft" className="ml-1 text-[10px] px-1.5 py-0">
+                  <SemanticBadge
+                    category="status"
+                    value={totalAudiencias}
+                    variantOverride="secondary"
+                    toneOverride="soft"
+                    className="ml-1 text-[10px] px-1.5 py-0"
+                  >
                     {totalAudiencias}
                   </SemanticBadge>
                 )}
@@ -101,7 +129,13 @@ export function AllDetailsSheet({
                 <Microscope className="size-3.5" />
                 Perícias
                 {totalPericias > 0 && (
-                  <SemanticBadge category="status" value={totalPericias} variantOverride="secondary" toneOverride="soft" className="ml-1 text-[10px] px-1.5 py-0">
+                  <SemanticBadge
+                    category="status"
+                    value={totalPericias}
+                    variantOverride="secondary"
+                    toneOverride="soft"
+                    className="ml-1 text-[10px] px-1.5 py-0"
+                  >
                     {totalPericias}
                   </SemanticBadge>
                 )}
@@ -110,17 +144,22 @@ export function AllDetailsSheet({
 
             <TabsContent value="expedientes" className="mt-3">
               {totalExpedientes === 0 ? (
-                <p className="text-sm text-muted-foreground py-6 text-center">Nenhum expediente.</p>
+                <p className="text-sm text-muted-foreground/60 py-6 text-center">
+                  Nenhum expediente.
+                </p>
               ) : (
                 <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
                   {expedientes.map((exp) => (
-                    <div key={exp.id} className="rounded-lg border px-3 py-2.5 text-xs">
-                      <p className="font-medium">Expediente</p>
-                      <p className="text-muted-foreground/60 mt-0.5">
-                        {exp.dataCriacaoExpediente ? new Date(exp.dataCriacaoExpediente).toLocaleDateString('pt-BR') : '--'}
-                        {exp.dataPrazoLegalParte && ` · Prazo: ${new Date(exp.dataPrazoLegalParte).toLocaleDateString('pt-BR')}`}
+                    <GlassPanel key={exp.id} depth={1} className="px-3 py-2.5">
+                      <p className="text-xs font-medium">Expediente</p>
+                      <p className="text-[11px] text-muted-foreground/60 mt-0.5">
+                        {exp.dataCriacaoExpediente
+                          ? new Date(exp.dataCriacaoExpediente).toLocaleDateString('pt-BR')
+                          : '--'}
+                        {exp.dataPrazoLegalParte &&
+                          ` · Prazo: ${new Date(exp.dataPrazoLegalParte).toLocaleDateString('pt-BR')}`}
                       </p>
-                    </div>
+                    </GlassPanel>
                   ))}
                 </div>
               )}
@@ -128,17 +167,21 @@ export function AllDetailsSheet({
 
             <TabsContent value="audiencias" className="mt-3">
               {totalAudiencias === 0 ? (
-                <p className="text-sm text-muted-foreground py-6 text-center">Nenhuma audiência.</p>
+                <p className="text-sm text-muted-foreground/60 py-6 text-center">
+                  Nenhuma audiência.
+                </p>
               ) : (
                 <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
                   {audiencias.map((aud) => (
-                    <div key={aud.id} className="rounded-lg border px-3 py-2.5 text-xs">
-                      <p className="font-medium">{aud.tipoDescricao || 'Audiência'}</p>
-                      <p className="text-muted-foreground/60 mt-0.5">
+                    <GlassPanel key={aud.id} depth={1} className="px-3 py-2.5">
+                      <p className="text-xs font-medium">
+                        {aud.tipoDescricao || 'Audiência'}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground/60 mt-0.5">
                         {new Date(aud.dataInicio).toLocaleDateString('pt-BR')}
                         {aud.salaAudienciaNome && ` · Sala ${aud.salaAudienciaNome}`}
                       </p>
-                    </div>
+                    </GlassPanel>
                   ))}
                 </div>
               )}
@@ -146,30 +189,37 @@ export function AllDetailsSheet({
 
             <TabsContent value="pericias" className="mt-3">
               {totalPericias === 0 ? (
-                <p className="text-sm text-muted-foreground py-6 text-center">Nenhuma perícia.</p>
+                <p className="text-sm text-muted-foreground/60 py-6 text-center">
+                  Nenhuma perícia.
+                </p>
               ) : (
                 <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
                   {pericias.map((per) => (
-                    <div key={per.id} className="rounded-lg border px-3 py-2.5 text-xs">
-                      <p className="font-medium">{per.especialidade?.descricao || 'Perícia'}</p>
-                      <p className="text-muted-foreground/60 mt-0.5">
-                        {per.perito?.nome && `Perito: ${per.perito.nome} · `}
-                        Prazo: {per.prazoEntrega ? new Date(per.prazoEntrega).toLocaleDateString('pt-BR') : '--'}
+                    <GlassPanel key={per.id} depth={1} className="px-3 py-2.5">
+                      <p className="text-xs font-medium">
+                        {per.especialidade?.descricao || 'Perícia'}
                       </p>
-                    </div>
+                      <p className="text-[11px] text-muted-foreground/60 mt-0.5">
+                        {per.perito?.nome && `Perito: ${per.perito.nome} · `}
+                        Prazo:{' '}
+                        {per.prazoEntrega
+                          ? new Date(per.prazoEntrega).toLocaleDateString('pt-BR')
+                          : '--'}
+                      </p>
+                    </GlassPanel>
                   ))}
                 </div>
               )}
             </TabsContent>
           </Tabs>
         )}
-      </DetailSheetContent>
 
-      <DetailSheetFooter>
-        <Button variant="ghost" onClick={() => onOpenChange(false)}>
-          Fechar
-        </Button>
-      </DetailSheetFooter>
-    </DetailSheet>
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>
+            Fechar
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

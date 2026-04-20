@@ -152,6 +152,12 @@ export type {
 // ============================================================================
 // Types / Domain
 // ============================================================================
+// Types - Dashboard (acessados por módulos que consomem dados agregados do financeiro)
+export type {
+  DashboardFinanceiroData,
+  FluxoCaixaProjetadoItem,
+} from './services/dashboard';
+
 // Types - Lancamentos
 export type {
   TipoLancamento,

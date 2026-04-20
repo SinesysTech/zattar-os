@@ -20,7 +20,6 @@ export type {
   ObrigacoesFilters,
   StatusObrigacao,
   ResumoObrigacoes,
-  AlertasObrigacoesType,
 
   // Enums / unions
   TipoObrigacao,

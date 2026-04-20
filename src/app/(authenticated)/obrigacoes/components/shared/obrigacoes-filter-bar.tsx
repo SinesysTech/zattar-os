@@ -46,8 +46,8 @@ function FilterDropdownTrigger({
       className={cn(
         'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         active
-          ? 'border-primary/20 bg-primary/5 text-primary'
-          : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
+          ? 'border-primary/40 bg-primary/15 text-primary'
+          : 'border-border/50 bg-muted/50 text-foreground/70 hover:bg-muted/80 hover:border-border/70',
         open && 'ring-1 ring-ring',
       )}
     >

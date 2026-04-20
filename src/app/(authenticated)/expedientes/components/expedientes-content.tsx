@@ -301,14 +301,14 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
 
       {/* 4. View Controls — sempre visível conforme Glass Briefing */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <div className="flex items-center gap-2 flex-1 flex-wrap justify-end">
-          <ExpedientesFilterBar
-            filters={filters}
-            onChange={setFilters}
-            usuarios={usuarios || []}
-            tiposExpedientes={tiposExpedientes || []}
-            counts={globalCounts}
-          />
+        <ExpedientesFilterBar
+          filters={filters}
+          onChange={setFilters}
+          usuarios={usuarios || []}
+          tiposExpedientes={tiposExpedientes || []}
+          counts={globalCounts}
+        />
+        <div className="flex items-center gap-2 flex-1 justify-end">
           <SearchInput
             value={search}
             onChange={setSearch}

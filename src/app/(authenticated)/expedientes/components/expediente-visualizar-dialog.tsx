@@ -1,28 +1,43 @@
 'use client';
 
-// Componente Dialog (modal centralizado) para visualizar detalhes completos de um expediente.
-// Os helpers DetailSheetSection/InfoRow/MetaGrid/MetaItem/Separator/Audit são apenas
-// containers visuais (divs com classes Tailwind) — não dependem do Sheet pai e podem
-// ser usados standalone dentro do Dialog.
+/**
+ * ExpedienteVisualizarDialog — Dialog de detalhes completos do expediente.
+ * ============================================================================
+ * Container: DialogFormShell (já Dialog, não Sheet).
+ * Helpers visuais locais (Section, InfoRow, MetaItem, Separator, Audit)
+ * substituem os primitivos DetailSheet* usados antes como containers standalone.
+ * ============================================================================
+ */
 
 import * as React from 'react';
+import {
+  ExternalLink,
+  Calendar,
+  FileText,
+  Users,
+  Building2,
+  Scale,
+  AlertCircle,
+  AlertTriangle,
+} from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Calendar, FileText, Users, Building2, Scale, AlertCircle, AlertTriangle } from 'lucide-react';
-import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS, getExpedientePartyNames } from '../domain';
-import type { Usuario } from '@/app/(authenticated)/usuarios';
-import type { TipoExpediente } from '@/app/(authenticated)/tipos-expedientes';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Heading } from '@/components/ui/typography';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import {
-  DetailSheetSection,
-  DetailSheetInfoRow,
-  DetailSheetSeparator,
-  DetailSheetMetaGrid,
-  DetailSheetMetaItem,
-  DetailSheetAudit,
-} from '@/components/shared/detail-sheet';
 
+import {
+  Expediente,
+  GrauTribunal,
+  GRAU_TRIBUNAL_LABELS,
+  getExpedientePartyNames,
+} from '../domain';
+import type { Usuario } from '@/app/(authenticated)/usuarios';
+import type { TipoExpediente } from '@/app/(authenticated)/tipos-expedientes';
+
+// =============================================================================
+// TYPES
+// =============================================================================
 
 interface ExpedienteVisualizarDialogProps {
   expediente: Expediente | null;
@@ -32,38 +47,123 @@ interface ExpedienteVisualizarDialogProps {
   tiposExpedientes?: TipoExpediente[];
 }
 
-/**
- * Formata data ISO para formato brasileiro (DD/MM/YYYY)
- */
+// =============================================================================
+// HELPERS
+// =============================================================================
+
 const formatarData = (dataISO: string | null): string => {
   if (!dataISO) return '-';
   try {
-    const data = new Date(dataISO);
-    return data.toLocaleDateString('pt-BR');
+    return new Date(dataISO).toLocaleDateString('pt-BR');
   } catch {
     return '-';
   }
 };
 
-/**
- * Formata data ISO para formato brasileiro com hora (DD/MM/YYYY HH:mm)
- */
 const formatarDataHora = (dataISO: string | null): string => {
   if (!dataISO) return '-';
   try {
-    const data = new Date(dataISO);
-    return data.toLocaleString('pt-BR');
+    return new Date(dataISO).toLocaleString('pt-BR');
   } catch {
     return '-';
   }
 };
 
-/**
- * Formata o grau para exibição
- */
-const formatarGrau = (grau: GrauTribunal): string => {
-  return GRAU_TRIBUNAL_LABELS[grau] || grau;
-};
+const formatarGrau = (grau: GrauTribunal): string =>
+  GRAU_TRIBUNAL_LABELS[grau] || grau;
+
+// =============================================================================
+// INTERNAL COMPONENTS (substitutos para primitivos DetailSheet)
+// =============================================================================
+
+function Section({
+  icon,
+  title,
+  children,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="space-y-1.5">
+      <header className="flex items-center gap-2">
+        <span className="text-muted-foreground/60">{icon}</span>
+        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+          {title}
+        </h3>
+      </header>
+      <div className="rounded-xl border border-border/30 bg-card divide-y divide-border/20">
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function InfoRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-3 px-3 py-2 text-sm">
+      <dt className="text-[12px] text-muted-foreground/65 shrink-0">{label}</dt>
+      <dd className="text-right font-medium text-foreground/90 min-w-0">
+        {children}
+      </dd>
+    </div>
+  );
+}
+
+function Separator() {
+  return <hr className="border-border/20" />;
+}
+
+function MetaGrid({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="grid grid-cols-3 gap-3 rounded-xl border border-border/30 bg-muted/20 p-4">
+      {children}
+    </div>
+  );
+}
+
+function MetaItem({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-1 min-w-0">
+      <span className="text-[10px] uppercase tracking-wider text-muted-foreground/55">
+        {label}
+      </span>
+      <div className="flex items-center gap-1.5 text-sm">{children}</div>
+    </div>
+  );
+}
+
+function Audit({
+  createdAt,
+  updatedAt,
+}: {
+  createdAt: string | null;
+  updatedAt: string | null;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3 pt-3 text-[10px] text-muted-foreground/55">
+      <span>Criado em {formatarDataHora(createdAt)}</span>
+      <span>Atualizado em {formatarDataHora(updatedAt)}</span>
+    </div>
+  );
+}
+
+// =============================================================================
+// MAIN COMPONENT
+// =============================================================================
 
 export function ExpedienteVisualizarDialog({
   expediente,
@@ -84,7 +184,9 @@ export function ExpedienteVisualizarDialog({
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/40">
             <AlertTriangle className="h-6 w-6 text-muted-foreground/60" />
           </div>
-          <Heading level="card" className="text-base">Expediente não encontrado</Heading>
+          <Heading level="card" className="text-base">
+            Expediente não encontrado
+          </Heading>
           <p className="text-sm text-muted-foreground max-w-sm">
             Os detalhes do expediente não estão disponíveis.
           </p>
@@ -93,14 +195,15 @@ export function ExpedienteVisualizarDialog({
     );
   }
 
-  const responsavel = usuarios.find(u => u.id === expediente.responsavelId);
-  const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipoExpedienteId);
+  const responsavel = usuarios.find((u) => u.id === expediente.responsavelId);
+  const tipoExpediente = tiposExpedientes.find(
+    (t) => t.id === expediente.tipoExpedienteId,
+  );
   const partes = getExpedientePartyNames(expediente);
 
   const handleAbrirPagina = () => {
     onOpenChange(false);
     // TODO: Navegar para /expedientes/[id] quando a página for criada
-    // router.push(`/expedientes/${expediente.id}`);
   };
 
   const statusBadge = (
@@ -126,7 +229,6 @@ export function ExpedienteVisualizarDialog({
     </div>
   );
 
-  // Header customizado: título com badge alinhado à direita + linha de metadados
   const dialogTitle = (
     <div className="flex items-start justify-between gap-3">
       <div className="flex-1 min-w-0">
@@ -169,56 +271,56 @@ export function ExpedienteVisualizarDialog({
     >
       <>
         {/* Informações do Processo */}
-        <DetailSheetSection icon={<Scale className="h-4 w-4" />} title="Informações do Processo">
-          <DetailSheetInfoRow label="Número do Processo">
-            {expediente.numeroProcesso}
-          </DetailSheetInfoRow>
+        <Section icon={<Scale className="h-4 w-4" />} title="Informações do Processo">
+          <InfoRow label="Número do Processo">{expediente.numeroProcesso}</InfoRow>
           {expediente.classeJudicial && (
-            <DetailSheetInfoRow label="Classe Judicial">
-              {expediente.classeJudicial}
-            </DetailSheetInfoRow>
+            <InfoRow label="Classe Judicial">{expediente.classeJudicial}</InfoRow>
           )}
-          <DetailSheetSeparator />
-          <DetailSheetInfoRow label="TRT">
+          <Separator />
+          <InfoRow label="TRT">
             <SemanticBadge category="tribunal" value={expediente.trt}>
               {expediente.trt}
             </SemanticBadge>
-          </DetailSheetInfoRow>
-          <DetailSheetInfoRow label="Grau">
+          </InfoRow>
+          <InfoRow label="Grau">
             <SemanticBadge category="grau" value={expediente.grau}>
               {formatarGrau(expediente.grau)}
             </SemanticBadge>
-          </DetailSheetInfoRow>
+          </InfoRow>
           {expediente.codigoStatusProcesso && (
-            <DetailSheetInfoRow label="Status do Processo">
+            <InfoRow label="Status do Processo">
               {expediente.codigoStatusProcesso}
-            </DetailSheetInfoRow>
+            </InfoRow>
           )}
-        </DetailSheetSection>
+        </Section>
 
         {/* Meta Grid: Flags do processo */}
-        <DetailSheetMetaGrid>
-          <DetailSheetMetaItem label="Prioridade">
+        <MetaGrid>
+          <MetaItem label="Prioridade">
             <SemanticBadge
               category="status"
               value={expediente.prioridadeProcessual ? 'ALTA' : 'NORMAL'}
-              variantOverride={expediente.prioridadeProcessual ? 'warning' : 'neutral'}
+              variantOverride={
+                expediente.prioridadeProcessual ? 'warning' : 'neutral'
+              }
               toneOverride="soft"
             >
               {expediente.prioridadeProcessual ? 'Sim' : 'Não'}
             </SemanticBadge>
-          </DetailSheetMetaItem>
-          <DetailSheetMetaItem label="Segredo de Justiça">
+          </MetaItem>
+          <MetaItem label="Segredo de Justiça">
             <SemanticBadge
               category="status"
               value={expediente.segredoJustica ? 'SEGREDO' : 'PUBLICO'}
-              variantOverride={expediente.segredoJustica ? 'destructive' : 'neutral'}
+              variantOverride={
+                expediente.segredoJustica ? 'destructive' : 'neutral'
+              }
               toneOverride="soft"
             >
               {expediente.segredoJustica ? 'Sim' : 'Não'}
             </SemanticBadge>
-          </DetailSheetMetaItem>
-          <DetailSheetMetaItem label="Juízo Digital">
+          </MetaItem>
+          <MetaItem label="Juízo Digital">
             <SemanticBadge
               category="status"
               value={expediente.juizoDigital ? 'DIGITAL' : 'FISICO'}
@@ -227,12 +329,12 @@ export function ExpedienteVisualizarDialog({
             >
               {expediente.juizoDigital ? 'Sim' : 'Não'}
             </SemanticBadge>
-          </DetailSheetMetaItem>
-        </DetailSheetMetaGrid>
+          </MetaItem>
+        </MetaGrid>
 
         {/* Partes Envolvidas */}
-        <DetailSheetSection icon={<Users className="h-4 w-4" />} title="Partes Envolvidas">
-          <DetailSheetInfoRow label="Parte Autora">
+        <Section icon={<Users className="h-4 w-4" />} title="Partes Envolvidas">
+          <InfoRow label="Parte Autora">
             <span className="text-right">
               {partes.autora || '-'}
               {(expediente.qtdeParteAutora ?? 0) > 1 && (
@@ -241,8 +343,8 @@ export function ExpedienteVisualizarDialog({
                 </span>
               )}
             </span>
-          </DetailSheetInfoRow>
-          <DetailSheetInfoRow label="Parte Ré">
+          </InfoRow>
+          <InfoRow label="Parte Ré">
             <span className="text-right">
               {partes.re || '-'}
               {expediente.qtdeParteRe && expediente.qtdeParteRe > 1 && (
@@ -251,16 +353,16 @@ export function ExpedienteVisualizarDialog({
                 </span>
               )}
             </span>
-          </DetailSheetInfoRow>
-        </DetailSheetSection>
+          </InfoRow>
+        </Section>
 
         {/* Órgão Julgador */}
-        <DetailSheetSection icon={<Building2 className="h-4 w-4" />} title="Órgão Julgador">
-          <DetailSheetInfoRow label="Descrição">
+        <Section icon={<Building2 className="h-4 w-4" />} title="Órgão Julgador">
+          <InfoRow label="Descrição">
             {expediente.descricaoOrgaoJulgador || '-'}
-          </DetailSheetInfoRow>
+          </InfoRow>
           {expediente.siglaOrgaoJulgador && (
-            <DetailSheetInfoRow label="Sigla">
+            <InfoRow label="Sigla">
               <SemanticBadge
                 category="status"
                 value={expediente.siglaOrgaoJulgador}
@@ -269,97 +371,104 @@ export function ExpedienteVisualizarDialog({
               >
                 {expediente.siglaOrgaoJulgador}
               </SemanticBadge>
-            </DetailSheetInfoRow>
+            </InfoRow>
           )}
-        </DetailSheetSection>
+        </Section>
 
         {/* Datas e Prazos */}
-        <DetailSheetSection icon={<Calendar className="h-4 w-4" />} title="Datas e Prazos">
-          <DetailSheetInfoRow label="Data de Autuação">
+        <Section icon={<Calendar className="h-4 w-4" />} title="Datas e Prazos">
+          <InfoRow label="Data de Autuação">
             {formatarData(expediente.dataAutuacao)}
-          </DetailSheetInfoRow>
-          <DetailSheetInfoRow label="Data de Ciência">
+          </InfoRow>
+          <InfoRow label="Data de Ciência">
             {formatarData(expediente.dataCienciaParte)}
-          </DetailSheetInfoRow>
-          <DetailSheetInfoRow label="Prazo Legal">
-            <span className={expediente.prazoVencido ? 'text-destructive font-semibold' : ''}>
+          </InfoRow>
+          <InfoRow label="Prazo Legal">
+            <span
+              className={
+                expediente.prazoVencido ? 'text-destructive font-semibold' : ''
+              }
+            >
               {formatarData(expediente.dataPrazoLegalParte)}
             </span>
-          </DetailSheetInfoRow>
-          <DetailSheetInfoRow label="Criação do Expediente">
+          </InfoRow>
+          <InfoRow label="Criação do Expediente">
             {formatarData(expediente.dataCriacaoExpediente)}
-          </DetailSheetInfoRow>
+          </InfoRow>
           {expediente.dataArquivamento && (
-            <DetailSheetInfoRow label="Data de Arquivamento">
+            <InfoRow label="Data de Arquivamento">
               {formatarData(expediente.dataArquivamento)}
-            </DetailSheetInfoRow>
+            </InfoRow>
           )}
           {expediente.baixadoEm && (
-            <DetailSheetInfoRow label="Data de Baixa">
+            <InfoRow label="Data de Baixa">
               {formatarDataHora(expediente.baixadoEm)}
-            </DetailSheetInfoRow>
+            </InfoRow>
           )}
-        </DetailSheetSection>
+        </Section>
 
         {/* Tipo e Descrição */}
         {(tipoExpediente || expediente.descricaoArquivos) && (
-          <DetailSheetSection icon={<FileText className="h-4 w-4" />} title="Tipo e Descrição">
+          <Section icon={<FileText className="h-4 w-4" />} title="Tipo e Descrição">
             {tipoExpediente && (
-              <DetailSheetInfoRow label="Tipo de Expediente">
+              <InfoRow label="Tipo de Expediente">
                 <SemanticBadge category="expediente_tipo" value={tipoExpediente.id}>
                   {tipoExpediente.tipoExpediente}
                 </SemanticBadge>
-              </DetailSheetInfoRow>
+              </InfoRow>
             )}
             {expediente.descricaoArquivos && (
               <>
-                {tipoExpediente && <DetailSheetSeparator />}
-                <DetailSheetInfoRow label="Descrição / Arquivos">
+                {tipoExpediente && <Separator />}
+                <InfoRow label="Descrição / Arquivos">
                   <span className="text-right">{expediente.descricaoArquivos}</span>
-                </DetailSheetInfoRow>
+                </InfoRow>
               </>
             )}
-          </DetailSheetSection>
+          </Section>
         )}
 
         {/* Informações de Baixa */}
         {expediente.baixadoEm && (
-          <DetailSheetSection icon={<AlertCircle className="h-4 w-4" />} title="Informações de Baixa">
+          <Section
+            icon={<AlertCircle className="h-4 w-4" />}
+            title="Informações de Baixa"
+          >
             {expediente.protocoloId && (
-              <DetailSheetInfoRow label="Protocolo ID">
+              <InfoRow label="Protocolo ID">
                 <span className="font-mono text-xs">{expediente.protocoloId}</span>
-              </DetailSheetInfoRow>
+              </InfoRow>
             )}
             {expediente.justificativaBaixa && (
-              <DetailSheetInfoRow label="Justificativa">
+              <InfoRow label="Justificativa">
                 <span className="text-right">{expediente.justificativaBaixa}</span>
-              </DetailSheetInfoRow>
+              </InfoRow>
             )}
-          </DetailSheetSection>
+          </Section>
         )}
 
         {/* Responsável */}
         {responsavel && (
-          <DetailSheetSection icon={<Users className="h-4 w-4" />} title="Responsável">
-            <DetailSheetInfoRow label="Usuário Responsável">
+          <Section icon={<Users className="h-4 w-4" />} title="Responsável">
+            <InfoRow label="Usuário Responsável">
               {responsavel.nomeExibicao || responsavel.nomeCompleto}
-            </DetailSheetInfoRow>
-          </DetailSheetSection>
+            </InfoRow>
+          </Section>
         )}
 
         {/* Informações Técnicas */}
-        <DetailSheetSection icon={<FileText className="h-4 w-4" />} title="Informações Técnicas">
-          <DetailSheetInfoRow label="ID PJE">
+        <Section icon={<FileText className="h-4 w-4" />} title="Informações Técnicas">
+          <InfoRow label="ID PJE">
             <span className="font-mono text-xs">{expediente.idPje || '-'}</span>
-          </DetailSheetInfoRow>
+          </InfoRow>
           {expediente.idDocumento && (
-            <DetailSheetInfoRow label="ID Documento">
+            <InfoRow label="ID Documento">
               <span className="font-mono text-xs">{expediente.idDocumento}</span>
-            </DetailSheetInfoRow>
+            </InfoRow>
           )}
-        </DetailSheetSection>
+        </Section>
 
-        <DetailSheetAudit
+        <Audit
           createdAt={expediente.createdAt}
           updatedAt={expediente.updatedAt}
         />

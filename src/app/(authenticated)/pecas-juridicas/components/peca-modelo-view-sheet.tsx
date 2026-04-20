@@ -1,8 +1,11 @@
 'use client';
 
 /**
- * Sheet de Visualização de Modelo de Peça
- * Mostra detalhes do modelo em modo somente leitura
+ * PecaModeloViewSheet — Dialog de visualização de modelo de peça jurídica.
+ * ============================================================================
+ * Migrado de Sheet para Dialog (política do projeto: "Sem Sheet, usar Dialog").
+ * Nome mantido por compatibilidade com consumidores.
+ * ============================================================================
  */
 
 import * as React from 'react';
@@ -11,18 +14,19 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Heading, Text } from '@/components/ui/typography';
+import { GlassPanel } from '@/components/shared/glass-panel';
 
 import { actionBuscarPecaModelo } from '../actions';
 import { TIPO_PECA_LABELS, type PecaModeloListItem } from '../domain';
@@ -51,7 +55,6 @@ export function PecaModeloViewSheet({
   const [loading, setLoading] = React.useState(false);
   const [conteudoPreview, setConteudoPreview] = React.useState<string>('');
 
-  // Extrair texto do conteúdo Plate.js
   const extractTextFromContent = React.useCallback((content: unknown[]): string => {
     if (!content) return '';
 
@@ -74,7 +77,6 @@ export function PecaModeloViewSheet({
     return content.map((node) => extractText(node)).join('\n\n');
   }, []);
 
-  // Carregar conteúdo completo quando abrir
   React.useEffect(() => {
     if (open && modelo) {
       setLoading(true);
@@ -94,17 +96,19 @@ export function PecaModeloViewSheet({
   if (!modelo) return null;
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-xl">
-        <SheetHeader className="px-6 pt-6 pb-4 border-b">
-          <SheetTitle className="flex items-center gap-2">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="glass-dialog max-w-2xl max-h-[90vh] p-0 flex flex-col">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b border-border/30 shrink-0">
+          <DialogTitle className="flex items-center gap-2">
             <Eye className="h-5 w-5" />
             Visualizar Modelo
-          </SheetTitle>
-          <SheetDescription>Detalhes do modelo de peça jurídica</SheetDescription>
-        </SheetHeader>
+          </DialogTitle>
+          <DialogDescription>
+            Detalhes do modelo de peça jurídica
+          </DialogDescription>
+        </DialogHeader>
 
-        <ScrollArea className="h-[calc(100vh-180px)]">
+        <ScrollArea className="flex-1">
           <div className="space-y-6 p-6">
             {/* Cabeçalho do Modelo */}
             <div className="space-y-3">
@@ -113,7 +117,9 @@ export function PecaModeloViewSheet({
                 <div className="space-y-1 flex-1 min-w-0">
                   <Heading level="card">{modelo.titulo}</Heading>
                   {modelo.descricao && (
-                    <p className="text-sm text-muted-foreground">{modelo.descricao}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {modelo.descricao}
+                    </p>
                   )}
                 </div>
               </div>
@@ -123,7 +129,9 @@ export function PecaModeloViewSheet({
                   <Tag className="h-3 w-3 mr-1" />
                   {TIPO_PECA_LABELS[modelo.tipoPeca] || modelo.tipoPeca}
                 </AppBadge>
-                <AppBadge variant={modelo.visibilidade === 'publico' ? 'default' : 'outline'}>
+                <AppBadge
+                  variant={modelo.visibilidade === 'publico' ? 'default' : 'outline'}
+                >
                   {modelo.visibilidade === 'publico' ? 'Público' : 'Privado'}
                 </AppBadge>
                 <AppBadge variant="outline">
@@ -160,11 +168,11 @@ export function PecaModeloViewSheet({
                   <Skeleton className="h-4 w-3/4" />
                 </div>
               ) : conteudoPreview ? (
-                <div className="rounded-md border bg-muted/30 p-4">
+                <GlassPanel depth={1} className="p-4 bg-muted/30">
                   <pre className="whitespace-pre-wrap font-mono text-sm text-foreground/80 max-h-80 overflow-auto">
                     {conteudoPreview}
                   </pre>
-                </div>
+                </GlassPanel>
               ) : (
                 <p className="text-sm text-muted-foreground italic">
                   Nenhum conteúdo definido
@@ -187,7 +195,7 @@ export function PecaModeloViewSheet({
             )}
           </div>
         </ScrollArea>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -35,7 +35,6 @@ Qualquer refatoração requer obrigatoriamente a atualização dos componentes p
 | Paginação da tabela | `DataPagination` | `@/components/shared/data-shell` |
 | Header de coluna ordenável | `DataTableColumnHeader` | `@/components/shared/data-shell` |
 | Modal de formulário | `DialogFormShell` | `@/components/shared/dialog-form-shell` |
-| Painel lateral de detalhes | `DetailSheet` | `@/components/shared/detail-sheet` |
 | Estado vazio | `EmptyState` | `@/components/shared/empty-state` |
 
 ---
@@ -650,114 +649,17 @@ export function EntidadeFormDialog({
 
 ---
 
-## PADRÃO C: Painel de Detalhes (DetailSheet)
+## PADRÃO C: Painel de Detalhes
 
-Sistema de compound components para painéis laterais de detalhes. Fornece layout,
-estados (loading/error/empty) e sub-componentes para composição livre.
+Este projeto **não adota `Sheet`** (painel lateral). Detail panels devem usar
+`DialogFormShell` (glass-dialog centralizado), mesmo padrão dos formulários.
 
-### Componentes Disponíveis
+Para blocos visuais internos (Section, InfoRow, MetaGrid, MetaItem, Audit), use
+helpers locais no próprio arquivo — ver exemplos em:
+- `src/app/(authenticated)/expedientes/components/expediente-visualizar-dialog.tsx`
+- `src/app/(authenticated)/pericias/components/pericia-detalhes-dialog.tsx`
 
-| Componente | Uso |
-|------------|-----|
-| `DetailSheet` | Container raiz (gerencia Sheet + estados) |
-| `DetailSheetHeader` | Header com border-b |
-| `DetailSheetTitle` | Título com suporte a `badge` lateral |
-| `DetailSheetDescription` | Metadados abaixo do título |
-| `DetailSheetActions` | Botões de ação no header |
-| `DetailSheetContent` | Área scrollável (flex-1 overflow-y-auto) |
-| `DetailSheetSection` | Card com ícone + título + `action` opcional |
-| `DetailSheetInfoRow` | Par label:valor |
-| `DetailSheetMetaGrid` | Grid 2-3 colunas para metadados |
-| `DetailSheetMetaItem` | Item do MetaGrid (label uppercase + valor) |
-| `DetailSheetSeparator` | Separador entre conteúdos de uma Section |
-| `DetailSheetAudit` | Timestamps criação/atualização |
-| `DetailSheetFooter` | Footer com border-t |
-| `DetailSheetEmpty` | Estado vazio com ícone + título + descrição |
-
-### Exemplo Completo
-
-```tsx
-import {
-  DetailSheet,
-  DetailSheetHeader,
-  DetailSheetTitle,
-  DetailSheetDescription,
-  DetailSheetContent,
-  DetailSheetSection,
-  DetailSheetInfoRow,
-  DetailSheetSeparator,
-  DetailSheetMetaGrid,
-  DetailSheetMetaItem,
-  DetailSheetAudit,
-  DetailSheetFooter,
-  DetailSheetEmpty,
-} from '@/components/shared/detail-sheet';
-import { Button } from '@/components/ui/button';
-import { CalendarDays, ClipboardList, User } from 'lucide-react';
-
-export function EntidadeDetailSheet({ open, onOpenChange, entidade, isLoading, error }) {
-  // Sem dados e sem loading/error → estado vazio
-  if (!entidade && !isLoading && !error) {
-    return (
-      <DetailSheet open={open} onOpenChange={onOpenChange}>
-        <DetailSheetHeader>
-          <DetailSheetTitle>Entidade</DetailSheetTitle>
-        </DetailSheetHeader>
-        <DetailSheetEmpty title="Não encontrada" description="Detalhes indisponíveis." />
-        <DetailSheetFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Fechar</Button>
-        </DetailSheetFooter>
-      </DetailSheet>
-    );
-  }
-
-  return (
-    <DetailSheet
-      open={open}
-      onOpenChange={onOpenChange}
-      loading={isLoading}    // Exibe skeleton automaticamente
-      error={error}          // Exibe estado de erro automaticamente
-    >
-      <DetailSheetHeader>
-        <DetailSheetTitle badge={<Badge>Ativo</Badge>}>
-          {entidade.nome}
-        </DetailSheetTitle>
-        <DetailSheetDescription>
-          <CalendarDays className="h-4 w-4" />
-          <span>01/04/2026</span>
-        </DetailSheetDescription>
-      </DetailSheetHeader>
-
-      <DetailSheetContent>
-        {/* Seção com card */}
-        <DetailSheetSection icon={<ClipboardList className="h-4 w-4" />} title="Dados">
-          <DetailSheetInfoRow label="Nome">{entidade.nome}</DetailSheetInfoRow>
-          <DetailSheetInfoRow label="CPF">{entidade.cpf}</DetailSheetInfoRow>
-          <DetailSheetSeparator />
-          <DetailSheetInfoRow label="E-mail">{entidade.email}</DetailSheetInfoRow>
-        </DetailSheetSection>
-
-        {/* Grid de metadados */}
-        <DetailSheetMetaGrid>
-          <DetailSheetMetaItem label="Status">
-            <Badge>Ativo</Badge>
-          </DetailSheetMetaItem>
-          <DetailSheetMetaItem label="Prioridade">Alta</DetailSheetMetaItem>
-          <DetailSheetMetaItem label="Prazo">01/05/2026</DetailSheetMetaItem>
-        </DetailSheetMetaGrid>
-
-        {/* Timestamps */}
-        <DetailSheetAudit createdAt={entidade.createdAt} updatedAt={entidade.updatedAt} />
-      </DetailSheetContent>
-
-      <DetailSheetFooter>
-        <Button variant="outline" onClick={() => onOpenChange(false)}>Fechar</Button>
-        <Button>Editar</Button>
-      </DetailSheetFooter>
-    </DetailSheet>
-  );
-}
-```
+Se o padrão se repetir em ≥3 arquivos, promover a um shared dedicado (ainda não foi necessário).
 
 ---
 
@@ -814,63 +716,6 @@ export function EntidadeDetailSheet({ open, onOpenChange, entidade, isLoading, e
 | `footer` | `ReactNode?` | Botões de ação |
 | `multiStep` | `{ current, total, stepTitle? }` | Config multi-step |
 | `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | Largura máxima |
-
-### DetailSheet (Root)
-
-| Prop | Tipo | Descrição |
-|------|------|-----------|
-| `open` | `boolean` | Controle de abertura |
-| `onOpenChange` | `(open) => void` | Callback de mudança |
-| `children` | `ReactNode` | Compound components internos |
-| `loading` | `boolean?` | Exibe skeleton automaticamente |
-| `error` | `string?` | Exibe estado de erro automaticamente |
-| `side` | `'left' \| 'right'` | Lado de abertura (default: right) |
-| `className` | `string?` | Width customizado (default: `w-full sm:w-135 md:w-155`) |
-
-### DetailSheetTitle
-
-| Prop | Tipo | Descrição |
-|------|------|-----------|
-| `children` | `ReactNode` | Texto do título |
-| `badge` | `ReactNode?` | Badge de status ao lado direito |
-
-### DetailSheetSection
-
-| Prop | Tipo | Descrição |
-|------|------|-----------|
-| `icon` | `ReactNode?` | Ícone Lucide (h-4 w-4) |
-| `title` | `string` | Título da seção |
-| `children` | `ReactNode` | Conteúdo da seção |
-| `action` | `ReactNode?` | Ação no canto superior direito |
-
-### DetailSheetInfoRow
-
-| Prop | Tipo | Descrição |
-|------|------|-----------|
-| `label` | `string` | Label do campo |
-| `children` | `ReactNode` | Valor do campo |
-
-### DetailSheetMetaItem
-
-| Prop | Tipo | Descrição |
-|------|------|-----------|
-| `label` | `string` | Label uppercase |
-| `children` | `ReactNode` | Valor com ícone opcional |
-
-### DetailSheetAudit
-
-| Prop | Tipo | Descrição |
-|------|------|-----------|
-| `createdAt` | `string` | Data de criação (ISO) |
-| `updatedAt` | `string?` | Data de atualização (ISO) |
-
-### DetailSheetEmpty
-
-| Prop | Tipo | Descrição |
-|------|------|-----------|
-| `title` | `string?` | Título (default: "Não encontrado") |
-| `description` | `string?` | Descrição |
-| `icon` | `ReactNode?` | Ícone customizado |
 
 ---
 

@@ -132,6 +132,8 @@ export interface FinalizePayload {
     cpf?: string | null;
     cnpj?: string | null;
     email?: string | null;
+    celular?: string | null;
+    telefone?: string | null;
     endereco?: string;
   };
   /** Partes contrárias para contratos */

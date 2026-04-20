@@ -101,10 +101,10 @@ function GlassRow({
         }
       }}
       className={cn(
-        'w-full text-left rounded-2xl border border-white/6 p-4 cursor-pointer',
+        'w-full text-left rounded-2xl border border-border/40 p-4 cursor-pointer bg-card',
         'transition-all duration-180 ease-out',
-        'hover:bg-white/5.5 hover:border-white/12 hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
-        isAlt ? 'bg-white/[0.018]' : 'bg-white/[0.028]',
+        'hover:bg-accent/40 hover:border-border/60 hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
+        isAlt && 'bg-muted/20',
       )}
     >
       <div className="grid grid-cols-[auto_1fr_auto_90px_120px] gap-4 items-center">
@@ -236,9 +236,9 @@ function GlassCard({
         }
       }}
       className={cn(
-        'relative flex flex-col gap-3 rounded-2xl border border-white/6 bg-white/[0.028] p-4 cursor-pointer',
+        'relative flex flex-col gap-3 rounded-2xl border border-border/40 bg-card p-4 cursor-pointer',
         'transition-all duration-180 ease-out',
-        'hover:bg-white/5.5 hover:border-white/12 hover:-translate-y-px hover:shadow-lg',
+        'hover:bg-accent/40 hover:border-border/60 hover:-translate-y-px hover:shadow-lg',
       )}
     >
       {/* Top row: icon + status dot + menu */}
@@ -281,7 +281,7 @@ function GlassCard({
       )}
 
       {/* Footer: captura + status */}
-      <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/6">
+      <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
         <div className="flex items-center gap-1.5">
           {formulario.foto_necessaria && (
             <span className="inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded px-1.5 py-0.5 text-[10px] font-semibold">
@@ -458,7 +458,7 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: 5 }, (_, i) => (
-        <div key={i} className="h-20 rounded-2xl border border-white/6 bg-white/[0.028] animate-pulse" />
+        <div key={i} className="h-20 rounded-2xl border border-border/40 bg-card animate-pulse" />
       ))}
     </div>
   );
@@ -468,7 +468,7 @@ function CardsSkeleton() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
       {Array.from({ length: 6 }, (_, i) => (
-        <div key={i} className="h-44 rounded-2xl border border-white/6 bg-white/[0.028] animate-pulse" />
+        <div key={i} className="h-44 rounded-2xl border border-border/40 bg-card animate-pulse" />
       ))}
     </div>
   );

@@ -39,11 +39,10 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { AlertCircle, FileText, Info } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { GlassPanel } from "@/components/shared/glass-panel";
 import { Text } from "@/components/ui/typography";
 import { apiFetch } from "@/lib/http/api-fetch";
+import { cn } from "@/lib/utils";
 import type { PreviewResult } from '@/shared/assinatura-digital/types/api';
 import type { SalvarAcaoRequest } from '@/shared/assinatura-digital/types/api';
 import { API_ROUTES } from '@/shared/assinatura-digital/constants';
@@ -487,30 +486,52 @@ export default function VisualizacaoPdfStep() {
 
       {pdfUrl && !isLoading && (
         <div className="space-y-5">
-          {/* Multi-template selector */}
+          {/* Navegação entre documentos do envio (quando há múltiplos) */}
           {templateMetadatas.length > 1 && (
-            <GlassPanel depth={2} className="space-y-3 p-4 sm:p-5">
-              <div className="flex items-center gap-2">
-                <FileText className="h-3.5 w-3.5 text-primary" />
-                <Text variant="overline" className="text-primary">
-                  Escolha o modelo do documento
+            <div className="flex flex-col gap-2">
+              <div className="flex items-baseline justify-between">
+                <Text
+                  variant="overline"
+                  className="block text-[13px] tracking-widest text-foreground/80"
+                >
+                  Documentos
+                </Text>
+                <Text variant="micro-caption" className="text-muted-foreground">
+                  {Math.max(
+                    1,
+                    templateMetadatas.findIndex((m) => m.id === templateIdSelecionado) + 1,
+                  )}{' '}
+                  de {templateMetadatas.length}
                 </Text>
               </div>
-              <RadioGroup
-                value={templateIdSelecionado || ''}
-                onValueChange={handleTemplateChange}
-                className="space-y-2"
+              <div
+                role="tablist"
+                aria-label="Documentos desta assinatura"
+                className="scrollbar-glass -mx-1 flex gap-2 overflow-x-auto px-1 pb-1"
               >
-                {templateMetadatas.map((meta) => (
-                  <div key={meta.id} className="flex items-center space-x-2">
-                    <RadioGroupItem value={meta.id} id={meta.id} />
-                    <Label htmlFor={meta.id} className="font-normal cursor-pointer">
+                {templateMetadatas.map((meta) => {
+                  const active = meta.id === templateIdSelecionado
+                  return (
+                    <button
+                      key={meta.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={active}
+                      onClick={() => handleTemplateChange(meta.id)}
+                      className={cn(
+                        'inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-[13px] font-medium transition-all cursor-pointer',
+                        active
+                          ? 'border-primary bg-primary/10 text-primary shadow-[0_0_0_1px_color-mix(in_oklch,var(--primary)_30%,transparent)]'
+                          : 'border-outline-variant/60 bg-surface-container-lowest/40 text-muted-foreground hover:border-outline-variant hover:bg-surface-container-lowest/70 hover:text-foreground',
+                      )}
+                    >
+                      <FileText className="h-3.5 w-3.5" strokeWidth={2} />
                       {meta.nome}
-                    </Label>
-                  </div>
-                ))}
-              </RadioGroup>
-            </GlassPanel>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
           )}
 
           {/* Info banner glass com tint info */}

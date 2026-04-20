@@ -41,7 +41,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
@@ -760,14 +765,14 @@ export function FileManager() {
                 onSuccess={loadItems}
             />
 
-            {/* Mobile Sheet */}
+            {/* Mobile Details Dialog */}
             {selectedItem && isMobile && (
-                <Sheet open={showMobileDetails} onOpenChange={setShowMobileDetails}>
-                    <SheetContent>
-                        <SheetHeader>
-                            <SheetTitle>Detalhes</SheetTitle>
-                        </SheetHeader>
-                        <div className="mt-6 space-y-6">
+                <Dialog open={showMobileDetails} onOpenChange={setShowMobileDetails}>
+                    <DialogContent className="glass-dialog max-w-md max-h-[90vh] flex flex-col">
+                        <DialogHeader>
+                            <DialogTitle>Detalhes</DialogTitle>
+                        </DialogHeader>
+                        <div className="mt-6 space-y-6 overflow-y-auto">
                             {/* Área do ícone e nome */}
                             <div className="flex flex-col items-center gap-4 rounded-xl border bg-muted/30 p-6">
                                 {getPreviewIcon(selectedItem)}
@@ -817,8 +822,8 @@ export function FileManager() {
                                 </Button>
                             )}
                         </div>
-                    </SheetContent>
-                </Sheet>
+                    </DialogContent>
+                </Dialog>
             )}
         </div>
     );

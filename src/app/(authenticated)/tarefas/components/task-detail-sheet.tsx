@@ -16,11 +16,11 @@ import {
 } from "lucide-react";
 
 import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-} from "@/components/ui/sheet";
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
 import { Separator } from "@/components/ui/separator";
@@ -266,11 +266,11 @@ export function TaskDetailSheet() {
     const labelInfo = labels.find((l) => l.value === tarefa?.label);
 
     return (
-        <Sheet open={isTarefaSheetOpen} onOpenChange={handleClose}>
-            <SheetContent className="w-full p-0 sm:max-w-xl">
+        <Dialog open={isTarefaSheetOpen} onOpenChange={handleClose}>
+            <DialogContent className="glass-dialog max-w-2xl max-h-[90vh] w-full p-0 flex flex-col">
                 {tarefa && (
-                    <div className="flex h-full flex-col">
-                        <SheetHeader className="border-b p-6">
+                    <div className="flex flex-1 min-h-0 flex-col">
+                        <DialogHeader className="border-b border-border/30 p-6 shrink-0">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <Badge variant="outline" className="capitalize">
@@ -309,10 +309,10 @@ export function TaskDetailSheet() {
                                     </DropdownMenu>
                                 </div>
                             </div>
-                            <SheetTitle className="mt-4 text-2xl font-bold leading-tight">
+                            <DialogTitle className="mt-4 text-2xl font-bold leading-tight">
                                 {tarefa.title}
-                            </SheetTitle>
-                        </SheetHeader>
+                            </DialogTitle>
+                        </DialogHeader>
 
                         <ScrollArea className="flex-1">
                             <div className="p-6">
@@ -529,7 +529,7 @@ export function TaskDetailSheet() {
                         </ScrollArea>
                     </div>
                 )}
-            </SheetContent>
-        </Sheet>
+            </DialogContent>
+        </Dialog>
     );
 }

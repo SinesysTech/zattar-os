@@ -128,7 +128,7 @@ export function AudienciasSemanaView({
     <div className="space-y-4">
       {/* Week Navigator */}
       <div className="flex items-center gap-2">
-        <button onClick={handlePrevWeek} className="p-1.5 rounded-lg hover:bg-foreground/[0.04] transition-colors text-muted-foreground/55 cursor-pointer">
+        <button onClick={handlePrevWeek} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer">
           <ChevronLeft className="size-4" />
         </button>
         <button
@@ -140,7 +140,7 @@ export function AudienciasSemanaView({
         >
           Hoje
         </button>
-        <button onClick={handleNextWeek} className="p-1.5 rounded-lg hover:bg-foreground/[0.04] transition-colors text-muted-foreground/55 cursor-pointer">
+        <button onClick={handleNextWeek} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer">
           <ChevronRight className="size-4" />
         </button>
         <span className="text-sm font-medium capitalize ml-1">{weekLabel}</span>
@@ -253,7 +253,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
 
       {/* 2. Tipo + Modalidade (mesma linha) */}
       <div className="flex items-center gap-1.5 mt-1.5 min-w-0">
-        <p className="text-xs font-medium text-foreground break-words leading-snug truncate">
+        <p className="text-xs font-medium text-foreground wrap-break-word leading-snug truncate">
           {audiencia.tipoDescricao || 'Audiência'}
         </p>
         <div className="flex items-center gap-1 shrink-0">
@@ -269,7 +269,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
 
       {/* 3. Partes */}
       {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-        <p className="text-[10px] text-muted-foreground/55 mt-1 break-words leading-snug">
+        <p className="text-[10px] text-muted-foreground/55 mt-1 wrap-break-word leading-snug">
           {audiencia.poloAtivoNome || '—'} <span className="text-muted-foreground/35">vs</span> {audiencia.poloPassivoNome || '—'}
         </p>
       )}

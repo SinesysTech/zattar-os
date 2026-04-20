@@ -33,11 +33,14 @@ import {
   BarChart2,
   FileCheck2,
   Clock,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
+import { Button } from '@/components/ui/button';
 import {
   Tooltip,
   TooltipContent,
@@ -55,6 +58,7 @@ import { SituacaoPericiaCodigo } from '../domain';
 export interface PericiasYearHeatmapProps {
   pericias: Pericia[];
   year: number;
+  onYearChange: (year: number) => void;
   onDayClick: (date: Date, pericias: Pericia[]) => void;
 }
 
@@ -298,6 +302,7 @@ function StatCard({
 export function PericiasYearHeatmap({
   pericias,
   year,
+  onYearChange,
   onDayClick,
 }: PericiasYearHeatmapProps) {
   const dayMap = React.useMemo(
@@ -327,6 +332,43 @@ export function PericiasYearHeatmap({
         <div className="flex gap-5 flex-wrap xl:flex-nowrap">
           {/* Heatmap Panel */}
           <GlassPanel depth={1} className="p-6 flex-1 min-w-0">
+            {/* Year Navigator (padrão audiências/expedientes — inline no painel) */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2 flex-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 border border-border/50 bg-accent/30 backdrop-blur-sm hover:bg-accent/50"
+                  onClick={() => onYearChange(year - 1)}
+                  aria-label="Ano anterior"
+                >
+                  <ChevronLeft className="w-4 h-4 text-foreground/60" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 border border-border/50 bg-accent/30 backdrop-blur-sm hover:bg-accent/50"
+                  onClick={() => onYearChange(year + 1)}
+                  aria-label="Próximo ano"
+                >
+                  <ChevronRight className="w-4 h-4 text-foreground/60" />
+                </Button>
+                <Button
+                  size="sm"
+                  className="ml-1 rounded-full px-4 text-xs font-semibold"
+                  onClick={() => onYearChange(new Date().getFullYear())}
+                >
+                  Hoje
+                </Button>
+              </div>
+
+              <span className="text-base font-bold tracking-tight text-center tabular-nums">
+                {year}
+              </span>
+
+              <div className="flex-1" />
+            </div>
+
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
               {Array.from({ length: 12 }, (_, i) => (
                 <MonthGrid

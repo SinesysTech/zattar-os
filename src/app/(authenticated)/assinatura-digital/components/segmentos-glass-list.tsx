@@ -210,10 +210,10 @@ function GlassRow({
         }
       }}
       className={cn(
-        'w-full text-left rounded-2xl border border-white/6 p-4 cursor-pointer',
+        'w-full text-left rounded-2xl border border-border/40 p-4 cursor-pointer bg-card',
         'transition-all duration-180 ease-out',
-        'hover:bg-white/5.5 hover:border-white/12 hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
-        isAlt ? 'bg-white/[0.018]' : 'bg-white/[0.028]',
+        'hover:bg-accent/40 hover:border-border/60 hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
+        isAlt && 'bg-muted/20',
       )}
     >
       <div className="grid grid-cols-[auto_1fr_auto_90px_120px] gap-4 items-center">
@@ -322,9 +322,9 @@ function GlassCard({
         }
       }}
       className={cn(
-        'relative flex flex-col gap-3 rounded-2xl border border-white/6 bg-white/[0.028] p-4 cursor-pointer',
+        'relative flex flex-col gap-3 rounded-2xl border border-border/40 bg-card p-4 cursor-pointer',
         'transition-all duration-180 ease-out',
-        'hover:bg-white/5.5 hover:border-white/12 hover:-translate-y-px hover:shadow-lg',
+        'hover:bg-accent/40 hover:border-border/60 hover:-translate-y-px hover:shadow-lg',
       )}
     >
       <div className="flex items-start justify-between gap-2">
@@ -362,7 +362,7 @@ function GlassCard({
         <p className="text-xs text-muted-foreground/40 italic flex-1">Sem descrição</p>
       )}
 
-      <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/6">
+      <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
         <span className="text-[10px] text-muted-foreground">
           <span className="font-display text-sm font-bold tabular-nums text-foreground/80">
             {segmento.formularios_count ?? 0}
@@ -394,7 +394,7 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: 5 }, (_, i) => (
-        <div key={i} className="h-20 rounded-2xl border border-white/6 bg-white/[0.028] animate-pulse" />
+        <div key={i} className="h-20 rounded-2xl border border-border/40 bg-card animate-pulse" />
       ))}
     </div>
   );
@@ -404,7 +404,7 @@ function CardsSkeleton() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
       {Array.from({ length: 6 }, (_, i) => (
-        <div key={i} className="h-44 rounded-2xl border border-white/6 bg-white/[0.028] animate-pulse" />
+        <div key={i} className="h-44 rounded-2xl border border-border/40 bg-card animate-pulse" />
       ))}
     </div>
   );

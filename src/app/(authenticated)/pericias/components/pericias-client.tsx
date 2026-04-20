@@ -42,11 +42,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
-import {
-  useWeekNavigator,
-  WeekNavigator,
-  YearFilterPopover,
-} from '@/components/shared';
+import { useWeekNavigator } from '@/components/shared';
 import { cn } from '@/lib/utils';
 
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
@@ -67,9 +63,9 @@ import { PericiasPulseStrip } from './pericias-pulse-strip';
 import { PericiasPipelineStepper } from './pericias-pipeline-stepper';
 import { PericiasMissaoContent } from './pericias-missao-content';
 import { PericiasListWrapper } from './pericias-list-wrapper';
-import { PericiasTableWrapper } from './pericias-table-wrapper';
 import { PericiasMonthWrapper } from './pericias-month-wrapper';
 import { PericiasYearWrapper } from './pericias-year-wrapper';
+import { PericiasSemanaWrapper } from './pericias-semana-wrapper';
 import { PericiaCriarDialog } from './pericia-criar-dialog';
 import {
   PericiasFilterBar,
@@ -336,8 +332,6 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
 
   // ── Render ────────────────────────────────────────────────────────────
   const showDateRangePicker = viewMode === 'lista';
-  const showYearPicker = viewMode === 'ano';
-  const showWeekNav = viewMode === 'semana';
   const hideFilterBarAdvanced = viewMode === 'semana';
 
   return (
@@ -429,14 +423,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
             value={dateRange}
             onChange={setDateRange}
             placeholder="Prazo entrega"
-            className="h-9 w-52 bg-card"
-          />
-        )}
-
-        {showYearPicker && (
-          <YearFilterPopover
-            selectedYear={selectedYear}
-            onYearChange={setSelectedYear}
+            className="h-9 min-w-52 rounded-lg border-border/15 bg-card text-xs"
           />
         )}
 
@@ -491,19 +478,6 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
         </div>
       </div>
 
-      {/* ── Week Navigator (só view semana) ─────────────────── */}
-      {showWeekNav && (
-        <WeekNavigator
-          weekDays={weekNav.weekDays}
-          selectedDate={weekNav.selectedDate}
-          onDateSelect={weekNav.setSelectedDate}
-          onPreviousWeek={weekNav.goToPreviousWeek}
-          onNextWeek={weekNav.goToNextWeek}
-          onToday={weekNav.goToToday}
-          isCurrentWeek={weekNav.isCurrentWeek}
-        />
-      )}
-
       {/* ── Active Filter Chips ─────────────────────────────── */}
       {activeFilterChips.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
@@ -554,9 +528,10 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
         />
       )}
       {viewMode === 'semana' && (
-        <PericiasTableWrapper
+        <PericiasSemanaWrapper
           {...commonFilterProps}
           weekDate={weekNav.selectedDate}
+          onWeekDateChange={weekNav.setSelectedDate}
         />
       )}
       {viewMode === 'mes' && <PericiasMonthWrapper {...commonFilterProps} />}
@@ -564,6 +539,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
         <PericiasYearWrapper
           {...commonFilterProps}
           selectedYear={selectedYear}
+          onYearChange={setSelectedYear}
         />
       )}
 

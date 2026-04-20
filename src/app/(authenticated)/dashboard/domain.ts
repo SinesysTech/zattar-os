@@ -8,7 +8,7 @@
 
 import { z } from 'zod';
 import type { SemanticTone } from '@/lib/design-system';
-import type { DashboardFinanceiroData } from '@/app/(authenticated)/financeiro/services/dashboard';
+import type { DashboardFinanceiroData } from '@/app/(authenticated)/financeiro';
 
 // ============================================================================
 // Tipos Compartilhados

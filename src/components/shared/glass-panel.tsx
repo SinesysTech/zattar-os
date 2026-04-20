@@ -25,9 +25,9 @@ import { Heading } from '@/components/ui/typography';
 
 // ─── Glass Panel ────────────────────────────────────────────────────────
 
-export interface GlassPanelProps {
+export interface GlassPanelProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   children: React.ReactNode;
-  className?: string;
   /**
    * Nível de profundidade visual:
    * - 1: glass-widget — container padrão, mais transparente (widgets, cards)
@@ -35,7 +35,6 @@ export interface GlassPanelProps {
    * - 3: primary tint — destaque máximo com backdrop-blur (chamadas à ação)
    */
   depth?: 1 | 2 | 3;
-  style?: React.CSSProperties;
 }
 
 const DEPTH_STYLES = {
@@ -48,11 +47,11 @@ export function GlassPanel({
   children,
   className,
   depth = 1,
-  style,
+  ...rest
 }: GlassPanelProps) {
   return (
     <div
-      style={style}
+      {...rest}
       className={cn(
         'rounded-2xl border transition-all duration-300 flex flex-col',
         DEPTH_STYLES[depth],

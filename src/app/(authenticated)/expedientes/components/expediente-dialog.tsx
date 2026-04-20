@@ -21,7 +21,6 @@ import {
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import {
-  Loader2,
   AlertCircle,
   FileText,
   Calendar,
@@ -32,6 +31,7 @@ import {
   FileType,
   CheckCircle2
 } from 'lucide-react';
+import { LoadingSpinner } from '@/components/ui/loading-state';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { Heading } from '@/components/ui/typography';
@@ -340,7 +340,7 @@ export function ExpedienteDialog({
       className="gap-2"
     >
       {isPending ? (
-        <Loader2 className="h-4 w-4 animate-spin" />
+        <LoadingSpinner />
       ) : (
         <CheckCircle2 className="h-4 w-4" />
       )}
@@ -435,7 +435,7 @@ export function ExpedienteDialog({
                   </Label>
                   {loadingTipos ? (
                     <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      <LoadingSpinner />
                       <span className="text-sm text-muted-foreground">Carregando tipos...</span>
                     </div>
                   ) : (
@@ -525,7 +525,7 @@ export function ExpedienteDialog({
                   </Label>
                   {loadingUsuarios ? (
                     <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      <LoadingSpinner />
                       <span className="text-sm text-muted-foreground">Carregando usuários...</span>
                     </div>
                   ) : (
@@ -682,7 +682,7 @@ export function ExpedienteDialog({
                 </Label>
                 {loadingProcessos ? (
                   <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
-                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                    <LoadingSpinner />
                     <span className="text-sm text-muted-foreground">Carregando processos...</span>
                   </div>
                 ) : processos.length === 0 ? (
@@ -753,7 +753,7 @@ export function ExpedienteDialog({
                   </Label>
                   {loadingTipos ? (
                     <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      <LoadingSpinner />
                       <span className="text-sm text-muted-foreground">Carregando tipos...</span>
                     </div>
                   ) : (
@@ -843,7 +843,7 @@ export function ExpedienteDialog({
                   </Label>
                   {loadingUsuarios ? (
                     <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      <LoadingSpinner />
                       <span className="text-sm text-muted-foreground">Carregando usuários...</span>
                     </div>
                   ) : (

@@ -1,15 +1,24 @@
 'use client';
 
+/**
+ * EventDetailDrawer — Dialog de detalhes completos de um evento da timeline.
+ * ============================================================================
+ * Migrado de Sheet para Dialog (política do projeto: "Sem Sheet, usar Dialog").
+ * Exibe metadados, informações de assinatura/sigilo, lista de arquivos e botão
+ * de download do pacote completo.
+ * ============================================================================
+ */
+
 import { useState } from 'react';
 import { Download } from 'lucide-react';
 import { toast } from 'sonner';
 
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
 
@@ -24,18 +33,6 @@ interface EventDetailDrawerProps {
   onOpenChange: (open: boolean) => void;
 }
 
-/**
- * Drawer lateral (Sheet) com detalhes completos de um evento da timeline.
- * Exibe metadados, informações de assinatura/sigilo, lista de arquivos
- * e botão de download.
- *
- * @example
- * <EventDetailDrawer
- *   item={selectedItem}
- *   open={isDrawerOpen}
- *   onOpenChange={setIsDrawerOpen}
- * />
- */
 export function EventDetailDrawer({
   item,
   open,
@@ -43,9 +40,6 @@ export function EventDetailDrawer({
 }: EventDetailDrawerProps) {
   const [isDownloading, setIsDownloading] = useState(false);
 
-  /**
-   * Gera URL pré-assinada e inicia o download do arquivo.
-   */
   async function handleDownload(key: string, fileName: string) {
     setIsDownloading(true);
     try {
@@ -56,7 +50,6 @@ export function EventDetailDrawer({
         return;
       }
 
-      // Abre a URL em nova aba para iniciar o download
       const link = document.createElement('a');
       link.href = resultado.data.url;
       link.download = fileName;
@@ -72,51 +65,35 @@ export function EventDetailDrawer({
     }
   }
 
-  /**
-   * Download de todos os arquivos disponíveis (chamado pelo botão do rodapé).
-   */
   async function handleDownloadAll() {
     if (!item?.backblaze) return;
     await handleDownload(item.backblaze.key, item.backblaze.fileName);
   }
 
-  /**
-   * Callback para abertura de arquivo externo (Google Drive).
-   * A navegação é tratada pelo `<a href>` do componente de anexos,
-   * mas o callback permite tracking ou ações futuras.
-   */
   function handleOpen(_fileId: string) {
     // A abertura real é via <a href> no EventAttachmentsList.
     // Este callback existe para extensibilidade (ex: analytics, logging).
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="right"
-        className="w-100 sm:w-100 p-0 flex flex-col"
-      >
-        {/* Cabeçalho */}
-        <SheetHeader className="px-6 py-5 border-b shrink-0">
-          <SheetTitle className="text-lg font-semibold tracking-tight">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="glass-dialog max-w-xl max-h-[90vh] p-0 flex flex-col">
+        <DialogHeader className="px-6 py-5 border-b border-border/30 shrink-0">
+          <DialogTitle className="text-lg font-semibold tracking-tight">
             Detalhes do Evento
-          </SheetTitle>
-        </SheetHeader>
+          </DialogTitle>
+        </DialogHeader>
 
-        {/* Conteúdo rolável */}
         <div className="flex-1 overflow-y-auto">
           {item && (
             <>
-              {/* Metadados do evento */}
               <EventMetadata item={item} />
 
-              {/* Informações de assinatura e sigilo */}
               <EventSignatureInfo
                 signatario={item.nomeSignatario}
                 isSigiloso={item.documentoSigiloso}
               />
 
-              {/* Lista de arquivos */}
               <EventAttachmentsList
                 item={item}
                 onDownload={handleDownload}
@@ -127,9 +104,8 @@ export function EventDetailDrawer({
           )}
         </div>
 
-        {/* Rodapé com botão de download — exibido apenas quando há arquivo no Backblaze */}
         {item?.backblaze && (
-          <div className="p-6 border-t bg-muted/30 mt-auto shrink-0">
+          <div className="p-6 border-t border-border/30 bg-muted/30 mt-auto shrink-0">
             <Button
               className="w-full gap-2"
               onClick={handleDownloadAll}
@@ -140,7 +116,7 @@ export function EventDetailDrawer({
             </Button>
           </div>
         )}
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

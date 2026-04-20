@@ -159,7 +159,7 @@ export default function PdfPreview({
     return (
       <div className={`flex flex-col h-full ${className}`}>
         {showControls && (
-          <div className="flex items-center justify-between border-b border-border/60 bg-background/90 px-3 py-2 backdrop-blur supports-backdrop-filter:bg-background/80">
+          <div className="flex items-center justify-between border-b border-outline-variant/25 bg-surface-container-lowest/60 px-3 py-2 backdrop-blur-sm">
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" disabled>
                 <ZoomOut className="w-4 h-4" />
@@ -174,7 +174,7 @@ export default function PdfPreview({
           </div>
         )}
         <div
-          className={`scrollbar-custom flex flex-1 items-center justify-center overflow-auto overscroll-contain scroll-smooth bg-[radial-gradient(circle_at_top,rgba(30,58,138,0.06),transparent_32%),linear-gradient(180deg,rgba(248,250,252,1)_0%,rgba(241,245,249,1)_100%)] p-4 dark:bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.12),transparent_28%),linear-gradient(180deg,rgba(15,23,42,0.94)_0%,rgba(15,23,42,0.98)_100%)] ${viewportClassName}`}
+          className={`scrollbar-custom flex flex-1 items-center justify-center overflow-auto overscroll-contain scroll-smooth bg-surface-dim/50 p-3 dark:bg-surface-dim/40 ${viewportClassName}`}
           style={{ maxHeight, maxWidth }}
         >
           {emptyState}
@@ -232,7 +232,7 @@ export default function PdfPreview({
     <div className={`flex h-full flex-col ${className}`}>
       {/* Controles */}
       {showControls && (
-        <div className="flex items-center justify-between border-b border-border/60 bg-background/90 px-3 py-2 backdrop-blur supports-backdrop-filter:bg-background/80">
+        <div className="flex items-center justify-between border-b border-outline-variant/25 bg-surface-container-lowest/60 px-3 py-2 backdrop-blur-sm">
           {/* Controles de Zoom */}
           <div className="flex items-center gap-2">
             <Button

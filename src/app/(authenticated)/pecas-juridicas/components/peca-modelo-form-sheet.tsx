@@ -11,12 +11,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -247,17 +247,17 @@ export function PecaModeloFormSheet({
   }[mode];
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-xl">
-        <SheetHeader className="px-6 pt-6 pb-4 border-b">
-          <SheetTitle className="flex items-center gap-2">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="glass-dialog max-w-2xl max-h-[90vh] p-0 flex flex-col">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b border-border/30 shrink-0">
+          <DialogTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
             {title}
-          </SheetTitle>
-          <SheetDescription>{description}</SheetDescription>
-        </SheetHeader>
+          </DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
 
-        <ScrollArea className="h-[calc(100vh-180px)]">
+        <ScrollArea className="flex-1">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6">
               {/* Título */}
@@ -432,8 +432,8 @@ export function PecaModeloFormSheet({
             </form>
           </Form>
         </ScrollArea>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }
 

@@ -1,11 +1,17 @@
 'use client';
 
 /**
- * PericiaCriarDialog - Dialog para criação manual de perícias
+ * PericiaCriarDialog — Dialog para criação manual de perícias (Glass Briefing).
+ * ============================================================================
+ * Usa DialogFormShell + Combobox searchable para especialidade/perito (listas
+ * longas). Segue tipografia semântica do DS.
+ * ============================================================================
  */
 
 import * as React from 'react';
+import { Check, ChevronsUpDown, AlertCircle } from 'lucide-react';
 
+import { cn } from '@/lib/utils';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +24,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 
 import { toDateString } from '@/lib/date-utils';
 import {
@@ -30,6 +49,118 @@ import {
 } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
 import { actionCriarPericia } from '../actions/pericias-actions';
+
+// =============================================================================
+// PRIMITIVA: SearchableCombobox
+// =============================================================================
+
+interface SearchableComboboxProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  searchPlaceholder: string;
+  emptyMessage: string;
+  options: { value: string; label: string }[];
+  disabled?: boolean;
+}
+
+function SearchableCombobox({
+  value,
+  onChange,
+  placeholder,
+  searchPlaceholder,
+  emptyMessage,
+  options,
+  disabled,
+}: SearchableComboboxProps) {
+  const [open, setOpen] = React.useState(false);
+  const selectedLabel = options.find((o) => o.value === value)?.label;
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          disabled={disabled}
+          className={cn(
+            'w-full justify-between bg-card font-normal h-9',
+            !value && 'text-muted-foreground/60',
+          )}
+        >
+          {selectedLabel || placeholder}
+          <ChevronsUpDown className="ml-2 size-3.5 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-[--radix-popover-trigger-width] p-0 rounded-2xl glass-dropdown overflow-hidden"
+        align="start"
+      >
+        <Command className="bg-transparent">
+          <div className="px-3 pt-3 pb-1.5">
+            <CommandInput
+              placeholder={searchPlaceholder}
+              className="h-8 text-xs rounded-lg"
+            />
+          </div>
+          <CommandList className="max-h-60 px-1.5 pb-1.5">
+            <CommandEmpty>
+              <span className="text-[11px] text-muted-foreground/40">
+                {emptyMessage}
+              </span>
+            </CommandEmpty>
+            <CommandGroup>
+              {options.map((opt) => {
+                const isSelected = value === opt.value;
+                return (
+                  <CommandItem
+                    key={opt.value}
+                    value={opt.label}
+                    onSelect={() => {
+                      onChange(isSelected ? '' : opt.value);
+                      setOpen(false);
+                    }}
+                    className="gap-2 rounded-lg text-xs px-2 py-1.5"
+                  >
+                    <span className="truncate flex-1">{opt.label}</span>
+                    {isSelected && (
+                      <Check className="size-3 ml-auto text-primary shrink-0" />
+                    )}
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+// =============================================================================
+// PRIMITIVA: FieldLabel
+// =============================================================================
+
+function FieldLabel({
+  children,
+  required,
+}: {
+  children: React.ReactNode;
+  required?: boolean;
+}) {
+  return (
+    <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+      {children}
+      {required && <span className="text-destructive ml-0.5">*</span>}
+    </label>
+  );
+}
+
+// =============================================================================
+// COMPONENTE PRINCIPAL
+// =============================================================================
 
 interface PericiaCriarDialogProps {
   open: boolean;
@@ -51,7 +182,9 @@ export function PericiaCriarDialog({
   const [trt, setTrt] = React.useState('');
   const [grau, setGrau] = React.useState('');
   const [prazoEntrega, setPrazoEntrega] = React.useState<Date | null>(null);
-  const [situacaoCodigo, setSituacaoCodigo] = React.useState<string>(SituacaoPericiaCodigo.AGUARDANDO_LAUDO);
+  const [situacaoCodigo, setSituacaoCodigo] = React.useState<string>(
+    SituacaoPericiaCodigo.AGUARDANDO_LAUDO,
+  );
   const [especialidadeId, setEspecialidadeId] = React.useState('');
   const [peritoId, setPeritoId] = React.useState('');
   const [observacoes, setObservacoes] = React.useState('');
@@ -77,6 +210,24 @@ export function PericiaCriarDialog({
     }
   }, [open, resetForm]);
 
+  const especialidadeOptions = React.useMemo(
+    () =>
+      especialidades.map((e) => ({
+        value: String(e.id),
+        label: e.descricao,
+      })),
+    [especialidades],
+  );
+
+  const peritoOptions = React.useMemo(
+    () =>
+      peritos.map((p) => ({
+        value: String(p.id),
+        label: p.nome,
+      })),
+    [peritos],
+  );
+
   const handleSave = async () => {
     setIsSaving(true);
     setError(null);
@@ -90,10 +241,10 @@ export function PericiaCriarDialog({
         fd.append('prazoEntrega', toDateString(prazoEntrega));
       }
       fd.append('situacaoCodigo', situacaoCodigo);
-      if (especialidadeId && especialidadeId !== '_none') {
+      if (especialidadeId) {
         fd.append('especialidadeId', especialidadeId);
       }
-      if (peritoId && peritoId !== '_none') {
+      if (peritoId) {
         fd.append('peritoId', peritoId);
       }
       if (observacoes) {
@@ -122,43 +273,52 @@ export function PericiaCriarDialog({
       open={open}
       onOpenChange={onOpenChange}
       title="Nova Perícia"
+      description="Cadastre uma perícia manual — complemente os campos obrigatórios para registrar."
       maxWidth="lg"
       footer={
-        <Button onClick={handleSave} disabled={isSaving || !isFormValid}>
-          {isSaving ? 'Criando...' : 'Criar Perícia'}
-        </Button>
+        <>
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={isSaving}
+          >
+            Cancelar
+          </Button>
+          <Button onClick={handleSave} disabled={isSaving || !isFormValid}>
+            {isSaving ? 'Criando...' : 'Criar Perícia'}
+          </Button>
+        </>
       }
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Número do Processo */}
-        <div className="md:col-span-2 grid gap-2">
-          <label className="text-sm font-medium">
-            Número do Processo <span className="text-destructive">*</span>
-          </label>
+        {/* Número do Processo (col span 2) */}
+        <div className="md:col-span-2 grid gap-1.5">
+          <FieldLabel required>Número do Processo</FieldLabel>
           <Input
             value={numeroProcesso}
             onChange={(e) => setNumeroProcesso(e.target.value)}
             placeholder="0000000-00.0000.0.00.0000"
-            className="bg-card"
+            className="bg-card tabular-nums"
             disabled={isSaving}
           />
           {numeroProcesso && numeroProcesso.length < 20 && (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-[11px] text-muted-foreground/60 tabular-nums">
               Mínimo 20 caracteres ({numeroProcesso.length}/20)
             </span>
           )}
         </div>
 
         {/* TRT */}
-        <div className="grid gap-2">
-          <label className="text-sm font-medium">
-            TRT <span className="text-destructive">*</span>
-          </label>
-          <Select value={trt || '_none'} onValueChange={(v) => setTrt(v === '_none' ? '' : v)}>
-            <SelectTrigger className="bg-card">
+        <div className="grid gap-1.5">
+          <FieldLabel required>Tribunal</FieldLabel>
+          <Select
+            value={trt || '_none'}
+            onValueChange={(v) => setTrt(v === '_none' ? '' : v)}
+          >
+            <SelectTrigger className="bg-card h-9">
               <SelectValue placeholder="Selecione o TRT" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl glass-dropdown max-h-60">
               <SelectItem value="_none">Selecione...</SelectItem>
               {CodigoTribunal.map((codigo) => (
                 <SelectItem key={codigo} value={codigo}>
@@ -170,15 +330,16 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Grau */}
-        <div className="grid gap-2">
-          <label className="text-sm font-medium">
-            Grau <span className="text-destructive">*</span>
-          </label>
-          <Select value={grau || '_none'} onValueChange={(v) => setGrau(v === '_none' ? '' : v)}>
-            <SelectTrigger className="bg-card">
+        <div className="grid gap-1.5">
+          <FieldLabel required>Grau</FieldLabel>
+          <Select
+            value={grau || '_none'}
+            onValueChange={(v) => setGrau(v === '_none' ? '' : v)}
+          >
+            <SelectTrigger className="bg-card h-9">
               <SelectValue placeholder="Selecione o grau" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl glass-dropdown">
               <SelectItem value="_none">Selecione...</SelectItem>
               {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
                 <SelectItem key={value} value={value}>
@@ -190,8 +351,8 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Prazo de Entrega */}
-        <div className="grid gap-2">
-          <label className="text-sm font-medium">Prazo de Entrega</label>
+        <div className="grid gap-1.5">
+          <FieldLabel>Prazo de Entrega</FieldLabel>
           <DatePicker
             value={prazoEntrega}
             onChange={setPrazoEntrega}
@@ -200,13 +361,13 @@ export function PericiaCriarDialog({
         </div>
 
         {/* Situação */}
-        <div className="grid gap-2">
-          <label className="text-sm font-medium">Situação</label>
+        <div className="grid gap-1.5">
+          <FieldLabel>Situação inicial</FieldLabel>
           <Select value={situacaoCodigo} onValueChange={setSituacaoCodigo}>
-            <SelectTrigger className="bg-card">
+            <SelectTrigger className="bg-card h-9">
               <SelectValue placeholder="Selecione a situação" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl glass-dropdown">
               {Object.values(SituacaoPericiaCodigo).map((codigo) => (
                 <SelectItem key={codigo} value={codigo}>
                   {SITUACAO_PERICIA_LABELS[codigo]}
@@ -216,61 +377,55 @@ export function PericiaCriarDialog({
           </Select>
         </div>
 
-        {/* Especialidade */}
-        <div className="grid gap-2">
-          <label className="text-sm font-medium">Especialidade</label>
-          <Select
-            value={especialidadeId || '_none'}
-            onValueChange={(v) => setEspecialidadeId(v === '_none' ? '' : v)}
-          >
-            <SelectTrigger className="bg-card">
-              <SelectValue placeholder="Selecione a especialidade" />
-            </SelectTrigger>
-            <SelectContent className="max-h-60">
-              <SelectItem value="_none">Nenhuma</SelectItem>
-              {especialidades.map((e) => (
-                <SelectItem key={e.id} value={String(e.id)}>
-                  {e.descricao}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Perito */}
-        <div className="grid gap-2">
-          <label className="text-sm font-medium">Perito</label>
-          <Select
-            value={peritoId || '_none'}
-            onValueChange={(v) => setPeritoId(v === '_none' ? '' : v)}
-          >
-            <SelectTrigger className="bg-card">
-              <SelectValue placeholder="Selecione o perito" />
-            </SelectTrigger>
-            <SelectContent className="max-h-60">
-              <SelectItem value="_none">Nenhum</SelectItem>
-              {peritos.map((p) => (
-                <SelectItem key={p.id} value={String(p.id)}>
-                  {p.nome}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Observações */}
-        <div className="md:col-span-2 grid gap-2">
-          <label className="text-sm font-medium">Observações</label>
-          <Textarea
-            value={observacoes}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setObservacoes(e.target.value)}
-            placeholder="Adicione observações sobre a perícia..."
-            className="min-h-25 resize-none"
+        {/* Especialidade (Combobox com busca) */}
+        <div className="grid gap-1.5">
+          <FieldLabel>Especialidade</FieldLabel>
+          <SearchableCombobox
+            value={especialidadeId}
+            onChange={setEspecialidadeId}
+            placeholder="Selecione a especialidade"
+            searchPlaceholder="Buscar especialidade..."
+            emptyMessage="Nenhuma especialidade encontrada"
+            options={especialidadeOptions}
             disabled={isSaving}
           />
         </div>
 
-        {error && <div className="md:col-span-2 text-sm text-destructive">{error}</div>}
+        {/* Perito (Combobox com busca) */}
+        <div className="grid gap-1.5">
+          <FieldLabel>Perito</FieldLabel>
+          <SearchableCombobox
+            value={peritoId}
+            onChange={setPeritoId}
+            placeholder="Selecione o perito"
+            searchPlaceholder="Buscar perito..."
+            emptyMessage="Nenhum perito encontrado"
+            options={peritoOptions}
+            disabled={isSaving}
+          />
+        </div>
+
+        {/* Observações */}
+        <div className="md:col-span-2 grid gap-1.5">
+          <FieldLabel>Observações</FieldLabel>
+          <Textarea
+            value={observacoes}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setObservacoes(e.target.value)
+            }
+            placeholder="Adicione observações sobre a perícia (opcional)..."
+            className="min-h-20 resize-none bg-card"
+            disabled={isSaving}
+          />
+        </div>
+
+        {/* Error banner */}
+        {error && (
+          <div className="md:col-span-2 flex items-start gap-2 px-3 py-2 rounded-lg bg-destructive/8 border border-destructive/20 text-destructive">
+            <AlertCircle className="size-4 shrink-0 mt-0.5" />
+            <span className="text-xs">{error}</span>
+          </div>
+        )}
       </div>
     </DialogFormShell>
   );

@@ -1,21 +1,12 @@
 import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
 
 import { ObrigacoesContent } from '@/app/(authenticated)/obrigacoes';
+import { ObrigacoesLoading } from '@/app/(authenticated)/obrigacoes/components/obrigacoes-loading';
 import { obterResumoObrigacoes } from '@/app/(authenticated)/obrigacoes/service';
 import type { ResumoObrigacoesDB } from '@/app/(authenticated)/obrigacoes/repository';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
-
-function ObrigacoesLoading() {
-  return (
-    <div className="space-y-4">
-      <Skeleton className="h-10 w-full" />
-      <Skeleton className="h-100 w-full" />
-    </div>
-  );
-}
 
 export default async function ObrigacoesMesPage() {
   let initialResumo: ResumoObrigacoesDB | null = null;
@@ -26,7 +17,7 @@ export default async function ObrigacoesMesPage() {
   }
 
   return (
-    <Suspense fallback={<ObrigacoesLoading />}>
+    <Suspense fallback={<ObrigacoesLoading view="mes" />}>
       <ObrigacoesContent visualizacao="mes" initialResumo={initialResumo} />
     </Suspense>
   );

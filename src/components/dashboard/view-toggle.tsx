@@ -47,7 +47,7 @@ const DEFAULT_OPTIONS: ViewToggleOption[] = [
 
 export function ViewToggle({ mode, onChange, options = DEFAULT_OPTIONS }: ViewToggleProps) {
   return (
-    <div className="flex p-0.5 rounded-lg bg-border/6">
+    <div className="flex p-0.5 rounded-lg bg-muted/50 border border-border/40">
       {options.map((opt) => (
         <button
           key={opt.id}
@@ -55,8 +55,8 @@ export function ViewToggle({ mode, onChange, options = DEFAULT_OPTIONS }: ViewTo
           aria-label={opt.label}
           className={`p-1.5 rounded-md transition-all cursor-pointer ${
             mode === opt.id
-              ? 'bg-primary/12 text-primary'
-              : 'text-muted-foreground/55 hover:text-muted-foreground/50'
+              ? 'bg-primary/20 text-primary shadow-sm'
+              : 'text-muted-foreground/70 hover:text-foreground hover:bg-accent/40'
           }`}
         >
           <opt.icon className="size-3.5" />

@@ -3,8 +3,8 @@
 /**
  * PericiasMonthWrapper — View de mês (thin).
  * ============================================================================
- * Layout master-detail: calendário compacto (esquerda) + lista do dia
- * (direita). Toolbar vive no PericiasClient pai.
+ * Busca perícias do mês e renderiza PericiasGlassMonth (padrão audiências).
+ * Toolbar vive no PericiasClient pai.
  * ============================================================================
  */
 
@@ -15,7 +15,6 @@ import {
   TemporalViewLoading,
   TemporalViewError,
 } from '@/components/shared';
-import { GlassPanel } from '@/components/shared/glass-panel';
 
 import {
   SituacaoPericiaCodigo,
@@ -25,8 +24,7 @@ import {
 } from '../domain';
 import { usePericias } from '../hooks/use-pericias';
 
-import { PericiasCalendarCompact } from './pericias-calendar-compact';
-import { PericiasDayList } from './pericias-day-list';
+import { PericiasGlassMonth } from './pericias-glass-month';
 import type {
   SituacaoFilterType,
   ResponsavelFilterType,
@@ -67,8 +65,7 @@ export function PericiasMonthWrapper({
   peritoFilter,
   refetchKey,
 }: PericiasMonthWrapperProps) {
-  // ---------- Navegação de calendário ----------
-  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
+  // Navegação mensal interna ao wrapper (persiste o estado local ao mudar de view)
   const [currentMonth, setCurrentMonth] = React.useState<Date>(new Date());
 
   // ---------- Hook params ----------
@@ -140,27 +137,10 @@ export function PericiasMonthWrapper({
   }
 
   return (
-    <GlassPanel depth={1} className="overflow-hidden">
-      <div className="flex h-[calc(100vh-380px)] min-h-140">
-        {/* Calendário compacto — largura fixa */}
-        <div className="w-105 shrink-0 border-r border-border/30 p-6 overflow-auto">
-          <PericiasCalendarCompact
-            selectedDate={selectedDate}
-            onDateSelect={setSelectedDate}
-            pericias={pericias}
-            currentMonth={currentMonth}
-            onMonthChange={setCurrentMonth}
-          />
-        </div>
-
-        {/* Lista do dia — ocupa espaço restante */}
-        <div className="flex-1 min-w-0">
-          <PericiasDayList
-            selectedDate={selectedDate}
-            pericias={pericias}
-          />
-        </div>
-      </div>
-    </GlassPanel>
+    <PericiasGlassMonth
+      pericias={pericias}
+      currentMonth={currentMonth}
+      onMonthChange={setCurrentMonth}
+    />
   );
 }

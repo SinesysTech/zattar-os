@@ -52,6 +52,7 @@ export interface PericiasYearWrapperProps {
   especialidades: EspecialidadePericiaOption[];
   peritos: PeritoOption[];
   selectedYear: number;
+  onYearChange: (year: number) => void;
   refetchKey: number;
 }
 
@@ -69,6 +70,7 @@ export function PericiasYearWrapper({
   especialidadeFilter,
   peritoFilter,
   selectedYear,
+  onYearChange,
   refetchKey,
 }: PericiasYearWrapperProps) {
   const selectedDate = React.useMemo(
@@ -162,7 +164,12 @@ export function PericiasYearWrapper({
 
   return (
     <>
-      <PericiasYearHeatmap pericias={pericias} year={selectedYear} onDayClick={handleDayClick} />
+      <PericiasYearHeatmap
+        pericias={pericias}
+        year={selectedYear}
+        onYearChange={onYearChange}
+        onDayClick={handleDayClick}
+      />
 
       <PericiaDetalhesDialog
         pericia={null}

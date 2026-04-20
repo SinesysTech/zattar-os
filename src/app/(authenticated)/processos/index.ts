@@ -44,7 +44,6 @@ export {
   TimelineError,
   TimelineLoading,
   // Formulários e Sheets
-  ProcessoDetailSheet,
   ProcessoForm,
   ProcessosTableWrapper,
   // Dialog de Tags

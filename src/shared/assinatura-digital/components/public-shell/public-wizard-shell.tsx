@@ -45,7 +45,7 @@ export function PublicWizardShell({
 
       <main
         id="main-content"
-        className="relative z-10 flex w-full max-w-130 flex-col"
+        className="relative z-10 flex w-full max-w-144 flex-col"
         aria-label="Formulário de assinatura digital"
       >
         {children}

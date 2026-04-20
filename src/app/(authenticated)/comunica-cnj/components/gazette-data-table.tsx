@@ -235,7 +235,7 @@ export function GazetteDataTable({
   const effectiveTotal = total ?? comunicacoes.length;
 
   return (
-    <div className="flex flex-col h-full min-h-0 overflow-hidden">
+    <div className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
       {/* Scrollable table area */}
       <div className="flex-1 overflow-auto min-h-0">
         <table className="w-full border-collapse text-left">

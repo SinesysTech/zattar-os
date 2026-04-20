@@ -28,11 +28,9 @@ import { Button } from '@/components/ui/button';
 import { Heading } from '@/components/ui/typography';
 
 import { useResumoObrigacoes } from '../hooks/use-resumo-obrigacoes';
-import type { AlertasObrigacoesType } from '../domain';
 import type { ResumoObrigacoesDB } from '../repository';
 
 import { ObrigacoesPulseStrip } from './shared/obrigacoes-pulse-strip';
-import { AlertasObrigacoes } from './shared/alertas-obrigacoes';
 import {
   ObrigacoesFilterBar,
   type ObrigacoesFilterBarFilters,
@@ -55,7 +53,7 @@ const VIEW_ROUTES: Record<ViewType, string> = {
 };
 
 const ROUTE_TO_VIEW: Record<string, ViewType> = {
-  '/obrigacoes': 'semana',
+  '/obrigacoes': 'lista',
   '/obrigacoes/semana': 'semana',
   '/obrigacoes/mes': 'mes',
   '/obrigacoes/ano': 'ano',
@@ -63,10 +61,10 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
 };
 
 const VIEW_OPTIONS: ViewToggleOption[] = [
+  { id: 'lista', label: 'Lista', icon: List },
   { id: 'semana', label: 'Semana', icon: CalendarDays },
   { id: 'mes', label: 'Mês', icon: CalendarRange },
   { id: 'ano', label: 'Ano', icon: Calendar },
-  { id: 'lista', label: 'Lista', icon: List },
 ];
 
 // =============================================================================
@@ -83,7 +81,7 @@ interface ObrigacoesContentProps {
 // =============================================================================
 
 export function ObrigacoesContent({
-  visualizacao: initialView = 'semana',
+  visualizacao: initialView = 'lista',
   initialResumo,
 }: ObrigacoesContentProps) {
   const router = useRouter();
@@ -117,23 +115,9 @@ export function ObrigacoesContent({
     [pathname, router],
   );
 
-  // Resumo (KPIs + Alertas)
+  // Resumo (KPIs do Pulse Strip)
   const { data: resumo, isLoading: isResumoLoading, refetch: refetchResumo } =
     useResumoObrigacoes({ initialData: initialResumo });
-
-  // Alertas adapter
-  const alertas: AlertasObrigacoesType | null = React.useMemo(() => {
-    if (!resumo) return null;
-    return {
-      vencidas: { ...resumo.vencidas, items: [] },
-      vencendoHoje: { ...resumo.vencendoHoje, items: [] },
-      vencendoEm7Dias: { ...resumo.vencendoEm7Dias, items: [] },
-      inconsistentes: {
-        quantidade: resumo.inconsistentes.quantidade,
-        items: [],
-      },
-    };
-  }, [resumo]);
 
   // Subtítulo dinâmico
   const subtitle = React.useMemo(() => {
@@ -184,13 +168,10 @@ export function ObrigacoesContent({
       {/* 2. KPI Strip */}
       <ObrigacoesPulseStrip resumo={resumo} isLoading={isResumoLoading} />
 
-      {/* 3. Alertas */}
-      <AlertasObrigacoes alertas={alertas} isLoading={isResumoLoading} />
-
-      {/* 4. Controls Row: filters (esquerda) + search + view toggle (direita) */}
+      {/* 3. Controls Row: filters (esquerda) + search + view toggle (direita) */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-        <div className="flex items-center gap-2 flex-1 flex-wrap justify-end">
-          <ObrigacoesFilterBar filters={filters} onChange={setFilters} />
+        <ObrigacoesFilterBar filters={filters} onChange={setFilters} />
+        <div className="flex items-center gap-2 flex-1 justify-end">
           <SearchInput
             value={busca}
             onChange={setBusca}

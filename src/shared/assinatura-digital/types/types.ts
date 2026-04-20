@@ -180,127 +180,14 @@ export interface AssinaturaDigitalDashboardStats {
  * - Template (frontend) define a estrutura completa do template
  */
 
-export interface PreviewPayload {
-  cliente_id: number;
-  contrato_id?: number | null;
-  template_id: string;
-  foto_base64?: string | null;
-  request_id?: string | null;
-  parte_contraria_dados?: Array<{
-    id: number;
-    nome: string;
-    cpf?: string | null;
-    cnpj?: string | null;
-    tipo_pessoa?: string | null;
-    telefone?: string | null;
-    email?: string | null;
-    endereco?: {
-      cep?: string | null;
-      logradouro?: string | null;
-      numero?: string | null;
-      complemento?: string | null;
-      bairro?: string | null;
-      municipio?: string | null;
-      estado_sigla?: string | null;
-    } | null;
-  }>;
-  /** Dados do formulário dinâmico (campos acao.*) para resolução de variáveis no PDF */
-  acao_dados?: Record<string, unknown>;
-}
-
-/**
- * Payload finalização: Acoplado a domain types globais.
- * - cliente_dados: Cliente completo (nome, CPF, endereço) de domain/partes
- * - parte_contraria_dados: Partes contrárias para contratos
- * - contrato_id: Referência ao contrato associado
- * Hashes calculados backend.
- */
-export interface FinalizePayload {
-  cliente_id: number;
-  /** ID do contrato associado a esta assinatura */
-  contrato_id?: number | null;
-
-  template_id: string;
-  segmento_id: number;
-  segmento_nome?: string;
-  formulario_id: number;
-
-  // Dados completos acoplados a domain types (nome, endereço, CPF, partes contrárias)
-  /** Cliente completo para geração de PDF (inclui nome, CPF, telefone, endereço) */
-  cliente_dados?: {
-    id: number;
-    nome: string;
-    cpf?: string | null;
-    cnpj?: string | null;
-    email?: string | null;
-    celular?: string | null;
-    telefone?: string | null;
-    endereco?: string;
-  };
-  /** Partes contrárias para contratos (nome, CPF/CNPJ, telefone) */
-  parte_contraria_dados?: Array<{
-    id: number;
-    nome: string;
-    cpf?: string | null;
-    cnpj?: string | null;
-    tipo_pessoa?: string | null;
-    telefone?: string | null;
-    email?: string | null;
-    endereco?: {
-      cep?: string | null;
-      logradouro?: string | null;
-      numero?: string | null;
-      complemento?: string | null;
-      bairro?: string | null;
-      municipio?: string | null;
-      estado_sigla?: string | null;
-    } | null;
-  }>;
-  /** Dados do formulário dinâmico (campos acao.*) para resolução de variáveis no PDF */
-  acao_dados?: Record<string, unknown>;
-
-  assinatura_base64: string;
-  foto_base64?: string | null;
-  latitude?: number | null;
-  longitude?: number | null;
-  geolocation_accuracy?: number | null;
-  geolocation_timestamp?: string | null;
-  ip_address?: string | null;
-  user_agent?: string | null;
-  sessao_id?: string | null;
-  request_id?: string | null;
-
-  // Conformidade legal MP 2.200-2
-  /** Aceite obrigatório dos termos (deve ser true) */
-  termos_aceite: boolean;
-  /**
-   * Versão dos termos aceitos (ex: "v1.0-MP2200-2").
-   * IMPORTANTE: Este campo usa nomenclatura `termos_aceite_versao` em todas as camadas:
-   * - Payload API (FinalizePayload)
-   * - Coluna PostgreSQL (assinatura_digital_assinaturas.termos_aceite_versao)
-   * - Record TypeScript (AssinaturaDigitalRecord)
-   * - ManifestData.termos.versao (mapeado internamente)
-   */
-  termos_aceite_versao: string;
-  /** Fingerprint do dispositivo para auditoria */
-  dispositivo_fingerprint_raw?: DeviceFingerprintData | null;
-}
-
-export interface FinalizeResult {
-  assinatura_id: number;
-  protocolo: string;
-  pdf_url: string;
-  /** URL raw do Backblaze (bucket privado, para armazenar em arquivos.b2_url) */
-  pdf_raw_url: string;
-  /** Key do objeto no Backblaze (ex: assinatura-digital/pdfs/documento-xxx.pdf) */
-  pdf_key: string;
-  /** Tamanho do PDF em bytes */
-  pdf_size: number;
-}
-
-export interface PreviewResult {
-  pdf_url: string;
-}
+// Fonte única de verdade para payloads de API: `types/api.ts`.
+// Re-exports abaixo preservam compat com consumers históricos que importam de `types/types`.
+export type {
+  PreviewPayload,
+  PreviewResult,
+  FinalizePayload,
+  FinalizeResult,
+} from './api';
 
 export interface ListSessoesParams {
   segmento_id?: number;

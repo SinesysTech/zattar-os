@@ -426,6 +426,8 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
         <AnoView
           currentDate={currentDate}
           events={filteredEvents}
+          onDateChange={setCurrentDate}
+          onEventClick={handleEventClick}
         />
       )}
 

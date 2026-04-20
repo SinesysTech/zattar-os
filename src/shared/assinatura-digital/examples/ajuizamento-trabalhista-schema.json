@@ -150,20 +150,18 @@
     {
       "id": "section-parte-contraria",
       "title": "Parte Contrária",
+      "preferredField": "field-busca-parte-contraria",
       "fields": [
         {
-          "id": "field-pc-cnpj",
-          "name": "pc_cnpj",
-          "type": "cnpj",
-          "label": "CNPJ",
-          "placeholder": "00.000.000/0000-00",
-          "helpText": "Em breve o CNPJ vai preencher automaticamente os dados da empresa.",
+          "id": "field-busca-parte-contraria",
+          "name": "busca_parte_contraria",
+          "type": "parte_contraria_search",
+          "label": "Buscar Parte Contrária",
+          "placeholder": "Digite o nome, CPF ou CNPJ",
           "gridColumns": 1,
-          "conditional": { "field": "field-pc-tipo-pessoa", "value": "pj", "operator": "=" },
-          "validation": { "required": true, "message": "CNPJ é obrigatório para Pessoa Jurídica" },
           "entitySearch": {
             "entityType": "parte_contraria",
-            "searchBy": ["cnpj"],
+            "searchBy": ["nome", "cpf", "cnpj"],
             "autoFill": {
               "cpf": "field-pc-cpf",
               "cnpj": "field-pc-cnpj",
@@ -193,6 +191,16 @@
             { "label": "Pessoa Física", "value": "pf" }
           ],
           "validation": { "required": true, "message": "Selecione o tipo de pessoa" }
+        },
+        {
+          "id": "field-pc-cnpj",
+          "name": "pc_cnpj",
+          "type": "cnpj",
+          "label": "CNPJ",
+          "placeholder": "00.000.000/0000-00",
+          "gridColumns": 1,
+          "conditional": { "field": "field-pc-tipo-pessoa", "value": "pj", "operator": "=" },
+          "validation": { "required": true, "message": "CNPJ é obrigatório para Pessoa Jurídica" }
         },
         {
           "id": "field-pc-cpf",
@@ -235,7 +243,6 @@
           "type": "cep",
           "label": "CEP",
           "placeholder": "00000-000",
-          "helpText": "O endereço será preenchido automaticamente.",
           "gridColumns": 1
         },
         {

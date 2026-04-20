@@ -67,7 +67,7 @@ const WEEKDAY_LABELS = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'];
 // =============================================================================
 
 function getDayBg(count: number): string {
-  if (count === 0) return 'bg-white/[0.05]';
+  if (count === 0) return 'bg-muted/50';
   if (count <= 2) return 'bg-primary/[0.15]';
   if (count <= 5) return 'bg-primary/[0.35]';
   if (count <= 10) return 'bg-primary/[0.55]';
@@ -92,7 +92,7 @@ function StatCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-white/8 bg-white/4 p-4 px-5">
+    <div className="rounded-2xl border border-border/40 bg-muted/30 p-4 px-5">
       <div className="flex items-center gap-2 mb-2">
         <IconContainer size="sm" className={iconBg}>
           <Icon className={cn('size-3.5', iconColor)} />
@@ -235,7 +235,7 @@ function ExpedientesDayDialog({
             {expedientes.map((exp) => (
               <div
                 key={exp.id}
-                className="rounded-xl border border-white/8 bg-white/4 p-3 space-y-1.5"
+                className="rounded-xl border border-border/40 bg-muted/30 p-3 space-y-1.5"
               >
                 <div className="flex items-center gap-2">
                   <IconContainer size="sm" className="bg-primary/15">
@@ -399,7 +399,7 @@ export function ExpedientesYearHeatmap({
           <Button
             variant="ghost"
             size="icon"
-            className="h-9 w-9 border border-white/8 bg-white/6 backdrop-blur-sm hoverhover:bg-white/12ded-xl"
+            className="h-9 w-9 border border-border/40 bg-muted/60 backdrop-blur-sm hover:bg-muted/70 rounded-xl"
             onClick={() => setYear((y) => y - 1)}
             aria-label="Ano anterior"
           >
@@ -411,7 +411,7 @@ export function ExpedientesYearHeatmap({
           <Button
             variant="ghost"
             size="icon"
-            className="h-9 w-9 border border-white/8 bg-white/6 backdrop-blur-sm hover:bg-white/12 rounded-xl"
+            className="h-9 w-9 border border-border/40 bg-muted/60 backdrop-blur-sm hover:bg-muted/70 rounded-xl"
             onClick={() => setYear((y) => y + 1)}
             aria-label="Próximo ano"
           >
@@ -421,7 +421,7 @@ export function ExpedientesYearHeatmap({
             <Button
               variant="ghost"
               size="sm"
-              className="text-xs border border-white/8 bg-primary/8 text-primary hover:bg-primary/14 rounded-lg"
+              className="text-xs border border-border/40 bg-primary/8 text-primary hover:bg-primary/14 rounded-lg"
               onClick={() => setYear(getYear(new Date()))}
             >
               Hoje
@@ -457,7 +457,7 @@ export function ExpedientesYearHeatmap({
               label="Baixados"
             >
               <Text variant="kpi-value">{stats.baixados}</Text>
-              <div className="mt-2 h-1 rounded-full bg-white/6">
+              <div className="mt-2 h-1 rounded-full bg-muted/60">
                 <div
                   className="h-full rounded-full bg-success transition-all duration-500"
                   style={{ width: `${stats.taxa}%` }}
@@ -536,7 +536,7 @@ export function ExpedientesYearHeatmap({
                           locale: ptBR,
                         })}
                       </span>
-                      <div className="flex-1 h-1.5 rounded-full bg-white/4 overflow-hidden">
+                      <div className="flex-1 h-1.5 rounded-full bg-muted/30 overflow-hidden">
                         <div
                           className="h-full rounded-full bg-primary transition-all duration-500"
                           style={{
@@ -573,7 +573,7 @@ export function ExpedientesYearHeatmap({
               <span className="text-[9px] text-muted-foreground/40 mr-1">
                 Menos
               </span>
-              <div className="size-3 rounded-[2px] bg-white/5" />
+              <div className="size-3 rounded-[2px] bg-muted/50" />
               <div className="size-3 rounded-[2px] bg-primary/15" />
               <div className="size-3 rounded-[2px] bg-primary/35" />
               <div className="size-3 rounded-[2px] bg-primary/[0.55]" />

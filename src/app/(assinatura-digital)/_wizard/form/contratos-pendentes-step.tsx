@@ -4,9 +4,9 @@ import { useFormularioStore } from '@/shared/assinatura-digital/store';
 import type { ContratoPendente } from '@/shared/assinatura-digital/types/store';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { FileText, Plus, Calendar, Users } from 'lucide-react';
+import { ChevronRight, Plus } from 'lucide-react';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { Text } from '@/components/ui/typography';
 import FormStepLayout from './form-step-layout';
 
 export default function ContratosPendentesStep() {
@@ -116,68 +116,72 @@ export default function ContratosPendentesStep() {
 
   return (
     <FormStepLayout
-      title="Contratos Pendentes"
-      description="Você possui contratos aguardando assinatura. Deseja assinar um deles ou criar um novo?"
+      title="Contratos pendentes"
       onPrevious={etapaAnterior}
       hideNext
     >
-      <div className="space-y-4">
+      <div className="flex flex-col gap-3">
         {contratosPendentes.map((contrato) => {
           const parteContraria = getParteContraria(contrato);
+          const tipo = contrato.segmento_nome?.trim();
+          const metadataParts = [
+            tipo,
+            `Criado em ${formatDate(contrato.cadastrado_em)}`,
+          ].filter(Boolean);
 
           return (
-            <Card key={contrato.id} className="border-l-4 border-l-amber-500">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <FileText className="h-4 w-4" />
-                    Contrato #{contrato.id}
-                  </CardTitle>
-                  <Badge variant="secondary">Aguardando assinatura</Badge>
-                </div>
-                {contrato.segmento_nome && (
-                  <CardDescription>{contrato.segmento_nome}</CardDescription>
-                )}
-              </CardHeader>
-              <CardContent className="pb-2">
-                <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-3.5 w-3.5" />
-                    <span>Criado em {formatDate(contrato.cadastrado_em)}</span>
-                  </div>
-                  {parteContraria && (
-                    <div className="flex items-center gap-2">
-                      <Users className="h-3.5 w-3.5" />
-                      <span>Parte contrária: {parteContraria}</span>
-                    </div>
+            <button
+              key={contrato.id}
+              type="button"
+              onClick={() => handleSelecionarContrato(contrato)}
+              className="group cursor-pointer text-left"
+              aria-label={`Assinar contrato de ${parteContraria ?? 'parte contrária não informada'}`}
+            >
+              <GlassPanel
+                depth={1}
+                className="flex items-center gap-3 p-4 transition-all duration-200 group-hover:border-primary/40 group-hover:bg-primary/[0.03] group-focus-visible:border-primary/60 group-focus-visible:ring-2 group-focus-visible:ring-primary/20 sm:p-5"
+              >
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <Text
+                    variant="label"
+                    className="truncate text-[15px] font-semibold text-foreground"
+                  >
+                    {parteContraria ?? 'Contrato sem parte contrária'}
+                  </Text>
+                  {metadataParts.length > 0 && (
+                    <Text
+                      variant="caption"
+                      className="truncate text-[12px] text-muted-foreground"
+                    >
+                      {metadataParts.join(' · ')}
+                    </Text>
                   )}
                   {contrato.observacoes && (
-                    <p className="mt-1 text-xs italic">{contrato.observacoes}</p>
+                    <Text
+                      variant="caption"
+                      className="truncate text-[11.5px] text-muted-foreground/70"
+                    >
+                      {contrato.observacoes}
+                    </Text>
                   )}
                 </div>
-              </CardContent>
-              <CardFooter>
-                <Button
-                  size="sm"
-                  onClick={() => handleSelecionarContrato(contrato)}
-                >
-                  Assinar este contrato
-                </Button>
-              </CardFooter>
-            </Card>
+                <ChevronRight
+                  className="h-4 w-4 shrink-0 text-muted-foreground/60 transition-all group-hover:translate-x-0.5 group-hover:text-primary"
+                  strokeWidth={2}
+                />
+              </GlassPanel>
+            </button>
           );
         })}
 
-        <div className="pt-4 border-t">
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={handleNovoContrato}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Criar novo contrato
-          </Button>
-        </div>
+        <Button
+          variant="glass-outline"
+          onClick={handleNovoContrato}
+          className="mt-2 h-11 w-full cursor-pointer gap-1.5"
+        >
+          <Plus className="h-4 w-4" />
+          Criar novo contrato
+        </Button>
       </div>
     </FormStepLayout>
   );

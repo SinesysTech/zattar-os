@@ -1,6 +1,67 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { createServiceClient } from '@/lib/supabase/service-client';
+
+type ParteContrariaRow = {
+  id: number;
+  nome: string;
+  cpf: string | null;
+  cnpj: string | null;
+  tipo_pessoa?: string | null;
+  ddd_celular: string | null;
+  numero_celular: string | null;
+  emails?: unknown;
+  endereco_id?: number | null;
+};
+
+/**
+ * Monta o payload canônico de parte contrária enriquecido com tipo_pessoa,
+ * email (do array `emails`) e endereço completo (via JOIN `enderecos.endereco_id`).
+ *
+ * Consumido pelo PDF via `ctx.parte_contraria` — expõe placeholders
+ * `{{parte_contraria.email}}`, `{{parte_contraria.endereco_*}}`, etc.
+ */
+async function buildParteContrariaPayload(
+  supabase: SupabaseClient,
+  parte: ParteContrariaRow,
+) {
+  const emailList = Array.isArray(parte.emails) ? (parte.emails as unknown[]) : [];
+  const email = typeof emailList[0] === 'string' ? (emailList[0] as string) : null;
+
+  let endereco: {
+    cep: string | null;
+    logradouro: string | null;
+    numero: string | null;
+    complemento: string | null;
+    bairro: string | null;
+    municipio: string | null;
+    estado_sigla: string | null;
+  } | null = null;
+
+  if (parte.endereco_id) {
+    const { data: end } = await supabase
+      .from('enderecos')
+      .select('cep, logradouro, numero, complemento, bairro, municipio, estado_sigla')
+      .eq('id', parte.endereco_id)
+      .maybeSingle();
+    if (end) endereco = end;
+  }
+
+  return {
+    id: parte.id,
+    nome: parte.nome,
+    cpf: parte.cpf ?? null,
+    cnpj: parte.cnpj ?? null,
+    tipo_pessoa: parte.tipo_pessoa ?? null,
+    telefone:
+      parte.ddd_celular && parte.numero_celular
+        ? `(${parte.ddd_celular}) ${parte.numero_celular}`
+        : null,
+    email,
+    endereco,
+  };
+}
 
 const schema = z.object({
   segmentoId: z.number().int().positive(),
@@ -173,7 +234,7 @@ function parseParteContraria(dados: Record<string, unknown>): ParteContrariaPayl
 async function upsertParteContraria(
   supabase: ReturnType<typeof createServiceClient>,
   parte: ParteContrariaPayload
-): Promise<{ id: number; nome: string; cpf?: string | null; cnpj?: string | null; ddd_celular?: string | null; numero_celular?: string | null } | null> {
+): Promise<ParteContrariaRow | null> {
   const telefone = splitTelefone(parte.telefone);
 
   const baseUpdate: Record<string, unknown> = {
@@ -203,7 +264,7 @@ async function upsertParteContraria(
       .from('partes_contrarias')
       .update(baseUpdate)
       .eq('id', parte.id)
-      .select('id, nome, cpf, cnpj, ddd_celular, numero_celular')
+      .select('id, nome, cpf, cnpj, tipo_pessoa, ddd_celular, numero_celular, emails, endereco_id')
       .single();
 
     if (!error && data) {
@@ -214,7 +275,7 @@ async function upsertParteContraria(
   if (parte.cpf) {
     const { data: existingPf } = await supabase
       .from('partes_contrarias')
-      .select('id, nome, cpf, cnpj, ddd_celular, numero_celular')
+      .select('id, nome, cpf, cnpj, tipo_pessoa, ddd_celular, numero_celular, emails, endereco_id')
       .eq('cpf', parte.cpf)
       .maybeSingle();
 
@@ -223,7 +284,7 @@ async function upsertParteContraria(
         .from('partes_contrarias')
         .update(baseUpdate)
         .eq('id', existingPf.id)
-        .select('id, nome, cpf, cnpj, ddd_celular, numero_celular')
+        .select('id, nome, cpf, cnpj, tipo_pessoa, ddd_celular, numero_celular, emails, endereco_id')
         .single();
       return updated ?? existingPf;
     }
@@ -232,7 +293,7 @@ async function upsertParteContraria(
   if (parte.cnpj) {
     const { data: existingPj } = await supabase
       .from('partes_contrarias')
-      .select('id, nome, cpf, cnpj, ddd_celular, numero_celular')
+      .select('id, nome, cpf, cnpj, tipo_pessoa, ddd_celular, numero_celular, emails, endereco_id')
       .eq('cnpj', parte.cnpj)
       .maybeSingle();
 
@@ -241,7 +302,7 @@ async function upsertParteContraria(
         .from('partes_contrarias')
         .update(baseUpdate)
         .eq('id', existingPj.id)
-        .select('id, nome, cpf, cnpj, ddd_celular, numero_celular')
+        .select('id, nome, cpf, cnpj, tipo_pessoa, ddd_celular, numero_celular, emails, endereco_id')
         .single();
       return updated ?? existingPj;
     }
@@ -467,17 +528,7 @@ export async function POST(request: NextRequest) {
             : null,
         },
         parte_contraria_dados: parteContraria
-          ? [
-              {
-                id: parteContraria.id,
-                nome: parteContraria.nome,
-                cpf: parteContraria.cpf ?? null,
-                cnpj: parteContraria.cnpj ?? null,
-                telefone: parteContraria.ddd_celular && parteContraria.numero_celular
-                  ? `(${parteContraria.ddd_celular}) ${parteContraria.numero_celular}`
-                  : null,
-              },
-            ]
+          ? [await buildParteContrariaPayload(supabase, parteContraria)]
           : [],
       },
     });

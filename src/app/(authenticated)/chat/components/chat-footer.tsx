@@ -248,11 +248,11 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
       <div className="flex items-end gap-2">
         {/* Glass input wrapper */}
         <div
-          className="flex-1 flex items-end rounded-2xl border transition-all duration-200 px-3.5 pb-1 pt-1 min-h-[44px] focus-within:border-primary/25 focus-within:shadow-[0_0_0_3px_rgba(139,92,246,0.06)] border-border/50 dark:border-white/[0.08] bg-foreground/[0.02] dark:bg-white/[0.04]"
+          className="flex-1 flex items-end rounded-2xl border transition-all duration-200 px-3.5 pb-1 pt-1 min-h-11 focus-within:border-primary/25 focus-within:shadow-[0_0_0_3px_rgba(139,92,246,0.06)] border-border/50 dark:border-white/8 bg-foreground/2 dark:bg-white/4"
         >
           {isRecording ? (
             // Recording UI — unchanged
-            <div className="flex-1 flex items-center justify-between h-[36px] w-full">
+            <div className="flex-1 flex items-center justify-between h-9 w-full">
               <div className="flex items-center gap-3">
                 <div className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive dark:bg-destructive opacity-75"></span>
@@ -281,7 +281,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                 disabled={isUploading}
                 placeholder={isUploading ? "Enviando arquivo..." : "Digite uma mensagem..."}
                 rows={1}
-                className="flex-1 bg-transparent border-none shadow-none ring-0 focus-visible:ring-0 resize-none min-h-8 max-h-[120px] overflow-y-auto text-[0.825rem] leading-relaxed py-1 px-0 placeholder:text-muted-foreground/40"
+                className="flex-1 bg-transparent border-none shadow-none ring-0 focus-visible:ring-0 resize-none min-h-8 max-h-30 overflow-y-auto text-[0.825rem] leading-relaxed py-1 px-0 placeholder:text-muted-foreground/40"
               />
 
               {/* Hidden File Input */}

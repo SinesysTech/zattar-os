@@ -42,7 +42,7 @@ export function SearchInput({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-56 pl-8 pr-3 py-1.5 rounded-lg bg-white/4 border border-border/15 text-xs placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary/20 transition-all"
+        className="w-56 pl-8 pr-3 py-1.5 rounded-lg bg-muted/50 border border-border/50 text-xs placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/40 focus:bg-card transition-all"
       />
     </div>
   );

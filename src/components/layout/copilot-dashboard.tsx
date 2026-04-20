@@ -1,11 +1,8 @@
 "use client"
 
 import { useState, useCallback, useEffect, useRef } from "react"
-import Notifications from "@/components/layout/header/notifications"
-import { AuthenticatorPopover } from "@/components/layout/header/authenticator-popover"
-import { HeaderUserMenu } from "@/components/layout/header/header-user-menu"
-import { useNotificacoes } from "@/app/(authenticated)/notificacoes"
-import { CommandHub } from "@/components/layout/header/command-hub"
+import { DashboardLogoButton } from "@/components/layout/header/dashboard-logo-button"
+import { ModulesMenuButton } from "@/components/layout/header/modules-menu-button"
 import { Terminal, MessageSquare } from "lucide-react"
 import "@copilotkit/react-core/v2/styles.css"
 import { CopilotKitProvider } from "@copilotkit/react-core/v2"
@@ -122,42 +119,14 @@ function DashboardHeader({
   onOpenCommand: () => void
   onOpenBriefing: () => void
 }) {
-  const { contador } = useNotificacoes({ pagina: 1, limite: 1, lida: false })
-  const hasUnread = contador.total > 0
-
   return (
     <div className="flex h-16 shrink-0 items-center gap-4 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-2 z-40">
-      {/* Esquerda: Avatar + ícones hover-reveal */}
-      <div className="group/avatar flex items-center gap-1">
-        <div className="relative">
-          <HeaderUserMenu />
-          {hasUnread && (
-            <span className="absolute -right-0.5 -top-0.5 block size-2.5 rounded-full bg-destructive ring-2 ring-background" />
-          )}
-        </div>
+      {/* Esquerda: logo Z → Dashboard */}
+      <DashboardLogoButton />
 
-        {/* Ícones aparecem com animação no hover */}
-        <div
-          className={cn(
-            "flex items-center gap-0.5",
-            "opacity-0 -translate-x-2 scale-90 pointer-events-none",
-            "group-hover/avatar:opacity-100 group-hover/avatar:translate-x-0 group-hover/avatar:scale-100 group-hover/avatar:pointer-events-auto",
-            "transition-all duration-250 ease-out",
-            // Mantém visível quando um popover/dropdown está aberto
-            "group-has-data-[state=open]/avatar:opacity-100",
-            "group-has-data-[state=open]/avatar:translate-x-0",
-            "group-has-data-[state=open]/avatar:scale-100",
-            "group-has-data-[state=open]/avatar:pointer-events-auto"
-          )}
-        >
-          <AuthenticatorPopover />
-          <Notifications />
-        </div>
-      </div>
-
-      {/* Centro: espaçador + Command Hub + espaçador */}
+      {/* Centro: apenas o ícone do menu (conta e ações integradas no painel) */}
       <div className="flex-1" />
-      <CommandHub />
+      <ModulesMenuButton />
       <div className="flex-1" />
 
       {/* Direita: Pedrinho toggle */}
@@ -189,15 +158,15 @@ export default function CopilotDashboard({ children }: { children: React.ReactNo
       {/* Registra ações globais + contexto de rota como readable state */}
       <CopilotGlobalActions />
 
-      {/* Conteúdo do app — empurra para a esquerda quando Briefing está aberto */}
+      {/* Conteúdo do app — retrai a largura quando Briefing está aberto */}
       <PageSearchProvider>
         <div
           className={cn(
-            "fixed inset-0 flex flex-col bg-background canvas-dots",
-            "transition-transform duration-300 ease-out"
+            "fixed top-0 bottom-0 left-0 flex flex-col bg-background canvas-dots",
+            "transition-[right] duration-300 ease-out"
           )}
           style={{
-            transform: isBriefingOpen && !isMobile ? `translateX(-${panelWidth}px)` : 'translateX(0)',
+            right: isBriefingOpen && !isMobile ? `${panelWidth}px` : 0,
           }}
         >
           <DashboardHeader
