@@ -50,6 +50,7 @@ import {
 import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
+import { Button } from '@/components/ui/button';
 
 import type { Audiencia } from '../domain';
 import { StatusAudiencia } from '../domain';
@@ -255,13 +256,10 @@ export function AudienciasMissionView({
           </p>
         </div>
         {onNewAudiencia && (
-          <button
-            onClick={onNewAudiencia}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
-          >
+          <Button size="sm" className="rounded-xl" onClick={onNewAudiencia}>
             <Plus className="size-3.5" />
             Nova audiência
-          </button>
+          </Button>
         )}
       </div>
 

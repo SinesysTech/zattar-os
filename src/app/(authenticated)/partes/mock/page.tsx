@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Users,
   Search,
@@ -418,10 +419,10 @@ export default function PartesMockPage() {
             {totalGeral} registros &middot; {novosEsteMes} novos este mês
           </p>
         </div>
-        <button className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm">
+        <Button size="sm" className="rounded-xl">
           <Plus className="size-3.5" />
           Nova parte
-        </button>
+        </Button>
       </div>
 
       {/* ── Pulse Strip ─────────────────────────────────────────── */}

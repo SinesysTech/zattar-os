@@ -21,6 +21,7 @@ import {
   Plus,
 } from "lucide-react";
 import { Heading } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
 import { ViewToggle, type ViewToggleOption } from "@/components/dashboard/view-toggle";
 import { AgendaKpiStrip, type AgendaKpiData } from "./agenda-kpi-strip";
 import { AgendaFilterBar } from "./agenda-filter-bar";
@@ -170,10 +171,10 @@ export function AgendaRedesignMock() {
             onChange={(m) => setView(m as AgendaView)}
             options={VIEW_OPTIONS}
           />
-          <button className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm">
+          <Button size="sm" className="rounded-xl">
             <Plus className="size-3.5" />
             <span className="hidden sm:inline">Novo evento</span>
-          </button>
+          </Button>
         </div>
       </div>
 

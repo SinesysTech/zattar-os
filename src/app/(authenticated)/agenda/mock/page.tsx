@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Calendar,
   Clock,
@@ -134,13 +135,10 @@ function Toolbar({
           <Heading level="page">Agenda</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">{dateLabel}</p>
         </div>
-        <button
-          onClick={onNewEvent}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
-        >
+        <Button size="sm" className="rounded-xl" onClick={onNewEvent}>
           <Plus className="size-3.5" />
           <span className="hidden sm:inline">Novo evento</span>
-        </button>
+        </Button>
       </div>
 
       {/* Row 2: Search + Filters + Nav + View */}

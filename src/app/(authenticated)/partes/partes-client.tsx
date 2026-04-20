@@ -46,6 +46,7 @@ import { ParteContrariaFormDialog } from './components/partes-contrarias/parte-c
 import { TerceiroFormDialog } from './components/terceiros/terceiro-form';
 import { RepresentanteFormDialog } from './components/representantes/representante-form';
 import { Heading } from '@/components/ui/typography';
+import { Button } from '@/components/ui/button';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -397,13 +398,10 @@ export function PartesClient({ initialStats }: PartesClientProps) {
           </p>
         </div>
         <div className="relative">
-          <button
-            onClick={handleNovaParte}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
-          >
+          <Button size="sm" className="rounded-xl" onClick={handleNovaParte}>
             <Plus className="size-3.5" />
             {buttonLabel}
-          </button>
+          </Button>
 
           {/* Dropdown de tipo (só na tab "Todos") */}
           {showTypeMenu && (
