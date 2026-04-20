@@ -466,11 +466,20 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
                 <SlidersHorizontal className="size-3.5" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
+            <DropdownMenuContent
+              align="end"
+              className="glass-dropdown rounded-2xl p-1.5 min-w-44 border-border/40"
+            >
+              <DropdownMenuItem
+                asChild
+                className="rounded-lg text-xs px-3 py-2 cursor-pointer"
+              >
                 <Link href="/pericias/especialidades">Especialidades</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
+              <DropdownMenuItem
+                asChild
+                className="rounded-lg text-xs px-3 py-2 cursor-pointer"
+              >
                 <Link href="/pericias/peritos">Peritos</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>

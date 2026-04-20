@@ -1,40 +1,30 @@
-// Core exports (kept from legacy)
-export { ComunicaCNJResultsTable } from "./results-table";
-export { ComunicacaoDetalhesDialog } from "./detalhes-dialog";
-export { PdfViewerDialog } from "./pdf-viewer-dialog";
-export { ComunicaCNJTabsContent } from "./tabs-content";
+/**
+ * Barrel dos componentes do módulo Comunica CNJ.
+ *
+ * Desde a reorganização em 2 páginas (Pesquisa + Capturadas), os componentes
+ * são agrupados em subpastas: `pesquisa/`, `capturadas/`, `shared/` e dialogs
+ * compartilhados (`detalhes-dialog`, `pdf-viewer-dialog`).
+ */
 
-// Gazette Fusion — Page orchestrator
-export { GazettePage } from "./gazette-page";
+// Dialogs compartilhados
+export { ComunicacaoDetalhesDialog } from './detalhes-dialog';
+export { PdfViewerDialog } from './pdf-viewer-dialog';
 
-// Gazette Fusion — UI components
-export { GazetteAlertBanner } from "./gazette-alert-banner";
-export { GazetteAiInsights } from "./gazette-ai-insights";
-export { GazetteAiSummary } from "./gazette-ai-summary";
-export { GazetteKpiStrip } from "./gazette-kpi-strip";
-export { GazetteKpiCard } from "./gazette-kpi-card";
-export { GazetteSearchBar } from "./gazette-search-bar";
-export { GazetteSyncDialog } from "./gazette-sync-dialog";
-export { GazetteOrphanResolver } from "./gazette-orphan-resolver";
-export { GazetteCreateViewDialog } from "./gazette-create-view-dialog";
-export { GazetteColumnConfig } from "./gazette-column-config";
-export { GazetteViewTabs } from "./gazette-view-tabs";
-export { GazetteFilterBar } from "./gazette-filter-bar";
-export { GazetteFilterChips } from "./gazette-filter-chips";
-export { GazetteDataTable } from "./gazette-data-table";
-export { GazetteCardGrid } from "./gazette-card-grid";
-export { GazetteDetailPanel } from "./gazette-detail-panel";
-export { GazetteTimeline } from "./gazette-timeline";
-export { GazetteKeyboardHelp } from "./gazette-keyboard-help";
+// Componentes da página de Pesquisa
+export * from './pesquisa';
 
-// Gazette Fusion — Empty states
-export {
-  EmptyNoResults,
-  EmptyFirstTime,
-  EmptyAllResolved,
-  EmptyNoDeadlines,
-} from "./gazette-empty-states";
+// Componentes da página de Capturadas
+export * from './capturadas';
 
-// Gazette Fusion — Hooks
-export { useGazetteStore } from "./hooks/use-gazette-store";
-export { useGazetteKeyboard } from "./hooks/use-gazette-keyboard";
+// Navegação entre sub-páginas
+export { ComunicaCnjSubnav } from './shared/comunica-cnj-subnav';
+
+// Dialogs/banners auxiliares reaproveitados em Capturadas
+export { GazetteSyncDialog } from './gazette-sync-dialog';
+export { GazetteAlertBanner } from './gazette-alert-banner';
+export { GazetteOrphanResolver } from './gazette-orphan-resolver';
+export { GazetteTimeline } from './gazette-timeline';
+
+// Hooks
+export { useGazetteStore } from './hooks/use-gazette-store';
+export { usePesquisaStore, montarParams } from './hooks/use-pesquisa-store';

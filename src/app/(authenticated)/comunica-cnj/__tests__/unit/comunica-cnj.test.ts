@@ -1,8 +1,8 @@
 /**
  * Testes do barrel público do módulo comunica-cnj (Diário Oficial).
  *
- * Validam a superfície pública exportada pelo index.ts após a migração
- * do módulo proxy para módulo FSD autocontido (2026-04-20).
+ * Validam a superfície pública exportada pelo index.ts após a
+ * reorganização em 2 páginas (Pesquisa + Capturadas) — 2026-04-20.
  */
 
 jest.mock('@/app/(authenticated)/expedientes', () => ({
@@ -20,12 +20,12 @@ jest.mock('@/app/(authenticated)/expedientes/repository', () => ({
 
 describe('Módulo comunica-cnj', () => {
     describe('index.ts — Barrel Export', () => {
-        it('deve exportar o componente ComunicaCNJTabsContent', () => {
+        it('deve exportar os clientes das 2 páginas', () => {
             // eslint-disable-next-line @typescript-eslint/no-require-imports
             const barrel = require('@/app/(authenticated)/comunica-cnj');
 
-            expect(barrel).toHaveProperty('ComunicaCNJTabsContent');
-            expect(typeof barrel.ComunicaCNJTabsContent).toBe('function');
+            expect(typeof barrel.PesquisaClient).toBe('function');
+            expect(typeof barrel.CapturadasClient).toBe('function');
         });
 
         it('deve expor labels e schemas de domínio', () => {
@@ -64,6 +64,14 @@ describe('Módulo comunica-cnj', () => {
             const page = require('@/app/(authenticated)/comunica-cnj/page');
 
             expect(page.default).toBeDefined();
+            expect(typeof page.default).toBe('function');
+        });
+
+        it('deve exportar CapturadasPage em /capturadas', () => {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const page = require('@/app/(authenticated)/comunica-cnj/capturadas/page');
+
+            expect(page.dynamic).toBe('force-dynamic');
             expect(typeof page.default).toBe('function');
         });
     });
