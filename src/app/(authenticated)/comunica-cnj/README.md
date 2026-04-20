@@ -1,53 +1,77 @@
 # Comunica CNJ (Diário Oficial)
 
 ## Status
-Módulo FSD autocontido. Toda lógica (domain, service, repository, client HTTP, actions, components, hooks, testes) vive aqui.
+Módulo FSD autocontido organizado em **2 páginas**:
+
+- **`/comunica-cnj`** → Pesquisa — hero de busca na API pública do Comunica CNJ
+- **`/comunica-cnj/capturadas`** → Gestão — KPIs, filtros, listagem, vinculação de expedientes
 
 ## O que este módulo é
-Rota `/comunica-cnj` — "Diário Oficial" — que consulta a **API pública do Comunica CNJ** (Conselho Nacional de Justiça) para obter comunicações processuais oficiais, persiste as capturas em banco e vincula automaticamente a expedientes correspondentes.
+Consulta direta e gestão das **comunicações processuais oficiais** publicadas no Comunica CNJ (Conselho Nacional de Justiça). A página raiz é uma busca ao vivo (sem persistência); a sub-página `/capturadas` é o painel operacional sobre o que já foi sincronizado.
 
 ## Estrutura FSD
 
 ```text
 comunica-cnj/
-├── RULES.md                  # Regras de negócio
-├── README.md                 # Este arquivo
-├── index.ts                  # Barrel público (importar via @/app/(authenticated)/comunica-cnj)
-├── layout.tsx                # PageShell wrapper
-├── page.tsx                  # Entry da rota
-├── domain.ts                 # Tipos, schemas Zod
-├── cnj-client.ts             # Cliente HTTP (axios) da API pública do CNJ
-├── service.ts                # Regras de negócio (server-only)
-├── repository.ts             # Acesso Supabase (server-only)
+├── RULES.md                        # Regras de negócio
+├── README.md                       # Este arquivo
+├── index.ts                        # Barrel público
+├── layout.tsx                      # PageShell wrapper
+├── page.tsx                        # Pesquisa (entrypoint raiz)
+├── pesquisa-client.tsx             # Client da Pesquisa
+├── capturadas/
+│   ├── page.tsx                    # Capturadas (sub-página)
+│   └── layout.tsx                  # (opcional, herdado)
+├── capturadas-client.tsx           # Client da Gestão
+├── domain.ts                       # Tipos, schemas Zod
+├── cnj-client.ts                   # Cliente HTTP (axios) da API CNJ
+├── service.ts                      # Regras de negócio (server-only)
+├── repository.ts                   # Acesso Supabase (server-only)
 ├── actions/
-│   ├── index.ts              # Barrel de actions
-│   ├── comunica-cnj-actions.ts   # Actions com requireAuth custom (legacy)
-│   ├── safe-actions.ts       # Actions com authenticatedAction (safe-action)
-│   └── utils.ts              # requireAuth helper local
+│   ├── index.ts                    # Barrel de actions
+│   ├── comunica-cnj-actions.ts     # Actions com requireAuth custom
+│   ├── safe-actions.ts             # Actions com authenticatedAction
+│   └── utils.ts                    # requireAuth helper local
 ├── components/
-│   ├── index.ts              # Barrel de componentes
-│   ├── tabs-content.tsx      # Entrypoint client (Suspense + GazettePage)
-│   ├── gazette-page.tsx      # Orquestrador principal
-│   ├── gazette-*.tsx         # 20+ componentes UI
-│   ├── detalhes-dialog.tsx
-│   ├── pdf-viewer-dialog.tsx
-│   ├── results-table.tsx
+│   ├── index.ts                    # Barrel de components
+│   ├── detalhes-dialog.tsx         # Dialog de detalhes (usado nas 2 páginas)
+│   ├── pdf-viewer-dialog.tsx       # Viewer PDF de certidão
+│   ├── gazette-sync-dialog.tsx     # Sincronização manual (Capturadas)
+│   ├── gazette-alert-banner.tsx    # Banner de prazos críticos
+│   ├── gazette-orphan-resolver.tsx # Tela dedicada à aba Órfãos
+│   ├── gazette-timeline.tsx        # Timeline usada no sync dialog
+│   ├── pesquisa/                   # componentes da página Pesquisa
+│   │   ├── search-hero.tsx         # Hero + input
+│   │   ├── search-quick-filters.tsx # Tribunal, OAB, Meio, Período
+│   │   ├── search-shortcuts.tsx    # Atalhos populares
+│   │   ├── search-stats.tsx        # Mini-stats + link para /capturadas
+│   │   └── search-results.tsx      # Lista resultados da API CNJ
+│   ├── capturadas/                 # componentes da página Capturadas
+│   │   ├── capturadas-pulse-strip.tsx  # KPIs (padrão PulseStrip)
+│   │   ├── capturadas-filter-bar.tsx   # Popovers + chips (padrão Audiências)
+│   │   ├── capturadas-glass-list.tsx   # Lista glass (padrão Audiências)
+│   │   ├── capturadas-glass-cards.tsx  # Grid de cards (padrão Processos)
+│   │   └── capturadas-detail-dialog.tsx # Dialog glass centralizado
+│   ├── shared/
+│   │   └── comunica-cnj-subnav.tsx # Navegação entre Pesquisa/Capturadas
 │   └── hooks/
-│       ├── use-gazette-store.ts
-│       └── use-gazette-keyboard.ts
+│       ├── use-gazette-store.ts    # Zustand — estado da Gestão
+│       └── use-pesquisa-store.ts   # Zustand — estado da Pesquisa
 └── __tests__/
-    ├── unit/                 # Testes de serviço e domínio
-    └── actions/              # Testes de server actions
+    ├── unit/                       # Testes de serviço e barrel
+    └── actions/                    # Testes de server actions
 ```
 
-## Diferença vs. módulo `captura`
+## Fluxo de uso
 
-| | Comunica CNJ | Captura |
-|---|---|---|
-| Fonte | API pública REST do CNJ | Scraping Playwright do PJE/TRT |
-| Auth externa | Nenhuma (API aberta) | Credenciais de advogado (cpf/senha) |
-| Entidade principal | `ComunicacaoCNJ` | `ProcessoCapturado`, `Audiencia`, etc. |
-| Agendamento | Via `captura/agendamentos/` (genérico) | Via `captura/agendamentos/` (genérico) |
+1. Usuário entra em **`/comunica-cnj`** → Hero de busca.
+2. Digita termo + filtros rápidos → `actionConsultarComunicacoes` consulta a API CNJ ao vivo.
+3. Resultados aparecem em cards abaixo do hero. Click abre o `ComunicacaoDetalhesDialog` com opção de ver PDF da certidão.
+4. Para **gerir** o que já foi sincronizado (vincular a expedientes, resolver órfãos, ver métricas), acessa **`/comunica-cnj/capturadas`** via subnav.
+5. A página de Capturadas segue o padrão gold-standard de Audiências/Expedientes/Processos: `PulseStrip` (KPIs) → `TabPills` + `ViewToggle` + `SearchInput` → `FilterBar` (popovers) → `GlassList` ou `GlassCards`.
+
+## Agendamentos
+**Fora do escopo.** Agendamentos de sincronização recorrente são gerenciados em `/captura/agendamentos/` (genéricos para todos os tipos de captura).
 
 ## Permissões RBAC
 - `comunica_cnj:consultar` — consulta à API (sem persistência)
@@ -55,12 +79,6 @@ comunica-cnj/
 - `comunica_cnj:capturar` — disparar sincronização manual
 - `comunica_cnj:visualizar` — obter certidão PDF
 - `comunica_cnj:editar` — vincular/desvincular expediente
-
-## Dependências externas do projeto
-- `captura/agendamentos/` — agendamentos genéricos (não acoplar lógica de comunica aqui)
-- `expedientes/` — para criar expediente a partir de comunicação não-vinculada
-- `@/lib/safe-action` — wrapper para server actions modernas
-- `@/lib/supabase/service-client` — acesso direto ao banco
 
 ## Tabelas Supabase
 - `comunica_cnj` — comunicações capturadas
