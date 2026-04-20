@@ -139,7 +139,7 @@ export default function ContratosPendentesStep() {
             >
               <GlassPanel
                 depth={1}
-                className="flex items-center gap-3 p-4 transition-all duration-200 group-hover:border-primary/40 group-hover:bg-primary/[0.03] group-focus-visible:border-primary/60 group-focus-visible:ring-2 group-focus-visible:ring-primary/20 sm:p-5"
+                className="flex items-center gap-3 p-4 transition-all duration-200 group-hover:border-primary/40 group-hover:bg-primary/3 group-focus-visible:border-primary/60 group-focus-visible:ring-2 group-focus-visible:ring-primary/20 sm:p-5"
               >
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <Text
