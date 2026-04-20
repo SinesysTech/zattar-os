@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react';
 import { toast } from 'sonner';
+import { Heading, Text } from '@/components/ui/typography';
 import {
   SearchHero,
   SearchQuickFilters,
@@ -17,12 +18,14 @@ import {
 } from './components/hooks/use-pesquisa-store';
 
 /**
- * Client component da página raiz `/comunica-cnj` — hero de busca
- * na API pública do Comunica CNJ. Orquestra SearchHero, SearchQuickFilters,
- * SearchShortcuts, SearchStats e SearchResults.
+ * Client da página raiz `/comunica-cnj` — Pesquisa ao vivo na API CNJ.
  *
- * Estado gerenciado em `usePesquisaStore` (zustand).
- * Busca ao vivo via `actionConsultarComunicacoes`.
+ * Layout padrão ouro (ver AssinaturaDigital/Audiências):
+ *  1. Heading do módulo ("Diário Oficial") + subtítulo
+ *  2. Subnav (Pesquisa | Capturadas)
+ *  3. Bloco de busca centralizado
+ *  4. Quick filters + atalhos + stats (antes da primeira busca)
+ *  5. Resultados
  */
 export function PesquisaClient() {
   const termo = usePesquisaStore((s) => s.termo);
@@ -76,15 +79,27 @@ export function PesquisaClient() {
   }, [termo, filtros, setIsBuscando, setErro, setResultados]);
 
   return (
-    <div className="flex flex-col gap-6 px-6 py-6">
-      <ComunicaCnjSubnav active="pesquisa" />
-
-      <div className="flex flex-col gap-8 py-4">
-        <SearchHero onBuscar={executarBusca} />
-        <SearchQuickFilters />
+    <div className="flex flex-col gap-5 px-6 py-6">
+      {/* Header do módulo */}
+      <div>
+        <Heading level="page">Diário Oficial</Heading>
+        <Text variant="caption" className="mt-0.5 text-muted-foreground">
+          Pesquise comunicações processuais oficiais publicadas no Comunica CNJ.
+        </Text>
       </div>
 
-      {/* Atalhos + stats só antes da primeira busca (reduz ruído depois) */}
+      {/* Abas */}
+      <ComunicaCnjSubnav active="pesquisa" />
+
+      {/* Busca */}
+      <div className="py-6">
+        <SearchHero onBuscar={executarBusca} />
+        <div className="mt-4">
+          <SearchQuickFilters />
+        </div>
+      </div>
+
+      {/* Atalhos + stats antes da primeira busca */}
       {!jaBuscou && (
         <div className="flex flex-col gap-6">
           <SearchShortcuts onAfterApply={executarBusca} />

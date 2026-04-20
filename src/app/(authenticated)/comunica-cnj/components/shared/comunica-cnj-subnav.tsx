@@ -27,7 +27,8 @@ const ITEMS: SubnavItem[] = [
 
 /**
  * Navegação horizontal entre as sub-páginas do módulo Comunica CNJ.
- * Exibe contador de capturadas sincronizado com as métricas.
+ * Segue o padrão "glass pill bar" do Design System Glass Briefing,
+ * idêntico ao AssinaturaDigitalPageNav.
  */
 export function ComunicaCnjSubnav({ active }: { active: SubnavKey }) {
   const [totalCapturadas, setTotalCapturadas] = useState<number | null>(null);
@@ -53,7 +54,10 @@ export function ComunicaCnjSubnav({ active }: { active: SubnavKey }) {
   return (
     <nav
       aria-label="Navegação do Diário Oficial"
-      className="inline-flex items-center gap-1 self-start rounded-2xl border border-border/40 bg-card/50 p-1"
+      className={cn(
+        'inline-flex items-center gap-1 rounded-2xl border border-border/40 bg-card/60 p-1',
+        'backdrop-blur-xl',
+      )}
     >
       {ITEMS.map((item) => {
         const isActive = active === item.id;
@@ -64,10 +68,10 @@ export function ComunicaCnjSubnav({ active }: { active: SubnavKey }) {
             href={item.href}
             aria-current={isActive ? 'page' : undefined}
             className={cn(
-              'inline-flex items-center gap-2 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors',
+              'flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors',
               isActive
-                ? 'bg-primary/10 text-primary'
-                : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground',
+                ? 'bg-foreground text-background shadow-sm'
+                : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground',
             )}
           >
             <item.icon className="size-3.5" aria-hidden />
@@ -76,7 +80,7 @@ export function ComunicaCnjSubnav({ active }: { active: SubnavKey }) {
               <span
                 className={cn(
                   'tabular-nums text-[10px]',
-                  isActive ? 'text-primary/70' : 'text-muted-foreground/60',
+                  isActive ? 'text-background/70' : 'text-muted-foreground/60',
                 )}
               >
                 {totalCapturadas!.toLocaleString('pt-BR')}

@@ -181,27 +181,26 @@ export function CapturadasClient() {
 
   return (
     <div className="flex flex-col gap-5 px-6 py-6">
-      <ComunicaCnjSubnav active="capturadas" />
-
-      {/* Header */}
+      {/* Header do módulo */}
       <div className="flex items-end justify-between gap-4">
         <div>
-          <Heading level="page">Capturadas</Heading>
+          <Heading level="page">Diário Oficial</Heading>
           <Text variant="caption" className="mt-0.5 text-muted-foreground">
-            {subtitle}
+            Gestão das comunicações capturadas · {subtitle}
           </Text>
         </div>
-        <div className="flex items-center gap-3">
-          <GazetteSyncDialog
-            trigger={
-              <Button variant="outline" size="sm" className="gap-1.5 rounded-xl">
-                <RefreshCw className="size-3.5" aria-hidden />
-                Sincronizar
-              </Button>
-            }
-          />
-        </div>
+        <GazetteSyncDialog
+          trigger={
+            <Button variant="outline" size="sm" className="gap-1.5 rounded-xl">
+              <RefreshCw className="size-3.5" aria-hidden />
+              Sincronizar
+            </Button>
+          }
+        />
       </div>
+
+      {/* Abas */}
+      <ComunicaCnjSubnav active="capturadas" />
 
       {/* Alert banner */}
       {metricas && metricas.prazosCriticos > 0 && (
