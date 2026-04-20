@@ -6,8 +6,6 @@ import type { DocumentosStats } from "../services/documentos.service";
 
 /**
  * Hook para buscar stats de documentos de assinatura digital.
- *
- * Usado pelo StatsStrip e SignaturePipeline.
  */
 export function useDocumentosStats(initialStats?: DocumentosStats) {
   const [stats, setStats] = useState<DocumentosStats | null>(initialStats ?? null);

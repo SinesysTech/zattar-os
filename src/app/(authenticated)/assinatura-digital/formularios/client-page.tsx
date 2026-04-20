@@ -17,7 +17,6 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { usePermissoes } from '@/providers/user-provider';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
-import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
@@ -251,28 +250,20 @@ export function FormulariosClient() {
 
   return (
     <div className="space-y-5">
-      <AssinaturaDigitalPageNav />
-
-      {/* Header */}
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <Heading level="page">Formulários</Heading>
-          <Text variant="meta-label" className="mt-0.5">
-            {stats.total} formulário{stats.total !== 1 ? 's' : ''}
-            {stats.ativos > 0 ? ` · ${stats.ativos} ativo${stats.ativos !== 1 ? 's' : ''}` : ''}
-          </Text>
-        </div>
-        {canCreate && (
-          <button
-            type="button"
-            onClick={() => setCreateOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
-          >
-            <Plus className="size-3.5" />
-            Novo formulário
-          </button>
-        )}
-      </div>
+      <AssinaturaDigitalPageNav
+        action={
+          canCreate ? (
+            <Button
+              size="sm"
+              className="gap-1.5"
+              onClick={() => setCreateOpen(true)}
+            >
+              <Plus className="size-3.5" />
+              Novo formulário
+            </Button>
+          ) : undefined
+        }
+      />
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">

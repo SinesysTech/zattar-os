@@ -3,9 +3,9 @@
 /**
  * ContratosPipelineStepper — Funil de estágios em GlassPanel único.
  * ============================================================================
- * Segue o padrão de `SignaturePipeline` (assinatura digital): um container
- * com header + colunas internas lado a lado, cada coluna com ícone, label,
- * contador grande, barra proporcional e taxa de conversão relativa ao total.
+ * Container com header + colunas internas lado a lado, cada coluna com ícone,
+ * label, contador grande, barra proporcional e taxa de conversão relativa ao
+ * total.
  *
  * Cada coluna é clicável para filtrar a lista por status; a coluna ativa
  * ganha realce sutil via fundo primary/5 e glow no dot.

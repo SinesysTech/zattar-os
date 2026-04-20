@@ -13,7 +13,7 @@
  */
 
 import * as React from 'react';
-import { Calendar as CalendarIcon, Check, ChevronDown, X } from 'lucide-react';
+import { Check, ChevronDown, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -494,7 +494,6 @@ export function DateRangePill({
               open && 'ring-1 ring-ring',
             )}
           >
-            <CalendarIcon className="size-3" />
             <span>{label}</span>
             {active ? (
               <span

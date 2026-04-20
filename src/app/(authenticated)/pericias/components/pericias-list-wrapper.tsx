@@ -65,6 +65,7 @@ export function PericiasListWrapper({
   especialidadeFilter,
   peritoFilter,
   dateRange,
+  usuarios,
   refetchKey,
 }: PericiasListWrapperProps) {
   const [pageIndex, setPageIndex] = React.useState(0);
@@ -162,6 +163,7 @@ export function PericiasListWrapper({
         pericias={pericias}
         isLoading={isLoading}
         onViewDetail={handleViewDetail}
+        usuarios={usuarios}
       />
 
       {/* Pagination simples */}

@@ -20,13 +20,11 @@ import {
 } from "@/components/dashboard/view-toggle";
 import { GlassPanel } from "@/components/shared/glass-panel";
 import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/typography";
 import type { DocumentosStats } from '@/shared/assinatura-digital/services/documentos.service';
 import type { DocumentoListItem } from '@/shared/assinatura-digital/adapters/documento-card-adapter';
 import { useDocumentosPage } from '@/shared/assinatura-digital/hooks/use-documentos-page';
 import { useDocumentosStats } from '@/shared/assinatura-digital/hooks/use-documentos-stats';
 import { DocumentDetail } from '@/app/(authenticated)/assinatura-digital/components/documento-detail';
-import { SignaturePipeline } from '@/app/(authenticated)/assinatura-digital/components/signature-pipeline';
 import { AssinaturaDigitalPageNav } from "../../components/page-nav";
 import { DocumentosGlassList } from "../../components/documentos-glass-list";
 
@@ -113,31 +111,17 @@ export function DocumentosCommandCenter({
 
   return (
     <div className="space-y-5">
-      {/* ── Navegação do módulo ──────────────────────────── */}
-      <AssinaturaDigitalPageNav />
-
-      {/* ── Header ──────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <Heading level="page">Documentos</Heading>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            {stats?.total ?? 0} documentos ·{" "}
-            <span className="text-info">{stats?.aguardando ?? 0} aguardando</span>
-            {stats && stats.concluidos > 0 && (
-              <>
-                {" · "}
-                <span className="text-success">{stats.concluidos} concluídos</span>
-              </>
-            )}
-          </p>
-        </div>
-        <Button asChild size="sm" className="gap-1.5">
-          <Link href="/app/assinatura-digital/documentos/novo">
-            <Plus className="size-3.5" />
-            Novo documento
-          </Link>
-        </Button>
-      </div>
+      {/* ── Header (título do módulo + abas + ação) ─────── */}
+      <AssinaturaDigitalPageNav
+        action={
+          <Button asChild size="sm" className="gap-1.5">
+            <Link href="/app/assinatura-digital/documentos/novo">
+              <Plus className="size-3.5" />
+              Novo documento
+            </Link>
+          </Button>
+        }
+      />
 
       {/* ── KPI Strip ───────────────────────────────────── */}
       {stats && (
@@ -185,9 +169,6 @@ export function DocumentosCommandCenter({
           />
         </div>
       )}
-
-      {/* ── Pipeline ────────────────────────────────────── */}
-      {stats && <SignaturePipeline stats={stats} />}
 
       {/* ── Insight ─────────────────────────────────────── */}
       {pendingSigners.length > 0 && (

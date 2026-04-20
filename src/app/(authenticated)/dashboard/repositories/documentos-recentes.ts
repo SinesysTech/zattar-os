@@ -12,6 +12,8 @@
  * ou não conter extensão. Sem extensão reconhecida, o tipo padrão é 'doc'.
  */
 
+import 'server-only';
+
 import { createClient } from '@/lib/supabase/server';
 import type { DocumentoRecente } from '../domain';
 
