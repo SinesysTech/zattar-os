@@ -14,7 +14,8 @@ set -e
 # ~/.cloudron.json antes de buildar, garantindo que opere no servidor
 # correto mesmo que o CLI esteja configurado para outra instancia.
 #
-# Variaveis NEXT_PUBLIC_* sao lidas do .env.production pelo Next.js no build.
+# Variaveis NEXT_PUBLIC_* e STRAPI_* sao materializadas automaticamente em
+# .env.production a partir do .env.local para o build do Next.js.
 # Variaveis de runtime sao lidas do .env.local e setadas via cloudron env set.
 #
 # Ref: https://docs.cloudron.io/packaging/cli
@@ -29,6 +30,7 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 # -----------------------------------------------------------------------------
 ENV_FILE="${PROJECT_DIR}/.env.local"
 ENV_PRODUCTION="${PROJECT_DIR}/.env.production"
+GENERATED_BUILD_ENV=false
 CLOUDRON_APP="zattaradvogados.com"
 REGISTRY="registry.sinesys.online"
 IMAGE_NAME="zattar-os"
@@ -166,6 +168,47 @@ parse_env_file() {
     done < "$file"
 }
 
+generate_build_env_file() {
+    local source_file="$ENV_FILE"
+    local target_file="$ENV_PRODUCTION"
+    local tmp_file="${target_file}.tmp"
+    local build_count=0
+
+    if [ ! -f "$source_file" ]; then
+        error "Nao foi possivel gerar .env.production: .env.local ausente"
+        return 1
+    fi
+
+    : > "$tmp_file"
+
+    while IFS='=' read -r key value; do
+        # Build do website usa NEXT_PUBLIC_* e tambem STRAPI_* em SSG/ISR.
+        if [[ "$key" == NEXT_PUBLIC_* ]] || [ "$key" = "STRAPI_URL" ] || [ "$key" = "STRAPI_API_TOKEN" ]; then
+            echo "${key}=${value}" >> "$tmp_file"
+            build_count=$((build_count + 1))
+        fi
+    done < <(parse_env_file "$source_file")
+
+    if [ "$build_count" -eq 0 ]; then
+        error "Nenhuma variavel de build encontrada no .env.local"
+        error "Adicione ao menos NEXT_PUBLIC_* ou STRAPI_URL/STRAPI_API_TOKEN"
+        rm -f "$tmp_file"
+        return 1
+    fi
+
+    mv "$tmp_file" "$target_file"
+    GENERATED_BUILD_ENV=true
+    success ".env.production gerado automaticamente (${build_count} vars)"
+    return 0
+}
+
+cleanup_generated_build_env_file() {
+    if [ "$GENERATED_BUILD_ENV" = true ] && [ -f "$ENV_PRODUCTION" ]; then
+        rm -f "$ENV_PRODUCTION"
+        info ".env.production temporario removido"
+    fi
+}
+
 wait_for_health() {
     local app="$1"
     local max_attempts=12
@@ -284,12 +327,10 @@ else
     success "Cloudron CLI $(cloudron --version 2>/dev/null)"
 fi
 
-if [ "$SKIP_BUILD" = false ] && [ ! -f "$ENV_PRODUCTION" ]; then
-    error ".env.production nao encontrado!"
-    error "Crie com: grep '^NEXT_PUBLIC_' .env.local > .env.production"
-    PREREQ_OK=false
-else
-    [ "$SKIP_BUILD" = false ] && success ".env.production encontrado"
+if [ "$SKIP_BUILD" = false ]; then
+    if ! generate_build_env_file; then
+        PREREQ_OK=false
+    fi
 fi
 
 # Configurar Build Service automaticamente (corrige builder e repository)
@@ -364,6 +405,8 @@ else
     header "STEP 1/3: Build (pulado)"
 fi
 
+cleanup_generated_build_env_file
+
 # =============================================================================
 # STEP 2: Cloudron Update
 # =============================================================================
@@ -410,8 +453,9 @@ echo "     - CLOUDRON_REDIS_* -> REDIS_URL, REDIS_PASSWORD, ENABLE_REDIS_CACHE"
 echo "     - CLOUDRON_MAIL_*  -> SYSTEM_SMTP_*, SYSTEM_MAIL_*"
 echo ""
 echo "   Build time (via .env.production):"
-echo "     - NEXT_PUBLIC_SUPABASE_URL"
-echo "     - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY"
+echo "     - NEXT_PUBLIC_*"
+echo "     - STRAPI_URL"
+echo "     - STRAPI_API_TOKEN"
 echo ""
 echo "   Comandos uteis:"
 echo "     cloudron logs -f --app ${CLOUDRON_APP}"

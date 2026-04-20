@@ -26,6 +26,7 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 DOCKERFILE="Dockerfile.cloudron"
 ENV_FILE="${PROJECT_DIR}/.env.local"
 ENV_PRODUCTION="${PROJECT_DIR}/.env.production"
+GENERATED_BUILD_ENV=false
 REGISTRY="registry.sinesys.online"
 IMAGE_NAME="zattar-os"
 CLOUDRON_APP="zattaradvogados.com"
@@ -164,6 +165,47 @@ parse_env_file() {
     done < "$file"
 }
 
+generate_build_env_file() {
+    local source_file="$ENV_FILE"
+    local target_file="$ENV_PRODUCTION"
+    local tmp_file="${target_file}.tmp"
+    local build_count=0
+
+    if [ ! -f "$source_file" ]; then
+        error "Nao foi possivel gerar .env.production: .env.local ausente"
+        return 1
+    fi
+
+    : > "$tmp_file"
+
+    while IFS='=' read -r key value; do
+        # Build do website usa NEXT_PUBLIC_* e tambem STRAPI_* em SSG/ISR.
+        if [[ "$key" == NEXT_PUBLIC_* ]] || [ "$key" = "STRAPI_URL" ] || [ "$key" = "STRAPI_API_TOKEN" ]; then
+            echo "${key}=${value}" >> "$tmp_file"
+            build_count=$((build_count + 1))
+        fi
+    done < <(parse_env_file "$source_file")
+
+    if [ "$build_count" -eq 0 ]; then
+        error "Nenhuma variavel de build encontrada no .env.local"
+        error "Adicione ao menos NEXT_PUBLIC_* ou STRAPI_URL/STRAPI_API_TOKEN"
+        rm -f "$tmp_file"
+        return 1
+    fi
+
+    mv "$tmp_file" "$target_file"
+    GENERATED_BUILD_ENV=true
+    success ".env.production gerado automaticamente (${build_count} vars)"
+    return 0
+}
+
+cleanup_generated_build_env_file() {
+    if [ "$GENERATED_BUILD_ENV" = true ] && [ -f "$ENV_PRODUCTION" ]; then
+        rm -f "$ENV_PRODUCTION"
+        info ".env.production temporario removido"
+    fi
+}
+
 cleanup_old_images() {
     local registry_prefix="${REGISTRY}/${IMAGE_NAME}"
     local count
@@ -274,12 +316,8 @@ if [ "$SKIP_BUILD" = false ]; then
         success "Docker $(docker --version 2>/dev/null | awk '{print $3}' | tr -d ',')"
     fi
 
-    if [ ! -f "$ENV_PRODUCTION" ]; then
-        error ".env.production nao encontrado!"
-        error "Crie com: grep '^NEXT_PUBLIC_' .env.local > .env.production"
+    if ! generate_build_env_file; then
         PREREQ_OK=false
-    else
-        success ".env.production encontrado"
     fi
 
     # Verificar login no registry
@@ -356,6 +394,8 @@ else
     header "STEP 2/4: Push (pulado)"
 fi
 
+cleanup_generated_build_env_file
+
 # =============================================================================
 # STEP 3: Cloudron Update
 # =============================================================================
@@ -414,8 +454,9 @@ echo "     - CLOUDRON_REDIS_* -> REDIS_URL, REDIS_PASSWORD, ENABLE_REDIS_CACHE"
 echo "     - CLOUDRON_MAIL_*  -> SYSTEM_SMTP_*, SYSTEM_MAIL_*"
 echo ""
 echo "   Build time (via .env.production):"
-echo "     - NEXT_PUBLIC_SUPABASE_URL"
-echo "     - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY"
+echo "     - NEXT_PUBLIC_*"
+echo "     - STRAPI_URL"
+echo "     - STRAPI_API_TOKEN"
 echo ""
 echo "   Comandos uteis:"
 echo "     cloudron logs -f --app ${CLOUDRON_APP}"
