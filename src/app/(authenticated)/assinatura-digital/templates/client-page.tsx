@@ -193,7 +193,7 @@ export function TemplatesClient() {
           canCreate ? (
             <Button
               size="sm"
-              className="gap-1.5"
+              className="rounded-xl"
               onClick={() => setCreateOpen(true)}
             >
               <Plus className="size-3.5" />

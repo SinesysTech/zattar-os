@@ -114,7 +114,7 @@ export function DocumentosCommandCenter({
       {/* ── Header (título do módulo + abas + ação) ─────── */}
       <AssinaturaDigitalPageNav
         action={
-          <Button asChild size="sm" className="gap-1.5">
+          <Button asChild size="sm" className="rounded-xl">
             <Link href="/app/assinatura-digital/documentos/novo">
               <Plus className="size-3.5" />
               Novo documento

@@ -8,7 +8,6 @@ import {
   ArrowUp,
   ChevronRight,
   FileSearch,
-  Wallet,
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -86,13 +85,13 @@ function ColumnHeaders() {
     <div className="grid grid-cols-[32px_2.5fr_1fr_1fr_1fr_96px_40px] gap-3 items-center px-4 mb-2">
       <div />
       <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Processo / Tipo
+        Partes / Processo
       </span>
       <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
         Próximo venc.
       </span>
       <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Valor total
+        Tipo / Valor
       </span>
       <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
         Parcelas
@@ -131,15 +130,22 @@ function GlassRow({
       ? Math.round((acordo.parcelasPagas / acordo.totalParcelas) * 100)
       : 0;
 
+  const parteAutora = processo?.nome_parte_autora;
+  const parteRe = processo?.nome_parte_re;
+  const numeroProcesso = processo?.numero_processo;
+  const trt = processo?.trt;
+  const grau = processo?.grau;
+  const orgaoJulgador = processo?.descricao_orgao_julgador;
+
   return (
     <button
       type="button"
       onClick={onViewDetail}
       className={cn(
         'group w-full text-left rounded-2xl border border-border/40 border-l-2 p-4 cursor-pointer',
-        'transition-all duration-180 ease-out bg-card',
-        'hover:bg-accent/40 hover:border-border/60 hover:-translate-y-px hover:shadow-lg',
-        isAlt && 'bg-muted/20',
+        'transition-all duration-180 ease-out',
+        'hover:bg-accent/50 hover:border-border/70 hover:-translate-y-px hover:shadow-lg',
+        isAlt ? 'bg-muted/40' : 'bg-card',
         URGENCY_BORDER[urgency],
       )}
     >
@@ -149,48 +155,55 @@ function GlassRow({
           <div className={cn('w-2 h-2 rounded-full shrink-0', URGENCY_DOT[urgency])} />
         </div>
 
-        {/* 2. Processo / Tipo / Direção */}
+        {/* 2. Partes / Processo com TRT+Grau / Órgão julgador */}
         <div className="min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-medium tabular-nums truncate">
-              {processo?.numero_processo || `Acordo #${acordo.id}`}
-            </span>
-            <SemanticBadge
-              category="obrigacao_tipo"
-              value={acordo.tipo}
-              className="text-[9px] font-semibold"
-            >
-              {tipoLabel}
-            </SemanticBadge>
-            <span
-              className={cn(
-                'inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[9px] font-semibold',
-                isRecebimento
-                  ? 'bg-success/10 text-success border border-success/20'
-                  : 'bg-destructive/10 text-destructive border border-destructive/20',
-              )}
-            >
-              {isRecebimento ? (
-                <ArrowDown className="w-2.5 h-2.5" />
-              ) : (
-                <ArrowUp className="w-2.5 h-2.5" />
-              )}
-              {direcaoLabel}
-            </span>
+          {/* Linha 1: Nome das partes */}
+          <div className="text-sm font-medium text-foreground/90 truncate">
+            {parteAutora || parteRe ? (
+              <>
+                {parteAutora || '—'}
+                <span className="text-muted-foreground/40"> vs. </span>
+                {parteRe || '—'}
+              </>
+            ) : (
+              `Acordo #${acordo.id}`
+            )}
           </div>
-          {(processo?.nome_parte_autora || processo?.nome_parte_re) && (
-            <div className="text-[10px] text-muted-foreground/60 truncate mt-0.5">
-              {processo?.nome_parte_autora || '—'}
-              <span className="text-muted-foreground/40"> vs. </span>
-              {processo?.nome_parte_re || '—'}
-            </div>
-          )}
-          {processo?.descricao_orgao_julgador && (
+
+          {/* Linha 2: [TRT] [Grau] Número do processo */}
+          <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+            {trt && (
+              <SemanticBadge
+                category="tribunal"
+                value={trt}
+                className="text-[9px] font-semibold"
+              >
+                {trt}
+              </SemanticBadge>
+            )}
+            {grau && (
+              <SemanticBadge
+                category="grau"
+                value={grau}
+                className="text-[9px] font-semibold"
+              >
+                {grau}
+              </SemanticBadge>
+            )}
+            {numeroProcesso && (
+              <span className="text-[11px] text-muted-foreground/70 tabular-nums truncate">
+                {numeroProcesso}
+              </span>
+            )}
+          </div>
+
+          {/* Linha 3: Órgão julgador */}
+          {orgaoJulgador && (
             <div
-              className="text-[10px] text-muted-foreground/45 mt-0.5 truncate"
-              title={processo.descricao_orgao_julgador}
+              className="text-[10px] text-muted-foreground/55 mt-0.5 truncate"
+              title={orgaoJulgador}
             >
-              {processo.descricao_orgao_julgador}
+              {orgaoJulgador}
             </div>
           )}
         </div>
@@ -230,12 +243,31 @@ function GlassRow({
           )}
         </div>
 
-        {/* 4. Valor total */}
-        <div className="min-w-0 flex items-center gap-1.5">
-          <Wallet className="size-3 text-muted-foreground/40 shrink-0" />
-          <span className="text-[11px] font-medium tabular-nums truncate">
-            {CURRENCY.format(acordo.valorTotal)}
-          </span>
+        {/* 4. Tipo + Valor com direção */}
+        <div className="min-w-0">
+          <SemanticBadge
+            category="obrigacao_tipo"
+            value={acordo.tipo}
+            className="text-[9px] font-semibold"
+          >
+            {tipoLabel}
+          </SemanticBadge>
+          <div className="flex items-center gap-1 mt-1">
+            {isRecebimento ? (
+              <ArrowDown className="size-3 text-success/70 shrink-0" />
+            ) : (
+              <ArrowUp className="size-3 text-destructive/70 shrink-0" />
+            )}
+            <span
+              className={cn(
+                'text-[11px] font-medium tabular-nums truncate',
+                isRecebimento ? 'text-success/90' : 'text-destructive/90',
+              )}
+              title={`${direcaoLabel} · ${CURRENCY.format(acordo.valorTotal)}`}
+            >
+              {CURRENCY.format(acordo.valorTotal)}
+            </span>
+          </div>
         </div>
 
         {/* 5. Parcelas (progresso) */}

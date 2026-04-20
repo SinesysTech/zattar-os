@@ -209,15 +209,29 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
         URGENCY_BORDER[urgency],
       )}
     >
-      {/* ── Linha 1: Partes (título) + Situação badge ───────────── */}
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="text-sm font-semibold text-foreground leading-snug flex-1 wrap-break-word">
-          {parteAutora || 'Autor não informado'}
-          <span className="mx-2 text-muted-foreground/50 font-medium">×</span>
-          {parteRe || 'Réu não informado'}
-        </h3>
+      {/* ── Linha 1: Partes (título) · Perito · Especialidade · Situação ── */}
+      <div className="flex items-start justify-between gap-3 flex-wrap">
+        <div className="flex-1 min-w-0 flex items-baseline gap-3 flex-wrap">
+          <h3 className="text-sm font-semibold text-foreground leading-snug wrap-break-word">
+            {parteAutora || 'Autor não informado'}
+            <span className="mx-2 text-muted-foreground/50 font-medium">×</span>
+            {parteRe || 'Réu não informado'}
+          </h3>
+
+          {perito && (
+            <span className="inline-flex items-baseline gap-1.5 text-[12px] text-foreground/70 wrap-break-word">
+              <Briefcase className="size-3 text-muted-foreground/50 translate-y-0.5 shrink-0" />
+              <span className="wrap-break-word">{perito}</span>
+            </span>
+          )}
+        </div>
 
         <div className="flex items-center gap-2 shrink-0">
+          {especialidade && (
+            <span className="inline-flex items-center rounded bg-muted border border-border/50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+              {especialidade}
+            </span>
+          )}
           <AppBadge
             variant={getSemanticBadgeVariant(
               'pericia_situacao',
@@ -245,17 +259,9 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
             {grauLabel}
           </span>
         )}
-        {especialidade && (
-          <>
-            <span className="mx-0.5 w-1 h-1 rounded-full bg-muted-foreground/30" />
-            <span className="text-[11px] text-foreground/70 truncate max-w-60">
-              {especialidade}
-            </span>
-          </>
-        )}
       </div>
 
-      {/* ── Footer: Prazo · Perito · Responsável · Countdown ── */}
+      {/* ── Footer: Prazo · Responsável · Countdown ── */}
       <div className="mt-3 pt-3 border-t border-border/40 flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-4 min-w-0 flex-wrap">
           {prazoFormatted && (
@@ -265,14 +271,6 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
               </span>
               <span className="text-[12px] font-medium tabular-nums text-foreground/85">
                 {prazoFormatted}
-              </span>
-            </div>
-          )}
-          {perito && (
-            <div className="flex items-center gap-1.5 min-w-0">
-              <Briefcase className="size-3 text-muted-foreground/50 shrink-0" />
-              <span className="text-[12px] text-foreground/70 truncate max-w-48">
-                {perito}
               </span>
             </div>
           )}

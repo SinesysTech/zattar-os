@@ -65,7 +65,10 @@ export function AssinaturaDigitalPageNav({ action }: AssinaturaDigitalPageNavPro
 
       <nav
         aria-label="Navegação do módulo Assinatura Digital"
-        className="flex gap-1 p-1 rounded-xl bg-border/6 overflow-x-auto w-fit"
+        className={cn(
+          'inline-flex items-center gap-1 rounded-2xl border border-border/40 bg-card/60 p-1',
+          'backdrop-blur-xl',
+        )}
       >
         {TABS.map(({ href, label, icon: Icon, match }) => {
           const active = pathname.startsWith(match);
@@ -75,10 +78,10 @@ export function AssinaturaDigitalPageNav({ action }: AssinaturaDigitalPageNavPro
               href={href}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-200',
+                'flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors',
                 active
-                  ? 'bg-primary/12 text-primary shadow-sm'
-                  : 'text-muted-foreground/55 hover:text-muted-foreground hover:bg-white/4',
+                  ? 'bg-foreground text-background shadow-sm'
+                  : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground',
               )}
             >
               <Icon className="size-3.5" aria-hidden="true" />
