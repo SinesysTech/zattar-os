@@ -1,9 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { FolderOpen, Plus, Upload } from 'lucide-react';
+import { FileText, Plus, Upload } from 'lucide-react';
 
-import { WidgetContainer } from '@/components/shared/glass-panel';
+import {
+  DetailSection,
+  DetailSectionCard,
+} from '@/components/shared/detail-section';
 import { Button } from '@/components/ui/button';
 import { ContratoDocumentosList } from '@/app/(authenticated)/pecas-juridicas';
 import { ContratoDocumentoUploadDialog } from './contrato-documento-upload-dialog';
@@ -26,26 +29,38 @@ export function ContratoDocumentosCard({
 
   return (
     <>
-      <WidgetContainer
-        title="Documentos e Peças Jurídicas"
-        icon={FolderOpen}
+      <DetailSection
+        icon={FileText}
+        label="Peças jurídicas e anexos"
         action={
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => setUploadDialogOpen(true)}>
-              <Upload className="size-4 mr-1" />
-              Novo Documento
+          <div className="flex items-center gap-1.5">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setUploadDialogOpen(true)}
+              className="h-7 px-2.5 rounded-lg text-[11.5px] font-medium gap-1.5"
+            >
+              <Upload className="size-3" />
+              Novo
             </Button>
-            {onGerarPeca && (
-              <Button variant="outline" size="sm" onClick={onGerarPeca}>
-                <Plus className="size-4 mr-1" />
-                Gerar Peça
+            {onGerarPeca ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onGerarPeca}
+                className="h-7 px-2.5 rounded-lg text-[11.5px] font-medium gap-1.5"
+              >
+                <Plus className="size-3" />
+                Gerar peça
               </Button>
-            )}
+            ) : null}
           </div>
         }
       >
-        <ContratoDocumentosList key={refreshKey} contratoId={contratoId} />
-      </WidgetContainer>
+        <DetailSectionCard>
+          <ContratoDocumentosList key={refreshKey} contratoId={contratoId} />
+        </DetailSectionCard>
+      </DetailSection>
 
       <ContratoDocumentoUploadDialog
         open={uploadDialogOpen}

@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { FileDown, Send } from 'lucide-react';
 import { toast } from 'sonner';
-import { WidgetContainer } from '@/components/shared/glass-panel';
 import { Button } from '@/components/ui/button';
 import { actionValidarGeracaoPdfs } from '@/app/(authenticated)/contratos/actions/gerar-pdfs-contrato-action';
 import { actionEnviarContratoParaAssinatura } from '../../actions/enviar-contrato-assinatura-action';
@@ -164,28 +163,42 @@ export function DocumentosContratacaoCard({
 
   return (
     <>
-      <WidgetContainer
-        title="Documentos de Contratação"
-        icon={FileDown}
-        action={
-          <div className="flex items-center gap-2">
-            <Button size="sm" onClick={handleBaixar} disabled={loading}>
-              <FileDown className="size-4 mr-1" />
-              {loading ? 'Gerando…' : 'Baixar PDFs preenchidos'}
-            </Button>
-            <Button size="sm" variant="outline" onClick={handleEnviar} disabled={loading}>
-              <Send className="size-4 mr-1" />
-              Enviar pra cliente assinar
-            </Button>
-          </div>
-        }
-      >
-        <p className="text-sm text-muted-foreground">
-          Gera os 4 documentos de contratação trabalhista preenchidos com os
-          dados deste contrato. Se faltar alguma informação, você poderá
-          completá-la antes do download.
-        </p>
-      </WidgetContainer>
+      <div className="flex items-center gap-3 px-4 py-3.5 rounded-[14px] bg-primary/5 border border-primary/15">
+        <div className="inline-flex size-9 items-center justify-center rounded-[10px] bg-primary/10 text-primary shrink-0">
+          <FileDown className="size-4" aria-hidden="true" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h4 className="text-[13.5px] font-semibold text-foreground">
+            Documentos de contratação
+          </h4>
+          <p className="text-[11.5px] text-muted-foreground mt-0.5 leading-relaxed">
+            Gera os 4 PDFs trabalhistas preenchidos com os dados deste
+            contrato. Se faltar informação, complete antes do download.
+          </p>
+        </div>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleBaixar}
+            disabled={loading}
+            className="h-7 px-2.5 rounded-lg text-[11.5px] font-medium gap-1.5"
+          >
+            <FileDown className="size-3" />
+            {loading ? 'Gerando…' : 'Baixar ZIP'}
+          </Button>
+          <Button
+            variant="default"
+            size="sm"
+            onClick={handleEnviar}
+            disabled={loading}
+            className="h-7 px-2.5 rounded-lg text-[11.5px] font-medium gap-1.5"
+          >
+            <Send className="size-3" />
+            Enviar para assinar
+          </Button>
+        </div>
+      </div>
 
       <ModalCamposFaltantesDialog
         open={modalOpen}

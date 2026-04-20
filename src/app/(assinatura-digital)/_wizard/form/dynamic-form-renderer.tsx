@@ -37,23 +37,11 @@ import { Separator } from '@/components/ui/separator';
 import { InputCEP, type InputCepAddress } from '@/app/(authenticated)/enderecos';
 import { InputCPF, InputData, InputCPFCNPJ, ClientSearchInput, ParteContrariaSearchInput } from '@/shared/assinatura-digital/components/inputs';
 import { InputTelefone } from '@/components/ui/input-telefone';
-import {
-  Info,
-  Search,
-  User,
-  Building2,
-  MapPin,
-  IdCard,
-  Briefcase,
-  FileText,
-  Sparkles,
-  type LucideIcon,
-} from 'lucide-react';
+import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Cliente, ParteContraria } from '@/app/(authenticated)/partes/types';
 import { UseFormReturn } from 'react-hook-form';
-import { Heading, Text } from '@/components/ui/typography';
-import { GlassPanel } from '@/components/shared/glass-panel';
+import { Text } from '@/components/ui/typography';
 
 interface DynamicFormRendererProps {
   schema: DynamicFormSchema;
@@ -616,40 +604,6 @@ export default function DynamicFormRenderer({
   };
 
   /**
-   * Resolve a FormSectionIcon key into a Lucide icon component.
-   */
-  const ICON_MAP: Record<NonNullable<FormSectionSchema['icon']>, LucideIcon> = {
-    search: Search,
-    building: Building2,
-    user: User,
-    idcard: IdCard,
-    mappin: MapPin,
-    briefcase: Briefcase,
-    file: FileText,
-  };
-
-  /**
-   * Obtém ícone semântico pra uma seção.
-   * Prioridade: section.icon explícito > heurística por section.id.
-   * Fallback final: FileText (genérico).
-   */
-  const getSectionIcon = (section: FormSectionSchema): LucideIcon => {
-    // 1. Schema explícito (preferido — schemas novos)
-    if (section.icon && ICON_MAP[section.icon]) {
-      return ICON_MAP[section.icon];
-    }
-    // 2. Heurística por id (retrocompat com schemas antigos sem icon)
-    const id = section.id.toLowerCase();
-    if (id.includes('parte-contraria') || id.includes('parte_contraria')) return Building2;
-    if (id.includes('cliente') || id.includes('identidade')) return IdCard;
-    if (id.includes('endereco') || id.includes('address')) return MapPin;
-    if (id.includes('acao') || id.includes('trabalho') || id.includes('acao-trabalhista')) return Briefcase;
-    if (id.includes('busca') || id.includes('search')) return Search;
-    if (id.includes('contato')) return User;
-    return FileText;
-  };
-
-  /**
    * Determina qual campo é o "caminho preferencial" (busca rápida) de uma seção.
    * Prioridade: section.preferredField explícito > primeiro campo de busca por type.
    * Retorna undefined quando nenhum dos dois está disponível.
@@ -672,13 +626,11 @@ export default function DynamicFormRenderer({
   };
 
   /**
-   * Render section with fields — split search field (if any) into its own
-   * GlassPanel depth=2 as the preferred path, then render remaining manual
-   * fields in the grid below.
+   * Render section with fields — search field (quando existe) vira primeiro,
+   * seguido por grid de campos manuais. Sem ícone decorativo, sem card glass
+   * de destaque — layout enxuto alinhado com o wizard público.
    */
   const renderSection = (section: FormSectionSchema) => {
-    const Icon = getSectionIcon(section);
-
     // Fase 1: filtro base (hidden + conditional do schema)
     let visibleFields = section.fields.filter((f) => {
       if (f.hidden) return false;
@@ -741,56 +693,16 @@ export default function DynamicFormRenderer({
 
     return (
       <div key={section.id} className="space-y-5">
-        {/* Header */}
-        <div className="flex items-start gap-3">
-          <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/15">
-            <Icon className="h-4 w-4" strokeWidth={2.25} />
-          </span>
-          <div className="min-w-0 flex-1">
-            <Heading
-              level="section"
-              className="font-display text-lg tracking-tight sm:text-xl"
-            >
-              {section.title}
-            </Heading>
-            {section.description && (
-              <Text variant="caption" className="mt-0.5 text-muted-foreground">
-                {section.description}
-              </Text>
-            )}
-          </div>
-        </div>
+        {/* Header — apenas overline da seção, sem ícone decorativo */}
+        <Text
+          variant="overline"
+          className="block text-[13px] tracking-widest text-foreground/80"
+        >
+          {section.title}
+        </Text>
 
-        {/* Search card — entidade existente (caminho preferencial) */}
-        {searchField && (
-          <>
-            <GlassPanel
-              depth={2}
-              className="space-y-3 p-4 sm:p-5"
-            >
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-3.5 w-3.5 text-primary" />
-                <Text
-                  variant="overline"
-                  className="text-primary"
-                >
-                  Busca rápida
-                </Text>
-              </div>
-              {renderField(searchField)}
-            </GlassPanel>
-
-            {manualFields.length > 0 && (
-              <div className="flex items-center gap-3">
-                <div className="h-px flex-1 bg-outline-variant/40" />
-                <Text variant="caption" className="text-muted-foreground">
-                  Não encontrou? Preencha abaixo
-                </Text>
-                <div className="h-px flex-1 bg-outline-variant/40" />
-              </div>
-            )}
-          </>
-        )}
+        {/* Busca de entidade existente — campo direto, sem card/ícone decorativo */}
+        {searchField && <div>{renderField(searchField)}</div>}
 
         {/* Grid de campos manuais */}
         {manualFields.length > 0 && (

@@ -417,7 +417,7 @@ export default function DadosContato() {
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_auto]">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="cidade"
@@ -440,7 +440,7 @@ export default function DadosContato() {
                 control={form.control}
                 name="estado"
                 render={({ field }) => (
-                  <FormItem className="sm:w-32">
+                  <FormItem>
                     <FormLabel>Estado</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>

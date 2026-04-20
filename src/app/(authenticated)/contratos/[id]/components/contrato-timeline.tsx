@@ -1,23 +1,35 @@
 'use client';
 
 import * as React from 'react';
-import { History, CheckCircle2, XCircle, Clock, Plus, ArrowRightLeft } from 'lucide-react';
+import {
+  History,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Plus,
+  ArrowRightLeft,
+  type LucideIcon,
+} from 'lucide-react';
 
-import { GlassPanel, WidgetContainer } from '@/components/shared/glass-panel';
-import { IconContainer } from '@/components/ui/icon-container';
-import { Text } from '@/components/ui/typography';
+import {
+  DetailSection,
+  DetailSectionCard,
+} from '@/components/shared/detail-section';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
-import type { ContratoStatusHistorico, StatusContrato } from '@/app/(authenticated)/contratos';
+import { cn } from '@/lib/utils';
+import type {
+  ContratoStatusHistorico,
+  StatusContrato,
+} from '@/app/(authenticated)/contratos';
 import { STATUS_CONTRATO_LABELS } from '@/app/(authenticated)/contratos';
 
-interface ContratoTimelineProps {
-  historico: ContratoStatusHistorico[];
-}
+// =============================================================================
+// HELPERS
+// =============================================================================
 
-function formatTime(dateStr: string): string {
+function formatDateTime(dateStr: string): string {
   try {
-    const date = new Date(dateStr);
-    return date.toLocaleString('pt-BR', {
+    return new Date(dateStr).toLocaleString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -29,9 +41,8 @@ function formatTime(dateStr: string): string {
   }
 }
 
-function getEventIcon(toStatus: StatusContrato, isCreation: boolean) {
+function getEventIcon(toStatus: StatusContrato, isCreation: boolean): LucideIcon {
   if (isCreation) return Plus;
-
   switch (toStatus) {
     case 'contratado':
     case 'distribuido':
@@ -45,9 +56,8 @@ function getEventIcon(toStatus: StatusContrato, isCreation: boolean) {
   }
 }
 
-function getIconColorClass(toStatus: StatusContrato, isCreation: boolean): string {
+function getDotTone(toStatus: StatusContrato, isCreation: boolean): string {
   if (isCreation) return 'bg-primary/10 text-primary';
-
   switch (toStatus) {
     case 'contratado':
     case 'distribuido':
@@ -55,7 +65,7 @@ function getIconColorClass(toStatus: StatusContrato, isCreation: boolean): strin
     case 'desistencia':
       return 'bg-destructive/10 text-destructive';
     case 'em_contratacao':
-      return 'bg-primary/10 text-primary';
+      return 'bg-warning/10 text-warning';
     default:
       return 'bg-muted text-muted-foreground';
   }
@@ -78,89 +88,106 @@ function groupByMonth(
   );
 }
 
+// =============================================================================
+// COMPONENT
+// =============================================================================
+
+interface ContratoTimelineProps {
+  historico: ContratoStatusHistorico[];
+}
+
 export function ContratoTimeline({ historico }: ContratoTimelineProps) {
   const isEmpty = historico.length === 0;
 
-  // Sort by date descending (most recent first)
-  const sortedHistorico = [...historico].sort(
-    (a, b) => new Date(b.changedAt).getTime() - new Date(a.changedAt).getTime(),
+  const sorted = React.useMemo(
+    () =>
+      [...historico].sort(
+        (a, b) => new Date(b.changedAt).getTime() - new Date(a.changedAt).getTime(),
+      ),
+    [historico],
   );
 
-  const grouped = groupByMonth(sortedHistorico);
-
-  // Flatten to get global index for isLast check
-  const flatItems = sortedHistorico;
+  const grouped = React.useMemo(() => groupByMonth(sorted), [sorted]);
 
   return (
-    <WidgetContainer title="Histórico de Status" icon={History}>
-      {isEmpty ? (
-        <div className="text-center py-6 text-muted-foreground">
-          <History className="size-8 mx-auto mb-2 opacity-50" />
-          <p>Nenhum histórico disponível</p>
-        </div>
-      ) : (
-        <div>
-          {Object.entries(grouped).map(([monthLabel, items]) => (
-            <div key={monthLabel}>
-              {/* Month group header */}
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/40 pb-2 pl-10">
-                {monthLabel}
-              </p>
+    <DetailSection icon={History} label="Histórico de status">
+      <DetailSectionCard>
+        {isEmpty ? (
+          <p className="text-[12.5px] text-muted-foreground/70 italic">
+            Nenhum histórico disponível
+          </p>
+        ) : (
+          <div className="flex flex-col">
+            {Object.entries(grouped).map(([monthLabel, items]) => (
+              <div key={monthLabel}>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 pt-1.5 pb-2.5 pl-10">
+                  {monthLabel}
+                </p>
 
-              {items.map((item) => {
-                const globalIndex = flatItems.findIndex((fi) => fi.id === item.id);
-                const isLast = globalIndex === flatItems.length - 1;
-                const isCreation = item.fromStatus === null;
-                const EventIcon = getEventIcon(item.toStatus, isCreation);
-                const iconColorClass = getIconColorClass(item.toStatus, isCreation);
+                {items.map((item, idx) => {
+                  const globalIdx = sorted.findIndex((s) => s.id === item.id);
+                  const isLast = globalIdx === sorted.length - 1;
+                  const isCreation = item.fromStatus === null;
+                  const Icon = getEventIcon(item.toStatus, isCreation);
+                  const tone = getDotTone(item.toStatus, isCreation);
 
-                return (
-                  <div key={item.id} className="flex gap-3 pb-6 relative">
-                    {/* Vertical connector line */}
-                    {!isLast && (
-                      <div className="absolute left-2.75 top-8 bottom-0 w-px bg-border/20" />
-                    )}
-
-                    {/* Icon dot */}
-                    <IconContainer size="sm" className={iconColorClass}>
-                      <EventIcon className="size-3.5" />
-                    </IconContainer>
-
-                    {/* Content */}
-                    <div className="flex-1 min-w-0 pt-0.5">
-                      {isCreation ? (
-                        <p className="text-[13px] text-foreground">
-                          Contrato criado com status{' '}
-                          <SemanticBadge category="status_contrato" value={item.toStatus}>
-                            {STATUS_CONTRATO_LABELS[item.toStatus]}
-                          </SemanticBadge>
-                        </p>
-                      ) : (
-                        <p className="text-[13px] text-foreground">
-                          Status alterado para{' '}
-                          <SemanticBadge category="status_contrato" value={item.toStatus}>
-                            {STATUS_CONTRATO_LABELS[item.toStatus]}
-                          </SemanticBadge>
-                        </p>
+                  return (
+                    <div
+                      key={item.id}
+                      className={cn(
+                        'flex gap-3 relative',
+                        idx === items.length - 1 ? 'pb-4' : 'pb-4',
                       )}
+                    >
+                      {!isLast ? (
+                        <span
+                          aria-hidden="true"
+                          className="absolute left-3.25 top-6.5 bottom-0 w-px bg-border/40"
+                        />
+                      ) : null}
 
-                      <Text variant="caption" className="mt-0.5">
-                        {formatTime(item.changedAt)}
-                      </Text>
+                      <div
+                        className={cn(
+                          'inline-flex items-center justify-center size-6.5 rounded-[8px] shrink-0 relative z-10 border border-border/50',
+                          tone,
+                        )}
+                      >
+                        <Icon className="size-3" />
+                      </div>
 
-                      {item.reason && (
-                        <GlassPanel depth={2} className="mt-2 px-2.5 py-1.5">
-                          <Text variant="caption">{item.reason}</Text>
-                        </GlassPanel>
-                      )}
+                      <div className="flex-1 min-w-0 pt-0.5">
+                        <div className="text-[12.5px] text-foreground/90 flex items-center flex-wrap gap-1.5">
+                          <span className="font-medium">
+                            {isCreation
+                              ? 'Contrato criado com status'
+                              : 'Status alterado para'}
+                          </span>
+                          <SemanticBadge
+                            category="status_contrato"
+                            value={item.toStatus}
+                            className="text-[10px]"
+                          >
+                            {STATUS_CONTRATO_LABELS[item.toStatus] ?? item.toStatus}
+                          </SemanticBadge>
+                        </div>
+                        <div className="text-[10.5px] text-muted-foreground mt-1 tabular-nums">
+                          {formatDateTime(item.changedAt)}
+                        </div>
+
+                        {item.reason ? (
+                          <div className="mt-2 px-3 py-2 rounded-[8px] bg-muted/50 text-[11.5px] text-muted-foreground leading-relaxed">
+                            {item.reason}
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-      )}
-    </WidgetContainer>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        )}
+      </DetailSectionCard>
+    </DetailSection>
   );
 }

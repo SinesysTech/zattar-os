@@ -13,9 +13,11 @@ import VisualizacaoMarkdownStep from './visualizacao-markdown-step'
 import TermosAceiteStep from './termos-aceite-step'
 import AssinaturaManuscritaStep from './assinatura-manuscrita-step'
 import Sucesso from './sucesso'
-import { Loader2, AlertCircle } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Skeleton } from '@/components/ui/skeleton'
+import { GlassPanel } from '@/components/shared/glass-panel'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { StepConfig } from '@/shared/assinatura-digital/types/store'
 import { PublicWizardShell } from '@/shared/assinatura-digital'
@@ -183,10 +185,46 @@ export default function FormularioContainer() {
   const renderEtapa = () => {
     if (!stepConfigs || stepConfigs.length === 0) {
       return (
-        <div className="flex flex-col items-center justify-center py-12 space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="text-lg font-medium text-muted-foreground">Carregando formulário...</p>
-        </div>
+        <GlassPanel
+          depth={1}
+          className="flex w-full flex-col overflow-hidden p-0"
+          aria-busy="true"
+          aria-live="polite"
+          aria-label="Carregando formulário"
+        >
+          <div className="flex flex-col gap-3 px-6 pt-5 sm:px-8 sm:pt-6">
+            <Skeleton className="h-0.75 w-full rounded-full" />
+            <Skeleton className="h-3 w-24" />
+          </div>
+
+          <section className="flex flex-col gap-6 px-6 py-5 sm:px-8 sm:py-6">
+            <Skeleton className="h-7 w-2/3 sm:h-8" />
+
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <Skeleton className="h-2.5 w-16" />
+                <Skeleton className="h-11 w-full rounded-xl" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Skeleton className="h-2.5 w-14" />
+                  <Skeleton className="h-11 w-full rounded-xl" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-2.5 w-20" />
+                  <Skeleton className="h-11 w-full rounded-xl" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div className="flex items-center gap-2.5 border-t border-outline-variant/25 bg-surface-container-lowest/50 px-6 py-4 sm:px-8 sm:py-5">
+            <Skeleton className="h-11 w-24 rounded-xl" />
+            <Skeleton className="h-11 flex-1 rounded-xl" />
+          </div>
+
+          <span className="sr-only">Carregando formulário...</span>
+        </GlassPanel>
       )
     }
 
@@ -235,12 +273,37 @@ export default function FormularioContainer() {
         }
         if (templateHasMarkdown === null) {
           return (
-            <div className="flex flex-col items-center justify-center py-12 space-y-4">
-              <Loader2 className="h-12 w-12 animate-spin text-primary" />
-              <p className="text-lg font-medium text-muted-foreground">
-                Carregando visualização...
-              </p>
-            </div>
+            <GlassPanel
+              depth={1}
+              className="flex w-full flex-col overflow-hidden p-0"
+              aria-busy="true"
+              aria-live="polite"
+              aria-label="Carregando visualização"
+            >
+              <div className="flex flex-col gap-3 px-6 pt-5 sm:px-8 sm:pt-6">
+                <Skeleton className="h-0.75 w-full rounded-full" />
+                <Skeleton className="h-3 w-28" />
+              </div>
+
+              <section className="flex flex-col gap-6 px-6 py-5 sm:px-8 sm:py-6">
+                <Skeleton className="h-7 w-1/2 sm:h-8" />
+                <div className="space-y-3">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-11/12" />
+                  <Skeleton className="h-4 w-10/12" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-8/12" />
+                </div>
+                <Skeleton className="h-48 w-full rounded-xl" />
+              </section>
+
+              <div className="flex items-center gap-2.5 border-t border-outline-variant/25 bg-surface-container-lowest/50 px-6 py-4 sm:px-8 sm:py-5">
+                <Skeleton className="h-11 w-24 rounded-xl" />
+                <Skeleton className="h-11 flex-1 rounded-xl" />
+              </div>
+
+              <span className="sr-only">Carregando visualização...</span>
+            </GlassPanel>
           )
         }
         return templateHasMarkdown ? <VisualizacaoMarkdownStep /> : <VisualizacaoPdfStep />

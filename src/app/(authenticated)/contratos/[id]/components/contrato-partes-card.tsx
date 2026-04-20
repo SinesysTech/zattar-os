@@ -1,123 +1,151 @@
 'use client';
 
 import * as React from 'react';
-import { Eye, Users } from 'lucide-react';
+import { Users, Plus } from 'lucide-react';
 
-import { WidgetContainer } from '@/components/shared/glass-panel';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { AppBadge as Badge } from '@/components/ui/app-badge';
-import type { ContratoParte } from '@/app/(authenticated)/contratos';
+import {
+  DetailSection,
+  DetailSectionCard,
+  DetailSectionAction,
+} from '@/components/shared/detail-section';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { cn } from '@/lib/utils';
+import type { Contrato, ContratoParte, PapelContratual } from '@/app/(authenticated)/contratos';
 import { PAPEL_CONTRATUAL_LABELS } from '@/app/(authenticated)/contratos';
 
-interface ParteDisplay {
-  id: string;
-  tipoEntidade: 'cliente' | 'parte_contraria';
-  entidadeId: number;
-  nome: string;
-  cpfCnpj: string | null;
-  papelContratual: 'autora' | 're';
-}
+// =============================================================================
+// HELPERS
+// =============================================================================
 
-interface ContratoPartesCardProps {
-  partes: ContratoParte[];
-  onViewParte?: (parte: ParteDisplay) => void;
-}
-
-function getInitials(nome: string): string {
-  const parts = nome.split(' ').filter(Boolean);
-  if (parts.length === 0) return '??';
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
-function formatCpfCnpj(value: string | null): string | null {
+function formatCpfCnpj(value: string | null | undefined): string | null {
   if (!value) return null;
-  // Remove non-digits
   const digits = value.replace(/\D/g, '');
-  if (digits.length === 11) {
-    // CPF: 000.000.000-00
-    return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-  }
-  if (digits.length === 14) {
-    // CNPJ: 00.000.000/0000-00
-    return digits.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
-  }
+  if (digits.length === 11) return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+  if (digits.length === 14) return digits.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
   return value;
 }
 
-export function ContratoPartesCard({ partes, onViewParte }: ContratoPartesCardProps) {
-  // Convert ContratoParte[] to ParteDisplay[]
-  const partesDisplay: ParteDisplay[] = partes.map((p) => ({
-    id: `${p.tipoEntidade}-${p.entidadeId}`,
-    tipoEntidade: p.tipoEntidade,
-    entidadeId: p.entidadeId,
-    nome: p.nomeSnapshot || `${p.tipoEntidade === 'cliente' ? 'Cliente' : 'Parte Contrária'} #${p.entidadeId}`,
-    cpfCnpj: p.cpfCnpjSnapshot,
-    papelContratual: p.papelContratual,
-  }));
+// =============================================================================
+// ROW PATTERN — dentro do SectionCard
+// =============================================================================
 
-  const isEmpty = partesDisplay.length === 0;
+interface ParteRowProps {
+  nome: string;
+  subtitulo: string;
+  papel: PapelContratual;
+  cpfCnpj?: string | null;
+}
+
+const RAIL_COLOR: Record<PapelContratual, string> = {
+  autora: 'bg-info',
+  re: 'bg-warning',
+};
+
+function ParteRow({ nome, subtitulo, papel, cpfCnpj }: ParteRowProps) {
+  const cpfFmt = formatCpfCnpj(cpfCnpj);
+  const papelLabel = PAPEL_CONTRATUAL_LABELS[papel] ?? papel;
 
   return (
-    <WidgetContainer title="Partes do Contrato" icon={Users}>
-      {isEmpty ? (
-        <div className="text-center py-6 text-muted-foreground">
-          <Users className="size-8 mx-auto mb-2 opacity-50" />
-          <p>Nenhuma parte registrada</p>
+    <div className="flex items-center gap-3 px-3 py-2.5 rounded-[10px] bg-muted/40 border border-border/30 transition-colors hover:bg-muted/60">
+      <span
+        aria-hidden="true"
+        className={cn('w-0.75 h-6.5 rounded-sm shrink-0', RAIL_COLOR[papel])}
+      />
+      <div className="flex-1 min-w-0">
+        <div className="text-[13px] font-medium text-foreground truncate">{nome}</div>
+        <div className="text-[10.5px] text-muted-foreground uppercase tracking-[0.04em] mt-0.5 truncate">
+          {subtitulo}
+          {cpfFmt ? ` · ${cpfFmt}` : ''}
         </div>
-      ) : (
-        <div className="grid gap-4">
-          {partesDisplay.map((parte) => (
-            <div key={parte.id} className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Avatar>
-                  <AvatarFallback
-                    className={
-                      parte.tipoEntidade === 'cliente'
-                        ? 'bg-primary/10 text-primary'
-                        : 'bg-destructive/10 text-destructive'
-                    }
-                  >
-                    {getInitials(parte.nome)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="font-medium flex items-center gap-2">
-                    {parte.nome}
-                    <Badge
-                      variant={parte.tipoEntidade === 'cliente' ? 'default' : 'destructive'}
-                      className="text-xs"
-                    >
-                      {parte.tipoEntidade === 'cliente' ? 'Cliente' : 'Parte Contrária'}
-                    </Badge>
-                  </div>
-                  <div className="text-muted-foreground text-xs flex items-center gap-2">
-                    {parte.cpfCnpj && (
-                      <span>{formatCpfCnpj(parte.cpfCnpj)}</span>
-                    )}
-                    <span className="text-muted-foreground/60">
-                      ({PAPEL_CONTRATUAL_LABELS[parte.papelContratual] || parte.papelContratual})
-                    </span>
-                  </div>
-                </div>
-              </div>
-              {onViewParte && (
-                <Button
-                  variant="ghost"
-                  size="icon" aria-label="Visualizar"
-                  onClick={() => onViewParte(parte)}
-                  title="Ver detalhes"
-                >
-                  <Eye className="size-4" />
-                </Button>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-    </WidgetContainer>
+      </div>
+      <SemanticBadge category="polo" value={papel} className="text-[10px] shrink-0">
+        {papelLabel}
+      </SemanticBadge>
+    </div>
   );
 }
 
-export type { ParteDisplay };
+// =============================================================================
+// COMPONENTE PRINCIPAL
+// =============================================================================
+
+interface ContratoPartesCardProps {
+  contrato: Contrato;
+  clienteNome: string;
+  onAddParte?: () => void;
+}
+
+export function ContratoPartesCard({
+  contrato,
+  clienteNome,
+  onAddParte,
+}: ContratoPartesCardProps) {
+  // Enriquece a lista de partes garantindo que o cliente canônico aparece
+  // (mesmo quando não está em `contrato.partes`, fallback antigo).
+  const partesFromTable = contrato.partes;
+  const clienteInTable = partesFromTable.some(
+    (p) => p.tipoEntidade === 'cliente' && p.entidadeId === contrato.clienteId,
+  );
+
+  const clienteFallback: ContratoParte | null = clienteInTable
+    ? null
+    : {
+        id: -1,
+        contratoId: contrato.id,
+        tipoEntidade: 'cliente',
+        entidadeId: contrato.clienteId,
+        papelContratual: contrato.papelClienteNoContrato,
+        ordem: 0,
+        nomeSnapshot: clienteNome,
+        cpfCnpjSnapshot: null,
+        createdAt: contrato.createdAt,
+      };
+
+  const todasPartes: ContratoParte[] = clienteFallback
+    ? [clienteFallback, ...partesFromTable]
+    : partesFromTable;
+
+  const isEmpty = todasPartes.length === 0;
+
+  return (
+    <DetailSection
+      icon={Users}
+      label="Partes envolvidas"
+      action={
+        onAddParte ? (
+          <DetailSectionAction icon={Plus} onClick={onAddParte}>
+            Adicionar
+          </DetailSectionAction>
+        ) : null
+      }
+    >
+      <DetailSectionCard>
+        {isEmpty ? (
+          <p className="text-[12.5px] text-muted-foreground/70 italic">
+            Nenhuma parte registrada
+          </p>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {todasPartes.map((parte) => {
+              const nome =
+                parte.nomeSnapshot ||
+                `${parte.tipoEntidade === 'cliente' ? 'Cliente' : 'Parte Contrária'} #${parte.entidadeId}`;
+              const tipoLabel = parte.tipoEntidade === 'cliente' ? 'Cliente' : 'Parte Contrária';
+              const poloLabel = parte.papelContratual === 'autora' ? 'Polo Ativo' : 'Polo Passivo';
+
+              return (
+                <ParteRow
+                  key={`${parte.tipoEntidade}-${parte.entidadeId}`}
+                  nome={nome}
+                  subtitulo={`${tipoLabel} · ${poloLabel}`}
+                  papel={parte.papelContratual}
+                  cpfCnpj={parte.cpfCnpjSnapshot}
+                />
+              );
+            })}
+          </div>
+        )}
+      </DetailSectionCard>
+    </DetailSection>
+  );
+}
