@@ -10,7 +10,10 @@ export {
     actionAtribuirResponsavel,
     actionAdicionarObservacao,
     actionListarEspecialidadesPericia,
+    actionListarTodasEspecialidadesPericia,
+    actionAlterarAtivoEspecialidade,
     actionCriarPericia,
+    actionPericiasPulseStats,
 } from './pericias-actions';
 
-export type { ActionResult } from './pericias-actions';
+export type { ActionResult, PericiasPulseStats } from './pericias-actions';

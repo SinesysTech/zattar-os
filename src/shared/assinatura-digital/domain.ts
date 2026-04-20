@@ -196,6 +196,21 @@ export const previewPayloadSchema = z.object({
         nome: z.string(),
         cpf: z.string().optional().nullable(),
         cnpj: z.string().optional().nullable(),
+        tipo_pessoa: z.string().optional().nullable(),
+        telefone: z.string().optional().nullable(),
+        email: z.string().optional().nullable(),
+        endereco: z
+          .object({
+            cep: z.string().optional().nullable(),
+            logradouro: z.string().optional().nullable(),
+            numero: z.string().optional().nullable(),
+            complemento: z.string().optional().nullable(),
+            bairro: z.string().optional().nullable(),
+            municipio: z.string().optional().nullable(),
+            estado_sigla: z.string().optional().nullable(),
+          })
+          .optional()
+          .nullable(),
       })
     )
     .optional(),
@@ -225,6 +240,21 @@ export const finalizePayloadSchema = z.object({
         nome: z.string(),
         cpf: z.string().optional().nullable(),
         cnpj: z.string().optional().nullable(),
+        tipo_pessoa: z.string().optional().nullable(),
+        telefone: z.string().optional().nullable(),
+        email: z.string().optional().nullable(),
+        endereco: z
+          .object({
+            cep: z.string().optional().nullable(),
+            logradouro: z.string().optional().nullable(),
+            numero: z.string().optional().nullable(),
+            complemento: z.string().optional().nullable(),
+            bairro: z.string().optional().nullable(),
+            municipio: z.string().optional().nullable(),
+            estado_sigla: z.string().optional().nullable(),
+          })
+          .optional()
+          .nullable(),
       })
     )
     .optional(),

@@ -1,45 +1,54 @@
 'use client';
 
 /**
- * @file obrigacoes-year-wrapper.tsx
- * @description Year view wrapper for Obrigações module
- * @module features/obrigacoes/components/calendar
+ * ObrigacoesYearWrapper
  *
- * Displays a 12-month year grid with parcelas (installments) from acordos (agreements).
- * Uses DataShell + DataTableToolbar + YearFilterPopover pattern.
- * Each day with parcelas is highlighted, clicking opens a dialog with details.
- *
- * @pattern DataShell year view (following ExpedientesYearWrapper)
+ * View anual: grid 12 meses. Clique num dia abre dialog (glass) com parcelas.
+ * Alinhado ao Glass Briefing: SearchInput + ObrigacoesFilterBar + GlassPanel.
  */
 
 import * as React from 'react';
 import { startOfYear, endOfYear, format, parseISO } from 'date-fns';
-import { DataShell, DataTableToolbar } from '@/components/shared/data-shell';
-import { YearFilterPopover, TemporalViewLoading, TemporalViewError, YearCalendarGrid } from '@/components/shared';
-import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ptBR } from 'date-fns/locale';
+import { Plus } from 'lucide-react';
+
+import { GlassPanel } from '@/components/shared/glass-panel';
+import {
+  YearFilterPopover,
+  TemporalViewLoading,
+  TemporalViewError,
+  YearCalendarGrid,
+} from '@/components/shared';
+import { SearchInput } from '@/components/dashboard/search-input';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { AppBadge } from '@/components/ui/app-badge';
-import type { AcordoComParcelas, StatusAcordo, TipoObrigacao, DirecaoPagamento, Parcela } from '../../domain';
-import { STATUS_LABELS, TIPO_LABELS, DIRECAO_LABELS } from '../../domain';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { useDebounce } from '@/hooks/use-debounce';
+import { cn } from '@/lib/utils';
+
+import type { AcordoComParcelas, Parcela } from '../../domain';
 import { actionListarObrigacoesPorPeriodo } from '../../actions';
+
+import {
+  ObrigacoesFilterBar,
+  type ObrigacoesFilterBarFilters,
+} from '../shared/obrigacoes-filter-bar';
 import { NovaObrigacaoDialog } from '../dialogs/nova-obrigacao-dialog';
 
 interface ObrigacoesYearWrapperProps {
   viewModeSlot?: React.ReactNode;
 }
 
-const STATUS_OPTIONS: readonly FilterOption[] = Object.entries(STATUS_LABELS).map(
-  ([value, label]) => ({ value, label })
-);
-
-const TIPO_OPTIONS: readonly FilterOption[] = Object.entries(TIPO_LABELS).map(
-  ([value, label]) => ({ value, label })
-);
-
-const DIRECAO_OPTIONS: readonly FilterOption[] = Object.entries(DIRECAO_LABELS).map(
-  ([value, label]) => ({ value, label })
-);
+const CURRENCY = new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL',
+});
 
 export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperProps) {
   // Year navigation
@@ -47,15 +56,19 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
   const selectedDate = React.useMemo(() => new Date(selectedYear, 0, 1), [selectedYear]);
 
   // Filter state
-  const [globalFilter, setGlobalFilter] = React.useState('');
-  const [statusFilter, setStatusFilter] = React.useState<StatusAcordo | 'todos'>('todos');
-  const [tipoFilter, setTipoFilter] = React.useState<TipoObrigacao | 'todos'>('todos');
-  const [direcaoFilter, setDirecaoFilter] = React.useState<DirecaoPagamento | 'todos'>('todos');
+  const [busca, setBusca] = React.useState('');
+  const [filters, setFilters] = React.useState<ObrigacoesFilterBarFilters>({
+    status: 'todos',
+    tipo: null,
+    direcao: null,
+  });
 
   // Dialog state
   const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
   const [dayDialogOpen, setDayDialogOpen] = React.useState(false);
-  const [selectedDayParcelas, setSelectedDayParcelas] = React.useState<{ parcela: Parcela; acordo: AcordoComParcelas }[]>([]);
+  const [selectedDayParcelas, setSelectedDayParcelas] = React.useState<
+    { parcela: Parcela; acordo: AcordoComParcelas }[]
+  >([]);
   const [selectedDayDate, setSelectedDayDate] = React.useState<Date | null>(null);
 
   // Data state
@@ -63,7 +76,8 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Data fetching
+  const buscaDebounced = useDebounce(busca, 500);
+
   const fetchData = React.useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -72,10 +86,10 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
         dataInicio: format(startOfYear(selectedDate), 'yyyy-MM-dd'),
         dataFim: format(endOfYear(selectedDate), 'yyyy-MM-dd'),
         incluirSemData: false,
-        status: statusFilter !== 'todos' ? statusFilter : undefined,
-        tipo: tipoFilter !== 'todos' ? tipoFilter : undefined,
-        direcao: direcaoFilter !== 'todos' ? direcaoFilter : undefined,
-        busca: globalFilter || undefined,
+        status: filters.status !== 'todos' ? filters.status : undefined,
+        tipo: filters.tipo ?? undefined,
+        direcao: filters.direcao ?? undefined,
+        busca: buscaDebounced || undefined,
       });
       if (!result.success) throw new Error(result.error || 'Erro ao listar obrigações');
       setObrigacoes(result.data || []);
@@ -84,7 +98,7 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
     } finally {
       setIsLoading(false);
     }
-  }, [selectedDate, statusFilter, tipoFilter, direcaoFilter, globalFilter]);
+  }, [selectedDate, filters, buscaDebounced]);
 
   React.useEffect(() => {
     fetchData();
@@ -107,104 +121,117 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
     return mapa;
   }, [obrigacoes, selectedYear]);
 
-  // Check if a day has parcelas
-  const hasDayContent = React.useCallback((mes: number, dia: number) => {
-    return parcelasPorDia.has(`${mes}-${dia}`);
-  }, [parcelasPorDia]);
+  const hasDayContent = React.useCallback(
+    (mes: number, dia: number) => parcelasPorDia.has(`${mes}-${dia}`),
+    [parcelasPorDia],
+  );
 
-  // Handle day click to show parcelas
-  const handleDiaClick = React.useCallback((mes: number, dia: number) => {
-    const key = `${mes}-${dia}`;
-    const items = parcelasPorDia.get(key);
-    if (items && items.length > 0) {
-      setSelectedDayParcelas(items);
-      setSelectedDayDate(new Date(selectedYear, mes, dia));
-      setDayDialogOpen(true);
-    }
-  }, [parcelasPorDia, selectedYear]);
+  const handleDiaClick = React.useCallback(
+    (mes: number, dia: number) => {
+      const key = `${mes}-${dia}`;
+      const items = parcelasPorDia.get(key);
+      if (items && items.length > 0) {
+        setSelectedDayParcelas(items);
+        setSelectedDayDate(new Date(selectedYear, mes, dia));
+        setDayDialogOpen(true);
+      }
+    },
+    [parcelasPorDia, selectedYear],
+  );
 
   return (
-    <>
-      <DataShell
-        header={
-          <DataTableToolbar
-            title="Obrigações"
-            searchValue={globalFilter}
-            onSearchValueChange={setGlobalFilter}
-            searchPlaceholder="Buscar obrigações..."
-            actionButton={{
-              label: 'Nova Obrigação',
-              onClick: () => setIsCreateDialogOpen(true),
-            }}
-            actionSlot={viewModeSlot}
-            filtersSlot={
-              <>
-                <YearFilterPopover
-                  selectedYear={selectedYear}
-                  onYearChange={setSelectedYear}
-                />
-                <FilterPopover
-                  label="Status"
-                  options={STATUS_OPTIONS}
-                  value={statusFilter}
-                  onValueChange={(v) => setStatusFilter(v as StatusAcordo | 'todos')}
-                  defaultValue="todos"
-                />
-                <FilterPopover
-                  label="Tipo"
-                  options={TIPO_OPTIONS}
-                  value={tipoFilter}
-                  onValueChange={(v) => setTipoFilter(v as TipoObrigacao | 'todos')}
-                  defaultValue="todos"
-                />
-                <FilterPopover
-                  label="Direção"
-                  options={DIRECAO_OPTIONS}
-                  value={direcaoFilter}
-                  onValueChange={(v) => setDirecaoFilter(v as DirecaoPagamento | 'todos')}
-                  defaultValue="todos"
-                />
-              </>
-            }
-          />
-        }
-      >
+    <div className="flex flex-col gap-4 h-full min-h-0">
+      {/* Toolbar */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <SearchInput
+          value={busca}
+          onChange={setBusca}
+          placeholder="Buscar obrigações..."
+        />
+        <YearFilterPopover
+          selectedYear={selectedYear}
+          onYearChange={setSelectedYear}
+        />
+        <ObrigacoesFilterBar filters={filters} onChange={setFilters} />
+        <div className="ml-auto flex items-center gap-2">
+          {viewModeSlot}
+          <Button
+            size="sm"
+            className="h-8 text-xs font-medium cursor-pointer"
+            onClick={() => setIsCreateDialogOpen(true)}
+          >
+            <Plus className="size-3.5 mr-1" />
+            Nova obrigação
+          </Button>
+        </div>
+      </div>
+
+      {/* Year Grid */}
+      <div className="flex-1 min-h-0">
         {isLoading ? (
           <TemporalViewLoading message="Carregando obrigações..." />
         ) : error ? (
-          <TemporalViewError message={`Erro ao carregar obrigações: ${error}`} onRetry={fetchData} />
-        ) : (
-          <YearCalendarGrid
-            year={selectedYear}
-            hasDayContent={hasDayContent}
-            onDayClick={handleDiaClick}
-            className="p-6"
+          <TemporalViewError
+            message={`Erro ao carregar obrigações: ${error}`}
+            onRetry={fetchData}
           />
+        ) : (
+          <GlassPanel depth={1} className="h-full overflow-auto">
+            <YearCalendarGrid
+              year={selectedYear}
+              hasDayContent={hasDayContent}
+              onDayClick={handleDiaClick}
+              className="p-6"
+            />
+          </GlassPanel>
         )}
-      </DataShell>
+      </div>
 
-      {/* Dialog lista do dia */}
+      {/* Dialog: parcelas do dia */}
       <Dialog open={dayDialogOpen} onOpenChange={setDayDialogOpen}>
-        <DialogContent>
+        <DialogContent className="glass-dialog max-w-lg">
           <DialogHeader>
-            <DialogTitle>
-              {selectedDayDate ? format(selectedDayDate, 'dd/MM/yyyy') : ''}
+            <DialogTitle className="text-sm font-medium">
+              {selectedDayDate
+                ? format(selectedDayDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
+                : ''}
             </DialogTitle>
           </DialogHeader>
           <ScrollArea className="max-h-[60vh]">
             <div className="space-y-2 p-1">
               {selectedDayParcelas.map((item, idx) => (
-                <div key={idx} className="flex items-center justify-between p-3 border rounded hover:bg-muted/50">
-                  <div className="flex flex-col">
-                    <span className="font-medium text-sm">
-                      Parcela {item.parcela.numeroParcela} - Processo {item.acordo.processo?.numero_processo || 'N/A'}
-                    </span>
-                    <span className="text-xs text-muted-foreground capitalize">{item.parcela.status}</span>
+                <GlassPanel
+                  key={idx}
+                  depth={1}
+                  className={cn(
+                    'px-4 py-3 transition-colors',
+                    item.parcela.status === 'atrasada' && 'border-destructive/20',
+                  )}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium truncate">
+                        Parcela {item.parcela.numeroParcela} ·{' '}
+                        {item.acordo.processo?.numero_processo || `Acordo #${item.acordo.id}`}
+                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <SemanticBadge
+                          category="obrigacao_tipo"
+                          value={item.acordo.tipo}
+                          className="text-[9px] font-semibold"
+                        >
+                          {item.acordo.tipo}
+                        </SemanticBadge>
+                        <span className="text-[10px] text-muted-foreground/60 capitalize">
+                          {item.parcela.status}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="shrink-0 text-xs font-medium tabular-nums">
+                      {CURRENCY.format(item.parcela.valorBrutoCreditoPrincipal)}
+                    </div>
                   </div>
-                  <AppBadge variant={item.parcela.status === 'atrasada' ? 'destructive' : 'outline'}>
-                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.parcela.valorBrutoCreditoPrincipal)}
-                  </AppBadge>
-                </div>
+                </GlassPanel>
               ))}
             </div>
           </ScrollArea>
@@ -216,6 +243,6 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
         onOpenChange={setIsCreateDialogOpen}
         onSuccess={fetchData}
       />
-    </>
+    </div>
   );
 }

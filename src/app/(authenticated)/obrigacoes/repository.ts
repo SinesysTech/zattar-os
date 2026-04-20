@@ -644,6 +644,116 @@ export async function registrarRepasse(
   if (error) throw error;
 }
 
+// --- Resumo (Dashboard KPIs) ---
+
+export interface ResumoObrigacoesDB {
+  vencidas: { quantidade: number; valor: number };
+  vencendoHoje: { quantidade: number; valor: number };
+  vencendoEm7Dias: { quantidade: number; valor: number };
+  pendentesTotal: { quantidade: number; valor: number };
+  aReceber: { quantidade: number; valor: number };
+  aPagar: { quantidade: number; valor: number };
+  saldoPrevisto: number;
+  inconsistentes: { quantidade: number };
+}
+
+/**
+ * Agrega 8 KPIs do módulo (vencidas, hoje, 7d, a receber/pagar, saldo, etc.)
+ * em uma única query sobre `parcelas` (join acordos_condenacoes).
+ *
+ * ⚠️ Limite de escala: agregação acontece em memória Node após a query.
+ * Para > ~50k parcelas pendentes, migrar para VIEW materializada ou RPC
+ * PL/pgSQL para manter latência < 300ms.
+ */
+export async function obterResumoObrigacoes(): Promise<ResumoObrigacoesDB> {
+  const supabase = createServiceClient();
+  const hoje = new Date();
+  const hojeStr = hoje.toISOString().slice(0, 10);
+  const em7DiasStr = new Date(hoje.getTime() + 7 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
+  const amanhaStr = new Date(hoje.getTime() + 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
+
+  const { data, error } = await supabase
+    .from('parcelas')
+    .select(
+      `
+        id,
+        valor_bruto_credito_principal,
+        data_vencimento,
+        status,
+        status_repasse,
+        acordos_condenacoes!inner (
+          direcao,
+          tipo
+        )
+      `,
+    )
+    .in('status', ['pendente', 'atrasada']);
+
+  if (error) throw error;
+
+  type ParcelaResumoRow = {
+    id: number;
+    valor_bruto_credito_principal: number;
+    data_vencimento: string;
+    status: StatusParcela;
+    status_repasse: StatusRepasse;
+    acordos_condenacoes: { direcao: DirecaoPagamento; tipo: TipoObrigacao } | null;
+  };
+
+  const rows = (data as unknown as ParcelaResumoRow[]) ?? [];
+
+  const resumo: ResumoObrigacoesDB = {
+    vencidas: { quantidade: 0, valor: 0 },
+    vencendoHoje: { quantidade: 0, valor: 0 },
+    vencendoEm7Dias: { quantidade: 0, valor: 0 },
+    pendentesTotal: { quantidade: 0, valor: 0 },
+    aReceber: { quantidade: 0, valor: 0 },
+    aPagar: { quantidade: 0, valor: 0 },
+    saldoPrevisto: 0,
+    inconsistentes: { quantidade: 0 },
+  };
+
+  for (const row of rows) {
+    const valor = Number(row.valor_bruto_credito_principal ?? 0);
+    const direcao = row.acordos_condenacoes?.direcao;
+    const venc = row.data_vencimento;
+
+    resumo.pendentesTotal.quantidade += 1;
+    resumo.pendentesTotal.valor += valor;
+
+    if (direcao === 'recebimento') {
+      resumo.aReceber.quantidade += 1;
+      resumo.aReceber.valor += valor;
+      resumo.saldoPrevisto += valor;
+    } else if (direcao === 'pagamento') {
+      resumo.aPagar.quantidade += 1;
+      resumo.aPagar.valor += valor;
+      resumo.saldoPrevisto -= valor;
+    }
+
+    if (venc < hojeStr) {
+      resumo.vencidas.quantidade += 1;
+      resumo.vencidas.valor += valor;
+    } else if (venc === hojeStr) {
+      resumo.vencendoHoje.quantidade += 1;
+      resumo.vencendoHoje.valor += valor;
+    } else if (venc >= amanhaStr && venc <= em7DiasStr) {
+      resumo.vencendoEm7Dias.quantidade += 1;
+      resumo.vencendoEm7Dias.valor += valor;
+    }
+
+    if (row.status_repasse === 'pendente_declaracao') {
+      resumo.inconsistentes.quantidade += 1;
+    }
+  }
+
+  return resumo;
+}
+
 export const ObrigacoesRepository = {
   criarAcordo,
   listarAcordos,
@@ -660,4 +770,5 @@ export const ObrigacoesRepository = {
   anexarDeclaracaoPrestacaoContas,
   registrarRepasse,
   listarAcordosPorProcessoIds,
+  obterResumoObrigacoes,
 };

@@ -164,14 +164,14 @@ const MonthGrid = React.memo(function MonthGrid({
       <div className="text-overline text-muted-foreground/70 mb-1.5">
         {MONTH_NAMES[monthIndex]}
       </div>
-      <div className="grid grid-cols-7 gap-[2px] mb-1">
+      <div className="grid grid-cols-7 gap-0.5 mb-1">
         {WEEKDAY_LABELS.map((lbl, i) => (
           <div key={i} className="text-micro-caption text-muted-foreground/50 text-center">
             {lbl}
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-[2px]">
+      <div className="grid grid-cols-7 gap-0.5">
         {cells}
       </div>
     </div>
@@ -196,7 +196,7 @@ function StatCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4 px-5">
+    <div className="rounded-2xl border border-white/8 bg-white/4 p-4 px-5">
       <div className="flex items-center gap-2 mb-3">
         <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />
@@ -251,7 +251,7 @@ export function AudienciasYearHeatmap({
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 border border-white/[0.08] bg-white/[0.06] backdrop-blur-sm hover:bg-white/[0.12]"
+              className="h-9 w-9 border border-white/8hite/6blur-sm hover:bg-white/12"
               onClick={() => onDateChange(new Date(year - 1, 0, 1))}
               aria-label="Ano anterior"
             >
@@ -263,7 +263,7 @@ export function AudienciasYearHeatmap({
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 border border-white/[0.08] bg-white/[0.06] backdrop-blur-sm hover:bg-white/[0.12]"
+              className="h-9 w-9 border border-white/8 bg-white/6 backdrop-blur-sm hover:bg-white/12"
               onClick={() => onDateChange(new Date(year + 1, 0, 1))}
               aria-label="Próximo ano"
             >
@@ -300,16 +300,16 @@ export function AudienciasYearHeatmap({
             <div className="mt-8 flex items-center gap-3">
               <span className="text-micro-caption">Menos</span>
               <div className="flex items-center gap-1">
-                <div className="w-2.5 h-2.5 rounded-[2px] bg-white/[0.05]" />
+                <div className="w-2.5 h-2.5 rounded-[2px] bg-white/5" />
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/30" />
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/55" />
-                <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/[0.65]" />
+                <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/65" />
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/85" />
               </div>
               <span className="text-micro-caption">Mais</span>
               <span className="text-muted-foreground/40 mx-2 text-micro-caption">·</span>
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-[2px] bg-white/[0.05] ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
+                <div className="w-2.5 h-2.5 rounded-[2px] bg-white/5 ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
                 <span className="text-micro-caption">Hoje</span>
               </div>
             </div>
@@ -328,7 +328,7 @@ export function AudienciasYearHeatmap({
               <div className="text-widget-sub mt-0.5">
                 {stats.maxMonthCount} audiências
               </div>
-              <div className="mt-3 h-1 rounded-full bg-white/[0.06]">
+              <div className="mt-3 h-1 rounded-full bg-white/6">
                 <div
                   className="h-1 rounded-full bg-warning/70"
                   style={{ width: `${stats.total > 0 ? Math.round((stats.maxMonthCount / stats.total) * 100) : 0}%` }}
@@ -348,9 +348,9 @@ export function AudienciasYearHeatmap({
                 {stats.taxa}
                 <span className="text-subsection-title text-muted-foreground">%</span>
               </div>
-              <div className="mt-3 h-1.5 rounded-full bg-white/[0.06]">
+              <div className="mt-3 h-1.5 rounded-full bg-white/6">
                 <div
-                  className="h-1.5 rounded-full bg-gradient-to-r from-primary to-primary/80"
+                  className="h-1.5 rounded-full bg-linear-to-r from-primary to-primary/80"
                   style={{ width: `${stats.taxa}%` }}
                 />
               </div>

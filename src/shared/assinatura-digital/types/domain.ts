@@ -253,7 +253,14 @@ export interface FormFieldSchema {
   defaultValue?: string | number | boolean;
   options?: FormFieldOption[];
   conditional?: ConditionalRule;
-  gridColumns?: 1 | 2 | 3;
+  /**
+   * Fração de largura do campo dentro do grid interno da seção (grid-cols-6):
+   * - `1` = linha inteira (full-width)
+   * - `2` = 2/3 da linha
+   * - `3` = 1/3 da linha
+   * - `4` = metade da linha (50%) — combina com outro `4` para split balanceado
+   */
+  gridColumns?: 1 | 2 | 3 | 4;
   helpText?: string;
   disabled?: boolean;
   hidden?: boolean; // Campo não aparece no formulário público

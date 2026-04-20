@@ -148,98 +148,171 @@
       ]
     },
     {
-      "id": "etapa-3-parte-contraria",
-      "title": "Etapa 3: Parte Contrária",
-      "description": "Busque ou cadastre a parte contrária",
-      "icon": "building",
-      "preferredField": "busca_parte_contraria",
+      "id": "section-parte-contraria",
+      "title": "Parte Contrária",
       "fields": [
         {
-          "id": "busca_parte_contraria",
-          "name": "busca_parte_contraria",
-          "label": "Buscar Parte Contrária",
-          "type": "parte_contraria_search",
-          "placeholder": "Digite CPF, CNPJ ou nome",
-          "gridColumns": 3,
-          "helpText": "Busque por CPF, CNPJ ou nome. Se encontrada, será selecionada automaticamente.",
+          "id": "field-pc-cnpj",
+          "name": "pc_cnpj",
+          "type": "cnpj",
+          "label": "CNPJ",
+          "placeholder": "00.000.000/0000-00",
+          "helpText": "Em breve o CNPJ vai preencher automaticamente os dados da empresa.",
+          "gridColumns": 1,
+          "conditional": { "field": "field-pc-tipo-pessoa", "value": "pj", "operator": "=" },
+          "validation": { "required": true, "message": "CNPJ é obrigatório para Pessoa Jurídica" },
           "entitySearch": {
             "entityType": "parte_contraria",
-            "searchBy": ["cpf", "cnpj", "nome"],
+            "searchBy": ["cnpj"],
             "autoFill": {
-              "nome": "parte_contraria_nome",
-              "cnpj": "parte_contraria_cnpj",
-              "cpf": "parte_contraria_cpf",
-              "emails[0]": "parte_contraria_email",
-              "ddd_comercial": "parte_contraria_ddd",
-              "numero_comercial": "parte_contraria_telefone"
+              "cpf": "field-pc-cpf",
+              "cnpj": "field-pc-cnpj",
+              "nome": "field-pc-nome",
+              "tipo_pessoa": "field-pc-tipo-pessoa",
+              "endereco.cep": "field-pc-cep",
+              "numero_celular": "field-pc-telefone",
+              "endereco.bairro": "field-pc-bairro",
+              "endereco.numero": "field-pc-numero",
+              "endereco.municipio": "field-pc-municipio",
+              "endereco.logradouro": "field-pc-logradouro",
+              "endereco.complemento": "field-pc-complemento",
+              "endereco.estado_sigla": "field-pc-estado",
+              "emails[0]": "field-pc-email"
             }
           }
         },
         {
-          "id": "parte_contraria_nome",
-          "name": "parte_contraria_nome",
-          "label": "Razão Social / Nome",
-          "type": "text",
-          "placeholder": "Razão social ou nome",
-          "gridColumns": 3,
-          "validation": {
-            "required": true
-          }
-        },
-        {
-          "id": "parte_contraria_cnpj",
-          "name": "parte_contraria_cnpj",
-          "label": "CNPJ",
-          "type": "cnpj",
-          "placeholder": "00.000.000/0000-00",
+          "id": "field-pc-tipo-pessoa",
+          "name": "pc_tipo_pessoa",
+          "type": "radio",
+          "label": "Tipo",
           "gridColumns": 1,
-          "validation": {
-            "required": false
-          }
+          "defaultValue": "pj",
+          "options": [
+            { "label": "Pessoa Jurídica", "value": "pj" },
+            { "label": "Pessoa Física", "value": "pf" }
+          ],
+          "validation": { "required": true, "message": "Selecione o tipo de pessoa" }
         },
         {
-          "id": "parte_contraria_cpf",
-          "name": "parte_contraria_cpf",
-          "label": "CPF",
+          "id": "field-pc-cpf",
+          "name": "pc_cpf",
           "type": "cpf",
+          "label": "CPF",
           "placeholder": "000.000.000-00",
           "gridColumns": 1,
-          "validation": {
-            "required": false
-          }
+          "conditional": { "field": "field-pc-tipo-pessoa", "value": "pf", "operator": "=" },
+          "validation": { "required": true, "message": "CPF é obrigatório para Pessoa Física" }
         },
         {
-          "id": "parte_contraria_email",
-          "name": "parte_contraria_email",
-          "label": "E-mail",
-          "type": "email",
-          "placeholder": "email@exemplo.com",
-          "gridColumns": 2,
-          "validation": {
-            "required": false
-          }
-        },
-        {
-          "id": "parte_contraria_ddd",
-          "name": "parte_contraria_ddd",
-          "label": "DDD",
+          "id": "field-pc-nome",
+          "name": "pc_nome",
           "type": "text",
-          "placeholder": "11",
+          "label": "Razão Social / Nome",
+          "placeholder": "Razão social ou nome completo",
           "gridColumns": 1,
-          "validation": {
-            "required": false
-          }
+          "validation": { "required": true, "min": 3, "max": 200, "message": "Nome ou Razão Social é obrigatório" }
         },
         {
-          "id": "parte_contraria_telefone",
-          "name": "parte_contraria_telefone",
-          "label": "Telefone",
+          "id": "field-pc-telefone",
+          "name": "pc_telefone",
           "type": "phone",
+          "label": "Telefone",
           "placeholder": "(00) 00000-0000",
-          "gridColumns": 2,
-          "validation": {
-            "required": false
-          }
+          "gridColumns": 4
+        },
+        {
+          "id": "field-pc-email",
+          "name": "pc_email",
+          "type": "email",
+          "label": "E-mail (opcional)",
+          "placeholder": "email@exemplo.com",
+          "gridColumns": 4
+        },
+        {
+          "id": "field-pc-cep",
+          "name": "pc_endereco_cep",
+          "type": "cep",
+          "label": "CEP",
+          "placeholder": "00000-000",
+          "helpText": "O endereço será preenchido automaticamente.",
+          "gridColumns": 1
+        },
+        {
+          "id": "field-pc-logradouro",
+          "name": "pc_endereco_logradouro",
+          "type": "text",
+          "label": "Logradouro",
+          "placeholder": "Rua, Avenida, etc.",
+          "gridColumns": 2
+        },
+        {
+          "id": "field-pc-numero",
+          "name": "pc_endereco_numero",
+          "type": "text",
+          "label": "Número",
+          "placeholder": "Nº",
+          "gridColumns": 3
+        },
+        {
+          "id": "field-pc-complemento",
+          "name": "pc_endereco_complemento",
+          "type": "text",
+          "label": "Complemento (opcional)",
+          "placeholder": "Apto, Bloco, Sala",
+          "gridColumns": 4
+        },
+        {
+          "id": "field-pc-bairro",
+          "name": "pc_endereco_bairro",
+          "type": "text",
+          "label": "Bairro",
+          "placeholder": "Bairro",
+          "gridColumns": 4
+        },
+        {
+          "id": "field-pc-municipio",
+          "name": "pc_endereco_municipio",
+          "type": "text",
+          "label": "Cidade",
+          "placeholder": "Cidade",
+          "gridColumns": 4
+        },
+        {
+          "id": "field-pc-estado",
+          "name": "pc_endereco_estado",
+          "type": "select",
+          "label": "Estado",
+          "gridColumns": 4,
+          "options": [
+            { "label": "Acre", "value": "AC" },
+            { "label": "Alagoas", "value": "AL" },
+            { "label": "Amapá", "value": "AP" },
+            { "label": "Amazonas", "value": "AM" },
+            { "label": "Bahia", "value": "BA" },
+            { "label": "Ceará", "value": "CE" },
+            { "label": "Distrito Federal", "value": "DF" },
+            { "label": "Espírito Santo", "value": "ES" },
+            { "label": "Goiás", "value": "GO" },
+            { "label": "Maranhão", "value": "MA" },
+            { "label": "Mato Grosso", "value": "MT" },
+            { "label": "Mato Grosso do Sul", "value": "MS" },
+            { "label": "Minas Gerais", "value": "MG" },
+            { "label": "Pará", "value": "PA" },
+            { "label": "Paraíba", "value": "PB" },
+            { "label": "Paraná", "value": "PR" },
+            { "label": "Pernambuco", "value": "PE" },
+            { "label": "Piauí", "value": "PI" },
+            { "label": "Rio de Janeiro", "value": "RJ" },
+            { "label": "Rio Grande do Norte", "value": "RN" },
+            { "label": "Rio Grande do Sul", "value": "RS" },
+            { "label": "Rondônia", "value": "RO" },
+            { "label": "Roraima", "value": "RR" },
+            { "label": "Santa Catarina", "value": "SC" },
+            { "label": "São Paulo", "value": "SP" },
+            { "label": "Sergipe", "value": "SE" },
+            { "label": "Tocantins", "value": "TO" }
+          ]
         }
       ]
     },

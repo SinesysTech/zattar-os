@@ -144,7 +144,7 @@ Caso raro. Usar `autoFocus` no input desejado dentro do step. **Não desabilitar
 | Suite | Arquivo | Escopo |
 |-------|---------|--------|
 | FormStepLayout | `src/app/(assinatura-digital)/_wizard/__tests__/form-step-layout.test.tsx` | Chip derivado, a11y do section, focus management |
-| DynamicFormRenderer | `src/app/(assinatura-digital)/_wizard/__tests__/dynamic-form-renderer.test.tsx` | Ícone semântico, busca depth=2, tipo_pessoa, preferredField/icon explícitos |
+| DynamicFormRenderer | `src/app/(assinatura-digital)/_wizard/__tests__/dynamic-form-renderer.test.tsx` | Header enxuto (overline), heurística tipo_pessoa, grid-cols-6 com gridColumns 1/2/3/4 |
 | PublicWizardProgress | `__tests__/public-wizard-progress.test.tsx` | Spine conector, ring primary no current, live regions |
 | PublicStepFooter | `__tests__/public-step-footer.test.tsx` | Glass, mobile flex-1, loading, formId |
 

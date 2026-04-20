@@ -24,8 +24,11 @@ export { ObrigacoesMonthWrapper } from './components/calendar/obrigacoes-month-w
 export { ObrigacoesYearWrapper } from './components/calendar/obrigacoes-year-wrapper';
 export { ObrigacoesCalendarCompact } from './components/calendar/obrigacoes-calendar-compact';
 export { ObrigacoesDayList } from './components/calendar/obrigacoes-day-list';
-export { ResumoCards } from './components/shared/resumo-cards';
+export { ObrigacoesPulseStrip } from './components/shared/obrigacoes-pulse-strip';
+export { AcordoPulseStrip } from './components/shared/acordo-pulse-strip';
 export { AlertasObrigacoes } from './components/shared/alertas-obrigacoes';
+export { ObrigacoesFilterBar } from './components/shared/obrigacoes-filter-bar';
+export { ObrigacoesGlassList } from './components/shared/obrigacoes-glass-list';
 export { ParcelasTable } from './components/parcelas/parcelas-table';
 export { EditParcelaDialog } from './components/parcelas/edit-parcela-dialog';
 export { IntegracaoFinanceiraSection } from './components/parcelas/integracao-financeira-section';
@@ -37,6 +40,7 @@ export { UploadComprovanteDialog } from './components/repasses/upload-comprovant
 // Hooks
 // ============================================================================
 export { useRepassesPendentes } from './hooks/use-repasses-pendentes';
+export { useResumoObrigacoes } from './hooks/use-resumo-obrigacoes';
 
 // ============================================================================
 // Actions (Server Actions)

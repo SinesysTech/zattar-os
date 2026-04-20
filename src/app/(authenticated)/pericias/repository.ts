@@ -357,6 +357,93 @@ export async function listEspecialidadesPericia(): Promise<
   }
 }
 
+export interface EspecialidadePericiaRow {
+  id: number;
+  descricao: string;
+  trt: string;
+  grau: string;
+  ativo: boolean;
+  updatedAt: string;
+}
+
+export async function listAllEspecialidadesPericia(): Promise<
+  Result<EspecialidadePericiaRow[]>
+> {
+  try {
+    const db = createDbClient();
+    const { data, error } = await db
+      .from("especialidades_pericia")
+      .select("id,descricao,trt,grau,ativo,updated_at")
+      .order("descricao", { ascending: true })
+      .limit(1000);
+
+    if (error) {
+      return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    }
+
+    const rows = (data || []).map((r) => {
+      const row = r as {
+        id: number;
+        descricao: string;
+        trt: string;
+        grau: string;
+        ativo: boolean;
+        updated_at: string;
+      };
+      return {
+        id: row.id,
+        descricao: row.descricao,
+        trt: row.trt,
+        grau: row.grau,
+        ativo: row.ativo,
+        updatedAt: row.updated_at,
+      };
+    });
+
+    return ok(rows);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao listar especialidades de perícia.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+export async function setEspecialidadePericiaAtivo(
+  id: number,
+  ativo: boolean
+): Promise<Result<boolean>> {
+  try {
+    const db = createDbClient();
+    const { error } = await db
+      .from("especialidades_pericia")
+      .update({
+        ativo,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id);
+
+    if (error) {
+      return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    }
+
+    return ok(true);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao atualizar especialidade.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
 export async function criarPericia(
   input: CriarPericiaInput,
   advogadoId: number
@@ -463,6 +550,148 @@ export async function atualizarSituacaoPericia(
       appError(
         "DATABASE_ERROR",
         "Erro ao atualizar situação da perícia.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+// =============================================================================
+// AGREGAÇÕES PARA KPI STRIP (PulseStats)
+// =============================================================================
+
+export async function countPericiasPorSituacao(): Promise<
+  Result<Record<string, number>>
+> {
+  try {
+    const db = createDbClient();
+    const { data, error } = await db
+      .from(TABLE_PERICIAS)
+      .select("situacao_codigo")
+      .eq("arquivado", false);
+
+    if (error) {
+      return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    }
+
+    const counts: Record<string, number> = {};
+    for (const row of data ?? []) {
+      const key = (row as { situacao_codigo: string }).situacao_codigo;
+      counts[key] = (counts[key] ?? 0) + 1;
+    }
+    return ok(counts);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao agregar situações de perícias.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+export async function countPericiasComPrazoCritico(
+  diasAFrente: number
+): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+    const hoje = new Date();
+    const limite = addDays(hoje.toISOString().slice(0, 10), diasAFrente);
+
+    const { count, error } = await db
+      .from(TABLE_PERICIAS)
+      .select("id", { count: "exact", head: true })
+      .eq("arquivado", false)
+      .not("situacao_codigo", "in", "(F,C)")
+      .not("prazo_entrega", "is", null)
+      .gte("prazo_entrega", hoje.toISOString().slice(0, 10))
+      .lt("prazo_entrega", limite);
+
+    if (error) {
+      return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    }
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao contar prazos críticos.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+export async function countPericiasSemResponsavel(): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+    const { count, error } = await db
+      .from(TABLE_PERICIAS)
+      .select("id", { count: "exact", head: true })
+      .eq("arquivado", false)
+      .not("situacao_codigo", "in", "(F,C)")
+      .is("responsavel_id", null);
+
+    if (error) {
+      return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    }
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao contar perícias sem responsável.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+export async function countPericiasTrendMensal(
+  meses: number
+): Promise<Result<{ label: string; count: number }[]>> {
+  try {
+    const db = createDbClient();
+    const hoje = new Date();
+    const inicio = new Date(hoje.getFullYear(), hoje.getMonth() - (meses - 1), 1);
+
+    const { data, error } = await db
+      .from(TABLE_PERICIAS)
+      .select("data_criacao")
+      .gte("data_criacao", inicio.toISOString())
+      .order("data_criacao", { ascending: true });
+
+    if (error) {
+      return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    }
+
+    const buckets: { label: string; count: number }[] = [];
+    for (let i = 0; i < meses; i++) {
+      const ref = new Date(hoje.getFullYear(), hoje.getMonth() - (meses - 1 - i), 1);
+      buckets.push({
+        label: `${ref.getFullYear()}-${String(ref.getMonth() + 1).padStart(2, "0")}`,
+        count: 0,
+      });
+    }
+    for (const row of data ?? []) {
+      const dc = (row as { data_criacao: string }).data_criacao;
+      const d = new Date(dc);
+      const label = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      const bucket = buckets.find((b) => b.label === label);
+      if (bucket) bucket.count++;
+    }
+
+    return ok(buckets);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao calcular tendência mensal.",
         undefined,
         error instanceof Error ? error : undefined
       )

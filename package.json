@@ -43,6 +43,7 @@
     "generate:build-dashboard": "node scripts/dev-tools/build/generate-build-dashboard.js",
     "start": "next start",
     "lint": "eslint --max-warnings=0",
+    "lint:rls": "node scripts/lint/check-rls-initplan.mjs --all",
     "security:check-secrets": "node scripts/security/check-secrets.js",
     "security:check-storage": "node scripts/security/check-plaintext-storage.js",
     "security:gitleaks": "gitleaks detect --config .gitleaks.toml",

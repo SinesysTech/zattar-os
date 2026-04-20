@@ -1,415 +1,221 @@
 'use client';
 
 /**
- * PericiasListWrapper - Wrapper auto-contido para a view de lista
+ * PericiasListWrapper — View de lista (thin).
+ * ============================================================================
+ * Renderiza apenas DataTable + paginação. Toolbar (search, filtros, botão
+ * "Nova Perícia", view switcher) vive no PericiasClient pai. Este componente
+ * é um view puro que consome props controlled.
  *
- * Segue o padrão de ExpedientesListWrapper / AudienciasListWrapper:
- * - Gerencia próprio estado de filtros, paginação e fetch
- * - DataShell + DataTableToolbar + DataTable + DataPagination
- * - PericiasListFilters no filtersSlot
- * - Dialog de criação interno
+ * Estado local mínimo: pagination, density, rowSelection (UI-only).
+ * ============================================================================
  */
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { X } from 'lucide-react';
 
 import {
   DataShell,
   DataTable,
-  DataTableToolbar,
   DataPagination,
 } from '@/components/shared/data-shell';
-import { DateRangePicker } from '@/components/ui/date-range-picker';
-import { Button } from '@/components/ui/button';
-import { AppBadge } from '@/components/ui/app-badge';
 
-import type { Pericia, GrauTribunal, UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../domain';
-import { SituacaoPericiaCodigo, SITUACAO_PERICIA_LABELS } from '../domain';
-import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
+import type {
+  Pericia,
+  UsuarioOption,
+  EspecialidadePericiaOption,
+  PeritoOption,
+} from '../domain';
+import { SituacaoPericiaCodigo } from '../domain';
 import { usePericias } from '../hooks/use-pericias';
-import { useUsuarios } from '@/app/(authenticated)/usuarios';
-import { useEspecialidadesPericias } from '../hooks/use-especialidades-pericias';
-import { usePeritos } from '../hooks/use-peritos';
 import { columns } from './columns';
-import { PericiaCriarDialog } from './pericia-criar-dialog';
-import {
-  PericiasListFilters,
-  type SituacaoFilterType,
-  type ResponsavelFilterType,
-  type LaudoFilterType,
-} from './pericias-list-filters';
+import type {
+  SituacaoFilterType,
+  ResponsavelFilterType,
+  LaudoFilterType,
+} from './pericias-filter-bar';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
-interface PericiasListWrapperProps {
-  /** Slot para o seletor de modo de visualização (ViewModePopover) */
-  viewModeSlot?: React.ReactNode;
-  /** Dados de usuários pré-carregados (evita fetch duplicado) */
-  usuariosData?: UsuarioOption[];
-  /** Dados de especialidades pré-carregados */
-  especialidadesData?: EspecialidadePericiaOption[];
-  /** Dados de peritos pré-carregados */
-  peritosData?: PeritoOption[];
+export interface PericiasListWrapperProps {
+  busca: string;
+  situacaoFilter: SituacaoFilterType;
+  responsavelFilter: ResponsavelFilterType;
+  laudoFilter: LaudoFilterType;
+  tribunalFilter: string;
+  grauFilter: string;
+  especialidadeFilter: string;
+  peritoFilter: string;
+  dateRange?: { from?: Date; to?: Date };
+  usuarios: UsuarioOption[];
+  especialidades: EspecialidadePericiaOption[];
+  peritos: PeritoOption[];
+  /** Incrementado externamente para forçar refetch (ex: após criar perícia). */
+  refetchKey: number;
 }
 
 // =============================================================================
-// COMPONENTE PRINCIPAL
+// COMPONENTE
 // =============================================================================
 
 export function PericiasListWrapper({
-  viewModeSlot,
-  usuariosData,
-  especialidadesData,
-  peritosData,
+  busca,
+  situacaoFilter,
+  responsavelFilter,
+  laudoFilter,
+  tribunalFilter,
+  grauFilter,
+  especialidadeFilter,
+  peritoFilter,
+  dateRange,
+  usuarios,
+  refetchKey,
 }: PericiasListWrapperProps) {
   const router = useRouter();
 
-  // ---------- Estado da Tabela ----------
-  const [table, setTable] = React.useState<TanstackTable<Pericia> | null>(null);
-  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
-  const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
+  // ---------- Estado local da tabela ----------
+  const [density, setDensity] = React.useState<
+    'compact' | 'standard' | 'relaxed'
+  >('standard');
+  const [rowSelection, setRowSelection] = React.useState<
+    Record<string, boolean>
+  >({});
+  const [, setTable] = React.useState<TanstackTable<Pericia> | null>(null);
 
   // ---------- Paginação ----------
   const [pageIndex, setPageIndex] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(50);
 
-  // ---------- Busca e Filtros ----------
-  const [globalFilter, setGlobalFilter] = React.useState('');
-  const [situacaoFilter, setSituacaoFilter] = React.useState<SituacaoFilterType>('todos');
-  const [responsavelFilter, setResponsavelFilter] = React.useState<ResponsavelFilterType>('todos');
-  const [laudoFilter, setLaudoFilter] = React.useState<LaudoFilterType>('todos');
-  const [tribunalFilter, setTribunalFilter] = React.useState('');
-  const [grauFilter, setGrauFilter] = React.useState('');
-  const [especialidadeFilter, setEspecialidadeFilter] = React.useState('');
-  const [peritoFilter, setPeritoFilter] = React.useState('');
-  const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>(undefined);
+  // Reset page when filters/busca change
+  React.useEffect(() => {
+    setPageIndex(0);
+  }, [
+    busca,
+    situacaoFilter,
+    responsavelFilter,
+    laudoFilter,
+    tribunalFilter,
+    grauFilter,
+    especialidadeFilter,
+    peritoFilter,
+    dateRange,
+  ]);
 
-  // ---------- Dialogs ----------
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
-
-  // ---------- Dados Auxiliares ----------
-  const { usuarios: usuariosFetched } = useUsuarios({ enabled: !usuariosData });
-  const { especialidades: especialidadesFetched } = useEspecialidadesPericias({ enabled: !especialidadesData });
-  const { peritos: peritosFetched } = usePeritos({ enabled: !peritosData });
-
-  const usuarios = usuariosData ?? usuariosFetched;
-  const especialidades = especialidadesData ?? especialidadesFetched;
-  const peritos = peritosData ?? peritosFetched;
-
-  // ---------- Montar params para o hook ----------
+  // ---------- Hook params (derivados das props controlled) ----------
   const hookParams = React.useMemo(() => {
     const params: Record<string, unknown> = {
       pagina: pageIndex + 1,
       limite: pageSize,
-      busca: globalFilter || undefined,
+      busca: busca || undefined,
     };
 
-    // Situação
     if (situacaoFilter !== 'todos') {
       params.situacaoCodigo = situacaoFilter;
     } else {
-      // Padrão: excluir Finalizadas e Canceladas
       params.situacoesExcluidas = [
         SituacaoPericiaCodigo.FINALIZADA,
         SituacaoPericiaCodigo.CANCELADA,
       ];
     }
 
-    // Responsável
     if (responsavelFilter === 'sem_responsavel') {
       params.semResponsavel = true;
     } else if (typeof responsavelFilter === 'number') {
       params.responsavelId = responsavelFilter;
     }
 
-    // Laudo
     if (laudoFilter === 'sim') params.laudoJuntado = true;
     if (laudoFilter === 'nao') params.laudoJuntado = false;
 
-    // DateRange
-    if (dateRange?.from) params.prazoEntregaInicio = format(dateRange.from, 'yyyy-MM-dd');
-    if (dateRange?.to) params.prazoEntregaFim = format(dateRange.to, 'yyyy-MM-dd');
+    if (dateRange?.from)
+      params.prazoEntregaInicio = format(dateRange.from, 'yyyy-MM-dd');
+    if (dateRange?.to)
+      params.prazoEntregaFim = format(dateRange.to, 'yyyy-MM-dd');
 
-    // Filtros avançados
     if (tribunalFilter) params.trt = tribunalFilter;
     if (grauFilter) params.grau = grauFilter;
-    if (especialidadeFilter) params.especialidadeId = parseInt(especialidadeFilter, 10);
+    if (especialidadeFilter)
+      params.especialidadeId = parseInt(especialidadeFilter, 10);
     if (peritoFilter) params.peritoId = parseInt(peritoFilter, 10);
 
     return params;
   }, [
-    pageIndex, pageSize, globalFilter,
-    situacaoFilter, responsavelFilter, laudoFilter,
-    tribunalFilter, grauFilter, especialidadeFilter, peritoFilter,
+    pageIndex,
+    pageSize,
+    busca,
+    situacaoFilter,
+    responsavelFilter,
+    laudoFilter,
+    tribunalFilter,
+    grauFilter,
+    especialidadeFilter,
+    peritoFilter,
     dateRange,
   ]);
 
-  // ---------- Data Fetching ----------
-  const { pericias, paginacao, isLoading, error, refetch } = usePericias(hookParams);
+  const { pericias, paginacao, isLoading, error, refetch } =
+    usePericias(hookParams);
+
+  // Refetch external (ex: após criar perícia no dialog do client pai)
+  React.useEffect(() => {
+    if (refetchKey > 0) {
+      refetch();
+    }
+  }, [refetchKey, refetch]);
 
   const total = paginacao?.total ?? 0;
   const totalPages = paginacao?.totalPaginas ?? 0;
 
-  // ---------- Handlers ----------
   const handleSucessoOperacao = React.useCallback(() => {
     setRowSelection({});
     refetch();
     router.refresh();
   }, [refetch, router]);
 
-  const handleCreateSuccess = React.useCallback(() => {
-    refetch();
-    setIsCreateDialogOpen(false);
-    router.refresh();
-  }, [refetch, router]);
-
-  const handleClearAllFilters = React.useCallback(() => {
-    setSituacaoFilter('todos');
-    setResponsavelFilter('todos');
-    setLaudoFilter('todos');
-    setDateRange(undefined);
-    setTribunalFilter('');
-    setGrauFilter('');
-    setEspecialidadeFilter('');
-    setPeritoFilter('');
-    setPageIndex(0);
-  }, []);
-
-  // ---------- Chips de filtros ativos ----------
-  const activeFilterChips = React.useMemo(() => {
-    const chips: { key: string; label: string; onRemove: () => void }[] = [];
-
-    if (situacaoFilter !== 'todos') {
-      chips.push({
-        key: 'situacao',
-        label: SITUACAO_PERICIA_LABELS[situacaoFilter],
-        onRemove: () => setSituacaoFilter('todos'),
-      });
-    }
-
-    if (responsavelFilter === 'sem_responsavel') {
-      chips.push({
-        key: 'responsavel',
-        label: 'Sem responsável',
-        onRemove: () => setResponsavelFilter('todos'),
-      });
-    } else if (typeof responsavelFilter === 'number') {
-      const usuario = usuarios.find((u) => u.id === responsavelFilter);
-      chips.push({
-        key: 'responsavel',
-        label: usuario ? (usuario.nomeExibicao || usuario.nomeCompleto || `Usuário ${usuario.id}`) : `Responsável #${responsavelFilter}`,
-        onRemove: () => setResponsavelFilter('todos'),
-      });
-    }
-
-    if (laudoFilter !== 'todos') {
-      chips.push({
-        key: 'laudo',
-        label: laudoFilter === 'sim' ? 'Laudo juntado' : 'Sem laudo',
-        onRemove: () => setLaudoFilter('todos'),
-      });
-    }
-
-    if (dateRange?.from || dateRange?.to) {
-      const fromStr = dateRange.from ? format(dateRange.from, 'dd/MM') : '';
-      const toStr = dateRange.to ? format(dateRange.to, 'dd/MM') : '';
-      chips.push({
-        key: 'dateRange',
-        label: `${fromStr} - ${toStr}`,
-        onRemove: () => setDateRange(undefined),
-      });
-    }
-
-    if (tribunalFilter) {
-      chips.push({
-        key: 'tribunal',
-        label: tribunalFilter,
-        onRemove: () => setTribunalFilter(''),
-      });
-    }
-
-    if (grauFilter) {
-      chips.push({
-        key: 'grau',
-        label: GRAU_TRIBUNAL_LABELS[grauFilter as GrauTribunal] || grauFilter,
-        onRemove: () => setGrauFilter(''),
-      });
-    }
-
-    if (especialidadeFilter) {
-      const esp = especialidades.find((e) => e.id === parseInt(especialidadeFilter, 10));
-      chips.push({
-        key: 'especialidade',
-        label: esp ? esp.descricao : `Especialidade #${especialidadeFilter}`,
-        onRemove: () => setEspecialidadeFilter(''),
-      });
-    }
-
-    if (peritoFilter) {
-      const p = peritos.find((x) => x.id === parseInt(peritoFilter, 10));
-      chips.push({
-        key: 'perito',
-        label: p ? p.nome : `Perito #${peritoFilter}`,
-        onRemove: () => setPeritoFilter(''),
-      });
-    }
-
-    return chips;
-  }, [
-    situacaoFilter, responsavelFilter, laudoFilter, dateRange,
-    tribunalFilter, grauFilter, especialidadeFilter, peritoFilter,
-    usuarios, especialidades, peritos,
-  ]);
-
-  // ---------- Render ----------
   return (
-    <>
-      <DataShell
-        header={
-          table ? (
-            <>
-              <DataTableToolbar
-                table={table}
-                title="Perícias"
-                density={density}
-                onDensityChange={setDensity}
-                searchValue={globalFilter}
-                onSearchValueChange={(value: string) => {
-                  setGlobalFilter(value);
-                  setPageIndex(0);
-                }}
-                searchPlaceholder="Buscar perícias..."
-                actionButton={{
-                  label: 'Nova Perícia',
-                  onClick: () => setIsCreateDialogOpen(true),
-                }}
-                viewModeSlot={viewModeSlot}
-                filtersSlot={
-                  <>
-                    <PericiasListFilters
-                      situacaoFilter={situacaoFilter}
-                      onSituacaoChange={(v) => { setSituacaoFilter(v); setPageIndex(0); }}
-                      responsavelFilter={responsavelFilter}
-                      onResponsavelChange={(v) => { setResponsavelFilter(v); setPageIndex(0); }}
-                      laudoFilter={laudoFilter}
-                      onLaudoChange={(v) => { setLaudoFilter(v); setPageIndex(0); }}
-                      tribunalFilter={tribunalFilter}
-                      onTribunalChange={(v) => { setTribunalFilter(v); setPageIndex(0); }}
-                      grauFilter={grauFilter}
-                      onGrauChange={(v) => { setGrauFilter(v); setPageIndex(0); }}
-                      especialidadeFilter={especialidadeFilter}
-                      onEspecialidadeChange={(v) => { setEspecialidadeFilter(v); setPageIndex(0); }}
-                      peritoFilter={peritoFilter}
-                      onPeritoChange={(v) => { setPeritoFilter(v); setPageIndex(0); }}
-                      usuarios={usuarios}
-                      especialidades={especialidades}
-                      peritos={peritos}
-                    />
-
-                    <DateRangePicker
-                      value={dateRange}
-                      onChange={(range) => {
-                        setDateRange(range);
-                        setPageIndex(0);
-                      }}
-                      placeholder="Prazo entrega"
-                      className="h-9 w-60 bg-card"
-                    />
-                  </>
-                }
-              />
-
-              {/* Active Filter Chips */}
-              {activeFilterChips.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2 px-6 pb-4">
-                  <span className="text-sm text-muted-foreground">Filtros:</span>
-                  {activeFilterChips.map((chip) => (
-                    <AppBadge
-                      key={chip.key}
-                      variant="secondary"
-                      className="gap-1 pr-1 cursor-pointer hover:bg-secondary/80"
-                      onClick={() => chip.onRemove()}
-                    >
-                      {chip.label}
-                      <button
-                        type="button"
-                        className="inline-flex h-5 w-5 items-center justify-center rounded-sm hover:bg-background/40"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          chip.onRemove();
-                        }}
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </AppBadge>
-                  ))}
-                  {activeFilterChips.length > 1 && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 px-2 text-xs"
-                      onClick={handleClearAllFilters}
-                    >
-                      Limpar todos
-                    </Button>
-                  )}
-                </div>
-              )}
-            </>
-          ) : undefined
-        }
-        footer={
-          totalPages > 0 ? (
-            <DataPagination
-              pageIndex={pageIndex}
-              pageSize={pageSize}
-              total={total}
-              totalPages={totalPages}
-              onPageChange={setPageIndex}
-              onPageSizeChange={(size) => {
-                setPageSize(size);
-                setPageIndex(0);
-              }}
-              isLoading={isLoading}
-            />
-          ) : null
-        }
-      >
-        <DataTable
-          data={pericias}
-          columns={columns}
-          isLoading={isLoading}
-          error={error}
-          density={density}
-          onTableReady={(t) => setTable(t as TanstackTable<Pericia>)}
-          emptyMessage="Nenhuma perícia encontrada."
-          rowSelection={{
-            state: rowSelection,
-            onRowSelectionChange: setRowSelection,
-            getRowId: (row) => row.id.toString(),
-          }}
-          options={{
-            meta: {
-              usuarios,
-              onSuccess: handleSucessoOperacao,
-            },
-          }}
-        />
-      </DataShell>
-
-      <PericiaCriarDialog
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-        usuarios={usuarios}
-        especialidades={especialidades}
-        peritos={peritos}
-        onSuccess={handleCreateSuccess}
+    <DataShell
+      footer={
+        totalPages > 0 ? (
+          <DataPagination
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            total={total}
+            totalPages={totalPages}
+            onPageChange={setPageIndex}
+            onPageSizeChange={(size) => {
+              setPageSize(size);
+              setPageIndex(0);
+            }}
+            isLoading={isLoading}
+          />
+        ) : null
+      }
+    >
+      <DataTable
+        data={pericias}
+        columns={columns}
+        isLoading={isLoading}
+        error={error}
+        density={density}
+        onDensityChange={setDensity}
+        onTableReady={(t) => setTable(t as TanstackTable<Pericia>)}
+        emptyMessage="Nenhuma perícia encontrada."
+        rowSelection={{
+          state: rowSelection,
+          onRowSelectionChange: setRowSelection,
+          getRowId: (row) => row.id.toString(),
+        }}
+        options={{
+          meta: {
+            usuarios,
+            onSuccess: handleSucessoOperacao,
+          },
+        }}
       />
-    </>
+    </DataShell>
   );
 }

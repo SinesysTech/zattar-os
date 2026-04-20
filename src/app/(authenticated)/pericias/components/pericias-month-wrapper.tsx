@@ -1,102 +1,82 @@
 'use client';
 
 /**
- * PericiasMonthWrapper - Wrapper auto-contido para a view de mês
- *
- * Segue o padrão de ExpedientesMonthWrapper / AudienciasMonthWrapper:
- * - DataShell + DataTableToolbar com PericiasListFilters
- * - Master-detail layout: calendário compacto + lista do dia
- * - Fetch via usePericias com range mensal
+ * PericiasMonthWrapper — View de mês (thin).
+ * ============================================================================
+ * Layout master-detail: calendário compacto (esquerda) + lista do dia
+ * (direita). Toolbar vive no PericiasClient pai.
+ * ============================================================================
  */
 
 import * as React from 'react';
 import { startOfMonth, endOfMonth, format } from 'date-fns';
 
 import {
-  DataShell,
-  DataTableToolbar,
-} from '@/components/shared/data-shell';
-import {
   TemporalViewLoading,
   TemporalViewError,
 } from '@/components/shared';
-
-import { SituacaoPericiaCodigo, type UsuarioOption, type EspecialidadePericiaOption, type PeritoOption } from '../domain';
-import { usePericias } from '../hooks/use-pericias';
-import { useUsuarios } from '@/app/(authenticated)/usuarios';
-import { useEspecialidadesPericias } from '../hooks/use-especialidades-pericias';
-import { usePeritos } from '../hooks/use-peritos';
+import { GlassPanel } from '@/components/shared/glass-panel';
 
 import {
-  PericiasListFilters,
-  type SituacaoFilterType,
-  type ResponsavelFilterType,
-  type LaudoFilterType,
-} from './pericias-list-filters';
+  SituacaoPericiaCodigo,
+  type UsuarioOption,
+  type EspecialidadePericiaOption,
+  type PeritoOption,
+} from '../domain';
+import { usePericias } from '../hooks/use-pericias';
+
 import { PericiasCalendarCompact } from './pericias-calendar-compact';
 import { PericiasDayList } from './pericias-day-list';
-import { PericiaCriarDialog } from './pericia-criar-dialog';
+import type {
+  SituacaoFilterType,
+  ResponsavelFilterType,
+  LaudoFilterType,
+} from './pericias-filter-bar';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
-interface PericiasMonthWrapperProps {
-  /** Slot para o seletor de modo de visualização (ViewModePopover) */
-  viewModeSlot?: React.ReactNode;
-  /** Slot para botões de ação adicionais (ex: Settings) */
-  settingsSlot?: React.ReactNode;
-  /** Dados de usuários pré-carregados (evita fetch duplicado) */
-  usuariosData?: UsuarioOption[];
-  /** Dados de especialidades pré-carregados */
-  especialidadesData?: EspecialidadePericiaOption[];
-  /** Dados de peritos pré-carregados */
-  peritosData?: PeritoOption[];
+export interface PericiasMonthWrapperProps {
+  busca: string;
+  situacaoFilter: SituacaoFilterType;
+  responsavelFilter: ResponsavelFilterType;
+  laudoFilter: LaudoFilterType;
+  tribunalFilter: string;
+  grauFilter: string;
+  especialidadeFilter: string;
+  peritoFilter: string;
+  usuarios: UsuarioOption[];
+  especialidades: EspecialidadePericiaOption[];
+  peritos: PeritoOption[];
+  refetchKey: number;
 }
 
 // =============================================================================
-// COMPONENTE PRINCIPAL
+// COMPONENTE
 // =============================================================================
 
 export function PericiasMonthWrapper({
-  viewModeSlot,
-  settingsSlot,
-  usuariosData,
-  especialidadesData,
-  peritosData,
+  busca,
+  situacaoFilter,
+  responsavelFilter,
+  laudoFilter,
+  tribunalFilter,
+  grauFilter,
+  especialidadeFilter,
+  peritoFilter,
+  refetchKey,
 }: PericiasMonthWrapperProps) {
-  // ---------- Estado do Calendário ----------
+  // ---------- Navegação de calendário ----------
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const [currentMonth, setCurrentMonth] = React.useState<Date>(new Date());
 
-  // ---------- Estado de Filtros ----------
-  const [globalFilter, setGlobalFilter] = React.useState('');
-  const [situacaoFilter, setSituacaoFilter] = React.useState<SituacaoFilterType>('todos');
-  const [responsavelFilter, setResponsavelFilter] = React.useState<ResponsavelFilterType>('todos');
-  const [laudoFilter, setLaudoFilter] = React.useState<LaudoFilterType>('todos');
-  const [tribunalFilter, setTribunalFilter] = React.useState('');
-  const [grauFilter, setGrauFilter] = React.useState('');
-  const [especialidadeFilter, setEspecialidadeFilter] = React.useState('');
-  const [peritoFilter, setPeritoFilter] = React.useState('');
-
-  // ---------- Dialog State ----------
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
-
-  // ---------- Dados Auxiliares ----------
-  const { usuarios: usuariosFetched } = useUsuarios({ enabled: !usuariosData });
-  const { especialidades: especialidadesFetched } = useEspecialidadesPericias({ enabled: !especialidadesData });
-  const { peritos: peritosFetched } = usePeritos({ enabled: !peritosData });
-
-  const usuarios = usuariosData ?? usuariosFetched;
-  const especialidades = especialidadesData ?? especialidadesFetched;
-  const peritos = peritosData ?? peritosFetched;
-
-  // ---------- Montar params para o hook ----------
+  // ---------- Hook params ----------
   const hookParams = React.useMemo(() => {
     const params: Record<string, unknown> = {
       pagina: 1,
       limite: 1000,
-      busca: globalFilter || undefined,
+      busca: busca || undefined,
       prazoEntregaInicio: format(startOfMonth(currentMonth), 'yyyy-MM-dd'),
       prazoEntregaFim: format(endOfMonth(currentMonth), 'yyyy-MM-dd'),
     };
@@ -121,107 +101,66 @@ export function PericiasMonthWrapper({
 
     if (tribunalFilter) params.trt = tribunalFilter;
     if (grauFilter) params.grau = grauFilter;
-    if (especialidadeFilter) params.especialidadeId = parseInt(especialidadeFilter, 10);
+    if (especialidadeFilter)
+      params.especialidadeId = parseInt(especialidadeFilter, 10);
     if (peritoFilter) params.peritoId = parseInt(peritoFilter, 10);
 
     return params;
   }, [
-    globalFilter, currentMonth, situacaoFilter, responsavelFilter, laudoFilter,
-    tribunalFilter, grauFilter, especialidadeFilter, peritoFilter,
+    busca,
+    currentMonth,
+    situacaoFilter,
+    responsavelFilter,
+    laudoFilter,
+    tribunalFilter,
+    grauFilter,
+    especialidadeFilter,
+    peritoFilter,
   ]);
 
-  // ---------- Data Fetching ----------
   const { pericias, isLoading, error, refetch } = usePericias(hookParams);
 
-  // ---------- Handlers ----------
-  const handleCreateSuccess = React.useCallback(() => {
-    refetch();
-    setIsCreateDialogOpen(false);
-  }, [refetch]);
+  React.useEffect(() => {
+    if (refetchKey > 0) {
+      refetch();
+    }
+  }, [refetchKey, refetch]);
 
-  // ---------- Render ----------
-  return (
-    <>
-      <DataShell
-        header={
-          <DataTableToolbar
-            title="Perícias"
-            searchValue={globalFilter}
-            onSearchValueChange={setGlobalFilter}
-            searchPlaceholder="Buscar perícias..."
-            actionButton={{
-              label: 'Nova Perícia',
-              onClick: () => setIsCreateDialogOpen(true),
-            }}
-            actionSlot={
-              <>
-                {viewModeSlot}
-                {settingsSlot}
-              </>
-            }
-            filtersSlot={
-              <PericiasListFilters
-                situacaoFilter={situacaoFilter}
-                onSituacaoChange={setSituacaoFilter}
-                responsavelFilter={responsavelFilter}
-                onResponsavelChange={setResponsavelFilter}
-                laudoFilter={laudoFilter}
-                onLaudoChange={setLaudoFilter}
-                tribunalFilter={tribunalFilter}
-                onTribunalChange={setTribunalFilter}
-                grauFilter={grauFilter}
-                onGrauChange={setGrauFilter}
-                especialidadeFilter={especialidadeFilter}
-                onEspecialidadeChange={setEspecialidadeFilter}
-                peritoFilter={peritoFilter}
-                onPeritoChange={setPeritoFilter}
-                usuarios={usuarios}
-                especialidades={especialidades}
-                peritos={peritos}
-              />
-            }
-          />
-        }
-      >
-        {isLoading ? (
-          <TemporalViewLoading message="Carregando perícias..." />
-        ) : error ? (
-          <TemporalViewError message={`Erro ao carregar perícias: ${error}`} onRetry={refetch} />
-        ) : (
-          <div className="bg-card border rounded-md overflow-hidden flex-1 min-h-0">
-            <div className="flex h-full">
-              {/* Calendário compacto — largura fixa */}
-              <div className="w-[480px] shrink-0 border-r p-6 overflow-auto">
-                <PericiasCalendarCompact
-                  selectedDate={selectedDate}
-                  onDateSelect={setSelectedDate}
-                  pericias={pericias}
-                  currentMonth={currentMonth}
-                  onMonthChange={setCurrentMonth}
-                />
-              </div>
+  if (isLoading) {
+    return <TemporalViewLoading message="Carregando perícias..." />;
+  }
 
-              {/* Lista do dia — ocupa todo o espaço restante */}
-              <div className="flex-1 min-w-0">
-                <PericiasDayList
-                  selectedDate={selectedDate}
-                  pericias={pericias}
-                  onAddPericia={() => setIsCreateDialogOpen(true)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </DataShell>
-
-      <PericiaCriarDialog
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-        usuarios={usuarios}
-        especialidades={especialidades}
-        peritos={peritos}
-        onSuccess={handleCreateSuccess}
+  if (error) {
+    return (
+      <TemporalViewError
+        message={`Erro ao carregar perícias: ${error}`}
+        onRetry={refetch}
       />
-    </>
+    );
+  }
+
+  return (
+    <GlassPanel depth={1} className="overflow-hidden">
+      <div className="flex h-[calc(100vh-380px)] min-h-140">
+        {/* Calendário compacto — largura fixa */}
+        <div className="w-105 shrink-0 border-r border-border/30 p-6 overflow-auto">
+          <PericiasCalendarCompact
+            selectedDate={selectedDate}
+            onDateSelect={setSelectedDate}
+            pericias={pericias}
+            currentMonth={currentMonth}
+            onMonthChange={setCurrentMonth}
+          />
+        </div>
+
+        {/* Lista do dia — ocupa espaço restante */}
+        <div className="flex-1 min-w-0">
+          <PericiasDayList
+            selectedDate={selectedDate}
+            pericias={pericias}
+          />
+        </div>
+      </div>
+    </GlassPanel>
   );
 }

@@ -9,10 +9,10 @@
  * - mês    → ObrigacoesMonthWrapper
  * - ano    → ObrigacoesYearWrapper
  *
- * Gerencia apenas:
+ * Gerencia:
  * - Routing por URL (sync visualização ↔ pathname)
  * - ViewModePopover (seletor de view compartilhado)
- * - ResumoCards e AlertasObrigacoes no topo (específico de obrigações)
+ * - Pulse Strip (KPIs) e Alertas no topo
  */
 
 import * as React from 'react';
@@ -24,11 +24,14 @@ import {
   type ViewType,
 } from '@/components/shared';
 
-import { ResumoCards } from './shared/resumo-cards';
+import { useResumoObrigacoes } from '../hooks/use-resumo-obrigacoes';
+import { ObrigacoesPulseStrip } from './shared/obrigacoes-pulse-strip';
 import { AlertasObrigacoes } from './shared/alertas-obrigacoes';
 import { ObrigacoesTableWrapper } from './table/obrigacoes-table-wrapper';
 import { ObrigacoesMonthWrapper } from './calendar/obrigacoes-month-wrapper';
 import { ObrigacoesYearWrapper } from './calendar/obrigacoes-year-wrapper';
+import type { AlertasObrigacoesType } from '../domain';
+import type { ResumoObrigacoesDB } from '../repository';
 
 // =============================================================================
 // MAPEAMENTO URL -> VIEW
@@ -50,29 +53,23 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
   '/obrigacoes/lista': 'lista',
 };
 
-// =============================================================================
-// TIPOS
-// =============================================================================
-
 interface ObrigacoesContentProps {
   visualizacao?: ViewType;
+  /** Resumo pré-buscado no server (elimina flash de skeleton no primeiro render). */
+  initialResumo?: ResumoObrigacoesDB | null;
 }
 
-// =============================================================================
-// COMPONENTE PRINCIPAL
-// =============================================================================
-
-export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: ObrigacoesContentProps) {
+export function ObrigacoesContent({
+  visualizacao: initialView = 'semana',
+  initialResumo,
+}: ObrigacoesContentProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Derive view from URL pathname
   const viewFromUrl = ROUTE_TO_VIEW[pathname] ?? initialView;
 
-  // View State - sync with URL
   const [visualizacao, setVisualizacao] = React.useState<ViewType>(viewFromUrl);
 
-  // Sync view state when URL changes
   React.useEffect(() => {
     const newView = ROUTE_TO_VIEW[pathname];
     if (newView && newView !== visualizacao) {
@@ -80,22 +77,35 @@ export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: Obri
     }
   }, [pathname, visualizacao]);
 
-  // Week Navigator (para view semana)
   const weekNav = useWeekNavigator();
 
-  // Handle visualization change - navigate to the correct URL
-  const handleVisualizacaoChange = React.useCallback((value: string) => {
-    const viewValue = value as ViewType;
-    const targetRoute = VIEW_ROUTES[viewValue];
-    if (targetRoute && targetRoute !== pathname) {
-      router.push(targetRoute);
-    }
-    setVisualizacao(viewValue);
-  }, [pathname, router]);
+  const handleVisualizacaoChange = React.useCallback(
+    (value: string) => {
+      const viewValue = value as ViewType;
+      const targetRoute = VIEW_ROUTES[viewValue];
+      if (targetRoute && targetRoute !== pathname) {
+        router.push(targetRoute);
+      }
+      setVisualizacao(viewValue);
+    },
+    [pathname, router],
+  );
 
-  // =============================================================================
-  // SLOTS COMPARTILHADOS
-  // =============================================================================
+  // Resumo (KPIs + Alertas) — initialResumo vem do server pra pular fetch inicial
+  const { data: resumo, isLoading: isResumoLoading } = useResumoObrigacoes({
+    initialData: initialResumo,
+  });
+
+  // Adapta resumo -> AlertasObrigacoesType (shape esperado pelo componente)
+  const alertas: AlertasObrigacoesType | null = React.useMemo(() => {
+    if (!resumo) return null;
+    return {
+      vencidas: { ...resumo.vencidas, items: [] },
+      vencendoHoje: { ...resumo.vencendoHoje, items: [] },
+      vencendoEm7Dias: { ...resumo.vencendoEm7Dias, items: [] },
+      inconsistentes: { quantidade: resumo.inconsistentes.quantidade, items: [] },
+    };
+  }, [resumo]);
 
   const viewModePopover = (
     <ViewModePopover
@@ -104,18 +114,10 @@ export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: Obri
     />
   );
 
-  // =============================================================================
-  // CONTEÚDO BASEADO NA VISUALIZAÇÃO
-  // =============================================================================
-
   const renderContent = () => {
     switch (visualizacao) {
       case 'lista':
-        return (
-          <ObrigacoesTableWrapper
-            viewModeSlot={viewModePopover}
-          />
-        );
+        return <ObrigacoesTableWrapper viewModeSlot={viewModePopover} />;
 
       case 'semana':
         return (
@@ -136,18 +138,10 @@ export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: Obri
         );
 
       case 'mes':
-        return (
-          <ObrigacoesMonthWrapper
-            viewModeSlot={viewModePopover}
-          />
-        );
+        return <ObrigacoesMonthWrapper viewModeSlot={viewModePopover} />;
 
       case 'ano':
-        return (
-          <ObrigacoesYearWrapper
-            viewModeSlot={viewModePopover}
-          />
-        );
+        return <ObrigacoesYearWrapper viewModeSlot={viewModePopover} />;
 
       default:
         return null;
@@ -156,14 +150,10 @@ export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: Obri
 
   return (
     <div className="flex flex-col h-full gap-4">
-      {/* Resumo e Alertas */}
-      <ResumoCards />
-      <AlertasObrigacoes />
+      <ObrigacoesPulseStrip resumo={resumo} isLoading={isResumoLoading} />
+      <AlertasObrigacoes alertas={alertas} isLoading={isResumoLoading} />
 
-      {/* Conteúdo principal */}
-      <div className="flex-1 min-h-0">
-        {renderContent()}
-      </div>
+      <div className="flex-1 min-h-0">{renderContent()}</div>
     </div>
   );
 }

@@ -17,7 +17,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Plus, List, Kanban, SlidersHorizontal } from 'lucide-react';
+import { Plus, List, LayoutGrid, Kanban, SlidersHorizontal } from 'lucide-react';
 import { Heading } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -51,10 +51,11 @@ import {
 
 const VIEW_OPTIONS: ViewToggleOption[] = [
   { id: 'lista', icon: List, label: 'Lista' },
+  { id: 'cards', icon: LayoutGrid, label: 'Cartões' },
   { id: 'kanban', icon: Kanban, label: 'Kanban' },
 ];
 
-export type ContratosViewMode = 'lista' | 'kanban';
+export type ContratosViewMode = 'lista' | 'cards' | 'kanban';
 
 // ─── Props ──────────────────────────────────────────────────────────────────
 
@@ -199,8 +200,8 @@ export function ContratosContent({ initialView = 'lista' }: ContratosContentProp
         <ContratosFilterBar
           filters={filters}
           onChange={setFilters}
-          sort={viewMode === 'lista' ? sort : undefined}
-          onSortChange={viewMode === 'lista' ? setSort : undefined}
+          sort={viewMode !== 'kanban' ? sort : undefined}
+          onSortChange={viewMode !== 'kanban' ? setSort : undefined}
         />
         <div className="flex items-center gap-2 flex-1 justify-end flex-wrap">
           <SearchInput
@@ -257,8 +258,15 @@ export function ContratosContent({ initialView = 'lista' }: ContratosContentProp
       </div>
 
       {/* ── Conteúdo por view ───────────────────────────────────── */}
-      {viewMode === 'lista' ? (
+      {viewMode === 'kanban' ? (
+        <ContratosKanbanView
+          segmentoId={currentSegmentoId}
+          segmentoNome={currentSegmentoNome}
+          search={search}
+        />
+      ) : (
         <ContratosListWrapper
+          viewLayout={viewMode === 'cards' ? 'cards' : 'lista'}
           statusFilter={statusFilter}
           createOpen={createOpen}
           onCreateOpenChange={setCreateOpen}
@@ -268,12 +276,6 @@ export function ContratosContent({ initialView = 'lista' }: ContratosContentProp
           tipoCobranca={filters.tipoCobranca}
           ordenarPor={sort.campo}
           ordem={sort.ordem}
-        />
-      ) : (
-        <ContratosKanbanView
-          segmentoId={currentSegmentoId}
-          segmentoNome={currentSegmentoNome}
-          search={search}
         />
       )}
     </div>

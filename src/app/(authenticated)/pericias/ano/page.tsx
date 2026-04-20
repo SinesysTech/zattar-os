@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default function PericiasAnoPage() {
-  return <PericiasClient initialView="lista" />;
+  return <PericiasClient initialView="ano" />;
 }
 
 

@@ -3,11 +3,10 @@ import { PericiasClient } from '@/app/(authenticated)/pericias/components/perici
 export const dynamic = 'force-dynamic';
 
 /**
- * Página raiz de Perícias
- * Renderiza visualização unificada baseada no Neon Magistrate.
+ * Página raiz de Perícias — default view é "quadro" (Missão).
  */
 export default function PericiasPage() {
-  return <PericiasClient />;
+  return <PericiasClient initialView="quadro" />;
 }
 
 

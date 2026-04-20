@@ -15,6 +15,15 @@ export async function actionListarAcordos(params: ListarAcordosParams) {
   }
 }
 
+export async function actionObterResumoObrigacoes() {
+  try {
+    const data = await service.obterResumoObrigacoes();
+    return { success: true as const, data };
+  } catch (error) {
+    return { success: false as const, error: String(error) };
+  }
+}
+
 export async function actionBuscarAcordo(id: number) {
   try {
     const data = await service.buscarAcordoPorId(id);

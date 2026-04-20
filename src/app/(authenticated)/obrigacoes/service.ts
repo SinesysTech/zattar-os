@@ -8,6 +8,12 @@ import { err, appError } from "@/types";
 import { buscarProcessosPorClienteCPF, buscarProcessosPorClienteCNPJ, buscarProcessoPorNumero } from "@/app/(authenticated)/processos";
 import { normalizarNumeroProcesso } from "@/app/(authenticated)/processos/utils";
 
+// --- Resumo (KPIs do dashboard) ---
+
+export async function obterResumoObrigacoes() {
+  return await ObrigacoesRepository.obterResumoObrigacoes();
+}
+
 // --- Acordos Services ---
 
 export async function criarAcordoComParcelas(

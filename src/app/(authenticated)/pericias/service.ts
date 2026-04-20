@@ -84,6 +84,22 @@ export async function listarEspecialidadesPericia(): Promise<
   return repository.listEspecialidadesPericia();
 }
 
+export async function listarTodasEspecialidadesPericia(): Promise<
+  Result<repository.EspecialidadePericiaRow[]>
+> {
+  return repository.listAllEspecialidadesPericia();
+}
+
+export async function alterarAtivoEspecialidade(
+  id: number,
+  ativo: boolean
+): Promise<Result<boolean>> {
+  if (!id || id <= 0) {
+    return err(appError("VALIDATION_ERROR", "ID da especialidade inválido."));
+  }
+  return repository.setEspecialidadePericiaAtivo(id, ativo);
+}
+
 export async function criarPericia(
   params: unknown,
   advogadoId: number
@@ -114,6 +130,56 @@ export async function atualizarSituacao(
   }
   // TODO: Adicionar validação de transição de status se necessário
   return repository.atualizarSituacaoPericia(periciaId, situacaoCodigo);
+}
+
+// =============================================================================
+// PULSE STATS (KPI Strip — dados agregados reais)
+// =============================================================================
+
+export interface PericiasPulseStats {
+  ativas: number;
+  aguardandoLaudo: number;
+  laudoJuntado: number;
+  finalizadas: number;
+  prazosCriticos7d: number;
+  semResponsavel: number;
+  porSituacao: Record<string, number>;
+  trendMensal: number[];
+}
+
+export async function calcularPulseStats(): Promise<Result<PericiasPulseStats>> {
+  const [porSituacao, prazosCriticos, semResponsavel, trend] = await Promise.all([
+    repository.countPericiasPorSituacao(),
+    repository.countPericiasComPrazoCritico(7),
+    repository.countPericiasSemResponsavel(),
+    repository.countPericiasTrendMensal(6),
+  ]);
+
+  if (!porSituacao.success) {
+    return err(porSituacao.error);
+  }
+
+  const counts = porSituacao.data;
+  const aguardandoLaudo = counts[SituacaoPericiaCodigo.AGUARDANDO_LAUDO] ?? 0;
+  const laudoJuntado = counts[SituacaoPericiaCodigo.LAUDO_JUNTADO] ?? 0;
+  const finalizadas = counts[SituacaoPericiaCodigo.FINALIZADA] ?? 0;
+  const canceladas = counts[SituacaoPericiaCodigo.CANCELADA] ?? 0;
+  const totalCounts = Object.values(counts).reduce((sum, n) => sum + n, 0);
+  const ativas = totalCounts - finalizadas - canceladas;
+
+  return {
+    success: true as const,
+    data: {
+      ativas,
+      aguardandoLaudo,
+      laudoJuntado,
+      finalizadas,
+      prazosCriticos7d: prazosCriticos.success ? prazosCriticos.data : 0,
+      semResponsavel: semResponsavel.success ? semResponsavel.data : 0,
+      porSituacao: counts,
+      trendMensal: trend.success ? trend.data.map((t) => t.count) : [],
+    },
+  };
 }
 
 

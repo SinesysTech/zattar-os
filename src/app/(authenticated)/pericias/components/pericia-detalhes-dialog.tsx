@@ -79,7 +79,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
         <TabsContent value="detalhes" className="space-y-4 mt-0">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <div className="font-mono text-sm font-semibold text-foreground truncate">
+              <div className="text-sm font-semibold tabular-nums tracking-tight text-foreground truncate">
                 {pericia.numeroProcesso}
               </div>
               <div className="text-[11px] text-muted-foreground/80 mt-0.5">
@@ -123,7 +123,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
         </TabsContent>
 
         <TabsContent value="historico" className="mt-0">
-          <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-[250px]" />
+          <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-62.5" />
         </TabsContent>
       </Tabs>
     </div>
@@ -175,7 +175,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
 
       <DetailSheetSection icon={<Building2 className="size-3.5 text-muted-foreground/50" />} title="Processo">
         <div className="space-y-0.5">
-          <span className="block font-mono text-sm font-semibold tabular-nums tracking-tight text-foreground">
+          <span className="block text-sm font-semibold tabular-nums tracking-tight text-foreground">
             {pericia.numeroProcesso}
           </span>
           <span className="block text-[11px] text-muted-foreground/60 mt-1">
@@ -193,7 +193,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
       )}
 
       <DetailSheetSection icon={<Clock className="size-3.5 text-muted-foreground/50" />} title="Histórico de Modificações">
-        <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-[250px]" />
+        <AuditLogTimeline logs={logs || []} isLoading={loadingLogs} className="h-62.5" />
       </DetailSheetSection>
     </div>
   );

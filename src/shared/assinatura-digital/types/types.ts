@@ -191,7 +191,18 @@ export interface PreviewPayload {
     nome: string;
     cpf?: string | null;
     cnpj?: string | null;
+    tipo_pessoa?: string | null;
     telefone?: string | null;
+    email?: string | null;
+    endereco?: {
+      cep?: string | null;
+      logradouro?: string | null;
+      numero?: string | null;
+      complemento?: string | null;
+      bairro?: string | null;
+      municipio?: string | null;
+      estado_sigla?: string | null;
+    } | null;
   }>;
   /** Dados do formulário dinâmico (campos acao.*) para resolução de variáveis no PDF */
   acao_dados?: Record<string, unknown>;
@@ -232,7 +243,18 @@ export interface FinalizePayload {
     nome: string;
     cpf?: string | null;
     cnpj?: string | null;
+    tipo_pessoa?: string | null;
     telefone?: string | null;
+    email?: string | null;
+    endereco?: {
+      cep?: string | null;
+      logradouro?: string | null;
+      numero?: string | null;
+      complemento?: string | null;
+      bairro?: string | null;
+      municipio?: string | null;
+      estado_sigla?: string | null;
+    } | null;
   }>;
   /** Dados do formulário dinâmico (campos acao.*) para resolução de variáveis no PDF */
   acao_dados?: Record<string, unknown>;

@@ -284,7 +284,10 @@ async function generatePreSignPdf(
             nome: parteContrariaDados.nome,
             cpf: parteContrariaDados.cpf,
             cnpj: parteContrariaDados.cnpj,
+            tipo_pessoa: parteContrariaDados.tipo_pessoa,
             telefone: parteContrariaDados.telefone,
+            email: parteContrariaDados.email,
+            endereco: parteContrariaDados.endereco ?? undefined,
           }
         : undefined,
     },
@@ -378,7 +381,10 @@ async function generateFinalPdf(
             nome: parteContrariaDados2.nome,
             cpf: parteContrariaDados2.cpf,
             cnpj: parteContrariaDados2.cnpj,
+            tipo_pessoa: parteContrariaDados2.tipo_pessoa,
             telefone: parteContrariaDados2.telefone,
+            email: parteContrariaDados2.email,
+            endereco: parteContrariaDados2.endereco ?? undefined,
           }
         : undefined,
     },

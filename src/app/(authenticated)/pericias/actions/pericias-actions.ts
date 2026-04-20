@@ -5,6 +5,9 @@ import { revalidatePath } from "next/cache";
 import { authenticateRequest } from "@/lib/auth";
 import type { ListarPericiasParams } from "../domain";
 import * as service from "../service";
+import type { PericiasPulseStats } from "../service";
+
+export type { PericiasPulseStats } from "../service";
 
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
@@ -176,6 +179,106 @@ export async function actionListarEspecialidadesPericia(): Promise<ActionResult>
       success: false,
       error: error instanceof Error ? error.message : "Erro interno do servidor",
       message: "Erro ao carregar especialidades. Tente novamente.",
+    };
+  }
+}
+
+export async function actionListarTodasEspecialidadesPericia(): Promise<ActionResult> {
+  try {
+    const result = await service.listarTodasEspecialidadesPericia();
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+    return {
+      success: true,
+      data: { especialidades: result.data },
+      message: "Especialidades carregadas",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar especialidades. Tente novamente.",
+    };
+  }
+}
+
+export async function actionAlterarAtivoEspecialidade(
+  formData: FormData
+): Promise<ActionResult> {
+  try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Não autenticado",
+        message: "Você precisa estar autenticado para alterar especialidades.",
+      };
+    }
+
+    const id = Number(formData.get("id"));
+    const ativoStr = String(formData.get("ativo") ?? "");
+    const ativo = ativoStr === "true";
+
+    if (!id || isNaN(id)) {
+      return {
+        success: false,
+        error: "ID inválido",
+        message: "ID da especialidade inválido.",
+      };
+    }
+
+    const result = await service.alterarAtivoEspecialidade(id, ativo);
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    revalidatePath("/app/pericias/especialidades");
+
+    return {
+      success: true,
+      data: true,
+      message: ativo ? "Especialidade ativada" : "Especialidade desativada",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao atualizar especialidade. Tente novamente.",
+    };
+  }
+}
+
+export async function actionPericiasPulseStats(): Promise<
+  ActionResult<PericiasPulseStats>
+> {
+  try {
+    const result = await service.calcularPulseStats();
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: "Erro ao carregar estatísticas de perícias",
+      };
+    }
+    return {
+      success: true,
+      data: result.data,
+      message: "Estatísticas carregadas",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar estatísticas. Tente novamente.",
     };
   }
 }

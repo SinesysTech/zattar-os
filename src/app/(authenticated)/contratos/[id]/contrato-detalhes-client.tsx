@@ -8,8 +8,6 @@ import {
   History,
   ClipboardList,
   StickyNote,
-  Users,
-  Scale,
   DollarSign,
   History as HistoryIcon,
   ArrowRight,
@@ -20,7 +18,6 @@ import { SemanticBadge } from '@/components/ui/semantic-badge';
 import {
   DetailSection,
   DetailSectionCard,
-  DetailSectionAction,
 } from '@/components/shared/detail-section';
 import type {
   Contrato,

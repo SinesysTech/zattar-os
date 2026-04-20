@@ -20,6 +20,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataPagination } from '@/components/shared/data-shell';
 
 import { ContratosGlassList } from './contratos-glass-list';
+import { ContratosGlassCards } from './contratos-glass-cards';
 import { ContratoForm } from './contrato-form';
 import { ContratoDeleteDialog } from './contrato-delete-dialog';
 import {
@@ -50,6 +51,8 @@ import {
 // TYPES
 // =============================================================================
 
+export type ContratosViewLayout = 'lista' | 'cards';
+
 export interface ContratosListWrapperProps {
   initialData?: Contrato[];
   initialPagination?: PaginationInfo | null;
@@ -74,6 +77,9 @@ export interface ContratosListWrapperProps {
   /** Ordenação controlada pelo orquestrador. */
   ordenarPor?: ContratoSortBy;
   ordem?: Ordem;
+
+  /** Layout de visualização (lista ou grid de cards). Default: 'lista'. */
+  viewLayout?: ContratosViewLayout;
 }
 
 // =============================================================================
@@ -96,6 +102,7 @@ export function ContratosListWrapper({
   tipoCobranca: externalTipoCobranca,
   ordenarPor: externalOrdenarPor,
   ordem: externalOrdem,
+  viewLayout = 'lista',
 }: ContratosListWrapperProps) {
   // ── Estado dos dados ─────────────────────────────────────────────────────
   const [contratos, setContratos] = React.useState<Contrato[]>(initialData);
@@ -459,22 +466,40 @@ export function ContratosListWrapper({
           />
         )}
 
-        <ContratosGlassList
-          contratos={contratos}
-          isLoading={isLoading}
-          clientesMap={clientesMap}
-          partesContrariasMap={partesContrariasMap}
-          usuariosMap={usuariosMap}
-          segmentosMap={segmentosMap}
-          usuarios={usuariosOptionsState}
-          selectedIds={selectedIds}
-          onToggleSelect={toggleSelect}
-          onToggleSelectAll={toggleSelectAll}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onGerarPeca={handleGerarPeca}
-          onResponsavelChanged={refetch}
-        />
+        {viewLayout === 'cards' ? (
+          <ContratosGlassCards
+            contratos={contratos}
+            isLoading={isLoading}
+            clientesMap={clientesMap}
+            partesContrariasMap={partesContrariasMap}
+            usuariosMap={usuariosMap}
+            segmentosMap={segmentosMap}
+            usuarios={usuariosOptionsState}
+            selectedIds={selectedIds}
+            onToggleSelect={toggleSelect}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onGerarPeca={handleGerarPeca}
+            onResponsavelChanged={refetch}
+          />
+        ) : (
+          <ContratosGlassList
+            contratos={contratos}
+            isLoading={isLoading}
+            clientesMap={clientesMap}
+            partesContrariasMap={partesContrariasMap}
+            usuariosMap={usuariosMap}
+            segmentosMap={segmentosMap}
+            usuarios={usuariosOptionsState}
+            selectedIds={selectedIds}
+            onToggleSelect={toggleSelect}
+            onToggleSelectAll={toggleSelectAll}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onGerarPeca={handleGerarPeca}
+            onResponsavelChanged={refetch}
+          />
+        )}
 
         {totalPages > 0 && (
           <DataPagination

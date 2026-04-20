@@ -97,12 +97,14 @@ const CLIENTE_FIELDS: EntityFieldDefinition[] = [
 ];
 
 /**
- * Campos de Parte Contrária (mesma estrutura de Cliente)
+ * Campos de Parte Contrária (mesma estrutura de Cliente).
+ *
+ * Nota: o campo dedicado de busca (`busca_parte_contraria`) foi removido em 2026-04.
+ * A busca automática é prep-preparada via `entitySearch.autoFill` no campo CNPJ —
+ * mesmo padrão usado no CEP. Se precisar de um campo de busca standalone no futuro,
+ * basta readicionar um FormFieldType.PARTE_CONTRARIA_SEARCH aqui.
  */
 const PARTE_CONTRARIA_FIELDS: EntityFieldDefinition[] = [
-  // Campo de busca
-  { fieldName: 'busca_parte_contraria', label: 'Busca de Parte Contrária', type: FormFieldType.PARTE_CONTRARIA_SEARCH, icon: Search, description: 'Buscar parte contrária por CPF, CNPJ ou nome e preencher automaticamente', pessoaTipo: 'ambos', badge: 'Busca' },
-  
   // Campos base (comuns a PF e PJ) - mapeados de CLIENTE_FIELDS
   ...CLIENTE_FIELDS
     .filter(f => f.fieldName !== 'busca_cliente')

@@ -16,7 +16,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FileText, Building2, Scale, Eye, Pencil, Trash2, FileSignature, ChevronRight } from 'lucide-react';
+import { FileText, Scale, Eye, Pencil, Trash2, FileSignature } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

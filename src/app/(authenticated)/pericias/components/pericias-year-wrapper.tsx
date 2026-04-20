@@ -1,107 +1,93 @@
 'use client';
 
 /**
- * PericiasYearWrapper - Wrapper auto-contido para a view de ano
- *
- * Segue o padrão de ExpedientesYearWrapper / AudienciasYearWrapper:
- * - DataShell + DataTableToolbar + YearFilterPopover
- * - PericiasListFilters no filtersSlot
- * - Grid de 12 meses com indicadores de perícias
- * - Fetch via usePericias com range anual
+ * PericiasYearWrapper — View de ano (thin).
+ * ============================================================================
+ * Renderiza o heatmap anual. Year navigator + filtros + toolbar vivem no
+ * PericiasClient pai. O heatmap recebe `year` controlled e dispara
+ * `onYearChange` quando o usuário clica no navigator (mas agora ele nem
+ * aparece mais — fica no toolbar via YearFilterPopover).
+ * ============================================================================
  */
 
 import * as React from 'react';
 import { startOfYear, endOfYear, format } from 'date-fns';
 
 import {
-  DataShell,
-  DataTableToolbar,
-} from '@/components/shared/data-shell';
-import {
-  YearFilterPopover,
   TemporalViewLoading,
   TemporalViewError,
-  YearCalendarGrid,
 } from '@/components/shared';
 
-import type { Pericia, UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '../domain';
+import type {
+  Pericia,
+  UsuarioOption,
+  EspecialidadePericiaOption,
+  PeritoOption,
+} from '../domain';
 import { SituacaoPericiaCodigo } from '../domain';
 import { usePericias } from '../hooks/use-pericias';
-import { useUsuarios } from '@/app/(authenticated)/usuarios';
-import { useEspecialidadesPericias } from '../hooks/use-especialidades-pericias';
-import { usePeritos } from '../hooks/use-peritos';
 
-import {
-  PericiasListFilters,
-  type SituacaoFilterType,
-  type ResponsavelFilterType,
-  type LaudoFilterType,
-} from './pericias-list-filters';
-import { PericiaCriarDialog } from './pericia-criar-dialog';
+import { PericiasYearHeatmap } from './pericias-year-heatmap';
 import { PericiaDetalhesDialog } from './pericia-detalhes-dialog';
+import type {
+  SituacaoFilterType,
+  ResponsavelFilterType,
+  LaudoFilterType,
+} from './pericias-filter-bar';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
-interface PericiasYearWrapperProps {
-  /** Slot para o seletor de modo de visualização (ViewModePopover) */
-  viewModeSlot?: React.ReactNode;
-  /** Slot para botões de ação adicionais (ex: Settings) */
-  settingsSlot?: React.ReactNode;
-  /** Dados de usuários pré-carregados */
-  usuariosData?: UsuarioOption[];
-  /** Dados de especialidades pré-carregados */
-  especialidadesData?: EspecialidadePericiaOption[];
-  /** Dados de peritos pré-carregados */
-  peritosData?: PeritoOption[];
+export interface PericiasYearWrapperProps {
+  busca: string;
+  situacaoFilter: SituacaoFilterType;
+  responsavelFilter: ResponsavelFilterType;
+  laudoFilter: LaudoFilterType;
+  tribunalFilter: string;
+  grauFilter: string;
+  especialidadeFilter: string;
+  peritoFilter: string;
+  usuarios: UsuarioOption[];
+  especialidades: EspecialidadePericiaOption[];
+  peritos: PeritoOption[];
+  selectedYear: number;
+  refetchKey: number;
 }
 
 // =============================================================================
-// COMPONENTE PRINCIPAL
+// COMPONENTE
 // =============================================================================
 
 export function PericiasYearWrapper({
-  viewModeSlot,
-  settingsSlot,
-  usuariosData,
-  especialidadesData,
-  peritosData,
+  busca,
+  situacaoFilter,
+  responsavelFilter,
+  laudoFilter,
+  tribunalFilter,
+  grauFilter,
+  especialidadeFilter,
+  peritoFilter,
+  selectedYear,
+  refetchKey,
 }: PericiasYearWrapperProps) {
-  // ---------- Navegação de Ano ----------
-  const [selectedYear, setSelectedYear] = React.useState(new Date().getFullYear());
-  const selectedDate = React.useMemo(() => new Date(selectedYear, 0, 1), [selectedYear]);
+  const selectedDate = React.useMemo(
+    () => new Date(selectedYear, 0, 1),
+    [selectedYear],
+  );
 
-  // ---------- Estado de Filtros ----------
-  const [globalFilter, setGlobalFilter] = React.useState('');
-  const [situacaoFilter, setSituacaoFilter] = React.useState<SituacaoFilterType>('todos');
-  const [responsavelFilter, setResponsavelFilter] = React.useState<ResponsavelFilterType>('todos');
-  const [laudoFilter, setLaudoFilter] = React.useState<LaudoFilterType>('todos');
-  const [tribunalFilter, setTribunalFilter] = React.useState('');
-  const [grauFilter, setGrauFilter] = React.useState('');
-  const [especialidadeFilter, setEspecialidadeFilter] = React.useState('');
-  const [peritoFilter, setPeritoFilter] = React.useState('');
-
-  // ---------- Dialog State ----------
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
-  const [periciasDiaDialog, setPericiasDiaDialog] = React.useState<Pericia[]>([]);
+  // ---------- Dialog state (day click detail) ----------
+  const [periciasDiaDialog, setPericiasDiaDialog] = React.useState<Pericia[]>(
+    [],
+  );
   const [isDiaDialogOpen, setIsDiaDialogOpen] = React.useState(false);
 
-  // ---------- Dados Auxiliares ----------
-  const { usuarios: usuariosFetched } = useUsuarios({ enabled: !usuariosData });
-  const { especialidades: especialidadesFetched } = useEspecialidadesPericias({ enabled: !especialidadesData });
-  const { peritos: peritosFetched } = usePeritos({ enabled: !peritosData });
-
-  const usuarios = usuariosData ?? usuariosFetched;
-  const especialidades = especialidadesData ?? especialidadesFetched;
-  const peritos = peritosData ?? peritosFetched;
-
-  // ---------- Montar params para o hook ----------
+  // ---------- Hook params ----------
   const hookParams = React.useMemo(() => {
     const params: Record<string, unknown> = {
       pagina: 1,
       limite: 1000,
-      busca: globalFilter || undefined,
+      busca: busca || undefined,
       prazoEntregaInicio: format(startOfYear(selectedDate), 'yyyy-MM-dd'),
       prazoEntregaFim: format(endOfYear(selectedDate), 'yyyy-MM-dd'),
     };
@@ -126,123 +112,57 @@ export function PericiasYearWrapper({
 
     if (tribunalFilter) params.trt = tribunalFilter;
     if (grauFilter) params.grau = grauFilter;
-    if (especialidadeFilter) params.especialidadeId = parseInt(especialidadeFilter, 10);
+    if (especialidadeFilter)
+      params.especialidadeId = parseInt(especialidadeFilter, 10);
     if (peritoFilter) params.peritoId = parseInt(peritoFilter, 10);
 
     return params;
   }, [
-    globalFilter, selectedDate, situacaoFilter, responsavelFilter, laudoFilter,
-    tribunalFilter, grauFilter, especialidadeFilter, peritoFilter,
+    busca,
+    selectedDate,
+    situacaoFilter,
+    responsavelFilter,
+    laudoFilter,
+    tribunalFilter,
+    grauFilter,
+    especialidadeFilter,
+    peritoFilter,
   ]);
 
-  // ---------- Data Fetching ----------
   const { pericias, isLoading, error, refetch } = usePericias(hookParams);
 
-  // ---------- Perícias por dia (mapa) ----------
-  const periciasPorDia = React.useMemo(() => {
-    const mapa = new Map<string, Pericia[]>();
-    pericias.forEach((p) => {
-      if (!p.prazoEntrega) return;
-      const d = new Date(p.prazoEntrega);
-      const key = `${d.getMonth()}-${d.getDate()}`;
-      const existing = mapa.get(key) || [];
-      existing.push(p);
-      mapa.set(key, existing);
-    });
-    return mapa;
-  }, [pericias]);
-
-  // ---------- Helpers ----------
-  const hasDayContent = React.useCallback((mes: number, dia: number) => {
-    return periciasPorDia.has(`${mes}-${dia}`);
-  }, [periciasPorDia]);
-
-  const handleDiaClick = React.useCallback((mes: number, dia: number) => {
-    const key = `${mes}-${dia}`;
-    const doDia = periciasPorDia.get(key) || [];
-    if (doDia.length > 0) {
-      setPericiasDiaDialog(doDia);
-      setIsDiaDialogOpen(true);
+  React.useEffect(() => {
+    if (refetchKey > 0) {
+      refetch();
     }
-  }, [periciasPorDia]);
+  }, [refetchKey, refetch]);
 
-  const handleCreateSuccess = React.useCallback(() => {
-    refetch();
-    setIsCreateDialogOpen(false);
-  }, [refetch]);
+  const handleDayClick = React.useCallback(
+    (_date: Date, dayPericias: Pericia[]) => {
+      if (dayPericias.length > 0) {
+        setPericiasDiaDialog(dayPericias);
+        setIsDiaDialogOpen(true);
+      }
+    },
+    [],
+  );
 
-  // ---------- Render ----------
+  if (isLoading) {
+    return <TemporalViewLoading message="Carregando perícias..." />;
+  }
+
+  if (error) {
+    return (
+      <TemporalViewError
+        message={`Erro ao carregar perícias: ${error}`}
+        onRetry={refetch}
+      />
+    );
+  }
+
   return (
     <>
-      <DataShell
-        header={
-          <DataTableToolbar
-            title="Perícias"
-            searchValue={globalFilter}
-            onSearchValueChange={setGlobalFilter}
-            searchPlaceholder="Buscar perícias..."
-            actionButton={{
-              label: 'Nova Perícia',
-              onClick: () => setIsCreateDialogOpen(true),
-            }}
-            actionSlot={
-              <>
-                {viewModeSlot}
-                {settingsSlot}
-              </>
-            }
-            filtersSlot={
-              <>
-                <YearFilterPopover
-                  selectedYear={selectedYear}
-                  onYearChange={setSelectedYear}
-                />
-                <PericiasListFilters
-                  situacaoFilter={situacaoFilter}
-                  onSituacaoChange={setSituacaoFilter}
-                  responsavelFilter={responsavelFilter}
-                  onResponsavelChange={setResponsavelFilter}
-                  laudoFilter={laudoFilter}
-                  onLaudoChange={setLaudoFilter}
-                  tribunalFilter={tribunalFilter}
-                  onTribunalChange={setTribunalFilter}
-                  grauFilter={grauFilter}
-                  onGrauChange={setGrauFilter}
-                  especialidadeFilter={especialidadeFilter}
-                  onEspecialidadeChange={setEspecialidadeFilter}
-                  peritoFilter={peritoFilter}
-                  onPeritoChange={setPeritoFilter}
-                  usuarios={usuarios}
-                  especialidades={especialidades}
-                  peritos={peritos}
-                />
-              </>
-            }
-          />
-        }
-      >
-        {isLoading ? (
-          <TemporalViewLoading message="Carregando perícias..." />
-        ) : error ? (
-          <TemporalViewError message={`Erro ao carregar perícias: ${error}`} onRetry={refetch} />
-        ) : (
-          <YearCalendarGrid
-            year={selectedYear}
-            hasDayContent={hasDayContent}
-            onDayClick={handleDiaClick}
-            className="p-6"
-          />
-        )}
-      </DataShell>
-
-      <PericiaCriarDialog
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-        usuarios={usuarios}
-        especialidades={especialidades}
-        peritos={peritos}
-        onSuccess={handleCreateSuccess}
-      />
+      <PericiasYearHeatmap pericias={pericias} year={selectedYear} onDayClick={handleDayClick} />
 
       <PericiaDetalhesDialog
         pericia={null}

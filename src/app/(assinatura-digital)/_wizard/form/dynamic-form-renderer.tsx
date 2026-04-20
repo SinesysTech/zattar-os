@@ -704,16 +704,18 @@ export default function DynamicFormRenderer({
         {/* Busca de entidade existente — campo direto, sem card/ícone decorativo */}
         {searchField && <div>{renderField(searchField)}</div>}
 
-        {/* Grid de campos manuais */}
+        {/* Grid de campos manuais — grid-cols-6 permite: full (1), 2/3 (2), 1/3 (3), 1/2 (4) */}
         {manualFields.length > 0 && (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-6">
             {manualFields.map((field) => {
               const gridClass =
                 field.gridColumns === 1
-                  ? 'md:col-span-3'
+                  ? 'md:col-span-6'
                   : field.gridColumns === 2
-                    ? 'md:col-span-2'
-                    : 'md:col-span-1';
+                    ? 'md:col-span-4'
+                    : field.gridColumns === 4
+                      ? 'md:col-span-3'
+                      : 'md:col-span-2';
               return (
                 <div key={field.id} className={cn(gridClass)}>
                   {renderField(field)}

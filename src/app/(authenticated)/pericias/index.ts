@@ -10,12 +10,17 @@
 // ============================================================================
 // Components
 // ============================================================================
-export { PericiasContent } from './components/pericias-content';
+export { PericiasClient } from './components/pericias-client';
+export type { PericiasViewMode } from './components/pericias-client';
+export { PericiasPulseStrip } from './components/pericias-pulse-strip';
+export { PericiasMissaoContent } from './components/pericias-missao-content';
+export { PericiasPipelineStepper } from './components/pericias-pipeline-stepper';
+export { PericiasYearHeatmap } from './components/pericias-year-heatmap';
 export { PericiasTableWrapper } from './components/pericias-table-wrapper';
 export { PericiasListWrapper } from './components/pericias-list-wrapper';
 export { PericiasMonthWrapper } from './components/pericias-month-wrapper';
 export { PericiasYearWrapper } from './components/pericias-year-wrapper';
-export { PericiasListFilters } from './components/pericias-list-filters';
+export { PericiasFilterBar } from './components/pericias-filter-bar';
 export { PericiasCalendarMonth } from './components/pericias-calendar-month';
 export { PericiasCalendarYear } from './components/pericias-calendar-year';
 export { PericiaDetalhesDialog } from './components/pericia-detalhes-dialog';
@@ -37,9 +42,10 @@ export {
     actionAdicionarObservacao,
     actionListarEspecialidadesPericia,
     actionCriarPericia,
+    actionPericiasPulseStats,
 } from './actions';
 
-export type { ActionResult } from './actions';
+export type { ActionResult, PericiasPulseStats } from './actions';
 
 // ============================================================================
 // Types / Domain

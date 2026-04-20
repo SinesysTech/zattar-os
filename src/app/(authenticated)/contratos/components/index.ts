@@ -16,6 +16,8 @@ export { ContratosListWrapper } from './contratos-list-wrapper';
 export type { ContratosListWrapperProps } from './contratos-list-wrapper';
 export { ContratosGlassList } from './contratos-glass-list';
 export type { ContratosGlassListProps } from './contratos-glass-list';
+export { ContratosGlassCards } from './contratos-glass-cards';
+export type { ContratosGlassCardsProps } from './contratos-glass-cards';
 export { ContratosKanbanView } from './contratos-kanban-view';
 export type { ContratosKanbanViewProps } from './contratos-kanban-view';
 

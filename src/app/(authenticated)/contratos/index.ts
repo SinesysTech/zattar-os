@@ -28,6 +28,7 @@ export {
   ContratosPipelineStepper,
   ContratosListWrapper,
   ContratosGlassList,
+  ContratosGlassCards,
   ContratosKanbanView,
 } from './components';
 

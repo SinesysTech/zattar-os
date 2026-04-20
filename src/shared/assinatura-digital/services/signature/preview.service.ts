@@ -117,7 +117,10 @@ export async function generatePreview(
             nome: parteContrariaDados.nome,
             cpf: parteContrariaDados.cpf,
             cnpj: parteContrariaDados.cnpj,
+            tipo_pessoa: parteContrariaDados.tipo_pessoa,
             telefone: parteContrariaDados.telefone,
+            email: parteContrariaDados.email,
+            endereco: parteContrariaDados.endereco ?? undefined,
           }
         : undefined,
     },

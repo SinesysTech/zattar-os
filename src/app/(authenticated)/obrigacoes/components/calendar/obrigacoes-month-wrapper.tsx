@@ -3,49 +3,34 @@
 /**
  * ObrigacoesMonthWrapper
  *
- * Wrapper component for the month view of "Obrigações".
- * Combines DataShell + DataTableToolbar + filters + master-detail layout
- * (compact calendar + day list).
- *
- * @example
- * ```tsx
- * <ObrigacoesMonthWrapper viewModeSlot={<ViewToggle />} />
- * ```
+ * View mensal: calendário compacto (coluna esquerda) + lista do dia selecionado.
+ * Alinhado ao Glass Briefing: SearchInput + ObrigacoesFilterBar + GlassPanel container.
  */
 
 import * as React from 'react';
 import { startOfMonth, endOfMonth, format } from 'date-fns';
-import { DataShell, DataTableToolbar } from '@/components/shared/data-shell';
+import { Plus } from 'lucide-react';
+
+import { GlassPanel } from '@/components/shared/glass-panel';
 import { TemporalViewLoading, TemporalViewError } from '@/components/shared';
-import { FilterPopover, type FilterOption } from '@/app/(authenticated)/partes';
-import type { AcordoComParcelas, StatusAcordo, TipoObrigacao, DirecaoPagamento } from '../../domain';
-import { STATUS_LABELS, TIPO_LABELS, DIRECAO_LABELS } from '../../domain';
+import { SearchInput } from '@/components/dashboard/search-input';
+import { Button } from '@/components/ui/button';
+import { useDebounce } from '@/hooks/use-debounce';
+
+import type { AcordoComParcelas } from '../../domain';
 import { actionListarObrigacoesPorPeriodo } from '../../actions';
+
+import {
+  ObrigacoesFilterBar,
+  type ObrigacoesFilterBarFilters,
+} from '../shared/obrigacoes-filter-bar';
 import { ObrigacoesCalendarCompact } from './obrigacoes-calendar-compact';
 import { ObrigacoesDayList } from './obrigacoes-day-list';
 import { NovaObrigacaoDialog } from '../dialogs/nova-obrigacao-dialog';
 
-/* --------------------------------- Filter Options --------------------------------- */
-
-const STATUS_OPTIONS: readonly FilterOption[] = Object.entries(STATUS_LABELS).map(
-  ([value, label]) => ({ value, label })
-);
-
-const TIPO_OPTIONS: readonly FilterOption[] = Object.entries(TIPO_LABELS).map(
-  ([value, label]) => ({ value, label })
-);
-
-const DIRECAO_OPTIONS: readonly FilterOption[] = Object.entries(DIRECAO_LABELS).map(
-  ([value, label]) => ({ value, label })
-);
-
-/* --------------------------------- Types --------------------------------- */
-
 interface ObrigacoesMonthWrapperProps {
   viewModeSlot?: React.ReactNode;
 }
-
-/* --------------------------------- Component --------------------------------- */
 
 export function ObrigacoesMonthWrapper({ viewModeSlot }: ObrigacoesMonthWrapperProps) {
   // Calendar state
@@ -53,10 +38,12 @@ export function ObrigacoesMonthWrapper({ viewModeSlot }: ObrigacoesMonthWrapperP
   const [currentMonth, setCurrentMonth] = React.useState<Date>(new Date());
 
   // Filter state
-  const [globalFilter, setGlobalFilter] = React.useState('');
-  const [statusFilter, setStatusFilter] = React.useState<StatusAcordo | 'todos'>('todos');
-  const [tipoFilter, setTipoFilter] = React.useState<TipoObrigacao | 'todos'>('todos');
-  const [direcaoFilter, setDirecaoFilter] = React.useState<DirecaoPagamento | 'todos'>('todos');
+  const [busca, setBusca] = React.useState('');
+  const [filters, setFilters] = React.useState<ObrigacoesFilterBarFilters>({
+    status: 'todos',
+    tipo: null,
+    direcao: null,
+  });
 
   // Dialog state
   const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
@@ -66,7 +53,8 @@ export function ObrigacoesMonthWrapper({ viewModeSlot }: ObrigacoesMonthWrapperP
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Data fetching
+  const buscaDebounced = useDebounce(busca, 500);
+
   const fetchData = React.useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -75,10 +63,10 @@ export function ObrigacoesMonthWrapper({ viewModeSlot }: ObrigacoesMonthWrapperP
         dataInicio: format(startOfMonth(currentMonth), 'yyyy-MM-dd'),
         dataFim: format(endOfMonth(currentMonth), 'yyyy-MM-dd'),
         incluirSemData: false,
-        status: statusFilter !== 'todos' ? statusFilter : undefined,
-        tipo: tipoFilter !== 'todos' ? tipoFilter : undefined,
-        direcao: direcaoFilter !== 'todos' ? direcaoFilter : undefined,
-        busca: globalFilter || undefined,
+        status: filters.status !== 'todos' ? filters.status : undefined,
+        tipo: filters.tipo ?? undefined,
+        direcao: filters.direcao ?? undefined,
+        busca: buscaDebounced || undefined,
       });
 
       if (!result.success) throw new Error(result.error || 'Erro ao listar obrigações');
@@ -88,63 +76,48 @@ export function ObrigacoesMonthWrapper({ viewModeSlot }: ObrigacoesMonthWrapperP
     } finally {
       setIsLoading(false);
     }
-  }, [currentMonth, statusFilter, tipoFilter, direcaoFilter, globalFilter]);
+  }, [currentMonth, filters, buscaDebounced]);
 
   React.useEffect(() => {
     fetchData();
   }, [fetchData]);
 
   return (
-    <>
-      <DataShell
-        header={
-          <DataTableToolbar
-            title="Obrigações"
-            searchValue={globalFilter}
-            onSearchValueChange={setGlobalFilter}
-            searchPlaceholder="Buscar obrigações..."
-            actionButton={{
-              label: 'Nova Obrigação',
-              onClick: () => setIsCreateDialogOpen(true),
-            }}
-            actionSlot={viewModeSlot}
-            filtersSlot={
-              <>
-                <FilterPopover
-                  label="Status"
-                  options={STATUS_OPTIONS}
-                  value={statusFilter}
-                  onValueChange={(v) => setStatusFilter(v as StatusAcordo | 'todos')}
-                  defaultValue="todos"
-                />
-                <FilterPopover
-                  label="Tipo"
-                  options={TIPO_OPTIONS}
-                  value={tipoFilter}
-                  onValueChange={(v) => setTipoFilter(v as TipoObrigacao | 'todos')}
-                  defaultValue="todos"
-                />
-                <FilterPopover
-                  label="Direção"
-                  options={DIRECAO_OPTIONS}
-                  value={direcaoFilter}
-                  onValueChange={(v) => setDirecaoFilter(v as DirecaoPagamento | 'todos')}
-                  defaultValue="todos"
-                />
-              </>
-            }
-          />
-        }
-      >
+    <div className="flex flex-col gap-4 h-full min-h-0">
+      {/* Toolbar */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <SearchInput
+          value={busca}
+          onChange={setBusca}
+          placeholder="Buscar obrigações..."
+        />
+        <ObrigacoesFilterBar filters={filters} onChange={setFilters} />
+        <div className="ml-auto flex items-center gap-2">
+          {viewModeSlot}
+          <Button
+            size="sm"
+            className="h-8 text-xs font-medium cursor-pointer"
+            onClick={() => setIsCreateDialogOpen(true)}
+          >
+            <Plus className="size-3.5 mr-1" />
+            Nova obrigação
+          </Button>
+        </div>
+      </div>
+
+      {/* Calendar + Day List */}
+      <div className="flex-1 min-h-0">
         {isLoading ? (
           <TemporalViewLoading message="Carregando obrigações..." />
         ) : error ? (
-          <TemporalViewError message={`Erro ao carregar obrigações: ${error}`} onRetry={fetchData} />
+          <TemporalViewError
+            message={`Erro ao carregar obrigações: ${error}`}
+            onRetry={fetchData}
+          />
         ) : (
-          <div className="bg-card border rounded-md overflow-hidden flex-1 min-h-0">
+          <GlassPanel depth={1} className="h-full overflow-hidden p-0">
             <div className="flex h-full">
-              {/* Calendário compacto — largura fixa */}
-              <div className="w-[480px] shrink-0 border-r p-6 overflow-auto">
+              <div className="w-120 shrink-0 border-r border-border/10 p-6 overflow-auto">
                 <ObrigacoesCalendarCompact
                   selectedDate={selectedDate}
                   onDateSelect={setSelectedDate}
@@ -153,8 +126,6 @@ export function ObrigacoesMonthWrapper({ viewModeSlot }: ObrigacoesMonthWrapperP
                   onMonthChange={setCurrentMonth}
                 />
               </div>
-
-              {/* Lista do dia — ocupa todo o espaço restante */}
               <div className="flex-1 min-w-0">
                 <ObrigacoesDayList
                   selectedDate={selectedDate}
@@ -163,15 +134,15 @@ export function ObrigacoesMonthWrapper({ viewModeSlot }: ObrigacoesMonthWrapperP
                 />
               </div>
             </div>
-          </div>
+          </GlassPanel>
         )}
-      </DataShell>
+      </div>
 
       <NovaObrigacaoDialog
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
         onSuccess={fetchData}
       />
-    </>
+    </div>
   );
 }

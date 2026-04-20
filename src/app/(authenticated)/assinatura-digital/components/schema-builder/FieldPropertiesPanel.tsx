@@ -29,7 +29,9 @@ const fieldPropertiesSchema = z.object({
   type: z.nativeEnum(FormFieldType),
   placeholder: z.string().optional(),
   helpText: z.string().optional(),
-  gridColumns: z.union([z.literal(1), z.literal(2), z.literal(3)]).optional(),
+  gridColumns: z
+    .union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)])
+    .optional(),
   defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
   required: z.boolean().optional(),
   min: z.number().optional(),
@@ -293,7 +295,7 @@ export default function FieldPropertiesPanel({
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleApply)} className="flex-1 flex flex-col overflow-hidden">
           <ScrollArea className="flex-1">
-            <div className="px-3 pt-2 space-y-3 [&_[data-slot=form-item-label]]:text-xs [&_[data-slot=form-item-label]]:text-muted-foreground [&_input]:text-xs [&_input]:h-8 [&_textarea]:text-xs [&_[data-slot=select-trigger]]:text-xs [&_[data-slot=select-trigger]]:h-8">
+            <div className="px-3 pt-2 space-y-3 **:data-[slot=form-item-label]:text-xs **:data-[slot=form-item-label]:text-muted-foreground [&_input]:text-xs [&_input]:h-8 [&_textarea]:text-xs **:data-[slot=select-trigger]:text-xs **:data-[slot=select-trigger]:h-8">
             {/* Seção Básico */}
             <Collapsible
               open={expandedSections.has('basico')}
@@ -401,9 +403,10 @@ export default function FieldPropertiesPanel({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="1">Largura Total (1 coluna)</SelectItem>
-                          <SelectItem value="2">Metade (2 colunas)</SelectItem>
-                          <SelectItem value="3">Um Terço (3 colunas)</SelectItem>
+                          <SelectItem value="1">Linha Inteira (100%)</SelectItem>
+                          <SelectItem value="2">Dois Terços (2/3)</SelectItem>
+                          <SelectItem value="4">Metade (1/2)</SelectItem>
+                          <SelectItem value="3">Um Terço (1/3)</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />

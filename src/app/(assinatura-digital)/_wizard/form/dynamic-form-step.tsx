@@ -80,20 +80,21 @@ export default function DynamicFormStep() {
       }
     }
 
-    // 2. Normalizar dados de PARTE_CONTRARIA_SEARCH para chaves padrão
-    // Campos com tipo parte_contraria_search usam entitySearch.autoFill para mapear
-    // campos da entidade (ex: nome, cpf) para campos do formulário (ex: nomeEmpresa).
-    // Aqui normalizamos esses campos para as chaves esperadas pelo backend (parte_contraria_*).
-    const parteContrariaSearchFields = allFields.filter(
-      f => f.type === 'parte_contraria_search' && f.entitySearch?.autoFill
+    // 2. Normalizar dados de campos com entitySearch.autoFill para chaves padrão
+    // Qualquer campo (parte_contraria_search, cnpj, cpf…) que declare entitySearch.autoFill
+    // vira ponte: entityField ('cnpj'/'nome'/...) → parte_contraria_<key> no payload final.
+    // Assim, quando a busca automática for acoplada a outros campos (ex: CNPJ igual CEP),
+    // o enrichment continua funcionando sem mudança.
+    const fieldsWithEntitySearch = allFields.filter(
+      f => f.entitySearch?.autoFill
     );
 
-    for (const field of parteContrariaSearchFields) {
+    for (const field of fieldsWithEntitySearch) {
       const autoFill = field.entitySearch!.autoFill!;
       const fieldValue = data[field.id];
 
-      // O valor do campo de busca pode ser o ID da entidade
-      if (fieldValue && !enriched.parte_contraria_id) {
+      // Para campos de busca pura (parte_contraria_search), o valor pode ser o ID da entidade
+      if (field.type === 'parte_contraria_search' && fieldValue && !enriched.parte_contraria_id) {
         enriched.parte_contraria_id = fieldValue;
       }
 
@@ -104,8 +105,16 @@ export default function DynamicFormStep() {
           const normalizedKey = entityField === 'nome' ? 'parte_contraria_nome'
             : entityField === 'cpf' ? 'parte_contraria_cpf'
             : entityField === 'cnpj' ? 'parte_contraria_cnpj'
-            : entityField === 'telefone' ? 'parte_contraria_telefone'
+            : entityField === 'tipo_pessoa' ? 'parte_contraria_tipo_pessoa'
+            : entityField === 'telefone' || entityField === 'numero_celular' ? 'parte_contraria_telefone'
             : entityField === 'email' || entityField === 'emails[0]' ? 'parte_contraria_email'
+            : entityField === 'endereco.cep' ? 'parte_contraria_cep'
+            : entityField === 'endereco.logradouro' ? 'parte_contraria_logradouro'
+            : entityField === 'endereco.numero' ? 'parte_contraria_numero'
+            : entityField === 'endereco.complemento' ? 'parte_contraria_complemento'
+            : entityField === 'endereco.bairro' ? 'parte_contraria_bairro'
+            : entityField === 'endereco.municipio' ? 'parte_contraria_cidade'
+            : entityField === 'endereco.estado_sigla' ? 'parte_contraria_uf'
             : null;
 
           if (normalizedKey && !enriched[normalizedKey]) {
@@ -161,7 +170,19 @@ export default function DynamicFormStep() {
 
     // SEÇÃO 1: PARTE CONTRÁRIA
     if (enriched.parte_contraria_id !== undefined) ordered.parte_contraria_id = enriched.parte_contraria_id;
+    if (enriched.parte_contraria_tipo_pessoa !== undefined) ordered.parte_contraria_tipo_pessoa = enriched.parte_contraria_tipo_pessoa;
+    if (enriched.parte_contraria_cnpj !== undefined) ordered.parte_contraria_cnpj = enriched.parte_contraria_cnpj;
+    if (enriched.parte_contraria_cpf !== undefined) ordered.parte_contraria_cpf = enriched.parte_contraria_cpf;
     if (enriched.parte_contraria_nome !== undefined) ordered.parte_contraria_nome = enriched.parte_contraria_nome;
+    if (enriched.parte_contraria_telefone !== undefined) ordered.parte_contraria_telefone = enriched.parte_contraria_telefone;
+    if (enriched.parte_contraria_email !== undefined) ordered.parte_contraria_email = enriched.parte_contraria_email;
+    if (enriched.parte_contraria_cep !== undefined) ordered.parte_contraria_cep = enriched.parte_contraria_cep;
+    if (enriched.parte_contraria_logradouro !== undefined) ordered.parte_contraria_logradouro = enriched.parte_contraria_logradouro;
+    if (enriched.parte_contraria_numero !== undefined) ordered.parte_contraria_numero = enriched.parte_contraria_numero;
+    if (enriched.parte_contraria_complemento !== undefined) ordered.parte_contraria_complemento = enriched.parte_contraria_complemento;
+    if (enriched.parte_contraria_bairro !== undefined) ordered.parte_contraria_bairro = enriched.parte_contraria_bairro;
+    if (enriched.parte_contraria_cidade !== undefined) ordered.parte_contraria_cidade = enriched.parte_contraria_cidade;
+    if (enriched.parte_contraria_uf !== undefined) ordered.parte_contraria_uf = enriched.parte_contraria_uf;
 
     // SEÇÃO 2: TRABALHADOR
     if (enriched.modalidade !== undefined) ordered.modalidade = enriched.modalidade;

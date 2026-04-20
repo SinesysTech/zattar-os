@@ -1,25 +1,20 @@
 'use client';
 
-/**
- * Componente de Alertas para Obrigações
- * Exibe alertas de obrigações vencidas, vencendo hoje e inconsistentes
- */
-
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
   AlertCircle,
   Clock,
   RefreshCw,
   ChevronRight,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import type { AlertasObrigacoesType } from '../../domain';
 
-// ============================================================================
-// Types
-// ============================================================================
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
+
+import type { AlertasObrigacoesType } from '../../domain';
 
 interface AlertasObrigacoesProps {
   alertas?: AlertasObrigacoesType | null;
@@ -29,97 +24,82 @@ interface AlertasObrigacoesProps {
   onFiltrarInconsistentes?: () => void;
 }
 
-// ============================================================================
-// Helpers
-// ============================================================================
+const CURRENCY = new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL',
+});
 
-const formatarValor = (valor: number): string => {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  }).format(valor);
-};
-
-// ============================================================================
-// Sub-components
-// ============================================================================
-
-function AlertaSkeleton() {
-  return (
-    <div className="rounded-lg border p-4">
-      <div className="flex items-center gap-3">
-        <Skeleton className="h-5 w-5 rounded-full" />
-        <div className="flex-1">
-          <Skeleton className="h-4 w-32 mb-1" />
-          <Skeleton className="h-3 w-48" />
-        </div>
-        <Skeleton className="h-8 w-16" />
-      </div>
-    </div>
-  );
-}
+type Variant = 'destructive' | 'warning' | 'info';
 
 interface AlertaItemProps {
-  variant: 'destructive' | 'warning' | 'default';
-  icon: React.ReactNode;
+  variant: Variant;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
   actionLabel: string;
   onAction?: () => void;
 }
 
+const ICON_TONE: Record<Variant, string> = {
+  destructive: 'bg-destructive/10 text-destructive/70',
+  warning: 'bg-warning/10 text-warning/70',
+  info: 'bg-info/10 text-info/70',
+};
+
+const BORDER_TONE: Record<Variant, string> = {
+  destructive: 'border-destructive/15',
+  warning: 'border-warning/15',
+  info: 'border-info/15',
+};
+
+function AlertaSkeleton() {
+  return (
+    <GlassPanel depth={1} className="px-4 py-3">
+      <div className="flex items-center gap-3">
+        <Skeleton className="size-8 rounded-lg" />
+        <div className="flex-1 space-y-1.5">
+          <Skeleton className="h-3 w-40" />
+          <Skeleton className="h-2.5 w-56" />
+        </div>
+        <Skeleton className="h-7 w-14" />
+      </div>
+    </GlassPanel>
+  );
+}
+
 function AlertaItem({
   variant,
-  icon,
+  icon: Icon,
   title,
   description,
   actionLabel,
   onAction,
 }: AlertaItemProps) {
-  const variantStyles = {
-    destructive: 'border-destructive/15 bg-destructive/5',
-    warning: 'border-warning/15 bg-warning/5',
-    default: 'border-info/15 bg-info/5',
-  };
-
-  const iconStyles = {
-    destructive: 'text-destructive',
-    warning: 'text-warning',
-    default: 'text-info',
-  };
-
   return (
-    <div
-      className={cn(
-        'rounded-lg border p-4 transition-colors',
-        variantStyles[variant]
-      )}
-    >
+    <GlassPanel depth={1} className={cn('px-4 py-3', BORDER_TONE[variant])}>
       <div className="flex items-center gap-3">
-        <div className={cn('flex-shrink-0', iconStyles[variant])}>{icon}</div>
+        <IconContainer size="md" className={cn(ICON_TONE[variant], 'shrink-0')}>
+          <Icon className="size-4" />
+        </IconContainer>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium">{title}</p>
-          <p className="text-xs text-muted-foreground">{description}</p>
+          <p className="text-xs font-medium text-foreground/85 truncate">{title}</p>
+          <p className="text-[11px] text-muted-foreground/60 truncate">{description}</p>
         </div>
         {onAction && (
           <Button
             variant="ghost"
             size="sm"
             onClick={onAction}
-            className="flex-shrink-0"
+            className="h-7 px-2.5 text-[11px] font-medium shrink-0"
           >
             {actionLabel}
             <ChevronRight className="ml-1 h-3 w-3" />
           </Button>
         )}
       </div>
-    </div>
+    </GlassPanel>
   );
 }
-
-// ============================================================================
-// Main Component
-// ============================================================================
 
 export function AlertasObrigacoes({
   alertas,
@@ -136,9 +116,7 @@ export function AlertasObrigacoes({
     );
   }
 
-  if (!alertas) {
-    return null;
-  }
+  if (!alertas) return null;
 
   const { vencidas, vencendoHoje, inconsistentes } = alertas;
   const hasAlerts =
@@ -146,41 +124,36 @@ export function AlertasObrigacoes({
     vencendoHoje.quantidade > 0 ||
     inconsistentes.quantidade > 0;
 
-  if (!hasAlerts) {
-    return null;
-  }
+  if (!hasAlerts) return null;
 
   return (
     <div className="space-y-2">
-      {/* Alerta de Vencidas */}
       {vencidas.quantidade > 0 && (
         <AlertaItem
           variant="destructive"
-          icon={<AlertCircle className="h-5 w-5" />}
+          icon={AlertCircle}
           title={`${vencidas.quantidade} obrigação${vencidas.quantidade > 1 ? 'ões' : ''} vencida${vencidas.quantidade > 1 ? 's' : ''}`}
-          description={`Total vencido: ${formatarValor(vencidas.valor)}`}
+          description={`Total vencido: ${CURRENCY.format(vencidas.valor)}`}
           actionLabel="Ver"
           onAction={onFiltrarVencidas}
         />
       )}
 
-      {/* Alerta de Vencendo Hoje */}
       {vencendoHoje.quantidade > 0 && (
         <AlertaItem
           variant="warning"
-          icon={<Clock className="h-5 w-5" />}
+          icon={Clock}
           title={`${vencendoHoje.quantidade} obrigação${vencendoHoje.quantidade > 1 ? 'ões' : ''} vence${vencendoHoje.quantidade > 1 ? 'm' : ''} hoje`}
-          description={`Total: ${formatarValor(vencendoHoje.valor)}`}
+          description={`Total: ${CURRENCY.format(vencendoHoje.valor)}`}
           actionLabel="Ver"
           onAction={onFiltrarHoje}
         />
       )}
 
-      {/* Alerta de Inconsistentes */}
       {inconsistentes.quantidade > 0 && (
         <AlertaItem
-          variant="default"
-          icon={<RefreshCw className="h-5 w-5" />}
+          variant="info"
+          icon={RefreshCw}
           title={`${inconsistentes.quantidade} obrigação${inconsistentes.quantidade > 1 ? 'ões' : ''} com inconsistência de sincronização`}
           description="Parcelas sem lançamento financeiro correspondente ou com valores divergentes"
           actionLabel="Ver"

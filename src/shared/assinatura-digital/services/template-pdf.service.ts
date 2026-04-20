@@ -364,7 +364,19 @@ interface PdfDataContext {
     nome: string;
     cpf?: string | null;
     cnpj?: string | null;
+    tipo_pessoa?: string | null;
     telefone?: string | null;
+    email?: string | null;
+    /** Endereço da parte contrária (mesmo shape usado em ClienteBasico.endereco) */
+    endereco?: {
+      cep?: string | null;
+      logradouro?: string | null;
+      numero?: string | null;
+      complemento?: string | null;
+      bairro?: string | null;
+      municipio?: string | null;
+      estado_sigla?: string | null;
+    };
   };
 }
 
@@ -608,14 +620,87 @@ function resolveVariable(
     "cliente.uf": end?.estado_sigla,
     "cliente.estado": end?.estado_sigla,
 
-    // Parte contrária
-    "parte_contraria.nome": ctx.parte_contraria?.nome,
-    "parte_contraria.cpf": formatCPF(ctx.parte_contraria?.cpf),
-    "parte_contraria.cnpj": ctx.parte_contraria?.cnpj,
-    "parte_contraria.telefone": ctx.parte_contraria?.telefone,
+    // Parte contrária — prioriza ctx.parte_contraria (dados hidratados da entidade),
+    // com fallback pros campos normalizados vindos do formulário dinâmico (enrichFormData
+    // produz chaves `parte_contraria_*` em acao_dados, que viram `acao.parte_contraria_*`
+    // no mapa de extras).
+    "parte_contraria.nome":
+      ctx.parte_contraria?.nome ??
+      (extras["acao.parte_contraria_nome"] as string | undefined),
+    "parte_contraria.cpf": formatCPF(
+      ctx.parte_contraria?.cpf ??
+        (extras["acao.parte_contraria_cpf"] as string | undefined),
+    ),
+    "parte_contraria.cnpj":
+      ctx.parte_contraria?.cnpj ??
+      (extras["acao.parte_contraria_cnpj"] as string | undefined),
+    "parte_contraria.tipo_pessoa":
+      ctx.parte_contraria?.tipo_pessoa ??
+      (extras["acao.parte_contraria_tipo_pessoa"] as string | undefined),
+    "parte_contraria.telefone":
+      ctx.parte_contraria?.telefone ??
+      (extras["acao.parte_contraria_telefone"] as string | undefined),
+    "parte_contraria.email":
+      ctx.parte_contraria?.email ??
+      (extras["acao.parte_contraria_email"] as string | undefined),
+
+    // Parte contrária — endereço (com prefixo endereco_ e aliases sem prefixo)
+    "parte_contraria.endereco_cep": formatCEP(
+      ctx.parte_contraria?.endereco?.cep ??
+        (extras["acao.parte_contraria_cep"] as string | undefined),
+    ),
+    "parte_contraria.endereco_logradouro":
+      ctx.parte_contraria?.endereco?.logradouro ??
+      (extras["acao.parte_contraria_logradouro"] as string | undefined),
+    "parte_contraria.endereco_numero":
+      ctx.parte_contraria?.endereco?.numero ??
+      (extras["acao.parte_contraria_numero"] as string | undefined),
+    "parte_contraria.endereco_complemento":
+      ctx.parte_contraria?.endereco?.complemento ??
+      (extras["acao.parte_contraria_complemento"] as string | undefined),
+    "parte_contraria.endereco_bairro":
+      ctx.parte_contraria?.endereco?.bairro ??
+      (extras["acao.parte_contraria_bairro"] as string | undefined),
+    "parte_contraria.endereco_cidade":
+      ctx.parte_contraria?.endereco?.municipio ??
+      (extras["acao.parte_contraria_cidade"] as string | undefined),
+    "parte_contraria.endereco_uf":
+      ctx.parte_contraria?.endereco?.estado_sigla ??
+      (extras["acao.parte_contraria_uf"] as string | undefined),
+    // Aliases sem prefixo endereco_ (conveniência)
+    "parte_contraria.cep": formatCEP(
+      ctx.parte_contraria?.endereco?.cep ??
+        (extras["acao.parte_contraria_cep"] as string | undefined),
+    ),
+    "parte_contraria.logradouro":
+      ctx.parte_contraria?.endereco?.logradouro ??
+      (extras["acao.parte_contraria_logradouro"] as string | undefined),
+    "parte_contraria.numero":
+      ctx.parte_contraria?.endereco?.numero ??
+      (extras["acao.parte_contraria_numero"] as string | undefined),
+    "parte_contraria.complemento":
+      ctx.parte_contraria?.endereco?.complemento ??
+      (extras["acao.parte_contraria_complemento"] as string | undefined),
+    "parte_contraria.bairro":
+      ctx.parte_contraria?.endereco?.bairro ??
+      (extras["acao.parte_contraria_bairro"] as string | undefined),
+    "parte_contraria.cidade":
+      ctx.parte_contraria?.endereco?.municipio ??
+      (extras["acao.parte_contraria_cidade"] as string | undefined),
+    "parte_contraria.municipio":
+      ctx.parte_contraria?.endereco?.municipio ??
+      (extras["acao.parte_contraria_cidade"] as string | undefined),
+    "parte_contraria.uf":
+      ctx.parte_contraria?.endereco?.estado_sigla ??
+      (extras["acao.parte_contraria_uf"] as string | undefined),
+    "parte_contraria.estado":
+      ctx.parte_contraria?.endereco?.estado_sigla ??
+      (extras["acao.parte_contraria_uf"] as string | undefined),
 
     // Ação (aliases para campos do formulário dinâmico)
-    "acao.nome_empresa_pessoa": ctx.parte_contraria?.nome,
+    "acao.nome_empresa_pessoa":
+      ctx.parte_contraria?.nome ??
+      (extras["acao.parte_contraria_nome"] as string | undefined),
 
     // Segmento
     "segmento.id": ctx.segmento.id,

@@ -37,7 +37,7 @@ import FormStepLayout from "./form-step-layout";
 import PdfPreviewDynamic from '@/shared/assinatura-digital/components/pdf/PdfPreviewDynamic';
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Loader2, AlertCircle, FileText, Info } from "lucide-react";
+import { AlertCircle, FileText, Info } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";

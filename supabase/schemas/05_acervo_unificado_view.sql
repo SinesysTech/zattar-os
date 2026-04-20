@@ -2,6 +2,14 @@
 -- Agrupa processos com mesmo numero_processo em uma única visualização
 -- Elimina necessidade de carregar e agrupar 35k+ registros em memória
 -- Permite paginação real no banco de dados e índices específicos
+--
+-- IMPORTANTE (2026-04-20): A materialized view reside em schema `private` para
+-- satisfazer o Supabase advisor 0016_materialized_view_in_api. A API PostgREST
+-- consome via view wrapper `public.acervo_unificado` (security_invoker=true).
+-- Ver final do arquivo para definicao do wrapper.
+
+create schema if not exists private;
+grant usage on schema private to authenticated, service_role;
 
 -- Primeiro, criar uma função auxiliar para identificar o grau atual
 -- Baseado em maior data_autuacao (critério primário) e updated_at (desempate)
@@ -32,7 +40,8 @@ $$;
 comment on function public.identificar_grau_atual_id is 'Identifica o ID da instância que representa o grau atual do processo, baseado em maior data_autuacao e updated_at como desempate';
 
 -- VIEW materializada que agrupa processos por numero_processo
-create materialized view public.acervo_unificado as
+-- Reside em schema private (nao exposta pela API) desde 2026-04-20.
+create materialized view private.acervo_unificado as
 with instancias_agrupadas as (
   -- Agrupar instâncias por numero_processo e advogado_id
   -- Identificar qual é o grau atual usando window functions
@@ -141,23 +150,23 @@ inner join graus_ativos_agrupados ga
   and ia.advogado_id = ga.advogado_id
 where ia.rn_grau_atual = 1; -- Apenas a instância do grau atual
 
-comment on materialized view public.acervo_unificado is 'VIEW materializada que unifica processos com mesmo numero_processo em uma única visualização. Agrupa todas as instâncias (graus) do mesmo processo, identificando o grau atual baseado em maior data_autuacao e updated_at como desempate. Elimina necessidade de carregar e agrupar grandes volumes de dados em memória, permitindo paginação real no banco de dados.';
+comment on materialized view private.acervo_unificado is 'VIEW materializada que unifica processos com mesmo numero_processo em uma única visualização. Agrupa todas as instâncias (graus) do mesmo processo, identificando o grau atual baseado em maior data_autuacao e updated_at como desempate. Reside em schema private; acessada via wrapper public.acervo_unificado.';
 
 -- Índices para performance na VIEW materializada
 -- IMPORTANTE: Índice único é necessário para refresh CONCURRENTLY
-create unique index idx_acervo_unificado_unique on public.acervo_unificado using btree (id, numero_processo, advogado_id);
-create index idx_acervo_unificado_numero_processo on public.acervo_unificado using btree (numero_processo);
-create index idx_acervo_unificado_advogado_id on public.acervo_unificado using btree (advogado_id);
-create index idx_acervo_unificado_trt on public.acervo_unificado using btree (trt);
-create index idx_acervo_unificado_grau_atual on public.acervo_unificado using btree (grau_atual);
-create index idx_acervo_unificado_data_autuacao on public.acervo_unificado using btree (data_autuacao);
-create index idx_acervo_unificado_responsavel_id on public.acervo_unificado using btree (responsavel_id);
-create index idx_acervo_unificado_origem on public.acervo_unificado using btree (origem);
-create index idx_acervo_unificado_advogado_trt on public.acervo_unificado using btree (advogado_id, trt);
-create index idx_acervo_unificado_numero_processo_advogado on public.acervo_unificado using btree (numero_processo, advogado_id);
+create unique index idx_acervo_unificado_unique on private.acervo_unificado using btree (id, numero_processo, advogado_id);
+create index idx_acervo_unificado_numero_processo on private.acervo_unificado using btree (numero_processo);
+create index idx_acervo_unificado_advogado_id on private.acervo_unificado using btree (advogado_id);
+create index idx_acervo_unificado_trt on private.acervo_unificado using btree (trt);
+create index idx_acervo_unificado_grau_atual on private.acervo_unificado using btree (grau_atual);
+create index idx_acervo_unificado_data_autuacao on private.acervo_unificado using btree (data_autuacao);
+create index idx_acervo_unificado_responsavel_id on private.acervo_unificado using btree (responsavel_id);
+create index idx_acervo_unificado_origem on private.acervo_unificado using btree (origem);
+create index idx_acervo_unificado_advogado_trt on private.acervo_unificado using btree (advogado_id, trt);
+create index idx_acervo_unificado_numero_processo_advogado on private.acervo_unificado using btree (numero_processo, advogado_id);
 
 -- Índice GIN para busca textual no JSONB de instâncias (se necessário)
--- create index idx_acervo_unificado_instances_gin on public.acervo_unificado using gin (instances);
+-- create index idx_acervo_unificado_instances_gin on private.acervo_unificado using gin (instances);
 
 -- Função para refresh da VIEW materializada
 -- Tenta usar CONCURRENTLY se possível (requer índice único), caso contrário usa refresh normal
@@ -172,14 +181,14 @@ begin
     -- CONCURRENTLY requer que a VIEW já tenha sido criada pelo menos uma vez
     -- e que exista um índice único
     begin
-      refresh materialized view concurrently public.acervo_unificado;
+      refresh materialized view concurrently private.acervo_unificado;
     exception
       when others then
         -- Se CONCURRENTLY falhar (ex: primeira execução), usar refresh normal
-        refresh materialized view public.acervo_unificado;
+        refresh materialized view private.acervo_unificado;
     end;
   else
-    refresh materialized view public.acervo_unificado;
+    refresh materialized view private.acervo_unificado;
   end if;
 end;
 $$;
@@ -211,17 +220,27 @@ comment on function public.trigger_refresh_acervo_unificado is 'Trigger function
 -- for each statement
 -- execute function public.trigger_refresh_acervo_unificado();
 
--- Owner e permissões
-alter materialized view public.acervo_unificado owner to postgres;
+-- Owner e permissões da MV em private
+alter materialized view private.acervo_unificado owner to postgres;
 
 -- GRANTs: IMPORTANTE - sempre incluir ao recriar a view (DROP perde permissões)
-grant select on table public.acervo_unificado to service_role;
-grant select on table public.acervo_unificado to authenticated;
-grant select on table public.acervo_unificado to anon;
+grant select on table private.acervo_unificado to service_role;
+grant select on table private.acervo_unificado to authenticated;
+-- anon NAO tem acesso (schema private nao e exposto via PostgREST de qualquer forma)
 
--- Comentários nas colunas principais
-comment on column public.acervo_unificado.id is 'ID da instância principal (grau atual) do processo';
-comment on column public.acervo_unificado.grau_atual is 'Grau atual do processo (primeiro_grau, segundo_grau ou tribunal_superior), identificado pela maior data_autuacao';
-comment on column public.acervo_unificado.graus_ativos is 'Array de graus onde o processo está ativo (ex: [primeiro_grau, segundo_grau, tribunal_superior])';
-comment on column public.acervo_unificado.instances is 'JSONB contendo todas as instâncias do processo, cada uma com id, grau, origem, trt, data_autuacao, updated_at e is_grau_atual';
+-- VIEW WRAPPER em public: preserva API PostgREST existente
+-- security_invoker=true garante que RLS/grants sao avaliados como o usuario chamador
+create or replace view public.acervo_unificado
+with (security_invoker = true)
+as select * from private.acervo_unificado;
+
+grant select on public.acervo_unificado to authenticated, service_role;
+
+comment on view public.acervo_unificado is 'View wrapper (security_invoker=true) sobre private.acervo_unificado. Preserva compatibilidade da API PostgREST existente. MV real em schema private satisfaz advisor 0016_materialized_view_in_api.';
+
+-- Comentários nas colunas principais (aplicados na MV real)
+comment on column private.acervo_unificado.id is 'ID da instância principal (grau atual) do processo';
+comment on column private.acervo_unificado.grau_atual is 'Grau atual do processo (primeiro_grau, segundo_grau ou tribunal_superior), identificado pela maior data_autuacao';
+comment on column private.acervo_unificado.graus_ativos is 'Array de graus onde o processo está ativo (ex: [primeiro_grau, segundo_grau, tribunal_superior])';
+comment on column private.acervo_unificado.instances is 'JSONB contendo todas as instâncias do processo, cada uma com id, grau, origem, trt, data_autuacao, updated_at e is_grau_atual';
 

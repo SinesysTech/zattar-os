@@ -1,6 +1,9 @@
 import { Suspense } from 'react';
-import { ObrigacoesContent } from '@/app/(authenticated)/obrigacoes';
 import { Skeleton } from '@/components/ui/skeleton';
+
+import { ObrigacoesContent } from '@/app/(authenticated)/obrigacoes';
+import { obterResumoObrigacoes } from '@/app/(authenticated)/obrigacoes/service';
+import type { ResumoObrigacoesDB } from '@/app/(authenticated)/obrigacoes/repository';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -9,18 +12,22 @@ function ObrigacoesLoading() {
   return (
     <div className="space-y-4">
       <Skeleton className="h-10 w-full" />
-      <Skeleton className="h-[400px] w-full" />
+      <Skeleton className="h-100ull" />
     </div>
   );
 }
 
-/**
- * Página de Visualização Mensal de Obrigações
- */
-export default function ObrigacoesMesPage() {
+export default async function ObrigacoesMesPage() {
+  let initialResumo: ResumoObrigacoesDB | null = null;
+  try {
+    initialResumo = await obterResumoObrigacoes();
+  } catch (error) {
+    console.error('[obrigacoes/mes] falha ao pré-buscar resumo:', error);
+  }
+
   return (
     <Suspense fallback={<ObrigacoesLoading />}>
-      <ObrigacoesContent visualizacao="mes" />
+      <ObrigacoesContent visualizacao="mes" initialResumo={initialResumo} />
     </Suspense>
   );
 }
