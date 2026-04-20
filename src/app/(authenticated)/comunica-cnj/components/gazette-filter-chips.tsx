@@ -3,7 +3,7 @@
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useGazetteStore } from './hooks/use-gazette-store';
-import type { GazetteFilters } from '@/app/(authenticated)/captura/comunica-cnj/domain';
+import type { GazetteFilters } from '@/app/(authenticated)/comunica-cnj/domain';
 
 // ── Chip color mapping by filter category ──
 

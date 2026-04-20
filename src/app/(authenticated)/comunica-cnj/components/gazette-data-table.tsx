@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { useGazetteStore } from './hooks/use-gazette-store';
-import type { ComunicacaoCNJEnriquecida } from '@/app/(authenticated)/captura/comunica-cnj/domain';
+import type { ComunicacaoCNJEnriquecida } from '@/app/(authenticated)/comunica-cnj/domain';
 
 // ─── Badge Maps ────────────────────────────────────────────────────────────────
 

@@ -24,7 +24,7 @@ import {
   Gavel,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { ComunicacaoItem } from '../../comunica-cnj/domain';
+import type { ComunicacaoItem } from '../domain';
 import { DataShell, DataTableToolbar, DataTable, DataTableColumnHeader, DataPagination } from '@/components/shared/data-shell';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 

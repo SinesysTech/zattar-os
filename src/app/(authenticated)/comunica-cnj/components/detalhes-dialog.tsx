@@ -20,7 +20,7 @@ import { Button } from '@/components/ui/button';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
 import { FileText, ExternalLink } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-breakpoint';
-import type { ComunicacaoItem } from '../../comunica-cnj/domain';
+import type { ComunicacaoItem } from '../domain';
 
 interface ComunicacaoDetalhesDialogProps {
   comunicacao: ComunicacaoItem | null;

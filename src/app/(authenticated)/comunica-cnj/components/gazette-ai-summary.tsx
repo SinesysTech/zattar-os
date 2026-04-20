@@ -3,7 +3,7 @@
 import { Sparkles, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import type { ComunicacaoResumo } from '@/app/(authenticated)/captura/comunica-cnj/domain';
+import type { ComunicacaoResumo } from '@/app/(authenticated)/comunica-cnj/domain';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

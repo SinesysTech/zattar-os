@@ -2,7 +2,7 @@
 
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { cn } from '@/lib/utils';
-import type { ComunicacaoCNJEnriquecida } from '@/app/(authenticated)/captura/comunica-cnj/domain';
+import type { ComunicacaoCNJEnriquecida } from '@/app/(authenticated)/comunica-cnj/domain';
 import { useGazetteStore } from './hooks/use-gazette-store';
 
 // ─── Tipo badge helpers ───────────────────────────────────────────────────────

@@ -16,18 +16,6 @@ export {
 export type { ActionResponse } from './timeline-actions';
 
 // ============================================================================
-// Comunica CNJ Actions
-// ============================================================================
-export {
-    actionConsultarComunicacoes,
-    actionListarComunicacoesCapturadas,
-    actionSincronizarComunicacoes,
-    actionObterCertidao,
-    actionVincularExpediente,
-    actionListarTribunaisDisponiveis,
-} from './comunica-cnj-actions';
-
-// ============================================================================
 // Utils (internos — auth helper para actions)
 // ============================================================================
 export { requireAuth } from './utils';

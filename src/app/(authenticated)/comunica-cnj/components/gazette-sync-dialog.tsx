@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { GazetteTimeline } from './gazette-timeline';
 import { useGazetteStore } from './hooks/use-gazette-store';
-import type { SyncLogEntry } from '@/app/(authenticated)/captura/comunica-cnj/domain';
+import type { SyncLogEntry } from '@/app/(authenticated)/comunica-cnj/domain';
 import type { TimelineItem } from './gazette-timeline';
 
 // ─── Types ───────────────────────────────────────────────────────────────────

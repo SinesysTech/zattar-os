@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { useGazetteStore } from './hooks/use-gazette-store';
-import type { GazetteFilters } from '@/app/(authenticated)/captura/comunica-cnj/domain';
+import type { GazetteFilters } from '@/app/(authenticated)/comunica-cnj/domain';
 
 // ── Types ──
 

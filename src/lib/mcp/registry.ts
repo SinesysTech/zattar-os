@@ -54,7 +54,7 @@ import {
   registerRHTools,
   registerDashboardTools,
   registerBuscaSemanticaTools,
-  registerCapturaTools,
+  registerComunicaCnjTools,
   registerUsuariosTools,
   registerAcervoTools,
   registerAssistentesTools,
@@ -112,7 +112,7 @@ export async function registerAllTools(): Promise<void> {
   await registerRHTools();
   await registerDashboardTools();
   await registerBuscaSemanticaTools();
-  await registerCapturaTools();
+  await registerComunicaCnjTools();
   await registerUsuariosTools();
   await registerAcervoTools();
   await registerAssistentesTools();

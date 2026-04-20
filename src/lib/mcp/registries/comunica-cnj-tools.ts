@@ -1,8 +1,8 @@
 /**
- * Registro de Ferramentas MCP - Captura
+ * Registro de Ferramentas MCP — Comunica CNJ (Diário Oficial)
  *
  * Tools disponíveis:
- * - listar_capturas_cnj: Lista capturas do Comunica CNJ
+ * - listar_capturas_cnj: Lista comunicações do Diário Oficial capturadas
  */
 
 import { z } from 'zod';
@@ -12,20 +12,20 @@ import { errorResult } from '../types';
 import type { ActionResult } from '@/lib/safe-action';
 
 /**
- * Registra ferramentas MCP do módulo Captura
+ * Registra ferramentas MCP do módulo Comunica CNJ
  */
-export async function registerCapturaTools(): Promise<void> {
+export async function registerComunicaCnjTools(): Promise<void> {
   const {
     actionListarComunicacoesCapturadas,
-  } = await import('@/app/(authenticated)/captura/actions/comunica-cnj-actions');
+  } = await import('@/app/(authenticated)/comunica-cnj/actions');
 
   /**
-   * Lista capturas do sistema Comunica CNJ
+   * Lista comunicações capturadas do sistema Comunica CNJ
    */
   registerMcpTool({
     name: 'listar_capturas_cnj',
-    description: 'Lista capturas do sistema Comunica CNJ',
-    feature: 'captura',
+    description: 'Lista comunicações capturadas do Diário Oficial (Comunica CNJ)',
+    feature: 'comunica_cnj',
     requiresAuth: true,
     schema: z.object({
       page: z.number().min(1).default(1).describe('Página'),
@@ -43,7 +43,7 @@ export async function registerCapturaTools(): Promise<void> {
         const result = await actionListarComunicacoesCapturadas(args);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar capturas CNJ');
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar comunicações CNJ');
       }
     },
   });

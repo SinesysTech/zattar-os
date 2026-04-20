@@ -20,7 +20,7 @@ import { useGazetteStore } from './hooks/use-gazette-store';
 import type {
   ComunicacaoCNJEnriquecida,
   MatchCriterio,
-} from '@/app/(authenticated)/captura/comunica-cnj/domain';
+} from '@/app/(authenticated)/comunica-cnj/domain';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 

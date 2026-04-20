@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { useGazetteStore } from './hooks/use-gazette-store';
-import type { GazetteInsight } from '@/app/(authenticated)/captura/comunica-cnj/domain';
+import type { GazetteInsight } from '@/app/(authenticated)/comunica-cnj/domain';
 
 const TIPO_STYLES: Record<
   GazetteInsight['tipo'],

@@ -19,12 +19,12 @@ import { GazetteCardGrid } from './gazette-card-grid';
 import { GazetteDetailPanel } from './gazette-detail-panel';
 import { Heading } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
-import type { StatusVinculacao } from '@/app/(authenticated)/captura/comunica-cnj/domain';
+import type { StatusVinculacao } from '@/app/(authenticated)/comunica-cnj/domain';
 import {
   actionObterMetricas,
   actionListarComunicacoesCapturadas,
   actionListarViews,
-} from '@/app/(authenticated)/captura/actions/comunica-cnj-actions';
+} from '@/app/(authenticated)/comunica-cnj/actions/comunica-cnj-actions';
 
 export function GazettePage() {
   useGazetteKeyboard();

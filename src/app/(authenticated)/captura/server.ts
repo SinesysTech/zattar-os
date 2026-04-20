@@ -46,14 +46,7 @@ export { buscarCapturaLog } from './services/persistence/captura-log-persistence
 // Raw Log Persistence Service (logs brutos por tribunal/grau)
 export { buscarLogsBrutoPorCapturaId, contarLogsBrutoPorStatus } from './services/persistence/captura-raw-log.service';
 
-// Comunica CNJ (server-only)
-export * from './comunica-cnj/domain';
-export * from './comunica-cnj/cnj-client';
-export * from './comunica-cnj/repository';
-export * from './comunica-cnj/service';
-
 // Actions (server actions)
-export * from './actions/comunica-cnj-actions';
 export * from './actions/timeline-actions';
 
 

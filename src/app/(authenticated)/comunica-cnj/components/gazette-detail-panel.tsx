@@ -17,7 +17,7 @@ import { useGazetteStore } from './hooks/use-gazette-store';
 import { GazetteAiSummary } from './gazette-ai-summary';
 import { GazetteTimeline } from './gazette-timeline';
 import type { TimelineItem } from './gazette-timeline';
-import type { StatusVinculacao } from '@/app/(authenticated)/captura/comunica-cnj/domain';
+import type { StatusVinculacao } from '@/app/(authenticated)/comunica-cnj/domain';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -124,7 +124,7 @@ export function GazetteDetailPanel() {
     <div
       className={cn(
         'h-full border-l border-border/30 bg-background transition-all duration-300 ease-in-out overflow-hidden flex flex-col',
-        detailPanelAberto ? 'w-[420px] opacity-100' : 'w-0 opacity-0',
+        detailPanelAberto ? 'w-105 opacity-100' : 'w-0 opacity-0',
       )}
     >
       {com && (
@@ -134,7 +134,7 @@ export function GazetteDetailPanel() {
             <div className="flex items-center gap-2 min-w-0">
               <span
                 className={cn(
-                  'text-[10px] px-1.5 py-0.5 rounded font-medium flex-shrink-0',
+                  'text-[10px] px-1.5 py-0.5 rounded font-medium shrink-0',
                   STATUS_BADGE_STYLES[com.statusVinculacao],
                 )}
               >
@@ -144,7 +144,7 @@ export function GazetteDetailPanel() {
                 {formatDate(com.dataDisponibilizacao)}
               </span>
             </div>
-            <div className="flex items-center gap-0.5 flex-shrink-0">
+            <div className="flex items-center gap-0.5 shrink-0">
               <Button
                 variant="ghost"
                 size="icon"
@@ -192,7 +192,7 @@ export function GazetteDetailPanel() {
                 </span>
               )}
               {com.nomeOrgao && (
-                <span className="text-[9px] px-1.5 py-0.5 rounded border border-border/40 text-muted-foreground truncate max-w-[180px]">
+                <span className="text-[9px] px-1.5 py-0.5 rounded border border-border/40 text-muted-foreground truncate max-w-45">
                   {com.nomeOrgao}
                 </span>
               )}
@@ -214,7 +214,7 @@ export function GazetteDetailPanel() {
               <div className="mt-1.5 space-y-1">
                 {com.partesAutor?.map((nome, i) => (
                   <div key={`a-${i}`} className="flex items-center gap-2">
-                    <span className="text-[9px] px-1 py-0.5 rounded font-medium bg-info/10 text-info flex-shrink-0">
+                    <span className="text-[9px] px-1 py-0.5 rounded font-medium bg-info/10 text-info shrink-0">
                       A
                     </span>
                     <span className="text-[11px] text-muted-foreground truncate">
@@ -224,7 +224,7 @@ export function GazetteDetailPanel() {
                 ))}
                 {com.partesReu?.map((nome, i) => (
                   <div key={`r-${i}`} className="flex items-center gap-2">
-                    <span className="text-[9px] px-1 py-0.5 rounded font-medium bg-destructive/10 text-destructive flex-shrink-0">
+                    <span className="text-[9px] px-1 py-0.5 rounded font-medium bg-destructive/10 text-destructive shrink-0">
                       R
                     </span>
                     <span className="text-[11px] text-muted-foreground truncate">
@@ -240,9 +240,9 @@ export function GazetteDetailPanel() {
           {com.diasParaPrazo !== null &&
             com.diasParaPrazo !== undefined &&
             com.diasParaPrazo <= 7 && (
-              <div className="mx-4 my-3 rounded-lg bg-destructive/[0.06] border border-destructive/15 p-3">
+              <div className="mx-4 my-3 rounded-lg bg-destructive/6er border-destructive/15 p-3">
                 <div className="flex items-start gap-2">
-                  <AlertTriangle className="size-4 text-destructive flex-shrink-0 mt-0.5" />
+                  <AlertTriangle className="size-4 text-destructive shrink-0 mt-0.5" />
                   <div className="min-w-0">
                     <p className="text-[12px] font-semibold text-destructive">
                       Prazo: {com.diasParaPrazo} dias restantes
@@ -269,13 +269,13 @@ export function GazetteDetailPanel() {
                 <div
                   className={cn(
                     'text-[11px] text-muted-foreground leading-relaxed overflow-hidden transition-all duration-300',
-                    !textoExpandido && 'max-h-[100px]',
+                    !textoExpandido && 'max-h-25',
                   )}
                 >
                   {com.texto}
                 </div>
                 {!textoExpandido && (
-                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-linear-to-t from-background to-transparent pointer-events-none" />
                 )}
               </div>
               <button
@@ -291,10 +291,10 @@ export function GazetteDetailPanel() {
           {/* ── 7. Expediente Link ────────────────────────────────── */}
           {com.statusVinculacao === 'vinculado' && com.expedienteId && (
             <div className="px-4 py-3 border-b border-border/30">
-              <GlassPanel depth={1} className="p-3 cursor-pointer hover:bg-primary/[0.03] transition-colors">
+              <GlassPanel depth={1} className="p-3 cursor-pointer hover:bg-primary/3 transition-colors">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="size-2 rounded-full bg-success flex-shrink-0" />
+                    <span className="size-2 rounded-full bg-success shrink-0" />
                     <div className="min-w-0">
                       <p className="text-[12px] font-medium text-foreground truncate">
                         Expediente #{com.expedienteId}
@@ -304,7 +304,7 @@ export function GazetteDetailPanel() {
                       </p>
                     </div>
                   </div>
-                  <ExternalLink className="size-3.5 text-muted-foreground/40 flex-shrink-0" />
+                  <ExternalLink className="size-3.5 text-muted-foreground/40 shrink-0" />
                 </div>
               </GlassPanel>
             </div>

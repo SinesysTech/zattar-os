@@ -10,7 +10,7 @@ import {
   PopoverContent,
 } from '@/components/ui/popover';
 import { useGazetteStore } from './hooks/use-gazette-store';
-import type { MeioComunicacao } from '@/app/(authenticated)/captura/comunica-cnj/domain';
+import type { MeioComunicacao } from '@/app/(authenticated)/comunica-cnj/domain';
 
 // ── Tribunal data ──
 

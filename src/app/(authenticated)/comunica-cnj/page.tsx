@@ -1,17 +1,25 @@
 'use client';
 
 import { Suspense } from 'react';
-import { ComunicaCNJTabsContent } from '@/app/(authenticated)/captura';
+import { ComunicaCNJTabsContent } from './components';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * Página do Diário Oficial
- * Consulta comunicações processuais na API do CNJ e lista as já capturadas
+ *
+ * Consulta a API pública do Comunica CNJ e lista comunicações processuais
+ * capturadas, com vinculação a expedientes, views salvas e métricas.
  */
 export default function DiarioOficialPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-64">Carregando...</div>}>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-64">
+          Carregando...
+        </div>
+      }
+    >
       <ComunicaCNJTabsContent />
     </Suspense>
   );

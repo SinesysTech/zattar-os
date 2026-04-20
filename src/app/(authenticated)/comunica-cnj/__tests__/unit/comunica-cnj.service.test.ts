@@ -4,12 +4,12 @@ import {
   inferirGrau,
   normalizarNumeroProcesso,
   extrairPartes,
-} from '../../comunica-cnj/service';
-import { getComunicaCNJClient } from '../../comunica-cnj/cnj-client';
-import type { ComunicacaoDestinatario } from '../../comunica-cnj/domain';
+} from '../../service';
+import { getComunicaCNJClient } from '../../cnj-client';
+import type { ComunicacaoDestinatario } from '../../domain';
 
 // Mock dependencies
-jest.mock('../../comunica-cnj/cnj-client');
+jest.mock('../../cnj-client');
 
 describe('Comunica CNJ Service', () => {
   beforeEach(() => {

@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Download, Loader2, AlertCircle, ExternalLink } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-breakpoint';
-import { actionObterCertidao } from '../../actions/comunica-cnj-actions';
+import { actionObterCertidao } from '../actions/comunica-cnj-actions';
 
 interface PdfViewerDialogProps {
   hash: string | null;

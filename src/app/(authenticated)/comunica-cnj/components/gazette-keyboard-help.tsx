@@ -35,7 +35,7 @@ export function GazetteKeyboardHelp() {
         <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 py-2">
           {SHORTCUTS.map(({ key, desc }) => (
             <div key={key} className="contents">
-              <kbd className="px-2 py-0.5 bg-muted/30 border border-border/30 rounded text-xs font-mono text-muted-foreground text-center min-w-[36px]">
+              <kbd className="px-2 py-0.5 bg-muted/30 border border-border/30 rounded text-xs font-mono text-muted-foreground text-center min-w-9">
                 {key}
               </kbd>
               <span className="text-sm text-muted-foreground/70">{desc}</span>

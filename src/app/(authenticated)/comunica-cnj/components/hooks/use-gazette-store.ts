@@ -8,7 +8,7 @@ import type {
   GazetteView,
   SyncLogEntry,
   GazetteInsight,
-} from '@/app/(authenticated)/captura/comunica-cnj/domain';
+} from '@/app/(authenticated)/comunica-cnj/domain';
 
 interface GazetteState {
   // Data

@@ -49,13 +49,6 @@ export { CapturaRawLogs } from './components/captura-raw-logs';
 export { AdvogadoCombobox } from './components/advogado-combobox';
 export { CredenciaisCombobox } from './components/credenciais-combobox';
 
-// Comunica CNJ Components (client-safe)
-export {
-  ComunicaCNJTabsContent,
-  ComunicaCNJResultsTable,
-  GazettePage,
-} from './components/comunica-cnj';
-
 // ============================================================================
 // Hooks
 // ============================================================================

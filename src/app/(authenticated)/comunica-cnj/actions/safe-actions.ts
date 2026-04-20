@@ -22,15 +22,15 @@ import {
   listarTribunaisDisponiveis,
   vincularComunicacaoAExpediente,
   obterStatusRateLimit,
-} from './service';
+} from '../service';
 import type {
   ConsultarComunicacoesParams,
   SincronizarParams,
-} from './domain';
+} from '../domain';
 import {
   salvarViewSchema,
   buscarMatchSchema,
-} from './domain';
+} from '../domain';
 import {
   findMetricas,
   findSyncLogs,
@@ -38,7 +38,7 @@ import {
   saveView,
   deleteView,
   findResumo,
-} from './repository';
+} from '../repository';
 
 // =============================================================================
 // SCHEMAS
