@@ -45,7 +45,7 @@ yarn-error.log*
 .env.*
 !.env.example
 !.env.build.example
-!.env.production
+!.env*.example
 .env*.local.bak
 .env.build
 
@@ -59,7 +59,28 @@ Dockerfile
 .mcp.json
 
 # vercel
-#.vercel
+.vercel
+
+# local credentials and private key material
+.envrc
+.direnv/
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+*.crt
+*.cer
+*.der
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*.ovpn
+*.secret
+*.credentials
+**/.secrets/
+**/secrets/
 
 # typescript
 *.tsbuildinfo
