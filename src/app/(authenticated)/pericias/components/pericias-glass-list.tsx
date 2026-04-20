@@ -211,7 +211,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
     >
       {/* ── Linha 1: Partes (título) + Situação badge ───────────── */}
       <div className="flex items-start justify-between gap-3">
-        <h3 className="text-sm font-semibold text-foreground leading-snug flex-1 break-words">
+        <h3 className="text-sm font-semibold text-foreground leading-snug flex-1 wrap-break-word">
           {parteAutora || 'Autor não informado'}
           <span className="mx-2 text-muted-foreground/50 font-medium">×</span>
           {parteRe || 'Réu não informado'}
