@@ -34,10 +34,10 @@ export interface SourceConfig {
 }
 
 export const SOURCE_CONFIGS: Record<AgendaSource, SourceConfig> = {
-  audiencias:  { label: "Audiencias",  icon: Gavel,        color: "info" },
+  audiencias:  { label: "Audiências",  icon: Gavel,        color: "info" },
   expedientes: { label: "Expedientes", icon: FileText,     color: "warning" },
-  obrigacoes:  { label: "Obrigacoes",  icon: CreditCard,   color: "warning" },
-  pericias:    { label: "Pericias",    icon: Stethoscope,  color: "primary" },
+  obrigacoes:  { label: "Obrigações",  icon: CreditCard,   color: "warning" },
+  pericias:    { label: "Perícias",    icon: Stethoscope,  color: "primary" },
   agenda:      { label: "Pessoal",     icon: CalendarDays,  color: "primary" },
   prazos:      { label: "Prazos",      icon: AlertCircle,   color: "destructive" },
 };
@@ -136,7 +136,7 @@ function d(day: number, h: number, m = 0) {
 export const MOCK_EVENTS: MockEvent[] = [
   {
     id: "aud-1",
-    title: "Audiencia de Instrucao e Julgamento",
+    title: "Audiência de Instrução e Julgamento",
     start: d(13, 9, 30),
     end: d(13, 11, 0),
     allDay: false,
@@ -151,17 +151,17 @@ export const MOCK_EVENTS: MockEvent[] = [
     prepPercent: 60,
     status: "Marcada",
     descricao:
-      "Reclamante alega adicional de insalubridade grau maximo. Empresa contesta com laudo pericial proprio. Verificar se perito judicial foi nomeado. Audiencia anterior foi adiada por ausencia do preposto.",
+      "Reclamante alega adicional de insalubridade grau máximo. Empresa contesta com laudo pericial próprio. Verificar se perito judicial foi nomeado. Audiência anterior foi adiada por ausência do preposto.",
   },
   {
     id: "prazo-1",
-    title: "Prazo: Recurso Ordinario",
+    title: "Prazo: Recurso Ordinário",
     start: d(13, 14, 0),
     end: d(13, 14, 0),
     allDay: false,
     source: "prazos",
     processo: "0067890-12.2024.5.01.0042",
-    partes: { reclamante: "Pereira", reclamada: "Industria XYZ S.A." },
+    partes: { reclamante: "Pereira", reclamada: "Indústria XYZ S.A." },
     trt: "TRT1",
     grau: "1o Grau",
     fatal: true,
@@ -169,27 +169,27 @@ export const MOCK_EVENTS: MockEvent[] = [
   },
   {
     id: "exp-1",
-    title: "Publicacao DJE",
+    title: "Publicação DJE",
     start: d(14, 9, 0),
     end: d(14, 9, 30),
     allDay: false,
     source: "expedientes",
     processo: "0034567-89.2024.5.02.0015",
-    partes: { reclamante: "Oliveira", reclamada: "Comercio Beta Ltda" },
+    partes: { reclamante: "Oliveira", reclamada: "Comércio Beta Ltda" },
     status: "Recebido",
   },
   {
     id: "pessoal-1",
-    title: "Reuniao Equipe",
+    title: "Reunião Equipe",
     start: d(14, 10, 0),
     end: d(14, 11, 0),
     allDay: false,
     source: "agenda",
-    local: "Escritorio — Sala 2",
+    local: "Escritório — Sala 2",
   },
   {
     id: "aud-2",
-    title: "Audiencia de Conciliacao",
+    title: "Audiência de Conciliação",
     start: d(15, 9, 30),
     end: d(15, 11, 0),
     allDay: false,
@@ -199,14 +199,14 @@ export const MOCK_EVENTS: MockEvent[] = [
     trt: "TRT2",
     grau: "1o Grau",
     modalidade: "presencial",
-    responsavel: { iniciais: "JM", nome: "Dr. Joao Medeiros" },
+    responsavel: { iniciais: "JM", nome: "Dr. João Medeiros" },
     prepStatus: "preparado",
     prepPercent: 100,
     status: "Marcada",
   },
   {
     id: "aud-3",
-    title: "Audiencia de Julgamento",
+    title: "Audiência de Julgamento",
     start: d(15, 13, 30),
     end: d(15, 15, 0),
     allDay: false,
@@ -221,17 +221,17 @@ export const MOCK_EVENTS: MockEvent[] = [
   },
   {
     id: "pessoal-2",
-    title: "Reuniao Cliente — Novo caso",
+    title: "Reunião Cliente — Novo caso",
     start: d(15, 13, 30),
     end: d(15, 14, 30),
     allDay: false,
     source: "agenda",
-    local: "Escritorio — Sala 3",
+    local: "Escritório — Sala 3",
     responsavel: { iniciais: "JM", nome: "Jordan Medeiros" },
   },
   {
     id: "obr-1",
-    title: "Pagamento FGTS Competencia",
+    title: "Pagamento FGTS Competência",
     start: d(16, 10, 0),
     end: d(16, 10, 30),
     allDay: false,
@@ -250,13 +250,13 @@ export const MOCK_EVENTS: MockEvent[] = [
   },
   {
     id: "per-1",
-    title: "Pericia Medica",
+    title: "Perícia Médica",
     start: d(17, 9, 0),
     end: d(17, 12, 0),
     allDay: false,
     source: "pericias",
     processo: "0045678-90.2024.5.05.0008",
-    partes: { reclamante: "Ferreira", reclamada: "Metalurgica Delta" },
+    partes: { reclamante: "Ferreira", reclamada: "Metalúrgica Delta" },
     responsavel: { iniciais: "CL", nome: "Dr. Carlos Lima" },
     prepStatus: "pendente",
     prepPercent: 25,
@@ -265,7 +265,7 @@ export const MOCK_EVENTS: MockEvent[] = [
   },
   {
     id: "aud-4",
-    title: "Audiencia de Instrucao",
+    title: "Audiência de Instrução",
     start: d(17, 14, 0),
     end: d(17, 16, 0),
     allDay: false,
@@ -284,12 +284,12 @@ export const MOCK_EVENTS: MockEvent[] = [
     end: d(14, 16, 0),
     allDay: false,
     source: "agenda",
-    local: "Escritorio — Sala 3",
+    local: "Escritório — Sala 3",
     responsavel: { iniciais: "RM", nome: "Roberto Mendes" },
   },
   {
     id: "aud-5",
-    title: "Audiencia de Instrucao",
+    title: "Audiência de Instrução",
     start: d(20, 10, 0),
     end: d(20, 12, 0),
     allDay: false,
@@ -300,7 +300,7 @@ export const MOCK_EVENTS: MockEvent[] = [
   },
   {
     id: "exp-3",
-    title: "Intimacao",
+    title: "Intimação",
     start: d(22, 9, 0),
     end: d(22, 9, 30),
     allDay: false,
@@ -309,7 +309,7 @@ export const MOCK_EVENTS: MockEvent[] = [
   },
   {
     id: "aud-6",
-    title: "Audiencia de Conciliacao",
+    title: "Audiência de Conciliação",
     start: d(28, 10, 0),
     end: d(28, 11, 30),
     allDay: false,
@@ -320,7 +320,7 @@ export const MOCK_EVENTS: MockEvent[] = [
   },
   {
     id: "prazo-2",
-    title: "Contestacao",
+    title: "Contestação",
     start: d(13, 23, 59),
     end: d(13, 23, 59),
     allDay: false,
@@ -331,7 +331,7 @@ export const MOCK_EVENTS: MockEvent[] = [
   },
   {
     id: "prazo-3",
-    title: "Recurso Ordinario",
+    title: "Recurso Ordinário",
     start: d(15, 23, 59),
     end: d(15, 23, 59),
     allDay: false,
@@ -356,25 +356,25 @@ export const MOCK_EVENTS: MockEvent[] = [
 // ─── Mock Deadlines ───────────────────────────────────────────────────
 
 export const MOCK_DEADLINES: Deadline[] = [
-  { id: "dl-1", label: "Contestacao — Proc. 0012345", processo: "0012345-00.2025.5.01.0001", daysLeft: 1, fatal: true },
-  { id: "dl-2", label: "Recurso Ordinario — Proc. 0067890", processo: "0067890-00.2024.5.01.0042", daysLeft: 3, fatal: false },
+  { id: "dl-1", label: "Contestação — Proc. 0012345", processo: "0012345-00.2025.5.01.0001", daysLeft: 1, fatal: true },
+  { id: "dl-2", label: "Recurso Ordinário — Proc. 0067890", processo: "0067890-00.2024.5.01.0042", daysLeft: 3, fatal: false },
   { id: "dl-3", label: "Juntada de Documentos — 0045678", processo: "0045678-00.2024.5.05.0008", daysLeft: 5, fatal: false },
 ];
 
 // ─── Mock Prep Items ──────────────────────────────────────────────────
 
 export const MOCK_PREP_ITEMS: PrepItem[] = [
-  { id: "prep-1", label: "Aud. Instrucao (09:30)", date: "13/04", percent: 60, missing: "Rol de testemunhas" },
-  { id: "prep-2", label: "Aud. Conciliacao (15/04)", date: "15/04", percent: 100 },
-  { id: "prep-3", label: "Pericia Medica (17/04)", date: "17/04", percent: 25, missing: "Laudo medico, Quesitos" },
+  { id: "prep-1", label: "Aud. Instrução (09:30)", date: "13/04", percent: 60, missing: "Rol de testemunhas" },
+  { id: "prep-2", label: "Aud. Conciliação (15/04)", date: "15/04", percent: 100 },
+  { id: "prep-3", label: "Perícia Médica (17/04)", date: "17/04", percent: 25, missing: "Laudo médico, Quesitos" },
 ];
 
 // ─── Mock Alerts ──────────────────────────────────────────────────────
 
 export const MOCK_ALERTS: AlertItem[] = [
-  { id: "alert-1", severity: "critical", title: "Prazo Fatal Hoje", description: "Recurso Ordinario 14:00" },
-  { id: "alert-2", severity: "warning", title: "Conflito 15/04", description: "2 eventos as 13:30" },
-  { id: "alert-3", severity: "info", title: "Preparo Pendente", description: "Pericia 17/04 — 25%" },
+  { id: "alert-1", severity: "critical", title: "Prazo Fatal Hoje", description: "Recurso Ordinário 14:00" },
+  { id: "alert-2", severity: "warning", title: "Conflito 15/04", description: "2 eventos às 13:30" },
+  { id: "alert-3", severity: "info", title: "Preparo Pendente", description: "Perícia 17/04 — 25%" },
 ];
 
 // ─── Mock Checklist (for dialog) ──────────────────────────────────────

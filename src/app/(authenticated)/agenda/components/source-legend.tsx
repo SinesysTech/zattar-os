@@ -1,8 +1,8 @@
 /**
- * SourceLegend — Legenda de calendarios com toggles de visibilidade
+ * SourceLegend — Legenda de calendários com toggles de visibilidade
  * ============================================================================
  * Mostra cada fonte de eventos com cor, label e contagem, permitindo
- * ativar/desativar a exibicao de cada fonte.
+ * ativar/desativar a exibição de cada fonte.
  * ============================================================================
  */
 
@@ -53,7 +53,7 @@ export function SourceLegend({
     <GlassPanel className={cn("p-4", className)}>
       <div className="flex items-center gap-2 mb-3">
         <Layers className="size-3.5 text-muted-foreground/55" />
-        <span className="text-xs font-semibold text-foreground">Calendarios</span>
+        <span className="text-xs font-semibold text-foreground">Calendários</span>
       </div>
       <div className="space-y-1.5">
         {SOURCE_ORDER.map((source) => {

@@ -36,7 +36,7 @@ export interface MiniCalendarProps {
 const WEEKDAY_LABELS = ["D", "S", "T", "Q", "Q", "S", "S"];
 
 const MONTH_NAMES = [
-  "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
@@ -111,14 +111,14 @@ export function MiniCalendar({
           <button
             onClick={onPrevMonth}
             className="size-5 flex items-center justify-center rounded hover:bg-muted/30 text-muted-foreground/55 transition-colors cursor-pointer"
-            aria-label="Mes anterior"
+            aria-label="Mês anterior"
           >
             <ChevronLeft className="size-3" />
           </button>
           <button
             onClick={onNextMonth}
             className="size-5 flex items-center justify-center rounded hover:bg-muted/30 text-muted-foreground/55 transition-colors cursor-pointer"
-            aria-label="Proximo mes"
+            aria-label="Próximo mês"
           >
             <ChevronRight className="size-3" />
           </button>

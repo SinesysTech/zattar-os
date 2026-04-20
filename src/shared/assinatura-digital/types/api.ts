@@ -27,12 +27,25 @@ export interface ClienteBase {
   email?: string | null;
 }
 
+export interface ParteContrariaEndereco {
+  cep?: string | null;
+  logradouro?: string | null;
+  numero?: string | null;
+  complemento?: string | null;
+  bairro?: string | null;
+  municipio?: string | null;
+  estado_sigla?: string | null;
+}
+
 export interface ParteContraria {
   id: number;
   nome: string;
   cpf?: string | null;
   cnpj?: string | null;
+  tipo_pessoa?: string | null;
   telefone?: string | null;
+  email?: string | null;
+  endereco?: ParteContrariaEndereco | null;
 }
 
 // =============================================================================

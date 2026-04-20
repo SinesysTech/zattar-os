@@ -1,5 +1,5 @@
 /**
- * Agenda Adapters — Conversao de UnifiedCalendarEvent para tipos de UI
+ * Agenda Adapters — Conversão de UnifiedCalendarEvent para tipos de UI
  * ============================================================================
  */
 
@@ -9,7 +9,7 @@ import { extractMeta } from "@/app/(authenticated)/calendar/briefing-helpers";
 
 /** Evento adaptado para uso em views da agenda */
 export interface AgendaEvent {
-  /** ID unico (format: "source:entityId") */
+  /** ID único (format: "source:entityId") */
   id: string;
   title: string;
   start: Date;
@@ -20,7 +20,7 @@ export interface AgendaEvent {
   url: string;
   responsavelId: number | null;
   meta: BriefingEventMeta;
-  /** Evento original para referencia */
+  /** Evento original para referência */
   raw: UnifiedCalendarEvent;
 }
 
@@ -57,7 +57,7 @@ export function filterBySource(
   return events.filter((e) => sources.has(e.source));
 }
 
-/** Filtra eventos por busca de texto no titulo */
+/** Filtra eventos por busca de texto no título */
 export function filterBySearch(events: AgendaEvent[], query: string): AgendaEvent[] {
   if (!query.trim()) return events;
   const q = query.toLowerCase();

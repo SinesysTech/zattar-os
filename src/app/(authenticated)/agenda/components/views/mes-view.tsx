@@ -28,9 +28,9 @@ export interface MesViewProps {
 
 // ─── Helpers ──────────────────────────────────────────────────────────
 
-const WEEKDAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+const WEEKDAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 const MONTH_NAMES = [
-  "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
@@ -91,9 +91,9 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
           <span className="text-sm font-semibold text-foreground">{MONTH_NAMES[month]} {year}</span>
         </div>
         <div className="flex items-center gap-1">
-          <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer" aria-label="Mes anterior"><ChevronLeft className="size-3.5" /></button>
+          <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer" aria-label="Mês anterior"><ChevronLeft className="size-3.5" /></button>
           <button onClick={onToday} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer">Hoje</button>
-          <button onClick={onNext} className="p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer" aria-label="Proximo mes"><ChevronRight className="size-3.5" /></button>
+          <button onClick={onNext} className="p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer" aria-label="Próximo mês"><ChevronRight className="size-3.5" /></button>
         </div>
       </div>
       <div className="grid grid-cols-7 gap-1 mb-1">

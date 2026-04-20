@@ -1,14 +1,14 @@
 /**
- * AgendaKpiStrip — Faixa de KPIs para o modulo Agenda
+ * AgendaKpiStrip — Faixa de KPIs para o módulo Agenda
  * ============================================================================
- * Segue EXATAMENTE o padrao PulseStrip/MissionKpiStrip dos outros modulos:
+ * Segue EXATAMENTE o padrão PulseStrip/MissionKpiStrip dos outros módulos:
  * - Grid responsivo: 2 cols mobile -> 3 cols md -> 6 cols lg
  * - GlassPanel (depth=1) para cada card
- * - Icon a direita (bg-{color}/8 rounded-lg)
+ * - Icon à direita (bg-{color}/8 rounded-lg)
  * - Label em cima, valor grande embaixo
  * - Progress bar ou sub-indicator como secondary viz
  *
- * KPIs: Eventos | Audiencias Hoje | Prazos 7d | Horas | Preparo | Conflitos
+ * KPIs: Eventos | Audiências Hoje | Prazos 7d | Horas | Preparo | Conflitos
  * ============================================================================
  */
 
@@ -50,7 +50,7 @@ function prepColor(score: number): string {
 }
 
 function prepLabel(pct: number) {
-  if (pct >= 80) return "Otimo";
+  if (pct >= 80) return "Ótimo";
   if (pct >= 50) return "Bom";
   if (pct >= 30) return "Regular";
   return "Baixo";
@@ -82,12 +82,12 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
         </div>
       </GlassPanel>
 
-      {/* ── Audiencias Hoje ────────────────────────────── */}
+      {/* ── Audiências Hoje ────────────────────────────── */}
       <GlassPanel className="px-4 py-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <p className="text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider">
-              Audiencias Hoje
+              Audiências Hoje
             </p>
             <div className="flex items-baseline gap-1.5 mt-1">
               <p className="font-display text-xl font-bold tabular-nums leading-none">

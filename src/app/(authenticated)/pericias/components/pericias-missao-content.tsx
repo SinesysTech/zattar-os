@@ -43,7 +43,11 @@ import {
 } from '../domain';
 import { usePericias } from '../hooks/use-pericias';
 import { PericiaDetalhesDialog } from './pericia-detalhes-dialog';
-import { PericiasPipelineStepper } from './pericias-pipeline-stepper';
+import type {
+  SituacaoFilterType,
+  ResponsavelFilterType,
+  LaudoFilterType,
+} from './pericias-filter-bar';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TIPOS E HELPERS
@@ -254,14 +258,28 @@ function GroupHeader({ group }: GroupHeaderProps) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 interface PericiasMissaoContentProps {
-  /** Agregação por situação (vem do pulse stats) para o stepper */
-  porSituacao: Record<string, number>;
+  busca: string;
+  situacaoFilter: SituacaoFilterType;
+  responsavelFilter: ResponsavelFilterType;
+  laudoFilter: LaudoFilterType;
+  tribunalFilter: string;
+  grauFilter: string;
+  especialidadeFilter: string;
+  peritoFilter: string;
+  refetchKey: number;
 }
 
-export function PericiasMissaoContent({ porSituacao }: PericiasMissaoContentProps) {
-  const [situacaoFilter, setSituacaoFilter] =
-    React.useState<SituacaoPericiaCodigo | null>(null);
-
+export function PericiasMissaoContent({
+  busca,
+  situacaoFilter,
+  responsavelFilter,
+  laudoFilter,
+  tribunalFilter,
+  grauFilter,
+  especialidadeFilter,
+  peritoFilter,
+  refetchKey,
+}: PericiasMissaoContentProps) {
   const [selectedPericia, setSelectedPericia] = React.useState<Pericia | null>(null);
   const [isDetailOpen, setIsDetailOpen] = React.useState(false);
 
@@ -270,11 +288,12 @@ export function PericiasMissaoContent({ porSituacao }: PericiasMissaoContentProp
     const params: Record<string, unknown> = {
       pagina: 1,
       limite: 200,
+      busca: busca || undefined,
       ordenarPor: 'prazo_entrega' as const,
       ordem: 'asc' as const,
     };
 
-    if (situacaoFilter) {
+    if (situacaoFilter !== 'todos') {
       params.situacaoCodigo = situacaoFilter;
     } else {
       params.situacoesExcluidas = [
@@ -283,10 +302,40 @@ export function PericiasMissaoContent({ porSituacao }: PericiasMissaoContentProp
       ];
     }
 
-    return params;
-  }, [situacaoFilter]);
+    if (responsavelFilter === 'sem_responsavel') {
+      params.semResponsavel = true;
+    } else if (typeof responsavelFilter === 'number') {
+      params.responsavelId = responsavelFilter;
+    }
 
-  const { pericias, isLoading } = usePericias(hookParams);
+    if (laudoFilter === 'sim') params.laudoJuntado = true;
+    if (laudoFilter === 'nao') params.laudoJuntado = false;
+
+    if (tribunalFilter) params.trt = tribunalFilter;
+    if (grauFilter) params.grau = grauFilter;
+    if (especialidadeFilter)
+      params.especialidadeId = parseInt(especialidadeFilter, 10);
+    if (peritoFilter) params.peritoId = parseInt(peritoFilter, 10);
+
+    return params;
+  }, [
+    busca,
+    situacaoFilter,
+    responsavelFilter,
+    laudoFilter,
+    tribunalFilter,
+    grauFilter,
+    especialidadeFilter,
+    peritoFilter,
+  ]);
+
+  const { pericias, isLoading, refetch } = usePericias(hookParams);
+
+  React.useEffect(() => {
+    if (refetchKey > 0) {
+      refetch();
+    }
+  }, [refetchKey, refetch]);
 
   const groups: UrgencyGroup[] = React.useMemo(() => {
     const base: Record<Urgency, Pericia[]> = {
@@ -360,22 +409,8 @@ export function PericiasMissaoContent({ porSituacao }: PericiasMissaoContentProp
     setIsDetailOpen(true);
   }, []);
 
-  const handleSituacaoClick = React.useCallback(
-    (situacao: SituacaoPericiaCodigo) => {
-      setSituacaoFilter((prev) => (prev === situacao ? null : situacao));
-    },
-    [],
-  );
-
   return (
     <div className="space-y-5">
-      {/* Pipeline stepper — clicável para filtrar por situação */}
-      <PericiasPipelineStepper
-        porSituacao={porSituacao}
-        activeSituacao={situacaoFilter}
-        onSituacaoClick={handleSituacaoClick}
-      />
-
       {/* Grupos de urgência */}
       {isLoading ? (
         <div className="space-y-4">
@@ -395,8 +430,8 @@ export function PericiasMissaoContent({ porSituacao }: PericiasMissaoContentProp
           <Sparkles className="size-10 text-primary/30 mb-3" />
           <Heading level="card">Nenhuma perícia ativa</Heading>
           <p className="text-sm text-muted-foreground/60 mt-1">
-            {situacaoFilter
-              ? `Sem perícias na situação "${SITUACAO_PERICIA_LABELS[situacaoFilter]}"`
+            {situacaoFilter !== 'todos'
+              ? `Sem perícias na situação "${SITUACAO_PERICIA_LABELS[situacaoFilter as SituacaoPericiaCodigo]}"`
               : 'Todas as perícias estão finalizadas ou canceladas.'}
           </p>
         </GlassPanel>

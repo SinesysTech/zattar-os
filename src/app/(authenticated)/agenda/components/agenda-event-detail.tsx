@@ -2,12 +2,12 @@
  * AgendaEventDetail — Dialog de detalhes de evento
  * ============================================================================
  * Light glass dialog com:
- * - Header: icone + titulo + status badge + close
- * - Meta strip: horario, modalidade, tribunal, responsavel
+ * - Header: ícone + título + status badge + close
+ * - Meta strip: horário, modalidade, tribunal, responsável
  * - Action buttons: Sala Virtual, Visualizar Ata, Abrir PJe
- * - Processo vinculado: numero, partes, link
+ * - Processo vinculado: número, partes, link
  * - Checklist de preparo
- * - Observacoes
+ * - Observações
  *
  * Usa DialogFormShell para overlay e glass dialog styling.
  * ============================================================================
@@ -52,9 +52,9 @@ function fmtTime(d: Date) {
   return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 }
 
-const DAY_NAMES = ["Domingo", "Segunda-feira", "Terca-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sabado"];
+const DAY_NAMES = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
 const MONTH_NAMES = [
-  "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
@@ -100,7 +100,7 @@ export function AgendaEventDetail({
       <div className="absolute inset-0 flex items-center justify-center p-6">
         <div
           className={cn(
-            "w-full max-w-[780px] max-h-[92vh] flex flex-col overflow-hidden",
+            "w-full max-w-195 max-h-[92vh] flex flex-col overflow-hidden",
             "glass-dialog rounded-2xl",
           )}
           role="dialog"
@@ -108,12 +108,12 @@ export function AgendaEventDetail({
           aria-labelledby="event-detail-title"
         >
           {/* ── Header ── */}
-          <div className="px-7 pt-6 pb-0 flex-shrink-0">
+          <div className="px-7 pt-6 pb-0 shrink-0">
             {/* Top row */}
             <div className="flex items-start justify-between gap-4 mb-4">
               <div className="flex items-start gap-3.5 flex-1 min-w-0">
                 <div className={cn(
-                  "size-11 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5",
+                  "size-11 rounded-xl flex items-center justify-center shrink-0 mt-0.5",
                   colors.bg,
                 )}>
                   <Gavel className={cn("size-5", colors.text)} />
@@ -152,10 +152,10 @@ export function AgendaEventDetail({
             </div>
 
             {/* Meta strip */}
-            <div className="flex gap-0 mb-4 rounded-xl border border-border/15 bg-muted/[0.04] p-3.5">
-              {/* Horario */}
+            <div className="flex gap-0 mb-4 rounded-xl border border-border/15 bg-muted/4 p-3.5">
+              {/* Horário */}
               <div className="flex-1">
-                <span className="text-[11px] font-medium text-muted-foreground/40 uppercase tracking-wider">Horario</span>
+                <span className="text-[11px] font-medium text-muted-foreground/40 uppercase tracking-wider">Horário</span>
                 <div className="flex items-center gap-1.5 mt-1 text-[13.5px] font-medium text-foreground">
                   <Clock className="size-3.5 text-muted-foreground/40" />
                   {fmtTime(event.start)} – {fmtTime(event.end)}
@@ -169,7 +169,7 @@ export function AgendaEventDetail({
                   {event.modalidade ? (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11.5px] font-medium bg-primary/10 text-primary">
                       {event.modalidade === "virtual" ? <Video className="size-3" /> : <MapPin className="size-3" />}
-                      {event.modalidade === "virtual" ? "Virtual" : event.modalidade === "presencial" ? "Presencial" : "Hibrida"}
+                      {event.modalidade === "virtual" ? "Virtual" : event.modalidade === "presencial" ? "Presencial" : "Híbrida"}
                     </span>
                   ) : (
                     <span className="text-[13px] text-muted-foreground/30">—</span>
@@ -186,13 +186,13 @@ export function AgendaEventDetail({
                 </div>
               </div>
               <div className="w-px bg-border/15 mx-4" />
-              {/* Responsavel */}
+              {/* Responsável */}
               <div className="flex-1">
-                <span className="text-[11px] font-medium text-muted-foreground/40 uppercase tracking-wider">Responsavel</span>
+                <span className="text-[11px] font-medium text-muted-foreground/40 uppercase tracking-wider">Responsável</span>
                 <div className="flex items-center gap-1.5 mt-1 text-[13.5px] font-medium text-foreground">
                   {event.responsavel ? (
                     <>
-                      <div className="size-5 rounded-full bg-primary/10 flex items-center justify-center text-[9px] font-bold text-primary flex-shrink-0">
+                      <div className="size-5 rounded-full bg-primary/10 flex items-center justify-center text-[9px] font-bold text-primary shrink-0">
                         {event.responsavel.iniciais}
                       </div>
                       {event.responsavel.nome}
@@ -231,7 +231,7 @@ export function AgendaEventDetail({
                   <FileText className="size-3.5 text-muted-foreground/40" />
                   <span className="text-xs font-semibold text-muted-foreground/40 uppercase tracking-wider">Processo Vinculado</span>
                 </div>
-                <div className="rounded-xl border border-border/15 bg-muted/[0.04] p-4">
+                <div className="rounded-xl border border-border/15 bg-muted/4 p-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-[12px] font-mono font-semibold text-foreground">{event.processo}</div>
@@ -283,11 +283,11 @@ export function AgendaEventDetail({
                     {prepPct}%
                   </span>
                 </div>
-                <div className="rounded-xl border border-border/15 bg-muted/[0.04] divide-y divide-border/10">
+                <div className="rounded-xl border border-border/15 bg-muted/4 divide-y divide-border/10">
                   {checklist.map((item, i) => (
                     <div key={i} className="flex items-center gap-3 px-4 py-2.5">
                       <div className={cn(
-                        "size-5 rounded border-2 flex items-center justify-center flex-shrink-0",
+                        "size-5 rounded border-2 flex items-center justify-center shrink-0",
                         item.done
                           ? "border-success bg-success/10"
                           : "border-border/30 bg-transparent",
@@ -306,14 +306,14 @@ export function AgendaEventDetail({
               </div>
             )}
 
-            {/* Observacoes */}
+            {/* Observações */}
             {event.descricao && (
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <MessageSquare className="size-3.5 text-muted-foreground/40" />
-                  <span className="text-xs font-semibold text-muted-foreground/40 uppercase tracking-wider">Observacoes</span>
+                  <span className="text-xs font-semibold text-muted-foreground/40 uppercase tracking-wider">Observações</span>
                 </div>
-                <div className="rounded-xl border border-border/15 bg-muted/[0.04] p-4">
+                <div className="rounded-xl border border-border/15 bg-muted/4 p-4">
                   <p className="text-[13px] text-muted-foreground/60 leading-relaxed">
                     {event.descricao}
                   </p>
@@ -323,7 +323,7 @@ export function AgendaEventDetail({
           </div>
 
           {/* ── Footer ── */}
-          <div className="flex items-center justify-between px-7 py-4 border-t border-border/15 flex-shrink-0">
+          <div className="flex items-center justify-between px-7 py-4 border-t border-border/15 shrink-0">
             <button
               onClick={onClose}
               className="inline-flex items-center gap-2 px-4 py-2 border border-border/30 text-foreground/70 rounded-xl text-[13px] font-medium hover:bg-muted/10 transition-colors cursor-pointer"

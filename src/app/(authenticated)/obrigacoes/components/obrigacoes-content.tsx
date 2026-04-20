@@ -3,38 +3,47 @@
 /**
  * ObrigacoesContent - Orquestrador da página de obrigações
  *
- * Thin router que delega para wrappers auto-contidos:
- * - lista  → ObrigacoesTableWrapper
- * - semana → ObrigacoesTableWrapper (com WeekNavigator)
- * - mês    → ObrigacoesMonthWrapper
- * - ano    → ObrigacoesYearWrapper
- *
- * Gerencia:
- * - Routing por URL (sync visualização ↔ pathname)
- * - ViewModePopover (seletor de view compartilhado)
- * - Pulse Strip (KPIs) e Alertas no topo
+ * Padrão alinhado com Expedientes/Audiências/Partes:
+ * - Header com título + subtítulo + botão "Nova" à direita
+ * - Pulse Strip (KPIs)
+ * - Insight Banners (Alertas)
+ * - Controls Row: FilterBar + SearchInput + ViewToggle (à direita)
+ * - Main content: switch por viewMode
  */
 
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-
 import {
-  ViewModePopover,
-  useWeekNavigator,
-  type ViewType,
-} from '@/components/shared';
+  CalendarDays,
+  CalendarRange,
+  Calendar,
+  List,
+  Plus,
+} from 'lucide-react';
+
+import { useWeekNavigator, type ViewType } from '@/components/shared';
+import { SearchInput } from '@/components/dashboard/search-input';
+import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
+import { Button } from '@/components/ui/button';
+import { Heading } from '@/components/ui/typography';
 
 import { useResumoObrigacoes } from '../hooks/use-resumo-obrigacoes';
-import { ObrigacoesPulseStrip } from './shared/obrigacoes-pulse-strip';
-import { AlertasObrigacoes } from './shared/alertas-obrigacoes';
-import { ObrigacoesTableWrapper } from './table/obrigacoes-table-wrapper';
-import { ObrigacoesMonthWrapper } from './calendar/obrigacoes-month-wrapper';
-import { ObrigacoesYearWrapper } from './calendar/obrigacoes-year-wrapper';
 import type { AlertasObrigacoesType } from '../domain';
 import type { ResumoObrigacoesDB } from '../repository';
 
+import { ObrigacoesPulseStrip } from './shared/obrigacoes-pulse-strip';
+import { AlertasObrigacoes } from './shared/alertas-obrigacoes';
+import {
+  ObrigacoesFilterBar,
+  type ObrigacoesFilterBarFilters,
+} from './shared/obrigacoes-filter-bar';
+import { ObrigacoesTableWrapper } from './table/obrigacoes-table-wrapper';
+import { ObrigacoesMonthWrapper } from './calendar/obrigacoes-month-wrapper';
+import { ObrigacoesYearWrapper } from './calendar/obrigacoes-year-wrapper';
+import { NovaObrigacaoDialog } from './dialogs/nova-obrigacao-dialog';
+
 // =============================================================================
-// MAPEAMENTO URL -> VIEW
+// ROTAS E VIEW OPTIONS
 // =============================================================================
 
 const VIEW_ROUTES: Record<ViewType, string> = {
@@ -53,11 +62,25 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
   '/obrigacoes/lista': 'lista',
 };
 
+const VIEW_OPTIONS: ViewToggleOption[] = [
+  { id: 'semana', label: 'Semana', icon: CalendarDays },
+  { id: 'mes', label: 'Mês', icon: CalendarRange },
+  { id: 'ano', label: 'Ano', icon: Calendar },
+  { id: 'lista', label: 'Lista', icon: List },
+];
+
+// =============================================================================
+// TYPES
+// =============================================================================
+
 interface ObrigacoesContentProps {
   visualizacao?: ViewType;
-  /** Resumo pré-buscado no server (elimina flash de skeleton no primeiro render). */
   initialResumo?: ResumoObrigacoesDB | null;
 }
+
+// =============================================================================
+// COMPONENT
+// =============================================================================
 
 export function ObrigacoesContent({
   visualizacao: initialView = 'semana',
@@ -67,64 +90,136 @@ export function ObrigacoesContent({
   const pathname = usePathname();
 
   const viewFromUrl = ROUTE_TO_VIEW[pathname] ?? initialView;
-
-  const [visualizacao, setVisualizacao] = React.useState<ViewType>(viewFromUrl);
+  const [viewMode, setViewMode] = React.useState<ViewType>(viewFromUrl);
 
   React.useEffect(() => {
     const newView = ROUTE_TO_VIEW[pathname];
-    if (newView && newView !== visualizacao) {
-      setVisualizacao(newView);
-    }
-  }, [pathname, visualizacao]);
+    if (newView && newView !== viewMode) setViewMode(newView);
+  }, [pathname, viewMode]);
+
+  // Controls state (compartilhado entre views)
+  const [busca, setBusca] = React.useState('');
+  const [filters, setFilters] = React.useState<ObrigacoesFilterBarFilters>({
+    status: 'todos',
+    tipo: null,
+    direcao: null,
+  });
+  const [isCreateOpen, setIsCreateOpen] = React.useState(false);
+  const [refreshCounter, setRefreshCounter] = React.useState(0);
 
   const weekNav = useWeekNavigator();
 
-  const handleVisualizacaoChange = React.useCallback(
-    (value: string) => {
-      const viewValue = value as ViewType;
-      const targetRoute = VIEW_ROUTES[viewValue];
-      if (targetRoute && targetRoute !== pathname) {
-        router.push(targetRoute);
-      }
-      setVisualizacao(viewValue);
+  const handleViewChange = React.useCallback(
+    (view: string) => {
+      const targetRoute = VIEW_ROUTES[view as ViewType];
+      if (targetRoute && targetRoute !== pathname) router.push(targetRoute);
     },
     [pathname, router],
   );
 
-  // Resumo (KPIs + Alertas) — initialResumo vem do server pra pular fetch inicial
-  const { data: resumo, isLoading: isResumoLoading } = useResumoObrigacoes({
-    initialData: initialResumo,
-  });
+  // Resumo (KPIs + Alertas)
+  const { data: resumo, isLoading: isResumoLoading, refetch: refetchResumo } =
+    useResumoObrigacoes({ initialData: initialResumo });
 
-  // Adapta resumo -> AlertasObrigacoesType (shape esperado pelo componente)
+  // Alertas adapter
   const alertas: AlertasObrigacoesType | null = React.useMemo(() => {
     if (!resumo) return null;
     return {
       vencidas: { ...resumo.vencidas, items: [] },
       vencendoHoje: { ...resumo.vencendoHoje, items: [] },
       vencendoEm7Dias: { ...resumo.vencendoEm7Dias, items: [] },
-      inconsistentes: { quantidade: resumo.inconsistentes.quantidade, items: [] },
+      inconsistentes: {
+        quantidade: resumo.inconsistentes.quantidade,
+        items: [],
+      },
     };
   }, [resumo]);
 
-  const viewModePopover = (
-    <ViewModePopover
-      value={visualizacao}
-      onValueChange={handleVisualizacaoChange}
-    />
-  );
+  // Subtítulo dinâmico
+  const subtitle = React.useMemo(() => {
+    if (isResumoLoading) return 'Carregando...';
+    if (!resumo) return 'Acordos, condenações, parcelas e repasses';
+    const p = resumo.pendentesTotal.quantidade;
+    const v = resumo.vencidas.quantidade;
+    return `${p} pendente${p !== 1 ? 's' : ''} · ${v} vencida${v !== 1 ? 's' : ''}`;
+  }, [isResumoLoading, resumo]);
 
-  const renderContent = () => {
-    switch (visualizacao) {
-      case 'lista':
-        return <ObrigacoesTableWrapper viewModeSlot={viewModePopover} />;
+  // Success handler
+  const handleCreateSuccess = React.useCallback(() => {
+    setIsCreateOpen(false);
+    refetchResumo();
+    setRefreshCounter((c) => c + 1);
+  }, [refetchResumo]);
 
-      case 'semana':
-        return (
+  // =========================================================================
+  // RENDER
+  // =========================================================================
+
+  return (
+    <div className="space-y-5">
+      {/* 1. Header */}
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <Heading level="page">Obrigações</Heading>
+          <p
+            className="text-sm text-muted-foreground mt-0.5"
+            aria-live="polite"
+          >
+            {subtitle}
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            className="rounded-xl"
+            onClick={() => setIsCreateOpen(true)}
+          >
+            <Plus className="size-3.5" />
+            Nova obrigação
+          </Button>
+        </div>
+      </div>
+
+      {/* 2. KPI Strip */}
+      <ObrigacoesPulseStrip resumo={resumo} isLoading={isResumoLoading} />
+
+      {/* 3. Alertas */}
+      <AlertasObrigacoes alertas={alertas} isLoading={isResumoLoading} />
+
+      {/* 4. Controls Row: filters (esquerda) + search + view toggle (direita) */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div className="flex items-center gap-2 flex-1 flex-wrap justify-end">
+          <ObrigacoesFilterBar filters={filters} onChange={setFilters} />
+          <SearchInput
+            value={busca}
+            onChange={setBusca}
+            placeholder="Buscar obrigação, processo..."
+          />
+          <ViewToggle
+            mode={viewMode}
+            onChange={handleViewChange}
+            options={VIEW_OPTIONS}
+          />
+        </div>
+      </div>
+
+      {/* 5. Content Switcher */}
+      <main className="min-h-0 transition-opacity duration-300">
+        {viewMode === 'lista' && (
           <ObrigacoesTableWrapper
+            busca={busca}
+            filters={filters}
+            refreshCounter={refreshCounter}
+          />
+        )}
+
+        {viewMode === 'semana' && (
+          <ObrigacoesTableWrapper
+            busca={busca}
+            filters={filters}
+            refreshCounter={refreshCounter}
             fixedDate={weekNav.selectedDate}
-            hideDateFilters={true}
-            viewModeSlot={viewModePopover}
             weekNavigatorProps={{
               weekDays: weekNav.weekDays,
               selectedDate: weekNav.selectedDate,
@@ -135,25 +230,23 @@ export function ObrigacoesContent({
               isCurrentWeek: weekNav.isCurrentWeek,
             }}
           />
-        );
+        )}
 
-      case 'mes':
-        return <ObrigacoesMonthWrapper viewModeSlot={viewModePopover} />;
+        {viewMode === 'mes' && (
+          <ObrigacoesMonthWrapper busca={busca} filters={filters} />
+        )}
 
-      case 'ano':
-        return <ObrigacoesYearWrapper viewModeSlot={viewModePopover} />;
+        {viewMode === 'ano' && (
+          <ObrigacoesYearWrapper busca={busca} filters={filters} />
+        )}
+      </main>
 
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="flex flex-col h-full gap-4">
-      <ObrigacoesPulseStrip resumo={resumo} isLoading={isResumoLoading} />
-      <AlertasObrigacoes alertas={alertas} isLoading={isResumoLoading} />
-
-      <div className="flex-1 min-h-0">{renderContent()}</div>
+      {/* 6. Dialogs */}
+      <NovaObrigacaoDialog
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        onSuccess={handleCreateSuccess}
+      />
     </div>
   );
 }

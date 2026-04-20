@@ -1,16 +1,16 @@
 'use client';
 
 /**
- * ObrigacoesYearWrapper
+ * ObrigacoesYearWrapper — Glass Briefing
  *
- * View anual: grid 12 meses. Clique num dia abre dialog (glass) com parcelas.
- * Alinhado ao Glass Briefing: SearchInput + ObrigacoesFilterBar + GlassPanel.
+ * View anual: grid 12 meses. Clique num dia abre glass-dialog com parcelas.
+ * Simplificado: toolbar vive em ObrigacoesContent; este wrapper consome
+ * `busca` e `filters` via props.
  */
 
 import * as React from 'react';
 import { startOfYear, endOfYear, format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Plus } from 'lucide-react';
 
 import { GlassPanel } from '@/components/shared/glass-panel';
 import {
@@ -19,8 +19,6 @@ import {
   TemporalViewError,
   YearCalendarGrid,
 } from '@/components/shared';
-import { SearchInput } from '@/components/dashboard/search-input';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -35,14 +33,11 @@ import { cn } from '@/lib/utils';
 import type { AcordoComParcelas, Parcela } from '../../domain';
 import { actionListarObrigacoesPorPeriodo } from '../../actions';
 
-import {
-  ObrigacoesFilterBar,
-  type ObrigacoesFilterBarFilters,
-} from '../shared/obrigacoes-filter-bar';
-import { NovaObrigacaoDialog } from '../dialogs/nova-obrigacao-dialog';
+import type { ObrigacoesFilterBarFilters } from '../shared/obrigacoes-filter-bar';
 
 interface ObrigacoesYearWrapperProps {
-  viewModeSlot?: React.ReactNode;
+  busca?: string;
+  filters?: ObrigacoesFilterBarFilters;
 }
 
 const CURRENCY = new Intl.NumberFormat('pt-BR', {
@@ -50,28 +45,26 @@ const CURRENCY = new Intl.NumberFormat('pt-BR', {
   currency: 'BRL',
 });
 
-export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperProps) {
-  // Year navigation
-  const [selectedYear, setSelectedYear] = React.useState(new Date().getFullYear());
-  const selectedDate = React.useMemo(() => new Date(selectedYear, 0, 1), [selectedYear]);
+export function ObrigacoesYearWrapper({
+  busca = '',
+  filters,
+}: ObrigacoesYearWrapperProps) {
+  const [selectedYear, setSelectedYear] = React.useState(
+    new Date().getFullYear(),
+  );
+  const selectedDate = React.useMemo(
+    () => new Date(selectedYear, 0, 1),
+    [selectedYear],
+  );
 
-  // Filter state
-  const [busca, setBusca] = React.useState('');
-  const [filters, setFilters] = React.useState<ObrigacoesFilterBarFilters>({
-    status: 'todos',
-    tipo: null,
-    direcao: null,
-  });
-
-  // Dialog state
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false);
   const [dayDialogOpen, setDayDialogOpen] = React.useState(false);
   const [selectedDayParcelas, setSelectedDayParcelas] = React.useState<
     { parcela: Parcela; acordo: AcordoComParcelas }[]
   >([]);
-  const [selectedDayDate, setSelectedDayDate] = React.useState<Date | null>(null);
+  const [selectedDayDate, setSelectedDayDate] = React.useState<Date | null>(
+    null,
+  );
 
-  // Data state
   const [obrigacoes, setObrigacoes] = React.useState<AcordoComParcelas[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -86,12 +79,14 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
         dataInicio: format(startOfYear(selectedDate), 'yyyy-MM-dd'),
         dataFim: format(endOfYear(selectedDate), 'yyyy-MM-dd'),
         incluirSemData: false,
-        status: filters.status !== 'todos' ? filters.status : undefined,
-        tipo: filters.tipo ?? undefined,
-        direcao: filters.direcao ?? undefined,
+        status:
+          filters && filters.status !== 'todos' ? filters.status : undefined,
+        tipo: filters?.tipo ?? undefined,
+        direcao: filters?.direcao ?? undefined,
         busca: buscaDebounced || undefined,
       });
-      if (!result.success) throw new Error(result.error || 'Erro ao listar obrigações');
+      if (!result.success)
+        throw new Error(result.error || 'Erro ao listar obrigações');
       setObrigacoes(result.data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
@@ -104,9 +99,11 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
     fetchData();
   }, [fetchData]);
 
-  // Map parcelas by day (month-day key)
   const parcelasPorDia = React.useMemo(() => {
-    const mapa = new Map<string, { parcela: Parcela; acordo: AcordoComParcelas }[]>();
+    const mapa = new Map<
+      string,
+      { parcela: Parcela; acordo: AcordoComParcelas }[]
+    >();
     obrigacoes.forEach((acordo) => {
       acordo.parcelas?.forEach((parcela) => {
         if (!parcela.dataVencimento) return;
@@ -140,33 +137,14 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
   );
 
   return (
-    <div className="flex flex-col gap-4 h-full min-h-0">
-      {/* Toolbar */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <SearchInput
-          value={busca}
-          onChange={setBusca}
-          placeholder="Buscar obrigações..."
-        />
+    <div className="flex flex-col gap-3 h-full min-h-0">
+      <div className="flex items-center gap-2">
         <YearFilterPopover
           selectedYear={selectedYear}
           onYearChange={setSelectedYear}
         />
-        <ObrigacoesFilterBar filters={filters} onChange={setFilters} />
-        <div className="ml-auto flex items-center gap-2">
-          {viewModeSlot}
-          <Button
-            size="sm"
-            className="h-8 text-xs font-medium cursor-pointer"
-            onClick={() => setIsCreateDialogOpen(true)}
-          >
-            <Plus className="size-3.5 mr-1" />
-            Nova obrigação
-          </Button>
-        </div>
       </div>
 
-      {/* Year Grid */}
       <div className="flex-1 min-h-0">
         {isLoading ? (
           <TemporalViewLoading message="Carregando obrigações..." />
@@ -187,7 +165,6 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
         )}
       </div>
 
-      {/* Dialog: parcelas do dia */}
       <Dialog open={dayDialogOpen} onOpenChange={setDayDialogOpen}>
         <DialogContent className="glass-dialog max-w-lg">
           <DialogHeader>
@@ -212,7 +189,8 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium truncate">
                         Parcela {item.parcela.numeroParcela} ·{' '}
-                        {item.acordo.processo?.numero_processo || `Acordo #${item.acordo.id}`}
+                        {item.acordo.processo?.numero_processo ||
+                          `Acordo #${item.acordo.id}`}
                       </p>
                       <div className="flex items-center gap-2 mt-1">
                         <SemanticBadge
@@ -237,12 +215,6 @@ export function ObrigacoesYearWrapper({ viewModeSlot }: ObrigacoesYearWrapperPro
           </ScrollArea>
         </DialogContent>
       </Dialog>
-
-      <NovaObrigacaoDialog
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-        onSuccess={fetchData}
-      />
     </div>
   );
 }

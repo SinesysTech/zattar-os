@@ -1,11 +1,10 @@
 'use client';
 
 /**
- * ObrigacoesCalendarCompact - Calendário compacto com navegação de mês integrada
+ * ObrigacoesCalendarCompact - Calendário compacto (Glass Briefing)
  *
- * Componente para exibição em layout master-detail.
  * Mostra um calendário mensal compacto à esquerda com indicadores
- * de dias que possuem obrigações (parcelas).
+ * de dias que possuem parcelas. Usado no layout master-detail da view mensal.
  */
 
 import * as React from 'react';
@@ -24,32 +23,26 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { getCalendarCells } from '@/components/calendar/helpers';
+
 import type { AcordoComParcelas } from '../../domain';
 
 // =============================================================================
-// TIPOS
+// TYPES
 // =============================================================================
 
 interface ObrigacoesCalendarCompactProps {
-  /** Data selecionada (dia) */
   selectedDate: Date;
-  /** Callback quando um dia é selecionado */
   onDateSelect: (date: Date) => void;
-  /** Obrigações (acordos com parcelas) para contar/destacar dias */
   obrigacoes: AcordoComParcelas[];
-  /** Mês sendo exibido */
   currentMonth: Date;
-  /** Callback quando mês muda */
   onMonthChange: (date: Date) => void;
-  /** Classes CSS adicionais */
   className?: string;
 }
 
-// Dias da semana em português (abreviados)
 const WEEK_DAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
 // =============================================================================
-// COMPONENTE PRINCIPAL
+// COMPONENT
 // =============================================================================
 
 export function ObrigacoesCalendarCompact({
@@ -60,39 +53,43 @@ export function ObrigacoesCalendarCompact({
   onMonthChange,
   className,
 }: ObrigacoesCalendarCompactProps) {
-  // Gerar células do calendário
   const cells = React.useMemo(() => getCalendarCells(currentMonth), [currentMonth]);
 
-  // Mapa de parcelas por dia com informações de status
   const parcelasByDay = React.useMemo(() => {
-    const map = new Map<string, { total: number; hasVencido: boolean; hasPago: boolean; hasPendente: boolean }>();
+    const map = new Map<
+      string,
+      { total: number; hasVencido: boolean; hasPago: boolean; hasPendente: boolean }
+    >();
     obrigacoes.forEach((acordo) => {
       acordo.parcelas?.forEach((parcela) => {
         if (!parcela.dataVencimento) return;
         const dateKey = format(parseISO(parcela.dataVencimento), 'yyyy-MM-dd');
-        const existing = map.get(dateKey) || { total: 0, hasVencido: false, hasPago: false, hasPendente: false };
+        const existing = map.get(dateKey) || {
+          total: 0,
+          hasVencido: false,
+          hasPago: false,
+          hasPendente: false,
+        };
         existing.total++;
-        if (parcela.status === 'atrasada') {
-          existing.hasVencido = true;
-        } else if (parcela.status === 'paga' || parcela.status === 'recebida') {
+        if (parcela.status === 'atrasada') existing.hasVencido = true;
+        else if (parcela.status === 'paga' || parcela.status === 'recebida')
           existing.hasPago = true;
-        } else {
-          existing.hasPendente = true;
-        }
+        else existing.hasPendente = true;
         map.set(dateKey, existing);
       });
     });
     return map;
   }, [obrigacoes]);
 
-  // Handlers de navegação
-  const handlePreviousMonth = React.useCallback(() => {
-    onMonthChange(subMonths(currentMonth, 1));
-  }, [currentMonth, onMonthChange]);
+  const handlePreviousMonth = React.useCallback(
+    () => onMonthChange(subMonths(currentMonth, 1)),
+    [currentMonth, onMonthChange],
+  );
 
-  const handleNextMonth = React.useCallback(() => {
-    onMonthChange(addMonths(currentMonth, 1));
-  }, [currentMonth, onMonthChange]);
+  const handleNextMonth = React.useCallback(
+    () => onMonthChange(addMonths(currentMonth, 1)),
+    [currentMonth, onMonthChange],
+  );
 
   const handleGoToToday = React.useCallback(() => {
     const today = new Date();
@@ -100,14 +97,12 @@ export function ObrigacoesCalendarCompact({
     onDateSelect(today);
   }, [onMonthChange, onDateSelect]);
 
-  // Texto do mês/ano (ex: "Fevereiro 2026")
   const monthYearText = React.useMemo(() => {
     const monthName = format(currentMonth, 'MMMM', { locale: ptBR });
     const year = format(currentMonth, 'yyyy');
     return `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} ${year}`;
   }, [currentMonth]);
 
-  // Verificar se o mês atual contém hoje
   const isCurrentMonth = React.useMemo(() => {
     const today = new Date();
     return (
@@ -121,13 +116,12 @@ export function ObrigacoesCalendarCompact({
       {/* Header: Navegação de mês */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
-          {/* Botão mês anterior */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 type="button"
-                className="flex items-center justify-center h-8 w-8 shrink-0 rounded-md bg-card border hover:bg-accent transition-colors p-0"
                 variant="ghost"
+                className="h-8 w-8 p-0 rounded-lg hover:bg-white/5"
                 onClick={handlePreviousMonth}
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -137,18 +131,16 @@ export function ObrigacoesCalendarCompact({
             <TooltipContent>Mês anterior</TooltipContent>
           </Tooltip>
 
-          {/* Mês/Ano */}
-          <span className="text-sm font-medium text-foreground select-none min-w-32 text-center">
+          <span className="text-xs font-medium text-foreground/85 select-none min-w-32 text-center tabular-nums">
             {monthYearText}
           </span>
 
-          {/* Botão próximo mês */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 type="button"
-                className="flex items-center justify-center h-8 w-8 shrink-0 rounded-md bg-card border hover:bg-accent transition-colors p-0"
                 variant="ghost"
+                className="h-8 w-8 p-0 rounded-lg hover:bg-white/5"
                 onClick={handleNextMonth}
               >
                 <ChevronRight className="h-4 w-4" />
@@ -159,12 +151,11 @@ export function ObrigacoesCalendarCompact({
           </Tooltip>
         </div>
 
-        {/* Botão Hoje */}
         {!isCurrentMonth && (
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
-            className="h-7 px-2 text-xs bg-card border shadow-sm hover:bg-accent hover:text-accent-foreground"
+            className="h-7 px-2.5 text-[11px] rounded-lg bg-white/4 hover:bg-white/8"
             onClick={handleGoToToday}
           >
             Hoje
@@ -173,22 +164,19 @@ export function ObrigacoesCalendarCompact({
       </div>
 
       {/* Grid do calendário */}
-      <div className="border rounded-md overflow-hidden">
-        {/* Header: Dias da semana */}
-        <div className="grid grid-cols-7 bg-muted/50 border-b">
+      <div className="rounded-xl border border-border/10 overflow-hidden bg-white/2">
+        {/* Header: dias da semana */}
+        <div className="grid grid-cols-7 bg-white/3 border-b border-border/10">
           {WEEK_DAYS.map((day) => (
-            <div
-              key={day}
-              className="flex items-center justify-center py-2"
-            >
-              <span className="text-xs font-medium text-muted-foreground">
+            <div key={day} className="flex items-center justify-center py-2">
+              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50">
                 {day}
               </span>
             </div>
           ))}
         </div>
 
-        {/* Corpo: Dias do mês */}
+        {/* Corpo: dias do mês */}
         <div className="grid grid-cols-7">
           {cells.map((cell, index) => {
             const dateKey = format(cell.date, 'yyyy-MM-dd');
@@ -197,17 +185,11 @@ export function ObrigacoesCalendarCompact({
             const isSelected = isSameDay(cell.date, selectedDate);
             const isTodayDate = isToday(cell.date);
 
-            // Determinar cor do indicador baseado na prioridade:
-            // Vencido (atrasada) > Pendente > Pago (recebida/paga)
             let indicatorColor = 'bg-primary';
             if (hasParcelas && dayInfo) {
-              if (dayInfo.hasVencido) {
-                indicatorColor = 'bg-destructive';
-              } else if (dayInfo.hasPendente) {
-                indicatorColor = 'bg-primary';
-              } else if (dayInfo.hasPago) {
-                indicatorColor = 'bg-success';
-              }
+              if (dayInfo.hasVencido) indicatorColor = 'bg-destructive';
+              else if (dayInfo.hasPendente) indicatorColor = 'bg-primary';
+              else if (dayInfo.hasPago) indicatorColor = 'bg-success';
             }
 
             return (
@@ -216,42 +198,40 @@ export function ObrigacoesCalendarCompact({
                 type="button"
                 onClick={() => onDateSelect(cell.date)}
                 className={cn(
-                  'relative flex flex-col items-center justify-center py-2 transition-colors',
-                  'hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
-                  // Bordas
-                  index % 7 !== 6 && 'border-r',
-                  index < cells.length - 7 && 'border-b',
-                  // Estados
-                  !cell.currentMonth && 'text-muted-foreground/50 bg-muted/20',
-                  cell.currentMonth && !isSelected && !isTodayDate && 'text-foreground',
+                  'relative flex flex-col items-center justify-center py-2 transition-colors cursor-pointer outline-none',
+                  'hover:bg-white/5 focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-inset',
+                  index % 7 !== 6 && 'border-r border-border/8',
+                  index < cells.length - 7 && 'border-b border-border/8',
+                  !cell.currentMonth && 'text-muted-foreground/30 bg-white/1.5',
+                  cell.currentMonth && !isSelected && !isTodayDate && 'text-foreground/80',
                   isTodayDate && !isSelected && 'font-semibold text-primary',
-                  isSelected && 'bg-primary text-primary-foreground font-semibold'
+                  isSelected && 'bg-primary/12 text-primary font-semibold',
                 )}
               >
-                {/* Número do dia */}
                 <span
                   className={cn(
-                    'text-sm leading-none',
-                    isTodayDate && !isSelected && 'h-6 w-6 flex items-center justify-center rounded-full ring-1 ring-primary'
+                    'text-xs leading-none tabular-nums',
+                    isTodayDate &&
+                      !isSelected &&
+                      'h-6 w-6 flex items-center justify-center rounded-full ring-1 ring-primary/40',
                   )}
                 >
                   {cell.day}
                 </span>
 
-                {/* Indicador de parcelas */}
                 {hasParcelas && dayInfo && (
                   <div className="flex items-center gap-0.5 mt-1">
                     <span
                       className={cn(
                         'w-1.5 h-1.5 rounded-full',
-                        isSelected ? 'bg-primary-foreground' : indicatorColor
+                        isSelected ? 'bg-primary' : indicatorColor,
                       )}
                     />
                     {dayInfo.total > 1 && (
                       <span
                         className={cn(
-                          'text-[10px] leading-none',
-                          isSelected ? 'text-primary-foreground' : 'text-muted-foreground'
+                          'text-[9px] leading-none tabular-nums',
+                          isSelected ? 'text-primary' : 'text-muted-foreground/55',
                         )}
                       >
                         {dayInfo.total}
@@ -266,17 +246,17 @@ export function ObrigacoesCalendarCompact({
       </div>
 
       {/* Legenda */}
-      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+      <div className="flex items-center gap-3 text-[10px] text-muted-foreground/50">
         <div className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-primary" />
+          <span className="w-1.5 h-1.5 rounded-full bg-primary" />
           <span>Pendente</span>
         </div>
         <div className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-destructive" />
+          <span className="w-1.5 h-1.5 rounded-full bg-destructive" />
           <span>Vencido</span>
         </div>
         <div className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-success" />
+          <span className="w-1.5 h-1.5 rounded-full bg-success" />
           <span>Pago</span>
         </div>
       </div>

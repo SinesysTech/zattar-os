@@ -12,7 +12,7 @@ function ObrigacoesLoading() {
   return (
     <div className="space-y-4">
       <Skeleton className="h-10 w-full" />
-      <Skeleton className="h-100ull" />
+      <Skeleton className="h-100 w-full" />
     </div>
   );
 }

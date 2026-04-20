@@ -118,10 +118,10 @@ function GlassRow({
       type="button"
       onClick={onViewDetail}
       className={cn(
-        'group w-full text-left rounded-2xl border border-white/6 p-4 cursor-pointer',
+        'group w-full text-left rounded-2xl border border-border/40 p-4 cursor-pointer bg-card',
         'transition-all duration-180 ease-out',
-        'hover:bg-white/5.5 hover:border-white/12 hover:scale-[1.003] hover:-translate-y-px hover:shadow-lg',
-        isAlt ? 'bg-white/[0.018]' : 'bg-white/[0.028]',
+        'hover:bg-accent/40 hover:border-border/60 hover:scale-[1.003] hover:-translate-y-px hover:shadow-lg',
+        isAlt && 'bg-muted/20',
         URGENCY_BORDER[urgency],
       )}
     >
@@ -283,7 +283,7 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: 6 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-white/6 bg-white/[0.028] p-4">
+        <div key={i} className="rounded-2xl border border-border/40 bg-card p-4">
           <div className="grid grid-cols-[32px_2.5fr_1fr_0.8fr_0.8fr_80px_80px_40px] gap-3 items-center">
             <Skeleton className="w-2 h-2 rounded-full" />
             <div className="space-y-1.5">

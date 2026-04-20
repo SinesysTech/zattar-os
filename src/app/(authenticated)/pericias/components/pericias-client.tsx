@@ -56,10 +56,15 @@ import {
   actionPericiasPulseStats,
   type PericiasPulseStats,
 } from '../actions';
-import { SITUACAO_PERICIA_LABELS, type GrauTribunal } from '../domain';
+import {
+  SITUACAO_PERICIA_LABELS,
+  SituacaoPericiaCodigo,
+  type GrauTribunal,
+} from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
 
 import { PericiasPulseStrip } from './pericias-pulse-strip';
+import { PericiasPipelineStepper } from './pericias-pipeline-stepper';
 import { PericiasMissaoContent } from './pericias-missao-content';
 import { PericiasListWrapper } from './pericias-list-wrapper';
 import { PericiasTableWrapper } from './pericias-table-wrapper';
@@ -381,144 +386,110 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
         )}
       </div>
 
-      {/* ── Toolbar: Filters | Search | ViewToggle+Settings ── */}
-      {viewMode !== 'quadro' && (
-        <div className="flex items-center gap-2 flex-wrap">
-          <PericiasFilterBar
-            situacaoFilter={situacaoFilter}
-            onSituacaoChange={setSituacaoFilter}
-            responsavelFilter={responsavelFilter}
-            onResponsavelChange={setResponsavelFilter}
-            laudoFilter={laudoFilter}
-            onLaudoChange={setLaudoFilter}
-            tribunalFilter={tribunalFilter}
-            onTribunalChange={setTribunalFilter}
-            grauFilter={grauFilter}
-            onGrauChange={setGrauFilter}
-            especialidadeFilter={especialidadeFilter}
-            onEspecialidadeChange={setEspecialidadeFilter}
-            peritoFilter={peritoFilter}
-            onPeritoChange={setPeritoFilter}
-            usuarios={usuarios}
-            especialidades={especialidades}
-            peritos={peritos}
-            hideAdvancedFilters={hideFilterBarAdvanced}
-          />
-
-          {showDateRangePicker && (
-            <DateRangePicker
-              value={dateRange}
-              onChange={setDateRange}
-              placeholder="Prazo entrega"
-              className="h-9 w-52 bg-card"
-            />
-          )}
-
-          {showYearPicker && (
-            <YearFilterPopover
-              selectedYear={selectedYear}
-              onYearChange={setSelectedYear}
-            />
-          )}
-
-          <div className="flex-1" />
-
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            placeholder="Buscar processo, perito..."
-          />
-
-          <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-border/6">
-            {VIEW_OPTIONS.map((opt) => (
-              <button
-                key={opt.id}
-                type="button"
-                onClick={() => handleViewChange(opt.id)}
-                aria-label={opt.label}
-                className={cn(
-                  'p-1.5 rounded-md transition-all cursor-pointer',
-                  viewMode === opt.id
-                    ? 'bg-primary/12 text-primary'
-                    : 'text-muted-foreground/55 hover:text-muted-foreground',
-                )}
-              >
-                <opt.icon className="size-3.5" />
-              </button>
-            ))}
-            <span
-              className="mx-0.5 h-4 w-px bg-border/40"
-              aria-hidden="true"
-            />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
-                  aria-label="Configurações de perícias"
-                  className="p-1.5 rounded-md text-muted-foreground/55 hover:text-muted-foreground transition-all cursor-pointer"
-                >
-                  <SlidersHorizontal className="size-3.5" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link href="/pericias/especialidades">Especialidades</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/pericias/peritos">Peritos</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
+      {/* ── Pipeline Stepper (universal, acima da toolbar) ─── */}
+      {stats && (
+        <PericiasPipelineStepper
+          porSituacao={stats.porSituacao}
+          activeSituacao={
+            situacaoFilter !== 'todos'
+              ? (situacaoFilter as SituacaoPericiaCodigo)
+              : null
+          }
+          onSituacaoClick={(s) =>
+            setSituacaoFilter((prev) => (prev === s ? 'todos' : s))
+          }
+        />
       )}
 
-      {/* ── View Controls para quadro (sem FilterBar) ───────── */}
-      {viewMode === 'quadro' && (
-        <div className="flex items-center justify-end">
-          <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-border/6">
-            {VIEW_OPTIONS.map((opt) => (
+      {/* ── Toolbar universal: Filters | Search | ViewToggle+Settings ── */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <PericiasFilterBar
+          situacaoFilter={situacaoFilter}
+          onSituacaoChange={setSituacaoFilter}
+          responsavelFilter={responsavelFilter}
+          onResponsavelChange={setResponsavelFilter}
+          laudoFilter={laudoFilter}
+          onLaudoChange={setLaudoFilter}
+          tribunalFilter={tribunalFilter}
+          onTribunalChange={setTribunalFilter}
+          grauFilter={grauFilter}
+          onGrauChange={setGrauFilter}
+          especialidadeFilter={especialidadeFilter}
+          onEspecialidadeChange={setEspecialidadeFilter}
+          peritoFilter={peritoFilter}
+          onPeritoChange={setPeritoFilter}
+          usuarios={usuarios}
+          especialidades={especialidades}
+          peritos={peritos}
+          hideAdvancedFilters={hideFilterBarAdvanced}
+        />
+
+        {showDateRangePicker && (
+          <DateRangePicker
+            value={dateRange}
+            onChange={setDateRange}
+            placeholder="Prazo entrega"
+            className="h-9 w-52 bg-card"
+          />
+        )}
+
+        {showYearPicker && (
+          <YearFilterPopover
+            selectedYear={selectedYear}
+            onYearChange={setSelectedYear}
+          />
+        )}
+
+        <div className="flex-1" />
+
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Buscar processo, perito..."
+        />
+
+        <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-border/6">
+          {VIEW_OPTIONS.map((opt) => (
+            <button
+              key={opt.id}
+              type="button"
+              onClick={() => handleViewChange(opt.id)}
+              aria-label={opt.label}
+              className={cn(
+                'p-1.5 rounded-md transition-all cursor-pointer',
+                viewMode === opt.id
+                  ? 'bg-primary/12 text-primary'
+                  : 'text-muted-foreground/55 hover:text-muted-foreground',
+              )}
+            >
+              <opt.icon className="size-3.5" />
+            </button>
+          ))}
+          <span
+            className="mx-0.5 h-4 w-px bg-border/40"
+            aria-hidden="true"
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <button
-                key={opt.id}
                 type="button"
-                onClick={() => handleViewChange(opt.id)}
-                aria-label={opt.label}
-                className={cn(
-                  'p-1.5 rounded-md transition-all cursor-pointer',
-                  viewMode === opt.id
-                    ? 'bg-primary/12 text-primary'
-                    : 'text-muted-foreground/55 hover:text-muted-foreground',
-                )}
+                aria-label="Configurações de perícias"
+                className="p-1.5 rounded-md text-muted-foreground/55 hover:text-muted-foreground transition-all cursor-pointer"
               >
-                <opt.icon className="size-3.5" />
+                <SlidersHorizontal className="size-3.5" />
               </button>
-            ))}
-            <span
-              className="mx-0.5 h-4 w-px bg-border/40"
-              aria-hidden="true"
-            />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
-                  aria-label="Configurações de perícias"
-                  className="p-1.5 rounded-md text-muted-foreground/55 hover:text-muted-foreground transition-all cursor-pointer"
-                >
-                  <SlidersHorizontal className="size-3.5" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link href="/pericias/especialidades">Especialidades</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/pericias/peritos">Peritos</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <Link href="/pericias/especialidades">Especialidades</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/pericias/peritos">Peritos</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-      )}
+      </div>
 
       {/* ── Week Navigator (só view semana) ─────────────────── */}
       {showWeekNav && (
@@ -534,7 +505,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
       )}
 
       {/* ── Active Filter Chips ─────────────────────────────── */}
-      {activeFilterChips.length > 0 && viewMode !== 'quadro' && (
+      {activeFilterChips.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-[11px] uppercase tracking-wider text-muted-foreground/60">
             Filtros:
@@ -573,15 +544,8 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
       )}
 
       {/* ── Content por view ────────────────────────────────── */}
-      {viewMode === 'quadro' && stats && (
-        <PericiasMissaoContent porSituacao={stats.porSituacao} />
-      )}
-      {viewMode === 'quadro' && !stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-40 rounded-2xl" />
-          ))}
-        </div>
+      {viewMode === 'quadro' && (
+        <PericiasMissaoContent {...commonFilterProps} />
       )}
       {viewMode === 'lista' && (
         <PericiasListWrapper

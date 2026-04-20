@@ -1,22 +1,22 @@
 /**
  * AgendaFilterBar — Barra de filtros unificada para Agenda
  * ============================================================================
- * Combina: Search + Date Navigation + Source Pills
- * Segue o padrao visual AudienciasFilterBar com chips ativaveis.
+ * Combina: Date Navigation + Source Pills
+ * Segue o padrão visual AudienciasFilterBar com chips ativáveis.
+ * O SearchInput fica fora deste componente, emparelhado com o ViewToggle
+ * à direita da linha de controle (padrão Audiências / Expedientes / Partes).
  * ============================================================================
  */
 
 "use client";
 
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SOURCE_CONFIGS, type AgendaSource } from "./mock-data";
 
 // ─── Props ────────────────────────────────────────────────────────────
 
 export interface AgendaFilterBarProps {
-  search: string;
-  onSearchChange: (value: string) => void;
   onPrev: () => void;
   onNext: () => void;
   onToday: () => void;
@@ -46,8 +46,6 @@ const SOURCE_ORDER: AgendaSource[] = [
 // ─── Component ────────────────────────────────────────────────────────
 
 export function AgendaFilterBar({
-  search,
-  onSearchChange,
   onPrev,
   onNext,
   onToday,
@@ -59,30 +57,12 @@ export function AgendaFilterBar({
 
   return (
     <div className={cn("flex items-center gap-3 flex-wrap", className)}>
-      {/* Search Input */}
-      <div className="relative">
-        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/45" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Buscar eventos..."
-          className={cn(
-            "w-56 pl-8 pr-3 py-2 rounded-lg text-xs",
-            "bg-muted/10 border border-border/15 text-foreground placeholder:text-muted-foreground/40",
-            "focus:outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary/20",
-            "transition-all",
-          )}
-          aria-label="Buscar eventos"
-        />
-      </div>
-
       {/* Date Navigation */}
       <div className="flex items-center gap-1">
         <button
           onClick={onPrev}
           className="p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 hover:text-muted-foreground cursor-pointer"
-          aria-label="Periodo anterior"
+          aria-label="Período anterior"
         >
           <ChevronLeft className="size-3.5" />
         </button>
@@ -95,7 +75,7 @@ export function AgendaFilterBar({
         <button
           onClick={onNext}
           className="p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 hover:text-muted-foreground cursor-pointer"
-          aria-label="Proximo periodo"
+          aria-label="Próximo período"
         >
           <ChevronRight className="size-3.5" />
         </button>

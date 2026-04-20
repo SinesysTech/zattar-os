@@ -1,18 +1,12 @@
 /**
- * AgendaApp — Orchestrador principal do modulo Agenda (Redesign)
+ * AgendaApp — Orquestrador principal do módulo Agenda (Redesign)
  * ============================================================================
- * Layout: Header + KPI Strip + Filter Bar + [View condicional] + EventDialog
+ * Layout: Header + KPI Strip + View Controls (FilterBar + Search + Toggle) + View
  * Views: semana (default) | mes | ano | lista | briefing
  *
- * Preserva toda a infraestrutura de dados do AgendaApp original:
- * - Server-side initial fetch (3-month window)
- * - Dynamic re-fetch on month change
- * - CRUD via server actions (criar/atualizar/deletar)
- * - Source filtering + text search
- * - EventDialog reutilizado para CRUD
- *
- * Novo: KPI strip, filter bar com source pills, views redesenhadas,
- *       semana view com mini calendar sidebar, briefing v2.
+ * View Controls seguem o padrão de Audiências / Expedientes / Partes:
+ * FilterBar à esquerda, SearchInput e ViewToggle agrupados à direita
+ * com flex-1 justify-end.
  * ============================================================================
  */
 
@@ -51,6 +45,8 @@ import {
 
 import { Heading } from "@/components/ui/typography";
 import { ViewToggle, type ViewToggleOption } from "@/components/dashboard/view-toggle";
+import { SearchInput } from "@/components/dashboard/search-input";
+import { Button } from "@/components/ui/button";
 
 import { adaptEvents, filterBySearch, filterBySource, type AgendaEvent } from "../lib/adapters";
 import { AgendaKpiStrip, type AgendaKpiData } from "./agenda-kpi-strip";
@@ -70,14 +66,14 @@ interface AgendaAppProps {
 
 const VIEW_OPTIONS: ViewToggleOption[] = [
   { id: "semana",   icon: Columns3,      label: "Semana" },
-  { id: "mes",      icon: Grid3x3,       label: "Mes" },
+  { id: "mes",      icon: Grid3x3,       label: "Mês" },
   { id: "ano",      icon: CalendarRange,  label: "Ano" },
   { id: "lista",    icon: List,           label: "Lista" },
   { id: "briefing", icon: Sparkles,       label: "Briefing" },
 ];
 
 const MONTH_NAMES = [
-  "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
@@ -309,7 +305,7 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
     async (event: CalendarEvent) => {
       const isNew = !event.id || !event.id.startsWith("agenda:");
       const payload = {
-        titulo: event.title || "(sem titulo)",
+        titulo: event.title || "(sem título)",
         descricao: event.description || null,
         dataInicio: event.start.toISOString(),
         dataFim: event.end.toISOString(),
@@ -344,7 +340,7 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
       const entityId = Number(eventId.split(":")[1]);
       const result = await actionDeletarAgendaEvento({ id: entityId });
       if (result.success) {
-        toast.success("Evento excluido");
+        toast.success("Evento excluído");
         await refetchEvents();
       }
       setDialogOpen(false);
@@ -364,46 +360,48 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
 
   // ── Render ────────────────────────────────────────────────────────
   return (
-    <div className="space-y-4 pb-12">
-      {/* ── Row 1: Title + View Toggle + CTA ── */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
+    <div className="space-y-5 pb-12">
+      {/* ── 1. Header ── */}
+      <div className="flex items-end justify-between gap-4">
         <div>
           <Heading level="page">Agenda</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">
-            {label} · {eventCount} eventos
+            {label} · {eventCount} evento{eventCount !== 1 ? "s" : ""}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <Button size="sm" className="rounded-xl" onClick={handleNewEvent}>
+          <Plus className="size-3.5" />
+          Novo Evento
+        </Button>
+      </div>
+
+      {/* ── 2. KPI Strip ── */}
+      <AgendaKpiStrip data={kpiData} />
+
+      {/* ── 3. View Controls — padrão Audiências / Expedientes / Partes ── */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <AgendaFilterBar
+          onPrev={handlePrev}
+          onNext={handleNext}
+          onToday={handleToday}
+          activeSources={sourceFilter as unknown as Set<AgendaSource>}
+          onToggleSource={toggleSource}
+        />
+        <div className="flex items-center gap-2 flex-1 justify-end">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Buscar eventos..."
+          />
           <ViewToggle
             mode={view}
             onChange={(m) => setView(m as AgendaViewMode)}
             options={VIEW_OPTIONS}
           />
-          <button
-            onClick={handleNewEvent}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-sm"
-          >
-            <Plus className="size-3.5" />
-            <span className="hidden sm:inline">Novo evento</span>
-          </button>
         </div>
       </div>
 
-      {/* ── Row 2: KPI Strip ── */}
-      <AgendaKpiStrip data={kpiData} />
-
-      {/* ── Row 3: Filter Bar ── */}
-      <AgendaFilterBar
-        search={search}
-        onSearchChange={setSearch}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onToday={handleToday}
-        activeSources={sourceFilter as unknown as Set<AgendaSource>}
-        onToggleSource={toggleSource}
-      />
-
-      {/* ── Row 4: Active View ── */}
+      {/* ── 4. Active View ── */}
       {view === "semana" && (
         <SemanaView
           currentDate={currentDate}

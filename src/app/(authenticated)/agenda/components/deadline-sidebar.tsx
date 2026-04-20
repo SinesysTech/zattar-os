@@ -1,8 +1,8 @@
 /**
- * DeadlineSidebar — Widget lateral de prazos proximos
+ * DeadlineSidebar — Widget lateral de prazos próximos
  * ============================================================================
  * Mostra countdown visual para prazos fatais e regulares com cores
- * de urgencia escalantes (vermelho -> amarelo -> verde).
+ * de urgência escalantes (vermelho -> amarelo -> verde).
  * ============================================================================
  */
 
@@ -43,7 +43,7 @@ function urgencyClasses(daysLeft: number, fatal: boolean) {
 
 function daysLabel(daysLeft: number): string {
   if (daysLeft <= 0) return "HOJE";
-  if (daysLeft === 1) return "AMANHA";
+  if (daysLeft === 1) return "AMANHÃ";
   return `${daysLeft} DIAS`;
 }
 
@@ -54,7 +54,7 @@ export function DeadlineSidebar({ deadlines, className }: DeadlineSidebarProps) 
     <GlassPanel className={cn("p-4", className)}>
       <div className="flex items-center gap-2 mb-3">
         <AlarmClock className="size-3.5 text-destructive" />
-        <span className="text-xs font-semibold text-foreground">Prazos Proximos</span>
+        <span className="text-xs font-semibold text-foreground">Prazos Próximos</span>
       </div>
       <div className="space-y-2">
         {deadlines.map((dl) => {
@@ -68,7 +68,7 @@ export function DeadlineSidebar({ deadlines, className }: DeadlineSidebarProps) 
                 u.border,
               )}
             >
-              <div className={cn("w-1 h-8 rounded-full flex-shrink-0", u.bar)} />
+              <div className={cn("w-1 h-8 rounded-full shrink-0", u.bar)} />
               <div className="min-w-0">
                 <div className={cn("text-[10px] font-mono font-semibold", u.label)}>
                   {daysLabel(dl.daysLeft)}

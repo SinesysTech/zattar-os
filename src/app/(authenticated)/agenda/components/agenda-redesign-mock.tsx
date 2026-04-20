@@ -69,7 +69,7 @@ type AgendaView = "semana" | "mes" | "ano" | "lista" | "briefing";
 
 const VIEW_OPTIONS: ViewToggleOption[] = [
   { id: "semana",   icon: Columns3,      label: "Semana" },
-  { id: "mes",      icon: Grid3x3,       label: "Mes" },
+  { id: "mes",      icon: Grid3x3,       label: "Mês" },
   { id: "ano",      icon: CalendarRange,  label: "Ano" },
   { id: "lista",    icon: List,           label: "Lista" },
   { id: "briefing", icon: Sparkles,       label: "Briefing" },
@@ -78,7 +78,7 @@ const VIEW_OPTIONS: ViewToggleOption[] = [
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 const MONTH_NAMES = [
-  "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
@@ -182,8 +182,6 @@ export function AgendaRedesignMock() {
 
       {/* ── Row 3: Filter Bar ── */}
       <AgendaFilterBar
-        search={search}
-        onSearchChange={setSearch}
         onPrev={() => {}}
         onNext={() => {}}
         onToday={() => {}}

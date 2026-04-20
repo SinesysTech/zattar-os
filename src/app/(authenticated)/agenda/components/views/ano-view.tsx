@@ -20,7 +20,7 @@ export interface AnoViewProps {
 }
 
 const MONTH_NAMES = [
-  "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
@@ -70,7 +70,7 @@ export function AnoView({ currentDate, events, className }: AnoViewProps) {
       <div className="flex gap-4 mb-6">
         {[
           { value: totalEvents, label: "Total", color: "text-foreground" },
-          { value: audiencias, label: "Audiencias", color: "text-event-audiencia" },
+          { value: audiencias, label: "Audiências", color: "text-event-audiencia" },
           { value: expedientes, label: "Expedientes", color: "text-event-expediente" },
         ].map((s) => (
           <GlassPanel key={s.label} depth={2} className="flex-1 text-center px-4 py-3">

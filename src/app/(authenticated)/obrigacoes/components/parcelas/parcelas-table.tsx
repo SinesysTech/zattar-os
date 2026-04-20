@@ -1,35 +1,58 @@
-
 'use client';
 
+/**
+ * ParcelasTable — Glass Briefing
+ * ============================================================================
+ * Lista de parcelas em GlassPanel rows (ex-shadcn Table).
+ * Agrupa dados financeiros na mesma coluna para manter cada row respirável.
+ * ============================================================================
+ */
+
 import { useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { CheckCircle2, Edit2, FileX } from 'lucide-react';
-import { formatCurrency, formatDate } from '../../utils';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { toast } from 'sonner';
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { Parcela } from '../../types';
+
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+import { formatCurrency, formatDate } from '../../utils';
+import type { Parcela } from '../../types';
 import { actionMarcarParcelaRecebida } from '../../actions/parcelas';
+
+// =============================================================================
+// TYPES
+// =============================================================================
 
 interface ParcelasTableProps {
   parcelas: Parcela[];
   onEdit?: (parcela: Parcela) => void;
-  // Callbacks optional, if not provided we use actions directly
   onMarcarRecebida?: (parcelaId: number) => void;
   onMarcarPaga?: (parcelaId: number) => void;
   direcao: 'recebimento' | 'pagamento';
   onParcelaUpdated?: () => void;
   acordoCondenacaoId?: number;
 }
+
+const PARCELA_STATUS_LABELS: Record<string, string> = {
+  pendente: 'Pendente',
+  recebida: 'Recebida',
+  paga: 'Paga',
+  atrasada: 'Atrasada',
+  cancelada: 'Cancelada',
+};
+
+const REPASSE_STATUS_LABELS: Record<string, string> = {
+  nao_aplicavel: 'N/A',
+  pendente_declaracao: 'Pend. Declaração',
+  pendente_transferencia: 'Pend. Transferência',
+  repassado: 'Repassado',
+};
+
+// =============================================================================
+// COMPONENT
+// =============================================================================
 
 export function ParcelasTable({
   parcelas,
@@ -41,21 +64,10 @@ export function ParcelasTable({
 }: ParcelasTableProps) {
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
-  const PARCELA_STATUS_LABELS: Record<string, string> = {
-    pendente: 'Pendente',
-    recebida: 'Recebida',
-    paga: 'Paga',
-    atrasado: 'Atrasado',
-  };
-
-  const REPASSE_STATUS_LABELS: Record<string, string> = {
-    nao_aplicavel: 'N/A',
-    pendente_declaracao: 'Pendente Declaração',
-    pendente_transferencia: 'Pendente Transferência',
-    repassado: 'Repassado',
-  };
-
-  const handleMarcar = async (parcelaId: number, tipo: 'recebida' | 'paga') => {
+  const handleMarcar = async (
+    parcelaId: number,
+    tipo: 'recebida' | 'paga',
+  ) => {
     setLoadingId(parcelaId);
     try {
       if (tipo === 'recebida' && onMarcarRecebida) {
@@ -63,17 +75,17 @@ export function ParcelasTable({
       } else if (tipo === 'paga' && onMarcarPaga) {
         await onMarcarPaga(parcelaId);
       } else {
-        // Use Server Action
-        // NOTE: actionMarcarParcelaRecebida currently handles logic. 
-        // Ideally we should have a 'Paga' action or pass a param. 
-        // For now using the same action and assuming it handles status based on direction implicitly or we might need to update service.
         const response = await actionMarcarParcelaRecebida(parcelaId, {
-          dataRecebimento: new Date().toISOString()
+          dataRecebimento: new Date().toISOString(),
         });
 
         if (response.success) {
-          toast.success(tipo === 'recebida' ? 'Parcela marcada como recebida' : 'Parcela marcada como paga');
-          if (onParcelaUpdated) onParcelaUpdated();
+          toast.success(
+            tipo === 'recebida'
+              ? 'Parcela marcada como recebida'
+              : 'Parcela marcada como paga',
+          );
+          onParcelaUpdated?.();
         } else {
           toast.error(response.error || 'Erro ao atualizar parcela');
         }
@@ -85,89 +97,144 @@ export function ParcelasTable({
     }
   };
 
+  if (parcelas.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 opacity-60">
+        <FileX className="w-8 h-8 text-muted-foreground/30 mb-3" />
+        <p className="text-sm font-medium text-muted-foreground/50">
+          Nenhuma parcela encontrada
+        </p>
+      </div>
+    );
+  }
+
+  const isRecebimento = direcao === 'recebimento';
+
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-20">Parcela</TableHead>
-            <TableHead>Crédito Principal</TableHead>
-            <TableHead>Hon. Contratuais</TableHead>
-            <TableHead>Hon. Sucumbenciais</TableHead>
-            <TableHead>Vencimento</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Forma Pgto</TableHead>
-            {direcao === 'recebimento' && <TableHead>Repasse</TableHead>}
-            <TableHead className="text-right">Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {parcelas.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={9} className="p-0">
-                <Empty className="border-0 py-8">
-                  <EmptyHeader>
-                    <EmptyMedia variant="icon"><FileX className="h-6 w-6" /></EmptyMedia>
-                    <EmptyTitle>Nenhuma parcela encontrada</EmptyTitle>
-                  </EmptyHeader>
-                </Empty>
-              </TableCell>
-            </TableRow>
-          ) : (
-            parcelas.map((parcela) => (
-              <TableRow key={parcela.id}>
-                <TableCell className="font-medium">
+    <div className="flex flex-col gap-2">
+      {parcelas.map((parcela) => {
+        const isPendente = parcela.status === 'pendente';
+        const isAtrasada = parcela.status === 'atrasada';
+        const isLoading = loadingId === parcela.id;
+
+        return (
+          <GlassPanel
+            key={parcela.id}
+            depth={1}
+            className={cn(
+              'px-4 py-3 transition-colors',
+              isAtrasada && 'border-destructive/20',
+            )}
+          >
+            <div className="flex items-center gap-3 flex-wrap">
+              {/* Numero da parcela */}
+              <div className="size-8 rounded-lg bg-primary/8 text-primary/80 flex items-center justify-center shrink-0">
+                <span className="text-[11px] font-bold tabular-nums">
                   {parcela.numeroParcela}
-                  {parcela.editadoManualmente && <span className="ml-1 text-xs text-muted-foreground" title="Editado manualmente">*</span>}
-                </TableCell>
-                <TableCell>{formatCurrency(parcela.valorBrutoCreditoPrincipal)}</TableCell>
-                <TableCell>{formatCurrency(parcela.honorariosContratuais)}</TableCell>
-                <TableCell>{formatCurrency(parcela.honorariosSucumbenciais)}</TableCell>
-                <TableCell>{formatDate(parcela.dataVencimento)}</TableCell>
-                <TableCell>
-                  <Badge variant={getSemanticBadgeVariant('parcela_status', parcela.status)}>
-                    {PARCELA_STATUS_LABELS[parcela.status] || parcela.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-xs">{parcela.formaPagamento?.replace(/_/g, ' ') || '-'}</TableCell>
-                {direcao === 'recebimento' && (
-                  <TableCell>
-                    <div className="flex flex-col gap-1">
-                      <Badge variant={getSemanticBadgeVariant('repasse_status', parcela.statusRepasse)}>
-                        {REPASSE_STATUS_LABELS[parcela.statusRepasse] || parcela.statusRepasse}
-                      </Badge>
-                      {parcela.valorRepasseCliente ? <span className="text-xs text-muted-foreground">{formatCurrency(parcela.valorRepasseCliente)}</span> : null}
-                    </div>
-                  </TableCell>
-                )}
-                <TableCell className="text-right">
-                  <div className="flex gap-1 justify-end">
-                    {onEdit && parcela.status === 'pendente' && (
-                      <Button size="sm" variant="ghost" onClick={() => onEdit(parcela)}>
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                    )}
-                    {parcela.status === 'pendente' && (
-                      <>
-                        {direcao === 'recebimento' && (
-                          <Button size="sm" variant="outline" onClick={() => handleMarcar(parcela.id, 'recebida')} disabled={loadingId === parcela.id}>
-                            <CheckCircle2 className="h-4 w-4 mr-1" /> Recebida
-                          </Button>
-                        )}
-                        {direcao === 'pagamento' && (
-                          <Button size="sm" variant="outline" onClick={() => handleMarcar(parcela.id, 'paga')} disabled={loadingId === parcela.id}>
-                            <CheckCircle2 className="h-4 w-4 mr-1" /> Paga
-                          </Button>
-                        )}
-                      </>
-                    )}
+                </span>
+              </div>
+
+              {/* Dados financeiros agrupados */}
+              <div className="flex-1 min-w-60">
+                <div className="text-sm font-medium tabular-nums">
+                  {formatCurrency(parcela.valorBrutoCreditoPrincipal)}
+                  {parcela.editadoManualmente && (
+                    <span
+                      className="ml-1 text-[10px] text-warning/70"
+                      title="Editado manualmente"
+                    >
+                      ●
+                    </span>
+                  )}
+                </div>
+                <div className="text-[10px] text-muted-foreground/55 mt-0.5 flex gap-2 flex-wrap">
+                  <span>
+                    Hon. contr: {formatCurrency(parcela.honorariosContratuais)}
+                  </span>
+                  <span className="text-muted-foreground/30">·</span>
+                  <span>
+                    Hon. suc: {formatCurrency(parcela.honorariosSucumbenciais)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Vencimento + forma pagamento */}
+              <div className="min-w-25">
+                <div className="text-xs tabular-nums">
+                  {formatDate(parcela.dataVencimento)}
+                </div>
+                {parcela.formaPagamento && (
+                  <div className="text-[10px] text-muted-foreground/50 capitalize mt-0.5 truncate">
+                    {parcela.formaPagamento.replace(/_/g, ' ')}
                   </div>
-                </TableCell>
-              </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+                )}
+              </div>
+
+              {/* Status parcela */}
+              <div className="shrink-0">
+                <SemanticBadge
+                  category="parcela_status"
+                  value={parcela.status}
+                  className="text-[10px]"
+                >
+                  {PARCELA_STATUS_LABELS[parcela.status] || parcela.status}
+                </SemanticBadge>
+              </div>
+
+              {/* Repasse (apenas em recebimento) */}
+              {isRecebimento && (
+                <div className="min-w-27.5 shrink-0">
+                  <SemanticBadge
+                    category="repasse_status"
+                    value={parcela.statusRepasse}
+                    className="text-[9px]"
+                  >
+                    {REPASSE_STATUS_LABELS[parcela.statusRepasse] ||
+                      parcela.statusRepasse}
+                  </SemanticBadge>
+                  {parcela.valorRepasseCliente ? (
+                    <div className="text-[10px] text-muted-foreground/55 tabular-nums mt-0.5">
+                      {formatCurrency(parcela.valorRepasseCliente)}
+                    </div>
+                  ) : null}
+                </div>
+              )}
+
+              {/* Ações */}
+              <div className="flex items-center gap-1 shrink-0">
+                {onEdit && isPendente && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 w-7 p-0"
+                    onClick={() => onEdit(parcela)}
+                    aria-label="Editar parcela"
+                  >
+                    <Edit2 className="h-3.5 w-3.5" />
+                  </Button>
+                )}
+                {isPendente && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-[11px] px-2.5"
+                    onClick={() =>
+                      handleMarcar(
+                        parcela.id,
+                        isRecebimento ? 'recebida' : 'paga',
+                      )
+                    }
+                    disabled={isLoading}
+                  >
+                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                    {isRecebimento ? 'Recebida' : 'Paga'}
+                  </Button>
+                )}
+              </div>
+            </div>
+          </GlassPanel>
+        );
+      })}
     </div>
   );
 }

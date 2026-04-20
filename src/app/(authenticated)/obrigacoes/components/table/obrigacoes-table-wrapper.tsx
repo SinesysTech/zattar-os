@@ -1,83 +1,71 @@
 'use client';
 
+/**
+ * ObrigacoesTableWrapper — Lista em Glass rows com paginação server-side
+ *
+ * Simplificado: toolbar (busca + filtros + botão Nova + view toggle) vive em
+ * ObrigacoesContent. Este wrapper só consome `busca` e `filters` via props.
+ */
+
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
-import { Plus } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { SearchInput } from '@/components/dashboard/search-input';
 import { TablePagination } from '@/components/shared/table-pagination';
 import { WeekNavigator, type WeekNavigatorProps } from '@/components/shared';
 import { useDebounce } from '@/hooks/use-debounce';
 
-import type { PaginatedResponse } from '@/types';
 import type {
   AcordoComParcelas,
   ListarAcordosParams,
   ObrigacaoComDetalhes,
   StatusObrigacao,
-  TipoObrigacao,
-  DirecaoPagamento,
 } from '../../domain';
 import { actionListarAcordos } from '../../actions';
 
-import {
-  ObrigacoesFilterBar,
-  type ObrigacoesFilterBarFilters,
-} from '../shared/obrigacoes-filter-bar';
 import { ObrigacoesGlassList } from '../shared/obrigacoes-glass-list';
+import type { ObrigacoesFilterBarFilters } from '../shared/obrigacoes-filter-bar';
 import { ObrigacaoDetalhesDialog } from '../dialogs/obrigacao-detalhes-dialog';
-import { NovaObrigacaoDialog } from '../dialogs/nova-obrigacao-dialog';
 
 interface ObrigacoesTableWrapperProps {
-  initialData?: PaginatedResponse<AcordoComParcelas>;
+  busca?: string;
+  filters?: ObrigacoesFilterBarFilters;
+  refreshCounter?: number;
   fixedDate?: Date;
-  hideDateFilters?: boolean;
   weekNavigatorProps?: Omit<WeekNavigatorProps, 'className'>;
-  viewModeSlot?: React.ReactNode;
 }
 
 export function ObrigacoesTableWrapper({
-  initialData,
+  busca = '',
+  filters,
+  refreshCounter = 0,
   fixedDate,
   weekNavigatorProps,
-  viewModeSlot,
 }: ObrigacoesTableWrapperProps) {
   const router = useRouter();
 
   // Paginação
   const [pageIndex, setPageIndex] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(
-    initialData?.pagination?.limit || 10,
-  );
-  const [total, setTotal] = React.useState(initialData?.pagination?.total || 0);
-  const [totalPages, setTotalPages] = React.useState(
-    initialData?.pagination?.totalPages || 0,
-  );
+  const [pageSize, setPageSize] = React.useState(50);
+  const [total, setTotal] = React.useState(0);
+  const [totalPages, setTotalPages] = React.useState(0);
 
-  // Loading / Data
+  // Data
   const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const [acordos, setAcordos] = React.useState<AcordoComParcelas[]>(
-    initialData?.data || [],
-  );
+  const [, setError] = React.useState<string | null>(null);
+  const [acordos, setAcordos] = React.useState<AcordoComParcelas[]>([]);
 
-  // Filtros
-  const [busca, setBusca] = React.useState('');
-  const [filters, setFilters] = React.useState<ObrigacoesFilterBarFilters>({
-    status: 'todos',
-    tipo: null,
-    direcao: null,
-  });
-
-  // Dialogs
-  const [isNovoDialogOpen, setIsNovoDialogOpen] = React.useState(false);
+  // Dialog detalhes
   const [detalhesItem, setDetalhesItem] =
     React.useState<ObrigacaoComDetalhes | null>(null);
   const [isDetalhesOpen, setIsDetalhesOpen] = React.useState(false);
 
   const buscaDebounced = useDebounce(busca, 500);
+
+  // Reset pageIndex quando filtros/busca mudam
+  React.useEffect(() => {
+    setPageIndex(0);
+  }, [buscaDebounced, filters, fixedDate]);
 
   const refetch = React.useCallback(async () => {
     setIsLoading(true);
@@ -90,10 +78,9 @@ export function ObrigacoesTableWrapper({
         busca: buscaDebounced || undefined,
       };
 
-      if (filters.status !== 'todos') params.status = filters.status;
-      if (filters.tipo) params.tipo = filters.tipo as TipoObrigacao;
-      if (filters.direcao)
-        params.direcao = filters.direcao as DirecaoPagamento;
+      if (filters && filters.status !== 'todos') params.status = filters.status;
+      if (filters?.tipo) params.tipo = filters.tipo;
+      if (filters?.direcao) params.direcao = filters.direcao;
 
       if (fixedDate) {
         const dateStr = format(fixedDate, 'yyyy-MM-dd');
@@ -102,9 +89,8 @@ export function ObrigacoesTableWrapper({
       }
 
       const result = await actionListarAcordos(params);
-      if (!result.success) {
+      if (!result.success)
         throw new Error(result.error || 'Erro ao listar obrigações');
-      }
 
       const responseData = result.data as {
         acordos: AcordoComParcelas[];
@@ -122,79 +108,34 @@ export function ObrigacoesTableWrapper({
     }
   }, [pageIndex, pageSize, buscaDebounced, filters, fixedDate]);
 
-  const isFirstRender = React.useRef(true);
-
   React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      if (initialData) return;
-    }
     refetch();
-  }, [refetch, initialData]);
+  }, [refetch, refreshCounter]);
 
-  const handleSucessoOperacao = React.useCallback(() => {
-    refetch();
-    router.refresh();
-  }, [refetch, router]);
-
-  const handleVerDetalhes = (acordo: AcordoComParcelas) => {
-    const detalhes: ObrigacaoComDetalhes = {
-      id: acordo.id,
-      tipo: acordo.tipo,
-      descricao: `Processo ${acordo.processo?.numero_processo || 'N/A'}`,
-      valor: acordo.valorTotal,
-      dataVencimento: acordo.dataVencimentoPrimeiraParcela,
-      status: acordo.status as StatusObrigacao,
-      statusSincronizacao: 'nao_aplicavel',
-      diasAteVencimento: null,
-      tipoEntidade: 'obrigacao',
-      acordoId: acordo.id,
-      processoId: acordo.processoId,
-    };
-    setDetalhesItem(detalhes);
-    setIsDetalhesOpen(true);
-  };
-
-  const handleFiltersChange = React.useCallback(
-    (next: ObrigacoesFilterBarFilters) => {
-      setFilters(next);
-      setPageIndex(0);
+  const handleVerDetalhes = React.useCallback(
+    (acordo: AcordoComParcelas) => {
+      router.push(`/obrigacoes/${acordo.id}`);
+      const detalhes: ObrigacaoComDetalhes = {
+        id: acordo.id,
+        tipo: acordo.tipo,
+        descricao: `Processo ${acordo.processo?.numero_processo || 'N/A'}`,
+        valor: acordo.valorTotal,
+        dataVencimento: acordo.dataVencimentoPrimeiraParcela,
+        status: acordo.status as StatusObrigacao,
+        statusSincronizacao: 'nao_aplicavel',
+        diasAteVencimento: null,
+        tipoEntidade: 'obrigacao',
+        acordoId: acordo.id,
+        processoId: acordo.processoId,
+      };
+      setDetalhesItem(detalhes);
+      setIsDetalhesOpen(true);
     },
-    [],
+    [router],
   );
 
   return (
-    <div className="flex flex-col gap-4 h-full min-h-0">
-      {/* Toolbar: busca + filtros + view switcher + ação */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <SearchInput
-          value={busca}
-          onChange={(value) => {
-            setBusca(value);
-            setPageIndex(0);
-          }}
-          placeholder="Buscar obrigações..."
-        />
-
-        <ObrigacoesFilterBar
-          filters={filters}
-          onChange={handleFiltersChange}
-        />
-
-        <div className="ml-auto flex items-center gap-2">
-          {viewModeSlot}
-          <Button
-            size="sm"
-            className="h-8 text-xs font-medium cursor-pointer"
-            onClick={() => setIsNovoDialogOpen(true)}
-          >
-            <Plus className="size-3.5 mr-1" />
-            Nova obrigação
-          </Button>
-        </div>
-      </div>
-
-      {/* Week navigator (se aplicável) */}
+    <div className="space-y-3">
       {weekNavigatorProps && (
         <WeekNavigator
           weekDays={weekNavigatorProps.weekDays}
@@ -207,23 +148,12 @@ export function ObrigacoesTableWrapper({
         />
       )}
 
-      {/* Error banner */}
-      {error && (
-        <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-xs text-destructive">
-          {error}
-        </div>
-      )}
+      <ObrigacoesGlassList
+        acordos={acordos}
+        isLoading={isLoading}
+        onViewDetail={handleVerDetalhes}
+      />
 
-      {/* Lista */}
-      <div className="flex-1 min-h-0 overflow-auto">
-        <ObrigacoesGlassList
-          acordos={acordos}
-          isLoading={isLoading}
-          onViewDetail={handleVerDetalhes}
-        />
-      </div>
-
-      {/* Paginação */}
       {totalPages > 0 && (
         <TablePagination
           pageIndex={pageIndex}
@@ -239,17 +169,10 @@ export function ObrigacoesTableWrapper({
         />
       )}
 
-      {/* Dialogs */}
       <ObrigacaoDetalhesDialog
         obrigacao={detalhesItem}
         open={isDetalhesOpen}
         onOpenChange={setIsDetalhesOpen}
-      />
-
-      <NovaObrigacaoDialog
-        open={isNovoDialogOpen}
-        onOpenChange={setIsNovoDialogOpen}
-        onSuccess={handleSucessoOperacao}
       />
     </div>
   );
