@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -27,7 +28,7 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
     <div className="relative flex flex-col gap-3">
       {/* Vertical line */}
       <div
-        className="absolute left-1.25op-2 bottom-2 w-px bg-border/50"
+        className="absolute bottom-2 left-1 top-2 w-px bg-border/50"
         aria-hidden
       />
 
@@ -36,10 +37,10 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
           {/* Dot */}
           <div
             className={cn(
-              'absolute left-0 top-2.5 w-2 h-2 rounded-full z-10',
+              'absolute left-0 top-2.5 z-10 size-2 rounded-full',
               item.isCurrent
-                ? 'bg-primary shadow-[0_0_6px] shadow-primary/40'
-                : 'border-2 border-muted-foreground/15 bg-transparent',
+                ? 'bg-primary shadow-[0_0_6px_var(--primary)]'
+                : 'border-2 border-muted-foreground/30 bg-transparent',
             )}
             aria-hidden
           />
@@ -49,28 +50,26 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
             className={cn(
               'flex-1 rounded-lg p-2',
               item.isCurrent
-                ? 'bg-primary/4 border border-primary/10'
-                : 'bg-muted/20 border border-border/30',
+                ? 'border border-primary/15 bg-primary/5'
+                : 'border border-border/30 bg-muted/20',
             )}
           >
             {/* Header: badge + date */}
-            <div className="flex items-center justify-between gap-2 mb-0.5">
+            <div className="mb-0.5 flex items-center justify-between gap-2">
               <div className="shrink-0">{item.badge}</div>
-              <span className="text-[10px] text-muted-foreground/25 whitespace-nowrap">
+              <Text variant="micro-caption" className="whitespace-nowrap">
                 {item.date}
-              </span>
+              </Text>
             </div>
 
             {/* Text */}
-            <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">
+            <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
               {item.text}
             </p>
 
             {/* Subtext (deadline warning) */}
             {item.subtext && (
-              <p className="text-[9px] text-destructive/60 mt-0.5">
-                {item.subtext}
-              </p>
+              <p className="mt-0.5 text-[10px] text-destructive/80">{item.subtext}</p>
             )}
           </div>
         </div>

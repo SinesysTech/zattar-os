@@ -17,8 +17,9 @@ import { GazetteFilterChips } from './gazette-filter-chips';
 import { GazetteDataTable } from './gazette-data-table';
 import { GazetteCardGrid } from './gazette-card-grid';
 import { GazetteDetailPanel } from './gazette-detail-panel';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
+import { RefreshCw } from 'lucide-react';
 import type { StatusVinculacao } from '@/app/(authenticated)/comunica-cnj/domain';
 import {
   actionObterMetricas,
@@ -78,31 +79,34 @@ export function GazettePage() {
   return (
     <div className="flex flex-col h-[calc(100vh-7.5rem)]">
       {/* Header with Search + Sync */}
-      <div className="px-6 py-3 flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3 px-6 py-3">
         <div className="flex items-center gap-3">
           <Heading level="page">Diário Oficial</Heading>
-          <span className="text-[10px] uppercase tracking-widest text-muted-foreground/30 px-2 py-0.5 border border-border/20 rounded">
+          <Text
+            variant="overline"
+            className="rounded border border-border/40 px-2 py-0.5 text-muted-foreground"
+          >
             Comunica CNJ
-          </span>
+          </Text>
         </div>
-        <div className="flex items-center gap-3 flex-1 max-w-xl">
+        <div className="flex max-w-xl flex-1 items-center gap-3">
           <GazetteSearchBar />
         </div>
         <div className="flex items-center gap-3">
           <GazetteSyncDialog
             trigger={
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-primary/10 border-primary/20 text-primary text-xs"
-              >
-                ↻ Sincronizar
+              <Button variant="outline" size="sm" className="gap-1.5">
+                <RefreshCw className="size-3.5" aria-hidden />
+                Sincronizar
               </Button>
             }
           />
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_6px] shadow-success/40" />
-            <span className="text-[11px] text-muted-foreground/25">API ok</span>
+            <span
+              className="size-2 rounded-full bg-success shadow-[0_0_6px_var(--success)]"
+              aria-hidden
+            />
+            <Text variant="micro-caption">API ok</Text>
           </div>
         </div>
       </div>

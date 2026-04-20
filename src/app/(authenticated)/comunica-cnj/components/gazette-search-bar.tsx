@@ -192,9 +192,9 @@ export function GazetteSearchBar({ className }: { className?: string }) {
         )}
       >
         {/* Keyboard shortcut badge */}
-        <span className="shrink-0 text-[10px] text-muted-foreground/20 px-1 py-0.5 border border-border/20 rounded select-none">
+        <kbd className="shrink-0 select-none rounded border border-border/40 px-1 py-0.5 text-[10px] text-muted-foreground">
           ⌘K
-        </span>
+        </kbd>
 
         {/* Input */}
         <input
@@ -230,37 +230,29 @@ export function GazetteSearchBar({ className }: { className?: string }) {
 
       {/* Parsed filters preview */}
       {hasPreview && (
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex flex-wrap items-center gap-1.5">
           {chips.map((chip) => (
             <span
               key={chip.key}
-              className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-primary/8 text-primary/70 border border-primary/10"
+              className="inline-flex items-center gap-1 rounded border border-primary/15 bg-primary/5 px-1.5 py-0.5 text-[10px] text-primary"
             >
-              <span className="opacity-60">{chip.label}:</span>
+              <span className="opacity-70">{chip.label}:</span>
               <span className="font-medium">{chip.value}</span>
             </span>
           ))}
 
-          <div className="flex items-center gap-1 ml-auto">
+          <div className="ml-auto flex items-center gap-1">
             <button
               type="button"
               onClick={handleApply}
-              className={cn(
-                'text-[10px] px-2 py-0.5 rounded',
-                'bg-primary/10 text-primary hover:bg-primary/20',
-                'border border-primary/15 transition-colors font-medium',
-              )}
+              className="rounded border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary transition-colors hover:bg-primary/15"
             >
               Aplicar
             </button>
             <button
               type="button"
               onClick={handleDismissPreview}
-              className={cn(
-                'text-[10px] px-2 py-0.5 rounded',
-                'bg-muted/20 text-muted-foreground hover:bg-muted/30',
-                'border border-border/20 transition-colors',
-              )}
+              className="rounded border border-border/40 bg-muted/30 px-2 py-0.5 text-[10px] text-muted-foreground transition-colors hover:bg-muted/50"
             >
               Limpar
             </button>

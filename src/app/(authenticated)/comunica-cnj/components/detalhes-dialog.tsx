@@ -8,18 +8,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
+import { Heading, Text } from '@/components/ui/typography';
 import { FileText, ExternalLink } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-breakpoint';
 import type { ComunicacaoItem } from '../domain';
 
 interface ComunicacaoDetalhesDialogProps {
@@ -29,9 +22,37 @@ interface ComunicacaoDetalhesDialogProps {
   onViewPdf: (hash: string) => void;
 }
 
+function DetailRow({
+  label,
+  children,
+  span = 1,
+}: {
+  label: string;
+  children: React.ReactNode;
+  span?: 1 | 2;
+}) {
+  return (
+    <div className={span === 2 ? 'sm:col-span-2' : undefined}>
+      <Text variant="meta-label" className="text-muted-foreground">
+        {label}
+      </Text>
+      <div className="mt-1 text-sm text-foreground">{children}</div>
+    </div>
+  );
+}
+
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <Heading level="widget" className="mb-3">
+      {children}
+    </Heading>
+  );
+}
+
 /**
- * Dialog para exibir detalhes completos de uma comunicação
- * Usa Sheet em mobile para melhor UX
+ * Dialog para exibir detalhes completos de uma comunicação.
+ * Usa Dialog com `glass-dialog` — sem variação mobile separada
+ * (padrão do design system Glass Briefing).
  */
 export function ComunicacaoDetalhesDialog({
   comunicacao,
@@ -39,184 +60,154 @@ export function ComunicacaoDetalhesDialog({
   onOpenChange,
   onViewPdf,
 }: ComunicacaoDetalhesDialogProps) {
-  const isMobile = useIsMobile();
-
   if (!comunicacao) return null;
-
-  const renderContent = () => (
-    <div className="space-y-6">
-      {/* Processo */}
-      <div>
-        <h3 className="font-semibold mb-3 text-sm">Processo</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-          <div>
-            <span className="text-muted-foreground">Número:</span>
-            <p className="font-mono font-medium break-all">{comunicacao.numeroProcessoComMascara}</p>
-          </div>
-          <div>
-            <span className="text-muted-foreground">Tribunal:</span>
-            <div className="mt-1">
-              <TribunalBadge codigo={comunicacao.siglaTribunal} />
-            </div>
-          </div>
-          <div>
-            <span className="text-muted-foreground">Classe:</span>
-            <p>{comunicacao.nomeClasse || '-'}</p>
-          </div>
-          <div>
-            <span className="text-muted-foreground">Órgão:</span>
-            <p>{comunicacao.nomeOrgao || '-'}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Comunicação */}
-      <div>
-        <h3 className="font-semibold mb-3 text-sm">Comunicação</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-          <div>
-            <span className="text-muted-foreground">Tipo:</span>
-            <div className="mt-1">
-              <Badge variant="outline">{comunicacao.tipoComunicacao}</Badge>
-            </div>
-          </div>
-          <div>
-            <span className="text-muted-foreground">Documento:</span>
-            <div className="mt-1">
-              <Badge variant="secondary">{comunicacao.tipoDocumento}</Badge>
-            </div>
-          </div>
-          <div>
-            <span className="text-muted-foreground">Data de Disponibilização:</span>
-            <p>{comunicacao.dataDisponibilizacaoFormatada || '-'}</p>
-          </div>
-          <div>
-            <span className="text-muted-foreground">Meio:</span>
-            <p>{comunicacao.meioCompleto || (comunicacao.meio === 'E' ? 'Edital' : 'Diário Eletrônico')}</p>
-          </div>
-          {comunicacao.numeroComunicacao && (
-            <div>
-              <span className="text-muted-foreground">Número da Comunicação:</span>
-              <p>{comunicacao.numeroComunicacao}</p>
-            </div>
-          )}
-          <div className="sm:col-span-2">
-            <span className="text-muted-foreground">Hash:</span>
-            <p className="font-mono text-xs break-all">{comunicacao.hash}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Partes */}
-      <div>
-        <h3 className="font-semibold mb-3 text-sm">Partes</h3>
-        <div className="space-y-3 text-sm">
-          {comunicacao.partesAutoras && comunicacao.partesAutoras.length > 0 && (
-            <div>
-              <span className="text-muted-foreground">Autor(es):</span>
-              <ul className="mt-1 ml-4 list-disc">
-                {comunicacao.partesAutoras.map((autor, idx) => (
-                  <li key={idx}>{autor}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {comunicacao.partesReus && comunicacao.partesReus.length > 0 && (
-            <div>
-              <span className="text-muted-foreground">Réu(s):</span>
-              <ul className="mt-1 ml-4 list-disc">
-                {comunicacao.partesReus.map((reu, idx) => (
-                  <li key={idx}>{reu}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {(!comunicacao.partesAutoras || comunicacao.partesAutoras.length === 0) &&
-            (!comunicacao.partesReus || comunicacao.partesReus.length === 0) && (
-              <p className="text-muted-foreground">Nenhuma parte identificada</p>
-            )}
-        </div>
-      </div>
-
-      {/* Advogados */}
-      {comunicacao.advogados && comunicacao.advogados.length > 0 && (
-        <div>
-          <h3 className="font-semibold mb-3 text-sm">Advogados</h3>
-          <ul className="ml-4 list-disc text-sm">
-            {comunicacao.advogados.map((advogado, idx) => (
-              <li key={idx}>
-                {advogado}
-                {comunicacao.advogadosOab && comunicacao.advogadosOab[idx] && (
-                  <span className="text-muted-foreground ml-1">
-                    (OAB {comunicacao.advogadosOab[idx]})
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Conteúdo da comunicação - sanitizado com DOMPurify */}
-      {comunicacao.texto && (
-        <div>
-          <h3 className="font-semibold mb-3 text-sm">Conteúdo</h3>
-          <div
-            className="text-sm p-3 bg-muted/50 rounded-md border prose prose-sm max-w-none dark:prose-invert"
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comunicacao.texto) }}
-          />
-        </div>
-      )}
-
-      {/* Ações */}
-      <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onViewPdf(comunicacao.hash)}
-          className="flex-1 sm:flex-none"
-        >
-          <FileText className="h-4 w-4 mr-2" />
-          Ver Certidão
-        </Button>
-        {comunicacao.link && (
-          <Button variant="outline" size="sm" asChild className="flex-1 sm:flex-none">
-            <a href={comunicacao.link} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="h-4 w-4 mr-2" />
-              Abrir no PJE
-            </a>
-          </Button>
-        )}
-      </div>
-    </div>
-  );
-
-  if (isMobile) {
-    return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="bottom" className="h-[90vh] overflow-y-auto">
-          <SheetHeader className="pb-4">
-            <SheetTitle>Detalhes da Comunicação</SheetTitle>
-            <SheetDescription>
-              Informações completas sobre a comunicação processual
-            </SheetDescription>
-          </SheetHeader>
-          {renderContent()}
-        </SheetContent>
-      </Sheet>
-    );
-  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="glass-dialog max-h-[90vh] max-w-3xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Detalhes da Comunicação</DialogTitle>
           <DialogDescription>
             Informações completas sobre a comunicação processual
           </DialogDescription>
         </DialogHeader>
-        {renderContent()}
+
+        <div className="space-y-6">
+          {/* Processo */}
+          <div>
+            <SectionHeading>Processo</SectionHeading>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <DetailRow label="Número">
+                <span className="break-all font-medium tabular-nums">
+                  {comunicacao.numeroProcessoComMascara}
+                </span>
+              </DetailRow>
+              <DetailRow label="Tribunal">
+                <TribunalBadge codigo={comunicacao.siglaTribunal} />
+              </DetailRow>
+              <DetailRow label="Classe">{comunicacao.nomeClasse || '—'}</DetailRow>
+              <DetailRow label="Órgão">{comunicacao.nomeOrgao || '—'}</DetailRow>
+            </div>
+          </div>
+
+          {/* Comunicação */}
+          <div>
+            <SectionHeading>Comunicação</SectionHeading>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <DetailRow label="Tipo">
+                <Badge variant="outline">{comunicacao.tipoComunicacao}</Badge>
+              </DetailRow>
+              <DetailRow label="Documento">
+                <Badge variant="secondary">{comunicacao.tipoDocumento}</Badge>
+              </DetailRow>
+              <DetailRow label="Data de disponibilização">
+                {comunicacao.dataDisponibilizacaoFormatada || '—'}
+              </DetailRow>
+              <DetailRow label="Meio">
+                {comunicacao.meioCompleto ||
+                  (comunicacao.meio === 'E' ? 'Edital' : 'Diário Eletrônico')}
+              </DetailRow>
+              {comunicacao.numeroComunicacao && (
+                <DetailRow label="Número da comunicação">
+                  {comunicacao.numeroComunicacao}
+                </DetailRow>
+              )}
+              <DetailRow label="Hash" span={2}>
+                <span className="break-all text-xs tabular-nums text-muted-foreground">
+                  {comunicacao.hash}
+                </span>
+              </DetailRow>
+            </div>
+          </div>
+
+          {/* Partes */}
+          <div>
+            <SectionHeading>Partes</SectionHeading>
+            <div className="space-y-3 text-sm">
+              {comunicacao.partesAutoras && comunicacao.partesAutoras.length > 0 && (
+                <div>
+                  <Text variant="meta-label" className="text-muted-foreground">
+                    Autor(es)
+                  </Text>
+                  <ul className="ml-4 mt-1 list-disc">
+                    {comunicacao.partesAutoras.map((autor, idx) => (
+                      <li key={idx}>{autor}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {comunicacao.partesReus && comunicacao.partesReus.length > 0 && (
+                <div>
+                  <Text variant="meta-label" className="text-muted-foreground">
+                    Réu(s)
+                  </Text>
+                  <ul className="ml-4 mt-1 list-disc">
+                    {comunicacao.partesReus.map((reu, idx) => (
+                      <li key={idx}>{reu}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {(!comunicacao.partesAutoras || comunicacao.partesAutoras.length === 0) &&
+                (!comunicacao.partesReus || comunicacao.partesReus.length === 0) && (
+                  <Text variant="caption" className="text-muted-foreground">
+                    Nenhuma parte identificada
+                  </Text>
+                )}
+            </div>
+          </div>
+
+          {/* Advogados */}
+          {comunicacao.advogados && comunicacao.advogados.length > 0 && (
+            <div>
+              <SectionHeading>Advogados</SectionHeading>
+              <ul className="ml-4 list-disc text-sm">
+                {comunicacao.advogados.map((advogado, idx) => (
+                  <li key={idx}>
+                    {advogado}
+                    {comunicacao.advogadosOab && comunicacao.advogadosOab[idx] && (
+                      <span className="ml-1 text-muted-foreground">
+                        (OAB {comunicacao.advogadosOab[idx]})
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Conteúdo da comunicação - sanitizado com DOMPurify */}
+          {comunicacao.texto && (
+            <div>
+              <SectionHeading>Conteúdo</SectionHeading>
+              <div
+                className="prose prose-sm max-w-none rounded-md border border-border/40 bg-muted/40 p-3 text-sm dark:prose-invert"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comunicacao.texto) }}
+              />
+            </div>
+          )}
+
+          {/* Ações */}
+          <div className="flex flex-col gap-2 border-t border-border/40 pt-4 sm:flex-row">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onViewPdf(comunicacao.hash)}
+              className="flex-1 sm:flex-none"
+            >
+              <FileText className="mr-2 size-4" aria-hidden />
+              Ver Certidão
+            </Button>
+            {comunicacao.link && (
+              <Button variant="outline" size="sm" asChild className="flex-1 sm:flex-none">
+                <a href={comunicacao.link} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="mr-2 size-4" aria-hidden />
+                  Abrir no PJE
+                </a>
+              </Button>
+            )}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

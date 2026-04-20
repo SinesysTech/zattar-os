@@ -113,13 +113,13 @@ export function GazetteFilterChips() {
   };
 
   return (
-    <div className="flex gap-1.5 flex-wrap px-6 pb-1.5">
+    <div className="flex flex-wrap gap-1.5 px-6 pb-1.5">
       {chips.map((chip) => (
         <span
           key={chip.key}
           className={cn(
-            'inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] transition-colors',
-            CHIP_STYLES[chip.category] ?? 'bg-muted/10 border-border text-muted-foreground',
+            'inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs transition-colors',
+            CHIP_STYLES[chip.category] ?? 'border-border bg-muted/10 text-muted-foreground',
           )}
         >
           <span className="opacity-70">{chip.label}:</span>
@@ -127,10 +127,10 @@ export function GazetteFilterChips() {
           <button
             type="button"
             onClick={() => handleRemove(chip)}
-            className="ml-0.5 rounded-full p-0.5 hover:bg-foreground/10 transition-colors"
+            className="ml-0.5 rounded-full p-0.5 transition-colors hover:bg-foreground/10"
             aria-label={`Remover filtro ${chip.label}: ${chip.value}`}
           >
-            <X className="size-2.5" />
+            <X className="size-2.5" aria-hidden />
           </button>
         </span>
       ))}

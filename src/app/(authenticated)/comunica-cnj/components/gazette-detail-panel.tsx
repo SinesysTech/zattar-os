@@ -179,7 +179,7 @@ export function GazetteDetailPanel() {
 
           {/* ── 2. Processo ───────────────────────────────────────── */}
           <div className="px-4 py-3 border-b border-border/30">
-            <span className="text-[10px] uppercase tracking-wide text-muted-foreground/60 font-medium">
+            <span className="text-overline text-muted-foreground/70">
               Processo
             </span>
             <p className="text-[15px] font-bold tabular-nums text-foreground mt-0.5">
@@ -208,7 +208,7 @@ export function GazetteDetailPanel() {
           {((com.partesAutor?.length ?? 0) > 0 ||
             (com.partesReu?.length ?? 0) > 0) && (
             <div className="px-4 py-3 border-b border-border/30">
-              <span className="text-[10px] uppercase tracking-wide text-muted-foreground/60 font-medium">
+              <span className="text-overline text-muted-foreground/70">
                 Partes
               </span>
               <div className="mt-1.5 space-y-1">
@@ -240,14 +240,14 @@ export function GazetteDetailPanel() {
           {com.diasParaPrazo !== null &&
             com.diasParaPrazo !== undefined &&
             com.diasParaPrazo <= 7 && (
-              <div className="mx-4 my-3 rounded-lg bg-destructive/6er border-destructive/15 p-3">
+              <div className="mx-4 my-3 rounded-lg border border-destructive/20 bg-destructive/5 p-3">
                 <div className="flex items-start gap-2">
-                  <AlertTriangle className="size-4 text-destructive shrink-0 mt-0.5" />
+                  <AlertTriangle className="mt-0.5 size-4 shrink-0 text-destructive" aria-hidden />
                   <div className="min-w-0">
-                    <p className="text-[12px] font-semibold text-destructive">
+                    <p className="text-xs font-semibold text-destructive">
                       Prazo: {com.diasParaPrazo} dias restantes
                     </p>
-                    <p className="text-[10px] text-destructive/60 mt-0.5">
+                    <p className="mt-0.5 text-[10px] text-destructive/70">
                       {formatDate(com.dataDisponibilizacao)} &middot;{' '}
                       {com.tipoComunicacao ?? 'Comunicação'}
                     </p>
@@ -262,7 +262,7 @@ export function GazetteDetailPanel() {
           {/* ── 6. Texto ──────────────────────────────────────────── */}
           {com.texto && (
             <div className="px-4 py-3 border-b border-border/30">
-              <span className="text-[10px] uppercase tracking-wide text-muted-foreground/60 font-medium">
+              <span className="text-overline text-muted-foreground/70">
                 Texto
               </span>
               <div className="relative mt-1.5">
@@ -313,7 +313,7 @@ export function GazetteDetailPanel() {
           {/* ── 8. Process Timeline ───────────────────────────────── */}
           {timelineItems.length > 1 && (
             <div className="px-4 py-3 border-b border-border/30">
-              <span className="text-[10px] uppercase tracking-wide text-muted-foreground/60 font-medium">
+              <span className="text-overline text-muted-foreground/70">
                 Timeline do Processo
               </span>
               <div className="mt-2">

@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading, Text } from '@/components/ui/typography';
 import { useGazetteStore } from './hooks/use-gazette-store';
 import type {
   ComunicacaoCNJEnriquecida,
@@ -71,17 +72,17 @@ function formatDate(dateStr: string) {
 function ConfidenceLegend() {
   return (
     <div className="flex items-center gap-4">
-      <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-        <span className="size-2 rounded-full bg-success" />
-        Alta (&gt;85%)
+      <span className="flex items-center gap-1.5">
+        <span className="size-2 rounded-full bg-success" aria-hidden />
+        <Text variant="micro-caption">Alta (&gt;85%)</Text>
       </span>
-      <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-        <span className="size-2 rounded-full bg-warning" />
-        Media (50-85%)
+      <span className="flex items-center gap-1.5">
+        <span className="size-2 rounded-full bg-warning" aria-hidden />
+        <Text variant="micro-caption">Média (50-85%)</Text>
       </span>
-      <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-        <span className="size-2 rounded-full bg-muted-foreground" />
-        Sem match
+      <span className="flex items-center gap-1.5">
+        <span className="size-2 rounded-full bg-muted-foreground" aria-hidden />
+        <Text variant="micro-caption">Sem match</Text>
       </span>
     </div>
   );
@@ -101,7 +102,7 @@ function ProgressSegment({
     <div className="space-y-1.5">
       <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-border/20">
         <div
-          className="rounded-full bg-linear-to-r from-success/80 to-success transition-all duration-500"
+          className="rounded-full bg-success transition-all duration-500"
           style={{ width: `${pctResolved}%` }}
         />
         <div
@@ -109,9 +110,9 @@ function ProgressSegment({
           style={{ width: `${pctPending}%` }}
         />
       </div>
-      <p className="text-[11px] text-muted-foreground">
+      <Text variant="micro-caption">
         {resolved} de {total} resolvidos ({total > 0 ? Math.round(pctResolved) : 0}%)
-      </p>
+      </Text>
     </div>
   );
 }
@@ -127,8 +128,10 @@ function MatchCriteriaList({ criterios }: { criterios: MatchCriterio[] }) {
             <Circle className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/40" />
           )}
           <div className={cn(!c.match && 'opacity-50')}>
-            <span className="text-[12px] font-medium">{c.campo}</span>
-            <span className="ml-1.5 text-[11px] text-muted-foreground">{c.detalhe}</span>
+            <span className="text-xs font-medium">{c.campo}</span>
+            <Text variant="micro-caption" className="ml-1.5">
+              {c.detalhe}
+            </Text>
           </div>
         </li>
       ))}
@@ -151,31 +154,31 @@ function NoMatchState({
         <AlertCircle className="size-6 text-muted-foreground" />
       </div>
       <div className="space-y-1">
-        <p className="text-[14px] font-semibold text-foreground">Nenhum match encontrado</p>
-        <p className="text-[12px] text-muted-foreground">
-          Nao encontramos um expediente compativel
-        </p>
+        <Heading level="widget">Nenhum match encontrado</Heading>
+        <Text variant="caption" className="text-muted-foreground">
+          Não encontramos um expediente compatível
+        </Text>
       </div>
-      <div className="flex flex-col items-center gap-2 w-full max-w-60">
+      <div className="flex w-full max-w-60 flex-col items-center gap-2">
         <Button
           variant="outline"
-          className="w-full gap-2 text-[12px]"
+          className="w-full gap-2 text-xs"
           onClick={onBuscarManualmente}
         >
-          <Search className="size-3.5" />
+          <Search className="size-3.5" aria-hidden />
           Buscar Manualmente
         </Button>
         <Button
           variant="outline"
-          className="w-full gap-2 text-[12px]"
+          className="w-full gap-2 text-xs"
           onClick={onCriarNovo}
         >
-          <Plus className="size-3.5" />
+          <Plus className="size-3.5" aria-hidden />
           Criar Novo
         </Button>
         <button
           type="button"
-          className="text-[11px] text-muted-foreground/40 hover:text-muted-foreground transition-colors mt-1"
+          className="mt-1 text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
           onClick={onIgnorar}
         >
           Ignorar
@@ -192,10 +195,10 @@ function AllResolvedState() {
         <CheckCircle2 className="size-8 text-success" />
       </div>
       <div className="space-y-1">
-        <p className="text-[16px] font-semibold text-foreground">Tudo resolvido!</p>
-        <p className="text-[12px] text-muted-foreground">
-          Todas as comunicacoes orfas foram processadas
-        </p>
+        <Heading level="section">Tudo resolvido!</Heading>
+        <Text variant="caption" className="text-muted-foreground">
+          Todas as comunicações órfãs foram processadas
+        </Text>
       </div>
     </div>
   );
@@ -357,29 +360,30 @@ export function GazetteOrphanResolver() {
         {/* Title row */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <h2 className="text-[15px] font-semibold text-foreground">
-              Comunicacoes Orfas
-            </h2>
-            <span className="inline-flex items-center rounded-full bg-warning/10 px-2 py-0.5 text-[11px] font-medium text-warning">
+            <Heading level="section">Comunicações Órfãs</Heading>
+            <Text
+              variant="micro-badge"
+              className="inline-flex items-center rounded-full bg-warning/10 px-2 py-0.5 text-warning"
+            >
               {orphans.length}
-            </span>
+            </Text>
           </div>
           <div className="flex items-center gap-2">
             {highConfidenceCount > 0 && (
               <Button
                 variant="outline"
                 size="sm"
-                className="h-7 gap-1.5 border-success/20 bg-success/10 px-3 text-[11px] text-success hover:bg-success/15"
+                className="h-7 gap-1.5 border-success/20 bg-success/10 px-3 text-xs text-success hover:bg-success/15"
                 onClick={handleAcceptHighConfidence}
               >
-                <Check className="size-3" />
-                Aceitar Alta Confianca ({highConfidenceCount})
+                <Check className="size-3" aria-hidden />
+                Aceitar Alta Confiança ({highConfidenceCount})
               </Button>
             )}
             <Button
               variant="outline"
               size="sm"
-              className="h-7 px-3 text-[11px]"
+              className="h-7 px-3 text-xs"
               onClick={handleIgnoreAll}
             >
               Ignorar Todos
@@ -400,61 +404,65 @@ export function GazetteOrphanResolver() {
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 gap-1 px-2 text-[11px]"
+            className="h-7 gap-1 px-2 text-xs"
             disabled={currentIndex === 0}
             onClick={goPrev}
           >
-            <ChevronLeft className="size-3.5" />
+            <ChevronLeft className="size-3.5" aria-hidden />
             Anterior
           </Button>
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 gap-1 px-2 text-[11px]"
+            className="h-7 gap-1 px-2 text-xs"
             disabled={currentIndex === orphans.length - 1}
             onClick={goNext}
           >
-            Proximo
-            <ChevronRight className="size-3.5" />
+            Próximo
+            <ChevronRight className="size-3.5" aria-hidden />
           </Button>
-          <span className="text-[11px] text-muted-foreground">
+          <Text variant="micro-caption">
             {currentIndex + 1} de {orphans.length} pendentes
-          </span>
+          </Text>
         </div>
-        <span className="hidden text-[10px] text-muted-foreground/60 sm:block">
+        <Text variant="micro-caption" className="hidden sm:block">
           ↑↓ navegar · Enter aceitar · Esc pular
-        </span>
+        </Text>
       </div>
 
       {/* ── Split Panel ── */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left — Publicacao Original */}
         <div className="flex flex-1 flex-col overflow-y-auto border-r border-border/30 p-4">
-          <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+          <span className="text-overline text-muted-foreground/70">
             Publicacao Original
           </span>
 
           {/* Badges */}
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {current.tipoComunicacao && (
-              <span className="rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+              <Text
+                variant="micro-badge"
+                className="rounded-md bg-primary/10 px-2 py-0.5 text-primary"
+              >
                 {current.tipoComunicacao}
-              </span>
+              </Text>
             )}
-            <span className="rounded-md bg-muted/40 px-2 py-0.5 text-[10px] text-muted-foreground">
+            <Text
+              variant="micro-badge"
+              className="rounded-md bg-muted/40 px-2 py-0.5 text-muted-foreground"
+            >
               {current.meioCompleto ?? current.meio}
-            </span>
-            <span className="text-[10px] text-muted-foreground">
-              {formatDate(current.dataDisponibilizacao)}
-            </span>
+            </Text>
+            <Text variant="micro-caption">{formatDate(current.dataDisponibilizacao)}</Text>
           </div>
 
           {/* Processo */}
           <div className="mt-4 space-y-0.5">
-            <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+            <Text variant="overline" className="text-muted-foreground/70">
               Processo
-            </span>
-            <p className="text-[13px] font-medium text-foreground">
+            </Text>
+            <p className="text-sm font-medium tabular-nums text-foreground">
               {highlightSegments(
                 current.numeroProcessoMascara ?? current.numeroProcesso,
                 matchHighlights,
@@ -466,29 +474,29 @@ export function GazetteOrphanResolver() {
           <div className="mt-3 space-y-1.5">
             {current.partesAutor.length > 0 && (
               <div>
-                <span className="text-[10px] text-muted-foreground">Autor: </span>
-                <span className="text-[12px] text-foreground">
+                <Text variant="micro-caption">Autor: </Text>
+                <span className="text-xs text-foreground">
                   {highlightSegments(current.partesAutor.join(', '), matchHighlights)}
                 </span>
               </div>
             )}
             {current.partesReu.length > 0 && (
               <div>
-                <span className="text-[10px] text-muted-foreground">Reu: </span>
-                <span className="text-[12px] text-foreground">
+                <Text variant="micro-caption">Réu: </Text>
+                <span className="text-xs text-foreground">
                   {highlightSegments(current.partesReu.join(', '), matchHighlights)}
                 </span>
               </div>
             )}
           </div>
 
-          {/* Orgao */}
+          {/* Órgão */}
           {current.nomeOrgao && (
             <div className="mt-3 space-y-0.5">
-              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-                Orgao
-              </span>
-              <p className="text-[12px] text-foreground">
+              <Text variant="overline" className="text-muted-foreground/70">
+                Órgão
+              </Text>
+              <p className="text-xs text-foreground">
                 {highlightSegments(current.nomeOrgao, matchHighlights)}
               </p>
             </div>
@@ -497,11 +505,11 @@ export function GazetteOrphanResolver() {
           {/* Texto excerpt */}
           {current.texto && (
             <div className="mt-4 space-y-1">
-              <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+              <Text variant="overline" className="text-muted-foreground/70">
                 Trecho
-              </span>
+              </Text>
               <div className="rounded-lg border border-border/40 bg-muted/20 p-3">
-                <p className="line-clamp-6 text-[11px] leading-relaxed text-foreground/80">
+                <p className="line-clamp-6 text-xs leading-relaxed text-foreground/80">
                   {highlightSegments(current.texto.slice(0, 600), matchHighlights)}
                 </p>
               </div>
@@ -515,9 +523,9 @@ export function GazetteOrphanResolver() {
             <>
               {/* Header with confidence */}
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                <Text variant="overline" className="text-muted-foreground/70">
                   Match Sugerido
-                </span>
+                </Text>
                 <div className="flex items-center gap-2">
                   <div className="h-1.5 w-16 overflow-hidden rounded-full bg-border/20">
                     <div
@@ -530,7 +538,7 @@ export function GazetteOrphanResolver() {
                   </div>
                   <span
                     className={cn(
-                      'text-[13px] font-bold',
+                      'text-sm font-bold tabular-nums',
                       confidenceColor(match.confianca),
                     )}
                   >
@@ -540,42 +548,44 @@ export function GazetteOrphanResolver() {
               </div>
 
               {/* Match card */}
-              <div className="mt-3 rounded-xl border border-success/10 bg-success/3 p-4 space-y-2.5">
+              <div className="mt-3 space-y-2.5 rounded-xl border border-success/20 bg-success/5 p-4">
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Expediente</span>
-                  <p className="text-[13px] font-semibold text-foreground">
+                  <Text variant="micro-caption">Expediente</Text>
+                  <p className="text-sm font-semibold text-foreground">
                     #{match.expedienteNumero}
                   </p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Processo</span>
-                  <p className="text-[12px] text-foreground">{match.processoNumero}</p>
+                  <Text variant="micro-caption">Processo</Text>
+                  <p className="text-xs tabular-nums text-foreground">
+                    {match.processoNumero}
+                  </p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Partes</span>
-                  <p className="text-[12px] text-foreground">{match.partes}</p>
+                  <Text variant="micro-caption">Partes</Text>
+                  <p className="text-xs text-foreground">{match.partes}</p>
                 </div>
                 <div className="flex gap-4">
                   <div>
-                    <span className="text-[10px] text-muted-foreground">Vara</span>
-                    <p className="text-[12px] text-foreground">{match.vara}</p>
+                    <Text variant="micro-caption">Vara</Text>
+                    <p className="text-xs text-foreground">{match.vara}</p>
                   </div>
                   <div>
-                    <span className="text-[10px] text-muted-foreground">Status</span>
-                    <p className="text-[12px] text-foreground">{match.status}</p>
+                    <Text variant="micro-caption">Status</Text>
+                    <p className="text-xs text-foreground">{match.status}</p>
                   </div>
                 </div>
                 <div>
-                  <span className="text-[10px] text-muted-foreground">Criado em</span>
-                  <p className="text-[12px] text-foreground">{formatDate(match.criadoEm)}</p>
+                  <Text variant="micro-caption">Criado em</Text>
+                  <p className="text-xs text-foreground">{formatDate(match.criadoEm)}</p>
                 </div>
               </div>
 
               {/* Criteria */}
               <div className="mt-4 space-y-2">
-                <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-                  Criterios de Match
-                </span>
+                <Text variant="overline" className="text-muted-foreground/70">
+                  Critérios de Match
+                </Text>
                 <MatchCriteriaList criterios={match.criterios} />
               </div>
 
@@ -583,7 +593,7 @@ export function GazetteOrphanResolver() {
               <div className="mt-6 space-y-2">
                 <button
                   type="button"
-                  className="w-full rounded-xl border border-success/20 bg-success/10 py-2.5 text-center text-[12px] font-medium text-success transition-colors hover:bg-success/15"
+                  className="w-full rounded-xl border border-success/20 bg-success/10 py-2.5 text-center text-xs font-medium text-success transition-colors hover:bg-success/15"
                   onClick={() => handleVincular(current)}
                 >
                   Vincular a Este Expediente
@@ -592,32 +602,32 @@ export function GazetteOrphanResolver() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 gap-1.5 text-[11px]"
+                    className="h-9 gap-1.5 text-xs"
                     onClick={() => {
                       /* TODO: buscar outro */
                     }}
                   >
-                    <Search className="size-3" />
+                    <Search className="size-3" aria-hidden />
                     Buscar Outro
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-9 gap-1.5 text-[11px]"
+                    className="h-9 gap-1.5 text-xs"
                     onClick={() => {
                       /* TODO: criar expediente */
                     }}
                   >
-                    <Plus className="size-3" />
+                    <Plus className="size-3" aria-hidden />
                     Criar Expediente
                   </Button>
                 </div>
                 <button
                   type="button"
-                  className="w-full text-center text-[11px] text-muted-foreground/20 transition-colors hover:text-muted-foreground/60"
+                  className="w-full text-center text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
                   onClick={() => handleIgnorar(current)}
                 >
-                  <Ban className="mr-1 inline size-3" />
+                  <Ban className="mr-1 inline size-3" aria-hidden />
                   Marcar Irrelevante
                 </button>
               </div>

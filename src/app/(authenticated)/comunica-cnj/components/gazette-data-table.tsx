@@ -1,6 +1,8 @@
 'use client';
 
+import { MoreHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 import { useGazetteStore } from './hooks/use-gazette-store';
 import type { ComunicacaoCNJEnriquecida } from '@/app/(authenticated)/comunica-cnj/domain';
 
@@ -37,7 +39,7 @@ const DENSITY_TD_CLASS: Record<string, string> = {
 
 function PrazoBadge({ dias }: { dias: number | null }) {
   if (dias === null) {
-    return <span className="text-muted-foreground/20 text-[11px]">—</span>;
+    return <Text variant="micro-caption" className="text-muted-foreground/40">—</Text>;
   }
 
   const className =
@@ -50,14 +52,12 @@ function PrazoBadge({ dias }: { dias: number | null }) {
   const label = dias < 0 ? `${Math.abs(dias)}d atrás` : `${dias}d`;
 
   return (
-    <span
-      className={cn(
-        'inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium',
-        className,
-      )}
+    <Text
+      variant="micro-badge"
+      className={cn('inline-flex items-center rounded px-1.5 py-0.5', className)}
     >
       {label}
-    </span>
+    </Text>
   );
 }
 
@@ -69,8 +69,8 @@ function StatusCell({ item }: { item: ComunicacaoCNJEnriquecida }) {
   if (statusVinculacao === 'vinculado') {
     return (
       <div className="flex items-center gap-1.5">
-        <span className="size-2 rounded-full bg-success shrink-0" aria-hidden />
-        <span className="text-[11px] text-success">Vinculado</span>
+        <span className="size-2 shrink-0 rounded-full bg-success" aria-hidden />
+        <Text variant="micro-caption" className="text-success">Vinculado</Text>
       </div>
     );
   }
@@ -78,8 +78,8 @@ function StatusCell({ item }: { item: ComunicacaoCNJEnriquecida }) {
   if (statusVinculacao === 'pendente') {
     return (
       <div className="flex items-center gap-1.5">
-        <span className="size-2 rounded-full bg-warning shrink-0" aria-hidden />
-        <span className="text-[11px] text-warning">Pendente</span>
+        <span className="size-2 shrink-0 rounded-full bg-warning" aria-hidden />
+        <Text variant="micro-caption" className="text-warning">Pendente</Text>
       </div>
     );
   }
@@ -88,14 +88,17 @@ function StatusCell({ item }: { item: ComunicacaoCNJEnriquecida }) {
     return (
       <div className="flex items-center gap-1.5">
         <span
-          className="size-2 rounded-full border-2 border-warning shrink-0"
+          className="size-2 shrink-0 rounded-full border-2 border-warning"
           aria-hidden
         />
-        <span className="text-[11px] text-warning">Órfão</span>
+        <Text variant="micro-caption" className="text-warning">Órfão</Text>
         {matchSugestao && (
-          <span className="inline-flex items-center rounded px-1 py-0.5 text-[9px] font-semibold bg-info/10 text-info uppercase tracking-wide">
+          <Text
+            variant="micro-badge"
+            className="inline-flex items-center rounded bg-info/10 px-1 py-0.5 uppercase tracking-wide text-info"
+          >
             AI
-          </span>
+          </Text>
         )}
       </div>
     );
@@ -103,8 +106,8 @@ function StatusCell({ item }: { item: ComunicacaoCNJEnriquecida }) {
 
   return (
     <div className="flex items-center gap-1.5">
-      <span className="size-2 rounded-full bg-muted-foreground/30 shrink-0" aria-hidden />
-      <span className="text-[11px] text-muted-foreground">—</span>
+      <span className="size-2 shrink-0 rounded-full bg-muted-foreground/30" aria-hidden />
+      <Text variant="micro-caption">—</Text>
     </div>
   );
 }
@@ -131,11 +134,11 @@ function PaginationFooter({
   const end = Math.min(page * pageSize, total);
 
   return (
-    <div className="flex items-center justify-between px-4 py-2 border-t border-border/50 text-[11px] text-muted-foreground shrink-0">
+    <div className="flex shrink-0 items-center justify-between border-t border-border/50 px-4 py-2">
       {/* Left: range info */}
-      <span>
+      <Text variant="micro-caption">
         {total > 0 ? `${start}–${end} de ${total}` : '0 resultados'}
-      </span>
+      </Text>
 
       {/* Center: page buttons */}
       <div className="flex items-center gap-1">
@@ -144,13 +147,14 @@ function PaginationFooter({
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
           className={cn(
-            'px-2 py-1 rounded border border-border/50 transition-colors',
+            'flex size-7 items-center justify-center rounded border border-border/50 transition-colors',
             page <= 1
-              ? 'opacity-30 cursor-not-allowed'
-              : 'hover:bg-muted/30 cursor-pointer',
+              ? 'cursor-not-allowed opacity-30'
+              : 'cursor-pointer hover:bg-muted/30',
           )}
+          aria-label="Página anterior"
         >
-          ‹
+          <ChevronLeft className="size-3.5" aria-hidden />
         </button>
         {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
           const pageNum = i + 1;
@@ -160,10 +164,10 @@ function PaginationFooter({
               type="button"
               onClick={() => onPageChange(pageNum)}
               className={cn(
-                'w-7 h-7 rounded border transition-colors',
+                'size-7 rounded border text-xs transition-colors',
                 page === pageNum
-                  ? 'border-primary bg-primary/10 text-primary font-medium'
-                  : 'border-border/50 hover:bg-muted/30 cursor-pointer',
+                  ? 'border-primary bg-primary/10 font-medium text-primary'
+                  : 'cursor-pointer border-border/50 hover:bg-muted/30',
               )}
             >
               {pageNum}
@@ -171,30 +175,31 @@ function PaginationFooter({
           );
         })}
         {totalPages > 5 && (
-          <span className="px-1 text-muted-foreground/50">…</span>
+          <Text variant="micro-caption" className="px-1 text-muted-foreground/50">…</Text>
         )}
         <button
           type="button"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
           className={cn(
-            'px-2 py-1 rounded border border-border/50 transition-colors',
+            'flex size-7 items-center justify-center rounded border border-border/50 transition-colors',
             page >= totalPages
-              ? 'opacity-30 cursor-not-allowed'
-              : 'hover:bg-muted/30 cursor-pointer',
+              ? 'cursor-not-allowed opacity-30'
+              : 'cursor-pointer hover:bg-muted/30',
           )}
+          aria-label="Próxima página"
         >
-          ›
+          <ChevronRight className="size-3.5" aria-hidden />
         </button>
       </div>
 
       {/* Right: page size selector */}
       <div className="flex items-center gap-1.5">
-        <span>Por página</span>
+        <Text variant="micro-caption">Por página</Text>
         <select
           value={pageSize}
           onChange={(e) => onPageSizeChange(Number(e.target.value))}
-          className="rounded border border-border/50 bg-background px-1.5 py-0.5 text-[11px] cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary/50"
+          className="cursor-pointer rounded border border-border/50 bg-background px-1.5 py-0.5 text-xs focus:outline-none focus:ring-1 focus:ring-primary/50"
         >
           {[25, 50, 100].map((s) => (
             <option key={s} value={s}>{s}</option>
@@ -241,14 +246,14 @@ export function GazetteDataTable({
               <th
                 scope="col"
                 style={{ width: 72, minWidth: 72 }}
-                className="px-3 py-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/25"
+                className="px-3 py-2 text-overline text-muted-foreground/60"
               >
                 Tipo
               </th>
               {/* Processo / Partes */}
               <th
                 scope="col"
-                className="px-3 py-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/25"
+                className="px-3 py-2 text-overline text-muted-foreground/60"
               >
                 Processo / Partes
               </th>
@@ -256,7 +261,7 @@ export function GazetteDataTable({
               <th
                 scope="col"
                 style={{ width: 160, minWidth: 120 }}
-                className="px-3 py-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/25"
+                className="px-3 py-2 text-overline text-muted-foreground/60"
               >
                 Órgão
               </th>
@@ -264,7 +269,7 @@ export function GazetteDataTable({
               <th
                 scope="col"
                 style={{ width: 80, minWidth: 80 }}
-                className="px-3 py-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/25"
+                className="px-3 py-2 text-overline text-muted-foreground/60"
               >
                 Fonte
               </th>
@@ -272,7 +277,7 @@ export function GazetteDataTable({
               <th
                 scope="col"
                 style={{ width: 70, minWidth: 70 }}
-                className="px-3 py-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/25"
+                className="px-3 py-2 text-overline text-muted-foreground/60"
               >
                 Data
               </th>
@@ -280,7 +285,7 @@ export function GazetteDataTable({
               <th
                 scope="col"
                 style={{ width: 80, minWidth: 80 }}
-                className="px-3 py-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/25"
+                className="px-3 py-2 text-overline text-muted-foreground/60"
               >
                 Prazo
               </th>
@@ -288,7 +293,7 @@ export function GazetteDataTable({
               <th
                 scope="col"
                 style={{ width: 100, minWidth: 100 }}
-                className="px-3 py-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/25"
+                className="px-3 py-2 text-overline text-muted-foreground/60"
               >
                 Status
               </th>
@@ -296,7 +301,7 @@ export function GazetteDataTable({
               <th
                 scope="col"
                 style={{ width: 40, minWidth: 40 }}
-                className="px-3 py-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/25"
+                className="px-3 py-2 text-overline text-muted-foreground/60"
               >
                 <span className="sr-only">Ações</span>
               </th>
@@ -307,11 +312,10 @@ export function GazetteDataTable({
           <tbody>
             {comunicacoes.length === 0 && (
               <tr>
-                <td
-                  colSpan={8}
-                  className="px-3 py-10 text-center text-[13px] text-muted-foreground"
-                >
-                  Nenhuma comunicação encontrada
+                <td colSpan={8} className="px-3 py-10 text-center">
+                  <Text variant="caption" className="text-muted-foreground">
+                    Nenhuma comunicação encontrada
+                  </Text>
                 </td>
               </tr>
             )}
@@ -330,54 +334,58 @@ export function GazetteDataTable({
                   key={item.id}
                   onClick={() => selecionarComunicacao(item)}
                   className={cn(
-                    'cursor-pointer border-b border-border/30 transition-colors duration-100',
-                    'hover:bg-muted/30',
-                    isSelected && 'bg-primary/4 border-l-2 border-l-primary',
+                    'cursor-pointer border-b border-border/40 transition-colors duration-100',
+                    'hover:bg-muted/40',
+                    isSelected && 'border-l-2 border-l-primary bg-primary/5',
                   )}
                 >
                   {/* Tipo */}
                   <td className={cn('px-3', tdPy)} style={{ width: 72 }}>
-                    <span
+                    <Text
+                      variant="micro-badge"
                       className={cn(
-                        'inline-flex items-center rounded px-2 py-0.5 text-[10px] font-medium',
+                        'inline-flex items-center rounded px-2 py-0.5',
                         tipoBadge.className,
                       )}
                     >
                       {tipoBadge.label}
-                    </span>
+                    </Text>
                   </td>
 
                   {/* Processo / Partes */}
                   <td className={cn('px-3', tdPy)}>
-                    <div className="flex flex-col gap-0.5 min-w-0">
-                      <span className="text-[13px] font-medium tabular-nums truncate text-foreground">
+                    <div className="flex min-w-0 flex-col gap-0.5">
+                      <span className="truncate text-sm font-medium tabular-nums text-foreground">
                         {item.numeroProcessoMascara ?? item.numeroProcesso}
                       </span>
                       {partesLabel && (
-                        <span className="text-[11px] text-muted-foreground/40 truncate">
+                        <Text variant="micro-caption" className="truncate">
                           {partesLabel}
-                        </span>
+                        </Text>
                       )}
                     </div>
                   </td>
 
                   {/* Órgão */}
                   <td className={cn('px-3', tdPy)} style={{ width: 160 }}>
-                    <span className="text-[11px] text-muted-foreground truncate block max-w-40">
+                    <Text variant="micro-caption" className="block max-w-40 truncate">
                       {item.nomeOrgao ?? item.siglaTribunal ?? '—'}
-                    </span>
+                    </Text>
                   </td>
 
                   {/* Fonte */}
                   <td className={cn('px-3', tdPy)} style={{ width: 80 }}>
-                    <span className="inline-flex items-center rounded border border-border px-1.5 py-0.5 text-[10px] bg-muted/30 text-muted-foreground">
+                    <Text
+                      variant="micro-badge"
+                      className="inline-flex items-center rounded border border-border bg-muted/30 px-1.5 py-0.5 text-muted-foreground"
+                    >
                       {item.siglaTribunal ?? '—'}
-                    </span>
+                    </Text>
                   </td>
 
                   {/* Data */}
                   <td className={cn('px-3', tdPy)} style={{ width: 70 }}>
-                    <span className="text-[11px] tabular-nums text-muted-foreground whitespace-nowrap">
+                    <Text variant="micro-caption" className="whitespace-nowrap tabular-nums">
                       {item.dataDisponibilizacao
                         ? new Date(item.dataDisponibilizacao).toLocaleDateString('pt-BR', {
                             day: '2-digit',
@@ -385,7 +393,7 @@ export function GazetteDataTable({
                             year: '2-digit',
                           })
                         : '—'}
-                    </span>
+                    </Text>
                   </td>
 
                   {/* Prazo */}
@@ -406,10 +414,10 @@ export function GazetteDataTable({
                         e.stopPropagation();
                         selecionarComunicacao(item);
                       }}
-                      className="flex items-center justify-center w-7 h-7 rounded hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
+                      className="flex size-7 cursor-pointer items-center justify-center rounded text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50"
                       aria-label="Mais opções"
                     >
-                      ⋯
+                      <MoreHorizontal className="size-3.5" aria-hidden />
                     </button>
                   </td>
                 </tr>

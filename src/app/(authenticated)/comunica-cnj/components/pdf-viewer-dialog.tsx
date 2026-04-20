@@ -8,17 +8,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Text } from '@/components/ui/typography';
 import { Download, Loader2, AlertCircle, ExternalLink } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-breakpoint';
 import { actionObterCertidao } from '../actions/comunica-cnj-actions';
 
 interface PdfViewerDialogProps {
@@ -28,11 +21,10 @@ interface PdfViewerDialogProps {
 }
 
 /**
- * Dialog/Sheet para visualizar certidão PDF do CNJ
- * Usa Sheet em mobile para melhor UX
+ * Dialog para visualizar certidão PDF do CNJ.
+ * Usa `glass-dialog` em todas as resoluções — padrão do design system.
  */
 export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogProps) {
-  const isMobile = useIsMobile();
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -120,75 +112,52 @@ export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogPro
     document.body.removeChild(link);
   };
 
-  const renderContent = () => (
-    <div className="flex-1 flex flex-col min-h-0">
-      {isLoading && (
-        <div className="flex-1 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          <span className="ml-3 text-muted-foreground">Carregando certidão...</span>
-        </div>
-      )}
-
-      {error && (
-        <Alert variant="destructive" className="m-4">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
-      {pdfUrl && !isLoading && !error && (
-        <>
-          <div className="flex gap-2 mb-4">
-            <Button variant="outline" size="sm" onClick={handleDownload}>
-              <Download className="h-4 w-4 mr-2" />
-              Baixar PDF
-            </Button>
-            <Button variant="outline" size="sm" asChild>
-              <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Abrir em Nova Aba
-              </a>
-            </Button>
-          </div>
-
-          <div className="flex-1 border rounded-lg overflow-hidden bg-muted">
-            <iframe
-              src={pdfUrl}
-              className="w-full h-full"
-              title="Certidão PDF"
-            />
-          </div>
-        </>
-      )}
-    </div>
-  );
-
-  if (isMobile) {
-    return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="bottom" className="h-[90vh] flex flex-col">
-          <SheetHeader>
-            <SheetTitle>Certidão da Comunicação</SheetTitle>
-            <SheetDescription>
-              Visualização da certidão em PDF
-            </SheetDescription>
-          </SheetHeader>
-          {renderContent()}
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
+      <DialogContent className="glass-dialog flex h-[90vh] max-w-4xl flex-col">
         <DialogHeader>
           <DialogTitle>Certidão da Comunicação</DialogTitle>
-          <DialogDescription>
-            Visualização da certidão em PDF
-          </DialogDescription>
+          <DialogDescription>Visualização da certidão em PDF</DialogDescription>
         </DialogHeader>
-        {renderContent()}
+
+        <div className="flex min-h-0 flex-1 flex-col">
+          {isLoading && (
+            <div className="flex flex-1 items-center justify-center gap-3">
+              <Loader2 className="size-8 animate-spin text-muted-foreground" aria-hidden />
+              <Text variant="caption" className="text-muted-foreground">
+                Carregando certidão...
+              </Text>
+            </div>
+          )}
+
+          {error && (
+            <Alert variant="destructive" className="m-4">
+              <AlertCircle className="size-4" aria-hidden />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {pdfUrl && !isLoading && !error && (
+            <>
+              <div className="mb-4 flex gap-2">
+                <Button variant="outline" size="sm" onClick={handleDownload}>
+                  <Download className="mr-2 size-4" aria-hidden />
+                  Baixar PDF
+                </Button>
+                <Button variant="outline" size="sm" asChild>
+                  <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="mr-2 size-4" aria-hidden />
+                    Abrir em Nova Aba
+                  </a>
+                </Button>
+              </div>
+
+              <div className="flex-1 overflow-hidden rounded-lg border border-border/40 bg-muted/40">
+                <iframe src={pdfUrl} className="size-full" title="Certidão PDF" />
+              </div>
+            </>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );
