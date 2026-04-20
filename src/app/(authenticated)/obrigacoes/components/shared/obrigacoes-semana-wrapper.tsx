@@ -1,54 +1,63 @@
 'use client';
 
 /**
- * ObrigacoesMonthWrapper — View de mês (Glass Briefing, padrão expedientes/audiências).
+ * ObrigacoesSemanaWrapper — View de semana (thin)
  * ============================================================================
- * Busca acordos do mês e renderiza grid mensal via ObrigacoesGlassMonth.
+ * Busca acordos da semana (com parcelas) e renderiza ObrigacoesSemanaView.
  * Toolbar vive no ObrigacoesContent pai.
  * ============================================================================
  */
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { startOfMonth, endOfMonth, format } from 'date-fns';
+import { startOfWeek, endOfWeek, format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
-import { TemporalViewLoading, TemporalViewError } from '@/components/shared';
+import {
+  TemporalViewLoading,
+  TemporalViewError,
+} from '@/components/shared';
 import { useDebounce } from '@/hooks/use-debounce';
 
 import type { AcordoComParcelas, ObrigacaoComDetalhes, StatusObrigacao } from '../../domain';
 import { actionListarObrigacoesPorPeriodo } from '../../actions';
 
-import type { ObrigacoesFilterBarFilters } from '../shared/obrigacoes-filter-bar';
-import { ObrigacoesGlassMonth } from '../shared/obrigacoes-glass-month';
+import { ObrigacoesSemanaView } from './obrigacoes-semana-view';
+import type { ObrigacoesFilterBarFilters } from './obrigacoes-filter-bar';
 import { ObrigacaoDetalhesDialog } from '../dialogs/obrigacao-detalhes-dialog';
 
-interface ObrigacoesMonthWrapperProps {
-  busca?: string;
+// =============================================================================
+// TYPES
+// =============================================================================
+
+export interface ObrigacoesSemanaWrapperProps {
+  busca: string;
   filters?: ObrigacoesFilterBarFilters;
+  refreshCounter?: number;
+  weekDate: Date;
+  onWeekDateChange: (date: Date) => void;
 }
 
-export function ObrigacoesMonthWrapper({
-  busca = '',
+// =============================================================================
+// COMPONENT
+// =============================================================================
+
+export function ObrigacoesSemanaWrapper({
+  busca,
   filters,
-}: ObrigacoesMonthWrapperProps) {
+  refreshCounter = 0,
+  weekDate,
+  onWeekDateChange,
+}: ObrigacoesSemanaWrapperProps) {
   const router = useRouter();
 
   const [acordos, setAcordos] = React.useState<AcordoComParcelas[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Detail dialog
+  // Dialog state
   const [detalhesItem, setDetalhesItem] = React.useState<ObrigacaoComDetalhes | null>(null);
   const [isDetalhesOpen, setIsDetalhesOpen] = React.useState(false);
-
-  // Month range (um mês de folga pra cobrir startOfWeek/endOfWeek)
-  const [monthRange] = React.useState(() => {
-    const now = new Date();
-    return {
-      start: startOfMonth(now),
-      end: endOfMonth(now),
-    };
-  });
 
   const buscaDebounced = useDebounce(busca, 500);
 
@@ -56,33 +65,35 @@ export function ObrigacoesMonthWrapper({
     setIsLoading(true);
     setError(null);
     try {
+      const start = startOfWeek(weekDate, { locale: ptBR, weekStartsOn: 1 });
+      const end = endOfWeek(weekDate, { locale: ptBR, weekStartsOn: 1 });
+
       const result = await actionListarObrigacoesPorPeriodo({
-        dataInicio: format(monthRange.start, 'yyyy-MM-dd'),
-        dataFim: format(monthRange.end, 'yyyy-MM-dd'),
+        dataInicio: format(start, 'yyyy-MM-dd'),
+        dataFim: format(end, 'yyyy-MM-dd'),
         incluirSemData: false,
-        status:
-          filters && filters.status !== 'todos' ? filters.status : undefined,
+        status: filters && filters.status !== 'todos' ? filters.status : undefined,
         tipo: filters?.tipo ?? undefined,
         direcao: filters?.direcao ?? undefined,
         busca: buscaDebounced || undefined,
       });
 
-      if (!result.success)
-        throw new Error(result.error || 'Erro ao listar obrigações');
+      if (!result.success) throw new Error(result.error || 'Erro ao listar obrigações');
       setAcordos(result.data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
     } finally {
       setIsLoading(false);
     }
-  }, [monthRange, filters, buscaDebounced]);
+  }, [weekDate, filters, buscaDebounced]);
 
   React.useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [fetchData, refreshCounter]);
 
   const handleViewDetail = React.useCallback(
     (acordo: AcordoComParcelas) => {
+      // Mesma lógica do table-wrapper: navega e abre dialog
       router.push(`/obrigacoes/${acordo.id}`);
       const detalhes: ObrigacaoComDetalhes = {
         id: acordo.id,
@@ -114,8 +125,10 @@ export function ObrigacoesMonthWrapper({
 
   return (
     <>
-      <ObrigacoesGlassMonth
+      <ObrigacoesSemanaView
         acordos={acordos}
+        currentDate={weekDate}
+        onDateChange={onWeekDateChange}
         onViewDetail={handleViewDetail}
       />
 

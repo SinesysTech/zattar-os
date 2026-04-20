@@ -456,3 +456,91 @@ export function PericiasFilterBar({
     </div>
   );
 }
+
+// =============================================================================
+// DATE RANGE PILL (prazo entrega) — glass pill alinhado aos outros filtros
+// =============================================================================
+
+export interface DateRangePillProps {
+  value: { from?: Date; to?: Date } | undefined;
+  onChange: (range: { from?: Date; to?: Date } | undefined) => void;
+  placeholder?: string;
+}
+
+export function DateRangePill({
+  value,
+  onChange,
+  placeholder = 'Prazo entrega',
+}: DateRangePillProps) {
+  const [open, setOpen] = React.useState(false);
+  const active = !!value?.from;
+
+  const label = active
+    ? value.to && value.from && value.from.getTime() !== value.to.getTime()
+      ? `${format(value.from, 'dd/MM', { locale: ptBR })} – ${format(value.to, 'dd/MM', { locale: ptBR })}`
+      : format(value.from!, 'dd/MM/yy', { locale: ptBR })
+    : placeholder;
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button type="button">
+          <div
+            className={cn(
+              'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+              active
+                ? 'border-primary/20 bg-primary/5 text-primary'
+                : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
+              open && 'ring-1 ring-ring',
+            )}
+          >
+            <CalendarIcon className="size-3" />
+            <span>{label}</span>
+            {active ? (
+              <span
+                role="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onChange(undefined);
+                }}
+                className="ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors"
+              >
+                <X className="size-2.5" />
+              </span>
+            ) : (
+              <ChevronDown
+                className={cn('size-3 transition-transform', open && 'rotate-180')}
+              />
+            )}
+          </div>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-auto p-0 rounded-2xl glass-dropdown border-border/40"
+        align="start"
+        side="bottom"
+      >
+        <Calendar
+          selected={
+            value?.from
+              ? { from: value.from, to: value.to }
+              : undefined
+          }
+          onSelect={(range) => {
+            if (!range?.from) {
+              onChange(undefined);
+              return;
+            }
+            onChange({
+              from: range.from,
+              to: range.to ?? range.from,
+            });
+          }}
+          mode="range"
+          numberOfMonths={2}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}

@@ -124,27 +124,27 @@ function ColumnHeaders() {
   return (
     <div
       className={cn(
-        'grid gap-3 items-center px-4 mb-2',
+        'grid gap-3 items-center px-4 py-2.5 mb-3 rounded-lg bg-muted/30 border border-border/30',
         GRID_COLS,
       )}
     >
       <div />
-      <span className="text-[10px] font-medium text-muted-foreground/55 uppercase tracking-wider">
+      <span className="text-[11px] font-semibold text-foreground/70 uppercase tracking-wider">
         Processo / Partes
       </span>
-      <span className="text-[10px] font-medium text-muted-foreground/55 uppercase tracking-wider">
+      <span className="text-[11px] font-semibold text-foreground/70 uppercase tracking-wider">
         Prazo
       </span>
-      <span className="text-[10px] font-medium text-muted-foreground/55 uppercase tracking-wider">
+      <span className="text-[11px] font-semibold text-foreground/70 uppercase tracking-wider">
         Especialidade
       </span>
-      <span className="text-[10px] font-medium text-muted-foreground/55 uppercase tracking-wider">
+      <span className="text-[11px] font-semibold text-foreground/70 uppercase tracking-wider">
         Perito
       </span>
-      <span className="text-[10px] font-medium text-muted-foreground/55 uppercase tracking-wider">
+      <span className="text-[11px] font-semibold text-foreground/70 uppercase tracking-wider">
         Responsável
       </span>
-      <span className="text-[10px] font-medium text-muted-foreground/55 uppercase tracking-wider text-center">
+      <span className="text-[11px] font-semibold text-foreground/70 uppercase tracking-wider text-center">
         Restante
       </span>
       <div />
@@ -159,10 +159,9 @@ function ColumnHeaders() {
 interface GlassRowProps {
   pericia: Pericia;
   onViewDetail: () => void;
-  isAlt: boolean;
 }
 
-function GlassRow({ pericia, onViewDetail, isAlt }: GlassRowProps) {
+function GlassRow({ pericia, onViewDetail }: GlassRowProps) {
   const urgency = getPericiaUrgency(pericia);
   const dias = getDiasRestantes(pericia);
   const responsavel = pericia.responsavel?.nomeExibicao;
@@ -183,7 +182,6 @@ function GlassRow({ pericia, onViewDetail, isAlt }: GlassRowProps) {
         'group w-full text-left rounded-2xl border border-border/40 p-4 cursor-pointer bg-card',
         'transition-all duration-180 ease-out',
         'hover:bg-accent/40 hover:border-border/60 hover:scale-[1.003] hover:-translate-y-px hover:shadow-lg',
-        isAlt && 'bg-muted/20',
         URGENCY_BORDER[urgency],
       )}
     >
@@ -334,11 +332,10 @@ export function PericiasGlassList({
     <div>
       <ColumnHeaders />
       <div className="space-y-1.5">
-        {pericias.map((pericia, idx) => (
+        {pericias.map((pericia) => (
           <GlassRow
             key={pericia.id}
             pericia={pericia}
-            isAlt={idx % 2 === 1}
             onViewDetail={() => onViewDetail(pericia)}
           />
         ))}

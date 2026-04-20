@@ -41,7 +41,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SearchInput } from '@/components/dashboard/search-input';
-import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { useWeekNavigator } from '@/components/shared';
 import { cn } from '@/lib/utils';
 
@@ -69,6 +68,7 @@ import { PericiasSemanaWrapper } from './pericias-semana-wrapper';
 import { PericiaCriarDialog } from './pericia-criar-dialog';
 import {
   PericiasFilterBar,
+  DateRangePill,
   type SituacaoFilterType,
   type ResponsavelFilterType,
   type LaudoFilterType,
@@ -419,12 +419,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
         />
 
         {showDateRangePicker && (
-          <DateRangePicker
-            value={dateRange}
-            onChange={setDateRange}
-            placeholder="Prazo entrega"
-            className="h-9 min-w-52 rounded-lg border-border/15 bg-card text-xs"
-          />
+          <DateRangePill value={dateRange} onChange={setDateRange} />
         )}
 
         <div className="flex-1" />

@@ -36,6 +36,7 @@ import {
   type ObrigacoesFilterBarFilters,
 } from './shared/obrigacoes-filter-bar';
 import { ObrigacoesTableWrapper } from './table/obrigacoes-table-wrapper';
+import { ObrigacoesSemanaWrapper } from './shared/obrigacoes-semana-wrapper';
 import { ObrigacoesMonthWrapper } from './calendar/obrigacoes-month-wrapper';
 import { ObrigacoesYearWrapper } from './calendar/obrigacoes-year-wrapper';
 import { NovaObrigacaoDialog } from './dialogs/nova-obrigacao-dialog';
@@ -196,20 +197,12 @@ export function ObrigacoesContent({
         )}
 
         {viewMode === 'semana' && (
-          <ObrigacoesTableWrapper
+          <ObrigacoesSemanaWrapper
             busca={busca}
             filters={filters}
             refreshCounter={refreshCounter}
-            fixedDate={weekNav.selectedDate}
-            weekNavigatorProps={{
-              weekDays: weekNav.weekDays,
-              selectedDate: weekNav.selectedDate,
-              onDateSelect: weekNav.setSelectedDate,
-              onPreviousWeek: weekNav.goToPreviousWeek,
-              onNextWeek: weekNav.goToNextWeek,
-              onToday: weekNav.goToToday,
-              isCurrentWeek: weekNav.isCurrentWeek,
-            }}
+            weekDate={weekNav.selectedDate}
+            onWeekDateChange={weekNav.setSelectedDate}
           />
         )}
 

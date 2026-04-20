@@ -22,8 +22,6 @@ export { ObrigacoesContent } from './components/obrigacoes-content';
 export { ObrigacoesTableWrapper } from './components/table/obrigacoes-table-wrapper';
 export { ObrigacoesMonthWrapper } from './components/calendar/obrigacoes-month-wrapper';
 export { ObrigacoesYearWrapper } from './components/calendar/obrigacoes-year-wrapper';
-export { ObrigacoesCalendarCompact } from './components/calendar/obrigacoes-calendar-compact';
-export { ObrigacoesDayList } from './components/calendar/obrigacoes-day-list';
 export { ObrigacoesPulseStrip } from './components/shared/obrigacoes-pulse-strip';
 export { AcordoPulseStrip } from './components/shared/acordo-pulse-strip';
 export { ObrigacoesFilterBar } from './components/shared/obrigacoes-filter-bar';
