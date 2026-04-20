@@ -1,10 +1,11 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ArrowRight, Loader2, Square } from 'lucide-react'
+import { ArrowRight, Square} from 'lucide-react'
 import { useAgent, useSuggestions } from '@copilotkit/react-core/v2'
 import { cn } from '@/lib/utils'
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface CommandBarProps {
   onClose: () => void
   onExpandToBriefing: () => void
@@ -104,7 +105,7 @@ export function CommandBar({ onClose, onExpandToBriefing }: CommandBarProps) {
             {/* Listening indicator */}
             <div className="shrink-0">
               {agent.isRunning ? (
-                <Loader2 className="size-4 text-primary animate-spin" />
+                <LoadingSpinner className="text-primary" />
               ) : (
                 <div className="size-2 rounded-full bg-primary animate-pulse" />
               )}

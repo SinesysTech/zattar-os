@@ -25,7 +25,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
 import { PlanoContaPaiSelect } from './plano-conta-select';
 import {
   TIPO_CONTA_LABELS,
@@ -38,6 +37,7 @@ import {
 } from '../../domain/plano-contas';
 import { actionCriarConta } from '../../actions/plano-contas';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const createPlanoContaSchema = z.object({
   codigo: z
     .string()
@@ -352,7 +352,7 @@ export function PlanoContaCreateDialog({
               Cancelar
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isSubmitting && <LoadingSpinner className="mr-2" />}
               Criar Conta
             </Button>
           </DialogFooter>

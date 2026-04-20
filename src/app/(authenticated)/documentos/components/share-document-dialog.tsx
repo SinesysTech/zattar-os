@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react';
-import { Loader2, Search, UserPlus, X, Users, Mail, Trash2, Shield } from 'lucide-react';
+import { Search, UserPlus, X, Users, Mail, Trash2, Shield} from 'lucide-react';
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -38,6 +38,7 @@ import {
 import { toast } from 'sonner';
 import { useDocumentSharing } from '../hooks/use-document-sharing';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface ShareDocumentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -219,7 +220,7 @@ export function ShareDocumentDialog({
                     className="pl-9"
                   />
                   {searchLoading && (
-                    <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+                    <LoadingSpinner className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   )}
                 </div>
                 <Select value={permissao} onValueChange={(v) => setPermissao(v as PermissaoTipo)}>
@@ -326,7 +327,7 @@ export function ShareDocumentDialog({
                     </Button>
                     <Button onClick={handleShare} disabled={loading} size="sm">
                       {loading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <LoadingSpinner />
                       ) : (
                         <UserPlus className="h-4 w-4" />
                       )}
@@ -427,7 +428,7 @@ export function ShareDocumentDialog({
                             disabled={actionLoading === compartilhamento.id}
                           >
                             {actionLoading === compartilhamento.id ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
+                              <LoadingSpinner />
                             ) : (
                               <Trash2 className="h-4 w-4" />
                             )}

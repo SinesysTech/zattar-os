@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Loader2 } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 export type LoadingStage = 'connecting' | 'initializing' | 'joining' | 'reconnecting';
 
 interface CallLoadingStateProps {
@@ -61,7 +61,7 @@ export function CallLoadingState({
       <div className="w-full max-w-sm flex flex-col items-center gap-6">
         <div className="relative">
           <div className="absolute inset-0 bg-info/20 blur-xl rounded-full" />
-          <Loader2 className="w-16 h-16 animate-spin text-info relative z-10" />
+          <LoadingSpinner className="size-16 text-info relative z-10" />
         </div>
 
         <div className="text-center space-y-2 w-full">

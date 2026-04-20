@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { saveAs } from 'file-saver';
-import { Download, Loader2 } from 'lucide-react';
+import { Download} from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface ExportButtonProps {
   endpoint: string;
   filtros?: Record<string, string | number | boolean>;
@@ -57,7 +58,7 @@ export function ExportButton({ endpoint, filtros, opcoes, disabled }: ExportButt
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button size="sm" variant="outline" disabled={disabled || !!loading}>
-          {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
+          {loading ? <LoadingSpinner className="mr-2" /> : <Download className="mr-2 h-4 w-4" />}
           Exportar
         </Button>
       </DropdownMenuTrigger>

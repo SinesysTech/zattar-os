@@ -17,8 +17,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Slider } from '@/components/ui/slider';
-import { Camera, Loader2, Trash2, Upload, ZoomIn, Minus, RotateCcw } from 'lucide-react';
+import { Camera, Trash2, Upload, ZoomIn, Minus, RotateCcw } from 'lucide-react';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // Tipos de imagem permitidos
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
@@ -329,7 +330,7 @@ export function AvatarUpload({
           )}
         >
           {isLoading ? (
-            <Loader2 className={cn(iconSizeClasses[size], 'animate-spin text-white')} />
+            <LoadingSpinner className={cn(iconSizeClasses[size], 'text-white')} />
           ) : (
             <Camera className={cn(iconSizeClasses[size], 'text-white')} />
           )}
@@ -338,7 +339,7 @@ export function AvatarUpload({
         {/* Badge de loading */}
         {isLoading && (
           <div className="absolute -bottom-1 -right-1 rounded-full bg-primary p-1">
-            <Loader2 className="h-3 w-3 animate-spin text-primary-foreground" />
+            <LoadingSpinner size="sm" className="text-primary-foreground" />
           </div>
         )}
       </div>
@@ -364,7 +365,7 @@ export function AvatarUpload({
           disabled={disabled || isLoading}
         >
           {isLoading ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <LoadingSpinner className="mr-2" />
           ) : (
             <Upload className="mr-2 h-4 w-4" />
           )}
@@ -470,7 +471,7 @@ export function AvatarUpload({
             >
               {isCropping ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <LoadingSpinner className="mr-2" />
                   Processando...
                 </>
               ) : (

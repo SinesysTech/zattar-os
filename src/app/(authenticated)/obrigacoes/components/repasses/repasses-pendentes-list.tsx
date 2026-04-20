@@ -12,13 +12,14 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { Upload, FileCheck, Loader2 } from 'lucide-react';
+import { Upload, FileCheck} from 'lucide-react';
 import { formatCurrency, formatDate } from '../../utils'; // Using local utils
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { EmptyHeader, EmptyTitle } from '@/components/ui/empty';
 import { Typography } from '@/components/ui/typography';
 import { useRepassesPendentes } from '../../hooks/use-repasses-pendentes';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface RepassesListProps {
    onAnexarDeclaracao?: (parcelaId: number) => void;
    onRealizarRepasse?: (parcelaId: number, valorRepasse: number) => void;
@@ -39,7 +40,7 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
    const repassesPendentesDecl = repasses.filter(r => r.statusRepasse === 'pendente_declaracao');
    const repassesPendentesTransf = repasses.filter(r => r.statusRepasse === 'pendente_transferencia');
 
-   if (isLoading) return <Loader2 className="h-6 w-6 animate-spin" />;
+   if (isLoading) return <LoadingSpinner className="size-6" />;
    if (error) return <div className="text-destructive">{error}</div>;
 
    const REPASSE_DISPLAY_LABELS: Record<string, string> = {

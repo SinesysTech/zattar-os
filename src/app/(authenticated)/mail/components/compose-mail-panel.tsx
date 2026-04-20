@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Loader2, X } from "lucide-react";
+import { X} from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import { useMailActions } from "../hooks/use-mail-api";
 import { useMailStore } from "../hooks/use-mail";
 import { MailEditor, type MailEditorRef } from "./mail-editor";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 export function ComposeMailPanel() {
   const [to, setTo] = useState("");
   const [cc, setCc] = useState("");
@@ -195,7 +196,7 @@ export function ComposeMailPanel() {
         <Button size="sm" onClick={handleSend} disabled={isSending}>
           {isSending ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <LoadingSpinner className="mr-2" />
               Enviando...
             </>
           ) : (

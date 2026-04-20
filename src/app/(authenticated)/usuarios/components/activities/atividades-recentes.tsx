@@ -7,20 +7,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 import {
-  Clock,
-  UserPlus,
-  ArrowRightLeft,
-  UserMinus,
-  RefreshCw,
-  MessageSquarePlus,
-  Activity,
-  Loader2,
-} from 'lucide-react';
+  Clock, UserPlus, ArrowRightLeft, UserMinus, RefreshCw, MessageSquarePlus, Activity} from 'lucide-react';
 import { actionBuscarAtividadesUsuario } from '../../actions/audit-atividades-actions';
 import type { AtividadeLog } from '../../repository-audit-atividades';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // --- Mapas de configuração por tipo de evento ---
 
 const EVENT_ICONS: Record<string, typeof Clock> = {
@@ -259,7 +252,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
                 >
                   {isLoadingMore ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <LoadingSpinner className="mr-2" />
                       Carregando...
                     </>
                   ) : (

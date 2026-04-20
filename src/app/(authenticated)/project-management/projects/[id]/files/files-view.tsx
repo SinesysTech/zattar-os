@@ -3,13 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import {
-  ArrowLeft,
-  Upload,
-  FileIcon,
-  Trash2,
-  Download,
-  Loader2,
-} from "lucide-react";
+  ArrowLeft, Upload, FileIcon, Trash2, Download} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,6 +24,7 @@ import {
   actionExcluirAnexo,
 } from "../../../actions/file.actions";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface FilesViewProps {
   projeto: Projeto;
   anexos: Anexo[];
@@ -143,7 +138,7 @@ export function FilesView({
             disabled={isPending}
           >
             {isPending ? (
-              <Loader2 className="mr-1 size-4 animate-spin" />
+              <LoadingSpinner className="mr-1" />
             ) : (
               <Upload className="mr-1 size-4" />
             )}

@@ -5,11 +5,11 @@ import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { actionAtualizarAudiencia, type ActionResult } from '../actions';
 import type { Audiencia } from '../domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface Usuario {
   id: number;
   nomeExibicao?: string;
@@ -77,7 +77,7 @@ export function AudienciasAlterarResponsavelDialog({
       disabled={isPending}
       form="alterar-responsavel-audiencia-form"
     >
-      {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      {isPending && <LoadingSpinner className="mr-2" />}
       Salvar
     </Button>
   );

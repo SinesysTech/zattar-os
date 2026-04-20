@@ -23,11 +23,7 @@ import {
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Heading } from '@/components/ui/typography';
 import {
-  Loader2,
-  X,
-  Plus,
-  Check,
-} from 'lucide-react';
+  X, Plus, Check} from 'lucide-react';
 import { toast } from 'sonner';
 import { InputCEP, type InputCepAddress } from '@/app/(authenticated)/enderecos';
 import type { Endereco } from '@/app/(authenticated)/enderecos/types';
@@ -36,6 +32,7 @@ import { actionCriarRepresentante, actionAtualizarRepresentante } from '../../ac
 import type { Representante, InscricaoOAB, TipoRepresentante, SituacaoOAB } from '../../types/representantes';
 import { DialogFormShell, DialogNavPrevious, DialogNavNext } from '@/components/shared/dialog-shell';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 
 interface RepresentanteFormDialogProps {
@@ -855,7 +852,7 @@ export function RepresentanteFormDialog({
               >
                 {isPending ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <LoadingSpinner className="mr-2" />
                     {isEditMode ? 'Salvando...' : 'Criando...'}
                   </>
                 ) : (

@@ -8,13 +8,7 @@ import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import {
-  ArrowRight,
-  Upload,
-  X,
-  FileText,
-  Loader2,
-  AlertCircle,
-} from 'lucide-react';
+  ArrowRight, Upload, X, FileText, AlertCircle} from 'lucide-react';
 import {
   type DifyUserInputField,
   type DifyUserInputFormRaw,
@@ -23,6 +17,7 @@ import {
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface UploadedFile {
   id: string;
   name: string;
@@ -237,7 +232,7 @@ export function DifyInputForm({
           >
             {isAnyUploading ? (
               <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <LoadingSpinner className="mr-2" />
                 Enviando arquivos...
               </>
             ) : (
@@ -338,7 +333,7 @@ function DifyFormField({
           >
             {isUploading ? (
               <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                <Loader2 className="h-8 w-8 animate-spin" />
+                <LoadingSpinner className="size-8" />
                 <span className="text-sm">Enviando...</span>
               </div>
             ) : (

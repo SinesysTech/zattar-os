@@ -3,11 +3,12 @@
 import * as React from 'react';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Loader2, CheckCircle2, Building2, User, SearchX } from 'lucide-react';
+import { CheckCircle2, Building2, User, SearchX} from 'lucide-react';
 import { searchPartesContrariasList } from '../../actions';
 import type { ParteContrariaComEndereco } from '@/app/(authenticated)/partes/types';
 import { cn } from '@/lib/utils';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 export interface ParteContrariaSearchInputProps {
   value?: string;
   onChange?: (value: string) => void;
@@ -163,7 +164,7 @@ export function ParteContrariaSearchInput({
         />
         {isSearching && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            <LoadingSpinner className="text-muted-foreground" />
           </div>
         )}
       </div>

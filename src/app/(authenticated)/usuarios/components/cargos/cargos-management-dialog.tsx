@@ -12,13 +12,7 @@ import { cn } from '@/lib/utils';
 import { getRoleBannerGradient } from '../shared/role-banner';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
-  Loader2,
-  Plus,
-  Pencil,
-  Trash2,
-  Save,
-  FileX,
-} from 'lucide-react';
+  Plus, Pencil, Trash2, Save, FileX} from 'lucide-react';
 import { toast } from 'sonner';
 import { useCargos } from '@/app/(authenticated)/cargos';
 import { actionCriarCargo, actionAtualizarCargo, actionDeletarCargo } from '@/app/(authenticated)/cargos';
@@ -36,6 +30,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface CargosManagementDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -201,7 +196,7 @@ export function CargosManagementDialog({
 
               {isLoading ? (
                 <div className="flex items-center justify-center py-10">
-                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                  <LoadingSpinner className="size-6 text-muted-foreground" />
                 </div>
               ) : cargos.length === 0 ? (
                 <Empty>
@@ -360,7 +355,7 @@ export function CargosManagementDialog({
                     >
                       {isSaving ? (
                         <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          <LoadingSpinner className="mr-2" />
                           Salvando...
                         </>
                       ) : (

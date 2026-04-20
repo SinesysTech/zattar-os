@@ -8,7 +8,7 @@ import * as React from 'react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { CalendarIcon, CreditCard, Building2, AlertCircle, Upload, X, FileText, Loader2 } from 'lucide-react';
+import { CalendarIcon, CreditCard, Building2, AlertCircle, Upload, X, FileText} from 'lucide-react';
 import { actionUploadComprovante } from '../../actions';
 import {
   Dialog,
@@ -41,6 +41,7 @@ import type {
   Lancamento,
 } from '../../types/lancamentos';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface PagarContaDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -424,7 +425,7 @@ export function PagarContaDialog({
                   <div className="flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed p-4 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary">
                     {comprovanteUploading ? (
                       <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <LoadingSpinner />
                         <span>Enviando...</span>
                       </>
                     ) : (

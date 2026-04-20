@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { cn } from '@/lib/utils';
-import { Loader2, X, Trash2, UserRound, ArrowRightLeft, FolderKanban, CheckSquare } from 'lucide-react';
+import { X, Trash2, UserRound, ArrowRightLeft, FolderKanban, CheckSquare} from 'lucide-react';
 import { toast } from 'sonner';
 import {
   actionAlterarStatusContratosEmMassa,
@@ -41,6 +41,7 @@ import {
 import { STATUS_CONTRATO_LABELS } from '../domain';
 import type { ClienteInfo } from '../types';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // BARRA DE AÇÕES EM MASSA
 // =============================================================================
@@ -166,7 +167,7 @@ export function AlterarStatusMassaDialog({
       maxWidth="sm"
       footer={
         <Button onClick={handleSubmit} disabled={isPending || !novoStatus}>
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isPending && <LoadingSpinner className="mr-2" />}
           Confirmar
         </Button>
       }
@@ -245,7 +246,7 @@ export function AtribuirResponsavelMassaDialog({
       maxWidth="sm"
       footer={
         <Button onClick={handleSubmit} disabled={isPending || !responsavelId}>
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isPending && <LoadingSpinner className="mr-2" />}
           Confirmar
         </Button>
       }
@@ -325,7 +326,7 @@ export function AlterarSegmentoMassaDialog({
       maxWidth="sm"
       footer={
         <Button onClick={handleSubmit} disabled={isPending || !segmentoId}>
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isPending && <LoadingSpinner className="mr-2" />}
           Confirmar
         </Button>
       }

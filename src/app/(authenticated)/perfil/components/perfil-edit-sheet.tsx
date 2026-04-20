@@ -14,10 +14,10 @@ import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Typography } from '@/components/ui/typography';
-import { Loader2 } from 'lucide-react';
 import { actionAtualizarPerfil } from '../actions/perfil-actions';
 import type { Usuario, UsuarioDados, GeneroUsuario, Endereco } from '@/app/(authenticated)/usuarios';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface PerfilEditSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -349,7 +349,7 @@ export function PerfilEditSheet({
               Cancelar
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading && <LoadingSpinner className="mr-2" />}
               Salvar Alterações
             </Button>
           </DialogFooter>

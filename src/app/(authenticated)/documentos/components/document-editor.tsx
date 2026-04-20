@@ -10,19 +10,7 @@ import { useUser } from '@/providers/user-provider';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import {
-  ArrowLeft,
-  Save,
-  Share2,
-  MessageSquare,
-  MoreVertical,
-  FileText,
-  Upload,
-  Download,
-  Loader2,
-  History,
-  Wifi,
-  WifiOff,
-} from 'lucide-react';
+  ArrowLeft, Save, Share2, MessageSquare, MoreVertical, FileText, Upload, Download, History, Wifi, WifiOff} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -43,6 +31,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Typography } from '@/components/ui/typography';
 import { toast } from 'sonner';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 /**
  * PlateEditor skeleton para loading state
  */
@@ -318,7 +307,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={handleExportPdf} disabled={exporting !== null}>
                   {exporting === 'pdf' ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <LoadingSpinner className="mr-2" />
                   ) : (
                     <Download className="mr-2 h-4 w-4" />
                   )}
@@ -326,7 +315,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleExportDocx} disabled={exporting !== null}>
                   {exporting === 'docx' ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <LoadingSpinner className="mr-2" />
                   ) : (
                     <Download className="mr-2 h-4 w-4" />
                   )}

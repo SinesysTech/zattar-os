@@ -16,7 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { cn } from '@/lib/utils';
 import { todayDateString } from '@/lib/date-utils';
-import { Loader2, Check } from 'lucide-react';
+import { Check} from 'lucide-react';
 import { toast } from 'sonner';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Heading } from '@/components/ui/typography';
@@ -24,6 +24,7 @@ import { actionCriarProcessoManual, actionAtualizarProcesso, type ActionResult }
 import type { Processo, GrauProcesso, OrigemAcervo } from '../domain';
 import { GRAU_LABELS, TRIBUNAIS } from '../domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface ProcessoFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -173,7 +174,7 @@ export function ProcessoForm({
         >
           {isPending ? (
             <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <LoadingSpinner className="mr-2" />
               {isEditMode ? 'Salvando...' : 'Criando...'}
             </>
           ) : (

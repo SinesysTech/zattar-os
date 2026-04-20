@@ -7,7 +7,7 @@ import { DynamicFormData, DynamicFormSchema } from '@/shared/assinatura-digital/
 import DynamicFormRenderer from './dynamic-form-renderer';
 import FormStepLayout from './form-step-layout';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { LoadingSpinner } from '@/components/ui/loading-state';
 
 export default function DynamicFormStep() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -436,7 +436,7 @@ export default function DynamicFormStep() {
           </div>
 
           <span className="sr-only">
-            <Loader2 aria-hidden="true" /> Carregando formulário...
+            <LoadingSpinner aria-hidden="true" /> Carregando formulário...
           </span>
         </div>
       </FormStepLayout>

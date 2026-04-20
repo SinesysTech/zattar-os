@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Loader2 } from 'lucide-react';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Button } from '@/components/ui/button';
 import { TipoCapturaSelect } from './tipo-captura-select';
@@ -15,6 +14,7 @@ import { CombinadaForm } from './combinada-form';
 import { PericiasForm } from './pericias-form';
 import type { CapturaFormHandle } from '@/app/(authenticated)/captura/types';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface CapturaDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -108,7 +108,7 @@ export function CapturaDialog({ open, onOpenChange, onSuccess }: CapturaDialogPr
       maxWidth="3xl"
       footer={
         <Button onClick={handleSubmit} disabled={isLoading}>
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isLoading && <LoadingSpinner className="mr-2" />}
           {submitLabel}
         </Button>
       }

@@ -6,14 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
-  Plus,
-  Pencil,
-  Loader2,
-  Star,
-  Trash2,
-  GripVertical,
-  Settings,
-} from 'lucide-react';
+  Plus, Pencil, Star, Trash2, GripVertical, Settings} from 'lucide-react';
 import { toast } from 'sonner';
 
 import { DialogFormShell } from '@/components/shared/dialog-shell';
@@ -52,6 +45,7 @@ import {
 import { usePipelines } from '@/app/(authenticated)/contratos/tipos-config/hooks';
 import type { ContratoPipeline, ContratoPipelineEstagio } from '@/app/(authenticated)/contratos/pipelines/types';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // INTERFACES LOCAIS
 // =============================================================================
@@ -224,7 +218,7 @@ function PipelineDialog({ open, onOpenChange, pipeline, segmentos, onSuccess }: 
       maxWidth="md"
       footer={
         <Button type="submit" form="pipeline-form" disabled={isSubmitting}>
-          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isSubmitting && <LoadingSpinner className="mr-2" />}
           {isEditing ? 'Salvar alterações' : 'Criar pipeline'}
         </Button>
       }
@@ -388,7 +382,7 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
       maxWidth="md"
       footer={
         <Button type="submit" form="estagio-form" disabled={isSubmitting}>
-          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isSubmitting && <LoadingSpinner className="mr-2" />}
           {isEditing ? 'Salvar alterações' : 'Criar estágio'}
         </Button>
       }
@@ -707,7 +701,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                 variant="outline"
                 className="w-full"
               >
-                {isSavingOrder && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isSavingOrder && <LoadingSpinner className="mr-2" />}
                 Salvar nova ordem
               </Button>
             )}
@@ -754,7 +748,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
               disabled={deleteConfirm.isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {deleteConfirm.isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {deleteConfirm.isDeleting && <LoadingSpinner className="mr-2" />}
               Excluir
             </AlertDialogAction>
           </AlertDialogFooter>

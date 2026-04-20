@@ -8,13 +8,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  Search,
-  FileText,
-  Loader2,
-  Globe,
-  Lock,
-  Star,
-} from 'lucide-react';
+  Search, FileText, Globe, Lock, Star} from 'lucide-react';
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -42,6 +36,7 @@ import { useTemplates } from '../hooks/use-templates';
 import { actionListarCategorias, actionListarTemplatesMaisUsados } from '../actions/templates-actions';
 import type { TemplateComUsuario } from '../domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface TemplateLibraryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -280,7 +275,7 @@ export function TemplateLibraryDialog({
           {creating && (
             <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-lg">
               <div className="flex flex-col items-center gap-2">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <LoadingSpinner className="size-8 text-primary" />
                 <p className="text-sm text-muted-foreground">Criando documento...</p>
               </div>
             </div>

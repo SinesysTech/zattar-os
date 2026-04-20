@@ -26,10 +26,11 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { Plus, Trash2, Edit2, Play, CheckCircle, XCircle, RefreshCw, ArrowLeft, Loader2 } from 'lucide-react';
+import { Plus, Trash2, Edit2, Play, CheckCircle, XCircle, RefreshCw, ArrowLeft} from 'lucide-react';
 import { listDifyAppsAction, createDifyAppAction, updateDifyAppAction, deleteDifyAppAction, checkDifyAppConnectionAction, syncDifyAppMetadataAction } from '../actions';
 import { toast } from 'sonner';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface DifyApp {
     id: string;
     name: string;
@@ -217,7 +218,7 @@ export function DifyAppsList() {
             {/* Table */}
             {loading ? (
                 <div className="flex items-center justify-center py-12">
-                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                    <LoadingSpinner className="size-8 text-muted-foreground" />
                 </div>
             ) : apps.length === 0 ? (
                 <div className="text-center py-12 border rounded-lg bg-muted/20">

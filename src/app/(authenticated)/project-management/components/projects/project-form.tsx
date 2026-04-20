@@ -25,7 +25,6 @@ import {
 } from "@/components/ui/select";
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   STATUS_PROJETO_LABELS,
@@ -41,6 +40,7 @@ import {
   actionAtualizarProjeto,
 } from "../../actions";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const formSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório").max(255),
   descricao: z.string().max(5000).optional(),
@@ -365,7 +365,7 @@ export function ProjectForm({
               </Button>
               <Button type="submit" disabled={isPending}>
                 {isPending && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <LoadingSpinner className="mr-2" />
                 )}
                 {isEditing ? "Salvar Alterações" : "Criar Projeto"}
               </Button>

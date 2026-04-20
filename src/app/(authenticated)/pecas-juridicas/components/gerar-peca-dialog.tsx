@@ -9,7 +9,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { FileText, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { FileText, CheckCircle2, AlertCircle} from 'lucide-react';
 
 import {
   Dialog,
@@ -43,6 +43,7 @@ import {
 import { TIPO_PECA_LABELS, type TipoPecaJuridica, type PecaModeloListItem } from '../domain';
 import type { PlaceholderResolution } from '../placeholders';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -351,7 +352,7 @@ export function GerarPecaDialog({
         {/* Step 3: Generating */}
         {step === 'generating' && (
           <div className="py-12 flex flex-col items-center justify-center gap-4">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <LoadingSpinner className="size-8 text-primary" />
             <p className="text-muted-foreground">Gerando peça jurídica...</p>
           </div>
         )}
@@ -392,7 +393,7 @@ export function GerarPecaDialog({
               >
                 {loadingPreview ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <LoadingSpinner className="mr-2" />
                     Carregando...
                   </>
                 ) : (

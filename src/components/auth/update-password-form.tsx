@@ -5,19 +5,12 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  AlertCircle,
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  CheckCircle2,
-  Eye,
-  EyeOff,
-  Loader2,
-} from 'lucide-react'
+  AlertCircle, ArrowLeft, ArrowRight, Check, CheckCircle2, Eye, EyeOff} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import { AUTH_STYLES } from './styles'
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const customEase: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 function PasswordStrength({ password }: { password: string }) {
@@ -275,7 +268,7 @@ export function UpdatePasswordForm() {
 
               <button type="submit" disabled={isLoading} className={AUTH_STYLES.btnPrimary}>
                 {isLoading ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <LoadingSpinner size="lg" />
                 ) : (
                   <>
                     Salvar nova senha

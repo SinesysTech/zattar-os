@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { TagBadge } from '@/components/ui/tag-badge';
-import { Loader2, Plus } from 'lucide-react';
+import { Plus} from 'lucide-react';
 import {
   Popover,
   PopoverContent,
@@ -22,6 +22,7 @@ import {
 } from '@/lib/domain/tags';
 import type { ProcessoUnificado } from '../domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface ProcessoTagsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -151,7 +152,7 @@ export function ProcessoTagsDialog({
         Cancelar
       </Button>
       <Button onClick={handleSave} disabled={isSaving}>
-        {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        {isSaving && <LoadingSpinner className="mr-2" />}
         Salvar
       </Button>
     </div>
@@ -274,7 +275,7 @@ export function ProcessoTagsDialog({
                   onClick={handleCreateTag}
                   disabled={!newTagNome.trim() || isCreatingTag}
                 >
-                  {isCreatingTag && <Loader2 className="mr-2 h-3 w-3 animate-spin" />}
+                  {isCreatingTag && <LoadingSpinner size="sm" className="mr-2" />}
                   Criar
                 </Button>
               </div>
@@ -284,7 +285,7 @@ export function ProcessoTagsDialog({
           {/* Lista de tags */}
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              <LoadingSpinner className="size-6 text-muted-foreground" />
             </div>
           ) : (
             <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-2 border rounded-md">

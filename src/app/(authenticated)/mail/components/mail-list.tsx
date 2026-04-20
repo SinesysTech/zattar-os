@@ -1,7 +1,7 @@
 import { useRef, useCallback, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
+import { AlertCircle, RefreshCw} from "lucide-react";
 import type { MailMessagePreview } from "@/lib/mail/types";
 import { useMailStore } from "../hooks/use-mail";
 import { useMailMessages, useMailActions } from "../hooks/use-mail-api";
@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface MailListProps {
   items: MailMessagePreview[];
 }
@@ -191,7 +192,7 @@ export function MailList({ items }: MailListProps) {
         {/* Infinite scroll sentinel */}
         {hasMore && (
           <div ref={sentinelRef} className="flex items-center justify-center py-4">
-            {isLoadingMore && <Loader2 className="text-muted-foreground h-5 w-5 animate-spin" />}
+            {isLoadingMore && <LoadingSpinner size="lg" className="text-muted-foreground" />}
           </div>
         )}
       </div>

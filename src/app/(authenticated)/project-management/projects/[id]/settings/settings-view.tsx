@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Trash2, Loader2 } from "lucide-react";
+import { Trash2} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,6 +25,7 @@ import {
 import { Heading } from "@/components/ui/typography";
 import { actionExcluirProjeto } from "../../../actions";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface SettingsViewProps {
   projetoId: string;
 }
@@ -60,7 +61,7 @@ export function SettingsView({ projetoId }: SettingsViewProps) {
             <AlertDialogTrigger asChild>
               <Button variant="destructive" disabled={isDeleting}>
                 {isDeleting ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <LoadingSpinner className="mr-2" />
                 ) : (
                   <Trash2 className="mr-2 h-4 w-4" />
                 )}

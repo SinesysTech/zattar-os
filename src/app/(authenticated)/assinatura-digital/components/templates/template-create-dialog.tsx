@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowRight, ArrowLeft} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
@@ -20,6 +20,7 @@ import {
 } from '@/shared/assinatura-digital/types';
 import { listarSegmentosAction, criarTemplateAction } from '@/shared/assinatura-digital/actions';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const STEP_TITLES = ['Informações do Template', 'Conteúdo'] as const;
 
 /**
@@ -223,7 +224,7 @@ export function TemplateCreateDialog({
         form="template-create-form"
         disabled={!canSubmit}
       >
-        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        {isSubmitting && <LoadingSpinner className="mr-2" />}
         Criar Template
       </Button>
     </>
@@ -244,7 +245,7 @@ export function TemplateCreateDialog({
     >
       {isLoadingSegmentos ? (
         <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <LoadingSpinner className="size-8 text-muted-foreground" />
         </div>
       ) : (
         <form

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Eye, Pencil, FileText, ExternalLink, MessageSquareText, Loader2, Check, Copy, MapPin } from 'lucide-react';
+import { Eye, Pencil, FileText, ExternalLink, MessageSquareText, Check, Copy, MapPin} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
@@ -32,6 +32,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from './audiencia-responsavel-popover';
 import { actionAtualizarObservacoes, actionAtualizarUrlVirtual, actionAtualizarEnderecoPresencial } from '../actions';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // HELPER COMPONENTS
 // =============================================================================
@@ -225,7 +226,7 @@ function ObservacoesCell({
               disabled={isSaving}
             >
               {isSaving ? (
-                <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                <LoadingSpinner size="sm" className="mr-1" />
               ) : (
                 <Check className="mr-1 h-3 w-3" />
               )}
@@ -380,7 +381,7 @@ function ModalidadeCell({
                   Cancelar
                 </Button>
                 <Button size="sm" onClick={handleSaveUrl} disabled={isSaving}>
-                  {isSaving ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Check className="mr-1 h-3 w-3" />}
+                  {isSaving ? <LoadingSpinner size="sm" className="mr-1" /> : <Check className="mr-1 h-3 w-3" />}
                   Salvar
                 </Button>
               </div>
@@ -427,7 +428,7 @@ function ModalidadeCell({
                   Cancelar
                 </Button>
                 <Button size="sm" onClick={handleSaveEndereco} disabled={isSaving}>
-                  {isSaving ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Check className="mr-1 h-3 w-3" />}
+                  {isSaving ? <LoadingSpinner size="sm" className="mr-1" /> : <Check className="mr-1 h-3 w-3" />}
                   Salvar
                 </Button>
               </div>

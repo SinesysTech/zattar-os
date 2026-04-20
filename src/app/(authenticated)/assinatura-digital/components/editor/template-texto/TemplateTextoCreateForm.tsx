@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import type { Descendant } from 'platejs';
 import { toast } from 'sonner';
-import { Loader2, Save, ArrowLeft } from 'lucide-react';
+import { Save, ArrowLeft} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,6 +31,7 @@ import {
 import { TemplateTextoEditor } from './TemplateTextoEditor';
 import type { Segmento } from '@/shared/assinatura-digital/types/domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // Form validation schema
 const templateTextoFormSchema = z.object({
   nome: z.string().min(1, 'Nome é obrigatório').max(100, 'Nome muito longo'),
@@ -126,7 +127,7 @@ export function TemplateTextoCreateForm({
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner className="mr-2" />
                 Salvando...
               </>
             ) : (

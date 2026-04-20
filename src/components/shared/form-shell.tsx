@@ -33,10 +33,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, Loader2 } from "lucide-react";
+import { CalendarIcon} from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 /**
  * Field types supported by FormShell
  */
@@ -313,7 +314,7 @@ export function FormShell<TFieldValues extends FieldValues = FieldValues>({
             data-testid="submit-button"
             aria-disabled={loading}
           >
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {loading && <LoadingSpinner className="mr-2" />}
             {submitLabel}
           </Button>
         </div>

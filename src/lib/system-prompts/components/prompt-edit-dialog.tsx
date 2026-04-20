@@ -13,7 +13,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { Loader2, RotateCcw, Save } from "lucide-react";
+import { RotateCcw, Save} from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -31,6 +31,7 @@ import { type SystemPrompt, BUILT_IN_SLUGS, LABELS_CATEGORIA } from "../domain";
 import { DEFAULT_PROMPTS } from "../defaults";
 import { actionAtualizarSystemPrompt } from "../actions/system-prompts-actions";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface PromptEditDialogProps {
   prompt: SystemPrompt;
   open: boolean;
@@ -199,7 +200,7 @@ export function PromptEditDialog({
           </Button>
           <Button type="button" onClick={handleSave} disabled={loading}>
             {loading ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <LoadingSpinner className="mr-2" />
             ) : (
               <Save className="h-4 w-4 mr-2" />
             )}

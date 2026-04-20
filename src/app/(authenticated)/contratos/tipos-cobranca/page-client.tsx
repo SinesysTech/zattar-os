@@ -5,7 +5,7 @@ import { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Plus, Pencil, Loader2 } from 'lucide-react';
+import { Plus, Pencil} from 'lucide-react';
 import { toast } from 'sonner';
 
 import { DialogFormShell } from '@/components/shared/dialog-shell/dialog-form-shell';
@@ -28,6 +28,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useContratoTiposCobranca } from '@/app/(authenticated)/contratos/tipos-config/hooks';
 import type { ContratoTipoCobranca } from '@/app/(authenticated)/contratos/tipos-config';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // SCHEMA
 // =============================================================================
@@ -166,7 +167,7 @@ function TipoCobrancaDialog({ open, onOpenChange, tipo, onSuccess }: TipoCobranc
       maxWidth="md"
       footer={
         <Button type="submit" form="tipo-cobranca-form" disabled={isSubmitting}>
-          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isSubmitting && <LoadingSpinner className="mr-2" />}
           {isEditing ? 'Salvar alterações' : 'Criar tipo'}
         </Button>
       }

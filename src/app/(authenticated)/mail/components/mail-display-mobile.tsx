@@ -4,15 +4,7 @@ import React, { useEffect, useRef } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
-  Archive,
-  ArchiveX,
-  Forward,
-  Loader2,
-  MoreVertical,
-  Reply,
-  ReplyAll,
-  Trash2,
-} from "lucide-react";
+  Archive, ArchiveX, Forward, MoreVertical, Reply, ReplyAll, Trash2} from "lucide-react";
 import { useMailStore } from "../hooks/use-mail";
 import { useMailActions } from "../hooks/use-mail-api";
 
@@ -33,6 +25,7 @@ import type { MailMessagePreview } from "@/lib/mail/types";
 import { useMailDisplay } from "../hooks/use-mail-display";
 import { MailEditor } from "./mail-editor";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface MailDisplayProps {
   mail: MailMessagePreview | null;
 }
@@ -199,7 +192,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                 aria-label="Arquivar"
                 onClick={() => handleMobileAction(actions?.archive)}>
                 {actionLoading === "archive" ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <LoadingSpinner />
                 ) : (
                   <Archive className="h-4 w-4" />
                 )}
@@ -212,7 +205,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                 aria-label="Lixo eletrônico"
                 onClick={() => handleMobileAction(actions?.junk)}>
                 {actionLoading === "junk" ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <LoadingSpinner />
                 ) : (
                   <ArchiveX className="h-4 w-4" />
                 )}
@@ -225,7 +218,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                 aria-label="Excluir"
                 onClick={() => handleMobileAction(actions?.delete)}>
                 {actionLoading === "delete" ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <LoadingSpinner />
                 ) : (
                   <Trash2 className="h-4 w-4" />
                 )}
@@ -336,7 +329,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                         <Button type="submit" size="sm" disabled={isSending}>
                           {isSending ? (
                             <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              <LoadingSpinner className="mr-2" />
                               Enviando...
                             </>
                           ) : (

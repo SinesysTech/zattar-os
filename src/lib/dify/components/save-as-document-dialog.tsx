@@ -12,12 +12,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { FileText, Loader2 } from 'lucide-react';
+import { FileText} from 'lucide-react';
 import { actionCriarDocumento } from '@/app/(authenticated)/documentos';
 import { markdownToPlate } from '../utils/markdown-to-plate';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface SaveAsDocumentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -107,7 +108,7 @@ export function SaveAsDocumentDialog({
           <Button onClick={handleSave} disabled={!titulo.trim() || isSaving}>
             {isSaving ? (
               <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <LoadingSpinner className="mr-2" />
                 Salvando...
               </>
             ) : (

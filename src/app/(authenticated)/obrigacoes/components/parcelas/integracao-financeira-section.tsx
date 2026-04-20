@@ -15,12 +15,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { RefreshCw, CheckCircle, AlertCircle, Clock, ExternalLink, ShieldCheck, Loader2 } from 'lucide-react';
+import { RefreshCw, CheckCircle, AlertCircle, Clock, ExternalLink, ShieldCheck} from 'lucide-react';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { actionSincronizarAcordo, actionVerificarConsistencia } from '@/app/(authenticated)/financeiro/actions';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface IntegracaoFinanceiraSectionProps {
   acordoId: number;
   acordoDirecao?: string; // Optional if needed for links or display
@@ -156,11 +157,11 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
 
       <div className="flex flex-wrap gap-2">
         <Button variant="outline" size="sm" onClick={() => setSyncDialogOpen(true)} disabled={isSyncing || isVerifying}>
-          {isSyncing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
+          {isSyncing ? <LoadingSpinner className="mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
           Sincronizar
         </Button>
         <Button variant="outline" size="sm" onClick={handleVerificarConsistencia} disabled={isSyncing || isVerifying}>
-          {isVerifying ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <ShieldCheck className="h-4 w-4 mr-2" />}
+          {isVerifying ? <LoadingSpinner className="mr-2" /> : <ShieldCheck className="h-4 w-4 mr-2" />}
           Verificar
         </Button>
         <Button variant="outline" size="sm" asChild>

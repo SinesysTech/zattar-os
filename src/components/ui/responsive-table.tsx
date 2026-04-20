@@ -40,12 +40,13 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2, FileX, MoreVertical } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, FileX, MoreVertical} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { useViewport } from '@/hooks/use-viewport';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 export type ResponsiveTableColumn<TData> = ColumnDef<TData> & {
     /**
      * Prioridade da coluna (1 = mais importante)
@@ -329,7 +330,7 @@ export function ResponsiveTable<TData>({
             )}>
                 {isLoading && (
                     <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50">
-                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                        <LoadingSpinner className="size-6 text-muted-foreground" />
                     </div>
                 )}
 

@@ -3,12 +3,13 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, AlertCircle, Loader2, User, Shield } from 'lucide-react';
+import { ArrowLeft, AlertCircle, User, Shield} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // Design System
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Heading } from '@/components/ui/typography';
@@ -168,7 +169,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         </div>
         <GlassPanel depth={1} className="p-12">
           <div className="flex items-center justify-center gap-3">
-            <Loader2 className="size-5 animate-spin text-primary" />
+            <LoadingSpinner size="lg" className="text-primary" />
             <p className="text-sm text-muted-foreground">Carregando dados do usuário...</p>
           </div>
         </GlassPanel>

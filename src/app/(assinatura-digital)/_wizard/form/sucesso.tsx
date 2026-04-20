@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Download, FileText, Loader2, PackageOpen } from 'lucide-react'
+import { Download, FileText, PackageOpen} from 'lucide-react'
 import { toast } from 'sonner'
 import JSZip from 'jszip'
 
@@ -12,6 +12,7 @@ import { useFormularioStore } from '@/shared/assinatura-digital/store'
 import type { PdfGerado } from '@/shared/assinatura-digital/types/store'
 import { SuccessHero } from '@/shared/assinatura-digital'
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 export default function Sucesso() {
   const resetAll = useFormularioStore((state) => state.resetAll)
   const getCachedTemplate = useFormularioStore((state) => state.getCachedTemplate)
@@ -146,7 +147,7 @@ export default function Sucesso() {
                   >
                     {isDownloadingZip ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <LoadingSpinner className="mr-2" />
                         Preparando ZIP...
                       </>
                     ) : (

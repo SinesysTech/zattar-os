@@ -6,7 +6,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Loader2, Save, AlertCircle, Wifi, ExternalLink } from "lucide-react";
+import { Save, AlertCircle, Wifi, ExternalLink} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +27,7 @@ import type {
 } from "../domain";
 import { AI_PROVIDER_TYPES, LABELS_AI_PROVIDER } from "../domain";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // Placeholder do modelo padrão por provedor
 const DEFAULT_MODEL_PLACEHOLDER: Record<AIProviderType, string> = {
   gateway: "openai/gpt-4o-mini",
@@ -316,7 +317,7 @@ export function EditorIAConfigForm({
           disabled={isTesting || !apiKey || !defaultModel}
         >
           {isTesting ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            <LoadingSpinner className="mr-2" />
           ) : (
             <Wifi className="h-4 w-4 mr-2" />
           )}
@@ -330,7 +331,7 @@ export function EditorIAConfigForm({
           className="flex-1"
         >
           {isLoading ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            <LoadingSpinner className="mr-2" />
           ) : (
             <Save className="h-4 w-4 mr-2" />
           )}

@@ -8,7 +8,7 @@
  */
 
 import * as React from 'react';
-import { PlusCircle, Settings, Loader2 } from 'lucide-react';
+import { PlusCircle, Settings} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 import {
@@ -30,6 +30,7 @@ import { SegmentosDialog } from './segmentos-dialog';
 import type { Segmento } from '../actions';
 import { actionListarSegmentos } from '../actions';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // TIPOS
 // =============================================================================
@@ -113,7 +114,7 @@ export function SegmentosFilter({
             <CommandList>
               {isLoading ? (
                 <div className="flex items-center justify-center py-6">
-                  <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                  <LoadingSpinner className="text-muted-foreground" />
                 </div>
               ) : (
                 <>

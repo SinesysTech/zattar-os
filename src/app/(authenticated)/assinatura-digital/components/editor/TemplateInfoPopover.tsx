@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FileText, Loader2, Eye, Edit } from 'lucide-react';
+import { FileText, Eye, Edit} from 'lucide-react';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -41,6 +41,7 @@ import type { StatusTemplate } from '@/shared/assinatura-digital/types/domain';
 import type { Template } from '@/shared/assinatura-digital/types/template.types';
 import { validateMarkdownForForm } from './editor-helpers';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface TemplateInfoPopoverProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -367,7 +368,7 @@ export default function TemplateInfoPopover({
               >
                 {isSaving ? (
                   <>
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <LoadingSpinner size="sm" />
                     {isCreating ? 'Criando...' : 'Salvando...'}
                   </>
                 ) : (

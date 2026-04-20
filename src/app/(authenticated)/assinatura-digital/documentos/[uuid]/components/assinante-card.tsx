@@ -2,20 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import {
-  Mail,
-  Phone,
-  CreditCard,
-  Clock,
-  Copy,
-  ExternalLink,
-  Check,
-  Shield,
-  PenLine,
-  Camera,
-  Stamp,
-  ImageIcon,
-  Loader2,
-} from "lucide-react";
+  Mail, Phone, CreditCard, Clock, Copy, ExternalLink, Check, Shield, PenLine, Camera, Stamp, ImageIcon} from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
@@ -39,6 +26,7 @@ import { actionGetPresignedPdfUrl } from '@/shared/assinatura-digital/actions/do
 import { SegurancaSection } from "./seguranca-section";
 import { Heading } from "@/components/ui/typography";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface AssinanteCardProps {
   signatario: SignatarioVerificacaoData;
   index: number;
@@ -104,7 +92,7 @@ function ImagePreview({
         className="flex min-w-24 flex-col items-center gap-2 rounded-2xl border border-dashed border-border/70 bg-background/80 px-3 py-3 transition-colors hover:bg-muted/40 cursor-pointer"
       >
         {isLoading ? (
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <LoadingSpinner className="size-8 text-muted-foreground" />
         ) : url ? (
           <img
             src={url}

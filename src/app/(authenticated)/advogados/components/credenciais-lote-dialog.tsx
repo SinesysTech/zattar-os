@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle, XCircle, AlertCircle, Loader2 } from "lucide-react";
+import { CheckCircle, XCircle, AlertCircle} from "lucide-react";
 
 import {
   TRIBUNAIS_ATIVOS,
@@ -22,6 +22,7 @@ import {
 } from "../domain";
 import { actionCriarCredenciaisEmLote } from "../actions/credenciais-actions";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface CredenciaisLoteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -301,7 +302,7 @@ export function CredenciaisLoteDialog({
                 onClick={handleSave}
                 disabled={isSaving || !isFormValid}
               >
-                {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isSaving && <LoadingSpinner className="mr-2" />}
                 Criar {totalCredenciais} Credencia
                 {totalCredenciais === 1 ? "l" : "is"}
               </Button>

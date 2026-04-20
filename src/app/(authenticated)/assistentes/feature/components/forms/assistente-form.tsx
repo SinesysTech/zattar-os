@@ -8,12 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Loader2 } from 'lucide-react';
 import {
   atualizarAssistenteSchema,
   Assistente
 } from '../../domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface AssistenteFormProps {
   initialData?: Assistente;
   onSubmit: (data: FormData) => Promise<void>;
@@ -138,7 +138,7 @@ export function AssistenteForm({
           Cancelar
         </Button>
         <Button type="submit" disabled={isLoading}>
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isLoading && <LoadingSpinner className="mr-2" />}
           {isEditing ? 'Salvar' : 'Criar Assistente'}
         </Button>
       </div>

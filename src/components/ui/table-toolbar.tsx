@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Search, Filter, Plus, Check, Loader2, ChevronRight, ChevronDown } from "lucide-react"
+import { Search, Filter, Plus, Check, ChevronRight, ChevronDown} from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/tooltip"
 import { ResponsiveFilterPanel } from "@/components/ui/responsive-filter-panel"
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 export interface ComboboxOption {
   value: string
   label: string
@@ -258,7 +259,7 @@ export function TableToolbar({
               />
               {isSearching && (
                 <InputGroupAddon align="inline-end">
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <LoadingSpinner />
                 </InputGroupAddon>
               )}
             </InputGroup>
@@ -317,7 +318,7 @@ export function TableToolbar({
         />
         {isSearching && (
           <InputGroupAddon align="inline-end">
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <LoadingSpinner />
           </InputGroupAddon>
         )}
       </InputGroup>

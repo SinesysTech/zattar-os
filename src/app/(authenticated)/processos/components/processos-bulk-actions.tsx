@@ -19,11 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionAtribuirResponsavelEmLote } from '../actions';
 import type { ProcessoUnificado } from '../types';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface Usuario {
   id: number;
   nomeExibicao: string;
@@ -128,7 +128,7 @@ export function ProcessosBulkActions({
               Cancelar
             </Button>
             <Button onClick={handleAtribuir} disabled={isPending}>
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isPending && <LoadingSpinner className="mr-2" />}
               Atribuir
             </Button>
           </DialogFooter>

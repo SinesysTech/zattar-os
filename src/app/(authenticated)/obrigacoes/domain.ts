@@ -156,13 +156,6 @@ export interface ResumoObrigacoes {
     }>;
 }
 
-export interface AlertasObrigacoesType {
-  vencidas: { quantidade: number; valor: number; items: ObrigacaoComDetalhes[] };
-  vencendoHoje: { quantidade: number; valor: number; items: ObrigacaoComDetalhes[] };
-  vencendoEm7Dias: { quantidade: number; valor: number; items: ObrigacaoComDetalhes[] };
-  inconsistentes: { quantidade: number; items: ObrigacaoComDetalhes[] };
-}
-
 // Params Types
 export interface CriarAcordoComParcelasParams {
   processoId: number;

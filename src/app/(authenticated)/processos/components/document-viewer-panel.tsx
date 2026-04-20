@@ -4,14 +4,7 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
-  FileText,
-  ExternalLink,
-  Download,
-  Lock,
-  Loader2,
-  MousePointerClick,
-  RefreshCw,
-} from 'lucide-react';
+  FileText, ExternalLink, Download, Lock, MousePointerClick, RefreshCw} from 'lucide-react';
 import { toast } from 'sonner';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import type { GrauProcesso } from '@/app/(authenticated)/partes';
@@ -26,6 +19,7 @@ import {
 import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
 import { Heading } from '@/components/ui/typography';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 type TimelineItemWithGrau = TimelineItemEnriquecido & {
   grauOrigem?: GrauProcesso;
 };
@@ -177,7 +171,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
             className="gap-2"
           >
             {isCapturing ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <LoadingSpinner size="sm" />
             ) : (
               <RefreshCw className="h-3.5 w-3.5" />
             )}
@@ -265,7 +259,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
       <div className="relative flex-1 min-h-0">
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
-            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            <LoadingSpinner className="size-6 text-primary" />
           </div>
         )}
 

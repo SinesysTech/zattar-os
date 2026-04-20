@@ -2,15 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
-  Fingerprint,
-  CopyIcon,
-  CheckIcon,
-  ChevronLeftIcon,
-  Loader2Icon,
-  AlertCircleIcon,
-  KeyRoundIcon,
-  ShieldCheckIcon,
-} from "lucide-react";
+  Fingerprint, CopyIcon, CheckIcon, ChevronLeftIcon, AlertCircleIcon, KeyRoundIcon, ShieldCheckIcon} from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -19,6 +11,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useTwoFAuth, type TwoFAuthAccount } from "@/hooks/use-twofauth";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 /**
  * Componente para exibir o ícone de uma conta 2FA
  * Suporta URLs e base64, com fallback para ícone padrão
@@ -182,7 +175,7 @@ export function AuthenticatorPopover() {
             <div className="flex flex-col items-center gap-2">
               {otpLoading ? (
                 <div className="flex h-14 items-center justify-center">
-                  <Loader2Icon className="h-5 w-5 animate-spin text-muted-foreground/60" />
+                  <LoadingSpinner size="lg" className="text-muted-foreground/60" />
                 </div>
               ) : otpError ? (
                 <div className="flex flex-col items-center gap-2 text-destructive">
@@ -252,7 +245,7 @@ export function AuthenticatorPopover() {
           <ScrollArea className="h-64">
             {isLoading ? (
               <div className="flex h-full items-center justify-center p-8">
-                <Loader2Icon className="h-5 w-5 animate-spin text-muted-foreground/60" />
+                <LoadingSpinner size="lg" className="text-muted-foreground/60" />
               </div>
             ) : error ? (
               <div className="flex h-full flex-col items-center justify-center p-8 text-center">

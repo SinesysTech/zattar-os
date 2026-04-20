@@ -13,8 +13,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useAssistenteMutations } from '../../hooks/use-assistente-mutations';
 import { Assistente } from '../../domain';
-import { Loader2 } from 'lucide-react';
-
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface DeleteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -59,7 +58,7 @@ export function DeleteDialog({
             disabled={isLoading}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isLoading && <LoadingSpinner className="mr-2" />}
             Excluir
           </AlertDialogAction>
         </AlertDialogFooter>

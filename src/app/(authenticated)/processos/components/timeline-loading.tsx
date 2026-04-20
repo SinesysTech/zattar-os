@@ -6,11 +6,11 @@
 
 'use client';
 
-import { Loader2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Progress } from '@/components/ui/progress';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface TimelineLoadingProps {
   message?: string;
   isCapturing?: boolean;
@@ -54,7 +54,7 @@ export function TimelineLoading({
 
         <div className="rounded-2xl border bg-card px-6 py-8">
           <div className="flex items-center justify-center gap-3">
-            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+            <LoadingSpinner size="lg" className="text-primary" />
             <div className="text-center space-y-2">
               <p className="text-base font-medium">{message}</p>
               {isCapturing && (
@@ -100,7 +100,7 @@ export function TimelineLoading({
       {/* Timeline Loading Message */}
       <Card className="p-6 space-y-4">
         <div className="flex items-center justify-center gap-3 py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+          <LoadingSpinner className="size-6 text-primary" />
           <div className="text-center space-y-2">
             <p className="text-base font-medium">{message}</p>
             {isCapturing && (

@@ -1,10 +1,11 @@
-import { Check, CheckCheck, AlertCircle, Loader2 } from "lucide-react";
+import { Check, CheckCheck, AlertCircle} from "lucide-react";
 import { MessageStatus } from "../domain";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 export function MessageStatusIcon({ status }: { status: MessageStatus }) {
   switch (status) {
     case "sending":
-      return <Loader2 className="size-3 shrink-0 text-muted-foreground animate-spin" />;
+      return <LoadingSpinner size="sm" className="shrink-0 text-muted-foreground" />;
     case "failed":
       return <AlertCircle className="size-3 shrink-0 text-destructive" />;
     case "read":

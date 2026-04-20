@@ -3,11 +3,12 @@
 import { useState, useRef, useImperativeHandle, forwardRef, useCallback } from "react";
 import Webcam from "react-webcam";
 import { Button } from "@/components/ui/button";
-import { Camera, RefreshCw, AlertCircle, Loader2 } from "lucide-react";
+import { Camera, RefreshCw, AlertCircle} from "lucide-react";
 import { toast } from "sonner";
 import { GlassPanel } from "@/components/shared/glass-panel";
 import { Text } from "@/components/ui/typography";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 export interface CapturaFotoRef {
   getPhotoBase64: () => string;
   hasPhoto: () => boolean;
@@ -129,7 +130,7 @@ const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto
                 {/* Loading overlay */}
                 {!isWebcamReady && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface-container-lowest/80 backdrop-blur-sm">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <LoadingSpinner className="size-8 text-primary" />
                     <Text variant="caption" className="text-muted-foreground">
                       Carregando câmera...
                     </Text>

@@ -23,14 +23,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
-  Loader2,
-  Plus,
-  Pencil,
-  Trash2,
-  Save,
-  X,
-  FileX,
-} from 'lucide-react';
+  Plus, Pencil, Trash2, Save, X, FileX} from 'lucide-react';
 import { toast } from 'sonner';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Typography } from '@/components/ui/typography';
@@ -52,6 +45,7 @@ import {
   actionDeletarSegmento,
 } from '../actions';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // TIPOS
 // =============================================================================
@@ -359,7 +353,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                   >
                     {isSaving ? (
                       <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        <LoadingSpinner className="mr-2" />
                         Salvando...
                       </>
                     ) : (
@@ -376,7 +370,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
             {/* Lista de Segmentos */}
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                <LoadingSpinner className="size-6 text-muted-foreground" />
               </div>
             ) : segmentos.length === 0 ? (
               <Empty>

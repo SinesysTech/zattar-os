@@ -6,7 +6,6 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -23,6 +22,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { actionCriarDocumento } from '../actions/documentos-actions';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface CreateDocumentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -134,7 +134,7 @@ export function CreateDocumentDialog({
               Cancelar
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {loading && <LoadingSpinner className="mr-2" />}
               Criar e Editar
             </Button>
           </ResponsiveDialogFooter>

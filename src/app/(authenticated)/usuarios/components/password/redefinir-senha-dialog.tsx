@@ -7,10 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { Loader2, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
+import { Eye, EyeOff, CheckCircle2} from 'lucide-react';
 import { actionRedefinirSenha } from '../../actions/senha-actions';
 import type { Usuario } from '../../domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface RedefinirSenhaDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -132,7 +133,7 @@ export function RedefinirSenhaDialog({
           onClick={() => formRef.current?.requestSubmit()}
           disabled={isLoading || !!successMessage}
         >
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isLoading && <LoadingSpinner className="mr-2" />}
           Redefinir Senha
         </Button>
       }

@@ -8,13 +8,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  Trash2,
-  RotateCcw,
-  AlertTriangle,
-  FileText,
-  ArrowLeft,
-  Loader2,
-} from 'lucide-react';
+  Trash2, RotateCcw, AlertTriangle, FileText, ArrowLeft} from 'lucide-react';
 import { EmptyState } from '@/components/shared/empty-state';
 import { Button } from '@/components/ui/button';
 import {
@@ -47,6 +41,7 @@ import {
   actionDeletarPermanentemente
 } from '@/app/(authenticated)/documentos';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // ============================================================================
 // Constantes
 // ============================================================================
@@ -180,7 +175,7 @@ function DocumentoCard({
               disabled={isLoading}
             >
               {isLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner className="mr-2" />
               ) : (
                 <RotateCcw className="mr-2 h-4 w-4" />
               )}
@@ -193,7 +188,7 @@ function DocumentoCard({
               disabled={isLoading}
             >
               {isLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner className="mr-2" />
               ) : (
                 <Trash2 className="mr-2 h-4 w-4" />
               )}

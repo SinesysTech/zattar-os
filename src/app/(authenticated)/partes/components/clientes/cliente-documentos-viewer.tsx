@@ -6,14 +6,7 @@
 
 import * as React from 'react';
 import {
-  FileText,
-  Download,
-  Loader2,
-  FolderOpen,
-  FileImage,
-  FileSpreadsheet,
-  File
-} from 'lucide-react';
+  FileText, Download, FolderOpen, FileImage, FileSpreadsheet, File} from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Card, CardContent } from '@/components/ui/card';
@@ -27,6 +20,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface DocumentFile {
   key: string;
   name: string;
@@ -127,7 +121,7 @@ export function ClienteDocumentosViewer({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <LoadingSpinner className="size-6 text-muted-foreground" />
         <span className="ml-2 text-muted-foreground">
           Carregando documentos...
         </span>

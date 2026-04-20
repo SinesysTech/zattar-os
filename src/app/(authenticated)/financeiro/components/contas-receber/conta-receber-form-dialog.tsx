@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Loader2, CalendarIcon } from 'lucide-react';
+import { CalendarIcon} from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Calendar } from '@/components/ui/calendar';
@@ -51,6 +51,7 @@ import type {
   Lancamento,
 } from '../../types/lancamentos';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // ============================================================================
 // Constants
 // ============================================================================
@@ -697,7 +698,7 @@ export function ContaReceberFormDialog({
               Cancelar
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isSubmitting && <LoadingSpinner className="mr-2" />}
               {isEditMode ? 'Salvar Alterações' : 'Criar Conta'}
             </Button>
           </DialogFooter>

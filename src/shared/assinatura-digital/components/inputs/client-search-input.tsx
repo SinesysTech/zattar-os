@@ -4,12 +4,13 @@ import * as React from 'react';
 import { useState } from 'react';
 import InputCPF from './input-cpf';
 import { Button } from '@/components/ui/button';
-import { Loader2, Search, CheckCircle2, XCircle } from 'lucide-react';
+import { Search, CheckCircle2, XCircle} from 'lucide-react';
 import { searchClienteByCPF } from '../../actions';
 import type { Cliente } from '@/app/(authenticated)/partes/types';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 export interface ClientSearchInputProps {
   value?: string;
   onChange?: (value: string) => void;
@@ -108,7 +109,7 @@ export function ClientSearchInput({
         >
           {isSearching ? (
             <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              <LoadingSpinner className="mr-2" />
               Buscando...
             </>
           ) : (

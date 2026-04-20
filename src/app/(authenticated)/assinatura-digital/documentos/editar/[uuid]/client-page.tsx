@@ -6,7 +6,7 @@
  * Layout: PDF canvas (bg-ambient glass) à esquerda + FloatingSidebar glass à direita.
  * Alinhado ao Design System Glass Briefing (POC novo-documento):
  * - Canvas com backdrop ambiente (radial glow sutil em vez de bg-muted/30 chapado)
- * - Indicador de salvamento como pill glass-kpi com Loader2
+ * - Indicador de salvamento como pill glass-kpi com LoadingSpinner
  * - Sidebar com divisor vertical ambient (sem border-l duro)
  */
 
@@ -14,9 +14,8 @@ import { useDocumentEditor } from '@/app/(authenticated)/assinatura-digital/comp
 import { PDF_CANVAS_SIZE } from '@/shared/assinatura-digital/types/pdf-preview.types';
 import EditorCanvas from '@/app/(authenticated)/assinatura-digital/components/editor/components/EditorCanvas';
 import FloatingSidebar from '@/app/(authenticated)/assinatura-digital/components/editor/components/FloatingSidebar';
-import { Loader2 } from "lucide-react";
 import { DocumentFlowShell } from '@/app/(authenticated)/assinatura-digital/components/flow';
-
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface EditarDocumentoClientProps {
   uuid: string;
 }
@@ -71,7 +70,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
     return (
       <DocumentFlowShell fullHeight>
         <div className="flex w-full h-full items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <LoadingSpinner className="size-8 text-primary" />
           <span className="ml-2 text-muted-foreground">
             Carregando documento...
           </span>
@@ -95,7 +94,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
           {isSaving && (
             <div className="absolute top-4 right-6 z-20">
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-kpi border border-info/25 bg-info/5 backdrop-blur-md text-xs font-medium text-info">
-                <Loader2 className="size-3 animate-spin" />
+                <LoadingSpinner size="sm" />
                 Salvando...
               </span>
             </div>

@@ -32,7 +32,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
-import { Loader2, Search, ChevronDown, Check, Info } from 'lucide-react';
+import { Search, ChevronDown, Check, Info} from 'lucide-react';
 import { Typography } from '@/components/ui/typography';
 import {
   Collapsible,
@@ -55,6 +55,7 @@ import {
 import { usePermissoes } from '@/providers/user-provider';
 import { PangeaResults } from './pangea-results';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const formSchema = z.object({
   buscaGeral: z.string().optional(),
   todasPalavras: z.string().optional(),
@@ -245,7 +246,7 @@ export function PangeaPageContent() {
   if (loadingPerms) {
     return (
       <div className="flex items-center gap-2 text-muted-foreground">
-        <Loader2 className="h-4 w-4 animate-spin" />
+        <LoadingSpinner />
         <span>Carregando permissões…</span>
       </div>
     );
@@ -300,7 +301,7 @@ export function PangeaPageContent() {
                 aria-label="Buscar"
               >
                 {isLoading ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <LoadingSpinner size="lg" />
                 ) : (
                   <Search className="h-5 w-5" />
                 )}
@@ -400,7 +401,7 @@ export function PangeaPageContent() {
                       >
                         {loadingOrgaos ? (
                           <span className="flex items-center gap-2">
-                            <Loader2 className="h-3 w-3 animate-spin" />
+                            <LoadingSpinner size="sm" />
                             Carregando…
                           </span>
                         ) : selectedOrgaos.length > 0 ? (

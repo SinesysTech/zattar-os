@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Loader2, CalendarIcon } from 'lucide-react';
+import { CalendarIcon} from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Calendar } from '@/components/ui/calendar';
@@ -43,6 +43,7 @@ import type {
 } from '../../types/lancamentos';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // ============================================================================
 // Constants
 // ============================================================================
@@ -320,7 +321,7 @@ export function ContaPagarFormDialog({
           disabled={isSubmitting}
           className="ml-auto"
         >
-          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isSubmitting && <LoadingSpinner className="mr-2" />}
           {isEditMode ? 'Salvar Alterações' : 'Criar Conta'}
         </Button>
       }

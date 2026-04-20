@@ -16,7 +16,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
-import { Loader2 } from "lucide-react";
 import {
   PAPEL_PROJETO_VALUES,
   PAPEL_PROJETO_LABELS,
@@ -25,6 +24,7 @@ import {
 import { actionAdicionarMembro } from "../../actions";
 import { toast } from "sonner";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface AddMemberDialogProps {
   projetoId: string;
   usuarios: ComboboxOption[];
@@ -118,7 +118,7 @@ export function AddMemberDialog({
             </Button>
             <Button type="submit" disabled={isPending || !selectedUser}>
               {isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner className="mr-2" />
               )}
               Adicionar
             </Button>

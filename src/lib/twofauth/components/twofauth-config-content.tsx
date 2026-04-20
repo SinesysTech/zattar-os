@@ -12,18 +12,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import {
-  ShieldCheckIcon,
-  RefreshCwIcon,
-  Loader2Icon,
-  CheckCircleIcon,
-  XCircleIcon,
-  KeyRoundIcon,
-  PlusIcon,
-  TrashIcon,
-  CopyIcon,
-  CheckIcon,
-  FolderIcon,
-} from "lucide-react";
+  ShieldCheckIcon, RefreshCwIcon, CheckCircleIcon, XCircleIcon, KeyRoundIcon, PlusIcon, TrashIcon, CopyIcon, CheckIcon, FolderIcon} from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AppBadge } from "@/components/ui/app-badge";
@@ -45,6 +34,7 @@ import { cn } from "@/lib/utils";
 import type { TwoFAuthAccount, TwoFAuthGroup } from "@/lib/integrations/twofauth/types";
 import useTwoFAuthAccounts from "../hooks/use-twofauth-accounts";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // TIPOS
 // =============================================================================
@@ -198,7 +188,7 @@ export function TwoFAuthConfigContent() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
+        <LoadingSpinner className="size-8 text-muted-foreground" />
       </div>
     );
   }
@@ -338,7 +328,7 @@ export function TwoFAuthConfigContent() {
                           disabled={otpLoading}
                         >
                           {otpLoading && selectedAccountId === account.id ? (
-                            <Loader2Icon className="h-4 w-4 animate-spin" />
+                            <LoadingSpinner />
                           ) : (
                             <KeyRoundIcon className="h-4 w-4" />
                           )}

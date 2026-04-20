@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Loader2, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2} from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -16,6 +16,7 @@ import { useGazetteStore } from './hooks/use-gazette-store';
 import type { SyncLogEntry } from '@/app/(authenticated)/comunica-cnj/domain';
 import type { TimelineItem } from './gazette-timeline';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 interface GazetteSyncDialogProps {
@@ -198,7 +199,7 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
             >
               {isSyncing ? (
                 <span className="flex items-center gap-2">
-                  <Loader2 className="size-4 animate-spin" />
+                  <LoadingSpinner />
                   Sincronizando...
                 </span>
               ) : result ? (

@@ -13,22 +13,7 @@ import { BlockSelectionPlugin, useIsSelecting } from '@platejs/selection/react';
 import { getTransientSuggestionKey } from '@platejs/suggestion';
 import { Command as CommandPrimitive } from 'cmdk';
 import {
-  Album,
-  BadgeHelp,
-  BookOpenCheck,
-  Check,
-  CornerUpLeft,
-  FeatherIcon,
-  ListEnd,
-  ListMinus,
-  ListPlus,
-  Loader2Icon,
-  PauseIcon,
-  PenLine,
-  SmileIcon,
-  Wand,
-  X,
-} from 'lucide-react';
+  Album, BadgeHelp, BookOpenCheck, Check, CornerUpLeft, FeatherIcon, ListEnd, ListMinus, ListPlus, PauseIcon, PenLine, SmileIcon, Wand, X} from 'lucide-react';
 import {
   type NodeEntry,
   type SlateEditor,
@@ -62,6 +47,7 @@ import { commentPlugin } from '@/components/editor/plate/comment-kit';
 
 import { AIChatEditor } from './ai-chat-editor';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 export function AIMenu() {
   const { api, editor } = useEditorPlugin(AIChatPlugin);
   const mode = usePluginOption(AIChatPlugin, 'mode');
@@ -216,7 +202,7 @@ export function AIMenu() {
 
           {isLoading ? (
             <div className="flex grow select-none items-center gap-2 p-2 text-muted-foreground text-sm">
-              <Loader2Icon className="size-4 animate-spin" />
+              <LoadingSpinner />
               {messages.length > 1 ? 'Editando...' : 'Pensando...'}
             </div>
           ) : (

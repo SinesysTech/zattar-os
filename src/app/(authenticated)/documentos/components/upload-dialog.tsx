@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react';
-import { Upload, Loader2, File, X } from 'lucide-react';
+import { Upload, File, X} from 'lucide-react';
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -20,6 +20,7 @@ import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import { actionUploadArquivo } from '../actions/uploads-actions';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface UploadDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -218,7 +219,7 @@ export function UploadDialog({
           >
             {uploading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner className="mr-2" />
                 Enviando...
               </>
             ) : (

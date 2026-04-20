@@ -17,7 +17,7 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 import { Heading } from '@/components/ui/typography';
 import { PermissionToggle } from './permission-toggle';
 import { RolePresetSelect } from './role-preset-select';
-import { Shield, Save, RotateCcw, Info, Loader2, AlertCircle } from 'lucide-react';
+import { Shield, Save, RotateCcw, Info, AlertCircle} from 'lucide-react';
 import type { PermissaoMatriz } from '../../domain';
 import {
   agruparPermissoesPorModulo,
@@ -29,6 +29,7 @@ import {
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Typography } from '@/components/ui/typography';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface PermissoesMatrizProps {
   matriz: PermissaoMatriz[];
   isSuperAdmin: boolean;
@@ -132,7 +133,7 @@ export function PermissoesMatriz({
               >
                 {isSaving ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />
+                    <LoadingSpinner className="mr-1.5" />
                     Salvando...
                   </>
                 ) : (
@@ -304,7 +305,7 @@ export function PermissoesMatriz({
             <Button type="button" onClick={handleConfirmarSalvar} disabled={isSaving}>
               {isSaving ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />
+                  <LoadingSpinner className="mr-1.5" />
                   Salvando...
                 </>
               ) : (

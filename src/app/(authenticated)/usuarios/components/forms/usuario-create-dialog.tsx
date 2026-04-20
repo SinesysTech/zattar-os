@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2, Search } from 'lucide-react';
+import { Search} from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useCargos } from '@/app/(authenticated)/cargos';
@@ -23,6 +23,7 @@ import type { UsuarioDados, GeneroUsuario, Endereco } from '../../domain';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { buscarEnderecoPorCep, limparCep } from '@/lib/utils/viacep';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface UsuarioCreateDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -220,7 +221,7 @@ export function UsuarioCreateDialog({
             </Button>
           ) : (
             <Button type="submit" onClick={() => formRef.current?.requestSubmit()} disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading && <LoadingSpinner className="mr-2" />}
               Criar Usuário
             </Button>
           )}
@@ -501,7 +502,7 @@ export function UsuarioCreateDialog({
                         title="Buscar CEP"
                       >
                         {isBuscandoCep ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <LoadingSpinner />
                         ) : (
                           <Search className="h-4 w-4" />
                         )}

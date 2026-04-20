@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Fingerprint, ArrowRight, Loader2 } from 'lucide-react'
+import { Fingerprint, ArrowRight} from 'lucide-react'
 import { GlassPanel } from '@/components/shared/glass-panel'
 import { actionLoginPortal } from '../../actions/portal-actions'
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 function formatCpf(value: string) {
   const digits = value.replace(/\D/g, '').slice(0, 11)
 
@@ -103,7 +104,7 @@ export function CpfHeroForm() {
         >
           {isPending ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <LoadingSpinner />
               Verificando...
             </>
           ) : (

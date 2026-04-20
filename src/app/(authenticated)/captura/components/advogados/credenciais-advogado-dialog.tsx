@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Pencil, Power, Loader2, Eye, EyeOff, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { Plus, Pencil, Power, Eye, EyeOff, CheckCircle, AlertCircle, XCircle} from 'lucide-react';
 
 import {
   Dialog,
@@ -55,6 +55,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 type Props = {
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
@@ -348,7 +349,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
 
                 {isLoading ? (
                   <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                    <LoadingSpinner className="size-6 text-muted-foreground" />
                   </div>
                 ) : credenciais.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
@@ -568,7 +569,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                         Cancelar
                       </Button>
                       <Button onClick={handleSave} disabled={isSaving}>
-                        {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {isSaving && <LoadingSpinner className="mr-2" />}
                         Salvar
                       </Button>
                     </div>
@@ -734,7 +735,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                         onClick={handleSave}
                         disabled={isSaving || loteFormData.tribunais.length === 0 || !loteFormData.senha}
                       >
-                        {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {isSaving && <LoadingSpinner className="mr-2" />}
                         Cadastrar {loteFormData.tribunais.length * loteFormData.graus.length} Credenciais
                       </Button>
                     </div>

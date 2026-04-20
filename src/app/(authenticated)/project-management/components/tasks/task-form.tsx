@@ -29,7 +29,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2 } from "lucide-react";
 import {
   STATUS_TAREFA_LABELS,
   STATUS_TAREFA_VALUES,
@@ -45,6 +44,7 @@ import {
 } from "../../actions";
 import { toast } from "sonner";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const formSchema = z.object({
   titulo: z.string().min(1, "Título é obrigatório").max(255),
   descricao: z.string().max(5000).optional(),
@@ -323,7 +323,7 @@ export function TaskFormDialog({
               </Button>
               <Button type="submit" disabled={isPending}>
                 {isPending && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <LoadingSpinner className="mr-2" />
                 )}
                 {isEditing ? "Salvar" : "Criar Tarefa"}
               </Button>

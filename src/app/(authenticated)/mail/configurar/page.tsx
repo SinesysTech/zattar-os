@@ -4,13 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/providers/user-provider";
 import {
-  ArrowLeft,
-  CheckCircle2,
-  Eye,
-  EyeOff,
-  Loader2,
-  XCircle,
-} from "lucide-react";
+  ArrowLeft, CheckCircle2, Eye, EyeOff, XCircle} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +24,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const CLOUDRON_DEFAULTS = {
   imap_host: "my.zattaradvogados.com",
   imap_port: 993,
@@ -188,7 +183,7 @@ export default function ConfigurarEmailPage() {
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Loader2 className="text-muted-foreground h-6 w-6 animate-spin" />
+        <LoadingSpinner className="text-muted-foreground size-6" />
       </div>
     );
   }
@@ -352,14 +347,14 @@ export default function ConfigurarEmailPage() {
               onClick={handleTest}
               disabled={isTesting || !email || !password}
             >
-              {isTesting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isTesting && <LoadingSpinner className="mr-2" />}
               Testar Conexão
             </Button>
             <Button
               onClick={handleSave}
               disabled={isSaving || !email || !password}
             >
-              {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isSaving && <LoadingSpinner className="mr-2" />}
               Salvar
             </Button>
             {isConfigured && (

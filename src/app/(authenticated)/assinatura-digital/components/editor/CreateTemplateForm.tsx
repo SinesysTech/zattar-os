@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FileText, Loader2, Info } from 'lucide-react';
+import { FileText, Info} from 'lucide-react';
 import { toast } from 'sonner';
 import { MarkdownRichTextEditorDialog } from './MarkdownRichTextEditorDialog.stub';
 import { MarkdownRichTextEditor } from './MarkdownRichTextEditor';
@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Heading } from '@/components/ui/typography';
 
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface CreateTemplateFormProps {
   pdfFile?: File; // Make pdfFile optional
   onSubmit: (data: {
@@ -225,7 +226,7 @@ export default function CreateTemplateForm({
           >
             {isSaving ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <LoadingSpinner />
                 Criando...
               </>
             ) : (

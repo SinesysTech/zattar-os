@@ -1,7 +1,8 @@
 'use client';
 
 import { useRef, type KeyboardEvent } from 'react';
-import { Search, Loader2, Scale } from 'lucide-react';
+import { Search, Scale } from 'lucide-react';
+import { LoadingSpinner } from '@/components/ui/loading-state';
 import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -71,7 +72,7 @@ export function SearchHero({ onBuscar }: SearchHeroProps) {
           className="gap-1.5 rounded-xl"
         >
           {isBuscando ? (
-            <Loader2 className="size-4 animate-spin" aria-hidden />
+            <LoadingSpinner />
           ) : (
             <Search className="size-4" aria-hidden />
           )}

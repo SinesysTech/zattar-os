@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2, Save, Search, AlertCircle, Camera } from 'lucide-react';
+import { Save, Search, AlertCircle, Camera} from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { useCargos } from '@/app/(authenticated)/cargos';
@@ -28,6 +28,7 @@ import { Typography } from '@/components/ui/typography';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { GlassPanel } from '@/components/shared/glass-panel';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface UsuarioEditDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -245,7 +246,7 @@ export function UsuarioEditDialog({
         >
           {isSaving ? (
             <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <LoadingSpinner className="mr-2" />
               Salvando...
             </>
           ) : (
@@ -506,7 +507,7 @@ export function UsuarioEditDialog({
                     title="Buscar CEP"
                   >
                     {isBuscandoCep ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <LoadingSpinner />
                     ) : (
                       <Search className="h-4 w-4" />
                     )}

@@ -10,7 +10,7 @@
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Loader2, RefreshCw, FileText } from 'lucide-react';
+import { RefreshCw, FileText} from 'lucide-react';
 
 import {
   Dialog,
@@ -44,6 +44,7 @@ import {
 } from '../utils';
 import { CallTranscriptViewer } from './call-transcript-viewer';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface CallDetailSheetProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -120,7 +121,7 @@ export function CallDetailSheet({
 
         {isLoading ? (
           <div className="flex flex-1 items-center justify-center py-10">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            <LoadingSpinner className="size-8 text-muted-foreground" />
           </div>
         ) : chamada ? (
           <Tabs

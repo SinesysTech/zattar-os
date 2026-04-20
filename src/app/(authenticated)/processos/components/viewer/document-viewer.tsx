@@ -18,7 +18,8 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { FileText, Loader2, RefreshCw } from 'lucide-react';
+import { FileText, RefreshCw } from 'lucide-react';
+import { LoadingSpinner } from '@/components/ui/loading-state';
 import { toast } from 'sonner';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
@@ -204,7 +205,7 @@ export function DocumentViewer({
         {isLoading ? (
           // Estado de carregamento
           <div className="flex items-center justify-center h-full">
-            <Loader2 className="h-6 w-6 animate-spin text-primary" aria-label="Carregando documento" />
+            <LoadingSpinner size="lg" className="text-primary" aria-label="Carregando documento" />
           </div>
         ) : error ? (
           // Estado de erro com retry

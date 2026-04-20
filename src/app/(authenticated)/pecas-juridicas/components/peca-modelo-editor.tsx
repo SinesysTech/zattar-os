@@ -11,12 +11,7 @@ import * as React from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import {
-  ArrowLeft,
-  Save,
-  Loader2,
-  FileText,
-  Download,
-} from 'lucide-react';
+  ArrowLeft, Save, FileText, Download} from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -55,6 +50,7 @@ import { exportToDocx, exportTextToPdf } from '@/app/(authenticated)/documentos'
 import type { Value } from '@/app/(authenticated)/documentos';
 import type { PlateEditorRef } from '@/components/editor/plate/plate-editor';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // LAZY LOADING
 // =============================================================================
@@ -328,7 +324,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" aria-label="Exportar" disabled={exporting !== null}>
                   {exporting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <LoadingSpinner />
                   ) : (
                     <Download className="h-4 w-4" />
                   )}
@@ -347,7 +343,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
             {/* Save button */}
             <Button onClick={handleSave} disabled={saving}>
               {saving ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner className="mr-2" />
               ) : (
                 <Save className="mr-2 h-4 w-4" />
               )}

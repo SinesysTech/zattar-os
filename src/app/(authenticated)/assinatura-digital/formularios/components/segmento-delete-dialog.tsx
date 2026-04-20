@@ -13,9 +13,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, AlertTriangle } from "lucide-react";
+import { AlertTriangle} from "lucide-react";
 import type { AssinaturaDigitalSegmento } from '@/shared/assinatura-digital';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface SegmentoDeleteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -145,7 +146,7 @@ export function SegmentoDeleteDialog({
           >
             {isDeleting ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner className="mr-2" />
                 Deletando...
               </>
             ) : (

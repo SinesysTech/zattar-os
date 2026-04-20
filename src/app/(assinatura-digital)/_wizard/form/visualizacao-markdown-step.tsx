@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Loader2, AlertCircle } from "lucide-react";
+import { AlertCircle} from "lucide-react";
 import { toast } from 'sonner';
 import ReactMarkdown from "react-markdown";
 import { renderMarkdownWithVariables, getMarkdownPlugins } from '@/shared/assinatura-digital/utils/markdown-renderer';
@@ -16,6 +16,7 @@ import type { VisualizacaoMarkdownData, ClienteDadosGeracao, DadosGeracao } from
 import { apiFetch } from "@/lib/http/api-fetch";
 import { formatCPF, formatCEP, formatTelefone } from '@/shared/assinatura-digital/utils/formatters';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface TemplateMetadata {
   id: string;
   nome: string;
@@ -279,7 +280,7 @@ export default function VisualizacaoMarkdownStep() {
     >
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-12 space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <LoadingSpinner className="size-12 text-primary" />
           <p className="text-lg font-medium text-foreground">
             {isFetchingTemplate ? "Buscando template..." : "Processando documento..."}
           </p>

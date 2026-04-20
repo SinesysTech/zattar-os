@@ -31,8 +31,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
-
 import {
   actionCriarAdvogado,
   actionAtualizarAdvogado,
@@ -40,6 +38,7 @@ import {
 } from '@/app/(authenticated)/advogados';
 import { UFS_BRASIL } from '@/app/(authenticated)/advogados';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const formSchema = z.object({
   nome_completo: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
   cpf: z.string().min(11, 'CPF deve ter 11 dígitos').max(14, 'CPF inválido'),
@@ -248,7 +247,7 @@ export function AdvogadosDialog({ advogado, open, onOpenChangeAction, onSuccessA
                 Cancelar
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isSubmitting && <LoadingSpinner className="mr-2" />}
                 {isEditing ? 'Salvar' : 'Cadastrar'}
               </Button>
             </DialogFooter>

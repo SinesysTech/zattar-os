@@ -13,24 +13,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Check,
-  Copy,
-  FileText,
-  Users,
-  Loader2,
-  ExternalLink,
-  Pen,
-  Stamp,
-  ChevronLeft,
-  ChevronRight,
-  Camera,
-  Link as LinkIcon,
-  ArrowLeft,
-  Send,
-  Shield,
-  Hash,
-  Clock,
-} from "lucide-react";
+  Check, Copy, FileText, Users, ExternalLink, Pen, Stamp, ChevronLeft, ChevronRight, Camera, Link as LinkIcon, ArrowLeft, Send, Shield, Hash, Clock} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -44,6 +27,7 @@ import { DocumentFlowShell } from '@/app/(authenticated)/assinatura-digital/comp
 import type { AssinaturaDigitalDocumentoAssinanteTipo } from '@/shared/assinatura-digital/domain';
 import { GlassPanel } from "@/components/shared/glass-panel";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // ─── Types ─────────────────────────────────────────────────────────────
 
 interface DocumentoRevisar {
@@ -538,7 +522,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
     >
       {isFinalizing ? (
         <>
-          <Loader2 className="size-3.5 animate-spin" />
+          <LoadingSpinner size="sm" />
           Finalizando...
         </>
       ) : (
@@ -555,7 +539,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
     return (
       <DocumentFlowShell>
         <div className="flex items-center justify-center min-h-100">
-          <Loader2 className="size-8 animate-spin text-muted-foreground" />
+          <LoadingSpinner className="size-8 text-muted-foreground" />
         </div>
       </DocumentFlowShell>
     );
@@ -706,7 +690,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
           >
             {isFinalizing ? (
               <>
-                <Loader2 className="size-4 mr-1.5 animate-spin" />
+                <LoadingSpinner className="mr-1.5" />
                 Finalizando...
               </>
             ) : (

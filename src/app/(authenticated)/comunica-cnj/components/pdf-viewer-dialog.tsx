@@ -11,7 +11,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Text } from '@/components/ui/typography';
-import { Download, Loader2, AlertCircle, ExternalLink } from 'lucide-react';
+import { Download, AlertCircle, ExternalLink } from 'lucide-react';
+import { LoadingSpinner } from '@/components/ui/loading-state';
 import { actionObterCertidao } from '../actions/comunica-cnj-actions';
 
 interface PdfViewerDialogProps {
@@ -123,7 +124,7 @@ export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogPro
         <div className="flex min-h-0 flex-1 flex-col">
           {isLoading && (
             <div className="flex flex-1 items-center justify-center gap-3">
-              <Loader2 className="size-8 animate-spin text-muted-foreground" aria-hidden />
+              <LoadingSpinner className="size-8" />
               <Text variant="caption" className="text-muted-foreground">
                 Carregando certidão...
               </Text>

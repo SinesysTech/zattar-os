@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Loader2, Pencil, Copy, Trash2, Plus } from "lucide-react";
+import { Pencil, Copy, Trash2, Plus} from "lucide-react";
 
 import { DialogFormShell } from "@/components/shared/dialog-shell/dialog-form-shell";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import type { AssinaturaDigitalSegmento } from '@/shared/assinatura-digital';
 
 import { SegmentoCreateDialog } from "./segmento-create-dialog";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface SegmentosManagerDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -92,7 +93,7 @@ export function SegmentosManagerDialog({
 
           {state.isLoading ? (
             <div className="flex items-center justify-center py-10">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              <LoadingSpinner className="size-6 text-muted-foreground" />
             </div>
           ) : state.segmentos.length === 0 ? (
             <div className="py-10 text-center text-sm text-muted-foreground">

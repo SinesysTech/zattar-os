@@ -12,9 +12,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2 } from "lucide-react";
 import type { Template as AssinaturaDigitalTemplate } from '@/shared/assinatura-digital';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface TemplateDeleteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -127,7 +127,7 @@ export function TemplateDeleteDialog({
           >
             {isDeleting ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner className="mr-2" />
                 Excluindo...
               </>
             ) : (

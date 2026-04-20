@@ -5,7 +5,6 @@
  */
 
 import * as React from 'react';
-import { Loader2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -27,6 +26,7 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'sonner';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface CreateFolderDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -161,7 +161,7 @@ export function CreateFolderDialog({
               Cancelar
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {loading && <LoadingSpinner className="mr-2" />}
               Criar Pasta
             </Button>
           </DialogFooter>

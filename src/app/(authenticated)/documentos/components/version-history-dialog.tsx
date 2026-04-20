@@ -6,13 +6,7 @@
 
 import * as React from 'react';
 import {
-  History,
-  Clock,
-  User,
-  RotateCcw,
-  Loader2,
-  FileText,
-} from 'lucide-react';
+  History, Clock, User, RotateCcw, FileText} from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -41,6 +35,7 @@ import { ptBR } from 'date-fns/locale';
 import { useDocumentVersions } from '../hooks/use-document-versions';
 import type { DocumentoVersaoComUsuario } from '../domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface VersionHistoryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -208,7 +203,7 @@ export function VersionHistoryDialog({
             <AlertDialogCancel disabled={restoring}>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={handleRestore} disabled={restoring}>
               {restoring ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <LoadingSpinner className="mr-2" />
               ) : (
                 <RotateCcw className="h-4 w-4 mr-2" />
               )}

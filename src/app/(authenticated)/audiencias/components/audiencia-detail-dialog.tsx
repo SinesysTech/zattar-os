@@ -2,22 +2,7 @@
 
 import * as React from 'react';
 import {
-  Clock,
-  ExternalLink,
-  Copy,
-  Pencil,
-  Video,
-  FileText,
-  Building2,
-  Loader2,
-  Check,
-  AlertCircle,
-  MessageSquare,
-  X,
-  ChevronDown,
-  ChevronRight,
-  Globe,
-} from 'lucide-react';
+  Clock, ExternalLink, Copy, Pencil, Video, FileText, Building2, Check, AlertCircle, MessageSquare, X, ChevronDown, ChevronRight, Globe} from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
@@ -49,6 +34,7 @@ import {
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
 import { cn } from '@/lib/utils';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const MODALIDADE_LABELS: Record<ModalidadeAudiencia, string> = {
   [ModalidadeAudiencia.Virtual]: 'Virtual',
   [ModalidadeAudiencia.Presencial]: 'Presencial',
@@ -403,7 +389,7 @@ export function AudienciaDetailDialog({
                         className="inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-full bg-card border border-border/60 text-[12.5px] font-medium text-foreground hover:bg-muted/60 hover:border-border transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
                       >
                         {savingModalidade ? (
-                          <Loader2 className="size-3 animate-spin text-muted-foreground" />
+                          <LoadingSpinner size="sm" className="text-muted-foreground" />
                         ) : (
                           <>
                             {audiencia.modalidade &&
@@ -509,7 +495,7 @@ export function AudienciaDetailDialog({
           <div className="flex-1 overflow-y-auto px-6 py-4 [scrollbar-width:thin]">
             {isLoading && (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="size-6 animate-spin text-muted-foreground" />
+                <LoadingSpinner className="size-6 text-muted-foreground" />
               </div>
             )}
             {error && !isLoading && (
@@ -590,7 +576,7 @@ export function AudienciaDetailDialog({
                               disabled={savingUrl}
                             >
                               {savingUrl ? (
-                                <Loader2 className="size-3 animate-spin" />
+                                <LoadingSpinner size="sm" />
                               ) : (
                                 <Check className="size-3.5 text-success" />
                               )}
@@ -738,7 +724,7 @@ export function AudienciaDetailDialog({
                                 className="h-7 text-xs"
                               >
                                 {savingEndereco && (
-                                  <Loader2 className="size-3 animate-spin mr-1" />
+                                  <LoadingSpinner size="sm" className="mr-1" />
                                 )}
                                 Salvar
                               </Button>
@@ -861,7 +847,7 @@ export function AudienciaDetailDialog({
                             disabled={savingObs}
                             className="h-7 text-xs"
                           >
-                            {savingObs && <Loader2 className="size-3 animate-spin mr-1" />}
+                            {savingObs && <LoadingSpinner size="sm" className="mr-1" />}
                             Salvar
                           </Button>
                         </div>

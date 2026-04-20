@@ -14,9 +14,9 @@ import {
   actionObterMetricasDB,
   type MetricasDB,
 } from "@/app/(authenticated)/admin";
-import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface UpgradeRecommendation {
   should_upgrade: boolean;
   recommended_tier: 'small' | 'medium' | 'large' | null;
@@ -114,7 +114,7 @@ export function AvaliarUpgradeContent() {
   if (isPending || !recommendation || !metricsSnapshot) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <LoadingSpinner className="size-8 text-muted-foreground" />
       </div>
     );
   }
@@ -282,7 +282,7 @@ export function AvaliarUpgradeContent() {
           >
             {isDocumenting ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner className="mr-2" />
                 Documentando...
               </>
             ) : (

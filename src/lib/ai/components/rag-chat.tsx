@@ -7,9 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppBadge } from '@/components/ui/app-badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { SearchIcon, FileTextIcon, Loader2Icon } from 'lucide-react';
+import { SearchIcon, FileTextIcon} from 'lucide-react';
 import type { SearchResult } from '../domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface RAGChatProps {
   processoId?: number;
   entityType?: string;
@@ -92,7 +93,7 @@ export function RAGChat({
           />
           <Button onClick={handleSearch} disabled={isPending || !query.trim()}>
             {isPending ? (
-              <Loader2Icon className="h-4 w-4 animate-spin" />
+              <LoadingSpinner />
             ) : (
               <SearchIcon className="h-4 w-4" />
             )}
@@ -106,7 +107,7 @@ export function RAGChat({
         )}
 
         {results.length > 0 && (
-          <ScrollArea className="h-[400px]">
+          <ScrollArea className="h-100">
             <div className="space-y-3">
               {results.map((result) => (
                 <div

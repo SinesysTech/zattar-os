@@ -1,9 +1,10 @@
 'use client'
 
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface PublicStepFooterProps {
   onPrevious?: () => void
   onNext?: () => void
@@ -71,7 +72,7 @@ export function PublicStepFooter({
           >
             {isLoading ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <LoadingSpinner />
                 Processando...
               </>
             ) : (

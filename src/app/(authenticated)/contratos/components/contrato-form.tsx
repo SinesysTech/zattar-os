@@ -24,7 +24,7 @@ import type { ComboboxOption } from '@/components/ui/combobox';
 import { ServerCombobox } from '@/components/ui/server-combobox';
 import { cn } from '@/lib/utils';
 import { todayDateString, toDateString } from '@/lib/date-utils';
-import { Loader2, Check, AlertCircle } from 'lucide-react';
+import { Check, AlertCircle} from 'lucide-react';
 import { toast } from 'sonner';
 import { actionCriarContrato, actionAtualizarContrato, type ActionResult } from '../actions';
 import type { Contrato, TipoContrato, TipoCobranca, StatusContrato, PapelContratual } from '../domain';
@@ -40,6 +40,7 @@ import { actionBuscarPartesContrariasParaCombobox } from '@/app/(authenticated)/
 import { actionBuscarClientesParaCombobox } from '@/app/(authenticated)/partes/actions/clientes-actions';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // TIPOS E CONSTANTES
 // =============================================================================
@@ -239,7 +240,7 @@ export function ContratoForm({
         >
           {isPending ? (
             <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <LoadingSpinner className="mr-2" />
               {isEditMode ? 'Salvando...' : 'Criando...'}
             </>
           ) : (

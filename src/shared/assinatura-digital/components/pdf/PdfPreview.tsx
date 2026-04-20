@@ -3,12 +3,13 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { Button } from '@/components/ui/button';
-import { ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Loader2, AlertCircle } from 'lucide-react';
+import { ZoomIn, ZoomOut, ChevronLeft, ChevronRight, AlertCircle} from 'lucide-react';
 import type { PdfPreviewProps, PdfLoadState } from '../../types/pdf-preview.types';
 import { DEFAULT_ZOOM_CONFIG } from '../../types/pdf-preview.types';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // Configurar o worker do PDF.js (versão 5.x)
 if (typeof window !== 'undefined') {
   // Usar worker local copiado para public/pdfjs/
@@ -143,7 +144,7 @@ export default function PdfPreview({
   if (!fileSource) {
     const emptyState = (
       <div className="flex h-full flex-col items-center justify-center p-4 text-muted-foreground">
-        <Loader2 className="mb-2 h-8 w-8 animate-spin" />
+        <LoadingSpinner className="mb-2 size-8" />
         <p className="text-sm">Aguardando URL do PDF...</p>
       </div>
     );
@@ -206,7 +207,7 @@ export default function PdfPreview({
         {/* Overlay for loading/error states */}
         {loadState.isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            <LoadingSpinner className="size-8 text-muted-foreground" />
           </div>
         )}
         {loadState.error && (
@@ -296,7 +297,7 @@ export default function PdfPreview({
           onLoadError={handleLoadError}
           loading={
             <div className="flex flex-col items-center gap-2 text-muted-foreground">
-              <Loader2 className="h-8 w-8 animate-spin" />
+              <LoadingSpinner className="size-8" />
               <p className="text-sm">Carregando PDF...</p>
             </div>
           }

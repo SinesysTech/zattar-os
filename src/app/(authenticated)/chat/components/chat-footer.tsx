@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Mic, Paperclip, PlusCircleIcon, SendIcon, SmileIcon, X, FileIcon, Loader2 } from "lucide-react";
+import { Mic, Paperclip, PlusCircleIcon, SendIcon, SmileIcon, X, FileIcon} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { actionUploadFile, actionDeleteFile } from "../actions/file-actions";
 import { ChatMessageData } from "../domain";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface ChatFooterProps {
   salaId: number;
   onEnviarMensagem: (conteudo: string, tipo?: string, data?: ChatMessageData | null) => Promise<void>;
@@ -335,7 +336,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                           onClick={() => fileInputRef.current?.click()}
                           disabled={isUploading}
                         >
-                          {isUploading ? <Loader2 className="size-4 animate-spin" /> : <Paperclip className="size-4" />}
+                          {isUploading ? <LoadingSpinner /> : <Paperclip className="size-4" />}
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent side="top">Anexar Arquivo</TooltipContent>

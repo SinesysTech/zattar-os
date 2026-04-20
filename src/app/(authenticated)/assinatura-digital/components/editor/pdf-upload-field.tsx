@@ -2,11 +2,12 @@
 
 import * as React from 'react';
 import { toast } from 'sonner';
-import { Loader2, FileUp, X, FileText } from 'lucide-react';
+import { FileUp, X, FileText} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { formatFileSize } from '@/shared/assinatura-digital/utils';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 /**
  * Resultado do upload de PDF
  */
@@ -145,7 +146,7 @@ export function PdfUploadField({
           >
             {isUploading ? (
               <>
-                <Loader2 className="h-8 w-8 text-muted-foreground animate-spin" />
+                <LoadingSpinner className="size-8 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Enviando arquivo...</span>
               </>
             ) : (

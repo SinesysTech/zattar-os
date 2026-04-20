@@ -254,7 +254,7 @@ export function TipoDescricaoCell({
         maxWidth="md"
         footer={
           <Button onClick={handleSaveDescricao} disabled={isLoadingDescricao}>
-            {isLoadingDescricao && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isLoadingDescricao && <LoadingSpinner className="mr-2" />}
             Salvar
           </Button>
         }

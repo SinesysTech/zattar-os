@@ -1,11 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { Loader2, FileText } from 'lucide-react';
+import { FileText} from 'lucide-react';
 import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Button } from '@/components/ui/button';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface PdfViewerDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -96,7 +97,7 @@ export function PdfViewerDialog({
             <div className="relative w-full h-[75vh] min-h-125 border rounded-md overflow-hidden bg-muted/10">
                 {isLoading && (
                     <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                        <LoadingSpinner className="size-8 text-primary" />
                     </div>
                 )}
 

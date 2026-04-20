@@ -5,13 +5,14 @@
 import * as React from 'react';
 import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2, AlertTriangle } from 'lucide-react';
+import { AlertTriangle} from 'lucide-react';
 import { toast } from 'sonner';
 import { actionReverterBaixa, type ActionResult } from '../actions';
 import { Expediente } from '../domain';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface ExpedientesReverterBaixaDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -90,7 +91,7 @@ export function ExpedientesReverterBaixaDialog({
         disabled={isPending}
         form="reverter-baixa-form"
       >
-        {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        {isPending && <LoadingSpinner className="mr-2" />}
         Reverter Baixa
       </Button>
     </div>

@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2, Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2} from 'lucide-react';
 import { toast } from 'sonner';
 
 import type {
@@ -32,6 +32,7 @@ import type {
 } from '@/app/(authenticated)/advogados';
 import { UFS_BRASIL } from '@/app/(authenticated)/advogados';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 type Props = {
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
@@ -259,7 +260,7 @@ export function AdvogadoDialog({
               Cancelar
             </Button>
             <Button type="submit" disabled={isSaving}>
-              {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isSaving && <LoadingSpinner className="mr-2" />}
               {mode === 'create' ? 'Cadastrar' : 'Salvar'}
             </Button>
           </DialogFooter>

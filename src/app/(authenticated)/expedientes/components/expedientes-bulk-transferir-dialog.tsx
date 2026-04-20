@@ -5,11 +5,11 @@ import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { actionBulkTransferirResponsavel, type ActionResult } from '../actions';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface Usuario {
   id: number;
   nomeExibicao: string;
@@ -93,7 +93,7 @@ export function ExpedientesBulkTransferirDialog({
       disabled={isPending || !responsavelId || responsavelId === 'null'}
       form="bulk-transferir-form"
     >
-      {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      {isPending && <LoadingSpinner className="mr-2" />}
       Transferir {expedienteIds.length} {expedienteIds.length === 1 ? 'expediente' : 'expedientes'}
     </Button>
   );

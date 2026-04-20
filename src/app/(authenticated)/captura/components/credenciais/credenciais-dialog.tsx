@@ -19,12 +19,12 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { GRAU_LABELS, TRIBUNAL_VARIANTS } from '@/lib/design-system';
 
 import type { Credencial } from '@/app/(authenticated)/captura/types';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 type Props = {
   credencial: Credencial | null;
   open: boolean;
@@ -126,7 +126,7 @@ export function CredenciaisDialog({ credencial, open, onOpenChange, onSuccess }:
             Cancelar
           </Button>
           <Button onClick={handleSave} disabled={isSaving || !tribunal || !grau}>
-            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isSaving && <LoadingSpinner className="mr-2" />}
             {isEditing ? 'Salvar' : 'Cadastrar'}
           </Button>
         </DialogFooter>

@@ -10,7 +10,6 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { Loader2 } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -23,6 +22,7 @@ import { actionAlterarResponsavelContrato } from '../actions';
 import type { Contrato } from '../domain';
 import type { ClienteInfo } from '../types';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface ContratoAlterarResponsavelDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -76,7 +76,7 @@ export function ContratoAlterarResponsavelDialog({
       maxWidth="md"
       footer={
         <Button onClick={handleSubmit} disabled={isPending}>
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isPending && <LoadingSpinner className="mr-2" />}
           Salvar
         </Button>
       }

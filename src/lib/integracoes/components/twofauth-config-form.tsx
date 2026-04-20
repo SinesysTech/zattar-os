@@ -5,7 +5,7 @@
  */
 
 import { useState } from "react";
-import { Loader2, Save, TestTube, AlertCircle } from "lucide-react";
+import { Save, TestTube, AlertCircle} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { actionAtualizarConfig2FAuth } from "../actions/integracoes-actions";
 import type { TwoFAuthConfig, Integracao } from "../domain";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface TwoFAuthConfigFormProps {
   integracao?: Integracao | null;
   onSuccess?: () => void;
@@ -213,7 +214,7 @@ export function TwoFAuthConfigForm({ integracao, onSuccess }: TwoFAuthConfigForm
           className="flex-1"
         >
           {isTesting ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            <LoadingSpinner className="mr-2" />
           ) : (
             <TestTube className="h-4 w-4 mr-2" />
           )}
@@ -226,7 +227,7 @@ export function TwoFAuthConfigForm({ integracao, onSuccess }: TwoFAuthConfigForm
           className="flex-1"
         >
           {isLoading ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            <LoadingSpinner className="mr-2" />
           ) : (
             <Save className="h-4 w-4 mr-2" />
           )}

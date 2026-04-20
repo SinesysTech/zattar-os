@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { AlertCircle, Check, Loader2, Upload, X } from 'lucide-react';
+import { AlertCircle, Check, Upload, X} from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { DialogFormShell } from '@/components/shared/dialog-shell/dialog-form-shell';
 import PdfPreviewDynamic from "@/shared/assinatura-digital/components/pdf/PdfPreviewDynamic";
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const PdfPreview = PdfPreviewDynamic;
 
 interface ReplacePdfDialogProps {
@@ -191,7 +192,7 @@ export default function ReplacePdfDialog({
         >
           {isUploading ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <LoadingSpinner />
               Substituindo...
             </>
           ) : (

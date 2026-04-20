@@ -4,19 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { addDays, addHours, format, nextSaturday } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
-  Archive,
-  ArchiveX,
-  Clock,
-  Forward,
-  Loader2,
-  MailOpen,
-  Maximize2,
-  Minimize2,
-  MoreVertical,
-  Reply,
-  ReplyAll,
-  Trash2,
-} from "lucide-react";
+  Archive, ArchiveX, Clock, Forward, MailOpen, Maximize2, Minimize2, MoreVertical, Reply, ReplyAll, Trash2} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -40,6 +28,7 @@ import { useMailDisplay } from "../hooks/use-mail-display";
 import { MailEditor, type MailEditorRef } from "./mail-editor";
 import { toast } from "sonner";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface MailDisplayProps {
   mail: MailMessagePreview | null;
 }
@@ -264,7 +253,7 @@ function ForwardDialog({
             disabled={isSending || !to.trim()}>
             {isSending ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner className="mr-2" />
                 Encaminhando...
               </>
             ) : (
@@ -321,7 +310,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                 disabled={!mail || actionLoading === "archive"}
                 onClick={() => actions?.archive()}>
                 {actionLoading === "archive" ? (
-                  <Loader2 className="animate-spin" />
+                  <LoadingSpinner />
                 ) : (
                   <Archive />
                 )}
@@ -339,7 +328,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                 disabled={!mail || actionLoading === "junk"}
                 onClick={() => actions?.junk()}>
                 {actionLoading === "junk" ? (
-                  <Loader2 className="animate-spin" />
+                  <LoadingSpinner />
                 ) : (
                   <ArchiveX />
                 )}
@@ -357,7 +346,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                 disabled={!mail || actionLoading === "delete"}
                 onClick={() => actions?.delete()}>
                 {actionLoading === "delete" ? (
-                  <Loader2 className="animate-spin" />
+                  <LoadingSpinner />
                 ) : (
                   <Trash2 />
                 )}
@@ -583,7 +572,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                     <Button type="submit" size="sm" disabled={isSending}>
                       {isSending ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          <LoadingSpinner className="mr-2" />
                           Enviando...
                         </>
                       ) : (

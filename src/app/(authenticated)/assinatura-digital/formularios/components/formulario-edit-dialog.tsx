@@ -11,7 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Combobox } from '@/components/ui/combobox';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { toast } from 'sonner';
-import { Loader2, Pencil, X } from 'lucide-react';
+import { Pencil, X} from 'lucide-react';
 import {
   generateSlug,
   type AssinaturaDigitalFormulario,
@@ -19,6 +19,7 @@ import {
   type AssinaturaDigitalTemplate,
 } from '@/shared/assinatura-digital';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const SELECT_CLASS =
   'flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50';
 
@@ -323,7 +324,7 @@ export function FormularioEditDialog({
       maxWidth="2xl"
       footer={
         <Button type="submit" form="formulario-edit-form" disabled={isSubmitting}>
-          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isSubmitting && <LoadingSpinner className="mr-2" />}
           Salvar Alterações
         </Button>
       }

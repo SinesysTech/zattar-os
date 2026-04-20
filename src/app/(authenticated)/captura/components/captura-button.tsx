@@ -1,8 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface CapturaButtonProps {
   isLoading: boolean;
   disabled?: boolean;
@@ -25,7 +24,7 @@ export function CapturaButton({
       disabled={isLoading || disabled}
       className="w-full sm:w-auto"
     >
-      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      {isLoading && <LoadingSpinner className="mr-2" />}
       {children}
     </Button>
   );

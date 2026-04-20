@@ -4,9 +4,9 @@ import * as React from 'react';
 import { IMaskInput } from 'react-imask';
 import { cn } from '@/lib/utils';
 import { buscarEnderecoPorCep } from '@/lib/utils/viacep';
-import { Loader2 } from 'lucide-react';
 import { INPUT_GLASS_BASE_CLASSES } from '@/components/ui/input-styles';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 /**
  * Adapter type for address data returned by InputCEP's onAddressFound callback.
  * Maps from EnderecoViaCep (cidade → localidade, estado → uf) to match common
@@ -116,7 +116,7 @@ const InputCEP = React.forwardRef<HTMLInputElement, InputCEPProps>(
           />
           {isSearching && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              <LoadingSpinner className="text-muted-foreground" />
             </div>
           )}
         </div>

@@ -4,23 +4,7 @@ import * as React from 'react';
 import { format, parseISO, differenceInMinutes, isPast } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
-  Gavel,
-  Lock,
-  Monitor,
-  CheckCircle2,
-  Users,
-  Clock,
-  Building2,
-  Layers,
-  Video,
-  Pencil,
-  Check,
-  X,
-  Link as LinkIcon,
-  MessageSquare,
-  Loader2,
-  Copy,
-} from 'lucide-react';
+  Gavel, Lock, Monitor, CheckCircle2, Users, Clock, Building2, Layers, Video, Pencil, Check, X, Link as LinkIcon, MessageSquare, Copy} from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
@@ -41,6 +25,7 @@ import { actionAtualizarObservacoes } from '../actions';
 import { AudienciaResponsavelPopover, ResponsavelTriggerContent } from './audiencia-responsavel-popover';
 import { calcPrepItems, calcPrepScore } from './prep-score';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // TIPOS
 // =============================================================================
@@ -407,7 +392,7 @@ function GlassRow({
                     className="h-6 text-[11px] px-2"
                   >
                     {savingObs ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <LoadingSpinner size="sm" />
                     ) : (
                       <Check className="w-3 h-3" />
                     )}

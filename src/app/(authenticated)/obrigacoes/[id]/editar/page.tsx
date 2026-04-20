@@ -6,12 +6,13 @@ import { useRouter } from 'next/navigation';
 import { AcordoForm } from '@/app/(authenticated)/obrigacoes';
 import { actionBuscarAcordo } from '@/app/(authenticated)/obrigacoes/actions';
 import type { AcordoComParcelas } from '@/app/(authenticated)/obrigacoes';
-import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, AlertCircle} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from '@/components/ui/empty';
 import { Heading } from '@/components/ui/typography';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface EditarObrigacaoPageProps {
   params: Promise<{ id: string }>;
 }
@@ -57,7 +58,7 @@ export default function EditarObrigacaoPage({ params }: EditarObrigacaoPageProps
   if (isLoading) {
     return (
       <div className="py-8 max-w-4xl mx-auto">
-        <Empty><EmptyHeader><EmptyMedia variant="icon"><Loader2 className="h-6 w-6 animate-spin" /></EmptyMedia><EmptyTitle>Carregando...</EmptyTitle></EmptyHeader></Empty>
+        <Empty><EmptyHeader><EmptyMedia variant="icon"><LoadingSpinner className="size-6" /></EmptyMedia><EmptyTitle>Carregando...</EmptyTitle></EmptyHeader></Empty>
       </div>
     );
   }

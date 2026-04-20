@@ -21,18 +21,10 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { 
-  Sun, 
-  Moon, 
-  Loader2, 
-  Check, 
-  X, 
-  AlertCircle,
-  Star,
-  Play,
-  Settings
-} from 'lucide-react';
+  Sun, Moon, Check, X, AlertCircle, Star, Play, Settings} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 type Theme = 'light' | 'dark';
 
 export default function PlaygroundPage() {
@@ -155,7 +147,7 @@ export default function PlaygroundPage() {
                     <Button onClick={simulateLoading}>
                       {isLoading ? (
                         <>
-                          <Loader2 className="animate-spin" />
+                          <LoadingSpinner />
                           Carregando...
                         </>
                       ) : (

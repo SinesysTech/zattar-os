@@ -17,15 +17,7 @@ import {
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import {
-  Loader2,
-  Landmark,
-  CalendarDays,
-  MapPin,
-  Video,
-  UserRound,
-  MessageSquare,
-  AlertCircle,
-} from 'lucide-react';
+  Landmark, CalendarDays, MapPin, Video, UserRound, MessageSquare, AlertCircle} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { actionListarAcervoPaginado } from '@/app/(authenticated)/acervo';
@@ -37,6 +29,7 @@ import {
 } from '@/app/(authenticated)/audiencias/actions';
 import { localToISO } from '@/app/(authenticated)/audiencias/lib/date-utils';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // ─── Section Helpers ──────────────────────────────────────────────────────────
 
 function SectionHeader({
@@ -75,7 +68,7 @@ function FieldLabel({ htmlFor, children }: { htmlFor?: string; children: React.R
 function InlineLoader({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-border/30 bg-muted/30 text-muted-foreground/60">
-      <Loader2 className="size-3.5 animate-spin shrink-0" />
+      <LoadingSpinner size="sm" className="shrink-0" />
       <span className="text-sm">{label}</span>
     </div>
   );
@@ -434,7 +427,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
       bodyClassName="overflow-y-auto px-6 py-5"
       footer={
         <Button type="submit" form="nova-audiencia-form" disabled={isLoading}>
-          {isLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
+          {isLoading && <LoadingSpinner className="mr-2" />}
           Salvar Audiência
         </Button>
       }

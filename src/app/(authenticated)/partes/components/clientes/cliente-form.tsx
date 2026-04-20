@@ -25,13 +25,7 @@ import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Heading } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import {
-  Loader2,
-  User,
-  Building2,
-  X,
-  Plus,
-  Check,
-} from 'lucide-react';
+  User, Building2, X, Plus, Check} from 'lucide-react';
 import { toast } from 'sonner';
 import { InputCEP, type InputCepAddress } from '@/app/(authenticated)/enderecos';
 import type { Endereco } from '@/app/(authenticated)/enderecos/types';
@@ -40,6 +34,7 @@ import { actionCriarCliente, actionAtualizarClienteForm, type ActionResult } fro
 import type { Cliente } from '../../types';
 import { DialogFormShell, DialogNavPrevious, DialogNavNext } from '@/components/shared/dialog-shell';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 
 interface ClienteFormDialogProps {
@@ -1071,7 +1066,7 @@ export function ClienteFormDialog({
               >
                 {isPending ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <LoadingSpinner className="mr-2" />
                     Salvando...
                   </>
                 ) : (

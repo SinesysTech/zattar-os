@@ -8,8 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2 } from 'lucide-react';
-
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface MarkdownRichTextEditorDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -104,7 +103,7 @@ export function MarkdownRichTextEditorDialog({
               Cancelar
             </Button>
             <Button onClick={handleSave} disabled={isOverLimit || isSaving}>
-              {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isSaving && <LoadingSpinner className="mr-2" />}
               {onSaveToBackend ? 'Salvar' : 'OK'}
             </Button>
           </div>

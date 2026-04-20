@@ -18,8 +18,9 @@ import { useHumanInTheLoop } from '@copilotkit/react-core/v2';
 import { z } from 'zod';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { AlertTriangle, CheckCircle, XCircle} from 'lucide-react';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // ─── Componente de Confirmação ──────────────────────────────────────
 
 function ConfirmationCard({
@@ -82,7 +83,7 @@ function LoadingConfirmation() {
   return (
     <Card className="w-full max-w-md">
       <CardContent className="p-3 flex items-center gap-2">
-        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+        <LoadingSpinner className="text-muted-foreground" />
         <span className="text-xs text-muted-foreground">Preparando confirmacao...</span>
       </CardContent>
     </Card>

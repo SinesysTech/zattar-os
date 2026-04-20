@@ -4,17 +4,7 @@ import { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
-  Shield,
-  ShieldCheck,
-  ShieldX,
-  RefreshCw,
-  Ban,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Clock,
-  Loader2,
-} from "lucide-react";
+  Shield, ShieldCheck, ShieldX, RefreshCw, Ban, CheckCircle, XCircle, AlertTriangle, Clock} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
@@ -41,6 +31,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -195,7 +186,7 @@ export function BlockedIpsContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <LoadingSpinner className="size-8 text-muted-foreground" />
       </div>
     );
   }
@@ -334,7 +325,7 @@ export function BlockedIpsContent() {
                             }
                           >
                             {actionLoading === item.ip ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
+                              <LoadingSpinner />
                             ) : (
                               <CheckCircle className="h-4 w-4" />
                             )}
@@ -407,7 +398,7 @@ export function BlockedIpsContent() {
                           }
                         >
                           {actionLoading === ip ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <LoadingSpinner />
                           ) : (
                             <XCircle className="h-4 w-4" />
                           )}

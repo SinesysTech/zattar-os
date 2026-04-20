@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown, X, Loader2 } from "lucide-react"
+import { Check, ChevronsUpDown, X} from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Empty, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 export interface ComboboxOption {
   value: string
   label: string
@@ -321,7 +322,7 @@ export function ServerCombobox({
               />
               {isLoading && (
                 <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                  <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                  <LoadingSpinner className="text-muted-foreground" />
                 </div>
               )}
             </div>
@@ -359,7 +360,7 @@ export function ServerCombobox({
               <Empty className="border-0 py-4 h-auto min-h-0">
                 <EmptyHeader>
                   <EmptyTitle className="text-sm font-normal text-muted-foreground flex items-center justify-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <LoadingSpinner />
                     {loadingText}
                   </EmptyTitle>
                 </EmptyHeader>

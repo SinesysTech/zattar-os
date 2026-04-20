@@ -24,7 +24,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { Loader2 } from 'lucide-react';
 import { Typography } from '@/components/ui/typography';
 import { actionListarAcervoPaginado } from '@/app/(authenticated)/acervo';
 import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
@@ -36,6 +35,7 @@ import {
 import { localToISO } from '@/app/(authenticated)/audiencias/lib/date-utils';
 import { isAudienciaCapturada, type Audiencia } from '../domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface EditarAudienciaDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -550,7 +550,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
               </div>
             ) : loadingProcessos ? (
               <div className="flex items-center gap-2 p-2 border rounded-md">
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <LoadingSpinner />
                 <Typography.Muted as="span">Carregando processos...</Typography.Muted>
               </div>
             ) : (
@@ -615,7 +615,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             <Label htmlFor="tipo">Tipo de Audiência</Label>
             {loadingTipos ? (
               <div className="flex items-center gap-2 p-2 border rounded-md">
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <LoadingSpinner />
                 <Typography.Muted as="span">Carregando tipos...</Typography.Muted>
               </div>
             ) : (!trt || !grau) ? (
@@ -645,7 +645,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             <Label htmlFor="sala">Sala de Audiência</Label>
             {loadingSalas ? (
               <div className="flex items-center gap-2 p-2 border rounded-md">
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <LoadingSpinner />
                 <Typography.Muted as="span">Carregando salas...</Typography.Muted>
               </div>
             ) : !processoSelecionado ? (
@@ -775,7 +775,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             <Label htmlFor="responsavel">Responsável (opcional)</Label>
             {loadingUsuarios ? (
               <div className="flex items-center gap-2 p-2 border rounded-md">
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <LoadingSpinner />
                 <Typography.Muted as="span">Carregando usuários...</Typography.Muted>
               </div>
             ) : (
@@ -811,7 +811,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
               Cancelar
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading && <LoadingSpinner className="mr-2" />}
               Salvar
             </Button>
           </DialogFooter>

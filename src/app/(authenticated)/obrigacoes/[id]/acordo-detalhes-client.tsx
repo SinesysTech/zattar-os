@@ -6,14 +6,7 @@ import { useRouter } from 'next/navigation';
 import { parseISO, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
-  ArrowLeft,
-  ArrowDown,
-  ArrowUp,
-  Edit,
-  Trash2,
-  Loader2,
-  Clock,
-} from 'lucide-react';
+  ArrowLeft, ArrowDown, ArrowUp, Edit, Trash2, Clock} from 'lucide-react';
 import { toast } from 'sonner';
 
 import { GlassPanel } from '@/components/shared/glass-panel';
@@ -52,6 +45,7 @@ import {
 
 import { AcordoPulseStrip } from '../components/shared/acordo-pulse-strip';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -284,7 +278,7 @@ export function AcordoDetalhesClient({
             >
               {isDeleting ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                  <LoadingSpinner className="mr-1" />
                   Excluindo...
                 </>
               ) : (

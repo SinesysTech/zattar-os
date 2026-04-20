@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react';
 import { ApiReferenceReact } from '@scalar/api-reference-react';
 import '@scalar/api-reference-react/style.css';
-import { Code, Loader2 } from 'lucide-react';
+import { Code} from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 export default function ApiDocsPage() {
   const [spec, setSpec] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,7 +46,7 @@ export default function ApiDocsPage() {
         <Card>
           <CardContent className="flex items-center justify-center py-12">
             <div className="text-center space-y-4">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
+              <LoadingSpinner className="size-8 mx-auto text-muted-foreground" />
               <p className="text-muted-foreground">Carregando documentação...</p>
             </div>
           </CardContent>

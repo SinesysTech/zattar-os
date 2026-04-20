@@ -1,12 +1,13 @@
 'use client'
 
 import { useEffect, useId, useRef, type ReactNode } from 'react'
-import { ChevronLeft, ChevronRight, Loader2, RotateCcw } from 'lucide-react'
+import { ChevronLeft, ChevronRight, RotateCcw} from 'lucide-react'
 import { GlassPanel } from '@/components/shared/glass-panel'
 import { Heading, Text } from '@/components/ui/typography'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 /**
  * Seletor CSS que identifica o primeiro elemento interativo focável.
  * Exclui elementos disabled, hidden, readonly, aria-hidden ou tabindex negativo.
@@ -262,7 +263,7 @@ export function PublicStepCard({
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <LoadingSpinner />
                   Processando...
                 </>
               ) : (

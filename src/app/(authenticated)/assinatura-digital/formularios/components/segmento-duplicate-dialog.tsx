@@ -19,10 +19,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Loader2 } from 'lucide-react';
-
 import { generateSlug, type AssinaturaDigitalSegmento } from '@/shared/assinatura-digital';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // Schema local para garantir tipagem correta com useForm
 const duplicateSchema = z.object({
   nome: z.string().min(1, 'Nome é obrigatório'),
@@ -175,7 +174,7 @@ export function SegmentoDuplicateDialog({
                 Cancelar
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {form.formState.isSubmitting && <LoadingSpinner className="mr-2" />}
                 Duplicar
               </Button>
             </DialogFooter>

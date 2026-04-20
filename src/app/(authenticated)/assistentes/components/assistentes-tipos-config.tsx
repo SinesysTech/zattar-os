@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2, Plus, Trash2, Check, X, Settings } from 'lucide-react';
+import { Plus, Trash2, Check, X, Settings} from 'lucide-react';
 import {
   listarAssistentesTiposAction,
   criarAssistenteTipoAction,
@@ -21,6 +21,7 @@ import {
 } from '../actions';
 import type { AssistenteTipoComRelacoes } from '../domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface AssistentesTiposConfigProps {
   assistentes: Array<{ id: string; nome: string; tipo: string }>;
   tiposExpedientes: Array<{ id: string; nome: string }>;
@@ -156,7 +157,7 @@ export function AssistentesTiposConfig({
     return (
       <Card>
         <CardContent className="flex items-center justify-center p-12">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <LoadingSpinner className="size-8 text-muted-foreground" />
         </CardContent>
       </Card>
     );
@@ -233,7 +234,7 @@ export function AssistentesTiposConfig({
               >
                 {saving ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <LoadingSpinner className="mr-2" />
                     Salvando...
                   </>
                 ) : (

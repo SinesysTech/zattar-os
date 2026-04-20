@@ -8,7 +8,7 @@
  */
 
 import * as React from 'react';
-import { Loader2, Video, MapPin, RefreshCw } from 'lucide-react';
+import { Video, MapPin, RefreshCw} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 import { SearchInput } from '@/components/dashboard/search-input';
@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils';
 
 import { actionListarTiposAudiencia } from '../actions';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface TipoAudiencia {
   id: number;
   descricao: string;
@@ -69,7 +70,7 @@ export function TiposAudienciasList() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <LoadingSpinner className="size-8 text-muted-foreground" />
       </div>
     );
   }

@@ -9,25 +9,26 @@ const SIZE_MAP: Record<LoadingSize, string> = {
   lg: "size-5",
 }
 
+type SpinnerProps = {
+  size?: LoadingSize
+  className?: string
+} & Omit<React.SVGProps<SVGSVGElement>, "ref">
+
 /**
  * Spinner circular consistente para estados inline (botões, popovers, empty states).
  * Usa `text-muted-foreground/60` por padrão — cor neutra, sem tingimento temático.
+ * Aceita props SVG extras (aria-label, aria-hidden, etc.) via spread.
  */
-export function LoadingSpinner({
-  size = "md",
-  className,
-}: {
-  size?: LoadingSize
-  className?: string
-}) {
+export function LoadingSpinner({ size = "md", className, ...props }: SpinnerProps) {
   return (
     <Loader2
+      aria-hidden="true"
+      {...props}
       className={cn(
         SIZE_MAP[size],
         "animate-spin text-muted-foreground/60",
         className
       )}
-      aria-hidden="true"
     />
   )
 }

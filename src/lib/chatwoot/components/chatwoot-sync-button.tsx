@@ -12,7 +12,7 @@
  */
 
 import * as React from 'react';
-import { CloudCog, Loader2, Check, AlertCircle } from 'lucide-react';
+import { CloudCog, Check, AlertCircle} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -36,6 +36,7 @@ import {
 } from '../actions';
 import type { TipoEntidadeChatwoot } from '../domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // Tipos
 // =============================================================================
@@ -145,7 +146,7 @@ export function ChatwootSyncButton({
   const renderIcon = () => {
     switch (state) {
       case 'syncing':
-        return <Loader2 className="h-4 w-4 animate-spin" />;
+        return <LoadingSpinner />;
       case 'success':
         return <Check className="h-4 w-4 text-success" />;
       case 'error':

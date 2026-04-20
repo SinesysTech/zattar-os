@@ -6,10 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionBulkBaixar, type ActionResult } from '../actions';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface ExpedientesBulkBaixarDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -82,7 +82,7 @@ export function ExpedientesBulkBaixarDialog({
       disabled={isPending || !justificativa.trim()}
       form="bulk-baixar-form"
     >
-      {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      {isPending && <LoadingSpinner className="mr-2" />}
       Baixar {expedienteIds.length} {expedienteIds.length === 1 ? 'expediente' : 'expedientes'}
     </Button>
   );

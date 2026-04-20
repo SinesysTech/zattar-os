@@ -6,10 +6,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Play, Square, RotateCcw, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { Play, Square, RotateCcw, CheckCircle2, XCircle} from 'lucide-react';
 import { useDifyWorkflow } from '../../hooks/use-dify-workflow';
 import { STATUS_EXECUCAO_LABELS, StatusExecucaoDify } from '../../domain';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface WorkflowRunnerProps {
   appId?: string;
   title?: string;
@@ -41,7 +42,7 @@ export function WorkflowRunner({
   };
 
   const statusIcon = {
-    [StatusExecucaoDify.RUNNING]: <Loader2 className="h-4 w-4 animate-spin" />,
+    [StatusExecucaoDify.RUNNING]: <LoadingSpinner />,
     [StatusExecucaoDify.SUCCEEDED]: <CheckCircle2 className="h-4 w-4 text-success" />,
     [StatusExecucaoDify.FAILED]: <XCircle className="h-4 w-4 text-destructive" />,
     [StatusExecucaoDify.STOPPED]: <Square className="h-4 w-4 text-warning" />,
@@ -73,7 +74,7 @@ export function WorkflowRunner({
           <Button onClick={handleRun} disabled={isRunning}>
             {isRunning ? (
               <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <LoadingSpinner className="mr-2" />
                 Executando...
               </>
             ) : (

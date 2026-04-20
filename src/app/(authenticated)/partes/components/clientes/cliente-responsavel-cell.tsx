@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Check, Loader2 } from 'lucide-react';
+import { Check} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,7 @@ import { actionAtualizarClienteSafe } from '@/app/(authenticated)/partes/actions
 import type { Cliente } from '@/app/(authenticated)/partes/types';
 import { toast } from 'sonner';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface Usuario {
     id: number;
     nomeExibicao: string;
@@ -135,7 +136,7 @@ export function ClienteResponsavelCell({
                                 </div>
                                 <span>Sem responsável</span>
                                 {responsavelId === null && <Check className="ml-auto h-4 w-4" />}
-                                {isPending && responsavelId === null && <Loader2 className="ml-auto h-4 w-4 animate-spin" />}
+                                {isPending && responsavelId === null && <LoadingSpinner className="ml-auto" />}
                             </CommandItem>
                             {usuarios.map((usuario) => (
                                 <CommandItem
@@ -152,7 +153,7 @@ export function ClienteResponsavelCell({
                                     </Avatar>
                                     <span>{usuario.nomeExibicao}</span>
                                     {responsavelId === usuario.id && <Check className="ml-auto h-4 w-4" />}
-                                    {isPending && responsavelId === usuario.id && <Loader2 className="ml-auto h-4 w-4 animate-spin" />}
+                                    {isPending && responsavelId === usuario.id && <LoadingSpinner className="ml-auto" />}
                                 </CommandItem>
                             ))}
                         </CommandGroup>

@@ -87,7 +87,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Loader2, SearchX } from 'lucide-react';
+import { SearchX} from 'lucide-react';
 
 import {
   Table,
@@ -100,6 +100,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -513,7 +514,7 @@ export function DataTable<TData, TValue>({
           role="status"
           aria-label="Carregando dados"
         >
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <LoadingSpinner className="size-8 text-primary" />
         </div>
       )}
 

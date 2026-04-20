@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { useMailActions } from "../hooks/use-mail-api";
 import { MailEditor, type MailEditorRef } from "./mail-editor";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface ComposeMailDialogProps {
   children: React.ReactNode;
 }
@@ -176,7 +176,7 @@ export function ComposeMailDialog({ children }: ComposeMailDialogProps) {
           <Button onClick={handleSend} disabled={isSending}>
             {isSending ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner className="mr-2" />
                 Enviando...
               </>
             ) : (

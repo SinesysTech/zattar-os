@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AlertCircle, ArrowRight, Loader2, Check, Eye, EyeOff } from 'lucide-react'
+import { AlertCircle, ArrowRight, Check, Eye, EyeOff} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import { AUTH_STYLES } from './styles'
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 function getGreeting(): string {
@@ -179,7 +180,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             {success ? (
               <Check className="h-5 w-5" strokeWidth={3} />
             ) : isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <LoadingSpinner size="lg" />
             ) : (
               <>
                 Entrar

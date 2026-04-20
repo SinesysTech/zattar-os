@@ -11,11 +11,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import type { TribunalConfigDb } from '@/app/(authenticated)/captura';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 type Props = {
   tribunal: TribunalConfigDb | null;
   open: boolean;
@@ -118,7 +118,7 @@ export function TribunaisDialog({ tribunal, open, onOpenChange, onSuccess }: Pro
             Cancelar
           </Button>
           <Button onClick={handleSave} disabled={isSaving || !tribunal}>
-            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isSaving && <LoadingSpinner className="mr-2" />}
             Salvar
           </Button>
         </DialogFooter>

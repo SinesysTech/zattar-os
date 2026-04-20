@@ -20,10 +20,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Loader2 } from "lucide-react";
-
 import { generateSlug, type AssinaturaDigitalFormulario } from '@/shared/assinatura-digital';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const duplicateSchema = z.object({
   nome: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
   slug: z.string().min(3, "Slug deve ter pelo menos 3 caracteres"),
@@ -188,7 +187,7 @@ export function FormularioDuplicateDialog({
                 Cancelar
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {form.formState.isSubmitting && <LoadingSpinner className="mr-2" />}
                 Duplicar
               </Button>
             </DialogFooter>

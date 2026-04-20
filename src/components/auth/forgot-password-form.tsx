@@ -3,10 +3,11 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AlertCircle, ArrowLeft, ArrowRight, Loader2, Mail } from 'lucide-react'
+import { AlertCircle, ArrowLeft, ArrowRight, Mail} from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { AUTH_STYLES } from './styles'
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 const customEase: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
 export function ForgotPasswordForm() {
@@ -136,7 +137,7 @@ export function ForgotPasswordForm() {
 
               <button type="submit" disabled={isLoading} className={AUTH_STYLES.btnPrimary}>
                 {isLoading ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <LoadingSpinner size="lg" />
                 ) : (
                   <>
                     Enviar link

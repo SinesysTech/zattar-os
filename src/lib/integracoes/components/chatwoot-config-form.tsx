@@ -5,7 +5,7 @@
  */
 
 import { useState } from "react";
-import { Loader2, Save, AlertCircle } from "lucide-react";
+import { Save, AlertCircle} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { actionAtualizarConfigChatwoot } from "../actions/integracoes-actions";
 import type { ChatwootConfig, Integracao } from "../domain";
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 interface ChatwootConfigFormProps {
   integracao?: Integracao | null;
   onSuccess?: () => void;
@@ -246,7 +247,7 @@ export function ChatwootConfigForm({ integracao, onSuccess }: ChatwootConfigForm
           className="flex-1"
         >
           {isLoading ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            <LoadingSpinner className="mr-2" />
           ) : (
             <Save className="h-4 w-4 mr-2" />
           )}

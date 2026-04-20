@@ -9,9 +9,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
 import { generateSlug, type AssinaturaDigitalSegmento } from '@/shared/assinatura-digital';
 
+import { LoadingSpinner } from "@/components/ui/loading-state"
 // Schema local para garantir tipagem correta com useForm
 const editSegmentoSchema = z.object({
   nome: z.string().min(1, 'Nome é obrigatório'),
@@ -141,7 +141,7 @@ export function SegmentoEditDialog({
       maxWidth="2xl"
       footer={
         <Button type="submit" form="segmento-edit-form" disabled={isSubmitting}>
-          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isSubmitting && <LoadingSpinner className="mr-2" />}
           Salvar Alterações
         </Button>
       }
