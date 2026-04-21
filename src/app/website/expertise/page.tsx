@@ -1,6 +1,14 @@
 import { WebsiteShell } from "@/app/website";
 import Link from "next/link";
 import { Shield, Users, Search, ArrowRight, Atom, Scale } from "lucide-react";
+import { buildWebsiteMetadata } from "../_metadata/build-metadata";
+
+export const metadata = buildWebsiteMetadata({
+  title: "Especialidades",
+  description:
+    "Áreas de atuação: Direito Digital, Direito do Trabalho, LGPD, cibersegurança e regulação de IA com precisão jurídica e tecnológica.",
+  path: "/expertise",
+});
 
 
 export default function ExpertisePage() {
@@ -29,8 +37,8 @@ export default function ExpertisePage() {
             <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl relative z-10 border border-white/5 bg-surface-container">
               <img
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 opacity-60"
-                alt="Close-up of a high-tech glass justice statue reflection"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB00jgBMTKoT_3jvaDU0yGBLdiBNj99LXTt2Zoa0-2b_jVi_l3QVizaPzUVkHM0XyBW-HdMGv2qhozBvP5MMjE3c7pradGhSMNiN77aIePY08xPM4rv5HALLsTZWkGhHwNo4fw8R8SVhatZgq6cor2eDGJ_AoYMYoHWeTBSK66GAH7hWSgGqFjlb1keSmmH6NrKrqRLb7kpDm_fAnC65M-aGPnlI879fq3W5z6THgqjWKZWOeMNxrdBCFu9kd6v5Nt02687juZbmMSJ"
+                alt="Estátua de justiça em vidro com reflexo tecnológico em close-up"
+                src="/website/expertise/hero.jpg"
               />
             </div>
           </div>
@@ -52,8 +60,8 @@ export default function ExpertisePage() {
               <div className="absolute inset-0 z-0">
                 <img
                   className="w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-700"
-                  alt="Futuristic cyber security data visualization"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDO2Uke9Ah8mTz9-UERSG3t-6j-yK4yXCKQ5KVY8blh7l4hOUcO1sET1XKFuZUjcG4bJOEPvzMp_20p4X_m9pFwCLl2bCtm68tL8Zgw34FlcpgRrPstJhJ6CiKPSVVcut7xQ2ifE7GlHz9prgxE5r0AMpr1DMqoBXo470a-u2iG-_bAndRVIHmcer9iUcL_-RMcDp8yPXdmjIw8v8FnMlUs0KMuu_C3s8RoGDiiNvhs1PErz_TGPtff27bbBIsJNPeripVi9_EpOMpR"
+                  alt="Visualização de dados futurística de cibersegurança"
+                  src="/website/expertise/profile-1.jpg"
                 />
               </div>
               <div className="relative z-10 w-full h-full flex flex-col justify-end">
@@ -119,7 +127,7 @@ export default function ExpertisePage() {
                   <img
                     className="w-full h-full object-cover opacity-50 grayscale rounded-xl mix-blend-screen"
                     alt="Abstract architectural lines"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZZsGwhm7xeYcSw9hyYPrb_CxlHe7nCk-iVKM-r7QVVhIgmBe4S1mx2otc1gyxiCrRKWionNPI_DPCIyn2nAViRPI5L7OgbkjDyziYzI1SqjxcAN0km29fyRkGiAYO66QF1KZbHs_A-u4EasKbu0jjB0oGFq9CXzvJ0R8vT-QFzH9czshQt4npKzHWSE1cxsdRJ800_sr2rRDZpiQWV4RuVjlLAc5N8lA1zVPSZE0WwDmW54dCE_V3khpI8sDdHAsBNz9adFS9ciF5"
+                    src="/website/expertise/profile-2.jpg"
                   />
                 </div>
               </div>
@@ -163,18 +171,18 @@ export default function ExpertisePage() {
             <div className="order-1 md:order-2 grid grid-cols-2 gap-4">
               <div className="space-y-4 pt-12">
                 <div className="aspect-3/4 rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
-                  <img className="w-full h-full object-cover" alt="Legal professional" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWcwkwJmqdS_rPSE2A0WMqzAbKmpcOTMD4nfP64bCqlpof3dZJLv9XrZLMg8N5S4ZNnBkCN-UPh50_kwtuj0Oys2A_AfSnyA0dkfHN-KTdThqV3BV8Xs6h6AvysO9XAuaV_HnZohXRmowNgKOLe4H2q3bNdv4QH8M8HGVNSBC77GkSxUYNCKp4r05vZCO2zfy43aedEJ47vkLc4CtWp8I3kEgUi5N2QH7Qh2tjP8X9In1CyiprPMoJwiyvrkTHfzRsTMag9vkQ50zV"/>
+                  <img className="w-full h-full object-cover" alt="Profissional jurídico" src="/website/expertise/legal-professional.jpg"/>
                 </div>
                 <div className="aspect-3/4 rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
-                  <img className="w-full h-full object-cover" alt="Tech engineer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByW5p4PYfBRRGLGZqyxWW3snJArVlfj2ztoVgPMAa1kexumNLBu5KKMg5D58IXUD7qaqgcfJbNnx5axrli-TdK5GJJRQgKiouLCtK4Qr9X7XuGapazk2waZ1VlS2DDQMSVCkf8n11qpwom9w5WHzeXjw4zQHuFf1zE7LbufPAb2OUXawbmTea7SE9YMoyE6tuhAT80Mwt2dGu-r73oqs_kfyeL1T48Y_jI-LNVdCgOtpvBr5M8NtRxKWqPY1rVZtncUirRXlDEDiXp"/>
+                  <img className="w-full h-full object-cover" alt="Engenheiro de tecnologia" src="/website/expertise/tech-engineer.jpg"/>
                 </div>
               </div>
               <div className="space-y-4">
                 <div className="aspect-3/4 rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
-                  <img className="w-full h-full object-cover" alt="Legal tech professional" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb9FRuVZGVb8vpw8vU8gf0_5NGAGKuQGkFRrlk7CXzvzjAHs2Ak_-1UmoR5yKpw9bLLeK60xyZiJcQ97mUB1DNNjS0Vt9iM9w8dNbefGhRd6xcrkFl5uxF844MBKoRGjstUFzJtCjO6kFR-rPjSGZjHJQLSL5-DCxDal7KyVx9EqNTrNPT-ciQK1U7nV9e_7esWcCoYhsNgk5SsWOPCNlKqjr-EGX4K4102s_6XLlbl4Hv7qiDPo8-a0Wl3b1cjTCWr-bOpS9LOtIa"/>
+                  <img className="w-full h-full object-cover" alt="Profissional de tecnologia jurídica" src="/website/expertise/legal-tech.jpg"/>
                 </div>
                 <div className="aspect-3/4 rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
-                  <img className="w-full h-full object-cover" alt="Expert counsel" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApheuuQPIRJ-ZtoCpiT_7cjQKzN7xsB9NifPEKUVtTrNED50QxDlLz6jd_qBrl_PqH7O9PluehgfGksuwekLHPATnX4GFOiuJUqAS7u7Jten34xHgmrZMveysWguJIZMztUSy7qB3Y4j_KGeX_BtiYfDqGPkn5ZGs86nRFOujXQQ4PF4SQghl6SXxKAVm8HBPPHlWtOl88Q0UeGdTnrFBjQkZGbMnpX69ZQpa-Mjo03RaYx2RHORb6tgLu1tVURaJmOFo1BGr-pMK3"/>
+                  <img className="w-full h-full object-cover" alt="Advogado especialista" src="/website/expertise/expert-counsel.jpg"/>
                 </div>
               </div>
             </div>

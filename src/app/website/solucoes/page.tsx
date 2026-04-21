@@ -1,5 +1,13 @@
 import { WebsiteShell } from "@/app/website";
 import Link from "next/link";
+import { buildWebsiteMetadata } from "../_metadata/build-metadata";
+
+export const metadata = buildWebsiteMetadata({
+  title: "Soluções",
+  description:
+    "Defesa assertiva, recuperação de ativos trabalhistas e justiça reparadora. Soluções jurídicas de alta precisão digital.",
+  path: "/solucoes",
+});
 import {
   ArrowRight,
   FileSearch,
@@ -54,7 +62,7 @@ export default function SolucoesPage() {
               <img 
                 alt="Conceito futurista de justiça" 
                 className="w-full h-full object-cover mix-blend-luminosity opacity-40 hover:opacity-60 transition-opacity duration-700" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvwVrtowJCM1qIqsAVHKMd5BIRCsEY-DAoIGyG0nog8sXrKVPlSnvUwgbS7QKgeI8mC88W0nwnVU_I8r5hgW5aETK3EK0PKddCZUbULimRniA-mdQG_g7t5UPNiYM2q7ZETmtHsQLw0tonkarUxC7E_TOQM-8HyHT_R8_gEF9N8LCH1kJEbgL44cPnqEFcc2tdCorF7uiXU5qbr8-YoX-iM8vTj7X672OlSiFWFMWPxHxsD_c3j6Tp10BXnE9ZylGvZ2hpVX3Ijbsn"
+                src="/website/solucoes/hero.jpg"
               />
               <div className="absolute inset-0 bg-linear-to-tr from-primary/20 to-transparent"></div>
             </div>

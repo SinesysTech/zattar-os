@@ -21,6 +21,16 @@ export { TemplateLibraryDialog } from './components/template-library-dialog';
 export { FileManager } from './components/file-manager';
 export { FileUploadDialogUnified } from './components/file-upload-dialog-unified';
 export { CreateFolderDialog } from './components/create-folder-dialog';
+export { DocumentosKpiStrip } from './components/documentos-kpi-strip';
+export { DocumentosFilterBar } from './components/documentos-filter-bar';
+export { DocumentosGlassList } from './components/documentos-glass-list';
+export { DocumentoDetailDialog } from './components/documento-detail-dialog';
+export type {
+  DocumentosFilters,
+  DocumentosTipoFiltro,
+  DocumentosPeriodoFiltro,
+  DocumentosCriadorOption,
+} from './components/documentos-filter-bar';
 
 // ============================================================================
 // Hooks

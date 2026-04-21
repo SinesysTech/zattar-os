@@ -14,6 +14,9 @@ export { EditorialHeader } from "./components/sections/editorial-header";
 export { GlowBackground } from "./components/effects/glow-background";
 
 // Cards
+// @deprecated Use GlassPanel (depth=1|2|3) de @/components/shared/glass-panel em vez destes.
+// Estes componentes existem apenas como legado e não são renderizados em nenhuma rota ativa.
+// Sprint 3 deve removê-los após confirmar zero consumidores.
 export { GlassCard } from "./components/cards/glass-card";
 export { StatCard } from "./components/cards/stat-card";
 export { FeatureCard } from "./components/cards/feature-card";

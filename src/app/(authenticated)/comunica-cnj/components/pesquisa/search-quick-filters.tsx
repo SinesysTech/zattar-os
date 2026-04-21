@@ -82,34 +82,43 @@ function FilterChip({
   return (
     <div
       className={cn(
-        'group flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-medium transition-colors cursor-pointer',
+        'group flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         hasValue
-          ? 'border-primary/30 bg-primary/5 text-primary'
-          : 'border-border/40 text-muted-foreground hover:bg-muted/40',
+          ? 'border-primary/20 bg-primary/5 text-primary'
+          : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
       )}
     >
-      <Icon className="size-3.5" aria-hidden />
+      <Icon className="size-3" aria-hidden />
       <span>{label}</span>
-      {hasValue && (
+      {hasValue ? (
         <>
           <span className="text-primary/60">·</span>
           <span className="max-w-32 truncate text-primary">{value}</span>
           {onClear && (
-            <button
-              type="button"
+            <span
+              role="button"
+              tabIndex={0}
               onClick={(e) => {
                 e.stopPropagation();
                 onClear();
               }}
-              className="rounded p-0.5 hover:bg-primary/20"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onClear();
+                }
+              }}
+              className="ml-0.5 rounded-full p-0.5 hover:bg-primary/10 transition-colors"
               aria-label={`Limpar ${label}`}
             >
               <X className="size-2.5" aria-hidden />
-            </button>
+            </span>
           )}
         </>
+      ) : (
+        <ChevronDown className="size-3 opacity-50" aria-hidden />
       )}
-      <ChevronDown className="size-3 opacity-50" aria-hidden />
     </div>
   );
 }

@@ -1341,6 +1341,98 @@
     @apply font-bold font-heading tabular-nums;
   }
 
+  /* =============================================================================
+   * MARKETING TYPOGRAPHY — Landing / Website Público
+   * =============================================================================
+   * Escalas dedicadas às rotas de marketing em src/app/website/*. Nunca usar
+   * nos módulos admin (usam text-page/section/card/widget-title acima).
+   *
+   * Usar via Heading level="marketing-hero|marketing-section" e
+   * Text variant="marketing-lead" em @/components/ui/typography.
+   */
+
+  /* Hero de landing — H1 principal, ex.: "Justiça para quem trabalha.".
+     Escala calibrada em "major third" (1.25x) para proporção harmônica entre
+     os níveis de marketing. Max 80px é suficiente para drama sem competir com
+     o layout bento e colunas estreitas.
+     Nota: o website roda com html.website-root-scale (font-size 16.2px). */
+  .text-marketing-hero {
+    font-size: clamp(2.25rem, 2.5vw + 1.75rem, 5rem); /* 36px → 80px */
+    line-height: 1;
+    letter-spacing: -0.035em;
+    @apply font-heading font-extrabold text-foreground;
+  }
+
+  /* Seção de landing — H2 de seção, ex.: "Soluções jurídicas de alta precisão." */
+  .text-marketing-section {
+    font-size: clamp(1.625rem, 1.5vw + 1rem, 3rem); /* 26px → 48px */
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    @apply font-heading font-bold text-foreground;
+  }
+
+  /* Título de bloco dentro de seção de landing — H3 intermediário,
+     ex.: "Defesa Assertiva.", "Recuperação de Ativos." */
+  .text-marketing-title {
+    font-size: clamp(1.375rem, 0.75vw + 0.875rem, 2.125rem); /* 22px → 34px */
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    @apply font-heading font-bold text-foreground;
+  }
+
+  /* Parágrafo lead de landing — abaixo do hero/section.
+     Tamanho calibrado para body confortável sem competir com os headings.
+     Cor levemente mais clara que muted-foreground padrão para compensar o
+     fundo preto puro forçado do website (--background oklch(0.12) em .dark). */
+  .text-marketing-lead {
+    font-size: clamp(0.9375rem, 0.3vw + 0.8125rem, 1.1875rem); /* 15px → 19px */
+    line-height: 1.6;
+    color: color-mix(in oklch, var(--foreground) 72%, transparent);
+  }
+
+  /* Overline marketing — label superior em seções de landing, ex.: "Especialidades". */
+  .text-marketing-overline {
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: 0.18em;
+    @apply font-bold uppercase text-primary;
+  }
+
+  /* ════════════════════════════════════════════════════════════════════════
+     WEBSITE MARKETING OVERRIDES (.website-root-scale escopo)
+     ════════════════════════════════════════════════════════════════════════
+     O admin usa bg cinza-escuro (oklch ~0.22) no .dark; o website força
+     fundo praticamente preto (~0.12). Os glass do DS foram calibrados para
+     admin e somem em fundo preto puro — estes overrides restauram a
+     legibilidade apenas no contexto website (.website-root-scale) em dark. */
+
+  .website-root-scale.dark .glass-kpi,
+  .website-root-scale.dark [class*="glass-kpi"] {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .website-root-scale.dark .glass-kpi:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+
+  .website-root-scale.dark .glass-widget {
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .website-root-scale.dark .glass-widget:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
   /* === ALIASES (retrocompatibilidade) === */
 
   /* text-page-heading é alias de text-page-title */

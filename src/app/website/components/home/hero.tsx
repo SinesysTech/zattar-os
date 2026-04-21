@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Heading, Text } from "@/components/ui/typography";
 
 export function Hero() {
   return (
@@ -39,33 +41,37 @@ export function Hero() {
 
       {/* Content */}
       <div className="container mx-auto px-5 sm:px-6 md:px-8 z-10 text-center relative pt-20 md:pt-0">
-        <span className="inline-block px-4 py-1 rounded-full bg-white/10 backdrop-blur-sm text-on-surface font-label text-xs font-bold uppercase tracking-widest mb-4 md:mb-6">
-          A Nova Era da Advocacia Trabalhista
-        </span>
-        <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold font-headline leading-[0.95] tracking-tighter mb-6 md:mb-8 text-on-surface">
-          Justiça para <br />
-          <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/25 backdrop-blur-sm mb-5 md:mb-7">
+          <span className="w-1.5 h-1.5 rounded-full bg-primary motion-safe:animate-pulse" aria-hidden="true" />
+          <Text variant="marketing-overline">
+            A Nova Era da Advocacia Trabalhista
+          </Text>
+        </div>
+        <Heading level="marketing-hero" className="mb-6 md:mb-8 mx-auto max-w-5xl">
+          Justiça para{" "}
+          <span className="bg-linear-to-br from-primary via-primary to-primary-dim bg-clip-text text-transparent">
             quem trabalha.
           </span>
-        </h1>
-        <p className="text-base sm:text-lg md:text-2xl text-on-surface/80 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed">
+        </Heading>
+        <Text variant="marketing-lead" className="max-w-2xl mx-auto mb-9 md:mb-12">
           Unimos tecnologia de ponta e expertise jurídica para garantir que seus
           direitos sejam respeitados com a velocidade que o mundo moderno exige.
-        </p>
+        </Text>
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-          <Link
-            href="/contato"
-            className="bg-primary text-on-primary-fixed px-8 py-4 sm:px-10 sm:py-5 rounded-xl font-bold text-base sm:text-lg hover:brightness-110 transition-all flex items-center justify-center gap-2 group"
+          <Button asChild size="lg" className="rounded-xl gap-2 group h-12 px-8 text-base">
+            <Link href="/contato">
+              Fale com um Especialista
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </Button>
+          <Button
+            asChild
+            size="lg"
+            variant="marketing-outline"
+            className="rounded-xl h-12 px-8 text-base"
           >
-            Fale com um Especialista
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link
-            href="#solucoes"
-            className="border border-white/50 bg-white/5 backdrop-blur-sm text-on-surface px-8 py-4 sm:px-10 sm:py-5 rounded-xl font-bold text-base sm:text-lg hover:bg-white/15 hover:border-white/70 transition-all flex items-center justify-center"
-          >
-            Nossas Soluções
-          </Link>
+            <Link href="#solucoes">Nossas Soluções</Link>
+          </Button>
         </div>
       </div>
     </section>

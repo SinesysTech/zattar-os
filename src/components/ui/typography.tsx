@@ -126,6 +126,11 @@ const HEADING_LEVELS = {
   card: { className: 'text-card-title', tag: 'h3' as const },
   subsection: { className: 'text-subsection-title', tag: 'h4' as const },
   widget: { className: 'text-widget-title', tag: 'h3' as const },
+  // Marketing scale — apenas para src/app/website/* (landing, contato, etc.).
+  // Não usar nos módulos admin.
+  'marketing-hero': { className: 'text-marketing-hero', tag: 'h1' as const },
+  'marketing-section': { className: 'text-marketing-section', tag: 'h2' as const },
+  'marketing-title': { className: 'text-marketing-title', tag: 'h3' as const },
 } as const;
 
 type HeadingLevel = keyof typeof HEADING_LEVELS;
@@ -156,6 +161,10 @@ const TEXT_VARIANTS = {
   'micro-caption': { className: 'text-micro-caption', tag: 'span' as const },
   'micro-badge': { className: 'text-micro-badge', tag: 'span' as const },
   overline: { className: 'text-overline', tag: 'span' as const },
+  // Parágrafo lead de landing — apenas para src/app/website/*
+  'marketing-lead': { className: 'text-marketing-lead', tag: 'p' as const },
+  // Overline marketing — label uppercase presente em seções de landing
+  'marketing-overline': { className: 'text-marketing-overline', tag: 'span' as const },
 } as const;
 
 type TextVariant = keyof typeof TEXT_VARIANTS;

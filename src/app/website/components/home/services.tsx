@@ -12,6 +12,8 @@ import {
   Wallet,
   HeartPulse,
 } from "lucide-react";
+import { GlassPanel } from "@/components/shared/glass-panel";
+import { Heading, Text } from "@/components/ui/typography";
 
 interface OverlayCardProps {
   icon: React.ReactNode;
@@ -24,17 +26,24 @@ interface OverlayCardProps {
 function OverlayCard({ icon, title, description, position }: OverlayCardProps) {
   const positionClasses =
     position === "bottom-right"
-      ? "md:-bottom-6 md:-right-6"
-      : "md:-bottom-6 md:-left-6";
+      ? "md:-bottom-8 md:-right-6 lg:-right-8"
+      : "md:-bottom-8 md:-left-6 lg:-left-8";
 
   return (
-    <div
-      className={`relative md:absolute ${positionClasses} p-5 md:p-6 lg:p-10 bg-surface-container rounded-2xl border border-white/10 max-w-xs lg:max-w-sm -mt-8 mx-4 md:mt-0 md:mx-0`}
+    <GlassPanel
+      depth={2}
+      className={`relative md:absolute ${positionClasses} p-6 md:p-7 lg:p-8 max-w-xs lg:max-w-sm -mt-8 mx-4 md:mt-0 md:mx-0`}
     >
-      <span className="text-primary mb-2 md:mb-3 lg:mb-4 block">{icon}</span>
-      <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-1.5 md:mb-2">{title}</h3>
-      <p className="text-on-surface-variant text-sm">{description}</p>
-    </div>
+      <div className="inline-flex items-center justify-center w-12 h-12 lg:w-14 lg:h-14 rounded-xl bg-primary/15 text-primary mb-4">
+        {icon}
+      </div>
+      <Heading level="card" as="h4" className="mb-2 text-foreground">
+        {title}
+      </Heading>
+      <Text variant="caption" className="text-foreground/70">
+        {description}
+      </Text>
+    </GlassPanel>
   );
 }
 
@@ -90,22 +99,24 @@ function ServiceBlock({
         className={`md:col-span-5 ${isImageLeft ? "md:order-2 md:pl-8 lg:pl-12" : "md:order-1 md:pr-8 lg:pr-12"}`}
       >
         {label && (
-          <span className="text-primary-dim font-label text-xs font-bold uppercase tracking-widest mb-3 block">
+          <Text variant="marketing-overline" className="mb-4 block">
             {label}
-          </span>
+          </Text>
         )}
-        <h4 className={`font-headline font-extrabold tracking-tight mb-4 md:mb-6 ${featured ? "text-3xl sm:text-4xl md:text-5xl" : "text-2xl sm:text-3xl md:text-4xl"}`}>
+        <Heading level="marketing-title" className="mb-5 md:mb-7">
           {title}
-        </h4>
-        <p className="text-on-surface-variant text-base md:text-lg leading-relaxed mb-6 md:mb-8">
+        </Heading>
+        <Text variant="marketing-lead" className="mb-7 md:mb-9">
           {description}
-        </p>
+        </Text>
         <Link
           href={href}
-          className="inline-flex items-center gap-2 text-primary-dim font-bold text-base md:text-lg hover:gap-4 transition-all underline underline-offset-4 decoration-primary-dim/40 hover:decoration-primary-dim/80"
+          className="group/cta inline-flex items-center gap-2 text-primary font-bold text-base md:text-lg hover:gap-3 transition-all"
         >
-          {ctaLabel}
-          <ArrowRight className="w-5 h-5" />
+          <span className="underline decoration-primary/40 underline-offset-4 group-hover/cta:decoration-primary">
+            {ctaLabel}
+          </span>
+          <ArrowRight className="w-5 h-5 group-hover/cta:translate-x-0.5 transition-transform" />
         </Link>
       </div>
     </div>
@@ -118,16 +129,14 @@ export function Services() {
       <div className="container mx-auto px-5 sm:px-6 md:px-8">
         {/* Section header */}
         <div className="max-w-4xl mb-12 sm:mb-16 md:mb-24">
-          <span className="text-primary font-label text-sm font-bold uppercase tracking-widest">
-            Especialidades
-          </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-headline font-bold mt-3 md:mt-4 tracking-tighter leading-[1.05]">
+          <Text variant="marketing-overline">Especialidades</Text>
+          <Heading level="marketing-section" className="mt-4 md:mt-5">
             Soluções jurídicas de{" "}
             <br className="hidden sm:block" />
-            <span className="text-on-surface-variant">
+            <span className="bg-linear-to-br from-primary via-primary to-primary-dim bg-clip-text text-transparent">
               alta precisão digital.
             </span>
-          </h2>
+          </Heading>
         </div>
 
         {/* Service blocks */}

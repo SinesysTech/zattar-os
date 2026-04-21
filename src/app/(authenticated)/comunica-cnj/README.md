@@ -47,13 +47,13 @@ comunica-cnj/
 │   │   ├── search-stats.tsx        # Mini-stats + link para /capturadas
 │   │   └── search-results.tsx      # Lista resultados da API CNJ
 │   ├── capturadas/                 # componentes da página Capturadas
-│   │   ├── capturadas-pulse-strip.tsx  # KPIs (padrão PulseStrip)
-│   │   ├── capturadas-filter-bar.tsx   # Popovers + chips (padrão Audiências)
-│   │   ├── capturadas-glass-list.tsx   # Lista glass (padrão Audiências)
+│   │   ├── gazette-mission-kpi-strip.tsx # KPIs custom (sparkline, próx. prazo, taxa vinc.)
+│   │   ├── capturadas-filter-bar.tsx   # StatusFilter + Fonte/Tipo/Meio/Período (padrão Audiências)
+│   │   ├── capturadas-glass-list.tsx   # Cards individuais + ColumnHeaders (padrão Expedientes)
 │   │   ├── capturadas-glass-cards.tsx  # Grid de cards (padrão Processos)
 │   │   └── capturadas-detail-dialog.tsx # Dialog glass centralizado
 │   ├── shared/
-│   │   └── comunica-cnj-subnav.tsx # Navegação entre Pesquisa/Capturadas
+│   │   └── diario-oficial-page-nav.tsx # Heading + nav + action unificados (padrão AssinaturaDigital)
 │   └── hooks/
 │       ├── use-gazette-store.ts    # Zustand — estado da Gestão
 │       └── use-pesquisa-store.ts   # Zustand — estado da Pesquisa
@@ -68,7 +68,7 @@ comunica-cnj/
 2. Digita termo + filtros rápidos → `actionConsultarComunicacoes` consulta a API CNJ ao vivo.
 3. Resultados aparecem em cards abaixo do hero. Click abre o `ComunicacaoDetalhesDialog` com opção de ver PDF da certidão.
 4. Para **gerir** o que já foi sincronizado (vincular a expedientes, resolver órfãos, ver métricas), acessa **`/comunica-cnj/capturadas`** via subnav.
-5. A página de Capturadas segue o padrão gold-standard de Audiências/Expedientes/Processos: `PulseStrip` (KPIs) → `TabPills` + `ViewToggle` + `SearchInput` → `FilterBar` (popovers) → `GlassList` ou `GlassCards`.
+5. A página de Capturadas segue o padrão gold-standard de Audiências/Expedientes/Processos: `GazetteMissionKpiStrip` (KPIs custom com sparkline) → `FilterBar` (popovers, inclui StatusFilter) + `SearchInput` + `ViewToggle` → `GlassList` (cards individuais + ColumnHeaders) ou `GlassCards`.
 
 ## Agendamentos
 **Fora do escopo.** Agendamentos de sincronização recorrente são gerenciados em `/captura/agendamentos/` (genéricos para todos os tipos de captura).

@@ -1,6 +1,14 @@
 import { WebsiteShell, TrustTicker } from "@/app/website";
 import Link from "next/link";
 import { Search, ArrowUpRight, Gavel, ArrowRight, Headset } from "lucide-react";
+import { buildWebsiteMetadata } from "../_metadata/build-metadata";
+
+export const metadata = buildWebsiteMetadata({
+  title: "Perguntas Frequentes",
+  description:
+    "Respostas rápidas sobre processos trabalhistas, FGTS, acidentes de trabalho, prazos e atendimento digital.",
+  path: "/faq",
+});
 
 
 export default function FAQPage() {

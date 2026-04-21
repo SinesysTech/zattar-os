@@ -1,4 +1,4 @@
-export { CapturadasPulseStrip } from './capturadas-pulse-strip';
+export { GazetteMissionKpiStrip } from './gazette-mission-kpi-strip';
 export { CapturadasFilterBar } from './capturadas-filter-bar';
 export { CapturadasGlassList } from './capturadas-glass-list';
 export { CapturadasGlassCards } from './capturadas-glass-cards';

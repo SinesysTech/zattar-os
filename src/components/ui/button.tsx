@@ -17,6 +17,10 @@ const buttonVariants = cva(
           "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
         "glass-outline":
           "border border-outline-variant/60 bg-surface-container-lowest/70 backdrop-blur-sm hover:bg-surface-container-lowest hover:border-outline-variant active:scale-[0.98] transition-colors",
+        // Outline de marketing — calibrado para fundo preto puro do website.
+        // Usa tokens neutros com alpha maior e backdrop-blur forte.
+        "marketing-outline":
+          "border border-white/25 bg-white/5 text-foreground backdrop-blur-md hover:bg-white/10 hover:border-white/40 active:scale-[0.98] transition-all",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:

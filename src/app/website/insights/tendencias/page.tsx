@@ -1,6 +1,14 @@
 import { WebsiteShell } from "@/app/website";
 import Link from "next/link";
 import { Search, ArrowRight } from "lucide-react";
+import { buildWebsiteMetadata } from "../../_metadata/build-metadata";
+
+export const metadata = buildWebsiteMetadata({
+  title: "Tendências",
+  description:
+    "Análises de tendências no Direito do Trabalho: automação, precedentes, métricas do judiciário e comportamento do contencioso.",
+  path: "/insights/tendencias",
+});
 
 export default function InsightsTendenciasPage() {
   return (
@@ -14,7 +22,7 @@ export default function InsightsTendenciasPage() {
             <img 
               alt="Tribunal futurista com interfaces holográficas" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-60 mix-blend-luminosity hover:mix-blend-normal" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkY_PQMsB6J3Thp9DKMB-sB1YnekGjAyLokayJ0RMPTGllsxihfQguYGzGGFBr3a6C361MVtXzWZZnZ8FxCrUrTjk190U_UrxEbnRMhyk4lD1pYCd2kGQHg6BqBhqnhsQ9nK-r5OTtaxjpUxE6Py_hvgSiMeaJVYdcLFZ-eg0mL40vdgSGagQboSA1nEPkBKZWBn3AgprfPHqDTniX6QT_ohz_a_hmgUi1DPPGln8Sunl4TtwMqvbh8bEEUuKd7wkK07C7DTl6cK_T"
+              src="/website/insights/tendencias/hero.jpg"
             />
           </div>
           <div className="absolute inset-0 bg-linear-to-t from-surface via-surface/60 to-transparent flex flex-col justify-end p-8 md:p-16">
@@ -75,7 +83,7 @@ export default function InsightsTendenciasPage() {
               <img 
                 alt="Direito Digital" 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 mix-blend-luminosity hover:mix-blend-normal" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ2GrBpII1Y_7SSCYZKDNiZT5wCwg4HHsoX03-pXoH_A-pRcN2UggZBOEwgQXd3MklpFtSPNn8ZYZ1MLAx5Flt1uFE68ofI8s9vi2EPbllUr-DexZ8vxW0DHZHXA2NwMKbIzjvy9fLfsQ6mvkijbbeEy5es8XPvXgh8kaXGAkhD2yZIFFUbFTnN0DOGWgC5-BqHAyE01xqIjQHSvKW6teLypwO69sm-SQIIOQAO06lHxNXE0BDRA2DSKWgcwZlrsKw8IXtfDZsBSYF"
+                src="/website/insights/tendencias/chart.jpg"
               />
             </div>
             <div className="md:w-1/2 p-8 lg:p-10 flex flex-col justify-between">
@@ -158,7 +166,7 @@ export default function InsightsTendenciasPage() {
               <img 
                 alt="Ambiente corporativo de tecnologia minimalista" 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 mix-blend-luminosity hover:mix-blend-normal" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrIwMBl25Vlc-4988HRdLbAprDUodEg4ZF-5C1iPaXF_8-wnUuiKEzfu0CojZd3JLRObEzcAcgzgEle29Hrx8Y9rUDRXVmAhFmDvUK_Nf1znEXrYC86ZLHGykHR5iWh5aLrPhN6VP6yGp8Yub2A1YwGZQcmlLaa65lLecGVyIeb0DFbKvr06MK8HaVHmHkBBdBtNkZd_7Wae-CM_IUBqCf-y-99eyYpgsDuKwRY7ntkJfkA8Kmj-tDffCRVXIFeQDsZFIcNquMcMlW"
+                src="/website/insights/tendencias/trend.jpg"
               />
             </div>
           </article>

@@ -1,6 +1,14 @@
 import { WebsiteShell } from "@/app/website";
 import Link from "next/link";
 import { ArrowRight, Bookmark, ExternalLink } from "lucide-react";
+import { buildWebsiteMetadata } from "../_metadata/build-metadata";
+
+export const metadata = buildWebsiteMetadata({
+  title: "Insights",
+  description:
+    "Artigos, análises e tendências do Direito do Trabalho com olhar tecnológico. Curadoria Zattar Advogados.",
+  path: "/insights",
+});
 
 export default function InsightsPage() {
   return (
@@ -54,7 +62,7 @@ export default function InsightsPage() {
             <img 
               alt="Edifício moderno de justiça com arquitetura em vidro refletindo luzes de neon violeta" 
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-40 mix-blend-luminosity hover:mix-blend-normal hover:opacity-50" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi1N4W6BJZkDnOGCAAkX6SFUZOz7vKkNNIDLj9NgcMRmOqk5A0wWVAIalPPY_ZTUZzPQX-DAg9SH8yxGgLXXY8mR7aAsj61d0SNJr-FH7lx5qX6ciCKQzR-1Ff1SbvlRTWMnWoDPuIbxZLOUbdEx_EhynTtyTfT7goPZoVXJhW7HBDGJNX7qSa7Dv3TW9pLcuyNfZjcV43QC-IK2sCqGg1Qx5_6GoKN-xYdughyWx4Of7Jvl_UrxQi8710V_k77Pig4L2a0XSCu-Um"
+              src="/website/insights/hero.jpg"
             />
             <div className="absolute inset-0 bg-linear-to-t from-surface via-surface/80 to-transparent"></div>
             <div className="relative z-10 p-8 md:p-12 w-full mt-auto">
@@ -133,7 +141,7 @@ export default function InsightsPage() {
                 <img 
                   className="w-full h-full object-cover opacity-60 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" 
                   alt="Conexões de rede digital abstrata com nós brilhantes" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuADkWitd8HXPESHxyw38f_QsvmUyy_EmmNiS9gM18pCliL4G3OMjlUzmWlg-PYdqodiaXi6XXQ4u5ymQtAWS7GRqFx2AEw730hPXeLdUzkJrpS4GJ5jjT8NmMv2D2mdrA150_vVaIwLafcDWNDW7DjNwKuJzRVc0mpUr9SCkP7v61Hf90doe08Azd4UreDE_I_ChsQQMfRtnpYe1K53XTqj8txMDUdLEqlZubnI-A_58-KL4bcyrFuPFIr9ITUS17J0LaDp3mR-TjP9"
+                  src="/website/insights/article-1.jpg"
                 />
                 <div className="absolute inset-0 bg-linear-to-tr from-primary/10 to-transparent"></div>
               </div>
@@ -154,7 +162,7 @@ export default function InsightsPage() {
                 <img 
                   className="w-full h-full object-cover opacity-60 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" 
                   alt="Aperto de mão entre humano e robô" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnD2wNM1Zn-H9bkXxPcipEDE_LELDCV2ruvQwee7UvbL2v4cJ7xioM7PMS2JUeFAxFg1mBdkqJEnfHD9N888pbBQJHfAkFSygfy3U7RAgRsYmX3v3DJsQXERH-IYWataPPDJHBV4u5NAJJcdCYLQEP2An7m-ZVMBXgmMBRQ3vMRaHUb9VzyX5Ij9ZCX-pSdUnO9EaM0VEj6FOmcKeuwzhK0s-eEG8r1tUD0rhA5m1rrG96zbEEuWmqmKqKvoy7IYSN1UMnQ_zjqoiI"
+                  src="/website/insights/article-2.jpg"
                 />
                 <div className="absolute inset-0 bg-linear-to-tr from-primary/10 to-transparent"></div>
               </div>
@@ -175,7 +183,7 @@ export default function InsightsPage() {
                 <img 
                   className="w-full h-full object-cover opacity-60 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" 
                   alt="Placa de circuito digital brilhando com luz violeta e azul" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmk2IhILvRxlFBR8tDaXUyBLPI3L1Cq9OYxJvgh_2KG7sqzL7X0bB6y-Ti0PRhTOkX9NnNZb4jcT81GAdpDT327pbTbIi28cTeVgiPmPEdxj0xIh1yVE54tyiSl8eNai2pIhPLUd7I87pxL3GCVDkBzhmv6H1sZuSeZB8Wsmnyl1Tdk-BoXC_tyxDVuXfXpFKCpbZM_R1ye5hOp-wvQYWO77y4FjvhFJSp4nZu1aj8Nuo2dDV8s6Jnu5iwCT0QwiuPuqlj5qeW-SAJ"
+                  src="/website/insights/article-3.jpg"
                 />
                 <div className="absolute inset-0 bg-linear-to-tr from-primary/10 to-transparent"></div>
               </div>
@@ -196,7 +204,7 @@ export default function InsightsPage() {
                 <img 
                   className="w-full h-full object-cover opacity-60 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" 
                   alt="Representação 3D abstrata de formas cristalinas geométricas flutuantes com textura metálica" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpVWguo-1rD-0bKNeqa8IfArC9YwNhHDqKwjuevC-pAk9RD5eyfgCygyAgs6E4wga0UybkSEakLy84alBA1GLnZrxhnZnFK8HYcJNPajpmqA3mJKpZmrcFBto4IZ7ArnZDWyDSVv47rVQ4MgK4GjO0QQpJx8IU0AAoPN1FICCIamWt4_Bv-L3tesscLzIKsj5e5Po0lAsz90ziwPp0MSdYJAseAdzrDeAQOD01LPImiKx-5D2kg5K4KlJuNY20WR9Fs6EaiuTsHZgs"
+                  src="/website/insights/article-4.jpg"
                 />
                 <div className="absolute inset-0 bg-linear-to-tr from-primary/10 to-transparent"></div>
               </div>
@@ -216,7 +224,7 @@ export default function InsightsPage() {
 
       {/* Newsletter Section */}
       <section className="py-24 px-6 border-t border-white/5 relative z-10">
-        <div className="max-w-7xl mx-auto rounded-[2.5rem] bg-surface-container overflow-hidden border border-white/10 relative shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
+        <div className="max-w-7xl mx-auto rounded-[2.5rem] bg-surface-container overflow-hidden border border-outline-variant/20 relative shadow-ambient">
           {/* Decorative background element */}
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 blur-[100px] rounded-full"></div>
           

@@ -2,19 +2,18 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { LayoutGrid, List, RefreshCw } from 'lucide-react';
-import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/dashboard/search-input';
-import { TabPills, type TabPillOption } from '@/components/dashboard/tab-pills';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
-import { ComunicaCnjSubnav } from './components/shared/comunica-cnj-subnav';
+import { DiarioOficialPageNav } from './components/shared/diario-oficial-page-nav';
 import {
-  CapturadasPulseStrip,
   CapturadasFilterBar,
   CapturadasGlassList,
   CapturadasGlassCards,
   CapturadasDetailDialog,
 } from './components/capturadas';
+import type { StatusValue } from './components/capturadas/capturadas-filter-bar';
+import { GazetteMissionKpiStrip } from './components/capturadas/gazette-mission-kpi-strip';
 import { GazetteSyncDialog } from './components/gazette-sync-dialog';
 import { GazetteAlertBanner } from './components/gazette-alert-banner';
 import { GazetteOrphanResolver } from './components/gazette-orphan-resolver';
@@ -34,21 +33,29 @@ const VIEW_OPTIONS: ViewToggleOption[] = [
   { id: 'cards', icon: LayoutGrid, label: 'Cards' },
 ];
 
-/**
- * Cliente orquestrador da página `/comunica-cnj/capturadas`.
- * Gestão operacional das comunicações já sincronizadas:
- * KPIs, filtros, tabs, lista/cards, banner de prazos e resolver de órfãos.
- *
- * Estrutura espelha o padrão AudienciasClient: full-width space-y-5,
- * PulseStrip, FilterBar inline, ViewToggle, content switcher.
- */
+// Mapeia valor do StatusFilter <-> viewAtiva no store (strings legadas)
+function statusToView(v: StatusValue): string {
+  if (v === null) return 'todas';
+  if (v === 'vinculado') return 'vinculados';
+  if (v === 'pendente') return 'pendentes';
+  if (v === 'orfao') return 'orfaos';
+  return v; // 'prazos'
+}
+
+function viewToStatus(view: string): StatusValue {
+  if (view === 'vinculados') return 'vinculado';
+  if (view === 'pendentes') return 'pendente';
+  if (view === 'orfaos') return 'orfao';
+  if (view === 'prazos') return 'prazos';
+  return null;
+}
+
 export function CapturadasClient() {
   const {
     metricas,
     comunicacoes,
     viewAtiva,
     modoVisualizacao,
-    densidade,
     comunicacaoSelecionada,
     filtros,
     isLoading,
@@ -79,7 +86,9 @@ export function CapturadasClient() {
             comunicacoesRes.data.data ?? []
           ).map((item) => ({
             ...item,
-            statusVinculacao: (item.expedienteId ? 'vinculado' : 'orfao') as StatusVinculacao,
+            statusVinculacao: (item.expedienteId
+              ? 'vinculado'
+              : 'orfao') as StatusVinculacao,
             diasParaPrazo: null,
             partesAutor: [] as string[],
             partesReu: [] as string[],
@@ -97,21 +106,25 @@ export function CapturadasClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const statusSelecionado = viewToStatus(viewAtiva);
+
   const comunicacoesFiltradas = useMemo(() => {
     let list = comunicacoes;
 
-    // View tabs
-    if (viewAtiva === 'pendentes') {
+    // Filtro por status de vinculação / prazos críticos
+    if (statusSelecionado === 'vinculado') {
+      list = list.filter((c) => c.statusVinculacao === 'vinculado');
+    } else if (statusSelecionado === 'pendente') {
       list = list.filter((c) => c.statusVinculacao === 'pendente');
-    } else if (viewAtiva === 'orfaos') {
+    } else if (statusSelecionado === 'orfao') {
       list = list.filter((c) => c.statusVinculacao === 'orfao');
-    } else if (viewAtiva === 'prazos') {
+    } else if (statusSelecionado === 'prazos') {
       list = list.filter(
         (c) => c.diasParaPrazo !== null && c.diasParaPrazo <= 7,
       );
     }
 
-    // Filter bar
+    // Demais filtros
     if (filtros.fonte && filtros.fonte.length > 0) {
       list = list.filter((c) => filtros.fonte!.includes(c.siglaTribunal));
     }
@@ -142,25 +155,21 @@ export function CapturadasClient() {
     }
 
     return list;
-  }, [comunicacoes, viewAtiva, filtros, search]);
+  }, [comunicacoes, statusSelecionado, filtros, search]);
 
-  const tabs = useMemo<TabPillOption[]>(() => {
-    const total = comunicacoes.length;
-    const pendentes = comunicacoes.filter(
-      (c) => c.statusVinculacao === 'pendente',
-    ).length;
-    const orfaos = comunicacoes.filter((c) => c.statusVinculacao === 'orfao').length;
-    const prazos = comunicacoes.filter(
-      (c) => c.diasParaPrazo !== null && c.diasParaPrazo <= 7,
-    ).length;
-
-    return [
-      { id: 'todas', label: 'Todas', count: total },
-      { id: 'pendentes', label: 'Pendentes', count: pendentes },
-      { id: 'orfaos', label: 'Órfãos', count: orfaos },
-      { id: 'prazos', label: 'Prazos', count: prazos },
-    ];
-  }, [comunicacoes]);
+  const statusCounts = useMemo(
+    () => ({
+      vinculado: comunicacoes.filter((c) => c.statusVinculacao === 'vinculado')
+        .length,
+      pendente: comunicacoes.filter((c) => c.statusVinculacao === 'pendente')
+        .length,
+      orfao: comunicacoes.filter((c) => c.statusVinculacao === 'orfao').length,
+      prazos: comunicacoes.filter(
+        (c) => c.diasParaPrazo !== null && c.diasParaPrazo <= 7,
+      ).length,
+    }),
+    [comunicacoes],
+  );
 
   const tribunaisDisponiveis = useMemo(() => {
     const set = new Set<string>();
@@ -174,50 +183,72 @@ export function CapturadasClient() {
     return Array.from(set).sort();
   }, [comunicacoes]);
 
-  const isOrphanView = viewAtiva === 'orfaos';
+  const tipoCounts = useMemo(() => {
+    const map = new Map<string, number>();
+    comunicacoes.forEach((c) => {
+      if (!c.tipoComunicacao) return;
+      map.set(c.tipoComunicacao, (map.get(c.tipoComunicacao) ?? 0) + 1);
+    });
+    return map;
+  }, [comunicacoes]);
+
+  const isOrphanView = statusSelecionado === 'orfao';
+
   const subtitle = isLoading
     ? 'Carregando...'
-    : `${comunicacoesFiltradas.length.toLocaleString('pt-BR')} comunicaç${comunicacoesFiltradas.length === 1 ? 'ão' : 'ões'}`;
+    : `${comunicacoesFiltradas.length.toLocaleString('pt-BR')} comunicaç${
+        comunicacoesFiltradas.length === 1 ? 'ão' : 'ões'
+      }${
+        statusCounts.prazos > 0
+          ? ` · ${statusCounts.prazos} prazo${statusCounts.prazos === 1 ? '' : 's'} crítico${statusCounts.prazos === 1 ? '' : 's'}`
+          : ''
+      }`;
 
   return (
-    <div className="flex flex-col gap-5 px-6 py-6">
-      {/* Header do módulo */}
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <Heading level="page">Diário Oficial</Heading>
-          <Text variant="caption" className="mt-0.5 text-muted-foreground">
-            Gestão das comunicações capturadas · {subtitle}
-          </Text>
-        </div>
-        <GazetteSyncDialog
-          trigger={
-            <Button variant="outline" size="sm" className="gap-1.5 rounded-xl">
-              <RefreshCw className="size-3.5" aria-hidden />
-              Sincronizar
-            </Button>
-          }
-        />
-      </div>
-
-      {/* Abas */}
-      <ComunicaCnjSubnav active="capturadas" />
+    <div className="space-y-5">
+      <DiarioOficialPageNav
+        active="capturadas"
+        subtitle={subtitle}
+        action={
+          <GazetteSyncDialog
+            trigger={
+              <Button variant="outline" size="sm" className="gap-1.5 rounded-xl">
+                <RefreshCw className="size-3.5" aria-hidden />
+                Sincronizar
+              </Button>
+            }
+          />
+        }
+      />
 
       {/* Alert banner */}
       {metricas && metricas.prazosCriticos > 0 && (
         <GazetteAlertBanner
           count={metricas.prazosCriticos}
           descricao="Intimações com prazo crítico"
-          onVerPrazos={() => setViewAtiva('prazos')}
+          onVerPrazos={() => setViewAtiva(statusToView('prazos'))}
         />
       )}
 
-      {/* KPIs */}
-      <CapturadasPulseStrip metricas={metricas} comunicacoes={comunicacoes} />
+      {/* KPI Strip (custom com sparkline/próximo prazo/taxa de vinculação) */}
+      <GazetteMissionKpiStrip
+        metricas={metricas}
+        comunicacoes={comunicacoes}
+      />
 
-      {/* Tabs + view controls */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <TabPills tabs={tabs} active={viewAtiva} onChange={setViewAtiva} />
-        <div className="flex items-center gap-2">
+      {/* Toolbar unificada: FilterBar + Search + ViewToggle */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <CapturadasFilterBar
+          filtros={filtros}
+          onChange={setFiltros}
+          tribunais={tribunaisDisponiveis}
+          tiposComunicacao={tiposDisponiveis}
+          tipoCounts={tipoCounts}
+          statusSelecionado={statusSelecionado}
+          onStatusChange={(v) => setViewAtiva(statusToView(v))}
+          statusCounts={statusCounts}
+        />
+        <div className="flex items-center gap-2 flex-1 justify-end">
           <SearchInput
             value={search}
             onChange={setSearch}
@@ -231,23 +262,13 @@ export function CapturadasClient() {
         </div>
       </div>
 
-      {/* Filter bar */}
-      {!isOrphanView && (
-        <CapturadasFilterBar
-          filtros={filtros}
-          onChange={setFiltros}
-          tribunais={tribunaisDisponiveis}
-          tiposComunicacao={tiposDisponiveis}
-        />
-      )}
-
       {/* Content */}
       {isLoading ? (
         <div className="space-y-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="h-14 rounded-2xl border border-border/20 bg-muted/30 animate-pulse"
+              className="h-20 rounded-2xl border border-border/20 bg-muted/30 animate-pulse"
             />
           ))}
         </div>
@@ -257,7 +278,6 @@ export function CapturadasClient() {
         <CapturadasGlassList
           comunicacoes={comunicacoesFiltradas}
           onSelect={selecionarComunicacao}
-          densidade={densidade}
           selectedId={comunicacaoSelecionada?.id ?? null}
         />
       ) : (

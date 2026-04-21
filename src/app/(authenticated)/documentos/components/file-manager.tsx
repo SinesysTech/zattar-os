@@ -1,832 +1,463 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import Image from 'next/image';
+/**
+ * FileManager — Container unificado do módulo de documentos
+ * ============================================================================
+ * Segue o padrão Glass Briefing (canônico em audiências, expedientes, partes):
+ * header com Heading, KPI strip, filter bar + search, breadcrumbs glass,
+ * glass list tipada e detail dialog.
+ * ============================================================================
+ */
+
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useIsMobile } from '@/hooks/use-breakpoint';
-import { cn } from '@/lib/utils';
 import {
-    Folder,
-    File,
-    FileText,
-    Home,
-    Search,
-    Plus,
-    ArrowDown,
-    ArrowUp,
-    ChevronsUpDown,
-    UploadIcon,
-    FolderPlus,
-    X,
-    ImageIcon,
-    FileVideoIcon,
-    FileAudioIcon,
-    ExternalLink,
-    Share2,
-    Trash2,
+  Home,
+  Plus,
+  FileText,
+  FolderPlus,
+  UploadIcon,
+  ChevronRight,
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Heading } from '@/components/ui/typography';
+import { SearchInput } from '@/components/dashboard/search-input';
+import { GlassPanel } from '@/components/shared/glass-panel';
+import { InsightBanner } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbList,
-    BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Separator } from '@/components/ui/separator';
-import { toast } from 'sonner';
-import { getAvatarUrl } from '@/app/(authenticated)/usuarios';
+import { cn } from '@/lib/utils';
 
 import { FileUploadDialogUnified } from './file-upload-dialog-unified';
 import { CreateFolderDialog } from './create-folder-dialog';
 import { CreateDocumentDialog } from './create-document-dialog';
+import { DocumentosKpiStrip } from './documentos-kpi-strip';
 import {
-    actionListarItensUnificados,
-    actionDeletarArquivo,
-    actionBuscarCaminhoPasta,
+  DocumentosFilterBar,
+  type DocumentosFilters,
+  type DocumentosCriadorOption,
+  type DocumentosTipoFiltro,
+} from './documentos-filter-bar';
+import { DocumentosGlassList } from './documentos-glass-list';
+import { DocumentoDetailDialog } from './documento-detail-dialog';
+
+import {
+  actionListarItensUnificados,
+  actionDeletarArquivo,
+  actionBuscarCaminhoPasta,
 } from '../actions/arquivos-actions';
 import { actionDeletarDocumento } from '../actions/documentos-actions';
 import type { ItemDocumento } from '../domain';
-import { Heading, Typography } from '@/components/ui/typography';
 
-type SortOption = 'name' | 'date' | 'size';
-type SortDirection = 'asc' | 'desc';
+// =============================================================================
+// HELPERS — classificação por tipo de filtro
+// =============================================================================
 
-/**
- * Retorna ícone colorido baseado no tipo de item/arquivo.
- *
- * @ai-context Cores via tokens semânticos do design system:
- * - warning: pastas (folders), áudio
- * - info: documentos de texto
- * - success: imagens
- * - primary: vídeos
- * - destructive: PDFs
- * - muted-foreground: desconhecido
- */
-function getItemIcon(item: ItemDocumento) {
-    if (item.tipo === 'pasta') {
-        return <Folder className="h-5 w-5 text-warning" />;
-    } else if (item.tipo === 'documento') {
-        return <FileText className="h-5 w-5 text-info" />;
-    } else {
-        const mime = item.dados.tipo_mime;
-        if (mime.startsWith('image/')) {
-            return <ImageIcon className="h-5 w-5 text-success" />;
-        } else if (mime.startsWith('video/')) {
-            return <FileVideoIcon className="h-5 w-5 text-primary" />;
-        } else if (mime.startsWith('audio/')) {
-            return <FileAudioIcon className="h-5 w-5 text-warning" />;
-        } else if (mime === 'application/pdf') {
-            return <FileText className="h-5 w-5 text-destructive" />;
-        }
-        return <File className="h-5 w-5 text-muted-foreground" />;
-    }
+function getItemTipoFiltro(item: ItemDocumento): DocumentosTipoFiltro {
+  if (item.tipo === 'pasta') return 'pasta';
+  if (item.tipo === 'documento') return 'documento';
+
+  const mime = item.dados.tipo_mime;
+  if (mime.startsWith('image/')) return 'imagem';
+  if (mime.startsWith('video/')) return 'video';
+  if (mime.startsWith('audio/')) return 'audio';
+  if (mime === 'application/pdf') return 'pdf';
+  return 'outro';
+}
+
+function matchesPeriodo(item: ItemDocumento, periodo: DocumentosFilters['periodo']): boolean {
+  if (!periodo) return true;
+  const created = new Date(item.dados.created_at);
+  const now = new Date();
+  const diffMs = now.getTime() - created.getTime();
+  const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+  if (periodo === 'hoje') {
+    return (
+      created.getFullYear() === now.getFullYear() &&
+      created.getMonth() === now.getMonth() &&
+      created.getDate() === now.getDate()
+    );
+  }
+  if (periodo === '7d') return diffDays <= 7;
+  if (periodo === '30d') return diffDays <= 30;
+  return true;
+}
+
+function getItemKey(item: ItemDocumento): string {
+  return `${item.tipo}-${item.dados.id}`;
 }
 
 function getItemName(item: ItemDocumento): string {
-    if (item.tipo === 'pasta') return item.dados.nome;
-    if (item.tipo === 'documento') return item.dados.titulo;
-    return item.dados.nome;
+  if (item.tipo === 'pasta') return item.dados.nome;
+  if (item.tipo === 'documento') return item.dados.titulo;
+  return item.dados.nome;
 }
 
-function formatFileSize(bytes: number): string {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
-}
-
-function getPreviewIcon(item: ItemDocumento) {
-    const baseClasses = 'flex items-center justify-center rounded-xl';
-
-    if (item.tipo === 'pasta') {
-        return (
-            <div className={`${baseClasses} h-20 w-20 bg-warning/5`}>
-                <Folder className="h-10 w-10 text-warning" />
-            </div>
-        );
-    }
-
-    if (item.tipo === 'documento') {
-        return (
-            <div className={`${baseClasses} h-20 w-20 bg-info/5`}>
-                <FileText className="h-10 w-10 text-info" />
-            </div>
-        );
-    }
-
-    // Arquivo
-    const mime = item.dados.tipo_mime;
-
-    // Thumbnail para imagens
-    if (mime.startsWith('image/')) {
-        return (
-            <div className="relative h-32 w-full overflow-hidden rounded-xl border bg-muted">
-                <Image
-                    src={item.dados.b2_url}
-                    alt={getItemName(item)}
-                    fill
-                    className="object-cover"
-                    unoptimized={true}
-                />
-            </div>
-        );
-    }
-
-    if (mime.startsWith('video/')) {
-        return (
-            <div className={`${baseClasses} h-20 w-20 bg-primary/5`}>
-                <FileVideoIcon className="h-10 w-10 text-primary" />
-            </div>
-        );
-    }
-
-    if (mime.startsWith('audio/')) {
-        return (
-            <div className={`${baseClasses} h-20 w-20 bg-warning/5`}>
-                <FileAudioIcon className="h-10 w-10 text-warning" />
-            </div>
-        );
-    }
-
-    if (mime === 'application/pdf') {
-        return (
-            <div className={`${baseClasses} relative h-20 w-20 bg-destructive/5`}>
-                <FileText className="h-10 w-10 text-destructive" />
-                <span className="absolute bottom-2 text-[10px] font-bold uppercase text-destructive">
-                    PDF
-                </span>
-            </div>
-        );
-    }
-
-    return (
-        <div className={`${baseClasses} h-20 w-20 bg-muted`}>
-            <File className="h-10 w-10 text-muted-foreground" />
-        </div>
-    );
-}
+// =============================================================================
+// MAIN COMPONENT
+// =============================================================================
 
 export function FileManager() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const isMobile = useIsMobile();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-    const [items, setItems] = useState<ItemDocumento[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [selectedItem, setSelectedItem] = useState<ItemDocumento | null>(null);
-    const [showMobileDetails, setShowMobileDetails] = useState(false);
-    const [sortBy, setSortBy] = useState<SortOption>('name');
-    const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  // ── Data State ────────────────────────────────────────────────────────
+  const [items, setItems] = useState<ItemDocumento[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    // Dialogs
-    const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-    const [createFolderOpen, setCreateFolderOpen] = useState(false);
-    const [createDocumentOpen, setCreateDocumentOpen] = useState(false);
+  // ── UI State ──────────────────────────────────────────────────────────
+  const [search, setSearch] = useState('');
+  const [filters, setFilters] = useState<DocumentosFilters>({
+    tipo: null,
+    criadorId: null,
+    periodo: null,
+  });
+  // ── Detail dialog state ───────────────────────────────────────────────
+  const [selectedItem, setSelectedItem] = useState<ItemDocumento | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
 
-    // Path handling
-    const pathParam = searchParams.get('pasta');
-    const currentPastaId = pathParam ? parseInt(pathParam) : null;
-    const [breadcrumbs, setBreadcrumbs] = useState<{ id: number | null; nome: string }[]>([]);
+  // ── Create/Upload dialogs ─────────────────────────────────────────────
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [createFolderOpen, setCreateFolderOpen] = useState(false);
+  const [createDocumentOpen, setCreateDocumentOpen] = useState(false);
 
-    const loadItems = useCallback(async () => {
-        setLoading(true);
-        try {
-            const result = await actionListarItensUnificados({
-                pasta_id: currentPastaId,
-                busca: searchQuery || undefined,
-                limit: 100,
-                offset: 0,
-            });
+  // ── Path handling ─────────────────────────────────────────────────────
+  const pathParam = searchParams.get('pasta');
+  const currentPastaId = pathParam ? parseInt(pathParam) : null;
+  const [breadcrumbs, setBreadcrumbs] = useState<{ id: number | null; nome: string }[]>([]);
 
-            if (result.success && result.data) {
-                setItems(result.data);
-            } else {
-                toast.error(result.error || 'Erro ao carregar itens');
-            }
-        } catch (error) {
-            console.error('Erro ao carregar itens:', error);
-            toast.error('Erro ao carregar itens');
-        } finally {
-            setLoading(false);
+  // ── Data loading ──────────────────────────────────────────────────────
+
+  const loadItems = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await actionListarItensUnificados({
+        pasta_id: currentPastaId,
+        busca: search || undefined,
+        limit: 500,
+        offset: 0,
+      });
+
+      if (result.success && result.data) {
+        setItems(result.data);
+      } else {
+        const msg = result.error || 'Erro ao carregar itens';
+        setError(msg);
+        toast.error(msg);
+      }
+    } catch (err) {
+      console.error('Erro ao carregar itens:', err);
+      setError('Erro ao carregar itens');
+      toast.error('Erro ao carregar itens');
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPastaId, search]);
+
+  useEffect(() => {
+    loadItems();
+  }, [loadItems]);
+
+  useEffect(() => {
+    if (!currentPastaId) {
+      setBreadcrumbs([]);
+      return;
+    }
+    const loadBreadcrumbs = async () => {
+      try {
+        const result = await actionBuscarCaminhoPasta(currentPastaId);
+        if (result.success && result.data) {
+          setBreadcrumbs(result.data.map((p) => ({ id: p.id, nome: p.nome })));
         }
-    }, [currentPastaId, searchQuery]);
-
-    useEffect(() => {
-        loadItems();
-    }, [loadItems]);
-
-    // Carregar breadcrumbs
-    useEffect(() => {
-        if (!currentPastaId) {
-            setBreadcrumbs([]);
-            return;
-        }
-
-        const loadBreadcrumbs = async () => {
-            try {
-                const result = await actionBuscarCaminhoPasta(currentPastaId);
-                if (result.success && result.data) {
-                    setBreadcrumbs(result.data.map(p => ({ id: p.id, nome: p.nome })));
-                } else {
-                    console.error('Erro ao carregar breadcrumbs:', result.error);
-                }
-            } catch (error) {
-                console.error('Erro ao carregar breadcrumbs:', error);
-            }
-        };
-
-        loadBreadcrumbs();
-    }, [currentPastaId]);
-
-    useEffect(() => {
-        setSelectedItem(null);
-        setShowMobileDetails(false);
-    }, [currentPastaId]);
-
-    const handleItemClick = (item: ItemDocumento) => {
-        if (item.tipo === 'pasta') {
-            router.push(`/documentos?pasta=${item.dados.id}`);
-        } else if (item.tipo === 'documento') {
-            router.push(`/documentos/${item.dados.id}`);
-        } else {
-            setSelectedItem(item);
-            if (isMobile) {
-                setShowMobileDetails(true);
-            }
-        }
+      } catch (err) {
+        console.error('Erro ao carregar breadcrumbs:', err);
+      }
     };
+    loadBreadcrumbs();
+  }, [currentPastaId]);
 
-    const handleDeleteItem = async (item: ItemDocumento, e: React.MouseEvent) => {
-        e.stopPropagation();
-        try {
-            if (item.tipo === 'documento') {
-                const result = await actionDeletarDocumento(item.dados.id);
-                if (!result.success) throw new Error(result.error);
-            } else if (item.tipo === 'arquivo') {
-                const result = await actionDeletarArquivo(item.dados.id);
-                if (!result.success) throw new Error(result.error);
-            }
-            toast.success('Item movido para a lixeira');
-            loadItems();
-        } catch (error) {
-            console.error('Erro ao deletar:', error);
-            toast.error('Erro ao deletar item');
-        }
+  useEffect(() => {
+    setSelectedItem(null);
+    setDetailOpen(false);
+  }, [currentPastaId]);
+
+  // ── Derived: criadores únicos (para filter) ──────────────────────────
+
+  const criadores = useMemo<DocumentosCriadorOption[]>(() => {
+    const map = new Map<number, DocumentosCriadorOption>();
+    items.forEach((item) => {
+      const c = item.dados.criador;
+      if (!c?.id) return;
+      if (!map.has(c.id)) {
+        const nome =
+          (c as { nomeExibicao?: string | null; nomeCompleto?: string }).nomeExibicao ||
+          c.nomeCompleto ||
+          `Usuário ${c.id}`;
+        const avatar =
+          (c as { avatarUrl?: string | null; avatar_url?: string | null })?.avatarUrl ??
+          (c as { avatarUrl?: string | null; avatar_url?: string | null })?.avatar_url ??
+          null;
+        map.set(c.id, { id: c.id, nome, avatarUrl: avatar });
+      }
+    });
+    return Array.from(map.values()).sort((a, b) => a.nome.localeCompare(b.nome));
+  }, [items]);
+
+  // ── Derived: counts para filter bar ──────────────────────────────────
+
+  const filterCounts = useMemo(() => {
+    const byType: Record<DocumentosTipoFiltro, number> = {
+      pasta: 0,
+      documento: 0,
+      imagem: 0,
+      video: 0,
+      audio: 0,
+      pdf: 0,
+      outro: 0,
     };
-
-    const handleShareItem = (item: ItemDocumento, e: React.MouseEvent) => {
-        e.stopPropagation();
-        toast.message('Compartilhar', { description: 'Em breve.' });
+    items.forEach((item) => {
+      byType[getItemTipoFiltro(item)] += 1;
+    });
+    return {
+      total: items.length,
+      pastas: byType.pasta,
+      documentos: byType.documento,
+      imagens: byType.imagem,
+      videos: byType.video,
+      audios: byType.audio,
+      pdfs: byType.pdf,
+      outros: byType.outro,
     };
+  }, [items]);
 
-    const _handleSortChange = (option: SortOption) => {
-        if (sortBy === option) {
-            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-        } else {
-            setSortBy(option);
-            setSortDirection('asc');
-        }
-    };
+  // ── Derived: items filtrados + ordenados ─────────────────────────────
 
-    const _getSortLabel = () => {
-        const icon = sortDirection === 'asc' ? '↑' : '↓';
-        const labels = { name: 'Nome', date: 'Data', size: 'Tamanho' };
-        return `${labels[sortBy]} ${icon}`;
-    };
-
-    const sortedItems = [...items].sort((a, b) => {
-        // Pastas sempre primeiro
-        if (a.tipo === 'pasta' && b.tipo !== 'pasta') return -1;
-        if (a.tipo !== 'pasta' && b.tipo === 'pasta') return 1;
-
-        let comparison = 0;
-        switch (sortBy) {
-            case 'name':
-                comparison = getItemName(a).localeCompare(getItemName(b));
-                break;
-            case 'date':
-                comparison = new Date(a.dados.created_at).getTime() - new Date(b.dados.created_at).getTime();
-                break;
-            case 'size':
-                const sizeA = a.tipo === 'arquivo' ? a.dados.tamanho_bytes : 0;
-                const sizeB = b.tipo === 'arquivo' ? b.dados.tamanho_bytes : 0;
-                comparison = sizeA - sizeB;
-                break;
-        }
-
-        return sortDirection === 'asc' ? comparison : -comparison;
+  const visibleItems = useMemo(() => {
+    const filtered = items.filter((item) => {
+      if (filters.tipo && getItemTipoFiltro(item) !== filters.tipo) return false;
+      if (filters.criadorId && item.dados.criador?.id !== filters.criadorId) return false;
+      if (!matchesPeriodo(item, filters.periodo)) return false;
+      return true;
     });
 
-    const filteredItems = sortedItems.filter((item) =>
-        getItemName(item).toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // Ordenação default: pastas primeiro, depois nome A→Z (ordem natural pt-BR)
+    return [...filtered].sort((a, b) => {
+      if (a.tipo === 'pasta' && b.tipo !== 'pasta') return -1;
+      if (a.tipo !== 'pasta' && b.tipo === 'pasta') return 1;
+      return getItemName(a).localeCompare(getItemName(b), 'pt-BR');
+    });
+  }, [items, filters]);
 
-    return (
-        <div className="flex h-full w-full">
-            <div className="flex min-w-0 flex-1 flex-col">
-                {/* Linha 1: Título + Botão de Ação (py-4 = mesmo espaçamento do DataTableToolbar) */}
-                <div className="flex items-center justify-between py-4">
-                    <Heading level="page">Documentos</Heading>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button className="h-9">
-                                <Plus className="h-4 w-4" />
-                                Novo
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => setCreateFolderOpen(true)}>
-                                <FolderPlus className="mr-2 h-4 w-4" />
-                                Nova Pasta
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setCreateDocumentOpen(true)}>
-                                <FileText className="mr-2 h-4 w-4" />
-                                Novo Documento
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => setUploadDialogOpen(true)}>
-                                <UploadIcon className="mr-2 h-4 w-4" />
-                                Upload
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
+  const hasActiveFilters =
+    !!filters.tipo || !!filters.criadorId || !!filters.periodo || !!search;
 
-                {/* Linha 2: Busca (pb-4 = mesmo espaçamento do DataTableToolbar) */}
-                <div className="flex items-center gap-4 pb-4">
-                    <div className="relative w-80">
-                        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                            placeholder="Buscar arquivos e pastas..."
-                            className="h-9 w-full bg-card pl-9"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
-                </div>
+  // ── Handlers ──────────────────────────────────────────────────────────
 
-                {/* Breadcrumbs (condicional) */}
-                {currentPastaId && (
-                    <div className="flex items-center gap-2 pb-4">
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <BreadcrumbItem
-                                    className="cursor-pointer hover:text-primary"
-                                    onClick={() => router.push('/documentos')}
-                                >
-                                    <Home className="h-4 w-4" />
-                                </BreadcrumbItem>
-                                {breadcrumbs.map((bc) => (
-                                    <div key={bc.id || 'root'} className="flex items-center">
-                                        <BreadcrumbSeparator />
-                                        <BreadcrumbItem
-                                            className="cursor-pointer hover:text-primary"
-                                            onClick={() =>
-                                                router.push(bc.id ? `/documentos?pasta=${bc.id}` : '/documentos')
-                                            }
-                                        >
-                                            {bc.nome}
-                                        </BreadcrumbItem>
-                                    </div>
-                                ))}
-                            </BreadcrumbList>
-                        </Breadcrumb>
-                    </div>
-                )}
+  const handleItemClick = useCallback(
+    (item: ItemDocumento) => {
+      if (item.tipo === 'pasta') {
+        router.push(`/documentos?pasta=${item.dados.id}`);
+      } else if (item.tipo === 'documento') {
+        router.push(`/documentos/${item.dados.id}`);
+      } else {
+        setSelectedItem(item);
+        setDetailOpen(true);
+      }
+    },
+    [router],
+  );
 
-                {/* Content */}
-                <div className="flex min-h-0 flex-1 gap-4">
-                    <div className="flex min-w-0 flex-1 flex-col">
-                        {loading ? (
-                            <div className="flex-1 overflow-hidden rounded-lg border bg-card">
-                                <div className="space-y-2 p-2">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Skeleton key={i} className="h-16 w-full" />
-                                    ))}
-                                </div>
-                            </div>
-                        ) : filteredItems.length === 0 ? (
-                            <div className="flex flex-1 flex-col items-center justify-center rounded-lg border bg-card text-center">
-                                <File className="mx-auto h-12 w-12 opacity-50" />
-                                <Typography.H2 className="mt-4 text-muted-foreground">
-                                    {searchQuery ? 'Nenhum item encontrado' : 'Não há arquivos'}
-                                </Typography.H2>
-                                {!searchQuery && (
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button className="mt-4">
-                                                <Plus className="mr-2 h-4 w-4" />
-                                                Adicionar
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="center">
-                                            <DropdownMenuItem onClick={() => setCreateFolderOpen(true)}>
-                                                <FolderPlus className="mr-2 h-4 w-4" />
-                                                Nova Pasta
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => setCreateDocumentOpen(true)}>
-                                                <FileText className="mr-2 h-4 w-4" />
-                                                Novo Documento
-                                            </DropdownMenuItem>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuItem onClick={() => setUploadDialogOpen(true)}>
-                                                <UploadIcon className="mr-2 h-4 w-4" />
-                                                Fazer upload de arquivo
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="flex flex-1 flex-col overflow-hidden rounded-lg border bg-card">
-                                <div className="flex-1 overflow-auto">
-                                    {/* Header — mesmo container e padding que as linhas */}
-                                    <div className="sticky top-0 z-10 hidden border-b bg-card px-4 py-3 text-sm font-medium text-muted-foreground lg:block">
-                                        <div className="grid grid-cols-[minmax(0,1fr)_160px_56px_112px] items-center gap-4">
-                                            <div className="flex min-w-0 items-center gap-4">
-                                                <div className="h-5 w-5 shrink-0" aria-hidden="true" />
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <button
-                                                            type="button"
-                                                            className="inline-flex items-center gap-1.5 hover:text-foreground"
-                                                        >
-                                                            <span>Nome</span>
-                                                            {sortBy !== 'name' ? (
-                                                                <ChevronsUpDown className="h-4 w-4" />
-                                                            ) : sortDirection === 'desc' ? (
-                                                                <ArrowDown className="h-4 w-4" />
-                                                            ) : (
-                                                                <ArrowUp className="h-4 w-4" />
-                                                            )}
-                                                        </button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="start">
-                                                        <DropdownMenuItem
-                                                            onClick={() => {
-                                                                setSortBy('name');
-                                                                setSortDirection('asc');
-                                                            }}
-                                                        >
-                                                            <ArrowUp className="mr-2 h-4 w-4" />
-                                                            Crescente
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem
-                                                            onClick={() => {
-                                                                setSortBy('name');
-                                                                setSortDirection('desc');
-                                                            }}
-                                                        >
-                                                            <ArrowDown className="mr-2 h-4 w-4" />
-                                                            Decrescente
-                                                        </DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </div>
+  const handleDelete = useCallback(
+    async (item: ItemDocumento, e?: React.MouseEvent) => {
+      e?.stopPropagation();
+      try {
+        if (item.tipo === 'documento') {
+          const result = await actionDeletarDocumento(item.dados.id);
+          if (!result.success) throw new Error(result.error);
+        } else if (item.tipo === 'arquivo') {
+          const result = await actionDeletarArquivo(item.dados.id);
+          if (!result.success) throw new Error(result.error);
+        }
+        toast.success('Item movido para a lixeira');
+        setDetailOpen(false);
+        loadItems();
+      } catch (err) {
+        console.error('Erro ao deletar:', err);
+        toast.error('Erro ao deletar item');
+      }
+    },
+    [loadItems],
+  );
 
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <button
-                                                        type="button"
-                                                        className="inline-flex items-center gap-1.5 hover:text-foreground"
-                                                    >
-                                                        <span>Criado em</span>
-                                                        {sortBy !== 'date' ? (
-                                                            <ChevronsUpDown className="h-4 w-4" />
-                                                        ) : sortDirection === 'desc' ? (
-                                                            <ArrowDown className="h-4 w-4" />
-                                                        ) : (
-                                                            <ArrowUp className="h-4 w-4" />
-                                                        )}
-                                                    </button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="start">
-                                                    <DropdownMenuItem
-                                                        onClick={() => {
-                                                            setSortBy('date');
-                                                            setSortDirection('asc');
-                                                        }}
-                                                    >
-                                                        <ArrowUp className="mr-2 h-4 w-4" />
-                                                        Crescente
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        onClick={() => {
-                                                            setSortBy('date');
-                                                            setSortDirection('desc');
-                                                        }}
-                                                    >
-                                                        <ArrowDown className="mr-2 h-4 w-4" />
-                                                        Decrescente
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
+  const handleShare = useCallback((item: ItemDocumento, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    toast.message('Compartilhar', { description: 'Em breve.' });
+  }, []);
 
-                                            <span>Por</span>
-                                            <span>Ações</span>
-                                        </div>
-                                    </div>
-                                    {filteredItems.map((item) => (
-                                        <div
-                                            key={`${item.tipo}-${item.dados.id}`}
-                                            className={cn(
-                                                'cursor-pointer border-b px-4 py-4 last:border-b-0 hover:bg-muted',
-                                                selectedItem?.dados.id === item.dados.id &&
-                                                selectedItem?.tipo === item.tipo &&
-                                                'bg-muted'
-                                            )}
-                                            onClick={() => handleItemClick(item)}
-                                        >
-                                            <div className="flex items-center justify-between gap-4 lg:hidden">
-                                                <div className="flex min-w-0 items-center gap-4">
-                                                    <div className="shrink-0">{getItemIcon(item)}</div>
-                                                    <div className="min-w-0">
-                                                        <div className="truncate text-sm font-medium">{getItemName(item)}</div>
-                                                    </div>
-                                                </div>
+  const handleOpen = useCallback((item: ItemDocumento, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (item.tipo === 'arquivo') {
+      window.open(item.dados.b2_url, '_blank');
+    }
+  }, []);
 
-                                                <div className="flex items-center gap-1">
-                                                    {item.tipo === 'arquivo' && (
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon-sm"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                window.open(item.dados.b2_url, '_blank');
-                                                            }}
-                                                            aria-label="Abrir"
-                                                        >
-                                                            <ExternalLink className="h-4 w-4" />
-                                                        </Button>
-                                                    )}
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon-sm"
-                                                        onClick={(e) => handleShareItem(item, e)}
-                                                        aria-label="Compartilhar"
-                                                    >
-                                                        <Share2 className="h-4 w-4" />
-                                                    </Button>
-                                                    {item.tipo !== 'pasta' && (
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon-sm"
-                                                            onClick={(e) => handleDeleteItem(item, e)}
-                                                            aria-label="Excluir"
-                                                            className="text-destructive hover:text-destructive"
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
-                                                    )}
-                                                </div>
-                                            </div>
+  // ── Subtitle ──────────────────────────────────────────────────────────
 
-                                            <div className="hidden lg:grid lg:grid-cols-[minmax(0,1fr)_160px_56px_112px] lg:items-center lg:gap-4">
-                                                <div className="flex min-w-0 items-center gap-4">
-                                                    <div className="shrink-0">{getItemIcon(item)}</div>
-                                                    <div className="min-w-0">
-                                                        <div className="truncate text-sm font-medium">{getItemName(item)}</div>
-                                                    </div>
-                                                </div>
+  const subtitle = loading
+    ? 'Carregando...'
+    : hasActiveFilters
+      ? `${visibleItems.length} de ${items.length} ite${items.length === 1 ? 'm' : 'ns'}`
+      : `${items.length} ite${items.length === 1 ? 'm' : 'ns'} neste nível`;
 
-                                                <span className="text-sm text-muted-foreground">
-                                                    {new Date(item.dados.created_at).toLocaleDateString('pt-BR')}
-                                                </span>
+  // ── Render ────────────────────────────────────────────────────────────
 
-                                                <Avatar className="h-7 w-7">
-                                                    {getAvatarUrl(
-                                                        (item.dados.criador as { avatarUrl?: string | null; avatar_url?: string | null } | undefined)?.avatarUrl ??
-                                                        (item.dados.criador as { avatarUrl?: string | null; avatar_url?: string | null } | undefined)?.avatar_url
-                                                    ) ? (
-                                                        <AvatarImage
-                                                            src={
-                                                                getAvatarUrl(
-                                                                    (item.dados.criador as { avatarUrl?: string | null; avatar_url?: string | null } | undefined)?.avatarUrl ??
-                                                                    (item.dados.criador as { avatarUrl?: string | null; avatar_url?: string | null } | undefined)?.avatar_url
-                                                                ) ?? undefined
-                                                            }
-                                                            alt={item.dados.criador?.nomeCompleto || 'Avatar'}
-                                                        />
-                                                    ) : null}
-                                                    <AvatarFallback className="text-xs">
-                                                        {item.dados.criador?.nomeCompleto?.charAt(0) || 'U'}
-                                                    </AvatarFallback>
-                                                </Avatar>
-
-                                                <div className="flex justify-start gap-0.5">
-                                                    {item.tipo === 'arquivo' && (
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon-sm"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                window.open(item.dados.b2_url, '_blank');
-                                                            }}
-                                                            aria-label="Abrir"
-                                                        >
-                                                            <ExternalLink className="h-4 w-4" />
-                                                        </Button>
-                                                    )}
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon-sm"
-                                                        onClick={(e) => handleShareItem(item, e)}
-                                                        aria-label="Compartilhar"
-                                                    >
-                                                        <Share2 className="h-4 w-4" />
-                                                    </Button>
-                                                    {item.tipo !== 'pasta' && (
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon-sm"
-                                                            onClick={(e) => handleDeleteItem(item, e)}
-                                                            aria-label="Excluir"
-                                                            className="text-destructive hover:text-destructive"
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Desktop Details Panel */}
-                    {selectedItem && !isMobile && (
-                        <div className="flex w-80 shrink-0 flex-col">
-                            <div className="flex flex-1 flex-col overflow-hidden rounded-lg border bg-card shadow-sm">
-                                <Button
-                                    onClick={() => setSelectedItem(null)}
-                                    variant="ghost"
-                                    size="icon-sm"
-                                    className="absolute right-2 top-2 z-10"
-                                >
-                                    <X className="h-4 w-4" />
-                                </Button>
-
-                                {/* Área do ícone e nome */}
-                                <div className="flex flex-col items-center gap-4 rounded-t-xl bg-muted/50 p-6 pt-10">
-                                    {getPreviewIcon(selectedItem)}
-                                    <Heading level="card" className="max-w-full wrap-break-word text-center text-sm leading-tight">
-                                        {getItemName(selectedItem)}
-                                    </Heading>
-                                </div>
-
-                                {/* Conteúdo do card */}
-                                <div className="flex flex-1 flex-col space-y-4 p-6">
-                                    {/* Seção de metadados */}
-                                    <div className="space-y-3">
-                                        <Heading level="subsection" className="text-xs uppercase tracking-wide text-muted-foreground">
-                                            Informações
-                                        </Heading>
-
-                                        <div className="space-y-2 text-sm">
-                                            <div className="flex justify-between py-1">
-                                                <span className="text-muted-foreground">Tipo</span>
-                                                <span className="font-medium capitalize">{selectedItem.tipo}</span>
-                                            </div>
-                                            {selectedItem.tipo === 'arquivo' && (
-                                                <div className="flex justify-between py-1">
-                                                    <span className="text-muted-foreground">Tamanho</span>
-                                                    <span className="font-medium">
-                                                        {formatFileSize(selectedItem.dados.tamanho_bytes)}
-                                                    </span>
-                                                </div>
-                                            )}
-                                            <div className="flex justify-between py-1">
-                                                <span className="text-muted-foreground">Criado em</span>
-                                                <span className="font-medium">
-                                                    {new Date(selectedItem.dados.created_at).toLocaleDateString('pt-BR')}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Botão de ação */}
-                                    {selectedItem.tipo === 'arquivo' && (
-                                        <div className="mt-auto pt-4">
-                                            <Button
-                                                className="w-full gap-2"
-                                                onClick={() => window.open(selectedItem.dados.b2_url, '_blank')}
-                                            >
-                                                <ExternalLink className="h-4 w-4" />
-                                                Abrir Arquivo
-                                            </Button>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Dialogs */}
-            <FileUploadDialogUnified
-                open={uploadDialogOpen}
-                onOpenChange={setUploadDialogOpen}
-                pastaId={currentPastaId}
-                onSuccess={loadItems}
-            />
-
-            <CreateFolderDialog
-                open={createFolderOpen}
-                onOpenChange={setCreateFolderOpen}
-                pastaPaiId={currentPastaId}
-                onSuccess={loadItems}
-            />
-
-            <CreateDocumentDialog
-                open={createDocumentOpen}
-                onOpenChange={setCreateDocumentOpen}
-                pastaId={currentPastaId}
-                onSuccess={loadItems}
-            />
-
-            {/* Mobile Details Dialog */}
-            {selectedItem && isMobile && (
-                <Dialog open={showMobileDetails} onOpenChange={setShowMobileDetails}>
-                    <DialogContent className="glass-dialog max-w-md max-h-[90vh] flex flex-col">
-                        <DialogHeader>
-                            <DialogTitle>Detalhes</DialogTitle>
-                        </DialogHeader>
-                        <div className="mt-6 space-y-6 overflow-y-auto">
-                            {/* Área do ícone e nome */}
-                            <div className="flex flex-col items-center gap-4 rounded-xl border bg-muted/30 p-6">
-                                {getPreviewIcon(selectedItem)}
-                                <Heading level="card" className="max-w-full wrap-break-word text-center text-sm leading-tight">
-                                    {getItemName(selectedItem)}
-                                </Heading>
-                            </div>
-
-                            <Separator />
-
-                            {/* Seção de metadados */}
-                            <div className="space-y-3">
-                                <Heading level="subsection" className="text-xs uppercase tracking-wide text-muted-foreground">
-                                    Informações
-                                </Heading>
-
-                                <div className="space-y-2 text-sm">
-                                    <div className="flex justify-between py-1">
-                                        <span className="text-muted-foreground">Tipo</span>
-                                        <span className="font-medium capitalize">{selectedItem.tipo}</span>
-                                    </div>
-                                    {selectedItem.tipo === 'arquivo' && (
-                                        <div className="flex justify-between py-1">
-                                            <span className="text-muted-foreground">Tamanho</span>
-                                            <span className="font-medium">
-                                                {formatFileSize(selectedItem.dados.tamanho_bytes)}
-                                            </span>
-                                        </div>
-                                    )}
-                                    <div className="flex justify-between py-1">
-                                        <span className="text-muted-foreground">Criado em</span>
-                                        <span className="font-medium">
-                                            {new Date(selectedItem.dados.created_at).toLocaleDateString('pt-BR')}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Botão de ação */}
-                            {selectedItem.tipo === 'arquivo' && (
-                                <Button
-                                    className="w-full gap-2"
-                                    onClick={() => window.open(selectedItem.dados.b2_url, '_blank')}
-                                >
-                                    <ExternalLink className="h-4 w-4" />
-                                    Abrir Arquivo
-                                </Button>
-                            )}
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            )}
+  return (
+    <div className="space-y-5">
+      {/* ── Header ─────────────────────────────────────────── */}
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <Heading level="page">Documentos</Heading>
+          <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
         </div>
-    );
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="sm" className="rounded-xl">
+              <Plus className="size-3.5" />
+              Novo
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="rounded-xl">
+            <DropdownMenuItem onClick={() => setCreateFolderOpen(true)} className="gap-2 cursor-pointer">
+              <FolderPlus className="size-4" />
+              Nova pasta
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setCreateDocumentOpen(true)} className="gap-2 cursor-pointer">
+              <FileText className="size-4" />
+              Novo documento
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setUploadDialogOpen(true)} className="gap-2 cursor-pointer">
+              <UploadIcon className="size-4" />
+              Fazer upload
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {/* ── KPI Strip ──────────────────────────────────────── */}
+      <DocumentosKpiStrip items={items} />
+
+      {/* ── Error banner ───────────────────────────────────── */}
+      {error && <InsightBanner type="alert">{error}</InsightBanner>}
+
+      {/* ── Filter + Search ────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <DocumentosFilterBar
+          filters={filters}
+          onChange={setFilters}
+          criadores={criadores}
+          counts={filterCounts}
+        />
+        <div className="flex items-center gap-2 flex-1 justify-end">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Buscar pastas, documentos, arquivos..."
+          />
+        </div>
+      </div>
+
+      {/* ── Breadcrumbs (dentro de pasta) ──────────────────── */}
+      {currentPastaId && (
+        <GlassPanel className="px-4 py-2.5">
+          <nav className="flex items-center gap-1.5 text-xs" aria-label="Breadcrumb">
+            <button
+              type="button"
+              onClick={() => router.push('/documentos')}
+              className="inline-flex items-center gap-1 text-muted-foreground/70 hover:text-primary transition-colors cursor-pointer"
+            >
+              <Home className="size-3.5" />
+              <span>Raiz</span>
+            </button>
+            {breadcrumbs.map((bc, i) => {
+              const isLast = i === breadcrumbs.length - 1;
+              return (
+                <div key={bc.id ?? `bc-${i}`} className="flex items-center gap-1.5">
+                  <ChevronRight className="size-3 text-muted-foreground/40" />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      router.push(bc.id ? `/documentos?pasta=${bc.id}` : '/documentos')
+                    }
+                    disabled={isLast}
+                    className={cn(
+                      'transition-colors',
+                      isLast
+                        ? 'font-semibold text-foreground cursor-default'
+                        : 'text-muted-foreground/70 hover:text-primary cursor-pointer',
+                    )}
+                  >
+                    {bc.nome}
+                  </button>
+                </div>
+              );
+            })}
+          </nav>
+        </GlassPanel>
+      )}
+
+      {/* ── Lista ──────────────────────────────────────────── */}
+      <DocumentosGlassList
+        items={visibleItems}
+        isLoading={loading}
+        onItemClick={handleItemClick}
+        onDelete={handleDelete}
+        onShare={handleShare}
+        onOpen={handleOpen}
+        selectedItemKey={selectedItem ? getItemKey(selectedItem) : null}
+      />
+
+      {/* ── Detail Dialog ──────────────────────────────────── */}
+      <DocumentoDetailDialog
+        item={selectedItem}
+        open={detailOpen}
+        onOpenChange={(open) => {
+          setDetailOpen(open);
+          if (!open) setSelectedItem(null);
+        }}
+        onDelete={(item) => handleDelete(item)}
+        onShare={(item) => handleShare(item)}
+      />
+
+      {/* ── Create/Upload Dialogs ──────────────────────────── */}
+      <FileUploadDialogUnified
+        open={uploadDialogOpen}
+        onOpenChange={setUploadDialogOpen}
+        pastaId={currentPastaId}
+        onSuccess={loadItems}
+      />
+      <CreateFolderDialog
+        open={createFolderOpen}
+        onOpenChange={setCreateFolderOpen}
+        pastaPaiId={currentPastaId}
+        onSuccess={loadItems}
+      />
+      <CreateDocumentDialog
+        open={createDocumentOpen}
+        onOpenChange={setCreateDocumentOpen}
+        pastaId={currentPastaId}
+        onSuccess={loadItems}
+      />
+    </div>
+  );
 }
-
-

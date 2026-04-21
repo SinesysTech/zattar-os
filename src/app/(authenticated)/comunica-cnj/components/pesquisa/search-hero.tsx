@@ -31,16 +31,16 @@ export function SearchHero({ onBuscar }: SearchHeroProps) {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col items-center gap-3">
-      <Text variant="caption" className="text-center text-muted-foreground">
+    <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-3">
+      <Text variant="caption" className="text-center text-muted-foreground/60">
         Consulte comunicações processuais na base pública do Comunica CNJ.
       </Text>
 
       <div
         className={cn(
           'flex w-full items-center gap-2 rounded-2xl border bg-card px-4 py-2.5 transition-all',
-          'border-border/40',
-          'focus-within:border-primary/40 focus-within:shadow-[0_4px_24px_rgba(85,35,235,0.10)]',
+          'border-border/20',
+          'focus-within:border-primary/40 focus-within:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_10%,transparent)]',
         )}
       >
         <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />

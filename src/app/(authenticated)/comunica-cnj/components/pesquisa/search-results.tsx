@@ -44,7 +44,7 @@ function ResultadoCard({
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
       )}
     >
-      <GlassPanel className="gap-3 p-5 group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_rgba(85,35,235,0.06)]">
+      <GlassPanel className="gap-3 p-4 group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_6%,transparent)]">
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
             <div className="flex flex-wrap items-center gap-2">

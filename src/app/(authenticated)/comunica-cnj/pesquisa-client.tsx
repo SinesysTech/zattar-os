@@ -1,8 +1,7 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
-import { Heading, Text } from '@/components/ui/typography';
 import {
   SearchHero,
   SearchQuickFilters,
@@ -10,7 +9,7 @@ import {
   SearchStats,
   SearchResults,
 } from './components/pesquisa';
-import { ComunicaCnjSubnav } from './components/shared/comunica-cnj-subnav';
+import { DiarioOficialPageNav } from './components/shared/diario-oficial-page-nav';
 import { actionConsultarComunicacoes } from './actions/comunica-cnj-actions';
 import {
   usePesquisaStore,
@@ -20,17 +19,18 @@ import {
 /**
  * Client da página raiz `/comunica-cnj` — Pesquisa ao vivo na API CNJ.
  *
- * Layout padrão ouro (ver AssinaturaDigital/Audiências):
- *  1. Heading do módulo ("Diário Oficial") + subtítulo
- *  2. Subnav (Pesquisa | Capturadas)
- *  3. Bloco de busca centralizado
- *  4. Quick filters + atalhos + stats (antes da primeira busca)
- *  5. Resultados
+ * Layout canônico (ver AudienciasClient/AssinaturaDigital):
+ *  1. DiarioOficialPageNav (heading + nav + action opcional)
+ *  2. Bloco de busca (hero + quick filters)
+ *  3. Atalhos + mini-stats (antes da primeira busca)
+ *  4. Resultados (após busca)
  */
 export function PesquisaClient() {
   const termo = usePesquisaStore((s) => s.termo);
   const filtros = usePesquisaStore((s) => s.filtros);
   const jaBuscou = usePesquisaStore((s) => s.jaBuscou);
+  const total = usePesquisaStore((s) => s.total);
+  const isBuscando = usePesquisaStore((s) => s.isBuscando);
   const setIsBuscando = usePesquisaStore((s) => s.setIsBuscando);
   const setErro = usePesquisaStore((s) => s.setErro);
   const setResultados = usePesquisaStore((s) => s.setResultados);
@@ -78,21 +78,21 @@ export function PesquisaClient() {
     }
   }, [termo, filtros, setIsBuscando, setErro, setResultados]);
 
+  // Subtítulo dinâmico: antes da busca = descrição curta;
+  // depois da busca = contador de resultados (padrão Audiências/Processos).
+  const subtitle = useMemo(() => {
+    if (isBuscando) return 'Consultando Comunica CNJ...';
+    if (!jaBuscou) return 'Base pública do Comunica CNJ · consulta em tempo real';
+    if (total === 0) return 'Nenhum resultado encontrado';
+    return `${total.toLocaleString('pt-BR')} resultado${total === 1 ? '' : 's'}`;
+  }, [isBuscando, jaBuscou, total]);
+
   return (
-    <div className="flex flex-col gap-5 px-6 py-6">
-      {/* Header do módulo */}
-      <div>
-        <Heading level="page">Diário Oficial</Heading>
-        <Text variant="caption" className="mt-0.5 text-muted-foreground">
-          Pesquise comunicações processuais oficiais publicadas no Comunica CNJ.
-        </Text>
-      </div>
+    <div className="space-y-5">
+      <DiarioOficialPageNav active="pesquisa" subtitle={subtitle} />
 
-      {/* Abas */}
-      <ComunicaCnjSubnav active="pesquisa" />
-
-      {/* Busca */}
-      <div className="py-6">
+      {/* Busca centralizada — hero de consulta à API pública */}
+      <div className="py-4">
         <SearchHero onBuscar={executarBusca} />
         <div className="mt-4">
           <SearchQuickFilters />

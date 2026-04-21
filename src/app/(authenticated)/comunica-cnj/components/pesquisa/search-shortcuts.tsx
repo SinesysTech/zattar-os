@@ -3,6 +3,7 @@
 import type { LucideIcon } from 'lucide-react';
 import { ArrowRight, CalendarClock, FileText, Gavel, UserCircle2 } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { IconContainer } from '@/components/ui/icon-container';
 import { Heading, Text } from '@/components/ui/typography';
 import { usePesquisaStore } from '../hooks/use-pesquisa-store';
 import type { PesquisaFiltros } from '../hooks/use-pesquisa-store';
@@ -100,12 +101,13 @@ export function SearchShortcuts({ onAfterApply }: SearchShortcutsProps) {
               }}
               className="group text-left"
             >
-              <GlassPanel className="h-full gap-2 p-4 transition-all duration-200 group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_rgba(85,35,235,0.08)]">
-                <div
-                  className={`flex size-9 items-center justify-center rounded-xl border ${tone.bg} ${tone.border} ${tone.text}`}
+              <GlassPanel className="h-full gap-2 p-4 transition-all duration-200 group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_8%,transparent)]">
+                <IconContainer
+                  size="md"
+                  className={`border ${tone.bg} ${tone.border} ${tone.text}`}
                 >
                   <s.icon className="size-4" aria-hidden />
-                </div>
+                </IconContainer>
                 <div className="mt-2 flex flex-col gap-0.5">
                   <Heading level="widget" className="flex items-center gap-1 text-sm">
                     {s.label}

@@ -16,8 +16,8 @@ export * from './pesquisa';
 // Componentes da página de Capturadas
 export * from './capturadas';
 
-// Navegação entre sub-páginas
-export { ComunicaCnjSubnav } from './shared/comunica-cnj-subnav';
+// Navegação entre sub-páginas (header unificado — heading + nav + action)
+export { DiarioOficialPageNav } from './shared/diario-oficial-page-nav';
 
 // Dialogs/banners auxiliares reaproveitados em Capturadas
 export { GazetteSyncDialog } from './gazette-sync-dialog';
