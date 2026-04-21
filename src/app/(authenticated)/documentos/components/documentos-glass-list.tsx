@@ -23,6 +23,7 @@ import { IconContainer } from '@/components/ui/icon-container';
 import { cn } from '@/lib/utils';
 import { getAvatarUrl } from '@/app/(authenticated)/usuarios';
 import type { ItemDocumento } from '../domain';
+import { normalizeCriador, type CriadorRaw } from '../lib/criador';
 
 // =============================================================================
 // TYPES
@@ -142,15 +143,9 @@ function GlassRow({
   const nome = getItemName(item);
   const meta = getItemMeta(item);
 
-  const criador = item.dados.criador;
-  const criadorNome =
-    (criador as { nomeExibicao?: string | null; nomeCompleto?: string }).nomeExibicao ||
-    criador?.nomeCompleto ||
-    'Desconhecido';
-  const criadorAvatar = getAvatarUrl(
-    (criador as { avatarUrl?: string | null; avatar_url?: string | null })?.avatarUrl ??
-      (criador as { avatarUrl?: string | null; avatar_url?: string | null })?.avatar_url,
-  );
+  const criador = normalizeCriador(item.dados.criador as CriadorRaw);
+  const criadorNome = criador.nome;
+  const criadorAvatar = getAvatarUrl(criador.avatarUrl);
 
   const createdAt = parseISO(item.dados.created_at);
   const createdLabel = format(createdAt, 'dd MMM yyyy', { locale: ptBR });

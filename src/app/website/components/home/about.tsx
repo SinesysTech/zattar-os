@@ -27,7 +27,7 @@ export function About() {
             <Text variant="marketing-overline">A Revolução Jurídica</Text>
             <Heading level="marketing-section" className="mt-4 md:mt-6 mb-6 md:mb-8">
               O Direito do Trabalho <br />
-              <span className="bg-linear-to-br from-primary via-primary to-primary-dim bg-clip-text text-transparent">
+              <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
                 reimaginado.
               </span>
             </Heading>
@@ -44,7 +44,7 @@ export function About() {
                   <Heading level="subsection" as="h3" className="mb-1 text-foreground">
                     Transparência Digital
                   </Heading>
-                  <Text variant="caption" className="text-foreground/70">
+                  <Text variant="caption" className="text-foreground/85">
                     Acompanhe seu caso através do nosso dashboard exclusivo.
                   </Text>
                 </div>
@@ -57,7 +57,7 @@ export function About() {
                   <Heading level="subsection" as="h3" className="mb-1 text-foreground">
                     Inteligência Preditiva
                   </Heading>
-                  <Text variant="caption" className="text-foreground/70">
+                  <Text variant="caption" className="text-foreground/85">
                     Análise estatística de decisões para aumentar as chances de êxito.
                   </Text>
                 </div>

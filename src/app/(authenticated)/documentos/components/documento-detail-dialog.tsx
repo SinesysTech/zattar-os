@@ -26,6 +26,7 @@ import { IconContainer } from '@/components/ui/icon-container';
 import { cn } from '@/lib/utils';
 import { getAvatarUrl } from '@/app/(authenticated)/usuarios';
 import type { ItemDocumento } from '../domain';
+import { normalizeCriador, type CriadorRaw } from '../lib/criador';
 
 // =============================================================================
 // HELPERS
@@ -173,15 +174,10 @@ export function DocumentoDetailDialog({
   const nome = getItemName(item);
   const tipoLabel = getTipoLabel(item);
 
-  const criador = item.dados.criador;
-  const criadorNome =
-    (criador as { nomeExibicao?: string | null; nomeCompleto?: string }).nomeExibicao ||
-    criador?.nomeCompleto ||
-    'Desconhecido';
-  const criadorAvatar = getAvatarUrl(
-    (criador as { avatarUrl?: string | null; avatar_url?: string | null })?.avatarUrl ??
-      (criador as { avatarUrl?: string | null; avatar_url?: string | null })?.avatar_url,
-  );
+  const criador = normalizeCriador(item.dados.criador as CriadorRaw);
+  const criadorNome = criador.nome;
+  const criadorAvatar = getAvatarUrl(criador.avatarUrl);
+  const criadorNomeCompleto = criador.nomeCompleto;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -290,9 +286,9 @@ export function DocumentoDetailDialog({
                 </Avatar>
                 <div className="min-w-0 flex-1">
                   <p className="text-[12.5px] font-medium text-foreground truncate">{criadorNome}</p>
-                  {criador?.nomeCompleto && criadorNome !== criador.nomeCompleto && (
+                  {criadorNomeCompleto && criadorNome !== criadorNomeCompleto && (
                     <p className="text-[11px] text-muted-foreground/60 truncate">
-                      {criador.nomeCompleto}
+                      {criadorNomeCompleto}
                     </p>
                   )}
                 </div>

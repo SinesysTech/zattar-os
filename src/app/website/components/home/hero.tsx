@@ -49,7 +49,7 @@ export function Hero() {
         </div>
         <Heading level="marketing-hero" className="mb-6 md:mb-8 mx-auto max-w-5xl">
           Justiça para{" "}
-          <span className="bg-linear-to-br from-primary via-primary to-primary-dim bg-clip-text text-transparent">
+          <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
             quem trabalha.
           </span>
         </Heading>

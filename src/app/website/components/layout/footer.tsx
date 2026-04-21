@@ -58,7 +58,7 @@ export function Footer() {
           <div className="max-w-3xl mx-auto text-center">
             <Heading level="marketing-section" className="mb-5 md:mb-7">
               Pronto para defender{" "}
-              <span className="bg-linear-to-br from-primary via-primary to-primary-dim bg-clip-text text-transparent">
+              <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
                 seus direitos?
               </span>
             </Heading>

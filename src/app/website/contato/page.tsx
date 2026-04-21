@@ -1,7 +1,6 @@
-import { WebsiteShell } from "@/app/website";
+import { WebsiteShell, MarketingCard } from "@/app/website";
 import { MapPin, Mail, Smartphone, Send, Instagram, Linkedin, MessageCircle } from "lucide-react";
 import { Heading, Text } from "@/components/ui/typography";
-import { GlassPanel } from "@/components/shared/glass-panel";
 import { buildWebsiteMetadata } from "../_metadata/build-metadata";
 import { ContactForm } from "./_components/contact-form";
 
@@ -43,18 +42,18 @@ export default function ContatoPage() {
         <section className="max-w-7xl mx-auto px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Contact Form Card */}
-            <GlassPanel depth={2} className="lg:col-span-2 p-10 shadow-2xl">
+            <MarketingCard variant="solid" padding="lg" className="lg:col-span-2">
               <Heading level="card" as="h2" className="mb-8 flex items-center gap-3">
                 <Send className="text-primary w-6 h-6" />
                 Enviar Mensagem
               </Heading>
               <ContactForm />
-            </GlassPanel>
+            </MarketingCard>
 
             {/* Info Stack */}
             <div className="space-y-8">
               {/* Contact Info Card */}
-              <GlassPanel depth={1} className="p-8 space-y-8">
+              <MarketingCard variant="solid" padding="lg" className="space-y-8">
                 <div>
                   <Text variant="overline" className="text-primary mb-6 block">
                     Informações
@@ -124,7 +123,7 @@ export default function ContatoPage() {
                     </a>
                   </div>
                 </div>
-              </GlassPanel>
+              </MarketingCard>
 
             </div>
           </div>

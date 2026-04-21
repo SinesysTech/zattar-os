@@ -5,7 +5,7 @@
  * ============================================================================
  * Segue o padrão Glass Briefing (canônico em audiências, expedientes, partes):
  * header com Heading, KPI strip, filter bar + search, breadcrumbs glass,
- * glass list tipada e detail dialog.
+ * view switcher lista/cards, detail dialog e popover "Novo" glass-dropdown.
  * ============================================================================
  */
 
@@ -18,21 +18,18 @@ import {
   FolderPlus,
   UploadIcon,
   ChevronRight,
+  LayoutGrid,
+  List as ListIcon,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Heading } from '@/components/ui/typography';
 import { SearchInput } from '@/components/dashboard/search-input';
+import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { InsightBanner } from '@/app/(authenticated)/dashboard/widgets/primitives';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 
 import { FileUploadDialogUnified } from './file-upload-dialog-unified';
@@ -46,6 +43,7 @@ import {
   type DocumentosTipoFiltro,
 } from './documentos-filter-bar';
 import { DocumentosGlassList } from './documentos-glass-list';
+import { DocumentosGlassCards } from './documentos-glass-cards';
 import { DocumentoDetailDialog } from './documento-detail-dialog';
 
 import {
@@ -55,6 +53,7 @@ import {
 } from '../actions/arquivos-actions';
 import { actionDeletarDocumento } from '../actions/documentos-actions';
 import type { ItemDocumento } from '../domain';
+import { normalizeCriador, type CriadorRaw } from '../lib/criador';
 
 // =============================================================================
 // HELPERS — classificação por tipo de filtro
@@ -101,6 +100,101 @@ function getItemName(item: ItemDocumento): string {
   return item.dados.nome;
 }
 
+// ── View switcher ──────────────────────────────────────────────────────
+
+type DocumentosViewMode = 'list' | 'cards';
+
+const VIEW_OPTIONS: ViewToggleOption[] = [
+  { id: 'list', icon: ListIcon, label: 'Lista' },
+  { id: 'cards', icon: LayoutGrid, label: 'Cartões' },
+];
+
+// =============================================================================
+// NOVO POPOVER (glass-dropdown)
+// =============================================================================
+
+function NovoPopover({
+  onCreateFolder,
+  onCreateDocument,
+  onUpload,
+}: {
+  onCreateFolder: () => void;
+  onCreateDocument: () => void;
+  onUpload: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  const wrap = (fn: () => void) => () => {
+    setOpen(false);
+    fn();
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button size="sm" className="rounded-xl">
+          <Plus className="size-3.5" />
+          Novo
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        align="end"
+        sideOffset={8}
+        className="rounded-2xl glass-dropdown overflow-hidden p-2 w-56"
+      >
+        <div className="space-y-0.5">
+          <button
+            type="button"
+            onClick={wrap(onCreateFolder)}
+            className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer"
+          >
+            <span className="inline-flex size-7 items-center justify-center rounded-lg bg-warning/10 text-warning">
+              <FolderPlus className="size-3.5" />
+            </span>
+            <span className="flex-1 text-left">
+              <span className="block font-medium">Nova pasta</span>
+              <span className="block text-[10px] text-muted-foreground/50">
+                Agrupar arquivos
+              </span>
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={wrap(onCreateDocument)}
+            className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer"
+          >
+            <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 text-info">
+              <FileText className="size-3.5" />
+            </span>
+            <span className="flex-1 text-left">
+              <span className="block font-medium">Novo documento</span>
+              <span className="block text-[10px] text-muted-foreground/50">
+                Editor colaborativo
+              </span>
+            </span>
+          </button>
+          <div className="h-px bg-border/30 my-1 mx-1" />
+          <button
+            type="button"
+            onClick={wrap(onUpload)}
+            className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer"
+          >
+            <span className="inline-flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <UploadIcon className="size-3.5" />
+            </span>
+            <span className="flex-1 text-left">
+              <span className="block font-medium">Fazer upload</span>
+              <span className="block text-[10px] text-muted-foreground/50">
+                PDF, imagem, planilha…
+              </span>
+            </span>
+          </button>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 // =============================================================================
 // MAIN COMPONENT
 // =============================================================================
@@ -121,6 +215,8 @@ export function FileManager() {
     criadorId: null,
     periodo: null,
   });
+  const [viewMode, setViewMode] = useState<DocumentosViewMode>('list');
+
   // ── Detail dialog state ───────────────────────────────────────────────
   const [selectedItem, setSelectedItem] = useState<ItemDocumento | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -196,18 +292,14 @@ export function FileManager() {
   const criadores = useMemo<DocumentosCriadorOption[]>(() => {
     const map = new Map<number, DocumentosCriadorOption>();
     items.forEach((item) => {
-      const c = item.dados.criador;
-      if (!c?.id) return;
-      if (!map.has(c.id)) {
-        const nome =
-          (c as { nomeExibicao?: string | null; nomeCompleto?: string }).nomeExibicao ||
-          c.nomeCompleto ||
-          `Usuário ${c.id}`;
-        const avatar =
-          (c as { avatarUrl?: string | null; avatar_url?: string | null })?.avatarUrl ??
-          (c as { avatarUrl?: string | null; avatar_url?: string | null })?.avatar_url ??
-          null;
-        map.set(c.id, { id: c.id, nome, avatarUrl: avatar });
+      const normalized = normalizeCriador(item.dados.criador as CriadorRaw);
+      if (!normalized.id) return;
+      if (!map.has(normalized.id)) {
+        map.set(normalized.id, {
+          id: normalized.id,
+          nome: normalized.nome,
+          avatarUrl: normalized.avatarUrl,
+        });
       }
     });
     return Array.from(map.values()).sort((a, b) => a.nome.localeCompare(b.nome));
@@ -299,7 +391,7 @@ export function FileManager() {
     [loadItems],
   );
 
-  const handleShare = useCallback((item: ItemDocumento, e?: React.MouseEvent) => {
+  const handleShare = useCallback((_item: ItemDocumento, e?: React.MouseEvent) => {
     e?.stopPropagation();
     toast.message('Compartilhar', { description: 'Em breve.' });
   }, []);
@@ -329,29 +421,11 @@ export function FileManager() {
           <Heading level="page">Documentos</Heading>
           <p className="text-sm text-muted-foreground/50 mt-0.5">{subtitle}</p>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button size="sm" className="rounded-xl">
-              <Plus className="size-3.5" />
-              Novo
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="rounded-xl">
-            <DropdownMenuItem onClick={() => setCreateFolderOpen(true)} className="gap-2 cursor-pointer">
-              <FolderPlus className="size-4" />
-              Nova pasta
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setCreateDocumentOpen(true)} className="gap-2 cursor-pointer">
-              <FileText className="size-4" />
-              Novo documento
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setUploadDialogOpen(true)} className="gap-2 cursor-pointer">
-              <UploadIcon className="size-4" />
-              Fazer upload
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <NovoPopover
+          onCreateFolder={() => setCreateFolderOpen(true)}
+          onCreateDocument={() => setCreateDocumentOpen(true)}
+          onUpload={() => setUploadDialogOpen(true)}
+        />
       </div>
 
       {/* ── KPI Strip ──────────────────────────────────────── */}
@@ -360,7 +434,7 @@ export function FileManager() {
       {/* ── Error banner ───────────────────────────────────── */}
       {error && <InsightBanner type="alert">{error}</InsightBanner>}
 
-      {/* ── Filter + Search ────────────────────────────────── */}
+      {/* ── Filter + Search + ViewToggle ───────────────────── */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <DocumentosFilterBar
           filters={filters}
@@ -373,6 +447,11 @@ export function FileManager() {
             value={search}
             onChange={setSearch}
             placeholder="Buscar pastas, documentos, arquivos..."
+          />
+          <ViewToggle
+            mode={viewMode}
+            onChange={(v) => setViewMode(v as DocumentosViewMode)}
+            options={VIEW_OPTIONS}
           />
         </div>
       </div>
@@ -416,16 +495,28 @@ export function FileManager() {
         </GlassPanel>
       )}
 
-      {/* ── Lista ──────────────────────────────────────────── */}
-      <DocumentosGlassList
-        items={visibleItems}
-        isLoading={loading}
-        onItemClick={handleItemClick}
-        onDelete={handleDelete}
-        onShare={handleShare}
-        onOpen={handleOpen}
-        selectedItemKey={selectedItem ? getItemKey(selectedItem) : null}
-      />
+      {/* ── Content (list or cards) ────────────────────────── */}
+      {viewMode === 'list' ? (
+        <DocumentosGlassList
+          items={visibleItems}
+          isLoading={loading}
+          onItemClick={handleItemClick}
+          onDelete={handleDelete}
+          onShare={handleShare}
+          onOpen={handleOpen}
+          selectedItemKey={selectedItem ? getItemKey(selectedItem) : null}
+        />
+      ) : (
+        <DocumentosGlassCards
+          items={visibleItems}
+          isLoading={loading}
+          onItemClick={handleItemClick}
+          onDelete={handleDelete}
+          onShare={handleShare}
+          onOpen={handleOpen}
+          selectedItemKey={selectedItem ? getItemKey(selectedItem) : null}
+        />
+      )}
 
       {/* ── Detail Dialog ──────────────────────────────────── */}
       <DocumentoDetailDialog

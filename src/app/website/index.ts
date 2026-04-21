@@ -23,6 +23,8 @@ export { FeatureCard } from "./components/cards/feature-card";
 export { ArticleCard } from "./components/cards/article-card";
 
 // Shared
+export { MarketingCard } from "./components/shared/marketing-card";
+export type { MarketingCardProps } from "./components/shared/marketing-card";
 export { FilterChips } from "./components/shared/filter-chips";
 export { ActivityItem } from "./components/shared/activity-item";
 export { TimelineEntry } from "./components/shared/timeline-entry";

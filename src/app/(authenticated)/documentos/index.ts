@@ -24,7 +24,10 @@ export { CreateFolderDialog } from './components/create-folder-dialog';
 export { DocumentosKpiStrip } from './components/documentos-kpi-strip';
 export { DocumentosFilterBar } from './components/documentos-filter-bar';
 export { DocumentosGlassList } from './components/documentos-glass-list';
+export { DocumentosGlassCards } from './components/documentos-glass-cards';
 export { DocumentoDetailDialog } from './components/documento-detail-dialog';
+export { normalizeCriador } from './lib/criador';
+export type { CriadorRaw, CriadorNormalizado } from './lib/criador';
 export type {
   DocumentosFilters,
   DocumentosTipoFiltro,

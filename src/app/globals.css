@@ -1382,12 +1382,12 @@
 
   /* Parágrafo lead de landing — abaixo do hero/section.
      Tamanho calibrado para body confortável sem competir com os headings.
-     Cor levemente mais clara que muted-foreground padrão para compensar o
-     fundo preto puro forçado do website (--background oklch(0.12) em .dark). */
+     Cor em 82% do foreground: contraste AA sobre fundo escuro (~7:1) e ainda
+     diferencia hierarquicamente do heading (100%). */
   .text-marketing-lead {
     font-size: clamp(0.9375rem, 0.3vw + 0.8125rem, 1.1875rem); /* 15px → 19px */
     line-height: 1.6;
-    color: color-mix(in oklch, var(--foreground) 72%, transparent);
+    color: color-mix(in oklch, var(--foreground) 82%, transparent);
   }
 
   /* Overline marketing — label superior em seções de landing, ex.: "Especialidades". */
@@ -1401,36 +1401,69 @@
   /* ════════════════════════════════════════════════════════════════════════
      WEBSITE MARKETING OVERRIDES (.website-root-scale escopo)
      ════════════════════════════════════════════════════════════════════════
-     O admin usa bg cinza-escuro (oklch ~0.22) no .dark; o website força
-     fundo praticamente preto (~0.12). Os glass do DS foram calibrados para
-     admin e somem em fundo preto puro — estes overrides restauram a
-     legibilidade apenas no contexto website (.website-root-scale) em dark. */
+     Ajustes específicos para o contexto marketing:
+     1) Tokens brand mais fiéis à logo #5523eb (oklch 0.44 0.28 280)
+     2) Fundo cinza-escuro (#121212 OLED-inspired) com textura noise sutil
+        para dar premium-feel e evitar o "preto sem alma".
+     3) Seletor mais robusto (both html.dark AND body-level fallback) para
+        funcionar em SSR antes do WebsiteScaleProvider hidratar. */
 
+  .website-root-scale.dark,
+  html.website-root-scale.dark body {
+    /* Primary website — clareado o suficiente para AA em fundo escuro
+       (L=0.62 sobre L=0.14 ≈ 5.1:1) mas mais saturado, próximo da logo. */
+    --primary: oklch(0.62 0.26 281);
+    /* Primary-dim = tom da logo em si #5523eb; usar em gradients, borders
+       e accents decorativos (NUNCA body text, contraste insuficiente). */
+    --primary-dim: oklch(0.48 0.28 281);
+    /* Fundo website: cinza-escuro (~#121212) em vez de preto puro.
+       Recomendação Dark Mode OLED da ui-ux-pro-max skill. */
+    --background: oklch(0.14 0.004 281);
+  }
+
+  /* Textura noise sutil no body do website — dá profundidade tátil sem
+     interferir na legibilidade. SVG inline evita round-trip de rede. */
+  .website-root-scale.dark body {
+    background-color: var(--background);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% 0%, color-mix(in oklch, var(--primary-dim) 5%, transparent) 0%, transparent 70%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-attachment: fixed, fixed;
+    background-size: 100% 100%, 200px 200px;
+  }
+
+  /* Glass KPI website — fundo sólido com tint primary sutil, evita que o
+     backdrop-blur capture luz de imagens claras atrás (problema observado
+     nos overlay cards de Services). */
   .website-root-scale.dark .glass-kpi,
   .website-root-scale.dark [class*="glass-kpi"] {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: color-mix(in oklch, var(--surface-container) 85%, var(--primary) 4%);
+    backdrop-filter: blur(20px) saturate(1.3);
+    -webkit-backdrop-filter: blur(20px) saturate(1.3);
+    border: 1px solid color-mix(in oklch, var(--primary) 22%, transparent);
     box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.35),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      0 12px 32px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 color-mix(in oklch, var(--primary) 10%, transparent);
   }
 
   .website-root-scale.dark .glass-kpi:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.18);
+    background: color-mix(in oklch, var(--surface-container) 78%, var(--primary) 8%);
+    border-color: color-mix(in oklch, var(--primary) 35%, transparent);
   }
 
   .website-root-scale.dark .glass-widget {
-    background: rgba(255, 255, 255, 0.035);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: color-mix(in oklch, var(--surface-container) 70%, transparent);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border: 1px solid color-mix(in oklch, var(--primary) 14%, transparent);
     box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      0 6px 24px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 color-mix(in oklch, var(--primary) 6%, transparent);
   }
 
   .website-root-scale.dark .glass-widget:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.14);
+    background: color-mix(in oklch, var(--surface-container) 60%, transparent);
+    border-color: color-mix(in oklch, var(--primary) 24%, transparent);
   }
 
   /* === ALIASES (retrocompatibilidade) === */

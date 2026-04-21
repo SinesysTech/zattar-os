@@ -12,7 +12,7 @@ import {
   Wallet,
   HeartPulse,
 } from "lucide-react";
-import { GlassPanel } from "@/components/shared/glass-panel";
+import { MarketingCard } from "../shared/marketing-card";
 import { Heading, Text } from "@/components/ui/typography";
 
 interface OverlayCardProps {
@@ -30,20 +30,21 @@ function OverlayCard({ icon, title, description, position }: OverlayCardProps) {
       : "md:-bottom-8 md:-left-6 lg:-left-8";
 
   return (
-    <GlassPanel
-      depth={2}
-      className={`relative md:absolute ${positionClasses} p-6 md:p-7 lg:p-8 max-w-xs lg:max-w-sm -mt-8 mx-4 md:mt-0 md:mx-0`}
+    <MarketingCard
+      variant="solid"
+      padding="lg"
+      className={`relative md:absolute ${positionClasses} max-w-xs lg:max-w-sm -mt-8 mx-4 md:mt-0 md:mx-0`}
     >
-      <div className="inline-flex items-center justify-center w-12 h-12 lg:w-14 lg:h-14 rounded-xl bg-primary/15 text-primary mb-4">
+      <div className="inline-flex items-center justify-center w-12 h-12 lg:w-14 lg:h-14 rounded-xl bg-primary-dim/25 text-primary mb-4 ring-1 ring-primary/40">
         {icon}
       </div>
       <Heading level="card" as="h4" className="mb-2 text-foreground">
         {title}
       </Heading>
-      <Text variant="caption" className="text-foreground/70">
+      <Text variant="caption" className="text-foreground/85">
         {description}
       </Text>
-    </GlassPanel>
+    </MarketingCard>
   );
 }
 
@@ -133,7 +134,7 @@ export function Services() {
           <Heading level="marketing-section" className="mt-4 md:mt-5">
             Soluções jurídicas de{" "}
             <br className="hidden sm:block" />
-            <span className="bg-linear-to-br from-primary via-primary to-primary-dim bg-clip-text text-transparent">
+            <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
               alta precisão digital.
             </span>
           </Heading>
