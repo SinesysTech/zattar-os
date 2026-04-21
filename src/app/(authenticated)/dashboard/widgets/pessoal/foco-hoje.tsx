@@ -9,7 +9,7 @@
  */
 
 import { Zap } from 'lucide-react';
-import { WidgetContainer, InsightBanner } from '../../mock/widgets/primitives';
+import { WidgetContainer, InsightBanner } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { formatarPartes, obterContextoProcesso } from '../shared/processo-display';
 import { useDashboard } from '../../hooks';

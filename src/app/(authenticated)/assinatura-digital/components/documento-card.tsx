@@ -12,7 +12,7 @@ import {
 import {
   GlassPanel,
   ProgressRing,
-} from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
+} from "@/app/(authenticated)/dashboard/widgets/primitives";
 import type { DocumentoCardData, DocStatus } from '@/shared/assinatura-digital/adapters/documento-card-adapter';
 import { SignerPill } from "./signer-pill";
 

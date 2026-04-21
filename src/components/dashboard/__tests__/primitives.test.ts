@@ -1,6 +1,6 @@
 // using globals
 
-import { fmtMoeda, fmtNum, fmtData } from '../../../app/(authenticated)/dashboard/mock/widgets/primitives';
+import { fmtMoeda, fmtNum, fmtData } from '../../../app/(authenticated)/dashboard/widgets/primitives';
 
 // =============================================================================
 // fmtMoeda

@@ -1,7 +1,7 @@
 'use client';
 
 import { Calendar, Clock, Video } from 'lucide-react';
-import { WidgetContainer } from '../../mock/widgets/primitives';
+import { WidgetContainer } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { formatarPartes, obterContextoProcesso } from '../shared/processo-display';
 import { useDashboard } from '../../hooks';

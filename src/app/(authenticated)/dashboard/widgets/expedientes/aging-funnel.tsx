@@ -20,7 +20,7 @@ import {
   UrgencyDot,
   WidgetContainer,
   fmtNum,
-} from '../../mock/widgets/primitives';
+} from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks/use-dashboard';
 

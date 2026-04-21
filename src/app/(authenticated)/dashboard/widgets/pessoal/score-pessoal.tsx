@@ -13,7 +13,7 @@ import {
   GaugeMeter,
   AnimatedNumber,
   InsightBanner,
-} from '../../mock/widgets/primitives';
+} from '../primitives';
 import { Text } from '@/components/ui/typography';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, useReminders, isDashboardUsuario } from '../../hooks';

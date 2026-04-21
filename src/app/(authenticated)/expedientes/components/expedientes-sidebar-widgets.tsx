@@ -15,7 +15,7 @@
 import * as React from 'react';
 import { ShieldCheck, TrendingDown, Activity } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { GaugeMeter } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { GaugeMeter } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { Heading } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 

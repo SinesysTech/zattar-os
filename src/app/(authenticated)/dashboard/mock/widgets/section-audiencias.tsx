@@ -19,7 +19,7 @@ import {
   CalendarHeatmap,
   InsightBanner,
   fmtNum,
-} from './primitives';
+} from '../../widgets/primitives';
 
 // ─── Mock Data ───────────────────────────────────────────────────────────────
 

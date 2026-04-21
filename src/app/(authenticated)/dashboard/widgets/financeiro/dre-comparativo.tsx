@@ -6,7 +6,7 @@
  */
 
 import { TrendingUp } from 'lucide-react';
-import { WidgetContainer, Stat, Sparkline, fmtMoeda } from '../../mock/widgets/primitives';
+import { WidgetContainer, Stat, Sparkline, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 

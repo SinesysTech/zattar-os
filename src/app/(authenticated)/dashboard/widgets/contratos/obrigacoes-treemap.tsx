@@ -18,7 +18,7 @@ import {
   InsightBanner,
   WidgetContainer,
   fmtMoeda,
-} from '../../mock/widgets/primitives';
+} from '../primitives';
 
 interface ObrigacaoPorTipo {
   label: string;

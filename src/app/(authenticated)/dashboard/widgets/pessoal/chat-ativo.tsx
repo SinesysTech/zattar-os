@@ -1,7 +1,7 @@
 'use client';
 
 import { MessageCircle } from 'lucide-react';
-import { WidgetContainer } from '../../mock/widgets/primitives';
+import { WidgetContainer } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 import { formatDistanceToNow } from 'date-fns';

@@ -29,7 +29,7 @@ import {
   X,
 } from 'lucide-react';
 
-import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { InsightBanner } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Heading } from '@/components/ui/typography';

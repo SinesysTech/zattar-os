@@ -11,7 +11,7 @@ import {
   WidgetContainer,
   CalendarHeatmap,
   ComparisonStat,
-} from '../../mock/widgets/primitives';
+} from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
 

@@ -21,7 +21,7 @@ import {
   Sparkline,
   ProgressRing,
   AnimatedNumber,
-} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+} from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { TabPills } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { Heading } from '@/components/ui/typography';

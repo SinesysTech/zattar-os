@@ -18,7 +18,7 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 import { Button } from '@/components/ui/button';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Heading } from '@/components/ui/typography';
-import { UrgencyDot } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { UrgencyDot } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { GRAU_TRIBUNAL_LABELS, type Expediente, getExpedientePartyNames } from '../domain';
 
 // ─── Types ────────────────────────────────────────────────────────────────────

@@ -9,7 +9,7 @@
 
 import { ChevronRight, Building2, Scale } from 'lucide-react';
 import { IconContainer } from '@/components/ui/icon-container';
-import { fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { fmtMoeda } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import type { ContratoCardData } from './contrato-card';
 
 // ─── Types ────────────────────────────────────────────────────────────────────

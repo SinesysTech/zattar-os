@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/kanban';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { EmptyState } from '@/components/shared/empty-state';
-import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { InsightBanner } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';

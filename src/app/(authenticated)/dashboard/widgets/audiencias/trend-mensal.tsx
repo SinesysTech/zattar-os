@@ -14,7 +14,7 @@
 import { TrendingUp } from 'lucide-react';
 import {
   WidgetContainer,
-} from '../../mock/widgets/primitives';
+} from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
 

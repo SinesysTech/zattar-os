@@ -11,7 +11,7 @@ import {
   Plus,
 } from "lucide-react";
 import Link from "next/link";
-import { InsightBanner } from "@/app/(authenticated)/dashboard/mock/widgets/primitives";
+import { InsightBanner } from "@/app/(authenticated)/dashboard/widgets/primitives";
 import { TabPills } from "@/components/dashboard/tab-pills";
 import { SearchInput } from "@/components/dashboard/search-input";
 import {

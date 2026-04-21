@@ -30,7 +30,7 @@ import {
   ProgressRing,
   AnimatedNumber,
   Sparkline,
-} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+} from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { TabPills } from '@/components/dashboard/tab-pills';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle, type ViewToggleOption } from '@/components/dashboard/view-toggle';

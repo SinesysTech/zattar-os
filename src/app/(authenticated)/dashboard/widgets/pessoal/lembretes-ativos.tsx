@@ -12,7 +12,7 @@ import {
   UrgencyDot,
   ListItem,
   InsightBanner,
-} from '../../mock/widgets/primitives';
+} from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useReminders } from '../../hooks';
 import type { PrioridadeLembrete } from '../../domain';

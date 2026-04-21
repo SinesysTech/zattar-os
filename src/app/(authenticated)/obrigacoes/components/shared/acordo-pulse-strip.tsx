@@ -15,7 +15,7 @@ import { AlertTriangle, CalendarClock, CheckCircle2, Wallet } from 'lucide-react
 
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
-import { AnimatedNumber } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { AnimatedNumber } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { cn } from '@/lib/utils';
 
 import type { AcordoComParcelas } from '../../domain';

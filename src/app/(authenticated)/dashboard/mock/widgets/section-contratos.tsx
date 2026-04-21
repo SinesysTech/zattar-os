@@ -29,7 +29,7 @@ import {
   fmtMoeda,
   fmtNum,
   fmtData,
-} from './primitives';
+} from '../../widgets/primitives';
 
 // ─── Mock Data ───────────────────────────────────────────────────────────────
 

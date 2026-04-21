@@ -17,7 +17,7 @@ import {
   ProgressRing,
   InsightBanner,
   WidgetContainer,
-} from '../../mock/widgets/primitives';
+} from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { formatarPartes, obterContextoProcesso } from '../shared/processo-display';
 import { useDashboard } from '../../hooks/use-dashboard';

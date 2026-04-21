@@ -21,7 +21,7 @@ import { Plus, List, LayoutGrid, Kanban, SlidersHorizontal } from 'lucide-react'
 import { Heading } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { InsightBanner } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { SearchInput } from '@/components/dashboard/search-input';
 import type { ViewToggleOption } from '@/components/dashboard/view-toggle';
 import {

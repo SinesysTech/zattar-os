@@ -76,6 +76,7 @@ import {
   registerPecasJuridicasTools,
   registerEntrevistasTrabalhistas,
   registerMailTools,
+  registerContratacaoTrabalhistaTools,
 } from './registries';
 
 /**
@@ -134,6 +135,7 @@ export async function registerAllTools(): Promise<void> {
   await registerPecasJuridicasTools();
   await registerEntrevistasTrabalhistas();
   await registerMailTools();
+  await registerContratacaoTrabalhistaTools();
 
   toolsRegistered = true;
   console.log('[MCP Registry] Registro concluído');

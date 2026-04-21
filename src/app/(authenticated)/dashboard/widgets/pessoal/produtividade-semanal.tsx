@@ -12,7 +12,7 @@ import {
   MiniBar,
   InsightBanner,
   fmtNum,
-} from '../../mock/widgets/primitives';
+} from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
 

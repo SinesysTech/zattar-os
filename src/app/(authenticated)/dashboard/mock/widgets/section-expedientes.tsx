@@ -28,7 +28,7 @@ import {
   Stat,
   UrgencyDot,
   WidgetContainer,
-} from './primitives';
+} from '../../widgets/primitives';
 
 // ─── Paleta de urgência (Expedientes usa warm/alert com prioridade) ──────
 

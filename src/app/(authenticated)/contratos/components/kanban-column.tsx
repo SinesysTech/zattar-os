@@ -16,7 +16,7 @@
 import { FileText } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { EmptyState } from '@/components/shared/empty-state';
-import { fmtMoeda } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { fmtMoeda } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { ContratoCard } from './contrato-card';
 import type { ContratoCardData } from './contrato-card';
 

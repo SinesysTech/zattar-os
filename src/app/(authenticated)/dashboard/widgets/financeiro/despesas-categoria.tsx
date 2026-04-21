@@ -6,7 +6,7 @@
  */
 
 import { PieChart } from 'lucide-react';
-import { WidgetContainer, MiniDonut, fmtMoeda } from '../../mock/widgets/primitives';
+import { WidgetContainer, MiniDonut, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 import { tokenForTone } from '@/lib/design-system';

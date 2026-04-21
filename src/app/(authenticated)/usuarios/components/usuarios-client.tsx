@@ -7,7 +7,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { Button } from '@/components/ui/button';
 import { Heading } from '@/components/ui/typography';
 import { Skeleton } from '@/components/ui/skeleton';
-import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { InsightBanner } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { useUsuarios } from '../hooks/use-usuarios';
 import { useCargos } from '../hooks/use-cargos';
 import { UserKpiStrip } from './list/user-kpi-strip';

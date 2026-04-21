@@ -8,7 +8,7 @@
  */
 
 import { Scale } from 'lucide-react';
-import { WidgetContainer } from '../../mock/widgets/primitives';
+import { WidgetContainer } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
 

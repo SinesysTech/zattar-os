@@ -10,7 +10,7 @@ import {
   Sparkles,
   Plus,
 } from 'lucide-react';
-import { InsightBanner } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { InsightBanner } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';

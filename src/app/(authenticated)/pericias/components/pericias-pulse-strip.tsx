@@ -16,7 +16,7 @@ import { IconContainer } from '@/components/ui/icon-container';
 import {
   AnimatedNumber,
   Sparkline,
-} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+} from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { cn } from '@/lib/utils';
 import type { PericiasPulseStats } from '../actions';
 

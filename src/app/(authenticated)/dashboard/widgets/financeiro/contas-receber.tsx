@@ -6,7 +6,7 @@
  */
 
 import { ArrowUpRight } from 'lucide-react';
-import { WidgetContainer, fmtMoeda } from '../../mock/widgets/primitives';
+import { WidgetContainer, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 import { tokenForTone } from '@/lib/design-system';

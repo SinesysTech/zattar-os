@@ -40,7 +40,7 @@ import {
   GaugeMeter,
   InsightBanner,
   ComparisonStat,
-} from './primitives';
+} from '../../widgets/primitives';
 
 // ─── Mock Data ──────────────────────────────────────────────────────────────
 

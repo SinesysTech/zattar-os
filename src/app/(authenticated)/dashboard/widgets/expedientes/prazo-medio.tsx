@@ -13,7 +13,7 @@ import {
   Sparkline,
   Stat,
   WidgetContainer,
-} from '../../mock/widgets/primitives';
+} from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 

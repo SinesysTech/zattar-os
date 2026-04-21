@@ -3,7 +3,7 @@
 import { AlertTriangle, Clock, CalendarClock, Wallet } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
-import { AnimatedNumber } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { AnimatedNumber } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import type { ResumoObrigacoesDB } from '../../repository';

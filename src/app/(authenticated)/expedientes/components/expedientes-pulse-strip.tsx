@@ -15,7 +15,7 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
 import {
   AnimatedNumber,
-} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+} from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { cn } from '@/lib/utils';
 
 // ─── Types ───────────────────────────────────────────────────────────────────

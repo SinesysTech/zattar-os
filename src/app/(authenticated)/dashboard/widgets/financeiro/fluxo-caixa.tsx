@@ -6,7 +6,7 @@
  */
 
 import { TrendingUp } from 'lucide-react';
-import { WidgetContainer, MiniBar, fmtMoeda } from '../../mock/widgets/primitives';
+import { WidgetContainer, MiniBar, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 import { fmtMes } from '../shared/fmt-mes';

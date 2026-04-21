@@ -39,3 +39,4 @@ export { registerProjectManagementTools } from './project-management-tools';
 export { registerPecasJuridicasTools } from './pecas-juridicas-tools';
 export { registerEntrevistasTrabalhistas } from './entrevistas-trabalhistas-tools';
 export { registerMailTools } from './mail-tools';
+export { registerContratacaoTrabalhistaTools } from './contratacao-trabalhista-tools';

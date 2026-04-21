@@ -8,7 +8,7 @@ import {
   MiniArea,
   TabToggle,
   fmtMoeda,
-} from '../../mock/widgets/primitives';
+} from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { fmtMes } from '../shared/fmt-mes';
 import { useFluxoCaixa } from '../../hooks';

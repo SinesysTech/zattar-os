@@ -40,7 +40,7 @@ export {
   fmtMoeda,
   fmtNum,
   fmtData,
-} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+} from '@/app/(authenticated)/dashboard/widgets/primitives';
 
 // ─── Entity / CRM Components ─────────────────────────────────────────────────
 

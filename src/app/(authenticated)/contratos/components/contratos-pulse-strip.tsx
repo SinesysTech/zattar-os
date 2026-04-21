@@ -16,7 +16,7 @@ import {
   AnimatedNumber,
   Sparkline,
   fmtMoeda,
-} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+} from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { cn } from '@/lib/utils';
 
 // ─── Types ───────────────────────────────────────────────────────────────────

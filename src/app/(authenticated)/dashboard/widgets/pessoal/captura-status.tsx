@@ -7,7 +7,7 @@
  */
 
 import { RefreshCw } from 'lucide-react';
-import { WidgetContainer } from '../../mock/widgets/primitives';
+import { WidgetContainer } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardAdmin } from '../../hooks';
 import type { StatusCaptura } from '../../domain';

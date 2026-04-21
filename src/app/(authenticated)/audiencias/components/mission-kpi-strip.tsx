@@ -19,7 +19,7 @@ import { IconContainer } from '@/components/ui/icon-container';
 import {
   Sparkline,
   AnimatedNumber,
-} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+} from '@/app/(authenticated)/dashboard/widgets/primitives';
 import type { Audiencia } from '../domain';
 import { StatusAudiencia } from '../domain';
 import { calcPrepItems, calcPrepScore } from './prep-score';

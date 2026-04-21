@@ -49,6 +49,24 @@ tsconfig.test.json
 src/app/sandbox/
 src/app/(dev)/
 
+# Páginas mock/demo — rotas /xxx/mock navegáveis só em desenvolvimento.
+# IMPORTANTE: primitives.tsx (primitivas de design consumidas por produção) já foi
+# movido para src/app/(authenticated)/dashboard/widgets/primitives.tsx.
+# Compilar essas pages (~9000 linhas) aumentava o pico de RAM do builder em OOM.
+src/app/(authenticated)/agenda/mock/
+src/app/(authenticated)/assinatura-digital/mock/
+src/app/(authenticated)/audiencias/mock/
+src/app/(authenticated)/contratos/mock/
+src/app/(authenticated)/dashboard/mock/
+src/app/(authenticated)/partes/mock/
+
+# Storybook stories — não executam em runtime Next.js
+*.stories.ts
+*.stories.tsx
+
+# Demo de website (página de recrutamento fake)
+src/app/website/demo/
+
 # Scripts de desenvolvimento (todos desnecessários em runtime)
 scripts/
 dev_data/

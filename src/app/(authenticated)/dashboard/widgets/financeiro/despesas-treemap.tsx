@@ -7,7 +7,7 @@ import {
   ComparisonStat,
   InsightBanner,
   fmtMoeda,
-} from '../../mock/widgets/primitives';
+} from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDespesasPorCategoria } from '../../hooks';
 

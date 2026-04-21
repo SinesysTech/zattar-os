@@ -1,7 +1,7 @@
 'use client';
 
 import { FolderOpen, FileText, FileSpreadsheet, FileImage, File } from 'lucide-react';
-import { WidgetContainer, ListItem } from '../../mock/widgets/primitives';
+import { WidgetContainer, ListItem } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 import { formatDistanceToNow } from 'date-fns';

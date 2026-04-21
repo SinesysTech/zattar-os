@@ -28,7 +28,7 @@ import {
   AnimatedNumber,
   UrgencyDot,
   InsightBanner,
-} from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+} from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Heading } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';

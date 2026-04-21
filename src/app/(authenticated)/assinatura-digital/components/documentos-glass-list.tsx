@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { ProgressRing } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { ProgressRing } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import type {
   DocumentoCardData,
   DocStatus,

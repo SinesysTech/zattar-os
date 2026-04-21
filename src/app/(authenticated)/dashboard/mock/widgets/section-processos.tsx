@@ -29,7 +29,7 @@ import {
   CalendarHeatmap,
   TabToggle,
   Treemap,
-} from './primitives';
+} from '../../widgets/primitives';
 
 // ─── Mock Data ──────────────────────────────────────────────────────────────
 

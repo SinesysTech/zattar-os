@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
-import { AnimatedNumber } from '@/app/(authenticated)/dashboard/mock/widgets/primitives';
+import { AnimatedNumber } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Briefcase, Calendar, FileText, FileCheck, ExternalLink } from 'lucide-react';
 import { actionBuscarEstatisticasAtividades } from '../../actions/atividades-actions';

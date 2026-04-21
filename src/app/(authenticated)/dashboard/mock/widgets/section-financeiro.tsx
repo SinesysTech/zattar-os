@@ -38,7 +38,7 @@ import {
   Treemap,
   ComparisonStat,
   fmtMoeda,
-} from './primitives';
+} from '../../widgets/primitives';
 
 // ─── Dados Mock ─────────────────────────────────────────────────────────────
 

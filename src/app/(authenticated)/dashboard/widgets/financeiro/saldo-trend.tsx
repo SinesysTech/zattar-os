@@ -6,7 +6,7 @@
  */
 
 import { Wallet } from 'lucide-react';
-import { WidgetContainer, Stat, MiniArea, fmtMoeda } from '../../mock/widgets/primitives';
+import { WidgetContainer, Stat, MiniArea, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { AlertTriangle } from 'lucide-react';
-import { WidgetContainer, UrgencyDot, ListItem, fmtData } from '../../mock/widgets/primitives';
+import { WidgetContainer, UrgencyDot, ListItem, fmtData } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { formatarPartes, obterContextoProcesso } from '../shared/processo-display';
 import { useDashboard } from '../../hooks';
