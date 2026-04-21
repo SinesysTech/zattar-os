@@ -4,8 +4,23 @@ import { ArrowRight } from "lucide-react";
 export function Hero() {
   return (
     <section className="relative min-h-dvh flex items-center justify-center overflow-hidden">
-      {/* Video Background (Cloudflare Stream) */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+      {/* Background CSS poster — sempre renderizado (no CLS, no extra bytes).
+          Serve como fallback em mobile, com prefers-reduced-motion, e durante
+          o carregamento do iframe Cloudflare em desktop. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 z-0 bg-background"
+        style={{
+          backgroundImage: [
+            "radial-gradient(ellipse 80% 60% at 70% 20%, color-mix(in oklch, var(--primary) 18%, transparent) 0%, transparent 60%)",
+            "radial-gradient(ellipse 70% 50% at 20% 80%, color-mix(in oklch, var(--primary-dim) 14%, transparent) 0%, transparent 55%)",
+            "radial-gradient(ellipse 100% 80% at 50% 50%, transparent 30%, color-mix(in oklch, var(--background) 80%, black) 100%)",
+          ].join(", "),
+        }}
+      />
+
+      {/* Video Background (Cloudflare Stream) — só em >=md e com motion-safe */}
+      <div className="absolute inset-0 z-0 overflow-hidden hidden md:motion-safe:block">
         <iframe
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-none pointer-events-none"
           style={{
@@ -14,12 +29,13 @@ export function Hero() {
           }}
           src="https://customer-lvnfk43x7eec1csc.cloudflarestream.com/500dc4de24fbf5ec2457f4779c4faded/iframe?muted=true&loop=true&autoplay=true&controls=false"
           allow="autoplay; fullscreen"
-          title="Video de fundo"
+          title="Vídeo ambiente do escritório Zattar Advogados"
+          loading="lazy"
         />
       </div>
 
       {/* Dark Overlay for text contrast */}
-      <div className="absolute inset-0 z-1 bg-black/60" />
+      <div className="absolute inset-0 z-1 bg-background/60" />
 
       {/* Content */}
       <div className="container mx-auto px-5 sm:px-6 md:px-8 z-10 text-center relative pt-20 md:pt-0">

@@ -1,3 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
 import { CheckCircle } from "lucide-react";
 
 export function About() {
@@ -6,11 +8,13 @@ export function About() {
       <div className="container mx-auto px-5 sm:px-6 md:px-8 relative z-10">
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-20 items-center">
           <div className="relative order-2 md:order-1">
-            <div className="aspect-square rounded-2xl md:rounded-3xl overflow-hidden relative z-10 shadow-2xl">
-              <img
-                className="w-full h-full object-cover opacity-85 hover:opacity-100 transition-all duration-700"
-                alt="Dynamic tech team working in a futuristic dark office"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4s68vvVIR2eH9z9YzLyHzYC86wmTsW9lCpLmnX19msfjKHu0ANV84BR2b6h1xJ6utqY5EOVMu_5_2m88XisLo8NhngBqnL3YOWe6u3UZPQSdxNkjnD9YLgQMRwpVjIKDi0pKonYT6ojwaEHb9by3w6eisSb9t5PtNIZ4Le86nwgKvSD4Jti802SOMNH5x48whGMzERpGgHAUGoPx-cv6EoIfGbN_N9q_PTAGyds9iFysoL089Sj_9ZIPBFIp2gkFDuPnC7kCxq5cH"
+            <div className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden z-10 shadow-2xl">
+              <Image
+                src="/website/home/about-team.jpg"
+                alt="Equipe técnica trabalhando em escritório futurista escuro com monitores de dados"
+                fill
+                sizes="(max-width: 768px) 100vw, 45vw"
+                className="object-cover opacity-85 hover:opacity-100 motion-safe:transition-all motion-safe:duration-700"
               />
             </div>
             <div className="absolute -top-10 -right-10 w-32 md:w-48 h-32 md:h-48 bg-primary/20 rounded-full blur-3xl z-0" />
@@ -48,18 +52,18 @@ export function About() {
             </ul>
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
-              <a
+              <Link
                 href="/contato"
                 className="bg-primary text-on-primary-fixed px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-bold text-sm sm:text-base hover:brightness-110 transition-all text-center"
               >
                 Fale com um Especialista
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/expertise"
                 className="bg-on-surface text-surface-container-lowest px-6 py-3 sm:px-8 sm:py-4 rounded-xl font-bold text-sm sm:text-base hover:bg-primary hover:text-on-primary transition-all text-center"
               >
                 Conheça nossa Metodologia
-              </a>
+              </Link>
             </div>
           </div>
         </div>

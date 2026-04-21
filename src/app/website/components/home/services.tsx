@@ -5,6 +5,7 @@
  */
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   Gavel,
@@ -71,13 +72,15 @@ function ServiceBlock({
       <div
         className={`md:col-span-7 relative ${isImageLeft ? "md:order-1" : "md:order-2"}`}
       >
-        <div className="aspect-video rounded-2xl md:rounded-3xl overflow-hidden bg-surface-container border border-white/5">
-          <img
+        <div className="relative aspect-video rounded-2xl md:rounded-3xl overflow-hidden bg-surface-container border border-outline-variant/20">
+          <Image
             src={imageSrc}
             alt={imageAlt}
-            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+            fill
+            sizes="(max-width: 768px) 100vw, 58vw"
+            className="object-cover opacity-80 group-hover:opacity-100 motion-safe:group-hover:scale-105 transition-all duration-700"
           />
-          <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent" />
         </div>
         {overlayCard}
       </div>
@@ -111,7 +114,7 @@ function ServiceBlock({
 
 export function Services() {
   return (
-    <section id="solucoes" className="py-16 sm:py-20 md:py-32 bg-black overflow-hidden">
+    <section id="solucoes" className="py-16 sm:py-20 md:py-32 bg-background overflow-hidden">
       <div className="container mx-auto px-5 sm:px-6 md:px-8">
         {/* Section header */}
         <div className="max-w-4xl mb-12 sm:mb-16 md:mb-24">
@@ -134,7 +137,7 @@ export function Services() {
             layout="image-left"
             featured
             label="Principal"
-            imageSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuBMczbgwNePWlBWRgiSkyzGfaZrHyEXJ8Awz6YtA-kWrk8BRe36xM7pS6Z5kpK9Vdky2Z3dq33pyyU9e_jYUfyzFofEKCSIwrpi_-XyTZBn8wrBhIvVwCHJCcTNNtCZRdh8Y3iEPT3AtSNtYnvw72X_FJo0Sa-a8eYyFNEnPB3jFnOuCP0J9OK_QmK6qNm_Digzo9I6AcLWyAU6ISTvr7Z5B-qUoEdGJI08pai8hAjxZuyNrPDT9_tyWNv9JY5YZVqpp8iPGQoiwkwh"
+            imageSrc="/website/home/services-demissao.jpg"
             imageAlt="Interface de dados de alta tecnologia com símbolos jurídicos e linhas brilhantes roxas"
             overlayCard={
               <OverlayCard
@@ -153,7 +156,7 @@ export function Services() {
           {/* Block 2 — Text Left (FGTS e Verbas) */}
           <ServiceBlock
             layout="text-left"
-            imageSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuA1t80OFnMZ9glumnSw0NK5KQxfF8c7eNY-xJuoeAv5yu7QuRTE3alXiXpGWrhrBPMqYYM4v7jx6S4eVQw9AJzMcxnrq5dj6_rqiWkHhKTTlJvA_gRCxwC9oyLztE_cTMfw7qV2Wtozu9DifRqt4MNMGMFBzv7Xsu_bCq5xYJ6Ha4bYqu09PmoQ6OOGFp_N7i-coFHgVdhS2JanujkK6A1DKoQXo-pHTzr1KgS3dvTBZfHxihyqzUIYehZO9-4yAw6JVKYpqIzYbEda"
+            imageSrc="/website/home/services-fgts.jpg"
             imageAlt="Dados financeiros e símbolos de moeda digital em tela escura com destaques roxos"
             overlayCard={
               <OverlayCard
@@ -172,7 +175,7 @@ export function Services() {
           {/* Block 3 — Image Left (Acidentes de Trabalho) */}
           <ServiceBlock
             layout="image-left"
-            imageSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuBndeP_TrZYWaqkXabXlacL39lZl9vdBV32heYFlkVewN30Ke7tc2YX_ruVmw8X7Pz86jo4tzOK8Xa-XQxi9by6CF1yboQDULko5E2Ho5dlyrfbUmvRrHbRsTyXeti2XNEEQWqLm1iFptn3LD_bapazzTRB47A10tEGxPtZ4G-WFctjdx4g75_wMJZLghwxXUNRtP8QHGyl1OTq_9shD5GkRfraKK5spA6duR1n9jzL1mB_6Ekunam3DTOfuSrc5hRt07HYe_jtH-w8"
+            imageSrc="/website/home/services-acidentes.jpg"
             imageAlt="Visualização futurista de dados médicos e anatomia humana em display digital escuro"
             overlayCard={
               <OverlayCard
