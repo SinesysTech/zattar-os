@@ -20,7 +20,8 @@ import { Check} from 'lucide-react';
 import { toast } from 'sonner';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Heading } from '@/components/ui/typography';
-import { actionCriarProcessoManual, actionAtualizarProcesso, type ActionResult } from '../actions';
+import { actionCriarProcessoManual, actionAtualizarProcesso } from '../actions';
+import type { ActionResult } from '../actions/types';
 import type { Processo, GrauProcesso, OrigemAcervo } from '../domain';
 import { GRAU_LABELS, TRIBUNAIS } from '../domain';
 

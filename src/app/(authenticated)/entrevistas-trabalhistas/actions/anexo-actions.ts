@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { createAnexoSchema } from '../domain';
 import { createAnexo, deleteAnexo } from '../repository';
 import { uploadToSupabase } from '@/lib/storage/supabase-storage.service';
-import type { EntrevistaActionResult } from './entrevista-actions';
+import type { EntrevistaActionResult } from './types';
 
 const ALLOWED_FILE_TYPES = [
   'audio/mpeg',

@@ -28,17 +28,7 @@ interface ActionResult<T> {
   error?: string;
 }
 
-export interface MetricasDB {
-  cacheHitRate: CacheHitRate[];
-  queriesLentas: QueryLenta[];
-  tabelasSeqScan: TabelaSequentialScan[];
-  bloat: BloatTabela[];
-  indicesNaoUtilizados: IndiceNaoUtilizado[];
-  diskIO: MetricasDiskIO | null;
-  diskIOStatus: DiskIOStatus;
-  diskIOMessage?: string;
-  timestamp: string;
-}
+import type { MetricasDB } from './types';
 
 export async function actionObterMetricasDB(): Promise<ActionResult<MetricasDB>> {
   try {

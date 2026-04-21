@@ -6,11 +6,7 @@ import { checkPermission } from '@/lib/auth/authorization';
 import { capturarTimeline, type CapturaTimelineParams } from '../services/timeline/timeline-capture.service';
 import { relinkBackblazeDocumentos } from '../services/timeline/timeline-relink.service';
 
-export interface ActionResponse<T = unknown> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
+import type { ActionResponse } from './types';
 
 function createErrorResponse(error: unknown, defaultMessage: string): ActionResponse {
   return {

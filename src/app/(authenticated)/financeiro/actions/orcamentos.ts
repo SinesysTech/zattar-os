@@ -38,32 +38,14 @@ import {
 } from '../domain/orcamentos';
 
 // ============================================================================
-// Types
+// Types (moved to ./types)
 // ============================================================================
 
-export interface ListarOrcamentosFilters {
-    pagina?: number;
-    limite?: number;
-    busca?: string;
-    ano?: number;
-    periodo?: PeriodoOrcamento;
-    status?: StatusOrcamento | StatusOrcamento[];
-    ordenarPor?: 'nome' | 'ano' | 'periodo' | 'status' | 'data_inicio' | 'created_at';
-    ordem?: 'asc' | 'desc';
-}
-
-export interface AnaliseOrcamentariaOptions {
-    incluirResumo?: boolean;
-    incluirAlertas?: boolean;
-    incluirEvolucao?: boolean;
-}
-
-export interface AnaliseOrcamentariaUI {
-    itens: AnaliseOrcamentariaItem[];
-    resumo: ResumoOrcamentario | null;
-    alertas: AlertaDesvio[] | null;
-    evolucao: ProjecaoItem[] | null;
-}
+import type {
+    ListarOrcamentosFilters,
+    AnaliseOrcamentariaOptions,
+    AnaliseOrcamentariaUI,
+} from './types';
 
 // ============================================================================
 // Server Actions - CRUD

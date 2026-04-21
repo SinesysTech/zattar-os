@@ -7,10 +7,7 @@
  */
 
 
-export interface WidgetConfig {
-  websiteToken: string;
-  baseUrl: string;
-}
+import type { WidgetConfig } from './action-types';
 
 export async function actionObterChatwootWidgetConfig(): Promise<WidgetConfig | null> {
   try {

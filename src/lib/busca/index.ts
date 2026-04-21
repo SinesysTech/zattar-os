@@ -18,4 +18,4 @@ export type {
   BuscaHibridaInput,
   ContextoRAGInput,
   BuscarSimilaresInput,
-} from './actions/busca-actions';
+} from './actions/schemas';

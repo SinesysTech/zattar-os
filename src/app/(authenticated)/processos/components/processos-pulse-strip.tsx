@@ -2,7 +2,7 @@
 
 import { Scale, Briefcase, Archive, CalendarClock } from 'lucide-react';
 import { PulseStrip, type PulseItem } from '@/components/dashboard/pulse-strip';
-import type { ProcessoStats } from '../service-estatisticas';
+import type { ProcessoStats } from '../types/estatisticas';
 
 interface ProcessosPulseStripProps {
   stats: ProcessoStats;

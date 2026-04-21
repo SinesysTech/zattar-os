@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { StatCard } from '@/app/(authenticated)/dashboard';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { DashboardFinanceiroData } from '@/app/(authenticated)/financeiro/actions/dashboard';
+import type { DashboardFinanceiroData } from '@/app/(authenticated)/financeiro/actions/types';
 
 // ============================================================================
 // Helpers

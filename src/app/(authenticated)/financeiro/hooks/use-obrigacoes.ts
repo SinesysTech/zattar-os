@@ -6,8 +6,8 @@ import {
     actionObterResumoObrigacoes,
     actionSincronizarAcordo,
     actionSincronizarParcela,
-    ObterResumoObrigacoesResult
 } from '../actions/obrigacoes';
+import type { ObterResumoObrigacoesResult } from '../actions/types';
 import type { ListarLancamentosParams } from '../types/lancamentos';
 
 /**

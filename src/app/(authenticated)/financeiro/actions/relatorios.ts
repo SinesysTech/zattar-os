@@ -8,24 +8,10 @@
 import { todayDateString } from '@/lib/date-utils';
 
 // ============================================================================
-// Types
+// Types (moved to ./types)
 // ============================================================================
 
-export interface RelatorioFiltros {
-    dataInicio: string;
-    dataFim: string;
-    tipo?: 'receita' | 'despesa' | 'todos';
-    contaBancariaId?: number;
-    centroCustoId?: number;
-    planoContaId?: number;
-    agruparPor?: 'dia' | 'semana' | 'mes' | 'categoria' | 'conta';
-}
-
-export interface RelatorioExportacao {
-    content: string;
-    filename: string;
-    contentType: string;
-}
+import type { RelatorioFiltros, RelatorioExportacao } from './types';
 
 type LancamentoRelatorio = {
     dataLancamento: string;

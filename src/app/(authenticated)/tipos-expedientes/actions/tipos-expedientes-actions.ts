@@ -11,11 +11,7 @@ import type {
 } from '../domain';
 import * as service from '../service';
 
-export type ActionResponse<T = unknown> = {
-    success: boolean;
-    data?: T;
-    error?: string;
-};
+import type { ActionResponse } from './types';
 
 // =============================================================================
 // ACTIONS

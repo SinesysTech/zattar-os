@@ -15,13 +15,15 @@ import {
     actionObterResumoDashboard,
     actionListarContasBancarias,
     actionListarCentrosCusto,
-    type FluxoCaixaFiltros,
-    type IndicadoresSaude,
-    type FluxoCaixaAlerta,
-    type FluxoCaixaResumoDashboard,
-    type ContaBancariaResumo,
-    type CentroCustoResumo,
 } from '../actions/fluxo-caixa';
+import type {
+    FluxoCaixaFiltros,
+    IndicadoresSaude,
+    FluxoCaixaAlerta,
+    FluxoCaixaResumoDashboard,
+    ContaBancariaResumo,
+    CentroCustoResumo,
+} from '../actions/types';
 import type { FluxoCaixaConsolidado, FluxoCaixaDiario, FluxoCaixaPeriodo } from '../domain/fluxo-caixa';
 
 interface UseFluxoCaixaOptions {

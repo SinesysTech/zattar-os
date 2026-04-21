@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { actionAtualizarProcesso, type ActionResult } from '../actions';
+import { actionAtualizarProcesso } from '../actions';
+import type { ActionResult } from '../actions/types';
 import type { ProcessoUnificado } from '../domain';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"

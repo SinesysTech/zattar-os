@@ -9,44 +9,22 @@ import { FluxoCaixaService } from '../services/fluxo-caixa';
 import type { FiltroFluxoCaixa, FluxoCaixaConsolidado, FluxoCaixaDiario, FluxoCaixaPeriodo } from '../domain/fluxo-caixa';
 
 // ============================================================================
-// Types
+// Types (moved to ./types)
 // ============================================================================
 
-export interface FluxoCaixaFiltros {
-    dataInicio?: string;
-    dataFim?: string;
-    contaBancariaId?: number;
-    centroCustoId?: number;
-    incluirProjetado?: boolean;
-}
-
-export interface FluxoCaixaDashboard {
-    saldoAtual: number;
-    entradasMes: number;
-    saidasMes: number;
-    saldoProjetado: number;
-    alertas: { tipo: 'perigo' | 'atencao' | 'ok'; mensagem: string }[];
-}
-
-export interface FluxoCaixaResumoSegmento {
-    receitas: number;
-    despesas: number;
-    saldo: number;
-}
-
-export interface FluxoCaixaResumo {
-    realizado: FluxoCaixaResumoSegmento;
-    projetado: FluxoCaixaResumoSegmento;
-    total: FluxoCaixaResumoSegmento;
-}
+import type {
+    FluxoCaixaFiltros,
+    FluxoCaixaDashboard,
+    FluxoCaixaResumoSegmento,
+    FluxoCaixaResumo,
+    IndicadoresSaude,
+    FluxoCaixaAlerta,
+    FluxoCaixaResumoDashboard,
+    ContaBancariaResumo,
+    CentroCustoResumo,
+} from './types';
 
 type ActionResult<T> = { success: true; data: T } | { success: false; error: string };
-
-export type IndicadoresSaude = Awaited<ReturnType<typeof FluxoCaixaService.getIndicadoresSaude>>;
-export type FluxoCaixaAlerta = Awaited<ReturnType<typeof FluxoCaixaService.getAlertasCaixa>>[number];
-export type FluxoCaixaResumoDashboard = Awaited<ReturnType<typeof FluxoCaixaService.getResumoDashboard>>;
-export type ContaBancariaResumo = Awaited<ReturnType<typeof FluxoCaixaService.listarContasBancarias>>[number];
-export type CentroCustoResumo = Awaited<ReturnType<typeof FluxoCaixaService.listarCentrosCusto>>[number];
 
 // ============================================================================
 // Server Actions

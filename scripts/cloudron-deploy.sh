@@ -6,7 +6,8 @@ set -e
 # =============================================================================
 # Uso:
 #   ./scripts/cloudron-deploy.sh                  # Build + Update + Env Set
-#   ./scripts/cloudron-deploy.sh --skip-build     # Update + Env Set
+#   ./scripts/cloudron-deploy.sh --skip-build     # Update + Env Set (usa ultima do manifest)
+#   ./scripts/cloudron-deploy.sh --image TAG      # Update com imagem especifica + Env Set
 #   ./scripts/cloudron-deploy.sh --env-only       # Apenas Env Set
 #   ./scripts/cloudron-deploy.sh --dry-run        # Simula sem executar
 #
@@ -31,7 +32,7 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 ENV_FILE="${PROJECT_DIR}/.env.local"
 ENV_PRODUCTION="${PROJECT_DIR}/.env.production"
 GENERATED_BUILD_ENV=false
-CLOUDRON_APP="zattaradvogados.com"
+CLOUDRON_APP="www.zattaradvogados.com"
 REGISTRY="registry.sinesys.online"
 IMAGE_NAME="zattar-os"
 DOCKER_REPOSITORY="${REGISTRY}/${IMAGE_NAME}"
@@ -75,6 +76,7 @@ SKIP_BUILD=false
 SKIP_UPDATE=false
 ENV_ONLY=false
 DRY_RUN=false
+EXPLICIT_IMAGE=""
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -82,6 +84,7 @@ while [[ $# -gt 0 ]]; do
         --skip-update)    SKIP_UPDATE=true; shift ;;
         --env-only)       ENV_ONLY=true; SKIP_BUILD=true; SKIP_UPDATE=true; shift ;;
         --dry-run)        DRY_RUN=true; shift ;;
+        --image)          EXPLICIT_IMAGE="$2"; SKIP_BUILD=true; shift 2 ;;
         --server)         CLOUDRON_SERVER="$2"; shift 2 ;;
         --token)          CLOUDRON_TOKEN="$2"; shift 2 ;;
         --help|-h)
@@ -91,6 +94,9 @@ while [[ $# -gt 0 ]]; do
             echo "  --skip-build       Pula o build (faz update + env set)"
             echo "  --skip-update      Pula o update (faz build + env set)"
             echo "  --env-only         Apenas seta as variaveis de ambiente"
+            echo "  --image <tag|url>  Usa imagem ja pushada (implica --skip-build)."
+            echo "                     Aceita tag curta (ex: 20260421-120539-xxx) ou URL completa."
+            echo "                     Util para retry ou rollback para imagem anterior."
             echo "  --dry-run          Simula sem executar"
             echo "  --server <domain>  Cloudron server domain (ou env CLOUDRON_SERVER)"
             echo "  --token <token>    Cloudron token (ou env CLOUDRON_TOKEN)"
@@ -98,6 +104,9 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "CI/CD (nao-interativo):"
             echo "  CLOUDRON_SERVER=my.sinesys.online CLOUDRON_TOKEN=xxx $0"
+            echo ""
+            echo "Rollback para imagem anterior:"
+            echo "  $0 --image 20260420-143043-20787a367"
             echo ""
             echo "NOTA: Se o build remoto falhar por memoria, use:"
             echo "  ./scripts/cloudron-deploy-local.sh"
@@ -292,6 +301,16 @@ configure_build_service() {
 # =============================================================================
 GIT_SHA="$(git -C "$PROJECT_DIR" rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
 
+# Se --image foi passado, resolver para URL completa. Detecta tag curta vs URL.
+FULL_IMAGE=""
+if [ -n "$EXPLICIT_IMAGE" ]; then
+    if [[ "$EXPLICIT_IMAGE" == */* || "$EXPLICIT_IMAGE" == *:* ]]; then
+        FULL_IMAGE="$EXPLICIT_IMAGE"
+    else
+        FULL_IMAGE="${DOCKER_REPOSITORY}:${EXPLICIT_IMAGE}"
+    fi
+fi
+
 echo ""
 echo -e "${BOLD}Zattar OS - Cloudron Deploy (Build Remoto)${NC}"
 echo "============================================================"
@@ -299,6 +318,7 @@ echo -e "  Git:       ${DIM}${GIT_SHA}${NC}"
 echo -e "  Server:    ${CYAN}${CLOUDRON_SERVER}${NC}"
 echo -e "  Registry:  ${CYAN}${DOCKER_REPOSITORY}${NC}"
 echo -e "  Builder:   ${CYAN}${BUILD_SERVICE_URL}${NC}"
+[ -n "$FULL_IMAGE" ] && echo -e "  Image:     ${CYAN}${FULL_IMAGE}${NC} ${YELLOW}(reuso via --image)${NC}"
 echo -e "  Build:     $([ "$SKIP_BUILD" = true ] && echo -e "${YELLOW}skip${NC}" || echo -e "${GREEN}cloudron build (remoto)${NC}")"
 echo -e "  Update:    $([ "$SKIP_UPDATE" = true ] && echo -e "${YELLOW}skip${NC}" || echo -e "${GREEN}cloudron update${NC}")"
 echo -e "  Env set:   ${GREEN}cloudron env set${NC}"
@@ -413,11 +433,17 @@ cleanup_generated_build_env_file
 if [ "$SKIP_UPDATE" = false ]; then
     header "STEP 2/3: Cloudron Update"
 
-    # cloudron update: usa a ultima imagem buildada (salva pelo cloudron build)
+    # Sem --image: usa a ultima imagem buildada (salva pelo cloudron build).
+    # Com --image: forca uma imagem especifica (retry apos falha ou rollback).
     # --server: garante operacao no Cloudron correto
     # Ref: https://docs.cloudron.io/packaging/cli
-    # shellcheck disable=SC2086
-    run cloudron update --app "$CLOUDRON_APP" $CLOUDRON_AUTH_FLAGS
+    if [ -n "$FULL_IMAGE" ]; then
+        # shellcheck disable=SC2086
+        run cloudron update --app "$CLOUDRON_APP" --image "$FULL_IMAGE" $CLOUDRON_AUTH_FLAGS
+    else
+        # shellcheck disable=SC2086
+        run cloudron update --app "$CLOUDRON_APP" $CLOUDRON_AUTH_FLAGS
+    fi
 
     success "Update concluido!"
 

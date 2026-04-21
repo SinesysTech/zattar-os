@@ -1,7 +1,8 @@
 'use server';
 
 import { authenticateRequest } from '@/lib/auth/session';
-import { obterEstatisticasProcessos, type ProcessoStats } from '../service-estatisticas';
+import { obterEstatisticasProcessos } from '../service-estatisticas';
+import type { ProcessoStats } from '../types/estatisticas';
 
 export async function actionObterEstatisticasProcessos(): Promise<{
   success: boolean;

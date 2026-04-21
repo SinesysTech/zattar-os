@@ -21,9 +21,8 @@ import {
     actionEncerrarOrcamento,
     actionObterAnaliseOrcamentaria,
     actionObterProjecaoOrcamentaria,
-    type ListarOrcamentosFilters,
-    type AnaliseOrcamentariaUI,
 } from '../actions/orcamentos';
+import type { ListarOrcamentosFilters, AnaliseOrcamentariaUI } from '../actions/types';
 import type {
     OrcamentoComItens,
     CriarOrcamentoDTO,

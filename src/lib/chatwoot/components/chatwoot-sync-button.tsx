@@ -30,10 +30,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import {
-  sincronizarCompletoComChatwoot,
-  type SincronizarCompletoResult,
-} from '../actions';
+import { sincronizarCompletoComChatwoot } from '../actions';
+import type { SincronizarCompletoResult } from '../action-types';
 import type { TipoEntidadeChatwoot } from '../domain';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"

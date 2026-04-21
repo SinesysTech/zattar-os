@@ -20,28 +20,7 @@ type SegmentoActionResult<T = unknown> =
   | { success: true; data: T }
   | { success: false; error: string };
 
-export interface Segmento {
-  id: number;
-  nome: string;
-  slug: string;
-  descricao: string | null;
-  ativo: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface CreateSegmentoInput {
-  nome: string;
-  slug: string;
-  descricao?: string | null;
-}
-
-export interface UpdateSegmentoInput {
-  nome?: string;
-  slug?: string;
-  descricao?: string | null;
-  ativo?: boolean;
-}
+import type { Segmento, CreateSegmentoInput, UpdateSegmentoInput } from './types';
 
 // =============================================================================
 // CONSTANTES

@@ -17,11 +17,7 @@ import {
   type AtualizarAdvogadoParams,
 } from '../domain';
 
-export type ActionResponse<T = unknown> = {
-  success: boolean;
-  data?: T;
-  error?: string;
-};
+import type { ActionResponse } from './types';
 
 export async function actionListarAdvogados(
   params: ListarAdvogadosParams = {}

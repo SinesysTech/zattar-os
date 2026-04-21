@@ -18,12 +18,7 @@ import {
   type AtualizarCargoDTO,
 } from "../domain";
 
-export type ActionResponse<T = unknown> = {
-  success: boolean;
-  data?: T;
-  error?: string;
-  errorDetail?: unknown; // For structured errors like CargoComUsuariosError
-};
+import type { ActionResponse } from './types';
 
 export async function actionListarCargos(
   params: ListarCargosParams = {}

@@ -30,7 +30,8 @@ import { toast } from 'sonner';
 import { InputCEP, type InputCepAddress } from '@/app/(authenticated)/enderecos';
 import type { Endereco } from '@/app/(authenticated)/enderecos/types';
 import { InputTelefone } from '@/components/ui/input-telefone';
-import { actionCriarCliente, actionAtualizarClienteForm, type ActionResult } from '../../actions';
+import { actionCriarCliente, actionAtualizarClienteForm } from '../../actions';
+import type { ActionResult } from '../../actions/types';
 import type { Cliente } from '../../types';
 import { DialogFormShell, DialogNavPrevious, DialogNavNext } from '@/components/shared/dialog-shell';
 

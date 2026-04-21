@@ -13,29 +13,11 @@ type ParcelaObrigacao = ParcelaComLancamento;
 // Types - Response padronizado (success/error)
 // ============================================================================
 
-export interface AlertaObrigacao {
-    tipo: 'vencida' | 'inconsistencia' | 'repasse_pendente' | 'sincronizacao';
-    nivel: 'erro' | 'aviso' | 'info';
-    mensagem: string;
-    parcelaId?: number;
-    acordoId?: number;
-    valor?: number;
-    dataVencimento?: string;
-}
-
-export interface ResumoObrigacoesFinanceiro {
-    totalVencidas: number;
-    valorTotalVencido: number;
-    totalPendentes: number;
-    valorTotalPendente: number;
-    totalRepassesPendentes: number;
-    valorRepassesPendentes: number;
-}
-
-export interface ObterResumoObrigacoesResult {
-    alertas: AlertaObrigacao[];
-    resumo: ResumoObrigacoesFinanceiro;
-}
+import type {
+    AlertaObrigacao,
+    ResumoObrigacoesFinanceiro,
+    ObterResumoObrigacoesResult,
+} from './types';
 
 type ActionStatusResponse = { success: true; message?: string } | { success: false; error: string };
 type ActionVoidResponse = { success: true } | { success: false; error: string };

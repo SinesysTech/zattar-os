@@ -5,11 +5,7 @@ import { requireAuth } from "./utils";
 import * as service from "../service";
 import { Assistente, AssistentesParams } from "../domain";
 
-export interface ActionResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
+import type { ActionResponse } from './types';
 
 export async function actionListarAssistentes(
   params: AssistentesParams = {}

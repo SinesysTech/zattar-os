@@ -102,11 +102,11 @@ export {
   actionObterDetalhesComplementaresProcesso,
 } from './actions';
 
-export type { ActionResult } from './actions';
+export type { ActionResult } from './actions/types';
 
 // --- Estatísticas ---
 export { actionObterEstatisticasProcessos } from './actions/estatisticas-actions';
-export type { ProcessoStats } from './service-estatisticas';
+export type { ProcessoStats } from './types/estatisticas';
 
 // --- Indexação ---
 export {

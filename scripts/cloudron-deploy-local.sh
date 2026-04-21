@@ -6,7 +6,8 @@ set -e
 # =============================================================================
 # Uso:
 #   ./scripts/cloudron-deploy-local.sh                  # Build + Push + Update + Env Set
-#   ./scripts/cloudron-deploy-local.sh --skip-build     # Update + Env Set
+#   ./scripts/cloudron-deploy-local.sh --skip-build     # Update + Env Set (sem --image: usa ultima do manifest)
+#   ./scripts/cloudron-deploy-local.sh --image TAG      # Update com imagem ja pushada + Env Set (retry)
 #   ./scripts/cloudron-deploy-local.sh --env-only       # Apenas Env Set
 #   ./scripts/cloudron-deploy-local.sh --no-cache       # Build sem cache Docker
 #   ./scripts/cloudron-deploy-local.sh --dry-run        # Simula sem executar
@@ -29,7 +30,7 @@ ENV_PRODUCTION="${PROJECT_DIR}/.env.production"
 GENERATED_BUILD_ENV=false
 REGISTRY="registry.sinesys.online"
 IMAGE_NAME="zattar-os"
-CLOUDRON_APP="zattaradvogados.com"
+CLOUDRON_APP="www.zattaradvogados.com"
 KEEP_IMAGES=5  # Numero de imagens locais antigas para manter
 
 # Autenticacao CI/CD (via env vars ou flags)
@@ -68,6 +69,7 @@ ENV_ONLY=false
 NO_CACHE=""
 DRY_RUN=false
 DO_CLEANUP=false
+EXPLICIT_IMAGE=""
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -77,24 +79,31 @@ while [[ $# -gt 0 ]]; do
         --no-cache)     NO_CACHE="--no-cache"; shift ;;
         --dry-run)      DRY_RUN=true; shift ;;
         --cleanup)      DO_CLEANUP=true; shift ;;
+        --image)        EXPLICIT_IMAGE="$2"; SKIP_BUILD=true; shift 2 ;;
         --server)       CLOUDRON_SERVER="$2"; shift 2 ;;
         --token)        CLOUDRON_TOKEN="$2"; shift 2 ;;
         --help|-h)
             echo "Uso: $0 [opcoes]"
             echo ""
             echo "Opcoes:"
-            echo "  --skip-build     Pula o build (faz update + env set)"
-            echo "  --skip-update    Pula o update (faz build + env set)"
-            echo "  --env-only       Apenas seta as variaveis de ambiente"
-            echo "  --no-cache       Build sem cache Docker"
-            echo "  --dry-run        Simula sem executar (mostra o que faria)"
-            echo "  --cleanup        Remove imagens antigas apos deploy (mantem ${KEEP_IMAGES})"
+            echo "  --skip-build       Pula o build (faz update + env set)"
+            echo "  --skip-update      Pula o update (faz build + env set)"
+            echo "  --env-only         Apenas seta as variaveis de ambiente"
+            echo "  --image <tag|url>  Usa imagem ja pushada (implica --skip-build)."
+            echo "                     Aceita tag curta (ex: 20260421-120539-xxx) ou URL completa."
+            echo "                     Util para retry quando build passou mas update falhou."
+            echo "  --no-cache         Build sem cache Docker"
+            echo "  --dry-run          Simula sem executar (mostra o que faria)"
+            echo "  --cleanup          Remove imagens antigas apos deploy (mantem ${KEEP_IMAGES})"
             echo "  --server <domain>  Cloudron server domain (ou env CLOUDRON_SERVER)"
             echo "  --token <token>    Cloudron token (ou env CLOUDRON_TOKEN)"
             echo "  --help             Mostra esta ajuda"
             echo ""
             echo "CI/CD (nao-interativo):"
             echo "  CLOUDRON_SERVER=my.sinesys.online CLOUDRON_TOKEN=xxx $0"
+            echo ""
+            echo "Retry apos falha no update (reaproveita imagem ja pushada):"
+            echo "  $0 --image 20260421-120539-78efe904c"
             exit 0
             ;;
         *)
@@ -267,17 +276,26 @@ wait_for_health() {
 # INICIO
 # =============================================================================
 
-# Gerar tag com timestamp + git short hash
+# Gerar tag com timestamp + git short hash (usado quando nao ha --image explicito)
 GIT_SHA="$(git -C "$PROJECT_DIR" rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
 TAG="$(date +%Y%m%d-%H%M%S)-${GIT_SHA}"
 FULL_IMAGE="${REGISTRY}/${IMAGE_NAME}:${TAG}"
+
+# Se --image foi passado, substituir FULL_IMAGE. Detecta se e tag curta ou URL completa.
+if [ -n "$EXPLICIT_IMAGE" ]; then
+    if [[ "$EXPLICIT_IMAGE" == */* || "$EXPLICIT_IMAGE" == *:* ]]; then
+        FULL_IMAGE="$EXPLICIT_IMAGE"
+    else
+        FULL_IMAGE="${REGISTRY}/${IMAGE_NAME}:${EXPLICIT_IMAGE}"
+    fi
+fi
 
 echo ""
 echo -e "${BOLD}Zattar OS - Cloudron Deploy (Build Local)${NC}"
 echo "============================================================"
 echo -e "  Server:    ${CYAN}${CLOUDRON_SERVER}${NC}"
 echo -e "  Registry:  ${CYAN}${REGISTRY}${NC}"
-echo -e "  Image:     ${CYAN}${FULL_IMAGE}${NC}"
+echo -e "  Image:     ${CYAN}${FULL_IMAGE}${NC}$([ -n "$EXPLICIT_IMAGE" ] && echo -e " ${YELLOW}(reuso via --image)${NC}")"
 echo -e "  Git:       ${DIM}${GIT_SHA}${NC}"
 echo -e "  Build:     $([ "$SKIP_BUILD" = true ] && echo -e "${YELLOW}skip${NC}" || echo -e "${GREEN}docker build (local)${NC}")"
 echo -e "  Push:      $([ "$SKIP_BUILD" = true ] && echo -e "${YELLOW}skip${NC}" || echo -e "${GREEN}docker push -> ${REGISTRY}${NC}")"
@@ -402,7 +420,8 @@ cleanup_generated_build_env_file
 if [ "$SKIP_UPDATE" = false ]; then
     header "STEP 3/4: Cloudron Update"
 
-    if [ "$SKIP_BUILD" = false ]; then
+    # Passa --image quando: (a) houve build nesta execucao, OU (b) --image explicito foi informado
+    if [ "$SKIP_BUILD" = false ] || [ -n "$EXPLICIT_IMAGE" ]; then
         # shellcheck disable=SC2086
         run cloudron update --app "$CLOUDRON_APP" --image "$FULL_IMAGE" $CLOUDRON_AUTH_FLAGS
     else

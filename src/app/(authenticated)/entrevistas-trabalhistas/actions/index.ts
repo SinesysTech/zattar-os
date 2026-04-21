@@ -2,7 +2,7 @@
 // Entrevistas Trabalhistas — Actions Barrel Export
 // =============================================================================
 
-export type { EntrevistaActionResult } from './entrevista-actions';
+export type { EntrevistaActionResult } from './types';
 export {
     iniciarEntrevistaAction,
     salvarModuloAction,

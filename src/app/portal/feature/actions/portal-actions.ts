@@ -6,7 +6,7 @@ import { validarCpf } from "../utils";
 import { redirect } from "next/navigation";
 import { buscarClientePorDocumento } from "@/app/(authenticated)/partes/server";
 
-export type PortalLoginResult = { success: boolean; error?: string };
+import type { PortalLoginResult } from './types';
 
 export async function validarCpfESetarSessao(
   cpf: string

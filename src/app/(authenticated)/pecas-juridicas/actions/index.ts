@@ -1,5 +1,4 @@
 export {
-  type ActionResult,
   actionBuscarPecaModelo,
   actionListarPecasModelos,
   actionCriarPecaModelo,
@@ -7,6 +6,8 @@ export {
   actionDeletarPecaModelo,
   actionGetTiposPecaOptions,
 } from "./pecas-modelos-actions";
+
+export type { ActionResult } from "./types";
 
 export {
   actionBuscarContextoContrato,

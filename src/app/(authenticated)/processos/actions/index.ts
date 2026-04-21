@@ -34,18 +34,8 @@ import {
   buscarUsuariosRelacionados,
 } from "../service";
 
-// =============================================================================
-// TIPOS DE RETORNO DAS ACTIONS
-// =============================================================================
-
-export type ActionResult<T = unknown> =
-  | { success: true; data: T; message: string }
-  | {
-      success: false;
-      error: string;
-      errors?: Record<string, string[]>;
-      message: string;
-    };
+// TIPOS DE RETORNO — movidos para ./types (arquivo "use server" não exporta tipos)
+import type { ActionResult } from './types';
 
 // =============================================================================
 // HELPERS

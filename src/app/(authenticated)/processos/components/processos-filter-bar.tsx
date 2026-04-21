@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { GRAU_LABELS } from '@/lib/design-system';
 import { TRIBUNAIS } from '../domain';
-import type { ProcessoStats } from '../service-estatisticas';
+import type { ProcessoStats } from '../types/estatisticas';
 
 // ── Types ──────────────────────────────────────────────────────────────
 

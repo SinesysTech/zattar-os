@@ -13,7 +13,7 @@ import { ProcessoListRow } from './components/processo-list-row';
 import { ProcessosFilterBar, type ProcessosFilters } from './components/processos-filter-bar';
 import { actionListarProcessos } from './actions';
 import type { ProcessoUnificado, ListarProcessosParams } from './domain';
-import type { ProcessoStats } from './service-estatisticas';
+import type { ProcessoStats } from './types/estatisticas';
 import { Heading } from '@/components/ui/typography';
 
 interface Usuario {

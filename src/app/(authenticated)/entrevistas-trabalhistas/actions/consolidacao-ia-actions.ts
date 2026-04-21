@@ -4,12 +4,7 @@ import { DifyService } from '@/lib/dify/service';
 import { findAnexos } from '../repository';
 import type { RespostasEntrevista } from '../domain';
 
-export interface ConsolidacaoIAResult {
-  success: boolean;
-  relatoConsolidado?: string;
-  inconsistencias?: string[];
-  error?: string;
-}
+import type { ConsolidacaoIAResult } from './types';
 
 function gerarFallbackLocal(respostas: RespostasEntrevista): ConsolidacaoIAResult {
   const inconsistencias: string[] = [];

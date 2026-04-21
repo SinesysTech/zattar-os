@@ -4,12 +4,7 @@ import { DifyService } from '@/lib/dify/service';
 import { findById, findAnexos } from '../repository';
 import { createServiceClient } from '@/lib/supabase/service-client';
 
-export interface IntegracaoPeticaoResult {
-  success: boolean;
-  message: string;
-  workflowRunId?: string;
-  payload?: Record<string, unknown>;
-}
+import type { IntegracaoPeticaoResult } from './types';
 
 type RelacaoAssistenteTipoRow = {
   assistente?: { dify_app_id?: string | null; ativo?: boolean | null; nome?: string | null };

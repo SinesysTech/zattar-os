@@ -37,63 +37,14 @@ import {
 // Tipos
 // =============================================================================
 
-/**
- * Parâmetros para sincronização em lote de partes
- */
-export interface SincronizarPartesParams {
-  /** Tipo de entidade a sincronizar */
-  tipoEntidade: TipoEntidadeChatwoot;
-  /** Limite de registros por página (padrão: 100) */
-  limite?: number;
-  /** Página inicial (padrão: 1) */
-  paginaInicial?: number;
-  /** Página final (padrão: todas) */
-  paginaFinal?: number;
-  /** Se true, sincroniza apenas registros ativos */
-  apenasAtivos?: boolean;
-  /** Delay em ms entre cada sincronização (padrão: 100ms) */
-  delayEntreSync?: number;
-  /** Se true, para no primeiro erro. Se false, continua e reporta erros no final */
-  pararNoErro?: boolean;
-}
-
-/**
- * Resultado da sincronização em lote
- */
-export interface SincronizarPartesResult {
-  tipo_entidade: TipoEntidadeChatwoot;
-  total_processados: number;
-  total_sucesso: number;
-  total_erros: number;
-  contatos_criados: number;
-  contatos_atualizados: number;
-  erros: Array<{ entidade_id: number; nome: string; erro: string }>;
-}
-
-// Alias para retrocompatibilidade
-export interface SincronizarClientesParams {
-  /** Limite de clientes por página (padrão: 100) */
-  limite?: number;
-  /** Página inicial (padrão: 1) */
-  paginaInicial?: number;
-  /** Página final (padrão: todas) */
-  paginaFinal?: number;
-  /** Se true, sincroniza apenas clientes ativos */
-  apenasAtivos?: boolean;
-  /** Delay em ms entre cada sincronização (padrão: 100ms) */
-  delayEntreSync?: number;
-  /** Se true, para no primeiro erro. Se false, continua e reporta erros no final */
-  pararNoErro?: boolean;
-}
-
-export interface SincronizarClientesResult {
-  total_processados: number;
-  total_sucesso: number;
-  total_erros: number;
-  clientes_criados: number;
-  clientes_atualizados: number;
-  erros: Array<{ cliente_id: number; nome: string; erro: string }>;
-}
+import type {
+  SincronizarPartesParams,
+  SincronizarPartesResult,
+  SincronizarClientesParams,
+  SincronizarClientesResult,
+  SincronizarCompletoResult,
+  SincronizarCompletoParams,
+} from './action-types';
 
 // =============================================================================
 // Helpers
@@ -661,35 +612,7 @@ export async function sincronizarParte(
 // Sincronização Completa (Two-Phase: Chatwoot->App, App->Chatwoot)
 // =============================================================================
 
-/**
- * Resultado da sincronização completa (duas fases)
- */
-export interface SincronizarCompletoResult {
-  /** Fase 1: Chatwoot -> App (por telefone) */
-  fase1_chatwoot_para_app: SincronizarChatwootParaAppResult | null;
-  /** Fase 2: App -> Chatwoot (partes restantes) */
-  fase2_app_para_chatwoot: SincronizarPartesResult | null;
-  /** Resumo geral */
-  resumo: {
-    total_vinculados_por_telefone: number;
-    total_criados_no_chatwoot: number;
-    total_atualizados: number;
-    total_sem_match: number;
-    total_erros: number;
-  };
-}
-
-/**
- * Parâmetros para sincronização completa
- */
-export interface SincronizarCompletoParams {
-  /** Tipo de entidade a sincronizar (ou 'todos' para sincronizar todas) */
-  tipoEntidade?: TipoEntidadeChatwoot | 'todos';
-  /** Se true, sincroniza apenas registros ativos na fase 2 */
-  apenasAtivos?: boolean;
-  /** Delay em ms entre cada sincronização (padrão: 100ms) */
-  delayEntreSync?: number;
-}
+// Tipos SincronizarCompletoResult/Params movidos para ./action-types
 
 /**
  * Sincronização completa em duas fases:

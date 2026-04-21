@@ -6,10 +6,7 @@ import type {
   TipoParteProcesso,
 } from "@/app/(authenticated)/partes";
 import type { ParteComDadosCompletos } from "../types/processo-partes";
-
-export type ActionResult<T = unknown> =
-  | { success: true; data: T; message: string }
-  | { success: false; error: string; message: string };
+import type { ActionResult } from "./types";
 
 type VínculoProcessoParteRow = {
   id: number;

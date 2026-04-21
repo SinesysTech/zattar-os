@@ -31,10 +31,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import {
-  actionContratosPulseStats,
-  type ContratosPulseStats,
-} from '../actions/contratos-actions';
+import { actionContratosPulseStats } from '../actions/contratos-actions';
+import type { ContratosPulseStats } from '../actions/types';
 import { useSegmentos } from '../hooks';
 import { ContratosPulseStrip } from './contratos-pulse-strip';
 import { ContratosPipelineStepper } from './contratos-pipeline-stepper';

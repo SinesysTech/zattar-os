@@ -6,7 +6,7 @@
  * Implementa busca por similaridade de vetores usando a camada de IA
  */
 
-import { z } from 'zod';
+import type { z } from 'zod';
 import { authenticatedAction } from '@/lib/safe-action';
 import {
   buscaSemantica,
@@ -15,43 +15,16 @@ import {
   buscarSimilares,
 } from '@/lib/ai/retrieval';
 import type { DocumentoMetadata } from '@/lib/ai/types';
-
-// =============================================================================
-// SCHEMAS
-// =============================================================================
-
-const buscaSemanticaSchema = z.object({
-  query: z.string().min(3, 'A busca deve ter pelo menos 3 caracteres'),
-  tipo: z
-    .enum(['processo', 'documento', 'audiencia', 'expediente', 'cliente', 'lancamento', 'outro'])
-    .optional()
-    .describe('Filtrar por tipo de documento'),
-  limite: z.number().min(1).max(50).describe('Número máximo de resultados'),
-  threshold: z
-    .number()
-    .min(0)
-    .max(1)
-    .describe('Limiar mínimo de similaridade (0-1)'),
-});
-
-const buscaHibridaSchema = z.object({
-  query: z.string().min(3, 'A busca deve ter pelo menos 3 caracteres'),
-  tipo: z
-    .enum(['processo', 'documento', 'audiencia', 'expediente', 'cliente', 'lancamento', 'outro'])
-    .optional(),
-  limite: z.number().min(1).max(50),
-});
-
-const contextoRAGSchema = z.object({
-  query: z.string().min(3, 'A pergunta deve ter pelo menos 3 caracteres'),
-  maxTokens: z.number().min(500).max(8000),
-});
-
-const buscarSimilaresSchema = z.object({
-  tipo: z.enum(['processo', 'documento', 'audiencia', 'expediente', 'cliente', 'lancamento', 'outro']),
-  id: z.number().int().positive(),
-  limite: z.number().min(1).max(20),
-});
+import {
+  buscaSemanticaSchema,
+  buscaHibridaSchema,
+  contextoRAGSchema,
+  buscarSimilaresSchema,
+  type BuscaSemanticaInput,
+  type BuscaHibridaInput,
+  type ContextoRAGInput,
+  type BuscarSimilaresInput,
+} from './schemas';
 
 // =============================================================================
 // ACTIONS
@@ -187,11 +160,4 @@ export async function actionBuscarSimilares(input: BuscarSimilaresInput) {
   return { success: true, data: result };
 }
 
-// =============================================================================
-// TIPOS EXPORTADOS
-// =============================================================================
-
-export type BuscaSemanticaInput = z.infer<typeof buscaSemanticaSchema>;
-export type BuscaHibridaInput = z.infer<typeof buscaHibridaSchema>;
-export type ContextoRAGInput = z.infer<typeof contextoRAGSchema>;
-export type BuscarSimilaresInput = z.infer<typeof buscarSimilaresSchema>;
+// Tipos movidos para ./schemas (arquivos "use server" não exportam tipos)

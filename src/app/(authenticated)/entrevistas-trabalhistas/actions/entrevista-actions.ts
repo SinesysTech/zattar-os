@@ -13,9 +13,7 @@ import {
 // TIPOS
 // =============================================================================
 
-export type EntrevistaActionResult<T = unknown> =
-  | { success: true; data: T; message: string }
-  | { success: false; error: string; message: string };
+import type { EntrevistaActionResult } from './types';
 
 // =============================================================================
 // INICIAR ENTREVISTA

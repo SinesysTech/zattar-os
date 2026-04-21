@@ -15,16 +15,7 @@ type ActionResponse<T> = { success: true; data: T } | { success: false; error: s
 
 type ActionVoidResponse = { success: true } | { success: false; error: string };
 
-export interface ListarLancamentosResult {
-    dados: Lancamento[];
-    meta: {
-        total: number;
-        pagina: number;
-        limite: number;
-        totalPaginas: number;
-    };
-    resumo: ResumoVencimentos;
-}
+import type { ListarLancamentosResult } from './types';
 
 function getErrorMessage(error: unknown): string {
     return error instanceof Error ? error.message : 'Erro inesperado.';

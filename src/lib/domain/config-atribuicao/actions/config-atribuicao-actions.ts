@@ -5,9 +5,7 @@ import { revalidatePath } from "next/cache";
 import type { RegiaoAtribuicao, MetodoBalanceamento } from "../domain";
 import * as service from "../service";
 
-export type ActionResult<T = unknown> =
-  | { success: true; data: T; message: string }
-  | { success: false; error: string; message: string };
+import type { ActionResult } from './types';
 
 // ============================================================================
 // LISTAR REGIÕES

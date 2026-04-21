@@ -12,7 +12,7 @@ export type {
   ResponsavelDetalhado,
   SegmentoDetalhado,
   ContratosPulseStats,
-} from "./contratos-actions";
+} from "./types";
 export {
   actionCriarContrato,
   actionAtualizarContrato,
@@ -37,7 +37,7 @@ export type {
   Segmento,
   CreateSegmentoInput,
   UpdateSegmentoInput,
-} from "./segmentos-actions";
+} from "./types";
 export {
   actionListarSegmentos,
   actionCriarSegmento,

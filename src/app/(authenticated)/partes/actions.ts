@@ -43,8 +43,6 @@ import {
   actionAtualizarTerceiro as _actionAtualizarTerceiro,
 } from './actions/partes-form-actions';
 
-export type { ActionResult } from './actions/partes-form-actions';
-
 export async function actionListarClientes(params: ListarClientesParams = {}) {
   return _actionListarClientes(params);
 }
@@ -69,7 +67,7 @@ export async function actionBuscarPartesPorProcessoEPolo(
 }
 
 export async function actionCriarCliente(
-  prevState: import('./actions/partes-form-actions').ActionResult | null,
+  prevState: import('./actions/types').ActionResult | null,
   formData: FormData
 ) {
   return _actionCriarCliente(prevState, formData);
@@ -77,7 +75,7 @@ export async function actionCriarCliente(
 
 export async function actionAtualizarClienteForm(
   id: number,
-  prevState: import('./actions/partes-form-actions').ActionResult | null,
+  prevState: import('./actions/types').ActionResult | null,
   formData: FormData
 ) {
   return _actionAtualizarClienteForm(id, prevState, formData);
@@ -92,7 +90,7 @@ export async function actionDesativarClientesEmMassa(ids: number[]) {
 }
 
 export async function actionCriarParteContraria(
-  prevState: import('./actions/partes-form-actions').ActionResult | null,
+  prevState: import('./actions/types').ActionResult | null,
   formData: FormData
 ) {
   return _actionCriarParteContraria(prevState, formData);
@@ -100,14 +98,14 @@ export async function actionCriarParteContraria(
 
 export async function actionAtualizarParteContraria(
   id: number,
-  prevState: import('./actions/partes-form-actions').ActionResult | null,
+  prevState: import('./actions/types').ActionResult | null,
   formData: FormData
 ) {
   return _actionAtualizarParteContraria(id, prevState, formData);
 }
 
 export async function actionCriarTerceiro(
-  prevState: import('./actions/partes-form-actions').ActionResult | null,
+  prevState: import('./actions/types').ActionResult | null,
   formData: FormData
 ) {
   return _actionCriarTerceiro(prevState, formData);
@@ -115,7 +113,7 @@ export async function actionCriarTerceiro(
 
 export async function actionAtualizarTerceiro(
   id: number,
-  prevState: import('./actions/partes-form-actions').ActionResult | null,
+  prevState: import('./actions/types').ActionResult | null,
   formData: FormData
 ) {
   return _actionAtualizarTerceiro(id, prevState, formData);

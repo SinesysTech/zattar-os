@@ -13,7 +13,7 @@ export {
     actionRelinkBackblaze,
 } from './timeline-actions';
 
-export type { ActionResponse } from './timeline-actions';
+export type { ActionResponse } from './types';
 
 // ============================================================================
 // Utils (internos — auth helper para actions)

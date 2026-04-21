@@ -6,7 +6,7 @@ import { authenticateRequest } from "@/lib/auth";
 import { realizarBaixa } from "../service";
 import { atribuirResponsavel } from "../service";
 import { z } from "zod";
-import type { ActionResult } from "./expediente-actions";
+import type { ActionResult } from "./types";
 
 // =============================================================================
 // SCHEMAS

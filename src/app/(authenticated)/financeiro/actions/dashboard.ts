@@ -7,12 +7,7 @@
 
 import { getDashboardFinanceiro, getFluxoCaixaProjetadoDashboard } from '../services/dashboard';
 
-// ============================================================================
-// Types
-// ============================================================================
-
-// Re-export types from services to avoid duplication
-export type { DashboardFinanceiroData, FluxoCaixaProjetadoItem } from '../services/dashboard';
+// Types movidos para ./types (Next.js 16 proíbe export type em "use server")
 
 // ============================================================================
 // Server Actions

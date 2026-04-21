@@ -1,7 +1,7 @@
 'use server';
 
 import { createDbClient } from '@/lib/supabase';
-import type { ActionResult } from './audiencias-actions';
+import type { ActionResult } from './types';
 
 export async function actionListarTiposAudiencia(params?: {
   limite?: number;

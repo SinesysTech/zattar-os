@@ -3,7 +3,7 @@
 // =============================================================================
 
 export { actionObterMetricasDB } from './metricas-actions';
-export type { MetricasDB } from './metricas-actions';
+export type { MetricasDB } from './types';
 
 export {
     actionAvaliarUpgrade,

@@ -16,4 +16,4 @@ export {
     actionPericiasPulseStats,
 } from './pericias-actions';
 
-export type { ActionResult, PericiasPulseStats } from './pericias-actions';
+export type { ActionResult, PericiasPulseStats } from './types';

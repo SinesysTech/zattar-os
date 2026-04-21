@@ -89,7 +89,32 @@ export {
   actionObterProjecaoOrcamentaria,
 } from './orcamentos';
 
-export type { AnaliseOrcamentariaUI } from './orcamentos';
+// Types centralizados em ./types
+export type {
+  AnaliseOrcamentariaUI,
+  DashboardFinanceiroData,
+  FluxoCaixaProjetadoItem,
+  GerarDREParams,
+  DREResult,
+  EvolucaoDREItem,
+  RelatorioFiltros,
+  RelatorioExportacao,
+  AlertaObrigacao,
+  ResumoObrigacoesFinanceiro,
+  ObterResumoObrigacoesResult,
+  ListarLancamentosResult,
+  FluxoCaixaFiltros,
+  FluxoCaixaDashboard,
+  FluxoCaixaResumoSegmento,
+  FluxoCaixaResumo,
+  IndicadoresSaude,
+  FluxoCaixaAlerta,
+  FluxoCaixaResumoDashboard,
+  ContaBancariaResumo,
+  CentroCustoResumo,
+  ListarOrcamentosFilters,
+  AnaliseOrcamentariaOptions,
+} from './types';
 
 // ============================================================================
 // Dashboard - Server Actions

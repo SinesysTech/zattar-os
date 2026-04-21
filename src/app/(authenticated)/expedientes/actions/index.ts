@@ -18,7 +18,7 @@ export {
   actionListarExpedientes,
 } from './expediente-actions';
 
-export type { ActionResult } from './expediente-actions';
+export type { ActionResult } from './types';
 
 // =============================================================================
 // BULK ACTIONS

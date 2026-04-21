@@ -35,14 +35,7 @@ import { TipoPecaJuridica } from "../domain";
 // TIPOS
 // =============================================================================
 
-export type ActionResult<T = unknown> =
-  | { success: true; data: T; message: string }
-  | {
-      success: false;
-      error: string;
-      errors?: Record<string, string[]>;
-      message: string;
-    };
+import type { ActionResult } from './types';
 
 // =============================================================================
 // BUSCAR CONTEXTO DO CONTRATO

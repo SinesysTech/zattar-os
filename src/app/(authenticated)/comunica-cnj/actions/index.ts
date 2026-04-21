@@ -30,7 +30,7 @@ export {
   actionListarViewsSafe,
   actionDeletarViewSafe,
   actionObterResumoSafe,
-  type ActionResult,
 } from './safe-actions';
+export type { ActionResult } from './types';
 
 export { requireAuth } from './utils';

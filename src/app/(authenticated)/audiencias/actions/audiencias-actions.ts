@@ -13,9 +13,7 @@ import {
 } from '../domain';
 import { PaginatedResponse } from '@/types';
 
-export type ActionResult<T = unknown> =
-  | { success: true; data: T; message: string }
-  | { success: false; error: string; errors?: Record<string, string[]>; message: string };
+import type { ActionResult } from './types';
 
 function formatZodErrors(zodError: z.ZodError): Record<string, string[]> {
   const formattedErrors: Record<string, string[]> = {};

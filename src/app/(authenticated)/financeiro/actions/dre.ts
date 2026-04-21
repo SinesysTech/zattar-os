@@ -15,37 +15,10 @@ import type { PeriodoDRE, DRE } from '../domain/dre';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
 // ============================================================================
-// Types
+// Types (moved to ./types — arquivos "use server" não podem exportar tipos)
 // ============================================================================
 
-export interface GerarDREParams {
-    dataInicio: string;
-    dataFim: string;
-    tipo?: PeriodoDRE;
-    incluirComparativo?: boolean;
-    incluirOrcado?: boolean;
-}
-
-export interface DREResult {
-    dre: DRE;
-    comparativo?: {
-        periodoAnterior?: DRE;
-        orcado?: DRE;
-        variacoes?: Record<string, number>;
-        variacoesOrcado?: Record<string, number>;
-    };
-    geradoEm: string;
-}
-
-export interface EvolucaoDREItem {
-    mes: number;
-    mesNome: string;
-    ano: number;
-    receitaLiquida: number;
-    lucroOperacional: number;
-    lucroLiquido: number;
-    margemLiquida: number;
-}
+import type { GerarDREParams, DREResult, EvolucaoDREItem } from './types';
 
 // ============================================================================
 // Helpers (PDF/CSV generation)

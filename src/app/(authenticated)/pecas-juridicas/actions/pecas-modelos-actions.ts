@@ -30,9 +30,7 @@ import type { PaginatedResponse } from '@/types';
 // TIPOS DE RETORNO
 // =============================================================================
 
-export type ActionResult<T = unknown> =
-  | { success: true; data: T; message: string }
-  | { success: false; error: string; errors?: Record<string, string[]>; message: string };
+import type { ActionResult } from './types';
 
 // =============================================================================
 // CRUD ACTIONS

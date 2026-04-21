@@ -2,22 +2,7 @@
 
 import { createDbClient } from '@/lib/supabase';
 
-export interface ProcessoStats {
-  /** Total de processos únicos (acervo_unificado) */
-  total: number;
-  /** Processos em curso (origem = acervo_geral) */
-  emCurso: number;
-  /** Processos arquivados (origem = arquivado) */
-  arquivados: number;
-  /** Processos sem responsável atribuído */
-  semResponsavel: number;
-  /** Processos com audiência futura agendada */
-  comAudienciaProxima: number;
-  /** Processos com eventos pendentes (expedientes, audiências ou obrigações ativas) */
-  comEventos: number;
-  /** IDs dos processos com eventos pendentes — usado para filtragem client-side */
-  processoIdsComEventos: number[];
-}
+import type { ProcessoStats } from './types/estatisticas';
 
 /**
  * Obtém estatísticas agregadas do acervo de processos.

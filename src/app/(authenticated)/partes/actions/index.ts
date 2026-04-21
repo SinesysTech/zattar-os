@@ -60,11 +60,8 @@ export {
 // =============================================================================
 // PARTES STATS (agregado)
 // =============================================================================
-export {
-  actionContarPartesPorTipo,
-  type ContarPartesPorTipoData,
-  type PartesTipoCounts,
-} from './partes-stats-actions';
+export { actionContarPartesPorTipo } from './partes-stats-actions';
+export type { ContarPartesPorTipoData, PartesTipoCounts } from './types';
 
 // =============================================================================
 // PROCESSO PARTES
@@ -96,7 +93,6 @@ export {
 // Nota: actionListarClientes e actionAtualizarCliente exportados de clientes-actions.ts
 // =============================================================================
 export {
-  type ActionResult,
   actionCriarCliente,
   actionAtualizarClienteForm,
   actionDesativarCliente,
@@ -107,3 +103,5 @@ export {
   actionAtualizarTerceiro,
   actionListarTerceiros,
 } from './partes-form-actions';
+
+export type { ActionResult } from './types';

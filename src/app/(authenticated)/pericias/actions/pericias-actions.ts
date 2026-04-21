@@ -6,12 +6,7 @@ import { authenticateRequest } from "@/lib/auth";
 import type { ListarPericiasParams } from "../domain";
 import * as service from "../service";
 import type { PericiasPulseStats } from "../service";
-
-export type { PericiasPulseStats } from "../service";
-
-export type ActionResult<T = unknown> =
-  | { success: true; data: T; message: string }
-  | { success: false; error: string; message: string };
+import type { ActionResult } from "./types";
 
 export async function actionListarPericias(
   params: ListarPericiasParams

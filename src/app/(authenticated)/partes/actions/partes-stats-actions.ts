@@ -8,6 +8,7 @@
  */
 
 import * as service from '../service';
+import type { ContarPartesPorTipoData } from './types';
 
 // =============================================================================
 // HELPERS
@@ -22,22 +23,6 @@ function ultimoDiaMesCorrente(): Date {
   const agora = new Date();
   const ultimo = new Date(agora.getFullYear(), agora.getMonth() + 1, 0, 23, 59, 59, 999);
   return ultimo;
-}
-
-// =============================================================================
-// ACTION PRINCIPAL
-// =============================================================================
-
-export interface PartesTipoCounts {
-  total: number;
-  novosMes: number;
-}
-
-export interface ContarPartesPorTipoData {
-  clientes: PartesTipoCounts;
-  partesContrarias: PartesTipoCounts;
-  terceiros: PartesTipoCounts;
-  representantes: PartesTipoCounts;
 }
 
 /**

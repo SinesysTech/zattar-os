@@ -20,7 +20,7 @@ import {
   type AtualizarCredencialParams,
   type CriarCredenciaisEmLoteParams,
 } from '../domain';
-import type { ActionResponse } from './advogados-actions'; // Reuse type
+import type { ActionResponse } from './types';
 
 export async function actionListarCredenciais(
   params: ListarCredenciaisParams

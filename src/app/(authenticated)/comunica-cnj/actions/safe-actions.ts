@@ -67,9 +67,7 @@ const vincularExpedienteSchema = z.object({
 // TIPOS DE RETORNO DAS ACTIONS
 // =============================================================================
 
-export type ActionResult<T = unknown> =
-  | { success: true; data: T; message: string }
-  | { success: false; error: string; errors?: Record<string, string[]>; message: string };
+import type { ActionResult } from './types';
 
 // =============================================================================
 // SERVER ACTIONS - SAFE (Recomendadas)

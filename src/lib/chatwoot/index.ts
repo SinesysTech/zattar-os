@@ -276,12 +276,8 @@ export {
   // Generic actions (for all tipos de partes)
   sincronizarTodasPartes,
   sincronizarParte,
-  type SincronizarPartesParams,
-  type SincronizarPartesResult,
   // Two-phase sync (Chatwoot <-> App)
   sincronizarCompletoComChatwoot,
-  type SincronizarCompletoParams,
-  type SincronizarCompletoResult,
   // Webhook & API endpoints (NEW)
   processarWebhookChatwoot,
   sincronizarConversaManual,
@@ -290,9 +286,16 @@ export {
   sincronizarTodosClientes,
   sincronizarCliente,
   sincronizarClientesPorIds,
-  type SincronizarClientesParams,
-  type SincronizarClientesResult,
 } from './actions';
+
+export type {
+  SincronizarPartesParams,
+  SincronizarPartesResult,
+  SincronizarCompletoParams,
+  SincronizarCompletoResult,
+  SincronizarClientesParams,
+  SincronizarClientesResult,
+} from './action-types';
 
 // Components
 export { ChatwootSyncButton } from './components';

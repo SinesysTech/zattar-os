@@ -2,7 +2,7 @@
 
 import { AlertCircle, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { ProcessoStats } from '../service-estatisticas';
+import type { ProcessoStats } from '../types/estatisticas';
 
 interface ProcessosInsightBannerProps {
   stats: ProcessoStats;

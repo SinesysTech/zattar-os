@@ -11,7 +11,6 @@
 // AUDIÊNCIAS - CRUD & Operações
 // =============================================================================
 export {
-  type ActionResult,
   actionCriarAudiencia,
   actionAtualizarAudiencia,
   actionAtualizarStatusAudiencia,
@@ -23,6 +22,8 @@ export {
   actionCriarAudienciaPayload,
   actionAtualizarAudienciaPayload,
 } from './audiencias-actions';
+
+export type { ActionResult } from './types';
 
 // =============================================================================
 // TIPOS & SALAS - Dados de Referência

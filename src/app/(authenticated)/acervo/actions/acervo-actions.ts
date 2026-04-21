@@ -26,11 +26,7 @@ import {
   type ProcessosClienteCpfResponse,
 } from "../domain";
 
-export type ActionResponse<T = unknown> = {
-  success: boolean;
-  data?: T;
-  error?: string;
-};
+import type { ActionResponse } from './types';
 
 function createErrorResponse(
   error: unknown,

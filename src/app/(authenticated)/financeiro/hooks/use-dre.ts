@@ -12,8 +12,8 @@ import {
   actionObterEvolucaoDRE,
   actionExportarDRECSV,
   actionExportarDREPDF,
-  type GerarDREParams,
 } from "../actions/dre";
+import type { GerarDREParams } from "../actions/types";
 import type {
   DRE,
   ResumoDRE,

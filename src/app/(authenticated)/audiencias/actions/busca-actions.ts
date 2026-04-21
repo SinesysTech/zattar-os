@@ -2,7 +2,7 @@
 
 import * as service from '../service';
 import { StatusAudiencia, Audiencia } from '../domain';
-import type { ActionResult } from './audiencias-actions';
+import type { ActionResult } from './types';
 
 // =============================================================================
 // BUSCAS POR CPF/CNPJ (para MCP Tools - FASE 1)
