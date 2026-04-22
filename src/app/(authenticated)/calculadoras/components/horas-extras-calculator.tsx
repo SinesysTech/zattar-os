@@ -28,7 +28,7 @@ export function HorasExtrasCalculator() {
           Labor Law Suite
         </span>
         <h1 className="font-headline font-extrabold text-5xl md:text-6xl tracking-tighter text-on-surface mb-6 max-w-3xl">
-          Calculadora de <span className="bg-gradient-to-br from-primary to-primary-dim bg-clip-text text-transparent">Horas Extras</span>
+          Calculadora de <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">Horas Extras</span>
         </h1>
         <p className="text-on-surface-variant text-lg md:text-xl max-w-2xl font-body">
           Análise de precisão para acordos trabalhistas profissionais. Calcule &quot;Horas Extras&quot; com conformidade legal e validação instantânea.
@@ -90,7 +90,7 @@ export function HorasExtrasCalculator() {
             </div>
 
             <div className="mt-10 pt-8 border-t border-white/5">
-              <button className="w-full py-5 bg-gradient-to-r from-primary to-primary-dim text-on-primary-fixed rounded-lg font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:shadow-[0_0_30px_rgba(204,151,255,0.3)] transition-all active:scale-95">
+              <button className="w-full py-5 bg-linear-to-r from-primary to-primary-dim text-on-primary-fixed rounded-lg font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:shadow-[0_0_30px_rgba(204,151,255,0.3)] transition-all active:scale-95">
                 <Calculator className="w-5 h-5" />
                 Recalcular
               </button>
