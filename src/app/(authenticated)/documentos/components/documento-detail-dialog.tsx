@@ -304,7 +304,7 @@ export function DocumentoDetailDialog({
                 <MetaRow
                   label="Chave"
                   value={
-                    <span className="font-mono text-[10.5px] text-muted-foreground/70 truncate max-w-[180px] inline-block align-bottom">
+                    <span className="font-mono text-[10.5px] text-muted-foreground/70 truncate max-w-45 inline-block align-bottom">
                       {item.dados.b2_key}
                     </span>
                   }

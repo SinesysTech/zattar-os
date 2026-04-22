@@ -26,19 +26,20 @@ interface OverlayCardProps {
 function OverlayCard({ icon, title, description, position }: OverlayCardProps) {
   const positionClasses =
     position === "bottom-right"
-      ? "md:-bottom-8 md:-right-6 lg:-right-8"
-      : "md:-bottom-8 md:-left-6 lg:-left-8";
+      ? "md:-bottom-6 md:-right-5 lg:-right-7"
+      : "md:-bottom-6 md:-left-5 lg:-left-7";
 
   return (
     <MarketingCard
       variant="solid"
-      padding="lg"
-      className={`relative md:absolute ${positionClasses} max-w-xs lg:max-w-sm -mt-8 mx-4 md:mt-0 md:mx-0`}
+      padding="md"
+      className={`relative md:absolute ${positionClasses} max-w-70 lg:max-w-80 -mt-6 mx-4 md:mt-0 md:mx-0`}
     >
-      <div className="inline-flex items-center justify-center w-12 h-12 lg:w-14 lg:h-14 rounded-xl bg-primary-dim/25 text-primary mb-4 ring-1 ring-primary/40">
+      {/* Proporção aplicada: título 16px → ícone ~24px, container ~44px, padding ~24px */}
+      <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-primary-dim/25 text-primary mb-3 ring-1 ring-primary/40">
         {icon}
       </div>
-      <Heading level="card" as="h4" className="mb-2 text-foreground">
+      <Heading level="card" as="h4" className="mb-1.5 text-foreground">
         {title}
       </Heading>
       <Text variant="caption" className="text-foreground/85">
@@ -59,7 +60,6 @@ interface ServiceBlockProps {
   description: string;
   href: string;
   ctaLabel: string;
-  featured?: boolean;
 }
 
 function ServiceBlock({
@@ -72,17 +72,16 @@ function ServiceBlock({
   description,
   href,
   ctaLabel,
-  featured,
 }: ServiceBlockProps) {
   const isImageLeft = layout === "image-left";
 
   return (
-    <div className="grid md:grid-cols-12 gap-8 md:gap-12 items-center group">
-      {/* Image column */}
+    <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-center group">
+      {/* Image column — aspect 4:3 → 16:10 para conter altura proporcional ao texto */}
       <div
         className={`md:col-span-7 relative ${isImageLeft ? "md:order-1" : "md:order-2"}`}
       >
-        <div className="relative aspect-video rounded-2xl md:rounded-3xl overflow-hidden bg-surface-container border border-outline-variant/20">
+        <div className="relative aspect-4/3 md:aspect-16/10 rounded-2xl md:rounded-3xl overflow-hidden bg-surface-container border border-outline-variant/20">
           <Image
             src={imageSrc}
             alt={imageAlt}
@@ -95,29 +94,29 @@ function ServiceBlock({
         {overlayCard}
       </div>
 
-      {/* Text column */}
+      {/* Text column — escala calibrada ao marketing-title (34px max) */}
       <div
-        className={`md:col-span-5 ${isImageLeft ? "md:order-2 md:pl-8 lg:pl-12" : "md:order-1 md:pr-8 lg:pr-12"}`}
+        className={`md:col-span-5 ${isImageLeft ? "md:order-2 md:pl-6 lg:pl-10" : "md:order-1 md:pr-6 lg:pr-10"}`}
       >
         {label && (
-          <Text variant="marketing-overline" className="mb-4 block">
+          <Text variant="marketing-overline" className="mb-3 block">
             {label}
           </Text>
         )}
-        <Heading level="marketing-title" className="mb-5 md:mb-7">
+        <Heading level="marketing-title" className="mb-4 md:mb-5">
           {title}
         </Heading>
-        <Text variant="marketing-lead" className="mb-7 md:mb-9">
+        <Text variant="marketing-lead" className="mb-6 md:mb-7">
           {description}
         </Text>
         <Link
           href={href}
-          className="group/cta inline-flex items-center gap-2 text-primary font-bold text-base md:text-lg hover:gap-3 transition-all"
+          className="group/cta inline-flex items-center gap-2 text-primary font-bold text-sm md:text-base hover:gap-3 transition-all"
         >
           <span className="underline decoration-primary/40 underline-offset-4 group-hover/cta:decoration-primary">
             {ctaLabel}
           </span>
-          <ArrowRight className="w-5 h-5 group-hover/cta:translate-x-0.5 transition-transform" />
+          <ArrowRight className="w-4 h-4 group-hover/cta:translate-x-0.5 transition-transform" />
         </Link>
       </div>
     </div>
@@ -126,12 +125,12 @@ function ServiceBlock({
 
 export function Services() {
   return (
-    <section id="solucoes" className="py-16 sm:py-20 md:py-32 bg-background overflow-hidden">
+    <section id="solucoes" className="py-14 sm:py-18 md:py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-5 sm:px-6 md:px-8">
-        {/* Section header */}
-        <div className="max-w-4xl mb-12 sm:mb-16 md:mb-24">
+        {/* Section header — spacing calibrado: marketing-section (48px) → mb 2x = 96px máx */}
+        <div className="max-w-4xl mb-10 sm:mb-12 md:mb-16">
           <Text variant="marketing-overline">Especialidades</Text>
-          <Heading level="marketing-section" className="mt-4 md:mt-5">
+          <Heading level="marketing-section" className="mt-3 md:mt-4">
             Soluções jurídicas de{" "}
             <br className="hidden sm:block" />
             <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
@@ -140,18 +139,17 @@ export function Services() {
           </Heading>
         </div>
 
-        {/* Service blocks */}
-        <div className="space-y-16 sm:space-y-20 md:space-y-32">
+        {/* Service blocks — gap proporcional (2x marketing-section ≈ 96px desktop) */}
+        <div className="space-y-14 sm:space-y-16 md:space-y-24">
           {/* Block 1 — Image Left (Demissão sem justa causa) */}
           <ServiceBlock
             layout="image-left"
-            featured
             label="Principal"
             imageSrc="/website/home/services-demissao.jpg"
             imageAlt="Interface de dados de alta tecnologia com símbolos jurídicos e linhas brilhantes roxas"
             overlayCard={
               <OverlayCard
-                icon={<Gavel className="w-10 h-10 lg:w-12 lg:h-12" />}
+                icon={<Gavel className="w-5 h-5" />}
                 title="Demissão sem justa causa"
                 description="Proteção imediata e estratégica em rescisões abusivas com suporte digital."
                 position="bottom-right"
@@ -170,7 +168,7 @@ export function Services() {
             imageAlt="Dados financeiros e símbolos de moeda digital em tela escura com destaques roxos"
             overlayCard={
               <OverlayCard
-                icon={<Wallet className="w-10 h-10 lg:w-12 lg:h-12" />}
+                icon={<Wallet className="w-5 h-5" />}
                 title="FGTS e Verbas"
                 description="Recuperação integral de horas extras e depósitos pendentes com auditoria digital."
                 position="bottom-left"
@@ -189,7 +187,7 @@ export function Services() {
             imageAlt="Visualização futurista de dados médicos e anatomia humana em display digital escuro"
             overlayCard={
               <OverlayCard
-                icon={<HeartPulse className="w-10 h-10 lg:w-12 lg:h-12" />}
+                icon={<HeartPulse className="w-5 h-5" />}
                 title="Acidentes de Trabalho"
                 description="Suporte jurídico-técnico completo para indenizações por doenças e acidentes laborais."
                 position="bottom-right"
