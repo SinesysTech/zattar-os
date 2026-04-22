@@ -93,11 +93,15 @@ jest.mock('@/components/shared/dialog-shell', () => ({
 jest.mock('@/components/shared/glass-panel', () => ({
   GlassPanel: ({
     children,
-    className,
   }: {
-    children: React.ReactNode;
-    className?: string;
-  }) => <div className={className}>{children}</div>,
+    title?: React.ReactNode;
+    children?: React.ReactNode;
+  }) => (
+    <section data-testid="dialog-section">
+      {title && <h3>{title}</h3>}
+      {children}
+    </section>
+  ),
 }));
 
 jest.mock('@/components/ui/select', () => ({
@@ -511,6 +515,72 @@ describe('ExpedienteDialog', () => {
         screen.getByText('Descrição é obrigatória'),
       ).toBeInTheDocument();
     });
+  });
+
+  it('modo manual: exibe partes ao selecionar processo (regressão do mapeamento nome_parte_autora/nome_parte_re)', async () => {
+    mockActionListarAcervoPaginado.mockResolvedValueOnce({
+      success: true,
+      data: {
+        processos: [
+          {
+            id: 7,
+            numero_processo: '0010249-69.2026.5.03.0105',
+            // Os campos devem ter EXATAMENTE os nomes retornados pelo repositório
+            // (snake_case alinhado com a tabela acervo). Antes do fix o dialog
+            // fazia cast para polo_ativo_nome/polo_passivo_nome e recebia undefined.
+            nome_parte_autora: 'Raphael Lucas Nogueira da Costa',
+            nome_parte_re: 'Uber do Brasil Tecnologia Ltda.',
+            trt: 'TRT3',
+            grau: GrauTribunal.PRIMEIRO_GRAU,
+          },
+        ],
+      },
+    });
+
+    const user = userEvent.setup();
+    render(
+      <ExpedienteDialog
+        open
+        onOpenChange={jest.fn()}
+        onSuccess={jest.fn()}
+      />,
+    );
+
+    // Passo 1: selecionar TRT + Grau para disparar o fetch
+    const form = screen.getByRole('dialog');
+    const selects = within(form).getAllByTestId('select');
+    await user.selectOptions(selects[0], 'TRT3');
+    await user.selectOptions(selects[1], GrauTribunal.PRIMEIRO_GRAU);
+
+    // Aguardar o fetch completar
+    await waitFor(() => {
+      expect(mockActionListarAcervoPaginado).toHaveBeenCalledWith({
+        trt: 'TRT3',
+        grau: GrauTribunal.PRIMEIRO_GRAU,
+        limite: 100,
+      });
+    });
+
+    // Selecionar o processo no combobox (primeiro combobox = processo)
+    await waitFor(() => {
+      const combos = within(form).getAllByTestId('combobox');
+      expect(combos[0]).toBeInTheDocument();
+    });
+    const combos = within(form).getAllByTestId('combobox');
+    await user.selectOptions(combos[0], '7');
+
+    // As partes devem estar visíveis na seção "Processo vinculado"
+    await waitFor(() => {
+      expect(
+        screen.getByText('Raphael Lucas Nogueira da Costa'),
+      ).toBeInTheDocument();
+    });
+    expect(
+      screen.getByText('Uber do Brasil Tecnologia Ltda.'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('0010249-69.2026.5.03.0105'),
+    ).toBeInTheDocument();
   });
 
   it('modo manual: não renderiza seleção de tribunal sem dadosIniciais pré-preenchidos', async () => {
