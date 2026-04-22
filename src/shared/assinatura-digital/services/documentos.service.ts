@@ -5,6 +5,8 @@ import { uploadToBackblaze } from "@/lib/storage/backblaze-b2.service";
 import { calculateHash } from "../services/integrity.service";
 import { decodeDataUrlToBuffer } from "../services/base64";
 import { downloadFromStorageUrl } from "../services/signature";
+import { validateDeviceFingerprintEntropy } from "../services/signature/validation.service";
+import { logger, LogServices, LogOperations } from "../services/logger";
 import {
   TABLE_DOCUMENTOS,
   TABLE_DOCUMENTO_ASSINANTES,
@@ -22,6 +24,7 @@ import type {
   CreateAssinaturaDigitalDocumentoAssinanteInput,
   CreateAssinaturaDigitalDocumentoInput,
   UpsertAssinaturaDigitalDocumentoAncoraInput,
+  DeviceFingerprintData,
 } from "../types/types";
 
 function buildPublicLink(token: string): string {
@@ -813,6 +816,33 @@ export async function finalizePublicSigner(params: {
   }
 
   const documento = documentoRow as AssinaturaDigitalDocumento;
+
+  // Validação de entropia do device fingerprint (conformidade MP 2.200-2/2001, Art. 10, § 2º, b).
+  // Paridade com o Fluxo Formulário: não bloqueante, mas loga warning quando fingerprint
+  // está ausente ou com entropia insuficiente. Assinaturas sem fingerprint têm menor robustez
+  // forense e podem ser questionadas em auditoria/contestação judicial.
+  const logContext = {
+    service: LogServices.SIGNATURE,
+    operation: LogOperations.VALIDATE_ENTROPY,
+    token_hash: params.token.slice(0, 8),
+    documento_uuid: documento.documento_uuid,
+    assinante_id: assinante.id,
+  };
+  const entropiaSuficiente = validateDeviceFingerprintEntropy(
+    (params.dispositivo_fingerprint_raw ?? null) as DeviceFingerprintData | null,
+    false // não obrigatório para manter retrocompatibilidade
+  );
+  if (!params.dispositivo_fingerprint_raw) {
+    logger.warn(
+      "Assinatura (Fluxo Documento) sem device fingerprint — evidência de identificação reduzida",
+      logContext
+    );
+  } else if (!entropiaSuficiente) {
+    logger.warn(
+      "Assinatura (Fluxo Documento) com fingerprint de entropia insuficiente — identificação questionável",
+      logContext
+    );
+  }
 
   // Validar necessidade de rubrica com base nas âncoras do assinante
   const { data: signerAnchors, error: signerAnchorsError } = await supabase
