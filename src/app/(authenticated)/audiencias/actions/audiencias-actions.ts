@@ -186,7 +186,7 @@ export async function actionAtualizarStatusAudiencia(
 export async function actionAtualizarObservacoes(
   id: number,
   observacoes: string | null
-): Promise<ActionResult> {
+): Promise<ActionResult<Audiencia>> {
   const result = await service.atualizarObservacoesAudiencia(id, observacoes);
 
   if (!result.success) {
@@ -209,7 +209,7 @@ export async function actionAtualizarObservacoes(
 export async function actionAtualizarUrlVirtual(
   id: number,
   urlAudienciaVirtual: string | null
-): Promise<ActionResult> {
+): Promise<ActionResult<Audiencia>> {
   const result = await service.atualizarUrlVirtualAudiencia(id, urlAudienciaVirtual);
 
   if (!result.success) {
@@ -232,7 +232,7 @@ export async function actionAtualizarUrlVirtual(
 export async function actionAtualizarEnderecoPresencial(
   id: number,
   enderecoPresencial: EnderecoPresencial | null
-): Promise<ActionResult> {
+): Promise<ActionResult<Audiencia>> {
   const result = await service.atualizarEnderecoPresencialAudiencia(id, enderecoPresencial);
 
   if (!result.success) {

@@ -12,7 +12,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FileText, Scale, Eye, Pencil, Trash2, FileSignature, Plus, Check } from 'lucide-react';
+import { FileText, Scale, Eye, Pencil, Trash2, FileSignature, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { cn, generateAvatarFallback } from '@/lib/utils';
@@ -276,12 +276,12 @@ function ResponsavelAssignPopover({
         <button
           type="button"
           onClick={(e) => e.stopPropagation()}
-          aria-label="Atribuir responsável"
-          title="Atribuir responsável"
+          aria-label="Adicionar responsável"
           disabled={isPending}
-          className="inline-flex items-center justify-center size-6 rounded-full border border-dashed border-border/30 text-muted-foreground/50 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-border/30 px-2 py-1 text-[11px] font-medium text-muted-foreground/60 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50 w-fit"
         >
-          <Plus className="size-3.5" />
+          <Plus className="size-3" aria-hidden="true" />
+          <span>Adicionar responsável</span>
         </button>
       </PopoverTrigger>
       <PopoverContent
@@ -309,13 +309,12 @@ function ResponsavelAssignPopover({
                   <Avatar className="size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nome} />
                     <AvatarFallback>
-                      <Text variant="micro-badge">
+                      <span className="text-[9px] font-medium">
                         {generateAvatarFallback(usuario.nome)}
-                      </Text>
+                      </span>
                     </AvatarFallback>
                   </Avatar>
                   <span className="truncate">{usuario.nome}</span>
-                  <Check className="size-3 ml-auto text-primary shrink-0 opacity-0" />
                 </CommandItem>
               ))}
             </CommandGroup>
