@@ -14,6 +14,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { actionAtualizarAudienciaPayload } from '../actions';
+import type { Audiencia } from '../domain';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 
@@ -28,7 +29,8 @@ interface AudienciaResponsavelPopoverProps {
   audienciaId: number;
   responsavelId: number | null | undefined;
   usuarios: Usuario[];
-  onSuccess?: () => void;
+  onSuccess?: (audiencia?: Audiencia) => void;
+  disabled?: boolean;
   children: React.ReactNode;
   align?: 'start' | 'center' | 'end';
 }
@@ -53,6 +55,7 @@ export function AudienciaResponsavelPopover({
   responsavelId,
   usuarios,
   onSuccess,
+  disabled,
   children,
   align = 'start',
 }: AudienciaResponsavelPopoverProps) {
@@ -79,7 +82,7 @@ export function AudienciaResponsavelPopover({
       });
 
       if (result.success) {
-        onSuccess?.();
+        onSuccess?.(result.data);
       }
       setIsPending(false);
     },
@@ -87,15 +90,17 @@ export function AudienciaResponsavelPopover({
   );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open && !disabled} onOpenChange={(v) => !disabled && setOpen(v)}>
       <PopoverTrigger asChild>
         <button
           type="button"
           onClick={(e) => e.stopPropagation()}
+          disabled={disabled}
           className={cn(
             'flex items-center gap-1.5 rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5',
-            'transition-colors hover:bg-muted/50 cursor-pointer',
-            'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+            'transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+            !disabled && 'hover:bg-muted/50 cursor-pointer',
+            disabled && 'cursor-not-allowed opacity-70',
             isPending && 'opacity-60 pointer-events-none',
           )}
         >

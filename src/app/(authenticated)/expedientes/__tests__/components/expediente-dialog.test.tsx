@@ -515,4 +515,77 @@ describe('ExpedienteDialog', () => {
       screen.getByRole('button', { name: /criar expediente/i }),
     ).toBeDisabled();
   });
+
+  it('modo manual: exibe partes ao selecionar processo (regressão do mapeamento nome_parte_autora/nome_parte_re)', async () => {
+    mockActionListarAcervoPaginado.mockResolvedValueOnce({
+      success: true,
+      data: {
+        processos: [
+          {
+            id: 7,
+            numero_processo: '0010249-69.2026.5.03.0105',
+            // Os campos devem ter EXATAMENTE os nomes retornados pelo
+            // repositório (snake_case alinhado com a tabela acervo). Antes do
+            // fix o dialog fazia cast para polo_ativo_nome/polo_passivo_nome
+            // e recebia undefined → partes renderizadas como '—'.
+            nome_parte_autora: 'Raphael Lucas Nogueira da Costa',
+            nome_parte_re: 'Uber do Brasil Tecnologia Ltda.',
+            trt: 'TRT3',
+            grau: GrauTribunal.PRIMEIRO_GRAU,
+          },
+        ],
+      },
+    });
+
+    const user = userEvent.setup();
+    render(
+      <ExpedienteDialog
+        open
+        onOpenChange={jest.fn()}
+        onSuccess={jest.fn()}
+      />,
+    );
+
+    // Passo 1: selecionar TRT + Grau para disparar o fetch
+    const form = screen.getByRole('dialog');
+    const selects = within(form).getAllByTestId('select');
+    await user.selectOptions(selects[0], 'TRT3');
+    await user.selectOptions(selects[1], GrauTribunal.PRIMEIRO_GRAU);
+
+    await waitFor(() => {
+      expect(mockActionListarAcervoPaginado).toHaveBeenCalledWith({
+        trt: 'TRT3',
+        grau: GrauTribunal.PRIMEIRO_GRAU,
+        limite: 100,
+      });
+    });
+
+    // Aguardar a option do processo aparecer no combobox (estado populado
+    // após o fetch resolver).
+    await waitFor(() => {
+      const combos = within(form).getAllByTestId('combobox');
+      expect(
+        within(combos[0]).queryByText('0010249-69.2026.5.03.0105'),
+      ).toBeInTheDocument();
+    });
+    const combos = within(form).getAllByTestId('combobox');
+    await user.selectOptions(combos[0], '7');
+
+    // As partes devem estar visíveis na seção "Processo vinculado"
+    // (antes do fix aparecia '—' por causa do mapeamento incorreto)
+    await waitFor(() => {
+      expect(
+        screen.getByText('Raphael Lucas Nogueira da Costa'),
+      ).toBeInTheDocument();
+    });
+    expect(
+      screen.getByText('Uber do Brasil Tecnologia Ltda.'),
+    ).toBeInTheDocument();
+
+    // Número do processo aparece em dois lugares: option do combobox (label)
+    // e seção "Processo vinculado". Ambos devem existir.
+    expect(
+      screen.getAllByText('0010249-69.2026.5.03.0105').length,
+    ).toBeGreaterThanOrEqual(2);
+  });
 });

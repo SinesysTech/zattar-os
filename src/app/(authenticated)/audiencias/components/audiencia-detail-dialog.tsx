@@ -106,6 +106,7 @@ export function AudienciaDetailDialog({
   onOpenChange,
 }: AudienciaDetailDialogProps) {
   const [fetchedAudiencia, setFetchedAudiencia] = React.useState<Audiencia | null>(null);
+  const [localAudiencia, setLocalAudiencia] = React.useState<Audiencia | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [copiedUrl, setCopiedUrl] = React.useState(false);
@@ -167,10 +168,22 @@ export function AudienciaDetailDialog({
   }, [audienciaId, shouldFetch, open]);
 
   React.useEffect(() => {
-    if (!open) setAtaOpen(false);
+    if (!open) {
+      setAtaOpen(false);
+      setLocalAudiencia(null);
+      setFetchedAudiencia(null);
+      setEditingUrl(false);
+      setEditingEndereco(false);
+      setEditingObs(false);
+    }
   }, [open]);
 
-  const audiencia = audienciaProp || fetchedAudiencia;
+  React.useEffect(() => {
+    const base = audienciaProp || fetchedAudiencia;
+    if (base) setLocalAudiencia(base);
+  }, [audienciaProp, fetchedAudiencia]);
+
+  const audiencia = localAudiencia || audienciaProp || fetchedAudiencia;
   const isPje = audiencia ? isAudienciaCapturada(audiencia) : false;
   const pjeUrl = audiencia ? buildPjeUrl(audiencia.trt, audiencia.numeroProcesso) : '';
   const hasAta = !!audiencia?.urlAtaAudiencia;
@@ -206,11 +219,11 @@ export function AudienciaDetailDialog({
     setSavingUrl(true);
     const result = await actionAtualizarUrlVirtual(audiencia.id, urlDraft || null);
     if (result.success) {
+      if (result.data) setLocalAudiencia(result.data);
       setEditingUrl(false);
-      onOpenChange(false);
     }
     setSavingUrl(false);
-  }, [audiencia, urlDraft, onOpenChange]);
+  }, [audiencia, urlDraft]);
 
   const handleStartEditEndereco = React.useCallback(() => {
     const e = audiencia?.enderecoPresencial;
@@ -227,11 +240,11 @@ export function AudienciaDetailDialog({
     const hasData = enderecoDraft.logradouro && enderecoDraft.numero && enderecoDraft.cidade && enderecoDraft.uf;
     const result = await actionAtualizarEnderecoPresencial(audiencia.id, hasData ? enderecoDraft : null);
     if (result.success) {
+      if (result.data) setLocalAudiencia(result.data);
       setEditingEndereco(false);
-      onOpenChange(false);
     }
     setSavingEndereco(false);
-  }, [audiencia, enderecoDraft, onOpenChange]);
+  }, [audiencia, enderecoDraft]);
 
   const handleStartEditObs = React.useCallback(() => {
     setObsDraft(audiencia?.observacoes || '');
@@ -243,11 +256,11 @@ export function AudienciaDetailDialog({
     setSavingObs(true);
     const result = await actionAtualizarObservacoes(audiencia.id, obsDraft || null);
     if (result.success) {
+      if (result.data) setLocalAudiencia(result.data);
       setEditingObs(false);
-      onOpenChange(false);
     }
     setSavingObs(false);
-  }, [audiencia, obsDraft, onOpenChange]);
+  }, [audiencia, obsDraft]);
 
   const handleChangeModalidade = React.useCallback(
     async (novaModalidade: ModalidadeAudiencia) => {
@@ -258,12 +271,12 @@ export function AudienciaDetailDialog({
       setSavingModalidade(true);
       setModalidadePopoverOpen(false);
       const result = await actionAtualizarAudienciaPayload(audiencia.id, { modalidade: novaModalidade });
-      if (result.success) {
-        onOpenChange(false);
+      if (result.success && result.data) {
+        setLocalAudiencia(result.data);
       }
       setSavingModalidade(false);
     },
-    [audiencia, onOpenChange]
+    [audiencia]
   );
 
   const handleChangePresencaHibrida = React.useCallback(
@@ -271,12 +284,12 @@ export function AudienciaDetailDialog({
       if (!audiencia) return;
       setSavingPresenca(true);
       const result = await actionAtualizarAudienciaPayload(audiencia.id, { presencaHibrida: valor });
-      if (result.success) {
-        onOpenChange(false);
+      if (result.success && result.data) {
+        setLocalAudiencia(result.data);
       }
       setSavingPresenca(false);
     },
-    [audiencia, onOpenChange]
+    [audiencia]
   );
 
   const hasIndicadores =
@@ -291,8 +304,8 @@ export function AudienciaDetailDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className={cn(
-          'max-h-[92vh] flex p-0 gap-0 overflow-hidden [scrollbar-width:thin] transition-[max-width] duration-300 ease-out',
-          ataOpen ? 'sm:max-w-275' : 'sm:max-w-2xl'
+          'max-h-[92vh] flex flex-col md:flex-row p-0 gap-0 overflow-hidden [scrollbar-width:thin] transition-[max-width] duration-300 ease-out w-[95vw]',
+          ataOpen ? 'sm:max-w-xl md:max-w-275' : 'sm:max-w-xl md:max-w-2xl'
         )}
       >
         <DialogDescription className="sr-only">Detalhes da audiência</DialogDescription>
@@ -301,7 +314,7 @@ export function AudienciaDetailDialog({
         <div
           className={cn(
             'flex-1 flex flex-col min-w-0',
-            ataOpen && 'border-r border-border/50'
+            ataOpen && 'md:border-r border-border/50'
           )}
         >
           {/* HEADER · Capa do processo */}
@@ -381,12 +394,20 @@ export function AudienciaDetailDialog({
                   <span className="text-[9.5px] font-semibold text-muted-foreground/75 uppercase tracking-[0.08em]">
                     Modalidade
                   </span>
-                  <Popover open={modalidadePopoverOpen} onOpenChange={setModalidadePopoverOpen}>
+                  <Popover
+                    open={modalidadePopoverOpen && !isPje}
+                    onOpenChange={(v) => !isPje && setModalidadePopoverOpen(v)}
+                  >
                     <PopoverTrigger asChild>
                       <button
                         type="button"
-                        disabled={savingModalidade}
-                        className="inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-full bg-card border border-border/60 text-[12.5px] font-medium text-foreground hover:bg-muted/60 hover:border-border transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+                        disabled={savingModalidade || isPje}
+                        title={isPje ? 'Sincronizado do PJe — não é possível alterar manualmente' : undefined}
+                        className={cn(
+                          'inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-full bg-card border border-border/60 text-[12.5px] font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
+                          !isPje && 'hover:bg-muted/60 hover:border-border cursor-pointer',
+                          isPje && 'cursor-not-allowed'
+                        )}
                       >
                         {savingModalidade ? (
                           <LoadingSpinner size="sm" className="text-muted-foreground" />
@@ -401,7 +422,9 @@ export function AudienciaDetailDialog({
                                 ? MODALIDADE_LABELS[audiencia.modalidade]
                                 : 'Definir'}
                             </span>
-                            <ChevronDown className="size-3 text-muted-foreground opacity-60" />
+                            {!isPje && (
+                              <ChevronDown className="size-3 text-muted-foreground opacity-60" />
+                            )}
                           </>
                         )}
                       </button>
@@ -440,7 +463,9 @@ export function AudienciaDetailDialog({
                     audienciaId={audiencia.id}
                     responsavelId={audiencia.responsavelId}
                     usuarios={usuarios}
-                    onSuccess={() => onOpenChange(false)}
+                    onSuccess={(a) => {
+                      if (a) setLocalAudiencia(a);
+                    }}
                   >
                     <ResponsavelTriggerContent
                       responsavelId={audiencia.responsavelId}
@@ -450,6 +475,18 @@ export function AudienciaDetailDialog({
                   </AudienciaResponsavelPopover>
                 </div>
               </div>
+
+              {/* Aviso · Audiência capturada do PJe */}
+              {isPje && (
+                <div className="flex items-start gap-2 mb-3 px-2.5 py-2 rounded-lg bg-info/8 border border-info/20 text-[11.5px] leading-snug text-info">
+                  <AlertCircle className="size-3.5 shrink-0 mt-0.5" />
+                  <span>
+                    <strong className="font-semibold">Sincronizada do PJe.</strong>{' '}
+                    Modalidade, link virtual, endereço e presença híbrida são atualizados
+                    pela captura — apenas <strong>responsável</strong> e <strong>observações</strong> podem ser alterados aqui.
+                  </span>
+                </div>
+              )}
 
               {/* Ações */}
               <div className="flex flex-wrap gap-1.5">
@@ -547,7 +584,7 @@ export function AudienciaDetailDialog({
                           <span className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-[0.06em]">
                             Link da sala virtual
                           </span>
-                          {!editingUrl && (
+                          {!editingUrl && !isPje && (
                             <button
                               type="button"
                               onClick={handleStartEditUrl}
@@ -628,7 +665,7 @@ export function AudienciaDetailDialog({
                           <span className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-[0.06em]">
                             Endereço presencial
                           </span>
-                          {!editingEndereco && (
+                          {!editingEndereco && !isPje && (
                             <button
                               type="button"
                               onClick={handleStartEditEndereco}
@@ -769,13 +806,14 @@ export function AudienciaDetailDialog({
                             <button
                               key={v}
                               type="button"
-                              disabled={savingPresenca}
+                              disabled={savingPresenca || isPje}
                               onClick={() => handleChangePresencaHibrida(v)}
                               className={cn(
                                 'px-3 py-1 rounded-md text-[11.5px] font-medium transition-colors',
                                 audiencia.presencaHibrida === v
                                   ? 'bg-card text-foreground shadow-sm'
-                                  : 'text-muted-foreground hover:text-foreground'
+                                  : 'text-muted-foreground hover:text-foreground',
+                                isPje && 'cursor-not-allowed opacity-60'
                               )}
                             >
                               {label}
@@ -883,7 +921,7 @@ export function AudienciaDetailDialog({
 
         {/* ═══ COLUNA PDF (split view) ═══ */}
         {ataOpen && audiencia?.urlAtaAudiencia && (
-          <aside className="w-1/2 shrink-0 flex flex-col bg-muted/30 overflow-hidden">
+          <aside className="w-full md:w-1/2 shrink-0 flex flex-col bg-muted/30 overflow-hidden border-t md:border-t-0 border-border/50 max-h-[50vh] md:max-h-none">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card">
               <div className="flex items-center gap-2 text-[12.5px] font-semibold">
                 <FileText className="size-3.5 text-success" />

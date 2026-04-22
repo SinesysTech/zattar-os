@@ -215,12 +215,10 @@ function ResponsavelCell({
           <Avatar className="size-6">
             <AvatarImage src={usuario?.avatarUrl || undefined} alt={nome} />
             <AvatarFallback>
-              <Text variant="micro-badge">{generateAvatarFallback(nome)}</Text>
+              <span className="text-[9px] font-medium">{generateAvatarFallback(nome)}</span>
             </AvatarFallback>
           </Avatar>
-          <Text variant="caption" className="truncate">
-            {nome}
-          </Text>
+          <span className="text-[11px] text-foreground truncate">{nome}</span>
         </button>
         <ContratoAlterarResponsavelDialog
           open={dialogOpen}
@@ -466,32 +464,40 @@ function GlassRow({
             )}
           </div>
           {reNome && (
-            <Text variant="caption" className="truncate mt-0.5 block">
+            <p className="text-[11px] text-muted-foreground truncate mt-0.5">
               <span className="text-muted-foreground/50">vs. </span>
               {reNome}
               {partesRe.length > 1 && (
                 <span className="text-muted-foreground/50"> e outros</span>
               )}
               {contrato.papelClienteNoContrato === 're' && (
-                <span className="ml-1.5 inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px text-micro-badge font-semibold">
+                <span className="ml-1.5 inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px text-[9px] font-semibold">
                   Cliente
                 </span>
               )}
-            </Text>
+            </p>
           )}
           {segmentoNome && (
-            <Text variant="micro-caption" className="mt-0.5 truncate block">
+            <p className="text-[10px] text-muted-foreground/50 mt-0.5 truncate">
               {segmentoNome}
-            </Text>
+            </p>
           )}
         </div>
 
         {/* 4. Tipo / Cobrança */}
         <div className="flex flex-col gap-1 min-w-0">
-          <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato} className="w-fit">
+          <SemanticBadge
+            category="tipo_contrato"
+            value={contrato.tipoContrato}
+            className="w-fit text-[10px]"
+          >
             {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
           </SemanticBadge>
-          <SemanticBadge category="tipo_cobranca" value={contrato.tipoCobranca} className="w-fit">
+          <SemanticBadge
+            category="tipo_cobranca"
+            value={contrato.tipoCobranca}
+            className="w-fit text-[10px]"
+          >
             {TIPO_COBRANCA_LABELS[contrato.tipoCobranca]}
           </SemanticBadge>
         </div>
@@ -506,24 +512,28 @@ function GlassRow({
                 className="inline-flex items-center gap-1 min-w-0 text-primary hover:underline"
               >
                 <Scale className="size-2.5 shrink-0" />
-                <Text variant="caption" className="tabular-nums truncate text-primary">
+                <span className="text-[11px] tabular-nums truncate text-primary">
                   {firstProcesso.processo?.numeroProcesso ?? `Processo #${firstProcesso.processoId}`}
-                </Text>
+                </span>
               </Link>
               {processosRestantes > 0 && (
-                <Text variant="micro-caption">
+                <span className="text-[10px] text-muted-foreground/50">
                   +{processosRestantes} vinculado{processosRestantes > 1 ? 's' : ''}
-                </Text>
+                </span>
               )}
             </>
           ) : (
-            <Text variant="caption" className="text-muted-foreground/40">—</Text>
+            <span className="text-[11px] text-muted-foreground/40">—</span>
           )}
         </div>
 
         {/* 6. Estágio (status) */}
         <div>
-          <SemanticBadge category="status_contrato" value={contrato.status}>
+          <SemanticBadge
+            category="status_contrato"
+            value={contrato.status}
+            className="text-[10px]"
+          >
             {STATUS_CONTRATO_LABELS[contrato.status]}
           </SemanticBadge>
         </div>
@@ -537,9 +547,9 @@ function GlassRow({
         />
 
         {/* 8. Data de cadastro */}
-        <Text variant="caption" className="tabular-nums">
+        <span className="text-[11px] text-muted-foreground tabular-nums">
           {formatarData(contrato.cadastradoEm)}
-        </Text>
+        </span>
 
         {/* 9. Ações */}
         <RowActions contrato={contrato} onEdit={onEdit} onDelete={onDelete} onGerarPeca={onGerarPeca} />
