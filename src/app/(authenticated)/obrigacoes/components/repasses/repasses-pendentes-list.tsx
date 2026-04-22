@@ -18,6 +18,7 @@ import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { EmptyHeader, EmptyTitle } from '@/components/ui/empty';
 import { Typography } from '@/components/ui/typography';
 import { useRepassesPendentes } from '../../hooks/use-repasses-pendentes';
+import { GerarLinkButton } from '../prestacao-contas';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 interface RepassesListProps {
@@ -73,11 +74,19 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
                                  </Badge>
                               </TableCell>
                               <TableCell className="text-right">
-                                 {onAnexarDeclaracao && (
-                                    <Button size="sm" variant="outline" onClick={() => onAnexarDeclaracao(r.parcelaId)}>
-                                       <Upload className="h-4 w-4 mr-1" /> Anexar
-                                    </Button>
-                                 )}
+                                 <div className="flex items-center justify-end gap-2">
+                                    <GerarLinkButton
+                                       parcelaId={r.parcelaId}
+                                       size="sm"
+                                       label="Gerar link"
+                                       onGerado={() => refetch()}
+                                    />
+                                    {onAnexarDeclaracao && (
+                                       <Button size="sm" variant="outline" onClick={() => onAnexarDeclaracao(r.parcelaId)} className="rounded-xl gap-1.5">
+                                          <Upload className="size-3.5" /> Anexar manual
+                                       </Button>
+                                    )}
+                                 </div>
                               </TableCell>
                            </TableRow>
                         ))}

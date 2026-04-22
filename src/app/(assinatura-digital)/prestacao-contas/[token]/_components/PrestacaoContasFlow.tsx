@@ -88,7 +88,7 @@ export function PrestacaoContasFlow({
       if (res.success) {
         setEtapa('sucesso');
       } else {
-        toast.error(res.error ?? res.message ?? 'Erro ao finalizar');
+        toast.error(res.error || res.message || 'Erro ao finalizar');
       }
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Erro inesperado');
