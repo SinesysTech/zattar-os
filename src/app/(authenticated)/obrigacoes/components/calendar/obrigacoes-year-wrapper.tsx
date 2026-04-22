@@ -9,7 +9,7 @@
  */
 
 import * as React from 'react';
-import { startOfYear, endOfYear, format, parseISO } from 'date-fns';
+import { startOfYear, endOfYear, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 import { TemporalViewLoading, TemporalViewError } from '@/components/shared';

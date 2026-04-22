@@ -153,6 +153,50 @@ export async function criarLinkPrestacaoContas(
 }
 
 // =============================================================================
+// Cancelar link ativo (admin)
+// =============================================================================
+
+export async function cancelarLinkPrestacaoContas(parcelaId: number): Promise<void> {
+  const supabase = createServiceClient();
+
+  const { data: parcela } = await supabase
+    .from('parcelas')
+    .select('documento_assinatura_id' as never)
+    .eq('id', parcelaId)
+    .single();
+
+  const docId = (parcela as { documento_assinatura_id?: number | null })
+    ?.documento_assinatura_id;
+  if (!docId) throw new Error('Parcela sem documento de assinatura vinculado');
+
+  const { data: doc } = await supabase
+    .from('assinatura_digital_documentos')
+    .select('id, status')
+    .eq('id', docId)
+    .single();
+
+  if (!doc) throw new Error('Documento não encontrado');
+  if (doc.status === 'concluido')
+    throw new Error('Documento já foi assinado — não é possível cancelar');
+  if (doc.status === 'cancelado')
+    throw new Error('Documento já está cancelado');
+
+  await supabase
+    .from('assinatura_digital_documentos')
+    .update({ status: 'cancelado', updated_at: new Date().toISOString() } as never)
+    .eq('id', docId);
+
+  // Desvincula da parcela para permitir gerar link novo depois
+  await supabase
+    .from('parcelas')
+    .update({
+      documento_assinatura_id: null,
+      updated_at: new Date().toISOString(),
+    } as never)
+    .eq('id', parcelaId);
+}
+
+// =============================================================================
 // Carregar contexto público (server component da rota /prestacao-contas/[token])
 // =============================================================================
 

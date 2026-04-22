@@ -27,16 +27,22 @@ export function GerarLinkButton({
   onGerado,
 }: Props) {
   const [loading, setLoading] = useState(false);
-  const [dialog, setDialog] = useState<{ url: string; expiresAt: string } | null>(
-    null,
-  );
+  const [dialog, setDialog] = useState<{
+    url: string;
+    token: string;
+    expiresAt: string;
+  } | null>(null);
 
   const handle = async () => {
     setLoading(true);
     try {
       const result = await actionCriarLinkPrestacaoContas({ parcelaId });
       if (result.success) {
-        setDialog({ url: result.data.url, expiresAt: result.data.expiresAt });
+        setDialog({
+          url: result.data.url,
+          token: result.data.token,
+          expiresAt: result.data.expiresAt,
+        });
         onGerado?.();
       } else {
         toast.error(result.error || result.message || 'Erro ao gerar link');
@@ -65,6 +71,7 @@ export function GerarLinkButton({
           open={!!dialog}
           onOpenChange={(o) => !o && setDialog(null)}
           url={dialog.url}
+          token={dialog.token}
           expiresAt={dialog.expiresAt}
         />
       )}

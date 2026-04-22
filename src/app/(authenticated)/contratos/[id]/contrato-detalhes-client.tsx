@@ -42,6 +42,11 @@ import {
   ContratoTimeline,
 } from './components';
 import { DocumentosContratacaoCard } from './components/documentos-contratacao-card';
+import { ContratoDocumentosAssinaturaCard } from './components/contrato-documentos-assinatura-card';
+import type {
+  DocumentoAssinaturaDoContrato,
+  PacoteAtivoResumo,
+} from '@/shared/assinatura-digital/services/documentos-do-contrato.service';
 
 // =============================================================================
 // HELPERS
@@ -208,6 +213,8 @@ interface ContratoDetalhesClientProps {
   lancamentos: Lancamento[];
   entrevista?: EntrevistaTrabalhista | null;
   entrevistaAnexos?: EntrevistaAnexo[];
+  documentosAssinatura?: DocumentoAssinaturaDoContrato[];
+  pacoteAssinaturaAtivo?: PacoteAtivoResumo | null;
 }
 
 export function ContratoDetalhesClient({
@@ -219,6 +226,8 @@ export function ContratoDetalhesClient({
   lancamentos,
   entrevista = null,
   entrevistaAnexos = [],
+  documentosAssinatura = [],
+  pacoteAssinaturaAtivo = null,
 }: ContratoDetalhesClientProps) {
   const clienteNome = cliente?.nome ?? `Cliente #${contrato.clienteId}`;
 
@@ -297,6 +306,11 @@ export function ContratoDetalhesClient({
         <DocumentosContratacaoCard
           contratoId={contrato.id}
           segmentoId={contrato.segmentoId ?? null}
+        />
+        <ContratoDocumentosAssinaturaCard
+          contratoId={contrato.id}
+          initialDocumentos={documentosAssinatura}
+          initialPacoteAtivo={pacoteAssinaturaAtivo}
         />
         <ContratoDocumentosCard contratoId={contrato.id} />
       </TabsContent>

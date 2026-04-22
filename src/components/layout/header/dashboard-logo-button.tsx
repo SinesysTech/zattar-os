@@ -1,15 +1,13 @@
 "use client"
 
 import Image from "next/image"
-import { useRouter, usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 
 const DASHBOARD_URL = "/app/dashboard"
 
 export function DashboardLogoButton() {
   const router = useRouter()
-  const pathname = usePathname()
-  const isActive = pathname?.startsWith(DASHBOARD_URL) ?? false
 
   return (
     <button
@@ -21,9 +19,7 @@ export function DashboardLogoButton() {
         "size-10 rounded-xl cursor-pointer overflow-hidden",
         "transition-all duration-200 ease-out",
         "active:scale-95",
-        isActive
-          ? "bg-primary/8 ring-1 ring-primary/20"
-          : "hover:bg-muted/50"
+        "hover:bg-muted/50"
       )}
     >
       <div className="absolute inset-0 rounded-xl bg-primary/6 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

@@ -236,6 +236,89 @@ export function publicAction<TInput, TOutput>(
   };
 }
 
+// =============================================================================
+// Public Token Action (para fluxos públicos gated por token de assinante)
+// =============================================================================
+
+export type PublicTokenContext = {
+  /** Token UUID presente no schema de entrada — útil para logging/trace. */
+  token: string;
+};
+
+export type PublicTokenActionHandler<TInput, TOutput> = (
+  data: TInput,
+  context: PublicTokenContext,
+) => Promise<TOutput>;
+
+/**
+ * Wrapper para Server Actions públicas que são gated por um token de assinante
+ * (uuid v4 no payload). Não requer sessão autenticada, mas:
+ *  - Valida com Zod (schema DEVE ter um campo `token` uuid)
+ *  - Extrai o `token` e injeta no contexto do handler
+ *  - Trata erros sem vazar stack trace para o cliente
+ *
+ * O handler é responsável por validar que o token ainda é válido (ex: chamando
+ * service que verifica em `assinatura_digital_documento_assinantes.token`).
+ *
+ * @example
+ * ```ts
+ * export const actionFoo = publicTokenAction(
+ *   z.object({ token: z.string().uuid(), ... }),
+ *   async (data, { token }) => {
+ *     return await fooService(token, data);
+ *   }
+ * );
+ * ```
+ */
+export function publicTokenAction<
+  TInput extends { token: string },
+  TOutput,
+>(
+  schema: ZodSchema<TInput>,
+  handler: PublicTokenActionHandler<TInput, TOutput>,
+): (input: FormData | TInput) => Promise<ActionResult<TOutput>> {
+  return async (input: FormData | TInput): Promise<ActionResult<TOutput>> => {
+    try {
+      const rawData = extractInputData(input);
+      const validation = schema.safeParse(rawData);
+      if (!validation.success) {
+        return {
+          success: false,
+          error: 'Erro de validação',
+          errors: formatZodErrors(validation.error),
+          message: validation.error.errors[0]?.message || 'Dados inválidos',
+        };
+      }
+
+      const result = await handler(validation.data, {
+        token: validation.data.token,
+      });
+
+      return {
+        success: true,
+        data: result,
+        message: 'Operação realizada com sucesso',
+      };
+    } catch (error) {
+      console.error('[PublicTokenAction] Erro:', error);
+
+      if (error instanceof Error) {
+        return {
+          success: false,
+          error: error.message,
+          message: error.message,
+        };
+      }
+
+      return {
+        success: false,
+        error: 'Erro interno do servidor',
+        message: 'Ocorreu um erro inesperado. Tente novamente.',
+      };
+    }
+  };
+}
+
 /**
  * Cria uma Server Action autenticada para uso com useActionState
  * (compatível com o padrão (prevState, formData) do React)

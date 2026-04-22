@@ -13,8 +13,7 @@ export const metadata = buildWebsiteMetadata({
 
 export default function ContatoPage() {
   return (
-    <WebsiteShell>
-      
+    <WebsiteShell hideClosingCta>
       <div className="pt-32 pb-24 overflow-hidden">
         {/* Hero Section */}
         <section className="max-w-7xl mx-auto px-8 mb-24 mt-12">

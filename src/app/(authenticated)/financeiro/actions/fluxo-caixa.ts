@@ -14,9 +14,6 @@ import type { FiltroFluxoCaixa, FluxoCaixaConsolidado, FluxoCaixaDiario, FluxoCa
 
 import type {
     FluxoCaixaFiltros,
-    FluxoCaixaDashboard,
-    FluxoCaixaResumoSegmento,
-    FluxoCaixaResumo,
     IndicadoresSaude,
     FluxoCaixaAlerta,
     FluxoCaixaResumoDashboard,

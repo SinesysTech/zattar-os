@@ -11,7 +11,7 @@ import { todayDateString } from '@/lib/date-utils';
 // Types (moved to ./types)
 // ============================================================================
 
-import type { RelatorioFiltros, RelatorioExportacao } from './types';
+import type { RelatorioFiltros } from './types';
 
 type LancamentoRelatorio = {
     dataLancamento: string;

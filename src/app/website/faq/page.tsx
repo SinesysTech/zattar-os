@@ -55,7 +55,7 @@ const popularTopics = [
 
 export default function FAQPage() {
   return (
-    <WebsiteShell>
+    <WebsiteShell hideClosingCta>
       <div className="pt-32 pb-24">
         {/* ─── Hero + Busca ─────────────────────────────────────────── */}
         <header className="max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pt-12 pb-12 mt-6">

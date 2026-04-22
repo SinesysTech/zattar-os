@@ -59,7 +59,7 @@ const archiveArticles: ArticleItem[] = [
 
 export default function InsightsPage() {
   return (
-    <WebsiteShell>
+    <WebsiteShell hideClosingCta>
       <div className="pt-32 pb-24">
         {/* ─── Hero ─────────────────────────────────────────────────── */}
         <section className="max-w-352 mx-auto px-5 sm:px-6 md:px-10 mb-16 md:mb-24 mt-6">

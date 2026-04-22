@@ -20,7 +20,6 @@ import {
   processarWebhook,
   sincronizarConversaChatwoot,
   atualizarStatusConversa,
-  type SincronizarChatwootParaAppResult,
   type WebhookEventType,
 } from './service';
 import type { TipoEntidadeChatwoot } from './domain';

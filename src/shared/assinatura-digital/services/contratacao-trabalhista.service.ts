@@ -36,8 +36,6 @@ import {
 } from '@/app/(authenticated)/partes';
 import { criarContrato } from '@/app/(authenticated)/contratos/service';
 import type {
-  TipoContrato,
-  TipoCobranca,
   PapelContratual,
   Contrato,
 } from '@/app/(authenticated)/contratos/domain';
@@ -46,7 +44,6 @@ import { getSegmentoBySlug } from './segmentos.service';
 import { getFormularioBySlugAndSegmentoId } from './formularios.service';
 import {
   criarContratacaoTrabalhistaSchema,
-  gerarLinkFormularioPublicoSchema,
   type CriarContratacaoTrabalhistaInput,
   type CriarContratacaoTrabalhistaResult,
   type GerarLinkFormularioPublicoInput,

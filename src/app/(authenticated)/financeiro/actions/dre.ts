@@ -11,14 +11,14 @@ import {
     calcularEvolucaoAnual,
 } from '../services/dre';
 import { validarGerarDREDTO, isPeriodoDREValido } from '../domain/dre';
-import type { PeriodoDRE, DRE } from '../domain/dre';
+import type { DRE } from '../domain/dre';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
 // ============================================================================
 // Types (moved to ./types — arquivos "use server" não podem exportar tipos)
 // ============================================================================
 
-import type { GerarDREParams, DREResult, EvolucaoDREItem } from './types';
+import type { GerarDREParams, DREResult } from './types';
 
 // ============================================================================
 // Helpers (PDF/CSV generation)

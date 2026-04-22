@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { fetchContratoCompleto } from '@/app/(authenticated)/contratos/queries';
 import { LancamentosRepository } from '@/app/(authenticated)/financeiro/repository';
 import { fetchEntrevistaByContratoId } from '@/app/(authenticated)/entrevistas-trabalhistas';
+import { listarDocumentosAssinaturaDoContrato } from '@/shared/assinatura-digital/services/documentos-do-contrato.service';
 import { ContratoDetalhesClient } from './contrato-detalhes-client';
 
 interface PageProps {
@@ -35,13 +36,17 @@ export default async function ContratoDetalhesPage({ params }: PageProps) {
 
   const { contrato, cliente, responsavel, segmento, stats } = result.data;
 
-  // Fetch lançamentos financeiros e entrevista em paralelo
-  const [lancamentos, entrevistaResult] = await Promise.all([
+  // Fetch lançamentos financeiros, entrevista e documentos de assinatura em paralelo
+  const [lancamentos, entrevistaResult, documentosAssinaturaResult] = await Promise.all([
     LancamentosRepository.listar({ contratoId, limite: 50 }).catch((error) => {
       console.error('Erro ao buscar lançamentos:', error);
       return [] as Awaited<ReturnType<typeof LancamentosRepository.listar>>;
     }),
     fetchEntrevistaByContratoId(contratoId),
+    listarDocumentosAssinaturaDoContrato(contratoId).catch((error) => {
+      console.error('Erro ao buscar documentos de assinatura:', error);
+      return { documentos: [], pacoteAtivo: null };
+    }),
   ]);
 
   const entrevistaData = entrevistaResult.success ? entrevistaResult.data : null;
@@ -56,6 +61,8 @@ export default async function ContratoDetalhesPage({ params }: PageProps) {
       lancamentos={lancamentos}
       entrevista={entrevistaData?.entrevista ?? null}
       entrevistaAnexos={entrevistaData?.anexos ?? []}
+      documentosAssinatura={documentosAssinaturaResult.documentos}
+      pacoteAssinaturaAtivo={documentosAssinaturaResult.pacoteAtivo}
     />
   );
 }

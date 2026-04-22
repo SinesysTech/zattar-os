@@ -1,14 +1,14 @@
 'use server';
 
-import { publicAction } from '@/lib/safe-action';
+import { publicTokenAction } from '@/lib/safe-action';
 import { finalizarPrestacaoContasSchema } from '../domain';
 import { finalizarPrestacaoContas } from '../service';
 
-export const actionFinalizarPrestacaoContas = publicAction(
+export const actionFinalizarPrestacaoContas = publicTokenAction(
   finalizarPrestacaoContasSchema,
-  async (data) => {
-    const result = await finalizarPrestacaoContas({
-      token: data.token,
+  async (data, { token }) => {
+    return await finalizarPrestacaoContas({
+      token,
       cpfConfirmado: data.cpfConfirmado,
       dadosBancarios: data.dadosBancarios,
       assinaturaBase64: data.assinaturaBase64,
@@ -18,6 +18,5 @@ export const actionFinalizarPrestacaoContas = publicAction(
       geolocation: data.geolocation,
       dispositivoFingerprint: data.dispositivoFingerprint,
     });
-    return result;
   },
 );

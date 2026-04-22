@@ -13,13 +13,6 @@ import {
   buscarTabelasSequentialScan,
   buscarIndicesNaoUtilizados,
   buscarMetricasDiskIO,
-  type BloatTabela,
-  type CacheHitRate,
-  type QueryLenta,
-  type TabelaSequentialScan,
-  type IndiceNaoUtilizado,
-  type MetricasDiskIO,
-  type DiskIOStatus,
 } from "../repositories/metricas-db-repository";
 
 interface ActionResult<T> {

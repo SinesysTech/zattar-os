@@ -35,7 +35,7 @@ import type {
   StatusObrigacao,
   StatusSincronizacao,
 } from '../../domain';
-import { GerarLinkButton } from '../prestacao-contas';
+import { PrestacaoContasSection } from '../prestacao-contas';
 
 // ============================================================================
 // Types
@@ -270,10 +270,7 @@ export function ObrigacaoDetalhesDialog({
               <Separator />
               <div>
                 <SectionTitle>Prestação de contas</SectionTitle>
-                <p className="text-xs text-muted-foreground mb-3">
-                  Gere um link público para o cliente assinar digitalmente a declaração de prestação de contas e informar os dados bancários para o repasse.
-                </p>
-                <GerarLinkButton parcelaId={obrigacao.id} />
+                <PrestacaoContasSection parcelaId={obrigacao.id} />
               </div>
             </>
           )}

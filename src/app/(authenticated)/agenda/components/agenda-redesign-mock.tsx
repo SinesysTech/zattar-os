@@ -95,7 +95,7 @@ function dateLabel(view: AgendaView, date: Date): string {
 export function AgendaRedesignMock() {
   const [view, setView] = useState<AgendaView>("semana");
   const [currentDate] = useState(() => new Date(2026, 3, 13)); // 13 April 2026 (Mon)
-  const [search, setSearch] = useState("");
+  const [search, _setSearch] = useState("");
   const [activeSources, setActiveSources] = useState<Set<AgendaSource>>(new Set());
   const [selectedEvent, setSelectedEvent] = useState<MockEvent | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);

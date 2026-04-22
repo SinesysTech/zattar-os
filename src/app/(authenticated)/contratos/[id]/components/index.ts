@@ -10,3 +10,4 @@ export { ContratoFinanceiroCard } from './contrato-financeiro-card';
 export { ContratoDocumentosCard } from './contrato-documentos-card';
 export { ContratoTimeline } from './contrato-timeline';
 export { DocumentosContratacaoCard } from './documentos-contratacao-card';
+export { ContratoDocumentosAssinaturaCard } from './contrato-documentos-assinatura-card';

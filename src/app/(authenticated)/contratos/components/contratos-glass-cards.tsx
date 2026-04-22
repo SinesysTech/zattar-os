@@ -279,7 +279,7 @@ function GlassCard({
     <GlassPanel
       className={cn(
         'group relative p-4 cursor-pointer transition-all duration-180',
-        'hover:border-border/40 hover:shadow-[0_4px_14px_oklch(0_0_0/0.06)] hover:-translate-y-px',
+        'hover:border-border/40 hover:shadow-[0_4px_14px_color-mix(in_oklch,var(--foreground)_6%,transparent)] hover:-translate-y-px',
         isSelected && 'border-primary/40 ring-1 ring-primary/20',
       )}
     >

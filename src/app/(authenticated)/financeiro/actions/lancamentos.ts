@@ -1,7 +1,7 @@
 'use server';
 
 import { LancamentosService } from '../services/lancamentos';
-import { Lancamento, ListarLancamentosParams, ResumoVencimentos } from '../types/lancamentos';
+import { Lancamento, ListarLancamentosParams } from '../types/lancamentos';
 import { revalidatePath } from 'next/cache';
 
 // ============================================================================

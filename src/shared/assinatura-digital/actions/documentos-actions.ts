@@ -15,6 +15,7 @@ import {
   createAssinaturaDigitalDocumentoAssinanteSchema,
 } from "../domain";
 import * as documentosService from "../services/documentos.service";
+import { listarDocumentosAssinaturaDoContrato } from "../services/documentos-do-contrato.service";
 import { downloadFromStorageUrl } from "../services/signature";
 import { generatePresignedUrl } from "@/lib/storage/backblaze-b2.service";
 
@@ -339,5 +340,20 @@ export const actionGetAssinatura = authenticatedAction(
     }
 
     return assinatura;
+  }
+);
+
+// =============================================================================
+// ACTIONS - DOCUMENTOS VINCULADOS A UM CONTRATO
+// =============================================================================
+
+/**
+ * Lista os documentos de assinatura digital de um contrato, com status de cada
+ * assinante e o pacote ativo (se houver) para reaproveitamento de link público.
+ */
+export const actionListarDocumentosAssinaturaDoContrato = authenticatedAction(
+  z.object({ contratoId: z.number().int().positive() }),
+  async (input) => {
+    return await listarDocumentosAssinaturaDoContrato(input.contratoId);
   }
 );
