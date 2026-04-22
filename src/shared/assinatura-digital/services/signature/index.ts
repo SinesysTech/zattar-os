@@ -28,7 +28,10 @@ export { finalizeSignature } from "./finalization.service";
 // =============================================================================
 // Auditoria
 // =============================================================================
-export { auditSignatureIntegrity } from "./audit.service";
+export {
+  auditSignatureIntegrity,
+  auditDocumentSignerIntegrity,
+} from "./audit.service";
 
 // =============================================================================
 // Storage

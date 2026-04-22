@@ -35,6 +35,7 @@ import {
   validateDeviceFingerprintEntropy,
   validatePhotoEmbedding,
 } from "./validation.service";
+import { auditSignatureIntegrity } from "./audit.service";
 import type { FinalizePayload, FinalizeResult } from "../../types/types";
 
 const SERVICE = LogServices.SIGNATURE;
@@ -647,6 +648,33 @@ export async function finalizeSignature(
   // O record.pdf_url contém a URL raw do Backblaze (bucket privado),
   // que não é acessível diretamente pelo browser.
   const presignedPdfUrl = await generatePresignedUrl(pdfStored.key, 3600);
+
+  // Auditoria automática pós-assinatura (fire-and-log, nunca bloqueia a resposta).
+  // Serve como smoke test: detecta imediatamente hash divergente, foto não-embedada
+  // ou fingerprint baixo, sem precisar esperar um pedido manual de auditoria.
+  try {
+    const auditResult = await auditSignatureIntegrity(record.id);
+    if (auditResult.status !== "valido") {
+      logger.warn("Auditoria pós-assinatura detectou problemas (Formulário)", {
+        ...context,
+        assinatura_id: record.id,
+        audit_status: auditResult.status,
+        avisos: auditResult.avisos,
+        erros: auditResult.erros,
+      });
+    } else {
+      logger.debug("Auditoria pós-assinatura OK (Formulário)", {
+        ...context,
+        assinatura_id: record.id,
+      });
+    }
+  } catch (auditError) {
+    logger.error(
+      "Falha não-bloqueante na auditoria pós-assinatura (Formulário)",
+      auditError,
+      { ...context, assinatura_id: record.id }
+    );
+  }
 
   timer.log(
     "Assinatura finalizada com sucesso",

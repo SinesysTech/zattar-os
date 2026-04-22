@@ -355,6 +355,30 @@ export interface AuditResult {
   auditado_em: string;
 }
 
+/**
+ * Resultado de auditoria do Fluxo Documento (assinatura por upload + token).
+ * Espelha AuditResult com identificadores do novo fluxo (documento_uuid + assinante_id)
+ * em vez de protocolo + assinatura_id do Fluxo Formulário.
+ */
+export interface DocumentSignerAuditResult {
+  assinante_id: number;
+  documento_uuid: string;
+  status: "valido" | "invalido" | "erro";
+  hashes_validos: boolean;
+  hash_final_registrado: string;
+  hash_final_recalculado: string;
+  entropia_suficiente: boolean;
+  entropia_detalhes?: {
+    campos_presentes: number;
+    campos_obrigatorios: number;
+    campos_recomendados: number;
+  };
+  foto_embedada?: boolean;
+  avisos: string[];
+  erros: string[];
+  auditado_em: string;
+}
+
 // #endregion
 
 // Re-export domain types para conveniência

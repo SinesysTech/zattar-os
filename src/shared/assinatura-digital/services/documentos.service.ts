@@ -6,6 +6,7 @@ import { calculateHash } from "../services/integrity.service";
 import { decodeDataUrlToBuffer } from "../services/base64";
 import { downloadFromStorageUrl } from "../services/signature";
 import { validateDeviceFingerprintEntropy } from "../services/signature/validation.service";
+import { auditDocumentSignerIntegrity } from "../services/signature/audit.service";
 import { logger, LogServices, LogOperations } from "../services/logger";
 import {
   appendManifestPage,
@@ -1149,6 +1150,42 @@ export async function finalizePublicSigner(params: {
 
   if (updateDocError) {
     throw new Error(`Erro ao atualizar documento: ${updateDocError.message}`);
+  }
+
+  // Auditoria automática pós-assinatura (fire-and-log, nunca bloqueia a resposta).
+  // Paridade com Fluxo Formulário: smoke test que detecta imediatamente hash
+  // divergente, foto não-embedada ou fingerprint baixo.
+  try {
+    const auditResult = await auditDocumentSignerIntegrity(assinante.id);
+    if (auditResult.status !== "valido") {
+      logger.warn("Auditoria pós-assinatura detectou problemas (Documento)", {
+        service: LogServices.SIGNATURE,
+        operation: LogOperations.AUDIT,
+        documento_uuid: documento.documento_uuid,
+        assinante_id: assinante.id,
+        audit_status: auditResult.status,
+        avisos: auditResult.avisos,
+        erros: auditResult.erros,
+      });
+    } else {
+      logger.debug("Auditoria pós-assinatura OK (Documento)", {
+        service: LogServices.SIGNATURE,
+        operation: LogOperations.AUDIT,
+        documento_uuid: documento.documento_uuid,
+        assinante_id: assinante.id,
+      });
+    }
+  } catch (auditError) {
+    logger.error(
+      "Falha não-bloqueante na auditoria pós-assinatura (Documento)",
+      auditError,
+      {
+        service: LogServices.SIGNATURE,
+        operation: LogOperations.AUDIT,
+        documento_uuid: documento.documento_uuid,
+        assinante_id: assinante.id,
+      }
+    );
   }
 
   return {
