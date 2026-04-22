@@ -415,7 +415,10 @@ export interface AssinaturaDigitalDocumentoAssinante {
   rubrica_url?: string | null;
   ip_address?: string | null;
   user_agent?: string | null;
-  geolocation?: Record<string, unknown> | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  geolocation_accuracy?: number | null;
+  geolocation_timestamp?: string | null;
   termos_aceite_versao?: string | null;
   termos_aceite_data?: string | null;
   dispositivo_fingerprint_raw?: Record<string, unknown> | null;

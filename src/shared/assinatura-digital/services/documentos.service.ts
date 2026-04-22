@@ -759,7 +759,12 @@ export async function finalizePublicSigner(params: {
   // identificação/segurança
   ip_address?: string | null;
   user_agent?: string | null;
-  geolocation?: Record<string, unknown> | null;
+  geolocation?: {
+    latitude: number;
+    longitude: number;
+    accuracy: number;
+    timestamp?: string | null;
+  } | null;
   dispositivo_fingerprint_raw?: Record<string, unknown> | null;
   termos_aceite_versao: string;
   // artefatos
@@ -873,7 +878,10 @@ export async function finalizePublicSigner(params: {
       rubrica_url: rubricaUrl,
       ip_address: params.ip_address ?? null,
       user_agent: params.user_agent ?? null,
-      geolocation: params.geolocation ?? null,
+      latitude: params.geolocation?.latitude ?? null,
+      longitude: params.geolocation?.longitude ?? null,
+      geolocation_accuracy: params.geolocation?.accuracy ?? null,
+      geolocation_timestamp: params.geolocation?.timestamp ?? null,
       termos_aceite_versao: params.termos_aceite_versao,
       termos_aceite_data: nowIso,
       dispositivo_fingerprint_raw: params.dispositivo_fingerprint_raw ?? null,

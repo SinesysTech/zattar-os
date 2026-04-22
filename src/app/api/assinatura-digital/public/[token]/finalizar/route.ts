@@ -25,7 +25,15 @@ const schema = z.object({
   selfie_base64: z.string().optional().nullable(), // Validação condicional após parse
   assinatura_base64: z.string().min(1),
   rubrica_base64: z.string().optional().nullable(), // Validação condicional após parse
-  geolocation: z.record(z.unknown()).optional().nullable(),
+  geolocation: z
+    .object({
+      latitude: z.number(),
+      longitude: z.number(),
+      accuracy: z.number(),
+      timestamp: z.string().optional().nullable(),
+    })
+    .optional()
+    .nullable(),
   dispositivo_fingerprint_raw: z.record(z.unknown()).optional().nullable(),
   termos_aceite: z.boolean().refine((v) => v === true, {
     message: "Aceite dos termos é obrigatório",

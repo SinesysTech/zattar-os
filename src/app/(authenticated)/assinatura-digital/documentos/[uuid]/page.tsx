@@ -41,14 +41,15 @@ function normalizeDocumento(
     rubricaUrl: a.rubrica_url ?? null,
     ipAddress: a.ip_address ?? null,
     userAgent: a.user_agent ?? null,
-    geolocation: a.geolocation
-      ? {
-          latitude: (a.geolocation as Record<string, unknown>).latitude as number | null,
-          longitude: (a.geolocation as Record<string, unknown>).longitude as number | null,
-          accuracy: (a.geolocation as Record<string, unknown>).accuracy as number | null,
-          timestamp: (a.geolocation as Record<string, unknown>).timestamp as string | null,
-        }
-      : null,
+    geolocation:
+      a.latitude != null || a.longitude != null
+        ? {
+            latitude: a.latitude ?? null,
+            longitude: a.longitude ?? null,
+            accuracy: a.geolocation_accuracy ?? null,
+            timestamp: a.geolocation_timestamp ?? null,
+          }
+        : null,
     dispositivoFingerprint: a.dispositivo_fingerprint_raw ?? null,
     termosAceiteVersao: a.termos_aceite_versao ?? null,
     termosAceiteData: a.termos_aceite_data ?? null,

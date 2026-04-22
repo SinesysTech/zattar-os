@@ -80,6 +80,7 @@ export interface GeolocationData {
   latitude: number;
   longitude: number;
   accuracy: number;
+  timestamp?: string | null;
 }
 
 // =============================================================================
@@ -330,7 +331,12 @@ export interface PublicSignatureContextValue {
     rubricaMetrics?: SignatureMetrics
   ) => void;
   setDeviceFingerprint: (fingerprint: DeviceFingerprintData) => void;
-  setGeolocation: (latitude: number, longitude: number, accuracy: number) => void;
+  setGeolocation: (
+    latitude: number,
+    longitude: number,
+    accuracy: number,
+    timestamp?: string | null
+  ) => void;
   setTermosAceite: (value: boolean) => void;
   finalizeSigning: (data?: FinalizeSigningData) => Promise<void>;
   nextStep: () => void;
@@ -469,10 +475,15 @@ export function PublicSignatureProvider({
 
   // Define geolocalização
   const setGeolocation = useCallback(
-    (latitude: number, longitude: number, accuracy: number) => {
+    (
+      latitude: number,
+      longitude: number,
+      accuracy: number,
+      timestamp?: string | null
+    ) => {
       dispatch({
         type: "SET_GEOLOCATION",
-        payload: { latitude, longitude, accuracy },
+        payload: { latitude, longitude, accuracy, timestamp: timestamp ?? null },
       });
     },
     []

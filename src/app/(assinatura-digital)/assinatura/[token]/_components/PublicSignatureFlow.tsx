@@ -107,6 +107,7 @@ function PublicSignatureFlowContent({ token }: { token: string }) {
             position.coords.latitude,
             position.coords.longitude,
             position.coords.accuracy,
+            String(position.timestamp),
           )
         },
         () => {},
