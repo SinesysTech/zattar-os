@@ -288,7 +288,7 @@ function HeroBlock({
       <GlassPanel
         depth={2}
         className={cn(
-          'relative overflow-hidden p-8 md:p-10 lg:p-12 rounded-[2rem]',
+          'relative overflow-hidden p-8 md:p-10 lg:p-12 rounded-4xl',
           'ring-1 ring-inset',
           style.ring,
         )}
@@ -464,7 +464,7 @@ function EditorialTabs({
                 )}
               </span>
               {isActive && (
-                <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary rounded-full" />
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
               )}
             </button>
           );
@@ -761,7 +761,7 @@ function HistoricoTab({
     <ol className="relative">
       <span
         aria-hidden="true"
-        className="absolute left-[5px] top-2 bottom-2 w-px bg-linear-to-b from-border/10 via-border/30 to-border/10"
+        className="absolute left-1.25 top-2 bottom-2 w-px bg-linear-to-b from-border/10 via-border/30 to-border/10"
       />
       {[...historico].reverse().map((evt, idx) => {
         const meta = eventStyle[evt.tipo];
@@ -774,7 +774,7 @@ function HistoricoTab({
           >
             <span
               className={cn(
-                'absolute left-[1px] top-[1.65rem] size-[11px] rounded-full ring-4 ring-background',
+                'absolute left-px top-[1.65rem] size-2.75 rounded-full ring-4 ring-background',
                 meta.dot,
               )}
             />

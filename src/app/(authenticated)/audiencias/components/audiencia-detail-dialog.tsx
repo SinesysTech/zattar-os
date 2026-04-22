@@ -604,7 +604,7 @@ export function AudienciaDetailDialog({
                             </Text>
                             {urlObrigatoriaFaltando && (
                               <span
-                                className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-[1px] text-[9px] font-semibold uppercase tracking-[0.08em] text-warning"
+                                className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.08em] text-warning"
                                 role="status"
                                 aria-label="Campo obrigatório não preenchido"
                               >
@@ -697,7 +697,7 @@ export function AudienciaDetailDialog({
                             </Text>
                             {enderecoObrigatorioFaltando && (
                               <span
-                                className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-[1px] text-[9px] font-semibold uppercase tracking-[0.08em] text-warning"
+                                className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-px text-[9px] font-semibold uppercase tracking-[0.08em] text-warning"
                                 role="status"
                                 aria-label="Campo obrigatório não preenchido"
                               >
