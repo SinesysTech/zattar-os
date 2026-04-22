@@ -398,14 +398,14 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
             </div>
           </div>
         </div>
-        <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors cursor-pointer">
+        <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer">
           <X className="size-4 text-muted-foreground/60" />
         </button>
       </div>
 
       {/* Progress */}
       {doc.assinantes.length > 0 && (
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/3 border border-border/10 mb-4">
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-4">
           <ProgressRing
             percent={progress.percent}
             size={48}
@@ -432,7 +432,7 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
             const isLate = !isDone && (a.diasPendente ?? 0) > 7;
 
             return (
-              <div key={i} className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white/3 transition-colors">
+              <div key={i} className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-foreground/3 transition-colors">
                 <div className={`size-2 rounded-full shrink-0 ${isDone ? 'bg-success/60' : isLate ? 'bg-warning/60 animate-pulse' : 'bg-muted-foreground/20'}`} />
                 <div className="flex-1 min-w-0">
                   <p className="text-[11px] font-medium">{a.nome}</p>
@@ -499,10 +499,10 @@ function DocumentDetail({ doc, onClose }: { doc: Documento; onClose: () => void 
           <ExternalLink className="size-3" />
           Ver documento
         </button>
-        <button className="flex items-center justify-center px-3 py-2 rounded-lg bg-white/4 text-muted-foreground/50 hover:bg-white/6 transition-colors cursor-pointer">
+        <button className="flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer">
           <Download className="size-3" />
         </button>
-        <button className="flex items-center justify-center px-3 py-2 rounded-lg bg-white/4 text-muted-foreground/50 hover:bg-white/6 transition-colors cursor-pointer">
+        <button className="flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer">
           <Copy className="size-3" />
         </button>
       </div>
@@ -521,7 +521,7 @@ function DocumentListRow({ doc, onSelect, selected }: { doc: Documento; onSelect
     <div
       onClick={() => onSelect(doc)}
       className={`flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all
-        ${selected ? 'bg-primary/6 border border-primary/15' : `hover:bg-white/4 border border-transparent ${hasPendingLong ? 'ring-1 ring-warning/10' : ''}`}`}
+        ${selected ? 'bg-primary/6 border border-primary/15' : `hover:bg-foreground/4 border border-transparent ${hasPendingLong ? 'ring-1 ring-warning/10' : ''}`}`}
     >
       <div className={`size-8 rounded-lg ${cfg.bg} flex items-center justify-center shrink-0`}>
         <cfg.icon className={`size-3.5 ${cfg.color}`} />

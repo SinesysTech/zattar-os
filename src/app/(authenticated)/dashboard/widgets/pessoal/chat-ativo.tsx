@@ -57,7 +57,7 @@ export function WidgetChatAtivo() {
 
       {/* Preview da última mensagem */}
       {ultimaMsg ? (
-        <div className="px-3 py-2.5 rounded-xl bg-white/3 border border-border/10">
+        <div className="px-3 py-2.5 rounded-xl bg-foreground/3 border border-border/10">
           <div className="flex items-center gap-1.5 mb-1">
             <div className="size-1.5 rounded-full bg-success/60" />
             <span className="text-[10px] font-semibold text-foreground/70">{ultimaMsg.autor}</span>
@@ -66,7 +66,7 @@ export function WidgetChatAtivo() {
           <p className="text-[10px] text-muted-foreground/55 leading-relaxed line-clamp-2">{ultimaMsg.preview}</p>
         </div>
       ) : (
-        <div className="px-3 py-2.5 rounded-xl bg-white/3 border border-border/10">
+        <div className="px-3 py-2.5 rounded-xl bg-foreground/3 border border-border/10">
           <p className="text-[10px] text-muted-foreground/40 text-center">Nenhuma mensagem recente</p>
         </div>
       )}

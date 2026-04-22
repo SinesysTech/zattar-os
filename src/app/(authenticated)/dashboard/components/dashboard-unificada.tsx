@@ -114,7 +114,7 @@ function Kpi({ label, value, description, trend, icon: Icon, href }: KpiProps) {
           )}
         </div>
         <CardAction>
-          <div className="flex size-12 items-center justify-center rounded-full border border-border/30 bg-white/5 backdrop-blur-sm">
+          <div className="flex size-12 items-center justify-center rounded-full border border-border/30 bg-foreground/5 backdrop-blur-sm">
             <Icon className="size-5 text-foreground/70" />
           </div>
         </CardAction>

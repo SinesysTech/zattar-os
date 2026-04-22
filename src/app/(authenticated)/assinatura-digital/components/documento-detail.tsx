@@ -63,7 +63,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
         </div>
         <button
           onClick={onClose}
-          className="p-1.5 rounded-lg hover:bg-white/4 transition-colors cursor-pointer"
+          className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer"
         >
           <X className="size-4 text-muted-foreground/60" />
         </button>
@@ -71,7 +71,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
 
       {/* Progress */}
       {doc.assinantes.length > 0 && (
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/3 border border-border/10 mb-4">
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-4">
           <ProgressRing
             percent={progress.percent}
             size={48}
@@ -109,7 +109,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             return (
               <div
                 key={i}
-                className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-white/3 transition-colors"
+                className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-foreground/3 transition-colors"
               >
                 <div
                   className={`size-2 rounded-full shrink-0 ${
@@ -203,10 +203,10 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
           <ExternalLink className="size-3" />
           Ver documento
         </button>
-        <button className="flex items-center justify-center px-3 py-2 rounded-lg bg-white/4 text-muted-foreground/50 hover:bg-white/6 transition-colors cursor-pointer">
+        <button className="flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer">
           <Download className="size-3" />
         </button>
-        <button className="flex items-center justify-center px-3 py-2 rounded-lg bg-white/4 text-muted-foreground/50 hover:bg-white/6 transition-colors cursor-pointer">
+        <button className="flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 hover:bg-foreground/6 transition-colors cursor-pointer">
           <Copy className="size-3" />
         </button>
       </div>

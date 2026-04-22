@@ -67,7 +67,7 @@ export function WidgetPicker({
         <Button
           variant="outline"
           size="sm"
-          className="gap-2 text-xs font-medium border-border/30 bg-transparent hover:bg-white/5 backdrop-blur-sm"
+          className="gap-2 text-xs font-medium border-border/30 bg-transparent hover:bg-foreground/5 backdrop-blur-sm"
           aria-label="Personalizar dashboard"
         >
           <LayoutGrid className="size-3.5" />
@@ -117,7 +117,7 @@ export function WidgetPicker({
                 <label
                   key={widget.id}
                   htmlFor={`widget-toggle-${widget.id}`}
-                  className="flex items-center gap-4 px-5 py-3.5 cursor-pointer hover:bg-white/3 transition-colors duration-150"
+                  className="flex items-center gap-4 px-5 py-3.5 cursor-pointer hover:bg-foreground/3 transition-colors duration-150"
                 >
                   <Switch
                     id={`widget-toggle-${widget.id}`}

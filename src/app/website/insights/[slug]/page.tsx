@@ -107,7 +107,7 @@ export default async function InsightsArtigoPage({ params }: Props) {
             )}
 
             {/* Metadados */}
-            <div className="flex flex-wrap items-center gap-6 text-on-surface-variant text-sm pb-8 border-b border-white/5">
+            <div className="flex flex-wrap items-center gap-6 text-on-surface-variant text-sm pb-8 border-b border-foreground/5">
               <span className="font-semibold text-on-surface">{post.authorName}</span>
 
               {dataPublicacao && (
@@ -128,7 +128,7 @@ export default async function InsightsArtigoPage({ params }: Props) {
                   {(post.tags as string[]).map((tag) => (
                     <span
                       key={tag}
-                      className="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full text-xs border border-white/5"
+                      className="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full text-xs border border-foreground/5"
                     >
                       {tag}
                     </span>
@@ -142,7 +142,7 @@ export default async function InsightsArtigoPage({ params }: Props) {
         {/* Cover */}
         {post.coverUrl && (
           <div className="max-w-5xl mx-auto px-6 md:px-12 mb-12">
-            <div className="aspect-video rounded-3xl overflow-hidden bg-surface-container-highest border border-white/5">
+            <div className="aspect-video rounded-3xl overflow-hidden bg-surface-container-highest border border-foreground/5">
               <img
                 src={post.coverUrl}
                 alt={post.title}
@@ -161,9 +161,9 @@ export default async function InsightsArtigoPage({ params }: Props) {
             prose-a:text-primary prose-a:no-underline hover:prose-a:underline
             prose-blockquote:border-primary/50 prose-blockquote:text-on-surface-variant
             prose-code:text-primary prose-code:bg-surface-container prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
-            prose-pre:bg-surface-container-highest prose-pre:border prose-pre:border-white/5
+            prose-pre:bg-surface-container-highest prose-pre:border prose-pre:border-foreground/5
             prose-img:rounded-2xl
-            prose-hr:border-white/10
+            prose-hr:border-foreground/10
           ">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {post.content}

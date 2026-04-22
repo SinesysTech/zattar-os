@@ -30,7 +30,7 @@ export function AttachmentMenu({ onSelect, disabled }: AttachmentMenuProps) {
           className={cn(
             'flex items-center justify-center size-8 rounded-lg',
             'text-muted-foreground/60 hover:text-foreground/80',
-            'hover:bg-muted/60 dark:hover:bg-white/5',
+            'hover:bg-muted/60 dark:hover:bg-foreground/5',
             'transition-colors duration-150 cursor-pointer',
             'disabled:opacity-30 disabled:cursor-not-allowed'
           )}

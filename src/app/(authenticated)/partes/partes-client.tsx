@@ -159,7 +159,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
         <button
           onClick={onClose}
           aria-label="Fechar painel de detalhes"
-          className="p-1.5 rounded-lg hover:bg-white/4 transition-colors cursor-pointer"
+          className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer"
         >
           <X className="size-4 text-muted-foreground/60" />
         </button>
@@ -181,7 +181,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       </div>
 
       {/* Métricas */}
-      <div className="flex gap-4 p-3 rounded-xl bg-white/3 border border-border/10 mb-5">
+      <div className="flex gap-4 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-5">
         <div className="flex-1 text-center">
           <p className="font-display text-xl font-bold">{data.metricas.ativos}</p>
           <p className="text-[9px] text-muted-foreground/60">Ativos</p>
@@ -213,7 +213,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
 
       {/* Nome social */}
       {data.nomeSocial && (
-        <div className="mb-4 p-2.5 rounded-lg bg-white/2.5 border border-border/10">
+        <div className="mb-4 p-2.5 rounded-lg bg-foreground/2.5 border border-border/10">
           <p className="text-[9px] text-muted-foreground/55 uppercase tracking-wider mb-0.5">Nome fantasia / Social</p>
           <p className="text-xs text-muted-foreground/70">{data.nomeSocial}</p>
         </div>
@@ -231,7 +231,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
         <button
           onClick={handleCopy}
           aria-label="Copiar nome"
-          className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-white/4 text-muted-foreground/50 text-xs font-medium hover:bg-white/6 transition-colors cursor-pointer"
+          className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 text-xs font-medium hover:bg-foreground/6 transition-colors cursor-pointer"
         >
           <Copy className="size-3" />
         </button>
@@ -524,7 +524,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
             <button
               onClick={() => setPagina((p) => Math.max(1, p - 1))}
               disabled={pagina <= 1}
-              className="flex items-center justify-center size-8 rounded-lg hover:bg-white/4 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              className="flex items-center justify-center size-8 rounded-lg hover:bg-foreground/4 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               <ChevronLeft className="size-4 text-muted-foreground/60" />
             </button>
@@ -534,7 +534,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
             <button
               onClick={() => setPagina((p) => Math.min(totalPages, p + 1))}
               disabled={pagina >= totalPages}
-              className="flex items-center justify-center size-8 rounded-lg hover:bg-white/4 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              className="flex items-center justify-center size-8 rounded-lg hover:bg-foreground/4 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               <ChevronRight className="size-4 text-muted-foreground/60" />
             </button>

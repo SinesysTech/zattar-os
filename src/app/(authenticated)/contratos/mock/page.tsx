@@ -257,7 +257,7 @@ function ContratoListRow({ contrato: c }: { contrato: ContratoCard }) {
   const isStuck = c.diasNoEstagio > 30;
 
   return (
-    <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all hover:bg-white/4 ${isStuck ? 'ring-1 ring-warning/10' : ''}`}>
+    <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all hover:bg-foreground/4 ${isStuck ? 'ring-1 ring-warning/10' : ''}`}>
       {/* Status dot */}
       <div className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: stage.color, opacity: 0.6 }} />
 

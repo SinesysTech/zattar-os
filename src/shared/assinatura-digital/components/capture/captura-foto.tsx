@@ -123,7 +123,7 @@ const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto
                     aria-hidden="true"
                     className="pointer-events-none absolute inset-0 flex items-center justify-center"
                   >
-                    <div className="h-[70%] w-[60%] rounded-[50%] border-2 border-dashed border-white/60 shadow-[0_0_0_9999px_color-mix(in_oklch,black_25%,transparent)]" />
+                    <div className="h-[70%] w-[60%] rounded-[50%] border-2 border-dashed border-foreground/60 shadow-[0_0_0_9999px_color-mix(in_oklch,black_25%,transparent)]" />
                   </div>
                 )}
 

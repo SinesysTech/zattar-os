@@ -2,7 +2,11 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 import type { TemplateBasico } from '@/shared/assinatura-digital/services/data.service';
 import type { DadosContratoParaMapping, CampoFaltante } from './mapeamento-contrato-input-data';
 import { contratoParaInputData, detectarCamposFaltantes } from './mapeamento-contrato-input-data';
-import { generatePdfFromTemplate } from '@/shared/assinatura-digital/services/template-pdf.service';
+import {
+  generatePdfFromTemplate,
+  resolveVariable,
+  type PdfDataContext,
+} from '@/shared/assinatura-digital/services/template-pdf.service';
 import JSZip from 'jszip';
 
 export const FORMULARIO_SLUG_TRABALHISTA = 'contratacao';
@@ -217,15 +221,32 @@ export async function validarGeracaoPdfs(
   const ctx = await carregarContexto(contratoId);
   if (ctx.status === 'error') return { status: 'erro', mensagem: ctx.mensagem };
 
-  let inputData: Record<string, unknown>;
+  let pdfCtx: PdfDataContext;
+  let extras: Record<string, unknown>;
   try {
     const mapeado = contratoParaInputData(ctx.dados);
-    inputData = {
+    pdfCtx = {
       cliente: mapeado.cliente,
-      'acao.nome_empresa_pessoa': mapeado.parteContrariaNome,
-      'cliente.email': mapeado.ctxExtras['cliente.email'],
-      ...overrides,
+      segmento: {
+        id: ctx.formulario.segmento_id,
+        nome: 'Trabalhista',
+        slug: 'trabalhista',
+        ativo: true,
+      },
+      formulario: {
+        id: ctx.formulario.id,
+        formulario_uuid: ctx.formulario.formulario_uuid,
+        nome: ctx.formulario.nome,
+        slug: ctx.formulario.slug,
+        segmento_id: ctx.formulario.segmento_id,
+        ativo: ctx.formulario.ativo,
+      },
+      protocolo: `CTR-${ctx.dados.contrato.id}-validate`,
+      parte_contraria: mapeado.parteContrariaNome
+        ? { nome: mapeado.parteContrariaNome }
+        : undefined,
     };
+    extras = { ...mapeado.ctxExtras, ...overrides };
   } catch (err) {
     return {
       status: 'erro',
@@ -233,7 +254,8 @@ export async function validarGeracaoPdfs(
     };
   }
 
-  const faltantes = detectarCamposFaltantes(inputData, ctx.templates);
+  const resolver = (chave: string) => resolveVariable(chave, pdfCtx, extras);
+  const faltantes = detectarCamposFaltantes(resolver, ctx.templates);
   if (faltantes.length > 0) {
     return { status: 'campos_faltantes', camposFaltantes: faltantes };
   }

@@ -319,7 +319,7 @@ export function ListItem({
   return (
     <div
       className={`flex items-center gap-3 px-3 py-2.5 -mx-1 rounded-xl
-                   hover:bg-white/4 transition-all duration-150 cursor-pointer ${className}`}
+                   hover:bg-foreground/4 transition-all duration-150 cursor-pointer ${className}`}
     >
       {children}
     </div>

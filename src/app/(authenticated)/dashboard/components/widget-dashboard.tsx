@@ -277,7 +277,7 @@ function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
   return (
     <GlassPanel depth={1} className="p-12">
       <div className="flex flex-col items-center justify-center text-center gap-4">
-        <div className="size-14 rounded-2xl border border-border/20 bg-white/3 flex items-center justify-center">
+        <div className="size-14 rounded-2xl border border-border/20 bg-foreground/3 flex items-center justify-center">
           <LayoutGrid className="size-6 text-muted-foreground/55" />
         </div>
         <div>
@@ -295,7 +295,7 @@ function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
             variant="outline"
             size="sm"
             onClick={onOpenPicker}
-            className="gap-2 border-border/30 bg-transparent hover:bg-white/5"
+            className="gap-2 border-border/30 bg-transparent hover:bg-foreground/5"
           >
             <LayoutGrid className="size-3.5" />
             Personalizar

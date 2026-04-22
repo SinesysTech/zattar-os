@@ -252,7 +252,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
                 { label: "Confirmar testemunhas", icon: Users },
                 { label: "Pauta da semana", icon: Calendar },
               ].map((a) => (
-                <button key={a.label} className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] text-muted-foreground/50 hover:text-foreground/70 hover:bg-white/4 transition-all cursor-pointer group">
+                <button key={a.label} className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] text-muted-foreground/50 hover:text-foreground/70 hover:bg-foreground/4 transition-all cursor-pointer group">
                   <a.icon className="size-2.5 text-muted-foreground/45 group-hover:text-primary/40 transition-colors" />
                   {a.label}
                   <ArrowRight className="size-2 ml-auto opacity-0 group-hover:opacity-40 transition-opacity" />

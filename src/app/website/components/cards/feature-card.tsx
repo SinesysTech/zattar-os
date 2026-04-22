@@ -30,7 +30,7 @@ export function FeatureCard({
     <div className={cn(wide && "md:col-span-2", "group")}>
       <div
         className={cn(
-          "h-full bg-surface-container rounded-3xl p-8 border border-white/5",
+          "h-full bg-surface-container rounded-3xl p-8 border border-foreground/5",
           "hover:border-primary/30 transition-all duration-500 flex flex-col",
           className
         )}

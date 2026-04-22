@@ -115,7 +115,7 @@ export function BriefingInput({
         className={cn(
           'relative flex flex-col w-full rounded-xl',
           'border border-border/25 dark:border-border/15',
-          'bg-muted/40 dark:bg-white/4',
+          'bg-muted/40 dark:bg-foreground/4',
           'transition-colors duration-150',
           'focus-within:border-border/40 dark:focus-within:border-border/25',
         )}

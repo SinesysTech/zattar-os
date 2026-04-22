@@ -26,7 +26,7 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
         ${
           selected
             ? "bg-primary/6 border border-primary/15"
-            : `hover:bg-white/4 border border-transparent ${hasPendingLong ? "ring-1 ring-warning/10" : ""}`
+            : `hover:bg-foreground/4 border border-transparent ${hasPendingLong ? "ring-1 ring-warning/10" : ""}`
         }`}
     >
       <IconContainer size="md" className={cfg.bg}>

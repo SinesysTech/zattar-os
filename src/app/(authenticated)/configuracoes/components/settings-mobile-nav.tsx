@@ -24,8 +24,8 @@ export function SettingsMobileNav({ activeTab, onTabChange }: SettingsMobileNavP
                 className={cn(
                   'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-200 cursor-pointer',
                   isActive
-                    ? 'bg-white/5 text-foreground'
-                    : 'text-muted-foreground hover:bg-white/4'
+                    ? 'bg-foreground/5 text-foreground'
+                    : 'text-muted-foreground hover:bg-foreground/4'
                 )}
               >
                 <item.icon className={cn('size-3.5', isActive ? 'text-primary' : 'text-muted-foreground/50')} />

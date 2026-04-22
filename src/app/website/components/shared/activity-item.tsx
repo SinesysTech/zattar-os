@@ -23,7 +23,7 @@ export function ActivityItem({
   return (
     <div
       className={cn(
-        "flex items-start gap-4 p-4 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/5 transition-all",
+        "flex items-start gap-4 p-4 rounded-xl hover:bg-foreground/5 border border-transparent hover:border-foreground/5 transition-all",
         className
       )}
     >

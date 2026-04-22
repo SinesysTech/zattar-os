@@ -137,7 +137,7 @@ export function ConfiguracoesSettingsLayout({
                 <p className="text-xs text-muted-foreground/70 mb-4">
                   Gerencie múltiplos aplicativos de IA, incluindo chatbots e workflows de automação.
                 </p>
-                <Button variant="outline" size="sm" className="w-full border-border/20 bg-transparent hover:bg-white/4" asChild>
+                <Button variant="outline" size="sm" className="w-full border-border/20 bg-transparent hover:bg-foreground/4" asChild>
                   <Link href="/app/configuracoes/dify">
                     Gerenciar Apps
                     <ArrowRight className="size-3 ml-auto" />
@@ -155,7 +155,7 @@ export function ConfiguracoesSettingsLayout({
                 <p className="text-xs text-muted-foreground/70 mb-4">
                   Vincule assistentes de IA a tipos de expedientes para geração automática de peças.
                 </p>
-                <Button variant="outline" size="sm" className="w-full border-border/20 bg-transparent hover:bg-white/4" asChild>
+                <Button variant="outline" size="sm" className="w-full border-border/20 bg-transparent hover:bg-foreground/4" asChild>
                   <Link href="/app/configuracoes/assistentes-tipos">
                     Vincular por Tipo
                     <ArrowRight className="size-3 ml-auto" />

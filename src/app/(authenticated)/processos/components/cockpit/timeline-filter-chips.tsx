@@ -76,7 +76,7 @@ export function TimelineFilterChips({
                 'flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium whitespace-nowrap transition-all duration-200 cursor-pointer',
                 isActive
                   ? 'bg-primary/12 text-primary shadow-sm'
-                  : 'text-muted-foreground/50 hover:text-muted-foreground/70 hover:bg-white/4'
+                  : 'text-muted-foreground/50 hover:text-muted-foreground/70 hover:bg-foreground/4'
               )}
             >
               <Icon className="size-3" />

@@ -307,9 +307,9 @@ export function WidgetFocoHoje() {
           <div
             key={i}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl
-                        bg-white/2.5 border border-border/10
+                        bg-foreground/2.5 border border-border/10
                         ring-1 ${URGENCIA_RING[item.urgencia]}
-                        hover:bg-white/4 transition-all duration-150 cursor-pointer`}
+                        hover:bg-foreground/4 transition-all duration-150 cursor-pointer`}
           >
             {/* Número em círculo */}
             <div
@@ -381,7 +381,7 @@ export function WidgetMeuDia() {
                 key={i}
                 className={`flex items-start gap-3 px-2 py-1.5 rounded-xl transition-all duration-150 ${isNext
                     ? 'bg-primary/[0.07] ring-1 ring-primary/20'
-                    : 'hover:bg-white/4'
+                    : 'hover:bg-foreground/4'
                   }`}
               >
                 {/* Dot no trilho */}
@@ -643,7 +643,7 @@ export function WidgetCapturaStatus() {
       depth={1}
     >
       {/* Strip de status geral */}
-      <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/3 border border-border/10 mb-3">
+      <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-foreground/3 border border-border/10 mb-3">
         <RefreshCw className="size-3 text-muted-foreground/55" />
         <span className="text-[10px] text-muted-foreground/50 flex-1">
           Última sincronização
@@ -661,7 +661,7 @@ export function WidgetCapturaStatus() {
         {CAPTURA_TRIBUNAIS.map((t) => (
           <div
             key={t.sigla}
-            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/4 transition-all duration-150"
+            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-foreground/4 transition-all duration-150"
           >
             <div className={`size-2 rounded-full shrink-0 ${CAPTURA_STATUS_STYLES[t.status]}`} />
             <span className="text-[10px] font-semibold text-foreground/70 w-10 shrink-0 tabular-nums">
@@ -732,7 +732,7 @@ export function WidgetChatAtivo() {
       </div>
 
       {/* Preview da última mensagem */}
-      <div className="px-3 py-2.5 rounded-xl bg-white/3 border border-border/10">
+      <div className="px-3 py-2.5 rounded-xl bg-foreground/3 border border-border/10">
         <div className="flex items-center gap-1.5 mb-1">
           <div className="size-1.5 rounded-full bg-emerald-500/60" />
           <span className="text-[10px] font-semibold text-foreground/70">

@@ -353,7 +353,7 @@ function embedRichText(
   }
 }
 
-interface PdfDataContext {
+export interface PdfDataContext {
   cliente: ClienteBasico;
   segmento: SegmentoBasico;
   formulario: FormularioBasico;
@@ -554,11 +554,11 @@ function formatDataExtenso(date: Date): string {
   return `${dia} de ${mes} de ${ano}`;
 }
 
-function resolveVariable(
-  variable: TipoVariavel | undefined,
+export function resolveVariable(
+  variable: TipoVariavel | string | undefined,
   ctx: PdfDataContext,
   extras: Record<string, unknown>
-) {
+): string {
   if (!variable) return "";
 
   const c = ctx.cliente;
@@ -608,6 +608,7 @@ function resolveVariable(
     "cliente.endereco_cep": cepFormatado,
     "cliente.endereco_cidade": end?.municipio,
     "cliente.endereco_uf": end?.estado_sigla,
+    "cliente.endereco_estado": end?.estado_sigla,
 
     // Cliente - endereço (aliases sem prefixo)
     "cliente.logradouro": end?.logradouro,

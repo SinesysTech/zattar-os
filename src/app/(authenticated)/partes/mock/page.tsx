@@ -137,7 +137,7 @@ function TabPills({ active, onChange }: { active: TabId; onChange: (id: TabId) =
             transition-all duration-200 cursor-pointer
             ${active === tab.id
               ? 'bg-primary/12 text-primary shadow-sm'
-              : 'text-muted-foreground/50 hover:text-muted-foreground/70 hover:bg-white/4'
+              : 'text-muted-foreground/50 hover:text-muted-foreground/70 hover:bg-foreground/4'
             }
           `}
         >
@@ -281,7 +281,7 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
             </div>
           </div>
         </div>
-        <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors cursor-pointer">
+        <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer">
           <X className="size-4 text-muted-foreground/60" />
         </button>
       </div>
@@ -295,7 +295,7 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
       </div>
 
       {/* Stats */}
-      <div className="flex gap-4 p-3 rounded-xl bg-white/3 border border-border/10 mb-5">
+      <div className="flex gap-4 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-5">
         <div className="flex-1 text-center">
           <p className="font-display text-xl font-bold">{parte.processosAtivos}</p>
           <p className="text-[9px] text-muted-foreground/60">Ativos</p>
@@ -320,7 +320,7 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
         </h3>
         <div className="space-y-1.5">
           {mockProcessos.map((p) => (
-            <div key={p.numero} className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/4 transition-colors cursor-pointer">
+            <div key={p.numero} className="flex items-center gap-2 p-2 rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer">
               <div className={`size-1.5 rounded-full ${p.status === 'Ativo' ? 'bg-success/60' : 'bg-muted-foreground/20'}`} />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-mono text-muted-foreground/60 truncate">{p.numero}</p>
@@ -358,7 +358,7 @@ function EntityDetail({ parte, onClose }: { parte: Parte; onClose: () => void })
           <ExternalLink className="size-3" />
           Ver perfil completo
         </button>
-        <button className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-white/4 text-muted-foreground/50 text-xs font-medium hover:bg-white/6 transition-colors cursor-pointer">
+        <button className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/50 text-xs font-medium hover:bg-foreground/6 transition-colors cursor-pointer">
           <Copy className="size-3" />
         </button>
       </div>
@@ -468,7 +468,7 @@ export default function PartesMockPage() {
               placeholder="Buscar por nome, CPF, CNPJ..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-56 pl-8 pr-3 py-1.5 rounded-lg bg-white/4 border border-border/15 text-xs placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary/20 transition-all"
+              className="w-56 pl-8 pr-3 py-1.5 rounded-lg bg-foreground/4 border border-border/15 text-xs placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary/20 transition-all"
             />
           </div>
           {/* View toggle */}
@@ -539,7 +539,7 @@ function EntityListRow({ parte, onSelect, selected }: { parte: Parte; onSelect: 
       onClick={() => onSelect(parte)}
       className={`
         flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer transition-all duration-150
-        ${selected ? 'bg-primary/6 border border-primary/15' : 'hover:bg-white/4 border border-transparent'}
+        ${selected ? 'bg-primary/6 border border-primary/15' : 'hover:bg-foreground/4 border border-transparent'}
       `}
     >
       {/* Avatar */}

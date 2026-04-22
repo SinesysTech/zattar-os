@@ -436,7 +436,7 @@ export function WidgetModeloCobranca() {
       {/* Comparação em duas colunas */}
       <div className="grid grid-cols-2 gap-3 mb-4">
         {/* Pro Labore */}
-        <div className="rounded-xl border border-border/15 bg-white/2 p-3">
+        <div className="rounded-xl border border-border/15 bg-foreground/2 p-3">
           <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider mb-1">
             Pro Labore
           </p>

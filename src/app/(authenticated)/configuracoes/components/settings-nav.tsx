@@ -36,8 +36,8 @@ export function SettingsNav({ activeTab, onTabChange }: SettingsNavProps) {
                       className={cn(
                         'flex items-center gap-3 w-full rounded-xl px-3 py-2.5 text-sm transition-all duration-200 cursor-pointer',
                         isActive
-                          ? 'bg-white/5 text-foreground border-l-2 border-primary font-medium'
-                          : 'text-muted-foreground/80 hover:bg-white/4 hover:text-foreground'
+                          ? 'bg-foreground/5 text-foreground border-l-2 border-primary font-medium'
+                          : 'text-muted-foreground/80 hover:bg-foreground/4 hover:text-foreground'
                       )}
                     >
                       <item.icon
@@ -63,7 +63,7 @@ export function SettingsNav({ activeTab, onTabChange }: SettingsNavProps) {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="flex items-center gap-3 w-full rounded-xl px-3 py-2.5 text-sm text-muted-foreground/80 hover:bg-white/4 hover:text-foreground transition-all duration-200"
+                  className="flex items-center gap-3 w-full rounded-xl px-3 py-2.5 text-sm text-muted-foreground/80 hover:bg-foreground/4 hover:text-foreground transition-all duration-200"
                 >
                   <link.icon className="size-4 shrink-0 text-muted-foreground/50" />
                   <span className="truncate">{link.label}</span>

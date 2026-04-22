@@ -79,7 +79,7 @@ export function ProfileSidebar({
           size="sm"
           variant="outline"
           onClick={onEditCover}
-          className="absolute top-2 right-2 h-7 px-2 gap-1 text-[11px] bg-black/30 backdrop-blur-sm border-white/10 text-white/70 hover:bg-black/50 hover:text-white/90"
+          className="absolute top-2 right-2 h-7 px-2 gap-1 text-[11px] bg-black/30 backdrop-blur-sm border-foreground/10 text-white/70 hover:bg-black/50 hover:text-white/90"
         >
           <Camera className="size-3" />
           Editar

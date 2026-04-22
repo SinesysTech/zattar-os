@@ -64,7 +64,7 @@ export function BriefingHeader({
               className={cn(
                 'size-7 rounded-lg flex items-center justify-center',
                 'text-muted-foreground/60 hover:text-foreground/80',
-                'hover:bg-muted/60 dark:hover:bg-white/8',
+                'hover:bg-muted/60 dark:hover:bg-foreground/8',
                 'transition-colors duration-150 cursor-pointer'
               )}
               title="Histórico de conversas"
@@ -100,9 +100,9 @@ export function BriefingHeader({
                     key={thread.id}
                     className={cn(
                       'group/thread flex items-center gap-2 px-3 py-2 cursor-pointer',
-                      'hover:bg-muted/50 dark:hover:bg-white/4',
+                      'hover:bg-muted/50 dark:hover:bg-foreground/4',
                       'transition-colors duration-100',
-                      thread.id === activeThreadId && 'bg-muted/40 dark:bg-white/3'
+                      thread.id === activeThreadId && 'bg-muted/40 dark:bg-foreground/3'
                     )}
                     onClick={() => onSwitchThread(thread.id)}
                   >
@@ -151,7 +151,7 @@ export function BriefingHeader({
           className={cn(
             'size-7 rounded-lg flex items-center justify-center',
             'text-muted-foreground/60 hover:text-foreground/80',
-            'hover:bg-muted/60 dark:hover:bg-white/8',
+            'hover:bg-muted/60 dark:hover:bg-foreground/8',
             'transition-colors duration-150 cursor-pointer'
           )}
           title="Nova conversa"
@@ -166,7 +166,7 @@ export function BriefingHeader({
           className={cn(
             'size-7 rounded-lg flex items-center justify-center',
             'text-muted-foreground/60 hover:text-foreground/80',
-            'hover:bg-muted/60 dark:hover:bg-white/8',
+            'hover:bg-muted/60 dark:hover:bg-foreground/8',
             'transition-colors duration-150 cursor-pointer'
           )}
           title="Fechar (Esc)"

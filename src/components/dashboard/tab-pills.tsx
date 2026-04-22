@@ -43,7 +43,7 @@ export function TabPills({ tabs, active, onChange }: TabPillsProps) {
             transition-all duration-200 cursor-pointer
             ${active === tab.id
               ? 'bg-primary/12 text-primary shadow-sm'
-              : 'text-muted-foreground/50 hover:text-muted-foreground/70 hover:bg-white/4'
+              : 'text-muted-foreground/50 hover:text-muted-foreground/70 hover:bg-foreground/4'
             }
           `}
         >

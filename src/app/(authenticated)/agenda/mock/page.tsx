@@ -151,7 +151,7 @@ function Toolbar({
             placeholder="Buscar eventos..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-white/4 border border-border/15 text-xs placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20"
+            className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-foreground/4 border border-border/15 text-xs placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20"
           />
           {search && (
             <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
@@ -187,7 +187,7 @@ function Toolbar({
                     <button
                       key={src}
                       onClick={() => toggleSource(src)}
-                      className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs hover:bg-white/4 transition-colors cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs hover:bg-foreground/4 transition-colors cursor-pointer"
                     >
                       <div className={cn("size-3.5 rounded border flex items-center justify-center", active ? "bg-primary border-primary" : "border-border/30")}>
                         {active && <Check className="size-2.5 text-primary-foreground" />}
@@ -206,13 +206,13 @@ function Toolbar({
 
         {/* Date Nav */}
         <div className="flex items-center gap-1">
-          <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
+          <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
             <ChevronLeft className="size-4" />
           </button>
           <button onClick={onToday} className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer">
             Hoje
           </button>
-          <button onClick={onNext} className="p-1.5 rounded-lg hover:bg-white/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
+          <button onClick={onNext} className="p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
             <ChevronRight className="size-4" />
           </button>
         </div>
@@ -221,7 +221,7 @@ function Toolbar({
         <div className="relative">
           <button
             onClick={() => setViewOpen(!viewOpen)}
-            className="p-1.5 rounded-lg hover:bg-white/4 border border-border/15 transition-colors text-muted-foreground/60 hover:text-muted-foreground/60 cursor-pointer"
+            className="p-1.5 rounded-lg hover:bg-foreground/4 border border-border/15 transition-colors text-muted-foreground/60 hover:text-muted-foreground/60 cursor-pointer"
           >
             <Eye className="size-4" />
           </button>
@@ -235,7 +235,7 @@ function Toolbar({
                     onClick={() => { setView(opt.id); setViewOpen(false); }}
                     className={cn(
                       "w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors cursor-pointer",
-                      view === opt.id ? "bg-primary/8 text-primary" : "text-muted-foreground/60 hover:bg-white/4",
+                      view === opt.id ? "bg-primary/8 text-primary" : "text-muted-foreground/60 hover:bg-foreground/4",
                     )}
                   >
                     <span>{opt.label}</span>
@@ -822,7 +822,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
                 { label: "Confirmar testemunhas", icon: Users },
                 { label: "Pauta da semana", icon: Calendar },
               ].map((a) => (
-                <button key={a.label} className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] text-muted-foreground/50 hover:text-foreground/70 hover:bg-white/4 transition-all cursor-pointer group">
+                <button key={a.label} className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] text-muted-foreground/50 hover:text-foreground/70 hover:bg-foreground/4 transition-all cursor-pointer group">
                   <a.icon className="size-2.5 text-muted-foreground/45 group-hover:text-primary/40 transition-colors" />
                   {a.label}
                   <ArrowRight className="size-2 ml-auto opacity-0 group-hover:opacity-40 transition-opacity" />
@@ -1047,7 +1047,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
               <Heading level="card" className="text-sm">{event.title}</Heading>
             </div>
           </div>
-          <button onClick={onClose} className="p-1 rounded-lg hover:bg-white/4 text-muted-foreground/55 cursor-pointer">
+          <button onClick={onClose} className="p-1 rounded-lg hover:bg-foreground/4 text-muted-foreground/55 cursor-pointer">
             <X className="size-4" />
           </button>
         </div>
@@ -1129,7 +1129,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
             </button>
           )}
           <div className="flex items-center gap-2">
-            <button onClick={onClose} className="px-3 py-1.5 rounded-lg text-xs text-muted-foreground/50 hover:bg-white/4 cursor-pointer">
+            <button onClick={onClose} className="px-3 py-1.5 rounded-lg text-xs text-muted-foreground/50 hover:bg-foreground/4 cursor-pointer">
               {isAgenda ? "Cancelar" : "Fechar"}
             </button>
             {isAgenda && (

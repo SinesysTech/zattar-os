@@ -198,7 +198,7 @@ export function BriefingPanel({ onClose, onWidthChange, threadId: initialThreadI
           suggestionView={{
             container: 'gap-2 px-4 pb-2',
             suggestion:
-              'rounded-lg border-border/30 bg-muted/50 dark:bg-white/5 text-foreground/70 text-[11px] font-medium hover:bg-muted/70 dark:hover:bg-white/10 hover:text-foreground/90',
+              'rounded-lg border-border/30 bg-muted/50 dark:bg-foreground/5 text-foreground/70 text-[11px] font-medium hover:bg-muted/70 dark:hover:bg-foreground/10 hover:text-foreground/90',
           }}
         />
       </div>

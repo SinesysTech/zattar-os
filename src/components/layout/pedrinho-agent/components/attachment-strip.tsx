@@ -34,7 +34,7 @@ function AttachmentChip({
       className={cn(
         'group/chip flex items-center gap-1.5 shrink-0',
         'rounded-lg border border-border/15 dark:border-border/8',
-        'bg-muted/40 dark:bg-white/4',
+        'bg-muted/40 dark:bg-foreground/4',
         'pl-1.5 pr-1 py-1',
         'animate-in fade-in zoom-in-95 duration-150'
       )}
@@ -50,7 +50,7 @@ function AttachmentChip({
           <Mic className="size-3.5 text-primary/70" />
         </div>
       ) : (
-        <div className="size-7 rounded bg-muted/60 dark:bg-white/6 flex items-center justify-center">
+        <div className="size-7 rounded bg-muted/60 dark:bg-foreground/6 flex items-center justify-center">
           <FileText className="size-3.5 text-muted-foreground/60" />
         </div>
       )}

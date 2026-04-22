@@ -151,29 +151,33 @@ describe('detectarCamposFaltantes', () => {
     ]),
   };
 
+  const makeResolver = (valores: Record<string, string | null | undefined>) =>
+    (chave: string) => valores[chave] ?? '';
+
   it('flags missing required field', () => {
-    const inputData = {
-      cliente: { rg: null },
-    };
-    const result = detectarCamposFaltantes(inputData, [templateMinimo]);
+    const resolver = makeResolver({ 'cliente.rg': null });
+    const result = detectarCamposFaltantes(resolver, [templateMinimo]);
     expect(result).toHaveLength(1);
     expect(result[0].chave).toBe('cliente.rg');
     expect(result[0].templates).toContain('Contrato');
   });
 
   it('ignores sistema.data_geracao and assinatura.assinatura_base64', () => {
-    const inputData = {
-      cliente: { rg: 'X' },
-    };
-    const result = detectarCamposFaltantes(inputData, [templateMinimo]);
+    const resolver = makeResolver({ 'cliente.rg': 'X' });
+    const result = detectarCamposFaltantes(resolver, [templateMinimo]);
     expect(result).toHaveLength(0);
   });
 
   it('returns empty when all fields present', () => {
-    const inputData = {
-      cliente: { rg: 'MG-123' },
-    };
-    expect(detectarCamposFaltantes(inputData, [templateMinimo])).toEqual([]);
+    const resolver = makeResolver({ 'cliente.rg': 'MG-123' });
+    expect(detectarCamposFaltantes(resolver, [templateMinimo])).toEqual([]);
+  });
+
+  it('treats whitespace-only values as missing', () => {
+    const resolver = makeResolver({ 'cliente.rg': '   ' });
+    const result = detectarCamposFaltantes(resolver, [templateMinimo]);
+    expect(result).toHaveLength(1);
+    expect(result[0].chave).toBe('cliente.rg');
   });
 
   it('extracts variables from texto_composto fields', () => {
@@ -202,15 +206,15 @@ describe('detectarCamposFaltantes', () => {
         },
       ]),
     };
-    const inputData = { cliente: { cpf: null, rg: null } };
-    const result = detectarCamposFaltantes(inputData, [templateCompound]);
+    const resolver = makeResolver({ 'cliente.cpf': null, 'cliente.rg': null });
+    const result = detectarCamposFaltantes(resolver, [templateCompound]);
     const chaves = result.map(c => c.chave).sort();
     expect(chaves).toEqual(['cliente.cpf', 'cliente.rg']);
   });
 
   it('deduplicates chaves when multiple templates use same variable', () => {
-    const inputData = { cliente: { rg: null } };
-    const result = detectarCamposFaltantes(inputData, [templateMinimo, templateMinimo]);
+    const resolver = makeResolver({ 'cliente.rg': null });
+    const result = detectarCamposFaltantes(resolver, [templateMinimo, templateMinimo]);
     expect(result).toHaveLength(1);
     expect(result[0].templates).toEqual(['Contrato', 'Contrato']);
   });

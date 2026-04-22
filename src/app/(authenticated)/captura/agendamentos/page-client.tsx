@@ -258,7 +258,7 @@ export default function AgendamentosPage() {
         {!isLoading && filteredAgendamentos.length > 0 && (
           <GlassPanel depth={1} className="overflow-hidden">
             {/* Column Headers */}
-            <div className="grid grid-cols-[70px_1fr_100px_140px_100px_100px_44px] gap-3 items-center px-4 py-2.5 border-b border-white/5">
+            <div className="grid grid-cols-[70px_1fr_100px_140px_100px_100px_44px] gap-3 items-center px-4 py-2.5 border-b border-foreground/5">
               <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">Status</span>
               <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">Nome / Tipo</span>
               <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-wider">Frequência</span>
@@ -276,7 +276,7 @@ export default function AgendamentosPage() {
               return (
                 <div
                   key={agendamento.id}
-                  className={`grid grid-cols-[70px_1fr_100px_140px_100px_100px_44px] gap-3 items-center px-4 py-3 transition-colors hover:bg-primary/2 ${i < filteredAgendamentos.length - 1 ? 'border-b border-white/3' : ''}`}
+                  className={`grid grid-cols-[70px_1fr_100px_140px_100px_100px_44px] gap-3 items-center px-4 py-3 transition-colors hover:bg-primary/2 ${i < filteredAgendamentos.length - 1 ? 'border-b border-foreground/3' : ''}`}
                 >
                   {/* Status badge */}
                   <div>

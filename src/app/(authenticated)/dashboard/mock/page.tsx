@@ -357,7 +357,7 @@ export default function DashboardMockPage() {
                 <div
                   key={item.id}
                   className="flex items-center gap-3 px-3 py-2.5 -mx-1 rounded-xl
-                             hover:bg-white/4 transition-all duration-150 cursor-pointer group"
+                             hover:bg-foreground/4 transition-all duration-150 cursor-pointer group"
                 >
                   <UrgencyDot level={item.urgencia} />
                   <div className="flex-1 min-w-0">
@@ -398,7 +398,7 @@ export default function DashboardMockPage() {
                     <div
                       key={i}
                       className={`flex items-start gap-3 py-2 px-1 rounded-lg transition-all duration-150 cursor-pointer
-                        ${isNext ? 'bg-primary/4' : 'hover:bg-white/3'}
+                        ${isNext ? 'bg-primary/4' : 'hover:bg-foreground/3'}
                       `}
                     >
                       <div className="relative z-10 mt-0.5">

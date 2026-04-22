@@ -21,14 +21,18 @@ O ZattarOS tem Design System **Glass Briefing 2.0.0** com infraestrutura normati
 
 **Determinismo via oráculos canônicos indexados por shape.**
 
-Em vez de re-inventar decisões a cada refactor, a skill força consulta a um **módulo canônico** apropriado ao **shape** do alvo. Módulos do ZattarOS têm topologias diferentes (CRUD simples, temporal, nested FSD, kanban) e um canon único não serve para todos. Análise empírica (2026-04-22) estabelece a seguinte tabela de canons:
+Em vez de re-inventar decisões a cada refactor, a skill força consulta a um **módulo canônico** apropriado ao **shape** do alvo. Análise empírica de **todos os 40 módulos** em `src/app/(authenticated)/` (medida em 2026-04-22) identificou **10 shapes distintos** no ZattarOS, cada um com canon eleito empiricamente (mais detalhes em §10.1):
 
-| Shape | Canon primário | Evidência |
-|---|---|---|
-| **CRUD simples** (lista + detail + form) | `src/app/(authenticated)/entrevistas-trabalhistas/` | 21/21 TSX com `Heading`/`Text` (100% density); FSD completo enxuto; 0 violações |
-| **Temporal** (ano/mês/semana/lista/quadro) | `src/app/(authenticated)/expedientes/` | 76 shell refs (maior do app); 55 Glass refs; topologia idêntica compartilhada com `perícias` |
-| **Nested FSD** (sub-domínios aninhados) | `src/app/(authenticated)/partes/` | Único módulo com 4 sub-domínios maduros (clientes, representantes, terceiros, partes-contrarias); 30 shell refs |
-| **Kanban/pipeline** | ❌ sem canon hoje | `contratos` tem 6 violações (grade F); se módulo novo cair nesse shape, `translating` é fase mandatória |
+1. **Temporal multi-view** → canon `expedientes/`
+2. **Nested FSD** → canon `partes/` (imaturo — requer lift)
+3. **Kanban/Pipeline** → canon `contratos/` (com violações — requer lift)
+4. **Dashboard widget grid** → canon `dashboard/`
+5. **Process Workspace** (com `[id]/` rich) → canon `processos/[id]/`
+6. **Wizard multi-step admin** → canon `assinatura-digital/` (com violações — requer lift)
+7. **Chat/Thread realtime** → sem canon (módulo único em redesign ativo)
+8. **CRUD simples** → canon `entrevistas-trabalhistas/`
+9. **High-adoption custom page** → canon `comunica-cnj/`
+10. **Content-rich docs** → canon `ajuda/`
 
 Qualquer decisão de alto nível (níveis de heading, depths, tabs, empty states, shell escolhido) deve **replicar o canon do shape correspondente**. Divergência é permitida apenas quando justificada por escrito em `DIVERGENCE-LOG.md`.
 
@@ -49,7 +53,7 @@ Aplicado como guard-rail, também ataca a Dor 1: criar componente novo sem class
 | 5 | **Slash command** | Só no hub (`/zattar-glass`), como escape hatch | Não é default |
 | 6 | **Testing** | Pressure scenarios com subagent (metodologia padrão) | Estabelecido em `writing-skills` |
 | 7 | **Docs linkadas** | Referências por caminho relativo, nunca `@`-links | `@` force-loada 200k+ de context |
-| 8 | **Oráculos canônicos por shape** | CRUD simples: `entrevistas-trabalhistas`; Temporal: `expedientes`; Nested FSD: `partes`; Kanban: sem canon (requer `translating`) | Análise empírica (§2) mostra shapes distintos com canons distintos; canon único geraria convergência errada |
+| 8 | **Oráculos canônicos por shape** | 10 shapes mapeados empiricamente em §10.1 (Temporal, Nested FSD, Kanban, Dashboard widget grid, Process Workspace, Wizard, Chat, CRUD simples, High-adoption custom page, Content-rich docs) | Análise empírica de 40 módulos (§10) mostra shapes distintos com canons distintos; canon único geraria convergência errada |
 | 9 | **Wipro Max** | `ui-ux-pro-max` (old, 96 palettes) = repertório; `ui-ux-pro-max:ui-ux-pro-max` (new, 161 palettes) = repertório + UX guidelines | Ambas são **agnósticas** ao Glass, sempre filtradas pela sub-skill `translating` antes de virar código |
 
 ---
@@ -102,7 +106,7 @@ Aplicado como guard-rail, também ataca a Dor 1: criar componente novo sem class
 1. **Overview** (≤30 palavras): O que é Glass Briefing; por que essa skill existe.
 2. **Routing table** (flowchart graphviz): decisão sobre qual sub-skill invocar.
 3. **Vocabulário compartilhado** (≤80 palavras): 3 depths, `Heading`/`Text` obrigatórios, nunca hex/literals, sempre `audit:design-system`.
-4. **Oráculos canônicos indexados por shape**: CRUD→`entrevistas-trabalhistas`, Temporal→`expedientes`, Nested FSD→`partes`, Kanban→passar por `translating` (§10).
+4. **Oráculos canônicos indexados por shape**: ver §10.1 — 10 shapes mapeados empiricamente (Temporal, Nested FSD, Kanban, Dashboard, Process Workspace, Wizard, Chat, CRUD simples, High-adoption custom, Content docs). Cada sub-skill classifica shape primeiro.
 5. **Ponteiros** (links, não force-load): `design-system/MASTER.md`, `src/lib/design-system/tokens.ts`, `design-system/GOVERNANCE.md`, `docs/architecture/VISUAL-REVIEW-CHECKLIST.md`.
 6. **Boundary clause**: "This skill does NOT implement anything. It routes. If you're here without invoking a sub-skill, stop."
 7. **Red flags** (table): 4 racionalizações que fazem Claude pular o hub.
@@ -115,7 +119,7 @@ Aplicado como guard-rail, também ataca a Dor 1: criar componente novo sem class
 
 **Workflow determinístico** (em etapas fixas):
 
-0. **CLASSIFY SHAPE** — Identificar o shape do componente/página a criar: CRUD simples, Temporal, Nested FSD, Kanban (§10.1). Para Kanban, interromper e chamar `translating` primeiro.
+0. **CLASSIFY SHAPE** — Identificar o shape do componente/página a criar entre os 10 shapes de §10.1. Para shapes sem canon maduro (Chat/Thread hoje — §10.6), interromper e chamar `translating` primeiro. Para shape híbrido (ex: Temporal + Nested), consultar canons sobrepostos (§10.4).
 1. **DISCOVER** — Ler canon do shape identificado (ex: `entrevistas-trabalhistas/components/` para CRUD) e listar componentes shared já existentes em `@/components/shared/` e `@/components/ui/`. Objetivo: mapear o que REUSAR antes de criar.
 2. **BRIEF** — Escrever briefing curto (≤100 palavras): o que o componente faz, densidade, estados (empty, loading, error), responsividade. Se briefing vier de fonte externa (Figma, Dribbble, ui-ux-pro-max), **parar e chamar `translating` primeiro**.
 3. **PLAN** — Mapear decisões estruturais em tabela: `GlassPanel depth`, `Heading level`, tokens de cor/espaçamento, componentes shared usados. Cada decisão **cita** um precedente no canon ou justifica divergência.
@@ -140,8 +144,8 @@ Aplicado como guard-rail, também ataca a Dor 1: criar componente novo sem class
 
 **Workflow determinístico**:
 
-0. **CLASSIFY SHAPE** — Identificar shape do módulo-alvo (§10.1): CRUD simples, Temporal, Nested FSD, Kanban. Output é `{shape, canon_path}`.
-1. **MAP CANON** — Ler o canon do shape correspondente em profundidade (ex: `entrevistas-trabalhistas/` para CRUD; `expedientes/` para Temporal; `partes/` para Nested FSD): layout da página, `PageShell`/`DataShell`/`DialogFormShell`/`TemporalViewShell` usados, níveis de `Heading`, variantes de `Text`, depths, componentes shared, empty states, loading states, filtros. Produzir **mapa mental escrito** (≤200 palavras). Se canon é `partes` (atualmente imaturo — §10.1), sinalizar e incluir tarefa de lift como parte do mesmo trabalho.
+0. **CLASSIFY SHAPE** — Identificar shape do módulo-alvo entre os 10 shapes de §10.1. Se híbrido, listar todos os shapes que se aplicam (ex: `pericias` = Temporal + Nested FSD). Output é `{shapes: [...], canons: [...]}`.
+1. **MAP CANON** — Ler o(s) canon(s) correspondente(s) em profundidade: layout da página, `PageShell`/`DataShell`/`DialogFormShell`/`TemporalViewShell` usados, níveis de `Heading`, variantes de `Text`, depths, componentes shared, empty states, loading states, filtros. Produzir **mapa mental escrito** (≤200 palavras). Se canon tem drift conhecido (§10.5 — `partes`, `contratos`, `assinatura-digital`), sinalizar e incluir tarefa de lift do canon como parte do mesmo trabalho (lift ANTES de replicar, ou o drift propaga).
 2. **INVENTORY TARGET** — Listar todas as violações do módulo-alvo (output de `audit:design-system` + grep por `#[0-9a-f]`, `bg-(red|blue|green|yellow)-\d`, `shadow-xl`, `<h[1-6]`, `<p `). Priorizar por frequência.
 3. **MAP DIFFS** — Tabela **por componente** do alvo: decisão atual → decisão canônica → ação (swap token, upgrade para componente shared, re-hierarquizar Heading).
 4. **PROPOSE ATOMIC COMMITS** — Cada commit = uma decisão estrutural (ex: "commit 1: trocar hex por tokens semânticos em `notes-list.tsx`"). Nunca um commit "migrar tudo".
@@ -219,38 +223,70 @@ Aplicado como guard-rail, também ataca a Dor 1: criar componente novo sem class
 
 ## 10. Oráculos canônicos indexados por shape
 
-### 10.1 Shapes e canons
+### 10.1 Shapes identificados
 
-Estabelecidos por análise empírica (medições em 2026-04-22: grep por refs de `Heading`/`Text`, `GlassPanel`, `Shell`, hex/tailwind literals, raw `<h*>`, shadow-xl):
+Análise empírica de **40 módulos** em `src/app/(authenticated)/` (medições em 2026-04-22: grep por refs de `Heading`/`Text`, `GlassPanel`/`glass-*`, Shell components, raw `<h*>`, hex/tailwind-color literals). A classificação foi derivada de **subpastas + métricas reais**, não de especulação.
 
-| Shape | Canon | Evidência |
-|---|---|---|
-| **CRUD simples** (lista + detail + form) | `src/app/(authenticated)/entrevistas-trabalhistas/` | 21 TSX, 21 refs `Heading`/`Text` (100% density), FSD completo, 0 violações; porte enxuto, ideal para CRUD |
-| **Temporal** (ano/mês/semana/lista/quadro) | `src/app/(authenticated)/expedientes/` | 42 TSX, **76 shell refs (maior do app)**, 55 Glass, 0 violações; topologia de visões temporais consolidada |
-| **Nested FSD** (sub-domínios aninhados) | `src/app/(authenticated)/partes/` | 34 TSX, 30 shell refs, 4 sub-domínios (clientes, representantes, terceiros, partes-contrarias); único módulo com essa topologia. **Drift presente** (5 raw `<h*>`, 7 `Heading`/`Text`) — canon vai precisar lift junto com a primeira iteração da skill |
-| **Kanban/pipeline** | ❌ sem canon maduro | `contratos` tem 6 violações hex/tailwind-color (grade F em `ROADMAP`) + design doc próprio em andamento. Para módulo novo nesse shape: `translating` é fase **mandatória** antes de qualquer código |
+Shapes que aparecem repetidamente no código (≥2 módulos):
 
-### 10.2 Uso nas sub-skills
+| # | Shape | Canon eleito | Evidência de canon | Módulos desse shape |
+|---|---|---|---|---|
+| 1 | **Temporal multi-view** (ano/mês/semana/lista/quadro) | `expedientes/` | 42 TSX, **76 shell refs (3º maior)**, 55 Glass, 16 H/T, 0 hex, 4 raw `<h*>` (drift leve) | audiencias, **expedientes**, obrigacoes, pericias, (agenda — partial) |
+| 2 | **Nested FSD** (sub-domínios aninhados) | `partes/` ⚠ imaturo | 34 TSX, 30 shell refs, 4 sub-domínios (clientes, representantes, terceiros, partes-contrarias); mas 5 raw `<h*>` + só 7 H/T = **drift** | **partes**, captura, financeiro, admin, rh, project-management |
+| 3 | **Kanban/Pipeline** | `contratos/` ⚠ com violações | 42 TSX, 69 H/T, 79 Glass, 35 Shell — adoção alta **mas 3 hex violations (grade F no `ROADMAP`)**. É o único módulo Kanban maduro do app; canonizar com plano de lift das violações é melhor que não ter canon | **contratos**, tarefas (imaturo: 1 Glass apenas) |
+| 4 | **Dashboard widget grid** | `dashboard/` | 107 TSX, 16 H/T, **100 Glass**, **431 shell refs (maior do app)**; único no shape | **dashboard** (único) |
+| 5 | **Process Workspace** (com `[id]/` detail rich) | `processos/[id]/` | 56 TSX, 15 H/T, 24 Glass, 15 Shell; topologia de workspace [id] consolidada | **processos**, usuarios, obrigacoes (também temporal), assistentes, documentos |
+| 6 | **Wizard multi-step admin** | `assinatura-digital/` ⚠ com violações | 118 TSX, 29 H/T, 62 Glass, **72 Shell**; mas 4 hex violations + 6 raw `<h*>`. Único módulo Wizard admin | **assinatura-digital** (único) |
+| 7 | **Chat / Thread realtime** | ❌ redesign ativo | `chat/` tem **21 raw `<h*>`** + só 4 H/T + 9 Glass — é o módulo em redesign ativo (PROJECT do CLAUDE.md). Usar como alvo de `migrating`, não como canon. | **chat** (em redesign) |
+| 8 | **CRUD simples** (lista + detail + form, sem subpastas temporais) | `entrevistas-trabalhistas/` | 21 TSX, 21 H/T (100% density), 23 Glass, 0 Shell, 0 hex | **entrevistas-trabalhistas**, notas, mail (com 4 hex), pecas-juridicas, calendar, perfil, configuracoes |
+| 9 | **High-adoption custom page** (lista custom rica) | `comunica-cnj/` | 22 TSX, **64 H/T (3º do app)**, 41 Glass, 0 hex, 1 raw `<h*>`; adoção altíssima | **comunica-cnj** (único) |
+| 10 | **Content-rich docs** (rotas dinâmicas `[...slug]` + MDX) | `ajuda/` | 44 TSX, 39 H/T, 0 Glass, 5 Shell, 8 raw `<h*>` (drift) | **ajuda** (único) |
 
-Primeiro passo de qualquer sub-skill é **classificar o shape do alvo**:
+### 10.2 Módulos stub / minimal-intentional (fora da análise de canon)
 
-- **CRUD simples** — módulo tem apenas lista + detail (opcional) + form. Canon: `entrevistas-trabalhistas`.
-- **Temporal** — módulo tem visões múltiplas por período (ano/mês/semana/lista/quadro ou subset). Canon: `expedientes`.
-- **Nested FSD** — módulo tem 2+ sub-domínios aninhados sob um domínio pai. Canon: `partes`.
-- **Kanban/pipeline** — módulo usa colunas-estado ou timeline de stages. Sem canon — passar por `translating`.
+Estes módulos têm <10 TSX ou são intencionalmente minimais (ver `docs/architecture/MINIMAL_MODULES.md`). Quando amadurecerem, classificam-se em um dos shapes acima ou criam novo shape:
+
+`acervo (2)`, `admin (8)`, `advogados (1)`, `cargos (0)`, `enderecos (1)`, `editor (2)`, `notificacoes (3)`, `pangea (4)`, `repasses (3)`, `tipos-expedientes (4)`, `calculadoras (1, mas composto por sub-calculadoras)`.
+
+### 10.3 Módulos pendentes com canon de destino já fixado
+
+Baseado na análise, os RED cenários pendentes têm canon claro:
+
+- `notas/` (9 TSX, 2 H/T, 0 Glass, 1 raw `<h*>`) — shape **CRUD simples** → canon: `entrevistas-trabalhistas`
+- `mail/` (14 TSX, 6 H/T, 0 Glass, **4 hex violations**) — shape **CRUD simples** → canon: `entrevistas-trabalhistas`
+- `chat/` (53 TSX, 4 H/T, 9 Glass, **21 raw `<h*>`**) — shape **Chat/Thread**, sem canon → passar por `translating` usando referências externas + design doc do próprio PROJECT
+- `tarefas/` (19 TSX, 2 H/T, 1 Glass) — shape **Kanban** → canon `contratos` (com cuidado, respeitando lift plan)
+
+### 10.4 Uso nas sub-skills
+
+Primeiro passo de qualquer sub-skill é **classificar o shape do alvo** (tabela §10.1). Se módulo híbrido (ex: `pericias` = Temporal + Nested FSD com `especialidades/` e `peritos/`), consultar canons **sobrepostos**: `expedientes` para a topologia temporal + `partes` para a topologia nested.
 
 Depois de classificado:
 
 - `creating`: consultar canon do shape antes de desenhar.
 - `migrating`: mapear canon do shape antes de refatorar.
 - `translating`: usar canon do shape como destino da tradução "genérico → Zattar".
-- `governing`: inspecionar canons de shapes afetados para checar se o caso já é atendido.
+- `governing`: inspecionar canons de shapes afetados.
 
-### 10.3 Manutenção dos canons
+### 10.5 Lift plans para canons imaturos
 
-Os canons não são fixos para sempre. Devem ser **re-avaliados empiricamente** a cada 2 meses (ou quando módulo canônico é alterado materialmente). O processo de re-avaliação roda as mesmas métricas de §10.1 e promove o vencedor. Qualquer mudança de canon atualiza **os 5 SKILL.md em PR único** — pertence ao workflow do próprio `governing`.
+Três canons têm drift conhecido. A meta-skill, na sua primeira iteração, deve **programar o lift** deles como pré-requisito para se tornarem oráculos confiáveis:
 
-**Canon imaturo conhecido**: `partes` tem drift a corrigir (5 raw `<h*>`). A primeira iteração da meta-skill (provavelmente `migrating` em `notas`) deve agendar um PR de lift em `partes` para fechar o drift e tornar o canon nested FSD autoritativo.
+| Canon | Drift | Lift necessário | Prioridade |
+|---|---|---|---|
+| `partes/` | 5 raw `<h*>`, só 7 H/T refs | Substituir raw `<h*>` por `<Heading>`, adicionar `<Text>` onde apropriado | ALTA (primeira sub-skill a rodar — `migrating` em `notas` vai expor o canon cedo) |
+| `contratos/` | 3 hex/tailwind-color violations, 1 raw `<h*>` | Substituir hex por tokens semânticos, usar `<Heading>` | MÉDIA (só bloqueia se próximo RED for Kanban) |
+| `assinatura-digital/` | 4 hex, 6 raw `<h*>` | Mesmo que contratos + uso mais consistente de `<Heading>` | BAIXA (único módulo desse shape; impacto isolado) |
+
+O lift **é ele próprio um caso de uso da skill `migrating`** — aplicar a skill aos canons imaturos antes de aplicá-la aos alvos reais fecha um loop de auto-validação: se a skill consegue lift os canons, ela funciona.
+
+### 10.6 Shapes sem canon hoje
+
+- **Chat/Thread** (shape #7): módulo único (`chat`) em redesign ativo (PROJECT do CLAUDE.md). Quando o redesign fechar, ele próprio vira canon. Até lá, novas features de chat passam por `translating` usando o design doc do redesign como fonte de verdade.
+
+### 10.7 Manutenção dos canons
+
+Os canons não são fixos. Devem ser **re-avaliados empiricamente** a cada 2 meses (ou quando módulo canônico é alterado materialmente). Processo de re-avaliação re-roda as métricas de §10.1 e promove vencedor. Qualquer mudança de canon atualiza **os 5 SKILL.md em PR único** — pertence ao workflow do próprio `governing`.
 
 ---
 
@@ -270,13 +306,16 @@ Os canons não são fixos para sempre. Devem ser **re-avaliados empiricamente** 
 
 Antes de escrever cada SKILL.md, rodar um pressure scenario com subagent **sem a skill**, capturando rationalizations verbatim. Cenários escolhidos com base em dores reais do usuário:
 
-| Sub-skill | Cenário RED | Pressões embutidas |
-|---|---|---|
-| `creating` | "Crie um widget de aging de prazos no dashboard — 5 faixas, glassmorphism, mostrando contagem por faixa" | Autoridade (usuário pede), sunk cost (já desenhou mental), tempo ("pra amanhã") |
-| `migrating` (primário) | "Refatore o módulo `notas` para o Glass Briefing — está com hex e sem Heading" | Exaustão (módulo grande), tempo, autoridade, "é parecido com audiências" (tentação de copiar sem consultar canon) |
-| `migrating` (teste de drift) | Aplicar skill retroativamente aos refactors já feitos (audiências, perícias, obrigações) e verificar se detecta as divergências atuais entre eles | Verifica que skill captura a Dor 2 de fato |
-| `translating` | Passar output fictício do `ui-ux-pro-max` ("claymorphism dashboard com palette Sunset Oasis, font pairing Playfair + Lato") e pedir conversão | Autoridade (ui-ux-pro-max é "oficial"), tentação de adaptar em vez de rejeitar |
-| `governing` | "Preciso de um token de cor para status de processo arquivado — não existe, faz rápido" | Tempo ("rápido"), escopo ("só uma cor"), tentação de adicionar só em globals.css |
+| Sub-skill | Cenário RED | Shape + canon | Pressões embutidas |
+|---|---|---|---|
+| `creating` | "Crie um widget novo no dashboard de aging de prazos — 5 faixas, contagem por faixa" | Dashboard widget grid → canon `dashboard/widgets/` | Autoridade, sunk cost, tempo |
+| `migrating` primário | "Refatore o módulo `notas` para Glass Briefing" | CRUD simples (9 TSX, 0 Glass, 1 raw `<h*>`) → canon `entrevistas-trabalhistas` | Exaustão, tempo, "é parecido com X" (tentação de copiar sem consultar canon) |
+| `migrating` secundário | "Refatore `mail` para Glass Briefing — tem 4 hex e zero Glass" | CRUD simples → canon `entrevistas-trabalhistas` | Mesmas de notas + complacência ("só trocar hex rápido") |
+| `migrating` teste de drift | Aplicar skill retroativamente aos refactors já feitos (audiências, perícias, obrigações — todos shape Temporal) e medir divergências entre eles | Temporal → canon `expedientes`; valida convergência em shape com múltiplas instâncias | Verifica que skill captura a Dor 2 de fato |
+| `translating` | Passar output fictício do `ui-ux-pro-max` ("claymorphism dashboard com palette Sunset Oasis, font pairing Playfair + Lato") e pedir conversão | Dashboard widget grid → destino `dashboard/` | Autoridade (ui-ux-pro-max é "oficial"), tentação de adaptar em vez de rejeitar |
+| `translating` shape-sem-canon | Pedir implementação de uma feature nova no `chat/` (único módulo do shape, em redesign ativo, sem canon maduro) | Chat/Thread → sem canon → requer doc de redesign como fonte | Testa o caminho "shape sem canon" explicitamente |
+| `governing` | "Preciso de um token de cor para status de processo arquivado — não existe, faz rápido" | Cross-shape (token afeta múltiplos módulos) | Tempo ("rápido"), escopo ("só uma cor"), tentação de adicionar só em globals.css |
+| `migrating` lift-canon | Aplicar skill ao próprio canon imaturo `partes/` (lift de drift antes de usar como oráculo) | Nested FSD → auto-validação | Testa se a skill consegue lift um canon imaturo — se sim, a skill funciona |
 
 Cada cenário precisa rodar antes do GREEN — sem baseline, o GREEN é chute.
 
@@ -300,17 +339,31 @@ Isso **testa determinismo em duas camadas** — classificação correta (shape) 
 
 ---
 
-## 14. Sequência de build
+## 14. Sequência de build e de primeiro uso
 
-Ordem sugerida para construção das skills (dependências e ROI):
+### 14.1 Ordem de construção das skills
 
-1. **`zattar-glass` (hub)** — primeiro, porque estabelece vocabulário.
-2. **`zattar-glass-migrating`** — segundo, porque ataca a Dor 2 primária e tem os RED mais concretos (notas, e-mail pendentes).
+1. **`zattar-glass` (hub)** — primeiro, porque estabelece vocabulário e tabela de §10.1.
+2. **`zattar-glass-migrating`** — segundo, porque ataca a Dor 2 primária e tem os RED mais concretos (notas, mail, lift de `partes`).
 3. **`zattar-glass-creating`** — terceiro, workflow mais simples que migrating.
 4. **`zattar-glass-governing`** — quarto, escopo bem delimitado.
 5. **`zattar-glass-translating`** — quinto, depende das outras já estarem testadas (faz handoff para elas).
 
 Cada skill passa pelo RED-GREEN-REFACTOR completo antes de passar para a próxima. **Não escrever as 5 em batch** — o `writing-skills` proíbe explicitamente isso.
+
+### 14.2 Ordem de primeiro uso (após todas as skills prontas)
+
+A sequência de execução dos RED reais, para validar empiricamente que a skill funciona:
+
+1. **Lift de canons imaturos** primeiro (`partes/` → aplicar `migrating` ao próprio canon) — se a skill consegue lift seu oráculo, ela funciona auto-recursivamente. Prova de vida.
+2. **`notas/` → `migrating`** — CRUD simples, canon maduro (`entrevistas-trabalhistas`), baixo risco. Valida convergência com shape simples.
+3. **`mail/` → `migrating`** — CRUD simples com 4 hex violations. Teste da disciplina anti-drift.
+4. **Teste de convergência retroativa** — aplicar skill a audiências/perícias/obrigações (Temporal já feitos) e medir divergências entre eles. Se detectar drift, a Dor 2 é empiricamente reproduzível; se convergir, a skill está calibrada.
+5. **Lift de `contratos/`** via `migrating` (Kanban com 3 hex) — se a skill lift o canon Kanban, libera uso em `tarefas` e futuros Kanban.
+6. **Primeiro `creating` real** — algum widget novo do dashboard.
+7. **Primeiro `translating` real** — primeira saída da `ui-ux-pro-max` que chegar em produção.
+
+Ordem faz sentido porque **canons precisam estar maduros antes de virarem oráculos de trabalho real**; lift antes de replicação.
 
 ---
 

@@ -148,8 +148,8 @@ export default function ExpertisePage() {
               className="md:col-span-4 group flex flex-col"
             >
               {/* Ícone em glass-white é intencional aqui — o card tem fundo roxo
-                  (primary-dim) próprio, então bg-white/15 cria contraste alto. */}
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white/15 text-white ring-1 ring-white/25 mb-5">
+                  (primary-dim) próprio, então bg-foreground/15 cria contraste alto. */}
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-foreground/15 text-white ring-1 ring-white/25 mb-5">
                 <Search className="w-6 h-6" />
               </div>
               <Heading level="section" as="h3" className="mb-3 text-white">

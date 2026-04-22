@@ -149,6 +149,10 @@ const ALLOWED_OFFENDERS = [
   // Contratos pipelines — hex em form defaults persistidos no banco + placeholder
   // do input de cor. Não é estilização de UI, é valor de domínio.
   'src/app/(authenticated)/contratos/pipelines/page-client.tsx',
+
+  // Video reel UI — always-dark overlay sobre vídeo. `bg-white/N` é semanticamente
+  // correto (branco translúcido sobre fundo de vídeo escuro). Não depende de tema.
+  'src/components/ui/reel.tsx',
 ];
 
 const TAILWIND_COLORS = [

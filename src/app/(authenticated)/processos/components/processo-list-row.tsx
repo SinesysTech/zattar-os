@@ -53,7 +53,7 @@ export function ProcessoListRow({
         'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all',
         isSelected
           ? 'bg-primary/6 border border-primary/15'
-          : 'hover:bg-white/4 border border-transparent'
+          : 'hover:bg-foreground/4 border border-transparent'
       )}
     >
       <button

@@ -249,7 +249,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
       <div className="flex items-end gap-2">
         {/* Glass input wrapper */}
         <div
-          className="flex-1 flex items-end rounded-2xl border transition-all duration-200 px-3.5 pb-1 pt-1 min-h-11 focus-within:border-primary/25 focus-within:shadow-[0_0_0_3px_rgba(139,92,246,0.06)] border-border/50 dark:border-white/8 bg-foreground/2 dark:bg-white/4"
+          className="flex-1 flex items-end rounded-2xl border transition-all duration-200 px-3.5 pb-1 pt-1 min-h-11 focus-within:border-primary/25 focus-within:shadow-[0_0_0_3px_rgba(139,92,246,0.06)] border-border/50 dark:border-foreground/8 bg-foreground/2 dark:bg-foreground/4"
         >
           {isRecording ? (
             // Recording UI — unchanged

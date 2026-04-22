@@ -418,7 +418,7 @@ export default function CredenciaisPage() {
         {viewMode === 'tabela' && (
           <>
             <GlassPanel depth={1} className="overflow-hidden relative">
-              <div className="flex items-center px-4 py-2.5 border-b border-white/5">
+              <div className="flex items-center px-4 py-2.5 border-b border-foreground/5">
                 <span className="text-xs text-muted-foreground/60">
                   {credenciaisFiltradas.length} credenciais
                 </span>

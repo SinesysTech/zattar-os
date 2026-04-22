@@ -29,7 +29,7 @@ export function TimelineEntry({
       className={cn(
         "flex items-center justify-between py-5 px-4 -mx-4 rounded-lg",
         "hover:bg-primary/5 transition-colors",
-        !isLast && "border-b border-white/5",
+        !isLast && "border-b border-foreground/5",
         className
       )}
     >

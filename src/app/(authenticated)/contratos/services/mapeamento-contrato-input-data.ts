@@ -178,23 +178,8 @@ function extrairVariaveisDoCampo(campo: CampoParsed): string[] {
   return [...out];
 }
 
-function temValor(inputData: Record<string, unknown>, chave: string): boolean {
-  const partes = chave.split('.');
-  let valor: unknown = inputData;
-  for (const p of partes) {
-    if (valor && typeof valor === 'object' && p in (valor as object)) {
-      valor = (valor as Record<string, unknown>)[p];
-    } else {
-      return false;
-    }
-  }
-  if (valor === null || valor === undefined) return false;
-  if (typeof valor === 'string' && valor.trim() === '') return false;
-  return true;
-}
-
 export function detectarCamposFaltantes(
-  inputData: Record<string, unknown>,
+  resolver: (chave: string) => string,
   templates: TemplateComCampos[],
 ): CampoFaltante[] {
   const chaveParaTemplates = new Map<string, string[]>();
@@ -219,7 +204,8 @@ export function detectarCamposFaltantes(
 
   const faltantes: CampoFaltante[] = [];
   for (const [chave, templatesQueUsam] of chaveParaTemplates) {
-    if (!temValor(inputData, chave)) {
+    const valor = resolver(chave);
+    if (!valor || valor.trim() === '') {
       faltantes.push({
         chave,
         label: LABELS_CAMPOS_CONTRATO[chave] ?? chave,

@@ -590,7 +590,7 @@ export function WidgetPreparacao() {
         {PREPARACAO_ITEMS.map((item) => (
           <div
             key={item.nome}
-            className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-white/4 transition-colors duration-150"
+            className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-foreground/4 transition-colors duration-150"
           >
             <ProgressRing
               percent={item.preparo}

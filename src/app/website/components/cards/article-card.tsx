@@ -37,7 +37,7 @@ export function ArticleCard({
       <a
         href={href}
         className={cn(
-          "group relative overflow-hidden rounded-xl bg-surface-container border border-white/5 block",
+          "group relative overflow-hidden rounded-xl bg-surface-container border border-foreground/5 block",
           className
         )}
       >
@@ -82,7 +82,7 @@ export function ArticleCard({
     <a
       href={href}
       className={cn(
-        "bg-surface-container border border-white/5 p-8 rounded-xl group hover:border-primary/30 transition-all block",
+        "bg-surface-container border border-foreground/5 p-8 rounded-xl group hover:border-primary/30 transition-all block",
         className
       )}
     >

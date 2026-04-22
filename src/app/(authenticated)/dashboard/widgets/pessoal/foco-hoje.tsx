@@ -178,9 +178,9 @@ export function WidgetFocoHoje() {
           <div
             key={i}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl
-                        bg-white/2.5 border border-border/10
+                        bg-foreground/2.5 border border-border/10
                         ring-1 ${URGENCIA_RING[acao.urgencia]}
-                        hover:bg-white/4 transition-all duration-150 cursor-pointer`}
+                        hover:bg-foreground/4 transition-all duration-150 cursor-pointer`}
           >
             {/* Número em círculo com cor de urgência */}
             <div

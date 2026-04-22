@@ -33,7 +33,7 @@ export function ServicoWebCard({
     <Link
       href={href}
       className={cn(
-        "group relative flex flex-col h-full bg-surface-container rounded-3xl p-8 border border-white/5",
+        "group relative flex flex-col h-full bg-surface-container rounded-3xl p-8 border border-foreground/5",
         "hover:border-primary/30 hover:bg-surface-container-high transition-all duration-500",
         "shadow-lg hover:shadow-[0_0_40px_rgb(var(--color-primary)/0.12)]",
         "overflow-hidden cursor-pointer",
@@ -51,7 +51,7 @@ export function ServicoWebCard({
           <Icon className="w-7 h-7" />
         </div>
         {badge && (
-          <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest bg-white/5 border border-white/5 px-3 py-1.5 rounded-full">
+          <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest bg-foreground/5 border border-foreground/5 px-3 py-1.5 rounded-full">
             {badge}
           </span>
         )}

@@ -52,23 +52,23 @@ export default function InsightsTendenciasPage() {
         {/* Search & Filter Controls */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-16">
           <div className="flex gap-3 overflow-x-auto pb-4 w-full md:w-auto scrollbar-hide">
-            <Link href="/insights" className="px-6 py-2.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface transition-colors font-semibold text-sm whitespace-nowrap border border-white/5 hover:bg-white/10">
+            <Link href="/insights" className="px-6 py-2.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface transition-colors font-semibold text-sm whitespace-nowrap border border-foreground/5 hover:bg-foreground/10">
               Todos
             </Link>
             <button className="px-6 py-2.5 rounded-full bg-primary text-on-primary-fixed font-bold text-sm whitespace-nowrap shadow-[0_0_15px_rgb(var(--color-primary)/0.3)]">
               Tendências
             </button>
-            <button className="px-6 py-2.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface transition-colors font-semibold text-sm whitespace-nowrap border border-white/5 hover:bg-white/10">
+            <button className="px-6 py-2.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface transition-colors font-semibold text-sm whitespace-nowrap border border-foreground/5 hover:bg-foreground/10">
               Estudos de Caso
             </button>
-            <button className="px-6 py-2.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface transition-colors font-semibold text-sm whitespace-nowrap border border-white/5 hover:bg-white/10">
+            <button className="px-6 py-2.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface transition-colors font-semibold text-sm whitespace-nowrap border border-foreground/5 hover:bg-foreground/10">
               Notícias
             </button>
           </div>
           <div className="relative w-full md:w-80 group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors w-5 h-5" />
             <input 
-              className="w-full bg-surface-container-high border border-white/5 focus:border-primary/50 grow rounded-2xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 transition-all outline-none shadow-inner" 
+              className="w-full bg-surface-container-high border border-foreground/5 focus:border-primary/50 grow rounded-2xl py-4 pl-12 pr-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/50 transition-all outline-none shadow-inner" 
               placeholder="Pesquisar insights..." 
               type="text"
             />
@@ -78,7 +78,7 @@ export default function InsightsTendenciasPage() {
         {/* Bento Grid Articles */}
         <div id="artigos" className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Big Card 1 */}
-          <article className="md:col-span-8 group bg-surface-container rounded-4xl overflow-hidden border border-white/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgb(var(--color-primary)/0.1)] flex flex-col md:flex-row h-full">
+          <article className="md:col-span-8 group bg-surface-container rounded-4xl overflow-hidden border border-foreground/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgb(var(--color-primary)/0.1)] flex flex-col md:flex-row h-full">
             <div className="md:w-1/2 overflow-hidden bg-surface-container-highest">
               <img 
                 alt="Direito Digital" 
@@ -106,7 +106,7 @@ export default function InsightsTendenciasPage() {
           </article>
 
           {/* Small Card 1 */}
-          <article className="md:col-span-4 group bg-surface-container rounded-4xl p-8 border border-white/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgb(var(--color-primary)/0.1)] flex flex-col justify-between">
+          <article className="md:col-span-4 group bg-surface-container rounded-4xl p-8 border border-foreground/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgb(var(--color-primary)/0.1)] flex flex-col justify-between">
             <div>
               <span className="bg-primary/10 border border-primary/20 text-primary px-4 py-1.5 rounded-full text-xs font-bold mb-6 inline-block uppercase tracking-wider">IA Jurídica</span>
               <h3 className="text-xl font-headline font-bold text-on-surface mb-4 group-hover:text-primary transition-colors leading-tight">
@@ -125,7 +125,7 @@ export default function InsightsTendenciasPage() {
           </article>
 
           {/* Small Card 2 */}
-          <article className="md:col-span-4 group bg-surface-container rounded-4xl p-8 border border-white/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgb(var(--color-primary)/0.1)] flex flex-col justify-between">
+          <article className="md:col-span-4 group bg-surface-container rounded-4xl p-8 border border-foreground/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgb(var(--color-primary)/0.1)] flex flex-col justify-between">
             <div>
               <span className="bg-primary/10 border border-primary/20 text-primary px-4 py-1.5 rounded-full text-xs font-bold mb-6 inline-block uppercase tracking-wider">Trabalhista</span>
               <h3 className="text-xl font-headline font-bold text-on-surface mb-4 group-hover:text-primary transition-colors leading-tight">
@@ -144,7 +144,7 @@ export default function InsightsTendenciasPage() {
           </article>
 
           {/* Big Card 2 */}
-          <article className="md:col-span-8 group bg-surface-container rounded-4xl overflow-hidden border border-white/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgb(var(--color-primary)/0.1)] flex flex-col md:flex-row h-full">
+          <article className="md:col-span-8 group bg-surface-container rounded-4xl overflow-hidden border border-foreground/5 hover:border-primary/30 transition-all duration-500 shadow-lg hover:shadow-[0_0_30px_rgb(var(--color-primary)/0.1)] flex flex-col md:flex-row h-full">
             <div className="md:w-1/2 p-8 lg:p-10 flex flex-col justify-between order-2 md:order-1">
               <div>
                 <span className="bg-primary/10 border border-primary/20 text-primary px-4 py-1.5 rounded-full text-xs font-bold mb-6 inline-block uppercase tracking-wider">Case Study</span>
@@ -173,7 +173,7 @@ export default function InsightsTendenciasPage() {
         </div>
 
         {/* Newsletter Section */}
-        <section className="mt-32 bg-linear-to-br from-surface-container-high to-surface-container p-12 md:p-16 rounded-[2.5rem] border border-white/5 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden shadow-2xl">
+        <section className="mt-32 bg-linear-to-br from-surface-container-high to-surface-container p-12 md:p-16 rounded-[2.5rem] border border-foreground/5 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden shadow-2xl">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-dim/10 rounded-full blur-[80px] pointer-events-none"></div>
           
@@ -188,7 +188,7 @@ export default function InsightsTendenciasPage() {
           <div className="flex flex-col gap-4 w-full md:w-auto relative z-10">
             <div className="flex flex-col sm:flex-row gap-4 w-full">
               <input 
-                className="bg-surface border border-white/5 focus:border-primary/50 text-on-surface rounded-xl px-6 py-5 focus:ring-1 focus:ring-primary/50 w-full sm:w-72 outline-none transition-all shadow-inner" 
+                className="bg-surface border border-foreground/5 focus:border-primary/50 text-on-surface rounded-xl px-6 py-5 focus:ring-1 focus:ring-primary/50 w-full sm:w-72 outline-none transition-all shadow-inner" 
                 placeholder="seu@email.com" 
                 type="email"
               />

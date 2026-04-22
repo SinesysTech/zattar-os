@@ -19,10 +19,10 @@ const buttonVariants = cva(
           "border border-outline-variant/60 bg-surface-container-lowest/70 backdrop-blur-sm hover:bg-surface-container-lowest hover:border-outline-variant active:scale-[0.98] transition-colors",
         // Outline de marketing — calibrado para fundo preto puro do website.
         // Usa tokens neutros com alpha maior e backdrop-blur forte.
-        // bg-white/10 garante que o botão seja legível sobre background escuro
+        // bg-foreground/10 garante que o botão seja legível sobre background escuro
         // puro (contraste ~4-5% vs base), sem competir com o CTA primary.
         "marketing-outline":
-          "border border-white/30 bg-white/10 text-foreground backdrop-blur-md hover:bg-white/15 hover:border-white/50 active:scale-[0.98] transition-all",
+          "border border-foreground/30 bg-foreground/10 text-foreground backdrop-blur-md hover:bg-foreground/15 hover:border-foreground/50 active:scale-[0.98] transition-all",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:

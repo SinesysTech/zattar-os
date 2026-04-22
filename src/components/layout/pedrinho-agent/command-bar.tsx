@@ -139,7 +139,7 @@ export function CommandBar({ onClose, onExpandToBriefing }: CommandBarProps) {
                   <ArrowRight className="size-3.5" />
                 </button>
               ) : (
-                <kbd className="text-[9px] text-muted-foreground/60 px-1.5 py-0.5 rounded border border-border/10 bg-white/2 font-mono">
+                <kbd className="text-[9px] text-muted-foreground/60 px-1.5 py-0.5 rounded border border-border/10 bg-foreground/2 font-mono">
                   ⌘J
                 </kbd>
               )}

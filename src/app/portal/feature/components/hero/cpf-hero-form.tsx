@@ -72,7 +72,7 @@ export function CpfHeroForm() {
               type="text"
               inputMode="numeric"
               placeholder="000.000.000-00"
-              className="w-full rounded-xl border border-white/5 bg-surface-container-high py-4 pl-12 pr-4 text-sm text-on-surface placeholder:text-outline/30 transition-all focus:border-primary/20 focus:ring-2 focus:ring-primary/20 focus:outline-none"
+              className="w-full rounded-xl border border-foreground/5 bg-surface-container-high py-4 pl-12 pr-4 text-sm text-on-surface placeholder:text-outline/30 transition-all focus:border-primary/20 focus:ring-2 focus:ring-primary/20 focus:outline-none"
               value={cpf}
               onChange={(e) => setCpf(formatCpf(e.target.value))}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e)}

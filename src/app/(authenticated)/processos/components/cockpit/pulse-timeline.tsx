@@ -142,7 +142,7 @@ export function PulseTimeline({
                   key={fi.id}
                   type="button"
                   onClick={() => onSelectFutureItem?.(fi)}
-                  className="group flex w-full cursor-pointer hover:bg-white/4 px-4 py-2"
+                  className="group flex w-full cursor-pointer hover:bg-foreground/4 px-4 py-2"
                 >
                   <div className="grid grid-cols-[48px_1fr] w-full">
                     <div className="flex flex-col items-center gap-1">

@@ -227,7 +227,7 @@ function MacOSDock({
               className="absolute left-0 pointer-events-none whitespace-nowrap z-50
                          px-3 py-1.5 rounded-lg text-xs font-medium text-white/90
                          bg-[rgba(8,8,8,0.88)] backdrop-blur-md
-                         border border-white/6 shadow-lg
+                         border border-foreground/6 shadow-lg
                          transition-[transform,opacity] duration-100 ease-out"
               style={{
                 transform: `translateX(${currentPositions[hoveredIndex]}px) translateX(-50%)`,
