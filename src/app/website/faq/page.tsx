@@ -1,6 +1,9 @@
-import { WebsiteShell, TrustTicker } from "@/app/website";
 import Link from "next/link";
 import { Search, ArrowUpRight, Gavel, ArrowRight, Headset } from "lucide-react";
+
+import { WebsiteShell, MarketingCard, TrustTicker } from "@/app/website";
+import { Heading, Text } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
 import { buildWebsiteMetadata } from "../_metadata/build-metadata";
 
 export const metadata = buildWebsiteMetadata({
@@ -10,192 +13,237 @@ export const metadata = buildWebsiteMetadata({
   path: "/faq",
 });
 
+interface FaqEntry {
+  tag: string;
+  question: string;
+  answer: string;
+}
+
+const faqEntries: FaqEntry[] = [
+  {
+    tag: "Rescisão",
+    question: "Como calcular minha rescisão?",
+    answer:
+      "O cálculo da rescisão depende do motivo do desligamento. No caso de demissão sem justa causa, você tem direito ao saldo de salário, aviso prévio, férias proporcionais + 1/3, 13º proporcional e multa de 40% do FGTS. Você pode utilizar nossa calculadora na área do cliente.",
+  },
+  {
+    tag: "Direitos",
+    question: "O que é rescisão indireta?",
+    answer:
+      'Conhecida como a "justa causa do empregador", ocorre quando a empresa comete faltas graves, como atraso recorrente de salários ou falta de depósitos de FGTS. Nesses casos, o trabalhador pode sair e receber todas as verbas como se tivesse sido demitido sem justa causa.',
+  },
+  {
+    tag: "Processual",
+    question: "Quais documentos preciso para um processo?",
+    answer:
+      "Essencialmente: CTPS (Carteira de Trabalho), holerites, extrato do FGTS, TRCT (Termo de Rescisão) e provas específicas do seu caso (mensagens de WhatsApp, e-mails ou fotos). Você pode subir todos esses arquivos de forma segura no cofre digital do Portal Zattar.",
+  },
+  {
+    tag: "Segurança",
+    question: "Meus dados estão seguros na plataforma?",
+    answer:
+      "Absolutamente. Utilizamos criptografia de ponta a ponta e estamos em total conformidade com a LGPD. Seus documentos são processados e armazenados em infraestrutura segura, restrita a você e aos sócios do caso.",
+  },
+];
+
+const popularTopics = [
+  "Horas Extras e Adicionais",
+  "Assédio Moral no Trabalho",
+  "Estabilidade Gestante",
+  "Férias e Descanso Semanal",
+];
 
 export default function FAQPage() {
   return (
     <WebsiteShell>
-      <div className="pt-32">
-
-      {/* Header / Search Area */}
-      <header className="pt-16 pb-12 px-8 max-w-6xl mx-auto mt-6">
-        <div className="space-y-4">
-          <span className="text-primary font-label text-xs font-bold uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-            Central de Ajuda
-          </span>
-          <h2 className="text-5xl md:text-7xl font-headline font-extrabold tracking-tighter text-on-surface">
-            Como podemos <span className="text-transparent bg-clip-text bg-linear-to-br from-primary to-primary-dim">ajudar hoje?</span>
-          </h2>
-          <p className="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
-            Encontre respostas rápidas para suas dúvidas jurídicas ou navegue pelas categorias para entender seus direitos com clareza.
-          </p>
-        </div>
-
-        {/* Search Bar */}
-        <div className="mt-12 relative group max-w-4xl">
-          <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-            <Search className="text-on-surface-variant group-focus-within:text-primary transition-colors w-6 h-6" />
+      <div className="pt-32 pb-24">
+        {/* ─── Hero + Busca ─────────────────────────────────────────── */}
+        <header className="max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pt-12 pb-12 mt-6">
+          <div className="inline-flex items-center mb-5">
+            <Text
+              variant="marketing-overline"
+              className="bg-primary/10 border border-primary/20 rounded-full px-3 py-1"
+            >
+              Central de Ajuda
+            </Text>
           </div>
-          <input
-            className="w-full bg-surface-container-high border-none rounded-2xl py-6 pl-16 pr-6 text-on-surface placeholder:text-on-surface-variant/50 focus:ring-1 focus:ring-primary/50 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.5)] outline-none"
-            placeholder="Pesquisar por 'Rescisão', 'Pagamentos' ou 'Documentos'..."
-            type="text"
-          />
-        </div>
+          <Heading level="marketing-hero" className="mb-6">
+            Como podemos{" "}
+            <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
+              ajudar hoje?
+            </span>
+          </Heading>
+          <Text variant="marketing-lead" className="max-w-2xl">
+            Encontre respostas rápidas para suas dúvidas jurídicas ou navegue
+            pelas categorias para entender seus direitos com clareza.
+          </Text>
 
-        {/* Categories */}
-        <div className="flex flex-wrap gap-3 mt-8">
-          <button className="px-6 py-2.5 bg-surface-container-highest text-primary font-medium rounded-full hover:bg-primary hover:text-on-primary-fixed transition-all text-sm border border-primary/20 hover:shadow-[0_0_15px_rgb(var(--color-primary)/0.4)]">
-            Direito Trabalhista
-          </button>
-          <button className="px-6 py-2.5 bg-surface-container-low text-on-surface-variant font-medium rounded-full hover:bg-surface-container-highest transition-all text-sm border border-white/5">
-            Uso da Plataforma
-          </button>
-          <button className="px-6 py-2.5 bg-surface-container-low text-on-surface-variant font-medium rounded-full hover:bg-surface-container-highest transition-all text-sm border border-white/5">
-            Segurança e Dados
-          </button>
-          <button className="px-6 py-2.5 bg-surface-container-low text-on-surface-variant font-medium rounded-full hover:bg-surface-container-highest transition-all text-sm border border-white/5">
-            Honorários & Custos
-          </button>
-        </div>
-      </header>
+          {/* Barra de busca */}
+          <div className="mt-10 md:mt-12 relative group max-w-4xl">
+            <label htmlFor="faq-search" className="sr-only">
+              Buscar na central de ajuda
+            </label>
+            <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+              <Search className="text-on-surface-variant group-focus-within:text-primary transition-colors w-5 h-5" />
+            </div>
+            <input
+              id="faq-search"
+              type="search"
+              placeholder="Pesquisar por 'Rescisão', 'Pagamentos' ou 'Documentos'..."
+              className="w-full bg-surface-container-high border border-outline-variant/20 rounded-2xl py-4 pl-14 pr-5 text-on-surface placeholder:text-on-surface-variant/60 focus:ring-1 focus:ring-primary/50 focus:border-primary/40 transition-colors shadow-[0_10px_30px_rgba(0,0,0,0.35)] outline-none"
+            />
+          </div>
 
-      {/* FAQ Content Sections (Asymmetric Layout) */}
-      <section className="px-8 pb-32 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12">
-        {/* Questions Column */}
-        <div className="md:col-span-8 space-y-6">
-          
-          {/* FAQ Card 1 */}
-          <div className="bg-surface-variant/60 backdrop-blur-[20px] p-8 rounded-3xl border border-white/5 hover:shadow-[0_0_20px_rgb(var(--color-primary)/0.15)] transition-all cursor-pointer group">
-            <div className="flex justify-between items-start">
-              <div className="space-y-2">
-                <span className="text-primary font-bold text-[10px] uppercase tracking-widest">Rescisão</span>
-                <h3 className="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors">
-                  Como calcular minha rescisão?
-                </h3>
+          {/* Categorias */}
+          <div className="flex flex-wrap gap-3 mt-8">
+            <button
+              type="button"
+              className="cursor-pointer px-5 py-2 bg-primary text-on-primary font-semibold rounded-full text-sm border border-primary/30 shadow-[0_0_15px_color-mix(in_oklch,var(--primary)_20%,transparent)] hover:brightness-110 transition-all"
+            >
+              Direito Trabalhista
+            </button>
+            {["Uso da Plataforma", "Segurança e Dados", "Honorários & Custos"].map(
+              (label) => (
+                <button
+                  key={label}
+                  type="button"
+                  className="cursor-pointer px-5 py-2 bg-surface-container-low text-on-surface-variant font-medium rounded-full text-sm border border-outline-variant/20 hover:bg-surface-container-highest hover:text-foreground transition-colors"
+                >
+                  {label}
+                </button>
+              ),
+            )}
+          </div>
+        </header>
+
+        {/* ─── FAQ + Sidebar ─────────────────────────────────────────── */}
+        <section className="max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pb-24 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
+          <div className="md:col-span-8 space-y-5 md:space-y-6">
+            {faqEntries.map((entry) => (
+              <MarketingCard
+                key={entry.question}
+                variant="solid"
+                padding="lg"
+                className="group cursor-pointer hover:border-primary/40 transition-all"
+              >
+                <div className="flex justify-between items-start gap-4">
+                  <div>
+                    <Text variant="marketing-overline" className="mb-2 block">
+                      {entry.tag}
+                    </Text>
+                    <Heading
+                      level="card"
+                      as="h3"
+                      className="group-hover:text-primary transition-colors"
+                    >
+                      {entry.question}
+                    </Heading>
+                  </div>
+                  <ArrowUpRight
+                    aria-hidden="true"
+                    className="text-primary-dim group-hover:rotate-45 group-hover:text-primary transition-all w-6 h-6 shrink-0 mt-1"
+                  />
+                </div>
+                <Text variant="caption" className="text-foreground/80 leading-relaxed mt-5">
+                  {entry.answer}
+                </Text>
+              </MarketingCard>
+            ))}
+          </div>
+
+          <aside className="md:col-span-4 space-y-6 md:space-y-8">
+            {/* Tech Feature Card — variant primary para destaque */}
+            <MarketingCard
+              variant="primary"
+              padding="lg"
+              className="overflow-hidden relative"
+            >
+              <div className="relative z-10">
+                <Heading level="card" as="h4" className="mb-3 text-white">
+                  Análise em Tempo Real
+                </Heading>
+                <Text variant="caption" className="text-white/85 leading-relaxed mb-5">
+                  Acesse nossa plataforma para visualizar o status do seu
+                  processo em tempo real, com explicações geradas para leigos.
+                </Text>
+                <Link
+                  href="/portal"
+                  className="inline-flex items-center gap-2 text-white font-bold text-xs tracking-widest uppercase hover:gap-3 transition-all"
+                >
+                  Acessar Portal
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
-              <ArrowUpRight className="text-primary-dim group-hover:rotate-45 transition-transform w-6 h-6 shrink-0" />
-            </div>
-            <div className="mt-6 text-on-surface-variant leading-relaxed text-sm">
-              O cálculo da rescisão depende do motivo do desligamento. No caso de demissão sem justa causa, você tem direito ao saldo de salário, aviso prévio, férias proporcionais + 1/3, 13º proporcional e multa de 40% do FGTS. Você pode utilizar nossa calculadora na área do cliente.
-            </div>
-          </div>
-
-          {/* FAQ Card 2 */}
-          <div className="bg-surface-variant/60 backdrop-blur-[20px] p-8 rounded-3xl border border-white/5 hover:shadow-[0_0_20px_rgb(var(--color-primary)/0.15)] transition-all cursor-pointer group">
-            <div className="flex justify-between items-start">
-              <div className="space-y-2">
-                <span className="text-primary font-bold text-[10px] uppercase tracking-widest">Direitos</span>
-                <h3 className="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors">
-                  O que é rescisão indireta?
-                </h3>
+              <div
+                aria-hidden="true"
+                className="absolute -bottom-10 -right-10 opacity-15 pointer-events-none"
+              >
+                <Gavel className="w-48 h-48 text-white" />
               </div>
-              <ArrowUpRight className="text-primary-dim group-hover:rotate-45 transition-transform w-6 h-6 shrink-0" />
-            </div>
-            <div className="mt-6 text-on-surface-variant leading-relaxed text-sm">
-              Conhecida como a &quot;justa causa do empregador&quot;, ocorre quando a empresa comete faltas graves, como atraso recorrente de salários ou falta de depósitos de FGTS. Nesses casos, o trabalhador pode sair e receber todas as verbas como se tivesse sido demitido sem justa causa.
-            </div>
-          </div>
+            </MarketingCard>
 
-          {/* FAQ Card 3 */}
-          <div className="bg-surface-variant/60 backdrop-blur-[20px] p-8 rounded-3xl border border-white/5 hover:shadow-[0_0_20px_rgb(var(--color-primary)/0.15)] transition-all cursor-pointer group">
-            <div className="flex justify-between items-start">
-              <div className="space-y-2">
-                <span className="text-primary font-bold text-[10px] uppercase tracking-widest">Processual</span>
-                <h3 className="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors">
-                  Quais documentos preciso para um processo?
-                </h3>
-              </div>
-              <ArrowUpRight className="text-primary-dim group-hover:rotate-45 transition-transform w-6 h-6 shrink-0" />
-            </div>
-            <div className="mt-6 text-on-surface-variant leading-relaxed text-sm">
-              Essencialmente: CTPS (Carteira de Trabalho), holerites, extrato do FGTS, TRCT (Termo de Rescisão) e provas específicas do seu caso (mensagens de WhatsApp, e-mails ou fotos). Você pode subir todos esses arquivos de forma segura no cofre digital do Portal Zattar.
-            </div>
-          </div>
+            {/* Popular Topics */}
+            <MarketingCard variant="solid" padding="lg">
+              <Heading level="card" as="h4" className="mb-5">
+                Tópicos Populares
+              </Heading>
+              <ul className="space-y-4">
+                {popularTopics.map((topic) => (
+                  <li key={topic}>
+                    <button
+                      type="button"
+                      className="cursor-pointer w-full text-left flex items-center gap-3 text-foreground/75 hover:text-primary transition-colors group"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="w-2 h-2 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"
+                      />
+                      <Text variant="caption" className="text-inherit">
+                        {topic}
+                      </Text>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </MarketingCard>
+          </aside>
+        </section>
 
-          {/* FAQ Card 4 */}
-          <div className="bg-surface-variant/60 backdrop-blur-[20px] p-8 rounded-3xl border border-white/5 hover:shadow-[0_0_20px_rgb(var(--color-primary)/0.15)] transition-all cursor-pointer group">
-            <div className="flex justify-between items-start">
-              <div className="space-y-2">
-                <span className="text-primary font-bold text-[10px] uppercase tracking-widest">Segurança</span>
-                <h3 className="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors">
-                  Meus dados estão seguros na plataforma?
-                </h3>
-              </div>
-              <ArrowUpRight className="text-primary-dim group-hover:rotate-45 transition-transform w-6 h-6 shrink-0" />
+        {/* ─── Footer CTA ──────────────────────────────────────────────── */}
+        <section className="bg-surface-container-low/60 py-24 md:py-32 border-y border-outline-variant/10 relative">
+          <div className="max-w-4xl mx-auto px-5 sm:px-6 md:px-10 text-center relative z-10">
+            <div className="inline-flex items-center justify-center p-5 bg-primary/10 rounded-full mb-6 border border-primary/20 shadow-[0_0_30px_color-mix(in_oklch,var(--primary)_15%,transparent)]">
+              <Headset className="text-primary w-8 h-8" />
             </div>
-            <div className="mt-6 text-on-surface-variant leading-relaxed text-sm">
-              Absolutamente. Utilizamos criptografia de ponta a ponta e estamos em total conformidade com a LGPD. Seus documentos são processados e armazenados em infraestrutura segura, restrita a você e aos sócios do caso.
+            <Heading level="marketing-section" className="mb-5">
+              Ainda tem dúvidas?
+            </Heading>
+            <Text variant="marketing-lead" className="max-w-xl mx-auto mb-9 md:mb-10">
+              Se você não encontrou o que procurava, nossos especialistas
+              jurídicos estão prontos para analisar o seu caso em detalhes.
+            </Text>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+              <Button
+                asChild
+                size="lg"
+                className="rounded-xl h-12 px-8 text-base gap-2 group"
+              >
+                <Link href="/contato">
+                  Falar com um especialista
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="marketing-outline"
+                className="rounded-xl h-12 px-8 text-base"
+              >
+                <Link href="/portal">Acessar Portal do Cliente</Link>
+              </Button>
             </div>
           </div>
-
-        </div>
-
-        {/* Sidebar/Featured Column */}
-        <div className="md:col-span-4 space-y-8">
-          {/* Tech Feature Card */}
-          <div className="bg-linear-to-br from-primary/20 to-transparent p-8 rounded-3xl border border-primary/20 overflow-hidden relative shadow-lg">
-            <div className="relative z-10">
-              <h4 className="text-xl font-headline font-bold text-on-surface mb-4">Análise em Tempo Real</h4>
-              <p className="text-on-surface-variant text-sm mb-6 leading-relaxed">
-                Acesse nossa plataforma para visualizar o status do seu processo em tempo real, com explicações geradas para leigos.
-              </p>
-              <Link href="/portal" className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-tighter hover:gap-4 transition-all">
-                Acessar Portal <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-            <div className="absolute -bottom-10 -right-10 opacity-10">
-              <Gavel className="w-48 h-48 text-primary" />
-            </div>
-          </div>
-
-          {/* Popular Topics List */}
-          <div className="bg-surface-container p-8 rounded-3xl border border-white/5 shadow-xl">
-            <h4 className="text-lg font-headline font-bold text-on-surface mb-6">Tópicos Populares</h4>
-            <ul className="space-y-5">
-              <li className="flex items-center gap-3 text-sm text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
-                <div className="w-2 h-2 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></div>
-                Horas Extras e Adicionais
-              </li>
-              <li className="flex items-center gap-3 text-sm text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
-                <div className="w-2 h-2 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></div>
-                Assédio Moral no Trabalho
-              </li>
-              <li className="flex items-center gap-3 text-sm text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
-                <div className="w-2 h-2 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></div>
-                Estabilidade Gestante
-              </li>
-              <li className="flex items-center gap-3 text-sm text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
-                <div className="w-2 h-2 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></div>
-                Férias e Descanso Semanal
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer CTA */}
-      <section className="bg-surface-container-low py-32 px-8 border-t border-white/5 relative">
-        <div className="max-w-4xl mx-auto text-center space-y-8 relative z-10">
-          <div className="inline-flex items-center justify-center p-5 bg-primary/10 rounded-full mb-4 border border-primary/20 shadow-[0_0_30px_rgb(var(--color-primary)/0.15)]">
-            <Headset className="text-primary w-8 h-8" />
-          </div>
-          <h2 className="text-4xl md:text-5xl font-headline font-black tracking-tighter text-on-surface">
-            Ainda tem dúvidas?
-          </h2>
-          <p className="text-on-surface-variant text-lg">
-            Se você não encontrou o que procurava, nossos especialistas jurídicos estão prontos para analisar o seu caso em detalhes.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-            <Link href="/contato" className="bg-primary text-on-primary-fixed font-bold px-10 py-4 rounded-xl hover:bg-primary-container transition-all active:scale-95 shadow-lg shadow-primary/20 text-lg text-center">
-              Falar com um especialista
-            </Link>
-            <Link href="/portal" className="bg-transparent border border-outline-variant hover:bg-white/5 text-on-surface font-bold px-10 py-4 rounded-xl transition-all text-lg border-opacity-50 hover:border-white/20 text-center">
-              Acessar Portal do Cliente
-            </Link>
-          </div>
-        </div>
-        <div className="absolute inset-0 bg-linear-to-t from-background to-transparent pointer-events-none opacity-50"></div>
-      </section>
+        </section>
 
         <TrustTicker
           items={["PARTNER_A", "LEGAL_CLOUD", "TRUST_PROTOCOL"]}

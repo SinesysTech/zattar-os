@@ -9,6 +9,7 @@ export { Footer } from "./components/layout/footer";
 // Sections
 export { SectionHeader } from "./components/sections/section-header";
 export { EditorialHeader } from "./components/sections/editorial-header";
+export { LegalSection } from "./components/sections/legal-section";
 
 // Effects
 export { GlowBackground } from "./components/effects/glow-background";

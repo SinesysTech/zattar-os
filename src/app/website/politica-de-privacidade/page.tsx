@@ -1,6 +1,9 @@
-import { WebsiteShell } from "@/app/website";
-import { Shield, Lock, Eye, Database, UserCheck, Mail } from "lucide-react";
 import type { Metadata } from "next";
+import { Shield, Lock, Eye, Database, UserCheck, Mail } from "lucide-react";
+
+import { WebsiteShell, LegalSection } from "@/app/website";
+import { Heading, Text } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Política de Privacidade | Zattar Advogados",
@@ -65,95 +68,71 @@ export default function PoliticaDePrivacidadePage() {
   return (
     <WebsiteShell>
       <div className="pt-32 pb-24">
-        {/* Hero */}
-        <section className="max-w-4xl mx-auto px-6 md:px-8 mb-16 mt-8">
+        {/* ─── Hero ─────────────────────────────────────────────────── */}
+        <section className="max-w-4xl mx-auto px-5 sm:px-6 md:px-10 mb-16 mt-8">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
               <Shield className="w-5 h-5 text-primary" />
             </div>
-            <span className="text-primary font-bold text-xs uppercase tracking-widest">
+            <Text variant="marketing-overline">
               Privacidade &amp; Proteção de Dados
-            </span>
+            </Text>
           </div>
-          <h1 className="text-4xl md:text-6xl font-headline font-extrabold tracking-tighter leading-tight mb-6 text-on-surface">
+          <Heading level="marketing-hero" className="mb-6">
             Política de{" "}
-            <span className="bg-linear-to-r from-primary to-primary-dim bg-clip-text text-transparent">
+            <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
               Privacidade
             </span>
-          </h1>
-          <p className="text-on-surface-variant text-lg leading-relaxed max-w-2xl">
+          </Heading>
+          <Text variant="marketing-lead" className="max-w-2xl">
             A Zattar Advogados trata seus dados pessoais com rigor e
             transparência, em total conformidade com a Lei Geral de Proteção de
             Dados (LGPD — Lei nº 13.709/2018).
-          </p>
-          <p className="text-on-surface-variant/60 text-sm mt-4">
+          </Text>
+          <Text variant="caption" className="text-foreground/60 mt-4">
             Última atualização: janeiro de 2025 · OAB/MG 128.404
-          </p>
+          </Text>
         </section>
 
-        {/* Divider */}
-        <div className="max-w-4xl mx-auto px-6 md:px-8 mb-16">
-          <div className="h-px bg-linear-to-r from-transparent via-primary/20 to-transparent" />
+        {/* ─── Divider ─────────────────────────────────────────────────── */}
+        <div className="max-w-4xl mx-auto px-5 sm:px-6 md:px-10 mb-16">
+          <div
+            aria-hidden="true"
+            className="h-px bg-linear-to-r from-transparent via-primary/20 to-transparent"
+          />
         </div>
 
-        {/* Sections */}
-        <section className="max-w-4xl mx-auto px-6 md:px-8 space-y-8">
-          {sections.map(({ icon: Icon, title, content }) => (
-            <div
-              key={title}
-              className="bg-surface-container rounded-3xl p-8 md:p-10 border border-white/5"
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-                  <Icon className="w-5 h-5 text-primary" />
-                </div>
-                <h2 className="text-xl font-headline font-bold text-on-surface">
-                  {title}
-                </h2>
-              </div>
-              <ul className="space-y-3">
-                {content.map((item, i) => (
-                  <li
-                    key={i}
-                    className="text-on-surface-variant text-sm leading-relaxed flex gap-3"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary/50 shrink-0 mt-2" />
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: item.replace(
-                          /\*\*(.*?)\*\*/g,
-                          '<strong class="text-on-surface font-semibold">$1</strong>'
-                        ),
-                      }}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {/* ─── Sections ─────────────────────────────────────────────────── */}
+        <section className="max-w-4xl mx-auto px-5 sm:px-6 md:px-10 space-y-6 md:space-y-8">
+          {sections.map(({ icon, title, content }) => (
+            <LegalSection key={title} icon={icon} title={title} items={content} />
           ))}
         </section>
 
-        {/* Contact DPO */}
-        <section className="max-w-4xl mx-auto px-6 md:px-8 mt-12">
-          <div className="bg-primary/10 border border-primary/20 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center gap-6">
-            <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center shrink-0">
+        {/* ─── Contact DPO ─────────────────────────────────────────────── */}
+        <section className="max-w-4xl mx-auto px-5 sm:px-6 md:px-10 mt-12">
+          <div className="bg-primary/10 border border-primary/25 rounded-2xl md:rounded-3xl px-6 md:px-10 py-7 md:py-8 flex flex-col md:flex-row items-start md:items-center gap-6">
+            <div className="w-12 h-12 rounded-2xl bg-primary/20 ring-1 ring-primary/30 flex items-center justify-center shrink-0">
               <Mail className="w-6 h-6 text-primary" />
             </div>
             <div className="grow">
-              <h3 className="text-on-surface font-bold font-headline mb-1">
+              <Heading level="card" as="h3" className="mb-1">
                 Encarregado de Dados (DPO)
-              </h3>
-              <p className="text-on-surface-variant text-sm leading-relaxed">
+              </Heading>
+              <Text variant="caption" className="text-foreground/75 leading-relaxed">
                 Para exercer seus direitos ou tirar dúvidas sobre o tratamento
                 dos seus dados, entre em contato:
-              </p>
+              </Text>
             </div>
-            <a
-              href="mailto:contato@zattaradvogados.com"
-              className="shrink-0 bg-primary text-on-primary-fixed px-6 py-3 rounded-xl font-bold text-sm hover:brightness-110 transition-all whitespace-nowrap"
+            <Button
+              asChild
+              size="lg"
+              className="rounded-xl h-12 px-6 text-sm shrink-0"
             >
-              contato@zattaradvogados.com
-            </a>
+              <a href="mailto:contato@zattaradvogados.com">
+                contato@zattaradvogados.com
+              </a>
+            </Button>
           </div>
         </section>
       </div>
