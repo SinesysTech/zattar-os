@@ -22,6 +22,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Heading, Text } from '@/components/ui/typography';
+import { GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
 
 import {
@@ -125,27 +126,39 @@ export function AcordoDetalhesClient({
 
   const isRecebimento = acordo.direcao === 'recebimento';
 
+  // ---------- Capa do processo (mesma hierarquia do processo-header) ----------
+  const processo = acordo.processo;
+  const parteAutora = processo?.nome_parte_autora?.trim() || null;
+  const parteRe = processo?.nome_parte_re?.trim() || null;
+  const tituloPartes =
+    parteAutora && parteRe
+      ? `${parteAutora} × ${parteRe}`
+      : parteAutora || parteRe || `${TIPO_LABELS[acordo.tipo]} #${acordo.id}`;
+  const classeJudicial = processo?.classe_judicial?.trim() || null;
+  const orgaoJulgador = processo?.descricao_orgao_julgador?.trim() || null;
+  const grauLabel = processo?.grau ? GRAU_LABELS[processo.grau] || processo.grau : null;
+
   // ---------- Render ----------
   return (
     <div className="flex flex-col gap-4 h-full">
-      {/* ==================== HEADER ==================== */}
+      {/* ==================== HEADER · Capa do processo ==================== */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-3 min-w-0 flex-1">
           <Button
             variant="ghost"
             size="icon"
             aria-label="Voltar"
             asChild
-            className="mt-0.5"
+            className="mt-0.5 shrink-0"
           >
             <Link href="/obrigacoes/lista">
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <div>
+          <div className="min-w-0 space-y-2">
             <div className="flex items-center gap-2 flex-wrap">
-              <Heading level="page">
-                {TIPO_LABELS[acordo.tipo]} #{acordo.id}
+              <Heading level="page" className="min-w-0 truncate">
+                {tituloPartes}
               </Heading>
               <SemanticBadge
                 category="obrigacao_status"
@@ -156,10 +169,10 @@ export function AcordoDetalhesClient({
               </SemanticBadge>
               <span
                 className={cn(
-                  'inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-semibold',
+                  'inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[10px] font-semibold border',
                   isRecebimento
-                    ? 'bg-success/10 text-success border border-success/20'
-                    : 'bg-destructive/10 text-destructive border border-destructive/20',
+                    ? 'bg-success/10 text-success border-success/25'
+                    : 'bg-destructive/10 text-destructive border-destructive/25',
                 )}
               >
                 {isRecebimento ? (
@@ -170,32 +183,69 @@ export function AcordoDetalhesClient({
                 {DIRECAO_LABELS[acordo.direcao]}
               </span>
             </div>
-            <Text variant="meta-label" className="mt-1">
-              {acordo.processo?.numero_processo
-                ? `Processo ${acordo.processo.numero_processo}`
-                : `Processo #${acordo.processoId}`}
-              {acordo.processo?.nome_parte_autora &&
-                acordo.processo?.nome_parte_re &&
-                ` · ${acordo.processo.nome_parte_autora} vs. ${acordo.processo.nome_parte_re}`}
-            </Text>
+
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm">
+              {processo?.trt && (
+                <SemanticBadge
+                  category="tribunal"
+                  value={processo.trt}
+                  className="text-[10px]"
+                >
+                  {processo.trt}
+                </SemanticBadge>
+              )}
+              {grauLabel && (
+                <SemanticBadge
+                  category="grau"
+                  value={processo.grau}
+                  className="text-[10px]"
+                >
+                  {grauLabel}
+                </SemanticBadge>
+              )}
+              {processo?.numero_processo && (
+                <Text
+                  variant="caption"
+                  className="font-medium text-foreground/85 tabular-nums"
+                >
+                  {processo.numero_processo}
+                </Text>
+              )}
+              {classeJudicial && (
+                <Text variant="caption" className="text-muted-foreground">
+                  {classeJudicial}
+                </Text>
+              )}
+              {orgaoJulgador && (
+                <Text
+                  variant="caption"
+                  className="text-muted-foreground truncate max-w-[18rem]"
+                >
+                  {orgaoJulgador}
+                </Text>
+              )}
+              <Text variant="meta-label" className="text-muted-foreground/70">
+                {TIPO_LABELS[acordo.tipo]} #{acordo.id}
+              </Text>
+            </div>
           </div>
         </div>
 
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" asChild className="h-8 text-xs">
+        <div className="flex gap-2 shrink-0">
+          <Button variant="outline" size="sm" asChild className="rounded-xl">
             <Link href={`/obrigacoes/${acordoId}/editar`}>
-              <Edit className="h-3.5 w-3.5 mr-1" />
+              <Edit className="size-3.5 mr-1" />
               Editar
             </Link>
           </Button>
           <Button
             variant="outline"
             size="sm"
-            className="h-8 text-xs text-destructive hover:text-destructive hover:bg-destructive/5"
+            className="rounded-xl text-destructive hover:text-destructive hover:bg-destructive/5"
             onClick={() => setIsDeleteOpen(true)}
             disabled={isDeleting}
           >
-            <Trash2 className="h-3.5 w-3.5 mr-1" />
+            <Trash2 className="size-3.5 mr-1" />
             Excluir
           </Button>
         </div>
@@ -255,7 +305,7 @@ export function AcordoDetalhesClient({
       )}
 
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DialogContent className="glass-dialog">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Confirmar exclusão</DialogTitle>
             <DialogDescription>
@@ -297,11 +347,11 @@ export function AcordoDetalhesClient({
 // =============================================================================
 
 function ResumoTab({ acordo }: { acordo: AcordoComParcelas }) {
-  const processo = acordo.processo;
+  // Dados do processo já vivem no header da página — aqui focamos apenas
+  // no que é particular ao acordo (tipo, valor, parcelamento, distribuição).
 
   return (
     <div className="space-y-4">
-      {/* Dados do acordo */}
       <GlassPanel depth={1} className="p-5">
         <Heading level="section" className="mb-4">
           Dados do acordo
@@ -366,31 +416,6 @@ function ResumoTab({ acordo }: { acordo: AcordoComParcelas }) {
           </div>
         )}
       </GlassPanel>
-
-      {/* Processo vinculado */}
-      {processo && (
-        <GlassPanel depth={1} className="p-5">
-          <Heading level="section" className="mb-4">
-            Processo vinculado
-          </Heading>
-          <dl className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <Field label="Número" value={processo.numero_processo} />
-            <Field label="Tribunal" value={processo.trt} />
-            <Field label="Grau" value={processo.grau} />
-            <Field label="Classe" value={processo.classe_judicial || '—'} />
-            <Field
-              label="Parte autora"
-              value={processo.nome_parte_autora || '—'}
-            />
-            <Field label="Parte ré" value={processo.nome_parte_re || '—'} />
-            <Field
-              label="Órgão julgador"
-              value={processo.descricao_orgao_julgador || '—'}
-              className="md:col-span-2"
-            />
-          </dl>
-        </GlassPanel>
-      )}
     </div>
   );
 }

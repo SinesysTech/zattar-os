@@ -202,10 +202,17 @@ function PericiaMissionCard({
   const EspecialidadeIcon = getIconForEspecialidade(especialidade);
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={() => onView(pericia)}
-      className="w-full text-left cursor-pointer focus-visible:outline-none"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onView(pericia);
+        }
+      }}
+      className="w-full text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-[inherit]"
     >
       <GlassPanel
         depth={2}
@@ -332,7 +339,7 @@ function PericiaMissionCard({
           </div>
         </div>
       </GlassPanel>
-    </button>
+    </div>
   );
 }
 

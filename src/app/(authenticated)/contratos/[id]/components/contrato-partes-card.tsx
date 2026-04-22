@@ -9,6 +9,7 @@ import {
   DetailSectionAction,
 } from '@/components/shared/detail-section';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import type { Contrato, ContratoParte, PapelContratual } from '@/app/(authenticated)/contratos';
 import { PAPEL_CONTRATUAL_LABELS } from '@/app/(authenticated)/contratos';
@@ -46,19 +47,21 @@ function ParteRow({ nome, subtitulo, papel, cpfCnpj }: ParteRowProps) {
   const papelLabel = PAPEL_CONTRATUAL_LABELS[papel] ?? papel;
 
   return (
-    <div className="flex items-center gap-3 px-3 py-2.5 rounded-[10px] bg-muted/40 border border-border/30 transition-colors hover:bg-muted/60">
+    <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-muted/30 border border-border/20 transition-colors hover:bg-muted/50">
       <span
         aria-hidden="true"
-        className={cn('w-0.75 h-6.5 rounded-sm shrink-0', RAIL_COLOR[papel])}
+        className={cn('w-1 h-7 rounded-full shrink-0', RAIL_COLOR[papel])}
       />
       <div className="flex-1 min-w-0">
-        <div className="text-[13px] font-medium text-foreground truncate">{nome}</div>
-        <div className="text-[10.5px] text-muted-foreground uppercase tracking-[0.04em] mt-0.5 truncate">
+        <Text variant="label" className="truncate">
+          {nome}
+        </Text>
+        <Text variant="micro-caption" className="mt-0.5 truncate block">
           {subtitulo}
           {cpfFmt ? ` · ${cpfFmt}` : ''}
-        </div>
+        </Text>
       </div>
-      <SemanticBadge category="polo" value={papel} className="text-[10px] shrink-0">
+      <SemanticBadge category="polo" value={papel} className="shrink-0">
         {papelLabel}
       </SemanticBadge>
     </div>
@@ -80,8 +83,6 @@ export function ContratoPartesCard({
   clienteNome,
   onAddParte,
 }: ContratoPartesCardProps) {
-  // Enriquece a lista de partes garantindo que o cliente canônico aparece
-  // (mesmo quando não está em `contrato.partes`, fallback antigo).
   const partesFromTable = contrato.partes;
   const clienteInTable = partesFromTable.some(
     (p) => p.tipoEntidade === 'cliente' && p.entidadeId === contrato.clienteId,
@@ -121,9 +122,9 @@ export function ContratoPartesCard({
     >
       <DetailSectionCard>
         {isEmpty ? (
-          <p className="text-[12.5px] text-muted-foreground/70 italic">
+          <Text variant="caption" className="italic text-muted-foreground/70">
             Nenhuma parte registrada
-          </p>
+          </Text>
         ) : (
           <div className="flex flex-col gap-2">
             {todasPartes.map((parte) => {

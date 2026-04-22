@@ -16,6 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 import type { AcordoComParcelas } from '../../domain';
 import { STATUS_LABELS, TIPO_LABELS, DIRECAO_LABELS } from '../../domain';
+import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
 
 // =============================================================================
 // TYPES & HELPERS
@@ -36,11 +37,11 @@ const CURRENCY = new Intl.NumberFormat('pt-BR', {
 });
 
 const URGENCY_BORDER: Record<Urgency, string> = {
-  critico: 'border-l-destructive/40',
-  alto: 'border-l-warning/40',
-  medio: 'border-l-primary/30',
-  baixo: 'border-l-muted/20',
-  ok: 'border-l-success/25',
+  critico: 'border-l-[3px] border-l-destructive',
+  alto: 'border-l-[3px] border-l-warning',
+  medio: 'border-l-[3px] border-l-info',
+  baixo: 'border-l-[3px] border-l-success',
+  ok: 'border-l-[3px] border-l-border/20',
 };
 
 const URGENCY_DOT: Record<Urgency, string> = {
@@ -77,45 +78,15 @@ function getDiasRestantes(acordo: AcordoComParcelas): number | null {
 }
 
 // =============================================================================
-// COLUMN HEADERS
-// =============================================================================
-
-function ColumnHeaders() {
-  return (
-    <div className="grid grid-cols-[32px_2.5fr_1fr_1fr_1fr_96px_40px] gap-3 items-center px-4 mb-2">
-      <div />
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Partes / Processo
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Próximo venc.
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Tipo / Valor
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Parcelas
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-center">
-        Status
-      </span>
-      <div />
-    </div>
-  );
-}
-
-// =============================================================================
 // GLASS ROW
 // =============================================================================
 
 function GlassRow({
   acordo,
   onViewDetail,
-  isAlt,
 }: {
   acordo: AcordoComParcelas;
   onViewDetail: () => void;
-  isAlt: boolean;
 }) {
   const urgency = getUrgency(acordo);
   const dias = getDiasRestantes(acordo);
@@ -135,17 +106,27 @@ function GlassRow({
   const numeroProcesso = processo?.numero_processo;
   const trt = processo?.trt;
   const grau = processo?.grau;
+  const grauLabel = grau
+    ? GRAU_TRIBUNAL_LABELS[grau as keyof typeof GRAU_TRIBUNAL_LABELS] ?? grau
+    : null;
   const orgaoJulgador = processo?.descricao_orgao_julgador;
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onViewDetail}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onViewDetail();
+        }
+      }}
       className={cn(
-        'group w-full text-left rounded-2xl border border-border/40 border-l-2 p-4 cursor-pointer',
+        'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
         'transition-all duration-180 ease-out',
-        'hover:bg-accent/50 hover:border-border/70 hover:-translate-y-px hover:shadow-lg',
-        isAlt ? 'bg-muted/40' : 'bg-card',
+        'hover:border-border hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] hover:-translate-y-px',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         URGENCY_BORDER[urgency],
       )}
     >
@@ -181,13 +162,13 @@ function GlassRow({
                 {trt}
               </SemanticBadge>
             )}
-            {grau && (
+            {grau && grauLabel && (
               <SemanticBadge
                 category="grau"
                 value={grau}
                 className="text-[9px] font-semibold"
               >
-                {grau}
+                {grauLabel}
               </SemanticBadge>
             )}
             {numeroProcesso && (
@@ -299,7 +280,7 @@ function GlassRow({
           <ChevronRight className="w-4 h-4 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -366,25 +347,18 @@ export function ObrigacoesGlassList({
   isLoading,
   onViewDetail,
 }: ObrigacoesGlassListProps) {
+  if (isLoading) return <ListSkeleton />;
+  if (acordos.length === 0) return <GlassEmptyState />;
+
   return (
-    <div>
-      <ColumnHeaders />
-      {isLoading ? (
-        <ListSkeleton />
-      ) : acordos.length === 0 ? (
-        <GlassEmptyState />
-      ) : (
-        <div className="flex flex-col gap-2">
-          {acordos.map((acordo, i) => (
-            <GlassRow
-              key={acordo.id}
-              acordo={acordo}
-              onViewDetail={() => onViewDetail(acordo)}
-              isAlt={i % 2 === 1}
-            />
-          ))}
-        </div>
-      )}
+    <div className="flex flex-col gap-2">
+      {acordos.map((acordo) => (
+        <GlassRow
+          key={acordo.id}
+          acordo={acordo}
+          onViewDetail={() => onViewDetail(acordo)}
+        />
+      ))}
     </div>
   );
 }

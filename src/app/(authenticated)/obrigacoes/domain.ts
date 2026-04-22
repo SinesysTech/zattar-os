@@ -139,6 +139,8 @@ export interface ObrigacaoComDetalhes {
     processoId?: number | null;
     acordoId?: number | null;
     lancamentoId?: number | null;
+    direcao?: DirecaoPagamento;
+    processo?: ProcessoInfo | null;
 }
 
 export interface ResumoObrigacoes {

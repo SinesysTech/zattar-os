@@ -57,10 +57,11 @@ export function ModulesMenuButton() {
         aria-label="Menu de módulos"
         title="Menu de módulos (⌘/)"
         className={cn(
-          "modules-menu-toggle group/modules relative flex items-center justify-center",
+          "group/modules relative flex items-center justify-center",
           "size-9 rounded-xl cursor-pointer",
           "border transition-all duration-200 ease-out",
           "active:scale-95",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           isOpen
             ? "bg-primary/10 border-primary/30 shadow-[0_0_16px_oklch(var(--primary)/0.15)]"
             : "bg-card/50 border-border/30 hover:bg-primary/8 hover:border-primary/25 hover:shadow-[0_0_16px_oklch(var(--primary)/0.12)]"

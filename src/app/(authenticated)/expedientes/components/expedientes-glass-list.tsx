@@ -8,7 +8,6 @@ import { FileSearch, ChevronRight, Lock, Monitor, AlertTriangle } from 'lucide-r
 import { cn } from '@/lib/utils';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Text } from '@/components/ui/typography';
 
 import {
   type Expediente,
@@ -51,25 +50,6 @@ function CountdownBadge({ dias, urgency }: { dias: number | null; urgency: Urgen
     <span className={cn('text-[11px] font-semibold tabular-nums px-2 py-1 rounded-lg text-center', URGENCY_COUNTDOWN[urgency])}>
       {label}
     </span>
-  );
-}
-
-// =============================================================================
-// COLUMN HEADERS
-// =============================================================================
-
-function ColumnHeaders() {
-  return (
-    <div className="grid grid-cols-[32px_2.5fr_1fr_0.8fr_0.8fr_80px_80px_40px] gap-3 items-center px-4 mb-2">
-      <div />
-      <Text variant="meta-label">Processo / Partes</Text>
-      <Text variant="meta-label">Prazo</Text>
-      <Text variant="meta-label">Tribunal</Text>
-      <Text variant="meta-label">Responsável</Text>
-      <Text variant="meta-label">Origem</Text>
-      <Text variant="meta-label" className="text-center">Restante</Text>
-      <div />
-    </div>
   );
 }
 
@@ -338,20 +318,17 @@ export function ExpedientesGlassList({
   if (expedientes.length === 0) return <GlassEmptyState />;
 
   return (
-    <div>
-      <ColumnHeaders />
-      <div className="flex flex-col gap-2">
-        {expedientes.map((exp) => (
-          <GlassRow
-            key={exp.id}
-            expediente={exp}
-            onViewDetail={() => onViewDetail(exp)}
-            onBaixar={onBaixar}
-            usuariosData={usuariosData}
-            tiposExpedientesData={tiposExpedientesData}
-          />
-        ))}
-      </div>
+    <div className="flex flex-col gap-2">
+      {expedientes.map((exp) => (
+        <GlassRow
+          key={exp.id}
+          expediente={exp}
+          onViewDetail={() => onViewDetail(exp)}
+          onBaixar={onBaixar}
+          usuariosData={usuariosData}
+          tiposExpedientesData={tiposExpedientesData}
+        />
+      ))}
     </div>
   );
 }

@@ -8,6 +8,7 @@ import {
   DetailSectionCard,
 } from '@/components/shared/detail-section';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import type { Lancamento, StatusLancamento } from '@/app/(authenticated)/financeiro/domain';
 
@@ -64,19 +65,18 @@ function KpiTile({
   tone?: 'success' | 'warning';
 }) {
   return (
-    <div className="px-3.5 py-2.5 rounded-[10px] bg-muted/40 border border-border/30">
-      <div className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-[0.06em]">
-        {label}
-      </div>
-      <div
+    <div className="flex flex-col gap-1.5 px-4 py-3 rounded-xl bg-muted/30 border border-border/20">
+      <Text variant="meta-label">{label}</Text>
+      <Text
+        variant="kpi-value"
         className={cn(
-          'mt-1 font-heading text-[18px] font-bold tabular-nums leading-none',
+          'leading-none text-[22px]',
           tone === 'success' && 'text-success',
           tone === 'warning' && 'text-warning',
         )}
       >
         {value}
-      </div>
+      </Text>
     </div>
   );
 }
@@ -84,11 +84,13 @@ function KpiTile({
 function ProgressBar({ pct }: { pct: number }) {
   return (
     <div>
-      <div className="flex justify-between text-[11px] mb-1.5">
-        <span className="text-muted-foreground font-medium">
+      <div className="flex justify-between mb-1.5">
+        <Text variant="caption" className="font-medium">
           Progresso de recebimento
-        </span>
-        <span className="text-primary font-bold tabular-nums">{pct}%</span>
+        </Text>
+        <Text variant="caption" className="text-primary font-bold tabular-nums">
+          {pct}%
+        </Text>
       </div>
       <div
         className="h-1 rounded-full bg-muted/60 overflow-hidden"
@@ -108,20 +110,20 @@ function ProgressBar({ pct }: { pct: number }) {
 
 function LancamentoRow({ lancamento }: { lancamento: Lancamento }) {
   return (
-    <div className="grid grid-cols-[2.2fr_1fr_1fr_1fr] gap-3 items-center px-3 py-2 rounded-[10px] bg-muted/40 border border-border/30 transition-colors hover:bg-muted/60">
-      <span className="text-[12.5px] font-medium text-foreground truncate">
+    <div className="grid grid-cols-[2.2fr_1fr_1fr_1fr] gap-3 items-center px-3 py-2.5 rounded-xl bg-muted/30 border border-border/20 transition-colors hover:bg-muted/50">
+      <Text variant="label" className="truncate block">
         {lancamento.descricao}
-      </span>
-      <span className="text-[12.5px] font-semibold tabular-nums">
+      </Text>
+      <Text variant="label" className="tabular-nums font-semibold">
         {formatCurrency(lancamento.valor)}
-      </span>
-      <span className="text-[11.5px] text-muted-foreground tabular-nums">
+      </Text>
+      <Text variant="caption" className="tabular-nums">
         {formatDate(lancamento.dataVencimento)}
-      </span>
+      </Text>
       <SemanticBadge
         category="payment_status"
         value={lancamento.status}
-        className="text-[10px] w-fit"
+        className="w-fit"
       >
         {STATUS_LABELS[lancamento.status] ?? lancamento.status}
       </SemanticBadge>
@@ -151,17 +153,17 @@ export function ContratoFinanceiroCard({
   const pctRecebido = valorTotal > 0 ? Math.round((totalReceitas / valorTotal) * 100) : 0;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       {/* Resumo */}
       <DetailSection icon={DollarSign} label="Resumo financeiro">
         <DetailSectionCard>
           {isEmpty ? (
-            <p className="text-[12.5px] text-muted-foreground/70 italic">
+            <Text variant="caption" className="italic text-muted-foreground/70">
               Nenhum lançamento financeiro
-            </p>
+            </Text>
           ) : (
             <>
-              <div className="grid grid-cols-3 gap-2.5 mb-3">
+              <div className="grid grid-cols-3 gap-3 mb-4">
                 <KpiTile label="Valor total" value={formatCurrency(valorTotal)} />
                 <KpiTile label="Recebido" value={formatCurrency(totalReceitas)} tone="success" />
                 <KpiTile label="Pendente" value={formatCurrency(totalPendente)} tone="warning" />
@@ -177,16 +179,16 @@ export function ContratoFinanceiroCard({
         <DetailSection icon={Wallet} label="Lançamentos">
           <DetailSectionCard className="p-3">
             {isLoading ? (
-              <p className="text-[12.5px] text-muted-foreground text-center py-3">
+              <Text variant="caption" className="text-center py-3 block">
                 Carregando...
-              </p>
+              </Text>
             ) : (
               <>
-                <div className="grid grid-cols-[2.2fr_1fr_1fr_1fr] gap-3 items-center px-3 pb-2 text-[10.5px] font-semibold text-muted-foreground uppercase tracking-[0.06em]">
-                  <span>Descrição</span>
-                  <span>Valor</span>
-                  <span>Vencimento</span>
-                  <span>Status</span>
+                <div className="grid grid-cols-[2.2fr_1fr_1fr_1fr] gap-3 items-center px-3 pb-2">
+                  <Text variant="meta-label">Descrição</Text>
+                  <Text variant="meta-label">Valor</Text>
+                  <Text variant="meta-label">Vencimento</Text>
+                  <Text variant="meta-label">Status</Text>
                 </div>
                 <div className="flex flex-col gap-1.5">
                   {lancamentos.slice(0, 10).map((l) => (
@@ -194,9 +196,12 @@ export function ContratoFinanceiroCard({
                   ))}
                 </div>
                 {lancamentos.length > 10 && (
-                  <p className="pt-2.5 mt-2 text-center text-[11px] text-muted-foreground border-t border-border/30">
+                  <Text
+                    variant="caption"
+                    className="pt-2.5 mt-2 text-center block border-t border-border/20"
+                  >
                     Mostrando 10 de {lancamentos.length} lançamentos
-                  </p>
+                  </Text>
                 )}
               </>
             )}

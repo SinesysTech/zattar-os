@@ -3,7 +3,6 @@
  */
 
 export { ContratoDetalhesHeader } from './contrato-detalhes-header';
-export { ContratoDetalhesCard } from './contrato-detalhes-card';
 export { ContratoPartesCard } from './contrato-partes-card';
 export { ContratoProcessosCard } from './contrato-processos-card';
 export { ContratoFinanceiroCard } from './contrato-financeiro-card';

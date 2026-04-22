@@ -127,6 +127,8 @@ export function ObrigacoesTableWrapper({
         tipoEntidade: 'obrigacao',
         acordoId: acordo.id,
         processoId: acordo.processoId,
+        direcao: acordo.direcao,
+        processo: acordo.processo ?? null,
       };
       setDetalhesItem(detalhes);
       setIsDetalhesOpen(true);

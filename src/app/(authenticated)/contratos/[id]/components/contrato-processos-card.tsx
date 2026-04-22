@@ -8,6 +8,7 @@ import {
   DetailSectionCard,
   DetailSectionAction,
 } from '@/components/shared/detail-section';
+import { Text } from '@/components/ui/typography';
 import type { ContratoProcessoVinculo } from '@/app/(authenticated)/contratos';
 
 // =============================================================================
@@ -68,9 +69,9 @@ export function ContratoProcessosCard({
     >
       <DetailSectionCard>
         {isEmpty ? (
-          <p className="text-[12.5px] text-muted-foreground/70 italic">
+          <Text variant="caption" className="italic text-muted-foreground/70">
             Nenhum processo vinculado
-          </p>
+          </Text>
         ) : (
           <div className="flex flex-col gap-2">
             {processos.map((vinculo) => {
@@ -92,16 +93,16 @@ export function ContratoProcessosCard({
                 <Link
                   key={vinculo.id}
                   href={`/app/processos/${processo.id}`}
-                  className="group flex items-center gap-3 px-3 py-2.5 rounded-[10px] bg-muted/40 border border-border/30 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="group flex items-center gap-3 px-3 py-2.5 rounded-xl bg-muted/30 border border-border/20 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="text-[13px] font-semibold text-foreground tabular-nums truncate">
+                    <Text variant="label" className="tabular-nums truncate block">
                       {numero}
-                    </div>
+                    </Text>
                     {meta && (
-                      <div className="text-[10.5px] text-muted-foreground uppercase tracking-[0.04em] mt-0.5 truncate">
+                      <Text variant="micro-caption" className="mt-0.5 truncate block">
                         {meta}
-                      </div>
+                      </Text>
                     )}
                   </div>
                   <ExternalLink className="size-3.5 text-muted-foreground/50 group-hover:text-primary transition-colors shrink-0" />

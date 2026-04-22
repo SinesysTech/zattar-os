@@ -198,14 +198,21 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
     : null;
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onViewDetail}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onViewDetail();
+        }
+      }}
       className={cn(
         'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:border-border hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] hover:-translate-y-px',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         URGENCY_BORDER[urgency],
       )}
     >
@@ -284,7 +291,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
           <CountdownBadge dias={dias} urgency={urgency} />
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 

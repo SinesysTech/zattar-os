@@ -16,6 +16,7 @@ import {
   DetailSectionCard,
 } from '@/components/shared/detail-section';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import type {
   ContratoStatusHistorico,
@@ -113,16 +114,19 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
     <DetailSection icon={History} label="Histórico de status">
       <DetailSectionCard>
         {isEmpty ? (
-          <p className="text-[12.5px] text-muted-foreground/70 italic">
+          <Text variant="caption" className="italic text-muted-foreground/70">
             Nenhum histórico disponível
-          </p>
+          </Text>
         ) : (
           <div className="flex flex-col">
             {Object.entries(grouped).map(([monthLabel, items]) => (
               <div key={monthLabel}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 pt-1.5 pb-2.5 pl-10">
+                <Text
+                  variant="meta-label"
+                  className="block pt-1.5 pb-3 pl-10 text-muted-foreground/50"
+                >
                   {monthLabel}
-                </p>
+                </Text>
 
                 {items.map((item, idx) => {
                   const globalIdx = sorted.findIndex((s) => s.id === item.id);
@@ -142,13 +146,13 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
                       {!isLast ? (
                         <span
                           aria-hidden="true"
-                          className="absolute left-3.25 top-6.5 bottom-0 w-px bg-border/40"
+                          className="absolute left-3 top-7 bottom-0 w-px bg-border/30"
                         />
                       ) : null}
 
                       <div
                         className={cn(
-                          'inline-flex items-center justify-center size-6.5 rounded-[8px] shrink-0 relative z-10 border border-border/50',
+                          'inline-flex items-center justify-center size-6 rounded-lg shrink-0 relative z-10 border border-border/30',
                           tone,
                         )}
                       >
@@ -156,27 +160,34 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
                       </div>
 
                       <div className="flex-1 min-w-0 pt-0.5">
-                        <div className="text-[12.5px] text-foreground/90 flex items-center flex-wrap gap-1.5">
-                          <span className="font-medium">
+                        <div className="flex items-center flex-wrap gap-1.5">
+                          <Text variant="label" className="font-medium">
                             {isCreation
                               ? 'Contrato criado com status'
                               : 'Status alterado para'}
-                          </span>
+                          </Text>
                           <SemanticBadge
                             category="status_contrato"
                             value={item.toStatus}
-                            className="text-[10px]"
                           >
                             {STATUS_CONTRATO_LABELS[item.toStatus] ?? item.toStatus}
                           </SemanticBadge>
                         </div>
-                        <div className="text-[10.5px] text-muted-foreground mt-1 tabular-nums">
+                        <Text
+                          variant="micro-caption"
+                          className="mt-1 tabular-nums block"
+                        >
                           {formatDateTime(item.changedAt)}
-                        </div>
+                        </Text>
 
                         {item.reason ? (
-                          <div className="mt-2 px-3 py-2 rounded-[8px] bg-muted/50 text-[11.5px] text-muted-foreground leading-relaxed">
-                            {item.reason}
+                          <div className="mt-2 px-3 py-2 rounded-lg bg-muted/40">
+                            <Text
+                              variant="caption"
+                              className="leading-relaxed text-muted-foreground"
+                            >
+                              {item.reason}
+                            </Text>
                           </div>
                         ) : null}
                       </div>

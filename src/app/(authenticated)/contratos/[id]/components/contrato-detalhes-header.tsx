@@ -3,12 +3,9 @@
 /**
  * ContratoDetalhesHeader — Hero do detalhe de contrato.
  * ============================================================================
- * Padrão extraído do `audiencia-detail-dialog`: GlassPanel único com
- * título compacto "Cliente × Parte Contrária", meta-line separada por dots,
- * bloco primary/5 destacado com campos principais (tipo, responsável,
- * processos) e ações rápidas, e TabsList embutido no rodapé do hero.
- *
- * Tokens: zero CSS inline — tudo via classes Tailwind resolvendo tokens CSS.
+ * Aderente ao Glass Briefing: GlassPanel depth 2 único (sem bloco aninhado),
+ * tipografia via Heading/Text, stat row horizontal minimalista e uma única
+ * ação primária visível (Editar), com demais ações concentradas no menu ⋮.
  * ============================================================================
  */
 
@@ -18,16 +15,21 @@ import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   Edit,
-  FileText,
   FileSignature,
   Send,
   Trash2,
-  User,
+  User as UserIcon,
   Scale,
   MoreHorizontal,
+  FileText,
+  Tag,
+  ShieldCheck,
+  Briefcase,
+  type LucideIcon,
 } from 'lucide-react';
 
 import { GlassPanel } from '@/components/shared/glass-panel';
+import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import {
@@ -83,8 +85,45 @@ function MetaDot() {
   return (
     <span
       aria-hidden="true"
-      className="inline-block size-0.75 rounded-full bg-muted-foreground/60"
+      className="inline-block size-1 rounded-full bg-muted-foreground/40"
     />
+  );
+}
+
+// ─── HeroStatField ───────────────────────────────────────────────────────────
+
+interface HeroStatFieldProps {
+  label: string;
+  icon: LucideIcon;
+  value: string;
+  muted?: boolean;
+}
+
+function HeroStatField({ label, icon: Icon, value, muted }: HeroStatFieldProps) {
+  return (
+    <div className="flex flex-col gap-1.5 min-w-0">
+      <Text variant="meta-label" className="text-muted-foreground/70">
+        {label}
+      </Text>
+      <div className="flex items-center gap-2 min-w-0">
+        <Icon
+          className={cn(
+            'size-3.5 shrink-0',
+            muted ? 'text-muted-foreground/50' : 'text-primary/70',
+          )}
+          aria-hidden="true"
+        />
+        <Text
+          variant="label"
+          className={cn(
+            'truncate',
+            muted && 'text-muted-foreground font-normal',
+          )}
+        >
+          {value}
+        </Text>
+      </div>
+    </div>
   );
 }
 
@@ -99,8 +138,6 @@ interface ContratoDetalhesHeaderProps {
   onEdit?: () => void;
   onGerarPeca?: () => void;
   onEnviarAssinatura?: () => void;
-  /** Slot para o TabsList (renderizado no rodapé do hero). */
-  tabs?: React.ReactNode;
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -114,7 +151,6 @@ export function ContratoDetalhesHeader({
   onEdit,
   onGerarPeca,
   onEnviarAssinatura,
-  tabs,
 }: ContratoDetalhesHeaderProps) {
   const router = useRouter();
   const [deleteOpen, setDeleteOpen] = React.useState(false);
@@ -127,51 +163,117 @@ export function ContratoDetalhesHeader({
 
   return (
     <>
-      {/* Back button — discreto, fora do hero */}
+      {/* Back link — discreto, fora do hero */}
       <button
         type="button"
         onClick={() => router.push('/app/contratos')}
-        className="inline-flex items-center gap-1.5 self-start px-2 py-1 -ml-2 rounded-lg text-[12px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+        className="inline-flex items-center gap-1.5 self-start -ml-1 px-2 py-1 rounded-lg text-caption font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
       >
         <ArrowLeft className="size-3.5" />
         Voltar para contratos
       </button>
 
-      <GlassPanel depth={1} className="flex flex-col p-0 overflow-hidden">
-        {/* ── Header: título + status + more ─────────────────────── */}
-        <div className="px-6 pt-5 pb-4 border-b border-border/50">
-          <div className="flex items-center gap-4 mb-1.5">
-            <h2 className="flex-1 min-w-0 text-[16px] font-semibold leading-[1.3] -tracking-[0.01em] text-foreground flex items-center gap-1.5 flex-wrap">
-              <span className="min-w-0 truncate">{clienteNome}</span>
-              {parteContraria && (
+      <GlassPanel depth={2} className="p-6 gap-5">
+        {/* ── Linha 1: identidade + ações ────────────────────────── */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0 flex flex-col gap-2">
+            <div className="flex items-center gap-3 flex-wrap">
+              <Heading
+                level="section"
+                className="min-w-0 truncate flex items-center gap-2 flex-wrap"
+              >
+                <span className="min-w-0 truncate">{clienteNome}</span>
+                {parteContraria && (
+                  <>
+                    <span aria-hidden="true" className="text-muted-foreground/50 font-normal">
+                      ×
+                    </span>
+                    <span className="min-w-0 truncate">{parteContraria.nome}</span>
+                  </>
+                )}
+              </Heading>
+              <SemanticBadge
+                category="status_contrato"
+                value={contrato.status}
+                className="shrink-0"
+              >
+                {STATUS_CONTRATO_LABELS[contrato.status]}
+              </SemanticBadge>
+            </div>
+
+            {/* Meta line */}
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <Text variant="caption">Contrato #{contrato.id}</Text>
+              <MetaDot />
+              <Text variant="caption">{tipoLabel}</Text>
+              {segmentoNome && (
                 <>
-                  <span className="mx-1 text-muted-foreground/70 font-medium">×</span>
-                  <span className="min-w-0 truncate">{parteContraria.nome}</span>
+                  <MetaDot />
+                  <Text variant="caption">{segmentoNome}</Text>
                 </>
               )}
-            </h2>
+              {parteContraria && parteContraria.total > 1 && (
+                <>
+                  <MetaDot />
+                  <Text variant="caption">
+                    +{parteContraria.total - 1} ré{parteContraria.total > 2 ? 's' : ''}
+                  </Text>
+                </>
+              )}
+              <MetaDot />
+              <Text variant="caption">
+                Cadastrado em {formatDate(contrato.cadastradoEm)}
+              </Text>
+              <MetaDot />
+              <Text variant="caption" className="tabular-nums">
+                {diasNoEstagio}d no estágio
+              </Text>
+            </div>
+          </div>
 
-            <SemanticBadge
-              category="status_contrato"
-              value={contrato.status}
-              className="shrink-0 text-[10.5px]"
-            >
-              {STATUS_CONTRATO_LABELS[contrato.status]}
-            </SemanticBadge>
+          {/* Ações no canto direito */}
+          <div className="flex items-center gap-2 shrink-0">
+            {onEdit && (
+              <Button
+                size="sm"
+                className="rounded-xl"
+                onClick={onEdit}
+              >
+                <Edit className="size-3.5" />
+                Editar
+              </Button>
+            )}
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-xl size-8"
                   aria-label="Mais opções"
-                  className="shrink-0 inline-flex items-center justify-center size-7 rounded-lg text-muted-foreground/70 hover:text-foreground hover:bg-muted/60 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 >
                   <MoreHorizontal className="size-4" />
-                </button>
+                </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="min-w-48">
+                {onGerarPeca && (
+                  <DropdownMenuItem onSelect={onGerarPeca}>
+                    <FileSignature className="size-3.5 mr-2" />
+                    Gerar peça
+                  </DropdownMenuItem>
+                )}
+                {onEnviarAssinatura && (
+                  <DropdownMenuItem onSelect={onEnviarAssinatura}>
+                    <Send className="size-3.5 mr-2" />
+                    Enviar para assinar
+                  </DropdownMenuItem>
+                )}
+                {(onGerarPeca || onEnviarAssinatura) && <DropdownMenuSeparator />}
                 <DropdownMenuItem asChild>
-                  <Link href={`/app/clientes/${contrato.clienteId}`}>Ver cliente</Link>
+                  <Link href={`/app/clientes/${contrato.clienteId}`}>
+                    <UserIcon className="size-3.5 mr-2" />
+                    Ver cliente
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -184,111 +286,47 @@ export function ContratoDetalhesHeader({
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-
-          {/* Meta line */}
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] font-medium text-muted-foreground">
-            <span>Contrato #{contrato.id}</span>
-            <MetaDot />
-            <span>{tipoLabel}</span>
-            {segmentoNome && (
-              <>
-                <MetaDot />
-                <span>{segmentoNome}</span>
-              </>
-            )}
-            {parteContraria && parteContraria.total > 1 && (
-              <>
-                <MetaDot />
-                <span>
-                  e mais {parteContraria.total - 1} ré{parteContraria.total > 2 ? 's' : ''}
-                </span>
-              </>
-            )}
-            <MetaDot />
-            <span>
-              Cadastrado em {formatDate(contrato.cadastradoEm)} · {diasNoEstagio}d no estágio
-            </span>
-          </div>
         </div>
 
-        {/* ── Bloco destacado (primary/5) ────────────────────────── */}
-        <div className="mx-6 mt-4 p-4 rounded-xl bg-primary/5 border border-primary/15">
-          <div className="mb-3.5">
-            <div className="text-[14.5px] font-semibold text-foreground leading-tight">
-              {cobrancaLabel} · {papelLabel}
-            </div>
-            <div className="text-[12.5px] text-muted-foreground mt-0.5">
-              Tipo: {tipoLabel}
-              {segmentoNome ? ` · Segmento ${segmentoNome}` : ''}
-            </div>
-          </div>
+        {/* ── Divisor sutil ──────────────────────────────────────── */}
+        <div className="h-px bg-border/30" aria-hidden="true" />
 
-          {/* Campos principais (pills) */}
-          <div className="flex flex-wrap gap-x-7 gap-y-3 pb-3.5 mb-3.5 border-b border-border/40">
-            <HeroField
-              label="Tipo de contrato"
-              icon={FileText}
-              value={tipoLabel}
-            />
-            <HeroField
-              label="Responsável"
-              icon={User}
-              value={responsavel?.nome ?? 'Sem responsável'}
-              muted={!responsavel?.nome}
-            />
-            <HeroField
-              label="Processos"
-              icon={Scale}
-              value={`${totalProcessos} vinculado${totalProcessos !== 1 ? 's' : ''}`}
-            />
-          </div>
-
-          {/* Quick actions */}
-          <div className="flex flex-wrap gap-1.5">
-            {onEdit && (
-              <Button
-                variant="default"
-                size="sm"
-                onClick={onEdit}
-                className="h-7 px-2.5 rounded-lg text-[11.5px] font-medium gap-1.5"
-              >
-                <Edit className="size-3" />
-                Editar contrato
-              </Button>
-            )}
-            {onGerarPeca && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onGerarPeca}
-                className="h-7 px-2.5 rounded-lg text-[11.5px] font-medium gap-1.5"
-              >
-                <FileSignature className="size-3" />
-                Gerar peça
-              </Button>
-            )}
-            {onEnviarAssinatura && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onEnviarAssinatura}
-                className="h-7 px-2.5 rounded-lg text-[11.5px] font-medium gap-1.5"
-              >
-                <Send className="size-3" />
-                Enviar para assinar
-              </Button>
-            )}
-          </div>
+        {/* ── Stat row: 6 campos horizontais ────────────────────── */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-4">
+          <HeroStatField
+            label="Tipo"
+            icon={FileText}
+            value={tipoLabel}
+          />
+          <HeroStatField
+            label="Papel"
+            icon={ShieldCheck}
+            value={papelLabel}
+          />
+          <HeroStatField
+            label="Cobrança"
+            icon={Briefcase}
+            value={cobrancaLabel}
+          />
+          <HeroStatField
+            label="Segmento"
+            icon={Tag}
+            value={segmentoNome ?? '—'}
+            muted={!segmentoNome}
+          />
+          <HeroStatField
+            label="Responsável"
+            icon={UserIcon}
+            value={responsavel?.nome ?? 'Sem responsável'}
+            muted={!responsavel?.nome}
+          />
+          <HeroStatField
+            label="Processos"
+            icon={Scale}
+            value={`${totalProcessos} vinculado${totalProcessos !== 1 ? 's' : ''}`}
+            muted={totalProcessos === 0}
+          />
         </div>
-
-        {/* ── Tabs inline no rodapé do hero ──────────────────────── */}
-        {tabs ? (
-          <div className="mt-4 px-6 py-3 border-t border-border/40">
-            {tabs}
-          </div>
-        ) : (
-          <div className="h-5" aria-hidden="true" />
-        )}
       </GlassPanel>
 
       <ContratoDeleteDialog
@@ -298,28 +336,5 @@ export function ContratoDetalhesHeader({
         onSuccess={() => router.push('/app/contratos')}
       />
     </>
-  );
-}
-
-// ─── HeroField (pill no bloco primary) ───────────────────────────────────────
-
-interface HeroFieldProps {
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  value: string;
-  muted?: boolean;
-}
-
-function HeroField({ label, icon: Icon, value, muted }: HeroFieldProps) {
-  return (
-    <div className="flex flex-col gap-1.5 min-w-0">
-      <span className="text-[9.5px] font-semibold text-muted-foreground/75 uppercase tracking-[0.08em]">
-        {label}
-      </span>
-      <span className="inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-full bg-card border border-border/60 text-[12.5px] font-medium text-foreground max-w-full">
-        <Icon className={cn('size-3.5 shrink-0', muted ? 'text-muted-foreground' : 'text-primary')} />
-        <span className="truncate">{value}</span>
-      </span>
-    </div>
   );
 }
