@@ -162,6 +162,7 @@ export const createExpedienteSchema = z.object({
   responsavelId: z.number().optional(),
   tipoExpedienteId: z.number().optional(),
   observacoes: z.string().optional(),
+  descricaoArquivos: z.string().optional(),
 });
 
 export const updateExpedienteSchema = createExpedienteSchema.partial().extend({
@@ -170,6 +171,8 @@ export const updateExpedienteSchema = createExpedienteSchema.partial().extend({
   responsavelId: z.number().nullable().optional(),
   processoId: z.number().nullable().optional(),
   advogadoId: z.number().nullable().optional(),
+  descricaoArquivos: z.string().nullable().optional(),
+  observacoes: z.string().nullable().optional(),
 });
 
 export const baixaExpedienteSchema = z

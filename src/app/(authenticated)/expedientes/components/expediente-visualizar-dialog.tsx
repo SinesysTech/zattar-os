@@ -1,15 +1,18 @@
 'use client';
 
 /**
- * ExpedienteVisualizarDialog — Dialog de detalhes completos do expediente.
+ * ExpedienteVisualizarDialog — Dialog de detalhes do expediente com edição inline.
  * ============================================================================
- * Container: DialogFormShell (já Dialog, não Sheet).
- * Helpers visuais locais (Section, InfoRow, MetaItem, Separator, Audit)
- * substituem os primitivos DetailSheet* usados antes como containers standalone.
+ * Abre quando o usuário clica num item em qualquer view (lista, quadro,
+ * semana, mês, ano). Campos editáveis (tipo, descrição, observações,
+ * responsável, prazo) usam os popovers/editores inline compartilhados —
+ * mesmo padrão presente nos cards do quadro e na coluna da lista.
+ * Campos de processo, partes, órgão e auditoria permanecem read-only.
  * ============================================================================
  */
 
 import * as React from 'react';
+import Link from 'next/link';
 import {
   ExternalLink,
   Calendar,
@@ -34,6 +37,19 @@ import {
 } from '../domain';
 import type { Usuario } from '@/app/(authenticated)/usuarios';
 import type { TipoExpediente } from '@/app/(authenticated)/tipos-expedientes';
+import {
+  ExpedienteResponsavelPopover,
+  ResponsavelTriggerContent,
+} from './expediente-responsavel-popover';
+import {
+  ExpedienteTipoPopover,
+  TipoTriggerContent,
+} from './expediente-tipo-popover';
+import {
+  ExpedientePrazoPopover,
+  PrazoTriggerContent,
+} from './expediente-prazo-popover';
+import { ExpedienteTextEditor } from './expediente-text-editor';
 
 // =============================================================================
 // TYPES
@@ -45,6 +61,7 @@ interface ExpedienteVisualizarDialogProps {
   onOpenChange: (open: boolean) => void;
   usuarios?: Usuario[];
   tiposExpedientes?: TipoExpediente[];
+  onSuccess?: () => void;
 }
 
 // =============================================================================
@@ -73,7 +90,7 @@ const formatarGrau = (grau: GrauTribunal): string =>
   GRAU_TRIBUNAL_LABELS[grau] || grau;
 
 // =============================================================================
-// INTERNAL COMPONENTS (substitutos para primitivos DetailSheet)
+// INTERNAL LAYOUT COMPONENTS
 // =============================================================================
 
 function Section({
@@ -113,6 +130,21 @@ function InfoRow({
       <dd className="text-right font-medium text-foreground/90 min-w-0">
         {children}
       </dd>
+    </div>
+  );
+}
+
+function EditableRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-3 px-3 py-2 text-sm">
+      <dt className="text-[12px] text-muted-foreground/65 shrink-0 pt-1">{label}</dt>
+      <dd className="flex-1 flex justify-end min-w-0">{children}</dd>
     </div>
   );
 }
@@ -171,6 +203,7 @@ export function ExpedienteVisualizarDialog({
   onOpenChange,
   usuarios = [],
   tiposExpedientes = [],
+  onSuccess,
 }: ExpedienteVisualizarDialogProps) {
   if (!expediente) {
     return (
@@ -195,16 +228,7 @@ export function ExpedienteVisualizarDialog({
     );
   }
 
-  const responsavel = usuarios.find((u) => u.id === expediente.responsavelId);
-  const tipoExpediente = tiposExpedientes.find(
-    (t) => t.id === expediente.tipoExpedienteId,
-  );
   const partes = getExpedientePartyNames(expediente);
-
-  const handleAbrirPagina = () => {
-    onOpenChange(false);
-    // TODO: Navegar para /expedientes/[id] quando a página for criada
-  };
 
   const statusBadge = (
     <div className="flex items-center gap-1.5">
@@ -263,13 +287,87 @@ export function ExpedienteVisualizarDialog({
       maxWidth="4xl"
       bodyClassName="px-6 py-4 space-y-4 overflow-y-auto"
       footer={
-        <Button onClick={handleAbrirPagina}>
-          <ExternalLink className="h-4 w-4 mr-2" />
-          Abrir Expediente
+        <Button asChild variant="outline">
+          <Link href={`/app/expedientes/${expediente.id}`}>
+            <ExternalLink className="h-4 w-4 mr-2" />
+            Abrir página completa
+          </Link>
         </Button>
       }
     >
       <>
+        {/* Edição rápida — popovers/inline em todos os campos editáveis */}
+        <Section icon={<FileText className="h-4 w-4" />} title="Edição rápida">
+          <EditableRow label="Tipo">
+            <ExpedienteTipoPopover
+              expedienteId={expediente.id}
+              tipoExpedienteId={expediente.tipoExpedienteId}
+              tiposExpedientes={tiposExpedientes}
+              onSuccess={onSuccess}
+              align="end"
+            >
+              <TipoTriggerContent
+                tipoExpedienteId={expediente.tipoExpedienteId}
+                tiposExpedientes={tiposExpedientes}
+                size="md"
+              />
+            </ExpedienteTipoPopover>
+          </EditableRow>
+          <EditableRow label="Responsável">
+            <ExpedienteResponsavelPopover
+              expedienteId={expediente.id}
+              responsavelId={expediente.responsavelId}
+              usuarios={usuarios}
+              onSuccess={onSuccess}
+              align="end"
+            >
+              <ResponsavelTriggerContent
+                responsavelId={expediente.responsavelId}
+                usuarios={usuarios}
+                size="md"
+              />
+            </ExpedienteResponsavelPopover>
+          </EditableRow>
+          <EditableRow label="Prazo legal">
+            <ExpedientePrazoPopover
+              expedienteId={expediente.id}
+              dataPrazoLegalParte={expediente.dataPrazoLegalParte}
+              onSuccess={onSuccess}
+              align="end"
+            >
+              <PrazoTriggerContent
+                dataPrazoLegalParte={expediente.dataPrazoLegalParte}
+                size="md"
+                vencido={expediente.prazoVencido && !expediente.baixadoEm}
+              />
+            </ExpedientePrazoPopover>
+          </EditableRow>
+          <EditableRow label="Descrição / arquivos">
+            <ExpedienteTextEditor
+              expedienteId={expediente.id}
+              field="descricaoArquivos"
+              value={expediente.descricaoArquivos}
+              title="Editar descrição"
+              placeholder="Descreva o conteúdo do expediente..."
+              emptyPlaceholder="Clique para adicionar descrição"
+              onSuccess={onSuccess}
+              className="text-right"
+            />
+          </EditableRow>
+          <EditableRow label="Observações">
+            <ExpedienteTextEditor
+              expedienteId={expediente.id}
+              field="observacoes"
+              value={expediente.observacoes}
+              title="Editar observações"
+              placeholder="Adicione observações..."
+              emptyPlaceholder="Clique para adicionar observações"
+              onSuccess={onSuccess}
+              className="text-right"
+            />
+          </EditableRow>
+        </Section>
+
         {/* Informações do Processo */}
         <Section icon={<Scale className="h-4 w-4" />} title="Informações do Processo">
           <InfoRow label="Número do Processo">{expediente.numeroProcesso}</InfoRow>
@@ -375,22 +473,13 @@ export function ExpedienteVisualizarDialog({
           )}
         </Section>
 
-        {/* Datas e Prazos */}
+        {/* Datas e Prazos — contextuais (read-only) */}
         <Section icon={<Calendar className="h-4 w-4" />} title="Datas e Prazos">
           <InfoRow label="Data de Autuação">
             {formatarData(expediente.dataAutuacao)}
           </InfoRow>
           <InfoRow label="Data de Ciência">
             {formatarData(expediente.dataCienciaParte)}
-          </InfoRow>
-          <InfoRow label="Prazo Legal">
-            <span
-              className={
-                expediente.prazoVencido ? 'text-destructive font-semibold' : ''
-              }
-            >
-              {formatarData(expediente.dataPrazoLegalParte)}
-            </span>
           </InfoRow>
           <InfoRow label="Criação do Expediente">
             {formatarData(expediente.dataCriacaoExpediente)}
@@ -407,27 +496,6 @@ export function ExpedienteVisualizarDialog({
           )}
         </Section>
 
-        {/* Tipo e Descrição */}
-        {(tipoExpediente || expediente.descricaoArquivos) && (
-          <Section icon={<FileText className="h-4 w-4" />} title="Tipo e Descrição">
-            {tipoExpediente && (
-              <InfoRow label="Tipo de Expediente">
-                <SemanticBadge category="expediente_tipo" value={tipoExpediente.id}>
-                  {tipoExpediente.tipoExpediente}
-                </SemanticBadge>
-              </InfoRow>
-            )}
-            {expediente.descricaoArquivos && (
-              <>
-                {tipoExpediente && <Separator />}
-                <InfoRow label="Descrição / Arquivos">
-                  <span className="text-right">{expediente.descricaoArquivos}</span>
-                </InfoRow>
-              </>
-            )}
-          </Section>
-        )}
-
         {/* Informações de Baixa */}
         {expediente.baixadoEm && (
           <Section
@@ -436,7 +504,7 @@ export function ExpedienteVisualizarDialog({
           >
             {expediente.protocoloId && (
               <InfoRow label="Protocolo ID">
-                <span className="font-mono text-xs">{expediente.protocoloId}</span>
+                <span>{expediente.protocoloId}</span>
               </InfoRow>
             )}
             {expediente.justificativaBaixa && (
@@ -447,23 +515,14 @@ export function ExpedienteVisualizarDialog({
           </Section>
         )}
 
-        {/* Responsável */}
-        {responsavel && (
-          <Section icon={<Users className="h-4 w-4" />} title="Responsável">
-            <InfoRow label="Usuário Responsável">
-              {responsavel.nomeExibicao || responsavel.nomeCompleto}
-            </InfoRow>
-          </Section>
-        )}
-
         {/* Informações Técnicas */}
         <Section icon={<FileText className="h-4 w-4" />} title="Informações Técnicas">
           <InfoRow label="ID PJE">
-            <span className="font-mono text-xs">{expediente.idPje || '-'}</span>
+            <span>{expediente.idPje || '-'}</span>
           </InfoRow>
           {expediente.idDocumento && (
             <InfoRow label="ID Documento">
-              <span className="font-mono text-xs">{expediente.idDocumento}</span>
+              <span>{expediente.idDocumento}</span>
             </InfoRow>
           )}
         </Section>
