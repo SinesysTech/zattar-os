@@ -301,56 +301,6 @@ export default function SolucoesPage() {
           </div>
         </section>
 
-        {/* ─── CTA dedicado da página ──────────────────────────────── */}
-        <section className="max-w-352 mx-auto px-5 sm:px-6 md:px-10 pt-24">
-          <MarketingCard
-            variant="solid"
-            padding="lg"
-            className="text-center relative overflow-hidden px-6 py-14 sm:py-16 md:py-20 lg:px-16"
-          >
-            <div
-              aria-hidden="true"
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-linear-to-r from-transparent via-primary to-transparent"
-            />
-            <div
-              aria-hidden="true"
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-32 bg-primary-dim/12 blur-[120px] rounded-full pointer-events-none"
-            />
-            <div className="relative z-10 max-w-3xl mx-auto">
-              <Heading level="marketing-section" className="mb-5 md:mb-6">
-                Pronto para a{" "}
-                <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
-                  nova era jurídica?
-                </span>
-              </Heading>
-              <Text variant="marketing-lead" className="mb-9 md:mb-10 max-w-xl mx-auto">
-                Transforme seu departamento jurídico em um centro de
-                inteligência e alta performance com a tecnologia da Zattar
-                Engine.
-              </Text>
-              <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
-                <Button
-                  asChild
-                  size="lg"
-                  className="rounded-xl h-12 px-8 text-base gap-2 group"
-                >
-                  <Link href="/contato">
-                    Falar com Especialista
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  variant="marketing-outline"
-                  className="rounded-xl h-12 px-8 text-base"
-                >
-                  <Link href="/contato">Agendar Demo</Link>
-                </Button>
-              </div>
-            </div>
-          </MarketingCard>
-        </section>
       </div>
     </WebsiteShell>
   );

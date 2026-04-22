@@ -95,15 +95,12 @@ const apiCategories = [
     title: 'Usuários & Permissões',
     icon: Shield,
     endpoints: [
-      { method: 'GET', path: '/api/usuarios', description: 'Listar usuários', auth: true, params: 'pagina, limite' },
-      { method: 'POST', path: '/api/usuarios', description: 'Criar usuário', auth: true },
-      { method: 'GET', path: '/api/usuarios/[id]', description: 'Obter usuário', auth: true },
-      { method: 'PATCH', path: '/api/usuarios/[id]', description: 'Atualizar usuário', auth: true },
-      { method: 'DELETE', path: '/api/usuarios/[id]', description: 'Excluir usuário', auth: true },
-      { method: 'POST', path: '/api/usuarios/sincronizar', description: 'Sincronizar Auth <-> DB', auth: true },
-      { method: 'GET', path: '/api/permissoes/recursos', description: 'Listar recursos e permissões', auth: true },
-      { method: 'GET', path: '/api/permissoes/usuarios/[id]', description: 'Permissões do usuário', auth: true },
-      { method: 'POST', path: '/api/permissoes/usuarios/[id]', description: 'Atualizar permissões', auth: true },
+      // Operações de CRUD de usuários NÃO são expostas como REST API.
+      // O acesso é via Server Actions: `actionListarUsuarios`, `actionCriarUsuario`,
+      // `actionAtualizarUsuario`, `actionDesativarUsuario`, `actionSincronizarUsuarios`
+      // exportadas de `@/app/(authenticated)/usuarios`.
+      { method: 'GET', path: '/api/permissoes/recursos', description: 'Listar recursos e permissões da matriz', auth: true },
+      { method: 'GET', path: '/api/permissoes/minhas', description: 'Permissões do usuário autenticado', auth: true },
     ],
   },
   {

@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { authenticateRequest } from '@/lib/auth';
+import { requireAuth } from '@/app/(authenticated)/usuarios';
 import type {
     ListarTiposExpedientesParams,
     ListarTiposExpedientesResult,
@@ -16,6 +16,15 @@ import type { ActionResponse } from './types';
 // =============================================================================
 // ACTIONS
 // =============================================================================
+//
+// Nota de segurança:
+// O repository de tipos-expedientes usa service client Supabase
+// (`createDbClient` com service role), que BYPASSA RLS. As 4 policies RLS
+// existentes na tabela (authenticated + is_current_user_active) só protegem
+// clients com sessão do usuário. Por isso TODAS as actions deste módulo
+// DEVEM chamar `requireAuth([...])` explicitamente — é a única camada de
+// autorização efetiva para este caminho.
+// =============================================================================
 
 /**
  * Listar tipos de expedientes
@@ -24,6 +33,7 @@ export async function actionListarTiposExpedientes(
     params?: ListarTiposExpedientesParams
 ): Promise<ActionResponse<ListarTiposExpedientesResult>> {
     try {
+        await requireAuth(['tipos_expedientes:listar']);
         const data = await service.listar(params);
         return { success: true, data };
     } catch (error) {
@@ -41,6 +51,7 @@ export async function actionBuscarTipoExpediente(
     id: number
 ): Promise<ActionResponse<TipoExpediente | null>> {
     try {
+        await requireAuth(['tipos_expedientes:visualizar']);
         const data = await service.buscar(id);
         return { success: true, data };
     } catch (error) {
@@ -58,14 +69,10 @@ export async function actionCriarTipoExpediente(
     formData: FormData
 ): Promise<ActionResponse<TipoExpediente>> {
     try {
-        const user = await authenticateRequest();
-        if (!user) {
-            return { success: false, error: 'Usuário não autenticado' };
-        }
+        const { userId } = await requireAuth(['tipos_expedientes:criar']);
 
         const tipoExpediente = formData.get('tipoExpediente')?.toString();
 
-        // Validar presença de dados básicos antes de enviar pro service (que valida schema completo)
         if (!tipoExpediente) {
             return { success: false, error: 'Nome do tipo de expediente é obrigatório' };
         }
@@ -74,7 +81,7 @@ export async function actionCriarTipoExpediente(
             tipoExpediente,
         };
 
-        const data = await service.criar(input, user.id);
+        const data = await service.criar(input, userId);
 
         revalidatePath('/app/tipos-expedientes');
 
@@ -95,10 +102,7 @@ export async function actionAtualizarTipoExpediente(
     formData: FormData
 ): Promise<ActionResponse<TipoExpediente>> {
     try {
-        const user = await authenticateRequest();
-        if (!user) {
-            return { success: false, error: 'Usuário não autenticado' };
-        }
+        await requireAuth(['tipos_expedientes:editar']);
 
         const tipoExpediente = formData.get('tipoExpediente')?.toString();
 
@@ -130,10 +134,7 @@ export async function actionDeletarTipoExpediente(
     id: number
 ): Promise<ActionResponse<void>> {
     try {
-        const user = await authenticateRequest();
-        if (!user) {
-            return { success: false, error: 'Usuário não autenticado' };
-        }
+        await requireAuth(['tipos_expedientes:deletar']);
 
         await service.deletar(id);
 

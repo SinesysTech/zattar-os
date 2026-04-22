@@ -2,14 +2,17 @@
  * Tests for Tipos-Expedientes Server Actions
  *
  * Tests real exported actions with mocked service layer, auth, and cache revalidation.
- * Tipos-expedientes actions use authenticateRequest from @/lib/auth directly.
+ * All actions now require `requireAuth([...])` with granular permissions.
+ *
+ * Hardening rationale: o repository usa service client (bypassa RLS), portanto
+ * a ÚNICA camada de autorização efetiva é `requireAuth` na action.
  *
  * Actions:
- * - actionListarTiposExpedientes: no auth required, delegates to service.listar
- * - actionBuscarTipoExpediente: no auth required, delegates to service.buscar
- * - actionCriarTipoExpediente: auth required, FormData input, delegates to service.criar
- * - actionAtualizarTipoExpediente: auth required, id + FormData, delegates to service.atualizar
- * - actionDeletarTipoExpediente: auth required, id, delegates to service.deletar
+ * - actionListarTiposExpedientes: auth tipos_expedientes:listar
+ * - actionBuscarTipoExpediente:   auth tipos_expedientes:visualizar
+ * - actionCriarTipoExpediente:    auth tipos_expedientes:criar
+ * - actionAtualizarTipoExpediente: auth tipos_expedientes:editar
+ * - actionDeletarTipoExpediente:  auth tipos_expedientes:deletar
  */
 
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
@@ -24,15 +27,13 @@ jest.mock('next/headers', () => ({
     })),
 }));
 
-// Mock auth
-const mockUser = {
-    id: 1,
-    nomeCompleto: 'Teste Tipos Expedientes',
-    emailCorporativo: 'teste@zattar.com',
-};
+// Mock requireAuth (novo padrão, vindo de @/app/(authenticated)/usuarios)
+const mockRequireAuth = jest.fn(async (_permissions?: string[]) => ({
+    userId: 1,
+}));
 
-jest.mock('@/lib/auth', () => ({
-    authenticateRequest: jest.fn(async () => mockUser),
+jest.mock('@/app/(authenticated)/usuarios', () => ({
+    requireAuth: (...args: unknown[]) => mockRequireAuth(...(args as [string[]])),
 }));
 
 // Mock service layer
@@ -45,7 +46,6 @@ jest.mock('../../service', () => ({
 }));
 
 import { revalidatePath } from 'next/cache';
-import { authenticateRequest } from '@/lib/auth';
 
 // Import REAL actions (after mocks)
 import {
@@ -86,7 +86,7 @@ function createFormData(fields: Record<string, string>): FormData {
 describe('Tipos-Expedientes Actions', () => {
     beforeEach(() => {
         jest.clearAllMocks();
-        (authenticateRequest as jest.Mock).mockResolvedValue(mockUser);
+        mockRequireAuth.mockResolvedValue({ userId: 1 });
     });
 
     // =========================================================================
@@ -101,6 +101,28 @@ describe('Tipos-Expedientes Actions', () => {
             expect(result.success).toBe(true);
             expect(result.data).toEqual(mockListResult);
             expect(mockService.listar).toHaveBeenCalledWith({});
+        });
+
+        it('deve exigir permissão tipos_expedientes:listar (hardening)', async () => {
+            (mockService.listar as jest.Mock).mockResolvedValue(mockListResult);
+
+            await actionListarTiposExpedientes({});
+
+            expect(mockRequireAuth).toHaveBeenCalledWith([
+                'tipos_expedientes:listar',
+            ]);
+        });
+
+        it('deve bloquear quando requireAuth falha (sem sessão ou sem permissão)', async () => {
+            mockRequireAuth.mockRejectedValueOnce(
+                new Error('Permissão negada: tipos_expedientes.listar'),
+            );
+
+            const result = await actionListarTiposExpedientes({});
+
+            expect(result.success).toBe(false);
+            expect(result.error).toContain('Permissão negada');
+            expect(mockService.listar).not.toHaveBeenCalled();
         });
 
         it('deve listar sem parâmetros', async () => {
@@ -145,6 +167,28 @@ describe('Tipos-Expedientes Actions', () => {
             expect(mockService.buscar).toHaveBeenCalledWith(1);
         });
 
+        it('deve exigir permissão tipos_expedientes:visualizar (hardening)', async () => {
+            (mockService.buscar as jest.Mock).mockResolvedValue(mockTipoExpediente);
+
+            await actionBuscarTipoExpediente(1);
+
+            expect(mockRequireAuth).toHaveBeenCalledWith([
+                'tipos_expedientes:visualizar',
+            ]);
+        });
+
+        it('deve bloquear quando requireAuth falha', async () => {
+            mockRequireAuth.mockRejectedValueOnce(
+                new Error('Não autorizado. Por favor faça login.'),
+            );
+
+            const result = await actionBuscarTipoExpediente(1);
+
+            expect(result.success).toBe(false);
+            expect(result.error).toContain('Não autorizado');
+            expect(mockService.buscar).not.toHaveBeenCalled();
+        });
+
         it('deve retornar null quando não encontrado', async () => {
             (mockService.buscar as jest.Mock).mockResolvedValue(null);
 
@@ -185,22 +229,26 @@ describe('Tipos-Expedientes Actions', () => {
 
             expect(result.success).toBe(true);
             expect(result.data).toEqual(mockTipoExpediente);
-            expect(authenticateRequest).toHaveBeenCalled();
+            expect(mockRequireAuth).toHaveBeenCalledWith([
+                'tipos_expedientes:criar',
+            ]);
             expect(mockService.criar).toHaveBeenCalledWith(
                 { tipoExpediente: 'Citação' },
-                mockUser.id,
+                1,
             );
             expect(revalidatePath).toHaveBeenCalledWith('/app/tipos-expedientes');
         });
 
-        it('deve retornar erro quando não autenticado', async () => {
-            (authenticateRequest as jest.Mock).mockResolvedValue(null);
+        it('deve bloquear quando requireAuth falha', async () => {
+            mockRequireAuth.mockRejectedValueOnce(
+                new Error('Permissão negada: tipos_expedientes.criar'),
+            );
 
             const fd = createFormData({ tipoExpediente: 'Citação' });
             const result = await actionCriarTipoExpediente(fd);
 
             expect(result.success).toBe(false);
-            expect(result.error).toBe('Usuário não autenticado');
+            expect(result.error).toContain('Permissão negada');
             expect(mockService.criar).not.toHaveBeenCalled();
         });
 
@@ -249,19 +297,23 @@ describe('Tipos-Expedientes Actions', () => {
 
             expect(result.success).toBe(true);
             expect(result.data).toEqual(updated);
-            expect(authenticateRequest).toHaveBeenCalled();
+            expect(mockRequireAuth).toHaveBeenCalledWith([
+                'tipos_expedientes:editar',
+            ]);
             expect(mockService.atualizar).toHaveBeenCalledWith(1, { tipoExpediente: 'Intimação' });
             expect(revalidatePath).toHaveBeenCalledWith('/app/tipos-expedientes');
         });
 
-        it('deve retornar erro quando não autenticado', async () => {
-            (authenticateRequest as jest.Mock).mockResolvedValue(null);
+        it('deve bloquear quando requireAuth falha', async () => {
+            mockRequireAuth.mockRejectedValueOnce(
+                new Error('Permissão negada: tipos_expedientes.editar'),
+            );
 
             const fd = createFormData({ tipoExpediente: 'Intimação' });
             const result = await actionAtualizarTipoExpediente(1, fd);
 
             expect(result.success).toBe(false);
-            expect(result.error).toBe('Usuário não autenticado');
+            expect(result.error).toContain('Permissão negada');
             expect(mockService.atualizar).not.toHaveBeenCalled();
         });
 
@@ -307,18 +359,22 @@ describe('Tipos-Expedientes Actions', () => {
             const result = await actionDeletarTipoExpediente(1);
 
             expect(result.success).toBe(true);
-            expect(authenticateRequest).toHaveBeenCalled();
+            expect(mockRequireAuth).toHaveBeenCalledWith([
+                'tipos_expedientes:deletar',
+            ]);
             expect(mockService.deletar).toHaveBeenCalledWith(1);
             expect(revalidatePath).toHaveBeenCalledWith('/app/tipos-expedientes');
         });
 
-        it('deve retornar erro quando não autenticado', async () => {
-            (authenticateRequest as jest.Mock).mockResolvedValue(null);
+        it('deve bloquear quando requireAuth falha', async () => {
+            mockRequireAuth.mockRejectedValueOnce(
+                new Error('Permissão negada: tipos_expedientes.deletar'),
+            );
 
             const result = await actionDeletarTipoExpediente(1);
 
             expect(result.success).toBe(false);
-            expect(result.error).toBe('Usuário não autenticado');
+            expect(result.error).toContain('Permissão negada');
             expect(mockService.deletar).not.toHaveBeenCalled();
         });
 
