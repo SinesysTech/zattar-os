@@ -36,9 +36,9 @@ import { cn } from '@/lib/utils';
 
 import {
   DIRECAO_LABELS,
-  STATUS_LABELS,
   TIPO_LABELS,
   type ObrigacaoComDetalhes,
+  type StatusObrigacao,
   type StatusSincronizacao,
 } from '../../domain';
 import { formatCurrency } from '../../utils';
@@ -68,6 +68,14 @@ const SINCRONIZACAO_CONFIG: Record<
   pendente: { label: 'Pendente de sincronização', icon: Clock, tone: 'warning' },
   inconsistente: { label: 'Inconsistente', icon: AlertCircle, tone: 'destructive' },
   nao_aplicavel: { label: 'Não aplicável', icon: Clock, tone: 'muted' },
+};
+
+const STATUS_OBRIGACAO_LABELS: Record<StatusObrigacao, string> = {
+  pendente: 'Pendente',
+  vencida: 'Vencida',
+  efetivada: 'Efetivada',
+  cancelada: 'Cancelada',
+  estornada: 'Estornada',
 };
 
 // ============================================================================
@@ -221,16 +229,8 @@ export function ObrigacaoDetalhesDialog({
         {/* ══════════ HEADER · Capa do processo ══════════ */}
         <div className="shrink-0 px-6 pt-5 pb-4 border-b border-border/50">
           <div className="flex items-center justify-between gap-4 mb-1.5">
-            <DialogTitle
-              asChild
-              className="flex-1 min-w-0"
-            >
-              <Heading
-                level="section"
-                className="text-[16px] font-semibold leading-[1.3] -tracking-[0.01em] truncate"
-              >
-                {tituloPartes}
-              </Heading>
+            <DialogTitle className="flex-1 min-w-0 text-[16px] font-semibold text-foreground leading-[1.3] -tracking-[0.01em] truncate">
+              {tituloPartes}
             </DialogTitle>
 
             <SemanticBadge
@@ -238,7 +238,7 @@ export function ObrigacaoDetalhesDialog({
               value={obrigacao.status}
               className="text-[10px]"
             >
-              {STATUS_LABELS[obrigacao.status] || obrigacao.status}
+              {STATUS_OBRIGACAO_LABELS[obrigacao.status] || obrigacao.status}
             </SemanticBadge>
 
             <button
@@ -286,9 +286,9 @@ export function ObrigacaoDetalhesDialog({
         <div className="shrink-0 mx-6 mt-4 p-4 rounded-xl bg-primary/5 border border-primary/15">
           <div className="flex items-start gap-3 mb-3.5">
             <div className="flex-1 min-w-0">
-              <Text variant="card" className="text-foreground font-semibold leading-tight">
+              <p className="text-[14.5px] font-semibold text-foreground leading-tight">
                 {TIPO_LABELS[obrigacao.tipo] || obrigacao.tipo}
-              </Text>
+              </p>
               <Text variant="caption" className="text-muted-foreground mt-0.5 block">
                 {obrigacao.descricao}
               </Text>

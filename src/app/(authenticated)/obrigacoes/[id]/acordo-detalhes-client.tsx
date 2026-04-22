@@ -194,7 +194,7 @@ export function AcordoDetalhesClient({
                   {processo.trt}
                 </SemanticBadge>
               )}
-              {grauLabel && (
+              {grauLabel && processo?.grau && (
                 <SemanticBadge
                   category="grau"
                   value={processo.grau}
