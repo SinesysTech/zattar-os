@@ -1,6 +1,10 @@
-import { WebsiteShell } from "@/app/website";
+import Image from "next/image";
 import Link from "next/link";
 import { Shield, Users, Search, ArrowRight, Atom, Scale } from "lucide-react";
+
+import { WebsiteShell, MarketingCard } from "@/app/website";
+import { Heading, Text } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
 import { buildWebsiteMetadata } from "../_metadata/build-metadata";
 
 export const metadata = buildWebsiteMetadata({
@@ -10,124 +14,287 @@ export const metadata = buildWebsiteMetadata({
   path: "/expertise",
 });
 
-
 export default function ExpertisePage() {
   return (
-    <WebsiteShell>
-
+    <WebsiteShell hideClosingCta>
       <div className="pt-32 pb-24">
-        {/* Hero Section */}
-        <section className="max-w-7xl mx-auto px-8 mb-32 grid grid-cols-1 md:grid-cols-12 gap-8 items-center mt-12">
+        {/* ─── Hero ─────────────────────────────────────────────────── */}
+        <section className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 mb-24 md:mb-32 grid grid-cols-1 md:grid-cols-12 gap-8 items-center mt-12">
           <div className="md:col-span-7">
-            <span className="inline-block py-1 px-3 rounded-full bg-surface-container-highest text-primary text-xs font-bold tracking-widest uppercase mb-6">
+            <Text variant="marketing-overline" className="mb-5 block">
               Inteligência Jurídica Deep Tech
-            </span>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold font-headline tracking-tighter leading-[0.9] mb-8">
+            </Text>
+            <Heading level="marketing-hero" className="mb-7">
               Expertise Jurídica de{" "}
-              <span className="bg-linear-to-br from-primary-fixed-dim to-primary bg-clip-text text-transparent">
+              <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
                 Vanguarda.
               </span>
-            </h1>
-            <p className="text-xl text-on-surface-variant leading-relaxed max-w-xl">
-              Combinamos a profundidade intelectual do direito tradicional com a agilidade algorítmica da próxima geração tecnológica. Proteção em alta velocidade.
-            </p>
+            </Heading>
+            <Text variant="marketing-lead" className="max-w-xl">
+              Combinamos a profundidade intelectual do direito tradicional com a
+              agilidade algorítmica da próxima geração tecnológica. Proteção em
+              alta velocidade.
+            </Text>
           </div>
           <div className="md:col-span-5 relative mt-12 md:mt-0">
-            <div className="aspect-square rounded-full border border-primary/20 absolute -top-12 -right-12 w-full"></div>
-            <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl relative z-10 border border-white/5 bg-surface-container">
-              <img
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 opacity-60"
-                alt="Estátua de justiça em vidro com reflexo tecnológico em close-up"
+            <div
+              aria-hidden="true"
+              className="aspect-square rounded-full border border-primary/20 absolute -top-12 -right-12 w-full"
+            />
+            <div className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl z-10 border border-outline-variant/20 bg-surface-container">
+              <Image
                 src="/website/expertise/hero.jpg"
+                alt="Estátua de justiça em vidro com reflexo tecnológico em close-up"
+                fill
+                sizes="(max-width: 768px) 100vw, 40vw"
+                className="object-cover grayscale hover:grayscale-0 transition-all duration-700 opacity-70"
               />
             </div>
           </div>
         </section>
 
-        {/* Specialization Areas: Bento Grid Layout */}
-        <section className="max-w-7xl mx-auto px-8 mb-40">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+        {/* ─── Specialization Areas (Bento) ─────────────────────────── */}
+        <section className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 mb-24 md:mb-32">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-10 md:mb-14 gap-6">
             <div className="max-w-2xl">
-              <h2 className="text-4xl font-headline font-bold mb-4">Áreas de Especialização</h2>
-              <p className="text-on-surface-variant">
+              <Text variant="marketing-overline" className="mb-3 block">
+                Áreas de atuação
+              </Text>
+              <Heading level="marketing-section">Áreas de Especialização</Heading>
+              <Text variant="marketing-lead" className="mt-4">
                 Arquitetura jurídica desenhada para o ecossistema digital contemporâneo.
-              </p>
+              </Text>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-200">
-            {/* Direito Digital */}
-            <div className="md:col-span-8 bg-surface-container rounded-3xl overflow-hidden group relative flex flex-col justify-end p-10 border border-white/5">
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-6">
+            {/* Direito Digital — wide, image bg */}
+            <MarketingCard
+              variant="solid"
+              padding="lg"
+              className="md:col-span-8 overflow-hidden group relative flex flex-col justify-end min-h-96 md:min-h-104"
+            >
               <div className="absolute inset-0 z-0">
-                <img
-                  className="w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-700"
-                  alt="Visualização de dados futurística de cibersegurança"
+                <Image
                   src="/website/expertise/profile-1.jpg"
+                  alt="Visualização de dados futurística de cibersegurança"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 60vw"
+                  className="object-cover opacity-25 motion-safe:group-hover:scale-105 transition-transform duration-700"
                 />
+                <div className="absolute inset-0 bg-linear-to-t from-background/95 via-background/70 to-transparent" />
               </div>
-              <div className="relative z-10 w-full h-full flex flex-col justify-end">
-                <div className="mb-4">
-                  <Shield className="text-primary w-10 h-10" />
+              <div className="relative z-10">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary-dim/25 text-primary ring-1 ring-primary/40 mb-5">
+                  <Shield className="w-6 h-6" />
                 </div>
-                <h3 className="text-3xl font-bold mb-4 font-headline">Direito Digital</h3>
-                <p className="text-on-surface-variant max-w-lg mb-6 leading-relaxed">
-                  Navegação precisa por LGPD, cibersegurança e regulação de IA. Protegemos seu IP e garantimos conformidade em infraestruturas complexas.
-                </p>
+                <Heading level="marketing-title" className="mb-3">
+                  Direito Digital
+                </Heading>
+                <Text variant="marketing-lead" className="max-w-lg mb-5">
+                  Navegação precisa por LGPD, cibersegurança e regulação de IA.
+                  Protegemos seu IP e garantimos conformidade em infraestruturas
+                  complexas.
+                </Text>
                 <ul className="flex flex-wrap gap-2">
-                  <li className="px-3 py-1 rounded-full bg-surface-container-highest text-primary text-xs font-semibold">LGPD</li>
-                  <li className="px-3 py-1 rounded-full bg-surface-container-highest text-primary text-xs font-semibold">Web3 & Smart Contracts</li>
-                  <li className="px-3 py-1 rounded-full bg-surface-container-highest text-primary text-xs font-semibold">Ciber-Litigância</li>
+                  {["LGPD", "Web3 & Smart Contracts", "Ciber-Litigância"].map(
+                    (tag) => (
+                      <li
+                        key={tag}
+                        className="px-3 py-1 rounded-full bg-surface-container-highest/80 border border-outline-variant/20 text-primary text-xs font-semibold"
+                      >
+                        {tag}
+                      </li>
+                    ),
+                  )}
                 </ul>
               </div>
-            </div>
+            </MarketingCard>
 
             {/* Direito do Trabalho */}
-            <div className="md:col-span-4 bg-surface-container rounded-3xl overflow-hidden group relative flex flex-col p-10 border border-white/5">
-              <div className="mb-8">
-                <Users className="text-primary w-10 h-10" />
+            <MarketingCard
+              variant="solid"
+              padding="lg"
+              className="md:col-span-4 group flex flex-col"
+            >
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary-dim/25 text-primary ring-1 ring-primary/40 mb-5">
+                <Users className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 font-headline">Direito do Trabalho</h3>
-              <p className="text-on-surface-variant leading-relaxed mb-8">
-                Estratégias laborais para o trabalho remoto e a economia de plataformas. Gestão de risco para times globais e contratos de vesting.
-              </p>
-              <div className="mt-auto pt-6 border-t border-white/5">
-                <span className="text-primary text-sm font-bold tracking-widest uppercase">Foco em Times Híbridos</span>
+              <Heading level="card" as="h3" className="mb-3">
+                Direito do Trabalho
+              </Heading>
+              <Text variant="caption" className="text-foreground/85 mb-6 leading-relaxed">
+                Estratégias laborais para o trabalho remoto e a economia de
+                plataformas. Gestão de risco para times globais e contratos de
+                vesting.
+              </Text>
+              <div className="mt-auto pt-5 border-t border-outline-variant/20">
+                <Text variant="marketing-overline">Foco em times híbridos</Text>
               </div>
-            </div>
+            </MarketingCard>
 
-            {/* Consultoria Preventiva */}
-            <div className="md:col-span-4 bg-primary text-on-primary-fixed rounded-3xl flex flex-col p-10 group hover:bg-primary-container transition-colors duration-300 shadow-xl shadow-primary/10">
-              <div className="mb-8">
-                <Search className="w-10 h-10 opacity-90" />
+            {/* Consultoria Preventiva — destaque primary */}
+            <MarketingCard
+              variant="primary"
+              padding="lg"
+              className="md:col-span-4 group flex flex-col"
+            >
+              {/* Ícone em glass-white é intencional aqui — o card tem fundo roxo
+                  (primary-dim) próprio, então bg-white/15 cria contraste alto. */}
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white/15 text-white ring-1 ring-white/25 mb-5">
+                <Search className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 font-headline">Consultoria Preventiva</h3>
-              <p className="text-on-primary-fixed/80 leading-relaxed mb-8">
-                Inteligência antecipatória para evitar o contencioso. Auditamos processos internos com precisão cirúrgica antes que se tornem passivos.
-              </p>
-              <Link href="/contato" className="mt-auto flex items-center gap-2 font-bold uppercase text-xs tracking-widest hover:pl-2 transition-all">
-                Saiba Mais <ArrowRight className="w-4 h-4" />
+              <Heading level="card" as="h3" className="mb-3 text-white">
+                Consultoria Preventiva
+              </Heading>
+              <Text variant="caption" className="text-white/85 mb-7 leading-relaxed">
+                Inteligência antecipatória para evitar o contencioso. Auditamos
+                processos internos com precisão cirúrgica antes que se tornem
+                passivos.
+              </Text>
+              <Link
+                href="/contato"
+                className="group/cta mt-auto inline-flex items-center gap-2 text-white font-bold text-xs tracking-widest uppercase hover:gap-3 transition-all"
+              >
+                Saiba Mais
+                <ArrowRight className="w-4 h-4 group-hover/cta:translate-x-0.5 transition-transform" />
               </Link>
-            </div>
+            </MarketingCard>
 
-            {/* Expertise Adicional / Visual */}
-            <div className="md:col-span-8 bg-surface-container-low rounded-3xl overflow-hidden p-10 border border-white/5 relative">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 h-full">
+            {/* Fusões & Aquisições Tech — wide com imagem lateral */}
+            <MarketingCard
+              variant="solid"
+              padding="lg"
+              className="md:col-span-8 relative overflow-hidden"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 h-full">
                 <div className="flex flex-col justify-center relative z-10">
-                  <h3 className="text-2xl font-bold mb-4 font-headline">Fusões & Aquisições Tech</h3>
-                  <p className="text-on-surface-variant text-sm mb-6 leading-relaxed">
-                    Due diligence automatizada e estruturação societária para startups em rodadas de investimento (Series A-E).
-                  </p>
-                  <div className="flex -space-x-3">
-                    <div className="w-10 h-10 rounded-full border-2 border-surface-container bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface shadow-md">M&A</div>
-                    <div className="w-10 h-10 rounded-full border-2 border-surface-container bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface shadow-md">EXIT</div>
-                    <div className="w-10 h-10 rounded-full border-2 border-surface-container bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface shadow-md">IPO</div>
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary-dim/25 text-primary ring-1 ring-primary/40 mb-5">
+                    <Scale className="w-6 h-6" />
+                  </div>
+                  <Heading level="card" as="h3" className="mb-3">
+                    Fusões &amp; Aquisições Tech
+                  </Heading>
+                  <Text variant="caption" className="text-foreground/85 mb-5 leading-relaxed">
+                    Due diligence automatizada e estruturação societária para
+                    startups em rodadas de investimento (Series A–E).
+                  </Text>
+                  <div className="flex -space-x-2">
+                    {["M&A", "EXIT", "IPO"].map((tag) => (
+                      <div
+                        key={tag}
+                        className="w-10 h-10 rounded-full border-2 border-surface-container bg-surface-container-high flex items-center justify-center text-[10px] font-bold text-foreground shadow-md"
+                      >
+                        {tag}
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <div className="relative hidden sm:block h-full min-h-50">
-                  <div className="absolute inset-0 bg-linear-to-t from-surface-container-low to-transparent z-10"></div>
-                  <img
-                    className="w-full h-full object-cover opacity-50 grayscale rounded-xl mix-blend-screen"
-                    alt="Abstract architectural lines"
+                <div className="relative hidden sm:block min-h-52 rounded-xl overflow-hidden">
+                  <Image
                     src="/website/expertise/profile-2.jpg"
+                    alt="Linhas arquitetônicas abstratas representando estruturação societária"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 30vw"
+                    className="object-cover opacity-50 grayscale mix-blend-screen"
+                  />
+                  <div className="absolute inset-0 bg-linear-to-l from-transparent to-surface-container/90" />
+                </div>
+              </div>
+            </MarketingCard>
+          </div>
+        </section>
+
+        {/* ─── Team ─────────────────────────────────────────────────── */}
+        <section className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 mb-24 md:mb-32">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 lg:gap-20 items-center">
+            <div className="order-2 md:order-1">
+              <Text variant="marketing-overline" className="mb-4 block">
+                Nossa célula de elite
+              </Text>
+              <Heading level="marketing-section" className="mb-6">
+                Advogados que codificam.
+                <br />
+                <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
+                  Engenheiros que legislam.
+                </span>
+              </Heading>
+              <Text variant="marketing-lead" className="mb-8">
+                Quebramos os silos tradicionais. Nosso time é composto por
+                profissionais híbridos que entendem tanto o Código Civil quanto
+                o código fonte. Essa fusão nos permite criar soluções que não
+                são apenas legalmente robustas, mas tecnicamente viáveis e
+                escaláveis.
+              </Text>
+
+              <ul className="space-y-5">
+                <li className="flex items-start gap-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-dim/20 ring-1 ring-primary/30 shrink-0 mt-0.5">
+                    <Atom className="text-primary w-5 h-5" />
+                  </div>
+                  <div>
+                    <Heading level="subsection" as="h3" className="mb-1 text-foreground">
+                      Célula de Engenharia Legal
+                    </Heading>
+                    <Text variant="caption" className="text-foreground/85">
+                      Desenvolvimento de automações customizadas para fluxos de compliance.
+                    </Text>
+                  </div>
+                </li>
+                <li className="flex items-start gap-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-dim/20 ring-1 ring-primary/30 shrink-0 mt-0.5">
+                    <Scale className="text-primary w-5 h-5" />
+                  </div>
+                  <div>
+                    <Heading level="subsection" as="h3" className="mb-1 text-foreground">
+                      Conselho Consultivo Sênior
+                    </Heading>
+                    <Text variant="caption" className="text-foreground/85">
+                      Doutores em Direito focados em estratégias de alto impacto jurídico.
+                    </Text>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div className="order-1 md:order-2 grid grid-cols-2 gap-3 md:gap-4">
+              <div className="space-y-3 md:space-y-4 pt-10">
+                <div className="relative aspect-3/4 rounded-2xl bg-surface-container overflow-hidden border border-outline-variant/20 grayscale hover:grayscale-0 transition-all duration-500">
+                  <Image
+                    src="/website/expertise/legal-professional.jpg"
+                    alt="Profissional jurídico"
+                    fill
+                    sizes="(max-width: 768px) 50vw, 20vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="relative aspect-3/4 rounded-2xl bg-surface-container overflow-hidden border border-outline-variant/20 grayscale hover:grayscale-0 transition-all duration-500">
+                  <Image
+                    src="/website/expertise/tech-engineer.jpg"
+                    alt="Engenheiro de tecnologia"
+                    fill
+                    sizes="(max-width: 768px) 50vw, 20vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+              <div className="space-y-3 md:space-y-4">
+                <div className="relative aspect-3/4 rounded-2xl bg-surface-container overflow-hidden border border-outline-variant/20 grayscale hover:grayscale-0 transition-all duration-500">
+                  <Image
+                    src="/website/expertise/legal-tech.jpg"
+                    alt="Profissional de tecnologia jurídica"
+                    fill
+                    sizes="(max-width: 768px) 50vw, 20vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="relative aspect-3/4 rounded-2xl bg-surface-container overflow-hidden border border-outline-variant/20 grayscale hover:grayscale-0 transition-all duration-500">
+                  <Image
+                    src="/website/expertise/expert-counsel.jpg"
+                    alt="Advogado especialista"
+                    fill
+                    sizes="(max-width: 768px) 50vw, 20vw"
+                    className="object-cover"
                   />
                 </div>
               </div>
@@ -135,82 +302,56 @@ export default function ExpertisePage() {
           </div>
         </section>
 
-        {/* The Team Section */}
-        <section className="max-w-7xl mx-auto px-8 mb-40">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
-            <div className="order-2 md:order-1">
-              <span className="text-primary font-bold text-xs tracking-[0.3em] uppercase mb-4 block">Nossa Célula de Elite</span>
-              <h2 className="text-4xl md:text-5xl font-bold font-headline mb-8 leading-tight">Advogados que codificam.<br/>Engenheiros que legislam.</h2>
-              <p className="text-on-surface-variant text-lg mb-8 leading-relaxed">
-                Quebramos os silos tradicionais. Nosso time é composto por profissionais híbridos que entendem tanto o Código Civil quanto o código fonte. Essa fusão nos permite criar soluções que não são apenas legalmente robustas, mas tecnicamente viáveis e escaláveis.
-              </p>
-              
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
-                    <Atom className="text-primary w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold mb-1 text-on-surface">Célula de Engenharia Legal</h4>
-                    <p className="text-sm text-on-surface-variant">Desenvolvimento de automações customizadas para fluxos de compliance.</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
-                    <Scale className="text-primary w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold mb-1 text-on-surface">Conselho Consultivo Sênior</h4>
-                    <p className="text-sm text-on-surface-variant">Doutores em Direito focados em estratégias de alto impacto jurídico.</p>
-                  </div>
-                </div>
+        {/* ─── CTA dedicado da página — substitui Zone 1 do Footer ─── */}
+        <section className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8">
+          <MarketingCard
+            variant="solid"
+            padding="lg"
+            className="text-center relative overflow-hidden px-6 py-14 sm:py-16 md:py-20 lg:px-16"
+          >
+            <div
+              aria-hidden="true"
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-linear-to-r from-transparent via-primary to-transparent"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-32 bg-primary-dim/12 blur-[120px] rounded-full pointer-events-none"
+            />
+            <div className="relative z-10 max-w-3xl mx-auto">
+              <Heading level="marketing-section" className="mb-5 md:mb-6">
+                Pronto para elevar seu{" "}
+                <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">
+                  padrão jurídico?
+                </span>
+              </Heading>
+              <Text variant="marketing-lead" className="mb-9 md:mb-10 max-w-xl mx-auto">
+                Seu time merece a segurança de um magistrado com a velocidade de
+                um processador.
+              </Text>
+              <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+                <Button
+                  asChild
+                  size="lg"
+                  className="rounded-xl h-12 px-8 text-base gap-2 group"
+                >
+                  <Link href="/contato">
+                    Agendar Consultoria
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="marketing-outline"
+                  className="rounded-xl h-12 px-8 text-base"
+                >
+                  <Link href="/contato">Falar com Especialista</Link>
+                </Button>
               </div>
             </div>
-            
-            <div className="order-1 md:order-2 grid grid-cols-2 gap-4">
-              <div className="space-y-4 pt-12">
-                <div className="aspect-3/4 rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
-                  <img className="w-full h-full object-cover" alt="Profissional jurídico" src="/website/expertise/legal-professional.jpg"/>
-                </div>
-                <div className="aspect-3/4 rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
-                  <img className="w-full h-full object-cover" alt="Engenheiro de tecnologia" src="/website/expertise/tech-engineer.jpg"/>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="aspect-3/4 rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
-                  <img className="w-full h-full object-cover" alt="Profissional de tecnologia jurídica" src="/website/expertise/legal-tech.jpg"/>
-                </div>
-                <div className="aspect-3/4 rounded-2xl bg-surface-container overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 border border-white/5">
-                  <img className="w-full h-full object-cover" alt="Advogado especialista" src="/website/expertise/expert-counsel.jpg"/>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="max-w-7xl mx-auto px-8 mb-40">
-          <div className="bg-surface-container rounded-3xl p-12 md:p-20 text-center relative overflow-hidden border border-white/5 shadow-2xl">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-linear-to-r from-transparent via-primary to-transparent"></div>
-            <div className="relative z-10 w-full flex flex-col items-center">
-              <h2 className="text-4xl md:text-6xl font-bold font-headline mb-8 leading-tight">Pronto para elevar seu<br/>padrão jurídico?</h2>
-              <p className="text-on-surface-variant text-xl mb-12 max-w-2xl mx-auto">
-                Seu time merece a segurança de um magistrado com a velocidade de um processador.
-              </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-6 w-full max-w-md mx-auto">
-                <Link href="/contato" className="bg-primary text-on-primary-fixed px-10 py-4 rounded-xl font-bold text-lg hover:bg-primary-container transition-all shadow-lg shadow-primary/20 active:scale-95 w-full sm:w-auto text-center">
-                  Agendar Consultoria
-                </Link>
-                <Link href="/contato" className="border border-outline-variant/30 text-on-surface px-10 py-4 rounded-xl font-bold text-lg hover:bg-white/5 transition-all w-full sm:w-auto text-center">
-                  Falar com Especialista
-                </Link>
-              </div>
-            </div>
-          </div>
+          </MarketingCard>
         </section>
       </div>
-
     </WebsiteShell>
   );
 }

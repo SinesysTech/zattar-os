@@ -34,7 +34,11 @@ import { actionListarExpedientes } from '../actions';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
 import { buildExpedientesFilterGroups, parseExpedientesFilters } from './expedientes-toolbar-filters';
-import { TiposExpedientesList } from '@/app/(authenticated)/tipos-expedientes';
+import {
+    TiposExpedientesList,
+    actionListarTiposExpedientes,
+} from '@/app/(authenticated)/tipos-expedientes';
+import { actionListarUsuarios } from '@/app/(authenticated)/usuarios';
 import { ExpedientesBulkActions } from './expedientes-bulk-actions';
 
 type UsuarioOption = { id: number; nome_exibicao?: string; nomeExibicao?: string; nome?: string };
@@ -79,33 +83,18 @@ export function ExpedientesCalendar() {
     React.useEffect(() => {
         const fetchAuxData = async () => {
             try {
-                const [usersResponse, tiposResponse] = await Promise.all([
-                    fetch('/api/usuarios?ativo=true&limite=100'),
-                    fetch('/api/tipos-expedientes?limite=100'),
+                const [usuariosResult, tiposResult] = await Promise.all([
+                    actionListarUsuarios({ ativo: true, limite: 1000 }),
+                    actionListarTiposExpedientes({ limite: 100 }),
                 ]);
 
-                // Processar resposta de usuários
-                if (usersResponse.ok) {
-                    const contentType = usersResponse.headers.get('content-type');
-                    if (contentType?.includes('application/json')) {
-                        const usersRes = await usersResponse.json();
-                        if (usersRes.success && usersRes.data?.usuarios) {
-                            setUsuarios(usersRes.data.usuarios);
-                        }
-                    }
+                if (usuariosResult.success) {
+                    setUsuarios(usuariosResult.data?.usuarios ?? []);
                 }
 
-                // Processar resposta de tipos
-                if (tiposResponse.ok) {
-                    const contentType = tiposResponse.headers.get('content-type');
-                    if (contentType?.includes('application/json')) {
-                        const tiposRes = await tiposResponse.json();
-                        if (tiposRes.success && tiposRes.data?.data) {
-                            setTiposExpedientes(tiposRes.data.data);
-                        }
-                    }
+                if (tiposResult.success) {
+                    setTiposExpedientes(tiposResult.data?.data ?? []);
                 }
-
             } catch (err) {
                 console.error('Erro ao carregar dados auxiliares:', err);
             }

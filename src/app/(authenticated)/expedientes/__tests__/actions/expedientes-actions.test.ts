@@ -214,6 +214,36 @@ describe('Expediente Actions', () => {
             expect(mockService.criarExpediente).not.toHaveBeenCalled();
         });
 
+        /**
+         * REGRESSÃO: o dialog de criação enviava processoId sem numeroProcesso,
+         * o que fazia o schema rejeitar silenciosamente com erro específico
+         * "Número do processo é obrigatório."
+         * Garantimos via erro de campo explícito que a mensagem chega à UI.
+         */
+        it('deve retornar errors.numeroProcesso quando processoId é enviado sem numeroProcesso', async () => {
+            const fd = createFormData({
+                processoId: '42',
+                trt: 'TRT1',
+                grau: 'primeiro_grau',
+                dataPrazoLegalParte: '2026-05-10T14:30:00',
+                origem: 'manual',
+                descricao: 'Intimação',
+                // numeroProcesso OMITIDO — esse era o bug
+            });
+
+            const result = await actionCriarExpediente(null, fd);
+
+            expect(result.success).toBe(false);
+            if (!result.success) {
+                // Zod reporta erro de tipo (string esperada, null recebido) antes
+                // mesmo da validação min(1). O que importa para a UI é que o
+                // campo numeroProcesso seja apontado como inválido.
+                expect(result.errors?.numeroProcesso).toBeDefined();
+                expect(result.errors?.numeroProcesso?.length).toBeGreaterThan(0);
+            }
+            expect(mockService.criarExpediente).not.toHaveBeenCalled();
+        });
+
         it('deve retornar erro quando service retorna falha', async () => {
             (mockService.criarExpediente as jest.Mock).mockResolvedValue({
                 success: false,

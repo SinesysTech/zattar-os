@@ -21,7 +21,7 @@ const navLinks = [
 
 export function Header() {
   return (
-    <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[92%] max-w-7xl rounded-full border border-outline-variant/20 bg-surface-container-highest/60 backdrop-blur-xl flex justify-between items-center px-4 sm:px-6 md:px-8 py-2.5 md:py-3 z-50 shadow-ambient">
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[94%] max-w-328 rounded-full border border-outline-variant/20 bg-surface-container-highest/60 backdrop-blur-xl flex justify-between items-center px-4 sm:px-6 md:px-8 py-2.5 md:py-3 z-50 shadow-ambient">
       {/* Mobile menu trigger */}
       <Sheet>
         <SheetTrigger className="md:hidden p-2 -ml-1 text-on-surface-variant hover:text-on-surface transition-colors" aria-label="Abrir menu">
@@ -53,13 +53,19 @@ export function Header() {
         </SheetContent>
       </Sheet>
 
-      {/* Logo */}
-      <Link href="/" className="flex border-none outline-none" aria-label="Logo Zattar Advogados">
+      {/* Logo — container com overflow-hidden "crop" visualmente o whitespace do SVG
+          (top/bottom) sem alterar a altura do navbar. O <Image> interno tem altura
+          maior que o container, e a área central fica visível. */}
+      <Link
+        href="/"
+        className="flex items-center h-8 sm:h-10 md:h-12 overflow-hidden border-none outline-none"
+        aria-label="Logo Zattar Advogados"
+      >
         <BrandMark
           variant="auto"
           size="custom"
           priority
-          className="h-8 sm:h-10 md:h-12 w-auto object-left"
+          className="h-20 sm:h-24 md:h-28 w-auto object-left"
         />
       </Link>
 
@@ -76,8 +82,12 @@ export function Header() {
         ))}
       </div>
 
-      {/* CTA button — hidden on very small screens, visible from sm+ */}
-      <Button asChild size="sm" className="hidden sm:inline-flex rounded-full">
+      {/* CTA button — hidden on very small screens, visible from sm+
+          leading-none garante centralização vertical precisa do texto */}
+      <Button
+        asChild
+        className="hidden sm:inline-flex rounded-full h-9 px-5 text-sm font-medium leading-none"
+      >
         <Link href="/portal">Acessar Portal</Link>
       </Button>
     </nav>

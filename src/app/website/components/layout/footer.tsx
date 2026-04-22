@@ -45,10 +45,20 @@ const socialLinks = [
   },
 ];
 
-export function Footer() {
+export interface FooterProps {
+  /**
+   * Oculta a Zona 1 (Closing Statement "Pronto para defender seus direitos?").
+   * Use em páginas que têm CTA próprio e dedicado no conteúdo — evita duplicação.
+   * Default: false (renderiza o CTA genérico).
+   */
+  hideClosingCta?: boolean;
+}
+
+export function Footer({ hideClosingCta = false }: FooterProps = {}) {
   return (
     <footer className="relative overflow-hidden">
-      {/* ─── Zona 1: Closing Statement ─── */}
+      {/* ─── Zona 1: Closing Statement — opcional, oculto em páginas com CTA dedicado ─── */}
+      {!hideClosingCta && (
       <div className="relative bg-surface-container-low border-t border-outline-variant/20">
         <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-linear-to-r from-transparent via-primary/40 to-transparent" />
@@ -71,19 +81,19 @@ export function Footer() {
               <Button
                 asChild
                 size="lg"
-                className="rounded-xl gap-2 group h-11 px-6 text-sm md:text-base"
+                className="rounded-xl gap-2 group h-12 px-8 text-base"
               >
                 <Link href="/contato">
                   Fale com um Especialista
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
               <a
                 href="tel:+5531984382217"
-                className="group/tel inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors font-bold text-sm md:text-base"
+                className="group/tel inline-flex items-center gap-2 text-foreground hover:text-primary transition-colors font-bold text-base"
               >
-                <span className="flex items-center justify-center w-9 h-9 rounded-full bg-primary/15 text-primary">
-                  <Phone className="w-3.5 h-3.5" />
+                <span className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/15 text-primary">
+                  <Phone className="w-4 h-4" />
                 </span>
                 (31) 98438-2217
               </a>
@@ -91,6 +101,7 @@ export function Footer() {
           </div>
         </div>
       </div>
+      )}
 
       {/* ─── Zona 2: Footer Principal — escala 0.75x da Zona 1 ─── */}
       <div className="bg-surface-container-lowest border-t border-outline-variant/20">

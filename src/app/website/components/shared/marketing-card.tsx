@@ -34,8 +34,9 @@ export interface MarketingCardProps
    * Variante visual:
    * - solid: fundo sólido escuro (use sobre imagens ou contextos com luz variável)
    * - glass: fundo translúcido com blur (use sobre fundos escuros homogêneos)
+   * - primary: card de destaque com tint primary (use para CTA em bento grids)
    */
-  variant?: "solid" | "glass";
+  variant?: "solid" | "glass" | "primary";
   /** Tamanho do padding interno. Default: md. */
   padding?: "sm" | "md" | "lg";
 }
@@ -59,6 +60,13 @@ const VARIANT = {
     "border border-[color-mix(in_oklch,var(--primary)_18%,transparent)] " +
     "shadow-[0_8px_28px_rgba(0,0,0,0.4)] " +
     "backdrop-blur-xl backdrop-saturate-150",
+  primary:
+    // Card de destaque — fundo primary-dim escurecido para dar ênfase em
+    // bento grids. Combina com text-white no conteúdo para contraste alto.
+    "bg-[color-mix(in_oklch,var(--primary-dim)_85%,black_15%)] " +
+    "border border-[color-mix(in_oklch,var(--primary)_30%,transparent)] " +
+    "shadow-[0_16px_40px_color-mix(in_oklch,var(--primary-dim)_25%,transparent),inset_0_1px_0_color-mix(in_oklch,white_8%,transparent)] " +
+    "hover:bg-[color-mix(in_oklch,var(--primary-dim)_90%,black_10%)]",
 } as const;
 
 export function MarketingCard({
