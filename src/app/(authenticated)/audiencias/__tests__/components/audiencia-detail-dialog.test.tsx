@@ -53,6 +53,21 @@ jest.mock('@/app/(authenticated)/usuarios', () => ({
   useUsuarios: () => ({ usuarios: [] }),
 }));
 
+jest.mock('@/providers/user-provider', () => ({
+  usePermissoes: () => ({
+    temPermissao: () => true,
+    permissoes: [],
+    isLoading: false,
+  }),
+}));
+
+jest.mock('sonner', () => ({
+  toast: {
+    success: jest.fn(),
+    error: jest.fn(),
+  },
+}));
+
 jest.mock('../../components/audiencia-timeline', () => ({
   AudienciaTimeline: () => <div data-testid="audiencia-timeline" />,
 }));

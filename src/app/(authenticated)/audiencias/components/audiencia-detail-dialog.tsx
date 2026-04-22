@@ -5,6 +5,7 @@ import {
   Clock, ExternalLink, Copy, Pencil, Video, FileText, Building2, Check, AlertCircle, MessageSquare, X, ChevronDown, ChevronRight, Globe} from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,6 +34,7 @@ import {
   actionAtualizarAudienciaPayload,
 } from '../actions';
 import { useUsuarios } from '@/app/(authenticated)/usuarios';
+import { usePermissoes } from '@/providers/user-provider';
 import { cn } from '@/lib/utils';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -134,6 +136,13 @@ export function AudienciaDetailDialog({
   const [ataOpen, setAtaOpen] = React.useState(false);
 
   const { usuarios } = useUsuarios({ enabled: open });
+  const { temPermissao } = usePermissoes();
+  const canEditUrl = temPermissao('audiencias', 'editar_url_virtual');
+  const canEditGeneral = temPermissao('audiencias', 'editar');
+  const canAssign =
+    temPermissao('audiencias', 'atribuir_responsavel') ||
+    temPermissao('audiencias', 'transferir_responsavel') ||
+    temPermissao('audiencias', 'desatribuir_responsavel');
 
   const shouldFetch = !!audienciaId && !audienciaProp;
 
@@ -222,6 +231,11 @@ export function AudienciaDetailDialog({
     if (result.success) {
       if (result.data) setLocalAudiencia(result.data);
       setEditingUrl(false);
+      toast.success('Link da sala virtual atualizado.');
+    } else {
+      toast.error(result.message || 'Falha ao atualizar link.', {
+        description: result.error,
+      });
     }
     setSavingUrl(false);
   }, [audiencia, urlDraft]);
@@ -243,6 +257,11 @@ export function AudienciaDetailDialog({
     if (result.success) {
       if (result.data) setLocalAudiencia(result.data);
       setEditingEndereco(false);
+      toast.success('Endereço presencial atualizado.');
+    } else {
+      toast.error(result.message || 'Falha ao salvar endereço.', {
+        description: result.error,
+      });
     }
     setSavingEndereco(false);
   }, [audiencia, enderecoDraft]);
@@ -259,6 +278,11 @@ export function AudienciaDetailDialog({
     if (result.success) {
       if (result.data) setLocalAudiencia(result.data);
       setEditingObs(false);
+      toast.success('Observações atualizadas.');
+    } else {
+      toast.error(result.message || 'Falha ao salvar observações.', {
+        description: result.error,
+      });
     }
     setSavingObs(false);
   }, [audiencia, obsDraft]);
@@ -274,6 +298,11 @@ export function AudienciaDetailDialog({
       const result = await actionAtualizarAudienciaPayload(audiencia.id, { modalidade: novaModalidade });
       if (result.success && result.data) {
         setLocalAudiencia(result.data);
+        toast.success('Modalidade atualizada.');
+      } else if (!result.success) {
+        toast.error(result.message || 'Falha ao alterar modalidade.', {
+          description: result.error,
+        });
       }
       setSavingModalidade(false);
     },
@@ -287,6 +316,11 @@ export function AudienciaDetailDialog({
       const result = await actionAtualizarAudienciaPayload(audiencia.id, { presencaHibrida: valor });
       if (result.success && result.data) {
         setLocalAudiencia(result.data);
+        toast.success('Presença híbrida atualizada.');
+      } else if (!result.success) {
+        toast.error(result.message || 'Falha ao alterar presença híbrida.', {
+          description: result.error,
+        });
       }
       setSavingPresenca(false);
     },
@@ -311,6 +345,9 @@ export function AudienciaDetailDialog({
     !isPje && (isVirtual || isHibrida) && !audiencia?.urlAudienciaVirtual;
   const enderecoObrigatorioFaltando =
     !isPje && (isPresencial || isHibrida) && !enderecoCompleto;
+
+  const modalidadePopoverDisabled = savingModalidade || isPje || !canEditGeneral;
+  const presencaDisabled = savingPresenca || isPje || !canEditGeneral;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -412,18 +449,24 @@ export function AudienciaDetailDialog({
                     Modalidade
                   </Text>
                   <Popover
-                    open={modalidadePopoverOpen && !isPje}
-                    onOpenChange={(v) => !isPje && setModalidadePopoverOpen(v)}
+                    open={modalidadePopoverOpen && !modalidadePopoverDisabled}
+                    onOpenChange={(v) => !modalidadePopoverDisabled && setModalidadePopoverOpen(v)}
                   >
                     <PopoverTrigger asChild>
                       <button
                         type="button"
-                        disabled={savingModalidade || isPje}
-                        title={isPje ? 'Sincronizado do PJe — não é possível alterar manualmente' : undefined}
+                        disabled={modalidadePopoverDisabled}
+                        title={
+                          isPje
+                            ? 'Sincronizado do PJe — não é possível alterar manualmente'
+                            : !canEditGeneral
+                            ? 'Você não tem permissão para editar audiências'
+                            : undefined
+                        }
                         className={cn(
                           'inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-full bg-card border border-border/60 text-[12.5px] font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
-                          !isPje && 'hover:bg-muted/60 hover:border-border cursor-pointer',
-                          isPje && 'cursor-not-allowed'
+                          !modalidadePopoverDisabled && 'hover:bg-muted/60 hover:border-border cursor-pointer',
+                          modalidadePopoverDisabled && 'cursor-not-allowed'
                         )}
                       >
                         {savingModalidade ? (
@@ -439,7 +482,7 @@ export function AudienciaDetailDialog({
                                 ? MODALIDADE_LABELS[audiencia.modalidade]
                                 : 'Definir'}
                             </span>
-                            {!isPje && (
+                            {!modalidadePopoverDisabled && (
                               <ChevronDown className="size-3 text-muted-foreground opacity-60" />
                             )}
                           </>
@@ -480,6 +523,7 @@ export function AudienciaDetailDialog({
                     audienciaId={audiencia.id}
                     responsavelId={audiencia.responsavelId}
                     usuarios={usuarios}
+                    disabled={!canAssign}
                     onSuccess={(a) => {
                       if (a) setLocalAudiencia(a);
                     }}
@@ -613,7 +657,7 @@ export function AudienciaDetailDialog({
                               </span>
                             )}
                           </div>
-                          {!editingUrl && !isPje && (
+                          {!editingUrl && !isPje && canEditUrl && (
                             <button
                               type="button"
                               onClick={handleStartEditUrl}
@@ -706,7 +750,7 @@ export function AudienciaDetailDialog({
                               </span>
                             )}
                           </div>
-                          {!editingEndereco && !isPje && (
+                          {!editingEndereco && !isPje && canEditGeneral && (
                             <button
                               type="button"
                               onClick={handleStartEditEndereco}
@@ -847,14 +891,21 @@ export function AudienciaDetailDialog({
                             <button
                               key={v}
                               type="button"
-                              disabled={savingPresenca || isPje}
+                              disabled={presencaDisabled}
                               onClick={() => handleChangePresencaHibrida(v)}
+                              title={
+                                isPje
+                                  ? 'Sincronizado do PJe — não é possível alterar manualmente'
+                                  : !canEditGeneral
+                                  ? 'Você não tem permissão para editar audiências'
+                                  : undefined
+                              }
                               className={cn(
                                 'px-3 py-1 rounded-md text-[11.5px] font-medium transition-colors',
                                 audiencia.presencaHibrida === v
                                   ? 'bg-card text-foreground shadow-sm'
                                   : 'text-muted-foreground hover:text-foreground',
-                                isPje && 'cursor-not-allowed opacity-60'
+                                presencaDisabled && 'cursor-not-allowed opacity-60'
                               )}
                             >
                               {label}
@@ -888,7 +939,7 @@ export function AudienciaDetailDialog({
                     icon={MessageSquare}
                     label="Observações"
                     action={
-                      !editingObs && (
+                      !editingObs && canEditGeneral && (
                         <button
                           type="button"
                           onClick={handleStartEditObs}

@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useActionState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
@@ -60,10 +61,15 @@ export function AudienciasAlterarResponsavelDialog({
 
   React.useEffect(() => {
     if (formState.success) {
+      toast.success(formState.message || 'Responsável atualizado.');
       onSuccess();
       onOpenChange(false);
+    } else if (!formState.success && formState.error) {
+      toast.error(formState.message || 'Falha ao atualizar responsável.', {
+        description: formState.error,
+      });
     }
-  }, [formState.success, onSuccess, onOpenChange]);
+  }, [formState, onSuccess, onOpenChange]);
 
   if (!audiencia) {
     return null;
