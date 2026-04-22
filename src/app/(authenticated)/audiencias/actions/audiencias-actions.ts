@@ -12,8 +12,96 @@ import {
   Audiencia,
 } from '../domain';
 import { PaginatedResponse } from '@/types';
+import { authenticateRequest as getCurrentUser } from '@/lib/auth/session';
+import { checkPermission } from '@/lib/auth/authorization';
+import type { Operacao } from '@/app/(authenticated)/usuarios';
 
 import type { ActionResult } from './types';
+
+const RECURSO = 'audiencias' as const;
+
+async function autorizar(
+  operacoes: Operacao | Operacao[],
+): Promise<{ ok: true; userId: number } | { ok: false; result: ActionResult<never> }> {
+  const user = await getCurrentUser();
+  if (!user) {
+    return {
+      ok: false,
+      result: {
+        success: false,
+        error: 'Não autenticado',
+        message: 'Você precisa estar autenticado para realizar esta ação.',
+      },
+    };
+  }
+
+  const ops = Array.isArray(operacoes) ? operacoes : [operacoes];
+  for (const op of ops) {
+    const has = await checkPermission(user.id, RECURSO, op);
+    if (!has) {
+      return {
+        ok: false,
+        result: {
+          success: false,
+          error: `Sem permissão: ${RECURSO}.${op}`,
+          message: `Você não tem permissão para ${op.replaceAll('_', ' ')} em audiências.`,
+        },
+      };
+    }
+  }
+
+  return { ok: true, userId: user.id };
+}
+
+async function autorizarOperacoesDoPayload(
+  userId: number,
+  audienciaAtual: Audiencia,
+  payload: z.infer<typeof updateAudienciaSchema>,
+): Promise<{ ok: true } | { ok: false; result: ActionResult<never> }> {
+  const ops = new Set<Operacao>();
+
+  if ('responsavelId' in payload) {
+    const antes = audienciaAtual.responsavelId ?? null;
+    const depois = payload.responsavelId ?? null;
+    if (antes !== depois) {
+      if (antes == null && depois != null) ops.add('atribuir_responsavel');
+      else if (antes != null && depois == null) ops.add('desatribuir_responsavel');
+      else ops.add('transferir_responsavel');
+    }
+  }
+
+  if (
+    'urlAudienciaVirtual' in payload &&
+    payload.urlAudienciaVirtual !== audienciaAtual.urlAudienciaVirtual
+  ) {
+    ops.add('editar_url_virtual');
+  }
+
+  const CAMPOS_DEDICADOS: ReadonlySet<string> = new Set([
+    'responsavelId',
+    'urlAudienciaVirtual',
+  ]);
+  const temOutroCampo = Object.entries(payload as Record<string, unknown>).some(
+    ([k, v]) => !CAMPOS_DEDICADOS.has(k) && v !== undefined,
+  );
+  if (temOutroCampo) ops.add('editar');
+
+  for (const op of ops) {
+    const has = await checkPermission(userId, RECURSO, op);
+    if (!has) {
+      return {
+        ok: false,
+        result: {
+          success: false,
+          error: `Sem permissão: ${RECURSO}.${op}`,
+          message: `Você não tem permissão para ${op.replaceAll('_', ' ')} em audiências.`,
+        },
+      };
+    }
+  }
+
+  return { ok: true };
+}
 
 function formatZodErrors(zodError: z.ZodError): Record<string, string[]> {
   const formattedErrors: Record<string, string[]> = {};
@@ -28,19 +116,14 @@ function formatZodErrors(zodError: z.ZodError): Record<string, string[]> {
 }
 
 function revalidateAudienciasPaths() {
-  // Layout path propaga para todas as sub-rotas (semana, mes, ano, lista, quadro)
   revalidatePath('/app/audiencias', 'layout');
-  // Portal do cliente
   revalidatePath('/portal/audiencias', 'layout');
-  // Dashboard principal (widget de audiências)
   revalidatePath('/app/dashboard');
 }
 
-// Helper to parse FormData into a cleaner object
 function parseAudienciaFormData(formData: FormData) {
   const rawData = Object.fromEntries(formData.entries());
 
-  // Parse complex fields
   let enderecoPresencial: FormDataEntryValue | null | unknown = rawData.enderecoPresencial;
   if (typeof enderecoPresencial === 'string' && enderecoPresencial) {
     try {
@@ -51,7 +134,6 @@ function parseAudienciaFormData(formData: FormData) {
     }
   }
 
-  // Helper to parse numbers safely
   const parseNumber = (value: unknown) => {
     if (typeof value === 'number') return value;
     if (typeof value === 'string' && value.trim() !== '') {
@@ -61,7 +143,6 @@ function parseAudienciaFormData(formData: FormData) {
     return undefined;
   };
 
-  // Helper to parse empty strings as null/undefined
   const parseString = (value: unknown) => {
     if (typeof value === 'string') {
       return value.trim() === '' ? null : value.trim();
@@ -86,6 +167,9 @@ export async function actionCriarAudiencia(
   prevState: ActionResult | null,
   formData: FormData
 ): Promise<ActionResult> {
+  const auth = await autorizar('editar');
+  if (!auth.ok) return auth.result;
+
   const data = parseAudienciaFormData(formData);
 
   const validation = createAudienciaSchema.safeParse(data);
@@ -123,6 +207,15 @@ export async function actionAtualizarAudiencia(
   prevState: ActionResult | null,
   formData: FormData
 ): Promise<ActionResult> {
+  const user = await getCurrentUser();
+  if (!user) {
+    return {
+      success: false,
+      error: 'Não autenticado',
+      message: 'Você precisa estar autenticado para realizar esta ação.',
+    };
+  }
+
   const data = parseAudienciaFormData(formData);
 
   const validation = updateAudienciaSchema.safeParse(data);
@@ -135,6 +228,18 @@ export async function actionAtualizarAudiencia(
       message: 'Por favor, corrija os erros no formulário.',
     };
   }
+
+  const atualResult = await service.buscarAudiencia(id);
+  if (!atualResult.success || !atualResult.data) {
+    return {
+      success: false,
+      error: 'Audiência não encontrada.',
+      message: 'A audiência não foi encontrada.',
+    };
+  }
+
+  const authOps = await autorizarOperacoesDoPayload(user.id, atualResult.data, validation.data);
+  if (!authOps.ok) return authOps.result;
 
   const result = await service.atualizarAudiencia(id, validation.data);
 
@@ -160,11 +265,10 @@ export async function actionAtualizarStatusAudiencia(
   status: StatusAudiencia,
   statusDescricao?: string
 ): Promise<ActionResult> {
-  const result = await service.atualizarStatusAudiencia(
-    id,
-    status,
-    statusDescricao
-  );
+  const auth = await autorizar('editar');
+  if (!auth.ok) return auth.result;
+
+  const result = await service.atualizarStatusAudiencia(id, status, statusDescricao);
 
   if (!result.success) {
     return {
@@ -187,6 +291,9 @@ export async function actionAtualizarObservacoes(
   id: number,
   observacoes: string | null
 ): Promise<ActionResult<Audiencia>> {
+  const auth = await autorizar('editar');
+  if (!auth.ok) return auth.result as ActionResult<Audiencia>;
+
   const result = await service.atualizarObservacoesAudiencia(id, observacoes);
 
   if (!result.success) {
@@ -210,6 +317,9 @@ export async function actionAtualizarUrlVirtual(
   id: number,
   urlAudienciaVirtual: string | null
 ): Promise<ActionResult<Audiencia>> {
+  const auth = await autorizar('editar_url_virtual');
+  if (!auth.ok) return auth.result as ActionResult<Audiencia>;
+
   const result = await service.atualizarUrlVirtualAudiencia(id, urlAudienciaVirtual);
 
   if (!result.success) {
@@ -233,6 +343,9 @@ export async function actionAtualizarEnderecoPresencial(
   id: number,
   enderecoPresencial: EnderecoPresencial | null
 ): Promise<ActionResult<Audiencia>> {
+  const auth = await autorizar('editar');
+  if (!auth.ok) return auth.result as ActionResult<Audiencia>;
+
   const result = await service.atualizarEnderecoPresencialAudiencia(id, enderecoPresencial);
 
   if (!result.success) {
@@ -255,6 +368,9 @@ export async function actionAtualizarEnderecoPresencial(
 export async function actionListarAudiencias(
   params: ListarAudienciasParams
 ): Promise<ActionResult<PaginatedResponse<Audiencia>>> {
+  const auth = await autorizar('listar');
+  if (!auth.ok) return auth.result as ActionResult<PaginatedResponse<Audiencia>>;
+
   const result = await service.listarAudiencias(params);
 
   if (!result.success) {
@@ -275,6 +391,9 @@ export async function actionListarAudiencias(
 export async function actionBuscarAudienciaPorId(
   id: number
 ): Promise<ActionResult<Audiencia | null>> {
+  const auth = await autorizar('visualizar');
+  if (!auth.ok) return auth.result as ActionResult<Audiencia | null>;
+
   const result = await service.buscarAudiencia(id);
 
   if (!result.success) {
@@ -295,6 +414,9 @@ export async function actionBuscarAudienciaPorId(
 export async function actionCriarAudienciaPayload(
   payload: z.infer<typeof createAudienciaSchema>
 ): Promise<ActionResult<Audiencia>> {
+  const auth = await autorizar('editar');
+  if (!auth.ok) return auth.result as ActionResult<Audiencia>;
+
   const validation = createAudienciaSchema.safeParse(payload);
   if (!validation.success) {
     return {
@@ -326,6 +448,15 @@ export async function actionAtualizarAudienciaPayload(
   id: number,
   payload: z.infer<typeof updateAudienciaSchema>
 ): Promise<ActionResult<Audiencia>> {
+  const user = await getCurrentUser();
+  if (!user) {
+    return {
+      success: false,
+      error: 'Não autenticado',
+      message: 'Você precisa estar autenticado para realizar esta ação.',
+    };
+  }
+
   const validation = updateAudienciaSchema.safeParse(payload);
   if (!validation.success) {
     return {
@@ -335,6 +466,18 @@ export async function actionAtualizarAudienciaPayload(
       message: 'Por favor, corrija os erros no formulário.',
     };
   }
+
+  const atualResult = await service.buscarAudiencia(id);
+  if (!atualResult.success || !atualResult.data) {
+    return {
+      success: false,
+      error: 'Audiência não encontrada.',
+      message: 'A audiência não foi encontrada.',
+    };
+  }
+
+  const authOps = await autorizarOperacoesDoPayload(user.id, atualResult.data, validation.data);
+  if (!authOps.ok) return authOps.result;
 
   const result = await service.atualizarAudiencia(id, validation.data);
   if (!result.success) {

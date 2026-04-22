@@ -367,6 +367,10 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
             tiposExpedientesData={tiposExpedientes}
             onBaixar={handleBaixar}
             onViewDetail={handleViewDetail}
+            onSuccess={() => {
+              refetch();
+              setRefreshCounter((c) => c + 1);
+            }}
           />
         )}
 

@@ -20,6 +20,18 @@ import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Heading } from '@/components/ui/typography';
 import { UrgencyDot } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { GRAU_TRIBUNAL_LABELS, type Expediente, getExpedientePartyNames } from '../domain';
+import {
+  ExpedienteResponsavelPopover,
+  ResponsavelTriggerContent,
+} from './expediente-responsavel-popover';
+import {
+  ExpedienteTipoPopover,
+  TipoTriggerContent,
+} from './expediente-tipo-popover';
+import {
+  ExpedientePrazoPopover,
+  PrazoTriggerContent,
+} from './expediente-prazo-popover';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -29,6 +41,7 @@ interface UsuarioData {
   nome_exibicao?: string;
   nomeCompleto?: string;
   nome?: string;
+  avatarUrl?: string | null;
 }
 
 interface TipoExpedienteData {
@@ -43,6 +56,7 @@ export interface ExpedientesControlViewProps {
   tiposExpedientesData: TipoExpedienteData[];
   onBaixar?: (expediente: Expediente) => void;
   onViewDetail?: (expediente: Expediente) => void;
+  onSuccess?: () => void;
 }
 
 type UrgencyLevel = 'critico' | 'alto' | 'medio' | 'baixo' | 'ok';
@@ -71,19 +85,6 @@ function calcularDiasRestantes(expediente: Expediente): number | null {
   const hoje = new Date();
   const hojeZerado = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
   return Math.round((prazo.getTime() - hojeZerado.getTime()) / 86400000);
-}
-
-function formatarDataCurta(dataISO: string | null | undefined): string {
-  if (!dataISO) return '—';
-  try {
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(new Date(dataISO));
-  } catch {
-    return '—';
-  }
 }
 
 function getExpedienteUrgencyLevel(
@@ -138,6 +139,23 @@ function InfoRow({
   );
 }
 
+function EditableInfoRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-3">
+      <span className="shrink-0 text-[9px] text-muted-foreground/55 uppercase tracking-wider pt-1">
+        {label}
+      </span>
+      <div className="flex justify-end">{children}</div>
+    </div>
+  );
+}
+
 // ─── Inline Copy Button ─────────────────────────────────────────────────────
 
 function InlineCopy({ text, label }: { text: string; label: string }) {
@@ -181,20 +199,22 @@ function InlineCopy({ text, label }: { text: string; label: string }) {
 
 function QueueCard({
   expediente,
-  responsavelNome,
-  tipoNome,
+  usuariosData,
+  tiposExpedientesData,
   selected,
   onSelect,
   onBaixar,
   onViewDetail,
+  onSuccess,
 }: {
   expediente: Expediente;
-  responsavelNome: string | null;
-  tipoNome: string | null;
+  usuariosData: UsuarioData[];
+  tiposExpedientesData: TipoExpedienteData[];
   selected: boolean;
   onSelect: () => void;
   onBaixar?: (e: React.MouseEvent | React.KeyboardEvent) => void;
   onViewDetail?: (e: React.MouseEvent | React.KeyboardEvent) => void;
+  onSuccess?: () => void;
 }) {
   const diasRestantes = calcularDiasRestantes(expediente);
   const urgencyLevel = getExpedienteUrgencyLevel(expediente, diasRestantes);
@@ -223,13 +243,29 @@ function QueueCard({
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <UrgencyDot level={urgencyLevel} />
-          <span className="truncate text-sm font-semibold">
-            {tipoNome || 'Sem tipo'}
-          </span>
+          <ExpedienteTipoPopover
+            expedienteId={expediente.id}
+            tipoExpedienteId={expediente.tipoExpedienteId}
+            tiposExpedientes={tiposExpedientesData}
+            onSuccess={onSuccess}
+          >
+            <TipoTriggerContent
+              tipoExpedienteId={expediente.tipoExpedienteId}
+              tiposExpedientes={tiposExpedientesData}
+              size="md"
+            />
+          </ExpedienteTipoPopover>
         </div>
-        <span className={cn('shrink-0 text-[10px] tabular-nums', URGENCY_TEXT_CLASS[urgencyLevel])}>
-          {diasLabel}
-        </span>
+        <ExpedientePrazoPopover
+          expedienteId={expediente.id}
+          dataPrazoLegalParte={expediente.dataPrazoLegalParte}
+          onSuccess={onSuccess}
+          align="end"
+        >
+          <span className={cn('shrink-0 text-[10px] tabular-nums', URGENCY_TEXT_CLASS[urgencyLevel])}>
+            {diasLabel}
+          </span>
+        </ExpedientePrazoPopover>
       </div>
 
       {/* Identificação do Processo (Seção 2) */}
@@ -242,9 +278,9 @@ function QueueCard({
               <span className="mx-1.5 font-normal text-muted-foreground/60">vs</span>
               <span>{partes.re || '—'}</span>
             </p>
-            <InlineCopy 
-              text={`${partes.autora || ''} vs ${partes.re || ''}`} 
-              label="Copiar parte" 
+            <InlineCopy
+              text={`${partes.autora || ''} vs ${partes.re || ''}`}
+              label="Copiar parte"
             />
           </div>
         )}
@@ -299,11 +335,21 @@ function QueueCard({
         >
           {grauLabel}
         </SemanticBadge>
-        {responsavelNome && (
-          <span className="ml-auto truncate text-[9px] text-muted-foreground/50">
-            {responsavelNome}
-          </span>
-        )}
+        <div className="ml-auto">
+          <ExpedienteResponsavelPopover
+            expedienteId={expediente.id}
+            responsavelId={expediente.responsavelId}
+            usuarios={usuariosData}
+            onSuccess={onSuccess}
+            align="end"
+          >
+            <ResponsavelTriggerContent
+              responsavelId={expediente.responsavelId}
+              usuarios={usuariosData}
+              size="sm"
+            />
+          </ExpedienteResponsavelPopover>
+        </div>
       </div>
 
       {/* Hover actions */}
@@ -374,18 +420,20 @@ function SectionHeader({
 
 function DetailPanel({
   expediente,
-  tipoNome,
-  responsavelNome,
+  usuariosData,
+  tiposExpedientesData,
   onClose,
   onBaixar,
   onViewDetail,
+  onSuccess,
 }: {
   expediente: Expediente;
-  tipoNome: string | null;
-  responsavelNome: string | null;
+  usuariosData: UsuarioData[];
+  tiposExpedientesData: TipoExpedienteData[];
   onClose: () => void;
   onBaixar?: (expediente: Expediente) => void;
   onViewDetail?: (expediente: Expediente) => void;
+  onSuccess?: () => void;
 }) {
   const grauLabel = GRAU_TRIBUNAL_LABELS[expediente.grau] ?? expediente.grau;
 
@@ -394,9 +442,18 @@ function DetailPanel({
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <Heading level="card" className="truncate text-sm">
-            {tipoNome || 'Expediente'}
-          </Heading>
+          <ExpedienteTipoPopover
+            expedienteId={expediente.id}
+            tipoExpedienteId={expediente.tipoExpedienteId}
+            tiposExpedientes={tiposExpedientesData}
+            onSuccess={onSuccess}
+          >
+            <TipoTriggerContent
+              tipoExpedienteId={expediente.tipoExpedienteId}
+              tiposExpedientes={tiposExpedientesData}
+              size="md"
+            />
+          </ExpedienteTipoPopover>
           <p className="mt-0.5 tabular-nums text-[11px] text-muted-foreground/55">
             {expediente.numeroProcesso}
           </p>
@@ -431,14 +488,27 @@ function DetailPanel({
             </SemanticBadge>
           }
         />
-        <InfoRow
-          label="Prazo"
-          value={formatarDataCurta(expediente.dataPrazoLegalParte)}
-        />
+        <EditableInfoRow label="Prazo">
+          <ExpedientePrazoPopover
+            expedienteId={expediente.id}
+            dataPrazoLegalParte={expediente.dataPrazoLegalParte}
+            onSuccess={onSuccess}
+            align="end"
+            allowClear
+          >
+            <PrazoTriggerContent
+              dataPrazoLegalParte={expediente.dataPrazoLegalParte}
+              size="sm"
+              vencido={expediente.prazoVencido && !expediente.baixadoEm}
+            />
+          </ExpedientePrazoPopover>
+        </EditableInfoRow>
         {expediente.dataCienciaParte && (
           <InfoRow
             label="Ciência"
-            value={formatarDataCurta(expediente.dataCienciaParte)}
+            value={new Intl.DateTimeFormat('pt-BR', {
+              day: '2-digit', month: '2-digit', year: 'numeric',
+            }).format(new Date(expediente.dataCienciaParte))}
           />
         )}
         <InfoRow
@@ -449,9 +519,21 @@ function DetailPanel({
           label="Parte Ré"
           value={getExpedientePartyNames(expediente).re || '—'}
         />
-        {responsavelNome && (
-          <InfoRow label="Responsável" value={responsavelNome} />
-        )}
+        <EditableInfoRow label="Responsável">
+          <ExpedienteResponsavelPopover
+            expedienteId={expediente.id}
+            responsavelId={expediente.responsavelId}
+            usuarios={usuariosData}
+            onSuccess={onSuccess}
+            align="end"
+          >
+            <ResponsavelTriggerContent
+              responsavelId={expediente.responsavelId}
+              usuarios={usuariosData}
+              size="sm"
+            />
+          </ExpedienteResponsavelPopover>
+        </EditableInfoRow>
         {expediente.descricaoOrgaoJulgador && (
           <InfoRow label="Órgão" value={expediente.descricaoOrgaoJulgador} />
         )}
@@ -491,33 +573,19 @@ export function ExpedientesControlView({
   tiposExpedientesData,
   onBaixar,
   onViewDetail,
+  onSuccess,
 }: ExpedientesControlViewProps) {
   const [selected, setSelected] = React.useState<Expediente | null>(null);
-
-  // Build lookup maps from props
-  const usuariosMap = React.useMemo(() => {
-    const map = new Map<number, string>();
-    usuariosData.forEach((u) => map.set(u.id, getUsuarioNome(u)));
-    return map;
-  }, [usuariosData]);
-
-  const tiposMap = React.useMemo(() => {
-    const map = new Map<number, string>();
-    tiposExpedientesData.forEach((t) => {
-      const nome =
-        t.tipoExpediente ||
-        ('tipo_expediente' in t ? t.tipo_expediente : undefined) ||
-        `Tipo ${t.id}`;
-      map.set(t.id, nome as string);
-    });
-    return map;
-  }, [tiposExpedientesData]);
 
   // Keep selected in sync when expedientes list changes
   React.useEffect(() => {
     if (!selected) return;
-    const aindaExiste = expedientes.some((e) => e.id === selected.id);
-    if (!aindaExiste) setSelected(null);
+    const atualizado = expedientes.find((e) => e.id === selected.id);
+    if (!atualizado) {
+      setSelected(null);
+    } else if (atualizado !== selected) {
+      setSelected(atualizado);
+    }
   }, [expedientes, selected]);
 
   // Group by urgency
@@ -620,13 +688,6 @@ export function ExpedientesControlView({
     );
   }
 
-  const selectedTipoNome = selected?.tipoExpedienteId
-    ? (tiposMap.get(selected.tipoExpedienteId) ?? null)
-    : null;
-  const selectedResponsavelNome = selected?.responsavelId
-    ? (usuariosMap.get(selected.responsavelId) ?? null)
-    : null;
-
   const mainContent = (
     <div className="space-y-6">
       {sections.map(({ key, label, icon, items, accentClass }) => (
@@ -643,43 +704,35 @@ export function ExpedientesControlView({
               ? 'grid-cols-1 sm:grid-cols-2'
               : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
           )}>
-            {items.map((exp) => {
-              const tipoNome = exp.tipoExpedienteId
-                ? (tiposMap.get(exp.tipoExpedienteId) ?? null)
-                : null;
-              const responsavelNome = exp.responsavelId
-                ? (usuariosMap.get(exp.responsavelId) ?? null)
-                : null;
-
-              return (
-                <QueueCard
-                  key={exp.id}
-                  expediente={exp}
-                  tipoNome={tipoNome}
-                  responsavelNome={responsavelNome}
-                  selected={selected?.id === exp.id}
-                  onSelect={() =>
-                    setSelected((prev) => (prev?.id === exp.id ? null : exp))
-                  }
-                  onBaixar={
-                    onBaixar
-                      ? (e) => {
-                          e.stopPropagation();
-                          onBaixar(exp);
-                        }
-                      : undefined
-                  }
-                  onViewDetail={
-                    onViewDetail
-                      ? (e) => {
-                          e.stopPropagation();
-                          onViewDetail(exp);
-                        }
-                      : undefined
-                  }
-                />
-              );
-            })}
+            {items.map((exp) => (
+              <QueueCard
+                key={exp.id}
+                expediente={exp}
+                usuariosData={usuariosData}
+                tiposExpedientesData={tiposExpedientesData}
+                selected={selected?.id === exp.id}
+                onSelect={() =>
+                  setSelected((prev) => (prev?.id === exp.id ? null : exp))
+                }
+                onBaixar={
+                  onBaixar
+                    ? (e) => {
+                        e.stopPropagation();
+                        onBaixar(exp);
+                      }
+                    : undefined
+                }
+                onViewDetail={
+                  onViewDetail
+                    ? (e) => {
+                        e.stopPropagation();
+                        onViewDetail(exp);
+                      }
+                    : undefined
+                }
+                onSuccess={onSuccess}
+              />
+            ))}
           </div>
         </section>
       ))}
@@ -700,11 +753,12 @@ export function ExpedientesControlView({
         <div className="sticky top-4 self-start">
           <DetailPanel
             expediente={selected}
-            tipoNome={selectedTipoNome}
-            responsavelNome={selectedResponsavelNome}
+            usuariosData={usuariosData}
+            tiposExpedientesData={tiposExpedientesData}
             onClose={() => setSelected(null)}
             onBaixar={onBaixar}
             onViewDetail={onViewDetail}
+            onSuccess={onSuccess}
           />
         </div>
       </div>
