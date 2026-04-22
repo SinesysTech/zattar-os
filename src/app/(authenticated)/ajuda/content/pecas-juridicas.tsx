@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -21,7 +22,7 @@ export default function PecasJuridicasDoc() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading mb-2">Peças Jurídicas</h1>
+        <Heading level="page">Peças Jurídicas</Heading>
         <p className="text-muted-foreground text-lg">
           Gere petições, contestações, recursos e outros documentos jurídicos automaticamente a partir de modelos com placeholders inteligentes.
         </p>

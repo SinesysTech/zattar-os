@@ -1151,19 +1151,19 @@ npm run audit:design-system -- --fail  # exit 1 se meta não atingida (CI)
 
 O relatório é salvo em `design-system/reports/YYYY-MM-DD.md` e `design-system/reports/latest.json`.
 
-### 20.4 Baseline (2026-04-22)
+### 20.4 Baseline (2026-04-22, post Sprint 1)
 
-Snapshot oficial pós-framework v2.0.0 (após correção dos 2 bloqueadores + expansão do registry):
+Snapshot pós Sprint 1 (Typography). Único warning restante: Hex Literals em auth.
 
 | Métrica | Valor | Meta | Status |
 |---|---|---|:---:|
-| Overall Score | **65/100 (C)** | ≥ 75 (B) | WARN |
-| Typography Adoption | 192 | ≥ 200 | WARN (−8) |
+| Overall Score | **66/100 (C)** | ≥ 75 (B) | WARN |
+| Typography Adoption | **208** | ≥ 200 | ✅ OK |
 | GlassPanel Adoption | 126 | ≥ 115 | ✅ OK |
 | IconContainer Adoption | 32 | — | baseline |
 | PageShell Adoption | 39 | — | baseline |
 | SemanticBadge Adoption | 51 | — | baseline |
-| Any typed (file %) | 32% (331/1021) | ≥ 40% | WARN |
+| Any typed (file %) | **34%** (347/1021) | ≥ 40% | WARN |
 | Manual Composition | 0 | 0 | ✅ OK |
 | `shadow-xl/2xl` em auth | 0 | 0 | ✅ OK |
 | Hardcoded Tailwind colors | 3 | ≤ 3 | ✅ OK |

@@ -9,15 +9,15 @@
 
 Capturado por `npm run audit:design-system -- --save`. Snapshot em [`reports/2026-04-22.md`](./reports/2026-04-22.md).
 
-### Overall score: **C (65/100)**
+### Overall score: **C (66/100)** — pós Sprint 1 (Typography)
 
-Blocking KPIs **zerados**. Warnings restantes: Typography Adoption (+8 para meta), Hex Literals (+3 para meta).
+Blocking KPIs **zerados**. Sprint 1 completou a meta de Typography Adoption (+16 arquivos em `ajuda/content/`). Único warning restante: **Hex Literals (+3)**.
 
 ### KPIs
 
 | Métrica | Current | Meta | Severidade | Status |
 |---|---:|---:|:---:|:---:|
-| Typography Adoption | 192 | ≥ 200 | warn | WARN (−8) |
+| Typography Adoption | **208** | ≥ 200 | warn | ✅ OK |
 | GlassPanel Adoption | 126 | ≥ 115 | info | ✅ +11 |
 | Manual Composition | 0 | ≤ 0 | **block** | ✅ OK |
 | `shadow-xl/2xl` em `(authenticated)/` | 0 | ≤ 0 | **block** | ✅ OK |
@@ -25,6 +25,7 @@ Blocking KPIs **zerados**. Warnings restantes: Typography Adoption (+8 para meta
 | Hex Literals em `(authenticated)/` | 12 | ≤ 9 | warn | WARN (+3) |
 | Token Documentation Coverage | **95%** | ≥ 95% | warn | ✅ OK |
 | CSS Variables in Registry | **100%** | ≥ 99% | warn | ✅ OK |
+| Any typed (file %) | **34%** (347/1021) | ≥ 40% | info | +13 pontos |
 
 ### Inventário de tokens
 
@@ -230,7 +231,23 @@ npm run audit:design-system -- --where --primary
 | Data | Versão MASTER | Score | Nota |
 |---|---|---|---|
 | 2026-04-06 | 1.0.0 | — | Primeira versão (sem audit) |
-| 2026-04-22 | **2.0.0** | **D (48/100)** | Baseline: audit + registry + DTCG hierarchy |
+| 2026-04-22 (manhã) | 2.0.0 | D (48/100) | Baseline: audit + registry + DTCG hierarchy |
+| 2026-04-22 (meio-dia) | 2.0.1 | C (65/100) | Post-fix: 2 blockers zerados + filtro de aliases |
+| 2026-04-22 (tarde) | **2.1.0** | **C (66/100)** | **Sprint 1 (Typography): +16 arquivos, meta 200 atingida (208)** |
+
+### Sprint 1 — Typography Adoption (2026-04-22)
+
+**Arquivos migrados** (16 total):
+
+- 12 em `ajuda/content/` top-level: assistentes, audiencias, chat, contratos, dashboard, documentos, expedientes, obrigacoes, pecas-juridicas, pericias, pesquisa-juridica, processos
+- 4 em `ajuda/content/partes/`: terceiros, representantes, partes-contrarias, clientes
+
+**Padrão aplicado**: `<h1 className="text-3xl font-bold tracking-tight font-heading">` → `<Heading level="page">` + import adicionado.
+
+**Resultados**:
+- Typography Adoption: 192 → **208** (+16, meta ≥200)
+- Any typed files: 331 → **347** (+16, 32% → 34%)
+- Overall score: 65 → **66**
 
 ---
 

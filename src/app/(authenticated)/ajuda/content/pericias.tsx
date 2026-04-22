@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -147,7 +148,7 @@ export default function PericiasDoc() {
   return (
     <div className="space-y-10">
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight font-heading">Perícias</h1>
+        <Heading level="page">Perícias</Heading>
         <p className="text-muted-foreground text-lg">
           Gestão de perícias judiciais, quesitos, peritos e laudos periciais.
         </p>

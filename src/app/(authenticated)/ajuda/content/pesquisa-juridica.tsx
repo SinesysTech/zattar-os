@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -21,7 +22,7 @@ export default function PesquisaJuridicaDoc() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading mb-2">Pesquisa Jurídica</h1>
+        <Heading level="page">Pesquisa Jurídica</Heading>
         <p className="text-muted-foreground text-lg">
           Ferramentas de pesquisa jurídica integradas ao sistema: Diário Oficial (Comunica CNJ) e Pangea para busca semântica em bases de dados jurídicas.
         </p>

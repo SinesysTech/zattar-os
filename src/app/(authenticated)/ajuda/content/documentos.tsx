@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocActionList,
@@ -23,7 +24,7 @@ export default function DocumentosDoc() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading mb-2">Documentos</h1>
+        <Heading level="page">Documentos</Heading>
         <p className="text-muted-foreground text-lg">
           Editor de documentos com inteligência artificial integrada para criar, formatar e colaborar em textos jurídicos e administrativos.
         </p>

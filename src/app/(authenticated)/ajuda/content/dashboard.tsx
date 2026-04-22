@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocActionList,
@@ -75,7 +76,7 @@ export default function DashboardDoc() {
   return (
     <div className="space-y-10">
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight font-heading">Dashboard</h1>
+        <Heading level="page">Dashboard</Heading>
         <p className="text-muted-foreground text-lg">
           Painel central do ZattarOS com visão consolidada das principais métricas do escritório.
         </p>

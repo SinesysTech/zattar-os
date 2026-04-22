@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocActionList,
@@ -21,7 +22,7 @@ export default function AssistentesDoc() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading mb-2">Assistentes</h1>
+        <Heading level="page">Assistentes</Heading>
         <p className="text-muted-foreground text-lg">
           Assistentes de IA especializados em tarefas jurídicas específicas, cada um otimizado para um domínio diferente do trabalho advocatício.
         </p>

@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocActionList,
@@ -19,7 +20,7 @@ export default function ChatDoc() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading mb-2">Chat</h1>
+        <Heading level="page">Chat</Heading>
         <p className="text-muted-foreground text-lg">
           Converse com a inteligência artificial do ZattarOS para tirar dúvidas jurídicas, analisar documentos e obter suporte nas suas atividades diárias.
         </p>

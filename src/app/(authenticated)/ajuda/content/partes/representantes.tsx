@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -98,7 +99,7 @@ export default function RepresentantesDoc() {
   return (
     <div className="space-y-10">
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight font-heading">Representantes</h1>
+        <Heading level="page">Representantes</Heading>
         <p className="text-muted-foreground text-lg">
           Cadastro de advogados e representantes legais vinculados às partes e processos do escritório.
         </p>

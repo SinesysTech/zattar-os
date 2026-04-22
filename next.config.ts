@@ -170,6 +170,13 @@ const nextConfig: NextConfig = {
     // e causou crash silencioso no builder remoto do Cloudron (builder.synthropic.online), provavelmente
     // por quota de disco do sandbox vs. cold seed multi-GB do cache Turbopack. Manter desabilitado
     // até que o builder tenha mais espaço livre ou a flag saia do experimental.
+    // Limita concorrência de SSG para caber nos 11.9GB do Docker do Cloudron.
+    // Sem isso, Next spawna ~10 workers (1 por ceil(222 páginas / default 25)), cada um
+    // carregando o bundle server inteiro (Plate.js, Tiptap, AI SDKs, pdfjs), totalizando
+    // ~15GB de pico e derrubando o build com OOM. Com 2 workers × ~1GB + 6GB do main heap,
+    // o pico fica em ~8GB. Trade-off: SSG ~2-3x mais lento, mas build passa.
+    staticGenerationMaxConcurrency: 2,
+    staticGenerationMinPagesPerWorker: 100,
     // Aumenta limite de tamanho do body para Server Actions (upload de imagens)
     serverActions: {
       bodySizeLimit: "50mb",
