@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocActionList,
@@ -21,7 +22,7 @@ export default function FinanceiroVisaoGeral() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading">Financeiro — Visão Geral</h1>
+        <Heading level="page">Financeiro — Visão Geral</Heading>
         <p className="text-muted-foreground mt-2">
           O módulo Financeiro centraliza todas as operações financeiras do escritório, desde o
           controle de receitas e despesas até a conciliação bancária e geração de relatórios

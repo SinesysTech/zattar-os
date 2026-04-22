@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -22,7 +23,7 @@ export default function ContasReceber() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading">Contas a Receber</h1>
+        <Heading level="page">Contas a Receber</Heading>
         <p className="text-muted-foreground mt-2">
           Registre receitas, vincule a contratos e honorários, acompanhe recebimentos e gere
           relatórios de inadimplência para manter o fluxo de caixa do escritório saudável.

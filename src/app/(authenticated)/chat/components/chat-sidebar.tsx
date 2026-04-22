@@ -53,7 +53,7 @@ export function ChatSidebar({
           </div>
           <button
             onClick={() => onNovoChatOpenChange(true)}
-            className="flex items-center gap-1.5 px-4 py-1 rounded-xl bg-primary text-white text-[0.7rem] font-semibold shadow-[0_2px_8px_rgba(139,92,246,0.25)] hover:bg-[#7c4ddb] hover:-translate-y-px transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-1 rounded-xl bg-primary text-primary-foreground text-[0.7rem] font-semibold shadow-sm hover:bg-primary/90 hover:-translate-y-px transition-all cursor-pointer"
           >
             <Plus className="size-3" />
             Nova
@@ -76,7 +76,7 @@ export function ChatSidebar({
       <div className="flex-1 overflow-y-auto px-2 scrollbar-thin">
         {fixadas.length > 0 && (
           <>
-            <p className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 px-2 pt-4 pb-2">
+            <p className="text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground/35 px-2 pt-4 pb-2">
               Fixadas
             </p>
             {fixadas.map(sala => (
@@ -90,7 +90,7 @@ export function ChatSidebar({
           </>
         )}
         {(fixadas.length > 0 || recentes.length > 0) && (
-          <p className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/35 px-2 pt-4 pb-2">
+          <p className="text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground/35 px-2 pt-4 pb-2">
             Recentes
           </p>
         )}

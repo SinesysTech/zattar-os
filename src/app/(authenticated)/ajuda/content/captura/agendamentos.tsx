@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -22,7 +23,7 @@ export default function CapturaAgendamentos() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading">Agendamentos de Captura</h1>
+        <Heading level="page">Agendamentos de Captura</Heading>
         <p className="text-muted-foreground mt-2">
           Configure capturas automáticas e recorrentes para que o sistema verifique novidades nos
           processos sem que você precise disparar manualmente cada consulta.

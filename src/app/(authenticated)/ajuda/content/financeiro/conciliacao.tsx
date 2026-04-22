@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -22,7 +23,7 @@ export default function Conciliacao() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading">Conciliação Bancária</h1>
+        <Heading level="page">Conciliação Bancária</Heading>
         <p className="text-muted-foreground mt-2">
           A conciliação bancária compara os lançamentos registrados no sistema com as transações
           reais do extrato bancário, garantindo que os saldos financeiros estejam sempre corretos

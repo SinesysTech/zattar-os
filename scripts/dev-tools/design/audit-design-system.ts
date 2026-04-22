@@ -130,11 +130,25 @@ const EXCLUDES = [
   '**/dist/**',
 ];
 
-// Ofensores aceitos (documentados) — não entram no score de violações
+// Ofensores aceitos (documentados em GOVERNANCE.md §6) — não entram no score
 const ALLOWED_OFFENDERS = [
-  'src/app/(authenticated)/assinatura-digital/components/editor/PdfCanvasArea.tsx', // render PDF
-  'src/components/editor/plate-ui/**',  // Plate.js editor (legitimate brand colors)
-  'src/app/(authenticated)/dashboard/mock/**', // mock data
+  // PDF rendering (hex persistido para desenho em canvas, não é CSS de UI)
+  'src/app/(authenticated)/assinatura-digital/components/editor/PdfCanvasArea.tsx',
+  'src/app/(authenticated)/assinatura-digital/components/editor/FieldMappingEditor.tsx',
+
+  // Plate.js editor (brand colors do Plate/Lexical — integração externa)
+  'src/components/editor/plate-ui/**',
+
+  // Mock/dev data
+  'src/app/(authenticated)/dashboard/mock/**',
+
+  // Mail preview — CSS embutido em iframe isolado renderizando HTML externo
+  'src/app/(authenticated)/mail/components/mail-display.tsx',
+  'src/app/(authenticated)/mail/components/mail-display-mobile.tsx',
+
+  // Contratos pipelines — hex em form defaults persistidos no banco + placeholder
+  // do input de cor. Não é estilização de UI, é valor de domínio.
+  'src/app/(authenticated)/contratos/pipelines/page-client.tsx',
 ];
 
 const TAILWIND_COLORS = [

@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -22,9 +23,9 @@ export default function CapturaConfiguracao() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading">
+        <Heading level="page">
           Configurações de Captura
-        </h1>
+        </Heading>
         <p className="text-muted-foreground mt-2">
           Configure os advogados para captura, as credenciais de acesso ao PJe e os tribunais
           monitorados pelo sistema. Estas configurações são a base para o funcionamento correto

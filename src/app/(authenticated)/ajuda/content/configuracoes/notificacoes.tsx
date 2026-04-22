@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocActionList,
@@ -24,7 +25,7 @@ export default function Notificacoes() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading">Notificações</h1>
+        <Heading level="page">Notificações</Heading>
         <p className="text-muted-foreground mt-2">
           O sistema de notificações do ZattarOS mantém você informado sobre eventos importantes
           como audiências, expedientes, prazos e atividades da equipe em tempo real.

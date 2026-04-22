@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -24,9 +25,9 @@ export default function AssinaturaDigitalTemplatesDoc() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading mb-2">
+        <Heading level="page">
           Assinatura Digital — Templates
-        </h1>
+        </Heading>
         <p className="text-muted-foreground text-lg">
           Crie modelos reutilizáveis de documentos para assinatura digital, com campos de preenchimento posicionados e configurados para cada uso.
         </p>

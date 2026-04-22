@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-22T17:25:40.773Z",
+  "timestamp": "2026-04-22T17:56:29.825Z",
   "version": "2.0.0",
   "coverage": {
     "cssVariablesTotal": 202,
@@ -12,14 +12,14 @@
   "adoption": {
     "totalFiles": 1021,
     "typography": {
-      "count": 208,
+      "count": 230,
       "files": [
         "src/app/(authenticated)/project-management/page.tsx",
         "src/app/(authenticated)/processos/processos-client.tsx",
         "src/app/(authenticated)/partes/partes-client.tsx",
         "src/app/(authenticated)/contratos/error.tsx",
-        "src/app/(authenticated)/captura/captura-client.tsx",
         "src/app/(authenticated)/audiencias/audiencias-client.tsx",
+        "src/app/(authenticated)/captura/captura-client.tsx",
         "src/app/(authenticated)/usuarios/components/usuarios-client.tsx",
         "src/app/(authenticated)/usuarios/[id]/usuario-detalhes.tsx",
         "src/app/(authenticated)/tarefas/components/task-detail-sheet.tsx",
@@ -33,11 +33,11 @@
         "src/app/(authenticated)/processos/components/processo-details-tabs.tsx",
         "src/app/(authenticated)/processos/components/processo-card.tsx",
         "src/app/(authenticated)/processos/components/document-viewer-panel.tsx",
+        "src/app/(authenticated)/pericias/peritos/page-client.tsx",
         "src/app/(authenticated)/pericias/especialidades/page-client.tsx",
         "src/app/(authenticated)/pericias/components/pericias-pipeline-stepper.tsx",
         "src/app/(authenticated)/pericias/components/pericias-missao-content.tsx",
         "src/app/(authenticated)/pericias/components/pericias-client.tsx",
-        "src/app/(authenticated)/pericias/peritos/page-client.tsx",
         "src/app/(authenticated)/perfil/components/perfil-view.tsx",
         "src/app/(authenticated)/perfil/components/perfil-edit-sheet.tsx",
         "src/app/(authenticated)/pecas-juridicas/components/peca-modelo-view-sheet.tsx",
@@ -49,7 +49,6 @@
         "src/app/(authenticated)/mail/configurar/page.tsx",
         "src/app/(authenticated)/mail/components/mail.tsx",
         "src/app/(authenticated)/mail/components/compose-mail-panel.tsx",
-        "src/app/(authenticated)/financeiro/conciliacao-bancaria/page-client.tsx",
         "src/app/(authenticated)/entrevistas-trabalhistas/components/no-zero-selector.tsx",
         "src/app/(authenticated)/entrevistas-trabalhistas/components/modulo-vinculo.tsx",
         "src/app/(authenticated)/entrevistas-trabalhistas/components/modulo-subordinacao-real.tsx",
@@ -66,6 +65,7 @@
         "src/app/(authenticated)/entrevistas-trabalhistas/components/modulo-condicoes-trabalho-gig.tsx",
         "src/app/(authenticated)/entrevistas-trabalhistas/components/entrevista-tab.tsx",
         "src/app/(authenticated)/entrevistas-trabalhistas/components/entrevista-resumo.tsx",
+        "src/app/(authenticated)/financeiro/conciliacao-bancaria/page-client.tsx",
         "src/app/(authenticated)/documentos/lixeira/page-client.tsx",
         "src/app/(authenticated)/documentos/[id]/client-page.tsx",
         "src/app/(authenticated)/documentos/components/version-history-dialog.tsx",
@@ -76,6 +76,12 @@
         "src/app/(authenticated)/documentos/components/document-editor.tsx",
         "src/app/(authenticated)/documentos/components/document-chat.tsx",
         "src/app/(authenticated)/documentos/components/document-card.tsx",
+        "src/app/(authenticated)/dashboard/processos/page.tsx",
+        "src/app/(authenticated)/dashboard/financeiro/page.tsx",
+        "src/app/(authenticated)/dashboard/expedientes/page.tsx",
+        "src/app/(authenticated)/dashboard/audiencias/page.tsx",
+        "src/app/(authenticated)/dashboard/components/widget-dashboard.tsx",
+        "src/app/(authenticated)/dashboard/components/dashboard-unificada.tsx",
         "src/app/(authenticated)/expedientes/components/expedientes-year-heatmap.tsx",
         "src/app/(authenticated)/expedientes/components/expedientes-week-mission.tsx",
         "src/app/(authenticated)/expedientes/components/expedientes-sidebar-widgets.tsx",
@@ -84,6 +90,7 @@
         "src/app/(authenticated)/expedientes/components/expedientes-calendar.tsx",
         "src/app/(authenticated)/expedientes/components/expediente-visualizar-dialog.tsx",
         "src/app/(authenticated)/expedientes/components/expediente-dialog.tsx",
+        "src/app/(authenticated)/contratos/tipos/page-client.tsx",
         "src/app/(authenticated)/contratos/tipos-cobranca/page-client.tsx",
         "src/app/(authenticated)/contratos/pipelines/page-client.tsx",
         "src/app/(authenticated)/contratos/mock/page.tsx",
@@ -92,36 +99,29 @@
         "src/app/(authenticated)/contratos/components/contratos-glass-list.tsx",
         "src/app/(authenticated)/contratos/components/contratos-glass-cards.tsx",
         "src/app/(authenticated)/contratos/components/contratos-content.tsx",
+        "src/app/(authenticated)/configuracoes/components/settings-section-header.tsx",
+        "src/app/(authenticated)/configuracoes/components/configuracoes-settings-layout.tsx",
         "src/app/(authenticated)/contratos/[id]/not-found.tsx",
         "src/app/(authenticated)/contratos/[id]/error.tsx",
         "src/app/(authenticated)/contratos/[id]/contrato-detalhes-client.tsx",
-        "src/app/(authenticated)/contratos/tipos/page-client.tsx",
-        "src/app/(authenticated)/configuracoes/components/settings-section-header.tsx",
-        "src/app/(authenticated)/configuracoes/components/configuracoes-settings-layout.tsx",
-        "src/app/(authenticated)/chat/components/chat-sidebar.tsx",
-        "src/app/(authenticated)/chat/components/chat-empty-state.tsx",
-        "src/app/(authenticated)/captura/components/agendamento-dialog.tsx",
-        "src/app/(authenticated)/captura/advogados/page-client.tsx",
-        "src/app/(authenticated)/dashboard/processos/page.tsx",
-        "src/app/(authenticated)/dashboard/expedientes/page.tsx",
-        "src/app/(authenticated)/dashboard/components/widget-dashboard.tsx",
-        "src/app/(authenticated)/dashboard/components/dashboard-unificada.tsx",
-        "src/app/(authenticated)/dashboard/audiencias/page.tsx",
-        "src/app/(authenticated)/dashboard/financeiro/page.tsx",
-        "src/app/(authenticated)/calendar/components/event-calendar-app.tsx",
-        "src/app/(authenticated)/assistentes/[id]/page.tsx",
-        "src/app/(authenticated)/audiencias/components/mission-card.tsx",
-        "src/app/(authenticated)/audiencias/components/editar-audiencia-dialog.tsx",
-        "src/app/(authenticated)/audiencias/components/audiencias-mission-view.tsx",
-        "src/app/(authenticated)/audiencias/components/audiencias-list-columns.tsx",
         "src/app/(authenticated)/comunica-cnj/components/pdf-viewer-dialog.tsx",
         "src/app/(authenticated)/comunica-cnj/components/gazette-timeline.tsx",
         "src/app/(authenticated)/comunica-cnj/components/gazette-orphan-resolver.tsx",
         "src/app/(authenticated)/comunica-cnj/components/gazette-alert-banner.tsx",
         "src/app/(authenticated)/comunica-cnj/components/detalhes-dialog.tsx",
+        "src/app/(authenticated)/chat/components/chat-sidebar.tsx",
+        "src/app/(authenticated)/chat/components/chat-empty-state.tsx",
+        "src/app/(authenticated)/calendar/components/event-calendar-app.tsx",
+        "src/app/(authenticated)/audiencias/components/mission-card.tsx",
+        "src/app/(authenticated)/audiencias/components/editar-audiencia-dialog.tsx",
+        "src/app/(authenticated)/audiencias/components/audiencias-mission-view.tsx",
+        "src/app/(authenticated)/audiencias/components/audiencias-list-columns.tsx",
         "src/app/(authenticated)/assinatura-digital/mock/page.tsx",
         "src/app/(authenticated)/assinatura-digital/components/page-nav.tsx",
         "src/app/(authenticated)/assinatura-digital/components/documento-detail.tsx",
+        "src/app/(authenticated)/assistentes/[id]/page.tsx",
+        "src/app/(authenticated)/captura/components/agendamento-dialog.tsx",
+        "src/app/(authenticated)/captura/advogados/page-client.tsx",
         "src/app/(authenticated)/ajuda/content/processos.tsx",
         "src/app/(authenticated)/ajuda/content/pesquisa-juridica.tsx",
         "src/app/(authenticated)/ajuda/content/pericias.tsx",
@@ -143,39 +143,31 @@
         "src/app/(authenticated)/usuarios/components/logs/auth-logs-timeline.tsx",
         "src/app/(authenticated)/usuarios/components/list/usuarios-pagination.tsx",
         "src/app/(authenticated)/usuarios/components/list/usuarios-filtros-avancados.tsx",
-        "src/app/(authenticated)/usuarios/components/forms/usuario-edit-dialog.tsx",
-        "src/app/(authenticated)/usuarios/components/forms/usuario-dados-basicos.tsx",
         "src/app/(authenticated)/usuarios/components/detail/usuario-view-sheet.tsx",
         "src/app/(authenticated)/usuarios/components/detail/profile-sidebar.tsx",
         "src/app/(authenticated)/usuarios/components/cargos/cargos-management-dialog.tsx",
+        "src/app/(authenticated)/usuarios/components/forms/usuario-edit-dialog.tsx",
+        "src/app/(authenticated)/usuarios/components/forms/usuario-dados-basicos.tsx",
         "src/app/(authenticated)/usuarios/components/activities/activity-heatmap.tsx",
-        "src/app/(authenticated)/tarefas/quadro/[boardSlug]/system-board-client.tsx",
         "src/app/(authenticated)/rh/components/shared/historico-salarios.tsx",
         "src/app/(authenticated)/rh/components/folhas-pagamento/folha-detalhes.tsx",
+        "src/app/(authenticated)/tarefas/quadro/[boardSlug]/system-board-client.tsx",
         "src/app/(authenticated)/project-management/projects/[id]/page.tsx",
         "src/app/(authenticated)/project-management/components/tasks/task-board.tsx",
         "src/app/(authenticated)/processos/components/detail/event-attachments-list.tsx",
         "src/app/(authenticated)/processos/components/cockpit/case-identity-bar.tsx",
         "src/app/(authenticated)/pecas-juridicas/[id]/editar/client.tsx",
-        "src/app/(authenticated)/partes/components/terceiros/terceiro-form.tsx",
-        "src/app/(authenticated)/partes/components/representantes/representante-form.tsx",
-        "src/app/(authenticated)/partes/components/partes-contrarias/parte-contraria-form.tsx",
-        "src/app/(authenticated)/partes/components/clientes/cliente-form.tsx",
-        "src/app/(authenticated)/partes/components/clientes/cliente-documentos-viewer.tsx",
         "src/app/(authenticated)/pangea/feature/components/pangea-results.tsx",
         "src/app/(authenticated)/pangea/feature/components/pangea-page-content.tsx",
         "src/app/(authenticated)/obrigacoes/components/repasses/repasses-pendentes-list.tsx",
         "src/app/(authenticated)/obrigacoes/components/dialogs/obrigacao-detalhes-dialog.tsx",
         "src/app/(authenticated)/obrigacoes/[id]/editar/page.tsx",
+        "src/app/(authenticated)/partes/components/terceiros/terceiro-form.tsx",
+        "src/app/(authenticated)/partes/components/clientes/cliente-form.tsx",
+        "src/app/(authenticated)/partes/components/clientes/cliente-documentos-viewer.tsx",
+        "src/app/(authenticated)/partes/components/representantes/representante-form.tsx",
+        "src/app/(authenticated)/partes/components/partes-contrarias/parte-contraria-form.tsx",
         "src/app/(authenticated)/financeiro/components/plano-contas/mais-filtros-plano-contas-popover.tsx",
-        "src/app/(authenticated)/contratos/[id]/components/modal-campos-faltantes-dialog.tsx",
-        "src/app/(authenticated)/contratos/[id]/components/contrato-timeline.tsx",
-        "src/app/(authenticated)/contratos/[id]/components/contrato-resumo-card.tsx",
-        "src/app/(authenticated)/contratos/[id]/components/contrato-processos-card.tsx",
-        "src/app/(authenticated)/contratos/[id]/components/contrato-partes-card.tsx",
-        "src/app/(authenticated)/contratos/[id]/components/contrato-financeiro-card.tsx",
-        "src/app/(authenticated)/contratos/[id]/components/contrato-detalhes-header.tsx",
-        "src/app/(authenticated)/captura/historico/[id]/page.tsx",
         "src/app/(authenticated)/dashboard/widgets/pessoal/score-pessoal.tsx",
         "src/app/(authenticated)/dashboard/components/widgets/widget-wrapper.tsx",
         "src/app/(authenticated)/dashboard/components/widgets/widget-fluxo-caixa.tsx",
@@ -184,7 +176,13 @@
         "src/app/(authenticated)/dashboard/components/shared/metric-card.tsx",
         "src/app/(authenticated)/dashboard/components/shared/domain-section.tsx",
         "src/app/(authenticated)/dashboard/components/shared/dashboard-content.tsx",
-        "src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx",
+        "src/app/(authenticated)/contratos/[id]/components/modal-campos-faltantes-dialog.tsx",
+        "src/app/(authenticated)/contratos/[id]/components/contrato-timeline.tsx",
+        "src/app/(authenticated)/contratos/[id]/components/contrato-resumo-card.tsx",
+        "src/app/(authenticated)/contratos/[id]/components/contrato-processos-card.tsx",
+        "src/app/(authenticated)/contratos/[id]/components/contrato-partes-card.tsx",
+        "src/app/(authenticated)/contratos/[id]/components/contrato-financeiro-card.tsx",
+        "src/app/(authenticated)/contratos/[id]/components/contrato-detalhes-header.tsx",
         "src/app/(authenticated)/comunica-cnj/components/shared/diario-oficial-page-nav.tsx",
         "src/app/(authenticated)/comunica-cnj/components/pesquisa/search-stats.tsx",
         "src/app/(authenticated)/comunica-cnj/components/pesquisa/search-shortcuts.tsx",
@@ -194,18 +192,42 @@
         "src/app/(authenticated)/comunica-cnj/components/capturadas/capturadas-glass-cards.tsx",
         "src/app/(authenticated)/comunica-cnj/components/capturadas/capturadas-filter-bar.tsx",
         "src/app/(authenticated)/comunica-cnj/components/capturadas/capturadas-detail-dialog.tsx",
+        "src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx",
         "src/app/(authenticated)/assinatura-digital/documentos/[uuid]/client-page.tsx",
         "src/app/(authenticated)/assinatura-digital/components/schema-builder/SchemaCanvas.tsx",
         "src/app/(authenticated)/assinatura-digital/components/schema-builder/FormSchemaBuilder.tsx",
         "src/app/(authenticated)/assinatura-digital/components/schema-builder/FieldPropertiesPanel.tsx",
         "src/app/(authenticated)/assinatura-digital/components/schema-builder/FieldPalette.tsx",
         "src/app/(authenticated)/assinatura-digital/components/editor/CreateTemplateForm.tsx",
+        "src/app/(authenticated)/captura/historico/[id]/page.tsx",
+        "src/app/(authenticated)/ajuda/content/rh/salarios.tsx",
+        "src/app/(authenticated)/ajuda/content/rh/folhas-pagamento.tsx",
+        "src/app/(authenticated)/ajuda/content/rh/equipe.tsx",
+        "src/app/(authenticated)/ajuda/content/planner/tarefas.tsx",
+        "src/app/(authenticated)/ajuda/content/planner/notas.tsx",
+        "src/app/(authenticated)/ajuda/content/planner/agenda.tsx",
         "src/app/(authenticated)/ajuda/content/partes/terceiros.tsx",
         "src/app/(authenticated)/ajuda/content/partes/representantes.tsx",
         "src/app/(authenticated)/ajuda/content/partes/partes-contrarias.tsx",
         "src/app/(authenticated)/ajuda/content/partes/clientes.tsx",
-        "src/app/(authenticated)/agenda/components/views/ano-view.tsx",
+        "src/app/(authenticated)/ajuda/content/financeiro/visao-geral.tsx",
+        "src/app/(authenticated)/ajuda/content/financeiro/plano-contas.tsx",
+        "src/app/(authenticated)/ajuda/content/financeiro/orcamentos.tsx",
+        "src/app/(authenticated)/ajuda/content/financeiro/dre.tsx",
+        "src/app/(authenticated)/ajuda/content/financeiro/contas-receber.tsx",
+        "src/app/(authenticated)/ajuda/content/financeiro/contas-pagar.tsx",
+        "src/app/(authenticated)/ajuda/content/financeiro/conciliacao.tsx",
+        "src/app/(authenticated)/ajuda/content/configuracoes/sistema.tsx",
+        "src/app/(authenticated)/ajuda/content/configuracoes/perfil.tsx",
+        "src/app/(authenticated)/ajuda/content/configuracoes/notificacoes.tsx",
+        "src/app/(authenticated)/ajuda/content/captura/historico.tsx",
+        "src/app/(authenticated)/ajuda/content/captura/configuracao.tsx",
+        "src/app/(authenticated)/ajuda/content/captura/agendamentos.tsx",
+        "src/app/(authenticated)/ajuda/content/assinatura-digital/templates.tsx",
+        "src/app/(authenticated)/ajuda/content/assinatura-digital/formularios.tsx",
+        "src/app/(authenticated)/ajuda/content/assinatura-digital/documentos.tsx",
         "src/app/(authenticated)/acervo/components/list/acervo-filters.tsx",
+        "src/app/(authenticated)/agenda/components/views/ano-view.tsx",
         "src/app/(authenticated)/rh/salarios/relatorios/custo-pessoal/page.tsx",
         "src/app/(authenticated)/rh/folhas-pagamento/relatorios/mensal/page.tsx",
         "src/app/(authenticated)/project-management/projects/[id]/team/team-view.tsx",
@@ -231,6 +253,7 @@
         "src/app/(authenticated)/contratos/error.tsx",
         "src/app/(authenticated)/usuarios/[id]/usuario-detalhes.tsx",
         "src/app/(authenticated)/processos/components/processo-card.tsx",
+        "src/app/(authenticated)/pericias/peritos/page-client.tsx",
         "src/app/(authenticated)/pericias/especialidades/page-client.tsx",
         "src/app/(authenticated)/pericias/components/pericias-year-heatmap.tsx",
         "src/app/(authenticated)/pericias/components/pericias-semana-view.tsx",
@@ -240,7 +263,6 @@
         "src/app/(authenticated)/pericias/components/pericias-glass-month.tsx",
         "src/app/(authenticated)/pericias/components/pericias-glass-list.tsx",
         "src/app/(authenticated)/pericias/components/pericia-detalhes-dialog.tsx",
-        "src/app/(authenticated)/pericias/peritos/page-client.tsx",
         "src/app/(authenticated)/pecas-juridicas/components/peca-modelo-view-sheet.tsx",
         "src/app/(authenticated)/obrigacoes/[id]/acordo-detalhes-client.tsx",
         "src/app/(authenticated)/entrevistas-trabalhistas/components/testemunhas-toggle.tsx",
@@ -252,6 +274,12 @@
         "src/app/(authenticated)/entrevistas-trabalhistas/components/anexo-upload-zone.tsx",
         "src/app/(authenticated)/documentos/components/file-manager.tsx",
         "src/app/(authenticated)/documentos/components/documentos-kpi-strip.tsx",
+        "src/app/(authenticated)/dashboard/widgets/primitives.tsx",
+        "src/app/(authenticated)/dashboard/components/widget-dashboard.tsx",
+        "src/app/(authenticated)/dashboard/components/dashboard-unificada.tsx",
+        "src/app/(authenticated)/dashboard/components/dashboard-tarefas.tsx",
+        "src/app/(authenticated)/dashboard/components/dashboard-lembretes.tsx",
+        "src/app/(authenticated)/dashboard/components/dashboard-chat.tsx",
         "src/app/(authenticated)/expedientes/components/expedientes-year-heatmap.tsx",
         "src/app/(authenticated)/expedientes/components/expedientes-week-mission.tsx",
         "src/app/(authenticated)/expedientes/components/expedientes-sidebar-widgets.tsx",
@@ -260,31 +288,21 @@
         "src/app/(authenticated)/expedientes/components/expedientes-month-wrapper.tsx",
         "src/app/(authenticated)/expedientes/components/expedientes-control-view.tsx",
         "src/app/(authenticated)/expedientes/components/expediente-dialog.tsx",
+        "src/app/(authenticated)/contratos/tipos/page-client.tsx",
         "src/app/(authenticated)/contratos/tipos-cobranca/page-client.tsx",
         "src/app/(authenticated)/contratos/pipelines/page-client.tsx",
         "src/app/(authenticated)/contratos/components/contratos-pulse-strip.tsx",
         "src/app/(authenticated)/contratos/components/contratos-pipeline-stepper.tsx",
         "src/app/(authenticated)/contratos/components/contratos-kanban-view.tsx",
         "src/app/(authenticated)/contratos/components/contratos-glass-cards.tsx",
-        "src/app/(authenticated)/contratos/[id]/not-found.tsx",
-        "src/app/(authenticated)/contratos/[id]/loading.tsx",
-        "src/app/(authenticated)/contratos/[id]/error.tsx",
-        "src/app/(authenticated)/contratos/tipos/page-client.tsx",
         "src/app/(authenticated)/configuracoes/components/settings-nav.tsx",
         "src/app/(authenticated)/configuracoes/components/settings-mobile-nav.tsx",
         "src/app/(authenticated)/configuracoes/components/configuracoes-settings-layout.tsx",
+        "src/app/(authenticated)/contratos/[id]/not-found.tsx",
+        "src/app/(authenticated)/contratos/[id]/loading.tsx",
+        "src/app/(authenticated)/contratos/[id]/error.tsx",
+        "src/app/(authenticated)/comunica-cnj/components/gazette-orphan-resolver.tsx",
         "src/app/(authenticated)/chat/components/call-detail-sheet.tsx",
-        "src/app/(authenticated)/captura/tribunais/page-client.tsx",
-        "src/app/(authenticated)/captura/credenciais/page-client.tsx",
-        "src/app/(authenticated)/captura/components/captura-glass-cards.tsx",
-        "src/app/(authenticated)/captura/advogados/page-client.tsx",
-        "src/app/(authenticated)/captura/agendamentos/page-client.tsx",
-        "src/app/(authenticated)/dashboard/widgets/primitives.tsx",
-        "src/app/(authenticated)/dashboard/components/widget-dashboard.tsx",
-        "src/app/(authenticated)/dashboard/components/dashboard-unificada.tsx",
-        "src/app/(authenticated)/dashboard/components/dashboard-tarefas.tsx",
-        "src/app/(authenticated)/dashboard/components/dashboard-lembretes.tsx",
-        "src/app/(authenticated)/dashboard/components/dashboard-chat.tsx",
         "src/app/(authenticated)/audiencias/components/rhythm-strip.tsx",
         "src/app/(authenticated)/audiencias/components/post-hearing-flow.tsx",
         "src/app/(authenticated)/audiencias/components/mission-kpi-strip.tsx",
@@ -294,11 +312,15 @@
         "src/app/(authenticated)/audiencias/components/audiencias-year-heatmap.tsx",
         "src/app/(authenticated)/audiencias/components/audiencias-glass-month.tsx",
         "src/app/(authenticated)/audiencias/components/audiencia-card.tsx",
-        "src/app/(authenticated)/comunica-cnj/components/gazette-orphan-resolver.tsx",
         "src/app/(authenticated)/assinatura-digital/templates/client-page.tsx",
         "src/app/(authenticated)/assinatura-digital/segmentos/client-page.tsx",
         "src/app/(authenticated)/assinatura-digital/formularios/client-page.tsx",
         "src/app/(authenticated)/assinatura-digital/components/documento-detail.tsx",
+        "src/app/(authenticated)/captura/tribunais/page-client.tsx",
+        "src/app/(authenticated)/captura/credenciais/page-client.tsx",
+        "src/app/(authenticated)/captura/components/captura-glass-cards.tsx",
+        "src/app/(authenticated)/captura/agendamentos/page-client.tsx",
+        "src/app/(authenticated)/captura/advogados/page-client.tsx",
         "src/app/(authenticated)/agenda/mock/page.tsx",
         "src/app/(authenticated)/agenda/components/source-legend.tsx",
         "src/app/(authenticated)/agenda/components/mini-calendar.tsx",
@@ -310,8 +332,8 @@
         "src/app/(authenticated)/usuarios/components/list/usuarios-org-view.tsx",
         "src/app/(authenticated)/usuarios/components/list/user-kpi-strip.tsx",
         "src/app/(authenticated)/usuarios/components/list/department-group-header.tsx",
-        "src/app/(authenticated)/usuarios/components/forms/usuario-edit-dialog.tsx",
         "src/app/(authenticated)/usuarios/components/detail/profile-sidebar.tsx",
+        "src/app/(authenticated)/usuarios/components/forms/usuario-edit-dialog.tsx",
         "src/app/(authenticated)/usuarios/components/activities/atividades-cards.tsx",
         "src/app/(authenticated)/usuarios/components/activities/activity-heatmap.tsx",
         "src/app/(authenticated)/processos/components/cockpit/case-identity-bar.tsx",
@@ -322,11 +344,8 @@
         "src/app/(authenticated)/obrigacoes/components/shared/obrigacoes-pulse-strip.tsx",
         "src/app/(authenticated)/obrigacoes/components/shared/obrigacoes-glass-month.tsx",
         "src/app/(authenticated)/obrigacoes/components/shared/acordo-pulse-strip.tsx",
-        "src/app/(authenticated)/obrigacoes/components/parcelas/parcelas-table.tsx",
         "src/app/(authenticated)/obrigacoes/components/calendar/obrigacoes-year-wrapper.tsx",
-        "src/app/(authenticated)/contratos/[id]/components/contrato-tags-card.tsx",
-        "src/app/(authenticated)/contratos/[id]/components/contrato-resumo-card.tsx",
-        "src/app/(authenticated)/contratos/[id]/components/contrato-detalhes-header.tsx",
+        "src/app/(authenticated)/obrigacoes/components/parcelas/parcelas-table.tsx",
         "src/app/(authenticated)/dashboard/widgets/shared/widget-skeleton.tsx",
         "src/app/(authenticated)/dashboard/components/widgets/widget-wrapper.tsx",
         "src/app/(authenticated)/dashboard/components/widgets/widget-produtividade.tsx",
@@ -337,13 +356,16 @@
         "src/app/(authenticated)/dashboard/components/widgets/widget-audiencias-proximas.tsx",
         "src/app/(authenticated)/dashboard/components/widgets/stat-card.tsx",
         "src/app/(authenticated)/dashboard/components/shared/obrigacoes-recentes-card.tsx",
-        "src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx",
-        "src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx",
+        "src/app/(authenticated)/contratos/[id]/components/contrato-tags-card.tsx",
+        "src/app/(authenticated)/contratos/[id]/components/contrato-resumo-card.tsx",
+        "src/app/(authenticated)/contratos/[id]/components/contrato-detalhes-header.tsx",
         "src/app/(authenticated)/comunica-cnj/components/pesquisa/search-stats.tsx",
         "src/app/(authenticated)/comunica-cnj/components/pesquisa/search-shortcuts.tsx",
         "src/app/(authenticated)/comunica-cnj/components/pesquisa/search-results.tsx",
         "src/app/(authenticated)/comunica-cnj/components/capturadas/gazette-mission-kpi-strip.tsx",
         "src/app/(authenticated)/comunica-cnj/components/capturadas/capturadas-glass-cards.tsx",
+        "src/app/(authenticated)/audiencias/components/views/audiencias-semana-view.tsx",
+        "src/app/(authenticated)/audiencias/components/views/audiencias-missao-content.tsx",
         "src/app/(authenticated)/assinatura-digital/documentos/novo/client-page.tsx",
         "src/app/(authenticated)/assinatura-digital/documentos/lista/command-center.tsx",
         "src/app/(authenticated)/agenda/components/views/semana-view.tsx",
@@ -358,10 +380,10 @@
     "iconContainer": {
       "count": 32,
       "files": [
+        "src/app/(authenticated)/pericias/peritos/page-client.tsx",
         "src/app/(authenticated)/pericias/components/pericias-year-heatmap.tsx",
         "src/app/(authenticated)/pericias/components/pericias-pulse-strip.tsx",
         "src/app/(authenticated)/pericias/components/pericias-missao-content.tsx",
-        "src/app/(authenticated)/pericias/peritos/page-client.tsx",
         "src/app/(authenticated)/entrevistas-trabalhistas/components/entrevista-tab.tsx",
         "src/app/(authenticated)/documentos/components/documentos-kpi-strip.tsx",
         "src/app/(authenticated)/documentos/components/documentos-glass-list.tsx",
@@ -395,29 +417,29 @@
     "pageShell": {
       "count": 39,
       "files": [
-        "src/app/(authenticated)/usuarios/layout.tsx",
         "src/app/(authenticated)/tipos-expedientes/layout.tsx",
-        "src/app/(authenticated)/tarefas/layout.tsx",
+        "src/app/(authenticated)/usuarios/layout.tsx",
         "src/app/(authenticated)/rh/layout.tsx",
-        "src/app/(authenticated)/repasses/layout.tsx",
+        "src/app/(authenticated)/tarefas/layout.tsx",
         "src/app/(authenticated)/project-management/layout.tsx",
+        "src/app/(authenticated)/repasses/layout.tsx",
         "src/app/(authenticated)/pericias/layout.tsx",
         "src/app/(authenticated)/perfil/layout.tsx",
         "src/app/(authenticated)/pecas-juridicas/layout.tsx",
         "src/app/(authenticated)/pangea/layout.tsx",
-        "src/app/(authenticated)/obrigacoes/layout.tsx",
         "src/app/(authenticated)/notificacoes/layout.tsx",
+        "src/app/(authenticated)/obrigacoes/layout.tsx",
         "src/app/(authenticated)/notas/layout.tsx",
         "src/app/(authenticated)/mail/layout.tsx",
         "src/app/(authenticated)/financeiro/layout.tsx",
         "src/app/(authenticated)/editor/layout.tsx",
         "src/app/(authenticated)/documentos/layout.tsx",
+        "src/app/(authenticated)/dashboard/layout.tsx",
         "src/app/(authenticated)/contratos/layout.tsx",
         "src/app/(authenticated)/configuracoes/layout.tsx",
-        "src/app/(authenticated)/captura/layout.tsx",
-        "src/app/(authenticated)/dashboard/layout.tsx",
-        "src/app/(authenticated)/assistentes/layout.tsx",
         "src/app/(authenticated)/comunica-cnj/layout.tsx",
+        "src/app/(authenticated)/assistentes/layout.tsx",
+        "src/app/(authenticated)/captura/layout.tsx",
         "src/app/(authenticated)/ajuda/layout.tsx",
         "src/app/(authenticated)/agenda/layout.tsx",
         "src/app/(authenticated)/contratos/pipelines/page.tsx",
@@ -428,8 +450,8 @@
         "src/app/(authenticated)/assinatura-digital/documentos/novo/page.tsx",
         "src/app/(authenticated)/assinatura-digital/documentos/lista/page.tsx",
         "src/app/(authenticated)/assinatura-digital/documentos/[uuid]/page.tsx",
-        "src/app/(authenticated)/admin/security/blocked-ips/page.tsx",
         "src/app/(authenticated)/admin/metricas-db/avaliar-upgrade/page.tsx",
+        "src/app/(authenticated)/admin/security/blocked-ips/page.tsx",
         "src/app/(authenticated)/assinatura-digital/templates/[id]/edit/page.tsx",
         "src/app/(authenticated)/assinatura-digital/formularios/[id]/schema/page.tsx",
         "src/app/(authenticated)/assinatura-digital/documentos/revisar/[uuid]/page.tsx",
@@ -463,38 +485,38 @@
         "src/app/(authenticated)/contratos/components/contratos-glass-list.tsx",
         "src/app/(authenticated)/contratos/components/contratos-glass-cards.tsx",
         "src/app/(authenticated)/contratos/[id]/contrato-detalhes-client.tsx",
-        "src/app/(authenticated)/captura/components/captura-glass-list.tsx",
-        "src/app/(authenticated)/captura/components/captura-glass-cards.tsx",
-        "src/app/(authenticated)/assistentes/components/assistentes-tipos-config.tsx",
         "src/app/(authenticated)/audiencias/components/audiencias-glass-list.tsx",
         "src/app/(authenticated)/audiencias/components/audiencias-dia-dialog.tsx",
         "src/app/(authenticated)/audiencias/components/audiencia-status-badge.tsx",
         "src/app/(authenticated)/audiencias/components/audiencia-modalidade-badge.tsx",
         "src/app/(authenticated)/audiencias/components/audiencia-indicador-badges.tsx",
+        "src/app/(authenticated)/assistentes/components/assistentes-tipos-config.tsx",
+        "src/app/(authenticated)/captura/components/captura-glass-list.tsx",
+        "src/app/(authenticated)/captura/components/captura-glass-cards.tsx",
         "src/app/(authenticated)/project-management/components/shared/project-status-badge.tsx",
         "src/app/(authenticated)/processos/components/cockpit/case-identity-bar.tsx",
         "src/app/(authenticated)/processos/components/cockpit/all-details-sheet.tsx",
-        "src/app/(authenticated)/partes/components/shared/processos-relacionados-cell.tsx",
         "src/app/(authenticated)/obrigacoes/components/shared/obrigacoes-semana-view.tsx",
         "src/app/(authenticated)/obrigacoes/components/shared/obrigacoes-glass-month.tsx",
         "src/app/(authenticated)/obrigacoes/components/shared/obrigacoes-glass-list.tsx",
-        "src/app/(authenticated)/obrigacoes/components/parcelas/parcelas-table.tsx",
-        "src/app/(authenticated)/obrigacoes/components/dialogs/obrigacao-detalhes-dialog.tsx",
         "src/app/(authenticated)/obrigacoes/components/calendar/obrigacoes-year-wrapper.tsx",
+        "src/app/(authenticated)/obrigacoes/components/dialogs/obrigacao-detalhes-dialog.tsx",
+        "src/app/(authenticated)/obrigacoes/components/parcelas/parcelas-table.tsx",
+        "src/app/(authenticated)/partes/components/shared/processos-relacionados-cell.tsx",
+        "src/app/(authenticated)/dashboard/contratos/components/recent-contracts.tsx",
         "src/app/(authenticated)/contratos/[id]/components/contrato-timeline.tsx",
         "src/app/(authenticated)/contratos/[id]/components/contrato-partes-card.tsx",
         "src/app/(authenticated)/contratos/[id]/components/contrato-financeiro-card.tsx",
         "src/app/(authenticated)/contratos/[id]/components/contrato-documentos-assinatura-card.tsx",
         "src/app/(authenticated)/contratos/[id]/components/contrato-detalhes-header.tsx",
-        "src/app/(authenticated)/dashboard/contratos/components/recent-contracts.tsx",
         "src/app/(authenticated)/acervo/components/list/acervo-table.tsx",
         "src/app/(authenticated)/financeiro/components/dashboard/widgets/orcamento-realizado-widget.tsx",
         "src/app/(authenticated)/financeiro/components/dashboard/widgets/alertas-widget.tsx"
       ]
     },
     "anyTyped": {
-      "count": 347,
-      "percent": 34
+      "count": 369,
+      "percent": 36
     },
     "designSystemImports": {
       "count": 53,
@@ -624,6 +646,30 @@
         "rule": "hardcoded-bg-color"
       },
       {
+        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
+        "line": 115,
+        "match": "bg-slate-100",
+        "rule": "hardcoded-bg-color"
+      },
+      {
+        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
+        "line": 115,
+        "match": "bg-slate-800",
+        "rule": "hardcoded-bg-color"
+      },
+      {
+        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
+        "line": 149,
+        "match": "bg-slate-100",
+        "rule": "hardcoded-bg-color"
+      },
+      {
+        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
+        "line": 149,
+        "match": "bg-slate-800",
+        "rule": "hardcoded-bg-color"
+      },
+      {
         "file": "src/app/(dev)/library/visual-diff/widgets/page.tsx",
         "line": 48,
         "match": "bg-emerald-500",
@@ -693,30 +739,6 @@
         "file": "src/app/(dev)/library/visual-diff/widgets/page.tsx",
         "line": 125,
         "match": "bg-zinc-400",
-        "rule": "hardcoded-bg-color"
-      },
-      {
-        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
-        "line": 115,
-        "match": "bg-slate-100",
-        "rule": "hardcoded-bg-color"
-      },
-      {
-        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
-        "line": 115,
-        "match": "bg-slate-800",
-        "rule": "hardcoded-bg-color"
-      },
-      {
-        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
-        "line": 149,
-        "match": "bg-slate-100",
-        "rule": "hardcoded-bg-color"
-      },
-      {
-        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
-        "line": 149,
-        "match": "bg-slate-800",
         "rule": "hardcoded-bg-color"
       },
       {
@@ -898,6 +920,24 @@
         "rule": "hardcoded-border-color"
       },
       {
+        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
+        "line": 65,
+        "match": "border-slate-700",
+        "rule": "hardcoded-border-color"
+      },
+      {
+        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
+        "line": 126,
+        "match": "border-slate-700",
+        "rule": "hardcoded-border-color"
+      },
+      {
+        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
+        "line": 160,
+        "match": "border-slate-700",
+        "rule": "hardcoded-border-color"
+      },
+      {
         "file": "src/app/(dev)/library/visual-diff/widgets/page.tsx",
         "line": 48,
         "match": "border-emerald-500",
@@ -967,24 +1007,6 @@
         "file": "src/app/(dev)/library/visual-diff/widgets/page.tsx",
         "line": 125,
         "match": "border-zinc-400",
-        "rule": "hardcoded-border-color"
-      },
-      {
-        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
-        "line": 65,
-        "match": "border-slate-700",
-        "rule": "hardcoded-border-color"
-      },
-      {
-        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
-        "line": 126,
-        "match": "border-slate-700",
-        "rule": "hardcoded-border-color"
-      },
-      {
-        "file": "src/app/portal/feature/components/navbar/portal-navbar.tsx",
-        "line": 160,
-        "match": "border-slate-700",
         "rule": "hardcoded-border-color"
       }
     ],
@@ -1134,72 +1156,6 @@
         "rule": "hex-literal"
       },
       {
-        "file": "src/app/(authenticated)/mail/components/mail-display.tsx",
-        "line": 75,
-        "match": "#1a1a1a",
-        "rule": "hex-literal"
-      },
-      {
-        "file": "src/app/(authenticated)/mail/components/mail-display.tsx",
-        "line": 82,
-        "match": "#2563eb",
-        "rule": "hex-literal"
-      },
-      {
-        "file": "src/app/(authenticated)/mail/components/mail-display-mobile.tsx",
-        "line": 65,
-        "match": "#1a1a1a",
-        "rule": "hex-literal"
-      },
-      {
-        "file": "src/app/(authenticated)/mail/components/mail-display-mobile.tsx",
-        "line": 72,
-        "match": "#2563eb",
-        "rule": "hex-literal"
-      },
-      {
-        "file": "src/app/(authenticated)/contratos/pipelines/page-client.tsx",
-        "line": 315,
-        "match": "#6B7280",
-        "rule": "hex-literal"
-      },
-      {
-        "file": "src/app/(authenticated)/contratos/pipelines/page-client.tsx",
-        "line": 333,
-        "match": "#6B7280",
-        "rule": "hex-literal"
-      },
-      {
-        "file": "src/app/(authenticated)/contratos/pipelines/page-client.tsx",
-        "line": 435,
-        "match": "#6B7280",
-        "rule": "hex-literal"
-      },
-      {
-        "file": "src/app/(authenticated)/contratos/components/contratos-kanban-view.tsx",
-        "line": 91,
-        "match": "#6B7280",
-        "rule": "hex-literal"
-      },
-      {
-        "file": "src/app/(authenticated)/contratos/components/contratos-kanban-view.tsx",
-        "line": 325,
-        "match": "#6B7280",
-        "rule": "hex-literal"
-      },
-      {
-        "file": "src/app/(authenticated)/contratos/components/contratos-kanban-view.tsx",
-        "line": 326,
-        "match": "#6B7280",
-        "rule": "hex-literal"
-      },
-      {
-        "file": "src/app/(authenticated)/chat/components/chat-sidebar.tsx",
-        "line": 56,
-        "match": "#7c4ddb",
-        "rule": "hex-literal"
-      },
-      {
         "file": "src/app/(dev)/library/tokens/palette/page.tsx",
         "line": 58,
         "match": "#ED4949",
@@ -1210,15 +1166,15 @@
         "line": 59,
         "match": "#ED7E40",
         "rule": "hex-literal"
-      },
-      {
-        "file": "src/app/(authenticated)/assinatura-digital/components/editor/FieldMappingEditor.tsx",
-        "line": 299,
-        "match": "#000000",
-        "rule": "hex-literal"
       }
     ],
     "oklchInline": [
+      {
+        "file": "src/app/(auth)/layout.tsx",
+        "line": 32,
+        "match": "oklch(",
+        "rule": "oklch-inline"
+      },
       {
         "file": "src/components/layout/copilot-dashboard.tsx",
         "line": 92,
@@ -1228,12 +1184,6 @@
       {
         "file": "src/components/calendar/current-time-line.tsx",
         "line": 28,
-        "match": "oklch(",
-        "rule": "oklch-inline"
-      },
-      {
-        "file": "src/app/(auth)/layout.tsx",
-        "line": 32,
         "match": "oklch(",
         "rule": "oklch-inline"
       },
@@ -1300,12 +1250,6 @@
         "rule": "shadow-xl"
       },
       {
-        "file": "src/components/layout/header/theme-customizer/panel.tsx",
-        "line": 31,
-        "match": "shadow-xl",
-        "rule": "shadow-xl"
-      },
-      {
         "file": "src/app/website/insights/tendencias/page.tsx",
         "line": 20,
         "match": "shadow-2xl",
@@ -1324,14 +1268,8 @@
         "rule": "shadow-xl"
       },
       {
-        "file": "src/app/(dev)/library/shared/glass-panel/page.tsx",
-        "line": 67,
-        "match": "shadow-2xl",
-        "rule": "shadow-xl"
-      },
-      {
-        "file": "src/app/(assinatura-digital)/formulario/[segmento]/[formulario]/not-found.tsx",
-        "line": 17,
+        "file": "src/components/layout/header/theme-customizer/panel.tsx",
+        "line": 31,
         "match": "shadow-xl",
         "rule": "shadow-xl"
       },
@@ -1345,6 +1283,18 @@
         "file": "src/app/portal/(dashboard)/contratos/gerador/page.tsx",
         "line": 141,
         "match": "shadow-2xl",
+        "rule": "shadow-xl"
+      },
+      {
+        "file": "src/app/(dev)/library/shared/glass-panel/page.tsx",
+        "line": 67,
+        "match": "shadow-2xl",
+        "rule": "shadow-xl"
+      },
+      {
+        "file": "src/app/(assinatura-digital)/formulario/[segmento]/[formulario]/not-found.tsx",
+        "line": 17,
+        "match": "shadow-xl",
         "rule": "shadow-xl"
       }
     ],
@@ -1402,24 +1352,6 @@
         "file": "src/components/dashboard/entity-list-row.tsx",
         "line": 42,
         "match": "bg-white/4",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/components/layout/pedrinho-agent/command-bar.tsx",
-        "line": 142,
-        "match": "bg-white/2",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/components/layout/pedrinho-agent/briefing-panel.tsx",
-        "line": 201,
-        "match": "bg-white/5",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/components/layout/pedrinho-agent/briefing-panel.tsx",
-        "line": 201,
-        "match": "bg-white/10",
         "rule": "white-low-opacity"
       },
       {
@@ -1483,57 +1415,21 @@
         "rule": "white-low-opacity"
       },
       {
-        "file": "src/components/layout/pedrinho-agent/components/briefing-input.tsx",
-        "line": 118,
-        "match": "bg-white/4",
+        "file": "src/components/layout/pedrinho-agent/command-bar.tsx",
+        "line": 142,
+        "match": "bg-white/2",
         "rule": "white-low-opacity"
       },
       {
-        "file": "src/components/layout/pedrinho-agent/components/briefing-header.tsx",
-        "line": 67,
-        "match": "bg-white/8",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/components/layout/pedrinho-agent/components/briefing-header.tsx",
-        "line": 103,
-        "match": "bg-white/4",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/components/layout/pedrinho-agent/components/briefing-header.tsx",
-        "line": 105,
-        "match": "bg-white/3",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/components/layout/pedrinho-agent/components/briefing-header.tsx",
-        "line": 154,
-        "match": "bg-white/8",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/components/layout/pedrinho-agent/components/briefing-header.tsx",
-        "line": 169,
-        "match": "bg-white/8",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/components/layout/pedrinho-agent/components/attachment-strip.tsx",
-        "line": 37,
-        "match": "bg-white/4",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/components/layout/pedrinho-agent/components/attachment-strip.tsx",
-        "line": 53,
-        "match": "bg-white/6",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/components/layout/pedrinho-agent/components/attachment-menu.tsx",
-        "line": 33,
+        "file": "src/components/layout/pedrinho-agent/briefing-panel.tsx",
+        "line": 201,
         "match": "bg-white/5",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/components/layout/pedrinho-agent/briefing-panel.tsx",
+        "line": 201,
+        "match": "bg-white/10",
         "rule": "white-low-opacity"
       },
       {
@@ -1915,6 +1811,60 @@
         "rule": "white-low-opacity"
       },
       {
+        "file": "src/components/layout/pedrinho-agent/components/briefing-input.tsx",
+        "line": 118,
+        "match": "bg-white/4",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/components/layout/pedrinho-agent/components/briefing-header.tsx",
+        "line": 67,
+        "match": "bg-white/8",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/components/layout/pedrinho-agent/components/briefing-header.tsx",
+        "line": 103,
+        "match": "bg-white/4",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/components/layout/pedrinho-agent/components/briefing-header.tsx",
+        "line": 105,
+        "match": "bg-white/3",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/components/layout/pedrinho-agent/components/briefing-header.tsx",
+        "line": 154,
+        "match": "bg-white/8",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/components/layout/pedrinho-agent/components/briefing-header.tsx",
+        "line": 169,
+        "match": "bg-white/8",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/components/layout/pedrinho-agent/components/attachment-strip.tsx",
+        "line": 37,
+        "match": "bg-white/4",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/components/layout/pedrinho-agent/components/attachment-strip.tsx",
+        "line": 53,
+        "match": "bg-white/6",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/components/layout/pedrinho-agent/components/attachment-menu.tsx",
+        "line": 33,
+        "match": "bg-white/5",
+        "rule": "white-low-opacity"
+      },
+      {
         "file": "src/app/(authenticated)/processos/components/cockpit/timeline-filter-chips.tsx",
         "line": 79,
         "match": "bg-white/4",
@@ -1923,36 +1873,6 @@
       {
         "file": "src/app/(authenticated)/processos/components/cockpit/pulse-timeline.tsx",
         "line": 145,
-        "match": "bg-white/4",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/app/(authenticated)/dashboard/widgets/pessoal/foco-hoje.tsx",
-        "line": 181,
-        "match": "bg-white/2",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/app/(authenticated)/dashboard/widgets/pessoal/foco-hoje.tsx",
-        "line": 183,
-        "match": "bg-white/4",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/app/(authenticated)/dashboard/widgets/pessoal/chat-ativo.tsx",
-        "line": 60,
-        "match": "bg-white/3",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/app/(authenticated)/dashboard/widgets/pessoal/chat-ativo.tsx",
-        "line": 69,
-        "match": "bg-white/3",
-        "rule": "white-low-opacity"
-      },
-      {
-        "file": "src/app/(authenticated)/dashboard/widgets/audiencias/preparacao.tsx",
-        "line": 99,
         "match": "bg-white/4",
         "rule": "white-low-opacity"
       },
@@ -2005,13 +1925,43 @@
         "rule": "white-low-opacity"
       },
       {
+        "file": "src/app/(authenticated)/dashboard/widgets/pessoal/foco-hoje.tsx",
+        "line": 181,
+        "match": "bg-white/2",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/app/(authenticated)/dashboard/widgets/pessoal/foco-hoje.tsx",
+        "line": 183,
+        "match": "bg-white/4",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/app/(authenticated)/dashboard/widgets/pessoal/chat-ativo.tsx",
+        "line": 60,
+        "match": "bg-white/3",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/app/(authenticated)/dashboard/widgets/pessoal/chat-ativo.tsx",
+        "line": 69,
+        "match": "bg-white/3",
+        "rule": "white-low-opacity"
+      },
+      {
+        "file": "src/app/(authenticated)/dashboard/widgets/audiencias/preparacao.tsx",
+        "line": 99,
+        "match": "bg-white/4",
+        "rule": "white-low-opacity"
+      },
+      {
         "file": "src/app/(authenticated)/agenda/components/views/briefing-view.tsx",
         "line": 255,
         "match": "bg-white/4",
         "rule": "white-low-opacity"
       }
     ],
-    "total": 249
+    "total": 237
   },
   "modules": [
     {
@@ -2045,15 +1995,15 @@
     {
       "name": "ajuda",
       "files": 44,
-      "adoption": 41,
+      "adoption": 91,
       "violations": 0,
-      "grade": "D"
+      "grade": "A"
     },
     {
       "name": "assinatura-digital",
       "files": 103,
       "adoption": 30,
-      "violations": 1,
+      "violations": 0,
       "grade": "F"
     },
     {
@@ -2095,7 +2045,7 @@
       "name": "chat",
       "files": 50,
       "adoption": 6,
-      "violations": 4,
+      "violations": 3,
       "grade": "F"
     },
     {
@@ -2116,8 +2066,8 @@
       "name": "contratos",
       "files": 42,
       "adoption": 62,
-      "violations": 6,
-      "grade": "F"
+      "violations": 0,
+      "grade": "C"
     },
     {
       "name": "dashboard",
@@ -2186,7 +2136,7 @@
       "name": "mail",
       "files": 14,
       "adoption": 29,
-      "violations": 4,
+      "violations": 0,
       "grade": "F"
     },
     {
@@ -2298,17 +2248,17 @@
   "overall": {
     "score": 66,
     "grade": "C",
-    "summary": "Healthy system — 347/1021 files adopt typed components"
+    "summary": "Healthy system — 369/1021 files adopt typed components"
   },
   "kpis": [
     {
       "name": "Typography Adoption",
-      "current": 208,
+      "current": 230,
       "target": 200,
       "comparison": "gte",
       "severity": "warn",
       "status": "pass",
-      "delta": 8
+      "delta": 30
     },
     {
       "name": "GlassPanel Adoption",
@@ -2348,12 +2298,12 @@
     },
     {
       "name": "Hex Literals in (authenticated)/",
-      "current": 12,
+      "current": 0,
       "target": 9,
       "comparison": "lte",
       "severity": "warn",
-      "status": "fail",
-      "delta": -3
+      "status": "pass",
+      "delta": 9
     },
     {
       "name": "Token Documentation Coverage",

@@ -111,7 +111,7 @@ export function SelfieCaptureSheet({
           </button>
         </header>
 
-        <div className="relative aspect-[3/4] overflow-hidden rounded-xl border border-outline-variant/30 bg-muted">
+        <div className="relative aspect-3/4 overflow-hidden rounded-xl border border-outline-variant/30 bg-muted">
           {error ? (
             <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center">
               <Camera className="h-10 w-10 text-muted-foreground" />

@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -22,7 +23,7 @@ export default function TarefasDoc() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading mb-2">Tarefas</h1>
+        <Heading level="page">Tarefas</Heading>
         <p className="text-muted-foreground text-lg">
           Gerencie o trabalho da equipe com quadros Kanban organizados por projeto, área ou fluxo de trabalho.
         </p>

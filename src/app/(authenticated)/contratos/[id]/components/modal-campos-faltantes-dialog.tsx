@@ -65,7 +65,7 @@ export function ModalCamposFaltantesDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+        <form onSubmit={handleSubmit} className="space-y-4 max-h-100rflow-y-auto pr-2">
           {camposFaltantes.map((campo) => (
             <div key={campo.chave} className="space-y-1">
               <Label htmlFor={campo.chave}>{campo.label}</Label>

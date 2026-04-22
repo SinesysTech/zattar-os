@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocActionList,
@@ -20,9 +21,9 @@ export default function Dre() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading">
+        <Heading level="page">
           Demonstração de Resultado do Exercício
-        </h1>
+        </Heading>
         <p className="text-muted-foreground mt-2">
           O DRE consolida receitas e despesas do período selecionado, apresentando o resultado
           líquido do escritório de forma estruturada por categorias do plano de contas.

@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -21,9 +22,9 @@ export default function AssinaturaDigitalDocumentosDoc() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading mb-2">
+        <Heading level="page">
           Assinatura Digital — Documentos
-        </h1>
+        </Heading>
         <p className="text-muted-foreground text-lg">
           Envie documentos para coleta de assinaturas digitais, acompanhe o status em tempo real e acesse os documentos assinados.
         </p>

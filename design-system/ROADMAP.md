@@ -9,23 +9,23 @@
 
 Capturado por `npm run audit:design-system -- --save`. Snapshot em [`reports/2026-04-22.md`](./reports/2026-04-22.md).
 
-### Overall score: **C (66/100)** — pós Sprint 1 (Typography)
+### Overall score: **C (66/100)** — pós Sprints 1+2+3
 
-Blocking KPIs **zerados**. Sprint 1 completou a meta de Typography Adoption (+16 arquivos em `ajuda/content/`). Único warning restante: **Hex Literals (+3)**.
+**Todos os 8 KPIs estão verdes.** O overall continua 66 porque ainda temos **237 violações no total** (principalmente `bg-white/[1-15]` em components globais fora do escopo admin) e adoption em 36% (meta info é 40%). Subir para B (≥75) requer atacar esses dois.
 
 ### KPIs
 
 | Métrica | Current | Meta | Severidade | Status |
 |---|---:|---:|:---:|:---:|
-| Typography Adoption | **208** | ≥ 200 | warn | ✅ OK |
+| Typography Adoption | **230** | ≥ 200 | warn | ✅ OK |
 | GlassPanel Adoption | 126 | ≥ 115 | info | ✅ +11 |
 | Manual Composition | 0 | ≤ 0 | **block** | ✅ OK |
 | `shadow-xl/2xl` em `(authenticated)/` | 0 | ≤ 0 | **block** | ✅ OK |
 | Hardcoded Tailwind Colors | 3 | ≤ 3 | warn | ✅ OK |
-| Hex Literals em `(authenticated)/` | 12 | ≤ 9 | warn | WARN (+3) |
+| Hex Literals em `(authenticated)/` | **0** | ≤ 9 | warn | ✅ OK |
 | Token Documentation Coverage | **95%** | ≥ 95% | warn | ✅ OK |
 | CSS Variables in Registry | **100%** | ≥ 99% | warn | ✅ OK |
-| Any typed (file %) | **34%** (347/1021) | ≥ 40% | info | +13 pontos |
+| Any typed (file %) | **36%** (369/1021) | ≥ 40% | info | +15 pontos |
 
 ### Inventário de tokens
 
@@ -233,7 +233,8 @@ npm run audit:design-system -- --where --primary
 | 2026-04-06 | 1.0.0 | — | Primeira versão (sem audit) |
 | 2026-04-22 (manhã) | 2.0.0 | D (48/100) | Baseline: audit + registry + DTCG hierarchy |
 | 2026-04-22 (meio-dia) | 2.0.1 | C (65/100) | Post-fix: 2 blockers zerados + filtro de aliases |
-| 2026-04-22 (tarde) | **2.1.0** | **C (66/100)** | **Sprint 1 (Typography): +16 arquivos, meta 200 atingida (208)** |
+| 2026-04-22 (tarde) | 2.1.0 | C (66/100) | Sprint 1 (Typography): +16 arquivos, meta 200 atingida (208) |
+| 2026-04-22 (noite) | **2.2.0** | **C (66/100) — todos 8 KPIs verdes** | **Sprints 2+3: Hex 12→0, Typography 208→230** |
 
 ### Sprint 1 — Typography Adoption (2026-04-22)
 
@@ -242,12 +243,40 @@ npm run audit:design-system -- --where --primary
 - 12 em `ajuda/content/` top-level: assistentes, audiencias, chat, contratos, dashboard, documentos, expedientes, obrigacoes, pecas-juridicas, pericias, pesquisa-juridica, processos
 - 4 em `ajuda/content/partes/`: terceiros, representantes, partes-contrarias, clientes
 
-**Padrão aplicado**: `<h1 className="text-3xl font-bold tracking-tight font-heading">` → `<Heading level="page">` + import adicionado.
+**Padrão aplicado**: `<h1 className="text-3xl font-bold tracking-tight font-heading">` → `<Heading level="page">` + import.
+
+**Resultados**: Typography 192 → 208, any-typed 331 → 347 (32% → 34%), score 65 → 66.
+
+### Sprint 2 — Hex Literals Elimination (2026-04-22)
+
+**Estratégia dupla**: classificar (legítimo vs migrável), depois ALLOWED_OFFENDERS + migração para tokens.
+
+**Ofensores documentados como ALLOWED** (5 ocorrências):
+- `mail-display.tsx` + `mail-display-mobile.tsx` — CSS embutido em iframe isolado renderizando HTML de email (cores externas)
+- `FieldMappingEditor.tsx` — valor `#000000` persistido no DB como config de campo de assinatura (PDF render)
+- `contratos/pipelines/page-client.tsx` — hex como `defaultValues` do form + `placeholder` de input (dado de domínio)
+
+**Hex migrados para tokens** (4 ocorrências):
+- `contratos-kanban-view.tsx`: 3× `'#6B7280'` → constante `DEFAULT_STAGE_COLOR = 'var(--palette-18)'`
+- `chat-sidebar.tsx`: `hover:bg-[#7c4ddb]` → `hover:bg-primary/90` + `text-white` → `text-primary-foreground` + arbitrary shadow → `shadow-sm`
+
+**Resultados**: Hex em auth 12 → **0** (meta ≤9 bateu com folga de 9).
+
+### Sprint 3 — Ajuda Content Adoption Push (2026-04-22)
+
+**Arquivos migrados** (22 em subdiretórios de `ajuda/content/`):
+- `rh/`: equipe, salarios, folhas-pagamento (3)
+- `planner/`: tarefas, notas, agenda (3)
+- `financeiro/`: visao-geral, plano-contas, orcamentos, dre, contas-receber, contas-pagar, conciliacao (7)
+- `configuracoes/`: sistema, perfil, notificacoes (3)
+- `captura/`: historico, configuracao, agendamentos (3)
+- `assinatura-digital/`: templates, formularios, documentos (3)
+
+**Padrão aplicado**: mesmo codemod do Sprint 1 (38 arquivos total cobertos por essa migração).
 
 **Resultados**:
-- Typography Adoption: 192 → **208** (+16, meta ≥200)
-- Any typed files: 331 → **347** (+16, 32% → 34%)
-- Overall score: 65 → **66**
+- Typography Adoption: 208 → **230** (+22)
+- Any typed files: 347 → **369** (+22, 34% → 36%)
 
 ---
 

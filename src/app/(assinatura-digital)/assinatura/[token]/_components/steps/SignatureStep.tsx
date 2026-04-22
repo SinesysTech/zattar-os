@@ -146,7 +146,7 @@ export function SignatureStep({
                   </Button>
                 </div>
                 <div className="overflow-hidden rounded-xl border-2 border-dashed border-outline-variant bg-muted/40 p-2">
-                  <div className="h-[220px] sm:h-[200px]">
+                  <div className="h-55 sm:h-50">
                     <CanvasAssinatura
                       ref={assinaturaRef}
                       hideClearButton
@@ -175,7 +175,7 @@ export function SignatureStep({
                     </Button>
                   </div>
                   <div className="overflow-hidden rounded-xl border-2 border-dashed border-outline-variant bg-muted/40 p-2">
-                    <div className="h-[140px]">
+                    <div className="h-35">
                       <CanvasAssinatura
                         ref={rubricaRef}
                         hideClearButton

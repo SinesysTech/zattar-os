@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -21,7 +22,7 @@ export default function Salarios() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading">Salários</h1>
+        <Heading level="page">Salários</Heading>
         <p className="text-muted-foreground mt-2">
           Registre e gerencie os salários de cada colaborador, configure componentes salariais
           como remuneração base, bonificações e descontos, e acompanhe o custo total de pessoal.

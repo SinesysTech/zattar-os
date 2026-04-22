@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -21,7 +22,7 @@ export default function NotasDoc() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading mb-2">Notas</h1>
+        <Heading level="page">Notas</Heading>
         <p className="text-muted-foreground text-lg">
           Capture ideias, registre informações e organize anotações pessoais ou compartilhadas com a equipe.
         </p>

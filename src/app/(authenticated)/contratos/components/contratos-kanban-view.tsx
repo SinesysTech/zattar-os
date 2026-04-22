@@ -47,6 +47,16 @@ import {
 } from '../domain';
 
 // =============================================================================
+// CONSTANTES
+// =============================================================================
+
+/**
+ * Cor de fallback para estágios sem configuração de cor (e contratos sem estágio).
+ * Aponta para `--palette-18` (cinza neutro do Design System).
+ */
+const DEFAULT_STAGE_COLOR = 'var(--palette-18)';
+
+// =============================================================================
 // CARD
 // =============================================================================
 
@@ -88,7 +98,7 @@ function KanbanColumnContent({
   estagio: ContratoPipelineEstagio | null;
   contratos: KanbanContrato[];
 }) {
-  const cor = estagio?.cor ?? '#6B7280';
+  const cor = estagio?.cor ?? DEFAULT_STAGE_COLOR;
   const nome = estagio?.nome ?? 'Sem estágio';
 
   return (
@@ -322,8 +332,8 @@ function KanbanBoardContent({
           const contrato = getContratoById(value);
           if (!contrato) return null;
           const cor = contrato.estagioId
-            ? estagioMap.get(contrato.estagioId)?.cor ?? '#6B7280'
-            : '#6B7280';
+            ? estagioMap.get(contrato.estagioId)?.cor ?? DEFAULT_STAGE_COLOR
+            : DEFAULT_STAGE_COLOR;
           return (
             <div className="min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 opacity-95 shadow-lg rotate-1">
               <ContratoCard contrato={contrato} stageCor={cor} />

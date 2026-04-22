@@ -1,5 +1,6 @@
 'use client';
 
+import { Heading } from '@/components/ui/typography';
 import {
   DocSection,
   DocFieldTable,
@@ -21,7 +22,7 @@ export default function PlanoContas() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-heading">Plano de Contas</h1>
+        <Heading level="page">Plano de Contas</Heading>
         <p className="text-muted-foreground mt-2">
           O Plano de Contas organiza as categorias contábeis do escritório em uma estrutura
           hierárquica, permitindo a classificação precisa de receitas e despesas em todos os

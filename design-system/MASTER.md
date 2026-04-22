@@ -1151,23 +1151,23 @@ npm run audit:design-system -- --fail  # exit 1 se meta não atingida (CI)
 
 O relatório é salvo em `design-system/reports/YYYY-MM-DD.md` e `design-system/reports/latest.json`.
 
-### 20.4 Baseline (2026-04-22, post Sprint 1)
+### 20.4 Baseline (2026-04-22, post Sprints 1+2+3)
 
-Snapshot pós Sprint 1 (Typography). Único warning restante: Hex Literals em auth.
+**Todos os 8 KPIs verdes.** Score overall 66 limitado por violações em components globais (`bg-white/[1-15]` fora do escopo admin) + adoption file-% em 36% (meta info 40%).
 
 | Métrica | Valor | Meta | Status |
 |---|---|---|:---:|
 | Overall Score | **66/100 (C)** | ≥ 75 (B) | WARN |
-| Typography Adoption | **208** | ≥ 200 | ✅ OK |
+| Typography Adoption | **230** | ≥ 200 | ✅ OK |
 | GlassPanel Adoption | 126 | ≥ 115 | ✅ OK |
 | IconContainer Adoption | 32 | — | baseline |
 | PageShell Adoption | 39 | — | baseline |
 | SemanticBadge Adoption | 51 | — | baseline |
-| Any typed (file %) | **34%** (347/1021) | ≥ 40% | WARN |
+| Any typed (file %) | **36%** (369/1021) | ≥ 40% | WARN |
 | Manual Composition | 0 | 0 | ✅ OK |
 | `shadow-xl/2xl` em auth | 0 | 0 | ✅ OK |
 | Hardcoded Tailwind colors | 3 | ≤ 3 | ✅ OK |
-| Hex em auth | 12 | ≤ 9 | WARN (+3) |
+| Hex em auth | **0** | ≤ 9 | ✅ OK |
 | Token Registry Coverage | **100%** (202/202) | ≥ 99% | ✅ OK |
 | Token Documentation Coverage | **95%** | ≥ 95% | ✅ OK |
 
