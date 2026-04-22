@@ -12,7 +12,8 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FileText, Scale, Eye, Pencil, Trash2, FileSignature } from 'lucide-react';
+import { FileText, Scale, Eye, Pencil, Trash2, FileSignature, Plus, Check } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { cn, generateAvatarFallback } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -22,7 +23,17 @@ import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/typography';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 
+import { actionAlterarResponsavelContrato } from '../actions';
 import type { Contrato, StatusContrato } from '../domain';
 import { TIPO_CONTRATO_LABELS, TIPO_COBRANCA_LABELS, STATUS_CONTRATO_LABELS } from '../domain';
 import type { ClienteInfo } from '../types';
@@ -188,43 +199,132 @@ function ResponsavelCell({
   const usuario = contrato.responsavelId ? usuariosMap.get(contrato.responsavelId) ?? null : null;
   const nome = usuario?.nome ?? null;
 
-  return (
-    <>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          setDialogOpen(true);
-        }}
-        className="flex items-center gap-1.5 min-w-0 rounded-lg px-1 -mx-1 py-1 text-left transition-colors hover:bg-muted/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
-        title={nome ? `Alterar responsável: ${nome}` : 'Atribuir responsável'}
-      >
-        {nome ? (
-          <>
-            <Avatar className="size-6">
-              <AvatarImage src={usuario?.avatarUrl || undefined} alt={nome} />
-              <AvatarFallback>
-                <Text variant="micro-badge">{generateAvatarFallback(nome)}</Text>
-              </AvatarFallback>
-            </Avatar>
-            <Text variant="caption" className="truncate">
-              {nome}
-            </Text>
-          </>
-        ) : (
-          <Text variant="caption" className="text-destructive/70 italic">
-            Sem responsável
+  // Quando já tem responsável: botão abre dialog completo (edit/remover).
+  if (nome) {
+    return (
+      <>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setDialogOpen(true);
+          }}
+          className="flex items-center gap-1.5 min-w-0 rounded-lg px-1 -mx-1 py-1 text-left transition-colors hover:bg-muted/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
+          title={`Alterar responsável: ${nome}`}
+        >
+          <Avatar className="size-6">
+            <AvatarImage src={usuario?.avatarUrl || undefined} alt={nome} />
+            <AvatarFallback>
+              <Text variant="micro-badge">{generateAvatarFallback(nome)}</Text>
+            </AvatarFallback>
+          </Avatar>
+          <Text variant="caption" className="truncate">
+            {nome}
           </Text>
-        )}
-      </button>
-      <ContratoAlterarResponsavelDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        contrato={contrato}
-        usuarios={usuarios}
-        onSuccess={onChanged}
-      />
-    </>
+        </button>
+        <ContratoAlterarResponsavelDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          contrato={contrato}
+          usuarios={usuarios}
+          onSuccess={onChanged}
+        />
+      </>
+    );
+  }
+
+  // Sem responsável: botão `+` compacto que abre popover inline com lista de usuários.
+  return (
+    <ResponsavelAssignPopover
+      contratoId={contrato.id}
+      usuarios={usuarios}
+      onChanged={onChanged}
+    />
+  );
+}
+
+function ResponsavelAssignPopover({
+  contratoId,
+  usuarios,
+  onChanged,
+}: {
+  contratoId: number;
+  usuarios: ClienteInfo[];
+  onChanged: () => void;
+}) {
+  const [open, setOpen] = React.useState(false);
+  const [isPending, startTransition] = React.useTransition();
+
+  const handleSelect = (usuarioId: number) => {
+    startTransition(async () => {
+      try {
+        const result = await actionAlterarResponsavelContrato(contratoId, usuarioId);
+        if (result.success) {
+          toast.success('Responsável atribuído');
+          setOpen(false);
+          onChanged();
+        } else {
+          toast.error(result.message || 'Erro ao atribuir responsável');
+        }
+      } catch {
+        toast.error('Erro ao atribuir responsável');
+      }
+    });
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          onClick={(e) => e.stopPropagation()}
+          aria-label="Atribuir responsável"
+          title="Atribuir responsável"
+          disabled={isPending}
+          className="inline-flex items-center justify-center size-6 rounded-full border border-dashed border-border/30 text-muted-foreground/50 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50"
+        >
+          <Plus className="size-3.5" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        align="start"
+        sideOffset={6}
+        className="w-56 rounded-2xl glass-dropdown overflow-hidden p-0"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Command>
+          <CommandInput placeholder="Buscar usuário..." className="h-8 text-xs rounded-lg" />
+          <CommandList className="max-h-52">
+            <CommandEmpty>
+              <span className="text-[11px] text-muted-foreground/40">
+                Nenhum usuário encontrado
+              </span>
+            </CommandEmpty>
+            <CommandGroup>
+              {usuarios.map((usuario) => (
+                <CommandItem
+                  key={usuario.id}
+                  value={usuario.nome}
+                  onSelect={() => handleSelect(usuario.id)}
+                  className="gap-2 rounded-lg text-xs px-2 py-1.5 cursor-pointer"
+                >
+                  <Avatar className="size-5">
+                    <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nome} />
+                    <AvatarFallback>
+                      <Text variant="micro-badge">
+                        {generateAvatarFallback(usuario.nome)}
+                      </Text>
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="truncate">{usuario.nome}</span>
+                  <Check className="size-3 ml-auto text-primary shrink-0 opacity-0" />
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }
 

@@ -87,7 +87,7 @@ function FilterDropdownTrigger({
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-caption font-medium transition-colors cursor-pointer',
+        'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
@@ -170,11 +170,11 @@ function SegmentoFilter({
           </div>
           <CommandList className="max-h-52 px-1.5 pb-1.5">
             {isLoading ? (
-              <div className="py-6 text-center text-caption text-muted-foreground/40">Carregando...</div>
+              <div className="py-6 text-center text-[11px] text-muted-foreground/40">Carregando...</div>
             ) : (
               <>
                 <CommandEmpty>
-                  <span className="text-caption text-muted-foreground/40">Nenhum segmento</span>
+                  <span className="text-[11px] text-muted-foreground/40">Nenhum segmento</span>
                 </CommandEmpty>
                 <CommandGroup>
                   {segmentos.map((segmento) => {

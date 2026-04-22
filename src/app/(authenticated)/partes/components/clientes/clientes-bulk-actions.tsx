@@ -43,7 +43,7 @@ export function ClientesBulkActionsBar({
 
   return (
     <div className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2">
-      <span className="text-sm font-medium whitespace-nowrap">
+      <span className="text-[11px] font-medium whitespace-nowrap">
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
       </span>
 

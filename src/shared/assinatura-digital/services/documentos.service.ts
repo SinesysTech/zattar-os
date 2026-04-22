@@ -8,6 +8,11 @@ import { downloadFromStorageUrl } from "../services/signature";
 import { validateDeviceFingerprintEntropy } from "../services/signature/validation.service";
 import { logger, LogServices, LogOperations } from "../services/logger";
 import {
+  appendManifestPage,
+  MANIFEST_LEGAL_TEXT,
+  type ManifestData,
+} from "../services/template-pdf.service";
+import {
   TABLE_DOCUMENTOS,
   TABLE_DOCUMENTO_ASSINANTES,
   TABLE_DOCUMENTO_ANCORAS,
@@ -960,8 +965,19 @@ export async function finalizePublicSigner(params: {
     }
   );
 
+  // Hash do PDF original — usado no manifesto como prova do estado pré-assinatura.
+  // Se documento já tem hash_original_sha256, reutiliza (deterministico).
+  const hashOriginal =
+    documento.hash_original_sha256 ?? calculateHash(originalPdfBuffer);
+
   const pdfDoc = await PDFDocument.load(originalPdfBuffer);
   const pages = pdfDoc.getPages();
+
+  // Cache de buffers biométricos por assinante para reuso na geração dos manifestos.
+  const signerEvidences = new Map<
+    number,
+    { assinaturaBuffer: Buffer; selfieBuffer?: Buffer }
+  >();
 
   // Aplicar assinaturas/rubricas de todos assinantes concluídos
   for (const s of concluded) {
@@ -984,6 +1000,18 @@ export async function finalizePublicSigner(params: {
       });
       rubImage = await pdfDoc.embedPng(rubBuffer);
     }
+
+    // Pré-carrega selfie (se houver) uma única vez — manifesto vai usar abaixo.
+    let selfieBuffer: Buffer | undefined;
+    if (s.selfie_url) {
+      selfieBuffer = await downloadFromStorageUrl(s.selfie_url, {
+        service: "documentos",
+        operation: "download_selfie_image",
+        documento_uuid: documento.documento_uuid,
+        assinante_id: s.id,
+      });
+    }
+    signerEvidences.set(s.id, { assinaturaBuffer: sigBuffer, selfieBuffer });
 
     const signerAnchors = (
       anchors as AssinaturaDigitalDocumentoAncora[]
@@ -1009,6 +1037,90 @@ export async function finalizePublicSigner(params: {
     }
   }
 
+  // Anexa página de manifesto MP 2.200-2 por assinante concluído.
+  // Cada manifesto consolida as evidências do seu respectivo signatário (nome, CPF,
+  // IP, geo, foto embedada, assinatura embedada, termos aceitos, device fingerprint).
+  // Ordem: conforme sequência de `concluded`, preservando timeline da coleta.
+  for (const s of concluded) {
+    const evid = signerEvidences.get(s.id);
+    if (!evid) continue;
+
+    const snapshot = (s.dados_snapshot ?? {}) as Record<string, unknown>;
+    const dataAssinatura = s.concluido_em
+      ? new Date(s.concluido_em)
+      : new Date();
+    const fingerprint = (s.dispositivo_fingerprint_raw ?? {}) as Record<
+      string,
+      unknown
+    >;
+
+    const manifestData: ManifestData = {
+      protocolo: `AD-${documento.documento_uuid.slice(0, 8)}-${s.id}`,
+      nomeArquivo: `${documento.documento_uuid}.pdf`,
+      hashOriginalSha256: hashOriginal,
+      signatario: {
+        nomeCompleto:
+          (snapshot.nome_completo as string) ??
+          (snapshot.nome as string) ??
+          "—",
+        cpf: (snapshot.cpf as string) ?? "",
+        dataHora: dataAssinatura.toISOString(),
+        dataHoraLocal: dataAssinatura.toLocaleString("pt-BR", {
+          timeZone: "America/Sao_Paulo",
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+        ipOrigem: s.ip_address ?? null,
+        geolocalizacao:
+          s.latitude != null && s.longitude != null
+            ? {
+                latitude: s.latitude,
+                longitude: s.longitude,
+                accuracy: s.geolocation_accuracy ?? undefined,
+              }
+            : null,
+      },
+      evidencias: {
+        assinaturaBase64: `data:image/png;base64,${evid.assinaturaBuffer.toString("base64")}`,
+        fotoBase64: evid.selfieBuffer
+          ? `data:image/jpeg;base64,${evid.selfieBuffer.toString("base64")}`
+          : undefined,
+      },
+      termos: {
+        versao: s.termos_aceite_versao ?? "v1.0-MP2200-2",
+        dataAceite: s.termos_aceite_data ?? dataAssinatura.toISOString(),
+        textoDeclaracao: MANIFEST_LEGAL_TEXT,
+      },
+      dispositivo: {
+        plataforma: fingerprint.platform as string | undefined,
+        navegador: fingerprint.user_agent as string | undefined,
+        resolucao: fingerprint.screen_resolution as string | undefined,
+      },
+    };
+
+    try {
+      await appendManifestPage(pdfDoc, manifestData);
+    } catch (error) {
+      logger.error(
+        "Falha ao anexar manifesto MP 2.200-2 no Fluxo Documento",
+        error,
+        {
+          service: LogServices.SIGNATURE,
+          operation: "append_manifest",
+          documento_uuid: documento.documento_uuid,
+          assinante_id: s.id,
+        }
+      );
+      throw new Error(
+        `Falha ao gerar manifesto de conformidade legal para assinante ${s.id}`
+      );
+    }
+  }
+
   const finalPdfBytes = await pdfDoc.save();
   const finalPdfBuffer = Buffer.from(finalPdfBytes);
   const hashFinal = calculateHash(finalPdfBuffer);
@@ -1029,6 +1141,8 @@ export async function finalizePublicSigner(params: {
     .update({
       pdf_final_url: finalUpload.url,
       hash_final_sha256: hashFinal,
+      // Backfill idempotente: grava hash_original se ainda estiver vazio.
+      hash_original_sha256: documento.hash_original_sha256 ?? hashOriginal,
       status: allDone ? "concluido" : "pronto",
     })
     .eq("id", documento.id);

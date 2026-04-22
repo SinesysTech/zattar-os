@@ -68,6 +68,7 @@ interface ViolationsReport {
   shadowXl: Violation[];
   manualComposition: Violation[];
   whiteLowOpacity: Violation[];
+  toolbarWrongSize: Violation[];
   total: number;
 }
 
@@ -153,6 +154,12 @@ const ALLOWED_OFFENDERS = [
   // Video reel UI — always-dark overlay sobre vídeo. `bg-white/N` é semanticamente
   // correto (branco translúcido sobre fundo de vídeo escuro). Não depende de tema.
   'src/components/ui/reel.tsx',
+
+  // Table toolbar — primitive shadcn-like com items de dropdown (text-sm = 14px
+  // é padrão shadcn em dropdown items, diferente de filter-bar pills de 11px).
+  // O regex detecta `text-sm` dentro de CommandItems/MenuItems que são 14px
+  // por design (legibilidade em menus longos). Não é uma filter-bar pill.
+  'src/components/ui/table-toolbar.tsx',
 ];
 
 const TAILWIND_COLORS = [
@@ -173,7 +180,26 @@ const PATTERNS = {
   manualComposition: /\bfont-heading\s+text-2xl\s+font-bold\b/g,
   whiteLowOpacity: /\bbg-white\/([1-9]|1[0-5])\b(?![0-9])/g,
   cssVarDef: /^\s*(--[a-zA-Z0-9-]+)\s*:/gm,
+  // MASTER.md §13.6 — Toolbars/filter-bars/bulk-actions devem usar text-[11px]
+  // em pills e triggers. `text-caption` (13px) é o anti-pattern histórico que já
+  // causou regressão (commit ad9ec7ee2). `text-sm`/`text-base` são grandes demais
+  // para qualquer contexto de pill. `text-xs` (12px) é aceitável em items de
+  // popover/command e NÃO é flagged.
+  toolbarWrongSize: /\btext-(caption|sm|base)\b/g,
 };
+
+/**
+ * Arquivo é um toolbar/filter-bar/bulk-actions?
+ * Nesses arquivos, MASTER.md §13.6 obriga text-[11px] em pills.
+ */
+function isToolbarFile(filePath: string): boolean {
+  const name = path.basename(filePath);
+  return (
+    /-filter-bar\.tsx$/.test(name) ||
+    /-bulk-actions\.tsx$/.test(name) ||
+    /-toolbar\.tsx$/.test(name)
+  );
+}
 
 // =============================================================================
 // KPI METAS
@@ -184,6 +210,7 @@ const KPI_TARGETS: KPI[] = [
   { name: 'GlassPanel Adoption', current: 0, target: 115, comparison: 'gte', severity: 'info' },
   { name: 'Manual Composition', current: 0, target: 0, comparison: 'lte', severity: 'block' },
   { name: 'shadow-xl in (authenticated)/', current: 0, target: 0, comparison: 'lte', severity: 'block' },
+  { name: 'Toolbar Wrong Size (§13.6)', current: 0, target: 0, comparison: 'lte', severity: 'block' },
   { name: 'Hardcoded Tailwind Colors', current: 0, target: 3, comparison: 'lte', severity: 'warn' },
   { name: 'Hex Literals in (authenticated)/', current: 0, target: 9, comparison: 'lte', severity: 'warn' },
   { name: 'Token Documentation Coverage', current: 0, target: 95, comparison: 'gte', severity: 'warn' },
@@ -378,9 +405,18 @@ async function auditViolations(files: string[]): Promise<ViolationsReport> {
     findViolations(files, PATTERNS.whiteLowOpacity, 'white-low-opacity'),
   ]);
 
+  // MASTER.md §13.6 — filter-bars/bulk-actions/toolbars devem usar text-[11px].
+  // Aplica o pattern apenas em arquivos dessa família.
+  const toolbarFiles = files.filter(isToolbarFile);
+  const toolbarWrongSize = await findViolations(
+    toolbarFiles,
+    PATTERNS.toolbarWrongSize,
+    'toolbar-wrong-size',
+  );
+
   const total =
     bg.length + text.length + border.length + hex.length + oklch.length +
-    shadow.length + composition.length + white.length;
+    shadow.length + composition.length + white.length + toolbarWrongSize.length;
 
   return {
     hardcodedBgColors: bg,
@@ -391,6 +427,7 @@ async function auditViolations(files: string[]): Promise<ViolationsReport> {
     shadowXl: shadow,
     manualComposition: composition,
     whiteLowOpacity: white,
+    toolbarWrongSize,
     total,
   };
 }
@@ -462,6 +499,7 @@ function computeKpis(report: {
     'GlassPanel Adoption': report.adoption.glassPanel.count,
     'Manual Composition': report.violations.manualComposition.length,
     'shadow-xl in (authenticated)/': report.authViolations.shadowXl,
+    'Toolbar Wrong Size (§13.6)': report.violations.toolbarWrongSize.length,
     'Hardcoded Tailwind Colors': report.authViolations.bg,
     'Hex Literals in (authenticated)/': report.authViolations.hex,
     'Token Documentation Coverage': report.coverage.coveragePercent,
@@ -585,6 +623,7 @@ ${report.coverage.missingInCss.length > 0
 | \`shadow-xl\` | ${report.violations.shadowXl.length} |
 | Manual composition | ${report.violations.manualComposition.length} |
 | \`bg-white/[1-15]\` | ${report.violations.whiteLowOpacity.length} |
+| Toolbar wrong size (§13.6) | ${report.violations.toolbarWrongSize.length} |
 | **TOTAL** | **${report.violations.total}** |
 
 ${topViolations ? `### Top 15 violações\n\n${topViolations}` : '### No violations found'}
@@ -650,6 +689,7 @@ function renderConsole(report: AuditReport): void {
   console.log(`  shadow-xl: ${report.violations.shadowXl.length}`);
   console.log(`  composition: ${report.violations.manualComposition.length}`);
   console.log(`  white-low: ${report.violations.whiteLowOpacity.length}`);
+  console.log(`  toolbar-wrong-size: ${report.violations.toolbarWrongSize.length}`);
 
   console.log(`\n${c.bold}Modules${c.reset} (top 10 por adoção)`);
   const top = [...report.modules].sort((a, b) => b.adoption - a.adoption).slice(0, 10);

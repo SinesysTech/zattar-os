@@ -887,6 +887,43 @@ toolbar:        'flex flex-col sm:flex-row items-start sm:items-center gap-3'
 | Detail sheet | `<DetailSheet>` | `@/components/shared/detail-sheet` |
 | Form | `<FormShell>` | `@/components/shared/form-shell` |
 
+### 13.6 Toolbars & Filter Bars (Pills) — **11px OBRIGATÓRIO**
+
+Toolbars de listagem (filter-bar, bulk-actions, view-toggle, segment picker) seguem **um único tamanho de fonte**: `text-[11px]` com `font-medium`. Isso garante densidade visual consistente entre módulos (Audiências, Expedientes, Contratos, Perícias, etc.).
+
+**Pill trigger canônico** (replicado em `audiencias-filter-bar.tsx`, `expedientes-filter-bar.tsx`):
+
+```tsx
+<div
+  className={cn(
+    'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+    active
+      ? 'border-primary/20 bg-primary/5 text-primary'
+      : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
+    open && 'ring-1 ring-ring',
+  )}
+>
+  {children}
+  <span>{label}</span>
+</div>
+```
+
+**Erros comuns (anti-patterns)**:
+
+| ❌ ERRADO | ✅ CORRETO | Motivo |
+|---|---|---|
+| `text-caption` (13px) em pill de filtro | `text-[11px]` | Quebra densidade canônica; vira ilha visual |
+| `text-xs` (12px) em pill | `text-[11px]` | Imperceptível mas inconsistente |
+| Tamanhos mistos dentro da mesma toolbar | Padronizar `text-[11px]` | Hierarquia confusa |
+| Filter-bar 11px + bulk-actions 13px | Ambos 11px | Toolbars coexistem na mesma tela |
+
+**Labels de pipeline/stepper** (acima da listagem): `text-meta-label` (11px uppercase tracking 0.14em semibold) — mantêm a mesma base de 11px com tratamento semântico.
+
+**Texto de apoio DENTRO dos popovers** (empty state, "Carregando…"): `text-[11px] text-muted-foreground/40` — mesma escala.
+
+**Fluxo de promoção para token** (quando consolidar):
+Se `text-[11px]` repetir em 5+ lugares, promover para utility `.text-filter-pill` em `globals.css`. Até lá, o valor literal é intencional para sinalizar "isto é pill de toolbar" na revisão de código.
+
 ---
 
 ## 14. Animações
@@ -1255,6 +1292,9 @@ npm run audit:design-system -- --where=--primary
 | `z-index` arbitrário (`z-[999]`) | Escala definida (`z-10/20/30/40/50/60/70`) |
 | Animar `width`/`height`/`top`/`left` | Usar `transform` + `opacity` |
 | Botões icon-only sem `aria-label` | Sempre incluir `aria-label` |
+| `text-caption` (13px) em pill/trigger de filtro | `text-[11px]` — ver §13.6 |
+| Filter-bar com `text-xs`/`text-sm`/`text-caption` | `text-[11px] font-medium` — ver §13.6 |
+| Tamanhos de fonte mistos dentro da mesma toolbar | Padronizar — ver §13.6 |
 
 ### 22.2 Fortes (review exige justificativa)
 
