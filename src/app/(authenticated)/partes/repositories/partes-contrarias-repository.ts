@@ -6,7 +6,6 @@
  */
 
 import { createDbClient } from '@/lib/supabase';
-import { fromSnakeToCamel } from '@/lib/utils';
 import { Result, ok, err, appError, PaginatedResponse } from '@/types';
 import type {
   ParteContraria,
@@ -18,7 +17,7 @@ import type {
   ProcessoRelacionado,
 } from '../domain';
 import { normalizarDocumento } from '../domain';
-import { converterParaParteContraria } from './shared/converters';
+import { converterParaParteContraria, converterParaEndereco } from './shared/converters';
 
 const TABLE_PARTES_CONTRARIAS = 'partes_contrarias';
 
@@ -115,7 +114,7 @@ export async function findParteContrariaById(id: number): Promise<Result<ParteCo
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
+    return ok(converterParaParteContraria(data as Record<string, unknown>));
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao buscar parte contraria', undefined, error instanceof Error ? error : undefined)
@@ -139,7 +138,7 @@ export async function findParteContrariaByCPF(cpf: string): Promise<Result<Parte
       return ok(null);
     }
 
-    return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
+    return ok(converterParaParteContraria(data as Record<string, unknown>));
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao buscar parte contraria por CPF', undefined, error instanceof Error ? error : undefined)
@@ -163,7 +162,7 @@ export async function findParteContrariaByCNPJ(cnpj: string): Promise<Result<Par
       return ok(null);
     }
 
-    return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
+    return ok(converterParaParteContraria(data as Record<string, unknown>));
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao buscar parte contraria por CNPJ', undefined, error instanceof Error ? error : undefined)
@@ -207,7 +206,9 @@ export async function findAllPartesContrarias(
     }
 
     const tipoPessoaResolved = normalizeTipoPessoa(tipo_pessoa) ?? normalizeTipoPessoa(tipoPessoa);
-    if (tipoPessoaResolved) query = query.eq('tipo_pessoa', tipoPessoaResolved);
+    if (tipoPessoaResolved) {
+      query = query.in('tipo_pessoa', [tipoPessoaResolved, tipoPessoaResolved.toLowerCase()]);
+    }
     if (situacao) query = query.eq('situacao', situacao);
     if (nome) query = query.ilike('nome_completo', `%${nome}%`);
     if (cpf) query = query.eq('cpf', cpf);
@@ -233,7 +234,7 @@ export async function findAllPartesContrarias(
     const totalPages = Math.ceil(total / limite);
 
     const paginated: PaginatedResponse<ParteContraria> = {
-      data: (data || []).map((d) => fromSnakeToCamel(d as Record<string, unknown>) as unknown as ParteContraria),
+      data: (data || []).map((d) => converterParaParteContraria(d as Record<string, unknown>)),
       pagination: {
         page: pagina,
         limit: limite,
@@ -474,7 +475,7 @@ export async function saveParteContraria(input: CreateParteContrariaInput): Prom
         return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
       }
 
-      return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
+      return ok(converterParaParteContraria(data as Record<string, unknown>));
     }
 
     const dadosInsercao: Record<string, unknown> = {
@@ -558,7 +559,7 @@ export async function saveParteContraria(input: CreateParteContrariaInput): Prom
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
+    return ok(converterParaParteContraria(data as Record<string, unknown>));
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao salvar parte contraria', undefined, error instanceof Error ? error : undefined)
@@ -595,7 +596,7 @@ export async function updateParteContraria(
         return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
       }
 
-      return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
+      return ok(converterParaParteContraria(data as Record<string, unknown>));
     }
 
     const dadosAtualizacao: Record<string, unknown> = {
@@ -666,7 +667,7 @@ export async function updateParteContraria(
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
+    return ok(converterParaParteContraria(data as Record<string, unknown>));
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao atualizar parte contraria', undefined, error instanceof Error ? error : undefined)

@@ -124,14 +124,18 @@ export function DialogFormShell({
             </ResponsiveDialogDescription>
           )}
 
-          {/* Barra de progresso para multi-step */}
+          {/* Barra de progresso para multi-step — hierarquia deliberadamente
+              subordinada ao título (overline 11px + micro 10px) para não
+              competir com ResponsiveDialogTitle. */}
           {multiStep && (
             <div className="mt-3 space-y-1.5">
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">
-                  {multiStep.stepTitle}
-                </span>
-                <span>
+              <div className="flex items-center justify-between gap-4">
+                {multiStep.stepTitle && (
+                  <span className="text-overline text-foreground/80 truncate">
+                    {multiStep.stepTitle}
+                  </span>
+                )}
+                <span className="text-micro-caption text-muted-foreground shrink-0">
                   Etapa {multiStep.current} de {multiStep.total}
                 </span>
               </div>

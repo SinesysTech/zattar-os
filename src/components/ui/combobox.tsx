@@ -25,6 +25,11 @@ interface ComboboxProps {
   onValueChange: (value: string[]) => void
   placeholder?: string
   searchPlaceholder?: string
+  /**
+   * Dica exibida abaixo do input de busca interno, explicando os campos
+   * que a busca cobre (ex: "Busque por número, parte autora ou ré").
+   */
+  searchHint?: React.ReactNode
   emptyText?: string
   multiple?: boolean
   disabled?: boolean
@@ -39,6 +44,7 @@ export function Combobox({
   onValueChange,
   placeholder = "Selecione...",
   searchPlaceholder = "Buscar...",
+  searchHint,
   emptyText = "Nenhum item encontrado.",
   multiple = false,
   disabled = false,
@@ -190,7 +196,7 @@ export function Combobox({
       <PopoverContent className="w-auto min-w-(--radix-popover-trigger-width) p-0" align="start" sideOffset={4}>
         <div className="flex flex-col">
           {/* Barra de busca */}
-          <div className="p-2 border-b">
+          <div className="p-2 border-b space-y-1.5">
             <Input
               placeholder={searchPlaceholder}
               value={search}
@@ -198,6 +204,11 @@ export function Combobox({
               className="h-8 text-sm"
               autoFocus
             />
+            {searchHint && (
+              <p className="text-micro-caption text-muted-foreground px-0.5">
+                {searchHint}
+              </p>
+            )}
           </div>
 
           {/* Botões de ação (apenas para múltipla seleção) */}

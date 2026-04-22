@@ -7,8 +7,11 @@ import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
-import { GlassPanel } from '@/components/shared/glass-panel';
+import {
+  DialogFormShell,
+  DialogSection,
+  type DialogSectionStepState,
+} from '@/components/shared/dialog-shell';
 import {
   Select,
   SelectContent,
@@ -30,8 +33,7 @@ import {
 } from 'lucide-react';
 import { LoadingSpinner } from '@/components/ui/loading-state';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { cn } from '@/lib/utils';
-import { Heading } from '@/components/ui/typography';
+import { Text } from '@/components/ui/typography';
 import { toast } from 'sonner';
 import { actionCriarExpediente, type ActionResult } from '../actions';
 import { GrauTribunal, CodigoTribunal } from '../domain';
@@ -106,33 +108,13 @@ const formatarGrau = (grau: string): string => {
 
 type StepNumber = 1 | 2 | 3;
 
-interface StepHeaderProps {
-  step: StepNumber;
-  active: boolean;
-  complete: boolean;
-  title: string;
-}
-
-function StepHeader({ step, active, complete, title }: StepHeaderProps) {
-  return (
-    <div className="flex items-center gap-2">
-      <div
-        className={cn(
-          'flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium transition-colors',
-          complete
-            ? 'bg-primary text-primary-foreground'
-            : active
-              ? 'bg-primary/20 text-primary'
-              : 'bg-muted text-muted-foreground',
-        )}
-      >
-        {complete ? <CheckCircle2 className="h-4 w-4" /> : step}
-      </div>
-      <Heading level="subsection" as="h3" className="text-sm">
-        {title}
-      </Heading>
-    </div>
-  );
+function stepStateFor(
+  active: boolean,
+  complete: boolean,
+): DialogSectionStepState {
+  if (complete) return 'complete';
+  if (active) return 'active';
+  return 'pending';
 }
 
 export function ExpedienteDialog({
@@ -231,8 +213,8 @@ export function ExpedienteDialog({
                   processos: Array<{
                     id: number;
                     numero_processo: string;
-                    polo_ativo_nome: string;
-                    polo_passivo_nome: string;
+                    nome_parte_autora: string | null;
+                    nome_parte_re: string | null;
                     trt: CodigoTribunal;
                     grau: GrauTribunal;
                   }>;
@@ -244,8 +226,8 @@ export function ExpedienteDialog({
           processosData.map((p) => ({
             id: p.id,
             numeroProcesso: p.numero_processo,
-            nomeParteAutora: p.polo_ativo_nome,
-            nomeParteRe: p.polo_passivo_nome,
+            nomeParteAutora: p.nome_parte_autora ?? '',
+            nomeParteRe: p.nome_parte_re ?? '',
             trt: p.trt,
             grau: p.grau,
           })),
@@ -456,7 +438,7 @@ export function ExpedienteDialog({
       <form
         id="criar-expediente-form"
         action={formAction}
-        className="space-y-5"
+        className="space-y-4"
       >
         {/* Hidden inputs — contratam com o schema do backend */}
         <input
@@ -515,14 +497,14 @@ export function ExpedienteDialog({
 
         {/* ─── Etapa 1 — Tribunal + Grau (apenas modo manual) ─── */}
         {!modoProcessoDefinido && (
-          <GlassPanel depth={2} className="p-5 gap-4">
-            <StepHeader
-              step={1}
-              active={currentStep === 1}
-              complete={!!(trtValue && grauValue)}
-              title="Selecione o tribunal e grau"
-            />
-
+          <DialogSection
+            step={1}
+            stepState={stepStateFor(
+              currentStep === 1,
+              !!(trtValue && grauValue),
+            )}
+            title="Selecione o tribunal e grau"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="trt" className="flex items-center gap-2">
@@ -588,19 +570,19 @@ export function ExpedienteDialog({
                 )}
               </div>
             </div>
-          </GlassPanel>
+          </DialogSection>
         )}
 
         {/* ─── Etapa 2 — Seleção de processo ─── */}
         {!modoProcessoDefinido && trtValue && grauValue && (
-          <GlassPanel depth={2} className="p-5 gap-4">
-            <StepHeader
-              step={2}
-              active={currentStep === 2}
-              complete={!!processoSelecionado}
-              title="Selecione o processo"
-            />
-
+          <DialogSection
+            step={2}
+            stepState={stepStateFor(
+              currentStep === 2,
+              !!processoSelecionado,
+            )}
+            title="Selecione o processo"
+          >
             <div className="space-y-2">
               <Label
                 htmlFor="processoIdCombobox"
@@ -634,6 +616,7 @@ export function ExpedienteDialog({
                     onValueChange={setProcessoIdValue}
                     placeholder="Buscar por número, parte autora ou ré..."
                     searchPlaceholder="Digite para buscar..."
+                    searchHint="Busque por número do processo, parte autora ou parte ré"
                     emptyText="Nenhum processo encontrado"
                     disabled={isPending}
                   />
@@ -648,48 +631,54 @@ export function ExpedienteDialog({
                 </>
               )}
             </div>
-          </GlassPanel>
+          </DialogSection>
         )}
 
         {/* ─── Processo vinculado (quando há) ─── */}
         {processoSelecionado && (
-          <GlassPanel depth={2} className="p-5 gap-3">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-primary" />
-              <Heading level="subsection" as="h3" className="text-sm">
-                Processo vinculado
-              </Heading>
-            </div>
-            <div className="text-lg font-semibold">
+          <DialogSection
+            icon={CheckCircle2}
+            title="Processo vinculado"
+          >
+            <p className="text-base font-semibold tabular-nums">
               {processoSelecionado.numeroProcesso}
-            </div>
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div>
-                <span className="text-muted-foreground">Parte autora</span>
-                <div className="font-medium truncate">
-                  {processoSelecionado.nomeParteAutora || '-'}
-                </div>
+            </p>
+            <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="space-y-1 min-w-0">
+                <Text
+                  variant="meta-label"
+                  as="dt"
+                  className="text-muted-foreground"
+                >
+                  Parte autora
+                </Text>
+                <dd className="text-sm font-medium truncate">
+                  {processoSelecionado.nomeParteAutora || '—'}
+                </dd>
               </div>
-              <div>
-                <span className="text-muted-foreground">Parte ré</span>
-                <div className="font-medium truncate">
-                  {processoSelecionado.nomeParteRe || '-'}
-                </div>
+              <div className="space-y-1 min-w-0">
+                <Text
+                  variant="meta-label"
+                  as="dt"
+                  className="text-muted-foreground"
+                >
+                  Parte ré
+                </Text>
+                <dd className="text-sm font-medium truncate">
+                  {processoSelecionado.nomeParteRe || '—'}
+                </dd>
               </div>
-            </div>
-          </GlassPanel>
+            </dl>
+          </DialogSection>
         )}
 
         {/* ─── Etapa 3 — Dados do expediente ─── */}
         {processoSelecionado && (
-          <GlassPanel depth={2} className="p-5 gap-4">
-            <StepHeader
-              step={3}
-              active={currentStep === 3}
-              complete={podeSubmeter}
-              title="Dados do expediente"
-            />
-
+          <DialogSection
+            step={3}
+            stepState={stepStateFor(currentStep === 3, podeSubmeter)}
+            title="Dados do expediente"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2 col-span-1 md:col-span-2">
                 <Label
@@ -857,7 +846,7 @@ export function ExpedienteDialog({
                 )}
               </div>
             </div>
-          </GlassPanel>
+          </DialogSection>
         )}
       </form>
     </DialogFormShell>

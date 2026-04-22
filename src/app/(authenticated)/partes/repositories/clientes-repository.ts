@@ -6,7 +6,7 @@
  */
 
 import { createDbClient } from '@/lib/supabase';
-import { fromCamelToSnake, fromSnakeToCamel } from '@/lib/utils';
+import { fromCamelToSnake } from '@/lib/utils';
 import { Result, ok, err, appError, PaginatedResponse } from '@/types';
 import type {
   Cliente,
@@ -18,6 +18,7 @@ import type {
   ProcessoRelacionado,
 } from '../domain';
 import { normalizarDocumento } from '../domain';
+import { converterParaCliente, converterParaEndereco } from './shared/converters';
 import {
   CACHE_PREFIXES,
   getCached,
@@ -89,7 +90,7 @@ export async function findClienteById(id: number): Promise<Result<Cliente | null
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    const cliente = fromSnakeToCamel(data as Record<string, unknown>) as unknown as Cliente;
+    const cliente = converterParaCliente(data as Record<string, unknown>);
     await safeSetCached(cacheKey, cliente, 600);
     return ok(cliente);
   } catch (error) {
@@ -119,7 +120,7 @@ export async function findClienteByCPF(cpf: string): Promise<Result<Cliente | nu
       return ok(null);
     }
 
-    const cliente = fromSnakeToCamel(data as Record<string, unknown>) as unknown as Cliente;
+    const cliente = converterParaCliente(data as Record<string, unknown>);
     await safeSetCached(cacheKey, cliente, 600);
     return ok(cliente);
   } catch (error) {
@@ -149,7 +150,7 @@ export async function findClienteByCNPJ(cnpj: string): Promise<Result<Cliente | 
       return ok(null);
     }
 
-    const cliente = fromSnakeToCamel(data as Record<string, unknown>) as unknown as Cliente;
+    const cliente = converterParaCliente(data as Record<string, unknown>);
     await safeSetCached(cacheKey, cliente, 600);
     return ok(cliente);
   } catch (error) {
@@ -182,7 +183,7 @@ export async function findClientesByNomeParcial(nome: string, limit: number = 10
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok((data || []).map((d) => fromSnakeToCamel(d as Record<string, unknown>) as unknown as Cliente));
+    return ok((data || []).map((d) => converterParaCliente(d as Record<string, unknown>)));
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao buscar clientes por nome', undefined, error instanceof Error ? error : undefined)
@@ -233,7 +234,8 @@ export async function findAllClientes(params: ListarClientesParamsCompat = {}): 
 
     const tipoPessoaValue = tipo_pessoa ?? tipoPessoa;
     if (typeof tipoPessoaValue === 'string' && tipoPessoaValue.trim()) {
-      query = query.eq('tipo_pessoa', tipoPessoaValue.trim().toUpperCase());
+      const tipoPessoaNorm = tipoPessoaValue.trim().toLowerCase();
+      query = query.in('tipo_pessoa', [tipoPessoaNorm, tipoPessoaNorm.toUpperCase()]);
     }
     if (nome) query = query.ilike('nome', `%${nome}%`);
     if (cpf) query = query.eq('cpf', cpf);
@@ -252,7 +254,7 @@ export async function findAllClientes(params: ListarClientesParamsCompat = {}): 
     const totalPages = Math.ceil(total / limite);
 
     const paginated: PaginatedResponse<Cliente> = {
-      data: (data || []).map((d) => fromSnakeToCamel(d as Record<string, unknown>) as unknown as Cliente),
+      data: (data || []).map((d) => converterParaCliente(d as Record<string, unknown>)),
       pagination: {
         page: pagina,
         limit: limite,
@@ -309,7 +311,7 @@ export async function saveCliente(input: CreateClienteInput): Promise<Result<Cli
         // fail-open
       }
 
-      return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as Cliente);
+      return ok(converterParaCliente(data as Record<string, unknown>));
     }
 
     const dadosInsercao: Record<string, unknown> = {
@@ -391,7 +393,7 @@ export async function saveCliente(input: CreateClienteInput): Promise<Result<Cli
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    const cliente = fromSnakeToCamel(data as Record<string, unknown>) as unknown as Cliente;
+    const cliente = converterParaCliente(data as Record<string, unknown>);
     try {
       await invalidateClientesCache();
     } catch {
@@ -444,7 +446,7 @@ export async function updateCliente(
         // fail-open
       }
 
-      return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as Cliente);
+      return ok(converterParaCliente(data as Record<string, unknown>));
     }
 
     const dadosAtualizacao: Record<string, unknown> = {
@@ -538,7 +540,7 @@ export async function updateCliente(
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    const cliente = fromSnakeToCamel(data as Record<string, unknown>) as unknown as Cliente;
+    const cliente = converterParaCliente(data as Record<string, unknown>);
 
     // Invalidar caches específicos (fail-open)
     try {
@@ -953,7 +955,8 @@ export async function findAllClientesComEndereco(
 
     const tipoPessoaValue = tipo_pessoa ?? tipoPessoa;
     if (typeof tipoPessoaValue === 'string' && tipoPessoaValue.trim()) {
-      query = query.eq('tipo_pessoa', tipoPessoaValue.trim().toUpperCase());
+      const tipoPessoaNorm = tipoPessoaValue.trim().toLowerCase();
+      query = query.in('tipo_pessoa', [tipoPessoaNorm, tipoPessoaNorm.toUpperCase()]);
     }
     if (nome) query = query.ilike('nome', `%${nome}%`);
     if (cpf) query = query.eq('cpf', cpf);
@@ -999,20 +1002,18 @@ export async function findAllClientesComEndereco(
         const entidadeId = (item as { entidade_id?: unknown }).entidade_id;
         if (typeof entidadeId !== 'number') continue;
         if (enderecosPorClienteId.has(entidadeId)) continue;
-        enderecosPorClienteId.set(entidadeId, fromSnakeToCamel(item as Record<string, unknown>));
+        enderecosPorClienteId.set(entidadeId, converterParaEndereco(item as Record<string, unknown>));
       }
     }
 
     const clientes = rows.map((row) => {
-      const cliente = fromSnakeToCamel(row as Record<string, unknown>) as unknown as Cliente;
+      const cliente = converterParaCliente(row as Record<string, unknown>);
       const enderecosRaw = (row as { enderecos?: unknown }).enderecos;
 
-      // Em relacionamentos many-to-one (clientes.endereco_id -> enderecos.id),
-      // o PostgREST pode retornar `enderecos` como OBJETO (não array).
       const enderecoJoin = Array.isArray(enderecosRaw)
-        ? (enderecosRaw[0] ? (fromSnakeToCamel(enderecosRaw[0] as Record<string, unknown>) as unknown) : null)
+        ? (enderecosRaw[0] ? converterParaEndereco(enderecosRaw[0] as Record<string, unknown>) : null)
         : enderecosRaw && typeof enderecosRaw === 'object'
-          ? (fromSnakeToCamel(enderecosRaw as Record<string, unknown>) as unknown)
+          ? converterParaEndereco(enderecosRaw as Record<string, unknown>)
           : null;
 
       const id = (row as { id?: unknown }).id;
@@ -1082,7 +1083,8 @@ export async function findAllClientesComEnderecoEProcessos(
 
     const tipoPessoaValue = tipo_pessoa ?? tipoPessoa;
     if (typeof tipoPessoaValue === 'string' && tipoPessoaValue.trim()) {
-      query = query.eq('tipo_pessoa', tipoPessoaValue.trim().toUpperCase());
+      const tipoPessoaNorm = tipoPessoaValue.trim().toLowerCase();
+      query = query.in('tipo_pessoa', [tipoPessoaNorm, tipoPessoaNorm.toUpperCase()]);
     }
     if (nome) query = query.ilike('nome', `%${nome}%`);
     if (cpf) query = query.eq('cpf', cpf);
@@ -1128,7 +1130,7 @@ export async function findAllClientesComEnderecoEProcessos(
         const entidadeId = (item as { entidade_id?: unknown }).entidade_id;
         if (typeof entidadeId !== 'number') continue;
         if (enderecosPorClienteId.has(entidadeId)) continue;
-        enderecosPorClienteId.set(entidadeId, fromSnakeToCamel(item as Record<string, unknown>));
+        enderecosPorClienteId.set(entidadeId, converterParaEndereco(item as Record<string, unknown>));
       }
     }
 
@@ -1199,14 +1201,13 @@ export async function findAllClientesComEnderecoEProcessos(
     }
 
     const clientes = rows.map((row) => {
-      const cliente = fromSnakeToCamel(row as Record<string, unknown>) as unknown as Cliente;
+      const cliente = converterParaCliente(row as Record<string, unknown>);
       const enderecosRaw = (row as { enderecos?: unknown }).enderecos;
-      // Em relacionamentos many-to-one (clientes.endereco_id -> enderecos.id),
-      // o PostgREST pode retornar `enderecos` como OBJETO (não array).
+
       const enderecoJoin = Array.isArray(enderecosRaw)
-        ? (enderecosRaw[0] ? (fromSnakeToCamel(enderecosRaw[0] as Record<string, unknown>) as unknown) : null)
+        ? (enderecosRaw[0] ? converterParaEndereco(enderecosRaw[0] as Record<string, unknown>) : null)
         : enderecosRaw && typeof enderecosRaw === 'object'
-          ? (fromSnakeToCamel(enderecosRaw as Record<string, unknown>) as unknown)
+          ? converterParaEndereco(enderecosRaw as Record<string, unknown>)
           : null;
 
       const id = (row as { id?: unknown }).id;
@@ -1252,10 +1253,10 @@ export async function findClienteComEndereco(id: number): Promise<Result<(Client
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    const cliente = fromSnakeToCamel(data as Record<string, unknown>) as unknown as Cliente;
+    const cliente = converterParaCliente(data as Record<string, unknown>);
     const enderecosRaw = (data as { enderecos?: unknown }).enderecos;
     const enderecos = Array.isArray(enderecosRaw)
-      ? enderecosRaw.map((e) => fromSnakeToCamel(e as Record<string, unknown>))
+      ? enderecosRaw.map((e) => converterParaEndereco(e as Record<string, unknown>)).filter((e) => e !== null)
       : [];
 
     return ok({ ...cliente, enderecos } as unknown as Cliente & { enderecos: unknown[] });
@@ -1282,9 +1283,9 @@ export async function findClienteByIdComEndereco(id: number): Promise<Result<Cli
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    const cliente = fromSnakeToCamel(data as Record<string, unknown>) as unknown as Cliente;
+    const cliente = converterParaCliente(data as Record<string, unknown>);
     const endereco = data.endereco
-      ? (fromSnakeToCamel(data.endereco as Record<string, unknown>) as unknown)
+      ? converterParaEndereco(data.endereco as Record<string, unknown>)
       : null;
 
     return ok({ ...cliente, endereco } as ClienteComEndereco);

@@ -401,13 +401,14 @@ export function ClienteFormDialog({
   };
 
   const handleSubmit = () => {
-    const errors = validateStep(currentStep);
+    const stepsToValidate = isEditMode ? [2, 3] : [currentStep];
+    const errors = stepsToValidate.flatMap((step) => validateStep(step));
+
     if (errors.length > 0) {
       toast.error(errors.join('\n'));
       return;
     }
 
-    // Submeter o form
     formRef.current?.requestSubmit();
   };
 
@@ -1041,46 +1042,106 @@ export function ClienteFormDialog({
   const isFirstStep = currentStep === (isEditMode ? 2 : 1);
   const isLastStep = currentStep === TOTAL_STEPS;
 
+  const renderEditFullView = () => (
+    <div className="space-y-6 pb-2">
+      <section aria-labelledby="secao-identificacao">
+        <Heading level="subsection" id="secao-identificacao" className="mb-3">
+          Identificação
+        </Heading>
+        {renderStep2()}
+      </section>
+
+      <section aria-labelledby="secao-contato">
+        <Heading level="subsection" id="secao-contato" className="mb-3">
+          Contato
+        </Heading>
+        {renderStep3()}
+      </section>
+
+      <section aria-labelledby="secao-endereco">
+        <Heading level="subsection" id="secao-endereco" className="mb-3">
+          Endereço
+        </Heading>
+        {renderStep4()}
+      </section>
+
+      <section aria-labelledby="secao-observacoes">
+        <Heading level="subsection" id="secao-observacoes" className="mb-3">
+          Observações
+        </Heading>
+        <div className="grid gap-2">
+          <Label htmlFor="observacoes">Observações</Label>
+          <Textarea
+            id="observacoes"
+            name="observacoes"
+            value={formData.observacoes}
+            onChange={(e) => setFormData(prev => ({ ...prev, observacoes: e.target.value }))}
+            placeholder="Observações adicionais sobre o cliente..."
+            rows={4}
+          />
+        </div>
+      </section>
+    </div>
+  );
+
   return (
     <DialogFormShell
       open={open}
       onOpenChange={onOpenChange}
       title={isEditMode ? 'Editar Cliente' : stepInfo.title}
-      multiStep={{
-        current: isEditMode ? currentStep - 1 : currentStep,
-        total: isEditMode ? TOTAL_STEPS - 1 : TOTAL_STEPS,
-        stepTitle: stepInfo.title,
-      }}
+      maxWidth={isEditMode ? '3xl' : 'lg'}
+      multiStep={
+        isEditMode
+          ? undefined
+          : {
+              current: currentStep,
+              total: TOTAL_STEPS,
+              stepTitle: stepInfo.title,
+            }
+      }
       footer={
-        <div className="flex justify-end w-full gap-2">
-            <DialogNavPrevious
-              onClick={handlePrevious}
-              disabled={isFirstStep || isPending}
-              hidden={isFirstStep}
-            />
-
-            {isLastStep ? (
-              <Button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isPending}
-              >
-                {isPending ? (
-                  <>
-                    <LoadingSpinner className="mr-2" />
-                    Salvando...
-                  </>
-                ) : (
-                  isEditMode ? 'Salvar' : 'Criar Cliente'
-                )}
-              </Button>
+        isEditMode ? (
+          <Button type="button" onClick={handleSubmit} disabled={isPending}>
+            {isPending ? (
+              <>
+                <LoadingSpinner className="mr-2" />
+                Salvando...
+              </>
             ) : (
-              <DialogNavNext
-                onClick={handleNext}
-                disabled={isPending}
-              />
+              'Salvar'
             )}
-          </div>
+          </Button>
+        ) : (
+          <div className="flex justify-end w-full gap-2">
+              <DialogNavPrevious
+                onClick={handlePrevious}
+                disabled={isFirstStep || isPending}
+                hidden={isFirstStep}
+              />
+
+              {isLastStep ? (
+                <Button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={isPending}
+                >
+                  {isPending ? (
+                    <>
+                      <LoadingSpinner className="mr-2" />
+                      Salvando...
+                    </>
+                  ) : (
+                    'Criar Cliente'
+                  )}
+                </Button>
+              ) : (
+                <DialogNavNext
+                  onClick={handleNext}
+                  disabled={isPending}
+                />
+              )}
+            </div>
+        )
       }
     >
         <form ref={formRef} action={formAction}>
@@ -1120,7 +1181,7 @@ export function ClienteFormDialog({
           <input type="hidden" name="observacoes" value={formData.observacoes} />
 
           <div>
-            {renderCurrentStep()}
+            {isEditMode ? renderEditFullView() : renderCurrentStep()}
           </div>
         </form>
     </DialogFormShell>

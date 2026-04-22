@@ -20,10 +20,31 @@ import type {
 import type { Endereco } from "@/app/(authenticated)/enderecos";
 
 /**
+ * Normaliza tipo_pessoa vindo do DB para o formato esperado pelo domain (lowercase).
+ * O DB historicamente tem valores em maiúsculas ("PF"/"PJ"), mas o domain declara
+ * `type TipoPessoa = 'pf' | 'pj'`. Esta função é o ponto canônico de normalização
+ * entre a camada de persistência e o domain.
+ */
+function normalizarTipoPessoa(raw: unknown): TipoPessoa {
+  if (typeof raw !== "string") {
+    throw new Error(
+      `tipo_pessoa inválido: esperado 'pf' | 'pj', recebido ${JSON.stringify(raw)}`,
+    );
+  }
+  const normalized = raw.trim().toLowerCase();
+  if (normalized !== "pf" && normalized !== "pj") {
+    throw new Error(
+      `tipo_pessoa inválido: esperado 'pf' | 'pj', recebido ${JSON.stringify(raw)}`,
+    );
+  }
+  return normalized;
+}
+
+/**
  * Converte dados do banco para entidade Cliente tipada
  */
 export function converterParaCliente(data: Record<string, unknown>): Cliente {
-  const tipo_pessoa = data.tipo_pessoa as TipoPessoa;
+  const tipo_pessoa = normalizarTipoPessoa(data.tipo_pessoa);
 
   const base = {
     id: data.id as number,
@@ -133,7 +154,7 @@ export function converterParaCliente(data: Record<string, unknown>): Cliente {
 export function converterParaParteContraria(
   data: Record<string, unknown>,
 ): ParteContraria {
-  const tipo_pessoa = data.tipo_pessoa as TipoPessoa;
+  const tipo_pessoa = normalizarTipoPessoa(data.tipo_pessoa);
 
   const base = {
     id: data.id as number,
@@ -239,7 +260,7 @@ export function converterParaParteContraria(
  * Converte dados do banco para entidade Terceiro tipada
  */
 export function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
-  const tipo_pessoa = data.tipo_pessoa as TipoPessoa;
+  const tipo_pessoa = normalizarTipoPessoa(data.tipo_pessoa);
 
   const base = {
     id: data.id as number,
