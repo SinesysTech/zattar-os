@@ -7,16 +7,20 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { toast } from 'sonner';
 import {
   ArrowDown,
   ArrowUp,
+  Check,
   CheckCircle2,
   Clock,
   FileText,
   Link as LinkIcon,
   ExternalLink,
+  Pencil,
   RefreshCw,
   AlertCircle,
   X,
@@ -29,6 +33,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { LoadingSpinner } from '@/components/ui/loading-state';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Text } from '@/components/ui/typography';
 import { GRAU_LABELS } from '@/lib/design-system';
@@ -41,6 +47,11 @@ import {
   type StatusObrigacao,
   type StatusSincronizacao,
 } from '../../domain';
+import {
+  actionAtualizarAcordo,
+  actionAtualizarParcela,
+  actionMarcarParcelaRecebida,
+} from '../../actions';
 import { formatCurrency } from '../../utils';
 import { PrestacaoContasSection } from '../prestacao-contas';
 
@@ -186,6 +197,30 @@ export function ObrigacaoDetalhesDialog({
   onSincronizar,
   onVerLancamento,
 }: ObrigacaoDetalhesDialogProps) {
+  const router = useRouter();
+
+  // ---------- Estado de edição inline (declarado antes de qualquer return) ----------
+  const [editingValor, setEditingValor] = React.useState(false);
+  const [valorDraft, setValorDraft] = React.useState('');
+  const [savingValor, setSavingValor] = React.useState(false);
+
+  const [editingVencimento, setEditingVencimento] = React.useState(false);
+  const [vencimentoDraft, setVencimentoDraft] = React.useState('');
+  const [savingVencimento, setSavingVencimento] = React.useState(false);
+
+  const [efetivando, setEfetivando] = React.useState(false);
+  const [dataEfetivacaoDraft, setDataEfetivacaoDraft] = React.useState('');
+  const [savingEfetivacao, setSavingEfetivacao] = React.useState(false);
+
+  // Reset dos drafts sempre que o dialog abre/fecha ou a obrigação muda
+  React.useEffect(() => {
+    if (!open) {
+      setEditingValor(false);
+      setEditingVencimento(false);
+      setEfetivando(false);
+    }
+  }, [open, obrigacao?.id]);
+
   if (!obrigacao) return null;
 
   const processo = obrigacao.processo;
@@ -217,7 +252,108 @@ export function ObrigacaoDetalhesDialog({
   const temAcordo = obrigacao.acordoId != null;
   const temProcesso = obrigacao.processoId != null;
 
+  const podeMarcarRecebida =
+    isParcela &&
+    (obrigacao.status === 'pendente' || obrigacao.status === 'vencida');
+
   const handleClose = () => onOpenChange(false);
+
+  // ---------- Edição: Valor ----------
+  const handleStartEditValor = () => {
+    setValorDraft(String(obrigacao.valor ?? ''));
+    setEditingValor(true);
+  };
+
+  const handleSaveValor = async () => {
+    const novoValor = parseFloat(valorDraft.replace(',', '.'));
+    if (isNaN(novoValor) || novoValor <= 0) {
+      toast.error('Informe um valor válido maior que zero');
+      return;
+    }
+    setSavingValor(true);
+    const result = isParcela
+      ? await actionAtualizarParcela(obrigacao.id, {
+          valorBrutoCreditoPrincipal: novoValor,
+        })
+      : await actionAtualizarAcordo(obrigacao.id, { valorTotal: novoValor });
+
+    if (result.success) {
+      toast.success('Valor atualizado');
+      setEditingValor(false);
+      router.refresh();
+      onOpenChange(false);
+    } else {
+      toast.error(
+        (result as { error?: string }).error || 'Erro ao atualizar valor',
+      );
+    }
+    setSavingValor(false);
+  };
+
+  // ---------- Edição: Vencimento ----------
+  const handleStartEditVencimento = () => {
+    // <input type="date"> espera yyyy-MM-dd
+    const iso = obrigacao.dataVencimento
+      ? obrigacao.dataVencimento.slice(0, 10)
+      : '';
+    setVencimentoDraft(iso);
+    setEditingVencimento(true);
+  };
+
+  const handleSaveVencimento = async () => {
+    if (!vencimentoDraft) {
+      toast.error('Informe uma data válida');
+      return;
+    }
+    setSavingVencimento(true);
+    const result = isParcela
+      ? await actionAtualizarParcela(obrigacao.id, {
+          dataVencimento: vencimentoDraft,
+        })
+      : await actionAtualizarAcordo(obrigacao.id, {
+          dataVencimentoPrimeiraParcela: vencimentoDraft,
+        });
+
+    if (result.success) {
+      toast.success('Vencimento atualizado');
+      setEditingVencimento(false);
+      router.refresh();
+      onOpenChange(false);
+    } else {
+      toast.error(
+        (result as { error?: string }).error || 'Erro ao atualizar vencimento',
+      );
+    }
+    setSavingVencimento(false);
+  };
+
+  // ---------- Edição: Marcar como recebida ----------
+  const handleStartEfetivacao = () => {
+    setDataEfetivacaoDraft(format(new Date(), 'yyyy-MM-dd'));
+    setEfetivando(true);
+  };
+
+  const handleMarcarRecebida = async () => {
+    if (!dataEfetivacaoDraft) {
+      toast.error('Informe a data de recebimento');
+      return;
+    }
+    setSavingEfetivacao(true);
+    const result = await actionMarcarParcelaRecebida(obrigacao.id, {
+      dataRecebimento: dataEfetivacaoDraft,
+    });
+    if (result.success) {
+      toast.success('Parcela marcada como recebida');
+      setEfetivando(false);
+      router.refresh();
+      onOpenChange(false);
+    } else {
+      toast.error(
+        (result as { error?: string }).error || 'Erro ao marcar como recebida',
+      );
+    }
+    setSavingEfetivacao(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -313,39 +449,159 @@ export function ObrigacaoDetalhesDialog({
           </div>
 
           <div className="grid grid-cols-2 gap-5 pb-3.5 mb-3.5 border-b border-border/40">
+            {/* ──────── Valor (editável) ──────── */}
             <div className="flex flex-col gap-1">
-              <Text variant="label" className="text-muted-foreground/80">
-                Valor
-              </Text>
-              <Text
-                variant="kpi-value"
-                className="text-[22px] leading-tight tabular-nums"
-              >
-                {formatCurrency(obrigacao.valor)}
-              </Text>
-            </div>
-            <div className="flex flex-col gap-1">
-              <Text variant="label" className="text-muted-foreground/80">
-                Vencimento
-              </Text>
-              <Text
-                variant="kpi-value"
-                className={cn(
-                  'text-[17px] leading-tight tabular-nums',
-                  obrigacao.status === 'vencida' && 'text-destructive',
-                )}
-              >
-                {formatarDataCurta(obrigacao.dataVencimento)}
-              </Text>
-              {diasLabel && (
-                <Text
-                  variant="meta-label"
-                  className={cn(
-                    obrigacao.status === 'vencida' && 'text-destructive/80',
-                  )}
-                >
-                  {diasLabel}
+              <div className="flex items-center justify-between gap-2">
+                <Text variant="label" className="text-muted-foreground/80">
+                  Valor
                 </Text>
+                {!editingValor && (
+                  <button
+                    type="button"
+                    onClick={handleStartEditValor}
+                    className="text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded"
+                    aria-label="Editar valor"
+                  >
+                    <Pencil className="size-2.5" />
+                    Editar
+                  </button>
+                )}
+              </div>
+
+              {editingValor ? (
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="text-[13px] font-medium text-muted-foreground shrink-0">
+                    R$
+                  </span>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={valorDraft}
+                    onChange={(e) => setValorDraft(e.target.value)}
+                    className="h-8 text-sm tabular-nums flex-1 min-w-0"
+                    autoFocus
+                    disabled={savingValor}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSaveValor();
+                      if (e.key === 'Escape') setEditingValor(false);
+                    }}
+                  />
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="size-7 shrink-0"
+                    onClick={handleSaveValor}
+                    disabled={savingValor}
+                    aria-label="Salvar valor"
+                  >
+                    {savingValor ? (
+                      <LoadingSpinner size="sm" />
+                    ) : (
+                      <Check className="size-3.5 text-success" />
+                    )}
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="size-7 shrink-0"
+                    onClick={() => setEditingValor(false)}
+                    disabled={savingValor}
+                    aria-label="Cancelar edição do valor"
+                  >
+                    <X className="size-3.5 text-muted-foreground" />
+                  </Button>
+                </div>
+              ) : (
+                <Text
+                  variant="kpi-value"
+                  className="text-[22px] leading-tight tabular-nums"
+                >
+                  {formatCurrency(obrigacao.valor)}
+                </Text>
+              )}
+            </div>
+
+            {/* ──────── Vencimento (editável) ──────── */}
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center justify-between gap-2">
+                <Text variant="label" className="text-muted-foreground/80">
+                  Vencimento
+                </Text>
+                {!editingVencimento && (
+                  <button
+                    type="button"
+                    onClick={handleStartEditVencimento}
+                    className="text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded"
+                    aria-label="Editar vencimento"
+                  >
+                    <Pencil className="size-2.5" />
+                    Editar
+                  </button>
+                )}
+              </div>
+
+              {editingVencimento ? (
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <Input
+                    type="date"
+                    value={vencimentoDraft}
+                    onChange={(e) => setVencimentoDraft(e.target.value)}
+                    className="h-8 text-sm tabular-nums flex-1 min-w-0"
+                    autoFocus
+                    disabled={savingVencimento}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSaveVencimento();
+                      if (e.key === 'Escape') setEditingVencimento(false);
+                    }}
+                  />
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="size-7 shrink-0"
+                    onClick={handleSaveVencimento}
+                    disabled={savingVencimento}
+                    aria-label="Salvar vencimento"
+                  >
+                    {savingVencimento ? (
+                      <LoadingSpinner size="sm" />
+                    ) : (
+                      <Check className="size-3.5 text-success" />
+                    )}
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="size-7 shrink-0"
+                    onClick={() => setEditingVencimento(false)}
+                    disabled={savingVencimento}
+                    aria-label="Cancelar edição do vencimento"
+                  >
+                    <X className="size-3.5 text-muted-foreground" />
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Text
+                    variant="kpi-value"
+                    className={cn(
+                      'text-[17px] leading-tight tabular-nums',
+                      obrigacao.status === 'vencida' && 'text-destructive',
+                    )}
+                  >
+                    {formatarDataCurta(obrigacao.dataVencimento)}
+                  </Text>
+                  {diasLabel && (
+                    <Text
+                      variant="meta-label"
+                      className={cn(
+                        obrigacao.status === 'vencida' && 'text-destructive/80',
+                      )}
+                    >
+                      {diasLabel}
+                    </Text>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -412,6 +668,89 @@ export function ObrigacaoDetalhesDialog({
         {/* ══════════ BODY scrollável ══════════ */}
         <div className="flex-1 overflow-y-auto px-6 py-4 [scrollbar-width:thin]">
           <div className="space-y-4">
+            {/* Registrar recebimento — parcelas pendentes/vencidas */}
+            {podeMarcarRecebida && (
+              <div>
+                <SectionHeader
+                  icon={CheckCircle2}
+                  label={
+                    isRecebimento
+                      ? 'Registrar recebimento'
+                      : 'Registrar pagamento'
+                  }
+                />
+                <SectionCard className="bg-success/5 border-success/25">
+                  {efetivando ? (
+                    <div className="space-y-2">
+                      <div>
+                        <Text variant="label" className="mb-1 block">
+                          {isRecebimento
+                            ? 'Data do recebimento'
+                            : 'Data do pagamento'}
+                        </Text>
+                        <Input
+                          type="date"
+                          value={dataEfetivacaoDraft}
+                          onChange={(e) =>
+                            setDataEfetivacaoDraft(e.target.value)
+                          }
+                          className="h-8 text-sm tabular-nums"
+                          autoFocus
+                          disabled={savingEfetivacao}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleMarcarRecebida();
+                            if (e.key === 'Escape') setEfetivando(false);
+                          }}
+                        />
+                      </div>
+                      <div className="flex justify-end gap-1.5">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setEfetivando(false)}
+                          disabled={savingEfetivacao}
+                          className="h-7 text-xs"
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={handleMarcarRecebida}
+                          disabled={savingEfetivacao}
+                          className="h-7 text-xs"
+                        >
+                          {savingEfetivacao && (
+                            <LoadingSpinner size="sm" className="mr-1" />
+                          )}
+                          {isRecebimento
+                            ? 'Confirmar recebimento'
+                            : 'Confirmar pagamento'}
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between gap-3">
+                      <Text variant="caption" className="text-foreground/80">
+                        {isRecebimento
+                          ? 'Esta parcela ainda não foi recebida.'
+                          : 'Esta parcela ainda não foi paga.'}
+                      </Text>
+                      <Button
+                        size="sm"
+                        onClick={handleStartEfetivacao}
+                        className="h-7 px-3 rounded-lg text-[11.5px] gap-1.5 bg-success hover:bg-success/90 text-success-foreground"
+                      >
+                        <CheckCircle2 className="size-3" />
+                        {isRecebimento
+                          ? 'Marcar como recebida'
+                          : 'Marcar como paga'}
+                      </Button>
+                    </div>
+                  )}
+                </SectionCard>
+              </div>
+            )}
+
             {/* Sincronização */}
             <div>
               <SectionHeader icon={RefreshCw} label="Sincronização" />

@@ -107,7 +107,7 @@ O Zattar OS segue a hierarquia de tokens **DTCG v2025.10**: três camadas de abs
 
 | Fonte | O que contém | Autoridade |
 |---|---|---|
-| [`src/app/globals.css`](../src/app/globals.css) — `@theme inline` | Todas as **495 CSS variables** (Tailwind v4 utilizies são geradas daqui) | **CANÔNICA** |
+| [`src/app/globals.css`](../src/app/globals.css) — `:root` + `.dark` + `@theme inline` | **202 CSS variables primárias** + ~140 aliases `@theme inline` gerados pelo Tailwind v4 | **CANÔNICA** |
 | [`src/lib/design-system/tokens.ts`](../src/lib/design-system/tokens.ts) | Espelho TypeScript read-only com tipo tipado das keys | Espelho |
 | [`design-system/MASTER.md`](./MASTER.md) | Esta documentação + governance | Fonte narrativa |
 | [`tailwind.config.ts`](../tailwind.config.ts) | Apenas plugins (ex: `tailwindcss-animate`) — **não contém tokens** | Legacy |
@@ -1153,19 +1153,23 @@ O relatório é salvo em `design-system/reports/YYYY-MM-DD.md` e `design-system/
 
 ### 20.4 Baseline (2026-04-22)
 
-Snapshot ao criar a versão 2.0.0 do MASTER.md:
+Snapshot oficial pós-framework v2.0.0 (após correção dos 2 bloqueadores + expansão do registry):
 
-| Métrica | Valor | Meta | Gap |
-|---|---|---|---|
-| Component Coverage | 16,3% | ≥ 40% | −23,7 pp |
-| `<Heading>/<Text>` | 171 arquivos | ≥ 200 | −29 |
-| `<GlassPanel>` | 115 arquivos | — | baseline |
-| Manual Composition | 2 arquivos | 0 | 2 |
-| Hardcoded Tailwind colors | 1 arquivo | ≤ 3 | ✅ OK |
-| Hex literais | 9 arquivos (6 legítimos) | ≤ 3 | 0 (legítimos excluídos) |
-| `shadow-xl` em `(authenticated)/` | 0 | 0 | ✅ OK |
-| `bg-white/[1-15]` risco light | 0 | 0 | ✅ OK |
-| CSS variables documentadas | 495 de 495 | 495 | ✅ OK (após v2.0) |
+| Métrica | Valor | Meta | Status |
+|---|---|---|:---:|
+| Overall Score | **65/100 (C)** | ≥ 75 (B) | WARN |
+| Typography Adoption | 192 | ≥ 200 | WARN (−8) |
+| GlassPanel Adoption | 126 | ≥ 115 | ✅ OK |
+| IconContainer Adoption | 32 | — | baseline |
+| PageShell Adoption | 39 | — | baseline |
+| SemanticBadge Adoption | 51 | — | baseline |
+| Any typed (file %) | 32% (331/1021) | ≥ 40% | WARN |
+| Manual Composition | 0 | 0 | ✅ OK |
+| `shadow-xl/2xl` em auth | 0 | 0 | ✅ OK |
+| Hardcoded Tailwind colors | 3 | ≤ 3 | ✅ OK |
+| Hex em auth | 12 | ≤ 9 | WARN (+3) |
+| Token Registry Coverage | **100%** (202/202) | ≥ 99% | ✅ OK |
+| Token Documentation Coverage | **95%** | ≥ 95% | ✅ OK |
 
 ---
 

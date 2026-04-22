@@ -5,36 +5,40 @@
 
 ---
 
-## 1. Baseline atual (2026-04-22)
+## 1. Baseline atual (2026-04-22, post fix)
 
 Capturado por `npm run audit:design-system -- --save`. Snapshot em [`reports/2026-04-22.md`](./reports/2026-04-22.md).
 
-### Overall score: **D (48/100)**
+### Overall score: **C (65/100)**
 
-Bloqueado por 2 KPIs críticos: `Manual Composition` (2 arquivos) e `shadow-xl em (authenticated)/` (6 arquivos).
+Blocking KPIs **zerados**. Warnings restantes: Typography Adoption (+8 para meta), Hex Literals (+3 para meta).
 
 ### KPIs
 
-| Métrica | Current | Meta | Severidade | Gap |
-|---|---:|---:|:---:|---:|
-| Typography Adoption | 192 | ≥ 200 | warn | −8 |
+| Métrica | Current | Meta | Severidade | Status |
+|---|---:|---:|:---:|:---:|
+| Typography Adoption | 192 | ≥ 200 | warn | WARN (−8) |
 | GlassPanel Adoption | 126 | ≥ 115 | info | ✅ +11 |
-| Manual Composition | 2 | ≤ 0 | **block** | +2 |
-| `shadow-xl/2xl` em `(authenticated)/` | 6 | ≤ 0 | **block** | +6 |
+| Manual Composition | 0 | ≤ 0 | **block** | ✅ OK |
+| `shadow-xl/2xl` em `(authenticated)/` | 0 | ≤ 0 | **block** | ✅ OK |
 | Hardcoded Tailwind Colors | 3 | ≤ 3 | warn | ✅ OK |
-| Hex Literals em `(authenticated)/` | 12 | ≤ 9 | warn | +3 |
-| Token Documentation Coverage | 54% | ≥ 95% | warn | −41 pp |
-| CSS Variables in Registry | 55% | ≥ 99% | warn | −44 pp |
+| Hex Literals em `(authenticated)/` | 12 | ≤ 9 | warn | WARN (+3) |
+| Token Documentation Coverage | **95%** | ≥ 95% | warn | ✅ OK |
+| CSS Variables in Registry | **100%** | ≥ 99% | warn | ✅ OK |
 
 ### Inventário de tokens
 
 | Camada | Contagem |
 |---|---:|
-| CSS variables em `globals.css` | **353** |
-| Registradas em `token-registry.ts` | 193 (55%) |
-| Documentadas em `MASTER.md` | 54% |
-| Drift (CSS sem registry) | 160 |
+| CSS variables primárias em `globals.css` | **202** |
+| Registradas em `token-registry.ts` | 202 (100%) |
+| Documentadas em `MASTER.md` | 95% |
+| Drift (CSS sem registry) | 0 |
 | Drift (registry sem CSS) | 0 |
+| Aliases Tailwind v4 (`--color-*`, `--radius-lg/md/sm`) — **não contabilizados** | ~140 |
+| Tailwind internals (`--tw-*`) — **não contabilizados** | ~8 |
+
+> **Nota de metodologia**: Tailwind v4 gera automaticamente aliases `--color-<name>` a partir do `@theme inline` para produzir utility classes. Esses aliases são derivados e não precisam ser documentados individualmente — o audit os identifica via `isDerivedAlias()` em [`audit-design-system.ts`](../scripts/dev-tools/design/audit-design-system.ts).
 
 ### Adoção por componente typed
 

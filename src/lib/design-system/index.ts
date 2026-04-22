@@ -110,6 +110,7 @@ export {
   EFFECT_REGISTRY,
   COMPONENT_REGISTRY,
   TYPOGRAPHY_REGISTRY,
+  BREAKPOINT_REGISTRY,
   type TokenEntry,
   type TokenCategory,
   type TokenMode,

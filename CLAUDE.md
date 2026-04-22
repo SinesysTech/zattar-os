@@ -70,7 +70,7 @@ O ZattarOS segue o Design System **Glass Briefing** — glassmorphism com hierar
 
 | Arquivo | O que contém | Autoridade |
 |---|---|---|
-| `src/app/globals.css` | **353 CSS variables** em `@theme inline` + `:root`/`.dark` + classes `.glass-*` | **CANÔNICA** |
+| `src/app/globals.css` | **202 CSS variables primárias** em `:root`+`.dark` + ~140 aliases `@theme inline` + classes `.glass-*` | **CANÔNICA** |
 | `src/lib/design-system/tokens.ts` | Espelho TS (spacing, typography, opacity, layout, palette, events, MD3, portal) | Mirror |
 | `src/lib/design-system/token-registry.ts` | Lista tipada de todos os tokens (para audit) | Registro |
 | `design-system/MASTER.md` | Single Source of Truth narrativa + contratos + anti-patterns | Doc |

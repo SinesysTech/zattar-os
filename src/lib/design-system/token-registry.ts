@@ -315,6 +315,13 @@ export const TYPOGRAPHY_REGISTRY: TokenEntry[] = [
   { name: '--font-body', category: 'typography', layer: 'reference', modes: ['light', 'dark'] },
 ];
 
+/**
+ * Breakpoints — custom breakpoints além dos padrões Tailwind (sm/md/lg/xl/2xl).
+ */
+export const BREAKPOINT_REGISTRY: TokenEntry[] = [
+  { name: '--breakpoint-xs', category: 'breakpoint', layer: 'reference', modes: ['light', 'dark'], purpose: 'Extra small (< sm), 480px' },
+];
+
 // =============================================================================
 // CONSOLIDADO
 // =============================================================================
@@ -336,6 +343,7 @@ export const TOKEN_REGISTRY: readonly TokenEntry[] = [
   ...EFFECT_REGISTRY,
   ...COMPONENT_REGISTRY,
   ...TYPOGRAPHY_REGISTRY,
+  ...BREAKPOINT_REGISTRY,
 ];
 
 /** Mapeamento rápido por nome para lookup. */

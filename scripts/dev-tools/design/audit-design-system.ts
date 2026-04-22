@@ -200,11 +200,29 @@ async function loadRegisteredTokens(): Promise<Set<string>> {
   while ((m = re.exec(src)) !== null) {
     found.add(m[1]);
   }
-  // Palette tokens são gerados dinamicamente (--palette-1 a --palette-18)
-  for (let i = 1; i <= 18; i++) {
-    found.add(`--palette-${i}`);
-  }
+  // Tokens dinâmicos gerados via Array.from() no registry
+  for (let i = 1; i <= 18; i++) found.add(`--palette-${i}`);
+  for (let i = 1; i <= 8; i++) found.add(`--chart-${i}`);
   return found;
+}
+
+/**
+ * Tokens derivados/aliases que NÃO são tokens reais de design.
+ * Existem em globals.css mas são:
+ *   - Aliases @theme inline do Tailwind v4 (geram utility classes a partir de semantic tokens)
+ *   - Internals do Tailwind (ring/shadow helpers)
+ *   - CSS vars locais de utility classes (não são globais)
+ *   - Radius aliases derivados via calc() de --radius
+ */
+const DERIVED_ALIASES_PATTERNS: RegExp[] = [
+  /^--color-/,       // @theme inline aliases (bg-primary etc.)
+  /^--tw-/,          // Tailwind internals
+  /^--dot-/,         // .canvas-dots local vars
+  /^--radius-(lg|md|sm|xl|2xl)$/, // calc() derivados de --radius
+];
+
+function isDerivedAlias(token: string): boolean {
+  return DERIVED_ALIASES_PATTERNS.some((re) => re.test(token));
 }
 
 /** Busca ocorrências de um pattern em múltiplos arquivos. */
@@ -273,11 +291,14 @@ function gradeFromScore(score: number): OverallScore['grade'] {
 
 async function auditCoverage(): Promise<TokenCoverage> {
   const css = await loadGlobalsCss();
-  const cssVars = extractCssVariables(css);
+  const cssVarsRaw = extractCssVariables(css);
+  // Exclui aliases/derivados — eles existem por automação do Tailwind v4, não são
+  // tokens de design primários que devem ser documentados individualmente.
+  const cssVars = new Set([...cssVarsRaw].filter((v) => !isDerivedAlias(v)));
   const registered = await loadRegisteredTokens();
 
   const missingInRegistry = [...cssVars].filter((v) => !registered.has(v));
-  const missingInCss = [...registered].filter((v) => !cssVars.has(v));
+  const missingInCss = [...registered].filter((v) => !cssVarsRaw.has(v));
 
   const master = await fs.readFile(MASTER_MD, 'utf-8');
   const documented = [...cssVars].filter((v) => master.includes(v)).length;
