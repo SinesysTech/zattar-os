@@ -3,7 +3,6 @@
 import * as React from "react"
 import { useCallback, useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { LayoutGrid } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { usePermissoes } from "@/providers/user-provider"
 import {
@@ -58,16 +57,58 @@ export function ModulesMenuButton() {
         aria-label="Menu de módulos"
         title="Menu de módulos (⌘/)"
         className={cn(
-          "group relative flex items-center justify-center",
-          "size-8 rounded-lg cursor-pointer",
-          "transition-all duration-200 ease-out",
+          "modules-menu-toggle group/modules relative flex items-center justify-center",
+          "size-9 rounded-xl cursor-pointer",
+          "border transition-all duration-200 ease-out",
           "active:scale-95",
           isOpen
-            ? "bg-primary/10 text-primary"
-            : "text-muted-foreground/70 hover:bg-primary/6 hover:text-foreground"
+            ? "bg-primary/10 border-primary/30 shadow-[0_0_16px_oklch(var(--primary)/0.15)]"
+            : "bg-card/50 border-border/30 hover:bg-primary/8 hover:border-primary/25 hover:shadow-[0_0_16px_oklch(var(--primary)/0.12)]"
         )}
       >
-        <LayoutGrid className="size-4 transition-transform duration-200 group-hover:scale-105" />
+        {/* Glow on hover */}
+        <div
+          className={cn(
+            "absolute inset-0 rounded-xl bg-primary/6 transition-opacity duration-300",
+            isOpen ? "opacity-0" : "opacity-0 group-hover/modules:opacity-100"
+          )}
+        />
+
+        {/* Four-dot grid signature — represents "modules" */}
+        <span className="relative grid grid-cols-2 gap-0.75">
+          <span
+            className={cn(
+              "size-1.5 rounded-[2px] transition-colors duration-200",
+              isOpen
+                ? "bg-primary"
+                : "bg-primary/70 group-hover/modules:bg-primary"
+            )}
+          />
+          <span
+            className={cn(
+              "size-1.5 rounded-[2px] transition-colors duration-200",
+              isOpen
+                ? "bg-primary"
+                : "bg-primary/70 group-hover/modules:bg-primary"
+            )}
+          />
+          <span
+            className={cn(
+              "size-1.5 rounded-[2px] transition-colors duration-200",
+              isOpen
+                ? "bg-primary"
+                : "bg-primary/70 group-hover/modules:bg-primary"
+            )}
+          />
+          <span
+            className={cn(
+              "size-1.5 rounded-[2px] transition-colors duration-200",
+              isOpen
+                ? "bg-primary"
+                : "bg-primary/70 group-hover/modules:bg-primary"
+            )}
+          />
+        </span>
       </button>
 
       {isOpen && (

@@ -8,6 +8,7 @@ import { FileSearch, ChevronRight, Lock, Monitor, AlertTriangle } from 'lucide-r
 import { cn } from '@/lib/utils';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Text } from '@/components/ui/typography';
 
 import {
   type Expediente,
@@ -61,24 +62,12 @@ function ColumnHeaders() {
   return (
     <div className="grid grid-cols-[32px_2.5fr_1fr_0.8fr_0.8fr_80px_80px_40px] gap-3 items-center px-4 mb-2">
       <div />
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Processo / Partes
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Prazo
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Tribunal
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Responsável
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider">
-        Origem
-      </span>
-      <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider text-center">
-        Restante
-      </span>
+      <Text variant="meta-label">Processo / Partes</Text>
+      <Text variant="meta-label">Prazo</Text>
+      <Text variant="meta-label">Tribunal</Text>
+      <Text variant="meta-label">Responsável</Text>
+      <Text variant="meta-label">Origem</Text>
+      <Text variant="meta-label" className="text-center">Restante</Text>
       <div />
     </div>
   );
@@ -92,14 +81,12 @@ function GlassRow({
   expediente,
   onViewDetail,
   onBaixar,
-  isAlt,
   usuariosData,
   tiposExpedientesData,
 }: {
   expediente: Expediente;
   onViewDetail: () => void;
   onBaixar?: (expediente: Expediente) => void;
-  isAlt: boolean;
   usuariosData?: Usuario[];
   tiposExpedientesData?: { id: number; tipoExpediente?: string }[];
 }) {
@@ -114,14 +101,21 @@ function GlassRow({
   const orgaoJulgador = expediente.descricaoOrgaoJulgador || expediente.orgaoJulgadorOrigem;
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onViewDetail}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onViewDetail();
+        }
+      }}
       className={cn(
-        'group w-full text-left rounded-2xl border border-border/40 p-4 cursor-pointer bg-card',
+        'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
         'transition-all duration-180 ease-out',
-        'hover:bg-accent/40 hover:border-border/60 hover:scale-[1.003] hover:-translate-y-px hover:shadow-lg',
-        isAlt && 'bg-muted/20',
+        'hover:border-border hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] hover:-translate-y-px',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         URGENCY_BORDER[urgency],
       )}
     >
@@ -262,7 +256,9 @@ function GlassRow({
         <div className="flex items-center justify-end gap-1">
           {onBaixar && !expediente.baixadoEm && (
             <button
+              type="button"
               onClick={(e) => { e.stopPropagation(); onBaixar(expediente); }}
+              onKeyDown={(e) => { e.stopPropagation(); }}
               className="px-2 py-1 rounded-md bg-success/6 text-success text-[10px] font-medium hover:bg-success/12 transition-colors cursor-pointer"
             >
               Baixar
@@ -271,7 +267,7 @@ function GlassRow({
           <ChevronRight className="w-4 h-4 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -345,13 +341,12 @@ export function ExpedientesGlassList({
     <div>
       <ColumnHeaders />
       <div className="flex flex-col gap-2">
-        {expedientes.map((exp, i) => (
+        {expedientes.map((exp) => (
           <GlassRow
             key={exp.id}
             expediente={exp}
             onViewDetail={() => onViewDetail(exp)}
             onBaixar={onBaixar}
-            isAlt={i % 2 === 1}
             usuariosData={usuariosData}
             tiposExpedientesData={tiposExpedientesData}
           />
