@@ -76,6 +76,18 @@ jest.mock('@/components/shared/dialog-shell', () => ({
         <div data-testid="dialog-footer">{footer}</div>
       </div>
     ) : null,
+  DialogSection: ({
+    title,
+    children,
+  }: {
+    title?: React.ReactNode;
+    children?: React.ReactNode;
+  }) => (
+    <section data-testid="dialog-section">
+      {title && <h3>{title}</h3>}
+      {children}
+    </section>
+  ),
 }));
 
 jest.mock('@/components/shared/glass-panel', () => ({
@@ -210,6 +222,14 @@ jest.mock('@/components/ui/typography', () => ({
     children,
     ...rest
   }: React.HTMLAttributes<HTMLHeadingElement>) => <h3 {...rest}>{children}</h3>,
+  Text: ({
+    children,
+    as: Tag = 'span',
+    ...rest
+  }: React.HTMLAttributes<HTMLElement> & {
+    as?: React.ElementType;
+    variant?: string;
+  }) => <Tag {...rest}>{children}</Tag>,
 }));
 
 jest.mock('@/components/ui/loading-state', () => ({
