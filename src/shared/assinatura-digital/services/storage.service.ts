@@ -35,3 +35,16 @@ export async function storePdf(buffer: Buffer): Promise<StoredFile> {
     contentType: 'application/pdf',
   });
 }
+
+export async function storePrestacaoContasPdf(
+  buffer: Buffer,
+  parcelaId: number,
+  documentoUuid: string,
+): Promise<StoredFile> {
+  const key = `assinatura-digital/prestacao-contas/${parcelaId}/${documentoUuid}.pdf`;
+  return uploadToBackblaze({
+    buffer,
+    key,
+    contentType: 'application/pdf',
+  });
+}

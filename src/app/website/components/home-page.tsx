@@ -1,17 +1,14 @@
-import { Header } from "./layout/header";
+import { WebsiteShell } from "./layout/website-shell";
 import { Hero } from "./home/hero";
 import { Services } from "./home/services";
 import { About } from "./home/about";
-import { Footer } from "./layout/footer";
 
 export function HomePage() {
   return (
-    <main className="min-h-screen bg-background dark selection:bg-primary selection:text-on-primary">
-      <Header />
+    <WebsiteShell>
       <Hero />
       <Services />
       <About />
-      <Footer />
-    </main>
+    </WebsiteShell>
   );
 }

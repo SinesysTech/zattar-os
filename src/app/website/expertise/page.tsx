@@ -19,7 +19,7 @@ export default function ExpertisePage() {
     <WebsiteShell hideClosingCta>
       <div className="pt-32 pb-24">
         {/* ─── Hero ─────────────────────────────────────────────────── */}
-        <section className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 mb-24 md:mb-32 grid grid-cols-1 md:grid-cols-12 gap-8 items-center mt-12">
+        <section className="max-w-352 mx-auto px-5 sm:px-6 md:px-10 mb-24 md:mb-32 grid grid-cols-1 md:grid-cols-12 gap-8 items-center mt-12">
           <div className="md:col-span-7">
             <Text variant="marketing-overline" className="mb-5 block">
               Inteligência Jurídica Deep Tech
@@ -54,7 +54,7 @@ export default function ExpertisePage() {
         </section>
 
         {/* ─── Specialization Areas (Bento) ─────────────────────────── */}
-        <section className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 mb-24 md:mb-32">
+        <section className="max-w-352 mx-auto px-5 sm:px-6 md:px-10 mb-24 md:mb-32">
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 md:mb-14 gap-6">
             <div className="max-w-2xl">
               <Text variant="marketing-overline" className="mb-3 block">
@@ -67,7 +67,15 @@ export default function ExpertisePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-6">
+          {/* ─── Bento grid — Apple-style ──────────────────────────────
+              Princípio de design: tipografia UNIFORME entre cards (Heading
+              section=20px fixo, Text caption=13-14px). A hierarquia vem do
+              tamanho do card (col-span), presença de imagem, cor de fundo
+              e tipo de cauda (pills / overline / CTA). Padrão adotado em
+              bentos modernos (Linear, Vercel, Apple, Stripe).
+              Hover: lift -2px + glow shadow em todos os cards. Cards com
+              imagem ganham scale 1.05 adicional no group-hover. */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-6 *:motion-safe:hover:-translate-y-0.5 *:motion-safe:hover:shadow-[0_24px_60px_rgba(0,0,0,0.55)]">
             {/* Direito Digital — wide, image bg */}
             <MarketingCard
               variant="solid"
@@ -88,10 +96,10 @@ export default function ExpertisePage() {
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary-dim/25 text-primary ring-1 ring-primary/40 mb-5">
                   <Shield className="w-6 h-6" />
                 </div>
-                <Heading level="marketing-title" className="mb-3">
+                <Heading level="section" as="h3" className="mb-3">
                   Direito Digital
                 </Heading>
-                <Text variant="marketing-lead" className="max-w-lg mb-5">
+                <Text variant="caption" className="text-foreground/85 max-w-lg mb-6 leading-relaxed">
                   Navegação precisa por LGPD, cibersegurança e regulação de IA.
                   Protegemos seu IP e garantimos conformidade em infraestruturas
                   complexas.
@@ -120,7 +128,7 @@ export default function ExpertisePage() {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary-dim/25 text-primary ring-1 ring-primary/40 mb-5">
                 <Users className="w-6 h-6" />
               </div>
-              <Heading level="card" as="h3" className="mb-3">
+              <Heading level="section" as="h3" className="mb-3">
                 Direito do Trabalho
               </Heading>
               <Text variant="caption" className="text-foreground/85 mb-6 leading-relaxed">
@@ -144,10 +152,10 @@ export default function ExpertisePage() {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white/15 text-white ring-1 ring-white/25 mb-5">
                 <Search className="w-6 h-6" />
               </div>
-              <Heading level="card" as="h3" className="mb-3 text-white">
+              <Heading level="section" as="h3" className="mb-3 text-white">
                 Consultoria Preventiva
               </Heading>
-              <Text variant="caption" className="text-white/85 mb-7 leading-relaxed">
+              <Text variant="caption" className="text-white/85 mb-6 leading-relaxed">
                 Inteligência antecipatória para evitar o contencioso. Auditamos
                 processos internos com precisão cirúrgica antes que se tornem
                 passivos.
@@ -165,30 +173,30 @@ export default function ExpertisePage() {
             <MarketingCard
               variant="solid"
               padding="lg"
-              className="md:col-span-8 relative overflow-hidden"
+              className="md:col-span-8 relative overflow-hidden group"
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 h-full">
                 <div className="flex flex-col justify-center relative z-10">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary-dim/25 text-primary ring-1 ring-primary/40 mb-5">
                     <Scale className="w-6 h-6" />
                   </div>
-                  <Heading level="card" as="h3" className="mb-3">
+                  <Heading level="section" as="h3" className="mb-3">
                     Fusões &amp; Aquisições Tech
                   </Heading>
-                  <Text variant="caption" className="text-foreground/85 mb-5 leading-relaxed">
+                  <Text variant="caption" className="text-foreground/85 max-w-lg mb-6 leading-relaxed">
                     Due diligence automatizada e estruturação societária para
                     startups em rodadas de investimento (Series A–E).
                   </Text>
-                  <div className="flex -space-x-2">
+                  <ul className="flex flex-wrap gap-2">
                     {["M&A", "EXIT", "IPO"].map((tag) => (
-                      <div
+                      <li
                         key={tag}
-                        className="w-10 h-10 rounded-full border-2 border-surface-container bg-surface-container-high flex items-center justify-center text-[10px] font-bold text-foreground shadow-md"
+                        className="px-3 py-1 rounded-full bg-surface-container-highest/80 border border-outline-variant/20 text-primary text-xs font-semibold"
                       >
                         {tag}
-                      </div>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
                 <div className="relative hidden sm:block min-h-52 rounded-xl overflow-hidden">
                   <Image
@@ -196,7 +204,7 @@ export default function ExpertisePage() {
                     alt="Linhas arquitetônicas abstratas representando estruturação societária"
                     fill
                     sizes="(max-width: 768px) 100vw, 30vw"
-                    className="object-cover opacity-50 grayscale mix-blend-screen"
+                    className="object-cover opacity-50 grayscale motion-safe:group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-linear-to-l from-transparent to-surface-container/90" />
                 </div>
@@ -206,7 +214,7 @@ export default function ExpertisePage() {
         </section>
 
         {/* ─── Team ─────────────────────────────────────────────────── */}
-        <section className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8 mb-24 md:mb-32">
+        <section className="max-w-352 mx-auto px-5 sm:px-6 md:px-10 mb-24 md:mb-32">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 lg:gap-20 items-center">
             <div className="order-2 md:order-1">
               <Text variant="marketing-overline" className="mb-4 block">
@@ -303,7 +311,7 @@ export default function ExpertisePage() {
         </section>
 
         {/* ─── CTA dedicado da página — substitui Zone 1 do Footer ─── */}
-        <section className="max-w-7xl mx-auto px-5 sm:px-6 md:px-8">
+        <section className="max-w-352 mx-auto px-5 sm:px-6 md:px-10">
           <MarketingCard
             variant="solid"
             padding="lg"

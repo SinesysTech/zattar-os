@@ -184,6 +184,19 @@ export async function POST(request: NextRequest): Promise<Response> {
     // Criar encoder para streaming
     // const encoder = new TextEncoder();
 
+    // Notifications do protocolo MCP não esperam resposta com result — devolvemos 202/vazio
+    if (method === "notifications/initialized" || method.startsWith("notifications/")) {
+      return new Response(null, { status: 202, headers: corsHeaders });
+    }
+
+    // Ping de keep-alive usado por alguns clientes (ex: n8n MCP Client)
+    if (method === "ping") {
+      return new Response(
+        JSON.stringify({ jsonrpc: "2.0", id, result: {} }),
+        { headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
     // Para métodos que não precisam de streaming, retornar JSON direto
     if (method === "initialize" || method === "tools/list") {
       return await handleNonStreamingMethod(method, id, manager, corsHeaders);
