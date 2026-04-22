@@ -110,6 +110,7 @@
     "mcp:docs": "tsx scripts/mcp/generate-docs.ts",
     "ai:reindex": "tsx scripts/ai/reindex-all.ts",
     "db:check-bloat": "tsx scripts/db/check-bloat.ts",
+    "seed:prestacao-contas": "tsx scripts/database/seed-prestacao-contas-template.ts",
     "integrations:migrate": "node scripts/migrate-integrations-simple.js",
     "integrations:test": "node scripts/test-integration-config-simple.js",
     "integrations:check": "npx tsx scripts/check-integracoes-table.ts",
