@@ -20,7 +20,6 @@ import Link from 'next/link';
 import { Plus, List, LayoutGrid, Kanban, SlidersHorizontal } from 'lucide-react';
 import { Heading } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import { InsightBanner } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { SearchInput } from '@/components/dashboard/search-input';
 import type { ViewToggleOption } from '@/components/dashboard/view-toggle';
@@ -31,9 +30,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { actionContratosPulseStats } from '../actions/contratos-actions';
 import type { ContratosPulseStats } from '../actions/types';
-import { useSegmentos } from '../hooks';
+import { useSegmentos, type SegmentoOption } from '../hooks/use-segmentos';
 import { ContratosPulseStrip } from './contratos-pulse-strip';
 import { ContratosPipelineStepper } from './contratos-pipeline-stepper';
 import { ContratosListWrapper } from './contratos-list-wrapper';
@@ -60,13 +58,24 @@ export type ContratosViewMode = 'lista' | 'cards' | 'kanban';
 export interface ContratosContentProps {
   /** View inicial — permite que a rota /kanban abra direto no quadro. */
   initialView?: ContratosViewMode;
+  /**
+   * Pulse stats pré-resolvidos no Server Component. Elimina o fetch via
+   * Server Action em `useEffect`, que quebrava quando o proxy de auth
+   * interceptava a requisição e devolvia 307.
+   */
+  initialStats?: ContratosPulseStats | null;
+  /** Segmentos pré-resolvidos no Server Component. */
+  initialSegmentos?: SegmentoOption[];
 }
 
 // ─── Component ──────────────────────────────────────────────────────────────
 
-export function ContratosContent({ initialView = 'lista' }: ContratosContentProps = {}) {
-  const [stats, setStats] = React.useState<ContratosPulseStats | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
+export function ContratosContent({
+  initialView = 'lista',
+  initialStats = null,
+  initialSegmentos,
+}: ContratosContentProps = {}) {
+  const [stats] = React.useState<ContratosPulseStats | null>(initialStats);
   const [statusFilter, setStatusFilter] = React.useState<string | null>(null);
   const [createOpen, setCreateOpen] = React.useState(false);
 
@@ -80,26 +89,7 @@ export function ContratosContent({ initialView = 'lista' }: ContratosContentProp
   const [sort, setSort] = React.useState<ContratosSort>(DEFAULT_CONTRATOS_SORT);
 
   // ── Segmentos (necessário para auto-select no modo Kanban) ────────────────
-  const { segmentos } = useSegmentos();
-
-  // ── Fetch stats on mount ──────────────────────────────────────────────────
-  React.useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        const result = await actionContratosPulseStats();
-        if (!cancelled && result.success) setStats(result.data);
-      } catch {
-        // stats non-critical
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const { segmentos } = useSegmentos(initialSegmentos);
 
   // ── Auto-select primeiro segmento ao entrar em Kanban sem seleção ────────
   React.useEffect(() => {
@@ -133,13 +123,9 @@ export function ContratosContent({ initialView = 'lista' }: ContratosContentProp
       <div className="flex items-end justify-between gap-4">
         <div>
           <Heading level="page">Contratos</Heading>
-          {isLoading ? (
-            <Skeleton className="h-4 w-36 mt-1" />
-          ) : (
-            <p className="text-sm text-muted-foreground mt-0.5">
-              {stats?.ativos ?? 0} ativos &middot; {totalContratos} total
-            </p>
-          )}
+          <p className="text-sm text-muted-foreground mt-0.5">
+            {stats?.ativos ?? 0} ativos &middot; {totalContratos} total
+          </p>
         </div>
         <Button size="sm" className="rounded-xl" onClick={() => setCreateOpen(true)}>
           <Plus className="size-3.5" />
@@ -148,13 +134,7 @@ export function ContratosContent({ initialView = 'lista' }: ContratosContentProp
       </div>
 
       {/* ── Pulse Strip (KPIs) ──────────────────────────────────── */}
-      {isLoading ? (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 rounded-xl" />
-          ))}
-        </div>
-      ) : stats ? (
+      {stats ? (
         <ContratosPulseStrip
           ativos={stats.ativos}
           valorTotal={stats.valorTotal}
@@ -167,14 +147,14 @@ export function ContratosContent({ initialView = 'lista' }: ContratosContentProp
 
       {/* ── Insight Banners ─────────────────────────────────────── */}
       <div role="status" aria-live="polite" className="space-y-2 empty:hidden">
-        {!isLoading && stats && stats.vencendo30d > 0 && (
+        {stats && stats.vencendo30d > 0 && (
           <InsightBanner type="warning">
             {stats.vencendo30d} contrato{stats.vencendo30d !== 1 ? 's' : ''} vence
             {stats.vencendo30d !== 1 ? 'm' : ''} nos próximos 30 dias
           </InsightBanner>
         )}
 
-        {!isLoading && stats && stats.semResponsavel > 0 && (
+        {stats && stats.semResponsavel > 0 && (
           <InsightBanner type="info">
             {stats.semResponsavel} contrato{stats.semResponsavel !== 1 ? 's' : ''} sem
             responsável atribuído
@@ -183,14 +163,12 @@ export function ContratosContent({ initialView = 'lista' }: ContratosContentProp
       </div>
 
       {/* ── Pipeline Stepper ────────────────────────────────────── */}
-      {!isLoading && stats ? (
+      {stats ? (
         <ContratosPipelineStepper
           porStatus={stats.porStatus}
           activeStatus={statusFilter}
           onStatusClick={handleStatusClick}
         />
-      ) : isLoading ? (
-        <Skeleton className="h-12 rounded-xl" />
       ) : null}
 
       {/* ── View Controls (FilterBar + Search + ViewToggle + Settings) ─────── */}

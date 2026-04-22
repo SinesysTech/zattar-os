@@ -3,12 +3,9 @@
 /**
  * ContratosGlassCards — Grid view de contratos (estética "EntityCard").
  * ============================================================================
- * Complementa `ContratosGlassList` com uma visualização em cartões, seguindo
- * o padrão de partes/entity-card. Cada card condensa: estágio (status), tipo
- * e cobrança, cliente × parte contrária, segmento, processos vinculados,
- * responsável e data — com 4 ações no hover + seleção em massa.
- *
- * Clicar no card navega para `/app/contratos/[id]`.
+ * Tipografia via classes canônicas (.text-label, .text-caption, .text-meta-label,
+ * .text-micro-badge, .text-micro-caption). Avatar fallback via
+ * `generateAvatarFallback` (src/lib/utils.ts).
  * ============================================================================
  */
 
@@ -25,12 +22,13 @@ import {
   FileText,
 } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { cn, generateAvatarFallback } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Text } from '@/components/ui/typography';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { timeAgo } from '@/components/dashboard/entity-card';
@@ -75,14 +73,6 @@ const STATUS_DOT_COLOR: Record<StatusContrato, string> = {
   desistencia: 'bg-destructive',
 };
 
-function getInitials(name: string): string {
-  if (!name) return 'U';
-  const parts = name.trim().split(/\s+/).filter((p) => p.length > 1);
-  if (parts.length === 0) return name.slice(0, 2).toUpperCase();
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
 // =============================================================================
 // RESPONSÁVEL
 // =============================================================================
@@ -117,14 +107,18 @@ function ResponsavelChip({
           <>
             <Avatar className="size-5 shrink-0">
               <AvatarImage src={usuario?.avatarUrl || undefined} alt={nome} />
-              <AvatarFallback className="text-[9px] font-semibold">
-                {getInitials(nome)}
+              <AvatarFallback>
+                <Text variant="micro-badge">{generateAvatarFallback(nome)}</Text>
               </AvatarFallback>
             </Avatar>
-            <span className="text-[11px] text-muted-foreground/80 truncate">{nome}</span>
+            <Text variant="caption" className="text-muted-foreground/80 truncate">
+              {nome}
+            </Text>
           </>
         ) : (
-          <span className="text-[11px] text-destructive/70 italic">Sem responsável</span>
+          <Text variant="caption" className="text-destructive/70 italic">
+            Sem responsável
+          </Text>
         )}
       </button>
       <ContratoAlterarResponsavelDialog
@@ -251,7 +245,6 @@ function GlassCard({
   const clienteInfo = clientesMap.get(contrato.clienteId);
   const clienteNome = clienteInfo?.nome ?? `Cliente #${contrato.clienteId}`;
 
-  // Parte contrária (primeira + contador)
   const partesContrarias = (contrato.partes ?? []).filter(
     (p) => p.tipoEntidade === 'parte_contraria',
   );
@@ -283,7 +276,6 @@ function GlassCard({
         isSelected && 'border-primary/40 ring-1 ring-primary/20',
       )}
     >
-      {/* Clickable overlay */}
       <button
         type="button"
         onClick={handleClick}
@@ -307,9 +299,9 @@ function GlassCard({
         </div>
 
         <div className="size-9 rounded-xl bg-primary/8 flex items-center justify-center shrink-0">
-          <span className="text-[10px] font-bold text-primary/70">
-            {getInitials(clienteNome)}
-          </span>
+          <Text variant="micro-badge" className="font-bold text-primary/70">
+            {generateAvatarFallback(clienteNome)}
+          </Text>
         </div>
 
         <div className="flex-1 min-w-0">
@@ -318,13 +310,17 @@ function GlassCard({
               aria-hidden="true"
               className={cn('size-2 rounded-full shrink-0 opacity-80', STATUS_DOT_COLOR[contrato.status])}
             />
-            <h3 className="text-[13px] font-semibold text-foreground truncate leading-tight flex-1">
+            <Text
+              variant="label"
+              as="h3"
+              className="font-semibold text-foreground truncate leading-tight flex-1"
+            >
               {clienteNome}
-            </h3>
+            </Text>
           </div>
 
           {parteContrariaNome && (
-            <p className="text-[11px] text-muted-foreground/70 truncate mt-0.5">
+            <Text variant="caption" className="truncate mt-0.5 block">
               <span className="text-muted-foreground/50">vs. </span>
               {parteContrariaNome}
               {partesContrarias.length > 1 && (
@@ -332,25 +328,27 @@ function GlassCard({
                   {' '}e outros ({partesContrarias.length})
                 </span>
               )}
-            </p>
+            </Text>
           )}
 
           <div className="mt-1.5 flex items-center gap-1 flex-wrap">
-            <SemanticBadge
-              category="status_contrato"
-              value={contrato.status}
-              className="text-[9.5px] px-1.5 py-0"
-            >
+            <SemanticBadge category="status_contrato" value={contrato.status}>
               {STATUS_CONTRATO_LABELS[contrato.status]}
             </SemanticBadge>
             {contrato.papelClienteNoContrato === 'autora' ? (
-              <span className="inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px text-[9px] font-semibold">
+              <Text
+                variant="micro-badge"
+                className="inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px font-semibold"
+              >
                 Cliente é autor
-              </span>
+              </Text>
             ) : (
-              <span className="inline-flex items-center bg-warning/10 border border-warning/20 text-warning rounded px-1 py-px text-[9px] font-semibold">
+              <Text
+                variant="micro-badge"
+                className="inline-flex items-center bg-warning/10 border border-warning/20 text-warning rounded px-1 py-px font-semibold"
+              >
                 Cliente é réu
-              </span>
+              </Text>
             )}
           </div>
         </div>
@@ -358,24 +356,19 @@ function GlassCard({
 
       {/* Tipo + cobrança + segmento */}
       <div className="relative mt-3 flex flex-wrap items-center gap-1">
-        <SemanticBadge
-          category="tipo_contrato"
-          value={contrato.tipoContrato}
-          className="text-[9.5px]"
-        >
+        <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato}>
           {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
         </SemanticBadge>
-        <SemanticBadge
-          category="tipo_cobranca"
-          value={contrato.tipoCobranca}
-          className="text-[9.5px]"
-        >
+        <SemanticBadge category="tipo_cobranca" value={contrato.tipoCobranca}>
           {TIPO_COBRANCA_LABELS[contrato.tipoCobranca]}
         </SemanticBadge>
         {segmentoNome && (
-          <span className="inline-flex items-center text-[9.5px] font-medium text-muted-foreground/70 bg-muted/50 border border-border/30 rounded px-1.5 py-0.5">
+          <Text
+            variant="micro-badge"
+            className="inline-flex items-center font-medium text-muted-foreground/70 bg-muted/50 border border-border/30 rounded px-1.5 py-0.5"
+          >
             {segmentoNome}
-          </span>
+          </Text>
         )}
       </div>
 
@@ -383,26 +376,26 @@ function GlassCard({
       <div className="relative mt-3 pt-3 border-t border-border/20">
         <div className="flex items-center gap-1.5 mb-1.5">
           <Scale className="size-3 text-muted-foreground/50" />
-          <span className="text-[10px] font-medium text-muted-foreground/70">
+          <Text variant="micro-caption" className="font-medium text-muted-foreground/70">
             {processos.length === 0
               ? 'Sem processos vinculados'
               : `${processos.length} ${processos.length === 1 ? 'processo' : 'processos'}`}
-          </span>
+          </Text>
         </div>
         {firstProcesso && firstProcesso.processo && (
           <div className="flex flex-wrap items-center gap-1">
             <Link
               href={`/app/processos/${firstProcesso.processoId}`}
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 text-[10px] tabular-nums px-1.5 py-0.5 rounded bg-primary/5 text-primary border border-primary/15 hover:bg-primary/10 transition-colors"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/5 text-primary border border-primary/15 hover:bg-primary/10 transition-colors"
             >
-              {firstProcesso.processo.numeroProcesso ??
-                `Processo #${firstProcesso.processoId}`}
+              <Text variant="micro-caption" className="tabular-nums text-primary">
+                {firstProcesso.processo.numeroProcesso ??
+                  `Processo #${firstProcesso.processoId}`}
+              </Text>
             </Link>
             {processosRestantes > 0 && (
-              <span className="text-[10px] text-muted-foreground/60">
-                +{processosRestantes}
-              </span>
+              <Text variant="micro-caption">+{processosRestantes}</Text>
             )}
           </div>
         )}
@@ -417,10 +410,10 @@ function GlassCard({
           onChanged={onResponsavelChanged}
         />
         <div className="flex items-center gap-1.5">
-          <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground/60">
+          <div className="inline-flex items-center gap-1 text-muted-foreground/60">
             <Clock className="size-2.5" />
-            {timeAgo(contrato.cadastradoEm)}
-          </span>
+            <Text variant="micro-caption">{timeAgo(contrato.cadastradoEm)}</Text>
+          </div>
           <div className="opacity-0 group-hover:opacity-100 transition-opacity">
             <CardActions
               contrato={contrato}
@@ -476,12 +469,12 @@ function EmptyState() {
   return (
     <div className="col-span-full flex flex-col items-center justify-center py-16 opacity-60">
       <FileText className="w-10 h-10 text-muted-foreground/30 mb-4" />
-      <p className="text-sm font-medium text-muted-foreground/60">
+      <Text variant="label" className="text-muted-foreground/60">
         Nenhum contrato encontrado
-      </p>
-      <p className="text-xs text-muted-foreground/40 mt-1">
+      </Text>
+      <Text variant="caption" className="text-muted-foreground/40 mt-1">
         Tente ajustar os filtros ou cadastre um novo contrato
-      </p>
+      </Text>
     </div>
   );
 }

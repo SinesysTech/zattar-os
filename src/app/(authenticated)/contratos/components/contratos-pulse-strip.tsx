@@ -50,7 +50,7 @@ export function ContratosPulseStrip({
       <GlassPanel depth={1} className="px-4 py-3.5">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+            <p className="text-meta-label text-muted-foreground/50 truncate">
               Ativos
             </p>
             <div className="flex items-baseline gap-1.5 mt-1">
@@ -72,7 +72,7 @@ export function ContratosPulseStrip({
               style={{ width: `${pctAtivos}%` }}
             />
           </div>
-          <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+          <span className="text-micro-badge tabular-nums text-muted-foreground/50 shrink-0">
             {pctAtivos}%
           </span>
         </div>
@@ -82,7 +82,7 @@ export function ContratosPulseStrip({
       <GlassPanel depth={1} className="px-4 py-3.5">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+            <p className="text-meta-label text-muted-foreground/50 truncate">
               Valor Total
             </p>
             <div className="flex items-baseline gap-1.5 mt-1">
@@ -116,7 +116,7 @@ export function ContratosPulseStrip({
       >
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+            <p className="text-meta-label text-muted-foreground/50 truncate">
               Vencendo 30d
             </p>
             <div className="flex items-baseline gap-1.5 mt-1">
@@ -144,7 +144,7 @@ export function ContratosPulseStrip({
               style={{ width: `${pctVencendo}%` }}
             />
           </div>
-          <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+          <span className="text-micro-badge tabular-nums text-muted-foreground/50 shrink-0">
             {pctVencendo}%
           </span>
         </div>
@@ -154,7 +154,7 @@ export function ContratosPulseStrip({
       <GlassPanel depth={1} className="px-4 py-3.5">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate">
+            <p className="text-meta-label text-muted-foreground/50 truncate">
               Novos/Mes
             </p>
             <div className="flex items-baseline gap-1.5 mt-1">
@@ -176,7 +176,7 @@ export function ContratosPulseStrip({
               style={{ width: `${pctNovos}%` }}
             />
           </div>
-          <span className="text-[9px] tabular-nums text-muted-foreground/50 shrink-0">
+          <span className="text-micro-badge tabular-nums text-muted-foreground/50 shrink-0">
             {pctNovos}%
           </span>
         </div>

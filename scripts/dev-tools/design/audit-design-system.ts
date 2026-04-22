@@ -1,0 +1,763 @@
+#!/usr/bin/env tsx
+/**
+ * Design System Audit — ZattarOS
+ *
+ * Relatório completo sobre:
+ *   1. Cobertura de tokens (CSS vs registro em token-registry.ts)
+ *   2. Adoção de typed components (<Heading>, <Text>, <GlassPanel>, etc.)
+ *   3. Antipatterns (hex literais, classes Tailwind hardcoded, shadow-xl, etc.)
+ *   4. Score por módulo (src/app/(authenticated)/<module>/)
+ *   5. Baseline histórico (snapshots em design-system/reports/)
+ *
+ * CLI:
+ *   npx tsx scripts/dev-tools/design/audit-design-system.ts              # relatório completo
+ *   npx tsx scripts/dev-tools/design/audit-design-system.ts --ci         # exit 1 se meta não atingida
+ *   npx tsx scripts/dev-tools/design/audit-design-system.ts --metrics    # apenas KPIs
+ *   npx tsx scripts/dev-tools/design/audit-design-system.ts --module chat
+ *   npx tsx scripts/dev-tools/design/audit-design-system.ts --violations hardcoded-colors
+ *   npx tsx scripts/dev-tools/design/audit-design-system.ts --where --primary
+ *   npx tsx scripts/dev-tools/design/audit-design-system.ts --json       # saída JSON
+ *   npx tsx scripts/dev-tools/design/audit-design-system.ts --save       # salva snapshot
+ */
+
+import { glob } from 'glob';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+
+// =============================================================================
+// TIPOS
+// =============================================================================
+
+interface AuditReport {
+  timestamp: string;
+  version: string;
+  coverage: TokenCoverage;
+  adoption: AdoptionMetrics;
+  violations: ViolationsReport;
+  modules: ModuleScore[];
+  overall: OverallScore;
+  kpis: KPIStatus[];
+}
+
+interface TokenCoverage {
+  cssVariablesTotal: number;
+  registryTotal: number;
+  missingInRegistry: string[];
+  missingInCss: string[];
+  documentedInMaster: number;
+  coveragePercent: number;
+}
+
+interface AdoptionMetrics {
+  totalFiles: number;
+  typography: { count: number; files: string[] };
+  glassPanel: { count: number; files: string[] };
+  iconContainer: { count: number; files: string[] };
+  pageShell: { count: number; files: string[] };
+  semanticBadge: { count: number; files: string[] };
+  anyTyped: { count: number; percent: number };
+  designSystemImports: { count: number; percent: number };
+}
+
+interface ViolationsReport {
+  hardcodedBgColors: Violation[];
+  hardcodedTextColors: Violation[];
+  hardcodedBorderColors: Violation[];
+  hexLiterals: Violation[];
+  oklchInline: Violation[];
+  shadowXl: Violation[];
+  manualComposition: Violation[];
+  whiteLowOpacity: Violation[];
+  total: number;
+}
+
+interface Violation {
+  file: string;
+  line: number;
+  match: string;
+  rule: string;
+}
+
+interface ModuleScore {
+  name: string;
+  files: number;
+  adoption: number; // 0-100
+  violations: number;
+  grade: 'A' | 'B' | 'C' | 'D' | 'F';
+}
+
+interface OverallScore {
+  score: number; // 0-100
+  grade: 'A' | 'B' | 'C' | 'D' | 'F';
+  summary: string;
+}
+
+interface KPI {
+  name: string;
+  current: number;
+  target: number;
+  comparison: 'gte' | 'lte' | 'eq';
+  severity: 'block' | 'warn' | 'info';
+}
+
+interface KPIStatus extends KPI {
+  status: 'pass' | 'fail';
+  delta: number;
+}
+
+// =============================================================================
+// CONFIG
+// =============================================================================
+
+const REPO_ROOT = path.resolve(process.cwd());
+const GLOBALS_CSS = path.join(REPO_ROOT, 'src/app/globals.css');
+const TOKEN_REGISTRY_FILE = path.join(REPO_ROOT, 'src/lib/design-system/token-registry.ts');
+const MASTER_MD = path.join(REPO_ROOT, 'design-system/MASTER.md');
+const REPORTS_DIR = path.join(REPO_ROOT, 'design-system/reports');
+
+const FILE_GLOBS = {
+  authenticated: 'src/app/(authenticated)/**/*.tsx',
+  components: 'src/components/**/*.tsx',
+  all: 'src/**/*.tsx',
+};
+
+const EXCLUDES = [
+  '**/node_modules/**',
+  '**/__tests__/**',
+  '**/*.test.tsx',
+  '**/*.stories.tsx',
+  '**/.next/**',
+  '**/dist/**',
+];
+
+// Ofensores aceitos (documentados) — não entram no score de violações
+const ALLOWED_OFFENDERS = [
+  'src/app/(authenticated)/assinatura-digital/components/editor/PdfCanvasArea.tsx', // render PDF
+  'src/components/editor/plate-ui/**',  // Plate.js editor (legitimate brand colors)
+  'src/app/(authenticated)/dashboard/mock/**', // mock data
+];
+
+const TAILWIND_COLORS = [
+  'blue', 'red', 'green', 'yellow', 'orange', 'pink',
+  'gray', 'slate', 'zinc', 'stone', 'neutral', 'purple',
+  'violet', 'indigo', 'cyan', 'teal', 'emerald', 'lime',
+  'amber', 'rose', 'fuchsia', 'sky',
+].join('|');
+
+// Regex patterns
+const PATTERNS = {
+  bgColor: new RegExp(`\\bbg-(${TAILWIND_COLORS})-\\d{2,3}\\b`, 'g'),
+  textColor: new RegExp(`\\btext-(${TAILWIND_COLORS})-\\d{2,3}\\b`, 'g'),
+  borderColor: new RegExp(`\\bborder-(${TAILWIND_COLORS})-\\d{2,3}\\b`, 'g'),
+  hexLiteral: /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g,
+  oklchInline: /oklch\s*\(/g,
+  shadowXl: /\bshadow-(xl|2xl|3xl)\b/g,
+  manualComposition: /\bfont-heading\s+text-2xl\s+font-bold\b/g,
+  whiteLowOpacity: /\bbg-white\/([1-9]|1[0-5])\b(?![0-9])/g,
+  cssVarDef: /^\s*(--[a-zA-Z0-9-]+)\s*:/gm,
+};
+
+// =============================================================================
+// KPI METAS
+// =============================================================================
+
+const KPI_TARGETS: KPI[] = [
+  { name: 'Typography Adoption', current: 0, target: 200, comparison: 'gte', severity: 'warn' },
+  { name: 'GlassPanel Adoption', current: 0, target: 115, comparison: 'gte', severity: 'info' },
+  { name: 'Manual Composition', current: 0, target: 0, comparison: 'lte', severity: 'block' },
+  { name: 'shadow-xl in (authenticated)/', current: 0, target: 0, comparison: 'lte', severity: 'block' },
+  { name: 'Hardcoded Tailwind Colors', current: 0, target: 3, comparison: 'lte', severity: 'warn' },
+  { name: 'Hex Literals in (authenticated)/', current: 0, target: 9, comparison: 'lte', severity: 'warn' },
+  { name: 'Token Documentation Coverage', current: 0, target: 95, comparison: 'gte', severity: 'warn' },
+  { name: 'CSS Variables in Registry', current: 0, target: 99, comparison: 'gte', severity: 'warn' },
+];
+
+// =============================================================================
+// UTILS
+// =============================================================================
+
+async function loadGlobalsCss(): Promise<string> {
+  return await fs.readFile(GLOBALS_CSS, 'utf-8');
+}
+
+/** Extrai lista de `--token-name` declarados em globals.css */
+function extractCssVariables(css: string): Set<string> {
+  const found = new Set<string>();
+  const re = /^\s*(--[a-zA-Z0-9-]+)\s*:/gm;
+  let m;
+  while ((m = re.exec(css)) !== null) {
+    found.add(m[1]);
+  }
+  return found;
+}
+
+/** Lê os nomes de token registrados em token-registry.ts */
+async function loadRegisteredTokens(): Promise<Set<string>> {
+  const src = await fs.readFile(TOKEN_REGISTRY_FILE, 'utf-8');
+  const found = new Set<string>();
+  const re = /name:\s*['"`](--[a-zA-Z0-9-]+)['"`]/g;
+  let m;
+  while ((m = re.exec(src)) !== null) {
+    found.add(m[1]);
+  }
+  // Palette tokens são gerados dinamicamente (--palette-1 a --palette-18)
+  for (let i = 1; i <= 18; i++) {
+    found.add(`--palette-${i}`);
+  }
+  return found;
+}
+
+/** Busca ocorrências de um pattern em múltiplos arquivos. */
+async function findViolations(
+  files: string[],
+  pattern: RegExp,
+  ruleName: string,
+): Promise<Violation[]> {
+  const violations: Violation[] = [];
+  for (const file of files) {
+    const rel = path.relative(REPO_ROOT, file);
+    if (ALLOWED_OFFENDERS.some((g) => matchGlob(rel, g))) continue;
+
+    const content = await fs.readFile(file, 'utf-8');
+    const lines = content.split('\n');
+    lines.forEach((line, idx) => {
+      pattern.lastIndex = 0;
+      let m;
+      while ((m = pattern.exec(line)) !== null) {
+        violations.push({ file: rel, line: idx + 1, match: m[0], rule: ruleName });
+      }
+    });
+  }
+  return violations;
+}
+
+function matchGlob(file: string, pattern: string): boolean {
+  const re = new RegExp(
+    '^' +
+      pattern
+        .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+        .replace(/\*\*/g, '.*')
+        .replace(/\*/g, '[^/]*') +
+      '$',
+  );
+  return re.test(file);
+}
+
+async function countImports(files: string[], importPath: string): Promise<string[]> {
+  const matching: string[] = [];
+  const needle = new RegExp(`from\\s+['"\`]${importPath.replace(/[/\-]/g, '\\$&')}['"\`]`);
+  for (const file of files) {
+    const content = await fs.readFile(file, 'utf-8');
+    if (needle.test(content)) {
+      matching.push(path.relative(REPO_ROOT, file));
+    }
+  }
+  return matching;
+}
+
+async function collectFiles(pattern: string): Promise<string[]> {
+  return glob(pattern, { cwd: REPO_ROOT, absolute: true, ignore: EXCLUDES });
+}
+
+function gradeFromScore(score: number): OverallScore['grade'] {
+  if (score >= 90) return 'A';
+  if (score >= 75) return 'B';
+  if (score >= 60) return 'C';
+  if (score >= 40) return 'D';
+  return 'F';
+}
+
+// =============================================================================
+// AUDITORIA
+// =============================================================================
+
+async function auditCoverage(): Promise<TokenCoverage> {
+  const css = await loadGlobalsCss();
+  const cssVars = extractCssVariables(css);
+  const registered = await loadRegisteredTokens();
+
+  const missingInRegistry = [...cssVars].filter((v) => !registered.has(v));
+  const missingInCss = [...registered].filter((v) => !cssVars.has(v));
+
+  const master = await fs.readFile(MASTER_MD, 'utf-8');
+  const documented = [...cssVars].filter((v) => master.includes(v)).length;
+  const coveragePercent = Math.round((documented / cssVars.size) * 100);
+
+  return {
+    cssVariablesTotal: cssVars.size,
+    registryTotal: registered.size,
+    missingInRegistry,
+    missingInCss,
+    documentedInMaster: documented,
+    coveragePercent,
+  };
+}
+
+async function auditAdoption(files: string[]): Promise<AdoptionMetrics> {
+  const typography = await countImports(files, '@/components/ui/typography');
+  const glassPanel = await countImports(files, '@/components/shared/glass-panel');
+  const iconContainer = await countImports(files, '@/components/ui/icon-container');
+  const pageShell = await countImports(files, '@/components/shared/page-shell');
+  const semanticBadge = await countImports(files, '@/components/ui/semantic-badge');
+  const designSystem = await countImports(files, '@/lib/design-system');
+
+  const allTypedSet = new Set([
+    ...typography,
+    ...glassPanel,
+    ...iconContainer,
+    ...pageShell,
+    ...semanticBadge,
+  ]);
+
+  return {
+    totalFiles: files.length,
+    typography: { count: typography.length, files: typography },
+    glassPanel: { count: glassPanel.length, files: glassPanel },
+    iconContainer: { count: iconContainer.length, files: iconContainer },
+    pageShell: { count: pageShell.length, files: pageShell },
+    semanticBadge: { count: semanticBadge.length, files: semanticBadge },
+    anyTyped: {
+      count: allTypedSet.size,
+      percent: Math.round((allTypedSet.size / files.length) * 100),
+    },
+    designSystemImports: {
+      count: designSystem.length,
+      percent: Math.round((designSystem.length / files.length) * 100),
+    },
+  };
+}
+
+async function auditViolations(files: string[]): Promise<ViolationsReport> {
+  const [bg, text, border, hex, oklch, shadow, composition, white] = await Promise.all([
+    findViolations(files, PATTERNS.bgColor, 'hardcoded-bg-color'),
+    findViolations(files, PATTERNS.textColor, 'hardcoded-text-color'),
+    findViolations(files, PATTERNS.borderColor, 'hardcoded-border-color'),
+    findViolations(files, PATTERNS.hexLiteral, 'hex-literal'),
+    findViolations(files, PATTERNS.oklchInline, 'oklch-inline'),
+    findViolations(files, PATTERNS.shadowXl, 'shadow-xl'),
+    findViolations(files, PATTERNS.manualComposition, 'manual-composition'),
+    findViolations(files, PATTERNS.whiteLowOpacity, 'white-low-opacity'),
+  ]);
+
+  const total =
+    bg.length + text.length + border.length + hex.length + oklch.length +
+    shadow.length + composition.length + white.length;
+
+  return {
+    hardcodedBgColors: bg,
+    hardcodedTextColors: text,
+    hardcodedBorderColors: border,
+    hexLiterals: hex,
+    oklchInline: oklch,
+    shadowXl: shadow,
+    manualComposition: composition,
+    whiteLowOpacity: white,
+    total,
+  };
+}
+
+async function auditModules(files: string[], violations: ViolationsReport): Promise<ModuleScore[]> {
+  const modulesMap = new Map<string, { files: string[]; violations: number; adopted: Set<string> }>();
+
+  const typedFiles = new Set<string>();
+  const typography = await countImports(files, '@/components/ui/typography');
+  const glassPanel = await countImports(files, '@/components/shared/glass-panel');
+  const pageShell = await countImports(files, '@/components/shared/page-shell');
+  [...typography, ...glassPanel, ...pageShell].forEach((f) => typedFiles.add(f));
+
+  for (const f of files) {
+    const rel = path.relative(REPO_ROOT, f);
+    const m = rel.match(/src\/app\/\(authenticated\)\/([^/]+)/);
+    if (!m) continue;
+    const module = m[1];
+
+    if (!modulesMap.has(module)) {
+      modulesMap.set(module, { files: [], violations: 0, adopted: new Set() });
+    }
+    modulesMap.get(module)!.files.push(rel);
+    if (typedFiles.has(rel)) modulesMap.get(module)!.adopted.add(rel);
+  }
+
+  const allViolations = [
+    ...violations.hardcodedBgColors,
+    ...violations.hardcodedTextColors,
+    ...violations.hardcodedBorderColors,
+    ...violations.hexLiterals,
+    ...violations.shadowXl,
+    ...violations.manualComposition,
+  ];
+
+  for (const v of allViolations) {
+    const m = v.file.match(/src\/app\/\(authenticated\)\/([^/]+)/);
+    if (!m) continue;
+    const mod = modulesMap.get(m[1]);
+    if (mod) mod.violations++;
+  }
+
+  const scores: ModuleScore[] = [];
+  for (const [name, data] of modulesMap) {
+    const adoption = data.files.length > 0 ? (data.adopted.size / data.files.length) * 100 : 0;
+    const violationPenalty = Math.min(data.violations * 10, 50);
+    const score = Math.max(0, Math.round(adoption - violationPenalty));
+    scores.push({
+      name,
+      files: data.files.length,
+      adoption: Math.round(adoption),
+      violations: data.violations,
+      grade: gradeFromScore(score),
+    });
+  }
+
+  scores.sort((a, b) => a.name.localeCompare(b.name));
+  return scores;
+}
+
+function computeKpis(report: {
+  adoption: AdoptionMetrics;
+  violations: ViolationsReport;
+  coverage: TokenCoverage;
+  authViolations: { shadowXl: number; hex: number; bg: number };
+}): KPIStatus[] {
+  const values: Record<string, number> = {
+    'Typography Adoption': report.adoption.typography.count,
+    'GlassPanel Adoption': report.adoption.glassPanel.count,
+    'Manual Composition': report.violations.manualComposition.length,
+    'shadow-xl in (authenticated)/': report.authViolations.shadowXl,
+    'Hardcoded Tailwind Colors': report.authViolations.bg,
+    'Hex Literals in (authenticated)/': report.authViolations.hex,
+    'Token Documentation Coverage': report.coverage.coveragePercent,
+    'CSS Variables in Registry': Math.round(
+      ((report.coverage.cssVariablesTotal - report.coverage.missingInRegistry.length) /
+        report.coverage.cssVariablesTotal) *
+        100,
+    ),
+  };
+
+  return KPI_TARGETS.map((k) => {
+    const current = values[k.name] ?? 0;
+    const pass =
+      k.comparison === 'gte' ? current >= k.target :
+      k.comparison === 'lte' ? current <= k.target :
+      current === k.target;
+    const delta =
+      k.comparison === 'gte' ? current - k.target :
+      k.comparison === 'lte' ? k.target - current :
+      current - k.target;
+    return { ...k, current, status: pass ? 'pass' : 'fail', delta };
+  });
+}
+
+function computeOverall(report: AuditReport): OverallScore {
+  const blockKpis = report.kpis.filter((k) => k.severity === 'block');
+  const hasBlockFailures = blockKpis.some((k) => k.status === 'fail');
+
+  const adoption = report.adoption.anyTyped.percent;
+  const coverage = report.coverage.coveragePercent;
+  const violationPenalty = Math.min(report.violations.total * 2, 30);
+
+  let score = Math.round(adoption * 0.4 + coverage * 0.4 + (100 - violationPenalty) * 0.2);
+  if (hasBlockFailures) score = Math.min(score, 60);
+
+  const grade = gradeFromScore(score);
+  const summary = hasBlockFailures
+    ? `Blocking failures present — ${blockKpis.filter((k) => k.status === 'fail').map((k) => k.name).join(', ')}`
+    : `Healthy system — ${report.adoption.anyTyped.count}/${report.adoption.totalFiles} files adopt typed components`;
+
+  return { score, grade, summary };
+}
+
+// =============================================================================
+// RENDERING
+// =============================================================================
+
+function renderMarkdown(report: AuditReport): string {
+  const modRows = report.modules
+    .map((m) => `| ${m.name} | ${m.files} | ${m.adoption}% | ${m.violations} | **${m.grade}** |`)
+    .join('\n');
+
+  const kpiRows = report.kpis
+    .map((k) => {
+      const arrow = k.status === 'pass' ? 'OK' : k.severity === 'block' ? 'BLOCK' : 'WARN';
+      return `| ${k.name} | ${k.current} | ${k.comparison} ${k.target} | **${arrow}** |`;
+    })
+    .join('\n');
+
+  const topViolations = [
+    ...report.violations.hardcodedBgColors,
+    ...report.violations.hexLiterals,
+    ...report.violations.manualComposition,
+    ...report.violations.shadowXl,
+  ]
+    .slice(0, 15)
+    .map((v) => `- \`${v.rule}\` at [${v.file}:${v.line}](${v.file}#L${v.line}): \`${v.match}\``)
+    .join('\n');
+
+  return `# Design System Audit — ${report.timestamp}
+
+> Version: ${report.version}
+> Overall grade: **${report.overall.grade}** (${report.overall.score}/100)
+> ${report.overall.summary}
+
+## KPIs
+
+| Métrica | Current | Meta | Status |
+|---|---:|---|---|
+${kpiRows}
+
+## Token Coverage
+
+| Métrica | Valor |
+|---|---:|
+| CSS variables em globals.css | ${report.coverage.cssVariablesTotal} |
+| Registrados em token-registry.ts | ${report.coverage.registryTotal} |
+| Documentados em MASTER.md | ${report.coverage.documentedInMaster} (${report.coverage.coveragePercent}%) |
+| Tokens drift (CSS sem registry) | ${report.coverage.missingInRegistry.length} |
+| Tokens drift (registry sem CSS) | ${report.coverage.missingInCss.length} |
+
+${report.coverage.missingInRegistry.length > 0
+    ? `### Drift: tokens no CSS que não estão no registry\n\n${report.coverage.missingInRegistry.map((t) => `- \`${t}\``).join('\n')}`
+    : ''}
+
+${report.coverage.missingInCss.length > 0
+    ? `### Drift: tokens no registry que não estão no CSS\n\n${report.coverage.missingInCss.map((t) => `- \`${t}\``).join('\n')}`
+    : ''}
+
+## Adoption
+
+| Componente typed | Arquivos | % dos TSX |
+|---|---:|---:|
+| \`<Heading>/<Text>\` (typography) | ${report.adoption.typography.count} | ${Math.round((report.adoption.typography.count / report.adoption.totalFiles) * 100)}% |
+| \`<GlassPanel>\` | ${report.adoption.glassPanel.count} | ${Math.round((report.adoption.glassPanel.count / report.adoption.totalFiles) * 100)}% |
+| \`<IconContainer>\` | ${report.adoption.iconContainer.count} | ${Math.round((report.adoption.iconContainer.count / report.adoption.totalFiles) * 100)}% |
+| \`<PageShell>\` | ${report.adoption.pageShell.count} | ${Math.round((report.adoption.pageShell.count / report.adoption.totalFiles) * 100)}% |
+| \`<SemanticBadge>\` | ${report.adoption.semanticBadge.count} | ${Math.round((report.adoption.semanticBadge.count / report.adoption.totalFiles) * 100)}% |
+| **Qualquer typed** | **${report.adoption.anyTyped.count}** | **${report.adoption.anyTyped.percent}%** |
+| Importam \`@/lib/design-system\` | ${report.adoption.designSystemImports.count} | ${report.adoption.designSystemImports.percent}% |
+
+## Violations
+
+| Regra | Ocorrências |
+|---|---:|
+| Hardcoded bg-color | ${report.violations.hardcodedBgColors.length} |
+| Hardcoded text-color | ${report.violations.hardcodedTextColors.length} |
+| Hardcoded border-color | ${report.violations.hardcodedBorderColors.length} |
+| Hex literal | ${report.violations.hexLiterals.length} |
+| OKLCH inline | ${report.violations.oklchInline.length} |
+| \`shadow-xl\` | ${report.violations.shadowXl.length} |
+| Manual composition | ${report.violations.manualComposition.length} |
+| \`bg-white/[1-15]\` | ${report.violations.whiteLowOpacity.length} |
+| **TOTAL** | **${report.violations.total}** |
+
+${topViolations ? `### Top 15 violações\n\n${topViolations}` : '### No violations found'}
+
+## Module Scores
+
+| Módulo | Arquivos | Adoção | Violações | Grade |
+|---|---:|---:|---:|:---:|
+${modRows}
+
+---
+
+_Generated by \`audit-design-system.ts\` · Total TSX scanned: ${report.adoption.totalFiles}_
+`;
+}
+
+function renderConsole(report: AuditReport): void {
+  const c = {
+    reset: '\x1b[0m',
+    bold: '\x1b[1m',
+    dim: '\x1b[2m',
+    green: '\x1b[32m',
+    yellow: '\x1b[33m',
+    red: '\x1b[31m',
+    cyan: '\x1b[36m',
+  };
+  console.log(`\n${c.bold}Design System Audit${c.reset}  ${c.dim}${report.timestamp}${c.reset}`);
+  console.log(
+    `Overall: ${c.bold}${report.overall.grade}${c.reset} (${report.overall.score}/100) — ${report.overall.summary}\n`,
+  );
+
+  console.log(`${c.bold}KPIs${c.reset}`);
+  for (const k of report.kpis) {
+    const color = k.status === 'pass' ? c.green : k.severity === 'block' ? c.red : c.yellow;
+    const badge = k.status === 'pass' ? 'OK' : k.severity === 'block' ? 'BLOCK' : 'WARN';
+    console.log(
+      `  ${color}[${badge}]${c.reset} ${k.name}: ${k.current} ${c.dim}(${k.comparison} ${k.target})${c.reset}`,
+    );
+  }
+
+  console.log(`\n${c.bold}Token Coverage${c.reset}`);
+  console.log(`  CSS vars: ${report.coverage.cssVariablesTotal}`);
+  console.log(`  Registry: ${report.coverage.registryTotal}`);
+  console.log(`  Documentado: ${report.coverage.coveragePercent}%`);
+  if (report.coverage.missingInRegistry.length > 0) {
+    console.log(`  ${c.yellow}Drift CSS→Registry: ${report.coverage.missingInRegistry.length}${c.reset}`);
+  }
+
+  console.log(`\n${c.bold}Adoption${c.reset} (${report.adoption.totalFiles} arquivos TSX)`);
+  console.log(`  Typography: ${report.adoption.typography.count}`);
+  console.log(`  GlassPanel: ${report.adoption.glassPanel.count}`);
+  console.log(`  IconContainer: ${report.adoption.iconContainer.count}`);
+  console.log(`  PageShell: ${report.adoption.pageShell.count}`);
+  console.log(`  SemanticBadge: ${report.adoption.semanticBadge.count}`);
+  console.log(`  ${c.cyan}Any typed: ${report.adoption.anyTyped.count} (${report.adoption.anyTyped.percent}%)${c.reset}`);
+
+  console.log(`\n${c.bold}Violations${c.reset} (total ${report.violations.total})`);
+  console.log(`  bg-*: ${report.violations.hardcodedBgColors.length}`);
+  console.log(`  text-*: ${report.violations.hardcodedTextColors.length}`);
+  console.log(`  border-*: ${report.violations.hardcodedBorderColors.length}`);
+  console.log(`  hex: ${report.violations.hexLiterals.length}`);
+  console.log(`  oklch: ${report.violations.oklchInline.length}`);
+  console.log(`  shadow-xl: ${report.violations.shadowXl.length}`);
+  console.log(`  composition: ${report.violations.manualComposition.length}`);
+  console.log(`  white-low: ${report.violations.whiteLowOpacity.length}`);
+
+  console.log(`\n${c.bold}Modules${c.reset} (top 10 por adoção)`);
+  const top = [...report.modules].sort((a, b) => b.adoption - a.adoption).slice(0, 10);
+  for (const m of top) {
+    console.log(
+      `  ${m.grade === 'A' ? c.green : m.grade === 'F' ? c.red : c.yellow}${m.grade}${c.reset} ${m.name.padEnd(28)} ${String(m.adoption).padStart(3)}% adoção · ${m.violations} violações · ${m.files} arquivos`,
+    );
+  }
+  console.log('');
+}
+
+// =============================================================================
+// CLI
+// =============================================================================
+
+interface CliArgs {
+  ci: boolean;
+  metricsOnly: boolean;
+  json: boolean;
+  save: boolean;
+  module?: string;
+  violations?: string;
+  where?: string;
+}
+
+function parseArgs(argv: string[]): CliArgs {
+  const args: CliArgs = { ci: false, metricsOnly: false, json: false, save: false };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === '--ci') args.ci = true;
+    else if (a === '--metrics' || a === '--metrics-only') args.metricsOnly = true;
+    else if (a === '--json') args.json = true;
+    else if (a === '--save') args.save = true;
+    else if (a === '--module') args.module = argv[++i];
+    else if (a === '--violations') args.violations = argv[++i];
+    else if (a === '--where') args.where = argv[++i];
+  }
+  return args;
+}
+
+async function whereIsToken(token: string): Promise<void> {
+  const files = await collectFiles('src/**/*.{ts,tsx,css}');
+  let total = 0;
+  const needle = token.startsWith('--') ? token : `--${token}`;
+  for (const f of files) {
+    const rel = path.relative(REPO_ROOT, f);
+    const content = await fs.readFile(f, 'utf-8');
+    const lines = content.split('\n');
+    lines.forEach((line, idx) => {
+      if (line.includes(needle)) {
+        console.log(`  ${rel}:${idx + 1} — ${line.trim().slice(0, 100)}`);
+        total++;
+      }
+    });
+  }
+  console.log(`\nTotal: ${total} ocorrências de \`${needle}\``);
+}
+
+async function main() {
+  const args = parseArgs(process.argv.slice(2));
+
+  if (args.where) {
+    await whereIsToken(args.where);
+    return;
+  }
+
+  console.error('[audit] Coletando arquivos TSX...');
+  const authFiles = await collectFiles(FILE_GLOBS.authenticated);
+  const allFiles = await collectFiles(FILE_GLOBS.all);
+
+  console.error(`[audit] Analisando ${authFiles.length} arquivos em (authenticated)/...`);
+  const adoption = await auditAdoption(authFiles);
+
+  console.error('[audit] Verificando cobertura de tokens...');
+  const coverage = await auditCoverage();
+
+  console.error('[audit] Detectando violações...');
+  const violations = await auditViolations(allFiles);
+
+  console.error('[audit] Calculando score por módulo...');
+  const modules = await auditModules(authFiles, violations);
+
+  const authOnly = allFiles.filter((f) =>
+    path.relative(REPO_ROOT, f).startsWith('src/app/(authenticated)/'),
+  );
+  const authViolations = {
+    shadowXl: (await findViolations(authOnly, PATTERNS.shadowXl, 'shadow-xl')).length,
+    hex: (await findViolations(authOnly, PATTERNS.hexLiteral, 'hex')).length,
+    bg: (await findViolations(authOnly, PATTERNS.bgColor, 'bg')).length,
+  };
+
+  const kpis = computeKpis({ adoption, violations, coverage, authViolations });
+
+  const report: AuditReport = {
+    timestamp: new Date().toISOString(),
+    version: '2.0.0',
+    coverage,
+    adoption,
+    violations,
+    modules,
+    overall: { score: 0, grade: 'C', summary: '' },
+    kpis,
+  };
+  report.overall = computeOverall(report);
+
+  // Rendering
+  if (args.json) {
+    console.log(JSON.stringify(report, null, 2));
+  } else if (args.module) {
+    const m = modules.find((x) => x.name === args.module);
+    if (!m) {
+      console.error(`Module "${args.module}" not found`);
+      process.exit(1);
+    }
+    console.log(JSON.stringify(m, null, 2));
+  } else if (args.violations) {
+    const key = args.violations.replace(/-([a-z])/g, (_, c) => c.toUpperCase()) as keyof ViolationsReport;
+    const v = violations[key];
+    if (!v || !Array.isArray(v)) {
+      console.error(`Unknown violation: ${args.violations}. Options: hardcoded-bg-colors, hardcoded-text-colors, hex-literals, shadow-xl, manual-composition, oklch-inline, white-low-opacity`);
+      process.exit(1);
+    }
+    v.forEach((x) => console.log(`${x.file}:${x.line} — ${x.match}`));
+    console.log(`\nTotal: ${v.length}`);
+  } else {
+    renderConsole(report);
+  }
+
+  // Save snapshot
+  if (args.save) {
+    await fs.mkdir(REPORTS_DIR, { recursive: true });
+    const today = new Date().toISOString().slice(0, 10);
+    const mdPath = path.join(REPORTS_DIR, `${today}.md`);
+    const jsonPath = path.join(REPORTS_DIR, 'latest.json');
+    await fs.writeFile(mdPath, renderMarkdown(report), 'utf-8');
+    await fs.writeFile(jsonPath, JSON.stringify(report, null, 2), 'utf-8');
+    console.error(`\n[audit] Snapshot salvo em ${path.relative(REPO_ROOT, mdPath)}`);
+  }
+
+  // CI mode
+  if (args.ci) {
+    const blocked = report.kpis.some((k) => k.severity === 'block' && k.status === 'fail');
+    process.exit(blocked ? 1 : 0);
+  }
+}
+
+main().catch((err) => {
+  console.error('[audit] Erro:', err);
+  process.exit(2);
+});

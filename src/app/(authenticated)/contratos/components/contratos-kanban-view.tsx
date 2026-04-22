@@ -57,18 +57,18 @@ function ContratoCard({ contrato, stageCor }: { contrato: KanbanContrato; stageC
       className="p-3 flex flex-col gap-1.5 text-sm"
       style={{ borderLeft: `3px solid ${stageCor}` }}
     >
-      <p className="font-semibold text-foreground leading-tight line-clamp-2 text-[13px]">
+      <p className="text-label font-semibold text-foreground line-clamp-2">
         {contrato.clienteNome}
       </p>
       <div className="flex flex-wrap gap-1 mt-0.5">
-        <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato} className="text-[10px]">
+        <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato}>
           {TIPO_CONTRATO_LABELS[contrato.tipoContrato as TipoContrato] ?? contrato.tipoContrato}
         </SemanticBadge>
-        <SemanticBadge category="tipo_cobranca" value={contrato.tipoCobranca} className="text-[10px]">
+        <SemanticBadge category="tipo_cobranca" value={contrato.tipoCobranca}>
           {TIPO_COBRANCA_LABELS[contrato.tipoCobranca as TipoCobranca] ?? contrato.tipoCobranca}
         </SemanticBadge>
       </div>
-      <p className="text-[10px] text-muted-foreground/60 mt-0.5 tabular-nums">
+      <p className="text-micro-caption mt-0.5 tabular-nums">
         {formatarData(contrato.cadastradoEm)}
       </p>
     </GlassPanel>
@@ -104,12 +104,12 @@ function KanbanColumnContent({
               style={{ backgroundColor: cor, boxShadow: `0 0 10px ${cor}55` }}
               aria-hidden="true"
             />
-            <span className="font-heading text-[11px] font-semibold text-foreground/80 uppercase tracking-[0.06em] truncate">
+            <span className="text-meta-label font-heading text-foreground/80 truncate">
               {nome}
             </span>
           </div>
           <span
-            className="text-[10px] font-semibold tabular-nums text-muted-foreground/50 shrink-0"
+            className="text-micro-caption font-semibold tabular-nums text-muted-foreground/50 shrink-0"
             aria-label={`${contratos.length} contratos`}
           >
             {contratos.length}
@@ -125,7 +125,7 @@ function KanbanColumnContent({
         />
 
         {contratos.length === 0 ? (
-          <div className="flex items-center justify-center h-16 text-[11px] text-muted-foreground/45 border border-dashed border-border/30 rounded-xl">
+          <div className="flex items-center justify-center h-16 text-caption text-muted-foreground/45 border border-dashed border-border/30 rounded-xl">
             Nenhum contrato
           </div>
         ) : (

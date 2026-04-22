@@ -168,10 +168,10 @@ export function DocumentosContratacaoCard({
           <FileDown className="size-4" aria-hidden="true" />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="text-[13.5px] font-semibold text-foreground">
+          <h4 className="text-label font-semibold text-foreground">
             Documentos de contratação
           </h4>
-          <p className="text-[11.5px] text-muted-foreground mt-0.5 leading-relaxed">
+          <p className="text-caption text-muted-foreground mt-0.5 leading-relaxed">
             Gera os 4 PDFs trabalhistas preenchidos com os dados deste
             contrato. Se faltar informação, complete antes do download.
           </p>
@@ -182,9 +182,9 @@ export function DocumentosContratacaoCard({
             size="sm"
             onClick={handleBaixar}
             disabled={loading}
-            className="h-7 px-2.5 rounded-lg text-[11.5px] font-medium gap-1.5"
+            className="rounded-xl"
           >
-            <FileDown className="size-3" />
+            <FileDown className="size-3.5" />
             {loading ? 'Gerando…' : 'Baixar ZIP'}
           </Button>
           <Button
@@ -192,9 +192,9 @@ export function DocumentosContratacaoCard({
             size="sm"
             onClick={handleEnviar}
             disabled={loading}
-            className="h-7 px-2.5 rounded-lg text-[11.5px] font-medium gap-1.5"
+            className="rounded-xl"
           >
-            <Send className="size-3" />
+            <Send className="size-3.5" />
             Enviar para assinar
           </Button>
         </div>

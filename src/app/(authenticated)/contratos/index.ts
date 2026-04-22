@@ -11,17 +11,9 @@
 // Components
 // ============================================================================
 export {
-  getContratosColumns,
   ContratoForm,
   ContratoDeleteDialog,
   SegmentosDialog,
-  SegmentosFilter,
-  // Pipeline UI
-  ContratoCard,
-  ContratoListRow,
-  PipelineFunnel,
-  FinancialStrip,
-  KanbanColumn,
   // Glass Briefing
   ContratosContent,
   ContratosPulseStrip,
@@ -30,17 +22,6 @@ export {
   ContratosGlassList,
   ContratosGlassCards,
   ContratosKanbanView,
-} from './components';
-
-export type {
-  ContratoCardData,
-  ContratoCardProps,
-  ContratoListRowProps,
-  PipelineStageData,
-  PipelineFunnelProps,
-  ContratosStatsData,
-  FinancialStripProps,
-  KanbanColumnProps,
 } from './components';
 
 // ============================================================================

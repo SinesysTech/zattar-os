@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { SituacaoPericiaCodigo, SITUACAO_PERICIA_LABELS } from '../domain';
 
@@ -131,14 +131,16 @@ export function PericiasPipelineStepper({
                 {SITUACAO_PERICIA_LABELS[stage.situacao]}
               </span>
             </div>
-            <p
+            <Text
+              as="p"
+              variant="kpi-value"
               className={cn(
-                'font-heading text-2xl font-bold tabular-nums leading-none',
+                'leading-none',
                 isActive ? 'text-foreground' : 'text-foreground/85',
               )}
             >
               {stage.count.toLocaleString('pt-BR')}
-            </p>
+            </Text>
             <div
               className="h-2 rounded-full transition-all duration-700"
               style={{

@@ -38,9 +38,9 @@ export function ContratoDocumentosCard({
               variant="outline"
               size="sm"
               onClick={() => setUploadDialogOpen(true)}
-              className="h-7 px-2.5 rounded-lg text-[11.5px] font-medium gap-1.5"
+              className="rounded-xl"
             >
-              <Upload className="size-3" />
+              <Upload className="size-3.5" />
               Novo
             </Button>
             {onGerarPeca ? (
@@ -48,9 +48,9 @@ export function ContratoDocumentosCard({
                 variant="outline"
                 size="sm"
                 onClick={onGerarPeca}
-                className="h-7 px-2.5 rounded-lg text-[11.5px] font-medium gap-1.5"
+                className="rounded-xl"
               >
-                <Plus className="size-3" />
+                <Plus className="size-3.5" />
                 Gerar peça
               </Button>
             ) : null}

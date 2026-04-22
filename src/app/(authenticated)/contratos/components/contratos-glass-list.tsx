@@ -3,13 +3,9 @@
 /**
  * ContratosGlassList — Lista Glass Briefing de contratos.
  * ============================================================================
- * Segue o vocabulário visual de AudienciasGlassList/ExpedientesGlassList:
- * grid CSS (sem TanStack), rows com rounded-2xl, hover com translate + shadow,
- * SemanticBadge, status dot colorido. Suporta seleção em massa via checkbox
- * à esquerda — diferencial de contratos.
- *
- * Clicar na linha navega para /app/contratos/[id]. Ícones de ação param
- * propagação para disparar dialogs (editar, excluir, gerar peça, visualizar).
+ * Grid CSS + rows rounded-2xl. Tipografia via classes canônicas (.text-label,
+ * .text-caption, .text-meta-label, .text-micro-badge). Avatar fallback via
+ * `generateAvatarFallback` (src/lib/utils.ts).
  * ============================================================================
  */
 
@@ -18,12 +14,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FileText, Scale, Eye, Pencil, Trash2, FileSignature } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { cn, generateAvatarFallback } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Text } from '@/components/ui/typography';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 
 import type { Contrato, StatusContrato } from '../domain';
@@ -64,19 +61,11 @@ const STATUS_DOT_COLOR: Record<StatusContrato, string> = {
   desistencia: 'bg-destructive',
 };
 
-function getInitials(name: string): string {
-  if (!name) return 'U';
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
-// Layout de grid compartilhado entre header e linha.
 const GRID_TEMPLATE =
   'grid-cols-[28px_10px_minmax(0,2.2fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_90px_140px]';
 
 // =============================================================================
-// SELECT-ALL RAIL (sem labels de coluna)
+// SELECT-ALL RAIL
 // =============================================================================
 
 function SelectAllRail({
@@ -98,9 +87,7 @@ function SelectAllRail({
         aria-label="Selecionar todos da página"
         className="size-3.5"
       />
-      <span className="text-[10px] font-medium uppercase tracking-wider">
-        Selecionar {visibleCount}
-      </span>
+      <Text variant="meta-label">Selecionar {visibleCount}</Text>
     </div>
   );
 }
@@ -214,14 +201,20 @@ function ResponsavelCell({
       >
         {nome ? (
           <>
-            <Avatar size="sm" className="size-5.5">
+            <Avatar className="size-6">
               <AvatarImage src={usuario?.avatarUrl || undefined} alt={nome} />
-              <AvatarFallback className="text-[9px] font-semibold">{getInitials(nome)}</AvatarFallback>
+              <AvatarFallback>
+                <Text variant="micro-badge">{generateAvatarFallback(nome)}</Text>
+              </AvatarFallback>
             </Avatar>
-            <span className="text-[11px] truncate">{nome}</span>
+            <Text variant="caption" className="truncate">
+              {nome}
+            </Text>
           </>
         ) : (
-          <span className="text-[11px] text-destructive/70 italic">Sem responsável</span>
+          <Text variant="caption" className="text-destructive/70 italic">
+            Sem responsável
+          </Text>
         )}
       </button>
       <ContratoAlterarResponsavelDialog
@@ -270,7 +263,6 @@ function GlassRow({
 }) {
   const router = useRouter();
 
-  // Partes autora/ré com fallback no cliente canônico do contrato.
   const clienteNome = clientesMap.get(contrato.clienteId)?.nome || `Cliente #${contrato.clienteId}`;
   const partesAutoras = (contrato.partes ?? []).filter((p) => p.papelContratual === 'autora');
   const partesRe = (contrato.partes ?? []).filter((p) => p.papelContratual === 're');
@@ -323,13 +315,13 @@ function GlassRow({
       className={cn(
         'group w-full text-left rounded-2xl border p-3 cursor-pointer',
         'transition-all duration-180 ease-out',
-        'hover:border-border hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] hover:-translate-y-px',
+        'hover:border-border hover:shadow-[0_4px_14px_color-mix(in_oklch,var(--foreground)_6%,transparent)] hover:-translate-y-px',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         isSelected
           ? 'border-primary/40 bg-primary/4'
           : isAlt
-            ? 'border-border/50 bg-card/60'
-            : 'border-border/60 bg-card',
+            ? 'border-border/30 bg-card/60'
+            : 'border-border/40 bg-card',
       )}
     >
       <div className={cn('grid items-center gap-3', GRID_TEMPLATE)}>
@@ -347,7 +339,7 @@ function GlassRow({
           />
         </div>
 
-        {/* 2. Status dot (stage color) */}
+        {/* 2. Status dot */}
         <div className="flex items-center justify-center">
           <span
             className={cn('size-2 rounded-full shrink-0 opacity-80', STATUS_DOT_COLOR[contrato.status])}
@@ -355,44 +347,51 @@ function GlassRow({
           />
         </div>
 
-        {/* 3. Cliente / Parte — título + partes + observações */}
+        {/* 3. Cliente / Parte */}
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="text-[13px] font-semibold text-foreground truncate leading-tight">
+            <Text variant="label" className="font-semibold text-foreground truncate leading-tight">
               {autoraNome || clienteNome}
               {partesAutoras.length > 1 && (
                 <span className="text-muted-foreground/60 font-medium"> e outros</span>
               )}
-            </span>
+            </Text>
             {contrato.papelClienteNoContrato === 'autora' && (
-              <span className="inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px text-[9px] font-semibold shrink-0">
+              <Text
+                variant="micro-badge"
+                className="inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px font-semibold shrink-0"
+              >
                 Cliente
-              </span>
+              </Text>
             )}
           </div>
           {reNome && (
-            <div className="text-[11px] text-muted-foreground/70 truncate mt-0.5">
-              <span className="text-muted-foreground/40">vs. </span>
+            <Text variant="caption" className="truncate mt-0.5 block">
+              <span className="text-muted-foreground/50">vs. </span>
               {reNome}
-              {partesRe.length > 1 && <span className="text-muted-foreground/50"> e outros</span>}
+              {partesRe.length > 1 && (
+                <span className="text-muted-foreground/50"> e outros</span>
+              )}
               {contrato.papelClienteNoContrato === 're' && (
-                <span className="ml-1.5 inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px text-[9px] font-semibold">
+                <span className="ml-1.5 inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px text-micro-badge font-semibold">
                   Cliente
                 </span>
               )}
-            </div>
+            </Text>
           )}
           {segmentoNome && (
-            <div className="text-[10px] text-muted-foreground/45 mt-0.5 truncate">{segmentoNome}</div>
+            <Text variant="micro-caption" className="mt-0.5 truncate block">
+              {segmentoNome}
+            </Text>
           )}
         </div>
 
         {/* 4. Tipo / Cobrança */}
         <div className="flex flex-col gap-1 min-w-0">
-          <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato} className="text-[10px] w-fit">
+          <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato} className="w-fit">
             {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
           </SemanticBadge>
-          <SemanticBadge category="tipo_cobranca" value={contrato.tipoCobranca} className="text-[10px] w-fit">
+          <SemanticBadge category="tipo_cobranca" value={contrato.tipoCobranca} className="w-fit">
             {TIPO_COBRANCA_LABELS[contrato.tipoCobranca]}
           </SemanticBadge>
         </div>
@@ -404,25 +403,27 @@ function GlassRow({
               <Link
                 href={`/app/processos/${firstProcesso.processoId}`}
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 min-w-0 text-[11px] text-primary hover:underline"
+                className="inline-flex items-center gap-1 min-w-0 text-primary hover:underline"
               >
                 <Scale className="size-2.5 shrink-0" />
-                <span className="tabular-nums truncate">
+                <Text variant="caption" className="tabular-nums truncate text-primary">
                   {firstProcesso.processo?.numeroProcesso ?? `Processo #${firstProcesso.processoId}`}
-                </span>
+                </Text>
               </Link>
               {processosRestantes > 0 && (
-                <span className="text-[9px] text-muted-foreground/60">+{processosRestantes} vinculado{processosRestantes > 1 ? 's' : ''}</span>
+                <Text variant="micro-caption">
+                  +{processosRestantes} vinculado{processosRestantes > 1 ? 's' : ''}
+                </Text>
               )}
             </>
           ) : (
-            <span className="text-[11px] text-muted-foreground/40">—</span>
+            <Text variant="caption" className="text-muted-foreground/40">—</Text>
           )}
         </div>
 
         {/* 6. Estágio (status) */}
         <div>
-          <SemanticBadge category="status_contrato" value={contrato.status} className="text-[10px]">
+          <SemanticBadge category="status_contrato" value={contrato.status}>
             {STATUS_CONTRATO_LABELS[contrato.status]}
           </SemanticBadge>
         </div>
@@ -436,11 +437,11 @@ function GlassRow({
         />
 
         {/* 8. Data de cadastro */}
-        <div className="text-[11px] text-muted-foreground/70 tabular-nums">
+        <Text variant="caption" className="tabular-nums">
           {formatarData(contrato.cadastradoEm)}
-        </div>
+        </Text>
 
-        {/* 9. Ações (4 ícones) */}
+        {/* 9. Ações */}
         <RowActions contrato={contrato} onEdit={onEdit} onDelete={onDelete} onGerarPeca={onGerarPeca} />
       </div>
     </div>
@@ -455,7 +456,7 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: 6 }, (_, i) => (
-        <div key={i} className="rounded-2xl border border-border/60 bg-card p-3">
+        <div key={i} className="rounded-2xl border border-border/40 bg-card p-3">
           <div className={cn('grid items-center gap-3', GRID_TEMPLATE)}>
             <Skeleton className="size-3.5 rounded" />
             <Skeleton className="size-2 rounded-full" />
@@ -494,8 +495,12 @@ function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-16 opacity-60">
       <FileText className="w-10 h-10 text-muted-foreground/30 mb-4" />
-      <p className="text-sm font-medium text-muted-foreground/60">Nenhum contrato encontrado</p>
-      <p className="text-xs text-muted-foreground/40 mt-1">Tente ajustar os filtros ou cadastre um novo contrato</p>
+      <Text variant="label" className="text-muted-foreground/60">
+        Nenhum contrato encontrado
+      </Text>
+      <Text variant="caption" className="text-muted-foreground/40 mt-1">
+        Tente ajustar os filtros ou cadastre um novo contrato
+      </Text>
     </div>
   );
 }

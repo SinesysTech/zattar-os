@@ -16,7 +16,7 @@ import * as React from 'react';
 import { GitBranch, FileEdit, FileCheck2, Scale, Ban, type LucideIcon } from 'lucide-react';
 
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import {
   STATUS_CONTRATO_LABELS,
@@ -117,21 +117,23 @@ export function ContratosPipelineStepper({
               <Icon className={cn('size-3.5', cfg.textColor)} />
               <span
                 className={cn(
-                  'text-[10px] font-medium uppercase tracking-[0.06em]',
+                  'text-meta-label',
                   isActive ? 'text-foreground' : 'text-muted-foreground/65',
                 )}
               >
                 {STATUS_CONTRATO_LABELS[stage.status]}
               </span>
             </div>
-            <p
+            <Text
+              as="p"
+              variant="kpi-value"
               className={cn(
-                'font-heading text-2xl font-bold tabular-nums leading-none',
+                'leading-none',
                 isActive ? 'text-foreground' : 'text-foreground/85',
               )}
             >
               {stage.count.toLocaleString('pt-BR')}
-            </p>
+            </Text>
             <div
               className="h-2 rounded-full transition-all duration-700"
               style={{
@@ -145,14 +147,14 @@ export function ContratosPipelineStepper({
             {total > 0 ? (
               <span
                 className={cn(
-                  'text-[10px] font-medium tabular-nums',
+                  'text-micro-caption font-medium tabular-nums',
                   isActive ? cfg.textColor : 'text-muted-foreground/55',
                 )}
               >
                 {pct}% do total
               </span>
             ) : (
-              <span className="text-[10px] text-transparent" aria-hidden>
+              <span className="text-micro-caption text-transparent" aria-hidden>
                 -
               </span>
             )}
@@ -200,7 +202,7 @@ export function ContratosPipelineStepper({
           <GitBranch className="size-3.5 text-primary/70" />
         </span>
         <Heading level="widget">Pipeline de Contratos</Heading>
-        <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 text-[10px] font-medium tabular-nums">
+        <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 text-micro-caption font-medium tabular-nums">
           {total.toLocaleString('pt-BR')} total
         </span>
       </div>

@@ -368,7 +368,7 @@ export function AudienciasGlassMonth({
                         </div>
                       </PopoverTrigger>
                       <PopoverContent
-                        className="w-80 p-4 bg-background/95 backdrop-blur-3xl border-border/50 rounded-2xl shadow-2xl"
+                        className="w-80 p-4 bg-background/95 backdrop-blur-3xl border-border/50 rounded-2xl shadow-lg"
                         side="bottom"
                         align="start"
                         sideOffset={6}

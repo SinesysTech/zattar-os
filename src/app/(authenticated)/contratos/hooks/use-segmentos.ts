@@ -4,6 +4,11 @@
  * CONTRATOS FEATURE - useSegmentos Hook
  *
  * Busca a lista de segmentos ativos via Server Action.
+ *
+ * Aceita `initialData` opcional para hidratação vinda de Server Component.
+ * Quando `initialData` é fornecido, o hook pula o fetch no client: isso evita
+ * a classe de bug em que Server Actions chamadas em `useEffect` recebem 307
+ * do proxy de auth e quebram o client RSC.
  */
 
 import { useState, useEffect } from 'react';
@@ -21,12 +26,15 @@ interface UseSegmentosResult {
   error: string | null;
 }
 
-export function useSegmentos(): UseSegmentosResult {
-  const [segmentos, setSegmentos] = useState<SegmentoOption[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export function useSegmentos(initialData?: SegmentoOption[]): UseSegmentosResult {
+  const hasInitialData = initialData !== undefined;
+  const [segmentos, setSegmentos] = useState<SegmentoOption[]>(initialData ?? []);
+  const [isLoading, setIsLoading] = useState(!hasInitialData);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (hasInitialData) return;
+
     let cancelled = false;
 
     const fetch = async () => {
@@ -65,7 +73,7 @@ export function useSegmentos(): UseSegmentosResult {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [hasInitialData]);
 
   return { segmentos, isLoading, error };
 }

@@ -25,7 +25,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
   if (!isVisible) return null;
 
   return (
-    <div className="absolute right-2 top-16 bottom-20 w-[calc(100%-1rem)] sm:right-4 sm:top-20 sm:bottom-24 sm:w-80 bg-black/80 backdrop-blur-md border border-[var(--video-surface-hover)] rounded-lg shadow-2xl flex flex-col z-50 transition-all duration-300 animate-in slide-in-from-right-10">
+    <div className="absolute right-2 top-16 bottom-20 w-[calc(100%-1rem)] sm:right-4 sm:top-20 sm:bottom-24 sm:w-80 bg-black/80 backdrop-blur-md border border-[var(--video-surface-hover)] rounded-lg shadow-lg flex flex-col z-50 transition-all duration-300 animate-in slide-in-from-right-10">
       <div className="flex items-center justify-between p-3 border-b border-[var(--video-surface-hover)]">
         <div className="flex items-center gap-2 text-[var(--video-text)]">
           <MessageSquareText className="w-4 h-4" />

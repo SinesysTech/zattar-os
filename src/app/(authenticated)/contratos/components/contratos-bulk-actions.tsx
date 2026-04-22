@@ -66,11 +66,11 @@ export function ContratosBulkActionsBar({
   if (selectedCount === 0) return null;
 
   const actionClass =
-    'inline-flex items-center gap-1.5 rounded-lg border border-border/15 bg-background/40 px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground/80 transition-colors hover:border-border/40 hover:bg-muted/30 hover:text-foreground cursor-pointer';
+    'inline-flex items-center gap-1.5 rounded-lg border border-border/15 bg-background/40 px-2.5 py-1.5 text-caption font-medium text-muted-foreground/80 transition-colors hover:border-border/40 hover:bg-muted/30 hover:text-foreground cursor-pointer';
 
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-xl border border-primary/15 bg-primary/5 px-3 py-1.5">
-      <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-primary whitespace-nowrap">
+      <div className="inline-flex items-center gap-1.5 text-caption font-semibold text-primary whitespace-nowrap">
         <CheckSquare className="size-3.5" aria-hidden="true" />
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
       </div>
@@ -106,7 +106,7 @@ export function ContratosBulkActionsBar({
       <button
         type="button"
         onClick={onClearSelection}
-        className="ml-auto inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] text-muted-foreground/60 transition-colors hover:bg-muted/30 hover:text-foreground cursor-pointer"
+        className="ml-auto inline-flex items-center gap-1 rounded-lg px-2 py-1 text-caption text-muted-foreground/60 transition-colors hover:bg-muted/30 hover:text-foreground cursor-pointer"
       >
         <X className="size-3" />
         Limpar

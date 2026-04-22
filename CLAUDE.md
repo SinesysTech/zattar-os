@@ -15,8 +15,11 @@ npm run type-check                   # Verificação de tipagem rígida
 npm run build:ci                     # Build CI com limite de RAM alto
 npm test                             # Todos os testes de unidade
 npm run test:e2e                     # Scrappers e fluxos end-to-end
-npm run check:architecture             # Valida violações arquiteturais do FSD
+npm run check:architecture           # Valida violações arquiteturais do FSD
 npm run validate:exports             # Valida barreiras
+npm run audit:design-system          # Auditoria completa do DS (KPIs, cobertura, ofensores)
+npm run audit:design-system:save     # Salva snapshot em design-system/reports/
+npm run audit:design-system:ci       # CI mode — exit 1 se KPI bloqueador falhar
 ```
 
 ## Arquitetura de Módulos (FSD + Colocation)
@@ -65,13 +68,18 @@ O ZattarOS segue o Design System **Glass Briefing** — glassmorphism com hierar
 
 ### Fontes Canônicas
 
-| Arquivo | O que contém |
-|---------|-------------|
-| `src/app/globals.css` | 145+ CSS custom properties (`:root` e `.dark`), classes `.glass-*` |
-| `src/lib/design-system/tokens.ts` | Tokens TS exportados (spacing, typography, opacity, layout, z-index) |
-| `tailwind.config.ts` | Mapeamento Tailwind → CSS variables |
-| `src/components/shared/glass-panel.tsx` | `GlassPanel` (depth 1–3) e `WidgetContainer` |
-| `src/components/ui/typography.tsx` | `Heading` (5 níveis) e `Text` (10+ variantes semânticas) |
+| Arquivo | O que contém | Autoridade |
+|---|---|---|
+| `src/app/globals.css` | **353 CSS variables** em `@theme inline` + `:root`/`.dark` + classes `.glass-*` | **CANÔNICA** |
+| `src/lib/design-system/tokens.ts` | Espelho TS (spacing, typography, opacity, layout, palette, events, MD3, portal) | Mirror |
+| `src/lib/design-system/token-registry.ts` | Lista tipada de todos os tokens (para audit) | Registro |
+| `design-system/MASTER.md` | Single Source of Truth narrativa + contratos + anti-patterns | Doc |
+| `design-system/GOVERNANCE.md` | Workflow de mudança, cadência, escalação | Processo |
+| `design-system/ROADMAP.md` | KPIs, metas trimestrais, baseline histórico | Plano |
+| `design-system/reports/latest.json` | Último snapshot do audit | Métricas |
+| `tailwind.config.ts` | **Apenas plugins + `max-w-350`** (Tailwind v4 lê cores do `@theme inline`) | Legacy |
+| `src/components/shared/glass-panel.tsx` | `<GlassPanel depth={1\|2\|3}>` | Componente |
+| `src/components/ui/typography.tsx` | `<Heading>` (10 níveis) e `<Text>` (17 variantes) | Componente |
 
 ### Regras Obrigatórias de UI
 

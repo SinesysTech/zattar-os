@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Wallet,
@@ -28,10 +29,14 @@ import type {
   ContratoStatusHistorico,
   ContratoCompletoStats,
 } from '@/app/(authenticated)/contratos';
-import { STATUS_CONTRATO_LABELS } from '@/app/(authenticated)/contratos';
+import {
+  STATUS_CONTRATO_LABELS,
+  ContratoForm,
+} from '@/app/(authenticated)/contratos';
 import type { Lancamento } from '@/app/(authenticated)/financeiro/domain';
 import type { EntrevistaTrabalhista, EntrevistaAnexo } from '@/app/(authenticated)/entrevistas-trabalhistas';
 import { EntrevistaTab } from '@/app/(authenticated)/entrevistas-trabalhistas';
+import { GerarPecaDialog } from '@/app/(authenticated)/pecas-juridicas';
 
 import {
   ContratoDetalhesHeader,
@@ -47,6 +52,8 @@ import type {
   DocumentoAssinaturaDoContrato,
   PacoteAtivoResumo,
 } from '@/shared/assinatura-digital/services/documentos-do-contrato.service';
+
+type TabValue = 'resumo' | 'financeiro' | 'documentos' | 'historico' | 'entrevista';
 
 // =============================================================================
 // HELPERS
@@ -246,7 +253,35 @@ export function ContratoDetalhesClient({
   documentosAssinatura = [],
   pacoteAssinaturaAtivo = null,
 }: ContratoDetalhesClientProps) {
+  const router = useRouter();
   const clienteNome = cliente?.nome ?? `Cliente #${contrato.clienteId}`;
+
+  const [activeTab, setActiveTab] = React.useState<TabValue>('resumo');
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [gerarPecaOpen, setGerarPecaOpen] = React.useState(false);
+
+  const handleEdit = React.useCallback(() => setEditOpen(true), []);
+  const handleGerarPeca = React.useCallback(() => setGerarPecaOpen(true), []);
+  const handleEnviarAssinatura = React.useCallback(() => {
+    setActiveTab('documentos');
+    if (typeof window !== 'undefined') {
+      setTimeout(() => {
+        document
+          .getElementById('contrato-assinatura-card')
+          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
+  }, []);
+
+  const handleEditSuccess = React.useCallback(() => {
+    setEditOpen(false);
+    router.refresh();
+  }, [router]);
+
+  const handleGerarPecaSuccess = React.useCallback(() => {
+    setGerarPecaOpen(false);
+    router.refresh();
+  }, [router]);
 
   return (
     <div className="flex flex-col gap-5">
@@ -256,9 +291,16 @@ export function ContratoDetalhesClient({
         responsavel={responsavel}
         segmentoNome={segmento?.nome ?? null}
         totalProcessos={stats.totalProcessos}
+        onEdit={handleEdit}
+        onGerarPeca={handleGerarPeca}
+        onEnviarAssinatura={handleEnviarAssinatura}
       />
 
-      <Tabs defaultValue="resumo" className="flex flex-col gap-5">
+      <Tabs
+        value={activeTab}
+        onValueChange={(v) => setActiveTab(v as TabValue)}
+        className="flex flex-col gap-5"
+      >
         <TabsList className="flex w-full max-w-full overflow-x-auto">
           <TabsTrigger value="resumo" className="gap-1.5">
             <LayoutDashboard className="size-3.5" />
@@ -314,11 +356,13 @@ export function ContratoDetalhesClient({
             contratoId={contrato.id}
             segmentoId={contrato.segmentoId ?? null}
           />
-          <ContratoDocumentosAssinaturaCard
-            contratoId={contrato.id}
-            initialDocumentos={documentosAssinatura}
-            initialPacoteAtivo={pacoteAssinaturaAtivo}
-          />
+          <div id="contrato-assinatura-card" className="scroll-mt-4">
+            <ContratoDocumentosAssinaturaCard
+              contratoId={contrato.id}
+              initialDocumentos={documentosAssinatura}
+              initialPacoteAtivo={pacoteAssinaturaAtivo}
+            />
+          </div>
           <ContratoDocumentosCard contratoId={contrato.id} />
         </TabsContent>
 
@@ -336,6 +380,21 @@ export function ContratoDetalhesClient({
           />
         </TabsContent>
       </Tabs>
+
+      <ContratoForm
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        mode="edit"
+        contrato={contrato}
+        onSuccess={handleEditSuccess}
+      />
+
+      <GerarPecaDialog
+        contratoId={contrato.id}
+        open={gerarPecaOpen}
+        onOpenChange={setGerarPecaOpen}
+        onSuccess={handleGerarPecaSuccess}
+      />
     </div>
   );
 }
