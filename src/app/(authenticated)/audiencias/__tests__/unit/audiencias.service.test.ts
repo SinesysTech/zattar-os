@@ -109,6 +109,142 @@ describe("Audiencias Service", () => {
     });
   });
 
+  describe("criarAudiencia — validação condicional por modalidade", () => {
+    const enderecoValido = {
+      logradouro: 'Rua A',
+      numero: '10',
+      bairro: 'B',
+      cidade: 'SP',
+      uf: 'SP',
+      cep: '01000-000',
+    };
+
+    beforeEach(() => {
+      (repo.processoExists as jest.Mock).mockResolvedValue(ok(true));
+      (repo.tipoAudienciaExists as jest.Mock).mockResolvedValue(ok(true));
+      (repo.saveAudiencia as jest.Mock).mockResolvedValue(ok({ id: 1 }));
+    });
+
+    it("Virtual sem URL → falha de validação", async () => {
+      const result = await criarAudiencia({
+        processoId: 1,
+        dataInicio: "2026-01-01T10:00:00Z",
+        dataFim: "2026-01-01T11:00:00Z",
+        modalidade: ModalidadeAudiencia.Virtual,
+      } as unknown as CreateAudienciaInput);
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toMatch(/URL.*obrigatória.*virtuais/i);
+      }
+      expect(repo.saveAudiencia).not.toHaveBeenCalled();
+    });
+
+    it("Virtual com URL → sucesso", async () => {
+      const result = await criarAudiencia({
+        processoId: 1,
+        dataInicio: "2026-01-01T10:00:00Z",
+        dataFim: "2026-01-01T11:00:00Z",
+        modalidade: ModalidadeAudiencia.Virtual,
+        urlAudienciaVirtual: "https://sala.exemplo.com/x",
+      } as unknown as CreateAudienciaInput);
+
+      expect(result.success).toBe(true);
+      expect(repo.saveAudiencia).toHaveBeenCalled();
+    });
+
+    it("Presencial sem endereço → falha de validação", async () => {
+      const result = await criarAudiencia({
+        processoId: 1,
+        dataInicio: "2026-01-01T10:00:00Z",
+        dataFim: "2026-01-01T11:00:00Z",
+        modalidade: ModalidadeAudiencia.Presencial,
+      } as unknown as CreateAudienciaInput);
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toMatch(/endereço.*obrigatório.*presenciais/i);
+      }
+    });
+
+    it("Presencial com endereço incompleto (falta UF) → falha", async () => {
+      const result = await criarAudiencia({
+        processoId: 1,
+        dataInicio: "2026-01-01T10:00:00Z",
+        dataFim: "2026-01-01T11:00:00Z",
+        modalidade: ModalidadeAudiencia.Presencial,
+        enderecoPresencial: { ...enderecoValido, uf: '' },
+      } as unknown as CreateAudienciaInput);
+
+      expect(result.success).toBe(false);
+    });
+
+    it("Presencial com endereço completo → sucesso", async () => {
+      const result = await criarAudiencia({
+        processoId: 1,
+        dataInicio: "2026-01-01T10:00:00Z",
+        dataFim: "2026-01-01T11:00:00Z",
+        modalidade: ModalidadeAudiencia.Presencial,
+        enderecoPresencial: enderecoValido,
+      } as unknown as CreateAudienciaInput);
+
+      expect(result.success).toBe(true);
+    });
+
+    it("Híbrida sem URL → falha", async () => {
+      const result = await criarAudiencia({
+        processoId: 1,
+        dataInicio: "2026-01-01T10:00:00Z",
+        dataFim: "2026-01-01T11:00:00Z",
+        modalidade: ModalidadeAudiencia.Hibrida,
+        enderecoPresencial: enderecoValido,
+      } as unknown as CreateAudienciaInput);
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toMatch(/URL.*obrigatória.*híbridas/i);
+      }
+    });
+
+    it("Híbrida sem endereço → falha", async () => {
+      const result = await criarAudiencia({
+        processoId: 1,
+        dataInicio: "2026-01-01T10:00:00Z",
+        dataFim: "2026-01-01T11:00:00Z",
+        modalidade: ModalidadeAudiencia.Hibrida,
+        urlAudienciaVirtual: "https://sala.exemplo.com/x",
+      } as unknown as CreateAudienciaInput);
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toMatch(/endereço.*obrigatório.*híbridas/i);
+      }
+    });
+
+    it("Híbrida completa (URL + endereço) → sucesso", async () => {
+      const result = await criarAudiencia({
+        processoId: 1,
+        dataInicio: "2026-01-01T10:00:00Z",
+        dataFim: "2026-01-01T11:00:00Z",
+        modalidade: ModalidadeAudiencia.Hibrida,
+        urlAudienciaVirtual: "https://sala.exemplo.com/x",
+        enderecoPresencial: enderecoValido,
+      } as unknown as CreateAudienciaInput);
+
+      expect(result.success).toBe(true);
+    });
+
+    it("Sem modalidade definida → não aplica refine", async () => {
+      const result = await criarAudiencia({
+        processoId: 1,
+        dataInicio: "2026-01-01T10:00:00Z",
+        dataFim: "2026-01-01T11:00:00Z",
+      } as unknown as CreateAudienciaInput);
+
+      expect(result.success).toBe(true);
+    });
+  });
+
   describe("atualizarAudiencia — modalidade", () => {
     const baseAudiencia = {
       id: 10,

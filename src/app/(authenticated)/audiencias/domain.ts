@@ -113,13 +113,52 @@ const baseAudienciaSchema = z.object({
   salaAudienciaNome: z.string().optional().nullable(),
 });
 
-export const createAudienciaSchema = baseAudienciaSchema.refine(
-  data => new Date(data.dataFim) > new Date(data.dataInicio),
-  {
+function isEnderecoCompleto(e: EnderecoPresencial | null | undefined): boolean {
+  if (!e) return false;
+  return Boolean(e.logradouro && e.numero && e.cidade && e.uf);
+}
+
+export const createAudienciaSchema = baseAudienciaSchema
+  .refine(data => new Date(data.dataFim) > new Date(data.dataInicio), {
     message: 'A data de fim deve ser posterior à data de início.',
     path: ['dataFim'],
-  }
-);
+  })
+  .refine(
+    data =>
+      data.modalidade !== ModalidadeAudiencia.Virtual ||
+      Boolean(data.urlAudienciaVirtual),
+    {
+      message: 'URL da sala virtual é obrigatória para audiências virtuais.',
+      path: ['urlAudienciaVirtual'],
+    }
+  )
+  .refine(
+    data =>
+      data.modalidade !== ModalidadeAudiencia.Presencial ||
+      isEnderecoCompleto(data.enderecoPresencial),
+    {
+      message: 'Endereço presencial é obrigatório para audiências presenciais.',
+      path: ['enderecoPresencial'],
+    }
+  )
+  .refine(
+    data =>
+      data.modalidade !== ModalidadeAudiencia.Hibrida ||
+      Boolean(data.urlAudienciaVirtual),
+    {
+      message: 'URL da sala virtual é obrigatória para audiências híbridas.',
+      path: ['urlAudienciaVirtual'],
+    }
+  )
+  .refine(
+    data =>
+      data.modalidade !== ModalidadeAudiencia.Hibrida ||
+      isEnderecoCompleto(data.enderecoPresencial),
+    {
+      message: 'Endereço presencial é obrigatório para audiências híbridas.',
+      path: ['enderecoPresencial'],
+    }
+  );
 
 export const updateAudienciaSchema = baseAudienciaSchema.partial();
 

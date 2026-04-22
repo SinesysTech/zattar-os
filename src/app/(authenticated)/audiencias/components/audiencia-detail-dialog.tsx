@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Heading, Text } from '@/components/ui/typography';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaIndicadorBadges } from './audiencia-indicador-badges';
 import { AudienciaTimeline } from './audiencia-timeline';
@@ -63,9 +64,9 @@ function SectionHeader({
   return (
     <div className="flex items-center gap-2 mb-2.5">
       <Icon className="size-3.5 text-primary" />
-      <h4 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]">
+      <Text variant="overline" as="h4" className="text-muted-foreground">
         {label}
-      </h4>
+      </Text>
       {action && <div className="ml-auto">{action}</div>}
     </div>
   );
@@ -300,6 +301,17 @@ export function AudienciaDetailDialog({
   const isPresencial = audiencia?.modalidade === ModalidadeAudiencia.Presencial;
   const isHibrida = audiencia?.modalidade === ModalidadeAudiencia.Hibrida;
 
+  const enderecoCompleto = Boolean(
+    audiencia?.enderecoPresencial?.logradouro &&
+      audiencia?.enderecoPresencial?.numero &&
+      audiencia?.enderecoPresencial?.cidade &&
+      audiencia?.enderecoPresencial?.uf
+  );
+  const urlObrigatoriaFaltando =
+    !isPje && (isVirtual || isHibrida) && !audiencia?.urlAudienciaVirtual;
+  const enderecoObrigatorioFaltando =
+    !isPje && (isPresencial || isHibrida) && !enderecoCompleto;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -320,10 +332,15 @@ export function AudienciaDetailDialog({
           {/* HEADER · Capa do processo */}
           <div className="shrink-0 px-6 pt-5 pb-4 border-b border-border/50">
             <div className="flex items-center justify-between gap-4 mb-1.5">
-              <DialogTitle className="flex-1 min-w-0 text-[16px] font-semibold text-foreground leading-[1.3] -tracking-[0.01em]">
-                {poloAtivo}
-                <span className="mx-1.5 font-medium text-muted-foreground/70">×</span>
-                {poloPassivo}
+              <DialogTitle asChild>
+                <Heading
+                  level="card"
+                  className="flex-1 min-w-0 text-foreground leading-[1.3] -tracking-[0.01em] truncate"
+                >
+                  {poloAtivo}
+                  <span className="mx-1.5 font-medium text-muted-foreground/70">×</span>
+                  {poloPassivo}
+                </Heading>
               </DialogTitle>
               {audiencia && <AudienciaStatusBadge status={audiencia.status} />}
               <button
@@ -373,17 +390,17 @@ export function AudienciaDetailDialog({
             <div className="shrink-0 mx-6 mt-4 p-4 rounded-xl bg-primary/5 border border-primary/15">
               <div className="flex items-center gap-3 mb-3.5">
                 <div className="flex-1 min-w-0">
-                  <div className="text-[14.5px] font-semibold text-foreground leading-tight">
+                  <Heading level="subsection" className="text-foreground leading-tight">
                     {audiencia.tipoDescricao || 'Audiência'}
-                  </div>
+                  </Heading>
                   {dataInicio && dataFim && (
-                    <div className="text-[12.5px] text-muted-foreground mt-0.5 capitalize">
+                    <Text variant="caption" className="text-muted-foreground mt-0.5 capitalize">
                       {format(dataInicio, "EEE, dd MMM yyyy", { locale: ptBR })}
                       {' · '}
                       <span className="tabular-nums">
                         {format(dataInicio, 'HH:mm')} – {format(dataFim, 'HH:mm')}
                       </span>
-                    </div>
+                    </Text>
                   )}
                 </div>
               </div>
@@ -391,9 +408,9 @@ export function AudienciaDetailDialog({
               <div className="flex flex-wrap gap-5 pb-3.5 mb-3.5 border-b border-border/40">
                 {/* Modalidade */}
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-[9.5px] font-semibold text-muted-foreground/75 uppercase tracking-[0.08em]">
+                  <Text variant="overline" className="text-muted-foreground/75">
                     Modalidade
-                  </span>
+                  </Text>
                   <Popover
                     open={modalidadePopoverOpen && !isPje}
                     onOpenChange={(v) => !isPje && setModalidadePopoverOpen(v)}
@@ -456,9 +473,9 @@ export function AudienciaDetailDialog({
 
                 {/* Responsável */}
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-[9.5px] font-semibold text-muted-foreground/75 uppercase tracking-[0.08em]">
+                  <Text variant="overline" className="text-muted-foreground/75">
                     Responsável
-                  </span>
+                  </Text>
                   <AudienciaResponsavelPopover
                     audienciaId={audiencia.id}
                     responsavelId={audiencia.responsavelId}
@@ -538,7 +555,7 @@ export function AudienciaDetailDialog({
             {error && !isLoading && (
               <div className="flex flex-col items-center justify-center py-12 gap-2 text-center">
                 <AlertCircle className="size-6 text-destructive" />
-                <p className="text-sm text-destructive">{error}</p>
+                <Text variant="caption" className="text-destructive">{error}</Text>
               </div>
             )}
 
@@ -581,9 +598,21 @@ export function AudienciaDetailDialog({
                     {(isVirtual || isHibrida) && (
                       <div className={isHibrida ? 'mb-3 pb-3 border-b border-border/40' : ''}>
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-[0.06em]">
-                            Link da sala virtual
-                          </span>
+                          <div className="flex items-center gap-1.5">
+                            <Text variant="overline" className="text-muted-foreground">
+                              Link da sala virtual
+                            </Text>
+                            {urlObrigatoriaFaltando && (
+                              <span
+                                className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-[1px] text-[9px] font-semibold uppercase tracking-[0.08em] text-warning"
+                                role="status"
+                                aria-label="Campo obrigatório não preenchido"
+                              >
+                                <AlertCircle className="size-2.5" />
+                                Obrigatório
+                              </span>
+                            )}
+                          </div>
                           {!editingUrl && !isPje && (
                             <button
                               type="button"
@@ -652,9 +681,9 @@ export function AudienciaDetailDialog({
                             </Button>
                           </div>
                         ) : (
-                          <p className="text-[13px] text-muted-foreground/60 italic">
+                          <Text variant="caption" className="text-muted-foreground/60 italic">
                             Nenhum link cadastrado
-                          </p>
+                          </Text>
                         )}
                       </div>
                     )}
@@ -662,9 +691,21 @@ export function AudienciaDetailDialog({
                     {(isPresencial || isHibrida) && (
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-[0.06em]">
-                            Endereço presencial
-                          </span>
+                          <div className="flex items-center gap-1.5">
+                            <Text variant="overline" className="text-muted-foreground">
+                              Endereço presencial
+                            </Text>
+                            {enderecoObrigatorioFaltando && (
+                              <span
+                                className="inline-flex items-center gap-1 rounded-full bg-warning/12 px-1.5 py-[1px] text-[9px] font-semibold uppercase tracking-[0.08em] text-warning"
+                                role="status"
+                                aria-label="Campo obrigatório não preenchido"
+                              >
+                                <AlertCircle className="size-2.5" />
+                                Obrigatório
+                              </span>
+                            )}
+                          </div>
                           {!editingEndereco && !isPje && (
                             <button
                               type="button"
@@ -768,7 +809,7 @@ export function AudienciaDetailDialog({
                             </div>
                           </div>
                         ) : audiencia.enderecoPresencial ? (
-                          <p className="text-[13px] text-foreground/90 leading-relaxed">
+                          <Text variant="caption" className="text-foreground/90 leading-relaxed">
                             {audiencia.enderecoPresencial.logradouro},{' '}
                             {audiencia.enderecoPresencial.numero}
                             {audiencia.enderecoPresencial.complemento &&
@@ -781,11 +822,11 @@ export function AudienciaDetailDialog({
                               {audiencia.enderecoPresencial.cep &&
                                 ` · CEP ${audiencia.enderecoPresencial.cep}`}
                             </span>
-                          </p>
+                          </Text>
                         ) : (
-                          <p className="text-[13px] text-muted-foreground/60 italic">
+                          <Text variant="caption" className="text-muted-foreground/60 italic">
                             Nenhum endereço cadastrado
-                          </p>
+                          </Text>
                         )}
                       </div>
                     )}
@@ -793,9 +834,9 @@ export function AudienciaDetailDialog({
                     {/* Híbrida: quem é presencial? */}
                     {isHibrida && (
                       <div className="mt-3 pt-3 border-t border-border/40">
-                        <span className="text-[10.5px] font-semibold text-muted-foreground uppercase tracking-[0.06em] block mb-2">
+                        <Text variant="overline" as="span" className="text-muted-foreground block mb-2">
                           Quem participa presencialmente?
-                        </span>
+                        </Text>
                         <div className="inline-flex gap-1 p-1 rounded-lg bg-muted/60 border border-border/40">
                           {(
                             [
@@ -891,13 +932,13 @@ export function AudienciaDetailDialog({
                         </div>
                       </div>
                     ) : audiencia.observacoes ? (
-                      <p className="text-[13px] text-foreground/90 leading-relaxed whitespace-pre-wrap">
+                      <Text variant="caption" className="text-foreground/90 leading-relaxed whitespace-pre-wrap">
                         {audiencia.observacoes}
-                      </p>
+                      </Text>
                     ) : (
-                      <p className="text-[13px] text-muted-foreground/60 italic">
+                      <Text variant="caption" className="text-muted-foreground/60 italic">
                         Nenhuma observação registrada
-                      </p>
+                      </Text>
                     )}
                   </SectionCard>
                 </div>
