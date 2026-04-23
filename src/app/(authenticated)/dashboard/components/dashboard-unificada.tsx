@@ -42,6 +42,7 @@ import {
   WidgetExpedientesUrgentes,
   WidgetProdutividade,
 } from './widgets';
+import { WidgetTransitoriasPendentes } from './widgets/widget-transitorias-pendentes';
 import { ObrigacoesRecentesCard } from './shared/obrigacoes-recentes-card';
 import { ProgressoChart } from '../geral/components/progresso-chart';
 import { TarefasWidget } from './dashboard-tarefas';
@@ -323,6 +324,9 @@ function UserContent({ data, progresso, lembretes, tarefas, currentUserId, curre
           )}
         </div>
       )}
+
+      {/* Cadastros pendentes de parte contrária — auto-oculta quando zero */}
+      <WidgetTransitoriasPendentes />
 
       {/* Processos & Produtividade */}
       {podeVerProcessos && (
