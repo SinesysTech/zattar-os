@@ -38,6 +38,7 @@ import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
+  isTipoParteContraria,
 } from '../domain';
 import type { ClienteInfo } from '../types';
 import { ContratoAlterarResponsavelDialog } from './contrato-alterar-responsavel-dialog';
@@ -246,7 +247,7 @@ function GlassCard({
   const clienteNome = clienteInfo?.nome ?? `Cliente #${contrato.clienteId}`;
 
   const partesContrarias = (contrato.partes ?? []).filter(
-    (p) => p.tipoEntidade === 'parte_contraria',
+    (p) => isTipoParteContraria(p.tipoEntidade),
   );
   const parteContrariaNome = (() => {
     if (partesContrarias.length === 0) return null;

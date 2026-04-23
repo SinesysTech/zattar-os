@@ -99,6 +99,8 @@ export type {
 } from './domain';
 
 export {
+  // Helpers
+  isTipoParteContraria,
   // Schemas Zod
   tipoContratoSchema,
   tipoCobrancaSchema,

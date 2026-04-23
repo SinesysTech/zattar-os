@@ -48,6 +48,7 @@ import {
   TIPO_COBRANCA_LABELS,
   PAPEL_CONTRATUAL_LABELS,
   ContratoDeleteDialog,
+  isTipoParteContraria,
 } from '@/app/(authenticated)/contratos';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -73,7 +74,7 @@ function diffDaysFromNow(iso: string | null | undefined): number | null {
 }
 
 function getParteContrariaInfo(contrato: Contrato): { nome: string; total: number } | null {
-  const partesContrarias = contrato.partes.filter((p) => p.tipoEntidade === 'parte_contraria');
+  const partesContrarias = contrato.partes.filter((p) => isTipoParteContraria(p.tipoEntidade));
   if (partesContrarias.length === 0) return null;
   const primeira = partesContrarias[0]?.nomeSnapshot || 'Parte Contrária';
   return { nome: primeira, total: partesContrarias.length };

@@ -9,7 +9,7 @@
  */
 
 import type { Contrato } from '../domain';
-import { TIPO_CONTRATO_LABELS, TIPO_COBRANCA_LABELS } from '../domain';
+import { TIPO_CONTRATO_LABELS, TIPO_COBRANCA_LABELS, isTipoParteContraria } from '../domain';
 
 // =============================================================================
 // INTERFACE DE SAÍDA
@@ -158,7 +158,7 @@ export function contratoToCardData(
     );
 
     if (parteRe) {
-      if (parteRe.tipoEntidade === 'parte_contraria') {
+      if (isTipoParteContraria(parteRe.tipoEntidade)) {
         parteContraria =
           nomes.partesContrarias.get(parteRe.entidadeId) ??
           parteRe.nomeSnapshot ??
