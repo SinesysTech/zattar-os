@@ -21,4 +21,15 @@ export {
   contarPendentes,
   sugerirMerge,
   marcarTransitoriaComoPromovida,
+  promoverTransitoria,
+  type PromoverResult,
 } from "./service";
+
+export {
+  actionPromoverTransitoria,
+  actionListarTransitoriasPendentes,
+  actionContarTransitoriasPendentes,
+  actionBuscarSugestoesMerge,
+  actionBuscarTransitoriaPorId,
+  actionListarTransitoriasPorContrato,
+} from "./actions";
