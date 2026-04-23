@@ -94,8 +94,14 @@ function installLockNoiseFilter() {
   };
 }
 
+// Instala o filtro no nível do módulo para garantir que esteja ativo
+// antes que qualquer componente React renderize e antes que o auth-js
+// dispare erros de lock durante a hidratação inicial da sessão.
+// Sem isso, o bridge de dev do Next.js/Turbopack captura os erros
+// antes do filtro ser instalado pelo primeiro `createClient()`.
+installLockNoiseFilter();
+
 export function createClient() {
-  installLockNoiseFilter();
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY;

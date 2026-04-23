@@ -31,7 +31,8 @@ describe('supabase browser client', () => {
     expect(mockCreateBrowserClient).toHaveBeenCalledTimes(2);
     expect(mockCreateBrowserClient).toHaveBeenCalledWith(
       'https://example.supabase.co',
-      'anon-key'
+      'anon-key',
+      expect.objectContaining({ auth: expect.objectContaining({ lockAcquireTimeout: expect.any(Number) }) })
     );
   });
 
