@@ -215,10 +215,12 @@ function ResponsavelCell({
           <Avatar className="size-6">
             <AvatarImage src={usuario?.avatarUrl || undefined} alt={nome} />
             <AvatarFallback>
-              <span className="text-[9px] font-medium">{generateAvatarFallback(nome)}</span>
+              <Text variant="micro-badge">{generateAvatarFallback(nome)}</Text>
             </AvatarFallback>
           </Avatar>
-          <span className="text-[11px] text-foreground truncate">{nome}</span>
+          <Text variant="caption" className="truncate">
+            {nome}
+          </Text>
         </button>
         <ContratoAlterarResponsavelDialog
           open={dialogOpen}
@@ -278,10 +280,12 @@ function ResponsavelAssignPopover({
           onClick={(e) => e.stopPropagation()}
           aria-label="Adicionar responsável"
           disabled={isPending}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-border/30 px-2 py-1 text-[11px] font-medium text-muted-foreground/60 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50 w-fit"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-border/30 px-2 py-1 text-muted-foreground/60 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50 w-fit"
         >
           <Plus className="size-3" aria-hidden="true" />
-          <span>Adicionar responsável</span>
+          <Text variant="caption" className="font-medium">
+            Adicionar responsável
+          </Text>
         </button>
       </PopoverTrigger>
       <PopoverContent
@@ -294,9 +298,9 @@ function ResponsavelAssignPopover({
           <CommandInput placeholder="Buscar usuário..." className="h-8 text-xs rounded-lg" />
           <CommandList className="max-h-52">
             <CommandEmpty>
-              <span className="text-[11px] text-muted-foreground/40">
+              <Text variant="caption" className="text-muted-foreground/40">
                 Nenhum usuário encontrado
-              </span>
+              </Text>
             </CommandEmpty>
             <CommandGroup>
               {usuarios.map((usuario) => (
@@ -309,9 +313,9 @@ function ResponsavelAssignPopover({
                   <Avatar className="size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nome} />
                     <AvatarFallback>
-                      <span className="text-[9px] font-medium">
+                      <Text variant="micro-badge">
                         {generateAvatarFallback(usuario.nome)}
-                      </span>
+                      </Text>
                     </AvatarFallback>
                   </Avatar>
                   <span className="truncate">{usuario.nome}</span>
@@ -463,40 +467,35 @@ function GlassRow({
             )}
           </div>
           {reNome && (
-            <p className="text-[11px] text-muted-foreground truncate mt-0.5">
+            <Text variant="caption" className="truncate mt-0.5 block">
               <span className="text-muted-foreground/50">vs. </span>
               {reNome}
               {partesRe.length > 1 && (
                 <span className="text-muted-foreground/50"> e outros</span>
               )}
               {contrato.papelClienteNoContrato === 're' && (
-                <span className="ml-1.5 inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px text-[9px] font-semibold">
+                <Text
+                  variant="micro-badge"
+                  className="ml-1.5 inline-flex items-center bg-primary/10 border border-primary/20 text-primary rounded px-1 py-px font-semibold"
+                >
                   Cliente
-                </span>
+                </Text>
               )}
-            </p>
+            </Text>
           )}
           {segmentoNome && (
-            <p className="text-[10px] text-muted-foreground/50 mt-0.5 truncate">
+            <Text variant="micro-caption" className="mt-0.5 truncate block text-muted-foreground/50">
               {segmentoNome}
-            </p>
+            </Text>
           )}
         </div>
 
         {/* 4. Tipo / Cobrança */}
         <div className="flex flex-col gap-1 min-w-0">
-          <SemanticBadge
-            category="tipo_contrato"
-            value={contrato.tipoContrato}
-            className="w-fit text-[10px]"
-          >
+          <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato} className="w-fit">
             {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
           </SemanticBadge>
-          <SemanticBadge
-            category="tipo_cobranca"
-            value={contrato.tipoCobranca}
-            className="w-fit text-[10px]"
-          >
+          <SemanticBadge category="tipo_cobranca" value={contrato.tipoCobranca} className="w-fit">
             {TIPO_COBRANCA_LABELS[contrato.tipoCobranca]}
           </SemanticBadge>
         </div>
@@ -511,28 +510,24 @@ function GlassRow({
                 className="inline-flex items-center gap-1 min-w-0 text-primary hover:underline"
               >
                 <Scale className="size-2.5 shrink-0" />
-                <span className="text-[11px] tabular-nums truncate text-primary">
+                <Text variant="caption" className="tabular-nums truncate text-primary">
                   {firstProcesso.processo?.numeroProcesso ?? `Processo #${firstProcesso.processoId}`}
-                </span>
+                </Text>
               </Link>
               {processosRestantes > 0 && (
-                <span className="text-[10px] text-muted-foreground/50">
+                <Text variant="micro-caption" className="text-muted-foreground/50">
                   +{processosRestantes} vinculado{processosRestantes > 1 ? 's' : ''}
-                </span>
+                </Text>
               )}
             </>
           ) : (
-            <span className="text-[11px] text-muted-foreground/40">—</span>
+            <Text variant="caption" className="text-muted-foreground/40">—</Text>
           )}
         </div>
 
         {/* 6. Estágio (status) */}
         <div>
-          <SemanticBadge
-            category="status_contrato"
-            value={contrato.status}
-            className="text-[10px]"
-          >
+          <SemanticBadge category="status_contrato" value={contrato.status}>
             {STATUS_CONTRATO_LABELS[contrato.status]}
           </SemanticBadge>
         </div>
@@ -546,9 +541,9 @@ function GlassRow({
         />
 
         {/* 8. Data de cadastro */}
-        <span className="text-[11px] text-muted-foreground tabular-nums">
+        <Text variant="caption" className="tabular-nums">
           {formatarData(contrato.cadastradoEm)}
-        </span>
+        </Text>
 
         {/* 9. Ações */}
         <RowActions contrato={contrato} onEdit={onEdit} onDelete={onDelete} onGerarPeca={onGerarPeca} />
