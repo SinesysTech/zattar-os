@@ -18,6 +18,7 @@ export default async function PublicRouteLayout({ children }: { children: ReactN
       <script
         nonce={nonce}
         data-zattar-theme="force-light"
+        suppressHydrationWarning
         dangerouslySetInnerHTML={{
           __html: `
             try {

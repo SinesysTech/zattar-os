@@ -188,7 +188,7 @@ export function ContratoDocumentosAssinaturaCard({
       <DetailSectionCard>
         {documentos.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <div className="inline-flex size-10 items-center justify-center rounded-[12px] bg-muted/40 text-muted-foreground mb-2">
+            <div className="inline-flex size-10 items-center justify-center rounded-xl bg-muted/40 text-muted-foreground mb-2">
               <FileSignature className="size-4" aria-hidden="true" />
             </div>
             <p className="text-[12.5px] text-muted-foreground">
@@ -256,7 +256,7 @@ function DocumentoRow({ doc, downloading, onDownload }: DocumentoRowProps) {
   const podeBaixar = doc.pdf_final_url !== null || doc.pdf_original_url !== null;
 
   return (
-    <div className="flex items-center gap-3 px-3 py-2.5 rounded-[12px] bg-muted/30 hover:bg-muted/50 transition-colors">
+    <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors">
       <div className="inline-flex size-8 items-center justify-center rounded-[10px] bg-background shrink-0">
         {statusIcon}
       </div>
