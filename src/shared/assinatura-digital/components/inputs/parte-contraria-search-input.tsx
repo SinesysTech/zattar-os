@@ -3,17 +3,48 @@
 import * as React from 'react';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { CheckCircle2, Building2, User, SearchX} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { CheckCircle2, Building2, User, SearchX, UserPlus, Clock } from 'lucide-react';
 import { searchPartesContrariasList } from '../../actions';
 import type { ParteContrariaComEndereco } from '@/app/(authenticated)/partes/types';
 import { cn } from '@/lib/utils';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+
+/**
+ * Resultado da criação de uma parte contrária transitória.
+ * Emitido via onTransitoriaCreated quando o usuário clica em
+ * "Adicionar com cadastro pendente" no empty state.
+ */
+export interface TransitoriaCreated {
+  id: number;
+  nome: string;
+  kind: 'transitoria';
+}
+
 export interface ParteContrariaSearchInputProps {
   value?: string;
   onChange?: (value: string) => void;
   onParteFound?: (parte: ParteContrariaComEndereco) => void;
   onParteNotFound?: () => void;
+  /**
+   * Quando presente, habilita o botão "Adicionar com cadastro pendente"
+   * no empty state. O callback recebe o id da transitória criada para
+   * que o consumidor armazene como entidade_id polimórfica em
+   * contrato_partes (tipo_entidade='parte_contraria_transitoria').
+   */
+  onTransitoriaCreated?: (transitoria: TransitoriaCreated) => void;
+  /**
+   * Contrato ao qual a transitória ficará vinculada (rastreabilidade do
+   * alerta "cadastro pendente"). Somente usado quando onTransitoriaCreated
+   * está presente.
+   */
+  contratoId?: number;
+  /**
+   * UUID da sessão do formulário público (para auditoria quando criado_por
+   * é null por ser cliente anônimo).
+   */
+  sessaoFormularioUuid?: string;
   disabled?: boolean;
   placeholder?: string;
   className?: string;
@@ -25,6 +56,9 @@ export function ParteContrariaSearchInput({
   onChange,
   onParteFound,
   onParteNotFound,
+  onTransitoriaCreated,
+  contratoId,
+  sessaoFormularioUuid,
   disabled = false,
   placeholder = 'Digite o nome, CPF ou CNPJ da parte contrária',
   className,
@@ -34,7 +68,10 @@ export function ParteContrariaSearchInput({
   const [results, setResults] = useState<ParteContrariaComEndereco[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedParte, setSelectedParte] = useState<ParteContrariaComEndereco | null>(null);
+  const [selectedTransitoria, setSelectedTransitoria] = useState<TransitoriaCreated | null>(null);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [isCreatingTransitoria, setIsCreatingTransitoria] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -83,6 +120,8 @@ export function ParteContrariaSearchInput({
     setSearchValue(newValue);
     onChange?.(newValue);
     setSelectedParte(null);
+    setSelectedTransitoria(null);
+    setCreateError(null);
 
     // Debounce de 300ms
     if (debounceRef.current) {
@@ -92,6 +131,45 @@ export function ParteContrariaSearchInput({
       doSearch(newValue);
     }, 300);
   };
+
+  const handleCreateTransitoria = useCallback(async () => {
+    const nome = searchValue.trim();
+    if (nome.length < 2 || isCreatingTransitoria) return;
+
+    setIsCreatingTransitoria(true);
+    setCreateError(null);
+    try {
+      const resp = await fetch('/api/partes-contrarias/transitorias', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          nome,
+          criado_em_contrato_id: contratoId ?? null,
+          sessao_formulario_uuid: sessaoFormularioUuid ?? null,
+        }),
+      });
+      const json = await resp.json();
+      if (!resp.ok || !json.success) {
+        const msg = json?.error ?? 'Erro ao adicionar cadastro pendente';
+        throw new Error(typeof msg === 'string' ? msg : 'Erro ao adicionar cadastro pendente');
+      }
+      const created: TransitoriaCreated = {
+        id: json.data.id as number,
+        nome: json.data.nome as string,
+        kind: 'transitoria',
+      };
+      setSelectedTransitoria(created);
+      setShowDropdown(false);
+      setResults([]);
+      onTransitoriaCreated?.(created);
+    } catch (err) {
+      setCreateError(
+        err instanceof Error ? err.message : 'Erro ao adicionar cadastro pendente'
+      );
+    } finally {
+      setIsCreatingTransitoria(false);
+    }
+  }, [searchValue, contratoId, sessaoFormularioUuid, isCreatingTransitoria, onTransitoriaCreated]);
 
   const handleSelect = (parte: ParteContrariaComEndereco) => {
     setSelectedParte(parte);
@@ -233,9 +311,37 @@ export function ParteContrariaSearchInput({
               <p className="text-sm font-medium text-foreground">
                 Nenhuma parte contrária encontrada
               </p>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                Preencha os dados abaixo para cadastrar uma nova.
-              </p>
+              {onTransitoriaCreated ? (
+                <>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    Você pode adicionar apenas o nome agora — o cadastro completo fica pendente pra equipe.
+                  </p>
+                  <div className="mt-3 flex flex-col gap-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="rounded-xl justify-start"
+                      onClick={handleCreateTransitoria}
+                      disabled={isCreatingTransitoria || searchValue.trim().length < 2}
+                    >
+                      {isCreatingTransitoria ? (
+                        <LoadingSpinner className="mr-2 size-3.5" />
+                      ) : (
+                        <UserPlus className="mr-2 size-3.5" strokeWidth={2.25} />
+                      )}
+                      Adicionar &ldquo;{searchValue.trim()}&rdquo; com cadastro pendente
+                    </Button>
+                    {createError && (
+                      <p className="text-xs text-destructive">{createError}</p>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Preencha os dados abaixo para cadastrar uma nova.
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -258,6 +364,20 @@ export function ParteContrariaSearchInput({
           <CheckCircle2 aria-hidden="true" className="h-3.5 w-3.5 text-success" strokeWidth={2.5} />
           <span className="text-xs font-medium text-success">
             Selecionada: <span className="font-semibold text-foreground">{selectedParte.nome}</span>
+          </span>
+        </div>
+      )}
+
+      {/* Status de transitória criada */}
+      {selectedTransitoria && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="inline-flex items-center gap-2 rounded-full bg-warning/10 px-3 py-1 ring-1 ring-warning/20"
+        >
+          <Clock aria-hidden="true" className="h-3.5 w-3.5 text-warning" strokeWidth={2.5} />
+          <span className="text-xs font-medium text-warning">
+            Cadastro pendente: <span className="font-semibold text-foreground">{selectedTransitoria.nome}</span>
           </span>
         </div>
       )}
